@@ -1,16 +1,1172 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>0079 SLG · IP联机版</title><style>
-:root{color-scheme:dark;--bg:#0e161e;--panel:#17232e;--line:#2b3f4b;--text:#e3edf0;--muted:#94aab7;--blue:#66d5ff;--red:#ff8c7b;--lime:#d8ed91}*{box-sizing:border-box}body{margin:0;font:13px/1.5 system-ui,"Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text)}button,select,input{font:inherit}button,select{background:#21333f;color:var(--text);border:1px solid #3a5361;border-radius:5px;padding:8px 11px}button{cursor:pointer}button:hover:not(:disabled){border-color:var(--blue);background:#2d4757}button:disabled{opacity:.38;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--lime);outline-offset:3px}.primary{background:var(--lime);border-color:var(--lime);color:#24301c}.primary:hover:not(:disabled){background:#ebf5c2;color:#24301c}.danger{border-color:#ac685f;color:#ffc1b6}.blue{color:var(--blue)}.red{color:var(--red)}.muted{color:var(--muted)}header{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 25px;border-bottom:1px solid var(--line)}.brand{display:flex;gap:13px;align-items:center}.logo{font:italic bold 27px Georgia;color:var(--lime);border:1px solid #74835d;width:40px;height:40px;display:grid;place-items:center}.eyebrow{font:10px ui-monospace,monospace;letter-spacing:2px;color:var(--muted)}h1{font-size:18px;margin:0}h2{font-size:19px;margin:0}h3{font-size:14px;margin:0 0 10px}.header-buttons{display:flex;align-items:center;gap:10px}.status-tag{border:1px solid #496775;padding:6px 12px;color:var(--blue);border-radius:4px;font-weight:650}.game-layout{display:grid;grid-template-columns:200px minmax(480px,1fr) 300px;max-width:1720px;margin:auto;min-height:calc(100vh - 74px)}.left,.right{background:var(--panel);padding:20px 14px}.left{border-right:1px solid var(--line)}.right{border-left:1px solid var(--line)}.section-title{font:10px ui-monospace,monospace;color:var(--muted);letter-spacing:1.5px;margin-bottom:14px}.roster-unit{display:flex;width:100%;gap:9px;padding:10px 6px;text-align:left;align-items:center;margin:8px 0;background:transparent}.roster-unit.selected{border-color:var(--lime);background:#2b3b3d}.roster-unit.dead{opacity:.3}.roster-unit img{width:48px;height:48px;object-fit:contain;image-rendering:pixelated}.roster-unit strong{font-size:12px;display:block}.roster-unit small{font-size:10px;color:var(--muted)}.hp-track{height:4px;background:#263c46;border-radius:3px;overflow:hidden;margin:4px 0;min-width:75px}.hp-fill{height:100%;background:var(--blue)}.hp-fill.red{background:var(--red)}.side-title{display:flex;align-items:center;justify-content:space-between;margin-top:14px}.side-title:first-child{margin-top:0}.side-title span{font-size:11px}.left-note{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}.center{min-width:0;padding:20px 20px 0;display:flex;flex-direction:column}.phase-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:15px}.phase-row p{margin:3px 0 0;color:var(--muted);font-size:12px}.map-wrap{position:relative;width:100%;aspect-ratio:12/9;background:#101c23;border:1px solid #3c5664;border-radius:6px;overflow:hidden}.map-wrap canvas{width:100%;height:100%;display:block;touch-action:manipulation}.map-label{position:absolute;left:12px;top:9px;pointer-events:none;color:#91a9b5;font:9px ui-monospace,monospace;letter-spacing:1px}.hover-info{position:absolute;bottom:8px;left:12px;font-size:10px;pointer-events:none;color:#c5d1d4;background:#13212bdd;padding:4px 7px;border-radius:3px}.legend{display:flex;flex-wrap:wrap;gap:15px;font-size:10px;color:var(--muted);padding:10px 0}.legend i{display:inline-block;width:8px;height:8px;margin-right:5px;border-radius:1px}.log{padding:11px 0;margin-top:auto;border-top:1px solid var(--line)}.log h3{font-size:10px;letter-spacing:1px;color:var(--muted);margin-bottom:8px}.log-lines{height:104px;overflow:auto;font-size:11px;line-height:1.8}.log-line{color:#a9bdc7}.log-line:first-child{color:var(--text)}.unit-card-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}.unit-card-head img{width:66px;height:66px;object-fit:contain;image-rendering:pixelated}.unit-card-head strong{font-size:15px}.unit-card-head small{display:block;color:var(--muted);font-size:11px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;margin-bottom:18px}.stats>div{background:#101c25;border-radius:4px;padding:7px 9px}.stats span{display:block;color:var(--muted);font-size:10px}.actions{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:19px}.actions button{font-size:11px}.weapon{display:block;text-align:left;width:100%;padding:11px;margin:8px 0;background:#15232e}.weapon.active{border-color:var(--lime);background:#293c3e}.weapon-title{display:flex;align-items:center;justify-content:space-between;gap:6px}.weapon-name{font-weight:650;font-size:12px}.type{font-size:9px;padding:2px 5px;border:1px solid #58717e;border-radius:3px;white-space:nowrap}.type.beam{color:#ffb5e9;border-color:#875a80}.type.game-layout{color:#e4ce98;border-color:#80724e}.type.melee{color:#aae2ee;border-color:#527c87}.weapon-meta{font-size:10px;color:var(--muted);margin-top:5px}.target-button{width:100%;text-align:left;display:flex;justify-content:space-between;margin:7px 0;font-size:11px;border-color:#916555}.helper{font-size:11px;color:var(--muted);line-height:1.8;padding:12px 0}.empty{padding:15px 0;color:var(--muted);font-size:12px}.rule-box{margin-top:15px;border-top:1px solid var(--line);padding-top:12px;font-size:10px;color:var(--muted)}.overlay{position:fixed;inset:0;background:#060d14cb;display:flex;align-items:center;justify-content:center;padding:20px;z-index:10;backdrop-filter:blur(5px)}.overlay[hidden]{display:none}.modal{width:min(780px,100%);max-height:92vh;overflow:auto;border:1px solid #526c7b;border-radius:10px;background:#152430;padding:25px;box-shadow:0 25px 100px #0009}.modal.large{width:min(1000px,100%)}.modal-top{display:flex;justify-content:space-between;align-items:start;gap:15px;margin-bottom:20px}.modal-top p{color:var(--muted);font-size:12px;margin:4px 0}.engagement{display:grid;grid-template-columns:1fr 44px 1fr;align-items:center;margin:15px 0 20px}.fighter{background:#0f1c27;border:1px solid var(--line);padding:13px;border-radius:6px}.fighter img{width:58px;height:58px;object-fit:contain;image-rendering:pixelated;float:right}.fighter small{color:var(--muted);display:block}.fighter strong{font-size:15px}.fighter .summary{margin-top:9px;font-size:11px}.arrow{text-align:center;font-size:24px;color:var(--muted)}.responses{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:10px}.response{padding:13px;text-align:left;background:#1c303c;border:1px solid #3a5666;border-radius:5px}.response.active{border-color:var(--lime);background:#2b3e3a}.response strong{display:block;font-size:13px;margin-bottom:5px}.response small{font-size:10px;color:var(--muted)}.counter-list{margin-top:16px}.counter-list .weapon{margin:6px 0;padding:9px}.estimate{border-top:1px solid var(--line);margin-top:17px;padding-top:14px;display:flex;justify-content:space-between;gap:15px;font-size:12px}.modal-footer{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:19px}.modal-footer .muted{font-size:11px}.battle-stage{position:relative;background:radial-gradient(ellipse at center,#294450,#101e29 75%);border:1px solid #3c5869;border-radius:6px;overflow:hidden}.battle-stage canvas{display:block;width:100%;aspect-ratio:2.2}.battle-caption{font-size:18px;font-weight:650;min-height:36px;text-align:center;padding-top:12px;color:var(--lime)}.battle-info{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:13px}.battle-info>div:last-child{text-align:right}.battle-info strong{font-size:13px}.battle-info small{font-size:10px;color:var(--muted);display:block}.battle-info .hp-track{height:7px}.options{display:flex;gap:8px;align-items:center}.options label{font-size:11px;color:var(--muted)}.options input{accent-color:var(--lime)}.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:12px;color:#b0c1ca}.help-grid strong{color:var(--text)}.start-layout{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.start-layout button{flex:1;padding:14px;min-width:180px}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#263e4d;color:#f3f6f4;border:1px solid #66889b;border-radius:6px;padding:10px 20px;z-index:20;pointer-events:none;opacity:0;transition:opacity .15s}.toast.show{opacity:1}kbd{background:#253742;padding:1px 4px;border:1px solid #42606f;border-radius:3px;font-size:10px}.win-title{font-size:34px;color:var(--lime);margin:10px 0}.win-note{color:var(--muted)}@media(min-width:1500px){.game-layout{grid-template-columns:220px minmax(480px,1fr) 325px}.center{padding:24px 26px 0}}@media(max-width:1100px){.game-layout{grid-template-columns:155px minmax(360px,1fr) 260px}.left{padding:15px 8px}.roster-unit img{width:36px;height:40px}.center{padding:16px 12px 0}.right{padding:16px 12px}.header-buttons .status-tag{display:none}}@media(max-width:850px){header{padding:0 14px;height:69px}h1{font-size:16px}.game-layout{grid-template-columns:minmax(300px,1fr) 250px}.left{grid-column:1/-1;display:flex;gap:10px;padding:8px 10px;overflow:auto;border-bottom:1px solid var(--line);border-right:0}.left .section-title,.left .side-title,.left-note{display:none}#allies,#enemies{display:flex;gap:6px}.roster-unit{margin:0;min-width:130px;padding:4px}.roster-unit .hp-track{min-width:65px}.map-wrap{margin-top:0}.log-lines{height:85px}.center{padding:12px 10px 0}.phase-row h2{font-size:15px}.phase-row p{font-size:10px}.phase-row button{font-size:11px}}@media(max-width:600px){.game-layout{display:flex;flex-direction:column}.right{border-left:0;border-top:1px solid var(--line)}.center{order:1}.left{order:0}.right{order:2}.header-buttons{gap:5px}.header-buttons button{padding:6px;font-size:11px}.logo{display:none}.eyebrow{font-size:8px}.map-wrap{aspect-ratio:12/10}.responses{grid-template-columns:1fr 1fr}.responses .response:first-child{grid-column:1/-1}.engagement{grid-template-columns:1fr 20px 1fr}.fighter{padding:9px}.fighter img{width:42px;height:42px}.fighter strong{font-size:12px}.fighter .summary{font-size:10px}.modal{padding:17px}.estimate{font-size:11px}.help-grid{grid-template-columns:1fr}.modal-footer{flex-wrap:wrap}.stats{grid-template-columns:repeat(4,1fr)}.weapon-list{display:grid;grid-template-columns:1fr 1fr;gap:7px}.weapon{margin:0}.unit-card-head{margin-bottom:8px}.left-note{display:none}.header-buttons button#newGame{display:none}}
-.net-form{border:1px solid var(--line);padding:17px;border-radius:6px;margin:18px 0}.net-form label{display:block;font-size:11px;color:var(--muted);margin-bottom:10px}.net-form input{display:block;width:100%;background:#0c1b25;color:var(--text);border:1px solid #496775;padding:10px;margin-top:5px;border-radius:4px}.net-buttons{display:flex;flex-wrap:wrap;gap:8px}#networkStatus{color:var(--lime);font-size:12px}#netBadge{overflow-wrap:anywhere;color:var(--lime)}
-</style></head><body>
-<header><div class="brand"><span class="logo">V</span><div><div class="eyebrow">BATTLE UNIVERSE / IP MULTIPLAYER</div><h1>V计划 · 0079 回合战术</h1></div></div><div class="header-buttons"><span class="status-tag" id="turnBadge">第1回合 · 蓝方</span><button id="netSettings">连接设置</button><button id="helpBtn">规则</button><button id="newGame">重新开始</button></div></header>
-<div class="game-layout"><aside class="left"><div class="section-title">TACTICAL SQUAD / 作战单位</div><div class="side-title"><span class="blue">蓝方小队</span><span id="blueCount" class="muted"></span></div><div id="allies"></div><div class="side-title"><span class="red">红方小队</span><span id="redCount" class="muted"></span></div><div id="enemies"></div><div class="left-note">双方各三台单位。<br>每台单位每回合可移动一次、攻击一次。反击消耗武器资源，不消耗自己的行动机会。<p>胜利条件：击破全部敌机。</p><span id="modeLabel"></span><p id="netBadge">未连接</p></div></aside>
-<main class="center"><div class="phase-row"><div><div class="eyebrow" id="phaseEyebrow">BLUE PHASE</div><h2 id="phaseTitle">蓝方行动阶段</h2><p id="hint">点击己方单位，选择蓝色格子移动。</p></div><button id="endTurn" class="primary">结束蓝方回合</button></div><div class="map-wrap" id="mapWrap"><canvas id="map" aria-label="12乘9格战术地图"></canvas><span class="map-label">SECTOR 07 / GROUND COMBAT</span><span class="hover-info" id="hoverInfo">曼哈顿格距 · 山岩与水域不可通过</span></div><div class="legend"><span><i style="background:#54b8dd"></i>可移动</span><span><i style="background:#c08f64"></i>武器范围</span><span><i style="background:#c76d68"></i>有效目标</span><span><i style="background:#42654a"></i>林地：移动2／掩护15%</span><span><i style="background:#7b807c"></i>废墟：移动2／掩护10%</span></div><div class="log"><h3>COMBAT LOG / 战斗记录</h3><div id="log" class="log-lines" aria-live="polite"></div></div></main>
-<aside class="right"><div class="section-title">UNIT COMMAND / 单位指令</div><div id="unitPanel"></div></aside></div>
-<div id="reaction" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="reactionTitle"><div class="modal"><div class="modal-top"><div><div class="eyebrow">DEFENDER RESPONSE</div><h2 id="reactionTitle">防守方选择应战方式</h2><p id="reactionSub"></p></div><button id="cancelAttack">返回选目标</button></div><div id="engagement" class="engagement"></div><div class="responses"><button class="response" id="responseCounter"><strong>反击</strong><small>承受攻击后，以可用武器回击。</small></button><button class="response" id="responseDefend"><strong>防御</strong><small>受到伤害减少50%，不反击。</small></button><button class="response" id="responseEvade"><strong>回避</strong><small>敌方命中率降低35个百分点，不反击。</small></button></div><div id="counterList" class="counter-list"></div><div id="estimate" class="estimate"></div><div class="modal-footer"><span class="muted">先攻方先结算；防守方被击破则无法反击。</span><button id="confirmResponse" class="primary">确认应战并开始战斗</button></div></div></div>
-<div id="battle" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="battleTitle"><div class="modal large"><div class="modal-top"><div><div class="eyebrow">BATTLE SEQUENCE</div><h2 id="battleTitle">交战</h2></div><div class="options"><label><input type="checkbox" id="quick">快速演出</label><button id="skipBattle">跳过演出</button></div></div><div class="battle-stage"><canvas id="battleCanvas" aria-label="战斗动画"></canvas></div><div class="battle-caption" id="battleCaption"></div><div class="battle-info" id="battleInfo"></div><div class="modal-footer"><span id="battleSummary" class="muted"></span><button id="continueBattle" class="primary" disabled>返回战术地图</button></div></div></div>
-<div id="help" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle"><div class="modal"><div class="modal-top"><div><div class="eyebrow">FIELD MANUAL</div><h2 id="helpTitle">作战说明</h2></div><button id="closeHelp">关闭</button></div><div class="help-grid"><div><strong>① 移动</strong><p>点击己方机体或左侧头像，点击蓝色格子移动。移动可在攻击／待机前撤销。不能穿过其他单位、山岩和水域。</p><strong>② 选择武器与目标</strong><p>右侧选择武器，再点红色高亮敌机，或点击目标列表。射程含最小距离；按横纵格数相加计算，不检测遮挡。</p><strong>③ 防守方应战</strong><p>选择反击、防御或回避。反击武器必须同时满足距离、EN、弹药条件。只有存活才能回击。</p></div><div><strong>回合规则</strong><p>每台单位可移动一次，然后攻击或待机。也可原地攻击。攻击后结束该单位行动；反击不消耗行动次数，但消耗武器资源。己方回合开始恢复15 EN，弹药不恢复。</p><strong>属性与掩护</strong><p>光束较少受装甲影响；实弹受到完整装甲减伤；格斗忽略地形的伤害减免。林地、废墟降低敌方命中率，并减免非格斗伤害。预估不含随机暴击，本版无暴击。</p><strong>原型范围</strong><p>三种机体的贴图和骨骼动画来自MOD。数值为SLG验证配置；没有照搬官方G世纪规则，尚未加入科技、成长与支援攻击。</p></div></div></div></div>
-<div id="start" class="overlay" role="dialog" aria-modal="true" aria-labelledby="startTitle"><div class="modal"><div class="eyebrow">V PROJECT / 3 VS 3 SKIRMISH</div><h2 id="startTitle" style="font-size:29px;margin:10px 0">0079 · IP联机对战</h2><p class="muted">高达、钢加农、钢坦克。移动、选武器、锁定目标，再由防守方选择应战。</p><div class="net-form"><label>服务器 IP : 端口<input id="serverAddress" placeholder="192.168.1.10:1313" autocomplete="off"></label><label>房间码<input id="roomCode" value="ROOM1" maxlength="20" autocomplete="off"></label><div class="net-buttons"><button id="createRoom" class="primary">创建房间 · 蓝方</button><button id="joinRoom">加入房间 · 红方</button><button id="resumeRoom">恢复连接</button><button id="leaveNetwork">断开连接</button></div><p id="networkStatus" role="status">房主创建房间，另一位玩家输入相同IP和房间码加入。</p><p class="muted" style="font-size:11px">双方连接后自动开始。刷新页面后点击“恢复连接”；暂时断网会自动重连。重连凭据保存在当前浏览器标签页中。</p></div><details><summary class="muted">离线模式</summary><div class="start-layout"><button id="startHotseat" class="primary">双人热座 · 双方手动应战</button><button id="startAI">单人试玩 · 对战AI</button></div></details><p class="muted" style="font-size:11px">联机由服务端统一裁定移动、命中和伤害。全部贴图已内置，无需额外下载素材。</p><p id="loading" class="blue">正在载入原始单位贴图…</p></div></div>
-<div id="victory" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="victoryTitle"><div class="modal"><div class="eyebrow">OPERATION COMPLETE</div><h2 id="victoryTitle" class="win-title"></h2><p id="victoryNote" class="win-note"></p><button id="playAgain" class="primary">重新部署</button></div></div><div class="toast" id="toast" role="status"></div>
-<script id="art" type="application/json">__DATA__</script><script>const ART=JSON.parse(document.getElementById('art').textContent);__CORE__
-__RENDERER__
-__APP__</script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>0079 SLG · IP联机版</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0e161e;
+        --panel: #17232e;
+        --line: #2b3f4b;
+        --text: #e3edf0;
+        --muted: #94aab7;
+        --blue: #66d5ff;
+        --red: #ff8c7b;
+        --lime: #d8ed91;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font:
+          13px/1.5 system-ui,
+          "Microsoft YaHei",
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      button,
+      select,
+      input {
+        font: inherit;
+      }
+      button,
+      select {
+        background: #21333f;
+        color: var(--text);
+        border: 1px solid #3a5361;
+        border-radius: 5px;
+        padding: 8px 11px;
+      }
+      button {
+        cursor: pointer;
+      }
+      button:hover:not(:disabled) {
+        border-color: var(--blue);
+        background: #2d4757;
+      }
+      button:disabled {
+        opacity: 0.38;
+        cursor: not-allowed;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 2px solid var(--lime);
+        outline-offset: 3px;
+      }
+      .primary {
+        background: var(--lime);
+        border-color: var(--lime);
+        color: #24301c;
+      }
+      .primary:hover:not(:disabled) {
+        background: #ebf5c2;
+        color: #24301c;
+      }
+      .danger {
+        border-color: #ac685f;
+        color: #ffc1b6;
+      }
+      .blue {
+        color: var(--blue);
+      }
+      .red {
+        color: var(--red);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      header {
+        height: 74px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 25px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        gap: 13px;
+        align-items: center;
+      }
+      .logo {
+        font: italic bold 27px Georgia;
+        color: var(--lime);
+        border: 1px solid #74835d;
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+      }
+      .eyebrow {
+        font:
+          10px ui-monospace,
+          monospace;
+        letter-spacing: 2px;
+        color: var(--muted);
+      }
+      h1 {
+        font-size: 18px;
+        margin: 0;
+      }
+      h2 {
+        font-size: 19px;
+        margin: 0;
+      }
+      h3 {
+        font-size: 14px;
+        margin: 0 0 10px;
+      }
+      .header-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .status-tag {
+        border: 1px solid #496775;
+        padding: 6px 12px;
+        color: var(--blue);
+        border-radius: 4px;
+        font-weight: 650;
+      }
+      .game-layout {
+        display: grid;
+        grid-template-columns: 200px minmax(480px, 1fr) 300px;
+        max-width: 1720px;
+        margin: auto;
+        min-height: calc(100vh - 74px);
+      }
+      .left,
+      .right {
+        background: var(--panel);
+        padding: 20px 14px;
+      }
+      .left {
+        border-right: 1px solid var(--line);
+      }
+      .right {
+        border-left: 1px solid var(--line);
+      }
+      .section-title {
+        font:
+          10px ui-monospace,
+          monospace;
+        color: var(--muted);
+        letter-spacing: 1.5px;
+        margin-bottom: 14px;
+      }
+      .roster-unit {
+        display: flex;
+        width: 100%;
+        gap: 9px;
+        padding: 10px 6px;
+        text-align: left;
+        align-items: center;
+        margin: 8px 0;
+        background: transparent;
+      }
+      .roster-unit.selected {
+        border-color: var(--lime);
+        background: #2b3b3d;
+      }
+      .roster-unit.dead {
+        opacity: 0.3;
+      }
+      .roster-unit img {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        image-rendering: pixelated;
+      }
+      .roster-unit strong {
+        font-size: 12px;
+        display: block;
+      }
+      .roster-unit small {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .hp-track {
+        height: 4px;
+        background: #263c46;
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 4px 0;
+        min-width: 75px;
+      }
+      .hp-fill {
+        height: 100%;
+        background: var(--blue);
+      }
+      .hp-fill.red {
+        background: var(--red);
+      }
+      .side-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 14px;
+      }
+      .side-title:first-child {
+        margin-top: 0;
+      }
+      .side-title span {
+        font-size: 11px;
+      }
+      .left-note {
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .center {
+        min-width: 0;
+        padding: 20px 20px 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .phase-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        gap: 15px;
+      }
+      .phase-row p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .map-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 12/9;
+        background: #101c23;
+        border: 1px solid #3c5664;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .map-wrap canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+        touch-action: manipulation;
+      }
+      .map-label {
+        position: absolute;
+        left: 12px;
+        top: 9px;
+        pointer-events: none;
+        color: #91a9b5;
+        font:
+          9px ui-monospace,
+          monospace;
+        letter-spacing: 1px;
+      }
+      .hover-info {
+        position: absolute;
+        bottom: 8px;
+        left: 12px;
+        font-size: 10px;
+        pointer-events: none;
+        color: #c5d1d4;
+        background: #13212bdd;
+        padding: 4px 7px;
+        border-radius: 3px;
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        font-size: 10px;
+        color: var(--muted);
+        padding: 10px 0;
+      }
+      .legend i {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 1px;
+      }
+      .log {
+        padding: 11px 0;
+        margin-top: auto;
+        border-top: 1px solid var(--line);
+      }
+      .log h3 {
+        font-size: 10px;
+        letter-spacing: 1px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .log-lines {
+        height: 104px;
+        overflow: auto;
+        font-size: 11px;
+        line-height: 1.8;
+      }
+      .log-line {
+        color: #a9bdc7;
+      }
+      .log-line:first-child {
+        color: var(--text);
+      }
+      .unit-card-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .unit-card-head img {
+        width: 66px;
+        height: 66px;
+        object-fit: contain;
+        image-rendering: pixelated;
+      }
+      .unit-card-head strong {
+        font-size: 15px;
+      }
+      .unit-card-head small {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        font-size: 11px;
+        margin-bottom: 18px;
+      }
+      .stats > div {
+        background: #101c25;
+        border-radius: 4px;
+        padding: 7px 9px;
+      }
+      .stats span {
+        display: block;
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-bottom: 19px;
+      }
+      .actions button {
+        font-size: 11px;
+      }
+      .weapon {
+        display: block;
+        text-align: left;
+        width: 100%;
+        padding: 11px;
+        margin: 8px 0;
+        background: #15232e;
+      }
+      .weapon.active {
+        border-color: var(--lime);
+        background: #293c3e;
+      }
+      .weapon-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+      }
+      .weapon-name {
+        font-weight: 650;
+        font-size: 12px;
+      }
+      .type {
+        font-size: 9px;
+        padding: 2px 5px;
+        border: 1px solid #58717e;
+        border-radius: 3px;
+        white-space: nowrap;
+      }
+      .type.beam {
+        color: #ffb5e9;
+        border-color: #875a80;
+      }
+      .type.game-layout {
+        color: #e4ce98;
+        border-color: #80724e;
+      }
+      .type.melee {
+        color: #aae2ee;
+        border-color: #527c87;
+      }
+      .weapon-meta {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 5px;
+      }
+      .target-button {
+        width: 100%;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        margin: 7px 0;
+        font-size: 11px;
+        border-color: #916555;
+      }
+      .helper {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.8;
+        padding: 12px 0;
+      }
+      .empty {
+        padding: 15px 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .rule-box {
+        margin-top: 15px;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: #060d14cb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 10;
+        backdrop-filter: blur(5px);
+      }
+      .overlay[hidden] {
+        display: none;
+      }
+      .modal {
+        width: min(780px, 100%);
+        max-height: 92vh;
+        overflow: auto;
+        border: 1px solid #526c7b;
+        border-radius: 10px;
+        background: #152430;
+        padding: 25px;
+        box-shadow: 0 25px 100px #0009;
+      }
+      .modal.large {
+        width: min(1000px, 100%);
+      }
+      .modal-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .modal-top p {
+        color: var(--muted);
+        font-size: 12px;
+        margin: 4px 0;
+      }
+      .engagement {
+        display: grid;
+        grid-template-columns: 1fr 44px 1fr;
+        align-items: center;
+        margin: 15px 0 20px;
+      }
+      .fighter {
+        background: #0f1c27;
+        border: 1px solid var(--line);
+        padding: 13px;
+        border-radius: 6px;
+      }
+      .fighter img {
+        width: 58px;
+        height: 58px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        float: right;
+      }
+      .fighter small {
+        color: var(--muted);
+        display: block;
+      }
+      .fighter strong {
+        font-size: 15px;
+      }
+      .fighter .summary {
+        margin-top: 9px;
+        font-size: 11px;
+      }
+      .arrow {
+        text-align: center;
+        font-size: 24px;
+        color: var(--muted);
+      }
+      .responses {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        gap: 10px;
+      }
+      .response {
+        padding: 13px;
+        text-align: left;
+        background: #1c303c;
+        border: 1px solid #3a5666;
+        border-radius: 5px;
+      }
+      .response.active {
+        border-color: var(--lime);
+        background: #2b3e3a;
+      }
+      .response strong {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 5px;
+      }
+      .response small {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .counter-list {
+        margin-top: 16px;
+      }
+      .counter-list .weapon {
+        margin: 6px 0;
+        padding: 9px;
+      }
+      .estimate {
+        border-top: 1px solid var(--line);
+        margin-top: 17px;
+        padding-top: 14px;
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        font-size: 12px;
+      }
+      .modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 19px;
+      }
+      .modal-footer .muted {
+        font-size: 11px;
+      }
+      .battle-stage {
+        position: relative;
+        background: radial-gradient(ellipse at center, #294450, #101e29 75%);
+        border: 1px solid #3c5869;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .battle-stage canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 2.2;
+      }
+      .battle-caption {
+        font-size: 18px;
+        font-weight: 650;
+        min-height: 36px;
+        text-align: center;
+        padding-top: 12px;
+        color: var(--lime);
+      }
+      .battle-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 13px;
+      }
+      .battle-info > div:last-child {
+        text-align: right;
+      }
+      .battle-info strong {
+        font-size: 13px;
+      }
+      .battle-info small {
+        font-size: 10px;
+        color: var(--muted);
+        display: block;
+      }
+      .battle-info .hp-track {
+        height: 7px;
+      }
+      .options {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .options label {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .options input {
+        accent-color: var(--lime);
+      }
+      .help-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        font-size: 12px;
+        color: #b0c1ca;
+      }
+      .help-grid strong {
+        color: var(--text);
+      }
+      .start-layout {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 18px 0;
+      }
+      .start-layout button {
+        flex: 1;
+        padding: 14px;
+        min-width: 180px;
+      }
+      .toast {
+        position: fixed;
+        bottom: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #263e4d;
+        color: #f3f6f4;
+        border: 1px solid #66889b;
+        border-radius: 6px;
+        padding: 10px 20px;
+        z-index: 20;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+      .toast.show {
+        opacity: 1;
+      }
+      kbd {
+        background: #253742;
+        padding: 1px 4px;
+        border: 1px solid #42606f;
+        border-radius: 3px;
+        font-size: 10px;
+      }
+      .win-title {
+        font-size: 34px;
+        color: var(--lime);
+        margin: 10px 0;
+      }
+      .win-note {
+        color: var(--muted);
+      }
+      @media (min-width: 1500px) {
+        .game-layout {
+          grid-template-columns: 220px minmax(480px, 1fr) 325px;
+        }
+        .center {
+          padding: 24px 26px 0;
+        }
+      }
+      @media (max-width: 1100px) {
+        .game-layout {
+          grid-template-columns: 155px minmax(360px, 1fr) 260px;
+        }
+        .left {
+          padding: 15px 8px;
+        }
+        .roster-unit img {
+          width: 36px;
+          height: 40px;
+        }
+        .center {
+          padding: 16px 12px 0;
+        }
+        .right {
+          padding: 16px 12px;
+        }
+        .header-buttons .status-tag {
+          display: none;
+        }
+      }
+      @media (max-width: 850px) {
+        header {
+          padding: 0 14px;
+          height: 69px;
+        }
+        h1 {
+          font-size: 16px;
+        }
+        .game-layout {
+          grid-template-columns: minmax(300px, 1fr) 250px;
+        }
+        .left {
+          grid-column: 1/-1;
+          display: flex;
+          gap: 10px;
+          padding: 8px 10px;
+          overflow: auto;
+          border-bottom: 1px solid var(--line);
+          border-right: 0;
+        }
+        .left .section-title,
+        .left .side-title,
+        .left-note {
+          display: none;
+        }
+        #allies,
+        #enemies {
+          display: flex;
+          gap: 6px;
+        }
+        .roster-unit {
+          margin: 0;
+          min-width: 130px;
+          padding: 4px;
+        }
+        .roster-unit .hp-track {
+          min-width: 65px;
+        }
+        .map-wrap {
+          margin-top: 0;
+        }
+        .log-lines {
+          height: 85px;
+        }
+        .center {
+          padding: 12px 10px 0;
+        }
+        .phase-row h2 {
+          font-size: 15px;
+        }
+        .phase-row p {
+          font-size: 10px;
+        }
+        .phase-row button {
+          font-size: 11px;
+        }
+      }
+      @media (max-width: 600px) {
+        .game-layout {
+          display: flex;
+          flex-direction: column;
+        }
+        .right {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+        }
+        .center {
+          order: 1;
+        }
+        .left {
+          order: 0;
+        }
+        .right {
+          order: 2;
+        }
+        .header-buttons {
+          gap: 5px;
+        }
+        .header-buttons button {
+          padding: 6px;
+          font-size: 11px;
+        }
+        .logo {
+          display: none;
+        }
+        .eyebrow {
+          font-size: 8px;
+        }
+        .map-wrap {
+          aspect-ratio: 12/10;
+        }
+        .responses {
+          grid-template-columns: 1fr 1fr;
+        }
+        .responses .response:first-child {
+          grid-column: 1/-1;
+        }
+        .engagement {
+          grid-template-columns: 1fr 20px 1fr;
+        }
+        .fighter {
+          padding: 9px;
+        }
+        .fighter img {
+          width: 42px;
+          height: 42px;
+        }
+        .fighter strong {
+          font-size: 12px;
+        }
+        .fighter .summary {
+          font-size: 10px;
+        }
+        .modal {
+          padding: 17px;
+        }
+        .estimate {
+          font-size: 11px;
+        }
+        .help-grid {
+          grid-template-columns: 1fr;
+        }
+        .modal-footer {
+          flex-wrap: wrap;
+        }
+        .stats {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .weapon-list {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 7px;
+        }
+        .weapon {
+          margin: 0;
+        }
+        .unit-card-head {
+          margin-bottom: 8px;
+        }
+        .left-note {
+          display: none;
+        }
+        .header-buttons button#newGame {
+          display: none;
+        }
+      }
+      .net-form {
+        border: 1px solid var(--line);
+        padding: 17px;
+        border-radius: 6px;
+        margin: 18px 0;
+      }
+      .net-form label {
+        display: block;
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .net-form input {
+        display: block;
+        width: 100%;
+        background: #0c1b25;
+        color: var(--text);
+        border: 1px solid #496775;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 4px;
+      }
+      .net-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      #networkStatus {
+        color: var(--lime);
+        font-size: 12px;
+      }
+      #netBadge {
+        overflow-wrap: anywhere;
+        color: var(--lime);
+      }
+    </style>
+  </head>
+  <body>
+    <header data-ui-node="node-1">
+      <div data-ui-node="node-2" class="brand">
+        <span data-ui-node="node-3" class="logo">V</span>
+        <div data-ui-node="node-4">
+          <div data-ui-node="node-5" class="eyebrow">BATTLE UNIVERSE / IP MULTIPLAYER</div>
+          <h1 data-ui-node="node-6">V计划 · 0079 回合战术</h1>
+        </div>
+      </div>
+      <div data-ui-node="node-7" class="header-buttons">
+        <span data-ui-node="node-8" class="status-tag" id="turnBadge">第1回合 · 蓝方</span
+        ><button data-ui-node="node-9" id="netSettings">连接设置</button
+        ><button data-ui-node="node-10" id="helpBtn">规则</button
+        ><button data-ui-node="node-11" id="newGame">重新开始</button>
+      </div>
+    </header>
+    <div data-ui-node="node-12" class="game-layout">
+      <aside data-ui-node="node-13" class="left">
+        <div data-ui-node="node-14" class="section-title">TACTICAL SQUAD / 作战单位</div>
+        <div data-ui-node="node-15" class="side-title">
+          <span data-ui-node="node-16" class="blue">蓝方小队</span
+          ><span data-ui-node="node-17" id="blueCount" class="muted"></span>
+        </div>
+        <div data-ui-node="node-18" id="allies"></div>
+        <div data-ui-node="node-19" class="side-title">
+          <span data-ui-node="node-20" class="red">红方小队</span
+          ><span data-ui-node="node-21" id="redCount" class="muted"></span>
+        </div>
+        <div data-ui-node="node-22" id="enemies"></div>
+        <div data-ui-node="node-23" class="left-note">
+          双方各三台单位。<br
+            data-ui-node="node-24"
+          />每台单位每回合可移动一次、攻击一次。反击消耗武器资源，不消耗自己的行动机会。
+          <p data-ui-node="node-25">胜利条件：击破全部敌机。</p>
+          <span data-ui-node="node-26" id="modeLabel"></span>
+          <p data-ui-node="node-27" id="netBadge">未连接</p>
+        </div>
+      </aside>
+      <main data-ui-node="node-28" class="center">
+        <div data-ui-node="node-29" class="phase-row">
+          <div data-ui-node="node-30">
+            <div data-ui-node="node-31" class="eyebrow" id="phaseEyebrow">BLUE PHASE</div>
+            <h2 data-ui-node="node-32" id="phaseTitle">蓝方行动阶段</h2>
+            <p data-ui-node="node-33" id="hint">点击己方单位，选择蓝色格子移动。</p>
+          </div>
+          <button data-ui-node="node-34" id="endTurn" class="primary">结束蓝方回合</button>
+        </div>
+        <div data-ui-node="node-35" class="map-wrap" id="mapWrap">
+          <canvas data-ui-node="node-36" id="map" aria-label="12乘9格战术地图"></canvas
+          ><span data-ui-node="node-37" class="map-label">SECTOR 07 / GROUND COMBAT</span
+          ><span data-ui-node="node-38" class="hover-info" id="hoverInfo"
+            >曼哈顿格距 · 山岩与水域不可通过</span
+          >
+        </div>
+        <div data-ui-node="node-39" class="legend">
+          <span data-ui-node="node-40"
+            ><i data-ui-node="node-41" style="background: #54b8dd"></i>可移动</span
+          ><span data-ui-node="node-42"
+            ><i data-ui-node="node-43" style="background: #c08f64"></i>武器范围</span
+          ><span data-ui-node="node-44"
+            ><i data-ui-node="node-45" style="background: #c76d68"></i>有效目标</span
+          ><span data-ui-node="node-46"
+            ><i data-ui-node="node-47" style="background: #42654a"></i>林地：移动2／掩护15%</span
+          ><span data-ui-node="node-48"
+            ><i data-ui-node="node-49" style="background: #7b807c"></i>废墟：移动2／掩护10%</span
+          >
+        </div>
+        <div data-ui-node="node-50" class="log">
+          <h3 data-ui-node="node-51">COMBAT LOG / 战斗记录</h3>
+          <div data-ui-node="node-52" id="log" class="log-lines" aria-live="polite"></div>
+        </div>
+      </main>
+      <aside data-ui-node="node-53" class="right">
+        <div data-ui-node="node-54" class="section-title">UNIT COMMAND / 单位指令</div>
+        <div data-ui-node="node-55" id="unitPanel"></div>
+      </aside>
+    </div>
+    <div
+      data-ui-node="node-56"
+      id="reaction"
+      class="overlay"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="reactionTitle"
+    >
+      <div data-ui-node="node-57" class="modal">
+        <div data-ui-node="node-58" class="modal-top">
+          <div data-ui-node="node-59">
+            <div data-ui-node="node-60" class="eyebrow">DEFENDER RESPONSE</div>
+            <h2 data-ui-node="node-61" id="reactionTitle">防守方选择应战方式</h2>
+            <p data-ui-node="node-62" id="reactionSub"></p>
+          </div>
+          <button data-ui-node="node-63" id="cancelAttack">返回选目标</button>
+        </div>
+        <div data-ui-node="node-64" id="engagement" class="engagement"></div>
+        <div data-ui-node="node-65" class="responses">
+          <button data-ui-node="node-66" class="response" id="responseCounter">
+            <strong data-ui-node="node-67">反击</strong
+            ><small data-ui-node="node-68">承受攻击后，以可用武器回击。</small></button
+          ><button data-ui-node="node-69" class="response" id="responseDefend">
+            <strong data-ui-node="node-70">防御</strong
+            ><small data-ui-node="node-71">受到伤害减少50%，不反击。</small></button
+          ><button data-ui-node="node-72" class="response" id="responseEvade">
+            <strong data-ui-node="node-73">回避</strong
+            ><small data-ui-node="node-74">敌方命中率降低35个百分点，不反击。</small>
+          </button>
+        </div>
+        <div data-ui-node="node-75" id="counterList" class="counter-list"></div>
+        <div data-ui-node="node-76" id="estimate" class="estimate"></div>
+        <div data-ui-node="node-77" class="modal-footer">
+          <span data-ui-node="node-78" class="muted">先攻方先结算；防守方被击破则无法反击。</span
+          ><button data-ui-node="node-79" id="confirmResponse" class="primary">
+            确认应战并开始战斗
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      data-ui-node="node-80"
+      id="battle"
+      class="overlay"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="battleTitle"
+    >
+      <div data-ui-node="node-81" class="modal large">
+        <div data-ui-node="node-82" class="modal-top">
+          <div data-ui-node="node-83">
+            <div data-ui-node="node-84" class="eyebrow">BATTLE SEQUENCE</div>
+            <h2 data-ui-node="node-85" id="battleTitle">交战</h2>
+          </div>
+          <div data-ui-node="node-86" class="options">
+            <label data-ui-node="node-87"
+              ><input data-ui-node="node-88" type="checkbox" id="quick" />快速演出</label
+            ><button data-ui-node="node-89" id="skipBattle">跳过演出</button>
+          </div>
+        </div>
+        <div data-ui-node="node-90" class="battle-stage">
+          <canvas data-ui-node="node-91" id="battleCanvas" aria-label="战斗动画"></canvas>
+        </div>
+        <div data-ui-node="node-92" class="battle-caption" id="battleCaption"></div>
+        <div data-ui-node="node-93" class="battle-info" id="battleInfo"></div>
+        <div data-ui-node="node-94" class="modal-footer">
+          <span data-ui-node="node-95" id="battleSummary" class="muted"></span
+          ><button data-ui-node="node-96" id="continueBattle" class="primary" disabled>
+            返回战术地图
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      data-ui-node="node-97"
+      id="help"
+      class="overlay"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="helpTitle"
+    >
+      <div data-ui-node="node-98" class="modal">
+        <div data-ui-node="node-99" class="modal-top">
+          <div data-ui-node="node-100">
+            <div data-ui-node="node-101" class="eyebrow">FIELD MANUAL</div>
+            <h2 data-ui-node="node-102" id="helpTitle">作战说明</h2>
+          </div>
+          <button data-ui-node="node-103" id="closeHelp">关闭</button>
+        </div>
+        <div data-ui-node="node-104" class="help-grid">
+          <div data-ui-node="node-105">
+            <strong data-ui-node="node-106">① 移动</strong>
+            <p data-ui-node="node-107">
+              点击己方机体或左侧头像，点击蓝色格子移动。移动可在攻击／待机前撤销。不能穿过其他单位、山岩和水域。
+            </p>
+            <strong data-ui-node="node-108">② 选择武器与目标</strong>
+            <p data-ui-node="node-109">
+              右侧选择武器，再点红色高亮敌机，或点击目标列表。射程含最小距离；按横纵格数相加计算，不检测遮挡。
+            </p>
+            <strong data-ui-node="node-110">③ 防守方应战</strong>
+            <p data-ui-node="node-111">
+              选择反击、防御或回避。反击武器必须同时满足距离、EN、弹药条件。只有存活才能回击。
+            </p>
+          </div>
+          <div data-ui-node="node-112">
+            <strong data-ui-node="node-113">回合规则</strong>
+            <p data-ui-node="node-114">
+              每台单位可移动一次，然后攻击或待机。也可原地攻击。攻击后结束该单位行动；反击不消耗行动次数，但消耗武器资源。己方回合开始恢复15
+              EN，弹药不恢复。
+            </p>
+            <strong data-ui-node="node-115">属性与掩护</strong>
+            <p data-ui-node="node-116">
+              光束较少受装甲影响；实弹受到完整装甲减伤；格斗忽略地形的伤害减免。林地、废墟降低敌方命中率，并减免非格斗伤害。预估不含随机暴击，本版无暴击。
+            </p>
+            <strong data-ui-node="node-117">原型范围</strong>
+            <p data-ui-node="node-118">
+              三种机体的贴图和骨骼动画来自MOD。数值为SLG验证配置；没有照搬官方G世纪规则，尚未加入科技、成长与支援攻击。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      data-ui-node="node-119"
+      id="start"
+      class="overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="startTitle"
+    >
+      <div data-ui-node="node-120" class="modal">
+        <div data-ui-node="node-121" class="eyebrow">V PROJECT / 3 VS 3 SKIRMISH</div>
+        <h2 data-ui-node="node-122" id="startTitle" style="font-size: 29px; margin: 10px 0">
+          0079 · IP联机对战
+        </h2>
+        <p data-ui-node="node-123" class="muted">
+          高达、钢加农、钢坦克。移动、选武器、锁定目标，再由防守方选择应战。
+        </p>
+        <div data-ui-node="node-124" class="net-form">
+          <label data-ui-node="node-125"
+            >服务器 IP : 端口<input
+              data-ui-node="node-126"
+              id="serverAddress"
+              placeholder="192.168.1.10:1313"
+              autocomplete="off" /></label
+          ><label data-ui-node="node-127"
+            >房间码<input
+              data-ui-node="node-128"
+              id="roomCode"
+              value="ROOM1"
+              maxlength="20"
+              autocomplete="off"
+          /></label>
+          <div data-ui-node="node-129" class="net-buttons">
+            <button data-ui-node="node-130" id="createRoom" class="primary">创建房间 · 蓝方</button
+            ><button data-ui-node="node-131" id="joinRoom">加入房间 · 红方</button
+            ><button data-ui-node="node-132" id="resumeRoom">恢复连接</button
+            ><button data-ui-node="node-133" id="leaveNetwork">断开连接</button>
+          </div>
+          <p data-ui-node="node-134" id="networkStatus" role="status">
+            房主创建房间，另一位玩家输入相同IP和房间码加入。
+          </p>
+          <p data-ui-node="node-135" class="muted" style="font-size: 11px">
+            双方连接后自动开始。刷新页面后点击“恢复连接”；暂时断网会自动重连。重连凭据保存在当前浏览器标签页中。
+          </p>
+        </div>
+        <details data-ui-node="node-136">
+          <summary data-ui-node="node-137" class="muted">离线模式</summary>
+          <div data-ui-node="node-138" class="start-layout">
+            <button data-ui-node="node-139" id="startHotseat" class="primary">
+              双人热座 · 双方手动应战</button
+            ><button data-ui-node="node-140" id="startAI">单人试玩 · 对战AI</button>
+          </div>
+        </details>
+        <p data-ui-node="node-141" class="muted" style="font-size: 11px">
+          联机由服务端统一裁定移动、命中和伤害。全部贴图已内置，无需额外下载素材。
+        </p>
+        <p data-ui-node="node-142" id="loading" class="blue">正在载入原始单位贴图…</p>
+      </div>
+    </div>
+    <div
+      data-ui-node="node-143"
+      id="victory"
+      class="overlay"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="victoryTitle"
+    >
+      <div data-ui-node="node-144" class="modal">
+        <div data-ui-node="node-145" class="eyebrow">OPERATION COMPLETE</div>
+        <h2 data-ui-node="node-146" id="victoryTitle" class="win-title"></h2>
+        <p data-ui-node="node-147" id="victoryNote" class="win-note"></p>
+        <button data-ui-node="node-148" id="playAgain" class="primary">重新部署</button>
+      </div>
+    </div>
+    <div data-ui-node="node-149" class="toast" id="toast" role="status"></div>
+    <script id="art" type="application/json">
+      __DATA__
+    </script>
+    <script>
+      const ART = JSON.parse(document.getElementById("art").textContent);
+      __CORE__;
+      __RENDERER__;
+      __BATTLE_SCENE__;
+      __APP__;
+      __NETWORK__;
+    </script>
+  </body>
+</html>

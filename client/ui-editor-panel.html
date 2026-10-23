@@ -1,0 +1,110 @@
+<!-- 开发者工具栏，不会进入发布版游戏。 -->
+<h2>全画面 UI / 演出编辑</h2>
+<p>点击元素后拖动，右下角拉伸。Shift+U 开关。画面来自独立预览。</p>
+<button id="uie-close">退出编辑</button>
+<label
+  >画面<select id="uie-scene">
+    <option value="start">连接／开始</option>
+    <option value="map">战术地图</option>
+    <option value="reaction">防守应战</option>
+    <option value="battle">战斗演出</option>
+    <option value="help">作战说明</option>
+    <option value="victory">胜利</option>
+  </select></label
+>
+<label
+  >预览尺寸<select id="uie-size">
+    <option value="1440,900">桌面 1440 × 900</option>
+    <option value="1920,1080">桌面 1920 × 1080</option>
+    <option value="1100,800">平板 1100 × 800</option>
+    <option value="850,900">平板 850 × 900</option>
+    <option value="600,900">手机边界 600 × 900</option>
+    <option value="390,844">手机 390 × 844</option>
+  </select></label
+>
+<div class="uie-grid">
+  <label>宽度<input id="uie-view-width" type="number" min="320" max="2560" value="1440" /></label
+  ><label>高度<input id="uie-view-height" type="number" min="320" max="1600" value="900" /></label>
+</div>
+<p id="uie-viewport"></p>
+<details open>
+  <summary>预览内容与战斗播放</summary>
+  <div class="uie-grid">
+    <label>左方机体<select id="uie-left"></select></label
+    ><label>右方机体<select id="uie-right"></select></label>
+  </div>
+  <label>左方武器<select id="uie-weapon"></select></label>
+  <div class="uie-grid">
+    <label
+      >应战<select id="uie-response">
+        <option value="counter">反击</option>
+        <option value="defend">防御</option>
+        <option value="evade">回避</option>
+      </select></label
+    ><label
+      >结果<select id="uie-result">
+        <option value="hit">命中</option>
+        <option value="miss">未命中</option>
+        <option value="kill">击破</option>
+      </select></label
+    >
+  </div>
+  <label
+    >单位指令状态<select id="uie-unit-state">
+      <option value="targets">选择武器与目标</option>
+      <option value="selected">选中单位</option>
+      <option value="empty">未选中</option>
+      <option value="acted">已行动</option>
+      <option value="dead">敌方被击破</option>
+    </select></label
+  >
+  <label
+    >连接状态<select id="uie-connection">
+      <option value="normal">连接表单</option>
+      <option value="waiting">等待玩家</option>
+      <option value="disconnected">断线重连</option>
+    </select></label
+  >
+  <label
+    >演出进度<input id="uie-progress" type="range" min="0" max="1" step="0.001" value="0.35"
+  /></label>
+  <div class="uie-buttons">
+    <button id="uie-play">播放</button><button id="uie-replay">从头播放</button
+    ><button id="uie-left-actor">选左机体</button><button id="uie-right-actor">选右机体</button>
+  </div>
+</details>
+<details open>
+  <summary>元素树与属性</summary>
+  <label>查找元素<input id="uie-search" placeholder="名称、ID 或选择器" /></label>
+  <label><input id="uie-all" type="checkbox" /> 包含其他画面与暂未显示的元素</label>
+  <select id="uie-target" size="8" aria-label="元素树"></select>
+  <div class="uie-buttons">
+    <button id="uie-parent">选择父容器</button><button id="uie-reset">重置选中元素</button>
+  </div>
+  <p id="uie-selected-note"></p>
+  <label id="uie-anchor-label">定位方式<select id="uie-anchor"></select></label>
+  <label id="uie-hidden-label"
+    ><input id="uie-hidden" type="checkbox" /> 隐藏元素（保留占位）</label
+  >
+  <div class="uie-grid" id="uie-fields"></div>
+  <div class="uie-buttons"><button id="uie-clear-color">清除颜色覆盖</button></div>
+</details>
+<details>
+  <summary>战斗与地图画布参数</summary>
+  <p>位置采用 0～1 的画框比例；倍率 1 为原尺寸。机体可直接点选、拖动和拉伸。</p>
+  <div class="uie-grid" id="uie-battle-fields"></div>
+</details>
+<div class="uie-buttons">
+  <button id="uie-undo">撤销</button><button id="uie-redo">重做</button
+  ><button id="uie-reset-profile">重置当前尺寸组</button>
+</div>
+<div class="uie-buttons">
+  <button id="uie-import">导入布局JSON</button><button id="uie-export">导出布局JSON</button
+  ><button id="uie-publish" class="primary">导出发布HTML</button>
+</div>
+<p>
+  自动保存仅在本浏览器。导出 JSON 放回 client/ui-layout.json，执行 npm run build
+  才会更新工程发布版。
+</p>
+<p id="uie-status" role="status"></p>
+<input id="uie-file" type="file" accept=".json,application/json" hidden />

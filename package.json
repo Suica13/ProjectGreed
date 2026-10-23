@@ -10,9 +10,16 @@
     "start": "node server.js",
     "dev": "node server.js --port 4173",
     "build": "node build.cjs",
-    "test": "node --test tests/*.test.cjs"
+    "test": "node --test tests/*.test.cjs",
+    "test:ui": "playwright test",
+    "format": "prettier --write client/*.js client/*.html client/*.css shared/*.js server.js build.cjs playwright.config.cjs tests/*.cjs",
+    "format:check": "prettier --check client/*.js client/*.html client/*.css shared/*.js server.js build.cjs playwright.config.cjs tests/*.cjs"
   },
   "dependencies": {
     "ws": "8.22.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "prettier": "3.9.10"
   }
 }

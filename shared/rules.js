@@ -1,32 +1,453 @@
-'use strict';
-const Tactics=(()=>{
- const W=12,H=9;
- const models={
- RX_78_2:{name:'高达',code:'RX-78-2',hp:12000,en:100,move:5,armor:.92,weapons:[{id:'br',name:'光束步枪',type:'beam',min:2,max:5,damage:2600,hit:92,en:16,clip:'Common_Shoot_A',eq:0,hold:0},{id:'bs',name:'光束军刀',type:'melee',min:1,max:1,damage:3200,hit:96,en:8,clip:'Common_Melee_A_Fast',eq:0,hold:1},{id:'bz',name:'超级火箭筒',type:'shell',min:3,max:6,damage:3000,hit:84,ammo:4,clip:'Common_Shoot_A',eq:1,hold:0},{id:'vulcan',name:'头部火神炮',type:'shell',min:1,max:2,damage:900,hit:98,en:3,clip:'Common_Shoot_A',eq:0,hold:0}]},
- RX_77_2:{name:'钢加农',code:'RX-77-2',hp:11500,en:100,move:4,armor:.88,weapons:[{id:'br',name:'光束步枪',type:'beam',min:2,max:5,damage:2400,hit:90,en:16,clip:'Common_Shoot_Two_Handed_A',eq:0,hold:0},{id:'cannon',name:'双联240mm加农炮',type:'shell',min:3,max:7,damage:2900,hit:86,ammo:8,clip:'Common_Cannon_Shoot_A',eq:0,hold:0},{id:'missile',name:'肩部导弹发射器',type:'shell',min:3,max:6,damage:2300,hit:92,ammo:8,clip:'Common_Cannon_Shoot_A',eq:1,hold:0},{id:'strike',name:'近身打击',type:'melee',min:1,max:1,damage:1700,hit:92,en:6,clip:'Common_Melee_B',eq:0,hold:1}]},
- RX_75:{name:'钢坦克',code:'RX-75',hp:13000,en:100,move:3,armor:.84,weapons:[{id:'cannon',name:'双联120mm低后坐力炮',type:'shell',min:4,max:8,damage:3400,hit:82,ammo:8,clip:'Common_Cannon_Shoot_A',eq:0,hold:0},{id:'missile',name:'双臂四联导弹发射器',type:'shell',min:2,max:4,damage:1900,hit:92,ammo:12,clip:'Common_StandShoot_A',eq:0,hold:0}]}
- };
- const terrain={plain:{name:'平地',cost:1,cover:0,color:'#243b3d'},forest:{name:'林地',cost:2,cover:15,color:'#294738'},rubble:{name:'废墟',cost:2,cover:10,color:'#43494a'},rock:{name:'山岩',cost:Infinity,cover:0,color:'#596064'},water:{name:'水域',cost:Infinity,cover:0,color:'#234c61'}};
- const key=(x,y)=>x+','+y,dist=(a,b)=>Math.abs(a.x-b.x)+Math.abs(a.y-b.y),typeNames={beam:'光束',shell:'实弹',melee:'格斗'};
- function create(ai=false,seed=7319){let tiles=Array.from({length:H},()=>Array(W).fill('plain'));for(const [x,y]of [[3,1],[3,2],[3,6],[3,7],[8,1],[8,2],[8,6],[8,7]])tiles[y][x]='forest';for(const [x,y]of [[5,2],[6,2],[5,6],[6,6]])tiles[y][x]='rock';for(const [x,y]of [[5,4],[6,4],[4,4],[7,4]])tiles[y][x]='rubble';for(const [x,y]of [[5,0],[6,0],[5,8],[6,8]])tiles[y][x]='water';let units=[];for(let team=0;team<2;team++)['RX_78_2','RX_77_2','RX_75'].forEach((model,i)=>{let m=models[model];units.push({id:team+'-'+i,model,team,x:team?10:1,y:1+i*3,hp:m.hp,en:m.en,ammo:Object.fromEntries(m.weapons.filter(w=>w.ammo).map(w=>[w.id,w.ammo])),moved:false,acted:false,origin:null,angle:team?-90:90,eq:0,hold:0});});return {tiles,units,team:0,round:1,ai,seed:seed>>>0,winner:null};}
- function at(g,x,y){return g.units.find(u=>u.hp>0&&u.x===x&&u.y===y);}
- function reachable(g,u){let best=new Map([[key(u.x,u.y),{x:u.x,y:u.y,cost:0,path:[]}]]),queue=[best.get(key(u.x,u.y))];while(queue.length){queue.sort((a,b)=>a.cost-b.cost);let n=queue.shift();if(n.cost!==best.get(key(n.x,n.y)).cost)continue;for(const [dx,dy]of [[1,0],[-1,0],[0,1],[0,-1]]){let x=n.x+dx,y=n.y+dy;if(x<0||x>=W||y<0||y>=H)continue;let occupant=at(g,x,y);if(occupant&&occupant.id!==u.id)continue;let cost=n.cost+terrain[g.tiles[y][x]].cost;if(cost>models[u.model].move)continue;let k=key(x,y);if(best.has(k)&&best.get(k).cost<=cost)continue;let entry={x,y,cost,path:[...n.path,{x,y}]};best.set(k,entry);queue.push(entry);}}return best;}
- function move(g,u,x,y){if(g.winner!==null||u.team!==g.team||u.acted||u.moved)throw Error('本单位无法移动');let tile=reachable(g,u).get(key(x,y));if(!tile||!tile.path.length)throw Error('该位置不可移动');u.origin={x:u.x,y:u.y};u.x=x;u.y=y;u.moved=true;return tile.path;}
- function undo(g,u){if(u.acted||!u.origin)throw Error('无法撤销');Object.assign(u,u.origin);u.origin=null;u.moved=false;}
- function canUse(u,w){return u.hp>0&&u.en>=(w.en||0)&&(!w.ammo||u.ammo[w.id]>0);}
- function inRange(a,b,w){let d=dist(a,b);return d>=w.min&&d<=w.max;}
- function canAttack(g,a,b,w){return !!a&&!!b&&a.hp>0&&b.hp>0&&a.team!==b.team&&canUse(a,w)&&inRange(a,b,w);}
- function estimate(g,a,b,w,response='counter'){let cover=terrain[g.tiles[b.y][b.x]].cover,hit=Math.max(10,Math.min(100,w.hit-cover-(response==='evade'?35:0)));let mitigation=models[b.model].armor;if(w.type==='beam')mitigation=(1+mitigation)/2;let damage=Math.round(w.damage*mitigation*(w.type==='melee'?1:1-cover/100)*(response==='defend'?.5:1));return {hit,damage};}
- function spend(u,w){if(w.en)u.en-=w.en;if(w.ammo)u.ammo[w.id]--;u.eq=w.eq;u.hold=w.hold;}
- function random(g){g.seed=(Math.imul(1664525,g.seed)+1013904223)>>>0;return g.seed/4294967296;}
- function fight(g,a,b,w,response,counterId){if(g.winner!==null||a.team!==g.team||a.acted||!canAttack(g,a,b,w))throw Error('攻击条件已失效');if(!['counter','defend','evade'].includes(response))throw Error('未知应战方式');let cw=models[b.model].weapons.find(x=>x.id===counterId);if(response==='counter'&&(!cw||!canAttack(g,b,a,cw)))throw Error('反击武器不满足射程或资源要求');let events=[];
-  function fire(from,to,weapon,stance){spend(from,weapon);let e=estimate(g,from,to,weapon,stance),hit=random(g)<e.hit/100,before=to.hp;let dealt=hit?Math.min(to.hp,e.damage):0;to.hp-=dealt;events.push({from:from.id,to:to.id,weapon:weapon.id,model:from.model,type:weapon.type,clip:weapon.clip,eq:weapon.eq,hold:weapon.hold,hit,damage:dealt,before,after:to.hp,hitChance:e.hit,response:stance});}
-  fire(a,b,w,response);if(response==='counter'&&b.hp>0&&canAttack(g,b,a,cw))fire(b,a,cw,'counter');a.acted=true;a.origin=null;let alive=[0,1].map(t=>g.units.some(u=>u.team===t&&u.hp>0));if(!alive[0]||!alive[1])g.winner=alive[0]?0:1;return events;
- }
- function wait(g,u){if(g.winner!==null||u.team!==g.team||u.acted)throw Error('无法待机');u.acted=true;u.origin=null;}
- function end(g){if(g.winner!==null)throw Error('战斗已经结束');g.team=1-g.team;if(!g.team)g.round++;for(const u of g.units.filter(u=>u.team===g.team&&u.hp>0)){u.acted=false;u.moved=false;u.origin=null;u.en=Math.min(models[u.model].en,u.en+15);}}
- function bestResponse(g,a,b,w){let attack=estimate(g,a,b,w),counter=models[b.model].weapons.filter(c=>canAttack(g,b,a,c)).sort((x,y)=>{let ex=estimate(g,b,a,x),ey=estimate(g,b,a,y);return ey.damage*ey.hit-ex.damage*ex.hit;})[0];if(b.hp<=attack.damage&&b.hp>attack.damage/2)return {response:'defend'};return counter?{response:'counter',weapon:counter.id}:{response:'evade'};}
- function aiChoice(g,u){let cells=u.moved?[{x:u.x,y:u.y,cost:0,path:[]}]:[...reachable(g,u).values()],enemies=g.units.filter(e=>e.team!==u.team&&e.hp>0),best=null;for(const c of cells){let virtual={...u,x:c.x,y:c.y},near=Math.min(...enemies.map(e=>dist(virtual,e)));let score=-near*.12-c.cost*.025+terrain[g.tiles[c.y][c.x]].cover*.006,target=null,weapon=null;for(const e of enemies)for(const w of models[u.model].weapons)if(canAttack(g,virtual,e,w)){let ex=estimate(g,virtual,e,w),s=2+ex.damage*ex.hit/100000+Math.min(1,ex.damage/e.hp)*.6-c.cost*.025;if(s>score){score=s;target=e.id;weapon=w.id;}}if(!best||score>best.score)best={...c,score,target,weapon};}return best;}
- return {W,H,models,terrain,typeNames,key,dist,create,at,reachable,move,undo,canUse,inRange,canAttack,estimate,fight,wait,end,bestResponse,aiChoice};
+/* 服务端与离线试玩共用的规则，不在这里调整 UI 尺寸或特效。
+ * g = 对局，u = 单位，a/b = 攻防双方，w = 武器。
+ */
+"use strict";
+const Tactics = (() => {
+  const W = 12,
+    H = 9;
+  // 机体数值配置。视觉大小另存于 client/ui-layout.json，不影响战斗属性。
+  const models = {
+    RX_78_2: {
+      name: "高达",
+      code: "RX-78-2",
+      hp: 12000,
+      en: 100,
+      move: 5,
+      armor: 0.92,
+      weapons: [
+        {
+          id: "br",
+          name: "光束步枪",
+          type: "beam",
+          min: 2,
+          max: 5,
+          damage: 2600,
+          hit: 92,
+          en: 16,
+          clip: "Common_Shoot_A",
+          eq: 0,
+          hold: 0,
+        },
+        {
+          id: "bs",
+          name: "光束军刀",
+          type: "melee",
+          min: 1,
+          max: 1,
+          damage: 3200,
+          hit: 96,
+          en: 8,
+          clip: "Common_Melee_A_Fast",
+          eq: 0,
+          hold: 1,
+        },
+        {
+          id: "bz",
+          name: "超级火箭筒",
+          type: "shell",
+          min: 3,
+          max: 6,
+          damage: 3000,
+          hit: 84,
+          ammo: 4,
+          clip: "Common_Shoot_A",
+          eq: 1,
+          hold: 0,
+        },
+        {
+          id: "vulcan",
+          name: "头部火神炮",
+          type: "shell",
+          min: 1,
+          max: 2,
+          damage: 900,
+          hit: 98,
+          en: 3,
+          clip: "Common_Shoot_A",
+          eq: 0,
+          hold: 0,
+        },
+      ],
+    },
+    RX_77_2: {
+      name: "钢加农",
+      code: "RX-77-2",
+      hp: 11500,
+      en: 100,
+      move: 4,
+      armor: 0.88,
+      weapons: [
+        {
+          id: "br",
+          name: "光束步枪",
+          type: "beam",
+          min: 2,
+          max: 5,
+          damage: 2400,
+          hit: 90,
+          en: 16,
+          clip: "Common_Shoot_Two_Handed_A",
+          eq: 0,
+          hold: 0,
+        },
+        {
+          id: "cannon",
+          name: "双联240mm加农炮",
+          type: "shell",
+          min: 3,
+          max: 7,
+          damage: 2900,
+          hit: 86,
+          ammo: 8,
+          clip: "Common_Cannon_Shoot_A",
+          eq: 0,
+          hold: 0,
+        },
+        {
+          id: "missile",
+          name: "肩部导弹发射器",
+          type: "shell",
+          min: 3,
+          max: 6,
+          damage: 2300,
+          hit: 92,
+          ammo: 8,
+          clip: "Common_Cannon_Shoot_A",
+          eq: 1,
+          hold: 0,
+        },
+        {
+          id: "strike",
+          name: "近身打击",
+          type: "melee",
+          min: 1,
+          max: 1,
+          damage: 1700,
+          hit: 92,
+          en: 6,
+          clip: "Common_Melee_B",
+          eq: 0,
+          hold: 1,
+        },
+      ],
+    },
+    RX_75: {
+      name: "钢坦克",
+      code: "RX-75",
+      hp: 13000,
+      en: 100,
+      move: 3,
+      armor: 0.84,
+      weapons: [
+        {
+          id: "cannon",
+          name: "双联120mm低后坐力炮",
+          type: "shell",
+          min: 4,
+          max: 8,
+          damage: 3400,
+          hit: 82,
+          ammo: 8,
+          clip: "Common_Cannon_Shoot_A",
+          eq: 0,
+          hold: 0,
+        },
+        {
+          id: "missile",
+          name: "双臂四联导弹发射器",
+          type: "shell",
+          min: 2,
+          max: 4,
+          damage: 1900,
+          hit: 92,
+          ammo: 12,
+          clip: "Common_StandShoot_A",
+          eq: 0,
+          hold: 0,
+        },
+      ],
+    },
+  };
+  const terrain = {
+    plain: { name: "平地", cost: 1, cover: 0, color: "#243b3d" },
+    forest: { name: "林地", cost: 2, cover: 15, color: "#294738" },
+    rubble: { name: "废墟", cost: 2, cover: 10, color: "#43494a" },
+    rock: { name: "山岩", cost: Infinity, cover: 0, color: "#596064" },
+    water: { name: "水域", cost: Infinity, cover: 0, color: "#234c61" },
+  };
+  const key = (x, y) => x + "," + y,
+    dist = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y),
+    typeNames = { beam: "光束", shell: "实弹", melee: "格斗" };
+  function create(ai = false, seed = 7319) {
+    let tiles = Array.from({ length: H }, () => Array(W).fill("plain"));
+    for (const [x, y] of [
+      [3, 1],
+      [3, 2],
+      [3, 6],
+      [3, 7],
+      [8, 1],
+      [8, 2],
+      [8, 6],
+      [8, 7],
+    ])
+      tiles[y][x] = "forest";
+    for (const [x, y] of [
+      [5, 2],
+      [6, 2],
+      [5, 6],
+      [6, 6],
+    ])
+      tiles[y][x] = "rock";
+    for (const [x, y] of [
+      [5, 4],
+      [6, 4],
+      [4, 4],
+      [7, 4],
+    ])
+      tiles[y][x] = "rubble";
+    for (const [x, y] of [
+      [5, 0],
+      [6, 0],
+      [5, 8],
+      [6, 8],
+    ])
+      tiles[y][x] = "water";
+    let units = [];
+    for (let team = 0; team < 2; team++)
+      ["RX_78_2", "RX_77_2", "RX_75"].forEach((model, i) => {
+        let m = models[model];
+        units.push({
+          id: team + "-" + i,
+          model,
+          team,
+          x: team ? 10 : 1,
+          y: 1 + i * 3,
+          hp: m.hp,
+          en: m.en,
+          ammo: Object.fromEntries(m.weapons.filter((w) => w.ammo).map((w) => [w.id, w.ammo])),
+          moved: false,
+          acted: false,
+          origin: null,
+          angle: team ? -90 : 90,
+          eq: 0,
+          hold: 0,
+        });
+      });
+    return {
+      tiles,
+      units,
+      team: 0,
+      round: 1,
+      ai,
+      seed: seed >>> 0,
+      winner: null,
+    };
+  }
+  function at(g, x, y) {
+    return g.units.find((u) => u.hp > 0 && u.x === x && u.y === y);
+  }
+  // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
+  function reachable(g, u) {
+    let best = new Map([[key(u.x, u.y), { x: u.x, y: u.y, cost: 0, path: [] }]]),
+      queue = [best.get(key(u.x, u.y))];
+    while (queue.length) {
+      queue.sort((a, b) => a.cost - b.cost);
+      let n = queue.shift();
+      if (n.cost !== best.get(key(n.x, n.y)).cost) continue;
+      for (const [dx, dy] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ]) {
+        let x = n.x + dx,
+          y = n.y + dy;
+        if (x < 0 || x >= W || y < 0 || y >= H) continue;
+        let occupant = at(g, x, y);
+        if (occupant && occupant.id !== u.id) continue;
+        let cost = n.cost + terrain[g.tiles[y][x]].cost;
+        if (cost > models[u.model].move) continue;
+        let k = key(x, y);
+        if (best.has(k) && best.get(k).cost <= cost) continue;
+        let entry = { x, y, cost, path: [...n.path, { x, y }] };
+        best.set(k, entry);
+        queue.push(entry);
+      }
+    }
+    return best;
+  }
+  function move(g, u, x, y) {
+    if (g.winner !== null || u.team !== g.team || u.acted || u.moved) throw Error("本单位无法移动");
+    let tile = reachable(g, u).get(key(x, y));
+    if (!tile || !tile.path.length) throw Error("该位置不可移动");
+    u.origin = { x: u.x, y: u.y };
+    u.x = x;
+    u.y = y;
+    u.moved = true;
+    return tile.path;
+  }
+  function undo(g, u) {
+    if (u.acted || !u.origin) throw Error("无法撤销");
+    Object.assign(u, u.origin);
+    u.origin = null;
+    u.moved = false;
+  }
+  function canUse(u, w) {
+    return u.hp > 0 && u.en >= (w.en || 0) && (!w.ammo || u.ammo[w.id] > 0);
+  }
+  function inRange(a, b, w) {
+    let d = dist(a, b);
+    return d >= w.min && d <= w.max;
+  }
+  function canAttack(g, a, b, w) {
+    return (
+      !!a && !!b && a.hp > 0 && b.hp > 0 && a.team !== b.team && canUse(a, w) && inRange(a, b, w)
+    );
+  }
+  // 返回预估命中率和命中后的伤害，不修改对局。
+  function estimate(g, a, b, w, response = "counter") {
+    let cover = terrain[g.tiles[b.y][b.x]].cover,
+      hit = Math.max(10, Math.min(100, w.hit - cover - (response === "evade" ? 35 : 0)));
+    let mitigation = models[b.model].armor;
+    if (w.type === "beam") mitigation = (1 + mitigation) / 2;
+    let damage = Math.round(
+      w.damage *
+        mitigation *
+        (w.type === "melee" ? 1 : 1 - cover / 100) *
+        (response === "defend" ? 0.5 : 1),
+    );
+    return { hit, damage };
+  }
+  function spend(u, w) {
+    if (w.en) u.en -= w.en;
+    if (w.ammo) u.ammo[w.id]--;
+    u.eq = w.eq;
+    u.hold = w.hold;
+  }
+  function random(g) {
+    g.seed = (Math.imul(1664525, g.seed) + 1013904223) >>> 0;
+    return g.seed / 4294967296;
+  }
+  // 真正结算入口：校验 → 扣资源 → 随机命中 → 扣血 → 生成演出事件。
+  function fight(g, a, b, w, response, counterId) {
+    if (g.winner !== null || a.team !== g.team || a.acted || !canAttack(g, a, b, w))
+      throw Error("攻击条件已失效");
+    if (!["counter", "defend", "evade"].includes(response)) throw Error("未知应战方式");
+    let cw = models[b.model].weapons.find((x) => x.id === counterId);
+    if (response === "counter" && (!cw || !canAttack(g, b, a, cw)))
+      throw Error("反击武器不满足射程或资源要求");
+    let events = [];
+    function fire(from, to, weapon, stance) {
+      spend(from, weapon);
+      let e = estimate(g, from, to, weapon, stance),
+        hit = random(g) < e.hit / 100,
+        before = to.hp;
+      let dealt = hit ? Math.min(to.hp, e.damage) : 0;
+      to.hp -= dealt;
+      events.push({
+        from: from.id,
+        to: to.id,
+        weapon: weapon.id,
+        model: from.model,
+        type: weapon.type,
+        clip: weapon.clip,
+        eq: weapon.eq,
+        hold: weapon.hold,
+        hit,
+        damage: dealt,
+        before,
+        after: to.hp,
+        hitChance: e.hit,
+        response: stance,
+      });
+    }
+    fire(a, b, w, response);
+    if (response === "counter" && b.hp > 0 && canAttack(g, b, a, cw)) fire(b, a, cw, "counter");
+    a.acted = true;
+    a.origin = null;
+    let alive = [0, 1].map((t) => g.units.some((u) => u.team === t && u.hp > 0));
+    if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
+    return events;
+  }
+  function wait(g, u) {
+    if (g.winner !== null || u.team !== g.team || u.acted) throw Error("无法待机");
+    u.acted = true;
+    u.origin = null;
+  }
+  function end(g) {
+    if (g.winner !== null) throw Error("战斗已经结束");
+    g.team = 1 - g.team;
+    if (!g.team) g.round++;
+    for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0)) {
+      u.acted = false;
+      u.moved = false;
+      u.origin = null;
+      u.en = Math.min(models[u.model].en, u.en + 15);
+    }
+  }
+  function bestResponse(g, a, b, w) {
+    let attack = estimate(g, a, b, w),
+      counter = models[b.model].weapons
+        .filter((c) => canAttack(g, b, a, c))
+        .sort((x, y) => {
+          let ex = estimate(g, b, a, x),
+            ey = estimate(g, b, a, y);
+          return ey.damage * ey.hit - ex.damage * ex.hit;
+        })[0];
+    if (b.hp <= attack.damage && b.hp > attack.damage / 2) return { response: "defend" };
+    return counter ? { response: "counter", weapon: counter.id } : { response: "evade" };
+  }
+  function aiChoice(g, u) {
+    let cells = u.moved ? [{ x: u.x, y: u.y, cost: 0, path: [] }] : [...reachable(g, u).values()],
+      enemies = g.units.filter((e) => e.team !== u.team && e.hp > 0),
+      best = null;
+    for (const c of cells) {
+      let virtual = { ...u, x: c.x, y: c.y },
+        near = Math.min(...enemies.map((e) => dist(virtual, e)));
+      let score = -near * 0.12 - c.cost * 0.025 + terrain[g.tiles[c.y][c.x]].cover * 0.006,
+        target = null,
+        weapon = null;
+      for (const e of enemies)
+        for (const w of models[u.model].weapons)
+          if (canAttack(g, virtual, e, w)) {
+            let ex = estimate(g, virtual, e, w),
+              s =
+                2 +
+                (ex.damage * ex.hit) / 100000 +
+                Math.min(1, ex.damage / e.hp) * 0.6 -
+                c.cost * 0.025;
+            if (s > score) {
+              score = s;
+              target = e.id;
+              weapon = w.id;
+            }
+          }
+      if (!best || score > best.score) best = { ...c, score, target, weapon };
+    }
+    return best;
+  }
+  return {
+    W,
+    H,
+    models,
+    terrain,
+    typeNames,
+    key,
+    dist,
+    create,
+    at,
+    reachable,
+    move,
+    undo,
+    canUse,
+    inRange,
+    canAttack,
+    estimate,
+    fight,
+    wait,
+    end,
+    bestResponse,
+    aiChoice,
+  };
 })();
-if(typeof module!=='undefined')module.exports=Tactics;
+if (typeof module !== "undefined") module.exports = Tactics;

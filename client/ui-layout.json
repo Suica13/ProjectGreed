@@ -1,7 +1,16 @@
 {
   "version": 1,
   "profiles": {
-    "desktop": {},
+    "desktop": {
+      "$battle": {
+        "leftScale": 1,
+        "rightX": 0.75,
+        "rightY": 0.5,
+        "leftX": 0.25,
+        "leftY": 0.5,
+        "scale": 0.25
+      }
+    },
     "tablet": {},
     "mobile": {}
   }

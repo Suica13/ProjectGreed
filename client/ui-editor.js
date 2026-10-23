@@ -1,47 +1,694 @@
-/* Developer only: editor tools never enter release builds. */
-(()=>{
-'use strict';
-const U=window.UILayout,key='slg-ui-layout-dev-v1',$=id=>document.getElementById(id),target=id=>U.targets.find(t=>t.id===id);
-let active=false,selected='startModal',layout=U.get(),history=[],future=[],gesture=null,hiddenState=null;
-try{const saved=localStorage.getItem(key);if(saved){layout=U.validate(JSON.parse(saved));U.apply(layout);}}catch(e){console.warn(e.message);}
-const style=document.createElement('style');style.dataset.developerOnly='';style.textContent=`
-#ui-dev-launch{position:fixed;left:12px;bottom:12px;z-index:10001;background:#d8ed91;color:#17232e;border:1px solid #efffc5;box-shadow:0 3px 20px #0009;font-size:12px}
-#ui-editor-panel{position:fixed;top:12px;left:12px;width:292px;max-height:calc(100vh - 72px);overflow:auto;z-index:10002;background:#10202bf5;border:1px solid #71919e;border-radius:9px;padding:14px;box-shadow:0 10px 40px #000a;font:12px/1.5 system-ui;color:#e3edf0}
-#ui-editor-panel[hidden],#ui-selection[hidden]{display:none!important}#ui-editor-panel h2{font-size:16px;margin:0}#ui-editor-panel p{margin:7px 0;color:#9bb2bf;font-size:11px}#ui-editor-panel select,#ui-editor-panel input{min-width:0;width:100%;background:#172f3d;color:#e3edf0;border:1px solid #4e6a79;border-radius:4px;padding:6px;font:12px system-ui}#ui-editor-panel input[type=color]{height:32px;padding:2px}#ui-editor-panel input[hidden]{display:none}#ui-editor-panel label{display:block;font-size:11px;color:#a6bfcc;margin-top:8px}#ui-editor-panel button{font-size:11px;padding:6px 8px}#ui-editor-panel .uie-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}#ui-editor-panel .uie-buttons{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}#ui-editor-panel hr{border:0;border-top:1px solid #36505f;margin:12px 0}#uie-status{min-height:32px;color:#d8ed91!important;overflow-wrap:anywhere}
-#ui-selection{position:fixed;z-index:10000;border:2px solid #d8ed91;pointer-events:none;box-shadow:0 0 0 1px #14202b}#ui-selection-label{position:absolute;bottom:100%;left:-2px;background:#d8ed91;color:#14202b;white-space:nowrap;padding:2px 5px;font:11px system-ui}#ui-resize{position:absolute;width:16px;height:16px;right:-8px;bottom:-8px;background:#d8ed91;border:2px solid #14202b;pointer-events:auto;cursor:nwse-resize;touch-action:none}
-[data-uie-sample]{display:contents}body.ui-layout-editing [data-uie-hover]{outline:1px dashed #7fcfff;outline-offset:2px}body.ui-layout-editing{cursor:crosshair}body.ui-layout-editing #ui-editor-panel,body.ui-layout-editing #ui-dev-launch{cursor:auto}
-`;document.head.append(style);
-const launcher=document.createElement('button');launcher.id='ui-dev-launch';launcher.dataset.developerOnly='';launcher.textContent='开发者 · UI布局';document.body.append(launcher);
-const panel=document.createElement('section');panel.id='ui-editor-panel';panel.dataset.developerOnly='';panel.hidden=true;panel.setAttribute('aria-label','UI布局编辑器');panel.innerHTML=`
-<div style="display:flex;justify-content:space-between;align-items:center"><h2>UI 布局编辑器</h2><button id="uie-dock">移至右侧</button></div><p id="uie-viewport"></p><p>点选后拖动，右下角方块调尺寸。编辑期间拦截游戏点击。Shift+U 开关。</p>
-<label>预览窗口<select id="uie-scene"><option value="current">当前画面</option><option value="map">战术地图</option><option value="start">连接／开始</option><option value="reaction">防守应战</option><option value="battle">战斗演出</option><option value="help">作战说明</option><option value="victory">胜利</option></select></label>
-<label>选中元素<select id="uie-target"></select></label><label>定位方式<select id="uie-anchor"><option value="flow">跟随原布局（偏移）</option><option value="top-left">屏幕左上</option><option value="top-right">屏幕右上</option><option value="bottom-left">屏幕左下</option><option value="bottom-right">屏幕右下</option><option value="center">屏幕中心</option></select></label>
-<div class="uie-grid" id="uie-fields"></div><p>尺寸留空沿用响应式布局。X向右、Y向下；屏幕锚点以对应屏幕边缘为原点。</p><div class="uie-buttons"><button id="uie-clear-color">清除颜色覆盖</button><button id="uie-reset">重置选中元素</button></div><div class="uie-buttons"><button id="uie-undo">撤销</button><button id="uie-redo">重做</button><button id="uie-reset-profile">重置当前尺寸组</button></div><hr>
-<div class="uie-buttons"><button id="uie-import">导入布局JSON</button><button id="uie-export">导出布局JSON</button><button id="uie-publish" class="primary">导出发布版HTML</button></div><p>调整自动保存在本浏览器的开发者版。导出JSON后放回 client/ui-layout.json 再构建，或直接导出发布版HTML。</p><p id="uie-status" role="status"></p><input type="file" id="uie-file" accept=".json,application/json" hidden>`;document.body.append(panel);
-const frame=document.createElement('div');frame.id='ui-selection';frame.dataset.developerOnly='';frame.hidden=true;frame.innerHTML='<span id="ui-selection-label"></span><span id="ui-resize" title="拖动调整尺寸"></span>';document.body.append(frame);
-$('uie-target').innerHTML=U.targets.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-const names={x:'X 偏移',y:'Y 偏移',width:'宽度 px',height:'高度 px',fontSize:'字号 px',padding:'内边距 px',gap:'间距 px',opacity:'不透明度',color:'文字颜色',background:'背景颜色'};
-for(const [k,name]of Object.entries(names)){const label=document.createElement('label');label.textContent=name;const input=document.createElement('input');input.id='uie-'+k;input.type=['color','background'].includes(k)?'color':'number';if(U.fields[k]){input.min=U.fields[k][0];input.max=U.fields[k][1];input.step=k==='opacity'?'.05':'1';}label.append(input);$('uie-fields').append(label);input.addEventListener('change',()=>edit(p=>{if(input.value==='')delete p[k];else p[k]=input.type==='color'?input.value:Number(input.value);}));}
-const props=()=>layout.profiles[U.profile()][selected]||{},visible=()=>[...document.querySelectorAll(target(selected).selector)].find(e=>e.getClientRects().length&&e.getBoundingClientRect().width>0),status=s=>$('uie-status').textContent=s;
-function persist(){try{localStorage.setItem(key,JSON.stringify(layout));status('布局已在本浏览器自动保存。');}catch{status('浏览器未允许本地保存，请导出JSON。');}}
-function sync(){const profile=U.profile();$('uie-viewport').textContent=`${innerWidth} × ${innerHeight} · ${ {desktop:'桌面 >1100',tablet:'平板 601–1100',mobile:'手机 ≤600'}[profile]}`;$('uie-target').value=selected;const p=props(),el=visible(),computed=el?getComputedStyle(el):null;$('uie-anchor').value=p.anchor||'flow';for(const k of Object.keys(names)){const input=$('uie-'+k);if(input.type==='color'){let fallback='#ffffff',rgb=computed?.[k==='background'?'backgroundColor':'color'].match(/\d+/g);if(rgb?.length>=3)fallback='#'+rgb.slice(0,3).map(v=>Number(v).toString(16).padStart(2,'0')).join('');input.value=p[k]||fallback;}else{input.value=p[k]??'';input.placeholder=k==='x'||k==='y'?'0':'自动';}}$('uie-undo').disabled=!history.length;$('uie-redo').disabled=!future.length;}
-function apply(){U.apply(layout);sync();}
-function commit(before){if(JSON.stringify(before)===JSON.stringify(layout))return;history.push(before);if(history.length>80)history.shift();future=[];persist();sync();}
-function edit(fn){const before=structuredClone(layout),p=layout.profiles[U.profile()];p[selected]||={};fn(p[selected]);try{layout=U.validate(layout);apply();commit(before);}catch(e){layout=before;apply();status(e.message);}}
-function pick(el){for(let n=el;n&&n!==document.body;n=n.parentElement){const t=U.targets.find(t=>n.matches(t.selector));if(t)return {id:t.id,el:n};}return null;}
-function select(id){selected=id;sync();if(!visible())status('此元素未显示，请切换预览窗口。');}
-const isEditor=el=>el instanceof Element&&!!el.closest('[data-developer-only]');
-function samples(){const data={unitPanel:'<div class="unit-card-head"><strong>RX-78-2 高达 · 示例</strong></div><div class="stats"><div>HP 12000</div><div>EN 100</div></div><div class="actions"><button>移动</button><button>待机</button></div><button class="weapon"><div class="weapon-title"><span class="weapon-name">光束步枪</span><span class="type beam">光束</span></div><div class="weapon-meta">射程 2–5 · 攻击 3200 · EN 16</div></button><button class="target-button">RX-77-2 · 示例目标</button>',engagement:'<div class="fighter"><small>蓝方</small><strong>RX-78-2</strong><p>光束步枪</p></div><div class="arrow">→</div><div class="fighter"><small>红方</small><strong>RX-77-2</strong><p>HP 12000</p></div>',counterList:'<button class="weapon">240mm 加农炮 · 示例反击武器</button>',battleInfo:'<div><strong>RX-78-2 高达</strong><div class="hp-track"><div class="hp-fill" style="width:80%"></div></div></div><div><strong>RX-77-2 钢加农</strong><div class="hp-track"><div class="hp-fill red" style="width:65%"></div></div></div>',battleCaption:'光束步枪 · 布局预览',victoryTitle:'蓝方胜利 · 布局预览',victoryNote:'已击破全部敌机。'};for(const [id,html]of Object.entries(data)){const el=$(id);if(el&&(!el.textContent.trim()||id==='unitPanel'&&el.querySelector('.empty'))){const wrap=document.createElement('div');wrap.dataset.uieSample='';wrap.innerHTML=html;wrap._uieOriginal=el.innerHTML;el.replaceChildren(wrap);}}}
-function scene(value){document.querySelectorAll('.overlay').forEach(e=>e.hidden=value==='current'?hiddenState.get(e):e.id!==value);select(({start:'startModal',reaction:'reactionModal',battle:'battleModal',help:'helpModal',victory:'victoryModal'})[value]||'map');}
-function toggle(){active=!active;panel.hidden=!active;document.body.classList.toggle('ui-layout-editing',active);launcher.textContent=active?'退出布局模式 · Shift+U':'开发者 · UI布局';if(active){hiddenState=new Map([...document.querySelectorAll('.overlay')].map(e=>[e,e.hidden]));samples();$('uie-scene').value='current';sync();}else{endGesture();for(const [el,hidden]of hiddenState||[])el.hidden=hidden;document.querySelectorAll('[data-uie-sample]').forEach(e=>{if(e.parentElement)e.parentElement.innerHTML=e._uieOriginal||'';});frame.hidden=true;document.querySelectorAll('[data-uie-hover]').forEach(e=>e.removeAttribute('data-uie-hover'));}}
-launcher.onclick=toggle;$('uie-dock').onclick=()=>{const right=panel.style.right==='12px';panel.style.left=right?'12px':'auto';panel.style.right=right?'auto':'12px';$('uie-dock').textContent=right?'移至右侧':'移至左侧';};$('uie-scene').onchange=e=>scene(e.target.value);$('uie-target').onchange=e=>select(e.target.value);$('uie-anchor').onchange=e=>edit(p=>{p.anchor=e.target.value;p.x=0;p.y=0;});
-$('uie-reset').onclick=()=>{const before=structuredClone(layout);delete layout.profiles[U.profile()][selected];apply();commit(before);};$('uie-clear-color').onclick=()=>edit(p=>{delete p.color;delete p.background;});$('uie-reset-profile').onclick=()=>{const before=structuredClone(layout);layout.profiles[U.profile()]={};apply();commit(before);};$('uie-undo').onclick=()=>{if(history.length){future.push(layout);layout=history.pop();apply();persist();}};$('uie-redo').onclick=()=>{if(future.length){history.push(layout);layout=future.pop();apply();persist();}};
-function download(name,content,type){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);status('已导出 '+name);}
-$('uie-export').onclick=()=>download('ui-layout.json',JSON.stringify(layout,null,2),'application/json');$('uie-import').onclick=()=>$('uie-file').click();$('uie-file').onchange=async()=>{const file=$('uie-file').files[0];try{if(!file)return;if(file.size>131072)throw Error('文件不能超过128KB');const parsed=U.validate(JSON.parse(await file.text())),before=structuredClone(layout);layout=parsed;apply();commit(before);status('已导入三个尺寸组。');}catch(e){status('导入失败：'+e.message);}finally{$('uie-file').value='';}};
-$('uie-publish').onclick=()=>{const base=JSON.parse($('ui-release-template').textContent),data=JSON.stringify(U.validate(layout)).replace(/</g,'\\u003c'),result=base.replace(/(<script type="application\/json" id="ui-layout-data">)[\s\S]*?(<\/script>)/,(_,a,b)=>a+data+b);download('0079_SLG_Release.html',result,'text/html');};
-document.addEventListener('pointerdown',e=>{if(!active||isEditor(e.target)&&e.target.id!=='ui-resize')return;const resize=e.target.id==='ui-resize',hit=resize?{id:selected,el:visible()}:pick(e.target);e.preventDefault();e.stopImmediatePropagation();if(!hit?.el)return;select(hit.id);const p=props(),r=hit.el.getBoundingClientRect();gesture={before:structuredClone(layout),profile:U.profile(),id:selected,resize,startX:e.clientX,startY:e.clientY,x:p.x||0,y:p.y||0,width:r.width,height:r.height};},true);
-document.addEventListener('pointermove',e=>{if(!active)return;if(!gesture){if(isEditor(e.target))return;document.querySelectorAll('[data-uie-hover]').forEach(el=>el.removeAttribute('data-uie-hover'));pick(e.target)?.el.setAttribute('data-uie-hover','');e.stopImmediatePropagation();return;}e.preventDefault();e.stopImmediatePropagation();const g=gesture,p=layout.profiles[g.profile];p[g.id]||={};const dx=e.clientX-g.startX,dy=e.clientY-g.startY;if(g.resize){p[g.id].width=Math.max(40,Math.min(4096,Math.round(g.width+dx)));p[g.id].height=Math.max(20,Math.min(4096,Math.round(g.height+dy)));}else{p[g.id].x=Math.max(-4096,Math.min(4096,Math.round(g.x+dx)));p[g.id].y=Math.max(-4096,Math.min(4096,Math.round(g.y+dy)));}U.apply(layout);},true);
-function endGesture(){if(gesture){const before=gesture.before;gesture=null;commit(before);sync();}}document.addEventListener('pointerup',()=>{if(active)endGesture();},true);document.addEventListener('pointercancel',endGesture,true);window.addEventListener('blur',endGesture);
-document.addEventListener('click',e=>{if(active&&!isEditor(e.target)){e.preventDefault();e.stopImmediatePropagation();}},true);document.addEventListener('keydown',e=>{if(e.shiftKey&&e.code==='KeyU'&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)){e.preventDefault();toggle();return;}if(active&&!isEditor(e.target)){e.stopImmediatePropagation();if(e.code==='Escape'){e.preventDefault();toggle();}}},true);window.addEventListener('resize',()=>{endGesture();sync();});
-function track(){if(active){const el=visible();if(el){const r=el.getBoundingClientRect();frame.hidden=false;Object.assign(frame.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px'});$('ui-selection-label').textContent=target(selected).name;}else frame.hidden=true;}requestAnimationFrame(track);}track();
+/* 开发者版入口。阅读顺序：界面 → 预览 → 属性与历史 → 选择与拖动 → 文件。
+ * 所有游戏点击都留在独立 iframe 内拦截，实际对局状态不参与编辑。
+ */
+(() => {
+  "use strict";
+  const U = window.UILayout;
+  const storageKey = "slg-ui-layout-dev-v1";
+  const byId = (id) => document.getElementById(id);
+  const clone = (value) => structuredClone(value);
+  let layout = U.get();
+  let selected = "battleStage";
+  let active = false;
+  let previewWindow = null;
+  let zoom = 1;
+  let gesture = null;
+  const history = [],
+    future = [];
+  try {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) layout = U.validate(JSON.parse(saved));
+  } catch (error) {
+    console.warn("未读取本地布局：", error.message);
+  }
+  U.apply(layout);
+
+  // 工具栏模板与样式单独保存，便于修改中文文案和 CSS。
+  const launcher = document.createElement("button");
+  launcher.id = "ui-dev-launch";
+  launcher.dataset.developerOnly = "";
+  launcher.textContent = "开发者 · UI布局";
+  document.body.append(launcher);
+  const panel = document.createElement("section");
+  panel.id = "ui-editor-panel";
+  panel.dataset.developerOnly = "";
+  panel.hidden = true;
+  panel.setAttribute("aria-label", "UI布局编辑器");
+  panel.innerHTML = byId("ui-editor-template").innerHTML;
+  document.body.append(panel);
+  const area = document.createElement("div");
+  area.id = "ui-preview-area";
+  area.dataset.developerOnly = "";
+  area.hidden = true;
+  area.innerHTML =
+    '<span id="ui-preview-title">独立预览 · 正在载入</span><div id="ui-preview-space"><iframe id="ui-preview-frame" title="独立游戏预览"></iframe></div>';
+  document.body.append(area);
+  const iframe = byId("ui-preview-frame");
+  const selectionFrame = document.createElement("div");
+  selectionFrame.id = "ui-selection";
+  selectionFrame.dataset.developerOnly = "";
+  selectionFrame.hidden = true;
+  selectionFrame.innerHTML =
+    '<span id="ui-selection-label"></span><span id="ui-resize" title="拉伸选中元素"></span>';
+  document.body.append(selectionFrame);
+
+  const fieldNames = {
+    x: "X 偏移 px",
+    y: "Y 偏移 px",
+    width: "宽度 px",
+    height: "高度 px",
+    fontSize: "字号 px",
+    padding: "内边距 px",
+    gap: "间距 px",
+    opacity: "不透明度",
+    borderRadius: "圆角 px",
+    borderWidth: "边框 px",
+    zIndex: "层级",
+    gridColumns: "等宽网格列数",
+    color: "文字颜色",
+    background: "背景颜色",
+  };
+  const battleNames = {
+    scale: "整体机体倍率",
+    leftX: "左机体 X 比例",
+    leftY: "左机体 Y 比例",
+    rightX: "右机体 X 比例",
+    rightY: "右机体 Y 比例",
+    leftScale: "左机体倍率",
+    rightScale: "右机体倍率",
+    RX_78_2: "高达校正倍率",
+    RX_77_2: "钢加农校正倍率",
+    RX_75: "钢坦克校正倍率",
+    meleeTravel: "近战前冲比例",
+    shake: "受击抖动 px",
+    shadowScale: "阴影倍率",
+    projectileScale: "弹道倍率",
+    muzzleY: "弹道起点 Y",
+    impactScale: "命中特效倍率",
+    damageSize: "伤害字号倍率",
+    damageX: "伤害 X 比例偏移",
+    damageY: "伤害 Y 比例偏移",
+    mapScale: "地图机体倍率",
+    mapLabelSize: "地图名称倍率",
+    mapBarScale: "地图血条宽倍率",
+  };
+  const anchorNames = {
+    flow: "跟随原布局（偏移）",
+    "top-left": "屏幕左上",
+    "top-right": "屏幕右上",
+    "bottom-left": "屏幕左下",
+    "bottom-right": "屏幕右下",
+    center: "屏幕中心",
+    "parent-top-left": "父容器左上",
+    "parent-top-right": "父容器右上",
+    "parent-bottom-left": "父容器左下",
+    "parent-bottom-right": "父容器右下",
+    "parent-center": "父容器中心",
+  };
+  for (const anchor of U.anchors) byId("uie-anchor").add(new Option(anchorNames[anchor], anchor));
+  for (const [key, label] of Object.entries(fieldNames))
+    addField("uie-fields", key, label, U.fields[key], false);
+  for (const [key, label] of Object.entries(battleNames))
+    addField("uie-battle-fields", key, label, U.battleFields[key], true);
+  for (const [id, model] of Object.entries(UnitModels)) {
+    byId("uie-left").add(new Option(model.name, id));
+    byId("uie-right").add(new Option(model.name, id));
+  }
+  byId("uie-right").value = "RX_77_2";
+  refreshWeapons();
+
+  function addField(container, key, label, range, battle) {
+    const wrapper = document.createElement("label");
+    wrapper.textContent = label;
+    const input = document.createElement("input");
+    input.id = (battle ? "uie-b-" : "uie-") + key;
+    input.type = ["color", "background"].includes(key) ? "color" : "number";
+    if (range) {
+      input.min = range[0];
+      input.max = range[1];
+      input.step = battle || key === "opacity" ? "0.01" : "1";
+    }
+    wrapper.append(input);
+    byId(container).append(wrapper);
+    input.onchange = () =>
+      change(() => {
+        const entries = layout.profiles[profile()];
+        const id = battle ? "$battle" : selected;
+        entries[id] ||= {};
+        if (input.value === "") delete entries[id][key];
+        else entries[id][key] = input.type === "color" ? input.value : Number(input.value);
+      });
+  }
+
+  // 预览的实际 viewport 决定响应式分组，缩放只影响编辑器显示大小。
+  function profile() {
+    return previewWindow?.UILayout.profile() || "desktop";
+  }
+  function status(message) {
+    byId("uie-status").textContent = message;
+  }
+  function actorSide() {
+    return selected.startsWith("actor-") ? selected.slice(6) : null;
+  }
+  function target() {
+    return U.targets.find((item) => item.id === selected);
+  }
+  function visible(element) {
+    return !!element?.getClientRects().length;
+  }
+  function selectedElement() {
+    return (
+      target() && [...previewWindow.document.querySelectorAll(target().selector)].find(visible)
+    );
+  }
+  function apply() {
+    U.apply(layout);
+    previewWindow?.UILayout.apply(layout);
+    sync();
+  }
+  function persist() {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(layout));
+      status("已自动保存到本浏览器；工程发布请导出 JSON 后构建。");
+    } catch {
+      status("浏览器无法保存，请导出 JSON。");
+    }
+  }
+  function commit(before) {
+    if (JSON.stringify(before) === JSON.stringify(layout)) return;
+    history.push(before);
+    if (history.length > 80) history.shift();
+    future.length = 0;
+    persist();
+    sync();
+  }
+  function change(mutate) {
+    const before = clone(layout);
+    try {
+      mutate();
+      layout = U.validate(layout);
+      apply();
+      commit(before);
+    } catch (error) {
+      layout = before;
+      apply();
+      status(error.message);
+    }
+  }
+
+  function refreshWeapons() {
+    const old = byId("uie-weapon").value;
+    byId("uie-weapon").replaceChildren(
+      ...UnitModels[byId("uie-left").value].weapons.map(
+        (weapon) => new Option(weapon.name, weapon.id),
+      ),
+    );
+    if (UnitModels[byId("uie-left").value].weapons.some((weapon) => weapon.id === old))
+      byId("uie-weapon").value = old;
+  }
+  function configurePreview() {
+    previewWindow?.GamePreview.configure({
+      scene: byId("uie-scene").value,
+      leftModel: byId("uie-left").value,
+      rightModel: byId("uie-right").value,
+      weapon: byId("uie-weapon").value,
+      response: byId("uie-response").value,
+      result: byId("uie-result").value,
+      unitState: byId("uie-unit-state").value,
+      connection: byId("uie-connection").value,
+    });
+    refreshTree();
+    sync();
+  }
+  function resizePreview() {
+    endGesture();
+    const width = Math.max(320, Math.min(2560, Number(byId("uie-view-width").value) || 1440));
+    const height = Math.max(320, Math.min(1600, Number(byId("uie-view-height").value) || 900));
+    byId("uie-view-width").value = width;
+    byId("uie-view-height").value = height;
+    iframe.style.width = width + "px";
+    iframe.style.height = height + "px";
+    zoom = Math.min(
+      1,
+      Math.max(0.1, (innerWidth - 344) / width),
+      Math.max(0.1, (innerHeight - 56) / height),
+    );
+    iframe.style.transform = `scale(${zoom})`;
+    byId("ui-preview-space").style.width = width * zoom + "px";
+    byId("ui-preview-space").style.height = height * zoom + "px";
+    requestAnimationFrame(() => {
+      sync();
+      refreshTree();
+    });
+  }
+  function openPreview() {
+    if (iframe.srcdoc) return;
+    iframe.onload = () => {
+      previewWindow = iframe.contentWindow;
+      previewWindow.GamePreview.suspended = !active;
+      previewWindow.UILayout.apply(layout);
+      configurePreview();
+      const doc = previewWindow.document;
+      doc.addEventListener("pointerdown", pointerDown, true);
+      doc.addEventListener("pointermove", pointerMove, true);
+      doc.addEventListener("pointerup", endGesture, true);
+      doc.addEventListener("pointercancel", endGesture, true);
+      doc.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        },
+        true,
+      );
+      doc.addEventListener("keydown", keyboard, true);
+      // 使用一次性的就绪事件，避免定时刷新打断正在输入的属性值。
+      previewWindow.addEventListener(
+        "ui-preview-ready",
+        () => {
+          refreshTree();
+          sync();
+        },
+        { once: true },
+      );
+    };
+    const base = JSON.parse(byId("ui-release-template").textContent);
+    const source = JSON.parse(byId("ui-preview-source").textContent);
+    iframe.srcdoc = base.replace("</body>", `<script>${source}</script></body>`);
+  }
+  function toggle() {
+    active = !active;
+    panel.hidden = area.hidden = !active;
+    launcher.hidden = active;
+    if (active) {
+      if (previewWindow) previewWindow.GamePreview.suspended = false;
+      openPreview();
+      resizePreview();
+    } else {
+      endGesture();
+      selectionFrame.hidden = true;
+      if (previewWindow) {
+        previewWindow.GamePreview.playing = false;
+        previewWindow.GamePreview.suspended = true;
+      }
+      byId("uie-play").textContent = "播放";
+    }
+  }
+
+  // 元素树同时列出静态节点和可复用的同类样式。静态节点按真实父子深度缩进。
+  function refreshTree() {
+    if (!previewWindow) return;
+    const search = byId("uie-search").value.toLowerCase();
+    const doc = previewWindow.document;
+    const options = [];
+    for (const item of U.targets) {
+      const elements = [...doc.querySelectorAll(item.selector)];
+      const shown = elements.some(visible);
+      if (!byId("uie-all").checked && item.id !== selected) {
+        const belongsToScene = elements.some(
+          (element) => (element.closest(".overlay")?.id || "map") === byId("uie-scene").value,
+        );
+        if (!shown || !belongsToScene) continue;
+      }
+      if (search && !`${item.name} ${item.id} ${item.selector}`.toLowerCase().includes(search))
+        continue;
+      const element = elements.find(visible) || elements[0];
+      let depth = 0;
+      for (
+        let parent = element?.parentElement;
+        parent && parent !== doc.body;
+        parent = parent.parentElement
+      )
+        depth++;
+      options.push(
+        new Option(
+          `${"　".repeat(Math.min(depth, 5))}${item.name}${shown ? "" : "（未显示）"}`,
+          item.id,
+        ),
+      );
+    }
+    if (byId("uie-scene").value === "battle") {
+      options.unshift(
+        new Option("画布 / 左方机体", "actor-left"),
+        new Option("画布 / 右方机体", "actor-right"),
+      );
+    }
+    byId("uie-target").replaceChildren(...options);
+    byId("uie-target").value = selected;
+  }
+  function sync() {
+    const group = profile();
+    byId("uie-viewport").textContent =
+      `${byId("uie-view-width").value} × ${byId("uie-view-height").value} · ${group} · 显示缩放 ${Math.round(zoom * 100)}%`;
+    byId("ui-preview-title").textContent =
+      "独立预览 · " + byId("uie-scene").selectedOptions[0].textContent;
+    byId("uie-target").value = selected;
+    const side = actorSide();
+    byId("uie-anchor-label").hidden = byId("uie-hidden-label").hidden = !!side;
+    byId("uie-fields").hidden = !!side;
+    byId("uie-clear-color").hidden = !!side;
+    byId("uie-selected-note").textContent = side
+      ? `${side === "left" ? "左" : "右"}机体：拖动改站位，拉伸改倍率。其余参数在下方“战斗与地图画布参数”。`
+      : target()?.selector || "请选择元素";
+    const props = layout.profiles[group][selected] || {};
+    byId("uie-anchor").value = props.anchor || "flow";
+    byId("uie-hidden").checked = !!props.hidden;
+    for (const key of Object.keys(fieldNames)) {
+      const input = byId("uie-" + key);
+      input.value = props[key] ?? (input.type === "color" ? "#ffffff" : "");
+      input.placeholder = "沿用原布局";
+    }
+    const settings = {
+      ...BattleScene.defaults,
+      ...layout.profiles[group].$battle,
+    };
+    for (const key of Object.keys(battleNames)) byId("uie-b-" + key).value = settings[key];
+    byId("uie-undo").disabled = !history.length;
+    byId("uie-redo").disabled = !future.length;
+  }
+
+  function select(id) {
+    selected = id;
+    sync();
+  }
+  function pick(element) {
+    for (
+      let node = element;
+      node && node !== previewWindow.document.body;
+      node = node.parentElement
+    ) {
+      const item = U.targets.find((item) => node.matches(item.selector));
+      if (item) return { id: item.id, element: node };
+    }
+    return null;
+  }
+  function point(event) {
+    const rect = iframe.getBoundingClientRect();
+    return event.view === previewWindow
+      ? { x: event.clientX, y: event.clientY }
+      : {
+          x: (event.clientX - rect.left) / zoom,
+          y: (event.clientY - rect.top) / zoom,
+        };
+  }
+  function actorBounds(side) {
+    const box = previewWindow?.GamePreview.boxes.find((item) => item.id === side);
+    if (!box) return null;
+    const canvas = previewWindow.document.getElementById("battleCanvas").getBoundingClientRect();
+    return {
+      left: canvas.left + box.x - box.width / 2,
+      top: canvas.top + box.y - box.height / 2,
+      width: box.width,
+      height: box.height,
+    };
+  }
+  function pointerDown(event) {
+    if (!active || !previewWindow) return;
+    const resize = event.target.id === "ui-resize";
+    const p = point(event);
+    let id = resize ? selected : null;
+    if (!resize) {
+      if (previewWindow.GamePreview.scene === "battle" && event.target.id === "battleCanvas") {
+        for (const side of ["right", "left"]) {
+          const box = actorBounds(side);
+          if (
+            box &&
+            p.x >= box.left &&
+            p.x <= box.left + box.width &&
+            p.y >= box.top &&
+            p.y <= box.top + box.height
+          ) {
+            id = "actor-" + side;
+            break;
+          }
+        }
+      }
+      id ||= pick(event.target)?.id;
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (!id) return;
+    select(id);
+    const side = actorSide();
+    const rect = side ? actorBounds(side) : selectedElement()?.getBoundingClientRect();
+    if (!rect) return;
+    const props = layout.profiles[profile()][selected] || {};
+    gesture = {
+      before: clone(layout),
+      profile: profile(),
+      id,
+      side,
+      resize,
+      start: p,
+      rect,
+      x: props.x || 0,
+      y: props.y || 0,
+    };
+    // 拖动机体时冻结演出，选框保持稳定；松手后由用户继续播放。
+    if (side) {
+      previewWindow.GamePreview.playing = false;
+      byId("uie-play").textContent = "播放";
+    }
+  }
+  function pointerMove(event) {
+    if (!active) return;
+    if (event.view === previewWindow) event.stopImmediatePropagation();
+    if (!gesture) return;
+    event.preventDefault();
+    const current = point(event),
+      g = gesture;
+    const dx = current.x - g.start.x,
+      dy = current.y - g.start.y;
+    const entries = layout.profiles[g.profile];
+    if (g.side) {
+      entries.$battle ||= {};
+      const base = {
+        ...BattleScene.defaults,
+        ...g.before.profiles[g.profile].$battle,
+      };
+      const canvas = previewWindow.document.getElementById("battleCanvas").getBoundingClientRect();
+      if (g.resize)
+        entries.$battle[g.side + "Scale"] = clamp(
+          base[g.side + "Scale"] * (1 + Math.max(dx, dy) / g.rect.width),
+          0.1,
+          4,
+        );
+      else {
+        entries.$battle[g.side + "X"] = clamp(base[g.side + "X"] + dx / canvas.width, 0, 1);
+        entries.$battle[g.side + "Y"] = clamp(base[g.side + "Y"] + dy / canvas.height, 0, 1);
+      }
+    } else {
+      entries[g.id] ||= {};
+      if (g.resize) {
+        entries[g.id].width = clamp(Math.round(g.rect.width + dx), 1, 4096);
+        entries[g.id].height = clamp(Math.round(g.rect.height + dy), 1, 4096);
+      } else {
+        entries[g.id].x = clamp(Math.round(g.x + dx), -4096, 4096);
+        entries[g.id].y = clamp(Math.round(g.y + dy), -4096, 4096);
+      }
+    }
+    U.apply(layout);
+    previewWindow.UILayout.apply(layout);
+  }
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+  function endGesture() {
+    if (!gesture) return;
+    const before = gesture.before;
+    gesture = null;
+    commit(before);
+    sync();
+  }
+  function keyboard(event) {
+    if (/INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
+    if ((event.shiftKey && event.code === "KeyU") || (active && event.code === "Escape")) {
+      event.preventDefault();
+      toggle();
+      return;
+    }
+    if (active && (event.ctrlKey || event.metaKey) && event.code === "KeyZ") {
+      event.preventDefault();
+      (event.shiftKey ? byId("uie-redo") : byId("uie-undo")).click();
+    }
+    if (active && event.view === previewWindow) event.stopImmediatePropagation();
+  }
+
+  launcher.onclick = byId("uie-close").onclick = toggle;
+  byId("uie-scene").onchange = () => {
+    endGesture();
+    configurePreview();
+    select(
+      {
+        start: "startModal",
+        map: "map",
+        reaction: "reactionModal",
+        battle: "battleStage",
+        help: "helpModal",
+        victory: "victoryModal",
+      }[byId("uie-scene").value],
+    );
+    refreshTree();
+  };
+  byId("uie-size").onchange = () => {
+    const [width, height] = byId("uie-size").value.split(",");
+    byId("uie-view-width").value = width;
+    byId("uie-view-height").value = height;
+    resizePreview();
+  };
+  byId("uie-view-width").onchange = byId("uie-view-height").onchange = resizePreview;
+  for (const id of ["right", "weapon", "response", "result", "unit-state", "connection"])
+    byId("uie-" + id).onchange = configurePreview;
+  byId("uie-left").onchange = () => {
+    refreshWeapons();
+    configurePreview();
+  };
+  byId("uie-play").onclick = () => {
+    const p = previewWindow.GamePreview;
+    p.playing = !p.playing;
+    byId("uie-play").textContent = p.playing ? "暂停" : "播放";
+  };
+  byId("uie-replay").onclick = () => {
+    const p = previewWindow.GamePreview;
+    p.progress = 0;
+    p.playing = true;
+    byId("uie-play").textContent = "暂停";
+  };
+  byId("uie-progress").oninput = () => {
+    const p = previewWindow.GamePreview;
+    p.playing = false;
+    p.progress = Number(byId("uie-progress").value);
+    byId("uie-play").textContent = "播放";
+  };
+  for (const side of ["left", "right"])
+    byId("uie-" + side + "-actor").onclick = () => {
+      byId("uie-scene").value = "battle";
+      configurePreview();
+      select("actor-" + side);
+      refreshTree();
+    };
+  byId("uie-target").onchange = () => select(byId("uie-target").value);
+  byId("uie-search").oninput = byId("uie-all").onchange = refreshTree;
+  byId("uie-parent").onclick = () => {
+    const parent = selectedElement()?.parentElement;
+    const hit = parent && pick(parent);
+    if (hit) select(hit.id);
+  };
+  byId("uie-anchor").onchange = () =>
+    change(() => {
+      const p = layout.profiles[profile()];
+      p[selected] ||= {};
+      Object.assign(p[selected], { anchor: byId("uie-anchor").value, x: 0, y: 0 });
+    });
+  byId("uie-hidden").onchange = () =>
+    change(() => {
+      const p = layout.profiles[profile()];
+      p[selected] ||= {};
+      p[selected].hidden = byId("uie-hidden").checked;
+    });
+  byId("uie-clear-color").onclick = () =>
+    change(() => {
+      const p = layout.profiles[profile()][selected];
+      if (p) {
+        delete p.color;
+        delete p.background;
+      }
+    });
+  byId("uie-reset").onclick = () =>
+    change(() => {
+      const entries = layout.profiles[profile()];
+      const side = actorSide();
+      if (side && entries.$battle) {
+        for (const key of ["X", "Y", "Scale"]) delete entries.$battle[side + key];
+      } else delete entries[selected];
+    });
+  byId("uie-reset-profile").onclick = () =>
+    change(() => {
+      layout.profiles[profile()] = {};
+    });
+  byId("uie-undo").onclick = () => {
+    if (history.length) {
+      future.push(clone(layout));
+      layout = history.pop();
+      apply();
+      persist();
+    }
+  };
+  byId("uie-redo").onclick = () => {
+    if (future.length) {
+      history.push(clone(layout));
+      layout = future.pop();
+      apply();
+      persist();
+    }
+  };
+
+  function download(filename, content, type) {
+    const url = URL.createObjectURL(new Blob([content], { type }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    status("已导出 " + filename);
+  }
+  byId("uie-export").onclick = () =>
+    download("ui-layout.json", JSON.stringify(layout, null, 2), "application/json");
+  byId("uie-import").onclick = () => byId("uie-file").click();
+  byId("uie-file").onchange = async () => {
+    try {
+      const file = byId("uie-file").files[0];
+      if (!file) return;
+      if (file.size > 1048576) throw Error("文件超过1MB");
+      const parsed = U.validate(JSON.parse(await file.text()));
+      change(() => {
+        layout = parsed;
+      });
+    } catch (error) {
+      status("导入失败：" + error.message);
+    } finally {
+      byId("uie-file").value = "";
+    }
+  };
+  byId("uie-publish").onclick = () => {
+    const base = JSON.parse(byId("ui-release-template").textContent);
+    const data = JSON.stringify(U.validate(layout)).replace(/</g, "\\u003c");
+    const result = base.replace(
+      /(<script type="application\/json" id="ui-layout-data">)[\s\S]*?(<\/script>)/,
+      (_, start, end) => start + data + end,
+    );
+    download("0079_SLG_Release.html", result, "text/html");
+  };
+  byId("ui-resize").addEventListener("pointerdown", pointerDown);
+  document.addEventListener("pointermove", pointerMove);
+  document.addEventListener("pointerup", endGesture);
+  document.addEventListener("pointercancel", endGesture);
+  document.addEventListener("keydown", keyboard, true);
+  window.addEventListener("blur", endGesture);
+  window.addEventListener("resize", () => {
+    if (active) resizePreview();
+  });
+  function trackSelection() {
+    if (active && previewWindow) {
+      const rect = actorSide()
+        ? actorBounds(actorSide())
+        : selectedElement()?.getBoundingClientRect();
+      selectionFrame.hidden = !rect;
+      if (rect) {
+        const frame = iframe.getBoundingClientRect();
+        Object.assign(selectionFrame.style, {
+          left: frame.left + rect.left * zoom + "px",
+          top: frame.top + rect.top * zoom + "px",
+          width: rect.width * zoom + "px",
+          height: rect.height * zoom + "px",
+        });
+        byId("ui-selection-label").textContent = actorSide()
+          ? `${actorSide() === "left" ? "左" : "右"}机体（参考框）`
+          : target().name;
+      }
+      byId("uie-progress").value = previewWindow.GamePreview.progress;
+    }
+    requestAnimationFrame(trackSelection);
+  }
+  trackSelection();
 })();

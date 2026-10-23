@@ -1,0 +1,4 @@
+public/
+client/art.json
+node_modules/
+.openai/
