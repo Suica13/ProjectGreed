@@ -1,145 +1,121 @@
-/* MOD 素材绘制器，只处理贴图、骨骼和关键帧。
- * 外部调用 draw(ctx, model, x, y, scale, ...)。演出大小在 battle-scene.js 调整。
- */
-"use strict";
+/* 贴图、骨骼与挂点共用同一套变换。配置只使用普通数值与命名变量。 */
 const SpriteRenderer = (() => {
-  const models = Object.fromEntries(ART.units.map((u) => [u.id, u])),
+  const models = Object.fromEntries(ART.units.map((unit) => [unit.id, unit])),
     images = {};
-  // 读取 MOD 的简单条件表达式（例如装备可见条件），不执行任意 JS。
-  function expression(src, vars) {
-    src = String(src)
-      .replace(/^\s*if\s+/i, "")
-      .replace(/self\.resource\(\)/gi, "resource")
-      .replace(/self\.resource/gi, "resource");
-    let tokens =
-        src.match(
-          /(?:\d*\.\d+|\d+(?:\.\d*)?)|(?:[A-Za-z_][\w.]*)|(?:==|!=|<=|>=|&&|\|\||[()+*/,<>!\-])/g,
-        ) || [],
-      pos = 0,
-      pri = {
-        or: 1,
-        "||": 1,
-        and: 2,
-        "&&": 2,
-        "==": 3,
-        "!=": 3,
-        "<": 4,
-        ">": 4,
-        "<=": 4,
-        ">=": 4,
-        "+": 5,
-        "-": 5,
-        "*": 6,
-        "/": 6,
-      };
-    function atom() {
-      let x = tokens[pos++];
-      if (x === undefined) throw Error("expression");
-      if (x === "(") {
-        let v = parse(0);
-        pos++;
-        return v;
-      }
-      if (x === "not" || x === "!") return !parse(7);
-      if (x === "-") return -parse(7);
-      if (x === "+") return +parse(7);
-      if (/^\d|^\./.test(x)) return Number(x);
-      let k = x.toLowerCase();
-      if (k === "true") return true;
-      if (k === "false") return false;
-      if (tokens[pos] === "(") {
-        pos++;
-        let args = [];
-        if (tokens[pos] !== ")")
-          do {
-            args.push(parse(0));
-            if (tokens[pos] !== ",") break;
-            pos++;
-          } while (true);
-        pos++;
-        if (k === "select") return args[0] ? args[1] : args[2];
-        if (k === "squareroot") return Math.sqrt(args[0]);
-        return 0;
-      }
-      return vars[k] ?? 0;
-    }
-    function parse(min) {
-      let a = atom();
-      while (pos < tokens.length) {
-        let op = tokens[pos].toLowerCase(),
-          p = pri[op];
-        if (p === undefined || p < min) break;
-        pos++;
-        let b = parse(p + 1);
-        switch (op) {
-          case "or":
-          case "||":
-            a = Boolean(a || b);
-            break;
-          case "and":
-          case "&&":
-            a = Boolean(a && b);
-            break;
-          case "==":
-            a = a === b;
-            break;
-          case "!=":
-            a = a !== b;
-            break;
-          case "<":
-            a = a < b;
-            break;
-          case ">":
-            a = a > b;
-            break;
-          case "<=":
-            a = a <= b;
-            break;
-          case ">=":
-            a = a >= b;
-            break;
-          case "+":
-            a += b;
-            break;
-          case "-":
-            a -= b;
-            break;
-          case "*":
-            a *= b;
-            break;
-          case "/":
-            a /= b;
-            break;
-        }
-      }
-      return a;
-    }
-    return parse(0);
-  }
-  const val = (v, vars, f = 0) => (v === undefined ? f : Number(expression(v, vars)));
-  // 关键帧之间线性插值，得到时刻 t 的骨骼位置、方向和高度。
-  function sample(anim, t) {
-    let result = {};
-    for (const [bone, fields] of Object.entries(anim?.curves || {})) {
+  const radians = (degrees) => (degrees * Math.PI) / 180;
+
+  function sample(animation, time) {
+    const result = {};
+    for (const [bone, fields] of Object.entries(animation?.curves || {})) {
       result[bone] = {};
       for (const [field, points] of Object.entries(fields)) {
-        let v = points.at(-1)[1];
-        if (t <= points[0][0]) v = points[0][1];
+        let value = points.at(-1)[1];
+        if (time <= points[0][0]) value = points[0][1];
         else
           for (let i = 0; i < points.length - 1; i++) {
-            let [ta, va] = points[i],
-              [tb, vb] = points[i + 1];
-            if (t >= ta && t <= tb) {
-              v = va + ((vb - va) * (t - ta)) / (tb - ta);
+            const [start, a] = points[i],
+              [end, b] = points[i + 1];
+            if (time >= start && time <= end) {
+              value = a + ((b - a) * (time - start)) / (end - start);
               break;
             }
           }
-        result[bone][field] = v;
+        result[bone][field] = value;
       }
     }
     return result;
   }
-  // x/y 是画布位置；scale 是倍率；clip 是动画名；t 是时间（秒）。
+  function pose(model, clip, time, loop = false) {
+    const animation = models[model].animations[clip];
+    const at = animation
+      ? loop
+        ? time % animation.duration
+        : Math.min(time, animation.duration)
+      : 0;
+    return sample(animation, at);
+  }
+  function state(model, heldWeapon) {
+    const unit = models[model];
+    return {
+      kit: unit.kit,
+      heldWeapon: heldWeapon || ART.models[model].weapons[0].id,
+      shieldVisible: unit.presentation.shield,
+      visorClosed: false,
+    };
+  }
+  function visible(layer, variables) {
+    return Object.entries(layer.visibleWhen || {}).every(([key, expected]) => {
+      if (Array.isArray(expected)) return expected.includes(variables[key]);
+      if (expected && typeof expected === "object") return variables[key] !== expected.not;
+      return variables[key] === expected;
+    });
+  }
+  function visibleLayers(model, heldWeapon, shieldVisible = true) {
+    const variables = state(model, heldWeapon);
+    variables.shieldVisible = variables.shieldVisible && shieldVisible;
+    return models[model].decals.filter((layer) => visible(layer, variables));
+  }
+  // offset.x 横向，offset.y 向前。贴图坐标则 x 向右、y 向下。
+  function layerTransform(model, layer, angle, pose) {
+    const bone = models[model].bones[layer.bone],
+      animation = pose[layer.bone] || {};
+    const theta = radians(angle - 90),
+      bx = bone.x + (animation.x || 0),
+      by = bone.y + (animation.y || 0);
+    const facing =
+      angle - 90 + (bone.endDirOffset || 0) + (bone.drawDirOffset || 0) + (animation.dir || 0);
+    const rotation = radians(facing + (layer.pivot || 0)),
+      offset = layer.offset || {};
+    return {
+      x:
+        Math.cos(theta) * by -
+        Math.sin(theta) * bx +
+        Math.cos(rotation) * (offset.y || 0) -
+        Math.sin(rotation) * (offset.x || 0) +
+        (layer.worldOffset?.x || 0),
+      y:
+        Math.sin(theta) * by +
+        Math.cos(theta) * bx +
+        Math.sin(rotation) * (offset.y || 0) +
+        Math.cos(rotation) * (offset.x || 0) +
+        (layer.worldOffset?.y || 0) -
+        (layer.height || 0) -
+        (animation.height || 0),
+      rotation: radians(facing + 90 + (layer.rotation || 0)),
+      scaleX: (layer.scale ?? 1) * (layer.scaleX ?? 1),
+      scaleY: (layer.scale ?? 1) * (layer.scaleY ?? 1),
+    };
+  }
+  // 在发射的那一刻采样，与枪的 PNG 同步移动、旋转、缩放和镜像。
+  function muzzle(model, weapon, actor, clip, time, shotIndex = 0) {
+    const mount = weapon.muzzle,
+      unit = models[model],
+      sampled = pose(model, clip, time);
+    const layer = mount.layer
+      ? unit.decals.find((layer) => layer.name === mount.layer)
+      : {
+          bone: mount.bone,
+          offset: {
+            ...mount.offset,
+            x: mount.offset.x + (shotIndex % 2) * (mount.alternatingOffsetX || 0),
+          },
+        };
+    const transform = layerTransform(model, layer, actor.angle, sampled),
+      point = { ...(mount.point || { x: 0, y: 0 }) };
+    if (mount.pairSpacing) point.x += ((shotIndex % 2 ? 1 : -1) * mount.pairSpacing) / 2;
+    const px = point.x * transform.scaleX,
+      py = point.y * transform.scaleY;
+    return {
+      x:
+        actor.x +
+        (transform.x + Math.cos(transform.rotation) * px - Math.sin(transform.rotation) * py) *
+          actor.scale,
+      y:
+        actor.y +
+        (transform.y + Math.sin(transform.rotation) * px + Math.cos(transform.rotation) * py) *
+          actor.scale,
+    };
+  }
   function draw(
     ctx,
     model,
@@ -148,92 +124,38 @@ const SpriteRenderer = (() => {
     scale,
     angle = 0,
     clip = "Common_Idle",
-    t = 0,
-    eq = 0,
-    hold = 0,
+    time = 0,
+    heldWeapon = null,
     loop = true,
+    shieldVisible = true,
   ) {
-    let u = models[model],
-      anim = u.animations[clip],
-      at = anim ? (loop ? t % anim.duration : Math.min(t, anim.duration)) : 0,
-      pose = sample(anim, at),
-      vars = {
-        "resource.equipmentindex": eq,
-        "resource.equipmentindex2": 0,
-        "resource.tilemode": 0,
-        "memory.nowweaponindex": hold,
-        "memory.armlbreaked": false,
-        "memory.armrbreaked": false,
-        "memory.headbreaked": false,
-        "memory.leglbreaked": false,
-        "memory.legrbreaked": false,
-        "memory.close": false,
-        "memory.ef_shm_unit.hp": 0,
-        "self.shield": model === "RX_78_2" ? 1 : 0,
-        "memory.legframe": Math.floor(t / (8 / 30)) % 4,
-      };
+    const sampled = pose(model, clip, time, loop);
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
-    for (const d of u.decals) {
-      if (d.name.includes("Boost") || d.onlyOnNonPreview === "true") continue;
-      let visible = true;
-      try {
-        visible = d.isVisible === undefined || expression(d.isVisible, vars);
-      } catch {
-        visible = false;
-      }
-      if (!visible) continue;
-      let im = images[d.asset];
-      if (!im) continue;
-      let b = u.bones[d.basePositionFromLegEnd] || { x: 0, y: 0 },
-        a = pose[d.basePositionFromLegEnd] || {},
-        theta = ((angle - 90) * Math.PI) / 180,
-        bx = val(b.x, vars) + (a.x || 0),
-        by = val(b.y, vars) + (a.y || 0),
-        px = Math.cos(theta) * by - Math.sin(theta) * bx,
-        py = Math.sin(theta) * by + Math.cos(theta) * bx,
-        facing = angle - 90 + val(b.endDirOffset, vars) + (a.dir || 0) + val(b.drawDirOffset, vars),
-        r = ((facing + val(d.pivotOffset, vars)) * Math.PI) / 180,
-        dx =
-          val(d.xOffsetRelative, vars) +
-          (model === "RX_77_2" && ["Head", "Head_Close"].includes(d.name) ? -0.5 : 0),
-        dy = val(d.yOffsetRelative, vars);
-      px += Math.cos(r) * dy - Math.sin(r) * dx + val(d.xOffsetAbsolute, vars);
-      py +=
-        Math.sin(r) * dy +
-        Math.cos(r) * dx +
-        val(d.yOffsetAbsolute, vars) -
-        val(d.hOffset, vars) -
-        (a.height || 0);
-      let frames = val(d.total_frames, vars, 1),
-        fw = val(d.frame_width, vars, Math.floor(im.width / frames)),
-        fh = val(d.frame_height, vars, im.height),
-        fr = 0;
-      try {
-        let fs = String(d.frame || "0")
-          .replace(/self\.isMoving\(\)/gi, clip === "OnMovingWalk" ? "true" : "false")
-          .replace(/self\.isReversing\(\)/gi, "false");
-        fr = Math.max(0, Math.floor(expression(fs, vars)));
-      } catch {}
-      let cols = Math.floor(im.width / fw);
+    for (const layer of visibleLayers(model, heldWeapon, shieldVisible)) {
+      const image = images[layer.asset];
+      if (!image) continue;
+      const transform = layerTransform(model, layer, angle, sampled);
+      const frames = layer.frames || 1,
+        fw = layer.frameWidth || Math.floor(image.width / frames),
+        fh = layer.frameHeight || image.height;
+      const frame = layer.frame || 0,
+        columns = Math.floor(image.width / fw);
       ctx.save();
-      ctx.translate(px, py);
-      ctx.rotate(((facing + 90 + val(d.dirOffset, vars)) * Math.PI) / 180);
-      ctx.scale(
-        val(d.imageScale, vars, 1) * val(d.imageScaleX, vars, 1),
-        val(d.imageScale, vars, 1) * val(d.imageScaleY, vars, 1),
-      );
-      ctx.globalAlpha = val(d.alpha, vars, 1);
+      ctx.translate(transform.x, transform.y);
+      ctx.rotate(transform.rotation);
+      ctx.scale(transform.scaleX, transform.scaleY);
+      ctx.globalAlpha *= layer.alpha ?? 1;
       ctx.drawImage(
-        im,
-        (fr % cols) * fw,
-        Math.floor(fr / cols) * fh,
+        image,
+        (frame % columns) * fw,
+        Math.floor(frame / columns) * fh,
         fw,
         fh,
-        -(frames > 1 ? Math.floor(fw / 2) : fw / 2),
-        -(frames > 1 ? Math.floor(fh / 2) : fh / 2),
+        -fw / 2,
+        -fh / 2,
         fw,
         fh,
       );
@@ -244,18 +166,18 @@ const SpriteRenderer = (() => {
   async function load() {
     await Promise.all(
       Object.entries(ART.assets).map(
-        ([key, src]) =>
+        ([key, source]) =>
           new Promise((resolve, reject) => {
-            let image = new Image();
+            const image = new Image();
             image.onload = () => {
               images[key] = image;
               resolve();
             };
-            image.onerror = () => reject(Error("素材加载失败"));
-            image.src = src;
+            image.onerror = () => reject(Error("素材加载失败：" + key));
+            image.src = source;
           }),
       ),
     );
   }
-  return { draw, load, models, images };
+  return { draw, load, models, images, sample, pose, layerTransform, muzzle, visibleLayers };
 })();

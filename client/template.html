@@ -839,9 +839,6 @@
         .left-note {
           display: none;
         }
-        .header-buttons button#newGame {
-          display: none;
-        }
       }
       .net-form {
         border: 1px solid var(--line);
@@ -870,6 +867,114 @@
         flex-wrap: wrap;
         gap: 8px;
       }
+      .lobby-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .lobby-heading h3 {
+        margin: 0;
+      }
+      .room-list-scroll {
+        max-height: 260px;
+        overflow: auto;
+        margin-bottom: 18px;
+        border: 1px solid var(--line);
+        border-radius: 5px;
+      }
+      .room-list {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        min-width: 420px;
+      }
+      .room-list th,
+      .room-list td {
+        padding: 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      .room-list thead {
+        background: #21333f;
+        position: sticky;
+        top: 0;
+      }
+      .room-card {
+        background: #101c25;
+      }
+      .room-card:hover {
+        background: #1c303c;
+      }
+      .room-state,
+      .room-players,
+      .room-action {
+        white-space: nowrap;
+      }
+      .room-list .room-action {
+        text-align: right;
+      }
+      .server-modal {
+        width: min(480px, 100%);
+      }
+      .server-label {
+        display: block;
+        margin-top: 20px;
+      }
+      .server-label input {
+        display: block;
+        width: 100%;
+        background: #0c1b25;
+        color: var(--text);
+        border: 1px solid #496775;
+        border-radius: 4px;
+        padding: 10px;
+        margin-top: 6px;
+      }
+      #serverStatus {
+        min-height: 36px;
+        color: var(--lime);
+      }
+      [hidden] {
+        display: none !important;
+      }
+      #gameScene > header {
+        position: relative;
+        z-index: 20;
+        background: var(--bg);
+      }
+      #leaveConfirm {
+        z-index: 40;
+      }
+      .menu-screen {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: radial-gradient(ellipse at top, #203947, #0e161e 70%);
+      }
+      .team-slots {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin: 20px 0;
+      }
+      .team-slot {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #101c25;
+      }
+      .spectator-title {
+        margin-top: 22px;
+      }
+      .spectator-slot {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 4px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+      }
       #networkStatus {
         color: var(--lime);
         font-size: 12px;
@@ -881,81 +986,89 @@
     </style>
   </head>
   <body>
-    <header data-ui-node="node-1">
-      <div data-ui-node="node-2" class="brand">
-        <span data-ui-node="node-3" class="logo">V</span>
-        <div data-ui-node="node-4">
-          <div data-ui-node="node-5" class="eyebrow">BATTLE UNIVERSE / IP MULTIPLAYER</div>
-          <h1 data-ui-node="node-6">V计划 · 0079 回合战术</h1>
-        </div>
-      </div>
-      <div data-ui-node="node-7" class="header-buttons">
-        <span data-ui-node="node-8" class="status-tag" id="turnBadge">第1回合 · 蓝方</span
-        ><button data-ui-node="node-9" id="netSettings">连接设置</button
-        ><button data-ui-node="node-10" id="helpBtn">规则</button
-        ><button data-ui-node="node-11" id="newGame">重新开始</button>
-      </div>
-    </header>
-    <div data-ui-node="node-12" class="game-layout">
-      <aside data-ui-node="node-13" class="left">
-        <div data-ui-node="node-14" class="section-title">TACTICAL SQUAD / 作战单位</div>
-        <div data-ui-node="node-15" class="side-title">
-          <span data-ui-node="node-16" class="blue">蓝方小队</span
-          ><span data-ui-node="node-17" id="blueCount" class="muted"></span>
-        </div>
-        <div data-ui-node="node-18" id="allies"></div>
-        <div data-ui-node="node-19" class="side-title">
-          <span data-ui-node="node-20" class="red">红方小队</span
-          ><span data-ui-node="node-21" id="redCount" class="muted"></span>
-        </div>
-        <div data-ui-node="node-22" id="enemies"></div>
-        <div data-ui-node="node-23" class="left-note">
-          双方各三台单位。<br
-            data-ui-node="node-24"
-          />每台单位每回合可移动一次、攻击一次。反击消耗武器资源，不消耗自己的行动机会。
-          <p data-ui-node="node-25">胜利条件：击破全部敌机。</p>
-          <span data-ui-node="node-26" id="modeLabel"></span>
-          <p data-ui-node="node-27" id="netBadge">未连接</p>
-        </div>
-      </aside>
-      <main data-ui-node="node-28" class="center">
-        <div data-ui-node="node-29" class="phase-row">
-          <div data-ui-node="node-30">
-            <div data-ui-node="node-31" class="eyebrow" id="phaseEyebrow">BLUE PHASE</div>
-            <h2 data-ui-node="node-32" id="phaseTitle">蓝方行动阶段</h2>
-            <p data-ui-node="node-33" id="hint">点击己方单位，选择蓝色格子移动。</p>
+    <div data-ui-node="node-173" id="gameScene" hidden>
+      <header data-ui-node="node-1">
+        <div data-ui-node="node-2" class="brand">
+          <span data-ui-node="node-3" class="logo">V</span>
+          <div data-ui-node="node-4">
+            <div data-ui-node="node-5" class="eyebrow">BATTLE UNIVERSE / IP MULTIPLAYER</div>
+            <h1 data-ui-node="node-6">V计划 · 0079 回合战术</h1>
           </div>
-          <button data-ui-node="node-34" id="endTurn" class="primary">结束蓝方回合</button>
         </div>
-        <div data-ui-node="node-35" class="map-wrap" id="mapWrap">
-          <canvas data-ui-node="node-36" id="map" aria-label="12乘9格战术地图"></canvas
-          ><span data-ui-node="node-37" class="map-label">SECTOR 07 / GROUND COMBAT</span
-          ><span data-ui-node="node-38" class="hover-info" id="hoverInfo"
-            >曼哈顿格距 · 山岩与水域不可通过</span
-          >
+        <div data-ui-node="node-7" class="header-buttons">
+          <span data-ui-node="node-8" class="status-tag" id="turnBadge">第1回合 · 蓝方</span
+          ><button data-ui-node="node-9" id="netSettings">主菜单</button
+          ><button data-ui-node="node-174" id="roomSettings" hidden>房间席位</button
+          ><button data-ui-node="node-10" id="helpBtn">规则</button>
         </div>
-        <div data-ui-node="node-39" class="legend">
-          <span data-ui-node="node-40"
-            ><i data-ui-node="node-41" style="background: #54b8dd"></i>可移动</span
-          ><span data-ui-node="node-42"
-            ><i data-ui-node="node-43" style="background: #c08f64"></i>武器范围</span
-          ><span data-ui-node="node-44"
-            ><i data-ui-node="node-45" style="background: #c76d68"></i>有效目标</span
-          ><span data-ui-node="node-46"
-            ><i data-ui-node="node-47" style="background: #42654a"></i>林地：移动2／掩护15%</span
-          ><span data-ui-node="node-48"
-            ><i data-ui-node="node-49" style="background: #7b807c"></i>废墟：移动2／掩护10%</span
-          >
-        </div>
-        <div data-ui-node="node-50" class="log">
-          <h3 data-ui-node="node-51">COMBAT LOG / 战斗记录</h3>
-          <div data-ui-node="node-52" id="log" class="log-lines" aria-live="polite"></div>
-        </div>
-      </main>
-      <aside data-ui-node="node-53" class="right">
-        <div data-ui-node="node-54" class="section-title">UNIT COMMAND / 单位指令</div>
-        <div data-ui-node="node-55" id="unitPanel"></div>
-      </aside>
+      </header>
+      <div data-ui-node="node-12" class="game-layout">
+        <aside data-ui-node="node-13" class="left">
+          <div data-ui-node="node-14" class="section-title">TACTICAL SQUAD / 作战单位</div>
+          <div data-ui-node="node-15" class="side-title">
+            <span data-ui-node="node-16" class="blue">蓝方小队</span
+            ><span data-ui-node="node-17" id="blueCount" class="muted"></span>
+          </div>
+          <div data-ui-node="node-18" id="allies"></div>
+          <div data-ui-node="node-19" class="side-title">
+            <span data-ui-node="node-20" class="red">红方小队</span
+            ><span data-ui-node="node-21" id="redCount" class="muted"></span>
+          </div>
+          <div data-ui-node="node-22" id="enemies"></div>
+          <div data-ui-node="node-23" class="left-note">
+            双方携带各自编组出击。<br
+              data-ui-node="node-24"
+            />每台单位每回合可移动一次、攻击一次。反击消耗武器资源，不消耗自己的行动机会。
+            <p data-ui-node="node-25">胜利条件：击破全部敌机。</p>
+            <span data-ui-node="node-26" id="modeLabel"></span>
+            <p data-ui-node="node-27" id="netBadge">未连接</p>
+          </div>
+        </aside>
+        <main data-ui-node="node-28" class="center">
+          <div data-ui-node="node-29" class="phase-row">
+            <div data-ui-node="node-30">
+              <div data-ui-node="node-31" class="eyebrow" id="phaseEyebrow">BLUE PHASE</div>
+              <h2 data-ui-node="node-32" id="phaseTitle">蓝方行动阶段</h2>
+              <div id="deploymentPanel" hidden data-ui-node="node-200">
+                <p id="deploymentStatus" data-ui-node="node-201"></p>
+                <button id="confirmDeployment" class="primary" data-ui-node="node-202">
+                  确认部署
+                </button>
+              </div>
+              <p data-ui-node="node-33" id="hint">点击己方单位，选择蓝色格子移动。</p>
+            </div>
+            <button data-ui-node="node-34" id="endTurn" class="primary">结束蓝方回合</button>
+          </div>
+          <div data-ui-node="node-35" class="map-wrap" id="mapWrap">
+            <canvas data-ui-node="node-36" id="map" aria-label="24乘18格战术地图"></canvas
+            ><span data-ui-node="node-37" class="map-label">SECTOR 07 / GROUND COMBAT</span
+            ><span data-ui-node="node-38" class="hover-info" id="hoverInfo"
+              >曼哈顿格距 · 山岩与水域不可通过</span
+            >
+          </div>
+          <div data-ui-node="node-39" class="legend">
+            <span data-ui-node="node-40"
+              ><i data-ui-node="node-41" style="background: #54b8dd"></i>可移动</span
+            ><span data-ui-node="node-42"
+              ><i data-ui-node="node-43" style="background: #c08f64"></i>武器范围</span
+            ><span data-ui-node="node-44"
+              ><i data-ui-node="node-45" style="background: #c76d68"></i>有效目标</span
+            ><span data-ui-node="node-46"
+              ><i data-ui-node="node-47" style="background: #42654a"></i>林地：移动2／掩护15%</span
+            ><span data-ui-node="node-48"
+              ><i data-ui-node="node-49" style="background: #7b807c"></i>废墟：移动2／掩护10%</span
+            >
+          </div>
+          <div data-ui-node="node-50" class="log">
+            <h3 data-ui-node="node-51">COMBAT LOG / 战斗记录</h3>
+            <div data-ui-node="node-52" id="log" class="log-lines" aria-live="polite"></div>
+          </div>
+        </main>
+        <aside data-ui-node="node-53" class="right">
+          <div data-ui-node="node-54" class="section-title">UNIT COMMAND / 单位指令</div>
+          <div data-ui-node="node-55" id="unitPanel"></div>
+        </aside>
+      </div>
     </div>
     <div
       data-ui-node="node-56"
@@ -1061,14 +1174,14 @@
             </p>
             <strong data-ui-node="node-110">③ 防守方应战</strong>
             <p data-ui-node="node-111">
-              选择反击、防御或回避。反击武器必须同时满足距离、EN、弹药条件。只有存活才能回击。
+              选择反击、防御或回避。反击武器必须同时满足射程和 EN 条件。只有存活才能回击。
             </p>
           </div>
           <div data-ui-node="node-112">
             <strong data-ui-node="node-113">回合规则</strong>
             <p data-ui-node="node-114">
-              每台单位可移动一次，然后攻击或待机。也可原地攻击。攻击后结束该单位行动；反击不消耗行动次数，但消耗武器资源。己方回合开始恢复15
-              EN，弹药不恢复。
+              每台单位可移动一次，然后攻击或待机。也可原地攻击。攻击后结束该单位行动；反击不消耗行动次数，但消耗
+              EN。己方回合开始恢复15 EN。
             </p>
             <strong data-ui-node="node-115">属性与掩护</strong>
             <p data-ui-node="node-116">
@@ -1085,28 +1198,51 @@
     <div
       data-ui-node="node-119"
       id="start"
-      class="overlay"
+      class="menu-screen"
       role="dialog"
       aria-modal="true"
       aria-labelledby="startTitle"
     >
       <div data-ui-node="node-120" class="modal">
-        <div data-ui-node="node-121" class="eyebrow">V PROJECT / 3 VS 3 SKIRMISH</div>
+        <div data-ui-node="node-121" class="eyebrow">V PROJECT / SQUAD SKIRMISH</div>
         <h2 data-ui-node="node-122" id="startTitle" style="font-size: 29px; margin: 10px 0">
-          0079 · IP联机对战
+          0079 · 回合战术
         </h2>
         <p data-ui-node="node-123" class="muted">
-          高达、钢加农、钢坦克。移动、选武器、锁定目标，再由防守方选择应战。
+          配置单位武器套件，编组出击，在己方出生区部署后开始战斗。
         </p>
-        <div data-ui-node="node-124" class="net-form">
-          <label data-ui-node="node-125"
-            >服务器 IP : 端口<input
-              data-ui-node="node-126"
-              id="serverAddress"
-              placeholder="192.168.1.10:1313"
-              autocomplete="off" /></label
-          ><label data-ui-node="node-127"
-            >房间码<input
+        <div data-ui-node="node-138" class="start-layout">
+          <button data-ui-node="node-198" id="openFormation">编组</button>
+          <button data-ui-node="node-140" id="startAI" class="primary" disabled>
+            单人离线 · 对战AI
+          </button>
+          <button data-ui-node="node-150" id="openRooms" disabled>联机房间</button>
+          <button data-ui-node="node-139" id="startHotseat" disabled>本机双人热座</button>
+        </div>
+        <div data-ui-node="node-124" id="lobby" class="net-form" hidden>
+          <div data-ui-node="node-154" class="lobby-heading">
+            <div data-ui-node="node-155">
+              <h3 data-ui-node="node-151">房间列表</h3>
+              <span data-ui-node="node-156" id="connectedServer" class="muted"></span>
+            </div>
+            <button data-ui-node="node-157" id="refreshRooms">刷新服务器列表</button>
+          </div>
+          <p data-ui-node="node-152" id="roomListStatus" role="status">连接成功后显示房间。</p>
+          <div data-ui-node="node-158" class="room-list-scroll">
+            <table data-ui-node="node-159" class="room-list" aria-label="房间列表">
+              <thead data-ui-node="node-160">
+                <tr data-ui-node="node-161">
+                  <th data-ui-node="node-162" scope="col">房间名</th>
+                  <th data-ui-node="node-163" scope="col">当前游戏状态</th>
+                  <th data-ui-node="node-164" scope="col">玩家人数</th>
+                  <th data-ui-node="node-165" scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody data-ui-node="node-153" id="roomList"></tbody>
+            </table>
+          </div>
+          <label data-ui-node="node-127"
+            >新房间名称<input
               data-ui-node="node-128"
               id="roomCode"
               value="ROOM1"
@@ -1114,28 +1250,17 @@
               autocomplete="off"
           /></label>
           <div data-ui-node="node-129" class="net-buttons">
-            <button data-ui-node="node-130" id="createRoom" class="primary">创建房间 · 蓝方</button
-            ><button data-ui-node="node-131" id="joinRoom">加入房间 · 红方</button
-            ><button data-ui-node="node-132" id="resumeRoom">恢复连接</button
-            ><button data-ui-node="node-133" id="leaveNetwork">断开连接</button>
+            <button data-ui-node="node-130" id="createRoom">创建房间</button>
           </div>
           <p data-ui-node="node-134" id="networkStatus" role="status">
-            房主创建房间，另一位玩家输入相同IP和房间码加入。
+            选择列表中的房间加入，或创建新房间。
           </p>
           <p data-ui-node="node-135" class="muted" style="font-size: 11px">
-            双方连接后自动开始。刷新页面后点击“恢复连接”；暂时断网会自动重连。重连凭据保存在当前浏览器标签页中。
+            两队准备后开始；游戏中可加入观战，断网或刷新页面后自动恢复席位。
           </p>
         </div>
-        <details data-ui-node="node-136">
-          <summary data-ui-node="node-137" class="muted">离线模式</summary>
-          <div data-ui-node="node-138" class="start-layout">
-            <button data-ui-node="node-139" id="startHotseat" class="primary">
-              双人热座 · 双方手动应战</button
-            ><button data-ui-node="node-140" id="startAI">单人试玩 · 对战AI</button>
-          </div>
-        </details>
         <p data-ui-node="node-141" class="muted" style="font-size: 11px">
-          联机由服务端统一裁定移动、命中和伤害。全部贴图已内置，无需额外下载素材。
+          单人离线和本机热座无需服务器。全部贴图已内置，可直接打开本地客户端游玩。
         </p>
         <p data-ui-node="node-142" id="loading" class="blue">正在载入原始单位贴图…</p>
       </div>
@@ -1157,16 +1282,341 @@
       </div>
     </div>
     <div data-ui-node="node-149" class="toast" id="toast" role="status"></div>
+    <div
+      data-ui-node="node-166"
+      id="serverConnect"
+      class="overlay"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="serverConnectTitle"
+    >
+      <form data-ui-node="node-167" id="serverForm" class="modal server-modal">
+        <h2 data-ui-node="node-168" id="serverConnectTitle">连接服务器</h2>
+        <label data-ui-node="node-125" class="server-label"
+          >服务器 IP : 端口
+          <input
+            data-ui-node="node-126"
+            id="serverAddress"
+            placeholder="192.168.1.10:1313"
+            autocomplete="off"
+            required
+          />
+        </label>
+        <p data-ui-node="node-169" id="serverStatus" role="status">输入服务器 IP 和端口后连接。</p>
+        <div data-ui-node="node-170" class="net-buttons">
+          <button data-ui-node="node-171" id="connectServer" type="submit" class="primary">
+            连接服务器
+          </button>
+          <button data-ui-node="node-172" id="cancelServer" type="button">返回主菜单</button>
+        </div>
+      </form>
+    </div>
+    <section
+      data-ui-node="node-175"
+      id="roomPreparation"
+      class="menu-screen"
+      hidden
+      aria-labelledby="roomTitle"
+    >
+      <div data-ui-node="node-176" class="modal room-preparation">
+        <div data-ui-node="node-177" class="lobby-heading">
+          <h2 data-ui-node="node-178" id="roomTitle">房间准备</h2>
+          <button data-ui-node="node-179" id="roomMainMenu">主菜单</button>
+        </div>
+        <p data-ui-node="node-180" id="roomStatus" role="status"></p>
+        <div class="net-buttons" data-ui-node="node-203">
+          <span id="roomFormationSummary" data-ui-node="node-204"></span
+          ><button id="roomFormation" data-ui-node="node-205">编组</button>
+        </div>
+        <div data-ui-node="node-181" id="teamSlots" class="team-slots"></div>
+        <div data-ui-node="node-182" class="net-buttons">
+          <button data-ui-node="node-183" id="joinTeam1">加入队伍1</button
+          ><button data-ui-node="node-184" id="joinTeam2">加入队伍2</button>
+          <button data-ui-node="node-185" id="becomeSpectator">切换到观战席</button
+          ><button data-ui-node="node-186" id="toggleReady" class="primary">准备</button
+          ><button data-ui-node="node-187" id="roomReturn" hidden>返回战斗</button>
+        </div>
+        <h3 data-ui-node="node-188" class="spectator-title">观战玩家</h3>
+        <div data-ui-node="node-189" id="spectatorSlots"></div>
+        <p data-ui-node="node-190" class="muted">
+          两队玩家均准备后开始。随时可转入观战席，观战玩家可加入空队伍。
+        </p>
+      </div>
+    </section>
+    <div
+      data-ui-node="node-191"
+      id="leaveConfirm"
+      class="overlay"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="leaveTitle"
+    >
+      <div data-ui-node="node-192" class="modal server-modal">
+        <h2 data-ui-node="node-193" id="leaveTitle">是否离开游戏？</h2>
+        <p data-ui-node="node-194" class="muted">确认后退出当前游戏并返回主菜单。</p>
+        <div data-ui-node="node-195" class="net-buttons">
+          <button data-ui-node="node-196" id="cancelLeave">继续游戏</button
+          ><button data-ui-node="node-197" id="confirmLeave" class="danger">确认离开</button>
+        </div>
+      </div>
+    </div>
+    <section id="formationScreen" class="menu-screen" hidden data-ui-node="node-199">
+      <div class="modal formation-dialog" data-ui-node="node-206">
+        <h2 data-ui-node="node-207">单位编组</h2>
+        <div class="net-buttons" data-ui-node="node-208">
+          <select id="formationSelect" aria-label="已保存编组" data-ui-node="node-209"></select
+          ><button id="newFormation" data-ui-node="node-210">新建编组</button>
+        </div>
+        <label data-ui-node="node-211"
+          >编组名称 <input id="formationName" maxlength="32" data-ui-node="node-212"
+        /></label>
+        <p id="formationBudget" data-ui-node="node-213"></p>
+        <div class="formation-workspace">
+          <section class="formation-squad">
+            <h3>出战编组</h3>
+            <div
+              id="formationUnits"
+              data-ui-node="node-214"
+              tabindex="0"
+              role="region"
+              aria-label="出战单位滚动列表"
+            ></div>
+          </section>
+          <aside class="formation-catalog">
+            <h3>可用机体</h3>
+            <select
+              id="formationPrefab"
+              size="6"
+              aria-label="可用单位"
+              data-ui-node="node-217"
+            ></select>
+            <button id="addFormationUnit" data-ui-node="node-218">添加到编组</button>
+            <p class="muted">选择机体后添加，再在出战列表更换武器套件。可拖动列表右侧滚动条。</p>
+          </aside>
+        </div>
+        <p id="formationWeapons" class="muted" data-ui-node="node-215"></p>
+        <div class="net-buttons" data-ui-node="node-219">
+          <button id="saveFormation" class="primary" data-ui-node="node-220">保存并选用</button
+          ><button id="cancelFormation" data-ui-node="node-221">取消</button>
+        </div>
+      </div>
+    </section>
+    <style>
+      #formationScreen .formation-dialog {
+        max-width: 1080px;
+        width: 95%;
+        height: min(86vh, 860px);
+        max-height: 95vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .formation-dialog h2,
+      .formation-dialog h3,
+      .formation-dialog p {
+        margin: 0;
+      }
+      .formation-workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 230px;
+        gap: 16px;
+        flex: 1;
+        min-height: 0;
+      }
+      .formation-squad {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        min-width: 0;
+        gap: 8px;
+      }
+      #formationUnits {
+        flex: 1;
+        min-height: 0;
+        overflow-y: scroll;
+        scrollbar-gutter: stable;
+        overscroll-behavior: contain;
+        border: 1px solid #3c596a;
+        border-radius: 6px;
+        background: #0d2028;
+        padding: 0 12px;
+      }
+      #formationUnits::-webkit-scrollbar {
+        width: 16px;
+      }
+      #formationUnits::-webkit-scrollbar-track {
+        background: #152c37;
+      }
+      #formationUnits::-webkit-scrollbar-thumb {
+        background: #5d91a7;
+        border: 3px solid #152c37;
+        border-radius: 8px;
+      }
+      .formation-catalog {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-height: 0;
+      }
+      #formationPrefab {
+        width: 100%;
+        flex: 1;
+        min-height: 100px;
+        max-height: 280px;
+        background: #132c37;
+        color: #e4f1f7;
+      }
+      #formationPrefab option {
+        padding: 12px 8px;
+        border-bottom: 1px solid #294954;
+      }
+      .formation-row {
+        display: grid;
+        grid-template-columns: 56px minmax(100px, 1fr) minmax(170px, 1fr) auto;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #344653;
+      }
+      .formation-row small {
+        grid-column: 2 / -1;
+      }
+      .formation-row select {
+        width: 100%;
+      }
+      #formationWeapons {
+        max-height: 50px;
+        overflow-y: auto;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+      .formation-dialog > .net-buttons {
+        flex-shrink: 0;
+      }
+      @media (max-width: 700px) {
+        #formationScreen .formation-dialog {
+          height: 92vh;
+          padding: 14px;
+          gap: 8px;
+        }
+        .formation-workspace {
+          grid-template-columns: minmax(0, 1fr);
+          grid-template-rows: minmax(0, 1fr) auto;
+          gap: 8px;
+        }
+        .formation-catalog {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 6px;
+        }
+        .formation-catalog h3 {
+          grid-column: 1 / -1;
+        }
+        #formationPrefab {
+          height: 100px;
+        }
+        .formation-row {
+          grid-template-columns: 42px minmax(0, 1fr) auto;
+          gap: 6px;
+        }
+        #formationScreen .formation-row img {
+          width: 42px;
+          height: 42px;
+        }
+        #formationScreen .formation-row select {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          min-width: 0;
+        }
+        .formation-row > button {
+          grid-column: 3;
+          grid-row: 1;
+        }
+        .formation-row small {
+          grid-column: 1 / -1;
+        }
+        .formation-catalog .muted {
+          display: none;
+        }
+      }
+      #formationName {
+        background: #203540;
+        color: #ecf5fa;
+        border: 1px solid #3c596a;
+        padding: 9px 12px;
+        border-radius: 4px;
+        max-width: 100%;
+      }
+      .formation-row select {
+        flex: 1;
+        min-width: 170px;
+      }
+      .formation-row img {
+        object-fit: contain;
+        height: 56px;
+      }
+      #deploymentPanel {
+        padding: 10px 14px;
+        background: #183b40;
+        border: 1px solid #59c4ab;
+        margin: 8px 0;
+      }
+    </style>
+    <aside id="musicPlayer" aria-label="背景音乐播放器" data-ui-node="music-player">
+      <span id="musicTitle"></span>
+      <button id="musicToggle" type="button">播放</button>
+      <button id="musicNext" type="button" aria-label="随机下一首背景音乐">下一首 ⤨</button>
+      <small id="musicStatus" role="status"></small>
+    </aside>
+    <style>
+      #musicPlayer {
+        position: fixed;
+        right: 12px;
+        bottom: 10px;
+        z-index: 160;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-wrap: wrap;
+        max-width: calc(100vw - 24px);
+        padding: 7px 10px;
+        border: 1px solid #426474;
+        border-radius: 7px;
+        background: #10232bed;
+        color: #d9eef6;
+        font-size: 12px;
+      }
+      #musicPlayer button {
+        padding: 4px 8px;
+        font-size: 12px;
+      }
+      #musicStatus:empty {
+        display: none;
+      }
+    </style>
     <script id="art" type="application/json">
       __DATA__
     </script>
     <script>
       const ART = JSON.parse(document.getElementById("art").textContent);
+      __WEAPON_SEQUENCE__;
       __CORE__;
       __RENDERER__;
+      __SPRITE_EFFECTS__;
+      __WEAPON_EFFECTS__;
+      __WEAPON_AUDIO__;
+      __MUSIC__;
       __BATTLE_SCENE__;
+      __BATTLE_WINDOW__;
       __APP__;
       __NETWORK__;
+      __LOBBY__;
+      __ROOM__;
+      __FORMATION__;
     </script>
   </body>
 </html>

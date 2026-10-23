@@ -7,9 +7,9 @@
     active: true,
     suspended: false,
     scene: "start",
-    leftModel: "RX_78_2",
-    rightModel: "RX_77_2",
-    weapon: "br",
+    leftModel: Object.keys(UnitModels)[0],
+    rightModel: Object.keys(UnitModels)[1] || Object.keys(UnitModels)[0],
+    weapon: null,
     response: "counter",
     result: "hit",
     unitState: "targets",
@@ -22,15 +22,36 @@
   };
 
   function makeUnit(id, model, team, x) {
-    const unit = Rules.create().units.find((item) => item.model === model && item.team === team);
+    const m = UnitModels[model];
+    const formation = [{ unitId: m.prefabId, kitId: m.kitId }];
+    const unit = Rules.create(false, 7319, [formation, formation]).units.find(
+      (item) => item.team === team,
+    );
     return { ...unit, id, x, y: 4 };
   }
 
   function configure(changes = {}) {
+    WeaponAudio.stop();
     Object.assign(preview, changes);
     if (!assetsReady) return;
     const firstRender = !preview.ready;
     preview.ready = true;
+    const gameScenes = [
+      "map",
+      "deployment",
+      "reaction",
+      "battle",
+      "help",
+      "victory",
+      "leaveConfirm",
+    ];
+    setPageView(
+      gameScenes.includes(preview.scene)
+        ? "game"
+        : preview.scene === "roomPreparation"
+          ? "room"
+          : "menu",
+    );
     game = Rules.create();
     game.ai = false;
     log = [];
@@ -66,13 +87,33 @@
     byId("victoryTitle").textContent = "蓝方胜利";
     byId("victoryNote").textContent = "第8回合，全歼敌方小队。存活单位 2 台。";
     byId("networkStatus").textContent = {
-      normal: "房主创建房间，另一位玩家输入相同IP和房间码加入。",
+      normal: "选择列表中的房间加入，或创建新房间。",
       waiting: "房间 ROOM1 · 你是蓝方 · 等待另一位玩家加入",
       disconnected: "连接中断，正在自动重连…",
     }[preview.connection];
-    byId("start").querySelector("details").open = true;
+    byId("lobby").hidden = preview.scene !== "rooms";
+    byId("connectedServer").textContent = "192.168.1.10:1313";
+    byId("serverStatus").textContent =
+      preview.connection === "disconnected"
+        ? "连接失败，请检查服务器 IP 和端口。"
+        : "输入服务器 IP 和端口后连接。";
+    Lobby.render([
+      { code: "ROOM1", players: 1, capacity: 2, phase: "waiting", joinable: true },
+      { code: "ROOM2", players: 2, capacity: 2, phase: "playing", joinable: false },
+    ]);
+    RoomPanel.render({
+      room: "ROOM1",
+      started: false,
+      connected: [true, true],
+      you: { id: "preview-1", seat: 0 },
+      members: [
+        { id: "preview-1", name: "玩家1", seat: 0, ready: true, connected: true },
+        { id: "preview-2", name: "玩家2", seat: 1, ready: false, connected: true },
+        { id: "preview-3", name: "玩家3", seat: null, ready: false, connected: true },
+      ],
+    });
     for (const overlay of document.querySelectorAll(".overlay"))
-      overlay.hidden = overlay.id !== preview.scene;
+      overlay.hidden = overlay.id !== (preview.scene === "rooms" ? "start" : preview.scene);
     byId("battleTitle").textContent = `${unitName(left)} vs ${unitName(right)}`;
     byId("battleSummary").textContent = "独立演出预览，可暂停并拖动进度。";
     byId("continueBattle").disabled = false;
@@ -85,6 +126,13 @@
     preview.events = [makeEvent(left, right, weapon)];
     if (preview.response === "counter" && preview.result !== "kill")
       preview.events.push(makeEvent(right, left, counterWeapon));
+    if (preview.scene === "formation") Formation.open();
+    if (preview.scene === "deployment") {
+      game.deployment = [false, false];
+      phase = "deployment";
+      Deployment.reset();
+      Deployment.render();
+    }
     if (firstRender) window.dispatchEvent(new Event("ui-preview-ready"));
   }
 
@@ -100,34 +148,79 @@
       weapon: weapon.id,
       type: weapon.type,
       clip: weapon.clip,
-      eq: weapon.eq,
-      hold: weapon.hold,
+      heldWeapon: weapon.changeHeldWeapon === false ? from.heldWeapon : weapon.id,
+      shotCount: weapon.shotCount,
+      damagePerShot: weapon.damagePerShot,
       hit: preview.result !== "miss",
+      response: from.team === 0 ? preview.response : "counter",
       damage,
+      before: to.hp,
       after: preview.result === "miss" ? to.hp : Math.max(0, to.hp - damage),
     };
   }
 
   function tick(now) {
     if (preview.suspended) {
+      WeaponAudio.stop();
       preview.lastTime = null;
       return;
     }
     if (!preview.ready) configure();
+    if (!["map", "deployment", "battle"].includes(preview.scene)) {
+      WeaponAudio.stop();
+      preview.boxes = [];
+      return;
+    }
     if (preview.playing && preview.lastTime !== null) {
       preview.progress =
-        (preview.progress + (now - preview.lastTime) / (1900 * preview.events.length)) % 1;
+        (preview.progress +
+          (now - preview.lastTime) /
+            preview.events.reduce(
+              (total, event) =>
+                total +
+                BattleScene.duration(event, preview.left, preview.right, byId("battleCanvas")) *
+                  1000,
+              0,
+            )) %
+        1;
     }
     preview.lastTime = now;
     drawMap(now);
     if (preview.scene !== "battle") {
+      WeaponAudio.stop();
       preview.boxes = [];
       return;
     }
-    const position = preview.progress * preview.events.length;
-    const index = Math.min(Math.floor(position), preview.events.length - 1);
-    const ratio = preview.progress === 1 ? 1 : position - index;
+    const durations = preview.events.map((event) =>
+      BattleScene.duration(event, preview.left, preview.right, byId("battleCanvas")),
+    );
+    const total = durations.reduce((a, b) => a + b, 0);
+    let position = preview.progress * total,
+      index = 0;
+    while (index < durations.length - 1 && position > durations[index]) {
+      position -= durations[index];
+      index++;
+    }
+    const ratio = preview.progress === 1 ? 1 : position / durations[index];
     const event = preview.events[index];
+    if (preview.playing) {
+      const bounds = byId("battleCanvas").getBoundingClientRect();
+      const plan = BattleScene.timeline(
+        event,
+        preview.left,
+        preview.right,
+        bounds.width,
+        bounds.height,
+      ).plan;
+      WeaponAudio.sync(
+        preview,
+        index,
+        getWeapon(getUnit(event.from), event.weapon),
+        ratio * durations[index],
+        1,
+        plan.cues,
+      );
+    } else WeaponAudio.stop();
     const displayHp = {
       [preview.left.id]: preview.left.hp,
       [preview.right.id]: preview.right.hp,
@@ -139,7 +232,7 @@
       right: preview.right,
       event,
       ratio,
-      elapsed: ratio * 1.9,
+      elapsed: ratio * durations[index],
       time: preview.progress * 3.8,
       completed: preview.progress === 1,
       displayHp,
@@ -148,7 +241,17 @@
       `${index ? "反击 · " : ""}${getWeapon(getUnit(event.from), event.weapon).name}`;
     byId("battleInfo").innerHTML = [preview.left, preview.right]
       .map((unit) => {
-        const hp = unit.id === event.to && ratio > 0.53 ? event.after : displayHp[unit.id];
+        const hp =
+          unit.id === event.to
+            ? BattleScene.displayedHp(
+                event,
+                preview.left,
+                preview.right,
+                byId("battleCanvas"),
+                ratio,
+                displayHp[unit.id],
+              )
+            : displayHp[unit.id];
         return /* HTML */ `<div>
           <strong>${teamName(unit.team)} ${unitName(unit)}</strong>
           <div class="hp-track">
@@ -167,6 +270,11 @@
   }
 
   // 对外公开同一个状态对象，编辑器读取的进度与 tick 使用的进度一致。
-  Object.assign(preview, { configure, tick });
+  Object.assign(preview, {
+    configure,
+    tick,
+    unlockAudio: WeaponAudio.unlock,
+    stopAudio: WeaponAudio.stop,
+  });
   window.GamePreview = preview;
 })();

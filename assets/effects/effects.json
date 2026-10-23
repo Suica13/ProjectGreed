@@ -1,0 +1,152 @@
+{
+  "MG_Hit_1": {
+    "texture": "textures/MG_Hit_1.png",
+    "frames": 2,
+    "startFrame": 0,
+    "endFrame": 1,
+    "fps": 12.0,
+    "scaleFrom": 0.5,
+    "scaleTo": 0.5,
+    "alpha": 1.0,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "drift": 30.0,
+    "sounds": [
+      {
+        "file": "../sounds/MachineGun_Hit_1.ogg",
+        "volume": 0.15
+      }
+    ],
+    "source": "Resource/Image/Fx/Weapon/Shell/Common/MG_Hit_1.gw"
+  },
+  "MG_Hit_1_S": {
+    "texture": "textures/MG_Hit_1.png",
+    "frames": 2,
+    "startFrame": 0,
+    "endFrame": 1,
+    "fps": 12.0,
+    "scaleFrom": 0.25,
+    "scaleTo": 0.25,
+    "alpha": 1.0,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "drift": 30.0,
+    "sounds": [
+      {
+        "file": "../sounds/MachineGun_Hit_1.ogg",
+        "volume": 0.15
+      }
+    ],
+    "source": "Resource/Image/Fx/Weapon/Shell/Common/MG_Hit_1.gw"
+  },
+  "Explosion_Hit_1": {
+    "texture": "textures/Explosion_Hit_1.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 9.0,
+    "scaleFrom": 1.35,
+    "scaleTo": 1.35,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": -1.0,
+      "y": 10.0
+    },
+    "drift": 0.0,
+    "sounds": [
+      {
+        "file": "../sounds/Explosion_Hit_1.ogg",
+        "volume": 0.35
+      }
+    ],
+    "source": "Resource/Image/Fx/Weapon/Shell/Common/Explosion_Hit_1.gw"
+  },
+  "Beam_Hit_1_S_Pink": {
+    "texture": "textures/Beam_Hit_1_Pink.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 12.0,
+    "scaleFrom": 0.35,
+    "scaleTo": 0.35,
+    "alpha": 0.75,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 10.0
+    },
+    "drift": 45.0,
+    "sounds": [
+      {
+        "file": "../sounds/Beam_Hit_1.ogg",
+        "volume": 0.15
+      }
+    ],
+    "source": "Resource/Image/Fx/Weapon/Beam/Common/Beam_Hit_1_Pink.gw"
+  },
+  "Cqb_Hit_1": {
+    "texture": "textures/Cqb_Hit_1.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 6.0,
+    "scaleFrom": 1.25,
+    "scaleTo": 1.0,
+    "alpha": 0.75,
+    "rotation": -180.0,
+    "offset": {
+      "x": -5.0,
+      "y": -15.0
+    },
+    "drift": 9.0,
+    "sounds": [
+      {
+        "file": "../sounds/Cqb_Hit_1.ogg",
+        "volume": 0.5
+      },
+      {
+        "file": "../sounds/Cqb_Hit_2.ogg",
+        "volume": 0.5
+      },
+      {
+        "file": "../sounds/Cqb_Hit_3.ogg",
+        "volume": 0.5
+      }
+    ],
+    "source": "Resource/Image/Fx/Weapon/Cqb/Common/Cqb_Hit_1.gw"
+  },
+  "Explosion_Ground_1": {
+    "texture": "textures/Explosion_Ground_1.png",
+    "frames": 10,
+    "startFrame": 0,
+    "endFrame": 9,
+    "fps": 9.0,
+    "scaleFrom": 4.0,
+    "scaleTo": 3.0,
+    "alpha": 1.0,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "drift": 0.0,
+    "sounds": [
+      {
+        "file": "../sounds/Dead_1.ogg",
+        "volume": 0.5
+      },
+      {
+        "file": "../sounds/Dead_2.ogg",
+        "volume": 0.5
+      }
+    ],
+    "source": "Resource/Image/Fx/Common/Common_Explosion_1.gw"
+  }
+}

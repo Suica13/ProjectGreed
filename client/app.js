@@ -25,6 +25,29 @@ let game = Rules.create(),
   aiTimer = null,
   session = 0,
   toastTimer = null;
+let pageView = "menu";
+let animationFrameId = null;
+// 页面生命周期：Menu 和房间准备只显示界面，不启动战斗 Canvas 绘制。
+function setPageView(view) {
+  if (view !== "game" && pageView === "game" && battleView) BattleWindow.suspend(battleView);
+  if (view !== "game") WeaponAudio.stop();
+  pageView = view;
+  byId("gameScene").hidden = view !== "game";
+  byId("start").hidden = view !== "menu";
+  byId("roomPreparation").hidden = view !== "room";
+  byId("formationScreen").hidden = view !== "formation";
+  byId("roomSettings").hidden = !Net.active;
+  if (view !== "game")
+    for (const id of ["reaction", "battle", "victory", "help"]) byId(id).hidden = true;
+  if (view === "game") startRendering();
+  else if (!window.isLayoutPreview) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+}
+function startRendering() {
+  if (assetsReady && animationFrameId === null) animationFrameId = requestAnimationFrame(tick);
+}
 const teamName = (t) => (t ? "红方" : "蓝方"),
   other = (t) => 1 - t,
   getUnit = (id) => game.units.find((u) => u.id === id),
@@ -33,7 +56,7 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
   unitName = (u) => UnitModels[u.model].name,
   formatNumber = (n) => Number(n).toLocaleString("en-US"),
   isAI = () => !Net.active && game.ai && game.team === 1,
-  isBusy = () => phase !== "idle" || !!Net.awaiting;
+  isBusy = () => phase !== "idle" || !!Net.awaiting || MapEffects.pending();
 function note(text) {
   byId("toast").textContent = text;
   byId("toast").classList.add("show");
@@ -64,27 +87,37 @@ function htmlWeapon(w, u) {
       ><span class="type ${w.type}">${Rules.typeNames[w.type]}</span>
     </div>
     <div class="weapon-meta">
-      射程 ${w.min}–${w.max}　基础伤害 ${formatNumber(w.damage)}　命中 ${w.hit}%<br />${w.en ? "EN " + w.en + " / 剩余 " + u.en : "弹药 " + u.ammo[w.id] + " / " + w.ammo}
+      射程 ${w.min}–${w.max}　单发 ${formatNumber(w.damagePerShot)} × ${w.shotCount}
+      发${w.hitsPerShot > 1 ? ` × ${w.hitsPerShot} 段` : ""} = ${formatNumber(w.damage)}　命中
+      ${w.hit}%<br />EN ${w.en} / 剩余 ${u.en}
     </div>`;
 }
 // 刷新顶栏、单位列表、提示和右侧指令，不推进回合。
 function update() {
+  if (pageView !== "game" && !window.isLayoutPreview) {
+    if (pageView === "room" && Net.snapshot) RoomPanel.render(Net.snapshot);
+    return;
+  }
+  Deployment.render();
   const busy = isBusy(),
     u = getUnit(selected);
   byId("turnBadge").textContent = `第${game.round}回合 · ${teamName(game.team)}`;
   byId("turnBadge").style.color = game.team ? "var(--red)" : "var(--blue)";
   byId("phaseTitle").textContent = teamName(game.team) + (isAI() ? "AI行动阶段" : "行动阶段");
+  if (phase === "deployment") byId("phaseTitle").textContent = "开局部署";
   byId("phaseEyebrow").textContent = game.team ? "RED PHASE" : "BLUE PHASE";
   byId("endTurn").textContent = "结束" + teamName(game.team) + "回合";
   byId("endTurn").disabled = busy || isAI() || (Net.active && !Net.canAct());
   byId("modeLabel").textContent = Net.active
-    ? "IP联机 · 你是" + teamName(Net.seat)
+    ? "IP联机 · " + Net.roleName()
     : game.ai
       ? "模式：蓝方玩家 vs 红方AI"
       : "模式：双人热座";
   for (let t = 0; t < 2; t++) {
     byId(t ? "redCount" : "blueCount").textContent =
-      game.units.filter((x) => x.team === t && x.hp > 0).length + "/3";
+      game.units.filter((x) => x.team === t && x.hp > 0).length +
+      "/" +
+      game.units.filter((x) => x.team === t).length;
     byId(t ? "enemies" : "allies").replaceChildren(
       ...game.units
         .filter((x) => x.team === t)
@@ -109,7 +142,10 @@ function update() {
             >`;
           button.append(im, text);
           button.setAttribute("aria-label", teamName(t) + " " + unitName(x));
-          button.disabled = busy || x.hp <= 0;
+          button.disabled =
+            (phase === "deployment"
+              ? !Deployment.canEdit() || x.team !== Deployment.team()
+              : busy) || x.hp <= 0;
           button.onclick = () => select(x.id);
           return button;
         }),
@@ -138,6 +174,8 @@ function update() {
     else if (phase === "connecting") hint = "正在连接服务器…";
     else if (!busy && game.team !== Net.seat) hint = "对手回合，可查看单位并等待行动。";
   }
+  if (phase === "deployment") hint = "在高亮出生区内调整位置，两队确认后开始回合。";
+  if (MapEffects.pending()) hint = "单位击破演出中…";
   byId("hint").textContent = hint;
   renderPanel();
 }
@@ -147,7 +185,7 @@ function renderPanel() {
     u = getUnit(selected);
   if (!u) {
     panel.innerHTML =
-      '<div class="empty">选择地图上的机体，查看移动范围与可用武器。</div><div class="rule-box">推荐先移动高达接近中线；钢加农可中距离支援，钢坦克有较远射程与近距盲区。</div>';
+      '<div class="empty">选择地图上的机体，查看移动范围与可用武器。</div><div class="rule-box">各机体携带自己的主武器套件与固定武装。选择单位查看武器射程与防护。</div>';
     return;
   }
   let m = UnitModels[u.model],
@@ -158,7 +196,7 @@ function renderPanel() {
   head.innerHTML = /* HTML */ `<img src="${unitIcon(u.model)}" alt="" />
     <div>
       <strong class="${u.team ? "red" : "blue"}">${m.name}</strong
-      ><small>${m.code} · ${teamName(u.team)}</small>
+      ><small>${m.code} · ${m.kitName} · ${teamName(u.team)}</small>
     </div>`;
   panel.append(head);
   let stats = element("div", "stats");
@@ -167,11 +205,52 @@ function renderPanel() {
     </div>
     <div><span>EN</span>${u.en} / ${m.en}</div>
     <div><span>移动力</span>${m.move} 格</div>
+    <div><span>机动性</span>${m.mobility}</div>
+    <div><span>盾牌</span>${formatNumber(u.shield ?? 0)} / ${formatNumber(m.shield.hp)}</div>
     <div>
       <span>当前位置</span>${String.fromCharCode(65 + u.x)}${u.y + 1} ·
       ${Rules.terrain[game.tiles[u.y][u.x]].name}
     </div>`;
   panel.append(stats);
+  const protection = element("details", "rule-box");
+  protection.append(element("summary", "", "防护属性"));
+  protection.append(element("p", "helper", m.description));
+  for (const [key, label] of [
+    ["beam", "光束"],
+    ["shell", "实弹"],
+    ["melee", "格斗"],
+    ["dp", "失衡（预留）"],
+    ["sp", "特殊（预留）"],
+  ]) {
+    const defense = m.defenses[key];
+    protection.append(
+      element("div", "helper", `${label}：${defense.percent}% / 固定 ${defense.flat}`),
+    );
+  }
+  protection.append(
+    element(
+      "p",
+      "helper",
+      `盾牌格挡率 ${Math.round(m.shield.blockChance * 100)}% · 覆盖 ${Math.round(m.shield.coverage * 100)}%`,
+    ),
+  );
+  panel.append(protection);
+  const attacks = element("details", "rule-box");
+  attacks.append(element("summary", "", "伤害加成"));
+  for (const [key, label] of [
+    ["melee", "格斗"],
+    ["shooting", "射击"],
+    ["beam", "光束"],
+    ["shell", "实弹"],
+  ])
+    attacks.append(
+      element(
+        "div",
+        "helper",
+        `${label}：${m.attackBonuses[key] >= 0 ? "+" : ""}${m.attackBonuses[key]}%`,
+      ),
+    );
+  panel.append(attacks);
   let actions = element("div", "actions");
   for (const [label, fn, disabled] of [
     [
@@ -230,8 +309,7 @@ function renderPanel() {
     b.onclick = () => {
       weaponId = w.id;
       mode = "target";
-      u.eq = w.eq;
-      u.hold = w.hold;
+      if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
       update();
     };
     list.append(b);
@@ -339,6 +417,14 @@ function drawMap(now) {
       ctx.strokeStyle = "#49616b55";
       ctx.lineWidth = 0.7;
       ctx.strokeRect(px + 0.4, py + 0.4, tile - 0.8, tile - 0.8);
+      if (
+        phase === "deployment" &&
+        Deployment.team() !== null &&
+        Rules.deploymentCells(game, Deployment.team()).some((c) => c.x === x && c.y === y)
+      ) {
+        ctx.fillStyle = "#5ee4b344";
+        ctx.fillRect(px, py, tile, tile);
+      }
       if (kind === "forest") {
         for (let i = 0; i < 4; i++) {
           let tx = px + tile * (0.22 + (i % 2) * 0.48),
@@ -405,9 +491,8 @@ function drawMap(now) {
   for (const u of game.units) {
     if (u.hp <= 0) continue;
     let pos = mapPosition(u.x, u.y),
-      anim = "Common_Idle",
+      anim = UnitModels[u.model].presentation.idle,
       t = now / 1000;
-    if (u.model === "RX_75") anim = "neutral";
     if (moving?.id === u.id) {
       let part = Math.min(moving.path.length - 0.0001, (now - moving.start) / moving.step),
         index = Math.floor(Math.max(0, part)),
@@ -416,7 +501,7 @@ function drawMap(now) {
         to = moving.path[index] || from;
       pos = mapPosition(from.x + (to.x - from.x) * frac, from.y + (to.y - from.y) * frac);
       u.angle = (Math.atan2(to.x - from.x, -(to.y - from.y)) * 180) / Math.PI;
-      anim = "OnMovingWalk";
+      anim = UnitModels[u.model].presentation.move;
       t = (now - moving.start) / 1000;
     }
     ctx.save();
@@ -440,12 +525,16 @@ function drawMap(now) {
       u.model,
       pos.x,
       pos.y + tile * 0.035,
-      (tile / 64) * 1.2 * BattleScene.settings().mapScale,
+      (tile / 64) *
+        1.2 *
+        BattleScene.settings().mapScale *
+        UnitModels[u.model].presentation.mapScale,
       u.angle,
       anim,
       t,
-      u.eq,
-      u.hold,
+      u.heldWeapon,
+      true,
+      (u.shield ?? 1) > 0,
     );
     ctx.restore();
     let hpw = tile * 0.72 * BattleScene.settings().mapBarScale,
@@ -466,6 +555,7 @@ function drawMap(now) {
       ctx.strokeRect(pos.x - tile * 0.45, pos.y - tile * 0.45, tile * 0.9, tile * 0.9);
     }
   }
+  MapEffects.draw(ctx, now, mapPosition, tile);
   if (hover) {
     let p = mapPosition(hover.x, hover.y);
     ctx.strokeStyle = "#f2f1c9aa";
@@ -498,6 +588,11 @@ byId("map").onpointermove = (e) => {
 };
 byId("map").onpointerleave = () => (hover = null);
 byId("map").onclick = async (e) => {
+  if (phase === "deployment") {
+    const cell = cellAt(e);
+    if (cell) Deployment.click(cell);
+    return;
+  }
   if (isBusy() || isAI() || (Net.active && !Net.canAct())) return;
   let cell = cellAt(e);
   if (!cell) return;
@@ -535,6 +630,7 @@ async function performMove(u, x, y) {
   }
   let from = { x: u.x, y: u.y },
     path = Rules.move(game, u, x, y);
+  WeaponAudio.play(ART.presentation.moveSound);
   phase = "moving";
   moving = {
     id: u.id,
@@ -672,14 +768,24 @@ function commitAttack() {
     completed: false,
   };
   byId("battleTitle").textContent = unitName(a) + " vs " + unitName(b);
-  byId("battle").hidden = false;
+  BattleWindow.show(battleView);
   byId("continueBattle").disabled = true;
   byId("skipBattle").disabled = false;
   byId("battleSummary").textContent = "";
   update();
 }
 function battleEventDuration() {
-  return byId("quick").checked ? 650 : 1900;
+  const event = battleView.events[Math.min(battleView.index, battleView.events.length - 1)];
+  return (
+    BattleScene.duration(
+      event,
+      getUnit(battleView.a),
+      getUnit(battleView.b),
+      byId("battleCanvas"),
+    ) *
+    1000 *
+    (byId("quick").checked ? 0.35 : 1)
+  );
 }
 function logEvent(event) {
   if (Net.active) return;
@@ -687,7 +793,7 @@ function logEvent(event) {
     b = getUnit(event.to),
     w = getWeapon(a, event.weapon);
   addLog(
-    `${teamName(a.team)} ${unitName(a)} · ${w.name} → ${unitName(b)}：${event.hit ? formatNumber(event.damage) + "伤害" : "未命中"}${event.after <= 0 ? "，击破！" : ""}`,
+    `${teamName(a.team)} ${unitName(a)} · ${w.name} → ${unitName(b)}：${event.hit ? formatNumber(event.damage) + "伤害" : "未命中"}${event.strikes ? `（命中 ${event.hitCount}/${event.strikeCount}）` : ""}${event.after <= 0 ? "，击破！" : ""}`,
   );
 }
 // 推进已经结算好的演出事件与显示血量，不再次计算伤害。
@@ -703,30 +809,56 @@ function progressBattle(now) {
     b.start = now;
     if (b.index >= b.events.length) {
       b.completed = true;
+      BattleWindow.complete(b, now);
       byId("continueBattle").disabled = false;
       byId("skipBattle").disabled = true;
       byId("battleCaption").textContent = b.events.some((e) => e.after <= 0)
         ? "目标击破"
         : "交战结束";
-      byId("battleSummary").textContent = b.events
-        .map(
-          (e) =>
-            `${unitName(getUnit(e.from))}：${e.hit ? formatNumber(e.damage) + "伤害" : "未命中"}`,
-        )
-        .join(" ／ ");
+      byId("battleSummary").textContent =
+        b.events
+          .map(
+            (e) =>
+              `${unitName(getUnit(e.from))}：${e.hit ? formatNumber(e.damage) + "伤害" : "未命中"}${e.strikes ? `（命中 ${e.hitCount}/${e.strikeCount}）` : ""}`,
+          )
+          .join(" ／ ") + " · 2秒后自动返回地图";
       return;
     }
   }
 }
 // 演出推进和状态栏留在界面层，画布统一交给 BattleScene。
 function drawBattle(now) {
-  if (byId("battle").hidden || !battleView) return;
+  if (byId("battle").hidden || !battleView) {
+    WeaponAudio.stopBattle();
+    return;
+  }
+  now = battleView.suspendedAt ?? now;
   progressBattle(now);
   const view = battleView;
+  if (!Net.active || !Net.awaiting) BattleWindow.update(view, now, finishBattle);
+  if (view.returned || !battleView) return;
   const left = getUnit(view.a),
     right = getUnit(view.b);
   const event = view.events[Math.min(view.index, view.events.length - 1)];
-  const ratio = Math.min(1, (now - view.start) / battleEventDuration());
+  const ratio = view.completed
+    ? 1
+    : Math.max(0, Math.min(1, (now - view.start) / battleEventDuration()));
+  if (view.completed || view.windowState === "opening") WeaponAudio.stopBattle();
+  else {
+    const weapon = getWeapon(getUnit(event.from), event.weapon);
+    const bounds = byId("battleCanvas").getBoundingClientRect();
+    const plan = BattleScene.timeline(event, left, right, bounds.width, bounds.height).plan;
+    if (plan.deathSoundAt !== null && ratio * plan.duration >= plan.deathSoundAt)
+      (view.deathSoundHeard ||= new Set()).add(event.to);
+    WeaponAudio.sync(
+      view,
+      view.index,
+      weapon,
+      ratio * plan.duration,
+      byId("quick").checked ? 1 / 0.35 : 1,
+      plan.cues,
+    );
+  }
   BattleScene.draw(byId("battleCanvas"), {
     left,
     right,
@@ -736,6 +868,12 @@ function drawBattle(now) {
     time: clock,
     completed: view.completed,
     displayHp: view.displayHp,
+    displayShield: Object.fromEntries(
+      view.events.map((item, index) => [
+        item.to,
+        index < view.index ? item.shieldAfter : item.shieldBefore,
+      ]),
+    ),
   });
   if (!view.completed)
     byId("battleCaption").textContent =
@@ -743,8 +881,15 @@ function drawBattle(now) {
   byId("battleInfo").innerHTML = [left, right]
     .map((unit) => {
       const hp =
-        !view.completed && unit.id === event.to && ratio > 0.53
-          ? event.after
+        !view.completed && unit.id === event.to
+          ? BattleScene.displayedHp(
+              event,
+              left,
+              right,
+              byId("battleCanvas"),
+              ratio,
+              view.displayHp[unit.id],
+            )
           : view.displayHp[unit.id];
       return /* HTML */ `<div>
         <strong class="${unit.team ? "red" : "blue"}"
@@ -765,6 +910,7 @@ function drawBattle(now) {
     .join("");
 }
 byId("skipBattle").onclick = () => {
+  WeaponAudio.stop();
   if (!battleView || battleView.completed) return;
   for (let i = battleView.index; i < battleView.events.length; i++) {
     let e = battleView.events[i];
@@ -773,15 +919,22 @@ byId("skipBattle").onclick = () => {
   }
   battleView.index = battleView.events.length;
   battleView.completed = true;
+  BattleWindow.complete(battleView);
   byId("continueBattle").disabled = false;
   byId("skipBattle").disabled = true;
   byId("battleCaption").textContent = "交战结束";
-  byId("battleSummary").textContent = "演出已跳过，战斗结果已保留。";
+  byId("battleSummary").textContent = "演出已跳过，2秒后自动返回地图。";
 };
 byId("continueBattle").onclick = () => {
+  BattleWindow.close(battleView);
+};
+function finishBattle() {
+  WeaponAudio.stop();
   if (!battleView?.completed) return;
+  MapEffects.capture(battleView);
   if (Net.active) {
-    Net.request("battle_ready", { battleId: battleView.networkId });
+    if (Net.isSpectator()) Net.spectatorBattleSeen = battleView.networkId;
+    else Net.request("battle_ready", { battleId: battleView.networkId });
     byId("battle").hidden = true;
     phase = "battle_wait";
     update();
@@ -790,14 +943,18 @@ byId("continueBattle").onclick = () => {
   byId("battle").hidden = true;
   battleView = null;
   pending = null;
-  phase = "idle";
-  if (game.winner !== null) {
-    showVictory();
-    return;
-  }
+  phase = MapEffects.pending() ? "map_effects" : "idle";
+  MapEffects.after(() => {
+    if (game.winner !== null) {
+      showVictory();
+      return;
+    }
+    phase = "idle";
+    update();
+    autoAI();
+  });
   update();
-  autoAI();
-};
+}
 function endTurn() {
   if (Net.active) {
     Net.request("end_turn");
@@ -862,6 +1019,11 @@ function autoAI() {
   }, 500);
 }
 function showVictory() {
+  if (MapEffects.pending()) {
+    phase = "victory";
+    MapEffects.after(showVictory);
+    return;
+  }
   phase = "victory";
   byId("victoryTitle").textContent = teamName(game.winner) + "胜利";
   byId("victoryNote").textContent =
@@ -874,14 +1036,22 @@ function start(ai) {
   Net.leave();
   session++;
   clearTimeout(aiTimer);
-  game = Rules.create(ai, Math.floor(Math.random() * 4294967296));
+  const seed = Math.floor(Math.random() * 4294967296);
+  game = Rules.create(
+    ai,
+    seed,
+    [Formation.current(), ai ? Rules.randomFormation(seed) : Formation.current()],
+    true,
+  );
+  Deployment.reset();
   selected = null;
   weaponId = null;
   mode = "select";
-  phase = "idle";
+  phase = "deployment";
   moving = null;
   pending = null;
   battleView = null;
+  setPageView("game");
   log = [];
   for (const id of ["start", "reaction", "battle", "victory", "help"]) byId(id).hidden = true;
   delete byId("endTurn").dataset.confirm;
@@ -890,13 +1060,38 @@ function start(ai) {
 }
 byId("startHotseat").onclick = () => start(false);
 byId("startAI").onclick = () => start(true);
-byId("newGame").onclick = () => {
-  byId("start").hidden = false;
+// 主动回主菜单会退出当前房间；网络意外中断则由网络层自动恢复。
+function openMenu() {
+  session++;
+  clearTimeout(aiTimer);
+  Net.leave();
+  moving = pending = battleView = null;
+  selected = weaponId = null;
+  mode = "select";
+  hover = mapGeo = null;
+  log = [];
+  game = Rules.create();
+  phase = "start";
+  for (const id of ["reaction", "battle", "victory", "help", "leaveConfirm"])
+    byId(id).hidden = true;
+  for (const id of ["map", "battleCanvas"]) {
+    const canvas = byId(id),
+      context = canvas.getContext("2d");
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  setPageView("menu");
+  update();
+}
+function requestMenu() {
+  byId("leaveConfirm").hidden = false;
+}
+byId("netSettings").onclick = requestMenu;
+byId("playAgain").onclick = requestMenu;
+byId("cancelLeave").onclick = () => {
+  byId("leaveConfirm").hidden = true;
 };
-byId("playAgain").onclick = () => {
-  byId("victory").hidden = true;
-  byId("start").hidden = false;
-};
+byId("confirmLeave").onclick = openMenu;
 byId("helpBtn").onclick = () => {
   byId("help").hidden = false;
 };
@@ -905,22 +1100,26 @@ byId("closeHelp").onclick = () => {
 };
 // 每帧入口：独立预览接管自己的绘制，实际游戏绘制正常地图与战斗。
 function tick(now) {
+  animationFrameId = null;
   clock = now / 1000;
   if (assetsReady) {
     if (window.GamePreview?.active) window.GamePreview.tick(now);
-    else {
+    else if (pageView === "game") {
       drawMap(now);
       drawBattle(now);
     }
   }
-  requestAnimationFrame(tick);
+  if (pageView === "game" || window.isLayoutPreview) startRendering();
 }
 SpriteRenderer.load()
   .then(() => {
     assetsReady = true;
+    byId("startAI").disabled = byId("startHotseat").disabled = false;
+    byId("openRooms").disabled = false;
     byId("loading").textContent = "原始素材已就绪 · 选择模式开始";
     update();
-    requestAnimationFrame(tick);
+    if (pageView === "game" || window.isLayoutPreview) startRendering();
+    window.dispatchEvent(new Event("game-assets-ready"));
   })
   .catch((err) => {
     byId("loading").textContent = err.message;

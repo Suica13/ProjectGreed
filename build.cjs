@@ -8,15 +8,28 @@ const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 const inlineScript = (source) => source.replace(/<\/script/gi, "<\\/script");
 let html = read("client/template.html");
 for (const [key, file] of [
-  ["DATA", "client/art.json"],
+  ["DATA", null],
+  ["FORMATION", "client/formation.js"],
   ["CORE", "shared/rules.js"],
+  ["WEAPON_SEQUENCE", "shared/weapon-sequence.js"],
   ["RENDERER", "client/renderer.js"],
+  ["SPRITE_EFFECTS", "client/sprite-effects.js"],
   ["BATTLE_SCENE", "client/battle-scene.js"],
+  ["BATTLE_WINDOW", "client/battle-window.js"],
+  ["WEAPON_EFFECTS", "client/weapon-effects.js"],
+  ["WEAPON_AUDIO", "client/weapon-audio.js"],
+  ["MUSIC", "client/music.js"],
   ["APP", "client/app.js"],
   ["NETWORK", "client/network.js"],
+  ["LOBBY", "client/lobby.js"],
+  ["ROOM", "client/room.js"],
 ])
   html = html.replace("__" + key + "__", () =>
-    key === "DATA" ? read(file).replace(/</g, "\\u003c") : inlineScript(read(file)),
+    key === "DATA"
+      ? JSON.stringify(
+          require("./tools/load-catalog.cjs").loadCatalog({ embedMusic: true }),
+        ).replace(/</g, "\\u003c")
+      : inlineScript(read(file)),
   );
 const layout = JSON.parse(read("client/ui-layout.json"));
 html = html.replace(

@@ -1,0 +1,22 @@
+{
+  "projectileSpeed": 0.5,
+  "animationSpeed": 0.85,
+  "dodgeDistance": 18,
+  "dodgeOut": 0.18,
+  "sfxVolume": 0.5,
+  "meleeAnimationSpeed": 1,
+  "battleFadeIn": 0.3,
+  "battleHold": 2,
+  "battleFadeOut": 0.3,
+  "deathSound": {
+    "file": "sounds/Dead_4.ogg",
+    "volume": 1,
+    "duration": 2.0
+  },
+  "moveSound": {
+    "file": "sounds/Boost_1.ogg",
+    "volume": 0.5,
+    "duration": 1.0796371882086169
+  },
+  "deathDelay": 2.0
+}

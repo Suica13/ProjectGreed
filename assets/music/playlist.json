@@ -1,0 +1,29 @@
+{
+  "volume": 0.25,
+  "tracks": [
+    {
+      "name": "GRNYB_01_Remix",
+      "file": "GRNYB_01_Remix.ogg"
+    },
+    {
+      "name": "GRNYB_02_Remix",
+      "file": "GRNYB_02_Remix.ogg"
+    },
+    {
+      "name": "GRNYB_03_Remix",
+      "file": "GRNYB_03_Remix.ogg"
+    },
+    {
+      "name": "GRNYB_04_Remix",
+      "file": "GRNYB_04_Remix.ogg"
+    },
+    {
+      "name": "GRNYB_05_Remix",
+      "file": "GRNYB_05_Remix.ogg"
+    },
+    {
+      "name": "GRNYB_06_Remix",
+      "file": "GRNYB_06_Remix.ogg"
+    }
+  ]
+}

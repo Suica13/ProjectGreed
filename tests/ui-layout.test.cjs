@@ -15,6 +15,7 @@ function runtime() {
       createElement: () => style,
       head: { append() {} },
     },
+    ART: require("../tools/load-catalog.cjs").loadCatalog(),
     structuredClone,
     Event: class {},
     innerWidth: 1400,
@@ -77,11 +78,11 @@ test("release contains layout and gameplay but excludes developer tools", () => 
 test("canvas settings validate separately from CSS and preserve version 1 layouts", () => {
   const { UILayout: U, style } = runtime();
   const layout = U.empty();
-  layout.profiles.desktop.$battle = { scale: 0.7, leftX: 0.3, RX_75: 1.2, damageY: -0.2 };
+  layout.profiles.desktop.$battle = { scale: 0.7, leftX: 0.3, RGM_79__bazooka: 1.2, damageY: -0.2 };
   layout.profiles.mobile.$battle = { scale: 0.5 };
   U.apply(layout);
   assert.equal(U.battle().scale, 0.7);
-  assert.doesNotMatch(style.textContent, /\$battle|RX_75/);
+  assert.doesNotMatch(style.textContent, /\$battle|RGM_79__bazooka/);
   assert.equal(U.validate(U.empty()).version, 1);
   for (const bad of [
     { scale: 0 },
@@ -106,9 +107,15 @@ test("battle geometry composes global, side and model scales across viewport siz
     context,
   );
   const scene = context.scene;
-  const left = { id: "a", model: "RX_78_2" },
-    right = { id: "b", model: "RX_75" };
-  const options = { ...scene.defaults, scale: 0.8, leftScale: 1.2, RX_78_2: 0.9, leftX: 0.3 };
+  const left = { id: "a", model: "RGM_79__beam_spray" },
+    right = { id: "b", model: "RGM_79__bazooka" };
+  const options = {
+    ...scene.defaults,
+    scale: 0.8,
+    leftScale: 1.2,
+    RGM_79__beam_spray: 0.9,
+    leftX: 0.3,
+  };
   const desktop = scene.geometry(1000, 450, left, right, options);
   const mobile = scene.geometry(500, 225, left, right, options);
   assert.equal(desktop[0].x, 300);

@@ -1,0 +1,645 @@
+{
+  "schemaVersion": 2,
+  "id": "RGM_79L",
+  "code": "RGM-79L",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79L/RGM_79L.ini",
+  "materials": {
+    "icon": "RGM_79L.png",
+    "textures": {
+      "RGM_79L_Crotch_1.png": "textures/RGM_79L_Crotch_1.png",
+      "RGM_79L_Body_1.png": "textures/RGM_79L_Body_1.png",
+      "RGM_79L_ArmL_1.png": "textures/RGM_79L_ArmL_1.png",
+      "RGM_79L_ArmR_1.png": "textures/RGM_79L_ArmR_1.png",
+      "RGM_79L_ShoulderL_1.png": "textures/RGM_79L_ShoulderL_1.png",
+      "RGM_79L_ShoulderR_1.png": "textures/RGM_79L_ShoulderR_1.png",
+      "RGM_79L_Head_1.png": "textures/RGM_79L_Head_1.png",
+      "RGM_79L_Head_1_Close.png": "textures/RGM_79L_Head_1_Close.png",
+      "RGM_79L_Foot_1.png": "textures/RGM_79L_Foot_1.png",
+      "RGM_79L_LegL_1.png": "textures/RGM_79L_LegL_1.png",
+      "RGM_79L_LegR_1.png": "textures/RGM_79L_LegR_1.png",
+      "EF_BOWA_BeamGun.png": "textures/EF_BOWA_BeamGun.png",
+      "EF_90mmMG.png": "textures/EF_90mmMG.png",
+      "EF_BeamSaber.png": "textures/EF_BeamSaber.png",
+      "RGM_79L_Body_BeamSaberL_1.png": "textures/RGM_79L_Body_BeamSaberL_1.png",
+      "EF_GroundTypeShield_Orange_B.png": "textures/EF_GroundTypeShield_Orange_B.png",
+      "RGM_79L.png": "textures/RGM_79L.png"
+    }
+  },
+  "skeleton": {
+    "arm1": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "arm2": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "arm3": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "arm4": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "arm5": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "arm6": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "arm10": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "arm11": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "arm12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "arm13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "arm15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "arm19": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "arm20": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "leg17": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "leg18": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "leg19": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "leg20": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "RGM_79L_Foot_1.png",
+      "bone": "leg17",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "RightFoot",
+      "texture": "RGM_79L_Foot_1.png",
+      "bone": "leg19",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "RGM_79L_LegL_1.png",
+      "bone": "leg18",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "RightLeg",
+      "texture": "RGM_79L_LegR_1.png",
+      "bone": "leg20",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "EF_BOWA_BeamGun_NotUsing",
+      "texture": "EF_BOWA_BeamGun.png",
+      "bone": "arm1",
+      "order": 3.0,
+      "offset": {
+        "x": -1.0,
+        "y": -9.5
+      },
+      "scale": 0.95,
+      "rotation": -90.0,
+      "visibleWhen": {
+        "kit": "beam_gun",
+        "heldWeapon": {
+          "not": "EF_BOWA_BeamGun"
+        }
+      }
+    },
+    {
+      "name": "EF_90mmMG_NotUsing",
+      "texture": "EF_90mmMG.png",
+      "bone": "arm1",
+      "order": 3.0,
+      "offset": {
+        "x": -1.0,
+        "y": -8.5
+      },
+      "scale": 0.75,
+      "rotation": -90.0,
+      "visibleWhen": {
+        "kit": "machine_gun",
+        "heldWeapon": {
+          "not": "EF_90mmMG"
+        }
+      }
+    },
+    {
+      "name": "Crotch",
+      "texture": "RGM_79L_Crotch_1.png",
+      "bone": "arm1",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArmL",
+      "texture": "RGM_79L_ArmL_1.png",
+      "bone": "arm3",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArmR",
+      "texture": "RGM_79L_ArmR_1.png",
+      "bone": "arm4",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "RGM_79L_Body_1.png",
+      "bone": "arm2",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body_BeamSaberL",
+      "texture": "RGM_79L_Body_BeamSaberL_1.png",
+      "bone": "arm2",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "heldWeapon": {
+          "not": "EF_BeamSaber_BF"
+        }
+      }
+    },
+    {
+      "name": "EF_BOWA_BeamGun",
+      "texture": "EF_BOWA_BeamGun.png",
+      "bone": "arm4",
+      "order": 5.5,
+      "offset": {
+        "x": 0.0,
+        "y": 13.0
+      },
+      "scale": 1.0,
+      "rotation": 0.0,
+      "visibleWhen": {
+        "kit": "beam_gun",
+        "heldWeapon": "EF_BOWA_BeamGun"
+      }
+    },
+    {
+      "name": "EF_90mmMG",
+      "texture": "EF_90mmMG.png",
+      "bone": "arm4",
+      "order": 5.5,
+      "offset": {
+        "x": 0.0,
+        "y": 12.0
+      },
+      "scale": 0.85,
+      "rotation": 0.0,
+      "visibleWhen": {
+        "kit": "machine_gun",
+        "heldWeapon": "EF_90mmMG"
+      }
+    },
+    {
+      "name": "EF_BeamSaber_BF",
+      "texture": "EF_BeamSaber.png",
+      "bone": "arm11",
+      "order": 5.5,
+      "offset": {
+        "x": 6.0,
+        "y": 22.0
+      },
+      "scale": 0.85,
+      "rotation": -16.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "visibleWhen": {
+        "heldWeapon": "EF_BeamSaber_BF"
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RGM_79L_ShoulderL_1.png",
+      "bone": "arm5",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RGM_79L_ShoulderR_1.png",
+      "bone": "arm6",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Shield",
+      "texture": "EF_GroundTypeShield_Orange_B.png",
+      "bone": "arm3",
+      "order": 6.5,
+      "offset": {
+        "x": -6.5,
+        "y": 2.0
+      },
+      "scale": 1.0,
+      "rotation": 20.0,
+      "visibleWhen": {
+        "shieldVisible": true
+      }
+    },
+    {
+      "name": "Head",
+      "texture": "RGM_79L_Head_1.png",
+      "bone": "arm19",
+      "order": 7.0,
+      "offset": {
+        "x": -0.5,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    },
+    {
+      "name": "Head_Close",
+      "texture": "RGM_79L_Head_1_Close.png",
+      "bone": "arm19",
+      "order": 7.0,
+      "offset": {
+        "x": -0.5,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      }
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard.json",
+    "Common_Dead": "../../animations/Common_Dead.json",
+    "Common_Stun": "../../animations/Common_Stun.json",
+    "Common_Daze": "../../animations/Common_Daze.json",
+    "Common_Stagger": "../../animations/Common_Stagger.json",
+    "Common_Push_A": "../../animations/Common_Push_A.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA.json",
+    "Common_Melee_B": "../../animations/Common_Melee_B.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F.json"
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMovingWalk",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1"
+  },
+  "name": "轻装吉姆",
+  "description": "轻装型：高机动、移动距离较长，耐久中等，盾牌较小。",
+  "stats": {
+    "hp": 18500,
+    "en": 100,
+    "move": 7,
+    "mobility": 120,
+    "cost": 325
+  },
+  "attackBonuses": {
+    "melee": 0,
+    "shooting": 0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 50.0
+    },
+    "melee": {
+      "percent": 15.0,
+      "flat": 450.0
+    },
+    "dp": {
+      "percent": 15.0,
+      "flat": 15.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 3250.0,
+    "blockChance": 0.4,
+    "coverage": 0.5,
+    "defenses": {
+      "beam": {
+        "percent": 0.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 10.0,
+        "flat": 25.0
+      },
+      "melee": {
+        "percent": 5.0,
+        "flat": 150.0
+      },
+      "dp": {
+        "percent": 10.0,
+        "flat": 25.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 17000.0,
+    "walkSpeed": 0.75,
+    "boostSpeed": 1.65,
+    "turnSpeed": 2.5,
+    "reaction": 140.0
+  },
+  "weapons": {
+    "EF_90mmMG": {
+      "name": "90mm机枪",
+      "type": "shell",
+      "min": 2,
+      "max": 5,
+      "hit": 79,
+      "clip": "Common_Shoot_A",
+      "slot": "primary",
+      "sourceName": "EF_90mmMG",
+      "hitEffect": "MG_Hit_1",
+      "sound": {
+        "file": "../../sounds/MachineGun_1.ogg",
+        "volume": 0.3
+      },
+      "damagePerShot": 725.0,
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.3
+          },
+          {
+            "delay": 0.0,
+            "shots": 1,
+            "animation": "Common_Shoot_A"
+          },
+          {
+            "delay": 0.1,
+            "shots": 1,
+            "animation": "Common_Shoot_A_FA",
+            "repeat": 8
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw",
+        "barrelX": 8.0,
+        "barrelY": 24.0
+      },
+      "muzzle": {
+        "layer": "EF_90mmMG",
+        "point": {
+          "x": -1.1764705882352942,
+          "y": -14.117647058823529
+        }
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.5,
+        "speed": 75.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "damageComponents": {
+        "shell": 725.0
+      },
+      "sourceHit": 92,
+      "hitMultiplier": 0.75,
+      "hitBonus": 10,
+      "en": 10
+    },
+    "EF_BOWA_BeamGun": {
+      "name": "BOWA光束枪",
+      "sourceName": "EF_BOWA_BeamGun",
+      "type": "beam",
+      "min": 2,
+      "max": 5,
+      "hit": 78,
+      "clip": "Common_Shoot_A",
+      "slot": "primary",
+      "damagePerShot": 1300,
+      "damageComponents": {
+        "beam": 1300
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.15,
+            "shots": 1
+          },
+          {
+            "delay": 0.4,
+            "shots": 1,
+            "animation": "Common_Shoot_A",
+            "repeat": 2
+          },
+          {
+            "delay": 0.15
+          }
+        ]
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/EF_BOWA_BeamGun.gw",
+        "barrelX": 8.0,
+        "barrelY": 10.0
+      },
+      "sound": {
+        "file": "../../sounds/BeamSprayGun_1.ogg",
+        "volume": 0.6
+      },
+      "hitEffect": "Beam_Hit_1_S_Pink",
+      "en": 12,
+      "projectile": {
+        "texture": "../../projectiles/Beam_1.png",
+        "scale": 1.0,
+        "speed": 75.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "muzzle": {
+        "layer": "EF_BOWA_BeamGun",
+        "point": {
+          "x": -1.0,
+          "y": 3.0
+        }
+      },
+      "sourceHit": 85,
+      "hitMultiplier": 0.8,
+      "hitBonus": 10
+    },
+    "EF_BeamSaber_BF": {
+      "name": "光束军刀",
+      "sourceName": "EF_BeamSaber_BF",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 92,
+      "clip": "Common_Melee_B",
+      "slot": "secondary",
+      "damagePerShot": 5000.0,
+      "damageComponents": {
+        "melee": 2500.0,
+        "meleeBeam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.4
+          },
+          {
+            "delay": 0.0,
+            "shots": 1
+          },
+          {
+            "delay": 0.6,
+            "animation": "Common_Melee_F"
+          },
+          {
+            "delay": 0.3
+          },
+          {
+            "delay": 0.0,
+            "shots": 1
+          },
+          {
+            "delay": 1.4
+          }
+        ]
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw",
+        "barrelX": 0.0,
+        "barrelY": 0.0
+      },
+      "sound": {
+        "file": "../../sounds/BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "en": 8,
+      "sourceHit": 96,
+      "hitMultiplier": 0.85,
+      "hitBonus": 10
+    }
+  },
+  "weaponKits": [
+    {
+      "id": "beam_gun",
+      "name": "光束枪套件",
+      "cost": 100,
+      "weapons": [
+        "EF_BOWA_BeamGun",
+        "EF_BeamSaber_BF"
+      ]
+    },
+    {
+      "id": "machine_gun",
+      "name": "机枪套件",
+      "cost": 0,
+      "weapons": [
+        "EF_90mmMG",
+        "EF_BeamSaber_BF"
+      ]
+    }
+  ]
+}

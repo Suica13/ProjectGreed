@@ -3,171 +3,78 @@
  */
 "use strict";
 const Tactics = (() => {
-  const W = 12,
-    H = 9;
   // 机体数值配置。视觉大小另存于 client/ui-layout.json，不影响战斗属性。
-  const models = {
-    RX_78_2: {
-      name: "高达",
-      code: "RX-78-2",
-      hp: 12000,
-      en: 100,
-      move: 5,
-      armor: 0.92,
-      weapons: [
-        {
-          id: "br",
-          name: "光束步枪",
-          type: "beam",
-          min: 2,
-          max: 5,
-          damage: 2600,
-          hit: 92,
-          en: 16,
-          clip: "Common_Shoot_A",
-          eq: 0,
-          hold: 0,
-        },
-        {
-          id: "bs",
-          name: "光束军刀",
-          type: "melee",
-          min: 1,
-          max: 1,
-          damage: 3200,
-          hit: 96,
-          en: 8,
-          clip: "Common_Melee_A_Fast",
-          eq: 0,
-          hold: 1,
-        },
-        {
-          id: "bz",
-          name: "超级火箭筒",
-          type: "shell",
-          min: 3,
-          max: 6,
-          damage: 3000,
-          hit: 84,
-          ammo: 4,
-          clip: "Common_Shoot_A",
-          eq: 1,
-          hold: 0,
-        },
-        {
-          id: "vulcan",
-          name: "头部火神炮",
-          type: "shell",
-          min: 1,
-          max: 2,
-          damage: 900,
-          hit: 98,
-          en: 3,
-          clip: "Common_Shoot_A",
-          eq: 0,
-          hold: 0,
-        },
-      ],
-    },
-    RX_77_2: {
-      name: "钢加农",
-      code: "RX-77-2",
-      hp: 11500,
-      en: 100,
-      move: 4,
-      armor: 0.88,
-      weapons: [
-        {
-          id: "br",
-          name: "光束步枪",
-          type: "beam",
-          min: 2,
-          max: 5,
-          damage: 2400,
-          hit: 90,
-          en: 16,
-          clip: "Common_Shoot_Two_Handed_A",
-          eq: 0,
-          hold: 0,
-        },
-        {
-          id: "cannon",
-          name: "双联240mm加农炮",
-          type: "shell",
-          min: 3,
-          max: 7,
-          damage: 2900,
-          hit: 86,
-          ammo: 8,
-          clip: "Common_Cannon_Shoot_A",
-          eq: 0,
-          hold: 0,
-        },
-        {
-          id: "missile",
-          name: "肩部导弹发射器",
-          type: "shell",
-          min: 3,
-          max: 6,
-          damage: 2300,
-          hit: 92,
-          ammo: 8,
-          clip: "Common_Cannon_Shoot_A",
-          eq: 1,
-          hold: 0,
-        },
-        {
-          id: "strike",
-          name: "近身打击",
-          type: "melee",
-          min: 1,
-          max: 1,
-          damage: 1700,
-          hit: 92,
-          en: 6,
-          clip: "Common_Melee_B",
-          eq: 0,
-          hold: 1,
-        },
-      ],
-    },
-    RX_75: {
-      name: "钢坦克",
-      code: "RX-75",
-      hp: 13000,
-      en: 100,
-      move: 3,
-      armor: 0.84,
-      weapons: [
-        {
-          id: "cannon",
-          name: "双联120mm低后坐力炮",
-          type: "shell",
-          min: 4,
-          max: 8,
-          damage: 3400,
-          hit: 82,
-          ammo: 8,
-          clip: "Common_Cannon_Shoot_A",
-          eq: 0,
-          hold: 0,
-        },
-        {
-          id: "missile",
-          name: "双臂四联导弹发射器",
-          type: "shell",
-          min: 2,
-          max: 4,
-          damage: 1900,
-          hit: 92,
-          ammo: 12,
-          clip: "Common_StandShoot_A",
-          eq: 0,
-          hold: 0,
-        },
-      ],
-    },
-  };
+  const catalog =
+    typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
+  const models = catalog.models;
+  const W = catalog.map.width,
+    H = catalog.map.height;
+  function validateFormation(entries) {
+    if (!Array.isArray(entries) || !entries.length || entries.length > catalog.formation.maxUnits)
+      throw Error("编组数量无效，请检查单位数量上限");
+    let cost = 0;
+    const clean = entries.map((entry) => {
+      const id = entry?.unitId + "__" + entry?.kitId,
+        model = models[id];
+      if (!model) throw Error("编组包含不可用单位或武器套件");
+      cost += model.cost;
+      return { unitId: model.prefabId, kitId: model.kitId };
+    });
+    if (cost > catalog.formation.maxCost) throw Error("编组 COST 超出上限");
+    return clean;
+  }
+  function randomFormation(seed = 7319) {
+    const choices = Object.values(models),
+      entries = [];
+    let remaining = catalog.formation.maxCost;
+    for (let i = 0; i < Math.min(catalog.formation.aiUnits, catalog.formation.maxUnits); i++) {
+      const legal = choices.filter((m) => m.cost <= remaining);
+      if (!legal.length) break;
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      const m = legal[seed % legal.length];
+      entries.push({ unitId: m.prefabId, kitId: m.kitId });
+      remaining -= m.cost;
+    }
+    return validateFormation(entries);
+  }
+  function deploymentCells(g, team) {
+    const spawn = catalog.deployment.spawns[team],
+      cells = [];
+    for (let y = 0; y < H; y++)
+      for (let x = 0; x < W; x++)
+        if (
+          dist({ x, y }, spawn) <= catalog.deployment.radius &&
+          Number.isFinite(terrain[g.tiles[y][x]].cost)
+        )
+          cells.push({ x, y });
+    return cells.sort((a, b) => dist(a, spawn) - dist(b, spawn) || a.y - b.y || a.x - b.x);
+  }
+  function deploy(g, team, id, x, y) {
+    if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再调整");
+    const u = g.units.find((u) => u.id === id && u.team === team);
+    if (
+      !u ||
+      !Number.isInteger(x) ||
+      !Number.isInteger(y) ||
+      !deploymentCells(g, team).some((c) => c.x === x && c.y === y)
+    )
+      throw Error("请在己方出生区的有效格子部署");
+    if (g.units.some((other) => other.id !== id && other.x === x && other.y === y))
+      throw Error("该部署位置已有单位");
+    u.x = x;
+    u.y = y;
+  }
+  function confirmDeployment(g, team) {
+    if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再次确认");
+    for (const u of g.units.filter((u) => u.team === team)) {
+      if (!deploymentCells(g, team).some((c) => c.x === u.x && c.y === u.y))
+        throw Error("单位不在有效部署区域");
+      if (g.units.some((other) => other.id !== u.id && other.x === u.x && other.y === u.y))
+        throw Error("部署位置重叠");
+    }
+    g.deployment[team] = true;
+    return g.deployment.every(Boolean);
+  }
   const terrain = {
     plain: { name: "平地", cost: 1, cover: 0, color: "#243b3d" },
     forest: { name: "林地", cost: 2, cover: 15, color: "#294738" },
@@ -178,8 +85,13 @@ const Tactics = (() => {
   const key = (x, y) => x + "," + y,
     dist = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y),
     typeNames = { beam: "光束", shell: "实弹", melee: "格斗" };
-  function create(ai = false, seed = 7319) {
-    let tiles = Array.from({ length: H }, () => Array(W).fill("plain"));
+  function create(
+    ai = false,
+    seed = 7319,
+    formations = [randomFormation(seed), randomFormation(seed + 1)],
+    deploying = false,
+  ) {
+    let baseTiles = Array.from({ length: 9 }, () => Array(12).fill("plain"));
     for (const [x, y] of [
       [3, 1],
       [3, 2],
@@ -190,52 +102,61 @@ const Tactics = (() => {
       [8, 6],
       [8, 7],
     ])
-      tiles[y][x] = "forest";
+      baseTiles[y][x] = "forest";
     for (const [x, y] of [
       [5, 2],
       [6, 2],
       [5, 6],
       [6, 6],
     ])
-      tiles[y][x] = "rock";
+      baseTiles[y][x] = "rock";
     for (const [x, y] of [
       [5, 4],
       [6, 4],
       [4, 4],
       [7, 4],
     ])
-      tiles[y][x] = "rubble";
+      baseTiles[y][x] = "rubble";
     for (const [x, y] of [
       [5, 0],
       [6, 0],
       [5, 8],
       [6, 8],
     ])
-      tiles[y][x] = "water";
+      baseTiles[y][x] = "water";
+    const tiles = Array.from({ length: H }, (_, y) =>
+      Array.from(
+        { length: W },
+        (_, x) => baseTiles[Math.floor((y * 9) / H)][Math.floor((x * 12) / W)],
+      ),
+    );
     let units = [];
     for (let team = 0; team < 2; team++)
-      ["RX_78_2", "RX_77_2", "RX_75"].forEach((model, i) => {
+      validateFormation(formations[team]).forEach((entry, i) => {
+        const model = entry.unitId + "__" + entry.kitId;
+        const position = deploymentCells({ tiles }, team)[i];
+        if (!position) throw Error("出生区没有足够位置容纳编组，请检查目录配置");
         let m = models[model];
         units.push({
           id: team + "-" + i,
           model,
           team,
-          x: team ? 10 : 1,
-          y: 1 + i * 3,
+          x: position.x,
+          y: position.y,
           hp: m.hp,
+          shield: m.shield.hp,
           en: m.en,
-          ammo: Object.fromEntries(m.weapons.filter((w) => w.ammo).map((w) => [w.id, w.ammo])),
           moved: false,
           acted: false,
           origin: null,
           angle: team ? -90 : 90,
-          eq: 0,
-          hold: 0,
+          heldWeapon: m.weapons[0].id,
         });
       });
     return {
       tiles,
       units,
+      deployment: deploying ? [false, false] : null,
       team: 0,
       round: 1,
       ai,
@@ -293,7 +214,7 @@ const Tactics = (() => {
     u.moved = false;
   }
   function canUse(u, w) {
-    return u.hp > 0 && u.en >= (w.en || 0) && (!w.ammo || u.ammo[w.id] > 0);
+    return u.hp > 0 && u.en >= w.en;
   }
   function inRange(a, b, w) {
     let d = dist(a, b);
@@ -306,23 +227,52 @@ const Tactics = (() => {
   }
   // 返回预估命中率和命中后的伤害，不修改对局。
   function estimate(g, a, b, w, response = "counter") {
-    let cover = terrain[g.tiles[b.y][b.x]].cover,
-      hit = Math.max(10, Math.min(100, w.hit - cover - (response === "evade" ? 35 : 0)));
-    let mitigation = models[b.model].armor;
-    if (w.type === "beam") mitigation = (1 + mitigation) / 2;
-    let damage = Math.round(
-      w.damage *
-        mitigation *
-        (w.type === "melee" ? 1 : 1 - cover / 100) *
-        (response === "defend" ? 0.5 : 1),
-    );
-    return { hit, damage };
+    const bonuses = models[a.model].attackBonuses,
+      categoryBonus = 1 + bonuses[w.type === "melee" ? "melee" : "shooting"] / 100;
+    const defender = models[b.model],
+      cover = terrain[g.tiles[b.y][b.x]].cover,
+      mobilityPenalty = (defender.mobility - 100) * 0.25,
+      hit = Math.max(
+        10,
+        Math.min(100, w.hit - cover - mobilityPenalty - (response === "evade" ? 35 : 0)),
+      ),
+      multiplier = (w.type === "melee" ? 1 : 1 - cover / 100) * (response === "defend" ? 0.5 : 1),
+      count = w.shotCount * w.hitsPerShot;
+    // MOD: subtract flat protection per projectile/component, then apply percentage protection.
+    function protectedDamage(defenses) {
+      return (
+        Object.entries(w.damageComponents).reduce((sum, [channel, value]) => {
+          const percentKey =
+              channel === "meleeBeam" ? "beam" : channel === "meleeShell" ? "shell" : channel,
+            flatKey = channel.startsWith("melee") ? "melee" : channel;
+          const element =
+              channel === "meleeBeam" ? "beam" : channel === "meleeShell" ? "shell" : channel,
+            elementBonus =
+              element === "beam" || element === "shell" ? 1 + bonuses[element] / 100 : 1;
+          return (
+            sum +
+            Math.max(0, value * categoryBonus * elementBonus - defenses[flatKey].flat) *
+              (1 - defenses[percentKey].percent / 100)
+          );
+        }, 0) * multiplier
+      );
+    }
+    const damage = Math.round(protectedDamage(defender.defenses)) * count,
+      shieldDamage = Math.min(
+        b.shield ?? 0,
+        Math.round(protectedDamage(defender.shield.defenses) * defender.shield.coverage) * count,
+      );
+    return {
+      hit,
+      damage,
+      shieldDamage,
+      blockedDamage: Math.max(0, damage - shieldDamage),
+      blockChance: b.shield > 0 ? defender.shield.blockChance : 0,
+    };
   }
   function spend(u, w) {
     if (w.en) u.en -= w.en;
-    if (w.ammo) u.ammo[w.id]--;
-    u.eq = w.eq;
-    u.hold = w.hold;
+    if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
   }
   function random(g) {
     g.seed = (Math.imul(1664525, g.seed) + 1013904223) >>> 0;
@@ -336,14 +286,52 @@ const Tactics = (() => {
     let cw = models[b.model].weapons.find((x) => x.id === counterId);
     if (response === "counter" && (!cw || !canAttack(g, b, a, cw)))
       throw Error("反击武器不满足射程或资源要求");
-    let events = [];
+    let events = [],
+      dodgeSeed = (g.seed ^ 0x9e3779b9) >>> 0;
+    const dodgeSlots = { [a.id]: 0, [b.id]: 0 };
+    function dodgeSide() {
+      // Independent visual RNG: choosing a dodge direction never changes hit rolls.
+      dodgeSeed = (Math.imul(1664525, dodgeSeed) + 1013904223) >>> 0;
+      return dodgeSeed < 0x80000000 ? -1 : 1;
+    }
     function fire(from, to, weapon, stance) {
       spend(from, weapon);
-      let e = estimate(g, from, to, weapon, stance),
-        hit = random(g) < e.hit / 100,
-        before = to.hp;
-      let dealt = hit ? Math.min(to.hp, e.damage) : 0;
-      to.hp -= dealt;
+      const before = to.hp,
+        shieldBefore = to.shield,
+        sourceDodgeSlot = dodgeSlots[from.id],
+        targetDodgeSlot = dodgeSlots[to.id],
+        strikes = [];
+      // One server roll per bullet / melee strike. Resources are spent once per attack.
+      const single = { ...weapon, shotCount: 1, hitsPerShot: 1 };
+      for (const step of weapon.attack.strikes) {
+        const e = estimate(g, from, to, single, stance),
+          executed = to.hp > 0,
+          hit = executed && random(g) < e.hit / 100,
+          blocked = hit && to.shield > 0 && random(g) < e.blockChance,
+          shieldDamage = blocked ? e.shieldDamage : 0,
+          damage = hit ? Math.min(to.hp, blocked ? e.blockedDamage : e.damage) : 0;
+        let dodgeTo = null;
+        if (executed && !hit) {
+          dodgeTo = dodgeSlots[to.id] === 0 ? dodgeSide() : 0;
+          dodgeSlots[to.id] = dodgeTo;
+        }
+        strikes.push({
+          ...step,
+          executed,
+          hit,
+          dodgeTo,
+          blocked,
+          damage,
+          shieldDamage,
+          before: to.hp,
+          after: to.hp - damage,
+          shieldBefore: to.shield,
+          shieldAfter: to.shield - shieldDamage,
+          hitChance: e.hit,
+        });
+        to.hp -= damage;
+        to.shield -= shieldDamage;
+      }
       events.push({
         from: from.id,
         to: to.id,
@@ -351,13 +339,24 @@ const Tactics = (() => {
         model: from.model,
         type: weapon.type,
         clip: weapon.clip,
-        eq: weapon.eq,
-        hold: weapon.hold,
-        hit,
-        damage: dealt,
+        heldWeapon: from.heldWeapon,
+        shotCount: weapon.shotCount,
+        damagePerShot: weapon.damagePerShot,
+        sourceDodgeSlot,
+        targetDodgeSlot,
+        targetDodgeEnd: dodgeSlots[to.id],
+        strikes,
+        hit: strikes.some((s) => s.hit),
+        hitCount: strikes.filter((s) => s.hit).length,
+        strikeCount: strikes.filter((s) => s.executed).length,
+        damage: before - to.hp,
         before,
+        blocked: strikes.some((s) => s.blocked),
+        shieldBefore,
+        shieldAfter: to.shield,
+        shieldDamage: shieldBefore - to.shield,
         after: to.hp,
-        hitChance: e.hit,
+        hitChance: strikes[0].hitChance,
         response: stance,
       });
     }
@@ -430,6 +429,12 @@ const Tactics = (() => {
     W,
     H,
     models,
+    catalog,
+    validateFormation,
+    randomFormation,
+    deploymentCells,
+    deploy,
+    confirmDeployment,
     terrain,
     typeNames,
     key,

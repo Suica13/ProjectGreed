@@ -8,6 +8,9 @@ const Net = (() => {
     active: false,
     socket: null,
     seat: null,
+    memberId: null,
+    started: false,
+    spectatorBattleSeen: null,
     room: null,
     token: null,
     revision: -1,
@@ -106,9 +109,17 @@ const Net = (() => {
       }
     }, 8000);
   }
-  function leave() {
+  function leave({ notify = true, forget = true } = {}) {
+    MapEffects.reset();
     n.manual = true;
     clearTimeout(n.reconnectTimer);
+    Lobby.close();
+    if (notify && n.socket?.readyState === WebSocket.OPEN)
+      n.socket.send(JSON.stringify({ type: "leave" }));
+    if (forget) {
+      if (n.endpoint && n.room) storage.remove(key(n.endpoint, n.room));
+      storage.remove("slg-last");
+    }
     n.socket?.close();
     n.socket = null;
     n.active = false;
@@ -118,17 +129,23 @@ const Net = (() => {
     n.seen.clear();
     n.seat = null;
     n.revision = -1;
+    n.token = null;
+    n.memberId = null;
+    n.started = false;
+    n.spectatorBattleSeen = null;
     status("未连接");
   }
-  function connect(mode = "join", auto = false) {
+  function connect(mode = "join", auto = false, roomCode = null) {
+    if (window.isLayoutPreview) return;
     if (!assetsReady) {
       note("贴图尚未加载完成");
       return;
     }
     let url, room;
     try {
-      url = auto ? n.endpoint : endpoint(byId("serverAddress").value);
-      room = (auto ? n.room : byId("roomCode").value).trim().toUpperCase();
+      url = auto ? n.endpoint : Lobby.endpoint();
+      if (!url) throw Error("请先连接服务器。");
+      room = (auto ? n.room : roomCode || byId("roomCode").value).trim().toUpperCase();
       if (!/^[A-Z0-9_-]{3,20}$/.test(room))
         throw Error("房间码需为3–20位英文、数字、下划线或短横线");
     } catch (e) {
@@ -136,6 +153,7 @@ const Net = (() => {
       return;
     }
     clearTimeout(n.reconnectTimer);
+    Lobby.close();
     let token = storage.get(key(url, room));
     if (mode === "resume" && !token) {
       status("本页面没有该房间的重连凭据，请创建或加入房间");
@@ -145,6 +163,8 @@ const Net = (() => {
     n.socket?.close();
     n.manual = false;
     n.active = true;
+    n.memberId = null;
+    n.started = false;
     n.connecting = true;
     n.endpoint = url;
     n.room = room;
@@ -183,15 +203,16 @@ const Net = (() => {
       }
       if (msg.type === "joined") {
         n.seat = msg.seat;
+        n.memberId = msg.memberId;
         n.token = msg.token;
         n.connecting = false;
         n.retry = 0;
         storage.set(key(url, room), msg.token);
         storage.set("slg-last", JSON.stringify({ url, room }));
         byId("start").hidden = true;
-        status("房间 " + room + " · 你是" + teamName(n.seat));
+        status("房间 " + room + " · " + roleName());
       } else if (msg.type === "state") {
-        if (n.seat === null || msg.revision < n.revision) return;
+        if (n.memberId === null || msg.revision < n.revision) return;
         if (n.awaiting && (msg.ack === n.awaiting.id || msg.revision > n.awaiting.revision))
           n.awaiting = null;
         n.revision = msg.revision;
@@ -202,11 +223,21 @@ const Net = (() => {
         status(msg.message);
         note(msg.message);
         if (n.connecting) {
+          if (mode === "resume") {
+            storage.remove(key(url, room));
+            storage.remove("slg-last");
+          }
           n.manual = true;
           n.connecting = false;
-          socket.close();
+          leave({ notify: false, forget: false });
+          phase = "start";
+          setPageView("menu");
+          status(msg.message);
         }
         update();
+      } else if (msg.type === "room_closed") {
+        openMenu();
+        note(msg.message);
       } else if (msg.type === "replaced") {
         n.manual = true;
         note(msg.message);
@@ -221,8 +252,10 @@ const Net = (() => {
       n.awaiting = null;
       n.connecting = false;
       if (n.manual || !n.token) {
-        phase = "disconnected";
-        status("已断开连接，请检查地址后重试");
+        leave({ notify: false, forget: false });
+        phase = "start";
+        setPageView("menu");
+        status("未连接服务器，可以选择房间或直接单人离线游玩。");
         update();
         return;
       }
@@ -238,6 +271,18 @@ const Net = (() => {
   }
   // 服务端快照是联机状态来源，按阶段恢复地图、应战或战斗画面。
   function applySnapshot(s) {
+    const wasStarted = n.started;
+    const previousSeat = n.seat;
+    if (s.you) {
+      n.seat = s.you.seat;
+      n.memberId = s.you.id;
+    }
+    n.started = s.started;
+    if (previousSeat !== n.seat) {
+      selected = weaponId = null;
+      mode = "select";
+      moving = null;
+    }
     let hadBattle = battleView?.networkId,
       previousGame = game;
     game = s.game;
@@ -245,15 +290,34 @@ const Net = (() => {
     log = s.log.slice();
     byId("log").replaceChildren(...log.map((t) => element("div", "log-line", t)));
     pending = s.pending;
-    const online = s.connected.every(Boolean);
-    byId("reaction").hidden = true;
+    if (s.phase !== "battle" && battleView) MapEffects.capture(battleView);
     if (!s.started) {
       phase = "waiting";
-      byId("battle").hidden = true;
-      status("房间 " + n.room + " · 你是" + teamName(n.seat) + " · 等待另一位玩家加入");
-    } else if (!online) {
+      battleView = null;
+      if (pageView !== "formation") setPageView("room");
+      RoomPanel.render(s);
+      n.applied = true;
+      update();
+      return;
+    }
+    if (!wasStarted || pageView === "menu") setPageView("game");
+    if (pageView === "room") {
+      if (s.lastEvent) n.seen.add(s.lastEvent.id);
+      RoomPanel.render(s);
+      n.applied = true;
+      update();
+      return;
+    }
+    const online = s.connected.every(Boolean);
+    byId("reaction").hidden = true;
+    if (!online) {
+      if (battleView) BattleWindow.suspend(battleView);
       phase = "disconnected";
-      status("房间 " + n.room + " · 对手离线，战局保留并暂停");
+      status("房间 " + n.room + " · 等待队伍补位或离线玩家恢复，战局已暂停");
+    } else if (s.phase === "deployment") {
+      phase = "deployment";
+      byId("battle").hidden = true;
+      battleView = null;
     } else if (s.phase === "reaction") {
       let b = getUnit(s.pending.target);
       if (b.team === n.seat) {
@@ -271,7 +335,7 @@ const Net = (() => {
     } else if (s.phase === "battle") {
       mode = "select";
       weaponId = null;
-      if (s.battle.ready[n.seat]) {
+      if (isSpectator() ? n.spectatorBattleSeen === s.battle.id : s.battle.ready[n.seat]) {
         byId("battle").hidden = true;
         phase = "battle_wait";
       } else {
@@ -290,11 +354,13 @@ const Net = (() => {
           byId("battleTitle").textContent =
             unitName(getUnit(s.battle.a)) + " vs " + unitName(getUnit(s.battle.b));
           byId("continueBattle").disabled = true;
-          byId("continueBattle").textContent = "看完演出后返回地图";
+          byId("continueBattle").textContent = "立即返回地图";
           byId("skipBattle").disabled = false;
-          byId("battleSummary").textContent = "双方演出结束并返回地图后继续行动。";
+          byId("battleSummary").textContent = isSpectator()
+            ? "观战演出不会阻塞两队继续游戏。"
+            : "演出结束后停留2秒自动返回地图，双方看完后继续行动。";
         }
-        byId("battle").hidden = false;
+        BattleWindow.resume(battleView);
       }
     } else if (s.phase === "finished") {
       phase = "victory";
@@ -306,13 +372,13 @@ const Net = (() => {
       byId("battle").hidden = true;
       battleView = null;
     }
-    if (s.started && online)
-      status("房间 " + n.room + " · 你是" + teamName(n.seat) + " · 双方在线");
+    if (s.started && online) status("房间 " + n.room + " · " + roleName() + " · 双方在线");
     const event = s.lastEvent;
     if (event && !n.seen.has(event.id)) {
       n.seen.add(event.id);
       if (n.seen.size > 128) n.seen.delete(n.seen.values().next().value);
       if (event.type === "move" && s.phase === "idle" && online && n.applied) {
+        WeaponAudio.play(ART.presentation.moveSound);
         moving = {
           id: event.unitId,
           from: event.from,
@@ -343,17 +409,12 @@ const Net = (() => {
     update();
   }
   byId("createRoom").onclick = () => connect("create");
-  byId("joinRoom").onclick = () => connect("join");
-  byId("resumeRoom").onclick = () => connect("resume");
-  byId("leaveNetwork").onclick = () => {
-    leave();
-    phase = "start";
-    byId("start").hidden = false;
-    update();
-  };
-  byId("netSettings").onclick = () => {
-    byId("start").hidden = false;
-  };
+  function isSpectator() {
+    return n.active && n.seat === null;
+  }
+  function roleName() {
+    return n.seat === null ? "观战玩家" : "队伍" + (n.seat + 1);
+  }
   let last;
   try {
     last = JSON.parse(storage.get("slg-last") || "null");
@@ -364,6 +425,17 @@ const Net = (() => {
     byId("serverAddress").value = last.url;
     byId("roomCode").value = last.room;
   }
+  // 刷新当前标签页时自动恢复席位，不再要求玩家点击重连按钮。
+  window.addEventListener(
+    "game-assets-ready",
+    () => {
+      if (window.isLayoutPreview || !last || !storage.get(key(last.url, last.room))) return;
+      n.endpoint = last.url;
+      n.room = last.room;
+      connect("resume", true);
+    },
+    { once: true },
+  );
   return Object.assign(n, {
     canAct,
     request,
@@ -371,5 +443,7 @@ const Net = (() => {
     leave,
     applySnapshot,
     endpoint,
+    isSpectator,
+    roleName,
   });
 })();

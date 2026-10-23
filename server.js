@@ -68,12 +68,69 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
     if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify(data));
   };
   const connected = (room) => room.seats.map((s) => !!s?.ws && s.ws.readyState === WebSocket.OPEN);
+  const onlineMember = (member) => member?.ws?.readyState === WebSocket.OPEN;
+  const members = (room) => [...room.members.values()];
+  function resetReady(room) {
+    for (const member of members(room)) member.ready = false;
+  }
+  // 大厅只公开房间摘要，绝不发送战局 seed、席位 token 或完整对局数据。
+  function roomList() {
+    return [...rooms.values()]
+      .map((room) => {
+        const online = connected(room);
+        return {
+          code: room.code,
+          players: online.filter(Boolean).length,
+          capacity: 2,
+          spectators: members(room).filter((member) => member.seat === null && onlineMember(member))
+            .length,
+          started: room.started,
+          phase:
+            room.game.winner !== null
+              ? "finished"
+              : room.started
+                ? online.every(Boolean)
+                  ? "playing"
+                  : "disconnected"
+                : "waiting",
+          joinable: room.members.size < 32,
+        };
+      })
+      .sort((a, b) => a.code.localeCompare(b.code));
+  }
+  function broadcastRooms() {
+    const message = { type: "rooms", rooms: roomList() };
+    for (const client of wss.clients) if (client.lobby) send(client, message);
+  }
+  function leaveRoom(ws) {
+    const room = rooms.get(ws.room);
+    const member = room?.members.get(ws.memberId);
+    if (!member || member.ws !== ws) return;
+    if (member.seat !== null) {
+      room.seats[member.seat] = null;
+      if (room.battle) room.battle.ready[member.seat] = false;
+      if (!room.started) resetReady(room);
+    }
+    room.members.delete(member.id);
+    delete ws.room;
+    delete ws.memberId;
+    delete ws.seat;
+    send(ws, { type: "room_closed", message: "已离开房间。" });
+    ws.close(1000, "Left room");
+    if (!room.members.size) {
+      rooms.delete(room.code);
+      broadcastRooms();
+    } else {
+      room.revision++;
+      broadcast(room);
+    }
+  }
   // 公开快照不包含随机 seed；席位 token 不放入广播。
   const safeGame = (game) => {
     let { seed, ...view } = game;
     return view;
   };
-  function state(room, ack) {
+  function state(room, ack, recipient) {
     return {
       type: "state",
       room: room.code,
@@ -84,6 +141,14 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
       battle: room.battle,
       connected: connected(room),
       started: room.started,
+      members: members(room).map((member) => ({
+        id: member.id,
+        name: member.name,
+        seat: member.seat,
+        ready: member.ready,
+        connected: onlineMember(member),
+      })),
+      you: recipient ? { id: recipient.id, seat: recipient.seat } : undefined,
       log: room.log,
       lastEvent: room.lastEvent,
       ack,
@@ -91,7 +156,8 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
   }
   function broadcast(room, ack) {
     room.updated = Date.now();
-    for (const s of room.seats) send(s?.ws, state(room, ack));
+    for (const member of members(room)) send(member.ws, state(room, ack, member));
+    broadcastRooms();
   }
   function log(room, text) {
     room.log.unshift(text);
@@ -113,18 +179,71 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
   function action(ws, msg) {
     let room = rooms.get(ws.room),
       seat = ws.seat;
-    if (!room || room.seats[seat]?.ws !== ws) throw Error("请先加入房间");
+    const member = room?.members.get(ws.memberId);
+    if (!member || member.ws !== ws) throw Error("请先加入房间");
     let id = msg.id;
     if (typeof id !== "string" || id.length < 4 || id.length > 100) throw Error("请求编号无效");
-    const cache = room.seats[seat].requests;
+    const cache = member.requests;
     if (cache.has(id)) {
-      send(ws, state(room, id));
+      send(ws, state(room, id, member));
       return;
     }
     if (msg.action === "sync") {
-      send(ws, state(room, id));
+      send(ws, state(room, id, member));
       return;
     }
+    // 准备和席位操作同样有请求 ID、版本校验和去重，观战者只能使用这些房间操作。
+    if (msg.action === "switch_seat" || msg.action === "set_ready") {
+      if (!Number.isSafeInteger(msg.revision) || msg.revision !== room.revision) {
+        send(ws, { type: "error", id, code: "STALE", message: "房间状态已更新，请重试。" });
+        send(ws, state(room, undefined, member));
+        return;
+      }
+      if (msg.action === "switch_seat") {
+        const destination = msg.seat;
+        if (destination !== null && destination !== 0 && destination !== 1)
+          throw Error("无效的席位");
+        if (destination !== null && room.seats[destination] && room.seats[destination] !== member)
+          throw Error("这个队伍已有玩家");
+        if (member.seat !== destination) {
+          if (member.seat !== null) {
+            room.seats[member.seat] = null;
+            if (room.battle) room.battle.ready[member.seat] = false;
+          }
+          member.seat = destination;
+          ws.seat = destination;
+          member.ready = false;
+          if (destination !== null) {
+            room.seats[destination] = member;
+            if (room.battle) room.battle.ready[destination] = false;
+          }
+          if (!room.started) resetReady(room);
+        }
+      } else {
+        if (room.started) throw Error("游戏已经开始");
+        if (member.seat === null) throw Error("观战玩家无需准备");
+        if (typeof msg.ready !== "boolean") throw Error("准备状态无效");
+        if (msg.ready) member.formation = G.validateFormation(msg.formation);
+        member.ready = msg.ready;
+        if (connected(room).every(Boolean) && room.seats.every((player) => player.ready)) {
+          room.started = true;
+          room.game = G.create(
+            false,
+            room.game.seed,
+            room.seats.map((p) => p.formation),
+            true,
+          );
+          room.phase = "deployment";
+          log(room, "两队已准备，请在各自出生区部署并确认，随后队伍1先手。");
+        }
+      }
+      room.revision++;
+      cache.set(id, true);
+      if (cache.size > 512) cache.delete(cache.keys().next().value);
+      broadcast(room, id);
+      return;
+    }
+    if (seat === null) throw Error("观战玩家不能操作战局");
     if (!room.started || !connected(room).every(Boolean)) throw Error("对手已断线，等待重连后继续");
     if (msg.action === "battle_ready") {
       if (room.phase !== "battle" || msg.battleId !== room.battle?.id)
@@ -147,11 +266,21 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
         code: "STALE",
         message: "战局已更新，已重新同步，请重试。",
       });
-      send(ws, state(room));
+      send(ws, state(room, undefined, member));
       return;
     }
     let event;
     switch (msg.action) {
+      case "deploy": {
+        if (room.phase !== "deployment") throw Error("Not deploying");
+        G.deploy(room.game, seat, msg.unitId, msg.x, msg.y);
+        break;
+      }
+      case "confirm_deployment": {
+        if (room.phase !== "deployment") throw Error("Not deploying");
+        if (G.confirmDeployment(room.game, seat)) room.phase = "idle";
+        break;
+      }
       case "move": {
         validateActive(room, seat);
         let u = ownUnit(room, seat, msg.unitId);
@@ -241,7 +370,7 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
             weapon = G.models[from.model].weapons.find((w) => w.id === e.weapon);
           log(
             room,
-            `${from.team ? "红方" : "蓝方"} ${G.models[from.model].name} · ${weapon.name} → ${G.models[to.model].name}：${e.hit ? e.damage + "伤害" : "未命中"}${e.after <= 0 ? "，击破！" : ""}`,
+            `${from.team ? "红方" : "蓝方"} ${G.models[from.model].name} · ${weapon.name} → ${G.models[to.model].name}：${e.hit ? e.damage + "伤害" : "未命中"}（命中 ${e.hitCount}/${e.strikeCount}）${e.after <= 0 ? "，击破！" : ""}`,
           );
         }
         break;
@@ -274,10 +403,12 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
         phase: "waiting",
         revision: 0,
         seats: [null, null],
+        members: new Map(),
+        nextPlayerNumber: 1,
         pending: null,
         battle: null,
         started: false,
-        log: ["房间已创建，等待红方玩家加入。"],
+        log: ["房间已创建，两队准备后开始。"],
         lastEvent: null,
         updated: Date.now(),
       };
@@ -285,41 +416,49 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
       seat = 0;
     } else {
       if (!room) throw Error("房间不存在，请确认IP和房间码；服务端重启后需重新创建");
-      if (msg.mode === "resume") {
-        if (typeof msg.token !== "string") throw Error("缺少重连凭据");
-        seat = room.seats.findIndex((s) => s?.token === msg.token);
-        if (seat < 0) throw Error("重连凭据无效，请重新创建或加入其他房间");
-      } else {
-        if (room.seats[1]) throw Error("房间已有两名玩家；刷新页面请使用恢复连接");
-        seat = 1;
-      }
+      seat = room.started ? null : room.seats.findIndex((player) => !player);
+      if (seat === -1) seat = null;
     }
-    if (!room.seats[seat])
-      room.seats[seat] = {
+    let member;
+    if (msg.mode === "resume") {
+      if (typeof msg.token !== "string") throw Error("缺少重连凭据");
+      member = members(room).find((player) => player.token === msg.token);
+      if (!member) throw Error("重连凭据无效，请重新加入房间");
+      seat = member.seat;
+    } else {
+      if (room.members.size >= 32) throw Error("房间人数已满");
+      member = {
+        id: crypto.randomUUID(),
+        name: "玩家" + room.nextPlayerNumber++,
+        seat,
+        ready: false,
         token: crypto.randomBytes(24).toString("hex"),
         ws: null,
         requests: new Map(),
       };
-    let old = room.seats[seat].ws;
-    room.seats[seat].ws = ws;
+      room.members.set(member.id, member);
+      if (seat !== null) {
+        room.seats[seat] = member;
+        if (!room.started) resetReady(room);
+      }
+    }
+    let old = member.ws;
+    member.ws = ws;
     ws.room = code;
     ws.seat = seat;
+    ws.memberId = member.id;
     if (old && old !== ws) {
       send(old, { type: "replaced", message: "此席位已在另一个连接恢复" });
       old.close(4001, "Session resumed elsewhere");
     }
-    if (room.seats.every(Boolean) && !room.started) {
-      room.started = true;
-      room.phase = "idle";
-      room.revision++;
-      log(room, "双方已连接，蓝方先手。");
-    }
+    room.revision++;
     send(ws, {
       type: "joined",
       protocol: 1,
       room: code,
       seat,
-      token: room.seats[seat].token,
+      memberId: member.id,
+      token: member.token,
     });
     broadcast(room);
   }
@@ -340,7 +479,11 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
         if (++ws.rateCount > 60) throw Error("操作过于频繁");
         msg = JSON.parse(data.toString());
         if (!msg || typeof msg !== "object" || Array.isArray(msg)) throw Error("消息格式无效");
-        if (msg.type === "hello") join(ws, msg);
+        if (msg.type === "list_rooms") {
+          ws.lobby = true;
+          send(ws, { type: "rooms", rooms: roomList() });
+        } else if (msg.type === "leave") leaveRoom(ws);
+        else if (msg.type === "hello") join(ws, msg);
         else if (msg.type === "action") action(ws, msg);
         else throw Error("未知消息类型");
       } catch (err) {
@@ -353,8 +496,11 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
     });
     ws.on("close", () => {
       let room = rooms.get(ws.room);
-      if (room && room.seats[ws.seat]?.ws === ws) {
-        room.seats[ws.seat].ws = null;
+      const member = room?.members.get(ws.memberId);
+      if (member?.ws === ws) {
+        member.ws = null;
+        if (!room.started && member.seat !== null) resetReady(room);
+        room.revision++;
         broadcast(room);
       }
     });
@@ -368,8 +514,13 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
       ws.alive = false;
       ws.ping();
     }
+    let removed = false;
     for (const [key, r] of rooms)
-      if (!connected(r).some(Boolean) && Date.now() - r.updated > 3600000) rooms.delete(key);
+      if (!members(r).some(onlineMember) && Date.now() - r.updated > 3600000) {
+        rooms.delete(key);
+        removed = true;
+      }
+    if (removed) broadcastRooms();
   }, heartbeatMs);
   heartbeat.unref();
   function listen() {

@@ -76,14 +76,10 @@
     rightY: "右机体 Y 比例",
     leftScale: "左机体倍率",
     rightScale: "右机体倍率",
-    RX_78_2: "高达校正倍率",
-    RX_77_2: "钢加农校正倍率",
-    RX_75: "钢坦克校正倍率",
     meleeTravel: "近战前冲比例",
     shake: "受击抖动 px",
     shadowScale: "阴影倍率",
     projectileScale: "弹道倍率",
-    muzzleY: "弹道起点 Y",
     impactScale: "命中特效倍率",
     damageSize: "伤害字号倍率",
     damageX: "伤害 X 比例偏移",
@@ -105,16 +101,18 @@
     "parent-bottom-right": "父容器右下",
     "parent-center": "父容器中心",
   };
+  for (const [id, model] of Object.entries(UnitModels))
+    battleNames[id] = model.code + " · " + model.kitName + " 倍率";
   for (const anchor of U.anchors) byId("uie-anchor").add(new Option(anchorNames[anchor], anchor));
   for (const [key, label] of Object.entries(fieldNames))
     addField("uie-fields", key, label, U.fields[key], false);
   for (const [key, label] of Object.entries(battleNames))
     addField("uie-battle-fields", key, label, U.battleFields[key], true);
   for (const [id, model] of Object.entries(UnitModels)) {
-    byId("uie-left").add(new Option(model.name, id));
-    byId("uie-right").add(new Option(model.name, id));
+    byId("uie-left").add(new Option(model.name + " · " + model.kitName, id));
+    byId("uie-right").add(new Option(model.name + " · " + model.kitName, id));
   }
-  byId("uie-right").value = "RX_77_2";
+  byId("uie-right").value = Object.keys(UnitModels)[1] || Object.keys(UnitModels)[0];
   refreshWeapons();
 
   function addField(container, key, label, range, battle) {
@@ -274,7 +272,12 @@
     };
     const base = JSON.parse(byId("ui-release-template").textContent);
     const source = JSON.parse(byId("ui-preview-source").textContent);
-    iframe.srcdoc = base.replace("</body>", `<script>${source}</script></body>`);
+    // 标记必须早于游戏脚本执行，防止继承的 sessionStorage 自动恢复真实玩家席位。
+    const previewHTML = base.replace(
+      "<head>",
+      "<head><script>window.isLayoutPreview=true;</script>",
+    );
+    iframe.srcdoc = previewHTML.replace("</body>", `<script>${source}</script></body>`);
   }
   function toggle() {
     active = !active;
@@ -290,6 +293,7 @@
       if (previewWindow) {
         previewWindow.GamePreview.playing = false;
         previewWindow.GamePreview.suspended = true;
+        previewWindow.GamePreview.stopAudio();
       }
       byId("uie-play").textContent = "播放";
     }
@@ -301,12 +305,15 @@
     const search = byId("uie-search").value.toLowerCase();
     const doc = previewWindow.document;
     const options = [];
+    const scene = byId("uie-scene").value;
+    const sceneRoot =
+      { rooms: "start", formation: "formationScreen", deployment: "map" }[scene] || scene;
     for (const item of U.targets) {
       const elements = [...doc.querySelectorAll(item.selector)];
       const shown = elements.some(visible);
       if (!byId("uie-all").checked && item.id !== selected) {
         const belongsToScene = elements.some(
-          (element) => (element.closest(".overlay")?.id || "map") === byId("uie-scene").value,
+          (element) => (element.closest(".overlay,.menu-screen")?.id || "map") === sceneRoot,
         );
         if (!shown || !belongsToScene) continue;
       }
@@ -521,6 +528,12 @@
     select(
       {
         start: "startModal",
+        serverConnect: "serverModal",
+        rooms: "roomList",
+        roomPreparation: "preparationModal",
+        formation: "formationModal",
+        deployment: "deploymentPanel",
+        leaveConfirm: "leaveModal",
         map: "map",
         reaction: "reactionModal",
         battle: "battleStage",
@@ -545,11 +558,14 @@
   };
   byId("uie-play").onclick = () => {
     const p = previewWindow.GamePreview;
+    p.unlockAudio();
     p.playing = !p.playing;
     byId("uie-play").textContent = p.playing ? "暂停" : "播放";
   };
   byId("uie-replay").onclick = () => {
     const p = previewWindow.GamePreview;
+    p.stopAudio();
+    p.unlockAudio();
     p.progress = 0;
     p.playing = true;
     byId("uie-play").textContent = "暂停";

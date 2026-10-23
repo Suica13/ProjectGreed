@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "units": [
+    "units/RGM_79/unit.json",
+    "units/RGC_80/unit.json",
+    "units/RGM_79L/unit.json"
+  ],
+  "effects": "effects/effects.json",
+  "presentation": "presentation.json",
+  "formation": {
+    "maxUnits": 9,
+    "maxCost": 3600,
+    "aiUnits": 6
+  },
+  "deployment": {
+    "radius": 4,
+    "spawns": [
+      {
+        "x": 2,
+        "y": 8
+      },
+      {
+        "x": 21,
+        "y": 8
+      }
+    ]
+  },
+  "map": {
+    "width": 24,
+    "height": 18
+  },
+  "music": "music/playlist.json"
+}

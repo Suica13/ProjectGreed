@@ -5,6 +5,7 @@
 (() => {
   "use strict";
   const targets = [
+    ["musicPlayer", "背景音乐播放器", "#musicPlayer"],
     ["header", "顶栏", "header"],
     ["brand", "标题标志", ".brand"],
     ["headerTitle", "主标题", "header h1"],
@@ -28,6 +29,14 @@
     ["weaponMeta", "武器参数（全部）", ".weapon-meta"],
     ["target", "攻击目标按钮（全部）", ".target-button"],
     ["startModal", "连接／开始窗口", "#start>.modal"],
+    ["serverModal", "服务器连接窗口", "#serverForm"],
+    ["preparationModal", "房间准备窗口", "#roomPreparation>.modal"],
+    ["leaveModal", "离开确认窗口", "#leaveConfirm>.modal"],
+    ["formationModal", "编组窗口", "#formationScreen>.modal"],
+    ["formationRow", "编组单位行", ".formation-row"],
+    ["formationKit", "武器套件选单", ".formation-row select"],
+    ["deploymentPanel", "部署面板", "#deploymentPanel"],
+    ["roomList", "房间列表", "#lobby"],
     ["netForm", "连接表单", ".net-form"],
     ["netButtons", "连接按钮组", ".net-buttons"],
     ["startTitle", "开始窗口标题", "#startTitle"],
@@ -45,6 +54,13 @@
     ["helpModal", "说明窗口", "#help>.modal"],
     ["victoryModal", "胜利窗口", "#victory>.modal"],
   ].map(([id, name, selector]) => ({ id, name, selector }));
+  // 保留已移除按钮的旧编号，使旧导出布局仍可读取；这些选择器不会匹配控件。
+  for (const id of [11, 131, 132, 133, 136, 137])
+    targets.push({
+      id: "node-" + id,
+      name: "已移除的旧入口",
+      selector: `[data-ui-node="node-${id}"]`,
+    });
   // 源模板中的每个静态元素都有稳定编号，新增元素时不要重新编号。
   const partNames = {
     img: "头像",
@@ -99,6 +115,36 @@
   }
   // 动态生成的列表不能依赖临时 DOM。提前登记可重建的选择器。
   const dynamicGroups = [
+    [
+      "#formationUnits",
+      "编组单位",
+      [
+        ".formation-row img",
+        ".formation-row span",
+        ".formation-row select",
+        ".formation-row button",
+      ],
+    ],
+    [
+      "#teamSlots",
+      "队伍席位",
+      [".team-slot", ".team-slot h3", ".team-slot strong", ".team-slot p"],
+    ],
+    ["#spectatorSlots", "观战席位", [".spectator-slot"]],
+    [
+      "#roomList",
+      "房间列表",
+      [
+        ".room-card",
+        ".room-card strong",
+        ".room-card small",
+        ".room-card button",
+        ".room-card th",
+        ".room-state",
+        ".room-players",
+        ".room-action",
+      ],
+    ],
     [
       "#unitPanel",
       "单位指令",
@@ -247,9 +293,6 @@
     scale: [0.1, 4],
     leftScale: [0.1, 4],
     rightScale: [0.1, 4],
-    RX_78_2: [0.1, 4],
-    RX_77_2: [0.1, 4],
-    RX_75: [0.1, 4],
     meleeTravel: [0, 0.5],
     shake: [0, 30],
     shadowScale: [0.1, 3],
@@ -263,6 +306,8 @@
     mapLabelSize: [0.3, 3],
     mapBarScale: [0.1, 2],
   };
+  for (const id of Object.keys(typeof ART !== "undefined" ? ART.models : {}))
+    battleFields[id] = [0.1, 4];
   const profiles = ["desktop", "tablet", "mobile"];
   function validate(raw) {
     if (
