@@ -1,0 +1,18 @@
+{
+  "name": "battle-universe-slg-lan",
+  "version": "0.1.0",
+  "private": true,
+  "description": "0079 turn-based SLG LAN/IP prototype",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js --port 4173",
+    "build": "node build.cjs",
+    "test": "node --test tests/*.test.cjs"
+  },
+  "dependencies": {
+    "ws": "8.22.0"
+  }
+}

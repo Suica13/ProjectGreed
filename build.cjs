@@ -1,0 +1,14 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),root=__dirname;
+const read=file=>fs.readFileSync(path.join(root,file),'utf8');
+const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
+let html=read('client/template.html');
+for(const [key,file]of [['DATA','client/art.json'],['CORE','shared/rules.js'],['RENDERER','client/renderer.js'],['APP','client/app.js']])html=html.replace('__'+key+'__',key==='DATA'?read(file).replace(/</g,'\\u003c'):read(file));
+html=html.replace('</script></body>',read('client/network.js')+'\n</script></body>');
+const layout=JSON.parse(read('client/ui-layout.json'));
+html=html.replace('</body>',`<script type="application/json" id="ui-layout-data">${json(layout)}</script><script id="ui-layout-runtime">${read('client/ui-layout.js')}</script></body>`);
+const release=html;
+const developer=release.replace('<title>0079 SLG · IP联机版</title>','<title>0079 SLG · 开发者版</title>').replace('</body>',`<script type="application/json" id="ui-release-template" data-developer-only>${json(release)}</script><script id="ui-layout-editor" data-developer-only>${read('client/ui-editor.js')}</script></body>`);
+fs.mkdirSync(path.join(root,'public'),{recursive:true});
+for(const [name,content]of [['index.html',release],['client.html',release],['developer.html',developer]])fs.writeFileSync(path.join(root,'public',name),content);
+console.log('Built release:',Buffer.byteLength(release),'bytes; developer:',Buffer.byteLength(developer),'bytes');

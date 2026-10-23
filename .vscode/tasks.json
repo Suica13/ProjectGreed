@@ -1,0 +1,1 @@
+{"version":"2.0.0","tasks":[{"label":"构建网页客户端","type":"shell","command":"npm run build","group":"build","problemMatcher":[]},{"label":"运行联机测试","type":"shell","command":"npm test","group":"test","problemMatcher":[]}]}
