@@ -1,4 +1,4 @@
-/* 原 MOD 序列帧。每个实例只播放一遍，不循环、不生成新的伤害。 */
+/* 原 MOD 序列帧。命中/爆炸播放一次，低耐久电流单独循环；都不生成伤害。 */
 const SpriteEffects = (() => {
   function frame(id, time) {
     const effect = ART.effects[id];
@@ -34,7 +34,66 @@ const SpriteEffects = (() => {
     ctx.restore();
     return true;
   }
-  return { frame, sound, draw };
+  // 与原 MOD 一样，仅在存活且 HP 严格低于25%时显示；使用统一演出时钟，不创建计时器。
+  function lowHp(ctx, unit, x, y, scale, time, hp = unit.hp) {
+    const config = ART.presentation.lowHp,
+      effect = ART.effects[config?.effect];
+    if (!effect || !Number.isFinite(time)) return false;
+    const maxHp =
+      typeof Rules !== "undefined"
+        ? Rules.modelOf(unit).hp
+        : UnitModels[unit.model].hp * (unit.performance ?? 1);
+    if (!(hp > 0 && hp < maxHp * config.threshold)) return false;
+    return draw(ctx, config.effect, x, y, scale, Math.max(0, time) % effect.duration);
+  }
+  function boostStart(ctx, unit, x, y, scale, time, angle = unit.angle) {
+    if (UnitModels[unit.model].presentation.movement !== "boost") return false;
+    return draw(
+      ctx,
+      ART.presentation.boostStartEffect,
+      x,
+      y,
+      scale,
+      time,
+      ((angle - 90) * Math.PI) / 180,
+    );
+  }
+  return { frame, sound, draw, lowHp, boostStart };
+})();
+
+/* 推进启动爆光留在起步位置，短距离移动结束后也会自然播完，不影响行动。 */
+const MovementEffects = (() => {
+  const active = [];
+  function start(unit, from, next, now) {
+    if (!next || UnitModels[unit.model].presentation.movement !== "boost") return;
+    active.push({
+      unit: { ...unit },
+      from,
+      start: now,
+      angle: (Math.atan2(next.x - from.x, -(next.y - from.y)) * 180) / Math.PI,
+    });
+  }
+  function reset() {
+    active.length = 0;
+  }
+  function draw(ctx, now, position, tile) {
+    for (let i = active.length - 1; i >= 0; i--) {
+      const item = active[i],
+        time = (now - item.start) / 1000;
+      if (time >= ART.effects[ART.presentation.boostStartEffect].duration) {
+        active.splice(i, 1);
+        continue;
+      }
+      const point = position(item.from.x, item.from.y);
+      const scale =
+        (tile / 64) *
+        1.2 *
+        BattleScene.settings().mapScale *
+        UnitModels[item.unit.model].presentation.mapScale;
+      SpriteEffects.boostStart(ctx, item.unit, point.x, point.y, scale, time, item.angle);
+    }
+  }
+  return { start, reset, draw };
 })();
 
 /* 战斗之后才在地图播放死亡爆炸。按战斗与单位去重，不从每帧 HP 检查触发。 */
@@ -67,6 +126,7 @@ const MapEffects = (() => {
     else callback();
   }
   function reset() {
+    MovementEffects.reset();
     queue.length = active.length = 0;
     seen.clear();
     callbacks.clear();
@@ -95,19 +155,20 @@ const MapEffects = (() => {
         1.2 *
         BattleScene.settings().mapScale *
         UnitModels[item.unit.model].presentation.mapScale;
-      SpriteRenderer.draw(
-        ctx,
-        item.unit.model,
-        point.x,
-        point.y + tile * 0.035,
-        scale,
-        item.unit.angle,
-        null,
-        0,
-        item.unit.heldWeapon,
-        false,
-        (item.unit.shield ?? 0) > 0,
-      );
+      if (age < 0)
+        SpriteRenderer.draw(
+          ctx,
+          item.unit.model,
+          point.x,
+          point.y + tile * 0.035,
+          scale,
+          item.unit.angle,
+          null,
+          0,
+          item.unit.heldWeapon,
+          false,
+          (item.unit.shield ?? 0) > 0,
+        );
       SpriteEffects.draw(
         ctx,
         item.effect,

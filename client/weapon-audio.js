@@ -2,9 +2,11 @@
 const WeaponAudio = (() => {
   let context = null,
     loading = null,
-    current = null;
+    current = null,
+    battleMuted = false;
   const buffers = new Map(),
-    nodes = new Map();
+    nodes = new Map(),
+    startTimes = new WeakMap();
   function stopNodes(channel = null) {
     for (const [node, kind] of nodes) {
       if (channel && kind !== channel) continue;
@@ -21,6 +23,27 @@ const WeaponAudio = (() => {
   function stopBattle() {
     current = null;
     stopNodes("battle");
+  }
+  // 自然结束只取消尚未开始的提示，正在响的最后一发允许完整播放。
+  function releaseBattle() {
+    current = null;
+    for (const [node, kind] of nodes) {
+      if (kind !== "battle") continue;
+      if ((startTimes.get(node) ?? Infinity) <= context.currentTime) nodes.set(node, "tail");
+      else {
+        try {
+          node.stop();
+        } catch {}
+        nodes.delete(node);
+      }
+    }
+  }
+  function setBattleMuted(muted) {
+    battleMuted = !!muted;
+    if (battleMuted) {
+      stopBattle();
+      stopNodes("tail");
+    }
   }
   function unlock() {
     try {
@@ -40,6 +63,7 @@ const WeaponAudio = (() => {
     }
   }
   function play(sound, at = context?.currentTime, rate = 1, channel = "map") {
+    if (channel === "battle" && battleMuted) return;
     if (!context || context.state !== "running" || !buffers.has(sound?.asset)) return;
     const source = context.createBufferSource(),
       gain = context.createGain();
@@ -54,9 +78,15 @@ const WeaponAudio = (() => {
       gain.disconnect();
     };
     nodes.set(source, channel);
-    source.start(Math.max(context.currentTime, at));
+    const startsAt = Math.max(context.currentTime, at);
+    startTimes.set(source, startsAt);
+    source.start(startsAt);
   }
   function sync(owner, index, weapon, time, rate = 1, cues = null) {
+    if (battleMuted) {
+      stopBattle();
+      return;
+    }
     const sequence =
       cues || [...new Set(weapon.attack.shots)].map((at) => ({ at, sound: weapon.sound }));
     if (!context || context.state !== "running") return;
@@ -87,5 +117,5 @@ const WeaponAudio = (() => {
     if (document.hidden) stop();
   });
   window.addEventListener("pagehide", stop);
-  return { unlock, sync, stop, stopBattle, play };
+  return { unlock, sync, stop, stopBattle, setBattleMuted, play, releaseBattle };
 })();

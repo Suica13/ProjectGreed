@@ -98,6 +98,15 @@ const BattleScene = (() => {
       ctx.stroke();
     }
 
+    ctx.save();
+    ctx.strokeStyle = "#83b0c5aa";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(width / 2, 8);
+    ctx.lineTo(width / 2, height - 8);
+    ctx.stroke();
+    ctx.restore();
+
     const { left, right, event, ratio, elapsed, time, completed, displayHp } = frame;
     const actors = geometry(width, height, left, right, options);
     const { source, target, weapon, plan } = timeline(event, left, right, width, height, options);
@@ -105,7 +114,11 @@ const BattleScene = (() => {
     const resolved = WeaponEffects.arrived(plan, attackTime),
       latest = resolved.at(-1),
       impact = Boolean(latest);
-    const animation = WeaponSequence.pose(weapon, attackTime * plan.actionSpeed);
+    const animation = WeaponSequence.pose(
+      weapon,
+      Math.max(0, attackTime - plan.lead) * plan.actionSpeed,
+    );
+    const melee = WeaponEffects.meleeMotion(plan, source, target, attackTime, options.meleeTravel);
     const dodge = WeaponEffects.dodge(event, plan, attackTime, source, target);
 
     for (const actor of actors) {
@@ -115,29 +128,30 @@ const BattleScene = (() => {
         !completed && unit.id === event.to && latest?.hit && attackTime < latest.at + 0.18;
       let offsetX = damaged ? Math.sin((time * 1000) / 28) * options.shake : 0;
       const dodging = unit.id === event.to && dodge.active && !completed;
-      const offsetY = unit.id === event.to ? dodge.y : plan.sourceY;
+      let offsetY = unit.id === event.to ? dodge.y : plan.sourceY;
       if (dodging) offsetX += dodge.x;
-      const destroyed =
-        unit.id === event.to && plan.deathEnd !== null && attackTime >= plan.deathEnd;
+      const destroyed = unit.id === event.to && plan.deathAt !== null && attackTime >= plan.deathAt;
       if (destroyed || (completed && displayHp[unit.id] <= 0)) continue;
       if (attacking && event.type === "melee") {
-        offsetX +=
-          (unit.id === left.id ? 1 : -1) * Math.sin(ratio * Math.PI) * width * options.meleeTravel;
+        offsetX += melee.x;
+        offsetY += melee.y;
       }
       ctx.save();
       if (displayHp[unit.id] <= 0) ctx.globalAlpha = 0.25;
-      ctx.fillStyle = unit.team ? "#ff9a8255" : "#6bcff855";
+      const ring =
+        typeof UnitIdentity !== "undefined"
+          ? UnitIdentity.colors[UnitIdentity.relation(unit)]
+          : {
+              fill: unit.team ? "#ff9a8233" : "#6bcff833",
+              color: unit.team ? "#ff9a82" : "#6bcff8",
+            };
+      ctx.fillStyle = ring.fill;
+      ctx.strokeStyle = ring.color;
+      ctx.lineWidth = 1.8;
       ctx.beginPath();
-      ctx.ellipse(
-        x + offsetX,
-        y + offsetY + (35 * scale) / 2,
-        26 * scale * options.shadowScale,
-        6 * scale * options.shadowScale,
-        0,
-        0,
-        Math.PI * 2,
-      );
+      ctx.arc(x + offsetX, y + offsetY, 26 * scale * options.shadowScale, 0, Math.PI * 2);
       ctx.fill();
+      ctx.stroke();
       SpriteRenderer.draw(
         ctx,
         unit.model,
@@ -146,14 +160,20 @@ const BattleScene = (() => {
         scale,
         angle,
         attacking
-          ? animation.clip
+          ? plan.melee && ["approach", "return"].includes(melee.stage)
+            ? UnitModels[unit.model].presentation.move
+            : plan.melee && melee.stage === "rest"
+              ? null
+              : animation.clip
           : damaged
             ? UnitModels[unit.model].presentation.stagger
             : dodging
               ? UnitModels[unit.model].presentation.dodge
               : null,
         attacking
-          ? animation.time
+          ? plan.melee && ["approach", "return"].includes(melee.stage)
+            ? melee.time * ART.presentation.meleeAnimationSpeed
+            : animation.time
           : damaged
             ? (attackTime - latest.at) * ART.presentation.animationSpeed
             : dodging
@@ -164,10 +184,47 @@ const BattleScene = (() => {
         unit.id === event.to && event.shieldBefore !== undefined
           ? WeaponEffects.shield(event, plan, attackTime, event.shieldBefore) > 0
           : (frame.displayShield?.[unit.id] ?? unit.shield ?? 1) > 0,
+        dodging,
       );
+      if (!completed && unit.id === event.to && dodge.started)
+        SpriteEffects.boostStart(ctx, unit, x + offsetX, y + offsetY, scale, dodge.time, angle);
+      const visibleHp =
+        !completed && unit.id === event.to
+          ? WeaponEffects.health(event, plan, attackTime, displayHp[unit.id] ?? unit.hp)
+          : (displayHp[unit.id] ?? unit.hp);
+      // 致命命中后播放一次电流，使用战斗时间轴，暂停、快进和重绘不会重复触发。
+      const dying =
+        !completed &&
+        unit.id === event.to &&
+        plan.deathSoundAt !== null &&
+        attackTime >= plan.deathSoundAt;
+      if (dying)
+        SpriteEffects.draw(
+          ctx,
+          plan.deathElectricEffect,
+          x + offsetX,
+          y + offsetY,
+          scale,
+          attackTime - plan.deathSoundAt,
+        );
+      else SpriteEffects.lowHp(ctx, unit, x + offsetX, y + offsetY, scale, time, visibleHp);
       ctx.restore();
     }
 
+    if (!completed && weapon.swingEffects?.length) {
+      const facing = Math.atan2(target.y - source.y, target.x - source.x);
+      for (const [index, contact] of plan.contacts.entries()) {
+        SpriteEffects.draw(
+          ctx,
+          weapon.swingEffects[index % weapon.swingEffects.length],
+          source.x + melee.x,
+          source.y + plan.sourceY + melee.y,
+          source.scale,
+          (attackTime - contact.at) * plan.actionSpeed,
+          facing,
+        );
+      }
+    }
     if (!completed)
       WeaponEffects.draw(ctx, weapon, plan, attackTime, source, event, options.projectileScale);
     if (!completed && impact && attackTime < plan.impacts.at(-1) + 0.35) {
@@ -178,7 +235,13 @@ const BattleScene = (() => {
       ctx.fillStyle = latest.hit ? "#ffe7aa" : "#b9dbe8";
       const damage = resolved.reduce((sum, contact) => sum + contact.damage, 0);
       const label = latest.hit
-        ? (latest.blocked ? "格挡 " : "") + "-" + damage.toLocaleString("en-US")
+        ? (latest.blocked
+            ? typeof I18n !== "undefined"
+              ? I18n.text("格挡") + " "
+              : "格挡 "
+            : "") +
+          "-" +
+          damage.toLocaleString("en-US")
         : "MISS";
       ctx.fillText(
         label,
@@ -197,7 +260,8 @@ const BattleScene = (() => {
           target.y +
             WeaponEffects.position(plan, contact.at) *
               ART.presentation.dodgeDistance *
-              target.scale,
+              target.scale +
+            (plan.shots.find((shot) => shot.index === contact.shotIndex)?.spreadY || 0),
           target.scale * options.impactScale,
           (attackTime - contact.at) * ART.presentation.animationSpeed,
           angle,

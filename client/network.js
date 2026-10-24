@@ -3,9 +3,10 @@
  */
 "use strict";
 const Net = (() => {
-  // active 表示联机模式，awaiting 表示等待某个请求的确认。
+  // active 表示已加入遭遇战房间（联机或离线），awaiting 表示等待某个请求的确认。
   const n = {
     active: false,
+    local: false,
     socket: null,
     seat: null,
     memberId: null,
@@ -20,7 +21,7 @@ const Net = (() => {
     reconnectTimer: null,
     retry: 0,
     manual: false,
-    endpoint: null,
+    serverURL: null,
     connecting: false,
     applied: false,
   };
@@ -47,6 +48,17 @@ const Net = (() => {
       } catch {}
     },
   };
+  const chatRequestIds = new Set();
+  function sendChat(message, retryId = null, channel = "all") {
+    if (!n.active || !n.memberId || n.socket?.readyState !== WebSocket.OPEN) return null;
+    const id =
+      retryId ||
+      "chat-" + (crypto.randomUUID?.() || Date.now() + "-" + Math.random().toString(16).slice(2));
+    chatRequestIds.add(id);
+    if (chatRequestIds.size > 100) chatRequestIds.delete(chatRequestIds.values().next().value);
+    n.socket.send(JSON.stringify({ type: "action", action: "chat", id, message, channel }));
+    return id;
+  }
   function endpoint(s) {
     s = s.trim();
     if (!s) throw Error("请输入服务器IP和端口");
@@ -68,7 +80,9 @@ const Net = (() => {
       (n.socket?.readyState === WebSocket.OPEN &&
         n.snapshot?.connected.every(Boolean) &&
         n.snapshot?.started &&
-        n.seat === game.team &&
+        n.seat !== null &&
+        Rules.seatTeam(n.seat) === game.team &&
+        !n.snapshot?.turnDone?.[n.seat] &&
         !n.awaiting)
     );
   }
@@ -110,6 +124,11 @@ const Net = (() => {
     }, 8000);
   }
   function leave({ notify = true, forget = true } = {}) {
+    MatchResults.reset();
+    GameAudio.reset();
+    WeaponAudio.stop();
+    Chat.reset();
+    chatRequestIds.clear();
     TurnFlow.reset();
     MapCamera.reset();
     MapEffects.reset();
@@ -119,12 +138,13 @@ const Net = (() => {
     if (notify && n.socket?.readyState === WebSocket.OPEN)
       n.socket.send(JSON.stringify({ type: "leave" }));
     if (forget) {
-      if (n.endpoint && n.room) storage.remove(key(n.endpoint, n.room));
+      if (n.serverURL && n.room) storage.remove(key(n.serverURL, n.room));
       storage.remove("slg-last");
     }
     n.socket?.close();
     n.socket = null;
     n.active = false;
+    n.local = false;
     n.connecting = false;
     n.awaiting = null;
     n.snapshot = null;
@@ -137,6 +157,74 @@ const Net = (() => {
     n.spectatorBattleSeen = null;
     status("未连接");
   }
+  // 两种传输都将裁定后的消息交给同一套快照恢复逻辑。
+  function receive(msg, socket, { url = n.serverURL, room = n.room, mode = "create" } = {}) {
+    if (n.socket !== socket) return;
+    if (msg.type === "joined") {
+      n.seat = msg.seat;
+      n.memberId = msg.memberId;
+      n.token = msg.token;
+      n.connecting = false;
+      n.retry = 0;
+      if (!n.local) {
+        storage.set(key(url, room), msg.token);
+        storage.set("slg-last", JSON.stringify({ url, room }));
+      }
+      byId("start").hidden = true;
+      status("房间 " + room + " · " + roleName());
+    } else if (msg.type === "chat") {
+      if (n.snapshot && !(n.snapshot.chat || []).some((old) => old.id === msg.message.id))
+        n.snapshot.chat = [...(n.snapshot.chat || []), msg.message].slice(-100);
+      Chat.receive(msg.message, msg.ack);
+    } else if (msg.type === "state") {
+      if (n.memberId === null || msg.revision < n.revision) return;
+      if (n.awaiting && (msg.ack === n.awaiting.id || msg.revision > n.awaiting.revision))
+        n.awaiting = null;
+      n.revision = msg.revision;
+      n.snapshot = msg;
+      applySnapshot(msg);
+    } else if (msg.type === "error") {
+      if (chatRequestIds.has(msg.id)) {
+        Chat.reject(msg.id, msg.message);
+        return;
+      }
+      n.awaiting = null;
+      status(msg.message);
+      note(msg.message);
+      if (n.connecting) {
+        if (mode === "resume") {
+          storage.remove(key(url, room));
+          storage.remove("slg-last");
+        }
+        n.manual = true;
+        n.connecting = false;
+        leave({ notify: false, forget: false });
+        phase = "start";
+        setPageView("menu");
+        status(msg.message);
+      }
+      update();
+    } else if (msg.type === "room_closed") {
+      openMenu();
+      note(msg.message);
+    } else if (msg.type === "replaced") {
+      n.manual = true;
+      note(msg.message);
+      socket.close();
+    }
+  }
+  function beginLocal(socket) {
+    n.active = true;
+    n.local = true;
+    n.manual = false;
+    n.socket = socket;
+    n.room = "OFFLINE";
+    n.serverURL = null;
+    n.applied = false;
+    session++;
+    moving = null;
+    status("离线遭遇战");
+  }
   function connect(mode = "join", auto = false, roomCode = null) {
     if (window.isLayoutPreview) return;
     if (!assetsReady) {
@@ -145,7 +233,7 @@ const Net = (() => {
     }
     let url, room;
     try {
-      url = auto ? n.endpoint : Lobby.endpoint();
+      url = auto ? n.serverURL : Lobby.endpoint();
       if (!url) throw Error("请先连接服务器。");
       room = (auto ? n.room : roomCode || byId("roomCode").value).trim().toUpperCase();
       if (!/^[A-Z0-9_-]{3,20}$/.test(room))
@@ -165,10 +253,11 @@ const Net = (() => {
     n.socket?.close();
     n.manual = false;
     n.active = true;
+    n.local = false;
     n.memberId = null;
     n.started = false;
     n.connecting = true;
-    n.endpoint = url;
+    n.serverURL = url;
     n.room = room;
     n.token = token;
     n.awaiting = null;
@@ -177,7 +266,6 @@ const Net = (() => {
     n.seen.clear();
     n.applied = false;
     session++;
-    clearTimeout(aiTimer);
     moving = null;
     phase = "connecting";
     status(auto ? "正在恢复连接…" : "正在连接 " + url);
@@ -192,59 +280,18 @@ const Net = (() => {
           mode,
           room,
           token: mode === "resume" ? token : undefined,
+          name: PlayerProfile.name(),
         }),
       );
     };
     socket.onmessage = (e) => {
-      if (n.socket !== socket) return;
       let msg;
       try {
         msg = JSON.parse(e.data);
       } catch {
         return;
       }
-      if (msg.type === "joined") {
-        n.seat = msg.seat;
-        n.memberId = msg.memberId;
-        n.token = msg.token;
-        n.connecting = false;
-        n.retry = 0;
-        storage.set(key(url, room), msg.token);
-        storage.set("slg-last", JSON.stringify({ url, room }));
-        byId("start").hidden = true;
-        status("房间 " + room + " · " + roleName());
-      } else if (msg.type === "state") {
-        if (n.memberId === null || msg.revision < n.revision) return;
-        if (n.awaiting && (msg.ack === n.awaiting.id || msg.revision > n.awaiting.revision))
-          n.awaiting = null;
-        n.revision = msg.revision;
-        n.snapshot = msg;
-        applySnapshot(msg);
-      } else if (msg.type === "error") {
-        n.awaiting = null;
-        status(msg.message);
-        note(msg.message);
-        if (n.connecting) {
-          if (mode === "resume") {
-            storage.remove(key(url, room));
-            storage.remove("slg-last");
-          }
-          n.manual = true;
-          n.connecting = false;
-          leave({ notify: false, forget: false });
-          phase = "start";
-          setPageView("menu");
-          status(msg.message);
-        }
-        update();
-      } else if (msg.type === "room_closed") {
-        openMenu();
-        note(msg.message);
-      } else if (msg.type === "replaced") {
-        n.manual = true;
-        note(msg.message);
-        socket.close();
-      }
+      receive(msg, socket, { url, room, mode });
     };
     socket.onerror = () => {
       if (n.socket === socket) status("连接失败：检查IP、端口及服务端是否启动");
@@ -257,7 +304,7 @@ const Net = (() => {
         leave({ notify: false, forget: false });
         phase = "start";
         setPageView("menu");
-        status("未连接服务器，可以选择房间或直接单人离线游玩。");
+        status("未连接服务器，可创建离线房间或连接服务器。");
         update();
         return;
       }
@@ -273,13 +320,16 @@ const Net = (() => {
   }
   // 服务端快照是联机状态来源，按阶段恢复地图、应战或战斗画面。
   function applySnapshot(s) {
+    GameAudio.receive(s, s.you ? s.you.seat : n.seat, n.applied);
     const wasStarted = n.started;
+    Chat.setSnapshot(s);
     const previousSeat = n.seat;
     if (s.you) {
       n.seat = s.you.seat;
       n.memberId = s.you.id;
     }
     n.started = s.started;
+    Formation.refresh();
     if (previousSeat !== n.seat) {
       selected = weaponId = null;
       mode = "select";
@@ -288,12 +338,32 @@ const Net = (() => {
     let hadBattle = battleView?.networkId,
       previousGame = game;
     game = s.game;
+    if (previousGame.mapId !== game.mapId) MapCamera.reset();
     game.ai = false;
     log = s.log.slice();
-    byId("log").replaceChildren(...log.map((t) => element("div", "log-line", t)));
+
     pending = s.pending;
     if (s.phase !== "battle" && battleView) MapEffects.capture(battleView);
+    if (s.phase === "assembly") {
+      phase = "assembly";
+      battleView = null;
+      if (pageView !== "formation") setPageView("room");
+      RoomPanel.render(s);
+      n.applied = true;
+      update();
+      return;
+    }
     if (!s.started) {
+      MatchResults.reset();
+      if (wasStarted) {
+        MapEffects.reset();
+        WeaponAudio.stop();
+        TurnFlow.reset();
+        MapCamera.reset();
+        selected = weaponId = null;
+        moving = pending = null;
+        mode = "select";
+      }
       phase = "waiting";
       battleView = null;
       if (pageView !== "formation") setPageView("room");
@@ -302,7 +372,13 @@ const Net = (() => {
       update();
       return;
     }
-    if (!wasStarted || pageView === "menu") setPageView("game");
+    if (!wasStarted || pageView === "menu" || byId("finalAssemblyPanel").hidden === false) {
+      byId("finalAssemblyPanel").hidden = true;
+      byId("roomLobbyContent").hidden = false;
+      byId("roomActions").hidden = false;
+      setPageView("game");
+    }
+    if (pageView === "room" && s.phase === "finished") setPageView("game");
     if (pageView === "room") {
       if (s.lastEvent) n.seen.add(s.lastEvent.id);
       RoomPanel.render(s);
@@ -312,7 +388,7 @@ const Net = (() => {
     }
     const online = s.connected.every(Boolean);
     byId("reaction").hidden = true;
-    if (!online) {
+    if (!online && s.phase !== "finished") {
       TurnFlow.reset();
       if (battleView) BattleWindow.suspend(battleView);
       phase = "disconnected";
@@ -323,10 +399,10 @@ const Net = (() => {
       battleView = null;
     } else if (s.phase === "reaction") {
       let b = getUnit(s.pending.target);
-      if (b.team === n.seat) {
+      if (Rules.ownerOf(b) === n.seat) {
         phase = "reaction";
         let a = getUnit(s.pending.attacker),
-          legal = UnitModels[b.model].weapons.filter((w) => Rules.canAttack(game, b, a, w));
+          legal = Rules.modelOf(b).weapons.filter((w) => Rules.canCounter(game, b, a, w));
         if (!legal.some((w) => w.id === counterId)) {
           response = legal.length ? "counter" : "defend";
           counterId = legal[0]?.id || null;
@@ -375,13 +451,16 @@ const Net = (() => {
       byId("battle").hidden = true;
       battleView = null;
     }
-    if (s.started && online) status("房间 " + n.room + " · " + roleName() + " · 双方在线");
+    if (s.started && online)
+      status((n.local ? "离线遭遇战" : "房间 " + n.room) + " · " + roleName());
     const event = s.lastEvent;
     if (event && !n.seen.has(event.id)) {
       n.seen.add(event.id);
       if (n.seen.size > 128) n.seen.delete(n.seen.values().next().value);
       if (event.type === "move" && s.phase === "idle" && online && n.applied) {
-        WeaponAudio.play(ART.presentation.moveSound);
+        if (Rules.modelOf(getUnit(event.unitId)).presentation.movement === "boost")
+          WeaponAudio.play(ART.presentation.moveSound);
+        MovementEffects.start(getUnit(event.unitId), event.from, event.path[0], performance.now());
         moving = {
           id: event.unitId,
           from: event.from,
@@ -418,35 +497,46 @@ const Net = (() => {
     return n.active && n.seat === null;
   }
   function roleName() {
-    return n.seat === null ? "观战玩家" : "队伍" + (n.seat + 1);
+    return n.seat === null
+      ? "观战玩家"
+      : "队伍" + (Rules.seatTeam(n.seat) + 1) + " · 出生点" + (Math.floor(n.seat / 2) + 1);
   }
   let last;
   try {
     last = JSON.parse(storage.get("slg-last") || "null");
   } catch {}
-  byId("serverAddress").value = CLIENT_CONFIG.defaultServerAddress;
-  if (last) {
-    byId("serverAddress").value = last.url;
-    byId("roomCode").value = last.room;
-  }
+  // 预设地址只保存在配置和连接状态里，不回填到自定义输入框。
+  const presetURLs = CLIENT_CONFIG.presetServers.map((server) => endpoint(server.address));
+  const savedAddress = last?.url || CLIENT_CONFIG.defaultServerAddress;
+  let savedIsPreset = false;
+  try {
+    savedIsPreset = !!savedAddress && presetURLs.includes(endpoint(savedAddress));
+  } catch {}
+  byId("serverAddress").value = savedIsPreset ? "" : savedAddress;
+  if (last) byId("roomCode").value = last.room;
   // 刷新当前标签页时自动恢复席位，不再要求玩家点击重连按钮。
   window.addEventListener(
     "game-assets-ready",
     () => {
       if (window.isLayoutPreview || !last || !storage.get(key(last.url, last.room))) return;
-      n.endpoint = last.url;
+      n.serverURL = last.url;
       n.room = last.room;
       connect("resume", true);
     },
     { once: true },
   );
   return Object.assign(n, {
+    beginLocal,
+    receive,
     canAct,
+    team: () => Rules.seatTeam(n.seat),
+    owns: (unit) => !!unit && n.seat !== null && Rules.ownerOf(unit) === n.seat,
     request,
     connect,
     leave,
     applySnapshot,
     endpoint,
+    sendChat,
     isSpectator,
     roleName,
   });

@@ -1,0 +1,12 @@
+{
+  "machine_gun": 0,
+  "anti_air": 0,
+  "bazooka": 50,
+  "missile_launcher": 50,
+  "big_gun": 50,
+  "beam_spray": 75,
+  "beam_gun": 75,
+  "beam_rifle": 100,
+  "cannon": 100,
+  "magella_cannon": 100
+}

@@ -6,6 +6,16 @@
   "use strict";
   const targets = [
     ["musicPlayer", "背景音乐播放器", "#musicPlayer"],
+    ["languageSwitch", "语言切换", "#languageSwitch"],
+    ["playerIdField", "玩家ID", ".player-id-label"],
+    ["rosterScroll", "单位滚动窗", "#unitRoster"],
+    ["consoleTabs", "聊天和LOG切换", ".log-tabs"],
+    ["roomChatPanel", "房间聊天", "#roomChatPanel"],
+    ["roomOptions", "房间地图与预算", ".room-options"],
+    ["roomActions", "房间准备按钮", "#roomActions"],
+    ["roomMapPreview", "房间地图预览", "#roomMapPreview"],
+    ["roomSpawnSlots", "出生席位", "#teamSlots"],
+    ["victoryCountdown", "赛后返回倒计时", "#victoryCountdown"],
     ["header", "顶栏", "header"],
     ["brand", "标题标志", ".brand"],
     ["headerTitle", "主标题", "header h1"],
@@ -23,6 +33,7 @@
     ["logLines", "战报内容", "#log"],
     ["rosterRow", "机体列表项（全部）", ".roster-unit"],
     ["unitHead", "单位信息标题", ".unit-card-head"],
+    ["unitOwnership", "单位所有者与队伍", "#unitOwnership"],
     ["stats", "单位属性区", ".stats"],
     ["actions", "单位动作按钮组", ".actions"],
     ["weapon", "武器按钮（全部）", ".weapon"],
@@ -178,7 +189,7 @@
     ["#battleInfo", "战斗状态", ["> div", "strong", "small", ".hp-track", ".hp-fill"]],
     [
       "#allies",
-      "蓝方列表",
+      "我军单位列表",
       [
         ".roster-unit",
         ".roster-unit img",
@@ -186,11 +197,14 @@
         ".roster-unit small",
         ".hp-track",
         ".hp-fill",
+        ".en-track",
+        ".en-fill",
+        ".roster-owner-heading",
       ],
     ],
     [
       "#enemies",
-      "红方列表",
+      "观战另一队列表",
       [
         ".roster-unit",
         ".roster-unit img",
@@ -198,6 +212,9 @@
         ".roster-unit small",
         ".hp-track",
         ".hp-fill",
+        ".en-track",
+        ".en-fill",
+        ".roster-owner-heading",
       ],
     ],
   ];
@@ -222,8 +239,8 @@
     "unitPanel .actions",
   ]) {
     const scopeName = {
-      allies: "蓝方列表",
-      enemies: "红方列表",
+      allies: "我军单位列表",
+      enemies: "观战另一队列表",
       "unitPanel .weapon-list": "指令武器",
       counterList: "反击武器",
       engagement: "应战双方",

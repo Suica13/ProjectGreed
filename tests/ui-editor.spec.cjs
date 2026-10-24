@@ -1,3 +1,4 @@
+const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const { test: base, expect } = require("@playwright/test");
 const { createServer } = require("../server.js");
 const fs = require("node:fs/promises");
@@ -79,11 +80,11 @@ test("new GM variants appear in formation and render native cannon and two-stage
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await page.locator("#openFormation").click();
-  await page.locator("#formationPrefab").selectOption("RGC_80");
+  await page.locator('[data-unit-id="RGC_80"]').click();
   await page.locator("#addFormationUnit").click();
   await expect(page.locator(".formation-row").last()).toContainText("肩部加农炮");
   await expect(page.locator(".formation-row").last()).toContainText("移动 4 格");
-  await page.locator("#formationPrefab").selectOption("RGM_79L");
+  await page.locator('[data-unit-id="RGM_79L"]').click();
   await page.locator("#addFormationUnit").click();
   await expect(page.locator(".formation-row").last()).toContainText("移动 7 格");
   await page.locator("#cancelFormation").click();
@@ -216,7 +217,7 @@ test("mixed burst results animate every Miss and apply only landed damage; both 
         if (args[0] === canvas.getContext("2d") && args[1] === a.model)
           calls.push({
             clip: args[6],
-            angle: SpriteRenderer.pose(a.model, args[6], args[7]).arm11.dir,
+            angle: SpriteRenderer.pose(a.model, args[6], args[7]).RightWeapon.dir,
           });
         return draw(...args);
       };
@@ -253,6 +254,7 @@ async function numberField(page, id, value) {
 }
 
 async function connectLobby(page, serverURL) {
+  await page.locator("#openSkirmish").click();
   await page.locator("#openRooms").click();
   await expect(page.locator("#serverConnect")).toBeVisible();
   await expect(page.locator("#lobby")).toBeHidden();
@@ -272,6 +274,8 @@ async function readyGame(first, second) {
   await second.locator("#cancelFormation").click();
   await expect(second.locator("#teamSlots")).toContainText("已准备");
   await second.locator("#toggleReady").click();
+  await first.locator("#confirmFinalFormation").click();
+  await second.locator("#confirmFinalFormation").click();
   await expect(first.locator("#gameScene")).toBeVisible();
   await expect(second.locator("#gameScene")).toBeVisible();
   await first.evaluate(() => Net.request("deploy", { unitId: "0-0", x: 3, y: 8 }));
@@ -309,25 +313,27 @@ test("formation persists selected weapon kits and offline deployment uses map cl
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
-  await expect(page.locator("#startAI")).toBeEnabled();
+  await expect(page.locator("#openSkirmish")).toBeEnabled();
   await page.locator("#openFormation").click();
   await expect(page.locator("#formationScreen")).toBeVisible();
   await page.locator("#newFormation").click();
   await page.locator("#formationName").fill("火箭筒单机编组");
   await page.locator(".formation-row button").last().click();
   await page.locator(".formation-row button").last().click();
-  await page.locator(".formation-row select").selectOption("bazooka");
+  await page.locator(".formation-row").first().click();
+  await page.locator("#formationDetailKit").selectOption("bazooka");
+  await page.locator("#closeFormationDetail").click();
   await expect(page.locator("#formationName")).toHaveValue("火箭筒单机编组");
-  await expect(page.locator("#formationBudget")).toContainText("1 / 9");
+  await expect(page.locator("#formationBudget")).toContainText("1 / 12");
   await page.screenshot({ path: ".openai/rgm79-formation.png" });
   await page.locator("#saveFormation").click();
   await page.reload();
-  await expect(page.locator("#startAI")).toBeEnabled();
+  await expect(page.locator("#openSkirmish")).toBeEnabled();
   expect(await page.evaluate(() => Formation.name())).toBe("火箭筒单机编组");
   expect(await page.evaluate(() => Formation.current())).toEqual([
     { unitId: "RGM_79", kitId: "bazooka" },
   ]);
-  await page.locator("#startAI").click();
+  await openPresentationFixture(page, true);
   await expect(page.locator("#deploymentPanel")).toBeVisible();
   expect(await page.evaluate(() => game.units.filter((u) => u.team === 0).length)).toBe(1);
   expect(
@@ -374,10 +380,15 @@ test("server dialog gates the table until handshake succeeds; refresh requests n
       if (JSON.parse(data).type === "list_rooms") requests++;
     });
   });
-  page.on("websocket", () => attempts++);
+  page.on("websocket", (socket) => {
+    if (new URL(socket.url()).port === String(server.address().port)) attempts++;
+  });
+  for (const host of ["114.66.40.147:1313", "126.227.168.176:1313"])
+    await page.routeWebSocket("ws://" + host + "/ws", (ws) => ws.close());
   try {
     await page.goto("/");
     await expect(page.locator("#openRooms")).toBeEnabled();
+    await page.locator("#openSkirmish").click();
     await page.locator("#openRooms").click();
     await expect(page.getByRole("dialog", { name: "连接服务器", exact: true })).toBeVisible();
     await expect(page.locator("#lobby")).toBeHidden();
@@ -428,7 +439,7 @@ test("server dialog gates the table until handshake succeeds; refresh requests n
     expect(attempts).toBe(1);
     await page.locator("#cancelServer").click();
     await expect(page.locator("#serverConnect")).toBeHidden();
-    await page.locator("#startAI").click();
+    await openPresentationFixture(page, true);
     await page.locator("#confirmDeployment").click();
     await expect(page.locator("#start")).toBeHidden();
     expect(errors).toEqual([]);
@@ -612,8 +623,8 @@ test("lethal hit plays death explosion once in battle then once on map before sh
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
-  await expect(page.locator("#startHotseat")).toBeEnabled();
-  await page.locator("#startHotseat").click();
+  await expect(page.locator("#openSkirmish")).toBeEnabled();
+  await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   await page.evaluate(() => {
@@ -749,8 +760,8 @@ test("standalone HTML decodes original weapon OGGs and schedules a single 9-shot
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
-  await expect(page.locator("#startHotseat")).toBeEnabled();
-  await page.locator("#startHotseat").click();
+  await expect(page.locator("#openSkirmish")).toBeEnabled();
+  await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   await page.evaluate(() => WeaponAudio.unlock());
@@ -919,7 +930,7 @@ test("release still starts an offline match and uses common battle drawing", asy
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await expect(page.locator("#loading")).toContainText("已就绪");
-  await page.locator("#startHotseat").click();
+  await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   await expect(page.locator("#start")).toBeHidden();
@@ -1014,22 +1025,24 @@ test("local HTML plays a complete AI turn with networking disabled and no server
     };
   });
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
-  await expect(page.locator("#startAI")).toBeEnabled();
-  await expect(page.locator("#startAI")).toBeVisible();
+  await expect(page.locator("#openSkirmish")).toBeEnabled();
+  await expect(page.locator("#openSkirmish")).toBeVisible();
   await expect(page.locator("#resumeRoom,#leaveNetwork,#joinRoom,#newGame")).toHaveCount(0);
-  await page.locator("#startAI").click();
+  await page.evaluate(() => LocalRoom.open());
+  await page.locator("#toggleReady").click();
+  await page.locator("#confirmFinalFormation").click();
   await page.locator("#confirmDeployment").click();
   await expect(page.locator("#start")).toBeHidden();
   expect(
     await page.evaluate(() => ({
-      ai: game.ai,
-      online: Net.active,
+      ai: Net.snapshot.members.some((m) => m.bot),
+      online: Net.active && !Net.local,
       attempts: window.networkAttempts,
     })),
   ).toEqual({ ai: true, online: false, attempts: 0 });
   await page.locator("#allies .roster-unit").first().click();
   await expect(page.locator("#unitPanel")).toContainText("吉姆");
-  expect(await page.evaluate(() => game.units.filter((u) => u.team === 1).length)).toBe(6);
+  expect(await page.evaluate(() => game.units.filter((u) => u.team === 1).length)).toBe(12);
   expect(await page.evaluate(() => ({ width: Rules.W, height: Rules.H }))).toEqual({
     width: 24,
     height: 18,
@@ -1055,8 +1068,10 @@ test("local HTML plays a complete AI turn with networking disabled and no server
   expect(await page.evaluate(() => game.round)).toBe(3);
   expect(await page.evaluate(() => window.networkAttempts)).toBe(0);
   await leaveGame(page);
-  await expect(page.locator("#startAI")).toBeVisible();
-  await page.locator("#startAI").click();
+  await expect(page.locator("#openSkirmish")).toBeVisible();
+  await page.evaluate(() => LocalRoom.open());
+  await page.locator("#toggleReady").click();
+  await page.locator("#confirmFinalFormation").click();
   await page.locator("#confirmDeployment").click();
   expect(await page.evaluate(() => game.round)).toBe(1);
   expect(errors).toEqual([]);
@@ -1103,7 +1118,7 @@ test("Menu never draws a battle; leaving requires confirmation and cancels the r
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
-  await expect(page.locator("#startAI")).toBeEnabled();
+  await expect(page.locator("#openSkirmish")).toBeEnabled();
   await expect(page.locator("#gameScene")).toBeHidden();
   expect(await page.evaluate(() => ({ view: pageView, frame: animationFrameId }))).toEqual({
     view: "menu",
@@ -1117,7 +1132,7 @@ test("Menu never draws a battle; leaving requires confirmation and cancels the r
       return original(...args);
     };
   });
-  await page.locator("#startAI").click();
+  await openPresentationFixture(page, true);
   await page.locator("#confirmDeployment").click();
   await expect.poll(() => page.evaluate(() => spriteDraws)).toBeGreaterThan(0);
   await page.locator("#netSettings").click();
@@ -1140,7 +1155,7 @@ test("Menu never draws a battle; leaving requires confirmation and cancels the r
     () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
   );
   expect(await page.evaluate(() => spriteDraws)).toBe(stopped);
-  await page.locator("#startHotseat").click();
+  await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   await expect(page.locator("#gameScene")).toBeVisible();
@@ -1182,7 +1197,7 @@ test("three players prepare, swap spectator/team roles and watch battles without
   await first.locator("#becomeSpectator").click();
   await expect(third.locator("#joinTeam1")).toBeEnabled();
   await third.locator("#joinTeam1").click();
-  await expect(first.locator("#spectatorSlots")).toContainText("（你）");
+  await expect(first.locator("#spectatorSlots")).not.toContainText("（你）");
   expect(await first.evaluate(() => Net.seat)).toBe(null);
   await readyGame(third, second);
   await expect(first.locator("#gameScene")).toBeVisible();
@@ -1193,8 +1208,8 @@ test("three players prepare, swap spectator/team roles and watch battles without
   await expect(first.locator("#joinTeam2")).toBeEnabled();
   await first.locator("#joinTeam2").click();
   await expect.poll(() => first.evaluate(() => Net.seat)).toBe(1);
-  await first.locator("#roomReturn").click();
-  await second.locator("#roomReturn").click();
+  await first.locator("#roomMainMenu").click();
+  await second.locator("#roomMainMenu").click();
   await third.evaluate(() => Net.request("move", { unitId: "0-0", x: 5, y: 4 }));
   await expect.poll(() => third.evaluate(() => phase)).toBe("idle");
   await third.evaluate(() =>
@@ -1207,7 +1222,7 @@ test("three players prepare, swap spectator/team roles and watch battles without
   // 战斗弹窗显示时仍能进入席位页，然后返回同一场战斗。
   await second.locator("#roomSettings").click();
   await expect(second.locator("#roomPreparation")).toBeVisible();
-  await second.locator("#roomReturn").click();
+  await second.locator("#roomMainMenu").click();
   await expect(second.locator("#battle")).toBeVisible();
   for (const client of [third, first]) {
     // 切换多个页面时演出可能已经自然结束；禁用的跳过按钮无需再次点击。
@@ -1219,9 +1234,10 @@ test("three players prepare, swap spectator/team roles and watch battles without
   expect(await second.evaluate(() => Net.seat)).toBe(null);
   await first.locator("#roomSettings").click();
   await first.locator("#roomMainMenu").click();
+  await first.locator("#netSettings").click();
   await first.locator("#cancelLeave").click();
-  await expect(first.locator("#roomPreparation")).toBeVisible();
-  await leaveGame(first, "#roomMainMenu");
+  await expect(first.locator("#gameScene")).toBeVisible();
+  await leaveGame(first, "#netSettings");
   await expect.poll(() => third.evaluate(() => Net.active)).toBe(true);
   expect(errors).toEqual([]);
 });

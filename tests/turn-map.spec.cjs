@@ -1,3 +1,4 @@
+const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const { test, expect } = require("@playwright/test"),
   { pathToFileURL } = require("node:url"),
   path = require("node:path"),
@@ -5,9 +6,9 @@ const { test, expect } = require("@playwright/test"),
 const url = pathToFileURL(path.resolve("public/client.html")).href;
 async function offline(page) {
   await page.goto(url);
-  await expect(page).toHaveTitle("ProjectGreed V0.1");
-  await expect(page.locator("#start")).toContainText("V0.1");
-  await page.locator("#startHotseat").click();
+  await expect(page).toHaveTitle("ProjectGreed V0.2");
+  await expect(page.locator("#start")).toContainText("V0.2");
+  await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
 }
@@ -84,7 +85,7 @@ test("a moved unit with an available attack keeps its turn; leaving cancels a pe
   await page.waitForTimeout(1100);
   await expect(page.locator("#turnCutin")).toBeHidden();
   expect(await page.evaluate(() => [pageView, game.round])).toEqual(["menu", 1]);
-  await page.locator("#startHotseat").click();
+  await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   await page.evaluate(() => {
@@ -151,6 +152,7 @@ test("both network teams see one cutin per authoritative turn and repeated snaps
   try {
     for (const client of [page, other]) {
       await client.goto(`http://127.0.0.1:${address.port}`);
+      await client.locator("#openSkirmish").click();
       await client.locator("#openRooms").click();
       await client.locator("#serverAddress").fill(`127.0.0.1:${address.port}`);
       await client.locator("#connectServer").click();
@@ -165,6 +167,8 @@ test("both network teams see one cutin per authoritative turn and repeated snaps
       .click();
     await page.locator("#toggleReady").click();
     await other.locator("#toggleReady").click();
+    await page.locator("#confirmFinalFormation").click();
+    await other.locator("#confirmFinalFormation").click();
     await page.locator("#confirmDeployment").click();
     await other.locator("#confirmDeployment").click();
     await expect.poll(() => page.evaluate(() => phase)).toBe("idle");

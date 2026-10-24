@@ -50,9 +50,11 @@ const SpriteRenderer = (() => {
       return variables[key] === expected;
     });
   }
-  function visibleLayers(model, heldWeapon, shieldVisible = true) {
+  function visibleLayers(model, heldWeapon, shieldVisible = true, moving = false) {
     const variables = state(model, heldWeapon);
     variables.shieldVisible = variables.shieldVisible && shieldVisible;
+    variables.moving = moving;
+    variables.boosting = models[model].presentation.movement === "boost";
     return models[model].decals.filter((layer) => visible(layer, variables));
   }
   // offset.x 横向，offset.y 向前。贴图坐标则 x 向右、y 向下。
@@ -88,7 +90,9 @@ const SpriteRenderer = (() => {
   }
   // 在发射的那一刻采样，与枪的 PNG 同步移动、旋转、缩放和镜像。
   function muzzle(model, weapon, actor, clip, time, shotIndex = 0) {
-    const mount = weapon.muzzle,
+    const mount = weapon.muzzle.mounts
+        ? weapon.muzzle.mounts[weapon.attack.muzzleIndices[shotIndex] ?? 0]
+        : weapon.muzzle,
       unit = models[model],
       sampled = pose(model, clip, time);
     const layer = mount.layer
@@ -128,20 +132,23 @@ const SpriteRenderer = (() => {
     heldWeapon = null,
     loop = true,
     shieldVisible = true,
+    moving = false,
   ) {
     const sampled = pose(model, clip, time, loop);
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
-    for (const layer of visibleLayers(model, heldWeapon, shieldVisible)) {
+    for (const layer of visibleLayers(model, heldWeapon, shieldVisible, moving)) {
       const image = images[layer.asset];
       if (!image) continue;
       const transform = layerTransform(model, layer, angle, sampled);
       const frames = layer.frames || 1,
         fw = layer.frameWidth || Math.floor(image.width / frames),
         fh = layer.frameHeight || image.height;
-      const frame = layer.frame || 0,
+      const frame = layer.frameFps
+          ? Math.floor(Math.max(0, time) * layer.frameFps) % frames
+          : layer.frame || 0,
         columns = Math.floor(image.width / fw);
       ctx.save();
       ctx.translate(transform.x, transform.y);
@@ -163,6 +170,10 @@ const SpriteRenderer = (() => {
     }
     ctx.restore();
   }
+  function movement(model) {
+    const presentation = models[model].presentation;
+    return presentation.movement === "walk" ? presentation.walk : presentation.move;
+  }
   async function load() {
     await Promise.all(
       Object.entries(ART.assets).map(
@@ -179,5 +190,16 @@ const SpriteRenderer = (() => {
       ),
     );
   }
-  return { draw, load, models, images, sample, pose, layerTransform, muzzle, visibleLayers };
+  return {
+    draw,
+    load,
+    models,
+    images,
+    sample,
+    pose,
+    layerTransform,
+    muzzle,
+    visibleLayers,
+    movement,
+  };
 })();

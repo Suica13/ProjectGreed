@@ -1,0 +1,837 @@
+{
+  "schemaVersion": 2,
+  "id": "MS_09",
+  "code": "MS-09",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09/MS_09.ini",
+  "materials": {
+    "textures": {
+      "MS_09_Crotch_1.png": "textures/MS_09_Crotch_1.png",
+      "MS_09_Body_1.png": "textures/MS_09_Body_1.png",
+      "MS_09_ArmL_1.png": "textures/MS_09_ArmL_1.png",
+      "MS_09_ArmR_1.png": "textures/MS_09_ArmR_1.png",
+      "MS_09_ShoulderL_1.png": "textures/MS_09_ShoulderL_1.png",
+      "MS_09_ShoulderR_1.png": "textures/MS_09_ShoulderR_1.png",
+      "MS_09_Head_1.png": "textures/MS_09_Head_1.png",
+      "MS_09_LegL_1.png": "textures/MS_09_LegL_1.png",
+      "MS_09_LegR_1.png": "textures/MS_09_LegR_1.png",
+      "ZN_120mmMG.png": "textures/ZN_120mmMG.png",
+      "ZN_380mmBazooka.png": "textures/ZN_380mmBazooka.png",
+      "ZN_HeatSaber.png": "textures/ZN_HeatSaber.png",
+      "MS_09_ArmL_2.png": "textures/MS_09_ArmL_2.png",
+      "MS_09.png": "textures/MS_09.png",
+      "MS_09_Eye_1.png": "textures/MS_09_Eye_1.png",
+      "Boost_1.png": "textures/Boost_1.png"
+    },
+    "icon": "MS_09.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0,
+      "y": 0
+    },
+    "Body": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftArm": {
+      "x": -9,
+      "y": 0
+    },
+    "RightArm": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftShoulder": {
+      "x": -9,
+      "y": 0
+    },
+    "RightShoulder": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "RightWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "Head": {
+      "x": 0,
+      "y": 0
+    },
+    "Eye": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftFoot": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "LeftLeg": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "RightFoot": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "RightLeg": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    }
+  },
+  "layers": [
+    {
+      "name": "ZN_380mmBazooka_NotUsing",
+      "texture": "ZN_380mmBazooka.png",
+      "bone": "Pelvis",
+      "order": 0,
+      "scale": 0.8,
+      "scaleY": -1,
+      "rotation": 90,
+      "offset": {
+        "x": -0.5,
+        "y": -8
+      },
+      "visibleWhen": {
+        "kit": "bazooka",
+        "heldWeapon": {
+          "not": "ZN_380mmBazooka"
+        }
+      }
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MS_09_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2,
+      "offset": {
+        "x": 0,
+        "y": 6
+      }
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MS_09_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2,
+      "offset": {
+        "x": 0,
+        "y": 6
+      }
+    },
+    {
+      "name": "ZN_120mmMG_NotUsing",
+      "texture": "ZN_120mmMG.png",
+      "bone": "Pelvis",
+      "order": 3,
+      "scale": 0.9,
+      "rotation": -90,
+      "offset": {
+        "x": 1,
+        "y": -8.5
+      },
+      "visibleWhen": {
+        "kit": "machine_gun",
+        "heldWeapon": {
+          "not": "ZN_120mmMG"
+        }
+      }
+    },
+    {
+      "name": "Crotch",
+      "texture": "MS_09_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ArmL",
+      "texture": "MS_09_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ArmR",
+      "texture": "MS_09_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "Body_HeatSaber",
+      "texture": "ZN_HeatSaber.png",
+      "bone": "Body",
+      "order": 4,
+      "scaleX": -1,
+      "rotation": -55,
+      "frames": 2,
+      "frame": 0,
+      "offset": {
+        "x": -8,
+        "y": -6
+      },
+      "visibleWhen": {
+        "heldWeapon": {
+          "not": "ZN_HeatSaber_A"
+        }
+      }
+    },
+    {
+      "name": "ArmL_1",
+      "texture": "MS_09_ArmL_2.png",
+      "bone": "LeftArm",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "heldWeapon": "ZN_HeatSaber_A"
+      }
+    },
+    {
+      "name": "BoostLoop",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "frames": 3,
+      "frameFps": 4,
+      "offset": {
+        "x": -2.5,
+        "y": -7
+      },
+      "scale": 2,
+      "scaleY": 1.5,
+      "rotation": 0,
+      "alpha": 0.75,
+      "visibleWhen": {
+        "moving": true,
+        "boosting": true
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "MS_09_Body_1.png",
+      "bone": "Body",
+      "order": 5,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ZN_120mmMG",
+      "texture": "ZN_120mmMG.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 1,
+      "rotation": 0,
+      "offset": {
+        "x": 2,
+        "y": 15
+      },
+      "visibleWhen": {
+        "kit": "machine_gun",
+        "heldWeapon": "ZN_120mmMG"
+      }
+    },
+    {
+      "name": "ZN_HeatSaber_A",
+      "texture": "ZN_HeatSaber.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 1,
+      "rotation": -15,
+      "frames": 2,
+      "frame": 1,
+      "offset": {
+        "x": 3,
+        "y": 30
+      },
+      "visibleWhen": {
+        "heldWeapon": "ZN_HeatSaber_A"
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MS_09_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MS_09_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ZN_380mmBazooka",
+      "texture": "ZN_380mmBazooka.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.9,
+      "rotation": 0,
+      "offset": {
+        "x": 4,
+        "y": 12
+      },
+      "visibleWhen": {
+        "kit": "bazooka",
+        "heldWeapon": "ZN_380mmBazooka"
+      }
+    },
+    {
+      "name": "Head",
+      "texture": "MS_09_Head_1.png",
+      "bone": "Head",
+      "order": 7,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MS_09_Head_1.png",
+      "bone": "Head",
+      "order": 7,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      }
+    },
+    {
+      "name": "Eye",
+      "texture": "MS_09_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.5,
+      "offset": {
+        "x": 0,
+        "y": 1
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/MS_09__EnterPilot.json",
+    "QuitPilot": "../../animations/MS_09__QuitPilot.json",
+    "NoPilotIdle": "../../animations/MS_09__NoPilotIdle.json",
+    "Common_Idle": "../../animations/MS_09__Common_Idle.json",
+    "Common_Dodge_L": "../../animations/MS_09__Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/MS_09__Common_Dodge_R.json",
+    "OnMoving": "../../animations/MS_09__OnMoving.json",
+    "OnMovingReversing": "../../animations/MS_09__OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/MS_09__OnMovingWalk.json",
+    "Guard": "../../animations/MS_09__Guard.json",
+    "Common_Dead": "../../animations/MS_09__Common_Dead.json",
+    "Common_Stun": "../../animations/MS_09__Common_Stun.json",
+    "Common_Daze": "../../animations/MS_09__Common_Daze.json",
+    "Common_Stagger": "../../animations/MS_09__Common_Stagger.json",
+    "Common_Push_A": "../../animations/MS_09__Common_Push_A.json",
+    "Common_Shoot_A": "../../animations/MS_09__Common_Shoot_A.json",
+    "Common_Shoot_A_FA": "../../animations/MS_09__Common_Shoot_A_FA.json",
+    "Common_Melee_A": "../../animations/MS_09__Common_Melee_A.json"
+  },
+  "stats": {
+    "hp": 22500,
+    "en": 100,
+    "move": 7,
+    "mobility": 85,
+    "cost": 475,
+    "counterLimit": 2
+  },
+  "attackBonuses": {
+    "melee": 20,
+    "shooting": 25,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 15,
+      "flat": 125
+    },
+    "melee": {
+      "percent": 10,
+      "flat": 50
+    },
+    "dp": {
+      "percent": 10,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1,
+        "flat": 0
+      },
+      "shell": {
+        "percent": 1,
+        "flat": 0
+      },
+      "melee": {
+        "percent": 1,
+        "flat": 0
+      },
+      "dp": {
+        "percent": 1,
+        "flat": 0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 25000,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.8,
+    "turnSpeed": 1.75,
+    "reaction": 100,
+    "shooting": 125,
+    "melee": 105
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "movement": "boost",
+    "walk": "OnMovingWalk"
+  },
+  "name": "大魔",
+  "description": "采用气垫移动的重型MS,擅长据点破坏任务",
+  "localization": {
+    "zh": {
+      "name": "大魔",
+      "description": "采用气垫移动的重型MS,擅长据点破坏任务"
+    },
+    "en": {
+      "name": "Dom",
+      "description": "A heavy MS that uses hover movement, specialized in base destruction missions"
+    },
+    "ja": {
+      "name": "ドム"
+    }
+  },
+  "weapons": {
+    "ZN_120mmMG": {
+      "name": "120mm机枪",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      },
+      "type": "shell",
+      "min": 2,
+      "max": 5,
+      "hit": 90,
+      "en": 12.5,
+      "clip": "Common_Shoot_A",
+      "slot": "primary",
+      "sourceName": "ZN_120mmMG",
+      "sourceHit": 100,
+      "hitMultiplier": 0.75,
+      "hitBonus": 15,
+      "damagePerShot": 575,
+      "damageComponents": {
+        "shell": 575
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.3
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0,
+            "animation": "Common_Shoot_A"
+          },
+          {
+            "delay": 0.125,
+            "shots": 1,
+            "muzzleIndex": 0,
+            "animation": "Common_Shoot_A",
+            "repeat": 7
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+        "barrelX": 11,
+        "barrelY": 30,
+        "damageComponents": {
+          "shell": 575
+        },
+        "projectileCount": 1,
+        "barrels": [
+          {
+            "id": "ZN_120mmMG",
+            "x": 11,
+            "y": 30
+          }
+        ]
+      },
+      "hitEffect": "MG_Hit_1",
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.5,
+        "speed": 75,
+        "forwardOffset": -10,
+        "rotation": 0
+      },
+      "muzzle": {
+        "layer": "ZN_120mmMG",
+        "point": {
+          "x": 9.18485099360515e-16,
+          "y": -15
+        }
+      }
+    },
+    "ZN_380mmBazooka": {
+      "name": "380mm火箭筒",
+      "localization": {
+        "zh": {
+          "name": "380mm火箭筒"
+        },
+        "en": {
+          "name": "380mm Bazooka"
+        },
+        "ja": {
+          "name": "380mmバズーカ"
+        }
+      },
+      "type": "shell",
+      "min": 3,
+      "max": 7,
+      "hit": 75,
+      "en": 22.5,
+      "clip": "Common_Shoot_A",
+      "slot": "primary",
+      "sourceName": "ZN_380mmBazooka",
+      "sourceHit": 75,
+      "hitMultiplier": 0.65,
+      "hitBonus": 26,
+      "damagePerShot": 5950,
+      "damageComponents": {
+        "shell": 5950
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.35,
+            "animation": "Common_Shoot_A"
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0
+          },
+          {
+            "delay": 0.35,
+            "animation": "Common_Shoot_A"
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": "Common_Shoot_A"
+      },
+      "sound": {
+        "file": "../../sounds/Bazooka_1.ogg",
+        "volume": 0.4
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+        "barrelX": 11,
+        "barrelY": 27,
+        "damageComponents": {
+          "shell": 9000
+        },
+        "projectileCount": 1,
+        "barrels": [
+          {
+            "id": "ZN_360mmBazooka",
+            "x": 11,
+            "y": 27
+          }
+        ]
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "projectile": {
+        "texture": "../../projectiles/Bazooka_1.png",
+        "scale": 1,
+        "speed": 27.5,
+        "forwardOffset": -5,
+        "rotation": 0
+      },
+      "muzzle": {
+        "layer": "ZN_380mmBazooka",
+        "point": {
+          "x": -2.222222222222221,
+          "y": -16.666666666666668
+        }
+      }
+    },
+    "ZN_MS_09_ChestBeam": {
+      "name": "胸部扩散光束炮",
+      "localization": {
+        "zh": {
+          "name": "胸部扩散光束炮"
+        },
+        "en": {
+          "name": "Chest Diffusion Beam"
+        },
+        "ja": {
+          "name": "胸部拡散ビーム砲"
+        }
+      },
+      "type": "beam",
+      "min": 1,
+      "max": 1,
+      "hit": 75,
+      "en": 10,
+      "clip": null,
+      "slot": "fixed",
+      "sourceName": "ZN_MS_09_ChestBeam",
+      "sourceHit": 95,
+      "hitMultiplier": 0.8,
+      "hitBonus": -1,
+      "damagePerShot": 400,
+      "damageComponents": {
+        "beam": 400
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.1
+          },
+          {
+            "delay": 0,
+            "shots": 8,
+            "muzzleIndex": 0
+          },
+          {
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "sound": {
+        "file": "../../sounds/BeamSprayGun_2.ogg",
+        "volume": 0.75
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw",
+        "barrelX": -6,
+        "barrelY": 5,
+        "damageComponents": {
+          "beam": 400
+        },
+        "projectileCount": 8,
+        "barrels": [
+          {
+            "id": "ZN_MS_09_ChestBeam",
+            "x": -6,
+            "y": 5
+          }
+        ]
+      },
+      "hitEffect": "Beam_Hit_1_S_Yellow",
+      "projectile": {
+        "texture": "../../projectiles/Beam_1_Yellow.png",
+        "scale": 0.75,
+        "speed": 55,
+        "forwardOffset": -7.5,
+        "rotation": 0,
+        "spreadDegrees": 24
+      },
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": -6,
+          "y": 5
+        }
+      },
+      "changeHeldWeapon": false,
+      "role": "shotgun"
+    },
+    "ZN_HeatSaber_A": {
+      "name": "热能军刀",
+      "localization": {
+        "zh": {
+          "name": "热能军刀"
+        },
+        "en": {
+          "name": "Heat Saber"
+        },
+        "ja": {
+          "name": "ヒート・サーベル"
+        }
+      },
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 10,
+      "clip": "Common_Melee_A",
+      "slot": "secondary",
+      "sourceName": "ZN_HeatSaber_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "damagePerShot": 6500,
+      "damageComponents": {
+        "melee": 3250,
+        "meleeShell": 3250
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.6
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0
+          },
+          {
+            "delay": 1.4
+          }
+        ],
+        "startAnimation": "Common_Melee_A"
+      },
+      "sound": {
+        "file": "../../sounds/BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "damageComponents": {
+          "melee": 2500,
+          "meleeShell": 2500
+        },
+        "projectileCount": 1,
+        "barrels": [
+          {
+            "id": "ZN_HeatSaber_A",
+            "x": 0,
+            "y": 0
+          }
+        ]
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": ["Cqb_Fire_1_Yellow_R", "Cqb_Fire_1_Yellow_L"]
+    }
+  },
+  "weaponKits": [
+    {
+      "id": "bazooka",
+      "name": "380mm火箭筒套件",
+      "cost": 50,
+      "weapons": ["ZN_380mmBazooka", "ZN_HeatSaber_A", "ZN_MS_09_ChestBeam"],
+      "localization": {
+        "zh": {
+          "name": "380mm火箭筒套件"
+        },
+        "en": {
+          "name": "380mm Bazooka Kit"
+        },
+        "ja": {
+          "name": "380mmバズーカ装備"
+        }
+      }
+    },
+    {
+      "id": "machine_gun",
+      "name": "120mm机枪套件",
+      "cost": 0,
+      "weapons": ["ZN_120mmMG", "ZN_HeatSaber_A", "ZN_MS_09_ChestBeam"],
+      "localization": {
+        "zh": {
+          "name": "120mm机枪套件"
+        },
+        "en": {
+          "name": "120mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "120mmマシンガン装備"
+        }
+      }
+    }
+  ],
+  "tags": ["ZEON", "0079"]
+}

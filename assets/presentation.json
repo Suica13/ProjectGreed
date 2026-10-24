@@ -18,5 +18,51 @@
     "volume": 0.5,
     "duration": 1.0796371882086169
   },
-  "deathDelay": 2.0
+  "deathDelay": 2.0,
+  "lowHp": {
+    "effect": "Stun_1",
+    "threshold": 0.25
+  },
+  "deathElectricEffect": "Stun_1",
+  "gameStartSound": {
+    "file": "sounds/GameSet_1.ogg",
+    "volume": 1,
+    "duration": 2.1792970521541952
+  },
+  "turnSound": {
+    "file": "sounds/Ready_1.ogg",
+    "volume": 0.7,
+    "duration": 0.7456916099773243
+  },
+  "underAttackSound": {
+    "file": "sounds/Warning_1.ogg",
+    "volume": 0.7,
+    "duration": 0.9462131519274376
+  },
+  "lockonSound": {
+    "file": "sounds/Locked.ogg",
+    "volume": 0.7,
+    "duration": 0.49342403628117915
+  },
+  "boostStartEffect": "Boost_Start",
+  "infoSound": {
+    "file": "sounds/Info_1.ogg",
+    "volume": 0.7,
+    "duration": 0.43201814058956917
+  },
+  "selectUnitSound": {
+    "file": "sounds/Select_1.ogg",
+    "volume": 0.35,
+    "duration": 0.96
+  },
+  "selectWeaponSound": {
+    "file": "sounds/Select_2.ogg",
+    "volume": 0.7,
+    "duration": 0.7411337868480725
+  },
+  "changeEquipmentSound": {
+    "file": "sounds/ChangeEquipment.ogg",
+    "volume": 0.7,
+    "duration": 1.584013605442177
+  }
 }

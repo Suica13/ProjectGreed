@@ -4,11 +4,13 @@ const test = require("node:test"),
   vm = require("node:vm");
 const ART = require("../tools/load-catalog.cjs").loadCatalog();
 function runtime() {
+  let engineClock;
   const starts = [],
     gains = [],
     stops = [];
   class AudioContext {
     constructor() {
+      engineClock = this;
       this.currentTime = 10;
       this.state = "running";
       this.destination = {};
@@ -49,7 +51,7 @@ function runtime() {
       "\nglobalThis.audio=WeaponAudio;globalThis.clock=()=>context;",
     context,
   );
-  return { ...context, starts, gains, stops };
+  return { ...context, starts, gains, stops, clock: () => engineClock };
 }
 const weapon = (id) =>
   Object.values(ART.models)
@@ -106,10 +108,10 @@ test("quick playback and counter attacks get distinct sound schedules without re
   assert.ok(r.starts.every((s) => s.node.playbackRate.value === 2));
   r.audio.sync(owner, 1, weapon("EF_HypeBazooka"), 0);
   assert.equal(r.stops.length, 9);
-  assert.equal(r.starts.length, 10);
-  assert.equal(r.starts.at(-1).at, 10.35);
+  assert.equal(r.starts.length, 11);
+  assert.equal(r.starts.at(-1).at, 10.75);
   r.audio.sync(owner, 1, weapon("EF_HypeBazooka"), 0.01);
-  assert.equal(r.starts.length, 10);
+  assert.equal(r.starts.length, 11);
 });
 
 test("a battle can start while sounds decode without losing its sound schedule", async () => {
@@ -120,4 +122,51 @@ test("a battle can start while sounds decode without losing its sound schedule",
   await loading;
   r.audio.sync(owner, 0, weapon("EF_90mmMG"), 0);
   assert.equal(r.starts.length, 9);
+});
+
+test("quick battle muting cancels queued cues and keeps map sounds independent", async () => {
+  const r = runtime();
+  await r.audio.unlock();
+  const owner = {};
+  r.audio.sync(owner, 0, weapon("EF_90mmMG"), 0);
+  assert.equal(r.starts.length, 9);
+  r.audio.setBattleMuted(true);
+  assert.equal(r.stops.length, 9);
+  const cues = [
+    { at: 0, sound: weapon("EF_90mmMG").sound },
+    { at: 0.2, sound: ART.presentation.deathSound },
+    { at: 0.4, sound: Object.values(ART.effects)[0].sounds[0] },
+  ];
+  r.audio.sync(owner, 1, weapon("EF_HypeBazooka"), 0, 1, cues);
+  r.audio.play(weapon("EF_HypeBazooka").sound, 10, 1, "battle");
+  assert.equal(r.starts.length, 9);
+  r.audio.play(ART.presentation.moveSound);
+  assert.equal(r.starts.length, 10);
+  r.audio.setBattleMuted(false);
+  r.audio.sync(owner, 0, weapon("EF_90mmMG"), 0.8);
+  assert.equal(r.starts.length, 14);
+  assert.ok(r.starts.slice(10).every((s) => s.at >= 10));
+});
+
+test("natural counter completion preserves the playing last shot, cancels future cues and keeps skip/mute effective", async () => {
+  const r = runtime();
+  await r.audio.unlock();
+  r.audio.sync({}, 1, weapon("EF_HypeBazooka"), 0);
+  const [first, last] = r.starts;
+  r.clock().currentTime = last.at;
+  r.audio.releaseBattle();
+  r.audio.stopBattle();
+  assert.equal(r.stops.includes(first.node), false);
+  assert.equal(r.stops.includes(last.node), false);
+  r.audio.setBattleMuted(true);
+  assert.ok(r.stops.includes(last.node));
+  const q = runtime();
+  await q.audio.unlock();
+  q.audio.sync({}, 1, weapon("EF_HypeBazooka"), 0);
+  q.clock().currentTime = q.starts[0].at;
+  q.audio.releaseBattle();
+  assert.equal(q.stops.includes(q.starts[0].node), false);
+  assert.equal(q.stops.includes(q.starts[1].node), true);
+  q.audio.stop();
+  assert.equal(q.stops.includes(q.starts[0].node), true);
 });

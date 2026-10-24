@@ -2,16 +2,17 @@
 const MapCamera = (() => {
   const canvas = byId("map");
   let zoom = 1,
-    centerX = Rules.W / 2,
-    centerY = Rules.H / 2,
+    centerX = Rules.mapWidth(game) / 2,
+    centerY = Rules.mapHeight(game) / 2,
     drag = null,
     suppressClick = false;
   function geometry(width, height) {
-    const tile = Math.min((width - 36) / Rules.W, (height - 36) / Rules.H) * zoom;
+    const tile =
+      Math.min((width - 36) / Rules.mapWidth(game), (height - 36) / Rules.mapHeight(game)) * zoom;
     const bound = (value, half, extent) =>
       half >= extent / 2 ? extent / 2 : Math.max(half, Math.min(extent - half, value));
-    centerX = bound(centerX, width / (2 * tile), Rules.W);
-    centerY = bound(centerY, height / (2 * tile), Rules.H);
+    centerX = bound(centerX, width / (2 * tile), Rules.mapWidth(game));
+    centerY = bound(centerY, height / (2 * tile), Rules.mapHeight(game));
     return { tile, ox: width / 2 - centerX * tile, oy: height / 2 - centerY * tile };
   }
   function refresh() {
@@ -30,15 +31,26 @@ const MapCamera = (() => {
     const cellX = (x - old.ox) / old.tile,
       cellY = (y - old.oy) / old.tile;
     zoom = Math.max(1, Math.min(3, value));
-    const tile = Math.min((box.width - 36) / Rules.W, (box.height - 36) / Rules.H) * zoom;
+    const tile =
+      Math.min((box.width - 36) / Rules.mapWidth(game), (box.height - 36) / Rules.mapHeight(game)) *
+      zoom;
     centerX = cellX - (x - box.width / 2) / tile;
     centerY = cellY - (y - box.height / 2) / tile;
     refresh();
   }
+  function focus(x, y) {
+    zoom = Math.max(zoom, 1.75);
+    centerX = x + 0.5;
+    centerY = y + 0.5;
+    drag = null;
+    suppressClick = false;
+    hover = null;
+    refresh();
+  }
   function reset() {
     zoom = 1;
-    centerX = Rules.W / 2;
-    centerY = Rules.H / 2;
+    centerX = Rules.mapWidth(game) / 2;
+    centerY = Rules.mapHeight(game) / 2;
     drag = null;
     suppressClick = false;
     refresh();
@@ -107,6 +119,7 @@ const MapCamera = (() => {
   byId("mapZoomReset").onclick = reset;
   return {
     geometry,
+    focus,
     reset,
     setZoom,
     get zoom() {

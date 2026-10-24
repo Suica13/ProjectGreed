@@ -8,10 +8,11 @@ const WeaponEffects = (() => {
   function plan(weapon, source, target, event = null) {
     const speed = animationSpeed(weapon),
       effectSpeed = ART.presentation.animationSpeed,
+      lead = weapon.type === "melee" ? 0.35 : 0,
       sourceY = (event?.sourceDodgeSlot || 0) * ART.presentation.dodgeDistance * source.scale,
       initialSlot = event?.targetDodgeSlot || 0;
     const shots = weapon.attack.shots.map((originalAt, index) => {
-      const at = originalAt / speed,
+      const at = lead + originalAt / speed,
         animation = WeaponSequence.pose(weapon, originalAt);
       const origin = weapon.projectile
         ? SpriteRenderer.muzzle(
@@ -28,6 +29,18 @@ const WeaponEffects = (() => {
         x: target.x,
         y: target.y + initialSlot * ART.presentation.dodgeDistance * target.scale,
       };
+      const group = weapon.attack.shots
+        .map((at, i) => (at === originalAt ? i : -1))
+        .filter((i) => i >= 0);
+      const spreadAngle =
+        group.length > 1
+          ? ((group.indexOf(index) / (group.length - 1) - 0.5) *
+              (weapon.projectile?.spreadDegrees || 0) *
+              Math.PI) /
+            180
+          : 0;
+      const spreadY = Math.tan(spreadAngle) * Math.abs(destination.x - origin.x);
+      destination.y += spreadY;
       const flight = weapon.projectile
         ? Math.max(
             0.001,
@@ -35,7 +48,7 @@ const WeaponEffects = (() => {
               (weapon.projectile.speed * 60 * source.scale * ART.presentation.projectileSpeed),
           )
         : 0;
-      return { index, at, origin, destination, flight, impactAt: at + flight };
+      return { index, at, origin, destination, spreadY, flight, impactAt: at + flight };
     });
     const steps = weapon.attack.strikes;
     const contacts = steps
@@ -67,7 +80,9 @@ const WeaponEffects = (() => {
     // Aim at the defender's current lane, without adding artificial Miss deviation.
     for (const shot of shots)
       shot.destination.y =
-        target.y + position(motion, shot.impactAt) * ART.presentation.dodgeDistance * target.scale;
+        target.y +
+        position(motion, shot.impactAt) * ART.presentation.dodgeDistance * target.scale +
+        shot.spreadY;
     const activeShots = shots.filter((shot) =>
       contacts.some((contact) => contact.shotIndex === shot.index),
     );
@@ -104,12 +119,13 @@ const WeaponEffects = (() => {
       shot.visibleUntil = shot.at + shot.flight * travel;
     }
     let end = Math.max(
-        weapon.attack.duration / speed,
+        lead + weapon.attack.duration / speed,
         ...impacts,
         ...activeShots.map((shot) => shot.visibleUntil),
       ),
       deathAt = null,
       deathEffect = null,
+      deathElectricEffect = null,
       deathSoundAt = null,
       deathEnd = null;
     for (const [index, contact] of contacts.entries())
@@ -124,18 +140,34 @@ const WeaponEffects = (() => {
       deathSoundAt = lethal?.at ?? impacts.at(-1);
       cues.push({ at: deathSoundAt, sound: ART.presentation.deathSound });
       deathAt = deathSoundAt + ART.presentation.deathDelay;
+      deathElectricEffect = ART.presentation.deathElectricEffect;
       deathEffect = ART.models[target.unit.model].presentation.deathEffect;
       cues.push({ at: deathAt, sound: SpriteEffects.sound(deathEffect) });
       deathEnd = deathAt + ART.effects[deathEffect].duration / effectSpeed;
       end = Math.max(end, deathEnd);
     }
+    const melee =
+      weapon.type === "melee"
+        ? {
+            approach: lead,
+            retreatAt: Math.max(
+              lead + weapon.attack.duration / speed,
+              (impacts.at(-1) || lead) + 0.2,
+            ),
+            retreat: 0.35,
+          }
+        : null;
+    if (melee) end = Math.max(end, melee.retreatAt + melee.retreat);
     return {
+      lead,
+      melee,
       shots: activeShots,
       contacts,
       impacts,
       cues,
       deathAt,
       deathEffect,
+      deathElectricEffect,
       deathSoundAt,
       deathEnd,
       moves,
@@ -143,6 +175,43 @@ const WeaponEffects = (() => {
       sourceY,
       actionSpeed: speed,
       duration: end + 0.35 / effectSpeed,
+    };
+  }
+  function meleeMotion(plan, source, target, time, travel = 0.18) {
+    if (!plan.melee) return { x: 0, y: 0, stage: "attack", time };
+    const { approach, retreatAt, retreat } = plan.melee;
+    const width = source.arenaWidth ?? Math.abs(target.x - source.x) * 2;
+    const gap = Math.min(
+      width * 0.2,
+      Math.max(width * Math.max(0.05, 0.25 - travel), (source.scale + target.scale) * 20),
+    );
+    const direction = target.x >= source.x ? 1 : -1;
+    const destination = {
+      x: target.x - direction * gap,
+      y: target.y + plan.initialSlot * ART.presentation.dodgeDistance * target.scale,
+    };
+    const smooth = (value) => (1 - Math.cos(Math.PI * Math.max(0, Math.min(1, value)))) / 2;
+    let progress = 1,
+      stage = "attack",
+      stageTime = time - approach;
+    if (time < approach) {
+      progress = smooth(time / approach);
+      stage = "approach";
+      stageTime = time;
+    } else if (time >= retreatAt) {
+      progress = 1 - smooth((time - retreatAt) / retreat);
+      stage = "return";
+      stageTime = time - retreatAt;
+    }
+    if (time >= retreatAt + retreat) {
+      progress = 0;
+      stage = "rest";
+    }
+    return {
+      x: (destination.x - source.x) * progress,
+      y: (destination.y - source.y - plan.sourceY) * progress,
+      stage,
+      time: Math.max(0, stageTime),
     };
   }
   function position(plan, time) {
@@ -191,6 +260,7 @@ const WeaponEffects = (() => {
       x: 0,
       y: position(plan, time) * target.scale * ART.presentation.dodgeDistance,
       active: Boolean(move && time < move.at + duration),
+      started: Boolean(move),
       time: move ? time - move.at : 0,
     };
   }
@@ -236,5 +306,5 @@ const WeaponEffects = (() => {
       ctx.restore();
     }
   }
-  return { plan, dodge, position, animationSpeed, health, shield, arrived, draw };
+  return { plan, meleeMotion, dodge, position, animationSpeed, health, shield, arrived, draw };
 })();

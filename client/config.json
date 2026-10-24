@@ -1,3 +1,15 @@
 {
-  "defaultServerAddress": "114.66.40.147:1313"
+  "defaultServerAddress": "",
+  "presetServers": [
+    {
+      "id": "primary",
+      "name": "主要服务器",
+      "address": "114.66.40.147:1313"
+    },
+    {
+      "id": "test",
+      "name": "测试服务器",
+      "address": "126.227.168.176:1313"
+    }
+  ]
 }

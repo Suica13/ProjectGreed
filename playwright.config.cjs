@@ -8,6 +8,7 @@ module.exports = defineConfig({
   outputDir: ".openai/browser-results",
   use: {
     viewport: { width: 1600, height: 1000 },
+    locale: "zh-CN",
     channel: process.env.SLG_BROWSER || (process.platform === "win32" ? "msedge" : "chromium"),
   },
 });

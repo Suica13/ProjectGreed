@@ -1,3 +1,4 @@
+const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const { test, expect } = require("@playwright/test"),
   { pathToFileURL } = require("node:url"),
   path = require("node:path");
@@ -8,7 +9,7 @@ test("formation keeps controls fixed while the native scrollbar is dragged throu
 }) => {
   await page.goto(url);
   await page.locator("#openFormation").click();
-  await page.locator("#formationPrefab").selectOption("RGM_79");
+  await page.locator('[data-unit-id="MS_06F"]').click();
   for (let i = 0; i < 6; i++) await page.locator("#addFormationUnit").click();
   await expect(page.locator(".formation-row")).toHaveCount(9);
   const region = page.locator("#formationUnits");
@@ -44,7 +45,7 @@ test("one local movement plays one boost-start sound, and failed movement does n
   page,
 }) => {
   await page.goto(url);
-  await page.locator("#startHotseat").click();
+  await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   const sounds = await page.evaluate(async () => {
@@ -68,11 +69,11 @@ test("one local movement plays one boost-start sound, and failed movement does n
   });
   expect(sounds).toEqual(["presentation/moveSound"]);
 });
-test("electric death sound precedes explosion and the model stays until the explosion finishes", async ({
+test("electric death sound precedes explosion and the model hides when the explosion starts", async ({
   page,
 }) => {
   await page.goto(url);
-  await page.locator("#startHotseat").click();
+  await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   const result = await page.evaluate(() => {
@@ -127,7 +128,7 @@ test("electric death sound precedes explosion and the model stays until the expl
       explosionAt: view.plan.deathAt,
     };
   });
-  expect(result.counts).toEqual([1, 1, 0]);
+  expect(result.counts).toEqual([1, 0, 0]);
   expect(result.delay).toBeGreaterThanOrEqual(result.sound);
   expect(result.cues.filter((c) => c.asset === "presentation/deathSound")).toEqual([
     { at: result.soundAt, asset: "presentation/deathSound" },

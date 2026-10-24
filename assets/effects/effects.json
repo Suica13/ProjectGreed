@@ -148,5 +148,228 @@
       }
     ],
     "source": "Resource/Image/Fx/Common/Common_Explosion_1.gw"
+  },
+  "Beam_Hit_1_S_Yellow": {
+    "texture": "textures/Beam_Hit_1_Yellow.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 12.0,
+    "scaleFrom": 0.35,
+    "scaleTo": 0.35,
+    "alpha": 0.75,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 10.0
+    },
+    "drift": 45.0,
+    "sounds": [
+      {
+        "file": "../sounds/Beam_Hit_1.ogg",
+        "volume": 0.15
+      }
+    ],
+    "source": "MOD native Beam_Hit_1_S_Yellow"
+  },
+  "Beam_Hit_2_Pink": {
+    "texture": "textures/Beam_Hit_2_Pink.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 12.0,
+    "scaleFrom": 0.85,
+    "scaleTo": 0.85,
+    "alpha": 0.85,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 20.0
+    },
+    "drift": 45.0,
+    "sounds": [
+      {
+        "file": "../sounds/Beam_Hit_1.ogg",
+        "volume": 0.25
+      }
+    ],
+    "source": "MOD native Beam_Hit_2_Pink"
+  },
+  "Explosion_Hit_1_S": {
+    "texture": "textures/Explosion_Hit_1.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 9.0,
+    "scaleFrom": 0.75,
+    "scaleTo": 0.75,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": -1.0,
+      "y": 10.0
+    },
+    "drift": 0.0,
+    "sounds": [
+      {
+        "file": "../sounds/Explosion_Hit_1.ogg",
+        "volume": 0.35
+      }
+    ],
+    "source": "MOD native Explosion_Hit_1_S"
+  },
+  "Explosion_Hit_1_XS": {
+    "texture": "textures/Explosion_Hit_1.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 9.0,
+    "scaleFrom": 0.5,
+    "scaleTo": 0.5,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": -1.0,
+      "y": 10.0
+    },
+    "drift": 0.0,
+    "sounds": [
+      {
+        "file": "../sounds/Explosion_Hit_1.ogg",
+        "volume": 0.35
+      }
+    ],
+    "source": "MOD native Explosion_Hit_1_XS"
+  },
+  "Beam_Hit_2_Yellow": {
+    "texture": "textures/Beam_Hit_2_Yellow.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 12.0,
+    "scaleFrom": 0.85,
+    "scaleTo": 0.85,
+    "alpha": 0.85,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 20.0
+    },
+    "drift": 45.0,
+    "sounds": [
+      {
+        "file": "../sounds/Beam_Hit_1.ogg",
+        "volume": 0.25
+      }
+    ],
+    "source": "MOD native Beam_Hit_2_Yellow"
+  },
+  "Cqb_Fire_1_Pink_R": {
+    "texture": "textures/Cqb_Fire_1_Pink_R.png",
+    "frames": 9,
+    "startFrame": 0,
+    "endFrame": 8,
+    "fps": 18.0,
+    "scaleFrom": 1.0,
+    "scaleTo": 0.75,
+    "alpha": 1.0,
+    "rotation": 90.0,
+    "offset": {
+      "x": 7.5,
+      "y": 11.0
+    },
+    "drift": 21.0,
+    "sounds": [],
+    "source": "Resource/Image/Fx/Weapon/Cqb/Common/Cqb_Fire_1_Pink_R.gw"
+  },
+  "Cqb_Fire_1_Pink_L": {
+    "texture": "textures/Cqb_Fire_1_Pink_L.png",
+    "frames": 9,
+    "startFrame": 0,
+    "endFrame": 8,
+    "fps": 18.0,
+    "scaleFrom": 1.0,
+    "scaleTo": 0.75,
+    "alpha": 1.0,
+    "rotation": 90.0,
+    "offset": {
+      "x": -7.5,
+      "y": 11.0
+    },
+    "drift": 21.0,
+    "sounds": [],
+    "source": "Resource/Image/Fx/Weapon/Cqb/Common/Cqb_Fire_1_Pink_L.gw"
+  },
+  "Cqb_Fire_1_Yellow_R": {
+    "texture": "textures/Cqb_Fire_1_Yellow_R.png",
+    "frames": 9,
+    "startFrame": 0,
+    "endFrame": 8,
+    "fps": 18.0,
+    "scaleFrom": 1.0,
+    "scaleTo": 0.75,
+    "alpha": 1.0,
+    "rotation": 90.0,
+    "offset": {
+      "x": 7.5,
+      "y": 11.0
+    },
+    "drift": 21.0,
+    "sounds": [],
+    "source": "Resource/Image/Fx/Weapon/Cqb/Common/Cqb_Fire_1_Yellow_R.gw"
+  },
+  "Cqb_Fire_1_Yellow_L": {
+    "texture": "textures/Cqb_Fire_1_Yellow_L.png",
+    "frames": 9,
+    "startFrame": 0,
+    "endFrame": 8,
+    "fps": 18.0,
+    "scaleFrom": 1.0,
+    "scaleTo": 0.75,
+    "alpha": 1.0,
+    "rotation": 90.0,
+    "offset": {
+      "x": -7.5,
+      "y": 11.0
+    },
+    "drift": 21.0,
+    "sounds": [],
+    "source": "Resource/Image/Fx/Weapon/Cqb/Common/Cqb_Fire_1_Yellow_L.gw"
+  },
+  "Stun_1": {
+    "texture": "textures/Stun_1.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 7.5,
+    "scaleFrom": 0.85,
+    "scaleTo": 0.85,
+    "alpha": 0.85,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "Template/Unit/BattleUnit_Graphics.ini [decal_Stun]; Main/Template/Unit/BattleUnitCore.ini 0.2s UpdateSub"
+  },
+  "Boost_Start": {
+    "texture": "textures/Boost_Start_1.png",
+    "frames": 4,
+    "startFrame": 0,
+    "endFrame": 3,
+    "fps": 6,
+    "scaleFrom": 1,
+    "scaleTo": 0.75,
+    "alpha": 0.85,
+    "rotation": 0,
+    "offset": {
+      "x": 2,
+      "y": -30
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native Boost_Start, Resource/Image/Fx/Unit/Boost_Start_1.gw"
   }
 }

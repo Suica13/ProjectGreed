@@ -9,18 +9,39 @@ const inlineScript = (source) => source.replace(/<\/script/gi, "<\\/script");
 let html = read("client/template.html");
 const project = JSON.parse(read("project.json"));
 const clientConfig = JSON.parse(read("client/config.json"));
+if (typeof clientConfig.defaultServerAddress !== "string")
+  throw Error(
+    "client/config.json: defaultServerAddress must be a string (empty means manual input)",
+  );
 if (
-  typeof clientConfig.defaultServerAddress !== "string" ||
-  !clientConfig.defaultServerAddress.trim()
+  !Array.isArray(clientConfig.presetServers) ||
+  clientConfig.presetServers.length !== 2 ||
+  new Set(clientConfig.presetServers.map((server) => server.id)).size !== 2 ||
+  clientConfig.presetServers.some(
+    (server) =>
+      !/^[a-z][a-z0-9_-]*$/.test(server.id) ||
+      typeof server.name !== "string" ||
+      !server.name.trim() ||
+      typeof server.address !== "string" ||
+      !server.address.trim(),
+  )
 )
-  throw Error("client/config.json: defaultServerAddress must be a non-empty server address");
+  throw Error("client/config.json: exactly two valid named presetServers are required");
 html = html
   .replaceAll("__PROJECT_NAME__", project.name)
   .replaceAll("__PROJECT_VERSION__", project.version)
   .replace("__PROJECT_META__", json(project))
   .replace("__CLIENT_CONFIG__", json(clientConfig));
+html = html.replace(
+  "__UI_LOCALES__",
+  json({
+    en: JSON.parse(read("client/locales/en.json")),
+    ja: JSON.parse(read("client/locales/ja.json")),
+  }),
+);
 for (const [key, file] of [
   ["DATA", null],
+  ["I18N", "client/i18n.js"],
   ["FORMATION", "client/formation.js"],
   ["CORE", "shared/rules.js"],
   ["WEAPON_SEQUENCE", "shared/weapon-sequence.js"],
@@ -30,11 +51,19 @@ for (const [key, file] of [
   ["BATTLE_WINDOW", "client/battle-window.js"],
   ["WEAPON_EFFECTS", "client/weapon-effects.js"],
   ["WEAPON_AUDIO", "client/weapon-audio.js"],
+  ["GAME_AUDIO", "client/game-audio.js"],
   ["MUSIC", "client/music.js"],
   ["APP", "client/app.js"],
+  ["UNIT_IDENTITY", "client/unit-identity.js"],
   ["TURN_FLOW", "client/turn-flow.js"],
   ["MAP_CAMERA", "client/map-camera.js"],
+  ["PLAYER_PROFILE", "client/player-profile.js"],
+  ["CHAT_CHANNELS", "shared/chat-channels.js"],
+  ["CHAT", "client/chat.js"],
+  ["MATCH_RESULTS", "client/match-results.js"],
+  ["ROOM_ENGINE", "shared/room-engine.js"],
   ["NETWORK", "client/network.js"],
+  ["LOCAL_ROOM", "client/local-room.js"],
   ["LOBBY", "client/lobby.js"],
   ["ROOM", "client/room.js"],
 ])

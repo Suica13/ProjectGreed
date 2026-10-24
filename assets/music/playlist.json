@@ -2,28 +2,44 @@
   "volume": 0.25,
   "tracks": [
     {
-      "name": "GRNYB_01_Remix",
+      "name": "基连的野望01",
       "file": "GRNYB_01_Remix.ogg"
     },
     {
-      "name": "GRNYB_02_Remix",
+      "name": "基连的野望02",
       "file": "GRNYB_02_Remix.ogg"
     },
     {
-      "name": "GRNYB_03_Remix",
+      "name": "基连的野望03",
       "file": "GRNYB_03_Remix.ogg"
     },
     {
-      "name": "GRNYB_04_Remix",
+      "name": "基连的野望04",
       "file": "GRNYB_04_Remix.ogg"
     },
     {
-      "name": "GRNYB_05_Remix",
+      "name": "基连的野望05",
       "file": "GRNYB_05_Remix.ogg"
     },
     {
-      "name": "GRNYB_06_Remix",
+      "name": "基连的野望06",
       "file": "GRNYB_06_Remix.ogg"
+    },
+    {
+      "name": "机动战士高达",
+      "file": "0079_01_Remix.ogg"
+    },
+    {
+      "name": "口袋里的战争",
+      "file": "0080_01_Remix.ogg"
+    },
+    {
+      "name": "水天之泪",
+      "file": "0081_01_Remix.ogg"
+    },
+    {
+      "name": "SDGO大厅",
+      "file": "SDGO_Lobby_Remix.ogg"
     }
   ]
 }

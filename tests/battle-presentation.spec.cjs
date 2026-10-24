@@ -1,11 +1,12 @@
+const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const { test, expect } = require("@playwright/test"),
   { pathToFileURL } = require("node:url"),
   path = require("node:path"),
   { createServer } = require("../server.js");
 async function openOffline(page) {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
-  await expect(page.locator("#startHotseat")).toBeEnabled();
-  await page.locator("#startHotseat").click();
+  await expect(page.locator("#openSkirmish")).toBeEnabled();
+  await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   await page.evaluate(() => {
@@ -57,7 +58,7 @@ test("network auto return confirms each team once and waits for the other viewer
     for (const client of [page, other]) {
       client.on("pageerror", (error) => errors.push(error.message));
       await client.goto(`http://127.0.0.1:${address.port}`);
-      await expect(client.locator("#startAI")).toBeEnabled();
+      await expect(client.locator("#openSkirmish")).toBeEnabled();
       await client.evaluate(() => {
         window.readyRequests = 0;
         window.moveSounds = 0;
@@ -72,6 +73,7 @@ test("network auto return confirms each team once and waits for the other viewer
           return request(action, ...args);
         };
       });
+      await client.locator("#openSkirmish").click();
       await client.locator("#openRooms").click();
       // Connect through the actual UI, including the server handshake.
       await client.locator("#serverAddress").fill(`127.0.0.1:${address.port}`);
@@ -88,6 +90,8 @@ test("network auto return confirms each team once and waits for the other viewer
       .click();
     await page.locator("#toggleReady").click();
     await other.locator("#toggleReady").click();
+    await page.locator("#confirmFinalFormation").click();
+    await other.locator("#confirmFinalFormation").click();
     await page.locator("#confirmDeployment").click();
     await other.locator("#confirmDeployment").click();
     await expect.poll(() => page.evaluate(() => phase)).toBe("idle");
@@ -122,7 +126,7 @@ test("network auto return confirms each team once and waits for the other viewer
     await expect.poll(() => page.evaluate(() => Net.snapshot.battle?.ready[0])).toBe(true);
     expect(app.rooms.get("AUTOFADE").phase).toBe("battle");
     expect(await page.evaluate(() => window.readyRequests)).toBe(1);
-    await other.locator("#roomReturn").click();
+    await other.locator("#roomMainMenu").click();
     await expect(other.locator("#battle")).toBeHidden({ timeout: 10000 });
     await expect.poll(() => page.evaluate(() => phase)).toBe("idle");
     expect(await other.evaluate(() => window.readyRequests)).toBe(1);

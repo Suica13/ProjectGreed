@@ -22,7 +22,6 @@ let game = Rules.create(),
   hover = null,
   mapGeo = null,
   battleView = null,
-  aiTimer = null,
   session = 0,
   toastTimer = null;
 let pageView = "menu";
@@ -52,9 +51,9 @@ function startRendering() {
 const teamName = (t) => (t ? "红方" : "蓝方"),
   other = (t) => 1 - t,
   getUnit = (id) => game.units.find((u) => u.id === id),
-  getWeapon = (u, id) => UnitModels[u.model].weapons.find((w) => w.id === id),
+  getWeapon = (u, id) => Rules.modelOf(u).weapons.find((w) => w.id === id),
   unitIcon = (model) => ART.assets[SpriteRenderer.models[model].icon],
-  unitName = (u) => UnitModels[u.model].name,
+  unitName = (u) => Rules.modelOf(u).name,
   formatNumber = (n) => Number(n).toLocaleString("en-US"),
   isAI = () => !Net.active && game.ai && game.team === 1,
   isBusy = () => phase !== "idle" || !!Net.awaiting || MapEffects.pending() || TurnFlow.active;
@@ -67,13 +66,12 @@ function note(text) {
 function addLog(text) {
   log.unshift(text);
   log = log.slice(0, 70);
-  byId("log").replaceChildren(
-    ...log.map((t) => {
-      let div = document.createElement("div");
-      div.className = "log-line";
-      div.textContent = t;
-      return div;
-    }),
+  Chat.setLog(log);
+}
+function playerNameClass(memberId, hostId = Net.snapshot?.hostId, selfId = Net.memberId) {
+  return (
+    "player-name " +
+    (memberId === hostId ? "player-host" : memberId === selfId ? "player-self" : "player-other")
   );
 }
 function element(tag, cls, text) {
@@ -83,14 +81,22 @@ function element(tag, cls, text) {
   return el;
 }
 function htmlWeapon(w, u) {
+  const damageLabel = w.attack.strikes.some((s) => s.damageMultiplier !== 1)
+    ? "分段 " +
+      w.attack.strikes.map((s) => formatNumber(w.damagePerShot * s.damageMultiplier)).join(" + ")
+    : "单发 " +
+      formatNumber(w.damagePerShot) +
+      " × " +
+      w.shotCount +
+      " 发" +
+      (w.hitsPerShot > 1 ? " × " + w.hitsPerShot + " 段" : "");
   return /* HTML */ `<div class="weapon-title">
       <span class="weapon-name">${w.name}</span
       ><span class="type ${w.type}">${Rules.typeNames[w.type]}</span>
     </div>
     <div class="weapon-meta">
-      射程 ${w.min}–${w.max}　单发 ${formatNumber(w.damagePerShot)} × ${w.shotCount}
-      发${w.hitsPerShot > 1 ? ` × ${w.hitsPerShot} 段` : ""} = ${formatNumber(w.damage)}　命中
-      ${w.hit}%<br />EN ${w.en} / 剩余 ${u.en}
+      射程 ${w.min}–${w.max}　${damageLabel} = ${formatNumber(w.damage)}　命中 ${w.hit}%<br />EN
+      ${w.en} / 剩余 ${u.en}
     </div>`;
 }
 // 刷新顶栏、单位列表、提示和右侧指令，不推进回合。
@@ -100,6 +106,7 @@ function update() {
     return;
   }
   Deployment.render();
+  Chat.refreshStatus();
   const busy = isBusy(),
     u = getUnit(selected);
   byId("turnBadge").textContent = `第${game.round}回合 · ${teamName(game.team)}`;
@@ -110,48 +117,9 @@ function update() {
   byId("endTurn").textContent = "结束" + teamName(game.team) + "回合";
   byId("endTurn").disabled = busy || isAI() || (Net.active && !Net.canAct());
   byId("modeLabel").textContent = Net.active
-    ? "IP联机 · " + Net.roleName()
-    : game.ai
-      ? "模式：蓝方玩家 vs 红方AI"
-      : "模式：双人热座";
-  for (let t = 0; t < 2; t++) {
-    byId(t ? "redCount" : "blueCount").textContent =
-      game.units.filter((x) => x.team === t && x.hp > 0).length +
-      "/" +
-      game.units.filter((x) => x.team === t).length;
-    byId(t ? "enemies" : "allies").replaceChildren(
-      ...game.units
-        .filter((x) => x.team === t)
-        .map((x) => {
-          let button = element(
-              "button",
-              "roster-unit" + (selected === x.id ? " selected" : "") + (x.hp <= 0 ? " dead" : ""),
-            ),
-            im = element("img");
-          im.src = unitIcon(x.model);
-          im.alt = "";
-          let text = element("span");
-          text.innerHTML = /* HTML */ `<strong>${UnitModels[x.model].code}</strong>
-            <div class="hp-track">
-              <div
-                class="hp-fill ${t ? "red" : ""}"
-                style="width:${(x.hp / UnitModels[x.model].hp) * 100}%"
-              ></div>
-            </div>
-            <small
-              >${x.hp <= 0 ? "已击破" : x.acted ? "行动结束" : x.moved ? "已移动 · 可攻击" : "未行动"}</small
-            >`;
-          button.append(im, text);
-          button.setAttribute("aria-label", teamName(t) + " " + unitName(x));
-          button.disabled =
-            (phase === "deployment"
-              ? !Deployment.canEdit() || x.team !== Deployment.team()
-              : busy) || x.hp <= 0;
-          button.onclick = () => select(x.id);
-          return button;
-        }),
-    );
-  }
+    ? (Net.local ? "离线遭遇战" : "联机遭遇战") + " · " + Net.roleName()
+    : "遭遇战";
+  renderRoster(busy);
   let hint = busy
     ? phase === "moving"
       ? "单位移动中…"
@@ -173,7 +141,8 @@ function update() {
     else if (phase === "waiting") hint = "等待红方加入房间。";
     else if (phase === "disconnected") hint = "连接中断：战局已暂停，恢复连接后继续。";
     else if (phase === "connecting") hint = "正在连接服务器…";
-    else if (!busy && game.team !== Net.seat) hint = "对手回合，可查看单位并等待行动。";
+    else if (!busy && Net.snapshot?.turnDone?.[Net.seat]) hint = "已结束个人行动，等待队友。";
+    else if (!busy && game.team !== Net.team()) hint = "对手回合，可查看单位并等待行动。";
   }
   if (phase === "deployment") hint = "在高亮出生区内调整位置，两队确认后开始回合。";
   if (MapEffects.pending()) hint = "单位击破演出中…";
@@ -181,6 +150,110 @@ function update() {
   byId("hint").textContent = hint;
   renderPanel();
   TurnFlow.refreshAutoEnd();
+}
+// 左侧只按当前视角显示我军；观战者可查看两队，每名所有者单独成组。
+function renderRoster(busy) {
+  const viewerTeam = Net.active
+    ? Net.seat === null
+      ? null
+      : Rules.seatTeam(Net.seat)
+    : game.ai
+      ? 0
+      : null;
+  const roster = byId("unitRoster"),
+    scrollTop = roster.scrollTop;
+  const allies = byId("allies"),
+    enemies = byId("enemies");
+  allies.replaceChildren();
+  enemies.replaceChildren();
+  enemies.hidden = viewerTeam !== null;
+  const visible = game.units.filter((unit) => viewerTeam === null || unit.team === viewerTeam);
+  const owners = [...new Set(visible.map(Rules.ownerOf))].sort((a, b) =>
+    a === Net.seat ? -1 : b === Net.seat ? 1 : a - b,
+  );
+  for (const seat of owners) {
+    const units = visible.filter((unit) => Rules.ownerOf(unit) === seat),
+      identity = UnitIdentity.owner(units[0]);
+    const group = element("section", "roster-owner"),
+      heading = element("div", "side-title roster-owner-heading");
+    group.dataset.ownerSeat = seat;
+    const name = element(
+      "strong",
+      identity.member ? playerNameClass(identity.member.id) : "",
+      identity.name,
+    );
+    if (identity.member) name.setAttribute("data-i18n-ignore", "");
+    heading.append(
+      name,
+      element(
+        "span",
+        "muted roster-owner-count",
+        units.filter((unit) => unit.hp > 0).length + "/" + units.length,
+      ),
+    );
+    group.append(heading);
+    for (const unit of units) {
+      const model = Rules.modelOf(unit),
+        button = element(
+          "button",
+          "roster-unit" + (selected === unit.id ? " selected" : "") + (unit.hp <= 0 ? " dead" : ""),
+        );
+      const image = element("img");
+      image.src = unitIcon(unit.model);
+      image.alt = "";
+      const info = element("span", "roster-unit-info");
+      info.append(element("strong", "roster-unit-name", model.name));
+      for (const [kind, current, maximum] of [
+        ["hp", unit.hp, model.hp],
+        ["en", unit.en, model.en],
+      ]) {
+        const track = element("div", kind === "hp" ? "hp-track" : "en-track");
+        track.setAttribute("role", "progressbar");
+        track.setAttribute("aria-label", kind.toUpperCase());
+        track.setAttribute("aria-valuemin", "0");
+        track.setAttribute("aria-valuemax", maximum);
+        track.setAttribute("aria-valuenow", Math.max(0, current));
+        track.title = `${kind.toUpperCase()} ${formatNumber(current)} / ${formatNumber(maximum)}`;
+        const fill = element(
+          "div",
+          kind === "hp" ? "hp-fill" + (unit.team ? " red" : "") : "en-fill",
+        );
+        fill.style.width = Math.max(0, Math.min(100, (current / maximum) * 100)) + "%";
+        track.append(fill);
+        info.append(track);
+      }
+      info.append(
+        element(
+          "small",
+          "roster-status",
+          unit.hp <= 0
+            ? "已击破"
+            : unit.acted
+              ? "行动结束"
+              : unit.moved
+                ? "已移动 · 可攻击"
+                : "未行动",
+        ),
+      );
+      button.dataset.unitId = unit.id;
+      button.append(image, info);
+      button.setAttribute("aria-label", model.name + " · " + I18n.text("定位单位"));
+      button.disabled = unit.hp <= 0 || (busy && phase !== "deployment");
+      button.onclick = () => {
+        MapCamera.focus(unit.x, unit.y);
+        if (phase === "deployment") {
+          GameAudio.play("selectUnitSound");
+          selected = unit.id;
+          weaponId = null;
+          mode = "select";
+          update();
+        } else select(unit.id);
+      };
+      group.append(button);
+    }
+    (viewerTeam === null && units[0].team === 1 ? enemies : allies).append(group);
+  }
+  roster.scrollTop = scrollTop;
 }
 // 右侧单位详情：属性、动作、武器和目标。选中单位后重新生成。
 function renderPanel() {
@@ -191,8 +264,8 @@ function renderPanel() {
       '<div class="empty">选择地图上的机体，查看移动范围与可用武器。</div><div class="rule-box">各机体携带自己的主武器套件与固定武装。选择单位查看武器射程与防护。</div>';
     return;
   }
-  let m = UnitModels[u.model],
-    own = u.team === game.team,
+  let m = Rules.modelOf(u),
+    own = u.team === game.team && (!Net.active || Net.owns(u)),
     canCommand = own && !u.acted && !isBusy() && !isAI() && (!Net.active || Net.canAct());
   panel.replaceChildren();
   let head = element("div", "unit-card-head");
@@ -202,6 +275,23 @@ function renderPanel() {
       ><small>${m.code} · ${m.kitName} · ${teamName(u.team)}</small>
     </div>`;
   panel.append(head);
+  const identity = UnitIdentity.owner(u),
+    ownership = element("div", "unit-ownership"),
+    ownerName = element(
+      "strong",
+      identity.member ? playerNameClass(identity.member.id) : "",
+      identity.name,
+    );
+  ownerName.id = "unitOwner";
+  if (Net.active && identity.member) ownerName.setAttribute("data-i18n-ignore", "");
+  ownership.append(
+    element("span", "", "所有者："),
+    ownerName,
+    element("span", "", " · "),
+    element("strong", "", identity.team),
+  );
+  ownership.id = "unitOwnership";
+  panel.append(ownership);
   let stats = element("div", "stats");
   stats.innerHTML = /* HTML */ `<div>
       <span>HP</span>${formatNumber(u.hp)} / ${formatNumber(m.hp)}
@@ -209,12 +299,22 @@ function renderPanel() {
     <div><span>EN</span>${u.en} / ${m.en}</div>
     <div><span>移动力</span>${m.move} 格</div>
     <div><span>机动性</span>${m.mobility}</div>
-    <div><span>盾牌</span>${formatNumber(u.shield ?? 0)} / ${formatNumber(m.shield.hp)}</div>
+    <div>
+      <span>盾牌</span
+      >${m.shield.hp > 0 ? formatNumber(u.shield ?? 0) + " / " + formatNumber(m.shield.hp) : "无独立盾牌"}
+    </div>
     <div>
       <span>当前位置</span>${String.fromCharCode(65 + u.x)}${u.y + 1} ·
       ${Rules.terrain[game.tiles[u.y][u.x]].name}
     </div>`;
   panel.append(stats);
+  panel.append(
+    element(
+      "p",
+      "helper",
+      "本回合剩余反击 " + Rules.countersRemaining(u) + " / " + (m.counterLimit ?? 2),
+    ),
+  );
   const protection = element("details", "rule-box");
   protection.append(element("summary", "", "防护属性"));
   protection.append(element("p", "helper", m.description));
@@ -268,7 +368,6 @@ function renderPanel() {
         mode = "select";
         weaponId = null;
         update();
-        autoAI();
       },
       !canCommand,
     ],
@@ -284,7 +383,7 @@ function renderPanel() {
         weaponId = null;
         update();
       },
-      !canCommand || !u.origin,
+      !canCommand || !Rules.canUndo(game, u),
     ],
     [
       "取消选武器",
@@ -310,6 +409,7 @@ function renderPanel() {
     b.disabled = !canCommand || !Rules.canUse(u, w);
     b.setAttribute("aria-label", "攻击武器 " + w.name);
     b.onclick = () => {
+      GameAudio.play("selectWeaponSound");
       weaponId = w.id;
       mode = "target";
       if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
@@ -346,12 +446,7 @@ function renderPanel() {
         ? "已移动：仍可攻击或待机。攻击后不可再移动。"
         : "移动可选；原地攻击也会结束本单位行动。";
   panel.append(element("div", "rule-box", info));
-  if (
-    Net.active &&
-    pending &&
-    getUnit(pending.attacker)?.team === Net.seat &&
-    phase === "reaction_wait"
-  ) {
+  if (Net.active && pending && Net.owns(getUnit(pending.attacker)) && phase === "reaction_wait") {
     let cancel = element("button", "", "取消本次攻击");
     cancel.onclick = () => Net.request("cancel_attack");
     panel.append(cancel);
@@ -361,6 +456,7 @@ function select(id) {
   if (isBusy()) return;
   let u = getUnit(id);
   if (!u || u.hp <= 0) return;
+  GameAudio.play("selectUnitSound");
   selected = id;
   weaponId = null;
   mode = "select";
@@ -395,6 +491,7 @@ function drawMap(now) {
       chosen &&
       chosen.hp > 0 &&
       chosen.team === game.team &&
+      (!Net.active || Net.owns(chosen)) &&
       !chosen.acted &&
       !chosen.moved &&
       phase === "idle" &&
@@ -404,10 +501,15 @@ function drawMap(now) {
         ? Rules.reachable(game, chosen)
         : new Map(),
     weapon = chosen && weaponId ? getWeapon(chosen, weaponId) : null;
-  for (let y = 0; y < Rules.H; y++)
-    for (let x = 0; x < Rules.W; x++) {
+  const deploymentArea = new Set(
+    phase === "deployment" && Deployment.team() !== null
+      ? Rules.deploymentCells(game, Deployment.team()).map((c) => Rules.key(c.x, c.y))
+      : [],
+  );
+  for (let y = 0; y < Rules.mapHeight(game); y++)
+    for (let x = 0; x < Rules.mapWidth(game); x++) {
       let kind = game.tiles[y][x],
-        t = Rules.terrain[kind],
+        t = Rules.terrainStyle(game.mapId, kind),
         px = ox + x * tile,
         py = oy + y * tile;
       ctx.fillStyle = t.color;
@@ -420,12 +522,26 @@ function drawMap(now) {
       if (
         phase === "deployment" &&
         Deployment.team() !== null &&
-        Rules.deploymentCells(game, Deployment.team()).some((c) => c.x === x && c.y === y)
+        deploymentArea.has(Rules.key(x, y))
       ) {
         ctx.fillStyle = "#5ee4b344";
         ctx.fillRect(px, py, tile, tile);
       }
-      if (kind === "forest") {
+      if (kind === "forest" && Rules.getMap(game.mapId).appearance?.biome === "desert") {
+        ctx.strokeStyle = "#d6bb83";
+        ctx.lineWidth = Math.max(1, tile * 0.035);
+        for (let i = 0; i < 3; i++) {
+          ctx.beginPath();
+          ctx.moveTo(px + tile * 0.1, py + tile * (0.4 + i * 0.18));
+          ctx.quadraticCurveTo(
+            px + tile * 0.5,
+            py + tile * (0.1 + i * 0.18),
+            px + tile * 0.9,
+            py + tile * (0.4 + i * 0.18),
+          );
+          ctx.stroke();
+        }
+      } else if (kind === "forest") {
         for (let i = 0; i < 4; i++) {
           let tx = px + tile * (0.22 + (i % 2) * 0.48),
             ty = py + tile * (0.18 + Math.floor(i / 2) * 0.42);
@@ -485,13 +601,15 @@ function drawMap(now) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = "#8ea5af";
-  for (let x = 0; x < Rules.W; x++)
+  for (let x = 0; x < Rules.mapWidth(game); x++)
     ctx.fillText(String.fromCharCode(65 + x), ox + (x + 0.5) * tile, oy - 9);
-  for (let y = 0; y < Rules.H; y++) ctx.fillText(String(y + 1), ox - 9, oy + (y + 0.5) * tile);
+  for (let y = 0; y < Rules.mapHeight(game); y++)
+    ctx.fillText(String(y + 1), ox - 9, oy + (y + 0.5) * tile);
   for (const u of game.units) {
     if (u.hp <= 0) continue;
     let pos = mapPosition(u.x, u.y),
-      anim = UnitModels[u.model].presentation.idle,
+      angle = u.angle,
+      anim = Rules.modelOf(u).presentation.idle,
       t = now / 1000;
     if (moving?.id === u.id) {
       let part = Math.min(moving.path.length - 0.0001, (now - moving.start) / moving.step),
@@ -500,21 +618,13 @@ function drawMap(now) {
         from = index ? moving.path[index - 1] : moving.from,
         to = moving.path[index] || from;
       pos = mapPosition(from.x + (to.x - from.x) * frac, from.y + (to.y - from.y) * frac);
-      u.angle = (Math.atan2(to.x - from.x, -(to.y - from.y)) * 180) / Math.PI;
-      anim = UnitModels[u.model].presentation.move;
+      angle = (Math.atan2(to.x - from.x, -(to.y - from.y)) * 180) / Math.PI;
+      anim = SpriteRenderer.movement(u.model);
       t = (now - moving.start) / 1000;
     }
     ctx.save();
     ctx.globalAlpha = u.acted && u.team === game.team ? 0.55 : 1;
-    ctx.fillStyle = u.team ? "#ff887c2c" : "#6acfff2d";
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, tile * 0.31, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = u.team ? "#fa8b79" : "#78ceef";
-    ctx.lineWidth = 1.4;
-    ctx.beginPath();
-    ctx.ellipse(pos.x, pos.y + tile * 0.1, tile * 0.31, tile * 0.19, 0, 0, Math.PI * 2);
-    ctx.stroke();
+    UnitIdentity.drawRing(ctx, u, pos, tile);
     if (u.id === selected) {
       ctx.strokeStyle = "#e1edaa";
       ctx.lineWidth = 2;
@@ -525,16 +635,22 @@ function drawMap(now) {
       u.model,
       pos.x,
       pos.y + tile * 0.035,
-      (tile / 64) *
-        1.2 *
-        BattleScene.settings().mapScale *
-        UnitModels[u.model].presentation.mapScale,
-      u.angle,
+      (tile / 64) * 1.2 * BattleScene.settings().mapScale * Rules.modelOf(u).presentation.mapScale,
+      angle,
       anim,
       t,
       u.heldWeapon,
       true,
       (u.shield ?? 1) > 0,
+      moving?.id === u.id,
+    );
+    SpriteEffects.lowHp(
+      ctx,
+      u,
+      pos.x,
+      pos.y + tile * 0.035,
+      (tile / 64) * 1.2 * BattleScene.settings().mapScale * Rules.modelOf(u).presentation.mapScale,
+      now / 1000,
     );
     ctx.restore();
     let hpw = tile * 0.72 * BattleScene.settings().mapBarScale,
@@ -543,7 +659,7 @@ function drawMap(now) {
     ctx.fillStyle = "#07141c";
     ctx.fillRect(barx, bary, hpw, 4);
     ctx.fillStyle = u.team ? "#ed9685" : "#83d6ee";
-    ctx.fillRect(barx, bary, (hpw * u.hp) / UnitModels[u.model].hp, 4);
+    ctx.fillRect(barx, bary, (hpw * u.hp) / Rules.modelOf(u).hp, 4);
     ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
     ctx.font = `${Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize}px system-ui`;
     ctx.textAlign = "center";
@@ -555,6 +671,7 @@ function drawMap(now) {
       ctx.strokeRect(pos.x - tile * 0.45, pos.y - tile * 0.45, tile * 0.9, tile * 0.9);
     }
   }
+  MovementEffects.draw(ctx, now, mapPosition, tile);
   MapEffects.draw(ctx, now, mapPosition, tile);
   if (hover) {
     let p = mapPosition(hover.x, hover.y);
@@ -568,7 +685,9 @@ function cellAt(e) {
   let r = byId("map").getBoundingClientRect(),
     x = Math.floor((e.clientX - r.left - mapGeo.ox) / mapGeo.tile),
     y = Math.floor((e.clientY - r.top - mapGeo.oy) / mapGeo.tile);
-  return x >= 0 && x < Rules.W && y >= 0 && y < Rules.H ? { x, y } : null;
+  return x >= 0 && x < Rules.mapWidth(game) && y >= 0 && y < Rules.mapHeight(game)
+    ? { x, y }
+    : null;
 }
 byId("map").onpointermove = (e) => {
   hover = cellAt(e);
@@ -594,11 +713,16 @@ byId("map").onclick = async (e) => {
     if (cell) Deployment.click(cell);
     return;
   }
-  if (isBusy() || isAI() || (Net.active && !Net.canAct())) return;
+  if (isBusy() || isAI()) return;
   let cell = cellAt(e);
   if (!cell) return;
   let target = Rules.at(game, cell.x, cell.y),
     u = getUnit(selected);
+  // 查看单位资料不需要操作权限；移动与攻击仍检查所属玩家。
+  if (Net.active && !Net.canAct()) {
+    if (target) select(target.id);
+    return;
+  }
   if (mode === "target" && u && weaponId) {
     let w = getWeapon(u, weaponId);
     if (target && Rules.canAttack(game, u, target, w)) {
@@ -616,7 +740,7 @@ byId("map").onclick = async (e) => {
     select(target.id);
     return;
   }
-  if (u && u.team === game.team && !u.acted && !u.moved) {
+  if (u && u.team === game.team && (!Net.active || Net.owns(u)) && !u.acted && !u.moved) {
     try {
       await performMove(u, cell.x, cell.y);
     } catch (err) {
@@ -631,7 +755,9 @@ async function performMove(u, x, y) {
   }
   let from = { x: u.x, y: u.y },
     path = Rules.move(game, u, x, y);
-  WeaponAudio.play(ART.presentation.moveSound);
+  if (Rules.modelOf(u).presentation.movement === "boost")
+    WeaponAudio.play(ART.presentation.moveSound);
+  MovementEffects.start(u, from, path[0], performance.now());
   phase = "moving";
   moving = {
     id: u.id,
@@ -652,14 +778,16 @@ async function performMove(u, x, y) {
 // a = 攻击方，b = 防守方，w = 武器。联机只发请求，离线进入本地应战。
 function beginAttack(a, b, w) {
   if (Net.active) {
-    if (Net.canAct() && phase === "idle")
+    if (Net.canAct() && Net.owns(a) && phase === "idle")
       Net.request("attack", { unitId: a.id, targetId: b.id, weaponId: w.id });
     return;
   }
   if (phase !== "idle" || !Rules.canAttack(game, a, b, w) || a.acted) return;
+  Rules.faceTarget(a, b);
+  Rules.faceTarget(b, a);
   pending = { attacker: a.id, target: b.id, weapon: w.id };
   phase = "reaction";
-  let legal = UnitModels[b.model].weapons.filter((c) => Rules.canAttack(game, b, a, c));
+  let legal = Rules.modelOf(b).weapons.filter((c) => Rules.canCounter(game, b, a, c));
   response = legal.length ? "counter" : "defend";
   counterId = legal[0]?.id || null;
   if (game.ai && b.team === 1) {
@@ -682,8 +810,19 @@ function renderReaction() {
     b = getUnit(pending.target),
     w = getWeapon(a, pending.weapon);
   byId("reactionTitle").textContent = teamName(b.team) + "选择应战方式";
-  byId("reactionSub").textContent =
-    `距离 ${Rules.dist(a, b)} 格 · ${teamName(a.team)} ${unitName(a)}使用${w.name}`;
+  byId("reactionSub").replaceChildren(
+    element(
+      "span",
+      "",
+      `距离 ${Rules.dist(a, b)} 格 · ${teamName(a.team)} ${unitName(a)}使用${w.name}`,
+    ),
+    document.createTextNode(" · "),
+    element(
+      "span",
+      "",
+      `本回合剩余反击 ${Rules.countersRemaining(b)} / ${Rules.modelOf(b).counterLimit ?? 2}`,
+    ),
+  );
   byId("cancelAttack").disabled = isAI();
   let initial = Rules.estimate(game, a, b, w, response);
   byId("engagement").innerHTML =
@@ -694,16 +833,17 @@ function renderReaction() {
     ["responseEvade", "evade"],
   ])
     byId(id).classList.toggle("active", response === value);
-  let legal = UnitModels[b.model].weapons.filter((c) => Rules.canAttack(game, b, a, c));
+  let legal = Rules.modelOf(b).weapons.filter((c) => Rules.canCounter(game, b, a, c));
   byId("responseCounter").disabled = !legal.length;
   byId("counterList").replaceChildren();
   if (response === "counter") {
-    for (const cw of UnitModels[b.model].weapons) {
+    for (const cw of Rules.modelOf(b).weapons) {
       let button = element("button", "weapon" + (cw.id === counterId ? " active" : ""));
       button.innerHTML = htmlWeapon(cw, b);
-      button.disabled = !Rules.canAttack(game, b, a, cw);
+      button.disabled = !Rules.canCounter(game, b, a, cw);
       button.setAttribute("aria-label", "反击武器 " + cw.name);
       button.onclick = () => {
+        GameAudio.play("selectWeaponSound");
         counterId = cw.id;
         renderReaction();
       };
@@ -827,8 +967,10 @@ function progressBattle(now) {
     }
   }
 }
+byId("quick").addEventListener("change", () => WeaponAudio.setBattleMuted(byId("quick").checked));
 // 演出推进和状态栏留在界面层，画布统一交给 BattleScene。
 function drawBattle(now) {
+  WeaponAudio.setBattleMuted(byId("quick").checked);
   if (byId("battle").hidden || !battleView) {
     WeaponAudio.stopBattle();
     return;
@@ -844,21 +986,19 @@ function drawBattle(now) {
   const ratio = view.completed
     ? 1
     : Math.max(0, Math.min(1, (now - view.start) / battleEventDuration()));
-  if (view.completed || view.windowState === "opening") WeaponAudio.stopBattle();
+  if (view.completed) WeaponAudio.releaseBattle();
+  else if (view.windowState === "opening") WeaponAudio.stopBattle();
   else {
     const weapon = getWeapon(getUnit(event.from), event.weapon);
     const bounds = byId("battleCanvas").getBoundingClientRect();
     const plan = BattleScene.timeline(event, left, right, bounds.width, bounds.height).plan;
-    if (plan.deathSoundAt !== null && ratio * plan.duration >= plan.deathSoundAt)
+    if (
+      !byId("quick").checked &&
+      plan.deathSoundAt !== null &&
+      ratio * plan.duration >= plan.deathSoundAt
+    )
       (view.deathSoundHeard ||= new Set()).add(event.to);
-    WeaponAudio.sync(
-      view,
-      view.index,
-      weapon,
-      ratio * plan.duration,
-      byId("quick").checked ? 1 / 0.35 : 1,
-      plan.cues,
-    );
+    WeaponAudio.sync(view, view.index, weapon, ratio * plan.duration, 1, plan.cues);
   }
   BattleScene.draw(byId("battleCanvas"), {
     left,
@@ -899,12 +1039,11 @@ function drawBattle(now) {
         <div class="hp-track">
           <div
             class="hp-fill ${unit.team ? "red" : ""}"
-            style="width:${(hp / UnitModels[unit.model].hp) * 100}%"
+            style="width:${(hp / Rules.modelOf(unit).hp) * 100}%"
           ></div>
         </div>
         <small
-          >HP ${formatNumber(hp)} / ${formatNumber(UnitModels[unit.model].hp)} ? EN
-          ${unit.en}</small
+          >HP ${formatNumber(hp)} / ${formatNumber(Rules.modelOf(unit).hp)} ? EN ${unit.en}</small
         >
       </div>`;
     })
@@ -930,7 +1069,7 @@ byId("continueBattle").onclick = () => {
   BattleWindow.close(battleView);
 };
 function finishBattle() {
-  WeaponAudio.stop();
+  WeaponAudio.releaseBattle();
   if (!battleView?.completed) return;
   MapEffects.capture(battleView);
   if (Net.active) {
@@ -952,7 +1091,6 @@ function finishBattle() {
     }
     phase = "idle";
     update();
-    autoAI();
   });
   update();
 }
@@ -972,7 +1110,9 @@ function endTurn() {
 }
 byId("endTurn").onclick = () => {
   if (isBusy() || isAI() || (Net.active && !Net.canAct())) return;
-  let remaining = game.units.filter((u) => u.team === game.team && u.hp > 0 && !u.acted).length;
+  let remaining = game.units.filter(
+    (u) => u.team === game.team && (!Net.active || Net.owns(u)) && u.hp > 0 && !u.acted,
+  ).length;
   if (remaining && !byId("endTurn").dataset.confirm) {
     byId("endTurn").dataset.confirm = "1";
     note(`尚有${remaining}台未行动；再次点击结束回合以确认。`);
@@ -982,47 +1122,6 @@ byId("endTurn").onclick = () => {
   delete byId("endTurn").dataset.confirm;
   endTurn();
 };
-// 离线 AI 的延时行动。session 标记阻止上一局的延时任务影响新局。
-function autoAI() {
-  if (Net.active) return;
-  clearTimeout(aiTimer);
-  if (!isAI() || isBusy() || game.winner !== null) return;
-  if (!Rules.hasActions(game)) {
-    TurnFlow.refreshAutoEnd();
-    return;
-  }
-  let stamp = session;
-  aiTimer = setTimeout(async () => {
-    if (stamp !== session || !isAI() || isBusy()) return;
-    let u = game.units.find((x) => x.team === 1 && x.hp > 0 && !x.acted);
-    if (!u) {
-      TurnFlow.refreshAutoEnd();
-      return;
-    }
-    selected = u.id;
-    let choice = Rules.aiChoice(game, u);
-    if (choice && (choice.x !== u.x || choice.y !== u.y) && !u.moved) {
-      await performMove(u, choice.x, choice.y);
-      if (stamp !== session) return;
-    }
-    let targets = game.units.filter((t) => t.team !== u.team && t.hp > 0),
-      best = null;
-    for (const target of targets)
-      for (const w of UnitModels[u.model].weapons)
-        if (Rules.canAttack(game, u, target, w)) {
-          let e = Rules.estimate(game, u, target, w),
-            score = e.hit * e.damage;
-          if (!best || score > best.score) best = { target, w, score };
-        }
-    if (best) beginAttack(u, best.target, best.w);
-    else {
-      Rules.wait(game, u);
-      addLog(`红方 ${unitName(u)}结束行动。`);
-      update();
-      autoAI();
-    }
-  }, 500);
-}
 function showVictory() {
   if (MapEffects.pending()) {
     phase = "victory";
@@ -1034,43 +1133,12 @@ function showVictory() {
   byId("victoryNote").textContent =
     `第${game.round}回合，全歼敌方小队。存活单位 ${game.units.filter((u) => u.team === game.winner && u.hp > 0).length} 台。`;
   byId("victory").hidden = false;
+  MatchResults.show();
   update();
 }
-function start(ai) {
-  if (!assetsReady) return;
-  Net.leave();
-  TurnFlow.reset();
-  MapCamera.reset();
-  session++;
-  clearTimeout(aiTimer);
-  const seed = Math.floor(Math.random() * 4294967296);
-  game = Rules.create(
-    ai,
-    seed,
-    [Formation.current(), ai ? Rules.randomFormation(seed) : Formation.current()],
-    true,
-  );
-  Deployment.reset();
-  selected = null;
-  weaponId = null;
-  mode = "select";
-  phase = "deployment";
-  moving = null;
-  pending = null;
-  battleView = null;
-  setPageView("game");
-  log = [];
-  for (const id of ["start", "reaction", "battle", "victory", "help"]) byId(id).hidden = true;
-  delete byId("endTurn").dataset.confirm;
-  addLog("蓝方行动开始。选择机体 → 移动 → 选择武器 → 选择目标 → 防守方应战。");
-  update();
-}
-byId("startHotseat").onclick = () => start(false);
-byId("startAI").onclick = () => start(true);
 // 主动回主菜单会退出当前房间；网络意外中断则由网络层自动恢复。
 function openMenu() {
   session++;
-  clearTimeout(aiTimer);
   Net.leave();
   moving = pending = battleView = null;
   selected = weaponId = null;
@@ -1087,6 +1155,7 @@ function openMenu() {
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
   }
+  byId("skirmishSetup").hidden = true;
   setPageView("menu");
   update();
 }
@@ -1094,7 +1163,7 @@ function requestMenu() {
   byId("leaveConfirm").hidden = false;
 }
 byId("netSettings").onclick = requestMenu;
-byId("playAgain").onclick = requestMenu;
+
 byId("cancelLeave").onclick = () => {
   byId("leaveConfirm").hidden = true;
 };
@@ -1118,10 +1187,13 @@ function tick(now) {
   }
   if (pageView === "game" || window.isLayoutPreview) startRendering();
 }
+window.addEventListener("language-change", () => {
+  update();
+});
 SpriteRenderer.load()
   .then(() => {
     assetsReady = true;
-    byId("startAI").disabled = byId("startHotseat").disabled = false;
+    byId("openSkirmish").disabled = false;
     byId("openRooms").disabled = false;
     byId("loading").textContent = "原始素材已就绪 · 选择模式开始";
     update();

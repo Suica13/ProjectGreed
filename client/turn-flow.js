@@ -79,7 +79,6 @@ const TurnFlow = (() => {
         active = false;
         overlay.hidden = true;
         update();
-        autoAI();
       }
     }
   }

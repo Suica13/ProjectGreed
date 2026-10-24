@@ -85,6 +85,8 @@
         .join("");
     }
     byId("victoryTitle").textContent = "蓝方胜利";
+    byId("victoryCountdown").textContent = "30秒后所有人返回房间";
+    byId("playAgain").textContent = "立即返回房间（全员）";
     byId("victoryNote").textContent = "第8回合，全歼敌方小队。存活单位 2 台。";
     byId("networkStatus").textContent = {
       normal: "选择列表中的房间加入，或创建新房间。",

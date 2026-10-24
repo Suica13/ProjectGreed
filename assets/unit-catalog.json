@@ -3,14 +3,25 @@
   "units": [
     "units/RGM_79/unit.json",
     "units/RGC_80/unit.json",
-    "units/RGM_79L/unit.json"
+    "units/RGM_79L/unit.json",
+    "units/MS_06F/unit.json",
+    "units/MS_09/unit.json",
+    "units/RGM_79_G/unit.json",
+    "units/MS_06J/unit.json",
+    "units/MS_06K/unit.json",
+    "units/MS_14A/unit.json",
+    "units/RX_79_G/unit.json",
+    "units/MS_06F2/unit.json"
   ],
   "effects": "effects/effects.json",
   "presentation": "presentation.json",
   "formation": {
-    "maxUnits": 9,
-    "maxCost": 3600,
-    "aiUnits": 6
+    "maxUnits": 12,
+    "maxCost": 5000,
+    "aiUnits": 12,
+    "costStep": 25,
+    "unitCostLimit": 1000,
+    "defaultUnits": 9
   },
   "deployment": {
     "radius": 4,
@@ -29,5 +40,22 @@
     "width": 24,
     "height": 18
   },
-  "music": "music/playlist.json"
+  "music": "music/playlist.json",
+  "maps": [
+    "maps/frontier_1v1.json",
+    "maps/arctic_base_1v1.json",
+    "maps/new_york_ruins_1v1.json",
+    "maps/open_dunes_1v1.json",
+    "maps/marsh_islands_1v1.json",
+    "maps/crossroads_2v2.json",
+    "maps/ice_bridges_2v2.json",
+    "maps/new_york_boulevards_2v2.json",
+    "maps/desert_depots_2v2.json",
+    "maps/frontline_3v3.json",
+    "maps/arctic_fortress_3v3.json",
+    "maps/new_york_crossfire_3v3.json",
+    "maps/desert_highway_3v3.json",
+    "maps/forest_front_5v5.json"
+  ],
+  "defaultMap": "frontier_1v1"
 }

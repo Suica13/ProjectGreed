@@ -1,0 +1,915 @@
+{
+  "schemaVersion": 2,
+  "id": "MS_14A",
+  "code": "MS-14A",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14A/MS_14A.ini",
+  "materials": {
+    "textures": {
+      "MS_14A_Crotch_1.png": "textures/MS_14A_Crotch_1.png",
+      "MS_14A_Body_1.png": "textures/MS_14A_Body_1.png",
+      "MS_14A_ArmL_1.png": "textures/MS_14A_ArmL_1.png",
+      "MS_14A_ArmR_1.png": "textures/MS_14A_ArmR_1.png",
+      "MS_14A_ShoulderL_1.png": "textures/MS_14A_ShoulderL_1.png",
+      "MS_14A_ShoulderR_1.png": "textures/MS_14A_ShoulderR_1.png",
+      "MS_14A_Head_1.png": "textures/MS_14A_Head_1.png",
+      "MS_14A_Eye_1.png": "textures/MS_14A_Eye_1.png",
+      "MS_14A_FootL_1.png": "textures/MS_14A_FootL_1.png",
+      "MS_14A_LegL_1.png": "textures/MS_14A_LegL_1.png",
+      "MS_14A_FootR_1.png": "textures/MS_14A_FootR_1.png",
+      "MS_14A_LegR_1.png": "textures/MS_14A_LegR_1.png",
+      "ZN_MS_14_BR.png": "textures/ZN_MS_14_BR.png",
+      "ZN_360mmBazooka.png": "textures/ZN_360mmBazooka.png",
+      "ZN_MMP80MG.png": "textures/ZN_MMP80MG.png",
+      "ZN_TwinBeamSword.png": "textures/ZN_TwinBeamSword.png",
+      "ZN_MS_14A_Shield.png": "textures/ZN_MS_14A_Shield.png",
+      "MS_14A.png": "textures/MS_14A.png",
+      "Boost_1.png": "textures/Boost_1.png"
+    },
+    "icon": "MS_14A.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0,
+      "y": 0
+    },
+    "Body": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftArm": {
+      "x": -9,
+      "y": 0
+    },
+    "RightArm": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftShoulder": {
+      "x": -9,
+      "y": 0
+    },
+    "RightShoulder": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "RightWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "Head": {
+      "x": 0,
+      "y": 0
+    },
+    "Eye": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftFoot": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "LeftLeg": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "RightFoot": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "RightLeg": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    }
+  },
+  "layers": [
+    {
+      "name": "ZN_360mmBazooka_NotUsing",
+      "texture": "ZN_360mmBazooka.png",
+      "bone": "Pelvis",
+      "order": 0,
+      "scale": 0.8,
+      "scaleY": -1,
+      "rotation": 90,
+      "offset": {
+        "x": -0.5,
+        "y": -8
+      },
+      "visibleWhen": {
+        "kit": "bazooka",
+        "heldWeapon": {
+          "not": "ZN_360mmBazooka"
+        }
+      }
+    },
+    {
+      "name": "LeftFoot",
+      "texture": "MS_14A_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MS_14A_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MS_14A_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MS_14A_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ZN_MS_14_BR_NotUsing",
+      "texture": "ZN_MS_14_BR.png",
+      "bone": "Pelvis",
+      "order": 3,
+      "scale": 0.9,
+      "rotation": -90,
+      "offset": {
+        "x": 0,
+        "y": -8.5
+      },
+      "visibleWhen": {
+        "kit": "beam_rifle",
+        "heldWeapon": {
+          "not": "ZN_MS_14_BR"
+        }
+      }
+    },
+    {
+      "name": "ZN_MMP80MG_NotUsing",
+      "texture": "ZN_MMP80MG.png",
+      "bone": "Pelvis",
+      "order": 3,
+      "scale": 0.75,
+      "rotation": -90,
+      "offset": {
+        "x": 2,
+        "y": -8.5
+      },
+      "visibleWhen": {
+        "kit": "machine_gun",
+        "heldWeapon": {
+          "not": "ZN_MMP80MG"
+        }
+      }
+    },
+    {
+      "name": "Body_BeamSaber",
+      "texture": "ZN_TwinBeamSword.png",
+      "bone": "Body",
+      "order": 3,
+      "scaleY": 0.75,
+      "rotation": 75,
+      "frames": 2,
+      "frame": 0,
+      "offset": {
+        "x": 10,
+        "y": -7.5
+      }
+    },
+    {
+      "name": "ZN_TwinBeamSword_A",
+      "texture": "ZN_TwinBeamSword.png",
+      "bone": "RightWeapon",
+      "order": 3.5,
+      "scale": 1,
+      "rotation": -16,
+      "frames": 2,
+      "frame": 1,
+      "offset": {
+        "x": 12,
+        "y": 24
+      },
+      "visibleWhen": {
+        "heldWeapon": "ZN_TwinBeamSword_A"
+      }
+    },
+    {
+      "name": "Crotch",
+      "texture": "MS_14A_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ArmL",
+      "texture": "MS_14A_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ArmR",
+      "texture": "MS_14A_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "BoostLoop",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "frames": 3,
+      "frameFps": 4,
+      "offset": {
+        "x": -2.5,
+        "y": -7
+      },
+      "scale": 2,
+      "scaleY": 1.5,
+      "rotation": 0,
+      "alpha": 0.75,
+      "visibleWhen": {
+        "moving": true,
+        "boosting": true
+      }
+    },
+    {
+      "name": "ZN_MS_14_BR",
+      "texture": "ZN_MS_14_BR.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 1,
+      "rotation": 0,
+      "offset": {
+        "x": 4,
+        "y": 16
+      },
+      "visibleWhen": {
+        "kit": "beam_rifle",
+        "heldWeapon": "ZN_MS_14_BR"
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "MS_14A_Body_1.png",
+      "bone": "Body",
+      "order": 5,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ZN_MMP80MG",
+      "texture": "ZN_MMP80MG.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.9,
+      "rotation": 0,
+      "offset": {
+        "x": 5,
+        "y": 14
+      },
+      "visibleWhen": {
+        "kit": "machine_gun",
+        "heldWeapon": "ZN_MMP80MG"
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MS_14A_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MS_14A_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6,
+      "offset": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "ZN_360mmBazooka",
+      "texture": "ZN_360mmBazooka.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.9,
+      "rotation": 0,
+      "offset": {
+        "x": 2.5,
+        "y": 12
+      },
+      "visibleWhen": {
+        "kit": "bazooka",
+        "heldWeapon": "ZN_360mmBazooka"
+      }
+    },
+    {
+      "name": "Shield",
+      "texture": "ZN_MS_14A_Shield.png",
+      "bone": "LeftArm",
+      "order": 6.5,
+      "scale": 1.25,
+      "rotation": -10,
+      "offset": {
+        "x": -5,
+        "y": 8
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      }
+    },
+    {
+      "name": "Head",
+      "texture": "MS_14A_Head_1.png",
+      "bone": "Head",
+      "order": 7,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MS_14A_Head_1.png",
+      "bone": "Head",
+      "order": 7,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      }
+    },
+    {
+      "name": "Eye",
+      "texture": "MS_14A_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.5,
+      "offset": {
+        "x": 0,
+        "y": 2.5
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/MS_14A__EnterPilot.json",
+    "QuitPilot": "../../animations/MS_14A__QuitPilot.json",
+    "NoPilotIdle": "../../animations/MS_14A__NoPilotIdle.json",
+    "Common_Idle": "../../animations/MS_14A__Common_Idle.json",
+    "Common_Dodge_L": "../../animations/MS_14A__Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/MS_14A__Common_Dodge_R.json",
+    "OnMoving": "../../animations/MS_14A__OnMoving.json",
+    "OnMovingReversing": "../../animations/MS_14A__OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/MS_14A__OnMovingWalk.json",
+    "Guard": "../../animations/MS_14A__Guard.json",
+    "Common_Dead": "../../animations/MS_14A__Common_Dead.json",
+    "Common_Stun": "../../animations/MS_14A__Common_Stun.json",
+    "Common_Daze": "../../animations/MS_14A__Common_Daze.json",
+    "Common_Stagger": "../../animations/MS_14A__Common_Stagger.json",
+    "Common_Push_A": "../../animations/MS_14A__Common_Push_A.json",
+    "Common_Shoot_A": "../../animations/MS_14A__Common_Shoot_A.json",
+    "Common_Shoot_A_FA": "../../animations/MS_14A__Common_Shoot_A_FA.json",
+    "Common_Melee_A": "../../animations/MS_14A__Common_Melee_A.json"
+  },
+  "stats": {
+    "hp": 24000,
+    "en": 100,
+    "move": 6,
+    "mobility": 115,
+    "cost": 800,
+    "counterLimit": 2
+  },
+  "attackBonuses": {
+    "shooting": 20,
+    "melee": 20,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5,
+      "flat": 50
+    },
+    "shell": {
+      "percent": 10,
+      "flat": 100
+    },
+    "melee": {
+      "percent": 10,
+      "flat": 150
+    },
+    "dp": {
+      "percent": 10,
+      "flat": 15
+    },
+    "sp": {
+      "percent": 0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 3000,
+    "blockChance": 0.45,
+    "coverage": 0.75,
+    "defenses": {
+      "beam": {
+        "percent": 5,
+        "flat": 35
+      },
+      "shell": {
+        "percent": 10,
+        "flat": 35
+      },
+      "melee": {
+        "percent": 5,
+        "flat": 175
+      },
+      "dp": {
+        "percent": 10,
+        "flat": 25
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 28500,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.5,
+    "turnSpeed": 2,
+    "reaction": 125,
+    "shooting": 135,
+    "melee": 125
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "movement": "boost",
+    "walk": "OnMovingWalk"
+  },
+  "name": "格鲁古古",
+  "description": "吉翁军一年战争末期所开发的MS,性能匹敌高达",
+  "localization": {
+    "zh": {
+      "name": "格鲁古古",
+      "description": "吉翁军一年战争末期所开发的MS,性能匹敌高达"
+    },
+    "en": {
+      "name": "Gelgoog",
+      "description": "An MS developed by Zeon during the late One Year War, with performance rivaling the Gundam"
+    },
+    "ja": {
+      "name": "ゲルググ"
+    }
+  },
+  "weapons": {
+    "ZN_MS_14_BR": {
+      "name": "格鲁古古光束步枪",
+      "localization": {
+        "zh": {
+          "name": "格鲁古古光束步枪"
+        },
+        "en": {
+          "name": "Gelgoog Beam Rifle"
+        },
+        "ja": {
+          "name": "ゲルググ用ビーム・ライフル"
+        }
+      },
+      "type": "beam",
+      "min": 2,
+      "max": 6,
+      "hit": 90,
+      "en": 17.5,
+      "clip": "Common_Shoot_A",
+      "slot": "primary",
+      "sourceName": "ZN_MS_14_BR",
+      "sourceHit": 90,
+      "hitMultiplier": 0.8,
+      "hitBonus": 18,
+      "damagePerShot": 5600,
+      "damageComponents": {
+        "beam": 5600
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.25,
+            "animation": "Common_Shoot_A"
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0
+          },
+          {
+            "delay": 0.25,
+            "animation": "Common_Shoot_A"
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0
+          },
+          {
+            "delay": 0.25
+          }
+        ],
+        "startAnimation": "Common_Shoot_A"
+      },
+      "sound": {
+        "file": "../../sounds/BeamRifle_1.ogg",
+        "volume": 0.6
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR.gw",
+        "barrelX": 13,
+        "barrelY": 29,
+        "damageComponents": {
+          "beam": 7500
+        },
+        "projectileCount": 1,
+        "barrels": [
+          {
+            "id": "ZN_MS_14_BR",
+            "x": 13,
+            "y": 29
+          }
+        ]
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1,
+        "speed": 85,
+        "forwardOffset": -7.5,
+        "rotation": 0
+      },
+      "muzzle": {
+        "layer": "ZN_MS_14_BR",
+        "point": {
+          "x": 7.960204194457795e-16,
+          "y": -13
+        }
+      }
+    },
+    "ZN_360mmBazooka": {
+      "name": "360mm火箭筒",
+      "localization": {
+        "zh": {
+          "name": "360mm火箭筒"
+        },
+        "en": {
+          "name": "360mm Bazooka"
+        },
+        "ja": {
+          "name": "360mmバズーカ"
+        }
+      },
+      "type": "shell",
+      "min": 3,
+      "max": 7,
+      "hit": 70,
+      "en": 25,
+      "clip": "Common_Shoot_A",
+      "slot": "primary",
+      "sourceName": "ZN_360mmBazooka",
+      "sourceHit": 75,
+      "hitMultiplier": 0.65,
+      "hitBonus": 21,
+      "damagePerShot": 6300,
+      "damageComponents": {
+        "shell": 6300
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.35,
+            "animation": "Common_Shoot_A"
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0
+          },
+          {
+            "delay": 0.35,
+            "animation": "Common_Shoot_A"
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": "Common_Shoot_A"
+      },
+      "sound": {
+        "file": "../../sounds/Bazooka_1.ogg",
+        "volume": 0.4
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka_Lv2.gw",
+        "barrelX": 11,
+        "barrelY": 27,
+        "damageComponents": {
+          "shell": 12500
+        },
+        "projectileCount": 1,
+        "barrels": [
+          {
+            "id": "ZN_360mmBazooka",
+            "x": 11,
+            "y": 27
+          }
+        ]
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "projectile": {
+        "texture": "../../projectiles/Bazooka_1.png",
+        "scale": 1,
+        "speed": 30,
+        "forwardOffset": -5,
+        "rotation": 0
+      },
+      "muzzle": {
+        "layer": "ZN_360mmBazooka",
+        "point": {
+          "x": -0.5555555555555545,
+          "y": -16.666666666666668
+        }
+      }
+    },
+    "ZN_MMP80MG": {
+      "name": "MMP-80机枪",
+      "localization": {
+        "zh": {
+          "name": "MMP-80机枪"
+        },
+        "en": {
+          "name": "MMP-80 Machine Gun"
+        },
+        "ja": {
+          "name": "MMP-80マシンガン"
+        }
+      },
+      "type": "shell",
+      "min": 2,
+      "max": 5,
+      "hit": 90,
+      "en": 12.5,
+      "clip": "Common_Shoot_A",
+      "slot": "primary",
+      "sourceName": "ZN_MMP80MG",
+      "sourceHit": 100,
+      "hitMultiplier": 0.75,
+      "hitBonus": 15,
+      "damagePerShot": 935,
+      "damageComponents": {
+        "shell": 935
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.3
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0,
+            "animation": "Common_Shoot_A"
+          },
+          {
+            "delay": 0.1,
+            "shots": 1,
+            "muzzleIndex": 0,
+            "animation": "Common_Shoot_A",
+            "repeat": 8
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_1.ogg",
+        "volume": 0.3
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Lv2.gw",
+        "barrelX": 13,
+        "barrelY": 32,
+        "damageComponents": {
+          "shell": 750
+        },
+        "projectileCount": 1,
+        "barrels": [
+          {
+            "id": "ZN_MMP80MG",
+            "x": 13,
+            "y": 32
+          }
+        ]
+      },
+      "hitEffect": "MG_Hit_1",
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.5,
+        "speed": 75,
+        "forwardOffset": -10,
+        "rotation": 0
+      },
+      "muzzle": {
+        "layer": "ZN_MMP80MG",
+        "point": {
+          "x": -1.1111111111111098,
+          "y": -20
+        }
+      }
+    },
+    "ZN_TwinBeamSword_A": {
+      "name": "双刃光束剑",
+      "localization": {
+        "zh": {
+          "name": "双刃光束剑"
+        },
+        "en": {
+          "name": "Twin Beam Sword"
+        },
+        "ja": {
+          "name": "ビーム・ナギナタ"
+        }
+      },
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 10,
+      "clip": "Common_Melee_A",
+      "slot": "secondary",
+      "sourceName": "ZN_TwinBeamSword_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "damagePerShot": 7000,
+      "damageComponents": {
+        "melee": 3500,
+        "meleeBeam": 3500
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.6
+          },
+          {
+            "delay": 0,
+            "shots": 1,
+            "muzzleIndex": 0
+          },
+          {
+            "delay": 1.4
+          }
+        ],
+        "startAnimation": "Common_Melee_A"
+      },
+      "sound": {
+        "file": "../../sounds/BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/ZN_TwinBeamSword_A_Lv2.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "damageComponents": {
+          "melee": 3500,
+          "meleeBeam": 3500
+        },
+        "projectileCount": 1,
+        "barrels": [
+          {
+            "id": "ZN_TwinBeamSword_A",
+            "x": 0,
+            "y": 0
+          }
+        ]
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": ["Cqb_Fire_1_Yellow_R", "Cqb_Fire_1_Yellow_L"]
+    }
+  },
+  "weaponKits": [
+    {
+      "id": "beam_rifle",
+      "name": "格鲁古古光束步枪套件",
+      "cost": 100,
+      "weapons": ["ZN_MS_14_BR", "ZN_TwinBeamSword_A"],
+      "localization": {
+        "zh": {
+          "name": "格鲁古古光束步枪套件"
+        },
+        "en": {
+          "name": "Gelgoog Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ゲルググ用ビーム・ライフル装備"
+        }
+      }
+    },
+    {
+      "id": "bazooka",
+      "name": "360mm火箭筒套件",
+      "cost": 50,
+      "weapons": ["ZN_360mmBazooka", "ZN_TwinBeamSword_A"],
+      "localization": {
+        "zh": {
+          "name": "360mm火箭筒套件"
+        },
+        "en": {
+          "name": "360mm Bazooka Kit"
+        },
+        "ja": {
+          "name": "360mmバズーカ装備"
+        }
+      }
+    },
+    {
+      "id": "machine_gun",
+      "name": "MMP-80机枪套件",
+      "cost": 0,
+      "weapons": ["ZN_MMP80MG", "ZN_TwinBeamSword_A"],
+      "localization": {
+        "zh": {
+          "name": "MMP-80机枪套件"
+        },
+        "en": {
+          "name": "MMP-80 Machine Gun Kit"
+        },
+        "ja": {
+          "name": "MMP-80マシンガン装備"
+        }
+      }
+    }
+  ],
+  "tags": ["ZEON", "0079"]
+}

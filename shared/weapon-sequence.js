@@ -3,6 +3,8 @@ const WeaponSequence = (() => {
   function compile(weapon) {
     let time = 0;
     const shots = [],
+      damageMultipliers = [],
+      muzzleIndices = [],
       animations = [
         {
           at: 0,
@@ -13,8 +15,15 @@ const WeaponSequence = (() => {
       ];
     for (const step of weapon.attack.steps) {
       const repeat = step.repeat ?? 1,
-        count = step.shots ?? 0;
+        count = step.shots ?? 0,
+        damageMultiplier = step.damageMultiplier ?? 1;
       if (
+        !Number.isInteger(step.muzzleIndex ?? 0) ||
+        (step.muzzleIndex ?? 0) < 0 ||
+        (step.muzzleIndex ?? 0) > 31 ||
+        !Number.isFinite(damageMultiplier) ||
+        damageMultiplier < 0 ||
+        damageMultiplier > 10 ||
         !Number.isFinite(step.delay) ||
         step.delay < 0 ||
         !Number.isInteger(repeat) ||
@@ -28,7 +37,11 @@ const WeaponSequence = (() => {
       for (let i = 0; i < repeat; i++) {
         time = Math.round((time + step.delay) * 1000000) / 1000000;
         if (step.animation) animations.push({ at: time, clip: step.animation });
-        for (let n = 0; n < count; n++) shots.push(time);
+        for (let n = 0; n < count; n++) {
+          shots.push(time);
+          damageMultipliers.push(damageMultiplier);
+          muzzleIndices.push(step.muzzleIndex ?? 0);
+        }
       }
     }
     const hitsPerShot = weapon.hitsPerShot ?? 1;
@@ -46,10 +59,14 @@ const WeaponSequence = (() => {
     return {
       ...weapon,
       shotCount: shots.length,
-      damage: weapon.damagePerShot * shots.length * hitsPerShot,
+      damage:
+        weapon.damagePerShot *
+        damageMultipliers.reduce((sum, value) => sum + value, 0) *
+        hitsPerShot,
       attack: {
         ...weapon.attack,
         shots,
+        muzzleIndices,
         animations,
         duration: time,
         strikes: shots
@@ -57,6 +74,7 @@ const WeaponSequence = (() => {
             Array.from({ length: hitsPerShot }, (_, hitIndex) => ({
               shotIndex,
               hitIndex,
+              damageMultiplier: damageMultipliers[shotIndex],
               at:
                 Math.round((at + hitIndex * (weapon.attack.hitInterval || 0)) * 1000000) / 1000000,
             })),

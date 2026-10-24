@@ -6,3 +6,5 @@ __pycache__/
 *.log
 .DS_Store
 Thumbs.db
+/build/
+build/ProjectGreed_V02.html

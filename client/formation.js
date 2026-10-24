@@ -18,23 +18,33 @@ const Formation = (() => {
   let squads = Array.isArray(saved)
     ? saved.filter((s) => {
         try {
-          Rules.validateFormation(s.units);
+          Rules.validateFormation(s.units, Rules.maxCostLimit);
           return typeof s.name === "string";
         } catch {
           return false;
         }
       })
     : [];
-  if (!squads.length) squads = [{ name: "第一编组", units: fallback }];
+  if (!squads.length) squads = [{ name: I18n.text("第一编组"), units: fallback }];
   let index = 0,
     returnView = "menu",
     draft = [],
-    previousIndex = 0;
+    previousIndex = 0,
+    detailIndex = null;
   try {
     const active = Number(localStorage.getItem(storageKey + "-active"));
     if (Number.isInteger(active) && active >= 0 && active < squads.length) index = active;
   } catch {}
-  const current = () => Rules.validateFormation(squads[index].units);
+  const current = () => Rules.validateFormation(squads[index].units, Rules.maxCostLimit);
+  const budget = () =>
+    Net.active && Net.snapshot?.settings ? Net.snapshot.settings.costLimit : Infinity;
+  const restrictions = () =>
+    Rules.formationRestrictions(Net.active ? Net.snapshot?.settings : {}, Net.seat ?? null);
+  const displayLimit = (value) => (Number.isFinite(value) ? value : I18n.text("无限"));
+  const unitLimit = () =>
+    Net.active
+      ? (Net.snapshot?.settings?.unitLimit ?? Rules.catalog.formation.maxUnits)
+      : Rules.catalog.formation.maxUnits;
   const cost = (entries) =>
     entries.reduce((n, e) => n + UnitModels[e.unitId + "__" + e.kitId].cost, 0);
   function persist() {
@@ -48,85 +58,205 @@ const Formation = (() => {
   function refreshSelect() {
     const select = byId("formationSelect");
     select.replaceChildren();
-    squads.forEach((s, i) => select.add(new Option(s.name, i)));
+    squads.forEach((s, i) => {
+      const option = new Option(s.name, i);
+      option.setAttribute("data-i18n-ignore", "");
+      select.add(option);
+    });
     select.value = index;
+    byId("deleteFormation").disabled = squads.length <= 1;
+    byId("deleteFormation").title = squads.length <= 1 ? "至少保留一个编组。" : "";
+  }
+  function closeDetail() {
+    byId("formationUnitDetail").hidden = true;
+    byId("formationMain").inert = false;
+    const selectedIndex = detailIndex;
+    detailIndex = null;
+    if (selectedIndex !== null) byId("formationUnits").children[selectedIndex]?.focus();
+  }
+  function renderDetail() {
+    const entry = draft[detailIndex];
+    if (!entry) return closeDetail();
+    const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId);
+    const model = UnitModels[entry.unitId + "__" + entry.kitId];
+    byId("formationDetailTitle").textContent = model.code + " " + model.name;
+    byId("formationDetailIntro").textContent = model.description;
+    const kits = byId("formationDetailKit");
+    kits.replaceChildren();
+    for (const kit of prefab.weaponKits)
+      kits.add(new Option(`${kit.name} · COST ${prefab.stats.cost + kit.cost}`, kit.id));
+    kits.value = entry.kitId;
+    byId("formationDetailStats").textContent =
+      `HP ${model.hp.toLocaleString()} · EN ${model.en} · 移动 ${model.move} · 机动 ${model.mobility}`;
+    const labels = {
+      melee: "格斗",
+      shooting: "射击",
+      beam: "光束",
+      shell: "实弹",
+      dp: "DP",
+      sp: "SP",
+    };
+    const defenses = Object.entries(model.defenses)
+      .map(
+        ([type, value]) => `${I18n.text(labels[type] || type)} ${value.percent}% / ${value.flat}`,
+      )
+      .join(" · ");
+    const bonuses = Object.entries(model.attackBonuses)
+      .map(([type, value]) => `${I18n.text(labels[type] || type)} +${value}%`)
+      .join(" · ");
+    byId("formationDetailDefense").textContent = I18n.text("防护") + ": " + defenses;
+    byId("formationDetailBonuses").textContent = I18n.text("伤害加成") + ": " + bonuses;
+    byId("formationDetailShield").textContent =
+      `${I18n.text("盾牌")} HP ${model.shield.hp} · ${I18n.text("格挡率")} ${Math.round(model.shield.blockChance * 100)}%`;
+    const weapons = byId("formationDetailWeapons");
+    weapons.replaceChildren();
+    for (const weapon of model.weapons) {
+      const card = element("div", "formation-weapon-detail");
+      card.append(element("strong", "", weapon.name));
+      card.append(
+        element(
+          "p",
+          "muted",
+          `威力 ${Math.round(weapon.damage)} · 发射次数 ${weapon.shotCount} · 命中 ${weapon.hit}% · 射程 ${weapon.min}–${weapon.max} · EN ${weapon.en}`,
+        ),
+      );
+      weapons.append(card);
+    }
+    byId("formationUnitDetail").hidden = false;
+    byId("formationMain").inert = true;
+  }
+  function unitTags(model) {
+    const tags = element("span", "unit-tags");
+    for (const value of model.tags) {
+      const tag = element("span", value === model.faction ? "faction-tag" : "era-tag", value);
+      tag.dataset.tag = value;
+      if (value === model.faction) tag.dataset.faction = value;
+      tags.append(tag);
+    }
+    return tags;
   }
   function render() {
     byId("formationBudget").textContent =
-      `${draft.length} / ${Rules.catalog.formation.maxUnits} 台 · COST ${cost(draft)} / ${Rules.catalog.formation.maxCost}`;
-    const list = byId("formationUnits");
-    const scrollTop = list.scrollTop;
+      `${draft.length} / ${unitLimit()} 台 · 编组COST: ${cost(draft)} / ${displayLimit(budget())} · 单位COST上限: ${displayLimit(restrictions().unitCostLimit)}`;
+    byId("formationBudget").classList.toggle("danger-text", draft.length > unitLimit());
+    byId("addFormationUnit").disabled =
+      draft.length >= unitLimit() || !byId("formationPrefab").value;
+    const plan = draft.length
+      ? Rules.planFormation(draft, budget(), restrictions())
+      : { disabled: [] };
+    const list = byId("formationUnits"),
+      scrollTop = list.scrollTop;
     list.replaceChildren();
     draft.forEach((entry, i) => {
       const row = element("div", "formation-row"),
         model = UnitModels[entry.unitId + "__" + entry.kitId];
-      const image = element("img");
+      row.tabIndex = 0;
+      row.setAttribute("role", "button");
+      row.setAttribute("aria-haspopup", "dialog");
+      const show = () => {
+        GameAudio.play("selectUnitSound");
+        detailIndex = i;
+        renderDetail();
+        byId("formationDetailKit").focus();
+      };
+      row.onclick = show;
+      row.onkeydown = (event) => {
+        if (event.target === row && ["Enter", " "].includes(event.key)) {
+          event.preventDefault();
+          show();
+        }
+      };
+      const icon = element("span", "formation-icon"),
+        image = element("img");
       image.src = unitIcon(entry.unitId + "__" + entry.kitId);
       image.width = 56;
       image.alt = model.name;
-      const label = element("span", "", `${i + 1}. ${model.code} ${model.name}`),
-        kits = element("select");
-      const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId);
-      prefab.weaponKits.forEach((k) =>
-        kits.add(new Option(`${k.name} · COST ${prefab.stats.cost + k.cost}`, k.id)),
+      icon.append(image);
+      if (plan.disabled.includes(i)) {
+        row.classList.add(
+          "unit-disabled",
+          plan.reasons[i] === "not_allowed" ? "not-allowed" : "overcost",
+        );
+        row.append(
+          element("span", "disabled-panel"),
+          element(
+            "span",
+            "overcost-label",
+            plan.reasons[i] === "not_allowed" ? "不被允许的单位" : "OVER COST",
+          ),
+        );
+      }
+      const label = element("span", "formation-unit-name");
+      const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId),
+        kit = prefab.weaponKits.find((k) => k.id === entry.kitId);
+      const description = element("small", "muted formation-row-description", model.description);
+      description.title = model.description;
+      label.append(
+        unitTags(model),
+        element("strong", "", `${i + 1}. ${model.code} ${model.name}`),
+        element("small", "formation-row-kit", `${kit.name} · COST ${model.cost}`),
+        description,
       );
-      kits.value = entry.kitId;
-      kits.onchange = () => {
-        entry.kitId = kits.value;
-        render();
-      };
       const remove = element("button", "", "移除");
-      remove.onclick = () => {
+      remove.onclick = (event) => {
+        event.stopPropagation();
+        closeDetail();
         draft.splice(i, 1);
         render();
       };
-      const kit = prefab.weaponKits.find((kit) => kit.id === entry.kitId);
-      const loadout = element(
-        "small",
-        "muted",
-        "携带：" + kit.weapons.map((id) => prefab.weapons[id].name).join("、"),
-      );
-      loadout.style.flexBasis = "100%";
-      const traits = element(
-        "small",
-        "muted",
-        `HP ${model.hp.toLocaleString()} · 移动 ${model.move} 格 · 机动 ${model.mobility} · ${model.description}`,
-      );
-      traits.style.flexBasis = "100%";
-      row.append(image, label, kits, remove, loadout, traits);
+      row.append(icon, label, remove);
       list.append(row);
     });
     list.scrollTop = scrollTop;
-    byId("formationWeapons").textContent =
-      "副武器：" +
-      [
-        ...new Set(
-          draft.flatMap((e) => {
-            const p = Rules.catalog.prefabs.find((p) => p.id === e.unitId);
-            const kit = p.weaponKits.find((k) => k.id === e.kitId);
-            return kit.weapons
-              .filter((id) => p.weapons[id].slot !== "primary")
-              .map((id) => p.weapons[id].name);
-          }),
-        ),
-      ].join("、");
   }
+  byId("closeFormationDetail").onclick = closeDetail;
+  byId("formationUnitDetail").addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      closeDetail();
+    }
+    if (event.key === "Tab") {
+      const controls = [byId("closeFormationDetail"), byId("formationDetailKit")];
+      if (event.shiftKey && document.activeElement === controls[0]) {
+        event.preventDefault();
+        controls[1].focus();
+      } else if (!event.shiftKey && document.activeElement === controls[1]) {
+        event.preventDefault();
+        controls[0].focus();
+      }
+    }
+  });
+  byId("formationDetailKit").onchange = (event) => {
+    if (detailIndex === null) return;
+    GameAudio.play("changeEquipmentSound");
+    draft[detailIndex].kitId = event.target.value;
+    render();
+    renderDetail();
+  };
   function open() {
+    closeDetail();
     previousIndex = index;
     returnView = pageView === "room" ? "room" : "menu";
-    draft = structuredClone(current());
+    const activePlan =
+      Net.snapshot?.phase === "assembly"
+        ? Net.snapshot.assembly?.players.find((player) => player.memberId === Net.memberId)
+        : null;
+    draft = structuredClone(activePlan?.entries || current());
     byId("formationName").value = squads[index].name;
     refreshSelect();
     render();
+    renderCatalog();
     setPageView("formation");
   }
   byId("formationSelect").onchange = (e) => {
+    closeDetail();
     index = Number(e.target.value);
     byId("formationName").value = squads[index].name;
     draft = structuredClone(current());
     render();
   };
   byId("newFormation").onclick = () => {
+    closeDetail();
     squads.push({ name: `编组${squads.length + 1}`, units: structuredClone(fallback) });
     index = squads.length - 1;
     byId("formationName").value = squads[index].name;
@@ -134,24 +264,89 @@ const Formation = (() => {
     refreshSelect();
     render();
   };
+  byId("deleteFormation").onclick = () => {
+    if (squads.length <= 1) return;
+    closeDetail();
+    const removed = index;
+    squads.splice(removed, 1);
+    if (previousIndex > removed) previousIndex--;
+    else if (previousIndex === removed) previousIndex = Math.min(removed, squads.length - 1);
+    // 删除立即保存；回到仍有效的出战编组，取消编辑时也不会引用已删除项。
+    index = previousIndex;
+    draft = structuredClone(current());
+    byId("formationName").value = squads[index].name;
+    persist();
+    refreshSelect();
+    render();
+    note("编组已删除。");
+  };
   byId("addFormationUnit").onclick = () => {
     const prefab = Rules.catalog.prefabs.find((p) => p.id === byId("formationPrefab").value);
-    if (draft.length >= Rules.catalog.formation.maxUnits) return note("已达到编组数量上限。");
+    if (draft.length >= unitLimit()) return note("已达到编组数量上限。");
     draft.push({ unitId: prefab.id, kitId: prefab.weaponKits[0].id });
     render();
     byId("formationUnits").scrollTop = byId("formationUnits").scrollHeight;
   };
-  Rules.catalog.prefabs.forEach((p) =>
-    byId("formationPrefab").add(new Option(`${p.code} ${p.name}`, p.id)),
-  );
+  function renderCatalog() {
+    const filter = byId("formationFaction").value,
+      era = byId("formationEra").value;
+    const prefabs = Rules.catalog.prefabs
+      .filter(
+        (p) =>
+          (filter === "ALL" || p.faction === filter) && (era === "ALL" || p.tags.includes(era)),
+      )
+      .sort(
+        (a, b) =>
+          a.faction.localeCompare(b.faction, "en") ||
+          a.name.localeCompare(b.name, I18n.language, { numeric: true, sensitivity: "base" }) ||
+          a.id.localeCompare(b.id, "en"),
+      );
+    if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
+      byId("formationPrefab").value = prefabs[0]?.id || "";
+    const list = byId("formationCatalog");
+    const scroll = list.scrollTop;
+    list.replaceChildren();
+    for (const prefab of prefabs) {
+      const card = element("button", "catalog-unit");
+      card.dataset.unitId = prefab.id;
+      card.setAttribute("role", "option");
+      card.setAttribute("aria-selected", String(byId("formationPrefab").value === prefab.id));
+      const image = element("img");
+      image.src = unitIcon(prefab.id + "__" + prefab.weaponKits[0].id);
+      image.alt = prefab.name;
+      const title = element("strong", "", prefab.code + " " + prefab.name);
+      const info = element("span", "catalog-unit-info");
+      const costs = prefab.weaponKits.map((k) => prefab.stats.cost + k.cost);
+      info.append(
+        unitTags(prefab),
+        title,
+        element("small", "muted", "Cost:" + Math.min(...costs) + "-" + Math.max(...costs)),
+      );
+      card.append(image, info);
+      card.onclick = () => {
+        GameAudio.play("selectUnitSound");
+        byId("formationPrefab").value = prefab.id;
+        renderCatalog();
+      };
+      list.append(card);
+    }
+    list.scrollTop = scroll;
+    byId("addFormationUnit").disabled = !prefabs.length || draft.length >= unitLimit();
+  }
+  for (const era of Rules.eras) byId("formationEra").add(new Option(era, era));
+  byId("formationEra").onchange = renderCatalog;
+  byId("formationFaction").onchange = renderCatalog;
+  renderCatalog();
   byId("saveFormation").onclick = () => {
     try {
-      const units = Rules.validateFormation(draft);
+      const units = Rules.validateFormation(draft, Infinity, unitLimit());
       squads[index] = {
         name: byId("formationName").value.trim().slice(0, 32) || "未命名编组",
         units,
       };
       persist();
+      if (Net.snapshot?.phase === "assembly") Net.request("update_formation", { formation: units });
+      closeDetail();
       setPageView(returnView);
       update();
       note("编组已保存并选用。");
@@ -166,13 +361,32 @@ const Formation = (() => {
   };
   byId("openFormation").onclick = open;
   byId("roomFormation").onclick = open;
-  return { current, open, name: () => squads[index].name };
+  window.addEventListener("language-change", () => {
+    renderCatalog();
+    if (pageView === "formation") {
+      refreshSelect();
+      render();
+      if (detailIndex !== null) renderDetail();
+    }
+  });
+  return {
+    current,
+    open,
+    refresh: () => {
+      if (pageView === "formation") {
+        render();
+        if (detailIndex !== null) renderDetail();
+      }
+    },
+    name: () => squads[index].name,
+  };
 })();
 
 /* 开局部署：预放在出生区，玩家可以选中单位后点击空格调整。 */
 const Deployment = (() => {
-  let hotseat = 0;
-  const team = () => (Net.active ? Net.seat : hotseat);
+  // 无房间时仅供开发预览与画面测试切换部署焦点。实际对局使用房间席位。
+  let previewSeat = 0;
+  const team = () => (Net.active ? Net.seat : previewSeat);
   const canEdit = () =>
     phase === "deployment" &&
     team() !== null &&
@@ -181,12 +395,21 @@ const Deployment = (() => {
     (!Net.active || Net.snapshot.connected.every(Boolean));
   function render() {
     byId("deploymentPanel").hidden = phase !== "deployment";
+    byId("confirmDeployment").hidden = phase !== "deployment";
+    byId("endTurn").hidden = [
+      "start",
+      "connecting",
+      "deployment",
+      "waiting",
+      "assembly",
+      "finished",
+    ].includes(phase);
     if (phase !== "deployment") return;
     const seat = team();
     byId("deploymentStatus").textContent =
       seat === null
         ? "观战：等待两队部署。"
-        : `${teamName(seat)}出生区部署 · 选中己方单位，再点击高亮空格调整位置。`;
+        : `${teamName(Rules.seatTeam(seat))}出生区部署 · 选中己方单位，再点击高亮空格调整位置。`;
     byId("confirmDeployment").disabled = !canEdit();
     byId("confirmDeployment").textContent =
       seat !== null && game.deployment[seat] ? "已确认，等待对方" : "确认部署";
@@ -195,12 +418,13 @@ const Deployment = (() => {
     if (!canEdit()) return;
     const target = Rules.at(game, cell.x, cell.y),
       u = getUnit(selected);
-    if (target?.team === team()) {
+    if (target && Rules.ownerOf(target) === team()) {
+      GameAudio.play("selectUnitSound");
       selected = target.id;
       update();
       return;
     }
-    if (!u || u.team !== team()) return note("请先选中己方单位。");
+    if (!u || Rules.ownerOf(u) !== team()) return note("请先选中己方单位。");
     if (Net.active) Net.request("deploy", { unitId: u.id, ...cell });
     else {
       try {
@@ -221,7 +445,7 @@ const Deployment = (() => {
       selected = null;
       note("部署完成，蓝方先手。");
     } else {
-      hotseat = 1;
+      previewSeat = 1;
       selected = null;
       note("请红方调整并确认部署。");
     }
@@ -233,7 +457,7 @@ const Deployment = (() => {
     team,
     canEdit,
     reset: () => {
-      hotseat = 0;
+      previewSeat = 0;
     },
   };
 })();

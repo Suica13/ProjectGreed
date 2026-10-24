@@ -8,6 +8,8 @@ import re
 import runpy
 import shutil
 import struct
+from unit_movement import configure_movement
+from unit_introductions import apply_introduction
 from pathlib import Path
 
 legacy = runpy.run_path(str(Path(__file__).with_name('import-rgm79.py')))
@@ -79,12 +81,13 @@ def import_visuals(unit_id):
                 clip = name[10:]
                 animations[clip] = '../../animations/' + clip + '.json'
                 write(DEST / 'animations' / (clip+'.json'), dict(duration=max(p[-1][0] for f in curves.values() for p in f.values()), curves=curves))
-    return data, dict(schemaVersion=2, id=unit_id, code=unit_id.replace('_', '-'),
+    prefab = dict(schemaVersion=2, id=unit_id, code=unit_id.replace('_', '-'),
                       source=f'GW_BattleUniverse_DLC_0079/Units/BattleUnits/{unit_id}/{unit_id}.ini',
                       materials=dict(icon=texture(data['graphics']['icon_build']), textures=textures),
                       skeleton=bones, layers=sorted(layers, key=lambda l: l['order']), animations=animations,
                       presentation=dict(shield=True, mapScale=1, battleScale=1, idle='Common_Idle',
                                         move='OnMovingWalk', stagger='Common_Stagger', dodge='Common_Dodge_L', deathEffect='Explosion_Ground_1'))
+    return data, configure_movement(prefab, data)
 
 
 def import_weapon(prefab, weapon_id, filename, name, kind, clip, minimum, maximum, hit, resource):
@@ -195,6 +198,9 @@ for unit_id in ('RGC_80', 'RGM_79L'):
     new_prefabs.append(prefab)
 
 for prefab in (gm, *new_prefabs):
+    kit_costs = json.loads((DEST / 'weapon-kit-costs.json').read_text(encoding='utf-8'))
+    for kit in prefab['weaponKits']:
+        kit['cost'] = kit_costs[kit['id']]
     for key, weapon in prefab['weapons'].items():
         # Re-importing is deterministic: copied GM weapons have not been reduced yet.
         multiplier = .65 if key in ('EF_HypeBazooka', 'Common_Cannon') else .75 if key == 'EF_90mmMG' else .85 if weapon['type'] == 'melee' or key == 'Common_DoubleVulcan_MS' else .8
@@ -217,8 +223,8 @@ for prefab in (gm, *new_prefabs):
             weapon['damageComponents'] = dict(beam=1300)
             weapon['attack'] = dict(steps=[dict(delay=.15,shots=1),dict(delay=.4,shots=1,animation=weapon['clip'],repeat=2),dict(delay=.15)])
         if key == 'EF_HypeBazooka':
-            weapon['damagePerShot'] = 3600
-            weapon['damageComponents'] = dict(shell=3600)
+            weapon['damagePerShot'] = 5000
+            weapon['damageComponents'] = dict(shell=5000)
             weapon['attack'] = dict(steps=[dict(delay=.35,shots=2),dict(delay=.3)])
             weapon['muzzle']['pairSpacing'] = 3
         weapon.pop('ammo',None)
@@ -231,12 +237,15 @@ for prefab in (gm, *new_prefabs):
             prefab['animations']['Common_Melee_F'] = '../../animations/Common_Melee_F.json'
             weapon['hitsPerShot'] = 1
             weapon['attack'] = dict(steps=[dict(delay=.6, shots=1), dict(delay=.4, animation='Common_Melee_F'), dict(delay=.3, shots=1), dict(delay=1.4)])
+        weapon['hit'] = int((weapon['hit'] + 2.5) // 5 * 5)
+        weapon['hitBonus'] = weapon['hit'] - int(weapon['sourceHit'] * weapon['hitMultiplier'] + .5)
+    apply_introduction(prefab, load(ROOT / f'Units/BattleUnits/{prefab["id"]}/{prefab["id"]}.ini'))
     write(DEST / f'units/{prefab["id"]}/unit.json', prefab)
 
 catalog = json.loads((DEST / 'unit-catalog.json').read_text(encoding='utf-8'))
 catalog['units'] = [f'units/{p["id"]}/unit.json' for p in (gm, *new_prefabs)]
 catalog['map'] = dict(width=24, height=18)
-catalog['formation'] = dict(maxUnits=9, maxCost=3600, aiUnits=6)
+catalog['formation'] = dict(maxUnits=12, maxCost=5000, aiUnits=12, unitCostLimit=500)
 catalog['deployment'] = dict(radius=4, spawns=[dict(x=2,y=8),dict(x=21,y=8)])
 catalog['music'] = 'music/playlist.json'
 write(DEST / 'unit-catalog.json', catalog)

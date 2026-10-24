@@ -32,10 +32,10 @@ test("MOD Steps preserve 9-round MG, 16-round alternating vulcan, one-shot weapo
   assert.equal(weapon("Common_DoubleVulcan_MS").shotCount, 16);
   assert.equal(weapon("Common_DoubleVulcan_MS").attack.shots.at(-1), 1.5);
   assert.deepEqual(weapon("EF_BeamSprayGun").attack.shots, [0.25, 0.65, 1.05]);
-  near(weapon("EF_BeamSprayGun").damage, 5000);
-  near(weapon("EF_BeamSprayGun").damagePerShot, 5000 / 3);
-  assert.deepEqual(weapon("EF_HypeBazooka").attack.shots, [0.35, 0.35]);
-  assert.equal(weapon("EF_HypeBazooka").damage, 7200);
+  near(weapon("EF_BeamSprayGun").damage, 10000);
+  near(weapon("EF_BeamSprayGun").damagePerShot, 10000 / 3);
+  assert.deepEqual(weapon("EF_HypeBazooka").attack.shots, [0.35, 0.75]);
+  assert.equal(weapon("EF_HypeBazooka").damage, 10000);
   assert.equal(weapon("EF_BeamSaber_A").shotCount, 2);
   assert.equal(weapon("EF_BeamSaber_A").hitsPerShot, 1);
   assert.equal(WeaponSequence.pose(weapon("EF_BeamSaber_A"), 1.3).clip, "Common_Melee_F");
@@ -94,7 +94,7 @@ test("vulcan is animation-free and does not change the held weapon in authoritat
     events = G.fight(g, a, b, w, "defend");
   assert.equal(a.heldWeapon, held);
   assert.equal(events[0].heldWeapon, held);
-  assert.equal(a.en, 94);
+  assert.equal(a.en, 92.5);
 });
 test("muzzle matches original barrelX/Y and follows the weapon animation, both facings and unequal scales", () => {
   for (const id of ["EF_BeamSprayGun", "EF_90mmMG", "EF_HypeBazooka"]) {

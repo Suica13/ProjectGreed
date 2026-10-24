@@ -1,4 +1,4 @@
-/* 联机入口分为两步：输入 IP → 收到服务器房间列表后进入大厅。
+/* 联机入口：选择预设或输入自定义 IP，收到服务器房间列表后进入大厅。
  * 大厅连接不占用席位；单人模式不会打开它。
  */
 const Lobby = (() => {
@@ -6,6 +6,80 @@ const Lobby = (() => {
   let currentURL = null;
   let ready = false;
   let timeout = null;
+  const presets = CLIENT_CONFIG.presetServers;
+  const probes = new Set();
+  let probeGeneration = 0,
+    statusTimer = null;
+  function setConnecting(busy) {
+    byId("connectServer").disabled = busy;
+    for (const preset of presets) byId("preset-" + preset.id).disabled = busy;
+  }
+  function stopChecks() {
+    probeGeneration++;
+    clearTimeout(statusTimer);
+    for (const cancel of [...probes]) cancel();
+  }
+  function mark(preset, state) {
+    const label = byId("preset-status-" + preset.id);
+    label.dataset.state = state;
+    label.textContent = {
+      checking: "检测中…",
+      online: "在线",
+      offline: "离线",
+      unavailable: "无法检测",
+    }[state];
+  }
+  // 只请求房间列表，不创建/加入房间；旧版服务端也支持该探测。
+  function probe(preset, generation) {
+    mark(preset, "checking");
+    return new Promise((resolve) => {
+      let peer = null,
+        timer = null,
+        done = false;
+      function finish(state) {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        probes.delete(cancel);
+        if (generation === probeGeneration && state) mark(preset, state);
+        if (peer) {
+          peer.onopen = peer.onmessage = peer.onclose = peer.onerror = null;
+          peer.close();
+        }
+        resolve();
+      }
+      const cancel = () => finish(null);
+      probes.add(cancel);
+      try {
+        const url = Net.endpoint(preset.address);
+        if (location.protocol === "https:" && url.startsWith("ws:")) return finish("unavailable");
+        peer = new WebSocket(url);
+        timer = setTimeout(() => finish("offline"), 4000);
+        peer.onopen = () => peer.send(JSON.stringify({ type: "list_rooms" }));
+        peer.onmessage = (event) => {
+          try {
+            const message = JSON.parse(event.data);
+            finish(message.type === "rooms" && Array.isArray(message.rooms) ? "online" : "offline");
+          } catch {
+            finish("offline");
+          }
+        };
+        peer.onerror = peer.onclose = () => finish("offline");
+      } catch {
+        finish("unavailable");
+      }
+    });
+  }
+  async function checkStatuses() {
+    stopChecks();
+    const generation = probeGeneration;
+    await Promise.all(presets.map((preset) => probe(preset, generation)));
+    if (generation === probeGeneration && !byId("serverConnect").hidden)
+      statusTimer = setTimeout(checkStatuses, 20000);
+  }
+  function presetFor(url) {
+    return presets.find((preset) => Net.endpoint(preset.address) === url);
+  }
 
   function stopConnection() {
     clearTimeout(timeout);
@@ -17,20 +91,23 @@ const Lobby = (() => {
   }
 
   function close() {
+    stopChecks();
     stopConnection();
     byId("lobby").hidden = true;
     byId("serverConnect").hidden = true;
-    byId("connectServer").disabled = false;
+    setConnecting(false);
   }
 
-  function open(message = "输入服务器 IP 和端口后连接。") {
+  function open(message = "选择预设服务器，或输入自定义 IP 和端口。") {
     if (window.isLayoutPreview) return;
     close();
+    byId("skirmishSetup").hidden = true;
     byId("start").hidden = false;
     byId("serverConnect").hidden = false;
     byId("roomList").replaceChildren();
     byId("serverStatus").textContent = message;
-    byId("serverAddress").focus();
+    checkStatuses();
+    byId("preset-" + presets[0].id).focus();
   }
 
   // 行内各列始终使用同一顺序，便于比较多个房间。
@@ -47,6 +124,7 @@ const Lobby = (() => {
       const label =
         {
           waiting: "等待玩家",
+          assembly: "最终编组",
           playing: "对战中",
           disconnected: "等待玩家恢复",
           finished: "已结束",
@@ -61,7 +139,7 @@ const Lobby = (() => {
       const button = element(
         "button",
         "",
-        room.joinable ? (room.started ? "观战" : "加入") : "不可加入",
+        room.joinable ? (room.started && room.phase !== "assembly" ? "观战" : "加入") : "不可加入",
       );
       button.disabled = !room.joinable || !assetsReady;
       button.onclick = () => Net.connect("join", false, room.code);
@@ -76,7 +154,8 @@ const Lobby = (() => {
     byId("lobby").hidden = true;
     byId("serverConnect").hidden = false;
     byId("serverStatus").textContent = message;
-    byId("connectServer").disabled = false;
+    setConnecting(false);
+    checkStatuses();
   }
 
   function requestRooms() {
@@ -85,17 +164,18 @@ const Lobby = (() => {
     socket.send(JSON.stringify({ type: "list_rooms" }));
   }
 
-  function connect() {
+  function connect(address = byId("serverAddress").value) {
     if (window.isLayoutPreview) return;
     stopConnection();
     let url;
     try {
-      url = Net.endpoint(byId("serverAddress").value);
+      url = Net.endpoint(address);
     } catch (error) {
       byId("serverStatus").textContent = error.message;
       return;
     }
-    byId("connectServer").disabled = true;
+    setConnecting(true);
+    if (presetFor(url)) byId("serverAddress").value = "";
     byId("serverStatus").textContent = "正在连接服务器…";
     let current;
     try {
@@ -128,8 +208,9 @@ const Lobby = (() => {
       ready = true;
       byId("serverConnect").hidden = true;
       byId("lobby").hidden = false;
-      byId("connectServer").disabled = false;
-      byId("connectedServer").textContent = new URL(currentURL).host;
+      setConnecting(false);
+      stopChecks();
+      byId("connectedServer").textContent = presetFor(currentURL)?.name || new URL(currentURL).host;
       render(message.rooms);
     };
     current.onerror = () => {};
@@ -152,6 +233,19 @@ const Lobby = (() => {
     requestRooms();
   }
 
+  for (const preset of presets) {
+    const button = element("button", "preset-server"),
+      label = element("span", "", preset.name),
+      status = element("span", "server-availability", "检测中…");
+    button.id = "preset-" + preset.id;
+    button.type = "button";
+    status.id = "preset-status-" + preset.id;
+    status.setAttribute("role", "status");
+    button.append(label, status);
+    button.onclick = () => connect(preset.address);
+    byId("presetServers").append(button);
+  }
+  byId("refreshServerStatus").onclick = checkStatuses;
   byId("openRooms").onclick = () => open();
   byId("serverForm").onsubmit = (event) => {
     event.preventDefault();

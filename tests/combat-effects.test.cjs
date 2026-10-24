@@ -125,6 +125,8 @@ test("hit sounds use arrival times, misses produce no hit cues, and death finish
     plan.deathSoundAt,
   );
   assert.ok(plan.deathAt - plan.deathSoundAt >= ART.presentation.deathSound.duration);
+  assert.equal(plan.deathElectricEffect, "Stun_1");
+  assert.ok(ART.effects[plan.deathElectricEffect].duration < plan.deathAt - plan.deathSoundAt);
   assert.equal(plan.cues[9].at, plan.impacts[0]);
   assert.ok(plan.deathAt > plan.impacts.at(-1));
   assert.ok(plan.duration > plan.deathAt + ART.effects[plan.deathEffect].duration / 0.85);
@@ -185,8 +187,8 @@ test("melee steps and bone sampling use normal speed while shooting keeps 85 per
     saber = ART.models.RGM_79__machine_gun.weapons[1],
     plan = r.fx.plan(saber, source, target, { hit: true, damage: 1 });
   assert.equal(plan.actionSpeed, 1);
-  assert.equal(plan.shots[0].at, 0.6);
-  assert.equal(plan.shots[1].at, 1.3);
+  assert.equal(plan.shots[0].at - plan.lead, 0.6);
+  assert.ok(Math.abs(plan.shots[1].at - plan.lead - 1.3) < 1e-10);
   assert.equal(r.fx.plan(weapon, source, target).actionSpeed, 0.85);
 });
 
@@ -221,4 +223,148 @@ test("map death effects queue after battle and deduplicate each battle/unit, inc
   r.map.reset();
   assert.equal(r.map.pending(), false);
   r.sprites.draw = draw;
+});
+
+test("map death sprite exists during electric delay and disappears on the first explosion frame", () => {
+  const r = runtime(),
+    draws = [];
+  r.context.recordSprite = () => draws.push("sprite");
+  vm.runInContext("SpriteRenderer.draw=recordSprite", r.context);
+  r.sprites.draw = () => true;
+  r.map.capture({
+    networkId: "hide-at-explosion",
+    events: [{ hit: true, before: 1, after: 0, to: "1-0" }],
+  });
+  r.map.draw({}, 0, () => ({ x: 100, y: 100 }), 64);
+  assert.equal(draws.length, 1);
+  const explosionAt = ART.presentation.deathDelay * 1000;
+  r.map.draw({}, explosionAt - 0.01, () => ({ x: 100, y: 100 }), 64);
+  assert.equal(draws.length, 2);
+  r.map.draw({}, explosionAt, () => ({ x: 100, y: 100 }), 64);
+  assert.equal(draws.length, 2);
+  r.map.draw({}, explosionAt + 100, () => ({ x: 100, y: 100 }), 64);
+  assert.equal(draws.length, 2);
+  assert.equal(r.map.pending(), true);
+});
+
+test("Dom shotgun has eight simultaneous independent pellets, short range and a fixed fan in both facings", () => {
+  const r = runtime(),
+    model = "MS_09__bazooka",
+    w = ART.models[model].weapons.find((w) => w.id === "ZN_MS_09_ChestBeam");
+  assert.equal(ART.models[model].hp, 22500);
+  assert.equal(ART.models.RGM_79_G__machine_gun.hp, 20000);
+  assert.equal(w.hit, 75);
+  assert.equal(w.min, 1);
+  assert.equal(w.max, 1);
+  assert.equal(w.damagePerShot, 400);
+  assert.equal(w.shotCount, 8);
+  assert.equal(w.damage, 3200);
+  for (const reverse of [false, true]) {
+    const a = {
+        ...source,
+        x: reverse ? 600 : 100,
+        angle: reverse ? -90 : 90,
+        unit: { id: "0-0", model },
+      },
+      b = { ...target, x: reverse ? 100 : 600 };
+    const plan = r.fx.plan(w, a, b, { hit: true, damage: 1 }),
+      miss = r.fx.plan(w, a, b, { hit: false });
+    assert.equal(plan.shots.length, 8);
+    assert.equal(new Set(plan.shots.map((s) => s.at)).size, 1);
+    assert.equal(new Set(plan.shots.map((s) => s.destination.y)).size, 8);
+    assert.ok(
+      plan.shots.some((s) => s.destination.y > b.y) &&
+        plan.shots.some((s) => s.destination.y < b.y),
+    );
+    assert.equal(
+      JSON.stringify(plan.shots.map((s) => s.spreadY)),
+      JSON.stringify(miss.shots.map((s) => s.spreadY)),
+    );
+  }
+});
+
+test("melee approaches across the divider before swinging, stays close for both strikes and returns home", () => {
+  const r = runtime(),
+    saber = ART.models.RGM_79__machine_gun.weapons[1];
+  for (const reverse of [false, true]) {
+    const a = { ...source, x: reverse ? 750 : 250, arenaWidth: 1000 },
+      b = { ...target, x: reverse ? 250 : 750 };
+    const plan = r.fx.plan(saber, a, b, { hit: false });
+    const start = r.fx.meleeMotion(plan, a, b, 0),
+      first = r.fx.meleeMotion(plan, a, b, plan.shots[0].at),
+      second = r.fx.meleeMotion(plan, a, b, plan.shots[1].at),
+      end = r.fx.meleeMotion(plan, a, b, plan.duration);
+    assert.ok(Math.abs(start.x) < 1e-10);
+    assert.ok(Math.abs(end.x) < 1e-10);
+    assert.ok(Math.abs(end.y) < 1e-10);
+    assert.ok(reverse ? a.x + first.x < 500 : a.x + first.x > 500);
+    assert.equal(first.x, second.x);
+    assert.ok(plan.melee.retreatAt > plan.shots[1].at);
+    assert.ok(plan.duration >= plan.melee.retreatAt + plan.melee.retreat);
+    assert.equal(plan.actionSpeed, 1);
+    assert.equal(saber.swingEffects.length, 2);
+    for (const effect of saber.swingEffects) {
+      assert.equal(ART.effects[effect].frames, 9);
+      assert.ok(ART.assets[ART.effects[effect].asset]);
+    }
+  }
+  for (const model of Object.values(ART.models))
+    for (const weapon of model.weapons.filter((w) => w.type === "melee" && w.id !== "Common_Cqb_A"))
+      assert.ok(weapon.swingEffects?.length);
+});
+
+test("Dom shotgun resolves eight independent hit rolls and spends EN once at adjacent range", () => {
+  const G = require("../shared/rules.js"),
+    g = G.create(false, 1, [
+      [{ unitId: "MS_09", kitId: "bazooka" }],
+      [{ unitId: "RGM_79", kitId: "machine_gun" }],
+    ]),
+    [a, b] = g.units;
+  Object.assign(a, { x: 2, y: 4 });
+  Object.assign(b, { x: 3, y: 4, hp: 100000, shield: 0 });
+  g.tiles[4][2] = g.tiles[4][3] = g.tiles[4][4] = "plain";
+  const w = G.modelOf(a).weapons.find((w) => w.id === "ZN_MS_09_ChestBeam");
+  assert.equal(G.estimate(g, a, b, w).hit, 75);
+  assert.equal(G.canAttack(g, a, { ...b, x: 4 }, w), false);
+  const event = G.fight(g, a, b, w, "defend")[0];
+  assert.equal(event.strikes.length, 8);
+  assert.equal(event.shotCount, 8);
+  assert.equal(a.en, 90);
+  assert.ok(event.hitCount > 0 && event.hitCount < 8);
+  assert.equal(event.damagePerShot, 400);
+});
+
+test("native low HP electricity loops five frames below 25 percent and stops at death or recovery", () => {
+  const r = runtime(),
+    e = ART.effects.Stun_1,
+    frames = [];
+  r.context.image = { width: 425, height: 85 };
+  vm.runInContext("SpriteRenderer.images[ART.effects.Stun_1.asset]=image", r.context);
+  const ctx = {
+      globalAlpha: 1,
+      save() {},
+      restore() {},
+      translate() {},
+      rotate() {},
+      scale() {},
+      drawImage(...args) {
+        frames.push(args[1]);
+      },
+    },
+    u = { model: "RGM_79__machine_gun", hp: 1000 };
+  const before = JSON.stringify(u);
+  for (const t of [0, 0.21, 0.81, 1, 1.21])
+    assert.equal(r.sprites.lowHp(ctx, u, 10, 20, 1, t), true);
+  assert.deepEqual(frames, [0, 85, 85, 170, 340]);
+  assert.equal(e.frames, 5);
+  assert.equal(e.alpha, 0.85);
+  assert.equal(e.fps, 7.5);
+  assert.equal(e.duration, 2 / 3);
+  for (const hp of [0, -1, 4125, 16500])
+    assert.equal(r.sprites.lowHp(ctx, u, 10, 20, 1, 0, hp), false);
+  assert.equal(r.sprites.lowHp(ctx, u, 10, 20, 1, 0, 4124), true);
+  assert.equal(r.sprites.lowHp(ctx, { ...u, performance: 0.75 }, 10, 20, 1, 0, 3500), false);
+  assert.equal(r.sprites.lowHp(ctx, { ...u, performance: 1.25 }, 10, 20, 1, 0, 4500), true);
+  assert.equal(JSON.stringify(u), before);
+  assert.equal(r.sounds.length, 0);
 });
