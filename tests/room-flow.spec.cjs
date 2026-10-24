@@ -19,8 +19,10 @@ async function join(page, room) {
   await expect(page.locator("#roomPreparation")).toBeVisible();
 }
 async function startMatch(a, b) {
-  await a.locator("#toggleReady").click();
-  await b.locator("#toggleReady").click();
+  const host = await a.evaluate(() => Net.snapshot.hostId === Net.memberId) ? a : b;
+  const guest = host === a ? b : a;
+  await guest.locator("#toggleReady").click();
+  await host.locator("#startRoomGame").click();
   await a.locator("#confirmFinalFormation").click();
   await b.locator("#confirmFinalFormation").click();
   await a.locator("#confirmDeployment").click();
@@ -187,7 +189,9 @@ test("room chat survives view changes; finished clients reconnect and the host r
     await expect(red.locator("#playAgain")).toBeDisabled();
     await expect(page.locator("#victoryCountdown")).toContainText("秒后所有人返回房间");
     await red.evaluate(() => Net.socket.close());
+    await expect(red.locator("#disconnectDialog")).toBeVisible();
     await expect.poll(() => page.evaluate(() => Net.snapshot.connected[1])).toBe(false);
+    await red.locator("#reconnectRoom").click();
     await expect
       .poll(
         () => red.evaluate(() => Net.socket?.readyState === WebSocket.OPEN && !Net.connecting),
@@ -279,7 +283,9 @@ test("the host seat panel returns every player and spectator to the same room du
     await page.locator("#returnAllToRoom").click();
     for (const client of pages) {
       await expect(client.locator("#roomPreparation")).toBeVisible();
-      await expect(client.locator("#toggleReady")).toBeVisible({ visible: client !== spectator });
+      await expect(client.locator("#toggleReady")).toBeVisible({
+        visible: client !== spectator && client !== page,
+      });
       await expect(client.locator("#gameScene")).toBeHidden();
       await expect(client.locator("#returnAllToRoom")).toBeHidden();
       expect(await client.evaluate(() => [Net.snapshot.started, phase, animationFrameId])).toEqual([

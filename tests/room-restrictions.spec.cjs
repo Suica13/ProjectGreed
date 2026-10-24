@@ -35,6 +35,9 @@ test("unlimited saved formations, era tags, default room caps and full-row panel
   await page.locator("#roomUnitCostLimit").fill("500");
   await waitForRoomSettings(page);
   await page.locator("#roomFormation").click();
+  await expect(page.locator("#formationUnitCostLimit")).toBeVisible();
+  await expect(page.locator("#formationUnitCostLimit")).toHaveText("单位COST上限: 500");
+  await expect(page.locator("#formationUnitCostLimit")).toHaveClass(/has-limit/);
   await expect(page.locator(".formation-row.overcost")).toHaveCount(1);
   const disabled = page.locator(".formation-row.overcost").first();
   await expect(disabled.locator(".overcost-label")).toHaveText("OVER COST");
@@ -76,7 +79,7 @@ test("unlimited saved formations, era tags, default room caps and full-row panel
   await team.locator("summary").click();
   await page.locator("#teamBan-0-bannedFactions").selectOption("EFSF");
 
-  await expect(page.locator("#toggleReady")).toBeDisabled();
+  await expect(page.locator("#startRoomGame")).toBeDisabled();
   await page.locator("#roomFormation").click();
   await expect(page.locator(".formation-row.not-allowed")).toHaveCount(5);
   await page.evaluate(() => I18n.setLanguage("en"));

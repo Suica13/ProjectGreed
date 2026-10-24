@@ -10,7 +10,18 @@ const MusicPlayer = (() => {
     wantsPlayback = true,
     started = false,
     request = 0;
-  audio.volume = ART.music.volume;
+  function applyVolume() {
+    audio.volume = Math.max(
+      0,
+      Math.min(
+        1,
+        ART.music.volume *
+          (typeof ClientSettings === "undefined" ? 1 : ClientSettings.volume("music")),
+      ),
+    );
+  }
+  applyVolume();
+  window.addEventListener("audio-settings-change", applyVolume);
   audio.preload = "none";
   function render() {
     title.textContent = playlist[index].name;

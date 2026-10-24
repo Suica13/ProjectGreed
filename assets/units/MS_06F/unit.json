@@ -96,7 +96,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightFoot",
@@ -106,7 +109,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "LeftLeg",
@@ -116,7 +122,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightLeg",
@@ -126,7 +135,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "ZN_120mmMG_NotUsing",
@@ -144,7 +156,10 @@
         "heldWeapon": {
           "not": "ZN_120mmMG"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_270mmBazooka_NotUsing",
@@ -163,7 +178,10 @@
         "heldWeapon": {
           "not": "ZN_270mmBazooka"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Crotch",
@@ -183,7 +201,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ArmR",
@@ -193,7 +214,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "BoostLoop",
@@ -229,7 +253,10 @@
       "visibleWhen": {
         "kit": "bazooka",
         "heldWeapon": "ZN_270mmBazooka"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Body",
@@ -255,7 +282,10 @@
       "visibleWhen": {
         "kit": "machine_gun",
         "heldWeapon": "ZN_120mmMG"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_HeatHawk_A",
@@ -277,7 +307,10 @@
         "start": 0.6,
         "end": 2,
         "visibleInside": false
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_HeatHawk_A_Step2",
@@ -299,7 +332,10 @@
         "start": 0.6,
         "end": 2,
         "visibleInside": true
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ShoulderL",
@@ -309,7 +345,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ShoulderR",
@@ -319,7 +358,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Head",
@@ -332,7 +374,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Head_Close",
@@ -345,7 +390,10 @@
       },
       "visibleWhen": {
         "visorClosed": true
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Eye",
@@ -359,7 +407,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     }
   ],
   "animations": {
@@ -389,7 +440,8 @@
     "move": 4,
     "mobility": 85,
     "cost": 200,
-    "counterLimit": 1
+    "counterLimit": 1,
+    "partStructuralStrength": 110.0
   },
   "attackBonuses": {
     "melee": 0,
@@ -440,7 +492,8 @@
         "percent": 1,
         "flat": 0
       }
-    }
+    },
+    "requiredParts": []
   },
   "sourceStats": {
     "hp": 15000,
@@ -449,7 +502,8 @@
     "turnSpeed": 1.5,
     "reaction": 105,
     "shooting": 110,
-    "melee": 100
+    "melee": 100,
+    "partStructuralStrength": 110.0
   },
   "presentation": {
     "shield": false,
@@ -494,7 +548,7 @@
       },
       "type": "shell",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "en": 12.5,
       "clip": "Common_Shoot_Two_Handed_A",
@@ -566,7 +620,11 @@
           "x": 9.18485099360515e-16,
           "y": -15
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "ZN_270mmBazooka": {
       "name": "270mm火箭筒",
@@ -583,7 +641,7 @@
       },
       "type": "shell",
       "min": 3,
-      "max": 6,
+      "max": 5,
       "hit": 70,
       "en": 22.5,
       "clip": "Common_Shoot_A",
@@ -657,7 +715,11 @@
           "x": 9.668264203794895e-16,
           "y": -15.789473684210527
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
     },
     "ZN_HeatHawk_A": {
       "name": "热能斧",
@@ -727,7 +789,73 @@
         ]
       },
       "hitEffect": "Cqb_Hit_1",
-      "swingEffects": ["Cqb_Fire_1_Yellow_R", "Cqb_Fire_1_Yellow_L"]
+      "swingEffects": [
+        "Cqb_Fire_1_Yellow_R",
+        "Cqb_Fire_1_Yellow_L"
+      ],
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
+    },
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000,
+      "damageComponents": {
+        "melee": 2500,
+        "meleeShell": 2500
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.45,
+            "shots": 1
+          },
+          {
+            "delay": 1
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3
+      }
     }
   },
   "weaponKits": [
@@ -735,7 +863,11 @@
       "id": "machine_gun",
       "name": "120mm机枪套件",
       "cost": 0,
-      "weapons": ["ZN_120mmMG", "ZN_HeatHawk_A"],
+      "weapons": [
+        "ZN_120mmMG",
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "120mm机枪套件"
@@ -752,7 +884,11 @@
       "id": "bazooka",
       "name": "270mm火箭筒套件",
       "cost": 50,
-      "weapons": ["ZN_270mmBazooka", "ZN_HeatHawk_A"],
+      "weapons": [
+        "ZN_270mmBazooka",
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "270mm火箭筒套件"
@@ -766,5 +902,8 @@
       }
     }
   ],
-  "tags": ["ZEON", "0079"]
+  "tags": [
+    "ZEON",
+    "0079"
+  ]
 }

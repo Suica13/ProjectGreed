@@ -1378,6 +1378,12 @@
         padding-left: 8px;
         border-left: 1px solid #30444f;
       }
+      .ready-status.not-ready {
+        color: var(--blue);
+      }
+      .ready-status.is-ready {
+        color: #f0ce67;
+      }
       .lineup-ready {
         padding-left: 8px;
         border-left: 1px solid #30444f;
@@ -1523,9 +1529,11 @@
             ><span data-ui-node="node-44"
               ><i data-ui-node="node-45" style="background: #c76d68"></i>有效目标</span
             ><span data-ui-node="node-46"
-              ><i data-ui-node="node-47" style="background: #42654a"></i>林地：移动2／掩护15%</span
+              ><i data-ui-node="node-47" style="background: #42654a"></i
+              >林地：移动1／近远命中-10%</span
             ><span data-ui-node="node-48"
-              ><i data-ui-node="node-49" style="background: #7b807c"></i>废墟：移动2／掩护10%</span
+              ><i data-ui-node="node-49" style="background: #7b807c"></i
+              >废墟：移动2／远战命中-25%</span
             >
             <span>敌军相邻格：移动至少3</span>
           </div>
@@ -1684,7 +1692,7 @@
             </p>
             <strong data-ui-node="node-115">属性与掩护</strong>
             <p data-ui-node="node-116">
-              光束较少受装甲影响；实弹受到完整装甲减伤；格斗忽略地形的伤害减免。林地、废墟降低敌方命中率，并减免非格斗伤害。预估不含随机暴击，本版无暴击。
+              林地使敌方近战和远战命中率各降低10个百分点；废墟仅使敌方远战命中率降低25个百分点。地形不再额外减免伤害，装甲与盾牌按机体防护计算。部位损坏后，对应武器无法使用。
             </p>
             <strong data-ui-node="node-117">原型范围</strong>
             <p data-ui-node="node-118">
@@ -2031,6 +2039,27 @@
         </div>
       </div>
     </div>
+    <dialog
+      id="disconnectDialog"
+      class="modal disconnect-dialog"
+      aria-labelledby="disconnectTitle"
+      aria-describedby="disconnectStatus"
+    >
+      <h2 id="disconnectTitle">连接已断开</h2>
+      <p id="disconnectStatus" role="status">点击重连，恢复当前房间和对局。</p>
+      <button id="reconnectRoom" class="primary">重连</button>
+    </dialog>
+    <style>
+      .disconnect-dialog {
+        width: min(420px, calc(100vw - 32px));
+        margin: auto;
+        color: var(--text);
+      }
+      .disconnect-dialog::backdrop {
+        background: #060d14cb;
+        backdrop-filter: blur(5px);
+      }
+    </style>
     <section id="formationScreen" class="menu-screen" hidden data-ui-node="node-199">
       <div id="formationMain" class="modal formation-dialog" data-ui-node="node-206">
         <div class="formation-heading">
@@ -2097,6 +2126,19 @@
           <button id="closeFormationDetail">关闭</button>
           <h2 id="formationDetailTitle"></h2>
           <p id="formationDetailIntro" class="muted"></p>
+          <label
+            >单位名称
+            <div class="formation-name-editor">
+              <input
+                id="formationDetailName"
+                type="text"
+                maxlength="24"
+                aria-label="单位名称"
+                autocomplete="off"
+              />
+              <button id="resetFormationUnitName" type="button">重置名称</button>
+            </div>
+          </label>
           <label>武器套件<select id="formationDetailKit" aria-label="武器套件"></select></label>
           <p id="formationDetailStats"></p>
           <p id="formationDetailDefense"></p>
@@ -2134,10 +2176,27 @@
         font-size: 20px;
       }
       #formationBudget {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 4px;
+        min-width: 0;
         text-align: right;
         font-size: 12px;
         line-height: 1.5;
         color: var(--muted);
+      }
+      .formation-unit-cost-limit {
+        white-space: nowrap;
+        padding: 2px 7px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: #10252e;
+      }
+      .formation-unit-cost-limit.has-limit {
+        color: var(--blue);
+        border-color: #426b7e;
       }
       #formationBudget.danger-text {
         color: #ff9c93;
@@ -2379,6 +2438,17 @@
         max-height: 85vh;
         overflow-y: auto;
       }
+      .formation-name-editor {
+        display: flex;
+        gap: 8px;
+      }
+      .formation-name-editor input {
+        min-width: 0;
+        flex: 1;
+      }
+      .formation-name-editor button {
+        flex-shrink: 0;
+      }
       .formation-detail-dialog > label {
         display: flex;
         flex-direction: column;
@@ -2575,7 +2645,14 @@
         white-space: pre-wrap;
       }
       .chat-channel-label {
-        color: #a9bdc6;
+        color: #f4f5f7;
+      }
+      .chat-line[data-channel="all"] .chat-channel-label {
+        color: #f0ce67;
+      }
+      .chat-line[data-channel="team1"] .chat-channel-label,
+      .chat-line[data-channel="team2"] .chat-channel-label {
+        color: #65cfff;
       }
       .chat-form {
         display: flex;
@@ -3027,6 +3104,32 @@
         touch-action: none;
       }
     </style>
+    <button id="openClientSettings" type="button" aria-haspopup="dialog">设置</button>
+    <dialog id="clientSettingsDialog" aria-labelledby="clientSettingsTitle">
+      <div class="settings-heading"><h2 id="clientSettingsTitle">设置</h2><button id="closeClientSettings" type="button">关闭</button></div>
+      <label for="settingsLanguage">语言</label>
+      <select id="settingsLanguage" data-i18n-ignore aria-label="Language">
+        <option value="zh">简体中文</option><option value="ja">日本語</option><option value="en">English</option>
+      </select>
+      <label for="volume-master">总音量 <output id="volume-master-value" for="volume-master"></output></label>
+      <input id="volume-master" aria-label="总音量" type="range" min="0" max="100" step="1" />
+      <label for="volume-music">音乐音量 <output id="volume-music-value" for="volume-music"></output></label>
+      <input id="volume-music" aria-label="音乐音量" type="range" min="0" max="100" step="1" />
+      <label for="volume-sfx">音效音量 <output id="volume-sfx-value" for="volume-sfx"></output></label>
+      <input id="volume-sfx" aria-label="音效音量" type="range" min="0" max="100" step="1" />
+    </dialog>
+    <style>
+      #openClientSettings { position: fixed; top: 12px; right: 14px; z-index: 1500; }
+      .header-buttons { padding-right: 72px; }
+      #clientSettingsDialog { width: min(420px, calc(100vw - 28px)); max-height: calc(100dvh - 28px); overflow: auto; box-sizing: border-box; padding: 24px; border: 1px solid #496775; border-radius: 12px; background: #142530; color: var(--text); }
+      #clientSettingsDialog::backdrop { background: #000a; }
+      .settings-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+      .settings-heading h2 { margin: 0; }
+      #clientSettingsDialog label { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; margin-bottom: 10px; }
+      #clientSettingsDialog select, #clientSettingsDialog input { width: 100%; }
+      #clientSettingsDialog output { color: #f0ce67; }
+      #clientSettingsDialog input { accent-color: #65cfff; }
+    </style>
     <script id="art" type="application/json">
       __DATA__
     </script>
@@ -3038,10 +3141,12 @@
       __I18N__;
       I18n.bindCatalog(ART);
       __WEAPON_SEQUENCE__;
+      __UNIT_PARTS__;
       __CORE__;
       __RENDERER__;
       __SPRITE_EFFECTS__;
       __WEAPON_EFFECTS__;
+      __CLIENT_SETTINGS__;
       __WEAPON_AUDIO__;
       __GAME_AUDIO__;
       __MUSIC__;

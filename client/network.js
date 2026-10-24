@@ -18,8 +18,6 @@ const Net = (() => {
     snapshot: null,
     awaiting: null,
     seen: new Set(),
-    reconnectTimer: null,
-    retry: 0,
     manual: false,
     serverURL: null,
     connecting: false,
@@ -28,6 +26,26 @@ const Net = (() => {
   const status = (t) => {
     byId("networkStatus").textContent = t;
     byId("netBadge").textContent = t;
+  };
+  let connectionTimer = null;
+  const disconnectDialog = byId("disconnectDialog");
+  function showDisconnect(connecting = false) {
+    byId("disconnectStatus").textContent = connecting
+      ? "正在重连，请稍候…"
+      : "点击重连，恢复当前房间和对局。";
+    byId("reconnectRoom").disabled = connecting;
+    byId("reconnectRoom").textContent = connecting ? "正在重连…" : "重连";
+    if (!disconnectDialog.open) disconnectDialog.showModal();
+  }
+  function closeDisconnect() {
+    clearTimeout(connectionTimer);
+    connectionTimer = null;
+    if (disconnectDialog.open) disconnectDialog.close();
+  }
+  disconnectDialog.addEventListener("cancel", (event) => event.preventDefault());
+  byId("reconnectRoom").onclick = () => {
+    if (n.local || n.connecting || !n.active) return;
+    connect("resume", true);
   };
   const storage = {
     get(k) {
@@ -127,6 +145,7 @@ const Net = (() => {
     }, 8000);
   }
   function leave({ notify = true, forget = true } = {}) {
+    closeDisconnect();
     MatchResults.reset();
     CombatPlayback.reset();
     PlanningUI.reset();
@@ -138,7 +157,6 @@ const Net = (() => {
     MapCamera.reset();
     MapEffects.reset();
     n.manual = true;
-    clearTimeout(n.reconnectTimer);
     Lobby.close();
     if (notify && n.socket?.readyState === WebSocket.OPEN)
       n.socket.send(JSON.stringify({ type: "leave" }));
@@ -170,7 +188,6 @@ const Net = (() => {
       n.memberId = msg.memberId;
       n.token = msg.token;
       n.connecting = false;
-      n.retry = 0;
       if (!n.local) {
         storage.set(key(url, room), msg.token);
         storage.set("slg-last", JSON.stringify({ url, room }));
@@ -187,6 +204,7 @@ const Net = (() => {
         n.awaiting = null;
       n.revision = msg.revision;
       n.snapshot = msg;
+      closeDisconnect();
       applySnapshot(msg);
     } else if (msg.type === "error") {
       if (chatRequestIds.has(msg.id)) {
@@ -247,9 +265,9 @@ const Net = (() => {
       status(e.message);
       return;
     }
-    clearTimeout(n.reconnectTimer);
     Lobby.close();
-    let token = storage.get(key(url, room));
+    const token =
+      (n.serverURL === url && n.room === room ? n.token : null) || storage.get(key(url, room));
     if (mode === "resume" && !token) {
       status("本页面没有该房间的重连凭据，请创建或加入房间");
       return;
@@ -262,6 +280,7 @@ const Net = (() => {
     n.memberId = null;
     n.started = false;
     n.connecting = true;
+    if (disconnectDialog.open) showDisconnect(true);
     n.serverURL = url;
     n.room = room;
     n.token = token;
@@ -277,6 +296,18 @@ const Net = (() => {
     update();
     let socket = new WebSocket(url);
     n.socket = socket;
+    clearTimeout(connectionTimer);
+    // TCP/WebSocket 已连通但未收到房间快照，也必须允许玩家再次尝试。
+    if (mode === "resume")
+      connectionTimer = setTimeout(function checkConnection() {
+        if (n.socket !== socket || n.snapshot) return;
+        // 后台计时器可能比快照消息先恢复执行，不因此误关连接。
+        if (document.hidden) {
+          connectionTimer = setTimeout(checkConnection, 8000);
+          return;
+        }
+        socket.close();
+      }, 8000);
     socket.onopen = () => {
       if (n.socket !== socket) return;
       socket.send(
@@ -303,6 +334,7 @@ const Net = (() => {
     };
     socket.onclose = () => {
       if (n.socket !== socket) return;
+      clearTimeout(connectionTimer);
       n.awaiting = null;
       n.connecting = false;
       if (n.manual || !n.token) {
@@ -315,12 +347,9 @@ const Net = (() => {
       }
       phase = "disconnected";
       byId("reaction").hidden = true;
-      status("连接中断，正在自动重连…");
+      status("连接中断，请点击重连。");
       update();
-      n.reconnectTimer = setTimeout(
-        () => connect("resume", true),
-        Math.min(8000, 1000 * 2 ** Math.min(n.retry++, 3)),
-      );
+      showDisconnect();
     };
   }
   // 服务端快照是联机状态来源，按阶段恢复地图、应战或战斗画面。
@@ -462,7 +491,7 @@ const Net = (() => {
           });
       }
     }
-    if (s.pending && n.focusedReactionId !== s.pending.id) {
+    if (ownResponse && n.focusedReactionId !== s.pending.id) {
       n.focusedReactionId = s.pending.id;
       const b = getUnit(s.pending.target);
       if (b) MapCamera.focus(b.x, b.y, { preserveZoom: true });
@@ -472,6 +501,26 @@ const Net = (() => {
     n.applied = true;
     update();
   }
+  // 保活独立于 requestAnimationFrame；后台不绘制时仍保持网络连接。
+  function keepAlive(sync = false) {
+    if (!n.active || n.local || n.manual || !n.memberId || n.socket?.readyState !== WebSocket.OPEN)
+      return;
+    n.socket.send(JSON.stringify({ type: "ping" }));
+    if (sync)
+      n.socket.send(
+        JSON.stringify({
+          type: "action",
+          action: "sync",
+          id: "foreground-" + Date.now(),
+        }),
+      );
+  }
+  setInterval(keepAlive, 20000);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) keepAlive(true);
+  });
+  window.addEventListener("focus", () => keepAlive(true));
+  document.addEventListener("resume", () => keepAlive(true));
   byId("createRoom").onclick = () => connect("create");
   function isSpectator() {
     return n.active && n.seat === null;
@@ -494,7 +543,7 @@ const Net = (() => {
   } catch {}
   byId("serverAddress").value = savedIsPreset ? "" : savedAddress;
   if (last) byId("roomCode").value = last.room;
-  // 刷新当前标签页时自动恢复席位，不再要求玩家点击重连按钮。
+  // 刷新页面时自动恢复；意外掉线后由居中弹窗中的按钮发起重连。
   window.addEventListener(
     "game-assets-ready",
     () => {

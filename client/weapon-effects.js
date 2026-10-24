@@ -118,14 +118,12 @@ const WeaponEffects = (() => {
           dy = shot.destination.y - shot.origin.y,
           width = source.arenaWidth ?? Math.max(source.x, target.x) + Math.abs(dx),
           height = source.arenaHeight ?? Math.max(source.y, target.y) + Math.abs(dy) + margin;
-        travel = Math.max(
-          1,
-          Math.abs(dx) > 0.001
-            ? ((dx > 0 ? width + margin : -margin) - shot.origin.x) / dx
-            : Math.abs(dy) > 0.001
-              ? ((dy > 0 ? height + margin : -margin) - shot.origin.y) / dy
-              : 1,
-        );
+        // 弹道先穿过哪条边就结束。只检测 X 会让近乎竖直的 Miss 在屏外飞行几十秒。
+        const exitX =
+            dx === 0 ? Infinity : ((dx > 0 ? width + margin : -margin) - shot.origin.x) / dx,
+          exitY = dy === 0 ? Infinity : ((dy > 0 ? height + margin : -margin) - shot.origin.y) / dy,
+          exit = Math.min(exitX, exitY);
+        travel = Math.max(1, Number.isFinite(exit) ? exit : 1);
       }
       shot.visibleUntil = shot.at + shot.flight * travel;
     }

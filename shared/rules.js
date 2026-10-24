@@ -7,6 +7,7 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const parts = typeof UnitParts !== "undefined" ? UnitParts : require("./unit-parts.js");
   const turnTransitionMs = 3600;
   const W = catalog.map.width,
     H = catalog.map.height;
@@ -30,6 +31,25 @@ const Tactics = (() => {
       throw Error("编组单位上限必须为3～12台");
     return value;
   }
+  function normalizeUnitName(value) {
+    if (value === undefined) return "";
+    if (typeof value !== "string") throw Error("单位名称无效");
+    const name = value.replace(/[\u0000-\u001f\u007f]/g, "").trim();
+    if (Array.from(name).length > 24) throw Error("单位名称最多24个字符");
+    return name;
+  }
+  function generateUnitName(baseName, entries, random = Math.random) {
+    const used = new Set(entries.map((entry) => entry.customName?.match(/\[([A-Z]\d{2})\]$/)?.[1]));
+    const start = Math.floor(random() * 2600);
+    for (let offset = 0; offset < 2600; offset++) {
+      const value = (start + offset) % 2600;
+      const code =
+        String.fromCharCode(65 + Math.floor(value / 100)) + String(value % 100).padStart(2, "0");
+      if (!used.has(code)) return Array.from(baseName).slice(0, 19).join("") + "[" + code + "]";
+    }
+    throw Error("没有可用的单位编号");
+  }
+  const unitName = (unit) => unit.customName || modelOf(unit).name;
   // 玩家默认最多12台；裁定端可为AI显式传入倍率后的上限（最多24台）。
   function validateFormation(
     entries,
@@ -51,7 +71,8 @@ const Tactics = (() => {
         model = models[id];
       if (!model) throw Error("编组包含不可用单位或武器套件");
       cost += model.cost;
-      return { unitId: model.prefabId, kitId: model.kitId };
+      const customName = normalizeUnitName(entry.customName);
+      return { unitId: model.prefabId, kitId: model.kitId, ...(customName ? { customName } : {}) };
     });
     if (cost > maxCost) throw Error("编组 COST 超出上限");
     return clean;
@@ -205,34 +226,44 @@ const Tactics = (() => {
       if (!legal.length) break;
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
       const model = legal[seed % legal.length];
-      entries.push({ unitId: model.prefabId, kitId: model.kitId });
+      entries.push({
+        unitId: model.prefabId,
+        kitId: model.kitId,
+        customName: generateUnitName(model.name, entries, () => seed / 4294967296),
+      });
       remaining -= model.cost;
     }
     return entries;
   }
   // 模型目录保持不变，每个 AI 实例只应用一次难度倍率。
   function weaponStats(weapon, unit) {
-    const factor = unit.performance ?? 1;
-    if (factor === 1 || weapon.performance === factor) return weapon;
+    const factor = unit.performance ?? 1,
+      attackMultiplier = parts.penalties(unit).attackMultiplier,
+      previousPerformance = weapon.performance ?? 1,
+      previousAttack = weapon.partDamageMultiplier ?? 1;
+    if (factor === previousPerformance && attackMultiplier === previousAttack) return weapon;
+    const performanceRatio = factor / previousPerformance,
+      damageRatio = (performanceRatio * attackMultiplier) / previousAttack;
     return {
       ...weapon,
       performance: factor,
+      partDamageMultiplier: attackMultiplier,
       get name() {
         return weapon.name;
       },
       get description() {
         return weapon.description;
       },
-      damagePerShot: weapon.damagePerShot * factor,
-      damage: weapon.damage * factor,
-      hit: Math.min(100, weapon.hit * factor),
+      damagePerShot: weapon.damagePerShot * damageRatio,
+      damage: weapon.damage * damageRatio,
+      hit: Math.min(100, weapon.hit * performanceRatio),
       damageComponents: Object.fromEntries(
-        Object.entries(weapon.damageComponents).map(([key, value]) => [key, value * factor]),
+        Object.entries(weapon.damageComponents).map(([key, value]) => [key, value * damageRatio]),
       ),
     };
   }
   const scaledModels = new WeakMap();
-  function modelOf(unit) {
+  function performanceModelOf(unit) {
     const base = models[unit.model],
       factor = unit.performance ?? 1;
     if (factor === 1) return base;
@@ -261,16 +292,51 @@ const Tactics = (() => {
         en: Math.round(base.en * factor),
         move: Math.max(1, Math.round(base.move * factor)),
         mobility: base.mobility * factor,
+        partStructuralStrength: base.partStructuralStrength * factor,
         defenses: defense(base.defenses),
         shield: {
           ...base.shield,
           hp: Math.round(base.shield.hp * factor),
           defenses: defense(base.shield.defenses),
         },
-        weapons: base.weapons.map((weapon) => weaponStats(weapon, unit)),
+        weapons: base.weapons.map((weapon) => weaponStats(weapon, { performance: factor })),
       });
     }
     return variants.get(factor);
+  }
+  // Derive damage penalties from current parts; never modify a shared catalog or AI variant.
+  function modelOf(unit) {
+    const base = performanceModelOf(unit),
+      penalty = parts.penalties(unit);
+    if (
+      penalty.attackMultiplier === 1 &&
+      penalty.moveMultiplier === 1 &&
+      !penalty.resistancePenalty
+    )
+      return base;
+    return {
+      ...base,
+      get name() {
+        return base.name;
+      },
+      get description() {
+        return base.description;
+      },
+      get kitName() {
+        return base.kitName;
+      },
+      move: Math.max(1, Math.floor(base.move * penalty.moveMultiplier)),
+      defenses: Object.fromEntries(
+        Object.entries(base.defenses).map(([type, value]) => [
+          type,
+          { ...value, percent: value.percent - penalty.resistancePenalty },
+        ]),
+      ),
+      weapons:
+        penalty.attackMultiplier === 1
+          ? base.weapons
+          : base.weapons.map((w) => weaponStats(w, unit)),
+    };
   }
   function deploymentCells(g, seat) {
     const map = getMap(g.mapId),
@@ -320,8 +386,9 @@ const Tactics = (() => {
   }
   const terrain = {
     plain: { name: "平地", cost: 1, cover: 0, color: "#243b3d" },
-    forest: { name: "林地", cost: 2, cover: 15, color: "#294738" },
-    rubble: { name: "废墟", cost: 2, cover: 10, color: "#43494a" },
+    highland: { name: "高地", cost: 1, cover: 0, color: "#9c986b" },
+    forest: { name: "林地", cost: 1, cover: 10, meleeCover: 10, color: "#294738" },
+    rubble: { name: "废墟", cost: 2, cover: 25, meleeCover: 0, color: "#43494a" },
     rock: { name: "山岩", cost: Infinity, cover: 0, color: "#596064" },
     water: { name: "水域", cost: Infinity, cover: 0, color: "#234c61" },
   };
@@ -377,11 +444,13 @@ const Tactics = (() => {
           id: seat + "-" + (settings.formationIndices?.[seat]?.[i] ?? i),
           ownerSeat: seat,
           model,
+          ...(entry.customName ? { customName: entry.customName } : {}),
           performance,
           team,
           x: position.x,
           y: position.y,
           hp: m.hp,
+          brokenParts: {},
           shield: m.shield.hp,
           en: m.en,
           moved: false,
@@ -404,6 +473,7 @@ const Tactics = (() => {
       round: 1,
       ai,
       seed: seed >>> 0,
+      partSeed: (seed ^ 0x85ebca6b) >>> 0,
       winner: null,
     };
   }
@@ -421,6 +491,7 @@ const Tactics = (() => {
   }
   // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
   function reachable(g, u) {
+    const moveLimit = modelOf(u).move;
     let best = new Map([[key(u.x, u.y), { x: u.x, y: u.y, cost: 0, path: [] }]]),
       queue = [best.get(key(u.x, u.y))];
     while (queue.length) {
@@ -439,7 +510,7 @@ const Tactics = (() => {
         let occupant = at(g, x, y);
         if (occupant && occupant.team !== u.team) continue;
         let cost = n.cost + movementCost(g, u, x, y);
-        if (cost > modelOf(u).move) continue;
+        if (cost > moveLimit) continue;
         let k = key(x, y);
         if (best.has(k) && best.get(k).cost <= cost) continue;
         let entry = { x, y, cost, path: [...n.path, { x, y }] };
@@ -495,8 +566,18 @@ const Tactics = (() => {
     u.origin = null;
     u.moved = false;
   }
+  function availableStrikes(u, w) {
+    if (parts.unavailable(u, w).length) return [];
+    return w.attack.strikes.filter((step) => !parts.unavailable(u, step).length);
+  }
   function canUse(u, w) {
-    return u.hp > 0 && u.en >= w.en;
+    return (
+      !!w &&
+      u.hp > 0 &&
+      u.en >= w.en &&
+      !parts.unavailable(u, w).length &&
+      availableStrikes(u, w).length > 0
+    );
   }
   function inRange(a, b, w) {
     let d = dist(a, b);
@@ -524,16 +605,16 @@ const Tactics = (() => {
     const bonuses = modelOf(a).attackBonuses,
       categoryBonus = 1 + bonuses[w.type === "melee" ? "melee" : "shooting"] / 100;
     const defender = modelOf(b),
-      cover = terrain[g.tiles[b.y][b.x]].cover,
+      ground = terrain[g.tiles[b.y][b.x]],
+      cover = w.type === "melee" ? (ground.meleeCover ?? 0) : ground.cover,
       mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.25,
       baseHit =
         Math.max(10, Math.min(100, w.hit - cover - mobilityPenalty)) * (isCounter ? 0.75 : 1),
       // 最终回避加成在机动性、地形与反击惩罚计算后生效。
       hit = Math.max(0, baseHit - (response === "evade" ? 15 : 0)),
-      multiplier = w.type === "melee" ? 1 : 1 - cover / 100,
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier = response === "defend" ? 0.75 : 1,
-      strikes = w.attack.strikes;
+      strikes = availableStrikes(a, w);
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.
     function protectedDamage(defenses, damageMultiplier, share = 1) {
       return (
@@ -554,15 +635,14 @@ const Tactics = (() => {
             ) *
               (1 - Math.min(100, defenses[percentKey].percent * defenseMultiplier) / 100)
           );
-        }, 0) *
-        multiplier *
-        finalDamageMultiplier
+        }, 0) * finalDamageMultiplier
       );
     }
     let damage = 0,
       shieldDamage = 0,
       blockedDamage = 0;
-    let shieldLeft = Math.max(0, b.shield ?? 0);
+    const shieldAvailable = parts.shieldUsable(b, defender.shield);
+    let shieldLeft = shieldAvailable ? Math.max(0, b.shield ?? 0) : 0;
     for (const strike of strikes) {
       const strikeMultiplier = strike.damageMultiplier ?? 1;
       damage += Math.round(protectedDamage(defender.defenses, strikeMultiplier));
@@ -587,7 +667,7 @@ const Tactics = (() => {
       shieldDamage,
       blockedDamage,
       blockChance:
-        b.shield > 0
+        shieldAvailable && b.shield > 0
           ? Math.min(1, defender.shield.blockChance + (response === "defend" ? 0.25 : 0))
           : 0,
     };
@@ -623,6 +703,7 @@ const Tactics = (() => {
       spend(from, weapon);
       const before = to.hp,
         shieldBefore = to.shield,
+        partsBefore = { ...to.brokenParts },
         sourceDodgeSlot = dodgeSlots[from.id],
         targetDodgeSlot = dodgeSlots[to.id],
         strikes = [];
@@ -636,11 +717,24 @@ const Tactics = (() => {
             stance,
             isCounter,
           ),
-          executed = to.hp > 0,
+          executed = to.hp > 0 && !parts.unavailable(from, step).length,
           hit = executed && random(g) < e.hit / 100,
           blocked = hit && to.shield > 0 && random(g) < e.blockChance,
           shieldDamage = blocked ? e.shieldDamage : 0,
           damage = hit ? Math.min(to.hp, blocked ? e.blockedDamage : e.damage) : 0;
+        const hpBefore = to.hp,
+          shieldBeforeStrike = to.shield;
+        to.hp -= damage;
+        to.shield -= shieldDamage;
+        const brokenPart = hit
+          ? parts.applyHit(
+              g,
+              to,
+              modelOf(to),
+              damage,
+              step.partBreakModifier ?? weapon.partBreakModifier ?? 1,
+            )
+          : null;
         let dodgeTo = null;
         if (executed && !hit) {
           dodgeTo = dodgeSlots[to.id] === 0 ? dodgeSide() : 0;
@@ -653,15 +747,15 @@ const Tactics = (() => {
           dodgeTo,
           blocked,
           damage,
-          shieldDamage,
-          before: to.hp,
-          after: to.hp - damage,
-          shieldBefore: to.shield,
-          shieldAfter: to.shield - shieldDamage,
+          shieldDamage: shieldBeforeStrike - to.shield,
+          before: hpBefore,
+          after: to.hp,
+          shieldBefore: shieldBeforeStrike,
+          shieldAfter: to.shield,
+          brokenParts: brokenPart ? [brokenPart] : [],
+          partsAfter: { ...to.brokenParts },
           hitChance: e.hit,
         });
-        to.hp -= damage;
-        to.shield -= shieldDamage;
       }
       events.push({
         from: from.id,
@@ -677,6 +771,9 @@ const Tactics = (() => {
         targetDodgeSlot,
         targetDodgeEnd: dodgeSlots[to.id],
         strikes,
+        partsBefore,
+        partsAfter: { ...to.brokenParts },
+        brokenParts: strikes.flatMap((strike) => strike.brokenParts),
         hit: strikes.some((s) => s.hit),
         hitCount: strikes.filter((s) => s.hit).length,
         strikeCount: strikes.filter((s) => s.executed).length,
@@ -803,6 +900,9 @@ const Tactics = (() => {
     models,
     catalog,
     validateFormation,
+    normalizeUnitName,
+    generateUnitName,
+    unitName,
     randomFormation,
     planFormation,
     aiDefaults,
@@ -831,6 +931,11 @@ const Tactics = (() => {
     countersRemaining,
     canCounter,
     canUse,
+    availableStrikes,
+    partNames: parts.names,
+    partPenalties: parts.penalties,
+    brokenWeaponParts: parts.unavailable,
+    partBreakChance: parts.chance,
     inRange,
     canAttack,
     estimate,

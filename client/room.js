@@ -156,7 +156,7 @@ const RoomPanel = (() => {
     byId("roomSettingsHint").textContent = snapshot.started
       ? "对局开始后不能修改房间设置"
       : snapshot.you?.id === snapshot.hostId
-        ? "所有房间设置自动生效；COST输入有效数值后自动更新。修改后全员需重新准备。"
+        ? "所有房间设置自动生效；COST输入有效数值后自动更新。仅更换地图会取消准备。"
         : "房间与队伍限制由房主设置。";
     drawMap(Rules.getMap(mapSelect.value));
   }
@@ -352,7 +352,11 @@ const RoomPanel = (() => {
             " / " +
             player.unitLimit,
         ),
-        element("span", "muted", player.ready ? "已确认" : "待确认"),
+        element(
+          "span",
+          "ready-status " + (player.ready ? "is-ready" : "not-ready"),
+          player.ready ? "已确认" : "待确认",
+        ),
       );
       const icons = element("div", "final-unit-icons");
       player.entries.forEach((entry, index) => {
@@ -368,10 +372,12 @@ const RoomPanel = (() => {
         );
         icon.dataset.index = index;
         icon.dataset.model = id;
-        icon.title = model.name + " · " + model.kitName + " · COST " + model.cost;
+        icon.title =
+          (entry.customName || model.name) + " · " + model.kitName + " · COST " + model.cost;
+        if (entry.customName) icon.setAttribute("data-i18n-ignore", "");
         const image = element("img");
         image.src = unitIcon(id);
-        image.alt = model.name;
+        image.alt = entry.customName || model.name;
         icon.append(image);
         if (player.disabled.includes(index))
           icon.append(
@@ -429,7 +435,7 @@ const RoomPanel = (() => {
     Chat.refreshStatus();
     Chat.refreshNames(snapshot);
     renderSettings(snapshot, busy);
-    byId("roomFormation").disabled = snapshot.started || !!own?.ready || busy;
+    byId("roomFormation").disabled = snapshot.started || busy;
     const squadName = element("span", "", Formation.name());
     squadName.setAttribute("data-i18n-ignore", "");
     let cost = 0,
@@ -559,16 +565,22 @@ const RoomPanel = (() => {
         }
         const ready = element(
           "span",
-          "lineup-ready muted",
+          "lineup-ready " +
+            (member?.connected && !snapshot.started
+              ? "ready-status " +
+                (member.id === snapshot.hostId || member.ready ? "is-ready" : "not-ready")
+              : "muted"),
           !member
             ? "—"
             : !member.connected
               ? "离线 · 保留席位"
               : snapshot.started
                 ? "游戏中"
-                : member.ready
-                  ? "已准备"
-                  : "未准备",
+                : member.id === snapshot.hostId
+                  ? "房主"
+                  : member.ready
+                    ? "已准备"
+                    : "未准备",
         );
 
         slot.append(spawnCell, ready);
@@ -603,7 +615,8 @@ const RoomPanel = (() => {
     byId("returnAllToRoom").hidden =
       !snapshot.started || snapshot.phase === "assembly" || self.id !== snapshot.hostId;
     byId("returnAllToRoom").disabled = busy;
-    byId("toggleReady").hidden = snapshot.started || self.seat === null;
+    byId("toggleReady").hidden =
+      snapshot.started || self.seat === null || self.id === snapshot.hostId;
     byId("toggleReady").disabled = busy || (!own?.ready && !valid);
     byId("toggleReady").textContent = own?.ready ? "取消准备" : "准备";
     const participants = roster.filter((player) => player.seat !== null);

@@ -11,7 +11,7 @@ async function connect(page, port, name) {
   await page.locator("#connectServer").click();
   await expect(page.locator("#lobby")).toBeVisible();
 }
-test("allied planning arrows, concurrent map moves, sequential owner responses and unsynchronized playback", async ({
+test("allied planning arrows, concurrent map moves, parallel owner responses and unsynchronized playback", async ({
   page,
   context,
 }) => {
@@ -35,7 +35,8 @@ test("allied planning arrows, concurrent map moves, sequential owner responses a
         .getByRole("button")
         .click();
     }
-    for (const p of pages) await p.locator("#toggleReady").click();
+    for (const p of pages.slice(1)) await p.locator("#toggleReady").click();
+    await page.locator("#startRoomGame").click();
     for (const p of pages) await p.locator("#confirmFinalFormation").click();
     for (const p of pages) {
       await expect(p.locator("#showChat")).toHaveAttribute("aria-selected", "true");
@@ -116,7 +117,7 @@ test("allied planning arrows, concurrent map moves, sequential owner responses a
     expect(room.phase).toBe("idle");
     await pages[2].evaluate(() => Net.request("end_turn"));
     await expect(pages[1].locator("#reaction")).toBeVisible();
-    await expect(pages[3].locator("#reaction")).toBeHidden();
+    await expect(pages[3].locator("#reaction")).toBeVisible();
     expect(await pages[1].evaluate(() => MapCamera.zoom)).toBe(2.5);
     await expect(pages[1].locator("#counterTarget option")).toHaveCount(2);
     await pages[1].locator("#responseCounter").click();
@@ -191,6 +192,15 @@ test("allied planning arrows, concurrent map moves, sequential owner responses a
     await expect.poll(() => page.locator("#map").getAttribute("data-plan-count")).toBe("3");
     await expect(pages[3].locator("#reaction")).toBeVisible();
     await pages[3].locator("#responseEvade").click();
+    const cameras = await Promise.all(
+      pages.map((p) =>
+        p.evaluate(() => {
+          MapCamera.setZoom(2.75);
+          MapCamera.focus(12, 10, { preserveZoom: true });
+          return { ...mapGeo, zoom: MapCamera.zoom };
+        }),
+      ),
+    );
     await pages[3].locator("#confirmResponse").click();
     await expect.poll(() => room.combats.length).toBe(3);
     expect(room.game.team).toBe(0);
@@ -204,6 +214,12 @@ test("allied planning arrows, concurrent map moves, sequential owner responses a
     await expect.poll(() => page.locator("#map").getAttribute("data-counter-plan-count")).toBe("0");
     await expect(page.locator("#mapCombatControls")).toBeVisible();
     await expect.poll(() => page.evaluate(() => MapCombat.frames.length)).toBe(3);
+    for (let index = 0; index < pages.length; index++) {
+      const camera = await pages[index].evaluate(() => ({ ...mapGeo, zoom: MapCamera.zoom }));
+      expect(camera.zoom).toBe(cameras[index].zoom);
+      expect(camera.ox).toBeCloseTo(cameras[index].ox, 5);
+      expect(camera.oy).toBeCloseTo(cameras[index].oy, 5);
+    }
     await expect(page.locator("#battle")).toBeHidden();
     const batchId = room.playback.id;
     await page.screenshot({ path: ".openai/parallel-map-combat.png" });

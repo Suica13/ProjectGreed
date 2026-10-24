@@ -56,10 +56,12 @@ test("offline room cap blocks oversized saved squads and limits the editor and A
   await page.locator("#saveFormation").click();
   await page.locator("#openSkirmish").click();
   await page.locator("#createOfflineRoom").click();
-  await expect(page.locator("#roomUnitLimit")).toHaveValue("9");
+  await expect(page.locator("#roomUnitLimit")).toHaveValue(
+    String(await page.evaluate(() => Rules.catalog.formation.defaultUnits)),
+  );
   await page.locator("#roomUnitLimit").fill("3");
   await waitForRoomSettings(page);
-  await expect(page.locator("#toggleReady")).toBeDisabled();
+  await expect(page.locator("#startRoomGame")).toBeDisabled();
   await page.locator("#roomFormation").click();
   await expect(page.locator("#formationBudget")).toContainText("4 / 3");
   await expect(page.locator("#addFormationUnit")).toBeDisabled();
@@ -69,8 +71,8 @@ test("offline room cap blocks oversized saved squads and limits the editor and A
     .getByRole("button", { name: "移除", exact: true })
     .click();
   await page.locator("#saveFormation").click();
-  await expect(page.locator("#toggleReady")).toBeEnabled();
-  await page.locator("#toggleReady").click();
+  await expect(page.locator("#startRoomGame")).toBeEnabled();
+  await page.locator("#startRoomGame").click();
   await expect(page.locator("#finalAssemblyPanel")).toBeVisible();
   await page.locator("#confirmFinalFormation").click();
   await expect(page.locator("#deploymentPanel")).toBeVisible();

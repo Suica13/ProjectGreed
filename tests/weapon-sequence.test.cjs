@@ -83,7 +83,7 @@ test("vulcan is animation-free and does not change the held weapon in authoritat
     [a, b] = g.units;
   a.x = 2;
   a.y = 3;
-  b.x = 4;
+  b.x = 3;
   b.y = 3;
   const w = G.models[a.model].weapons.find((w) => w.id === "Common_DoubleVulcan_MS");
   for (const time of [0, 0.3, 1.5]) {

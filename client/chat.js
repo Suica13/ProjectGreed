@@ -106,11 +106,17 @@ const Chat = (() => {
       for (const name of byId(view.lines).querySelectorAll("[data-member-id]"))
         name.className = playerNameClass(name.dataset.memberId, snapshot.hostId, snapshot.you?.id);
   }
-  function setLog(entries) {
+  function setLog(entries, names = game.units.map((unit) => unit.customName).filter(Boolean)) {
     for (const id of ["log", "roomCombatLog"]) {
       const list = byId(id),
         scrollTop = list.scrollTop;
-      list.replaceChildren(...entries.map((text) => element("div", "log-line", text)));
+      list.replaceChildren(
+        ...entries.map((text) => {
+          const line = element("div", "log-line");
+          setNamedText(line, text, names);
+          return line;
+        }),
+      );
       list.scrollTop = scrollTop;
     }
   }
@@ -120,7 +126,10 @@ const Chat = (() => {
       matchId = snapshot.matchId;
       if (!Net.local) selectTab("chat");
     }
-    setLog(snapshot.log || []);
+    setLog(snapshot.log || [], [
+      ...(snapshot.logNames || []),
+      ...snapshot.game.units.map((unit) => unit.customName).filter(Boolean),
+    ]);
     // A seat change can remove access to the previous team's history.
     messages = (snapshot.chat || []).slice(-100);
     render();

@@ -2,6 +2,16 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const WeaponSequence = require("../shared/weapon-sequence.js");
+const UnitParts = require("../shared/unit-parts.js");
+function validateParts(parts, label) {
+  if (parts === undefined) return;
+  if (
+    !Array.isArray(parts) ||
+    new Set(parts).size !== parts.length ||
+    parts.some((part) => !Object.hasOwn(UnitParts.names, part))
+  )
+    throw Error("Invalid part dependencies: " + label);
+}
 const root = path.resolve(__dirname, "../assets");
 function file(base, reference) {
   if (typeof reference !== "string") throw Error("Invalid asset reference");
@@ -87,7 +97,7 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         (row) =>
           !Array.isArray(row) ||
           row.length !== map.width ||
-          row.some((t) => !["plain", "forest", "rubble", "rock", "water"].includes(t)),
+          row.some((t) => !["plain", "forest", "rubble", "rock", "water", "highland"].includes(t)),
       )
     )
       throw Error("Invalid map: " + reference);
@@ -98,7 +108,7 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         !map.appearance.colors ||
         Object.entries(map.appearance.colors).some(
           ([kind, color]) =>
-            !["plain", "forest", "rubble", "rock", "water"].includes(kind) ||
+            !["plain", "forest", "rubble", "rock", "water", "highland"].includes(kind) ||
             typeof color !== "string" ||
             !/^#[0-9a-f]{6}$/i.test(color),
         ))
@@ -279,6 +289,13 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     for (const key of ["hp", "en", "move", "cost"])
       if (!Number.isFinite(prefab.stats[key]) || prefab.stats[key] <= 0)
         throw Error("Invalid stat " + key + ": " + ref);
+    prefab.stats.partStructuralStrength ??= 100;
+    if (
+      !Number.isFinite(prefab.stats.partStructuralStrength) ||
+      prefab.stats.partStructuralStrength <= 0
+    )
+      throw Error("Invalid structural strength: " + ref);
+    validateParts(prefab.shield?.requiredParts, prefab.id + "/shield");
     if (prefab.stats.cost % catalog.formation.costStep !== 0)
       throw Error("Unit COST must follow the catalog step: " + ref);
     if (
@@ -353,6 +370,10 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       const weapons = kit.weapons.map((key) => {
         const raw = prefab.weapons[key];
         validateLocalization(raw?.localization, prefab.id + "/" + key);
+        validateParts(raw?.requiredParts, prefab.id + "/" + key);
+        validateParts(raw?.anyParts, prefab.id + "/" + key);
+        for (const step of raw?.attack?.steps || [])
+          validateParts(step.requiredParts, prefab.id + "/" + key + "/Step");
         const weapon = raw && WeaponSequence.compile(raw);
         if (!result.effects[weapon?.hitEffect]) throw Error("Missing hit effect: " + key);
         if (
@@ -367,7 +388,8 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         if (
           "ammo" in weapon ||
           !Number.isFinite(weapon.en) ||
-          weapon.en <= 0 ||
+          weapon.en < 0 ||
+          (weapon.en === 0 && weapon.slot !== "skill") ||
           weapon.en > prefab.stats.en
         )
           throw Error("Weapons must use EN: " + key);
@@ -463,6 +485,7 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       )
         throw Error("Invalid movement presentation: " + prefab.id);
       const layers = prefab.layers.map((layer) => {
+        validateParts(layer.requiredParts, prefab.id + "/layer/" + layer.name);
         if (!textureKeys[layer.texture] || !prefab.skeleton[layer.bone])
           throw Error("Invalid layer: " + layer.name);
         if (

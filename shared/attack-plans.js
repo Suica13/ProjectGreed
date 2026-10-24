@@ -7,6 +7,7 @@ function createAttackPlanner(rules, randomId) {
     room.plans = [];
     room.combats = [];
     room.pending = null;
+    room.reactions = [];
     room.responses = [];
     room.combatBatch = [];
     room.playback = null;
@@ -75,6 +76,17 @@ function createAttackPlanner(rules, randomId) {
     }
     return null;
   }
+  // 一次建立全部目标单位的应战请求，各玩家分别领取自己的第一项。
+  function prepare(room) {
+    if (room.reactions?.length) return room.reactions;
+    room.reactions = [];
+    while (room.plans.length) {
+      const request = next(room);
+      if (request) room.reactions.push(request);
+    }
+    room.pending = room.reactions[0] || null;
+    return room.reactions;
+  }
   function respond(room, reactionId, response, counterId, allowCounter = true) {
     if (!room.pending || reactionId !== room.pending.id)
       throw Error("应战请求已过期，请处理当前交战");
@@ -127,16 +139,19 @@ function createAttackPlanner(rules, randomId) {
     };
   }
   // 先收集选择，不扣 EN、不掷命中，也不提前移除任何单位。
-  function choose(room, reactionId, response, counterId, counterTargetId = room.pending?.attacker) {
-    if (!room.pending || reactionId !== room.pending.id)
-      throw Error("应战请求已过期，请处理当前交战");
+  function choose(room, reactionId, response, counterId, counterTargetId) {
+    const pending =
+      room.reactions?.find((request) => request.id === reactionId) ||
+      (room.pending?.id === reactionId ? room.pending : null);
+    if (!pending) throw Error("应战请求已过期，请处理当前交战");
+    counterTargetId ??= pending.attacker;
     if (!["counter", "defend", "evade"].includes(response)) throw Error("未知应战方式");
-    const attack = (room.pending.attacks || [room.pending]).find(
+    const attack = (pending.attacks || [pending]).find(
       (attack) => attack.attacker === counterTargetId,
     );
     if (response === "counter" && !attack) throw Error("反击目标必须是正在攻击该单位的敌人");
     const attacker = find(room, counterTargetId),
-      target = find(room, room.pending.target);
+      target = find(room, pending.target);
     const counter = rules.modelOf(target).weapons.find((weapon) => weapon.id === counterId);
     if (
       response === "counter" &&
@@ -145,15 +160,17 @@ function createAttackPlanner(rules, randomId) {
       throw Error("反击次数已用完，或武器不满足射程与 EN 条件");
     if (response === "counter") rules.faceTarget(target, attacker);
     (room.responses ||= []).push({
-      intent: room.pending,
+      intent: pending,
       response,
       counterId,
       counterTargetId: response === "counter" ? counterTargetId : null,
     });
-    room.pending = null;
+    room.reactions = (room.reactions || []).filter((request) => request.id !== reactionId);
+    room.pending = room.reactions[0] || null;
   }
   function resolve(room) {
-    if (room.pending || room.plans.length) throw Error("还有未完成的应战选择");
+    if (room.pending || room.reactions?.length || room.plans.length)
+      throw Error("还有未完成的应战选择");
     const choices = room.responses || [];
     room.responses = [];
     room.combatBatch = [];
@@ -194,6 +211,6 @@ function createAttackPlanner(rules, randomId) {
     }
     return room.combatBatch;
   }
-  return { reset, plan, cancel, next, respond, choose, resolve, counterOptions };
+  return { reset, plan, cancel, next, prepare, respond, choose, resolve, counterOptions };
 }
 if (typeof module !== "undefined") module.exports = { createAttackPlanner };

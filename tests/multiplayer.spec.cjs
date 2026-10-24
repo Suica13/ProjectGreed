@@ -31,10 +31,11 @@ async function createRoom(pages, address, id, cost) {
   }
 }
 async function prepare(pages) {
-  for (const page of pages) {
+  for (const page of pages.slice(1)) {
     await page.locator("#toggleReady").click();
     await expect.poll(() => page.evaluate(() => Net.awaiting)).toBe(null);
   }
+  await pages[0].locator("#startRoomGame").click();
   for (const page of pages) {
     await page.locator("#confirmFinalFormation").click();
     await expect.poll(() => page.evaluate(() => Net.awaiting)).toBe(null);
@@ -60,8 +61,8 @@ test("four players choose spawn seats, room budget gates readiness, names and ch
     const [host, guest, ally] = pages;
     await expect(guest.locator("#roomMapSelect")).toBeDisabled();
     await expect(guest.locator("#roomCostLimit")).toBeDisabled();
-    await expect(host.locator("#toggleReady")).toBeEnabled();
-    await expect(host.locator("#roomFormationWarning")).toContainText("COST");
+    await expect(host.locator("#toggleReady")).toBeHidden();
+    await expect(host.locator("#roomFormationWarning")).toContainText("超限");
     await expect(ally.locator("#chooseSeat3")).toBeDisabled();
     await ally.locator("#becomeSpectator").click();
     await joined(ally);
@@ -89,7 +90,7 @@ test("four players choose spawn seats, room budget gates readiness, names and ch
           .getByRole("button", { name: "移除", exact: true })
           .click();
       await p.locator("#saveFormation").click();
-      await expect(p.locator("#toggleReady")).toBeEnabled();
+      await expect(p.locator(p === host ? "#roomFormation" : "#toggleReady")).toBeEnabled();
     }
     await prepare(pages);
     expect(await ally.evaluate(() => Net.team())).toBe(0);
@@ -124,7 +125,7 @@ test("six browser players deploy on the large map, only the unit owner responds,
     await prepare(pages);
     expect(
       await pages[4].evaluate(() => [Net.team(), Net.canAct(), Rules.mapHeight(game)]),
-    ).toEqual([0, true, 34]);
+    ).toEqual([0, true, app.rooms.get("BROWSER").game.tiles.length]);
     const room = app.rooms.get("BROWSER"),
       g = room.game;
     for (const u of g.units) {
@@ -158,7 +159,9 @@ test("six browser players deploy on the large map, only the unit owner responds,
     for (const p of pages) await expect.poll(() => p.evaluate(() => phase)).toBe("idle");
     const id = await pages[5].evaluate(() => Net.memberId);
     await pages[5].evaluate(() => Net.socket.close());
+    await expect(pages[5].locator("#disconnectDialog")).toBeVisible();
     await expect.poll(() => pages[0].evaluate(() => Net.snapshot.connected[5])).toBe(false);
+    await pages[5].locator("#reconnectRoom").click();
     await expect
       .poll(
         () =>
@@ -217,10 +220,14 @@ test("room controls and chat stay inside the desktop viewport and the compact la
     await page.screenshot({ path: ".openai/multiplayer-room-final.png" });
     await page.evaluate(() => I18n.setLanguage("en"));
     await expect(page.locator("#roomSettingsHint")).toContainText("automatically");
-    await expect(page.locator("#roomMapSelect")).toContainText("Deep Front");
+    await expect(page.locator("#roomMapSelect option:checked")).toHaveText(
+      await page.evaluate(() => I18n.text(Rules.getMap("frontline_3v3").name)),
+    );
     await page.evaluate(() => I18n.setLanguage("ja"));
     await expect(page.locator("#roomSettingsHint")).toContainText("自動");
-    await expect(page.locator("#roomMapSelect")).toContainText("縦深戦場");
+    await expect(page.locator("#roomMapSelect option:checked")).toHaveText(
+      await page.evaluate(() => I18n.text(Rules.getMap("frontline_3v3").name)),
+    );
   } finally {
     await page.close();
     await app.close();

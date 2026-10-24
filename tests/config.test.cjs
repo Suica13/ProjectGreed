@@ -33,7 +33,7 @@ test("JSON port config, overrides and invalid values", async (t) => {
     const health = await response.json();
     assert.equal(health.ok, true);
     assert.equal(health.project, "ProjectGreed");
-    assert.equal(health.version, "V03");
+    assert.equal(health.version, "V04");
   } finally {
     await app.close();
   }

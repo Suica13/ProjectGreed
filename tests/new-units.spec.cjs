@@ -185,7 +185,7 @@ test("red-side player's own ring is green, allies blue, enemies red, and non-act
       });
     await expect.poll(() => page.evaluate(() => Net.revision)).toBe(room.revision);
     await page.evaluate(() =>
-      Net.request("set_ready", { ready: true, formation: [{ unitId: "MS_09", kitId: "bazooka" }] }),
+      Net.request("start_game", { formation: [{ unitId: "MS_09", kitId: "bazooka" }] }),
     );
     await expect(page.locator("#finalAssemblyPanel")).toBeVisible();
     for (const peer of peers) await peer.act(room, "confirm_formation");

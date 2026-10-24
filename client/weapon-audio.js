@@ -6,7 +6,15 @@ const WeaponAudio = (() => {
     battleMuted = false;
   const buffers = new Map(),
     nodes = new Map(),
+    volumeGains = new Map(),
     startTimes = new WeakMap();
+  const volumeMultiplier = () =>
+    typeof ClientSettings === "undefined" ? 1 : ClientSettings.volume("sfx");
+  function updateVolume() {
+    for (const { gain, volume } of volumeGains.values())
+      gain.gain.value = volume * volumeMultiplier();
+  }
+  window.addEventListener("audio-settings-change", updateVolume);
   function stopNodes(channel = null) {
     for (const [node, kind] of nodes) {
       if (channel && kind !== channel) continue;
@@ -14,6 +22,7 @@ const WeaponAudio = (() => {
         node.stop();
       } catch {}
       nodes.delete(node);
+      volumeGains.delete(node);
     }
   }
   function stop() {
@@ -35,6 +44,7 @@ const WeaponAudio = (() => {
           node.stop();
         } catch {}
         nodes.delete(node);
+        volumeGains.delete(node);
       }
     }
   }
@@ -69,14 +79,17 @@ const WeaponAudio = (() => {
       gain = context.createGain();
     source.buffer = buffers.get(sound.asset);
     source.playbackRate.value = rate;
-    gain.gain.value =
+    const volume =
       sound.volume *
       ART.presentation.sfxVolume *
       (channel === "battle" ? (ART.presentation.battleSfxVolume ?? 0.5) : 1);
+    gain.gain.value = volume * volumeMultiplier();
+    volumeGains.set(source, { gain, volume });
     source.connect(gain);
     gain.connect(context.destination);
     source.onended = () => {
       nodes.delete(source);
+      volumeGains.delete(source);
       source.disconnect();
       gain.disconnect();
     };

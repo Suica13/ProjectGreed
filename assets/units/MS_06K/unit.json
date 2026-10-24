@@ -95,7 +95,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightFoot",
@@ -105,7 +108,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "LeftLeg",
@@ -115,7 +121,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightLeg",
@@ -125,7 +134,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "ZN_120mmMG_NotUsing",
@@ -143,7 +155,10 @@
         "heldWeapon": {
           "not": "ZN_120mmMG"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_MS_06K_BigGun_R_NotUsing",
@@ -163,7 +178,10 @@
         "heldWeapon": {
           "not": "ZN_MS_06K_BigGun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_MS_06K_BigGun_L_NotUsing",
@@ -183,7 +201,10 @@
         "heldWeapon": {
           "not": "ZN_MS_06K_BigGun"
         }
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ZN_MS_06K_BigGun_R",
@@ -199,7 +220,10 @@
       "visibleWhen": {
         "kit": "big_gun",
         "heldWeapon": "ZN_MS_06K_BigGun"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_MS_06K_BigGun_L",
@@ -216,7 +240,10 @@
       "visibleWhen": {
         "kit": "big_gun",
         "heldWeapon": "ZN_MS_06K_BigGun"
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "Crotch",
@@ -236,7 +263,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ArmR",
@@ -246,7 +276,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "BoostLoop",
@@ -292,7 +325,10 @@
       "visibleWhen": {
         "kit": "machine_gun",
         "heldWeapon": "ZN_120mmMG"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ShoulderL",
@@ -302,7 +338,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ShoulderR",
@@ -312,7 +351,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Head",
@@ -325,7 +367,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Head_Close",
@@ -338,7 +383,10 @@
       },
       "visibleWhen": {
         "visorClosed": true
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "MS_06K_Cannon",
@@ -363,7 +411,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     }
   ],
   "animations": {
@@ -394,7 +445,8 @@
     "move": 3,
     "mobility": 65,
     "cost": 275,
-    "counterLimit": 1
+    "counterLimit": 1,
+    "partStructuralStrength": 110.0
   },
   "attackBonuses": {
     "melee": 0,
@@ -445,7 +497,8 @@
         "percent": 1,
         "flat": 0
       }
-    }
+    },
+    "requiredParts": []
   },
   "sourceStats": {
     "hp": 14500,
@@ -454,7 +507,8 @@
     "turnSpeed": 1,
     "reaction": 90,
     "shooting": 110,
-    "melee": 75
+    "melee": 75,
+    "partStructuralStrength": 110.0
   },
   "presentation": {
     "shield": false,
@@ -499,7 +553,7 @@
       },
       "type": "shell",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "en": 12.5,
       "clip": "Common_Shoot_A",
@@ -571,7 +625,11 @@
           "x": 9.18485099360515e-16,
           "y": -15
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "ZN_MS_06K_BigGun": {
       "name": "双联装大枪",
@@ -588,7 +646,7 @@
       },
       "type": "shell",
       "min": 2,
-      "max": 6,
+      "max": 5,
       "hit": 85,
       "en": 15,
       "clip": "Common_StandShoot_A",
@@ -610,22 +668,34 @@
           {
             "delay": 0.1,
             "shots": 1,
-            "muzzleIndex": 0
+            "muzzleIndex": 0,
+            "requiredParts": [
+              "rightArm"
+            ]
           },
           {
             "delay": 0.1,
             "shots": 1,
-            "muzzleIndex": 1
+            "muzzleIndex": 1,
+            "requiredParts": [
+              "leftArm"
+            ]
           },
           {
             "delay": 0.1,
             "shots": 1,
-            "muzzleIndex": 0
+            "muzzleIndex": 0,
+            "requiredParts": [
+              "rightArm"
+            ]
           },
           {
             "delay": 0.1,
             "shots": 1,
-            "muzzleIndex": 1
+            "muzzleIndex": 1,
+            "requiredParts": [
+              "leftArm"
+            ]
           },
           {
             "delay": 0.3
@@ -683,7 +753,13 @@
             }
           }
         ]
-      }
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "Common_Cannon_AntiAir": {
       "name": "肩部防空加农炮",
@@ -700,7 +776,7 @@
       },
       "type": "shell",
       "min": 3,
-      "max": 8,
+      "max": 6,
       "hit": 75,
       "en": 20,
       "clip": "Common_Cannon_Shoot_A",
@@ -793,7 +869,11 @@
           "y": -3.061616997868383e-17
         }
       },
-      "changeHeldWeapon": false
+      "changeHeldWeapon": false,
+      "requiredParts": [
+        "backpack"
+      ],
+      "partBreakModifier": 0.5
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -862,7 +942,70 @@
           }
         ]
       },
-      "hitEffect": "Cqb_Hit_1"
+      "hitEffect": "Cqb_Hit_1",
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
+    },
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000,
+      "damageComponents": {
+        "melee": 2500,
+        "meleeShell": 2500
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.45,
+            "shots": 1
+          },
+          {
+            "delay": 1
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3
+      }
     }
   },
   "weaponKits": [
@@ -870,7 +1013,12 @@
       "id": "machine_gun",
       "name": "120mm机枪套件",
       "cost": 0,
-      "weapons": ["ZN_120mmMG", "Common_Cannon_AntiAir", "Common_Cqb_A"],
+      "weapons": [
+        "ZN_120mmMG",
+        "Common_Cannon_AntiAir",
+        "Common_Cqb_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "120mm机枪套件"
@@ -887,7 +1035,12 @@
       "id": "big_gun",
       "name": "双联装大枪套件",
       "cost": 50,
-      "weapons": ["ZN_MS_06K_BigGun", "Common_Cannon_AntiAir", "Common_Cqb_A"],
+      "weapons": [
+        "ZN_MS_06K_BigGun",
+        "Common_Cannon_AntiAir",
+        "Common_Cqb_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "双联装大枪套件"
@@ -901,5 +1054,8 @@
       }
     }
   ],
-  "tags": ["ZEON", "0079"]
+  "tags": [
+    "ZEON",
+    "0079"
+  ]
 }

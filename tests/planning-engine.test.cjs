@@ -2,7 +2,7 @@ const test = require("node:test"),
   assert = require("node:assert/strict");
 const G = require("../shared/rules.js"),
   { createRoomEngine } = require("../shared/room-engine.js");
-function fixture(t, count = 2) {
+function fixture(t, count = 2, unitCount = 1) {
   let seq = 0;
   const frames = new Map(),
     errors = new Map();
@@ -28,16 +28,24 @@ function fixture(t, count = 2) {
       revision: room.revision,
       round: room.game.round,
       matchId: room.matchId,
-      reactionId: room.pending?.id,
+      reactionId: frames.get(clients[seat])?.pending?.id,
       action,
       ...fields,
     });
     return errors.get(clients[seat]) || frames.get(clients[seat]);
   };
-  if (count > 2) act(0, "configure_room", { ...G.defaultRoomSettings(), mapId: "crossroads_2v2" });
+  if (count > 2)
+    act(0, "configure_room", {
+      ...G.defaultRoomSettings(),
+      mapId: count > 4 ? "frontline_3v3" : "crossroads_2v2",
+    });
   for (const ws of clients.slice(1)) engine.join(ws, { mode: "join", room: "PLAN" });
-  const formation = [{ unitId: "RGM_79", kitId: "machine_gun" }];
+  const formation = Array.from({ length: unitCount }, () => ({
+    unitId: "RGM_79",
+    kitId: "machine_gun",
+  }));
   for (let seat = 0; seat < count; seat++) act(seat, "set_ready", { ready: true, formation });
+  act(0, "start_game", { formation });
   for (let seat = 0; seat < count; seat++) act(seat, "confirm_formation");
   for (let seat = 0; seat < count; seat++) act(seat, "confirm_deployment");
   for (const u of room.game.units) {
@@ -65,7 +73,7 @@ test("room authority accepts an attack plan without opening a reaction or damagi
 });
 module.exports = { fixture };
 
-test("only all allied players finishing their plans opens the first sequential response", (t) => {
+test("only all allied players finishing their plans opens parallel owner responses", (t) => {
   const { room, act } = fixture(t, 4);
   act(0, "attack", { unitId: "0-0", targetId: "1-0", weaponId: "EF_90mmMG" });
   act(2, "attack", { unitId: "2-0", targetId: "3-0", weaponId: "EF_90mmMG" });
@@ -76,7 +84,8 @@ test("only all allied players finishing their plans opens the first sequential r
   assert.equal(room.phase, "reaction");
   assert.equal(room.pending.attacker, "0-0");
   assert.equal(room.game.team, 0);
-  assert.equal(room.plans.length, 1);
+  assert.equal(room.plans.length, 0);
+  assert.equal(room.reactions.length, 2);
 });
 
 test("responses publish a batch and all players must finish playback before team handoff", (t) => {
@@ -86,7 +95,7 @@ test("responses publish a batch and all players must finish playback before team
   act(0, "end_turn");
   act(2, "end_turn");
   const first = room.pending.id;
-  assert.throws(() => act(3, "respond", { response: "defend" }));
+  assert.throws(() => act(3, "respond", { response: "defend", reactionId: first }));
   act(1, "respond", { response: "defend" });
   assert.equal(room.combats.length, 0);
   assert.equal(room.responses.length, 1);
@@ -325,4 +334,134 @@ test("unit action logs identify faction, owner and unit for movement, plans, sta
       line.startsWith("[蓝方][Pilot01]吉姆 使用90mm机枪 → [红方][Pilot02]吉姆"),
     ),
   );
+});
+
+test("three defending players confirm independently at the same revision; results retain attack order", (t) => {
+  const { room, act, clients, frames } = fixture(t, 6);
+  for (const seat of [0, 2, 4])
+    act(seat, "attack", { unitId: seat + "-0", targetId: seat + 1 + "-0", weaponId: "EF_90mmMG" });
+  for (const seat of [0, 2, 4]) act(seat, "end_turn");
+  const revision = room.revision,
+    before = JSON.stringify(room.game),
+    requests = [1, 3, 5].map((seat) => frames.get(clients[seat]).pending);
+  assert.deepEqual(
+    requests.map((r) => r.target),
+    ["1-0", "3-0", "5-0"],
+  );
+  assert.equal(new Set(requests.map((r) => r.id)).size, 3);
+  assert.throws(() =>
+    act(5, "respond", { response: "evade", reactionId: requests[0].id, revision }),
+  );
+  act(5, "respond", {
+    response: "evade",
+    reactionId: requests[2].id,
+    revision,
+    id: "parallel-choice",
+  });
+  assert.equal(
+    JSON.stringify(room.game),
+    before,
+    "no damage, energy or RNG before the last choice",
+  );
+  act(5, "respond", {
+    response: "evade",
+    reactionId: requests[2].id,
+    revision,
+    id: "parallel-choice",
+  });
+  assert.equal(room.responses.length, 1, "a duplicate request never reserves twice");
+  assert.throws(() => act(5, "respond", { response: "evade", reactionId: requests[2].id }));
+  act(3, "respond", { response: "defend", reactionId: requests[1].id, revision });
+  assert.equal(room.phase, "reaction");
+  assert.equal(room.combats.length, 0);
+  assert.equal(
+    frames.get(clients[1]).pending.id,
+    requests[0].id,
+    "another player's confirmation preserves this request",
+  );
+  act(1, "respond", { response: "defend", reactionId: requests[0].id, revision });
+  assert.equal(room.phase, "playback");
+  assert.deepEqual(
+    room.combatBatch.map((battle) => battle.a),
+    ["0-0", "2-0", "4-0"],
+  );
+  assert.equal(room.reactions.length, 0);
+});
+
+test("one owner receives consecutive unit decisions while a teammate keeps their independent request", (t) => {
+  const { room, act, clients, frames } = fixture(t, 4, 2);
+  for (const u of room.game.units) {
+    u.x = u.team ? 4 : 2;
+    u.y = 4 + Math.floor(G.ownerOf(u) / 2) * 4 + Number(u.id.split("-")[1]);
+    room.game.tiles[u.y][u.x] = "plain";
+  }
+  for (const [from, to] of [
+    ["0-0", "1-0"],
+    ["0-1", "1-1"],
+    ["2-0", "3-0"],
+  ])
+    act(G.ownerOf(room.game.units.find((u) => u.id === from)), "attack", {
+      unitId: from,
+      targetId: to,
+      weaponId: "EF_90mmMG",
+    });
+  act(0, "end_turn");
+  act(2, "end_turn");
+  const teammate = frames.get(clients[3]).pending.id,
+    later = room.reactions.find((r) => r.target === "1-1");
+  assert.throws(() => act(1, "respond", { response: "defend", reactionId: later.id }));
+  act(1, "respond", { response: "defend" });
+  assert.equal(frames.get(clients[1]).pending.target, "1-1");
+  assert.equal(frames.get(clients[3]).pending.id, teammate);
+  act(1, "respond", { response: "evade" });
+  assert.equal(room.phase, "reaction");
+  assert.equal(room.combats.length, 0);
+  act(3, "respond", { response: "defend" });
+  assert.equal(room.phase, "playback");
+  assert.equal(room.combats.length, 3);
+});
+
+test("an allied AI answers its own pending request without waiting for the first human response", async (t) => {
+  const { room, act } = fixture(t, 4);
+  room.seats[3].bot = true;
+  for (const seat of [0, 2])
+    act(seat, "attack", { unitId: seat + "-0", targetId: seat + 1 + "-0", weaponId: "EF_90mmMG" });
+  act(0, "end_turn");
+  act(2, "end_turn");
+  await new Promise((resolve) => setTimeout(resolve, 80));
+  assert.equal(room.phase, "reaction");
+  assert.equal(room.pending.target, "1-0");
+  assert.equal(room.responses.length, 1);
+  assert.equal(room.responses[0].intent.target, "3-0");
+  assert.equal(room.combats.length, 0);
+  act(1, "respond", { response: "defend" });
+  assert.equal(room.phase, "playback");
+});
+
+test("reconnect restores a player's own unfinished decision while preserving a teammate's confirmation", (t) => {
+  const { room, act, clients, frames, engine } = fixture(t, 4);
+  for (const seat of [0, 2])
+    act(seat, "attack", { unitId: seat + "-0", targetId: seat + 1 + "-0", weaponId: "EF_90mmMG" });
+  act(0, "end_turn");
+  act(2, "end_turn");
+  const request = frames.get(clients[3]).pending.id;
+  act(1, "respond", { response: "defend" });
+  const token = room.members.get(clients[3].memberId).token;
+  engine.disconnect(clients[3]);
+  const resumed = { readyState: 1 };
+  engine.join(resumed, { mode: "resume", room: "PLAN", token });
+  assert.equal(frames.get(resumed).pending.id, request);
+  assert.equal(frames.get(resumed).pending.target, "3-0");
+  assert.equal(room.responses.length, 1);
+  engine.action(resumed, {
+    id: "resumed-response",
+    action: "respond",
+    response: "evade",
+    reactionId: request,
+    revision: room.revision,
+    round: room.game.round,
+    matchId: room.matchId,
+  });
+  assert.equal(room.phase, "playback");
+  assert.equal(room.combats.length, 2);
 });

@@ -6,8 +6,8 @@ const { test, expect } = require("@playwright/test"),
 const url = pathToFileURL(path.resolve("public/client.html")).href;
 async function offline(page) {
   await page.goto(url);
-  await expect(page).toHaveTitle("ProjectGreed V03");
-  await expect(page.locator("#start")).toContainText("V03");
+  await expect(page).toHaveTitle("ProjectGreed V04");
+  await expect(page.locator("#start")).toContainText("V04");
   await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
@@ -164,8 +164,8 @@ test("both network teams see one cutin per authoritative turn and repeated snaps
       .filter({ hasText: "CUTIN" })
       .getByRole("button", { name: "加入", exact: true })
       .click();
-    await page.locator("#toggleReady").click();
     await other.locator("#toggleReady").click();
+    await page.locator("#startRoomGame").click();
     await page.locator("#confirmFinalFormation").click();
     await other.locator("#confirmFinalFormation").click();
     await page.locator("#confirmDeployment").click();

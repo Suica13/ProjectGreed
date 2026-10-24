@@ -124,8 +124,8 @@ test("two real clients hear game start, own turn, attack lock and target warning
     expect(
       await guest.evaluate(() => notices.filter((s) => s === "presentation/infoSound").length),
     ).toBe(0);
-    await page.locator("#toggleReady").click();
     await guest.locator("#toggleReady").click();
+    await page.locator("#startRoomGame").click();
     await page.locator("#confirmFinalFormation").click();
     await guest.locator("#confirmFinalFormation").click();
     for (const p of [page, guest])
@@ -160,9 +160,20 @@ test("two real clients hear game start, own turn, attack lock and target warning
     Object.assign(a, { x: 2, y: 4 });
     Object.assign(b, { x: 4, y: 4 });
     room.game.tiles[4][2] = room.game.tiles[4][4] = "plain";
-    await page.evaluate(() =>
-      Net.request("attack", { unitId: "0-0", targetId: "1-0", weaponId: "EF_BeamSprayGun" }),
-    );
+    await page.evaluate(() => Net.request("sync"));
+    await expect.poll(() => page.evaluate(() => !Net.awaiting)).toBe(true);
+    await page.locator('.target-button[data-target-id="1-0"]').click();
+    await expect
+      .poll(() =>
+        page.evaluate(() => notices.filter((s) => s === "presentation/lockonSound").length),
+      )
+      .toBe(1);
+    expect(room.phase).toBe("idle");
+    expect(
+      await guest.evaluate(
+        () => notices.filter((s) => s === "presentation/underAttackSound").length,
+      ),
+    ).toBe(0);
     await finishPlanning([page, guest]);
     await expect(guest.locator("#reaction")).toBeVisible();
     await expect
@@ -173,6 +184,12 @@ test("two real clients hear game start, own turn, attack lock and target warning
     await expect
       .poll(() =>
         guest.evaluate(() => notices.filter((s) => s === "presentation/underAttackSound").length),
+      )
+      .toBe(1);
+    await guest.locator(".incoming-entry").first().click();
+    await expect
+      .poll(() =>
+        guest.evaluate(() => notices.filter((s) => s === "presentation/lockonSound").length),
       )
       .toBe(1);
     await page.evaluate(() => Net.receive(JSON.parse(JSON.stringify(Net.snapshot)), Net.socket));

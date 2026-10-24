@@ -89,8 +89,8 @@ test("network handoff waits for the paused viewer to return and finish map playb
       .filter({ hasText: "AUTOFADE" })
       .getByRole("button", { name: "加入", exact: true })
       .click();
-    await page.locator("#toggleReady").click();
     await other.locator("#toggleReady").click();
+    await page.locator("#startRoomGame").click();
     await page.locator("#confirmFinalFormation").click();
     await other.locator("#confirmFinalFormation").click();
     await page.locator("#confirmDeployment").click();

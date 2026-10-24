@@ -22,7 +22,7 @@ test("new variants retain native equipment, fixed cannon, different movement and
     assert.equal(weapon.slot, "fixed");
     assert.equal(weapon.changeHeldWeapon, false);
     assert.equal(weapon.damage, 12000);
-    assert.equal(weapon.max, 8);
+    assert.equal(weapon.max, 6);
     assert.deepEqual(weapon.attack.shots, [0.6, 1.2, 1.8]);
     assert.equal(Sequence.pose(weapon, 0).clip, null);
     assert.equal(Sequence.pose(weapon, 0.4).clip, "Common_Cannon_Shoot_A");
@@ -33,7 +33,7 @@ test("new variants retain native equipment, fixed cannon, different movement and
   assert.equal(G.models.RGM_79L__beam_gun.weapons[0].damage, 8400);
   assert.deepEqual(G.models.RGM_79L__beam_gun.weapons[0].attack.shots, [0.15, 0.55, 0.95]);
 });
-test("V03 accuracy boosts retain bazooka and cannon as the low tier", () => {
+test("V04 accuracy boosts retain bazooka and cannon as the low tier", () => {
   for (const m of Object.values(G.models))
     for (const w of m.weapons) {
       assert.equal(w.hit % 5, 0);
@@ -143,7 +143,7 @@ test("all weapons use EN once per volley and honor available energy", () => {
   for (const model of Object.values(G.models))
     for (const weapon of model.weapons) {
       assert.equal("ammo" in weapon, false);
-      assert.ok(weapon.en > 0);
+      assert.ok(weapon.en > 0 || (weapon.slot === "skill" && weapon.en === 0));
       assert.equal(G.canUse({ hp: 1, en: weapon.en - 1 }, weapon), false);
       assert.equal(G.canUse({ hp: 1, en: weapon.en }, weapon), true);
     }

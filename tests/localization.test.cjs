@@ -52,6 +52,7 @@ test("unit and weapon localization changes display names only and falls back to 
     "EF_HypeBazooka",
     "EF_BeamSaber_A",
     "Common_DoubleVulcan_MS",
+    "Common_Push_A",
   ]);
   assert.equal(
     api.localized({ name: "旧名称", localization: { en: { name: "English only" } } }),

@@ -80,7 +80,7 @@ test("a volley consumes one counter, exhausted counters reject atomically, hando
   G.end(g);
   assert.equal(G.countersRemaining(b), 1);
 });
-test("V03 weapons, bonuses, HP, shield and Step multipliers match the editable configuration", () => {
+test("V04 weapons, bonuses, HP, shield and Step multipliers match the editable configuration", () => {
   const gm = G.models.RGM_79__beam_spray,
     light = G.models.RGM_79L__beam_gun,
     cannon = G.models.RGC_80__machine_gun;

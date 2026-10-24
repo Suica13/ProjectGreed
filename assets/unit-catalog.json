@@ -46,7 +46,11 @@
     "maps/open_dunes_1v1.json",
     "maps/crossroads_2v2.json",
     "maps/ice_bridges_2v2.json",
-    "maps/frontline_3v3.json"
+    "maps/frontline_3v3.json",
+    "maps/central_heights_3v3.json",
+    "maps/serpentine_rainforest_3v3.json",
+    "maps/military_base_5v5.json",
+    "maps/great_plains_5v5.json"
   ],
   "defaultMap": "frontier_1v1"
 }

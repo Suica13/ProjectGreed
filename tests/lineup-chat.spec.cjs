@@ -106,8 +106,8 @@ test("lineup buttons, three-column observers and shared room/game channel permis
     expect(
       await page.evaluate(() => Net.snapshot.chat.some((m) => m.text === "OBSERVER SECRET")),
     ).toBe(false);
-    await page.locator("#toggleReady").click();
     await observer.locator("#toggleReady").click();
+    await page.locator("#startRoomGame").click();
     await page.locator("#confirmFinalFormation").click();
     await observer.locator("#confirmFinalFormation").click();
     await expect(page.locator("#confirmDeployment")).toBeVisible();

@@ -5,7 +5,7 @@ const { pathToFileURL } = require("node:url"),
 const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const url = pathToFileURL(path.resolve("public/client.html")).href;
 
-test("all five maps can be selected in an offline room with descriptions and a new 3v3 map enters deployment", async ({
+test("all nine maps can be selected in an offline room with descriptions and a new 3v3 map enters deployment", async ({
   page,
 }) => {
   const errors = [];
@@ -13,7 +13,7 @@ test("all five maps can be selected in an offline room with descriptions and a n
   await page.goto(url);
   await page.locator("#openSkirmish").click();
   await page.locator("#createOfflineRoom").click();
-  await expect(page.locator("#roomMapSelect option")).toHaveCount(5);
+  await expect(page.locator("#roomMapSelect option")).toHaveCount(9);
   await expect(page.locator("#roomCostLimit")).toHaveValue("3000");
   await expect(page.locator("#roomUnitCostLimit")).toHaveValue("500");
   await expect(page.locator("#roomUnitLimit")).toHaveValue("6");
@@ -31,7 +31,7 @@ test("all five maps can be selected in an offline room with descriptions and a n
   await page.locator("#roomMapSelect").selectOption("frontline_3v3");
   await waitForRoomSettings(page);
   for (const seat of [2, 3, 4, 5]) await page.locator("#addAI" + seat).click();
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await expect(page.locator("#confirmDeployment")).toBeVisible();
   expect(await page.evaluate(() => game.mapId)).toBe("frontline_3v3");
@@ -48,7 +48,7 @@ test("all five maps can be selected in an offline room with descriptions and a n
   expect(errors).toEqual([]);
 });
 
-test("new map themes render in battle and an overview shows all five different layouts", async ({
+test("new map themes render in battle and an overview shows all nine different layouts", async ({
   page,
 }) => {
   const errors = [];
@@ -82,7 +82,7 @@ test("new map themes render in battle and an overview shows all five different l
       background: "#0b1821",
       padding: "18px",
       display: "grid",
-      gridTemplateColumns: "repeat(5,1fr)",
+      gridTemplateColumns: "repeat(3,1fr)",
       gap: "12px",
       color: "white",
       font: "14px sans-serif",

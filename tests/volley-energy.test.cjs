@@ -26,6 +26,7 @@ test("every bazooka and beam rifle fires twice and every cannon fires three sepa
 
 test("all weapon EN costs increase exactly 25%, including fractional costs and shared secondary weapons", () => {
   const groups = {
+    0: ["Common_Push_A"],
     5: ["Common_SingleVulcan_RX_79_G"],
     6: ["Common_DoubleVulcan_MS", "Common_Cqb_A", "ZN_MS_06J_LegMS"],
     8: [
@@ -60,8 +61,6 @@ test("all weapon EN costs increase exactly 25%, including fractional costs and s
       assert.equal(weapon.en, original[weapon.id] * 1.25, model.id + ":" + weapon.id);
     }
   }
-  for (const model of Object.values(G.models).filter((m) => m.prefabId === "MS_14A"))
-    assert.equal(model.hp, 24000);
 });
 
 test("weapons whose volley was increased keep the 30 percent reduction except subsequent balance overrides", () => {
@@ -80,7 +79,16 @@ test("weapons whose volley was increased keep the 30 percent reduction except su
       const before = id === "ZN_360mmBazooka" ? (prefab.id === "MS_06F2" ? 7200 : 9000) : old[id];
       if (before) {
         adjusted++;
-        assert.equal(weapon.damagePerShot, before * 0.7, prefab.id + ":" + id);
+        const beamBuff =
+          (prefab.id === "MS_14A" && id === "ZN_MS_14_BR") ||
+          (prefab.id === "RX_79_G" && id === "EF_GroundTypeBeamRifle")
+            ? 1.1
+            : 1;
+        assert.equal(
+          weapon.damagePerShot,
+          Math.round(before * 0.7 * beamBuff * 1e8) / 1e8,
+          prefab.id + ":" + id,
+        );
         assert.equal(
           Object.values(weapon.damageComponents).reduce((sum, n) => sum + n, 0),
           weapon.damagePerShot,
@@ -101,10 +109,10 @@ test("weapons whose volley was increased keep the 30 percent reduction except su
   assert.equal(G.models.RGM_79__beam_spray.weapons[0].damage, 10000);
 });
 
-test("Panzerfaust gains 25 percent damage as one shot; Zaku shoulder cannon stays just below GM cannon", () => {
+test("Panzerfaust gains another 25 percent damage as one shot; Zaku shoulder cannon stays just below GM cannon", () => {
   const panzer = G.models.MS_06F2__machine_gun.weapons.find((w) => w.id === "ZN_Panzerfaust");
-  assert.equal(panzer.damagePerShot, 4200 * 1.25);
-  assert.deepEqual(panzer.damageComponents, { shell: 5250 });
+  assert.equal(panzer.damagePerShot, 4200 * 1.25 * 1.25);
+  assert.deepEqual(panzer.damageComponents, { shell: 6562.5 });
   assert.equal(panzer.shotCount, 1);
   assert.equal(panzer.attack.strikes.length, 1);
   const zaku = G.models.MS_06K__machine_gun.weapons.find((w) => w.id === "Common_Cannon_AntiAir");

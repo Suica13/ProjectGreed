@@ -29,7 +29,7 @@ test("chat channels sit left of both inputs and messages use channel, player and
   );
   await expect(page.locator("#roomChatLines b")).toHaveCount(0);
   await expect(page.locator("#roomChatLines time")).toHaveCount(0);
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await page.locator("#showChat").click();
   await channelOnLeft(page, "chat");

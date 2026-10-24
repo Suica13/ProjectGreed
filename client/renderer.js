@@ -44,6 +44,7 @@ const SpriteRenderer = (() => {
     };
   }
   function visible(layer, variables, clip, time) {
+    if (layer.requiredParts?.some((part) => variables.brokenParts?.[part])) return false;
     // 图层切换按骨骼动画时间采样，快速演出和暂停不会改变切换位置。
     const window = layer.animationVisibility;
     if (window) {
@@ -64,6 +65,7 @@ const SpriteRenderer = (() => {
     clip = null,
     time = 0,
     loop = false,
+    brokenParts = {},
   ) {
     const animation = models[model].animations[clip];
     const at = animation
@@ -74,6 +76,7 @@ const SpriteRenderer = (() => {
     const variables = state(model, heldWeapon);
     variables.shieldVisible = variables.shieldVisible && shieldVisible;
     variables.moving = moving;
+    variables.brokenParts = brokenParts;
     variables.boosting = models[model].presentation.movement === "boost";
     return models[model].decals.filter((layer) => visible(layer, variables, clip, at));
   }
@@ -153,13 +156,23 @@ const SpriteRenderer = (() => {
     loop = true,
     shieldVisible = true,
     moving = false,
+    brokenParts = {},
   ) {
     const sampled = pose(model, clip, time, loop);
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
-    for (const layer of visibleLayers(model, heldWeapon, shieldVisible, moving, clip, time, loop)) {
+    for (const layer of visibleLayers(
+      model,
+      heldWeapon,
+      shieldVisible,
+      moving,
+      clip,
+      time,
+      loop,
+      brokenParts,
+    )) {
       const image = images[layer.asset];
       if (!image) continue;
       const transform = layerTransform(model, layer, angle, sampled);

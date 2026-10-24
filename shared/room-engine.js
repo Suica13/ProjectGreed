@@ -76,10 +76,8 @@ function createRoomEngine({
     if (member.seat !== null) {
       room.seats[member.seat] = null;
       if (room.battle) room.battle.ready[member.seat] = false;
-      if (!room.started) resetReady(room);
     }
     room.members.delete(member.id);
-    if (room.phase === "assembly") resetFinalReady(room);
     delete ws.room;
     delete ws.memberId;
     delete ws.seat;
@@ -94,7 +92,7 @@ function createRoomEngine({
   }
   // 公开快照不包含随机 seed；席位 token 不放入广播。
   const safeGame = (game) => {
-    let { seed, ...view } = game;
+    let { seed, partSeed, ...view } = game;
     return view;
   };
   function state(room, ack, recipient) {
@@ -104,7 +102,8 @@ function createRoomEngine({
       revision: room.revision,
       game: safeGame(room.game),
       phase: room.phase,
-      pending: room.pending,
+      pending: reactionForSeat(room, recipient?.seat) || room.pending,
+      reactions: room.reactions || [],
       playback: room.playback || null,
       battle: room.battle,
       plans: room.plans || [],
@@ -140,6 +139,7 @@ function createRoomEngine({
       })),
       you: recipient ? { id: recipient.id, seat: recipient.seat } : undefined,
       log: room.log,
+      logNames: room.logNames || [],
       lastEvent: room.lastEvent,
       ack,
     };
@@ -244,31 +244,46 @@ function createRoomEngine({
       !G.hasActions(room.game)
     );
   }
+  function reactionForSeat(room, seat) {
+    return (
+      (room.reactions || []).find((request) => G.ownerOf(unit(room, request.target)) === seat) ||
+      null
+    );
+  }
+  function botReaction(room) {
+    return (
+      (room.reactions || []).find(
+        (request) => room.seats[G.ownerOf(unit(room, request.target))]?.bot,
+      ) || null
+    );
+  }
   function resolvePlans(room, automatic = false) {
-    const pending = planner.next(room);
+    const requests = planner.prepare(room);
     if (room.game.winner !== null) {
       room.phase = "finished";
       return { type: "match_end" };
     }
-    if (pending) {
-      const options = planner.counterOptions(
-        room,
-        unit(room, pending.attacker),
-        unit(room, pending.target),
-      );
-      pending.counterOptions = options.ids;
-      pending.counterTargets = pending.attacks.map((attack) => ({
-        attacker: attack.attacker,
-        weapon: attack.weapon,
-        options: planner.counterOptions(
+    if (requests.length) {
+      for (const pending of requests) {
+        const options = planner.counterOptions(
           room,
-          unit(room, attack.attacker),
+          unit(room, pending.attacker),
           unit(room, pending.target),
-        ).ids,
-      }));
-      pending.countersRemaining = options.remaining;
+        );
+        pending.counterOptions = options.ids;
+        pending.counterTargets = pending.attacks.map((attack) => ({
+          attacker: attack.attacker,
+          weapon: attack.weapon,
+          options: planner.counterOptions(
+            room,
+            unit(room, attack.attacker),
+            unit(room, pending.target),
+          ).ids,
+        }));
+        pending.countersRemaining = options.remaining;
+      }
       room.phase = "reaction";
-      return { type: "attack", ...pending };
+      return { type: "attack", ...room.pending };
     }
     const battles = planner.resolve(room);
     for (const battle of battles)
@@ -278,7 +293,7 @@ function createRoomEngine({
         const weapon = G.modelOf(from).weapons.find((weapon) => weapon.id === e.weapon);
         log(
           room,
-          `${unitLabel(room, from)} 使用${weapon.name} → ${unitLabel(room, to)}：${e.hit ? e.damage + "伤害" : "未命中"}（命中 ${e.hitCount}/${e.strikeCount}）${e.after <= 0 ? "，击破！" : ""}`,
+          `${unitLabel(room, from)} 使用${weapon.name} → ${unitLabel(room, to)}：${e.hit ? e.damage + "伤害" : "未命中"}（命中 ${e.hitCount}/${e.strikeCount}）${e.brokenParts?.length ? "，部位破坏：" + e.brokenParts.map((part) => G.partNames[part]).join("、") : ""}${e.after <= 0 ? "，击破！" : ""}`,
         );
       }
     if (battles.length) {
@@ -410,10 +425,9 @@ function createRoomEngine({
   function resetFinalReady(room) {
     for (const player of members(room)) player.finalReady = !!player.bot;
   }
-  function startIfReady(room, allowEmpty = false) {
+  function startGame(room) {
     if (
       room.started ||
-      (!allowEmpty && !room.seats.every(Boolean)) ||
       !room.seats
         .filter(Boolean)
         .every((player) => (player.bot || onlineMember(player)) && player.ready) ||
@@ -448,6 +462,7 @@ function createRoomEngine({
     resetFinalReady(room);
     // 上一局日志保留到新一局正式进入最终编组。
     room.log = [];
+    room.logNames = [];
     log(room, "进入最终编组，确认队友配置后准备出击。");
   }
   function startDeployment(room) {
@@ -458,8 +473,7 @@ function createRoomEngine({
     )
       return;
     const plans = room.seats.map((player) => (player ? formationPlan(room, player) : null));
-    if (plans.some((plan) => plan && !plan.deployable.length))
-      throw Error("每名玩家至少需要一台可出击单位");
+    if (plans.some((plan) => plan && !plan.deployable.length)) return;
     if (
       ![0, 1].every((team) =>
         room.seats.some((player, seat) => player && G.seatTeam(seat) === team),
@@ -501,14 +515,16 @@ function createRoomEngine({
       return room.battle.ready.every(Boolean) ? { finishBattle: true } : null;
     if (room.game.winner !== null) return null;
     if (room.phase === "reaction") {
-      const target = unit(room, room.pending.target);
+      const pending = botReaction(room);
+      if (!pending) return null;
+      const target = unit(room, pending.target);
       const player = room.seats[G.ownerOf(target)];
       if (!player?.bot) return null;
-      const attacker = unit(room, room.pending.attacker);
-      const weapon = G.modelOf(attacker).weapons.find((w) => w.id === room.pending.weapon);
+      const attacker = unit(room, pending.attacker);
+      const weapon = G.modelOf(attacker).weapons.find((w) => w.id === pending.weapon);
       let response = G.bestResponse(room.game, attacker, target, weapon),
         counterTargetId = attacker.id;
-      const candidates = (room.pending.counterTargets || [])
+      const candidates = (pending.counterTargets || [])
         .flatMap((entry) => {
           const enemy = unit(room, entry.attacker),
             incoming = G.modelOf(enemy).weapons.find((w) => w.id === entry.weapon);
@@ -526,7 +542,12 @@ function createRoomEngine({
       return {
         player,
         action: "respond",
-        fields: { response: response.response, counterId: response.weapon, counterTargetId },
+        fields: {
+          reactionId: pending.id,
+          response: response.response,
+          counterId: response.weapon,
+          counterTargetId,
+        },
       };
     }
     if (room.phase !== "idle") return null;
@@ -575,8 +596,7 @@ function createRoomEngine({
     )
       return;
     if (room.phase === "battle" && !room.battle.ready.every(Boolean)) return;
-    if (room.phase === "reaction" && !room.seats[G.ownerOf(unit(room, room.pending.target))]?.bot)
-      return;
+    if (room.phase === "reaction" && !botReaction(room)) return;
     if (
       room.phase === "idle" &&
       !room.seats.some(
@@ -614,8 +634,10 @@ function createRoomEngine({
   }
   // 使用玩家显示 ID 而非席位编号，避免多人同型号机体的日志混淆。
   function unitLabel(room, unit) {
+    if (unit.customName && !room.logNames?.includes(unit.customName))
+      (room.logNames ||= []).push(unit.customName);
     const player = room.seats[G.ownerOf(unit)];
-    return `[${unit.team ? "红方" : "蓝方"}][${player?.name || "空席位"}]${G.modelOf(unit).name}`;
+    return `[${unit.team ? "红方" : "蓝方"}][${player?.name || "空席位"}]${G.unitName(unit)}`;
   }
   function log(room, text) {
     room.log.unshift(text);
@@ -757,14 +779,15 @@ function createRoomEngine({
             );
             member.ready = true;
           }
-          startIfReady(room, true);
+          startGame(room);
         } catch (error) {
           member.formation = oldFormation;
           member.ready = oldReady;
           throw error;
         }
       } else if (msg.action === "update_formation" || msg.action === "confirm_formation") {
-        if (room.phase !== "assembly") throw Error("当前不是最终编组阶段");
+        if (room.phase !== "assembly" && (room.started || msg.action !== "update_formation"))
+          throw Error("当前不是最终编组阶段");
         if (member.seat === null) {
           if (
             msg.action !== "confirm_formation" ||
@@ -789,15 +812,10 @@ function createRoomEngine({
         );
         if (msg.action === "confirm_formation" && !plan.deployable.length)
           throw Error("至少需要一台可出击单位");
-        const changed = JSON.stringify(formation) !== JSON.stringify(member.formation);
         member.formation = formation;
-        // 队友修改编组后，全队重新确认，避免确认了过期的阵容。
-        if (changed)
-          for (const player of room.seats)
-            if (player && G.seatTeam(player.seat) === G.seatTeam(member.seat))
-              player.finalReady = !!player.bot;
-        member.finalReady = msg.action === "confirm_formation";
-        startDeployment(room);
+        // 保存编组保留自己和队友的准备/确认状态。
+        if (msg.action === "confirm_formation") member.finalReady = true;
+        if (room.phase === "assembly") startDeployment(room);
       } else if (msg.action === "configure_ai") {
         if (room.hostId !== member.id) throw Error("只有房主可以设置 AI");
         if (room.started) throw Error("对局开始后不能修改 AI");
@@ -806,7 +824,6 @@ function createRoomEngine({
         const config = G.validateAISettings(msg.config);
         checkAIArmy(room, { ...bot, aiSettings: config });
         bot.aiSettings = config;
-        resetReady(room);
       } else if (msg.action === "add_ai" || msg.action === "remove_ai") {
         if (room.hostId !== member.id) throw Error("只有房主可以添加或移除 AI");
         if (room.started) throw Error("对局开始后不能添加或移除 AI");
@@ -838,8 +855,6 @@ function createRoomEngine({
           room.members.delete(bot.id);
           room.seats[destination] = null;
         }
-        resetReady(room);
-        startIfReady(room);
       } else if (msg.action === "configure_room") {
         if (room.hostId !== member.id) throw Error("只有房主可以修改房间设置");
         if (room.started) throw Error("对局开始后不能修改地图和 COST");
@@ -858,6 +873,7 @@ function createRoomEngine({
           ),
         };
         if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
+          const mapChanged = settings.mapId !== room.settings.mapId;
           room.settings = settings;
           for (const player of members(room)) {
             if (player.seat !== null && player.seat >= map.spawns.length) {
@@ -873,7 +889,7 @@ function createRoomEngine({
           for (const player of members(room))
             if (player.seat !== null) room.seats[player.seat] = player;
           room.turnDone = Array(map.spawns.length).fill(false);
-          resetReady(room);
+          if (mapChanged) resetReady(room);
         }
       } else if (msg.action === "kick_player") {
         if (room.hostId !== member.id) throw Error("只有房主可以踢出玩家");
@@ -892,8 +908,6 @@ function createRoomEngine({
           send(targetSocket, { type: "room_closed", message: "你已被房主移出房间。" });
           targetSocket.close(1000, "Removed by host");
         }
-        if (!room.started) resetReady(room);
-        else if (room.phase === "assembly") resetFinalReady(room);
       } else if (
         msg.action === "switch_seat" ||
         msg.action === "join_team" ||
@@ -933,13 +947,11 @@ function createRoomEngine({
           }
           movingMember.seat = destination;
           if (movingMember.ws) movingMember.ws.seat = destination;
-          movingMember.ready = false;
           if (destination !== null) {
             room.seats[destination] = movingMember;
             if (room.battle) room.battle.ready[destination] = false;
           }
-          if (!room.started) resetReady(room);
-          else if (room.phase === "assembly") {
+          if (room.phase === "assembly") {
             if (destination !== null && !movingMember.formation)
               movingMember.formation = G.randomFormation(
                 7319,
@@ -947,7 +959,6 @@ function createRoomEngine({
                 G.formationRestrictions(room.settings, destination),
                 room.settings.unitLimit,
               );
-            resetFinalReady(room);
           }
         }
       } else {
@@ -971,7 +982,6 @@ function createRoomEngine({
             member.formation = formation;
           }
           member.ready = msg.ready;
-          startIfReady(room);
         } catch (error) {
           member.formation = oldFormation;
           member.ready = oldReady;
@@ -998,7 +1008,9 @@ function createRoomEngine({
       msg.matchId === room.matchId &&
       ["move", "undo", "wait", "attack", "cancel_attack", "end_turn"].includes(msg.action);
     const currentResponse =
-      msg.action === "respond" && !!room.pending && msg.reactionId === room.pending.id;
+      msg.action === "respond" &&
+      !!reactionForSeat(room, seat) &&
+      msg.reactionId === reactionForSeat(room, seat).id;
     if (
       !Number.isSafeInteger(msg.revision) ||
       msg.revision > room.revision ||
@@ -1096,15 +1108,17 @@ function createRoomEngine({
         break;
       }
       case "respond": {
-        if (room.phase !== "reaction" || !room.pending) throw Error("当前没有待应战的攻击");
-        const b = unit(room, room.pending.target);
+        const pending = reactionForSeat(room, seat);
+        if (room.phase !== "reaction" || !pending) throw Error("当前没有待应战的攻击");
+        if (msg.reactionId !== pending.id) throw Error("应战请求已过期，请处理当前交战");
+        const b = unit(room, pending.target);
         if (G.ownerOf(b) !== seat) throw Error("只有被攻击方能选择应战");
         planner.choose(
           room,
           msg.reactionId,
           msg.response,
           msg.counterId,
-          msg.counterTargetId ?? room.pending.attacker,
+          msg.counterTargetId ?? pending.attacker,
         );
         const decision =
           msg.response === "counter" ? "反击" : msg.response === "defend" ? "防御" : "回避";
@@ -1202,8 +1216,6 @@ function createRoomEngine({
       if (!room.hostId) room.hostId = member.id;
       if (seat !== null) {
         room.seats[seat] = member;
-        if (!room.started) resetReady(room);
-        else if (room.phase === "assembly") resetFinalReady(room);
       }
     }
     let old = member.ws;
@@ -1232,7 +1244,6 @@ function createRoomEngine({
     const member = room?.members.get(ws.memberId);
     if (member?.ws === ws) {
       member.ws = null;
-      if (!room.started && member.seat !== null) resetReady(room);
       room.revision++;
       broadcast(room);
     }

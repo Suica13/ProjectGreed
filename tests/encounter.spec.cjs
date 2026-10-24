@@ -42,7 +42,7 @@ test("faction cards filter and offline encounter uses room preparation without n
   await expect(page.locator("#removeAI2")).toBeVisible();
   await page.locator("#addAI3").click();
   await expect(page.locator("#removeAI3")).toBeVisible();
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await expect(page.locator("#deploymentPanel")).toBeVisible();
   expect(await page.evaluate(() => game.deployment)).toEqual([false, true, true, true]);
@@ -74,8 +74,8 @@ test("offline room resolves a real battle, returns to preparation and starts ano
   });
   await page.locator("#openSkirmish").click();
   await page.locator("#createOfflineRoom").click();
-  await expect(page.locator("#toggleReady")).toBeVisible();
-  await page.locator("#toggleReady").click();
+  await expect(page.locator("#startRoomGame")).toBeVisible();
+  await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await expect(page.locator("#confirmDeployment")).toBeVisible();
   await page.locator("#confirmDeployment").click();
@@ -115,7 +115,7 @@ test("offline room resolves a real battle, returns to preparation and starts ano
   await expect(page.locator("#roomPreparation")).toBeVisible();
   await expect(page.locator("#removeAI1")).toBeVisible();
   expect(await page.evaluate(() => Net.snapshot.members.find((m) => m.bot).ready)).toBe(true);
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await expect(page.locator("#deploymentPanel")).toBeVisible();
   expect(await page.evaluate(() => Net.snapshot.matchId)).not.toBe(oldMatch);

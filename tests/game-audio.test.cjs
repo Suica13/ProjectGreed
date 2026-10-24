@@ -73,7 +73,7 @@ test("native game notifications are embedded OGG assets and play once for start 
 
 test("attack cues follow owner seats, deduplicate snapshots, ignore spectators, and do not replay on reconnect", async () => {
   for (const [seat, expected] of [
-    [0, "presentation/lockonSound"],
+    [0, null],
     [1, "presentation/underAttackSound"],
     [2, null],
     [null, null],
@@ -96,4 +96,62 @@ test("attack cues follow owner seats, deduplicate snapshots, ignore spectators, 
   r.audio.reset();
   await flush();
   assert.deepEqual(r.played, []);
+});
+
+test("parallel response snapshots notify each owner once regardless of another player's confirmation", async () => {
+  for (const seat of [0, 1, 2, 3]) {
+    const r = runtime(),
+      idle = snapshot("idle"),
+      reaction = snapshot("reaction");
+    idle.game.units.push({ id: "other", ownerSeat: 3 });
+    reaction.game.units = idle.game.units;
+    const requests = [
+      { id: "r1", attacker: "a", target: "b" },
+      { id: "r3", attacker: "ally", target: "other" },
+    ];
+    reaction.reactions = requests;
+    reaction.pending = requests[seat === 3 ? 1 : 0];
+    reaction.lastEvent = { type: "attack", ...requests[0] };
+    r.audio.receive(idle, seat, false);
+    r.audio.receive(reaction, seat, true);
+    r.audio.receive(reaction, seat, true);
+    r.audio.receive({ ...reaction, reactions: [requests[1]], pending: requests[1] }, seat, true);
+    await flush();
+    assert.deepEqual(r.played, seat % 2 ? ["presentation/underAttackSound"] : []);
+  }
+});
+
+test("Lockon plays when a local attack target is planned, before ending the turn, and never repeats from response snapshots", async () => {
+  for (const seat of [0, 1, 2, null]) {
+    const r = runtime(),
+      idle = snapshot("idle");
+    r.audio.receive(idle, seat, false);
+    const plan = {
+      ...idle,
+      lastEvent: { type: "plan_attack", id: "plan-1", attacker: "a", target: "b" },
+    };
+    r.audio.receive(plan, seat, true);
+    r.audio.receive(plan, seat, true);
+    await flush();
+    assert.deepEqual(r.played, seat === 0 ? ["presentation/lockonSound"] : []);
+    r.audio.receive(
+      {
+        ...snapshot("reaction"),
+        lastEvent: { type: "attack", id: "response-1", attacker: "a", target: "b" },
+      },
+      seat,
+      true,
+    );
+    await flush();
+    assert.equal(
+      r.played.filter((key) => key === "presentation/lockonSound").length,
+      seat === 0 ? 1 : 0,
+    );
+    r.audio.receive({ ...plan, lastEvent: { ...plan.lastEvent, id: "plan-2" } }, seat, true);
+    await flush();
+    assert.equal(
+      r.played.filter((key) => key === "presentation/lockonSound").length,
+      seat === 0 ? 2 : 0,
+    );
+  }
 });

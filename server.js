@@ -15,6 +15,7 @@ function createServer({
   port = 1313,
   host = "0.0.0.0",
   heartbeatMs = 20000,
+  heartbeatTimeoutMs = Math.max(90000, heartbeatMs * 3),
   resultReturnMs = 30000,
   aiDelayMs = 500,
   aiBattleMs = 10000,
@@ -112,13 +113,16 @@ function createServer({
     members,
     onlineMember,
   } = engine;
-  wss.on("connection", (ws) => {
-    ws.alive = true;
+  wss.on("connection", (ws, request) => {
+    // 浏览器后台节流或短暂系统卡顿不应因一次延迟就失去席位。
+    request.socket.setKeepAlive(true, heartbeatMs);
+    ws.lastSeen = Date.now();
     ws.rateAt = Date.now();
     ws.rateCount = 0;
-    ws.on("pong", () => (ws.alive = true));
+    ws.on("pong", () => (ws.lastSeen = Date.now()));
     ws.on("error", () => {});
     ws.on("message", (data, binary) => {
+      ws.lastSeen = Date.now();
       let msg;
       try {
         if (binary) throw Error("仅支持JSON文本");
@@ -129,7 +133,8 @@ function createServer({
         if (++ws.rateCount > 60) throw Error("操作过于频繁");
         msg = JSON.parse(data.toString());
         if (!msg || typeof msg !== "object" || Array.isArray(msg)) throw Error("消息格式无效");
-        if (msg.type === "list_rooms") {
+        if (msg.type === "ping") send(ws, { type: "pong" });
+        else if (msg.type === "list_rooms") {
           ws.lobby = true;
           send(ws, { type: "rooms", rooms: roomList() });
         } else if (msg.type === "leave") leaveRoom(ws);
@@ -148,12 +153,11 @@ function createServer({
   });
   const heartbeat = setInterval(() => {
     for (const ws of wss.clients) {
-      if (!ws.alive) {
+      if (Date.now() - ws.lastSeen > heartbeatTimeoutMs) {
         ws.terminate();
         continue;
       }
-      ws.alive = false;
-      ws.ping();
+      if (ws.readyState === WebSocket.OPEN) ws.ping();
     }
     let removed = false;
     for (const r of rooms.values())

@@ -65,7 +65,7 @@ test("new weapons retain native shot cadence, alternate left and right mounts an
       assert.ok(ART.sounds[w.sound.asset]);
       if (w.type !== "melee") assert.ok(ART.assets[w.projectile.asset]);
       assert.equal("ammo" in w, false);
-      assert.ok(w.en > 0);
+      assert.ok(w.en > 0 || (w.slot === "skill" && w.en === 0));
     }
   }
 });

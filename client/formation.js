@@ -1,4 +1,4 @@
-/* 编组只保存单位和套件 ID，数值与部署合法性始终由共用规则决定。 */
+/* 编组保存单位/套件 ID 与可选自定义名称；数值和部署合法性由共用规则决定。 */
 const Formation = (() => {
   const storageKey = "slg-formations-v1";
   let saved;
@@ -9,7 +9,13 @@ const Formation = (() => {
   const fallback = Rules.randomFormation(7319);
   // 首次示例尽量展示不同套件；仍服从目录里的数量和预算限制。
   if (first.weaponKits.length >= 3 && Rules.catalog.formation.maxUnits >= 3) {
-    const example = first.weaponKits.slice(0, 3).map((k) => ({ unitId: first.id, kitId: k.id }));
+    const example = [];
+    for (const kit of first.weaponKits.slice(0, 3))
+      example.push({
+        unitId: first.id,
+        kitId: kit.id,
+        customName: Rules.generateUnitName(first.name, example),
+      });
     try {
       Rules.validateFormation(example);
       fallback.splice(0, fallback.length, ...example);
@@ -79,7 +85,11 @@ const Formation = (() => {
     if (!entry) return closeDetail();
     const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId);
     const model = UnitModels[entry.unitId + "__" + entry.kitId];
-    byId("formationDetailTitle").textContent = model.code + " " + model.name;
+    byId("formationDetailTitle").textContent = model.code + " " + (entry.customName || model.name);
+    byId("formationDetailTitle").toggleAttribute("data-i18n-ignore", !!entry.customName);
+    byId("formationDetailName").value = entry.customName || "";
+    byId("formationDetailName").placeholder = model.name;
+    byId("resetFormationUnitName").disabled = !entry.customName;
     byId("formationDetailIntro").textContent = model.description;
     const kits = byId("formationDetailKit");
     kits.replaceChildren();
@@ -87,7 +97,7 @@ const Formation = (() => {
       kits.add(new Option(`${kit.name} · COST ${prefab.stats.cost + kit.cost}`, kit.id));
     kits.value = entry.kitId;
     byId("formationDetailStats").textContent =
-      `HP ${model.hp.toLocaleString()} · EN ${model.en} · 移动 ${model.move} · 机动 ${model.mobility}`;
+      `HP ${model.hp.toLocaleString()} · EN ${model.en} · 移动 ${model.move} · 机动 ${model.mobility} · 零件强度 ${model.partStructuralStrength}`;
     const labels = {
       melee: "格斗",
       shooting: "射击",
@@ -113,6 +123,26 @@ const Formation = (() => {
     for (const weapon of model.weapons) {
       const card = element("div", "formation-weapon-detail");
       card.append(element("strong", "", weapon.name));
+      const all = (weapon.requiredParts || [])
+        .map((part) => I18n.text(Rules.partNames[part]))
+        .join(" / ");
+      const any = (weapon.anyParts || [])
+        .map((part) => I18n.text(Rules.partNames[part]))
+        .join(" / ");
+      card.append(
+        element(
+          "p",
+          "muted",
+          I18n.text("安装部位") +
+            ": " +
+            (all || any || I18n.text("躯干")) +
+            (any ? " · " + I18n.text("任一部位完好即可") : "") +
+            " · " +
+            I18n.text("部位破坏系数") +
+            " " +
+            weapon.partBreakModifier,
+        ),
+      );
       card.append(
         element(
           "p",
@@ -136,8 +166,22 @@ const Formation = (() => {
     return tags;
   }
   function render() {
-    byId("formationBudget").textContent =
-      `${draft.length} / ${unitLimit()} 台 · 编组COST: ${cost(draft)} / ${displayLimit(budget())} · 单位COST上限: ${displayLimit(restrictions().unitCostLimit)}`;
+    const unitCostLimit = restrictions().unitCostLimit;
+    const unitCostRule = element(
+      "span",
+      "formation-unit-cost-limit" + (Number.isFinite(unitCostLimit) ? " has-limit" : ""),
+      `单位COST上限: ${displayLimit(unitCostLimit)}`,
+    );
+    unitCostRule.id = "formationUnitCostLimit";
+    byId("formationBudget").replaceChildren(
+      element(
+        "span",
+        "",
+        `${draft.length} / ${unitLimit()} 台 · 编组COST: ${cost(draft)} / ${displayLimit(budget())}`,
+      ),
+      document.createTextNode(" · "),
+      unitCostRule,
+    );
     byId("formationBudget").classList.toggle("danger-text", draft.length > unitLimit());
     byId("addFormationUnit").disabled =
       draft.length >= unitLimit() || !byId("formationPrefab").value;
@@ -170,7 +214,7 @@ const Formation = (() => {
         image = element("img");
       image.src = unitIcon(entry.unitId + "__" + entry.kitId);
       image.width = 56;
-      image.alt = model.name;
+      image.alt = entry.customName || model.name;
       icon.append(image);
       if (plan.disabled.includes(i)) {
         row.classList.add(
@@ -193,10 +237,11 @@ const Formation = (() => {
       description.title = model.description;
       label.append(
         unitTags(model),
-        element("strong", "", `${i + 1}. ${model.code} ${model.name}`),
+        element("strong", "", `${i + 1}. ${model.code} ${entry.customName || model.name}`),
         element("small", "formation-row-kit", `${kit.name} · COST ${model.cost}`),
         description,
       );
+      if (entry.customName) label.querySelector("strong").setAttribute("data-i18n-ignore", "");
       const remove = element("button", "", "移除");
       remove.onclick = (event) => {
         event.stopPropagation();
@@ -216,16 +261,40 @@ const Formation = (() => {
       closeDetail();
     }
     if (event.key === "Tab") {
-      const controls = [byId("closeFormationDetail"), byId("formationDetailKit")];
+      const controls = [
+        byId("closeFormationDetail"),
+        byId("formationDetailName"),
+        ...(!byId("resetFormationUnitName").disabled ? [byId("resetFormationUnitName")] : []),
+        byId("formationDetailKit"),
+      ];
       if (event.shiftKey && document.activeElement === controls[0]) {
         event.preventDefault();
-        controls[1].focus();
-      } else if (!event.shiftKey && document.activeElement === controls[1]) {
+        controls.at(-1).focus();
+      } else if (!event.shiftKey && document.activeElement === controls.at(-1)) {
         event.preventDefault();
         controls[0].focus();
       }
     }
   });
+  byId("formationDetailName").oninput = (event) => {
+    if (detailIndex === null) return;
+    const entry = draft[detailIndex],
+      name = Rules.normalizeUnitName(event.target.value);
+    if (name) entry.customName = name;
+    else delete entry.customName;
+    byId("resetFormationUnitName").disabled = !name;
+    const model = UnitModels[entry.unitId + "__" + entry.kitId];
+    byId("formationDetailTitle").textContent = model.code + " " + (name || model.name);
+    byId("formationDetailTitle").toggleAttribute("data-i18n-ignore", !!name);
+    render();
+  };
+  byId("resetFormationUnitName").onclick = () => {
+    if (detailIndex === null) return;
+    delete draft[detailIndex].customName;
+    render();
+    renderDetail();
+    byId("formationDetailName").focus();
+  };
   byId("formationDetailKit").onchange = (event) => {
     if (detailIndex === null) return;
     GameAudio.play("changeEquipmentSound");
@@ -283,7 +352,11 @@ const Formation = (() => {
   byId("addFormationUnit").onclick = () => {
     const prefab = Rules.catalog.prefabs.find((p) => p.id === byId("formationPrefab").value);
     if (draft.length >= unitLimit()) return note("已达到编组数量上限。");
-    draft.push({ unitId: prefab.id, kitId: prefab.weaponKits[0].id });
+    draft.push({
+      unitId: prefab.id,
+      kitId: prefab.weaponKits[0].id,
+      customName: Rules.generateUnitName(prefab.name, draft),
+    });
     render();
     byId("formationUnits").scrollTop = byId("formationUnits").scrollHeight;
   };
@@ -345,7 +418,12 @@ const Formation = (() => {
         units,
       };
       persist();
-      if (Net.snapshot?.phase === "assembly") Net.request("update_formation", { formation: units });
+      if (
+        Net.active &&
+        Net.seat !== null &&
+        (!Net.snapshot.started || Net.snapshot.phase === "assembly")
+      )
+        Net.request("update_formation", { formation: units });
       closeDetail();
       setPageView(returnView);
       update();

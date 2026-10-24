@@ -10,6 +10,7 @@ import shutil
 import struct
 from unit_movement import configure_movement
 from unit_introductions import apply_introduction
+from unit_parts import apply_parts
 from pathlib import Path
 
 legacy = runpy.run_path(str(Path(__file__).with_name('import-rgm79.py')))
@@ -171,7 +172,7 @@ for unit_id in ('RGC_80', 'RGM_79L'):
         prefab.update(name='吉姆加农', description='支援型：机动与耐久偏低，固定肩部加农炮不随主武器套件更换。')
         add_stats(prefab, data, 16500, 4, 85, 300)
         prefab['weapons'] = {key: copy.deepcopy(gm['weapons'][key]) for key in ('EF_BeamSprayGun', 'EF_90mmMG')}
-        prefab['weapons']['Common_Cannon'] = import_weapon(prefab, 'Common_Cannon', 'Shell/Common_Cannon.gw', '肩部加农炮', 'shell', 'Common_Cannon_Shoot_A', 3, 7, 75, dict(ammo=8))
+        prefab['weapons']['Common_Cannon'] = import_weapon(prefab, 'Common_Cannon', 'Shell/Common_Cannon.gw', '肩部加农炮', 'shell', 'Common_Cannon_Shoot_A', 3, 5, 75, dict(ammo=8))
         prefab['weapons']['Common_Cqb_A'] = import_weapon(prefab, 'Common_Cqb_A', 'Cqb/Common_Cqb_A.gw', '格斗', 'melee', 'Common_Melee_A', 1, 1, 96, {})
         secondaries = ['Common_Cannon', 'Common_Cqb_A']
         primary = [('beam_spray', '光束喷枪套件', 'EF_BeamSprayGun', 100), ('machine_gun', '机枪套件', 'EF_90mmMG', 0)]
@@ -179,7 +180,7 @@ for unit_id in ('RGC_80', 'RGM_79L'):
         prefab.update(name='轻装吉姆', description='轻装型：高机动、移动距离较长，耐久中等，盾牌较小。')
         add_stats(prefab, data, 18500, 7, 120, 325)
         prefab['weapons'] = {'EF_90mmMG': copy.deepcopy(gm['weapons']['EF_90mmMG'])}
-        prefab['weapons']['EF_BOWA_BeamGun'] = import_weapon(prefab, 'EF_BOWA_BeamGun', 'Beam/EF_BOWA_BeamGun.gw', 'BOWA光束枪', 'beam', 'Common_Shoot_A', 2, 5, 85, dict(en=10))
+        prefab['weapons']['EF_BOWA_BeamGun'] = import_weapon(prefab, 'EF_BOWA_BeamGun', 'Beam/EF_BOWA_BeamGun.gw', 'BOWA光束枪', 'beam', 'Common_Shoot_A', 2, 4, 85, dict(en=10))
         prefab['weapons']['EF_BeamSaber_BF'] = import_weapon(prefab, 'EF_BeamSaber_BF', 'Cqb/EF_BeamSaber_BF.gw', '光束军刀', 'melee', 'Common_Melee_B', 1, 1, 96, dict(en=8))
         secondaries = ['EF_BeamSaber_BF']
         primary = [('beam_gun', '光束枪套件', 'EF_BOWA_BeamGun', 100), ('machine_gun', '机枪套件', 'EF_90mmMG', 0)]
@@ -240,6 +241,7 @@ for prefab in (gm, *new_prefabs):
         weapon['hit'] = int((weapon['hit'] + 2.5) // 5 * 5)
         weapon['hitBonus'] = weapon['hit'] - int(weapon['sourceHit'] * weapon['hitMultiplier'] + .5)
     apply_introduction(prefab, load(ROOT / f'Units/BattleUnits/{prefab["id"]}/{prefab["id"]}.ini'))
+    apply_parts(prefab)
     write(DEST / f'units/{prefab["id"]}/unit.json', prefab)
 
 catalog = json.loads((DEST / 'unit-catalog.json').read_text(encoding='utf-8'))

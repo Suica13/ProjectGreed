@@ -12,7 +12,7 @@ test("forest front presents six seats, capacity-sorted maps, AI preparation and 
   await page.goto(url);
   await page.locator("#openSkirmish").click();
   await page.locator("#createOfflineRoom").click();
-  await expect(page.locator("#roomMapSelect option")).toHaveCount(5);
+  await expect(page.locator("#roomMapSelect option")).toHaveCount(9);
   const counts = await page
     .locator("#roomMapSelect option")
     .evaluateAll((options) => options.map((o) => Rules.getMap(o.value).spawns.length));
@@ -23,7 +23,7 @@ test("forest front presents six seats, capacity-sorted maps, AI preparation and 
   expect(await page.evaluate(() => Net.snapshot.settings.mapId)).toBe("frontline_3v3");
   for (const seat of [2, 3, 4, 5]) await page.locator("#addAI" + seat).click();
   expect(await page.evaluate(() => Net.snapshot.members.length)).toBe(6);
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await expect(page.locator("#confirmDeployment")).toBeVisible();
   expect(await page.evaluate(() => game.deployment.length)).toBe(6);

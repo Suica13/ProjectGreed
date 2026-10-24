@@ -10,7 +10,8 @@
     "move": 5,
     "mobility": 100,
     "cost": 350,
-    "counterLimit": 1
+    "counterLimit": 1,
+    "partStructuralStrength": 120.0
   },
   "materials": {
     "icon": "RGM_79.png",
@@ -116,31 +117,46 @@
         "heldWeapon": {
           "not": "EF_HypeBazooka"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "LeftFoot",
       "texture": "RGM_79_Foot_1.png",
       "bone": "LeftFoot",
-      "order": 1
+      "order": 1,
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightFoot",
       "texture": "RGM_79_Foot_1.png",
       "bone": "RightFoot",
-      "order": 1
+      "order": 1,
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "LeftLeg",
       "texture": "RGM_79_LegL_1.png",
       "bone": "LeftLeg",
-      "order": 2
+      "order": 2,
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightLeg",
       "texture": "RGM_79_LegR_1.png",
       "bone": "RightLeg",
-      "order": 2
+      "order": 2,
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "EF_BeamSprayGun_NotUsing",
@@ -158,7 +174,10 @@
         "heldWeapon": {
           "not": "EF_BeamSprayGun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_90mmMG_NotUsing",
@@ -176,7 +195,10 @@
         "heldWeapon": {
           "not": "EF_90mmMG"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Crotch",
@@ -188,13 +210,19 @@
       "name": "ArmL",
       "texture": "RGM_79_ArmL_1.png",
       "bone": "LeftArm",
-      "order": 4
+      "order": 4,
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ArmR",
       "texture": "RGM_79_ArmR_1.png",
       "bone": "RightArm",
-      "order": 4
+      "order": 4,
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "BoostLoop",
@@ -247,7 +275,10 @@
       "visibleWhen": {
         "kit": "beam_spray",
         "heldWeapon": "EF_BeamSprayGun"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_90mmMG",
@@ -263,7 +294,10 @@
       "visibleWhen": {
         "kit": "machine_gun",
         "heldWeapon": "EF_90mmMG"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_BeamSaber_A",
@@ -280,19 +314,28 @@
       },
       "visibleWhen": {
         "heldWeapon": "EF_BeamSaber_A"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ShoulderL",
       "texture": "RGM_79_ShoulderL_1.png",
       "bone": "LeftShoulder",
-      "order": 6
+      "order": 6,
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ShoulderR",
       "texture": "RGM_79_ShoulderR_1.png",
       "bone": "RightShoulder",
-      "order": 6
+      "order": 6,
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_HypeBazooka",
@@ -308,7 +351,10 @@
       "visibleWhen": {
         "kit": "bazooka",
         "heldWeapon": "EF_HypeBazooka"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Shield",
@@ -323,7 +369,10 @@
       },
       "visibleWhen": {
         "shieldVisible": true
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "Head",
@@ -332,7 +381,10 @@
       "order": 7,
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Head_Close",
@@ -341,7 +393,10 @@
       "order": 7,
       "visibleWhen": {
         "visorClosed": true
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     }
   ],
   "animations": {
@@ -383,7 +438,7 @@
       "name": "光束喷枪",
       "type": "beam",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "en": 15,
       "clip": "Common_Shoot_A2",
@@ -448,13 +503,17 @@
         "en": {
           "name": "Beam Spray Gun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
       "type": "shell",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "clip": "Common_Shoot_A",
       "slot": "primary",
@@ -524,13 +583,17 @@
         "en": {
           "name": "90mm Machine Gun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",
       "type": "shell",
       "min": 3,
-      "max": 6,
+      "max": 5,
       "hit": 70,
       "clip": "Common_Shoot_A",
       "slot": "primary",
@@ -594,7 +657,11 @@
         "en": {
           "name": "Hyper Bazooka"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",
@@ -656,13 +723,20 @@
           "name": "Beam Saber"
         }
       },
-      "swingEffects": ["Cqb_Fire_1_Pink_R", "Cqb_Fire_1_Pink_L"]
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
       "type": "shell",
       "min": 1,
-      "max": 2,
+      "max": 1,
       "hit": 95,
       "clip": null,
       "slot": "secondary",
@@ -725,6 +799,69 @@
         "en": {
           "name": "Head Vulcans"
         }
+      },
+      "requiredParts": [
+        "head"
+      ],
+      "partBreakModifier": 1.0
+    },
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000,
+      "damageComponents": {
+        "melee": 2500,
+        "meleeShell": 2500
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.45,
+            "shots": 1
+          },
+          {
+            "delay": 1
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3
       }
     }
   },
@@ -733,7 +870,12 @@
       "id": "beam_spray",
       "name": "光束喷枪套件",
       "cost": 75,
-      "weapons": ["EF_BeamSprayGun", "EF_BeamSaber_A", "Common_DoubleVulcan_MS"],
+      "weapons": [
+        "EF_BeamSprayGun",
+        "EF_BeamSaber_A",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "光束喷枪套件"
@@ -750,7 +892,12 @@
       "id": "machine_gun",
       "name": "机枪套件",
       "cost": 0,
-      "weapons": ["EF_90mmMG", "EF_BeamSaber_A", "Common_DoubleVulcan_MS"],
+      "weapons": [
+        "EF_90mmMG",
+        "EF_BeamSaber_A",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "机枪套件"
@@ -767,7 +914,12 @@
       "id": "bazooka",
       "name": "火箭筒套件",
       "cost": 50,
-      "weapons": ["EF_HypeBazooka", "EF_BeamSaber_A", "Common_DoubleVulcan_MS"],
+      "weapons": [
+        "EF_HypeBazooka",
+        "EF_BeamSaber_A",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "火箭筒套件"
@@ -830,14 +982,18 @@
         "percent": 10,
         "flat": 25
       }
-    }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
   },
   "sourceStats": {
     "hp": 21000,
     "walkSpeed": 0.65,
     "boostSpeed": 1.4,
     "turnSpeed": 1.75,
-    "reaction": 115
+    "reaction": 115,
+    "partStructuralStrength": 120.0
   },
   "description": "联邦军主力泛用型MS",
   "localization": {
@@ -853,5 +1009,8 @@
       "description": "Federation mainline general-purpose MS"
     }
   },
-  "tags": ["EFSF", "0079"]
+  "tags": [
+    "EFSF",
+    "0079"
+  ]
 }

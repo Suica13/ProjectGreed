@@ -368,3 +368,61 @@ test("native low HP electricity loops five frames below 25 percent and stops at 
   assert.equal(JSON.stringify(u), before);
   assert.equal(r.sounds.length, 0);
 });
+
+test("miss lifetimes stop at the first arena edge for vertical, horizontal and diagonal native projectiles", () => {
+  const r = runtime();
+  for (const [modelId, model] of Object.entries(ART.models))
+    for (const w of model.weapons.filter((w) => w.projectile))
+      for (const [dx, dy] of [
+        [0, 128],
+        [0, -128],
+        [128, 0],
+        [-128, 0],
+        [128, 128],
+        [-128, -128],
+        [0, 512],
+      ]) {
+        const a = {
+            unit: { id: "a", model: modelId },
+            x: 800,
+            y: 800,
+            scale: (1.2 / ART.presentation.mapCellScale) * model.presentation.mapScale,
+            angle: (Math.atan2(dx, -dy) * 180) / Math.PI,
+            arenaWidth: 2048,
+            arenaHeight: 2304,
+          },
+          b = {
+            ...a,
+            unit: { id: "b", model: modelId },
+            x: 800 + dx,
+            y: 800 + dy,
+            angle: a.angle + 180,
+          };
+        const plan = r.fx.plan(w, a, b, { from: "a", to: "b", weapon: w.id, hit: false });
+        assert.ok(Number.isFinite(plan.duration), modelId + "/" + w.id);
+        for (const shot of plan.shots) {
+          const margin = 64 * a.scale * w.projectile.scale + 16,
+            progress = (shot.visibleUntil - shot.at) / shot.flight,
+            x = shot.origin.x + (shot.destination.x - shot.origin.x) * progress,
+            y = shot.origin.y + (shot.destination.y - shot.origin.y) * progress;
+          assert.ok(
+            x >= -margin - 1e-6 && x <= a.arenaWidth + margin + 1e-6,
+            "exit remains inside horizontal bounds",
+          );
+          assert.ok(
+            y >= -margin - 1e-6 && y <= a.arenaHeight + margin + 1e-6,
+            "exit remains inside vertical bounds",
+          );
+          assert.ok(
+            Math.min(
+              Math.abs(x + margin),
+              Math.abs(x - a.arenaWidth - margin),
+              Math.abs(y + margin),
+              Math.abs(y - a.arenaHeight - margin),
+            ) < 1e-6,
+            modelId + "/" + w.id + " finishes on a boundary",
+          );
+          assert.ok(shot.visibleUntil >= shot.impactAt, "Miss still travels through the target");
+        }
+      }
+});

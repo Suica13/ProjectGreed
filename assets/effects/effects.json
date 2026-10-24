@@ -371,5 +371,23 @@
     "drift": 0,
     "sounds": [],
     "source": "MOD native Boost_Start, Resource/Image/Fx/Unit/Boost_Start_1.gw"
+  },
+  "Cqb_Fire_2_Kick_White_R": {
+    "texture": "textures/Cqb_Fire_2_White.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 15,
+    "scaleFrom": 0.45,
+    "scaleTo": 0.25,
+    "alpha": 0.85,
+    "rotation": 90,
+    "offset": {
+      "x": 5,
+      "y": 5
+    },
+    "drift": 21,
+    "sounds": [],
+    "source": "Resource/Image/Fx/Weapon/Cqb/Common/Cqb_Fire_2_Kick_White_R.gw"
   }
 }

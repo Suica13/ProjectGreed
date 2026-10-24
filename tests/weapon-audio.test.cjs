@@ -58,7 +58,7 @@ const weapon = (id) =>
     .flatMap((m) => m.weapons)
     .find((w) => w.id === id);
 test("original OGG references, volumes and original weapon identifiers are embedded offline", () => {
-  assert.equal(Object.keys(ART.sounds).filter((key) => key.startsWith("RGM_79/")).length, 5);
+  assert.equal(Object.keys(ART.sounds).filter((key) => key.startsWith("RGM_79/")).length, 6);
   assert.equal(ART.presentation.sfxVolume, 0.5);
   for (const [id, name, file, volume] of [
     ["EF_BeamSprayGun", "光束喷枪", "BeamSprayGun_1.ogg", 0.6],

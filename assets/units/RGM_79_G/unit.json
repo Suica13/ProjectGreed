@@ -108,7 +108,10 @@
         "heldWeapon": {
           "not": "EF_GroundTypeBazooka"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_180mmCannon_NotUsing",
@@ -127,7 +130,10 @@
         "heldWeapon": {
           "not": "EF_180mmCannon"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "LeftFoot",
@@ -137,7 +143,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightFoot",
@@ -147,7 +156,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "LeftLeg",
@@ -157,7 +169,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightLeg",
@@ -167,7 +182,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "EF_100mmMG_NotUsing",
@@ -185,7 +203,10 @@
         "heldWeapon": {
           "not": "EF_100mmMG"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_GroundTypeBeamRifle_NotUsing",
@@ -203,7 +224,10 @@
         "heldWeapon": {
           "not": "EF_GroundTypeBeamRifle"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Crotch",
@@ -223,7 +247,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ArmR",
@@ -233,7 +260,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "BoostLoop",
@@ -279,7 +309,10 @@
       "visibleWhen": {
         "kit": "machine_gun",
         "heldWeapon": "EF_100mmMG"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_GroundTypeBeamRifle",
@@ -295,7 +328,10 @@
       "visibleWhen": {
         "kit": "beam_rifle",
         "heldWeapon": "EF_GroundTypeBeamRifle"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_180mmCannon",
@@ -311,7 +347,10 @@
       "visibleWhen": {
         "kit": "cannon",
         "heldWeapon": "EF_180mmCannon"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_BeamSaber_A",
@@ -328,7 +367,10 @@
       },
       "visibleWhen": {
         "heldWeapon": "EF_BeamSaber_A"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Shield",
@@ -343,7 +385,10 @@
       },
       "visibleWhen": {
         "shieldVisible": true
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ShoulderL",
@@ -353,7 +398,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ShoulderR",
@@ -363,7 +411,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_GroundTypeBazooka",
@@ -379,7 +430,10 @@
       "visibleWhen": {
         "kit": "bazooka",
         "heldWeapon": "EF_GroundTypeBazooka"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_GroundTypeMissileLauncher",
@@ -395,7 +449,10 @@
       "visibleWhen": {
         "kit": "missile_launcher",
         "heldWeapon": "EF_GroundTypeMissileLauncher"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Head",
@@ -408,7 +465,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Head_Close",
@@ -421,7 +481,10 @@
       },
       "visibleWhen": {
         "visorClosed": true
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     }
   ],
   "animations": {
@@ -452,7 +515,8 @@
     "move": 5,
     "mobility": 105,
     "cost": 500,
-    "counterLimit": 1
+    "counterLimit": 1,
+    "partStructuralStrength": 120.0
   },
   "attackBonuses": {
     "melee": 15,
@@ -467,7 +531,7 @@
     },
     "shell": {
       "flat": 200,
-      "percent": 30
+      "percent": 20
     },
     "melee": {
       "percent": 10,
@@ -503,7 +567,10 @@
         "percent": 10,
         "flat": 25
       }
-    }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
   },
   "sourceStats": {
     "hp": 25000,
@@ -512,7 +579,8 @@
     "turnSpeed": 1.55,
     "reaction": 115,
     "shooting": 120,
-    "melee": 115
+    "melee": 115,
+    "partStructuralStrength": 120.0
   },
   "presentation": {
     "shield": true,
@@ -557,7 +625,7 @@
       },
       "type": "shell",
       "min": 3,
-      "max": 6,
+      "max": 5,
       "hit": 75,
       "en": 20,
       "clip": "Common_Shoot_A",
@@ -631,7 +699,11 @@
           "x": 7.203804700866784e-16,
           "y": -11.764705882352942
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
     },
     "EF_100mmMG": {
       "name": "100mm机枪",
@@ -648,7 +720,7 @@
       },
       "type": "shell",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "en": 12.5,
       "clip": "Common_Shoot_A",
@@ -720,7 +792,11 @@
           "x": -1.1764705882352933,
           "y": -11.764705882352942
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "EF_GroundTypeBeamRifle": {
       "name": "陆战型光束步枪",
@@ -737,7 +813,7 @@
       },
       "type": "beam",
       "min": 2,
-      "max": 6,
+      "max": 5,
       "hit": 90,
       "en": 17.5,
       "clip": "Common_Shoot_A",
@@ -811,7 +887,11 @@
           "x": -1,
           "y": -6.123233995736766e-17
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "EF_180mmCannon": {
       "name": "180mm加农炮",
@@ -828,7 +908,7 @@
       },
       "type": "shell",
       "min": 3,
-      "max": 8,
+      "max": 6,
       "hit": 75,
       "en": 25,
       "clip": "Common_Shoot_Two_Handed_A",
@@ -911,7 +991,11 @@
           "x": 0,
           "y": 0
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "EF_GroundTypeMissileLauncher": {
       "name": "陆战型导弹发射器",
@@ -928,7 +1012,7 @@
       },
       "type": "shell",
       "min": 3,
-      "max": 7,
+      "max": 5,
       "hit": 95,
       "en": 20,
       "clip": "Common_Shoot_A",
@@ -1001,7 +1085,11 @@
           "y": 5
         }
       },
-      "role": "guided_missile"
+      "role": "guided_missile",
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",
@@ -1063,7 +1151,73 @@
           "name": "Beam Saber"
         }
       },
-      "swingEffects": ["Cqb_Fire_1_Pink_R", "Cqb_Fire_1_Pink_L"]
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
+    },
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000,
+      "damageComponents": {
+        "melee": 2500,
+        "meleeShell": 2500
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.45,
+            "shots": 1
+          },
+          {
+            "delay": 1
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3
+      }
     }
   },
   "weaponKits": [
@@ -1071,7 +1225,11 @@
       "id": "machine_gun",
       "name": "100mm机枪套件",
       "cost": 0,
-      "weapons": ["EF_100mmMG", "EF_BeamSaber_A"],
+      "weapons": [
+        "EF_100mmMG",
+        "EF_BeamSaber_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "100mm机枪套件"
@@ -1088,7 +1246,11 @@
       "id": "bazooka",
       "name": "陆战型火箭筒套件",
       "cost": 50,
-      "weapons": ["EF_GroundTypeBazooka", "EF_BeamSaber_A"],
+      "weapons": [
+        "EF_GroundTypeBazooka",
+        "EF_BeamSaber_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "陆战型火箭筒套件"
@@ -1105,7 +1267,11 @@
       "id": "beam_rifle",
       "name": "陆战型光束步枪套件",
       "cost": 100,
-      "weapons": ["EF_GroundTypeBeamRifle", "EF_BeamSaber_A"],
+      "weapons": [
+        "EF_GroundTypeBeamRifle",
+        "EF_BeamSaber_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "陆战型光束步枪套件"
@@ -1122,7 +1288,11 @@
       "id": "cannon",
       "name": "180mm加农炮套件",
       "cost": 100,
-      "weapons": ["EF_180mmCannon", "EF_BeamSaber_A"],
+      "weapons": [
+        "EF_180mmCannon",
+        "EF_BeamSaber_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "180mm加农炮套件"
@@ -1139,7 +1309,11 @@
       "id": "missile_launcher",
       "name": "陆战型导弹发射器套件",
       "cost": 50,
-      "weapons": ["EF_GroundTypeMissileLauncher", "EF_BeamSaber_A"],
+      "weapons": [
+        "EF_GroundTypeMissileLauncher",
+        "EF_BeamSaber_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "陆战型导弹发射器套件"
@@ -1153,5 +1327,8 @@
       }
     }
   ],
-  "tags": ["EFSF", "0079"]
+  "tags": [
+    "EFSF",
+    "0079"
+  ]
 }

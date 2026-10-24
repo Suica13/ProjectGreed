@@ -58,13 +58,13 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
   battleUnit = (id) => battleView?.actors?.find((unit) => unit.id === id) || getUnit(id),
   getWeapon = (u, id) => Rules.modelOf(u).weapons.find((w) => w.id === id),
   unitIcon = (model) => ART.assets[SpriteRenderer.models[model].icon],
-  unitName = (u) => Rules.modelOf(u).name,
+  unitName = (u) => Rules.unitName(u),
   formatNumber = (n) => Number(n).toLocaleString("en-US"),
   isAI = () => !Net.active && game.ai && game.team === 1,
   isBusy = () =>
     phase !== "idle" || !!Net.awaiting || (!Net.active && MapEffects.pending()) || TurnFlow.active;
 function note(text) {
-  byId("toast").textContent = text;
+  setNamedText(byId("toast"), text);
   byId("toast").classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => byId("toast").classList.remove("show"), 2200);
@@ -83,29 +83,72 @@ function playerNameClass(memberId, hostId = Net.snapshot?.hostId, selfId = Net.m
     (memberId === hostId ? "player-host" : memberId === selfId ? "player-self" : "player-other")
   );
 }
+function escapeHtml(value) {
+  return String(value).replace(
+    /[&<>"']/g,
+    (char) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      })[char],
+  );
+}
+// Keep player-written unit names literal while surrounding UI text is translated.
+function setNamedText(el, text, names = game.units.map((unit) => unit.customName).filter(Boolean)) {
+  el.replaceChildren();
+  let rest = String(text);
+  const unique = [...new Set(names)].sort((a, b) => b.length - a.length);
+  while (rest) {
+    let next = null;
+    for (const name of unique) {
+      const at = rest.indexOf(name);
+      if (at >= 0 && (!next || at < next.at)) next = { name, at };
+    }
+    if (!next) {
+      el.append(document.createTextNode(rest));
+      break;
+    }
+    if (next.at) el.append(document.createTextNode(rest.slice(0, next.at)));
+    const literal = document.createElement("span");
+    literal.setAttribute("data-i18n-ignore", "");
+    literal.textContent = next.name;
+    el.append(literal);
+    rest = rest.slice(next.at + next.name.length);
+  }
+}
 function element(tag, cls, text) {
   let el = document.createElement(tag);
   if (cls) el.className = cls;
-  if (text !== undefined) el.textContent = text;
+  if (text !== undefined) setNamedText(el, text);
   return el;
 }
 function htmlWeapon(w, u) {
+  w = Rules.weaponStats(w, u);
+  const liveStrikes = Rules.availableStrikes(u, w),
+    liveShots = new Set(liveStrikes.map((step) => step.shotIndex)).size,
+    damage =
+      w.damagePerShot * liveStrikes.reduce((sum, step) => sum + (step.damageMultiplier ?? 1), 0);
   const damageLabel = w.attack.strikes.some((s) => s.damageMultiplier !== 1)
     ? "分段 " +
       w.attack.strikes.map((s) => formatNumber(w.damagePerShot * s.damageMultiplier)).join(" + ")
     : "单发 " +
       formatNumber(w.damagePerShot) +
       " × " +
-      w.shotCount +
+      (liveShots < w.shotCount ? liveShots + "/" + w.shotCount : w.shotCount) +
       " 发" +
       (w.hitsPerShot > 1 ? " × " + w.hitsPerShot + " 段" : "");
+  const broken = Rules.brokenWeaponParts(u, w);
   return /* HTML */ `<div class="weapon-title">
       <span class="weapon-name">${w.name}</span
       ><span class="type ${w.type}">${Rules.typeNames[w.type]}</span>
     </div>
     <div class="weapon-meta">
-      射程 ${w.min}–${w.max}　${damageLabel} = ${formatNumber(w.damage)}　命中 ${w.hit}%<br />EN
+      射程 ${w.min}–${w.max}　${damageLabel} = ${formatNumber(damage)}　命中 ${w.hit}%<br />EN
       ${w.en} / 剩余 ${u.en}
+      ${broken.length ? `<br /><span class="red">${broken.map((part) => I18n.text(Rules.partNames[part])).join(" / ")} · ${I18n.text("部位损坏，无法使用")}</span>` : ""}
     </div>`;
 }
 // 刷新顶栏、单位列表、提示和右侧指令，不推进回合。
@@ -147,7 +190,7 @@ function update() {
           ? "点击蓝色格子移动，或直接选择武器攻击。"
           : "选择己方尚未行动的单位。";
   if (Net.active) {
-    if (phase === "reaction_wait") hint = "等待对手选择反击、防御或回避。";
+    if (phase === "reaction_wait") hint = "等待其他玩家选择反击、防御或回避。";
     else if (phase === "playback_wait") hint = "等待所有玩家完成演出。";
     else if (phase === "waiting") hint = "等待红方加入房间。";
     else if (phase === "disconnected") hint = "连接中断：战局已暂停，恢复连接后继续。";
@@ -214,7 +257,9 @@ function renderRoster(busy) {
       image.src = unitIcon(unit.model);
       image.alt = "";
       const info = element("span", "roster-unit-info");
-      info.append(element("strong", "roster-unit-name", model.name));
+      const name = element("strong", "roster-unit-name", unitName(unit));
+      if (unit.customName) name.setAttribute("data-i18n-ignore", "");
+      info.append(name);
       for (const [kind, current, maximum] of [
         ["hp", unit.hp, model.hp],
         ["en", unit.en, model.en],
@@ -251,7 +296,7 @@ function renderRoster(busy) {
       );
       button.dataset.unitId = unit.id;
       button.append(image, info);
-      button.setAttribute("aria-label", model.name + " · " + I18n.text("定位单位"));
+      button.setAttribute("aria-label", unitName(unit) + " · " + I18n.text("定位单位"));
       button.disabled = unit.hp <= 0 || (busy && phase !== "deployment");
       button.onclick = () => {
         MapCamera.focus(unit.x, unit.y);
@@ -286,9 +331,10 @@ function renderPanel() {
   let head = element("div", "unit-card-head");
   head.innerHTML = /* HTML */ `<img src="${unitIcon(u.model)}" alt="" />
     <div>
-      <strong class="${u.team ? "red" : "blue"}">${m.name}</strong
+      <strong class="${u.team ? "red" : "blue"}">${escapeHtml(unitName(u))}</strong
       ><small>${m.code} · ${m.kitName} · ${teamName(u.team)}</small>
     </div>`;
+  if (u.customName) head.querySelector("strong").setAttribute("data-i18n-ignore", "");
   panel.append(head);
   const identity = UnitIdentity.owner(u),
     ownership = element("div", "unit-ownership"),
@@ -314,6 +360,7 @@ function renderPanel() {
     <div><span>EN</span>${u.en} / ${m.en}</div>
     <div><span>移动力</span>${m.move} 格</div>
     <div><span>机动性</span>${m.mobility}</div>
+    <div><span>零件强度</span>${m.partStructuralStrength}</div>
     <div>
       <span>盾牌</span
       >${m.shield.hp > 0 ? formatNumber(u.shield ?? 0) + " / " + formatNumber(m.shield.hp) : "无独立盾牌"}
@@ -323,6 +370,28 @@ function renderPanel() {
       ${Rules.terrain[game.tiles[u.y][u.x]].name}
     </div>`;
   panel.append(stats);
+  const partStatus = element("div", "rule-box");
+  partStatus.id = "unitPartStatus";
+  partStatus.append(element("strong", "", "部位状态"));
+  for (const [part, name] of Object.entries(Rules.partNames)) {
+    const broken = !!u.brokenParts?.[part];
+    const label = element(
+      "span",
+      broken ? "red" : "muted",
+      " · " + I18n.text(name) + ": " + I18n.text(broken ? "损坏" : "完好"),
+    );
+    label.dataset.part = part;
+    partStatus.append(label);
+  }
+  const penalty = Rules.partPenalties(u),
+    effects = [];
+  if (penalty.attackMultiplier < 1) effects.push(I18n.text("头部损毁：攻击力-25%"));
+  if (penalty.moveMultiplier < 1)
+    effects.push(I18n.text("背包损毁：移动力-25%（向下取整，至少1格）"));
+  if (penalty.resistancePenalty)
+    effects.push(I18n.text("四肢损毁：抗性降低") + " " + penalty.resistancePenalty + "%");
+  if (effects.length) partStatus.append(element("p", "red", effects.join(" · ")));
+  panel.append(partStatus);
   const protection = element("details", "rule-box");
   protection.append(element("summary", "", "防护属性"));
   protection.append(element("p", "helper", m.description));
@@ -380,8 +449,14 @@ function renderPanel() {
       !canCommand,
     ],
     [
-      "撤销移动",
+      u.moved ? "撤回移动" : "移动",
       () => {
+        if (!u.moved) {
+          mode = "select";
+          weaponId = null;
+          update();
+          return;
+        }
         if (Net.active) {
           Net.request("undo", { unitId: u.id });
           return;
@@ -391,7 +466,7 @@ function renderPanel() {
         weaponId = null;
         update();
       },
-      !canCommand || !Rules.canUndo(game, u),
+      !canCommand || (u.moved ? !Rules.canUndo(game, u) : u.acted),
     ],
     [
       "取消选武器",
@@ -410,22 +485,26 @@ function renderPanel() {
   }
   panel.append(actions);
   panel.append(element("div", "section-title", "WEAPONS / 选择攻击武器"));
-  let list = element("div", "weapon-list");
-  for (const w of m.weapons) {
-    let b = element("button", "weapon" + (weaponId === w.id ? " active" : ""));
-    b.innerHTML = htmlWeapon(w, u);
-    b.disabled = !canCommand || !Rules.canUse(u, w);
-    b.setAttribute("aria-label", "攻击武器 " + w.name);
-    b.onclick = () => {
-      GameAudio.play("selectWeaponSound");
-      weaponId = w.id;
-      mode = "target";
-      if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
-      update();
-    };
-    list.append(b);
+  for (const skills of [false, true]) {
+    if (skills) panel.append(element("div", "section-title", "SKILLS / 技能"));
+    let list = element("div", "weapon-list");
+    for (const w of m.weapons.filter((w) => (w.slot === "skill") === skills)) {
+      let b = element("button", "weapon" + (weaponId === w.id ? " active" : ""));
+      b.innerHTML = htmlWeapon(w, u);
+      b.disabled = !canCommand || !Rules.canUse(u, w);
+      b.classList.toggle("part-disabled", Rules.brokenWeaponParts(u, w).length > 0);
+      b.setAttribute("aria-label", (skills ? "技能 " : "攻击武器 ") + w.name);
+      b.onclick = () => {
+        GameAudio.play("selectWeaponSound");
+        weaponId = w.id;
+        mode = "target";
+        if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
+        update();
+      };
+      list.append(b);
+    }
+    panel.append(list);
   }
-  panel.append(list);
   if (mode === "target" && weaponId && own) {
     let w = getWeapon(u, weaponId),
       targets = game.units.filter((t) => Rules.canAttack(game, u, t, w));
@@ -567,6 +646,27 @@ function drawMap(now) {
           ctx.lineTo(tx + 9, ty + 12);
           ctx.fill();
         }
+      } else if (kind === "highland") {
+        ctx.strokeStyle = "#e8d9ad99";
+        ctx.lineWidth = Math.max(1, tile * 0.04);
+        ctx.beginPath();
+        if (game.tiles[y - 1]?.[x] !== "highland") {
+          ctx.moveTo(px + tile * 0.1, py + tile * 0.14);
+          ctx.lineTo(px + tile * 0.9, py + tile * 0.14);
+        }
+        if (game.tiles[y + 1]?.[x] !== "highland") {
+          ctx.moveTo(px + tile * 0.1, py + tile * 0.86);
+          ctx.lineTo(px + tile * 0.9, py + tile * 0.86);
+        }
+        if (game.tiles[y]?.[x - 1] !== "highland") {
+          ctx.moveTo(px + tile * 0.14, py + tile * 0.1);
+          ctx.lineTo(px + tile * 0.14, py + tile * 0.9);
+        }
+        if (game.tiles[y]?.[x + 1] !== "highland") {
+          ctx.moveTo(px + tile * 0.86, py + tile * 0.1);
+          ctx.lineTo(px + tile * 0.86, py + tile * 0.9);
+        }
+        ctx.stroke();
       } else if (kind === "rock") {
         ctx.fillStyle = "#727978";
         ctx.beginPath();
@@ -645,7 +745,7 @@ function drawMap(now) {
     }
     if (!combatPose) angle = PlanningUI.facing(u, angle);
     ctx.save();
-    ctx.globalAlpha = combatPose ? 1 : u.acted && u.team === game.team ? 0.55 : 1;
+    ctx.globalAlpha = 1;
     UnitIdentity.drawRing(ctx, u, pos, tile);
     if (u.id === selected || (phase === "reaction" && pending?.target === u.id)) {
       ctx.strokeStyle = "#e1edaa";
@@ -668,6 +768,7 @@ function drawMap(now) {
       !combatPose,
       (u.shield ?? 1) > 0,
       !!motion || !!combatPose?.moving,
+      u.brokenParts,
     );
     SpriteEffects.lowHp(
       ctx,
@@ -693,6 +794,18 @@ function drawMap(now) {
     ctx.fillStyle = "#efd568";
     const enRatio = Math.max(0, Math.min(1, u.en / Math.max(1, Rules.modelOf(u).en)));
     ctx.fillRect(barx, bary + 6, hpw * enRatio, 3);
+    if (u.acted && u.team === game.team) {
+      ctx.save();
+      ctx.font = `bold ${Math.max(10, tile * 0.18)}px system-ui`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "bottom";
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#07141c";
+      ctx.fillStyle = "#efd568";
+      ctx.strokeText("E", barx + hpw + 3, bary - 1);
+      ctx.fillText("E", barx + hpw + 3, bary - 1);
+      ctx.restore();
+    }
     if (MapCamera.zoom >= 3) {
       ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
       const nameSize = Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize;
@@ -738,8 +851,14 @@ byId("map").onpointermove = (e) => {
       " · " +
       t.name +
       (unit ? " · " + teamName(unit.team) + " " + unitName(unit) : "") +
-      " · 掩护 " +
+      " · " +
+      I18n.text("远战命中") +
+      " -" +
       t.cover +
+      "% / " +
+      I18n.text("近战命中") +
+      " -" +
+      (t.meleeCover ?? 0) +
       "%";
   }
 };
@@ -827,6 +946,7 @@ function beginAttack(a, b, w) {
     return;
   }
   if (phase !== "idle" || !Rules.canAttack(game, a, b, w) || a.acted) return;
+  GameAudio.play("lockonSound");
   Rules.faceTarget(a, b);
   Rules.faceTarget(b, a);
   pending = { attacker: a.id, target: b.id, weapon: w.id };
@@ -893,6 +1013,7 @@ function renderReaction() {
           (unit.y + 1),
         unit.id,
       );
+      if (unit.customName) option.setAttribute("data-i18n-ignore", "");
       option.disabled = !legalTargets.some((target) => target.attacker === entry.attacker);
       return option;
     }),
@@ -920,6 +1041,7 @@ function renderReaction() {
     const owner = element("small", "response-owner", identity.name + " · " + identity.team);
     owner.setAttribute("data-i18n-ignore", "");
     const title = element("strong", "", unitName(unit));
+    if (unit.customName) title.setAttribute("data-i18n-ignore", "");
     const summary = element("div", "summary");
     summary.append(
       element("div", "", `HP ${formatNumber(unit.hp)} / ${formatNumber(Rules.modelOf(unit).hp)}`),
@@ -1024,7 +1146,7 @@ function selectCounterTarget(id) {
   if (Net.awaiting || !legalCounterTargets().some((entry) => entry.attacker === id)) return false;
   if (Net.active && !Net.owns(getUnit(pending.target))) return false;
   counterTargetId = id;
-  GameAudio.play("selectUnitSound");
+  GameAudio.play("lockonSound");
   renderReaction();
   return true;
 }
@@ -1062,7 +1184,7 @@ function commitAttack() {
     displayHp: before,
     completed: false,
   };
-  byId("battleTitle").textContent = unitName(a) + " vs " + unitName(b);
+  setNamedText(byId("battleTitle"), unitName(a) + " vs " + unitName(b));
   BattleWindow.show(battleView);
   byId("continueBattle").disabled = true;
   byId("skipBattle").disabled = false;
@@ -1189,7 +1311,7 @@ function drawBattle(now) {
           : view.displayHp[unit.id];
       return /* HTML */ `<div>
         <strong class="${unit.team ? "red" : "blue"}"
-          >${teamName(unit.team)} ${unitName(unit)}</strong
+          >${teamName(unit.team)} ${escapeHtml(unitName(unit))}</strong
         >
         <div class="hp-track">
           <div

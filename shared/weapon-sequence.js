@@ -4,6 +4,8 @@ const WeaponSequence = (() => {
     let time = 0;
     const shots = [],
       damageMultipliers = [],
+      partBreakModifiers = [],
+      requiredParts = [],
       muzzleIndices = [],
       animations = [
         {
@@ -16,11 +18,15 @@ const WeaponSequence = (() => {
     for (const step of weapon.attack.steps) {
       const repeat = step.repeat ?? 1,
         count = step.shots ?? 0,
-        damageMultiplier = step.damageMultiplier ?? 1;
+        damageMultiplier = step.damageMultiplier ?? 1,
+        partBreakModifier = step.partBreakModifier ?? weapon.partBreakModifier ?? 1;
       if (
         !Number.isInteger(step.muzzleIndex ?? 0) ||
         (step.muzzleIndex ?? 0) < 0 ||
         (step.muzzleIndex ?? 0) > 31 ||
+        !Array.isArray(step.requiredParts ?? []) ||
+        !Number.isFinite(partBreakModifier) ||
+        partBreakModifier < 0 ||
         !Number.isFinite(damageMultiplier) ||
         damageMultiplier < 0 ||
         damageMultiplier > 10 ||
@@ -40,6 +46,8 @@ const WeaponSequence = (() => {
         for (let n = 0; n < count; n++) {
           shots.push(time);
           damageMultipliers.push(damageMultiplier);
+          partBreakModifiers.push(partBreakModifier);
+          requiredParts.push(step.requiredParts || []);
           muzzleIndices.push(step.muzzleIndex ?? 0);
         }
       }
@@ -75,6 +83,8 @@ const WeaponSequence = (() => {
               shotIndex,
               hitIndex,
               damageMultiplier: damageMultipliers[shotIndex],
+              partBreakModifier: partBreakModifiers[shotIndex],
+              requiredParts: requiredParts[shotIndex],
               at:
                 Math.round((at + hitIndex * (weapon.attack.hitInterval || 0)) * 1000000) / 1000000,
             })),

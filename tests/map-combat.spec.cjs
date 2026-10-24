@@ -37,7 +37,7 @@ async function stage(page, death = false) {
       completed: false,
     };
     phase = "battle";
-    MapCombat.begin(battleView);
+    MapCombat.begin(battleView, () => 0);
     MapCombat.update(performance.now());
   }, death);
 }
@@ -148,7 +148,7 @@ test("parallel attacks draw each unit once and merge damage and shield loss into
       events: battles.flatMap((b) => b.events),
     };
     phase = "battle";
-    MapCombat.begin(battleView);
+    MapCombat.begin(battleView, () => 0);
     MapCombat.update(performance.now());
     for (const f of MapCombat.frames) {
       f.time = f.plan.impacts[0] + 0.01;
@@ -238,7 +238,7 @@ test("repeated simultaneous dodges draw one boost at the actual visible unit pos
       events: battles.flatMap((b) => b.events),
     };
     phase = "battle";
-    MapCombat.begin(battleView);
+    MapCombat.begin(battleView, () => 0);
     MapCombat.update(performance.now());
     const original = SpriteEffects.boostStart,
       result = [];
@@ -316,7 +316,17 @@ test("a later lethal volley waits for an earlier authoritative counter before di
         game,
         unit,
         target,
-        UnitModels[unit.model].weapons[0],
+        // Isolate death ordering; part-damage counter cancellation has its own coverage.
+        {
+          ...UnitModels[unit.model].weapons[0],
+          attack: {
+            ...UnitModels[unit.model].weapons[0].attack,
+            strikes: UnitModels[unit.model].weapons[0].attack.strikes.map((s) => ({
+              ...s,
+              partBreakModifier: 0,
+            })),
+          },
+        },
         "counter",
         "EF_90mmMG",
         index === 0,
@@ -360,7 +370,7 @@ test("a later lethal volley waits for an earlier authoritative counter before di
       events: battles.flatMap((b) => b.events),
     };
     phase = "battle";
-    MapCombat.begin(battleView);
+    MapCombat.begin(battleView, () => 0);
     MapCombat.update(performance.now());
     const initialFrames = MapCombat.frames.length;
     let f = MapCombat.frames[0];
@@ -418,4 +428,189 @@ test("a later lethal volley waits for an earlier authoritative counter before di
   expect(result.deadHp).toBe(0);
   expect(result.hidden).toBe(true);
   expect(result.fired).not.toContain(result.target);
+});
+
+test("the last of four battles finishes automatically after a vertical cannon Miss leaves the map", async ({
+  page,
+}) => {
+  await stage(page);
+  const result = await page.evaluate(() => {
+    const entry = { unitId: "RGC_80", kitId: "machine_gun" },
+      enemy = { unitId: "RGM_79", kitId: "machine_gun" };
+    game = Rules.create(
+      false,
+      1,
+      [Array(4).fill(entry), Array(4).fill(enemy), null, null, null, null],
+      false,
+      { mapId: "frontline_3v3" },
+    );
+    for (const row of game.tiles) row.fill("plain");
+    const attackers = game.units.filter((u) => u.team === 0),
+      targets = game.units.filter((u) => u.team === 1),
+      battles = [];
+    for (const [index, a] of attackers.entries()) {
+      const b = targets[index];
+      Object.assign(a, { x: index ? 4 : 10, y: index ? 16 + index * 3 : 5, en: 100 });
+      Object.assign(b, {
+        x: index ? 8 : 10,
+        y: index ? 16 + index * 3 : 13,
+        hp: 100000,
+        shield: 0,
+      });
+      const actors = structuredClone([a, b]),
+        before = Object.fromEntries(actors.map((u) => [u.id, u.hp])),
+        weapon = getWeapon(a, "Common_Cannon"),
+        events = Rules.fight(game, a, b, { ...weapon, hit: 0 }, "evade");
+      battles.push({ id: "exit-" + index, a: a.id, b: b.id, actors, before, events });
+    }
+    const authoritative = JSON.stringify(game);
+    MapCombat.reset();
+    MapCombat.seed(battles);
+    battleView = {
+      networkId: "four",
+      battles,
+      a: battles[0].a,
+      b: battles[0].b,
+      actors: battles.flatMap((b) => b.actors),
+      events: battles.flatMap((b) => b.events),
+    };
+    phase = "battle";
+    MapCombat.begin(battleView, () => 0);
+    const start = performance.now();
+    MapCombat.update(start);
+    const lastPlanDuration = MapCombat.frames[0].plan.duration;
+    for (const f of MapCombat.frames.slice(1)) f.time = f.plan.duration;
+    MapCombat.update(start + 1);
+    const remaining = byId("mapCombatStatus").textContent;
+    let finished = 0;
+    const original = CombatPlayback.finish;
+    try {
+      CombatPlayback.finish = () => {
+        finished++;
+        battleView = null;
+        MapCombat.reset();
+        phase = "idle";
+      };
+      for (let elapsed = 100; elapsed <= 10000 && battleView; elapsed += 100)
+        MapCombat.update(start + elapsed);
+    } finally {
+      CombatPlayback.finish = original;
+    }
+    return {
+      remaining,
+      finished,
+      lastPlanDuration,
+      controlsHidden: byId("mapCombatControls").hidden,
+      stateUnchanged: JSON.stringify(game) === authoritative,
+    };
+  });
+  expect(result.remaining).toContain("1/4");
+  expect(result.lastPlanDuration).toBeLessThan(10);
+  expect(result.finished).toBe(1);
+  expect(result.controlsHidden).toBe(true);
+  expect(result.stateUnchanged).toBe(true);
+});
+
+test("each attacking and countering unit gets its own delay, preserved across pause and resume", async ({
+  page,
+}) => {
+  await stage(page);
+  const result = await page.evaluate(() => {
+    game.winner = null;
+    const [a, other] = game.units.filter((u) => u.team === 0),
+      [target, otherTarget] = game.units.filter((u) => u.team === 1);
+    for (const unit of [a, other, target, otherTarget])
+      Object.assign(unit, {
+        model: "RGM_79__machine_gun",
+        hp: 100000,
+        shield: 0,
+        en: 100,
+        acted: false,
+        counterCount: 0,
+      });
+    Object.assign(a, { x: 8, y: 8 });
+    Object.assign(target, { x: 10, y: 8 });
+    Object.assign(other, { x: 8, y: 14 });
+    Object.assign(otherTarget, { x: 10, y: 14 });
+    for (const row of game.tiles) row.fill("plain");
+    const battles = [];
+    for (const [from, to, stance] of [
+      [a, target, "counter"],
+      [other, otherTarget, "evade"],
+    ]) {
+      const actors = structuredClone([from, to]),
+        before = Object.fromEntries(actors.map((u) => [u.id, u.hp]));
+      const weapon = getWeapon(from, "EF_90mmMG"),
+        events = Rules.fight(game, from, to, { ...weapon, hit: 0 }, stance, weapon.id);
+      battles.push({ id: "delay-" + from.id, a: from.id, b: to.id, actors, before, events });
+    }
+    const before = JSON.stringify(game),
+      originalNow = performance.now.bind(performance);
+    let clock = 10000,
+      draws = 0;
+    const values = [0.2, 0.8, 0.5],
+      checkpoints = [];
+    try {
+      performance.now = () => clock;
+      MapCombat.reset();
+      MapCombat.seed(battles);
+      battleView = {
+        networkId: "stagger",
+        battles,
+        a: a.id,
+        b: target.id,
+        actors: battles.flatMap((b) => b.actors),
+        events: battles.flatMap((b) => b.events),
+      };
+      phase = "battle";
+      MapCombat.begin(battleView, () => values[draws++]);
+      const step = (value) => {
+        clock = value;
+        MapCombat.update(clock);
+        return MapCombat.frames.map((f) => f.event.from);
+      };
+      checkpoints.push(step(10000));
+      checkpoints.push(step(10199));
+      checkpoints.push(step(10201));
+      step(10250);
+      const pausedTime = MapCombat.frames.find((f) => f.event.from === a.id).time;
+      MapCombat.suspend(battleView);
+      step(15250);
+      const timeDuringPause = MapCombat.frames.find((f) => f.event.from === a.id).time;
+      MapCombat.resume(battleView);
+      checkpoints.push(step(15490));
+      checkpoints.push(step(15510));
+      const primary = MapCombat.frames.find((f) => f.event.from === a.id);
+      primary.time = primary.plan.duration;
+      primary.lastNow = clock;
+      MapCombat.update(clock);
+      checkpoints.push(step(clock + 799));
+      checkpoints.push(step(clock + 2));
+      return {
+        checkpoints,
+        ids: { a: a.id, other: other.id, counter: target.id },
+        draws,
+        pausedTime,
+        timeDuringPause,
+        unchanged: JSON.stringify(game) === before,
+        eventCounts: battles.map((b) => b.events.length),
+      };
+    } finally {
+      performance.now = originalNow;
+      MapCombat.reset();
+      battleView = null;
+      phase = "idle";
+    }
+  });
+  expect(result.eventCounts).toEqual([2, 1]);
+  expect(result.draws).toBe(3);
+  expect(result.checkpoints[0]).toEqual([]);
+  expect(result.checkpoints[1]).toEqual([]);
+  expect(result.checkpoints[2]).toEqual([result.ids.a]);
+  expect(result.checkpoints[3]).toEqual([result.ids.a]);
+  expect(result.checkpoints[4]).toEqual([result.ids.a, result.ids.other]);
+  expect(result.checkpoints[5]).not.toContain(result.ids.counter);
+  expect(result.checkpoints[6]).toContain(result.ids.counter);
+  expect(result.timeDuringPause).toBe(result.pausedTime);
+  expect(result.unchanged).toBe(true);
 });

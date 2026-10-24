@@ -1,19 +1,23 @@
 /* 大地图交战演出：使用地图坐标和已裁定逐发结果，不修改权威战局。 */
 const MapCombat = (() => {
-  const displayed = new Map();
+  const displayed = new Map(),
+    unitStartDelays = new Map();
   let frame = null,
     lanes = [];
   const initialHp = new Map(),
     initialShield = new Map(),
-    initialEn = new Map();
+    initialEn = new Map(),
+    initialParts = new Map();
   const clone = (value) => JSON.parse(JSON.stringify(value));
   function reset() {
     displayed.clear();
+    unitStartDelays.clear();
     frame = null;
     lanes = [];
     initialHp.clear();
     initialShield.clear();
     initialEn.clear();
+    initialParts.clear();
     byId("mapCombatControls").hidden = true;
   }
   function seed(battles) {
@@ -21,11 +25,20 @@ const MapCombat = (() => {
       for (const actor of battle.actors)
         if (!displayed.has(actor.id)) displayed.set(actor.id, clone(actor));
   }
-  function begin(view) {
+  function begin(view, random = Math.random) {
     frame = null;
     view.mapBattle = true;
+    const now = performance.now();
+    // 每台执行攻击或反击的单位独立抽取一次，本地随机数不使用战斗判定 seed。
+    unitStartDelays.clear();
+    for (const battle of view.battles || [])
+      for (const event of battle.events)
+        if (!unitStartDelays.has(event.from)) unitStartDelays.set(event.from, random());
     lanes = (view.battles || []).map((battle) => ({
-      view: { ...battle, index: 0, displayHp: { ...battle.before }, start: performance.now() },
+      view: { ...battle, index: 0, displayHp: { ...battle.before }, start: now },
+      delayElapsed: 0,
+      delayAt: now,
+      started: false,
       frame: null,
       finished: [],
       dependencies: new Map(),
@@ -35,13 +48,14 @@ const MapCombat = (() => {
     const earlier = [];
     for (const lane of lanes)
       lane.view.events.forEach((event, index) => {
-        if (event.after <= 0 && event.before > 0)
+        if ((event.after <= 0 && event.before > 0) || event.brokenParts?.length)
           lane.dependencies.set(
             index,
             earlier.filter(
               (entry) =>
                 entry.lane !== lane &&
-                (entry.event.from === event.to || entry.event.to === event.to),
+                (entry.event.from === event.to ||
+                  (event.after <= 0 && entry.event.to === event.to)),
             ),
           );
         earlier.push({ lane, index, event });
@@ -50,13 +64,12 @@ const MapCombat = (() => {
       initialHp.set(id, unit.hp);
       initialShield.set(id, unit.shield);
       initialEn.set(id, unit.en);
+      initialParts.set(id, { ...unit.brokenParts });
     }
     byId("mapQuick").checked = byId("quick").checked;
     byId("battle").hidden = true;
     byId("mapCombatControls").hidden = false;
-    const a = view.actors.find((unit) => unit.id === view.a),
-      b = view.actors.find((unit) => unit.id === view.b);
-    MapCamera.frame(a, b);
+    // 演出沿用玩家当前的镜头位置与倍率。
   }
   function setup(view) {
     const event = view.events[view.index];
@@ -92,6 +105,7 @@ const MapCombat = (() => {
     if (target) {
       target.hp = event.after;
       target.shield = event.shieldAfter ?? target.shield;
+      if (event.partsAfter) target.brokenParts = { ...event.partsAfter };
     }
     // EN 的显示以此次交战结束值为准；最终状态仍由服务端快照覆盖。
     if (source) source.en = Math.max(0, source.en - getWeapon(source, event.weapon).en);
@@ -207,7 +221,20 @@ const MapCombat = (() => {
     for (const lane of lanes) {
       if (lane.view.completed) continue;
       const dependencies = lane.dependencies.get(lane.view.index) || [];
-      if (dependencies.some((entry) => entry.lane.view.index <= entry.index)) continue;
+      if (dependencies.some((entry) => entry.lane.view.index <= entry.index)) {
+        lane.delayAt = now;
+        continue;
+      }
+      if (!lane.started) {
+        lane.delayElapsed += (Math.max(0, now - lane.delayAt) / 1000) * rate;
+        lane.delayAt = now;
+        const startDelay = unitStartDelays.get(lane.view.events[lane.view.index].from) || 0;
+        if (lane.delayElapsed < startDelay) continue;
+        lane.started = true;
+        lane.frame = setup(lane.view);
+        // 保留跨越起播时刻的这一帧时间，低帧率下也不会把延迟额外拉长。
+        lane.frame.lastNow = now - ((lane.delayElapsed - startDelay) * 1000) / rate;
+      }
       frame = lane.frame || setup(lane.view);
       frame.time += (Math.max(0, now - (frame.lastNow ?? now)) / 1000) * rate;
       frame.lastNow = now;
@@ -222,6 +249,10 @@ const MapCombat = (() => {
         lane.finished.push(frame);
         commit(lane.view, true);
         lane.frame = null;
+        // 先攻结束后，反击由反击单位自己的随机延迟决定起播时间。
+        lane.started = false;
+        lane.delayElapsed = 0;
+        lane.delayAt = now;
       }
     }
     frame = lanes.find((lane) => !lane.view.completed)?.frame || null;
@@ -316,6 +347,19 @@ const MapCombat = (() => {
     }
     ctx.restore();
   }
+  function visibleParts(unit) {
+    const state = { ...(initialParts.get(unit.id) || unit.brokenParts) };
+    const items = lanes.length
+      ? lanes.flatMap((lane) => [...lane.finished, ...(lane.frame ? [lane.frame] : [])])
+      : frame
+        ? [frame]
+        : [];
+    for (const item of items)
+      if (item.event.to === unit.id)
+        for (const contact of WeaponEffects.arrived(item.plan, item.time))
+          for (const part of contact.brokenParts || []) state[part] = true;
+    return state;
+  }
   function units() {
     const pose = poses();
     return game.units.map((unit) => {
@@ -323,6 +367,7 @@ const MapCombat = (() => {
       const effect = pose.get(unit.id);
       return {
         ...visual,
+        brokenParts: visibleParts(visual),
         hp: (lanes.length ? health(unit.id) : effect?.hp) ?? visual.hp,
         shield: (lanes.length ? health(unit.id, true) : effect?.shield) ?? visual.shield,
         en: (lanes.length ? energy(unit.id) : undefined) ?? visual.en,
@@ -399,6 +444,19 @@ const MapCombat = (() => {
         targetPose.y - 32,
       );
     }
+    const partContact = contacts.filter((contact) => contact.brokenParts?.length).at(-1);
+    if (partContact && time < partContact.at + 1.2) {
+      ctx.font = "bold 12px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#ffad65";
+      ctx.fillText(
+        partContact.brokenParts.map((part) => I18n.text(Rules.partNames[part])).join(" / ") +
+          " · " +
+          I18n.text("部位破坏"),
+        targetPose.x,
+        targetPose.y - 48,
+      );
+    }
     ctx.restore();
   }
   byId("mapQuick").onchange = () => {
@@ -426,8 +484,12 @@ const MapCombat = (() => {
   function resume(view) {
     if (view.suspendedAt !== undefined) {
       delete view.suspendedAt;
-      if (frame) frame.lastNow = performance.now();
-      for (const lane of lanes) if (lane.frame) lane.frame.lastNow = performance.now();
+      const now = performance.now();
+      if (frame) frame.lastNow = now;
+      for (const lane of lanes) {
+        lane.delayAt = now;
+        if (lane.frame) lane.frame.lastNow = now;
+      }
     }
   }
   return {

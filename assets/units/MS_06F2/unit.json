@@ -108,7 +108,10 @@
         "heldWeapon": {
           "not": "ZN_360mmBazooka"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "LeftFoot",
@@ -118,7 +121,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightFoot",
@@ -128,7 +134,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "LeftLeg",
@@ -138,7 +147,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightLeg",
@@ -148,7 +160,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "ZN_120mmMG_NotUsing",
@@ -166,7 +181,10 @@
         "heldWeapon": {
           "not": "ZN_120mmMG"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_120mmMG_AntiAir_NotUsing",
@@ -184,7 +202,10 @@
         "heldWeapon": {
           "not": "ZN_120mmMG_AntiAir"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Crotch",
@@ -204,7 +225,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ArmR",
@@ -214,7 +238,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_Panzerfaust_NotUsing",
@@ -266,7 +293,10 @@
       },
       "visibleWhen": {
         "heldWeapon": "ZN_Panzerfaust"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Body",
@@ -292,7 +322,10 @@
       "visibleWhen": {
         "kit": "machine_gun",
         "heldWeapon": "ZN_120mmMG"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_120mmMG_AntiAir",
@@ -308,7 +341,10 @@
       "visibleWhen": {
         "kit": "anti_air",
         "heldWeapon": "ZN_120mmMG_AntiAir"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_HeatHawk_A",
@@ -330,7 +366,10 @@
         "start": 0.6,
         "end": 2,
         "visibleInside": false
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_HeatHawk_A_Step2",
@@ -352,7 +391,10 @@
         "start": 0.6,
         "end": 2,
         "visibleInside": true
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ShoulderL",
@@ -362,7 +404,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ShoulderR",
@@ -372,7 +417,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_360mmBazooka",
@@ -388,7 +436,10 @@
       "visibleWhen": {
         "kit": "bazooka",
         "heldWeapon": "ZN_360mmBazooka"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Head",
@@ -401,7 +452,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Head_Close",
@@ -414,7 +468,10 @@
       },
       "visibleWhen": {
         "visorClosed": true
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Eye",
@@ -428,7 +485,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     }
   ],
   "animations": {
@@ -457,7 +517,8 @@
     "move": 5,
     "mobility": 95,
     "cost": 350,
-    "counterLimit": 1
+    "counterLimit": 1,
+    "partStructuralStrength": 120.0
   },
   "attackBonuses": {
     "melee": 5,
@@ -508,7 +569,8 @@
         "percent": 1,
         "flat": 0
       }
-    }
+    },
+    "requiredParts": []
   },
   "sourceStats": {
     "hp": 22000,
@@ -517,7 +579,8 @@
     "turnSpeed": 1.5,
     "reaction": 105,
     "shooting": 120,
-    "melee": 115
+    "melee": 115,
+    "partStructuralStrength": 120.0
   },
   "presentation": {
     "shield": false,
@@ -562,7 +625,7 @@
       },
       "type": "shell",
       "min": 2,
-      "max": 4,
+      "max": 3,
       "hit": 80,
       "en": 12.5,
       "clip": "Common_Shoot_A",
@@ -571,9 +634,9 @@
       "sourceHit": 75,
       "hitMultiplier": 0.8,
       "hitBonus": 20,
-      "damagePerShot": 5250,
+      "damagePerShot": 6562.5,
       "damageComponents": {
-        "shell": 5250
+        "shell": 6562.5
       },
       "hitsPerShot": 1,
       "attack": {
@@ -629,7 +692,11 @@
           "x": -0.49999999999999906,
           "y": -15
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
     },
     "ZN_120mmMG": {
       "name": "120mm机枪",
@@ -646,7 +713,7 @@
       },
       "type": "shell",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "en": 12.5,
       "clip": "Common_Shoot_A",
@@ -718,24 +785,28 @@
           "x": 9.18485099360515e-16,
           "y": -15
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "ZN_360mmBazooka": {
-      "name": "360mm火箭筒",
+      "name": "380mm火箭筒",
       "localization": {
         "zh": {
-          "name": "360mm火箭筒"
+          "name": "380mm火箭筒"
         },
         "en": {
-          "name": "360mm Bazooka"
+          "name": "380mm Bazooka"
         },
         "ja": {
-          "name": "360mmバズーカ"
+          "name": "380mmバズーカ"
         }
       },
       "type": "shell",
       "min": 3,
-      "max": 7,
+      "max": 5,
       "hit": 70,
       "en": 25,
       "clip": "Common_Shoot_A",
@@ -809,7 +880,11 @@
           "x": -0.5555555555555545,
           "y": -16.666666666666668
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
     },
     "ZN_120mmMG_AntiAir": {
       "name": "120mm对空机枪",
@@ -826,7 +901,7 @@
       },
       "type": "shell",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "en": 12.5,
       "clip": "Common_Shoot_A",
@@ -898,7 +973,11 @@
           "x": 9.18485099360515e-16,
           "y": -15
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
     },
     "ZN_HeatHawk_A": {
       "name": "热能斧",
@@ -967,7 +1046,73 @@
         ]
       },
       "hitEffect": "Cqb_Hit_1",
-      "swingEffects": ["Cqb_Fire_1_Yellow_R", "Cqb_Fire_1_Yellow_L"]
+      "swingEffects": [
+        "Cqb_Fire_1_Yellow_R",
+        "Cqb_Fire_1_Yellow_L"
+      ],
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
+    },
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000,
+      "damageComponents": {
+        "melee": 2500,
+        "meleeShell": 2500
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.45,
+            "shots": 1
+          },
+          {
+            "delay": 1
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3
+      }
     }
   },
   "weaponKits": [
@@ -975,7 +1120,12 @@
       "id": "machine_gun",
       "name": "120mm机枪套件",
       "cost": 0,
-      "weapons": ["ZN_120mmMG", "ZN_Panzerfaust", "ZN_HeatHawk_A"],
+      "weapons": [
+        "ZN_120mmMG",
+        "ZN_Panzerfaust",
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "120mm机枪套件"
@@ -990,18 +1140,23 @@
     },
     {
       "id": "bazooka",
-      "name": "360mm火箭筒套件",
+      "name": "380mm火箭筒套件",
       "cost": 50,
-      "weapons": ["ZN_360mmBazooka", "ZN_Panzerfaust", "ZN_HeatHawk_A"],
+      "weapons": [
+        "ZN_360mmBazooka",
+        "ZN_Panzerfaust",
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
-          "name": "360mm火箭筒套件"
+          "name": "380mm火箭筒套件"
         },
         "en": {
-          "name": "360mm Bazooka Kit"
+          "name": "380mm Bazooka Kit"
         },
         "ja": {
-          "name": "360mmバズーカ装備"
+          "name": "380mmバズーカ装備"
         }
       }
     },
@@ -1009,7 +1164,12 @@
       "id": "anti_air",
       "name": "120mm对空机枪套件",
       "cost": 0,
-      "weapons": ["ZN_120mmMG_AntiAir", "ZN_Panzerfaust", "ZN_HeatHawk_A"],
+      "weapons": [
+        "ZN_120mmMG_AntiAir",
+        "ZN_Panzerfaust",
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "120mm对空机枪套件"
@@ -1023,5 +1183,8 @@
       }
     }
   ],
-  "tags": ["ZEON", "0079"]
+  "tags": [
+    "ZEON",
+    "0079"
+  ]
 }

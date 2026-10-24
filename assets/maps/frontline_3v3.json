@@ -65,7 +65,8 @@
       "forest": "#234b38",
       "rubble": "#687368",
       "rock": "#777d74",
-      "water": "#224c60"
+      "water": "#224c60",
+      "highland": "#9c986b"
     }
   },
   "tiles": [

@@ -30,7 +30,7 @@ test("friendly owner roster hides enemies, shows names, HP/EN/status and focuses
     await lobby(watch, address.port, "Observer");
     await watch.locator(".room-card").filter({ hasText: "ROSTER" }).getByRole("button").click();
     await expect.poll(() => watch.evaluate(() => Net.seat)).toBeNull();
-    await page.locator("#toggleReady").click();
+    await page.locator("#startRoomGame").click();
     await page.locator("#confirmFinalFormation").click();
     await expect(page.locator("#deploymentPanel")).toBeVisible();
     await expect(watch.locator("#deploymentPanel")).toBeVisible();
@@ -161,7 +161,7 @@ test("native ban dropdowns toggle multiple tags, clear all and apply independent
   expect(await page.evaluate(() => Net.snapshot.settings.teamRestrictions[1].bannedEras)).toEqual(
     [],
   );
-  await expect(page.locator("#toggleReady")).toBeDisabled();
+  await expect(page.locator("#startRoomGame")).toBeDisabled();
 });
 test("red-side offline player sees only red allies and owner groups remain bounded on mobile", async ({
   page,
@@ -178,7 +178,7 @@ test("red-side offline player sees only red allies and owner groups remain bound
   await page.locator("#removeAI1").click();
   await page.locator("#chooseSeat1").click();
   for (const seat of [0, 2, 3]) await page.locator("#addAI" + seat).click();
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await expect(page.locator("#deploymentPanel")).toBeVisible();
   const teams = await page

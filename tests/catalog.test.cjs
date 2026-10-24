@@ -11,9 +11,9 @@ test("RGM-79 kits contain exactly one primary and both secondary weapons; local 
       .filter((m) => m.prefabId === "RGM_79")
       .map((m) => m.weapons.map((w) => w.id)),
     [
-      ["EF_BeamSprayGun", "EF_BeamSaber_A", "Common_DoubleVulcan_MS"],
-      ["EF_90mmMG", "EF_BeamSaber_A", "Common_DoubleVulcan_MS"],
-      ["EF_HypeBazooka", "EF_BeamSaber_A", "Common_DoubleVulcan_MS"],
+      ["EF_BeamSprayGun", "EF_BeamSaber_A", "Common_DoubleVulcan_MS", "Common_Push_A"],
+      ["EF_90mmMG", "EF_BeamSaber_A", "Common_DoubleVulcan_MS", "Common_Push_A"],
+      ["EF_HypeBazooka", "EF_BeamSaber_A", "Common_DoubleVulcan_MS", "Common_Push_A"],
     ],
   );
   assert.ok(Object.values(catalog.assets).every((src) => src.startsWith("data:image/png;base64,")));

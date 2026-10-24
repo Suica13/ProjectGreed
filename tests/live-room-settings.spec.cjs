@@ -93,7 +93,7 @@ test("host COST inputs sync to another client, reset readiness and preserve inva
     await page.locator("#createRoom").click();
     await connect(guest, address.port, "Guest");
     await guest.locator(".room-card").filter({ hasText: "LIVESET" }).getByRole("button").click();
-    await page.locator("#toggleReady").click();
+    await guest.locator("#toggleReady").click();
     await page.locator("#roomCostLimit").fill("4300");
     await page.locator("#roomUnitCostLimit").fill("800");
     await guest.locator("#roomChatInput").fill("keep the host's drafts");
@@ -103,7 +103,7 @@ test("host COST inputs sync to another client, reset readiness and preserve inva
       .poll(() => guest.evaluate(() => Net.snapshot.settings.mapId))
       .toBe("crossroads_2v2");
     expect(
-      await guest.evaluate(() => Net.snapshot.members.find((m) => m.name === "Host").ready),
+      await guest.evaluate(() => Net.snapshot.members.find((m) => m.name === "Guest").ready),
     ).toBe(false);
     await expect(guest.locator("#roomMapInfo")).toContainText("2v2");
     await expect(page.locator("#roomCostLimit")).toHaveValue("4300");

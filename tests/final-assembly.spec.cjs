@@ -52,7 +52,7 @@ test("offline AI profiles and OVERCOST final assembly edit, ally preview and dep
   await expect(page.locator("#ai-difficulty-3")).toHaveValue("medium");
   await expect(page.locator("#ai-fill-3")).toHaveValue("100");
   await page.locator("#closeRoomDetail").click();
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await expect(page.locator("#finalAssemblyPanel")).toBeVisible();
   await expect(page.locator("#gameScene")).toBeHidden();
   await expect(page.locator(".final-squad")).toHaveCount(2);
@@ -60,7 +60,13 @@ test("offline AI profiles and OVERCOST final assembly edit, ally preview and dep
     own = page.locator('.final-squad[data-member-id="' + self + '"]');
   await expect(own.locator(".final-unit-icon")).toHaveCount(4);
   await expect(own.locator(".overcost-label")).toHaveCount(2);
-  await expect(own).toContainText("编组COST: 2050 / 700");
+  const totalCost = await page.evaluate(() =>
+    Formation.current().reduce(
+      (sum, entry) => sum + UnitModels[entry.unitId + "__" + entry.kitId].cost,
+      0,
+    ),
+  );
+  await expect(own).toContainText("编组COST: " + totalCost + " / 700");
   await page.screenshot({ path: ".openai/final-assembly.png" });
   await page.locator("#editFinalFormation").click();
   await expect(page.locator(".formation-row.unit-disabled")).toHaveCount(2);
@@ -95,7 +101,7 @@ test("offline AI profiles and OVERCOST final assembly edit, ally preview and dep
   expect(errors).toEqual([]);
 });
 
-test("online allies review only their team, edits revoke confirmation and reload resumes final assembly", async ({
+test("online allies review only their team, edits retain confirmation and reload resumes final assembly", async ({
   page,
   context,
 }) => {
@@ -135,8 +141,20 @@ test("online allies review only their team, edits revoke confirmation and reload
     await ally.locator("#aiSettings1").click();
     await expect(ally.locator("#ai-difficulty-1")).toBeDisabled();
     await ally.locator("#closeRoomDetail").click();
-    await page.locator("#toggleReady").click();
+    await expect(page.locator('.spawn-slot[data-seat="0"] .lineup-ready')).toHaveCSS(
+      "color",
+      "rgb(102, 213, 255)",
+    );
+    await expect(page.locator('.spawn-slot[data-seat="1"] .lineup-ready')).toHaveCSS(
+      "color",
+      "rgb(240, 206, 103)",
+    );
+    await expect(page.locator("#toggleReady")).toBeHidden();
+    await expect(page.locator("#startRoomGame")).toBeDisabled();
     await ally.locator("#toggleReady").click();
+    await expect(page.locator("#startRoomGame")).toBeEnabled();
+    await expect(page.locator("#finalAssemblyPanel")).toBeHidden();
+    await page.locator("#startRoomGame").click();
     for (const p of [page, ally]) {
       await expect(p.locator("#finalAssemblyPanel")).toBeVisible();
       await expect(p.locator(".final-squad")).toHaveCount(2);
@@ -146,17 +164,33 @@ test("online allies review only their team, edits revoke confirmation and reload
     }
     await expect(watch.locator(".final-squad")).toHaveCount(4);
     await expect(watch.locator("#confirmFinalFormation")).toBeHidden();
+    for (const status of await page.locator(".final-squad .ready-status").all())
+      await expect(status).toHaveCSS("color", "rgb(102, 213, 255)");
+    await expect(watch.locator(".final-squad .ready-status.is-ready")).toHaveCount(2);
+    for (const status of await watch.locator(".final-squad .ready-status.is-ready").all())
+      await expect(status).toHaveCSS("color", "rgb(240, 206, 103)");
     await page.locator("#confirmFinalFormation").click();
+    await expect(page.locator(".final-squad .ready-status.is-ready")).toHaveCSS(
+      "color",
+      "rgb(240, 206, 103)",
+    );
     await expect(page.locator("#confirmFinalFormation")).toBeDisabled();
     await ally.locator("#editFinalFormation").click();
+    await expect(ally.locator("#formationUnitCostLimit")).toBeVisible();
+    await expect(ally.locator("#formationUnitCostLimit")).toHaveText("单位COST上限: 500");
     await ally.locator('[data-unit-id="MS_06F"]').click();
     await ally.locator("#addFormationUnit").click();
     await ally.locator("#saveFormation").click();
-    await expect(page.locator("#confirmFinalFormation")).toBeEnabled();
+    await expect(page.locator("#confirmFinalFormation")).toBeDisabled();
+    await expect(page.locator(".final-squad .ready-status.is-ready")).toHaveCount(1);
+    await expect(page.locator(".final-squad .ready-status.is-ready")).toHaveCSS(
+      "color",
+      "rgb(240, 206, 103)",
+    );
     await page.reload();
     await expect(page.locator("#finalAssemblyPanel")).toBeVisible();
     await expect(page.locator("#gameScene")).toBeHidden();
-    await page.locator("#confirmFinalFormation").click();
+    await expect(page.locator("#confirmFinalFormation")).toBeDisabled();
     await ally.locator("#confirmFinalFormation").click();
     for (const p of [page, ally]) await expect(p.locator("#deploymentPanel")).toBeVisible();
     await page.locator("#confirmDeployment").click();
@@ -229,7 +263,7 @@ test("new AI and final formation controls localize in English and Japanese", asy
   await expect(page.locator("#ai-difficulty-1 option").first()).toHaveText("Easy · 75%");
   await page.locator("#ai-difficulty-1").selectOption("hard");
   await page.locator("#closeRoomDetail").click();
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await expect(page.locator("#finalAssemblyTitle")).toHaveText("Final formation");
   await expect(page.locator("#confirmFinalFormation")).toHaveText("Confirm sortie formation");
   await page.evaluate(() => I18n.setLanguage("ja"));

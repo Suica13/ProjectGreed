@@ -26,7 +26,7 @@ test("host adds and removes AI, prepares and deploys without a second human clie
     await page.locator("#addAI1").click();
     await expect(page.locator("#removeAI1")).toBeVisible();
     await page.screenshot({ path: ".openai/online-ai-room.png" });
-    await page.locator("#toggleReady").click();
+    await page.locator("#startRoomGame").click();
     await page.locator("#confirmFinalFormation").click();
     await expect(page.locator("#deploymentPanel")).toBeVisible();
     expect(await page.evaluate(() => game.deployment)).toEqual([false, true]);

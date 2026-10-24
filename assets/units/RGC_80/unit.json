@@ -96,7 +96,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightFoot",
@@ -106,7 +109,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "LeftLeg",
@@ -116,7 +122,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightLeg",
@@ -126,7 +135,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "EF_BeamSprayGun_NotUsing",
@@ -144,7 +156,10 @@
         "heldWeapon": {
           "not": "EF_BeamSprayGun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_90mmMG_NotUsing",
@@ -162,7 +177,10 @@
         "heldWeapon": {
           "not": "EF_90mmMG"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Crotch",
@@ -182,7 +200,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ArmR",
@@ -192,7 +213,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "BoostLoop",
@@ -238,7 +262,10 @@
       "visibleWhen": {
         "kit": "beam_spray",
         "heldWeapon": "EF_BeamSprayGun"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_90mmMG",
@@ -254,7 +281,10 @@
       "visibleWhen": {
         "kit": "machine_gun",
         "heldWeapon": "EF_90mmMG"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ShoulderL",
@@ -264,7 +294,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ShoulderR",
@@ -274,7 +307,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Shield",
@@ -289,7 +325,10 @@
       "rotation": 10,
       "visibleWhen": {
         "shieldVisible": true
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "Head",
@@ -302,7 +341,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Head_Close",
@@ -315,7 +357,10 @@
       },
       "visibleWhen": {
         "visorClosed": true
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "RGC_80_Cannon",
@@ -371,7 +416,8 @@
     "move": 4,
     "mobility": 85,
     "cost": 425,
-    "counterLimit": 1
+    "counterLimit": 1,
+    "partStructuralStrength": 115.0
   },
   "attackBonuses": {
     "melee": 0,
@@ -422,21 +468,25 @@
         "percent": 10,
         "flat": 25
       }
-    }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
   },
   "sourceStats": {
     "hp": 18500,
     "walkSpeed": 0.65,
     "boostSpeed": 1.25,
     "turnSpeed": 1.5,
-    "reaction": 105
+    "reaction": 105,
+    "partStructuralStrength": 115.0
   },
   "weapons": {
     "EF_BeamSprayGun": {
       "name": "光束喷枪",
       "type": "beam",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "en": 15,
       "clip": "Common_Shoot_A2",
@@ -501,13 +551,17 @@
         "en": {
           "name": "Beam Spray Gun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
       "type": "shell",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "clip": "Common_Shoot_A",
       "slot": "primary",
@@ -577,14 +631,18 @@
         "en": {
           "name": "90mm Machine Gun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "Common_Cannon": {
       "name": "肩部加农炮",
       "sourceName": "Common_Cannon",
       "type": "shell",
       "min": 3,
-      "max": 8,
+      "max": 6,
       "hit": 75,
       "clip": "Common_Cannon_Shoot_A",
       "slot": "fixed",
@@ -664,7 +722,11 @@
         "en": {
           "name": "Shoulder Cannon"
         }
-      }
+      },
+      "requiredParts": [
+        "backpack"
+      ],
+      "partBreakModifier": 0.5
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -719,6 +781,69 @@
         "en": {
           "name": "Melee"
         }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
+    },
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000,
+      "damageComponents": {
+        "melee": 2500,
+        "meleeShell": 2500
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.45,
+            "shots": 1
+          },
+          {
+            "delay": 1
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3
       }
     }
   },
@@ -727,7 +852,12 @@
       "id": "beam_spray",
       "name": "光束喷枪套件",
       "cost": 75,
-      "weapons": ["EF_BeamSprayGun", "Common_Cannon", "Common_Cqb_A"],
+      "weapons": [
+        "EF_BeamSprayGun",
+        "Common_Cannon",
+        "Common_Cqb_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "光束喷枪套件"
@@ -744,7 +874,12 @@
       "id": "machine_gun",
       "name": "机枪套件",
       "cost": 0,
-      "weapons": ["EF_90mmMG", "Common_Cannon", "Common_Cqb_A"],
+      "weapons": [
+        "EF_90mmMG",
+        "Common_Cannon",
+        "Common_Cqb_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "机枪套件"
@@ -771,5 +906,8 @@
       "description": "Mobile suit specialized in mid-range support bombardment"
     }
   },
-  "tags": ["EFSF", "0079"]
+  "tags": [
+    "EFSF",
+    "0079"
+  ]
 }

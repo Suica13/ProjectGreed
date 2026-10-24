@@ -97,7 +97,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightFoot",
@@ -107,7 +110,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "LeftLeg",
@@ -117,7 +123,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightLeg",
@@ -127,7 +136,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "EF_BOWA_BeamGun_NotUsing",
@@ -145,7 +157,10 @@
         "heldWeapon": {
           "not": "EF_BOWA_BeamGun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_90mmMG_NotUsing",
@@ -163,7 +178,10 @@
         "heldWeapon": {
           "not": "EF_90mmMG"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Crotch",
@@ -183,7 +201,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ArmR",
@@ -193,7 +214,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "BoostLoop",
@@ -254,7 +278,10 @@
       "visibleWhen": {
         "kit": "beam_gun",
         "heldWeapon": "EF_BOWA_BeamGun"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_90mmMG",
@@ -270,7 +297,10 @@
       "visibleWhen": {
         "kit": "machine_gun",
         "heldWeapon": "EF_90mmMG"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "EF_BeamSaber_BF",
@@ -287,7 +317,10 @@
       "frame": 1,
       "visibleWhen": {
         "heldWeapon": "EF_BeamSaber_BF"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ShoulderL",
@@ -297,7 +330,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ShoulderR",
@@ -307,7 +343,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Shield",
@@ -322,7 +361,10 @@
       "rotation": 20,
       "visibleWhen": {
         "shieldVisible": true
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "Head",
@@ -335,7 +377,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Head_Close",
@@ -348,7 +393,10 @@
       },
       "visibleWhen": {
         "visorClosed": true
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     }
   ],
   "animations": {
@@ -392,7 +440,8 @@
     "move": 7,
     "mobility": 135,
     "cost": 425,
-    "counterLimit": 1
+    "counterLimit": 1,
+    "partStructuralStrength": 100.0
   },
   "attackBonuses": {
     "melee": 15,
@@ -443,21 +492,25 @@
         "percent": 10,
         "flat": 25
       }
-    }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
   },
   "sourceStats": {
     "hp": 17000,
     "walkSpeed": 0.75,
     "boostSpeed": 1.65,
     "turnSpeed": 2.5,
-    "reaction": 140
+    "reaction": 140,
+    "partStructuralStrength": 100.0
   },
   "weapons": {
     "EF_90mmMG": {
       "name": "90mm机枪",
       "type": "shell",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "clip": "Common_Shoot_A",
       "slot": "primary",
@@ -527,14 +580,18 @@
         "en": {
           "name": "90mm Machine Gun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "EF_BOWA_BeamGun": {
       "name": "BOWA光束枪",
       "sourceName": "EF_BOWA_BeamGun",
       "type": "beam",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "clip": "Common_Shoot_A",
       "slot": "primary",
@@ -598,7 +655,11 @@
         "en": {
           "name": "BOWA Beam Gun"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "EF_BeamSaber_BF": {
       "name": "光束军刀",
@@ -622,7 +683,8 @@
           },
           {
             "delay": 0,
-            "shots": 1
+            "shots": 1,
+            "partBreakModifier": 0.75
           },
           {
             "delay": 0.6,
@@ -634,7 +696,8 @@
           {
             "delay": 0,
             "shots": 1,
-            "damageMultiplier": 0.5
+            "damageMultiplier": 0.5,
+            "partBreakModifier": 1.25
           },
           {
             "delay": 1.4
@@ -666,13 +729,20 @@
           "name": "Beam Saber"
         }
       },
-      "swingEffects": ["Cqb_Fire_1_Pink_R", "Cqb_Fire_1_Pink_L"]
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 0.75
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
       "type": "shell",
       "min": 1,
-      "max": 2,
+      "max": 1,
       "hit": 95,
       "clip": null,
       "slot": "secondary",
@@ -735,6 +805,69 @@
         "en": {
           "name": "Head Vulcans"
         }
+      },
+      "requiredParts": [
+        "head"
+      ],
+      "partBreakModifier": 1.0
+    },
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000,
+      "damageComponents": {
+        "melee": 2500,
+        "meleeShell": 2500
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.45,
+            "shots": 1
+          },
+          {
+            "delay": 1
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3
       }
     }
   },
@@ -743,7 +876,12 @@
       "id": "beam_gun",
       "name": "光束枪套件",
       "cost": 75,
-      "weapons": ["EF_BOWA_BeamGun", "EF_BeamSaber_BF", "Common_DoubleVulcan_MS"],
+      "weapons": [
+        "EF_BOWA_BeamGun",
+        "EF_BeamSaber_BF",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "光束枪套件"
@@ -760,7 +898,12 @@
       "id": "machine_gun",
       "name": "机枪套件",
       "cost": 0,
-      "weapons": ["EF_90mmMG", "EF_BeamSaber_BF", "Common_DoubleVulcan_MS"],
+      "weapons": [
+        "EF_90mmMG",
+        "EF_BeamSaber_BF",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "机枪套件"
@@ -787,5 +930,8 @@
       "description": "Assault-type MS with extremely high mobility"
     }
   },
-  "tags": ["EFSF", "0079"]
+  "tags": [
+    "EFSF",
+    "0079"
+  ]
 }

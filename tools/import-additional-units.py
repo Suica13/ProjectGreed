@@ -14,6 +14,8 @@ from mod_source import ROOT, MAIN, ASSETS, load, section, resolve, number, stat
 from unit_visuals import normalize_visuals
 from unit_movement import configure_movement
 from unit_introductions import apply_introduction
+from unit_parts import apply_parts
+from unit_skills import import_tackle_assets
 
 def read(path):
     return json.loads(path.read_text(encoding="utf-8-sig"))
@@ -39,28 +41,28 @@ def localized(zh, en, ja, description=None):
 
 # IDs are native weapon IDs; the two-handed wrapper still uses ZN_120mmMG.
 WEAPONS = {
- "ZN_120mmMG_AntiAir": ("120mm对空机枪","120mm Anti-Air Machine Gun","120mm対空マシンガン","shell",2,5,90,10),
- "ZN_Panzerfaust": ("铁拳火箭弹","Panzerfaust","シュツルム・ファウスト","shell",2,4,80,10),
- "ZN_MS_14_BR": ("格鲁古古光束步枪","Gelgoog Beam Rifle","ゲルググ用ビーム・ライフル","beam",2,6,89,14),
- "ZN_MMP80MG": ("MMP-80机枪","MMP-80 Machine Gun","MMP-80マシンガン","shell",2,5,90,10),
+ "ZN_120mmMG_AntiAir": ("120mm对空机枪","120mm Anti-Air Machine Gun","120mm対空マシンガン","shell",2,4,90,10),
+ "ZN_Panzerfaust": ("铁拳火箭弹","Panzerfaust","シュツルム・ファウスト","shell",2,3,80,10),
+ "ZN_MS_14_BR": ("格鲁古古光束步枪","Gelgoog Beam Rifle","ゲルググ用ビーム・ライフル","beam",2,5,89,14),
+ "ZN_MMP80MG": ("MMP-80机枪","MMP-80 Machine Gun","MMP-80マシンガン","shell",2,4,90,10),
  "ZN_TwinBeamSword_A": ("双刃光束剑","Twin Beam Sword","ビーム・ナギナタ","melee",1,1,95,8),
- "Common_SingleVulcan_RX_79_G": ("胸部火神炮","Chest Vulcan","胸部バルカン砲","shell",1,3,95,5),
- "ZN_120mmMG": ("120mm机枪","120mm Machine Gun","120mmマシンガン","shell",2,5,89,10),
- "ZN_270mmBazooka": ("270mm火箭筒","270mm Bazooka","270mmバズーカ","shell",3,6,72,18),
- "ZN_360mmBazooka": ("360mm火箭筒","360mm Bazooka","360mmバズーカ","shell",3,7,72,20),
+ "Common_SingleVulcan_RX_79_G": ("胸部火神炮","Chest Vulcan","胸部バルカン砲","shell",1,2,95,5),
+ "ZN_120mmMG": ("120mm机枪","120mm Machine Gun","120mmマシンガン","shell",2,4,89,10),
+ "ZN_270mmBazooka": ("270mm火箭筒","270mm Bazooka","270mmバズーカ","shell",3,5,72,18),
+ "ZN_360mmBazooka": ("360mm火箭筒","360mm Bazooka","360mmバズーカ","shell",3,5,72,20),
  "ZN_HeatHawk_A": ("热能斧","Heat Hawk","ヒート・ホーク","melee",1,1,95,8),
  "ZN_HeatSaber_A": ("热能军刀","Heat Saber","ヒート・サーベル","melee",1,1,95,8),
- "ZN_MS_09_ChestBeam": ("胸部扩散光束炮","Chest Diffusion Beam","胸部拡散ビーム砲","beam",1,2,95,8),
- "EF_100mmMG": ("100mm机枪","100mm Machine Gun","100mmマシンガン","shell",2,5,89,10),
- "EF_GroundTypeBazooka": ("陆战型火箭筒","Ground Type Bazooka","陸戦型バズーカ","shell",3,6,72,18),
- "EF_GroundTypeBeamRifle": ("陆战型光束步枪","Ground Type Beam Rifle","陸戦型ビーム・ライフル","beam",2,6,88,12),
- "EF_180mmCannon": ("180mm加农炮","180mm Cannon","180mmキャノン","shell",3,8,74,20),
- "EF_GroundTypeMissileLauncher": ("陆战型导弹发射器","Ground Type Missile Launcher","陸戦型ミサイル・ランチャー","shell",3,7,82,18),
+ "ZN_MS_09_ChestBeam": ("胸部扩散光束炮","Chest Diffusion Beam","胸部拡散ビーム砲","beam",1,1,95,8),
+ "EF_100mmMG": ("100mm机枪","100mm Machine Gun","100mmマシンガン","shell",2,4,89,10),
+ "EF_GroundTypeBazooka": ("陆战型火箭筒","Ground Type Bazooka","陸戦型バズーカ","shell",3,5,72,18),
+ "EF_GroundTypeBeamRifle": ("陆战型光束步枪","Ground Type Beam Rifle","陸戦型ビーム・ライフル","beam",2,5,88,12),
+ "EF_180mmCannon": ("180mm加农炮","180mm Cannon","180mmキャノン","shell",3,6,74,20),
+ "EF_GroundTypeMissileLauncher": ("陆战型导弹发射器","Ground Type Missile Launcher","陸戦型ミサイル・ランチャー","shell",3,5,82,18),
  "EF_BeamSaber_A": ("光束军刀","Beam Saber","ビーム・サーベル","melee",1,1,95,8),
- "ZN_MagellaCannon": ("马哲拉顶炮","Magella Top Cannon","マゼラ・トップ砲","shell",3,8,74,18),
- "ZN_MS_06J_LegMS": ("腿部导弹发射器","Leg Missile Launchers","脚部ミサイル・ポッド","shell",2,5,82,8),
- "ZN_MS_06K_BigGun": ("双联装大枪","Twin Big Guns","ビッグ・ガン","shell",2,6,82,12),
- "Common_Cannon_AntiAir": ("肩部防空加农炮","Shoulder AA Cannon","肩部対空キャノン","shell",3,8,74,12),
+ "ZN_MagellaCannon": ("马哲拉顶炮","Magella Top Cannon","マゼラ・トップ砲","shell",3,6,74,18),
+ "ZN_MS_06J_LegMS": ("腿部导弹发射器","Leg Missile Launchers","脚部ミサイル・ポッド","shell",2,4,82,8),
+ "ZN_MS_06K_BigGun": ("双联装大枪","Twin Big Guns","ビッグ・ガン","shell",2,5,82,12),
+ "Common_Cannon_AntiAir": ("肩部防空加农炮","Shoulder AA Cannon","肩部対空キャノン","shell",3,6,74,12),
  "Common_Cqb_A": ("格斗","Melee","格闘","melee",1,1,95,6),
 }
 UNITS = [
@@ -289,6 +291,9 @@ def weapon(prefab, reference, effects):
         w["clip"]=None
         w["attack"].pop("startAnimation",None)
         for step in w["attack"]["steps"]: step.pop("animation",None)
+    if key == "ZN_TwinBeamSword_A":
+        w["damagePerShot"] = 10000
+        w["damageComponents"] = {"melee": 5000, "meleeBeam": 5000}
     if kind=="melee":
         if key!="Common_Cqb_A":
             color="Pink" if key.startswith("EF_") else "Yellow"
@@ -387,6 +392,7 @@ def build(unit, effects):
         raise ValueError("Untranslated MOD expression: "+unit_id)
     if unit_id == "MS_14A":
         prefab["stats"]["hp"] = 24000
+        prefab["stats"]["cost"] = 750
     if unit_id == "MS_06F2":
         prefab["code"] = "MS-06F2"
         prefab["stats"].update(hp=18000, move=5, mobility=95, cost=350)
@@ -400,8 +406,8 @@ def build(unit, effects):
                 value["damagePerShot"] = 4200
                 value["damageComponents"] = {"meleeShell": 4200}
             elif key == "ZN_Panzerfaust":
-                value["damagePerShot"] = 5250
-                value["damageComponents"] = {"shell": 5250}
+                value["damagePerShot"] = 6562.5
+                value["damageComponents"] = {"shell": 6562.5}
     if "Common_Cannon_AntiAir" in prefab["weapons"]:
         cannon = prefab["weapons"]["Common_Cannon_AntiAir"]
         cannon.update(damagePerShot=3600, damageComponents={"shell": 3600})
@@ -411,6 +417,12 @@ def build(unit, effects):
             weapon["damagePerShot"] = sum(weapon["damageComponents"].values())
         weapon["hit"] = int(math.floor(weapon["hit"] / 5 + .5) * 5)
         weapon["hitBonus"] = weapon["hit"] - int(math.floor(weapon["sourceHit"] * weapon["hitMultiplier"] + .5))
+    if unit_id in ("MS_14A", "RX_79_G"):
+        mg = prefab["weapons"]["ZN_MMP80MG" if unit_id == "MS_14A" else "EF_100mmMG"]
+        mg["attack"]["steps"][2]["repeat"] = 11
+        beam = prefab["weapons"]["ZN_MS_14_BR" if unit_id == "MS_14A" else "EF_GroundTypeBeamRifle"]
+        beam["damageComponents"] = {k: round(v * 1.1, 8) for k, v in beam["damageComponents"].items()}
+        beam["damagePerShot"] = sum(beam["damageComponents"].values())
     kit_costs = read(ASSETS / "weapon-kit-costs.json")
     for kit in prefab["weaponKits"]:
         kit["cost"] = kit_costs[kit["id"]]
@@ -428,7 +440,13 @@ def build(unit, effects):
         asset(original, corrected)
         original.unlink()
         prefab = correct(prefab)
-    return prefab
+    if unit_id == "MS_06F2":
+        # Keep native weapon/asset IDs; correct the displayed calibre in every language.
+        for entry in [prefab["weapons"]["ZN_360mmBazooka"], *prefab["weaponKits"]]:
+            entry["name"] = entry["name"].replace("360mm", "380mm")
+            for localized in entry.get("localization", {}).values():
+                localized["name"] = localized["name"].replace("360mm", "380mm")
+    return apply_parts(prefab, data)
 
 def read_source_weapons(unit_id):
     from mod_source import parse
@@ -456,6 +474,7 @@ def main():
         if reference not in catalog["units"]:
             catalog["units"].append(reference)
     write(ASSETS/"effects/effects.json",effects)
+    import_tackle_assets()
     write(ASSETS/"unit-catalog.json",catalog)
 if __name__=="__main__":
     main()

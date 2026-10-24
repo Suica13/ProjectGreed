@@ -25,8 +25,8 @@ test("English and Japanese players share stable unit and weapon IDs and authorit
     await english.locator("#roomCode").fill("LOCALES");
     await english.locator("#createRoom").click();
     await japanese.locator(".room-card").filter({ hasText: "LOCALES" }).getByRole("button").click();
-    await english.locator("#toggleReady").click();
     await japanese.locator("#toggleReady").click();
+    await english.locator("#startRoomGame").click();
     await english.locator("#confirmFinalFormation").click();
     await japanese.locator("#confirmFinalFormation").click();
     await english.locator("#confirmDeployment").click();

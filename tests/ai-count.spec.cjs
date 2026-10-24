@@ -45,7 +45,7 @@ test("AI quantity ratio has seven choices, localizes, stays independent per bot 
   await page.locator("#aiSettings3").click();
   await expect(page.locator("#ai-countPercent-3")).toHaveValue("100");
   await page.locator("#closeRoomDetail").click();
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await expect(page.locator("#finalAssemblyPanel")).toBeVisible();
   await page.locator("#confirmFinalFormation").click();
   await expect(page.locator("#deploymentPanel")).toBeVisible();

@@ -269,12 +269,21 @@ async function readyGame(first, second) {
   await expect(second.locator("#roomPreparation")).toBeVisible();
   await second.locator("#roomFormation").click();
   await second.locator("#formationName").fill("等待时编辑");
-  await first.locator("#toggleReady").click();
+  await first.evaluate(() => Net.request("sync"));
   await expect(second.locator("#formationScreen")).toBeVisible();
   await expect(second.locator("#formationName")).toHaveValue("等待时编辑");
   await second.locator("#cancelFormation").click();
-  await expect(second.locator("#teamSlots")).toContainText("已准备");
-  await second.locator("#toggleReady").click();
+  await expect(second.locator("#teamSlots")).toContainText("房主");
+  for (const p of [first, second])
+    if (await p.evaluate(() => Net.snapshot.you.id !== Net.snapshot.hostId))
+      await p.locator("#toggleReady").click();
+  for (const p of first.context().pages())
+    if (
+      await p.evaluate(
+        () => typeof Net !== "undefined" && !!Net.snapshot && Net.snapshot.you.id === Net.snapshot.hostId,
+      )
+    )
+      await p.locator("#startRoomGame").click();
   await first.locator("#confirmFinalFormation").click();
   await second.locator("#confirmFinalFormation").click();
   await expect(first.locator("#gameScene")).toBeVisible();
@@ -1030,7 +1039,7 @@ test("local HTML plays a complete AI turn with networking disabled and no server
   await expect(page.locator("#openSkirmish")).toBeVisible();
   await expect(page.locator("#resumeRoom,#leaveNetwork,#joinRoom,#newGame")).toHaveCount(0);
   await page.evaluate(() => LocalRoom.open());
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await page.locator("#confirmDeployment").click();
   await expect(page.locator("#start")).toBeHidden();
@@ -1071,7 +1080,7 @@ test("local HTML plays a complete AI turn with networking disabled and no server
   await leaveGame(page);
   await expect(page.locator("#openSkirmish")).toBeVisible();
   await page.evaluate(() => LocalRoom.open());
-  await page.locator("#toggleReady").click();
+  await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await page.locator("#confirmDeployment").click();
   expect(await page.evaluate(() => game.round)).toBe(1);
@@ -1193,8 +1202,8 @@ test("three players prepare, swap spectator/team roles and watch battles without
   }
   expect(await third.evaluate(() => Net.seat)).toBe(null);
   await expect(third.locator("#toggleReady")).toBeHidden();
-  await first.locator("#toggleReady").click();
-  await expect(second.locator("#teamSlots")).toContainText("已准备");
+  await expect(first.locator("#toggleReady")).toBeHidden();
+  await expect(second.locator("#teamSlots")).toContainText("房主");
   await first.locator("#becomeSpectator").click();
   await expect(third.locator("#joinTeam1")).toBeEnabled();
   await third.locator("#joinTeam1").click();

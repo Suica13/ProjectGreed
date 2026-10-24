@@ -107,7 +107,10 @@
         "heldWeapon": {
           "not": "ZN_360mmBazooka"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "LeftFoot",
@@ -117,7 +120,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightFoot",
@@ -127,7 +133,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "LeftLeg",
@@ -137,7 +146,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftLeg"
+      ]
     },
     {
       "name": "RightLeg",
@@ -147,7 +159,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightLeg"
+      ]
     },
     {
       "name": "ZN_MS_14_BR_NotUsing",
@@ -165,7 +180,10 @@
         "heldWeapon": {
           "not": "ZN_MS_14_BR"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_MMP80MG_NotUsing",
@@ -183,7 +201,10 @@
         "heldWeapon": {
           "not": "ZN_MMP80MG"
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Body_BeamSaber",
@@ -214,7 +235,10 @@
       },
       "visibleWhen": {
         "heldWeapon": "ZN_TwinBeamSword_A"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Crotch",
@@ -234,7 +258,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ArmR",
@@ -244,7 +271,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "BoostLoop",
@@ -280,7 +310,10 @@
       "visibleWhen": {
         "kit": "beam_rifle",
         "heldWeapon": "ZN_MS_14_BR"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Body",
@@ -306,7 +339,10 @@
       "visibleWhen": {
         "kit": "machine_gun",
         "heldWeapon": "ZN_MMP80MG"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ShoulderL",
@@ -316,7 +352,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "ShoulderR",
@@ -326,7 +365,10 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "ZN_360mmBazooka",
@@ -342,7 +384,10 @@
       "visibleWhen": {
         "kit": "bazooka",
         "heldWeapon": "ZN_360mmBazooka"
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
     },
     {
       "name": "Shield",
@@ -357,7 +402,10 @@
       },
       "visibleWhen": {
         "shieldVisible": true
-      }
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
     },
     {
       "name": "Head",
@@ -370,7 +418,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Head_Close",
@@ -383,7 +434,10 @@
       },
       "visibleWhen": {
         "visorClosed": true
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     },
     {
       "name": "Eye",
@@ -397,7 +451,10 @@
       },
       "visibleWhen": {
         "visorClosed": false
-      }
+      },
+      "requiredParts": [
+        "head"
+      ]
     }
   ],
   "animations": {
@@ -421,12 +478,13 @@
     "Common_Melee_A": "../../animations/MS_14A__Common_Melee_A.json"
   },
   "stats": {
-    "hp": 24000,
+    "hp": 24500,
     "en": 100,
     "move": 6,
-    "mobility": 115,
-    "cost": 800,
-    "counterLimit": 1
+    "mobility": 120,
+    "cost": 750,
+    "counterLimit": 1,
+    "partStructuralStrength": 125.0
   },
   "attackBonuses": {
     "shooting": 20,
@@ -440,7 +498,7 @@
       "flat": 50
     },
     "shell": {
-      "percent": 10,
+      "percent": 15,
       "flat": 100
     },
     "melee": {
@@ -477,7 +535,10 @@
         "percent": 10,
         "flat": 25
       }
-    }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
   },
   "sourceStats": {
     "hp": 28500,
@@ -486,7 +547,8 @@
     "turnSpeed": 2,
     "reaction": 125,
     "shooting": 135,
-    "melee": 125
+    "melee": 125,
+    "partStructuralStrength": 125.0
   },
   "presentation": {
     "shield": true,
@@ -531,7 +593,7 @@
       },
       "type": "beam",
       "min": 2,
-      "max": 6,
+      "max": 5,
       "hit": 90,
       "en": 17.5,
       "clip": "Common_Shoot_A",
@@ -540,9 +602,9 @@
       "sourceHit": 90,
       "hitMultiplier": 0.8,
       "hitBonus": 18,
-      "damagePerShot": 5600,
+      "damagePerShot": 6160.0,
       "damageComponents": {
-        "beam": 5600
+        "beam": 6160.0
       },
       "hitsPerShot": 1,
       "attack": {
@@ -605,7 +667,11 @@
           "x": 7.960204194457795e-16,
           "y": -13
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "ZN_360mmBazooka": {
       "name": "360mm火箭筒",
@@ -622,7 +688,7 @@
       },
       "type": "shell",
       "min": 3,
-      "max": 7,
+      "max": 5,
       "hit": 70,
       "en": 25,
       "clip": "Common_Shoot_A",
@@ -696,7 +762,11 @@
           "x": -0.5555555555555545,
           "y": -16.666666666666668
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
     },
     "ZN_MMP80MG": {
       "name": "MMP-80机枪",
@@ -713,7 +783,7 @@
       },
       "type": "shell",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "hit": 90,
       "en": 12.5,
       "clip": "Common_Shoot_A",
@@ -743,7 +813,7 @@
             "shots": 1,
             "muzzleIndex": 0,
             "animation": "Common_Shoot_A",
-            "repeat": 8
+            "repeat": 11
           },
           {
             "delay": 0.3
@@ -785,7 +855,11 @@
           "x": -1.1111111111111098,
           "y": -20
         }
-      }
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0
     },
     "ZN_TwinBeamSword_A": {
       "name": "双刃光束剑",
@@ -811,10 +885,10 @@
       "sourceHit": 125,
       "hitMultiplier": 0.85,
       "hitBonus": -11,
-      "damagePerShot": 7000,
+      "damagePerShot": 10000,
       "damageComponents": {
-        "melee": 3500,
-        "meleeBeam": 3500
+        "melee": 5000,
+        "meleeBeam": 5000
       },
       "hitsPerShot": 1,
       "attack": {
@@ -855,7 +929,73 @@
         ]
       },
       "hitEffect": "Cqb_Hit_1",
-      "swingEffects": ["Cqb_Fire_1_Yellow_R", "Cqb_Fire_1_Yellow_L"]
+      "swingEffects": [
+        "Cqb_Fire_1_Yellow_R",
+        "Cqb_Fire_1_Yellow_L"
+      ],
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25
+    },
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 95,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125,
+      "hitMultiplier": 0.85,
+      "hitBonus": -11,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000,
+      "damageComponents": {
+        "melee": 2500,
+        "meleeShell": 2500
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "delay": 0.45,
+            "shots": 1
+          },
+          {
+            "delay": 1
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3
+      }
     }
   },
   "weaponKits": [
@@ -863,7 +1003,11 @@
       "id": "beam_rifle",
       "name": "格鲁古古光束步枪套件",
       "cost": 100,
-      "weapons": ["ZN_MS_14_BR", "ZN_TwinBeamSword_A"],
+      "weapons": [
+        "ZN_MS_14_BR",
+        "ZN_TwinBeamSword_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "格鲁古古光束步枪套件"
@@ -880,7 +1024,11 @@
       "id": "bazooka",
       "name": "360mm火箭筒套件",
       "cost": 50,
-      "weapons": ["ZN_360mmBazooka", "ZN_TwinBeamSword_A"],
+      "weapons": [
+        "ZN_360mmBazooka",
+        "ZN_TwinBeamSword_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "360mm火箭筒套件"
@@ -897,7 +1045,11 @@
       "id": "machine_gun",
       "name": "MMP-80机枪套件",
       "cost": 0,
-      "weapons": ["ZN_MMP80MG", "ZN_TwinBeamSword_A"],
+      "weapons": [
+        "ZN_MMP80MG",
+        "ZN_TwinBeamSword_A",
+        "Common_Push_A"
+      ],
       "localization": {
         "zh": {
           "name": "MMP-80机枪套件"
@@ -911,5 +1063,8 @@
       }
     }
   ],
-  "tags": ["ZEON", "0079"]
+  "tags": [
+    "ZEON",
+    "0079"
+  ]
 }

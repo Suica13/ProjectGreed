@@ -70,7 +70,7 @@ test("ground GM upgrades ordinary GM protection and HP; missiles offer accuracy 
   assert.ok(missile.damagePerShot < cannon.damagePerShot);
   assert.ok(missile.damage < cannon.damage);
   assert.equal(missile.shotCount, 3);
-  assert.equal(missile.max, 7);
+  assert.equal(missile.max, 5);
   assert.equal(missile.role, "guided_missile");
   const legs = G.models.MS_06J__machine_gun.weapons.find((w) => w.id === "ZN_MS_06J_LegMS");
   assert.equal(legs.shotCount, 2);
@@ -144,6 +144,6 @@ test("all primary weapon kits use fixed category surcharges on the unchanged pla
   assert.equal(G.models.RGM_79__machine_gun.cost, 350);
   assert.equal(G.models.RGM_79__bazooka.cost, 400);
   assert.equal(G.models.RGM_79__beam_spray.cost, 425);
-  assert.equal(G.models.MS_14A__beam_rifle.cost, 900);
+  assert.equal(G.models.MS_14A__beam_rifle.cost, 850);
   assert.equal(G.models.RX_79_G__cannon.cost, 925);
 });

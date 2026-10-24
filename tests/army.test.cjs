@@ -13,7 +13,7 @@ test("OVERCOST removes from the end of the roster and sanitizes untrusted fields
     plan = G.planFormation(army, 1000);
   assert.deepEqual(plan.disabled, [1, 2, 3]);
   assert.equal(plan.deployCost, 200);
-  assert.equal(plan.totalCost, 2225);
+  assert.equal(plan.totalCost, 2175);
   assert.equal(JSON.stringify(army), before);
   const tied = G.planFormation(Array(3).fill(entry("MS_06F", "machine_gun")), 400);
   assert.deepEqual(tied.disabled, [2]);

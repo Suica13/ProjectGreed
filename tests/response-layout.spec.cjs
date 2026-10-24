@@ -111,7 +111,7 @@ test("map bullets originate from the rendered gun after either dodge lane at eve
           displayHp: record.before,
         };
         phase = "battle";
-        MapCombat.begin(battleView);
+        MapCombat.begin(battleView, () => 0);
         MapCombat.update(performance.now());
         const f = MapCombat.frame;
         const original = SpriteRenderer.draw;

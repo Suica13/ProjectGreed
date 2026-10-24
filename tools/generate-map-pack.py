@@ -53,7 +53,6 @@ def generate(spec, index):
         for x,y,w,h in [(8,2,2,2),(14,3,3,2),(19,5,2,2),(10,7,2,3),(17,10,3,2),(7,13,2,2),(13,16,3,2),(19,20,2,2),(9,23,2,1)]:
             rect(x,y,w,h,'rubble')
         for x,y in [(8,3),(15,3),(11,8),(18,10),(14,17),(19,21)]:rect(x,y,1,1,'rock')
-        woods(19,15,3,2)
     elif ident=='ice_bridges_2v2':
         for y in range(height):
             x=13+(1 if y<9 else -1 if y<18 else 2)
@@ -92,16 +91,19 @@ def main():
     maps=[generate(spec,index) for index,spec in enumerate(SPECS)]
     directory=(ROOT/'assets/maps').resolve()
     assert directory==ROOT.resolve()/'assets/maps'
-    # This command explicitly replaces the preset catalog, including obsolete maps.
-    for path in directory.glob('*.json'):path.unlink()
+    # Rebuild the original presets, then restore the additive large-map pack.
+    # Preserve additional maps and hand-authored files.
     for data in maps:
         (directory/(data['id']+'.json')).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         print(data['id'],data['width'],data['height'])
     path=ROOT/'assets/unit-catalog.json'
     catalog=json.loads(path.read_text(encoding='utf-8'))
-    catalog['maps']=['maps/'+data['id']+'.json' for data in maps]
+    catalog['maps']=['maps/'+data['id']+'.json' for data in maps]+[ref for ref in catalog.get('maps',[]) if ref not in ['maps/'+data['id']+'.json' for data in maps]]
     catalog['defaultMap']=maps[0]['id']
     path.write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    main()
+    import runpy
+    runpy.run_path(str(ROOT / "tools/add-large-battlefields.py"), run_name="__main__")
