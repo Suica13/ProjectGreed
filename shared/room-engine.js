@@ -17,6 +17,11 @@ function createRoomEngine({
   hostReconnectMs = 10000,
 }) {
   // 未参战的出生点不等待连接；参战席位掉线仍然暂停，保留重连/补位流程。
+  const createPlanner =
+    typeof createAttackPlanner === "undefined"
+      ? require("./attack-plans.js").createAttackPlanner
+      : createAttackPlanner;
+  const planner = createPlanner(G, randomId);
   const connected = (room) =>
     room.seats.map(
       (player, seat) =>
@@ -100,7 +105,18 @@ function createRoomEngine({
       game: safeGame(room.game),
       phase: room.phase,
       pending: room.pending,
+      playback: room.playback || null,
       battle: room.battle,
+      plans: room.plans || [],
+      counterPlans: (room.responses || [])
+        .filter((choice) => choice.response === "counter")
+        .map((choice) => ({
+          attacker: choice.intent.target,
+          target: choice.counterTargetId,
+          weapon: choice.counterId,
+        })),
+      // 整批应战完成后一次广播本批全部结果，重连直接使用最终状态。
+      combats: room.combatBatch || [],
       connected: connected(room),
       started: room.started,
       hostId: room.hostId,
@@ -170,6 +186,7 @@ function createRoomEngine({
       return;
     }
     refreshHost(room);
+    completePlayback(room);
     scheduleResultReturn(room);
     room.updated = Date.now();
     for (const member of members(room)) send(member.ws, state(room, ack, member));
@@ -197,11 +214,12 @@ function createRoomEngine({
     room.started = false;
     room.phase = "waiting";
     room.pending = room.battle = null;
+    planner.reset(room);
     room.returnAt = null;
     room.turnNotBefore = 0;
     room.turnDone = Array(room.seats.length).fill(false);
     resetReady(room);
-    room.log = ["对局结束，已返回房间，请重新准备。"];
+    log(room, "对局结束，已返回房间，请重新准备。");
     room.revision++;
     room.lastEvent = { id: randomId(), type: "return_room", matchId: room.matchId };
     broadcast(room);
@@ -225,6 +243,71 @@ function createRoomEngine({
       connected(room).every(Boolean) &&
       !G.hasActions(room.game)
     );
+  }
+  function resolvePlans(room, automatic = false) {
+    const pending = planner.next(room);
+    if (room.game.winner !== null) {
+      room.phase = "finished";
+      return { type: "match_end" };
+    }
+    if (pending) {
+      const options = planner.counterOptions(
+        room,
+        unit(room, pending.attacker),
+        unit(room, pending.target),
+      );
+      pending.counterOptions = options.ids;
+      pending.counterTargets = pending.attacks.map((attack) => ({
+        attacker: attack.attacker,
+        weapon: attack.weapon,
+        options: planner.counterOptions(
+          room,
+          unit(room, attack.attacker),
+          unit(room, pending.target),
+        ).ids,
+      }));
+      pending.countersRemaining = options.remaining;
+      room.phase = "reaction";
+      return { type: "attack", ...pending };
+    }
+    const battles = planner.resolve(room);
+    for (const battle of battles)
+      for (const e of battle.events) {
+        const from = unit(room, e.from),
+          to = unit(room, e.to);
+        const weapon = G.modelOf(from).weapons.find((weapon) => weapon.id === e.weapon);
+        log(
+          room,
+          `${unitLabel(room, from)} 使用${weapon.name} → ${unitLabel(room, to)}：${e.hit ? e.damage + "伤害" : "未命中"}（命中 ${e.hitCount}/${e.strikeCount}）${e.after <= 0 ? "，击破！" : ""}`,
+        );
+      }
+    if (battles.length) {
+      room.playback = {
+        id: randomId(),
+        matchId: room.matchId,
+        members: members(room)
+          .filter((member) => !member.bot && onlineMember(member))
+          .map((member) => member.id),
+        ready: [],
+        automatic,
+      };
+      room.phase = "playback";
+      return { type: "combat_batch", batchId: room.playback.id };
+    }
+    room.phase = "idle";
+    return advanceTurn(room, automatic);
+  }
+  function completePlayback(room) {
+    const playback = room.playback;
+    if (room.phase !== "playback" || !playback) return;
+    playback.members = playback.members.filter((id) => room.members.has(id));
+    if (!playback.members.every((id) => playback.ready.includes(id))) return;
+    room.playback = null;
+    room.phase = room.game.winner === null ? "idle" : "finished";
+    const event =
+      room.game.winner === null ? advanceTurn(room, playback.automatic) : { type: "match_end" };
+    room.revision++;
+    room.lastEvent = { id: randomId(), ...event };
   }
   function advanceTurn(room, automatic = false) {
     const fromTeam = room.game.team;
@@ -250,7 +333,7 @@ function createRoomEngine({
         autoEndTimers.delete(room);
         if (!canAutoEnd(room) || room.game !== entry.game || room.game.round !== entry.round)
           return;
-        room.lastEvent = { id: randomId(), ...advanceTurn(room, true) };
+        room.lastEvent = { id: randomId(), ...resolvePlans(room, true) };
         room.revision++;
         broadcast(room);
       },
@@ -363,6 +446,8 @@ function createRoomEngine({
     room.matchId = randomId();
     room.returnAt = null;
     resetFinalReady(room);
+    // 上一局日志保留到新一局正式进入最终编组。
+    room.log = [];
     log(room, "进入最终编组，确认队友配置后准备出击。");
   }
   function startDeployment(room) {
@@ -398,6 +483,7 @@ function createRoomEngine({
       },
     );
     room.phase = "deployment";
+    planner.reset(room);
     room.turnDone = Array(room.seats.length).fill(false);
     for (const player of room.seats)
       if (player?.bot && G.confirmDeployment(room.game, player.seat)) room.phase = "idle";
@@ -420,11 +506,27 @@ function createRoomEngine({
       if (!player?.bot) return null;
       const attacker = unit(room, room.pending.attacker);
       const weapon = G.modelOf(attacker).weapons.find((w) => w.id === room.pending.weapon);
-      const response = G.bestResponse(room.game, attacker, target, weapon);
+      let response = G.bestResponse(room.game, attacker, target, weapon),
+        counterTargetId = attacker.id;
+      const candidates = (room.pending.counterTargets || [])
+        .flatMap((entry) => {
+          const enemy = unit(room, entry.attacker),
+            incoming = G.modelOf(enemy).weapons.find((w) => w.id === entry.weapon);
+          const choice = G.bestResponse(room.game, enemy, target, incoming);
+          if (choice.response !== "counter" || !entry.options.includes(choice.weapon)) return [];
+          const counter = G.modelOf(target).weapons.find((w) => w.id === choice.weapon),
+            estimate = G.estimate(room.game, target, enemy, counter, "counter", true);
+          return [{ choice, targetId: enemy.id, score: estimate.damage * estimate.hit }];
+        })
+        .sort((a, b) => b.score - a.score);
+      if (candidates.length) {
+        response = candidates[0].choice;
+        counterTargetId = candidates[0].targetId;
+      } else if (response.response === "counter") response = { response: "defend" };
       return {
         player,
         action: "respond",
-        fields: { response: response.response, counterId: response.weapon },
+        fields: { response: response.response, counterId: response.weapon, counterTargetId },
       };
     }
     if (room.phase !== "idle") return null;
@@ -435,7 +537,13 @@ function createRoomEngine({
         !room.turnDone[p.seat] &&
         room.game.units.some((u) => G.ownerOf(u) === p.seat && u.hp > 0 && !u.acted),
     );
-    if (!player) return null;
+    if (!player) {
+      const unfinished = room.seats.find(
+        (player) =>
+          player?.bot && G.seatTeam(player.seat) === room.game.team && !room.turnDone[player.seat],
+      );
+      return unfinished ? { player: unfinished, action: "end_turn", fields: {} } : null;
+    }
     const u = room.game.units.find((u) => G.ownerOf(u) === player.seat && u.hp > 0 && !u.acted);
     const choice = G.aiChoice(room.game, u);
     if (choice && !u.moved && (choice.x !== u.x || choice.y !== u.y))
@@ -495,12 +603,19 @@ function createRoomEngine({
       action(intent.player.ws, {
         id: randomId(),
         revision: room.revision,
+        round: room.game.round,
+        reactionId: room.pending?.id,
         action: intent.action,
         ...intent.fields,
       });
     }, delay);
     timer.unref?.();
     aiTimers.set(room, timer);
+  }
+  // 使用玩家显示 ID 而非席位编号，避免多人同型号机体的日志混淆。
+  function unitLabel(room, unit) {
+    const player = room.seats[G.ownerOf(unit)];
+    return `[${unit.team ? "红方" : "蓝方"}][${player?.name || "空席位"}]${G.modelOf(unit).name}`;
   }
   function log(room, text) {
     room.log.unshift(text);
@@ -534,6 +649,29 @@ function createRoomEngine({
           throw Error("你目前不能查看该聊天频道。");
         send(ws, { type: "chat", message: cached.message, ack: id });
       } else send(ws, state(room, id, member));
+      return;
+    }
+    if (msg.action === "playback_ready") {
+      const playback = room.playback;
+      if (
+        room.phase !== "playback" ||
+        !playback ||
+        playback.id !== msg.batchId ||
+        msg.matchId !== room.matchId ||
+        !Number.isSafeInteger(msg.revision) ||
+        msg.revision > room.revision
+      )
+        throw Error("演出批次已过期");
+      if (!playback.members.includes(member.id)) throw Error("你不在本批演出等待名单中");
+      if (playback.ready.includes(member.id)) {
+        cache.set(id, true);
+        send(ws, state(room, id, member));
+        return;
+      }
+      playback.ready.push(member.id);
+      cache.set(id, true);
+      room.revision++;
+      broadcast(room, id);
       return;
     }
     if (msg.action === "sync") {
@@ -849,17 +987,23 @@ function createRoomEngine({
     if (seat === null) throw Error("观战玩家不能操作战局");
     if (!room.started || !connected(room).every(Boolean)) throw Error("对手已断线，等待重连后继续");
     if (msg.action === "battle_ready") {
-      if (room.phase !== "battle" || msg.battleId !== room.battle?.id)
-        throw Error("交战已经结束或编号不一致");
-      room.battle.ready[seat] = true;
+      if (!room.combats.some((battle) => battle.id === msg.battleId)) throw Error("交战编号无效");
       cache.set(id, true);
-      if (room.battle.ready.every(Boolean)) {
-        finishBattle(room);
-      }
-      broadcast(room, id);
+      send(ws, state(room, id, member));
       return;
     }
-    if (!Number.isSafeInteger(msg.revision) || msg.revision !== room.revision) {
+    const concurrentPlan =
+      room.phase === "idle" &&
+      msg.round === room.game.round &&
+      msg.matchId === room.matchId &&
+      ["move", "undo", "wait", "attack", "cancel_attack", "end_turn"].includes(msg.action);
+    const currentResponse =
+      msg.action === "respond" && !!room.pending && msg.reactionId === room.pending.id;
+    if (
+      !Number.isSafeInteger(msg.revision) ||
+      msg.revision > room.revision ||
+      (msg.revision !== room.revision && !concurrentPlan && !currentResponse)
+    ) {
       send(ws, {
         type: "error",
         id,
@@ -874,6 +1018,10 @@ function createRoomEngine({
       case "deploy": {
         if (room.phase !== "deployment") throw Error("Not deploying");
         G.deploy(room.game, seat, msg.unitId, msg.x, msg.y);
+        log(
+          room,
+          `${unitLabel(room, unit(room, msg.unitId))} 部署至${String.fromCharCode(65 + msg.x)}${msg.y + 1}。`,
+        );
         break;
       }
       case "confirm_deployment": {
@@ -888,10 +1036,7 @@ function createRoomEngine({
         let from = { x: u.x, y: u.y },
           steps = G.move(room.game, u, msg.x, msg.y);
         event = { type: "move", unitId: u.id, from, path: steps };
-        log(
-          room,
-          `${G.seatTeam(seat) ? "红方" : "蓝方"} ${G.modelOf(u).name}移动至${String.fromCharCode(65 + u.x)}${u.y + 1}。`,
-        );
+        log(room, `${unitLabel(room, u)} 移动至${String.fromCharCode(65 + u.x)}${u.y + 1}。`);
         break;
       }
       case "undo": {
@@ -900,92 +1045,71 @@ function createRoomEngine({
         if (u.acted || !u.origin) throw Error("无法撤销移动");
         G.undo(room.game, u);
         event = { type: "undo", unitId: u.id };
-        log(room, "已撤销移动。");
+        log(room, `${unitLabel(room, u)} 撤销移动。`);
         break;
       }
       case "wait": {
         validateActive(room, seat);
         let u = ownUnit(room, seat, msg.unitId);
+        if (u.plan) planner.cancel(room, u);
         G.wait(room.game, u);
         event = { type: "wait", unitId: u.id };
-        log(room, `${G.seatTeam(seat) ? "红方" : "蓝方"} ${G.modelOf(u).name}待机。`);
+        log(room, `${unitLabel(room, u)} 待机。`);
         break;
       }
       case "end_turn": {
         validateActive(room, seat);
-        if (room.seats.length === 2) event = advanceTurn(room);
-        else {
-          room.turnDone[seat] = true;
-          for (const u of room.game.units)
-            if (G.ownerOf(u) === seat && u.hp > 0 && !u.acted) G.wait(room.game, u);
-          const teamPlayers = room.seats
-            .map((_, index) => index)
-            .filter(
-              (index) =>
-                G.seatTeam(index) === room.game.team &&
-                room.game.units.some((u) => G.ownerOf(u) === index && u.hp > 0),
-            );
-          event =
-            teamPlayers.every((index) => room.turnDone[index]) || !G.hasActions(room.game)
-              ? advanceTurn(room)
-              : { type: "player_end", seat };
-        }
+        room.turnDone[seat] = true;
+        for (const u of room.game.units)
+          if (G.ownerOf(u) === seat && u.hp > 0 && !u.acted) G.wait(room.game, u);
+        const teammates = room.seats.filter(
+          (player) =>
+            player &&
+            G.seatTeam(player.seat) === room.game.team &&
+            room.game.units.some((u) => G.ownerOf(u) === player.seat && u.hp > 0),
+        );
+        event = teammates.every((player) => room.turnDone[player.seat])
+          ? resolvePlans(room)
+          : { type: "player_end", seat };
         break;
       }
       case "attack": {
         validateActive(room, seat);
-        let a = ownUnit(room, seat, msg.unitId),
+        const a = ownUnit(room, seat, msg.unitId),
           b = unit(room, msg.targetId),
-          w = G.modelOf(a).weapons.find((w) => w.id === msg.weaponId);
-        if (a.acted || !w || !b || !G.canAttack(room.game, a, b, w))
-          throw Error("目标、武器、射程或资源不满足条件");
-        G.faceTarget(a, b);
-        G.faceTarget(b, a);
-        room.pending = { attacker: a.id, target: b.id, weapon: w.id };
-        room.phase = "reaction";
-        event = { type: "attack", ...room.pending };
+          w = G.modelOf(a).weapons.find((weapon) => weapon.id === msg.weaponId);
+        if (!w || !b) throw Error("武器或目标无效");
+        const plan = planner.plan(room, a, b, w, seat);
+        event = { type: "plan_attack", ...plan };
         log(
           room,
-          `${G.seatTeam(seat) ? "红方" : "蓝方"} ${G.modelOf(a).name}选择${w.name}，等待对手应战。`,
+          `${unitLabel(room, a)} 计划使用${w.name}攻击${unitLabel(room, b)}，等待本队结束规划。`,
         );
         break;
       }
       case "cancel_attack": {
-        if (room.phase !== "reaction" || G.ownerOf(unit(room, room.pending.attacker)) !== seat)
-          throw Error("只有进攻方能取消选目标");
-        room.pending = null;
-        room.phase = "idle";
-        event = { type: "cancel_attack" };
+        validateActive(room, seat);
+        const attacker = ownUnit(room, seat, msg.unitId);
+        planner.cancel(room, attacker);
+        event = { type: "cancel_plan", unitId: attacker.id };
+        log(room, `${unitLabel(room, attacker)} 取消攻击计划。`);
         break;
       }
       case "respond": {
         if (room.phase !== "reaction" || !room.pending) throw Error("当前没有待应战的攻击");
-        let a = unit(room, room.pending.attacker),
-          b = unit(room, room.pending.target);
+        const b = unit(room, room.pending.target);
         if (G.ownerOf(b) !== seat) throw Error("只有被攻击方能选择应战");
-        let w = G.modelOf(a).weapons.find((w) => w.id === room.pending.weapon),
-          before = Object.fromEntries(room.game.units.map((u) => [u.id, u.hp]));
-        let events = G.fight(room.game, a, b, w, msg.response, msg.counterId);
-        room.battle = {
-          id: randomId(),
-          a: a.id,
-          b: b.id,
-          events,
-          before,
-          ready: room.seats.map((player, seat) => !room.activeSeats[seat] || !!player?.bot),
-        };
-        room.phase = "battle";
-        room.pending = null;
-        event = { type: "battle", battleId: room.battle.id };
-        for (const e of events) {
-          let from = unit(room, e.from),
-            to = unit(room, e.to),
-            weapon = G.modelOf(from).weapons.find((w) => w.id === e.weapon);
-          log(
-            room,
-            `${from.team ? "红方" : "蓝方"} ${G.modelOf(from).name} · ${weapon.name} → ${G.modelOf(to).name}：${e.hit ? e.damage + "伤害" : "未命中"}（命中 ${e.hitCount}/${e.strikeCount}）${e.after <= 0 ? "，击破！" : ""}`,
-          );
-        }
+        planner.choose(
+          room,
+          msg.reactionId,
+          msg.response,
+          msg.counterId,
+          msg.counterTargetId ?? room.pending.attacker,
+        );
+        const decision =
+          msg.response === "counter" ? "反击" : msg.response === "defend" ? "防御" : "回避";
+        log(room, `${unitLabel(room, b)} 选择${decision}。`);
+        event = resolvePlans(room);
         break;
       }
       default:
@@ -1034,6 +1158,8 @@ function createRoomEngine({
         pending: null,
         battle: null,
         started: false,
+        plans: [],
+        combats: [],
         log: ["房间已创建，两队准备后开始。"],
         lastEvent: null,
         updated: Date.now(),

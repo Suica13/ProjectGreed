@@ -39,11 +39,11 @@ function scenario(config, check) {
         damageMultiplier: config.multipliers?.[i] ?? 1,
       })),
     };
-    const stance = config.stance || "evade",
+    const stance = config.stance || "counter",
       before = JSON.stringify(g),
       estimate = G.estimate(g, a, b, w, stance);
     assert.equal(JSON.stringify(g), before, "forecast must not modify the match");
-    const event = G.fight(g, a, b, w, stance)[0];
+    const event = G.fight(g, a, b, w, stance, null, false)[0];
     check({ g, a, b, w, estimate, event });
   } finally {
     [G.models[a.model], G.models[b.model]] = originals;
@@ -76,7 +76,7 @@ test("hull flat and percentage defense apply to the remainder, separately for ev
     },
   );
   scenario({ body: { beam: { flat: 500, percent: 20 } }, stance: "defend" }, ({ event }) => {
-    assert.equal(event.damage, Math.round((3000 - 625) * 0.75));
+    assert.equal(event.damage, Math.round((3000 - 625) * 0.75 * 0.75));
   });
 });
 test("insufficient shield durability spills the unabsorbed raw damage back before hull defense", () => {
@@ -146,5 +146,15 @@ test("volley forecasts and actual per-shot blocks both deplete shields in firing
     assert.equal(estimate.shieldDamage, 4500);
     assert.equal(estimate.blockedDamage, 4500);
     assert.equal(event.damage, 4500);
+  });
+});
+
+test("defense final resistance reduces both hull and shield damage after coverage splitting", () => {
+  scenario({ stance: "defend" }, ({ estimate, event }) => {
+    assert.equal(estimate.damage, 4500);
+    assert.equal(estimate.shieldDamage, 2250);
+    assert.equal(estimate.blockedDamage, 2250);
+    assert.equal(event.damage, 2250);
+    assert.equal(event.shieldDamage, 2250);
   });
 });

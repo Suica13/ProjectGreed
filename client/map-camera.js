@@ -1,6 +1,7 @@
 /* 地图视图与格子坐标分开；缩放和平移不会改变单位实际位置。 */
 const MapCamera = (() => {
   const canvas = byId("map");
+  const cellScale = ART.presentation.mapCellScale || 1;
   let zoom = 1,
     centerX = Rules.mapWidth(game) / 2,
     centerY = Rules.mapHeight(game) / 2,
@@ -8,7 +9,9 @@ const MapCamera = (() => {
     suppressClick = false;
   function geometry(width, height) {
     const tile =
-      Math.min((width - 36) / Rules.mapWidth(game), (height - 36) / Rules.mapHeight(game)) * zoom;
+      Math.min((width - 36) / Rules.mapWidth(game), (height - 36) / Rules.mapHeight(game)) *
+      zoom *
+      cellScale;
     const bound = (value, half, extent) =>
       half >= extent / 2 ? extent / 2 : Math.max(half, Math.min(extent - half, value));
     centerX = bound(centerX, width / (2 * tile), Rules.mapWidth(game));
@@ -20,8 +23,8 @@ const MapCamera = (() => {
     if (box.width > 0 && box.height > 0) mapGeo = geometry(box.width, box.height);
     byId("mapZoomLabel").textContent = Math.round(zoom * 100) + "%";
     byId("mapZoomOut").disabled = zoom <= 1;
-    byId("mapZoomIn").disabled = zoom >= 3;
-    canvas.style.cursor = zoom > 1 ? "grab" : "";
+    byId("mapZoomIn").disabled = zoom >= 5;
+    canvas.style.cursor = zoom * cellScale > 1 ? "grab" : "";
   }
   function setZoom(value, x, y) {
     const box = canvas.getBoundingClientRect(),
@@ -30,22 +33,26 @@ const MapCamera = (() => {
     y ??= box.height / 2;
     const cellX = (x - old.ox) / old.tile,
       cellY = (y - old.oy) / old.tile;
-    zoom = Math.max(1, Math.min(3, value));
+    zoom = Math.max(1, Math.min(5, value));
     const tile =
       Math.min((box.width - 36) / Rules.mapWidth(game), (box.height - 36) / Rules.mapHeight(game)) *
-      zoom;
+      zoom *
+      cellScale;
     centerX = cellX - (x - box.width / 2) / tile;
     centerY = cellY - (y - box.height / 2) / tile;
     refresh();
   }
-  function focus(x, y) {
-    zoom = Math.max(zoom, 1.75);
+  function focus(x, y, { preserveZoom = false } = {}) {
+    if (!preserveZoom) zoom = Math.max(zoom, 1.75);
     centerX = x + 0.5;
     centerY = y + 0.5;
     drag = null;
     suppressClick = false;
     hover = null;
     refresh();
+  }
+  function frame(a, b) {
+    focus((a.x + b.x) / 2, (a.y + b.y) / 2, { preserveZoom: true });
   }
   function reset() {
     zoom = 1;
@@ -70,7 +77,7 @@ const MapCamera = (() => {
     { passive: false },
   );
   canvas.addEventListener("pointerdown", (event) => {
-    if (zoom <= 1 || event.button !== 0 || window.GamePreview?.active) return;
+    if (zoom * cellScale <= 1 || event.button !== 0 || window.GamePreview?.active) return;
     suppressClick = false;
     drag = {
       id: event.pointerId,
@@ -119,6 +126,7 @@ const MapCamera = (() => {
   byId("mapZoomReset").onclick = reset;
   return {
     geometry,
+    frame,
     focus,
     reset,
     setZoom,

@@ -271,6 +271,12 @@
       },
       "visibleWhen": {
         "heldWeapon": "ZN_HeatHawk_A"
+      },
+      "animationVisibility": {
+        "clip": "Common_Melee_A",
+        "start": 0.6,
+        "end": 2,
+        "visibleInside": false
       }
     },
     {
@@ -287,6 +293,12 @@
       },
       "visibleWhen": {
         "heldWeapon": "ZN_HeatHawk_A"
+      },
+      "animationVisibility": {
+        "clip": "Common_Melee_A",
+        "start": 0.6,
+        "end": 2,
+        "visibleInside": true
       }
     },
     {
@@ -377,7 +389,7 @@
     "move": 4,
     "mobility": 85,
     "cost": 200,
-    "counterLimit": 2
+    "counterLimit": 1
   },
   "attackBonuses": {
     "melee": 0,

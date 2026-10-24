@@ -30,8 +30,8 @@ test("unlimited saved formations, era tags, default room caps and full-row panel
   await page.locator("#saveFormation").click();
   await page.locator("#openSkirmish").click();
   await page.locator("#createOfflineRoom").click();
-  await expect(page.locator("#roomCostLimit")).toHaveValue("5000");
-  await expect(page.locator("#roomUnitCostLimit")).toHaveValue("1000");
+  await expect(page.locator("#roomCostLimit")).toHaveValue("3000");
+  await expect(page.locator("#roomUnitCostLimit")).toHaveValue("500");
   await page.locator("#roomUnitCostLimit").fill("500");
   await waitForRoomSettings(page);
   await page.locator("#roomFormation").click();

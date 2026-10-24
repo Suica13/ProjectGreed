@@ -30,7 +30,7 @@ const Chat = (() => {
   }
   function availableChannels() {
     return connected()
-      ? ChatChannels.ids.filter((channel) => ChatChannels.canRead(seat(), channel))
+      ? ChatChannels.ids.filter((channel) => ChatChannels.canSend(seat(), channel))
       : ["all"];
   }
   function status(text = "") {
@@ -73,7 +73,8 @@ const Chat = (() => {
   }
   function render() {
     refreshChannels();
-    const visible = messages.filter((message) => (message.channel || "all") === selectedChannel);
+    // 服务端已按身份过滤权限；发送频道不再筛选聊天历史。
+    const visible = messages;
     for (const view of views) {
       const list = byId(view.lines);
       const nearBottom = list.scrollHeight - list.scrollTop - list.clientHeight < 40;
@@ -113,7 +114,12 @@ const Chat = (() => {
       list.scrollTop = scrollTop;
     }
   }
+  let matchId = null;
   function setSnapshot(snapshot) {
+    if (snapshot.started && snapshot.matchId !== matchId) {
+      matchId = snapshot.matchId;
+      if (!Net.local) selectTab("chat");
+    }
     setLog(snapshot.log || []);
     // A seat change can remove access to the previous team's history.
     messages = (snapshot.chat || []).slice(-100);
@@ -148,6 +154,8 @@ const Chat = (() => {
     clearTimeout(timer);
     setLog([]);
     selectRoomTab("chat");
+    selectTab("log");
+    matchId = null;
     messages = [];
     pending = retry = null;
     selectedChannel = "all";

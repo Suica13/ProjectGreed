@@ -1,3 +1,4 @@
+const { finishPlanning } = require("./planning-fixture.cjs");
 const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const { test, expect } = require("@playwright/test"),
   { pathToFileURL } = require("node:url"),
@@ -43,16 +44,15 @@ async function finishMatch(app, room, pages, noEffects = false) {
   await pages[0].evaluate(() =>
     Net.request("attack", { unitId: "0-0", targetId: "1-0", weaponId: "EF_BeamSprayGun" }),
   );
+  await finishPlanning(pages);
   await expect(pages[1].locator("#reaction")).toBeVisible();
   await pages[1].locator("#responseDefend").click();
   await pages[1].locator("#confirmResponse").click();
   for (const page of pages) {
-    await expect(page.locator("#battle")).toBeVisible();
-    await page.locator("#skipBattle").click();
+    await expect(page.locator("#battle")).toBeHidden();
+    await expect(page.locator("#mapCombatControls")).toBeVisible();
+    await page.locator("#mapSkipBattle").click();
   }
-  for (const page of pages.slice(2)) await page.locator("#continueBattle").click();
-  await pages[0].locator("#continueBattle").click();
-  await pages[1].locator("#continueBattle").click();
   for (const page of pages) await expect(page.locator("#victory")).toBeVisible({ timeout: 7000 });
 }
 test("nine-unit rosters and long logs scroll inside a bounded desktop viewport", async ({
@@ -222,7 +222,7 @@ test("the server countdown returns every client without a return request", async
   page,
   context,
 }) => {
-  const app = createServer({ host: "127.0.0.1", port: 0, resultReturnMs: 1400 }),
+  const app = createServer({ host: "127.0.0.1", port: 0, resultReturnMs: 4000 }),
     address = await app.listen(),
     red = await context.newPage();
   try {

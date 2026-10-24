@@ -13,15 +13,13 @@ test("map, count, COST and room/team bans apply automatically without confirmati
   await page.locator("#roomCostLimit").fill("4000");
   await page.locator("#roomUnitCostLimit").fill("750");
   const preview = await page.evaluate(() => {
-    byId("roomMapSelect").value = "forest_front_5v5";
+    byId("roomMapSelect").value = "frontline_3v3";
     byId("roomMapSelect").dispatchEvent(new Event("change"));
     return { text: byId("roomMapInfo").textContent, selected: byId("roomMapSelect").value };
   });
-  expect(preview.text).toContain("森林战线");
-  expect(preview.selected).toBe("forest_front_5v5");
-  await expect
-    .poll(() => page.evaluate(() => Net.snapshot.settings.mapId))
-    .toBe("forest_front_5v5");
+  expect(preview.text).toContain("林海战线");
+  expect(preview.selected).toBe("frontline_3v3");
+  await expect.poll(() => page.evaluate(() => Net.snapshot.settings.mapId)).toBe("frontline_3v3");
   await expect
     .poll(() =>
       page.evaluate(() => [Net.snapshot.settings.costLimit, Net.snapshot.settings.unitCostLimit]),
@@ -55,7 +53,7 @@ test("map, count, COST and room/team bans apply automatically without confirmati
       page.evaluate(() => [Net.snapshot.settings.costLimit, Net.snapshot.settings.unitCostLimit]),
     )
     .toEqual([4000, 750]);
-  expect(await page.evaluate(() => Net.snapshot.settings.mapId)).toBe("forest_front_5v5");
+  expect(await page.evaluate(() => Net.snapshot.settings.mapId)).toBe("frontline_3v3");
   await page.locator("#roomCostLimit").fill("");
   await page.locator("#roomMapSelect").selectOption("frontier_1v1");
   await expect.poll(() => page.evaluate(() => Net.snapshot.settings.mapId)).toBe("frontier_1v1");

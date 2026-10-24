@@ -79,17 +79,30 @@ test("lineup buttons, three-column observers and shared room/game channel permis
     expect(new Set(boxes.map((b) => Math.round(b.x))).size).toBe(3);
     expect(new Set(boxes.map((b) => Math.round(b.y))).size).toBe(2);
     await say(page, "team1", "<b>TEAM ONE SECRET</b>");
-    await red.locator("#roomChatChannel").selectOption("team1");
     await expect(red.locator("#roomChatLines")).toContainText("<b>TEAM ONE SECRET</b>");
     await expect(red.locator("#roomChatLines b")).toHaveCount(0);
-    await expect(red.locator("#roomChatInput")).toBeDisabled();
+    await expect(red.locator("#roomChatInput")).toBeEnabled();
+    expect(
+      await red.locator("#roomChatChannel option").evaluateAll((es) => es.map((e) => e.value)),
+    ).toEqual(["all", "spectators"]);
+    await expect(observer.locator("#roomChatLines")).not.toContainText("TEAM ONE SECRET");
     expect(
       await observer.locator("#roomChatChannel option").evaluateAll((es) => es.map((e) => e.value)),
     ).toEqual(["all", "team2"]);
     await say(observer, "team2", "TEAM TWO SECRET");
-    await red.locator("#roomChatChannel").selectOption("team2");
     await expect(red.locator("#roomChatLines")).toContainText("TEAM TWO SECRET");
+    await expect(red.locator("#roomChatLines")).toContainText("TEAM ONE SECRET");
+    await expect(page.locator("#roomChatLines")).not.toContainText("TEAM TWO SECRET");
     await say(red, "spectators", "OBSERVER SECRET");
+    await expect(red.locator("#roomChatLines")).toContainText(
+      "[队伍1]GoldHost:<b>TEAM ONE SECRET</b>",
+    );
+    await expect(red.locator("#roomChatLines")).toContainText("[队伍2]Watcher:TEAM TWO SECRET");
+    await expect(red.locator("#roomChatLines")).toContainText("[观战]BlueRed:OBSERVER SECRET");
+    await say(page, "all", "ROOM PUBLIC");
+    await page.locator("#roomChatChannel").selectOption("team1");
+    await expect(page.locator("#roomChatLines")).toContainText("[全部]GoldHost:ROOM PUBLIC");
+    await expect(page.locator("#roomChatLines")).toContainText("TEAM ONE SECRET");
     expect(
       await page.evaluate(() => Net.snapshot.chat.some((m) => m.text === "OBSERVER SECRET")),
     ).toBe(false);
@@ -105,6 +118,11 @@ test("lineup buttons, three-column observers and shared room/game channel permis
     await red.locator("#showChat").click();
     await red.locator("#chatChannel").selectOption("all");
     await expect(red.locator("#chatLines")).toContainText("IN GAME PUBLIC");
+    await expect(red.locator("#chatLines")).toContainText("TEAM ONE SECRET");
+    await expect(red.locator("#chatLines")).toContainText("TEAM TWO SECRET");
+    await expect(red.locator("#chatLines")).toContainText("OBSERVER SECRET");
+    await expect(page.locator("#chatLines")).toContainText("TEAM ONE SECRET");
+    await expect(page.locator("#chatLines")).not.toContainText("TEAM TWO SECRET");
     await page.locator("#roomSettings").click();
     await expect(page.locator("#roomChatChannel")).toHaveValue("all");
     await expect(page.locator("#roomChatLines")).toContainText("IN GAME PUBLIC");

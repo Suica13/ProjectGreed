@@ -104,6 +104,9 @@ const Net = (() => {
         action,
         id,
         revision: n.revision,
+        round: n.snapshot?.game.round,
+        matchId: n.snapshot?.matchId,
+        reactionId: n.snapshot?.pending?.id,
         ...fields,
       }),
     );
@@ -125,6 +128,8 @@ const Net = (() => {
   }
   function leave({ notify = true, forget = true } = {}) {
     MatchResults.reset();
+    CombatPlayback.reset();
+    PlanningUI.reset();
     GameAudio.reset();
     WeaponAudio.stop();
     Chat.reset();
@@ -321,6 +326,7 @@ const Net = (() => {
   // 服务端快照是联机状态来源，按阶段恢复地图、应战或战斗画面。
   function applySnapshot(s) {
     GameAudio.receive(s, s.you ? s.you.seat : n.seat, n.applied);
+    CombatPlayback.receive(s, n.applied);
     const wasStarted = n.started;
     Chat.setSnapshot(s);
     const previousSeat = n.seat;
@@ -343,7 +349,6 @@ const Net = (() => {
     log = s.log.slice();
 
     pending = s.pending;
-    if (s.phase !== "battle" && battleView) MapEffects.capture(battleView);
     if (s.phase === "assembly") {
       phase = "assembly";
       battleView = null;
@@ -355,6 +360,8 @@ const Net = (() => {
     }
     if (!s.started) {
       MatchResults.reset();
+      CombatPlayback.reset();
+      PlanningUI.reset();
       if (wasStarted) {
         MapEffects.reset();
         WeaponAudio.stop();
@@ -388,9 +395,14 @@ const Net = (() => {
     }
     const online = s.connected.every(Boolean);
     byId("reaction").hidden = true;
-    if (!online && s.phase !== "finished") {
+    const ownResponse =
+      s.phase === "reaction" && s.pending && Rules.ownerOf(getUnit(s.pending.target)) === n.seat;
+    if (CombatPlayback.active() && !ownResponse) {
+      phase = "battle";
+      MapCombat.resume(battleView);
+    } else if (!online && s.phase !== "finished") {
       TurnFlow.reset();
-      if (battleView) BattleWindow.suspend(battleView);
+      if (battleView?.mapBattle) MapCombat.suspend(battleView);
       phase = "disconnected";
       status("房间 " + n.room + " · 等待队伍补位或离线玩家恢复，战局已暂停");
     } else if (s.phase === "deployment") {
@@ -402,50 +414,28 @@ const Net = (() => {
       if (Rules.ownerOf(b) === n.seat) {
         phase = "reaction";
         let a = getUnit(s.pending.attacker),
-          legal = Rules.modelOf(b).weapons.filter((w) => Rules.canCounter(game, b, a, w));
+          legal = Rules.modelOf(b).weapons.filter((w) =>
+            s.pending.counterTargets
+              ? s.pending.counterTargets.some((entry) => entry.options.includes(w.id))
+              : Rules.canCounter(game, b, a, w) &&
+                (!s.pending.counterOptions || s.pending.counterOptions.includes(w.id)),
+          );
         if (!legal.some((w) => w.id === counterId)) {
           response = legal.length ? "counter" : "defend";
           counterId = legal[0]?.id || null;
         }
         renderReaction();
-        byId("cancelAttack").disabled = true;
         byId("reaction").hidden = false;
       } else phase = "reaction_wait";
-    } else if (s.phase === "battle") {
-      mode = "select";
-      weaponId = null;
-      if (isSpectator() ? n.spectatorBattleSeen === s.battle.id : s.battle.ready[n.seat]) {
-        byId("battle").hidden = true;
-        phase = "battle_wait";
-      } else {
-        phase = "battle";
-        if (hadBattle !== s.battle.id) {
-          battleView = {
-            a: s.battle.a,
-            b: s.battle.b,
-            events: s.battle.events,
-            index: 0,
-            start: performance.now(),
-            displayHp: { ...s.battle.before },
-            completed: false,
-            networkId: s.battle.id,
-          };
-          byId("battleTitle").textContent =
-            unitName(getUnit(s.battle.a)) + " vs " + unitName(getUnit(s.battle.b));
-          byId("continueBattle").disabled = true;
-          byId("continueBattle").textContent = "立即返回地图";
-          byId("skipBattle").disabled = false;
-          byId("battleSummary").textContent = isSpectator()
-            ? "观战演出不会阻塞两队继续游戏。"
-            : "演出结束后停留2秒自动返回地图，双方看完后继续行动。";
-        }
-        BattleWindow.resume(battleView);
-      }
+    } else if (s.phase === "playback") {
+      phase = "playback_wait";
+      battleView = null;
+      byId("hint").textContent = "等待所有玩家完成演出。";
     } else if (s.phase === "finished") {
       phase = "victory";
       byId("battle").hidden = true;
       battleView = null;
-      showVictory();
+      if (!CombatPlayback.queued) showVictory();
     } else {
       phase = "idle";
       byId("battle").hidden = true;
@@ -458,36 +448,26 @@ const Net = (() => {
       n.seen.add(event.id);
       if (n.seen.size > 128) n.seen.delete(n.seen.values().next().value);
       if (event.type === "move" && s.phase === "idle" && online && n.applied) {
-        if (Rules.modelOf(getUnit(event.unitId)).presentation.movement === "boost")
-          WeaponAudio.play(ART.presentation.moveSound);
-        MovementEffects.start(getUnit(event.unitId), event.from, event.path[0], performance.now());
-        moving = {
-          id: event.unitId,
-          from: event.from,
-          path: event.path,
-          start: performance.now(),
-          step: byId("quick").checked ? 50 : 120,
-        };
-        let marker = moving;
-        phase = "moving";
-        setTimeout(
-          () => {
-            if (moving !== marker) return;
-            moving = null;
-            if (n.snapshot === s) phase = "idle";
-            update();
-          },
-          event.path.length * moving.step + 20,
-        );
+        PlanningUI.move(event);
       }
       if (event.type === "turn") {
         selected = null;
         weaponId = null;
         mode = "select";
         if (n.applied && online)
-          TurnFlow.play(event.fromTeam ?? previousGame.team, game.round, game.team);
+          CombatPlayback.turn({
+            fromTeam: event.fromTeam ?? previousGame.team,
+            round: game.round,
+            toTeam: game.team,
+          });
       }
     }
+    if (s.pending && n.focusedReactionId !== s.pending.id) {
+      n.focusedReactionId = s.pending.id;
+      const b = getUnit(s.pending.target);
+      if (b) MapCamera.focus(b.x, b.y, { preserveZoom: true });
+    }
+    if (s.started && online) CombatPlayback.show();
     if (selected && !game.units.some((u) => u.id === selected && u.hp > 0)) selected = null;
     n.applied = true;
     update();

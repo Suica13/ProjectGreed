@@ -15,6 +15,7 @@ let game = Rules.create(),
   pending = null,
   response = "defend",
   counterId = null,
+  counterTargetId = null,
   log = [],
   assetsReady = false,
   clock = 0,
@@ -29,7 +30,10 @@ let animationFrameId = null;
 // 页面生命周期：Menu 和房间准备只显示界面，不启动战斗 Canvas 绘制。
 function setPageView(view) {
   if (view !== "game") TurnFlow.reset();
-  if (view !== "game" && pageView === "game" && battleView) BattleWindow.suspend(battleView);
+  if (view !== "game" && pageView === "game" && battleView) {
+    if (battleView.mapBattle) MapCombat.suspend(battleView);
+    else BattleWindow.suspend(battleView);
+  }
   if (view !== "game") WeaponAudio.stop();
   pageView = view;
   byId("gameScene").hidden = view !== "game";
@@ -51,17 +55,22 @@ function startRendering() {
 const teamName = (t) => (t ? "红方" : "蓝方"),
   other = (t) => 1 - t,
   getUnit = (id) => game.units.find((u) => u.id === id),
+  battleUnit = (id) => battleView?.actors?.find((unit) => unit.id === id) || getUnit(id),
   getWeapon = (u, id) => Rules.modelOf(u).weapons.find((w) => w.id === id),
   unitIcon = (model) => ART.assets[SpriteRenderer.models[model].icon],
   unitName = (u) => Rules.modelOf(u).name,
   formatNumber = (n) => Number(n).toLocaleString("en-US"),
   isAI = () => !Net.active && game.ai && game.team === 1,
-  isBusy = () => phase !== "idle" || !!Net.awaiting || MapEffects.pending() || TurnFlow.active;
+  isBusy = () =>
+    phase !== "idle" || !!Net.awaiting || (!Net.active && MapEffects.pending()) || TurnFlow.active;
 function note(text) {
   byId("toast").textContent = text;
   byId("toast").classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => byId("toast").classList.remove("show"), 2200);
+}
+function logUnit(unit) {
+  return `[${teamName(unit.team)}][${UnitIdentity.owner(unit).name}]${unitName(unit)}`;
 }
 function addLog(text) {
   log.unshift(text);
@@ -114,7 +123,9 @@ function update() {
   byId("phaseTitle").textContent = teamName(game.team) + (isAI() ? "AI行动阶段" : "行动阶段");
   if (phase === "deployment") byId("phaseTitle").textContent = "开局部署";
   byId("phaseEyebrow").textContent = game.team ? "RED PHASE" : "BLUE PHASE";
-  byId("endTurn").textContent = "结束" + teamName(game.team) + "回合";
+  byId("endTurn").textContent = Net.active
+    ? "完成计划 · 结束行动"
+    : "结束" + teamName(game.team) + "回合";
   byId("endTurn").disabled = busy || isAI() || (Net.active && !Net.canAct());
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线遭遇战" : "联机遭遇战") + " · " + Net.roleName()
@@ -137,7 +148,7 @@ function update() {
           : "选择己方尚未行动的单位。";
   if (Net.active) {
     if (phase === "reaction_wait") hint = "等待对手选择反击、防御或回避。";
-    else if (phase === "battle_wait") hint = "已返回地图，等待对手结束演出。";
+    else if (phase === "playback_wait") hint = "等待所有玩家完成演出。";
     else if (phase === "waiting") hint = "等待红方加入房间。";
     else if (phase === "disconnected") hint = "连接中断：战局已暂停，恢复连接后继续。";
     else if (phase === "connecting") hint = "正在连接服务器…";
@@ -148,6 +159,7 @@ function update() {
   if (MapEffects.pending()) hint = "单位击破演出中…";
   if (TurnFlow.active) hint = "回合交接中…";
   byId("hint").textContent = hint;
+  byId("hint").hidden = phase === "deployment";
   renderPanel();
   TurnFlow.refreshAutoEnd();
 }
@@ -228,11 +240,13 @@ function renderRoster(busy) {
           "roster-status",
           unit.hp <= 0
             ? "已击破"
-            : unit.acted
-              ? "行动结束"
-              : unit.moved
-                ? "已移动 · 可攻击"
-                : "未行动",
+            : unit.plan
+              ? "已计划攻击"
+              : unit.acted
+                ? "行动结束"
+                : unit.moved
+                  ? "已移动 · 可攻击"
+                  : "未行动",
         ),
       );
       button.dataset.unitId = unit.id;
@@ -266,7 +280,8 @@ function renderPanel() {
   }
   let m = Rules.modelOf(u),
     own = u.team === game.team && (!Net.active || Net.owns(u)),
-    canCommand = own && !u.acted && !isBusy() && !isAI() && (!Net.active || Net.canAct());
+    canCommand =
+      own && (!u.acted || !!u.plan) && !isBusy() && !isAI() && (!Net.active || Net.canAct());
   panel.replaceChildren();
   let head = element("div", "unit-card-head");
   head.innerHTML = /* HTML */ `<img src="${unitIcon(u.model)}" alt="" />
@@ -308,13 +323,6 @@ function renderPanel() {
       ${Rules.terrain[game.tiles[u.y][u.x]].name}
     </div>`;
   panel.append(stats);
-  panel.append(
-    element(
-      "p",
-      "helper",
-      "本回合剩余反击 " + Rules.countersRemaining(u) + " / " + (m.counterLimit ?? 2),
-    ),
-  );
   const protection = element("details", "rule-box");
   protection.append(element("summary", "", "防护属性"));
   protection.append(element("p", "helper", m.description));
@@ -364,7 +372,7 @@ function renderPanel() {
           return;
         }
         Rules.wait(game, u);
-        addLog(`${teamName(u.team)} ${unitName(u)}待机。`);
+        addLog(`${logUnit(u)} 待机。`);
         mode = "select";
         weaponId = null;
         update();
@@ -429,6 +437,7 @@ function renderPanel() {
     for (const target of targets) {
       let e = Rules.estimate(game, u, target, w),
         button = element("button", "target-button");
+      button.dataset.targetId = target.id;
       button.append(
         element("span", "", teamName(target.team) + " " + unitName(target)),
         element("span", "muted", `${Rules.dist(u, target)}格 · ${e.hit}%`),
@@ -438,17 +447,21 @@ function renderPanel() {
       panel.append(button);
     }
   }
-  let info = u.acted
-    ? "本单位行动已经结束。"
-    : !own
-      ? "当前是对手的单位，可查看其射程与资源。"
-      : u.moved
-        ? "已移动：仍可攻击或待机。攻击后不可再移动。"
-        : "移动可选；原地攻击也会结束本单位行动。";
+  let info = u.plan
+    ? "已计划攻击：本队结束规划后执行，可取消计划重新选择。"
+    : u.acted
+      ? "本单位行动已经结束。"
+      : !own
+        ? "当前是对手的单位，可查看其射程与资源。"
+        : u.moved
+          ? "已移动：仍可攻击或待机。攻击后不可再移动。"
+          : "移动可选；原地攻击也会结束本单位行动。";
   panel.append(element("div", "rule-box", info));
-  if (Net.active && pending && Net.owns(getUnit(pending.attacker)) && phase === "reaction_wait") {
-    let cancel = element("button", "", "取消本次攻击");
-    cancel.onclick = () => Net.request("cancel_attack");
+  if (Net.active && u.plan && Net.owns(u) && phase === "idle") {
+    const cancel = element("button", "", "取消攻击计划");
+    cancel.id = "cancelAttackPlan";
+    cancel.disabled = !Net.canAct();
+    cancel.onclick = () => Net.request("cancel_attack", { unitId: u.id });
     panel.append(cancel);
   }
 }
@@ -605,27 +618,36 @@ function drawMap(now) {
     ctx.fillText(String.fromCharCode(65 + x), ox + (x + 0.5) * tile, oy - 9);
   for (let y = 0; y < Rules.mapHeight(game); y++)
     ctx.fillText(String(y + 1), ox - 9, oy + (y + 0.5) * tile);
-  for (const u of game.units) {
-    if (u.hp <= 0) continue;
+  for (const u of MapCombat.units()) {
+    if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden) continue;
+    const motion = PlanningUI.motion(u, now) || (moving?.id === u.id ? moving : null);
     let pos = mapPosition(u.x, u.y),
       angle = u.angle,
       anim = Rules.modelOf(u).presentation.idle,
       t = now / 1000;
-    if (moving?.id === u.id) {
-      let part = Math.min(moving.path.length - 0.0001, (now - moving.start) / moving.step),
+    if (!!motion) {
+      let part = Math.min(motion.path.length - 0.0001, (now - motion.start) / motion.step),
         index = Math.floor(Math.max(0, part)),
         frac = Math.max(0, part - index),
-        from = index ? moving.path[index - 1] : moving.from,
-        to = moving.path[index] || from;
+        from = index ? motion.path[index - 1] : motion.from,
+        to = motion.path[index] || from;
       pos = mapPosition(from.x + (to.x - from.x) * frac, from.y + (to.y - from.y) * frac);
       angle = (Math.atan2(to.x - from.x, -(to.y - from.y)) * 180) / Math.PI;
       anim = SpriteRenderer.movement(u.model);
-      t = (now - moving.start) / 1000;
+      t = (now - motion.start) / 1000;
     }
+    const combatPose = u.mapPose;
+    if (combatPose) {
+      pos = mapPosition(combatPose.x / 64 - 0.5, combatPose.y / 64 - 0.5);
+      angle = combatPose.angle;
+      anim = combatPose.clip;
+      t = combatPose.time;
+    }
+    if (!combatPose) angle = PlanningUI.facing(u, angle);
     ctx.save();
-    ctx.globalAlpha = u.acted && u.team === game.team ? 0.55 : 1;
+    ctx.globalAlpha = combatPose ? 1 : u.acted && u.team === game.team ? 0.55 : 1;
     UnitIdentity.drawRing(ctx, u, pos, tile);
-    if (u.id === selected) {
+    if (u.id === selected || (phase === "reaction" && pending?.target === u.id)) {
       ctx.strokeStyle = "#e1edaa";
       ctx.lineWidth = 2;
       ctx.strokeRect(pos.x - tile * 0.43, pos.y - tile * 0.43, tile * 0.86, tile * 0.86);
@@ -634,22 +656,28 @@ function drawMap(now) {
       ctx,
       u.model,
       pos.x,
-      pos.y + tile * 0.035,
-      (tile / 64) * 1.2 * BattleScene.settings().mapScale * Rules.modelOf(u).presentation.mapScale,
+      pos.y + (combatPose ? 0 : tile * 0.035),
+      (tile / 64) *
+        1.2 *
+        (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
+        Rules.modelOf(u).presentation.mapScale,
       angle,
       anim,
       t,
-      u.heldWeapon,
-      true,
+      combatPose?.heldWeapon ?? u.heldWeapon,
+      !combatPose,
       (u.shield ?? 1) > 0,
-      moving?.id === u.id,
+      !!motion || !!combatPose?.moving,
     );
     SpriteEffects.lowHp(
       ctx,
       u,
       pos.x,
-      pos.y + tile * 0.035,
-      (tile / 64) * 1.2 * BattleScene.settings().mapScale * Rules.modelOf(u).presentation.mapScale,
+      pos.y + (combatPose ? 0 : tile * 0.035),
+      (tile / 64) *
+        1.2 *
+        (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
+        Rules.modelOf(u).presentation.mapScale,
       now / 1000,
     );
     ctx.restore();
@@ -659,11 +687,19 @@ function drawMap(now) {
     ctx.fillStyle = "#07141c";
     ctx.fillRect(barx, bary, hpw, 4);
     ctx.fillStyle = u.team ? "#ed9685" : "#83d6ee";
-    ctx.fillRect(barx, bary, (hpw * u.hp) / Rules.modelOf(u).hp, 4);
-    ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
-    ctx.font = `${Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize}px system-ui`;
-    ctx.textAlign = "center";
-    ctx.fillText(unitName(u), pos.x, pos.y + tile * 0.49);
+    ctx.fillRect(barx, bary, hpw * Math.max(0, Math.min(1, u.hp / Rules.modelOf(u).hp)), 4);
+    ctx.fillStyle = "#07141c";
+    ctx.fillRect(barx, bary + 6, hpw, 3);
+    ctx.fillStyle = "#efd568";
+    const enRatio = Math.max(0, Math.min(1, u.en / Math.max(1, Rules.modelOf(u).en)));
+    ctx.fillRect(barx, bary + 6, hpw * enRatio, 3);
+    if (MapCamera.zoom >= 3) {
+      ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
+      const nameSize = Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize;
+      ctx.font = `${nameSize}px system-ui`;
+      ctx.textAlign = "center";
+      ctx.fillText(unitName(u), pos.x, bary + 12 + nameSize / 2);
+    }
     if (mode === "target" && weapon && chosen && Rules.canAttack(game, chosen, u, weapon)) {
       let p = 0.7 + 0.3 * Math.sin(now / 200);
       ctx.strokeStyle = `rgba(255,140,115,${p})`;
@@ -671,6 +707,8 @@ function drawMap(now) {
       ctx.strokeRect(pos.x - tile * 0.45, pos.y - tile * 0.45, tile * 0.9, tile * 0.9);
     }
   }
+  MapCombat.draw(ctx, mapGeo);
+  PlanningUI.arrows(ctx);
   MovementEffects.draw(ctx, now, mapPosition, tile);
   MapEffects.draw(ctx, now, mapPosition, tile);
   if (hover) {
@@ -711,6 +749,12 @@ byId("map").onclick = async (e) => {
   if (phase === "deployment") {
     const cell = cellAt(e);
     if (cell) Deployment.click(cell);
+    return;
+  }
+  if (phase === "reaction") {
+    const cell = cellAt(e),
+      target = cell && Rules.at(game, cell.x, cell.y);
+    if (target) selectCounterTarget(target.id);
     return;
   }
   if (isBusy() || isAI()) return;
@@ -772,7 +816,7 @@ async function performMove(u, x, y) {
   if (stamp !== session) return;
   moving = null;
   phase = "idle";
-  addLog(`${teamName(u.team)} ${unitName(u)}移动至${String.fromCharCode(65 + x)}${y + 1}。`);
+  addLog(`${logUnit(u)} 移动至${String.fromCharCode(65 + x)}${y + 1}。`);
   update();
 }
 // a = 攻击方，b = 防守方，w = 武器。联机只发请求，离线进入本地应战。
@@ -800,15 +844,60 @@ function beginAttack(a, b, w) {
     commitAttack();
     return;
   }
+  MapCamera.focus(b.x, b.y, { preserveZoom: true });
   renderReaction();
   byId("reaction").hidden = false;
   update();
 }
 // 应战弹窗展示预估值，不扣血或消耗资源。
 function renderReaction() {
-  let a = getUnit(pending.attacker),
-    b = getUnit(pending.target),
-    w = getWeapon(a, pending.weapon);
+  const targets = pending.counterTargets || [
+    { attacker: pending.attacker, weapon: pending.weapon, options: pending.counterOptions },
+  ];
+  const b = getUnit(pending.target);
+  const available = (entry) =>
+    Rules.modelOf(b).weapons.filter(
+      (weapon) =>
+        Rules.canCounter(game, b, getUnit(entry.attacker), weapon) &&
+        (!entry.options || entry.options.includes(weapon.id)),
+    );
+  // 先选武器，再按武器射程与 EN 条件筛选本组来袭目标。
+  const usableWeapons = Rules.modelOf(b).weapons.filter((weapon) =>
+    targets.some((entry) => available(entry).some((candidate) => candidate.id === weapon.id)),
+  );
+  if (!usableWeapons.some((weapon) => weapon.id === counterId))
+    counterId = usableWeapons[0]?.id || null;
+  const legalTargets = targets.filter((entry) =>
+    available(entry).some((weapon) => weapon.id === counterId),
+  );
+  if (!legalTargets.some((entry) => entry.attacker === counterTargetId))
+    counterTargetId = (legalTargets[0] || targets[0]).attacker;
+  const selectedTarget = targets.find((entry) => entry.attacker === counterTargetId) || targets[0];
+  const incoming = response === "counter" ? selectedTarget : targets[0];
+  const a = getUnit(incoming.attacker),
+    w = getWeapon(a, incoming.weapon);
+  const selectedEnemy = getUnit(selectedTarget.attacker);
+  const legal = available(selectedTarget);
+  byId("counterTargetWrap").hidden = response !== "counter";
+  const select = byId("counterTarget");
+  select.replaceChildren(
+    ...targets.map((entry) => {
+      const unit = getUnit(entry.attacker),
+        owner = UnitIdentity.owner(unit);
+      const option = new Option(
+        unitName(unit) +
+          " · " +
+          owner.name +
+          " · " +
+          String.fromCharCode(65 + unit.x) +
+          (unit.y + 1),
+        unit.id,
+      );
+      option.disabled = !legalTargets.some((target) => target.attacker === entry.attacker);
+      return option;
+    }),
+  );
+  select.value = counterTargetId;
   byId("reactionTitle").textContent = teamName(b.team) + "选择应战方式";
   byId("reactionSub").replaceChildren(
     element(
@@ -816,31 +905,75 @@ function renderReaction() {
       "",
       `距离 ${Rules.dist(a, b)} 格 · ${teamName(a.team)} ${unitName(a)}使用${w.name}`,
     ),
-    document.createTextNode(" · "),
-    element(
-      "span",
-      "",
-      `本回合剩余反击 ${Rules.countersRemaining(b)} / ${Rules.modelOf(b).counterLimit ?? 2}`,
-    ),
   );
-  byId("cancelAttack").disabled = isAI();
-  let initial = Rules.estimate(game, a, b, w, response);
-  byId("engagement").innerHTML =
-    `<div class="fighter"><img src="${unitIcon(a.model)}" alt=""><small>${teamName(a.team)} · 先攻</small><strong>${unitName(a)}</strong><div class="summary">HP ${formatNumber(a.hp)}<br>${w.name} · ${Rules.typeNames[w.type]}</div></div><div class="arrow">→</div><div class="fighter"><img src="${unitIcon(b.model)}" alt=""><small>${teamName(b.team)} · 防守</small><strong>${unitName(b)}</strong><div class="summary">HP ${formatNumber(b.hp)}<br>${Rules.terrain[game.tiles[b.y][b.x]].name} · 掩护${Rules.terrain[game.tiles[b.y][b.x]].cover}%</div></div>`;
+  byId("reactionSub").append(
+    document.createTextNode(" · "),
+    element("span", "", "来袭单位"),
+    document.createTextNode(" " + targets.length),
+  );
+  function fighter(unit, weapon) {
+    const card = element("div", "fighter");
+    const image = element("img");
+    image.src = unitIcon(unit.model);
+    image.alt = "";
+    const identity = UnitIdentity.owner(unit);
+    const owner = element("small", "response-owner", identity.name + " · " + identity.team);
+    owner.setAttribute("data-i18n-ignore", "");
+    const title = element("strong", "", unitName(unit));
+    const summary = element("div", "summary");
+    summary.append(
+      element("div", "", `HP ${formatNumber(unit.hp)} / ${formatNumber(Rules.modelOf(unit).hp)}`),
+      element("div", "", `EN ${unit.en} / ${Rules.modelOf(unit).en}`),
+      element(
+        "div",
+        "",
+        weapon
+          ? weapon.name + " · " + Rules.typeNames[weapon.type]
+          : Rules.terrain[game.tiles[unit.y][unit.x]].name,
+      ),
+    );
+    card.append(image, title, owner, summary);
+    return card;
+  }
+  const incomingList = byId("engagement"),
+    previousScroll = incomingList.scrollTop;
+  incomingList.replaceChildren(
+    ...targets.map((entry) => {
+      const unit = getUnit(entry.attacker),
+        weapon = getWeapon(unit, entry.weapon);
+      const card = element(
+        "button",
+        "incoming-entry" +
+          (response === "counter" && entry.attacker === counterTargetId ? " selected" : ""),
+      );
+      card.type = "button";
+      card.dataset.unitId = unit.id;
+      card.disabled =
+        response !== "counter" || !legalTargets.some((target) => target.attacker === unit.id);
+      card.append(fighter(unit, weapon));
+      const forecast = Rules.estimate(game, unit, b, weapon, response);
+      card.append(
+        element("div", "incoming-forecast", `${forecast.hit}% · ${formatNumber(forecast.damage)}`),
+      );
+      card.onclick = () => selectCounterTarget(unit.id);
+      return card;
+    }),
+  );
+  incomingList.scrollTop = previousScroll;
+  byId("defenderInfo").replaceChildren(fighter(b));
   for (const [id, value] of [
     ["responseCounter", "counter"],
     ["responseDefend", "defend"],
     ["responseEvade", "evade"],
   ])
     byId(id).classList.toggle("active", response === value);
-  let legal = Rules.modelOf(b).weapons.filter((c) => Rules.canCounter(game, b, a, c));
-  byId("responseCounter").disabled = !legal.length;
+  byId("responseCounter").disabled = !targets.some((entry) => available(entry).length);
   byId("counterList").replaceChildren();
   if (response === "counter") {
     for (const cw of Rules.modelOf(b).weapons) {
       let button = element("button", "weapon" + (cw.id === counterId ? " active" : ""));
       button.innerHTML = htmlWeapon(cw, b);
-      button.disabled = !Rules.canCounter(game, b, a, cw);
+      button.disabled = !usableWeapons.some((weapon) => weapon.id === cw.id);
       button.setAttribute("aria-label", "反击武器 " + cw.name);
       button.onclick = () => {
         GameAudio.play("selectWeaponSound");
@@ -852,10 +985,14 @@ function renderReaction() {
   }
   let counter =
     response === "counter" && counterId
-      ? Rules.estimate(game, b, a, getWeapon(b, counterId), "counter", true)
+      ? Rules.estimate(game, b, selectedEnemy, getWeapon(b, counterId), "counter", true)
       : null;
+  byId("incomingEstimate").replaceChildren(
+    element("span", "", "来袭单位"),
+    document.createTextNode(" " + targets.length),
+  );
   byId("estimate").innerHTML =
-    `<span>来袭：命中 <strong>${initial.hit}%</strong><br>命中后约 <strong class="red">${formatNumber(initial.damage)}</strong> 伤害</span><span>${counter ? `反击：命中 <strong>${counter.hit}%</strong><br>命中后约 <strong class="blue">${formatNumber(counter.damage)}</strong> 伤害` : "本次不进行反击"}</span>`;
+    `<span>${counter ? `反击：命中 <strong>${counter.hit}%</strong><br>命中后约 <strong class="blue">${formatNumber(counter.damage)}</strong> 伤害` : "本次不进行反击"}</span>`;
   byId("confirmResponse").disabled =
     response === "counter" && !legal.some((c) => c.id === counterId);
 }
@@ -868,18 +1005,35 @@ for (const [id, value] of [
     response = value;
     renderReaction();
   };
-byId("cancelAttack").onclick = () => {
-  if (isAI()) return;
-  byId("reaction").hidden = true;
-  pending = null;
-  phase = "idle";
-  update();
-};
+// 地图、左侧列表、下拉框统一走同一条合法目标选择路径。
+function legalCounterTargets() {
+  if (phase !== "reaction" || !pending || response !== "counter" || !counterId) return [];
+  const defender = getUnit(pending.target),
+    weapon = defender && getWeapon(defender, counterId);
+  if (!defender || !weapon) return [];
+  const entries = pending.counterTargets || [
+    { attacker: pending.attacker, options: pending.counterOptions },
+  ];
+  return entries.filter(
+    (entry) =>
+      (!entry.options || entry.options.includes(counterId)) &&
+      Rules.canCounter(game, defender, getUnit(entry.attacker), weapon),
+  );
+}
+function selectCounterTarget(id) {
+  if (Net.awaiting || !legalCounterTargets().some((entry) => entry.attacker === id)) return false;
+  if (Net.active && !Net.owns(getUnit(pending.target))) return false;
+  counterTargetId = id;
+  GameAudio.play("selectUnitSound");
+  renderReaction();
+  return true;
+}
+byId("counterTarget").onchange = () => selectCounterTarget(byId("counterTarget").value);
 byId("confirmResponse").onclick = () => commitAttack();
 // 确认应战：离线调用规则结算；联机等待服务端返回事件。
 function commitAttack() {
   if (Net.active) {
-    Net.request("respond", { response, counterId });
+    Net.request("respond", { response, counterId, counterTargetId });
     return;
   }
   if (phase !== "reaction" || !pending) return;
@@ -920,8 +1074,8 @@ function battleEventDuration() {
   return (
     BattleScene.duration(
       event,
-      getUnit(battleView.a),
-      getUnit(battleView.b),
+      battleUnit(battleView.a),
+      battleUnit(battleView.b),
       byId("battleCanvas"),
     ) *
     1000 *
@@ -930,11 +1084,11 @@ function battleEventDuration() {
 }
 function logEvent(event) {
   if (Net.active) return;
-  let a = getUnit(event.from),
-    b = getUnit(event.to),
+  let a = battleUnit(event.from),
+    b = battleUnit(event.to),
     w = getWeapon(a, event.weapon);
   addLog(
-    `${teamName(a.team)} ${unitName(a)} · ${w.name} → ${unitName(b)}：${event.hit ? formatNumber(event.damage) + "伤害" : "未命中"}${event.strikes ? `（命中 ${event.hitCount}/${event.strikeCount}）` : ""}${event.after <= 0 ? "，击破！" : ""}`,
+    `${logUnit(a)} 使用${w.name} → ${logUnit(b)}：${event.hit ? formatNumber(event.damage) + "伤害" : "未命中"}${event.strikes ? `（命中 ${event.hitCount}/${event.strikeCount}）` : ""}${event.after <= 0 ? "，击破！" : ""}`,
   );
 }
 // 推进已经结算好的演出事件与显示血量，不再次计算伤害。
@@ -960,7 +1114,7 @@ function progressBattle(now) {
         b.events
           .map(
             (e) =>
-              `${unitName(getUnit(e.from))}：${e.hit ? formatNumber(e.damage) + "伤害" : "未命中"}${e.strikes ? `（命中 ${e.hitCount}/${e.strikeCount}）` : ""}`,
+              `${unitName(battleUnit(e.from))}：${e.hit ? formatNumber(e.damage) + "伤害" : "未命中"}${e.strikes ? `（命中 ${e.hitCount}/${e.strikeCount}）` : ""}`,
           )
           .join(" ／ ") + " · 2秒后自动返回地图";
       return;
@@ -970,6 +1124,7 @@ function progressBattle(now) {
 byId("quick").addEventListener("change", () => WeaponAudio.setBattleMuted(byId("quick").checked));
 // 演出推进和状态栏留在界面层，画布统一交给 BattleScene。
 function drawBattle(now) {
+  if (battleView?.mapBattle) return;
   WeaponAudio.setBattleMuted(byId("quick").checked);
   if (byId("battle").hidden || !battleView) {
     WeaponAudio.stopBattle();
@@ -978,10 +1133,10 @@ function drawBattle(now) {
   now = battleView.suspendedAt ?? now;
   progressBattle(now);
   const view = battleView;
-  if (!Net.active || !Net.awaiting) BattleWindow.update(view, now, finishBattle);
+  BattleWindow.update(view, now, finishBattle);
   if (view.returned || !battleView) return;
-  const left = getUnit(view.a),
-    right = getUnit(view.b);
+  const left = battleUnit(view.a),
+    right = battleUnit(view.b);
   const event = view.events[Math.min(view.index, view.events.length - 1)];
   const ratio = view.completed
     ? 1
@@ -989,7 +1144,7 @@ function drawBattle(now) {
   if (view.completed) WeaponAudio.releaseBattle();
   else if (view.windowState === "opening") WeaponAudio.stopBattle();
   else {
-    const weapon = getWeapon(getUnit(event.from), event.weapon);
+    const weapon = getWeapon(battleUnit(event.from), event.weapon);
     const bounds = byId("battleCanvas").getBoundingClientRect();
     const plan = BattleScene.timeline(event, left, right, bounds.width, bounds.height).plan;
     if (
@@ -1018,7 +1173,7 @@ function drawBattle(now) {
   });
   if (!view.completed)
     byId("battleCaption").textContent =
-      `${view.index ? "反击 · " : ""}${getWeapon(getUnit(event.from), event.weapon).name}`;
+      `${view.index ? "反击 · " : ""}${getWeapon(battleUnit(event.from), event.weapon).name}`;
   byId("battleInfo").innerHTML = [left, right]
     .map((unit) => {
       const hp =
@@ -1073,11 +1228,7 @@ function finishBattle() {
   if (!battleView?.completed) return;
   MapEffects.capture(battleView);
   if (Net.active) {
-    if (Net.isSpectator()) Net.spectatorBattleSeen = battleView.networkId;
-    else Net.request("battle_ready", { battleId: battleView.networkId });
-    byId("battle").hidden = true;
-    phase = "battle_wait";
-    update();
+    CombatPlayback.finish();
     return;
   }
   byId("battle").hidden = true;
@@ -1181,6 +1332,7 @@ function tick(now) {
   if (assetsReady) {
     if (window.GamePreview?.active) window.GamePreview.tick(now);
     else if (pageView === "game") {
+      MapCombat.update(now);
       drawMap(now);
       drawBattle(now);
     }

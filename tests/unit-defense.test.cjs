@@ -33,7 +33,7 @@ test("new variants retain native equipment, fixed cannon, different movement and
   assert.equal(G.models.RGM_79L__beam_gun.weapons[0].damage, 8400);
   assert.deepEqual(G.models.RGM_79L__beam_gun.weapons[0].attack.shots, [0.15, 0.55, 0.95]);
 });
-test("V0.2 accuracy boosts retain bazooka and cannon as the low tier", () => {
+test("V03 accuracy boosts retain bazooka and cannon as the low tier", () => {
   for (const m of Object.values(G.models))
     for (const w of m.weapons) {
       assert.equal(w.hit % 5, 0);
@@ -58,7 +58,7 @@ test("V0.2 accuracy boosts retain bazooka and cannon as the low tier", () => {
 test("MOD protection subtracts flat damage per bullet before percentage; melee components use separate defenses", () => {
   const { g, a, b, w } = duel("RGM_79", 13);
   assert.equal(G.estimate(g, a, b, w).damage, 5850); // (725*1.1-75)*.9*9, rounded per strike
-  assert.equal(G.estimate(g, a, b, w, "defend").damage, 5544);
+  assert.equal(G.estimate(g, a, b, w, "defend").damage, 4158);
   const saber = G.models.RGM_79__beam_spray.weapons[1];
   assert.equal(G.estimate(g, a, b, saber).damage, 7262); // First strike 4903, reduced second strike 2359 after armor
   const low = { ...w, damageComponents: { shell: 25 }, damagePerShot: 25 };
@@ -71,8 +71,8 @@ test("server-side shield blocks consume durability, spill to HP and disappear at
   const event = G.fight(g, a, b, w, "defend")[0];
   assert.equal(event.blocked, true);
   assert.equal(event.shieldDamage, 100);
-  assert.equal(event.damage, 4822);
-  assert.equal(event.strikes[0].damage, 510);
+  assert.equal(event.damage, 3590);
+  assert.equal(event.strikes[0].damage, 356);
   assert.equal(event.strikes[0].shieldAfter, 0);
   assert.equal(b.shield, 0);
   assert.equal(G.estimate(g, a, b, w).blockChance, 0);
@@ -95,10 +95,10 @@ test("a burst rolls each projectile independently and spends ammo once; melee ro
     [true, true, true, true, true, true, false, true, true],
   );
   assert.equal(result.hitCount, 8);
-  assert.equal(result.damage, 4928);
+  assert.equal(result.damage, 3696);
   assert.equal(a.en, 87.5);
   assert.equal("ammo" in a, false);
-  assert.equal(b.hp, 16500 - 4928);
+  assert.equal(b.hp, 16500 - 3696);
   const other = duel("RGM_79", 30);
   other.b.x = 3;
   other.b.shield = 0;

@@ -437,7 +437,7 @@ const Tactics = (() => {
           y = n.y + dy;
         if (x < 0 || x >= mapWidth(g) || y < 0 || y >= mapHeight(g)) continue;
         let occupant = at(g, x, y);
-        if (occupant && occupant.id !== u.id) continue;
+        if (occupant && occupant.team !== u.team) continue;
         let cost = n.cost + movementCost(g, u, x, y);
         if (cost > modelOf(u).move) continue;
         let k = key(x, y);
@@ -446,6 +446,11 @@ const Tactics = (() => {
         best.set(k, entry);
         queue.push(entry);
       }
+    }
+    // 友军可作为路径中间点，但不能作为移动终点。
+    for (const [cell, entry] of best) {
+      const occupant = at(g, entry.x, entry.y);
+      if (occupant && occupant.id !== u.id) best.delete(cell);
     }
     return best;
   }
@@ -459,8 +464,10 @@ const Tactics = (() => {
     if (g.winner !== null || u.team !== g.team || u.acted || u.moved) throw Error("本单位无法移动");
     let tile = reachable(g, u).get(key(x, y));
     if (!tile || !tile.path.length) throw Error("该位置不可移动");
-    // A later successful move commits every previous move, including its vacated cell.
-    for (const other of g.units) other.origin = null;
+    // 只有同一玩家的后续成功移动才会提交先前移动；友军玩家独立撤回。
+    for (const other of g.units) {
+      if (ownerOf(other) === ownerOf(u)) other.origin = null;
+    }
     u.origin = { x: u.x, y: u.y, angle: u.angle };
     const from = tile.path.length > 1 ? tile.path[tile.path.length - 2] : u;
     const direction = { ...from };
@@ -483,7 +490,7 @@ const Tactics = (() => {
     );
   }
   function undo(g, u) {
-    if (!canUndo(g, u)) throw Error("无法撤销：后续单位已移动或原位置被占用");
+    if (!canUndo(g, u)) throw Error("无法撤销：己方编组的后续单位已移动或原位置被占用");
     Object.assign(u, u.origin);
     u.origin = null;
     u.moved = false;
@@ -501,10 +508,15 @@ const Tactics = (() => {
     );
   }
   function countersRemaining(u) {
-    return Math.max(0, (modelOf(u).counterLimit ?? 2) - (u.counterCount ?? 0));
+    return Math.max(0, Math.min(1, modelOf(u).counterLimit ?? 1) - (u.counterCount ?? 0));
   }
   function canCounter(g, a, b, w) {
-    return !!a && countersRemaining(a) > 0 && canAttack(g, a, b, w);
+    return (
+      !!a &&
+      countersRemaining(a) > 0 &&
+      (!a.counterTargetId || a.counterTargetId === b?.id) &&
+      canAttack(g, a, b, w)
+    );
   }
   // 返回预估命中率和命中后的伤害，不修改对局。
   function estimate(g, a, b, w, response = "counter", isCounter = false) {
@@ -514,9 +526,13 @@ const Tactics = (() => {
     const defender = modelOf(b),
       cover = terrain[g.tiles[b.y][b.x]].cover,
       mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.25,
-      hit = Math.max(10, Math.min(100, w.hit - cover - mobilityPenalty)) * (isCounter ? 0.75 : 1),
+      baseHit =
+        Math.max(10, Math.min(100, w.hit - cover - mobilityPenalty)) * (isCounter ? 0.75 : 1),
+      // 最终回避加成在机动性、地形与反击惩罚计算后生效。
+      hit = Math.max(0, baseHit - (response === "evade" ? 15 : 0)),
       multiplier = w.type === "melee" ? 1 : 1 - cover / 100,
       defenseMultiplier = response === "defend" ? 1.25 : 1,
+      finalDamageMultiplier = response === "defend" ? 0.75 : 1,
       strikes = w.attack.strikes;
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.
     function protectedDamage(defenses, damageMultiplier, share = 1) {
@@ -538,7 +554,9 @@ const Tactics = (() => {
             ) *
               (1 - Math.min(100, defenses[percentKey].percent * defenseMultiplier) / 100)
           );
-        }, 0) * multiplier
+        }, 0) *
+        multiplier *
+        finalDamageMultiplier
       );
     }
     let damage = 0,
@@ -583,12 +601,12 @@ const Tactics = (() => {
     return g.seed / 4294967296;
   }
   // 真正结算入口：校验 → 扣资源 → 随机命中 → 扣血 → 生成演出事件。
-  function fight(g, a, b, w, response, counterId) {
+  function fight(g, a, b, w, response, counterId, allowCounter = true) {
     if (g.winner !== null || a.team !== g.team || a.acted || !canAttack(g, a, b, w))
       throw Error("攻击条件已失效");
     if (!["counter", "defend", "evade"].includes(response)) throw Error("未知应战方式");
     let cw = modelOf(b).weapons.find((x) => x.id === counterId);
-    if (response === "counter" && (!cw || !canCounter(g, b, a, cw)))
+    if (response === "counter" && allowCounter && (!cw || !canCounter(g, b, a, cw)))
       throw Error("反击次数已用完，或武器不满足射程与 EN 条件");
     let events = [],
       dodgeSeed = (g.seed ^ 0x9e3779b9) >>> 0;
@@ -674,8 +692,9 @@ const Tactics = (() => {
       });
     }
     fire(a, b, w, response);
-    if (response === "counter" && b.hp > 0 && canCounter(g, b, a, cw)) {
+    if (response === "counter" && allowCounter && b.hp > 0 && canCounter(g, b, a, cw)) {
       b.counterCount = (b.counterCount ?? 0) + 1;
+      b.counterTargetId = a.id;
       fire(b, a, cw, "counter", true);
     }
     a.acted = true;
@@ -694,7 +713,10 @@ const Tactics = (() => {
     g.team = 1 - g.team;
     g.round++;
     // One round number is one team action phase; all counter budgets refresh on handoff.
-    for (const u of g.units) u.counterCount = 0;
+    for (const u of g.units) {
+      u.counterCount = 0;
+      delete u.counterTargetId;
+    }
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0)) {
       u.acted = false;
       u.moved = false;

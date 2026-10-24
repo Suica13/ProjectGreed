@@ -372,7 +372,7 @@
     "move": 7,
     "mobility": 85,
     "cost": 475,
-    "counterLimit": 2
+    "counterLimit": 1
   },
   "attackBonuses": {
     "melee": 20,

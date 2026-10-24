@@ -4,6 +4,7 @@
   "dodgeDistance": 18,
   "dodgeOut": 0.18,
   "sfxVolume": 0.5,
+  "battleSfxVolume": 0.5,
   "meleeAnimationSpeed": 1,
   "battleFadeIn": 0.3,
   "battleHold": 2,
@@ -47,7 +48,7 @@
   "boostStartEffect": "Boost_Start",
   "infoSound": {
     "file": "sounds/Info_1.ogg",
-    "volume": 0.7,
+    "volume": 0.5,
     "duration": 0.43201814058956917
   },
   "selectUnitSound": {
@@ -57,12 +58,13 @@
   },
   "selectWeaponSound": {
     "file": "sounds/Select_2.ogg",
-    "volume": 0.7,
+    "volume": 0.5,
     "duration": 0.7411337868480725
   },
   "changeEquipmentSound": {
     "file": "sounds/ChangeEquipment.ogg",
-    "volume": 0.7,
+    "volume": 0.5,
     "duration": 1.584013605442177
-  }
+  },
+  "mapCellScale": 1.125
 }

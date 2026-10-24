@@ -371,7 +371,7 @@
     "move": 4,
     "mobility": 85,
     "cost": 425,
-    "counterLimit": 2
+    "counterLimit": 1
   },
   "attackBonuses": {
     "melee": 0,

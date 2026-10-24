@@ -1,3 +1,4 @@
+const { finishPlanning } = require("./planning-fixture.cjs");
 const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const { test, expect } = require("@playwright/test"),
   { pathToFileURL } = require("node:url"),
@@ -46,7 +47,7 @@ test("offline battle fades in, waits two seconds and automatically fades back to
   expect(await page.evaluate(() => battleView)).toBe(null);
   expect(errors).toEqual([]);
 });
-test("network auto return confirms each team once and waits for the other viewer", async ({
+test("network handoff waits for the paused viewer to return and finish map playback", async ({
   page,
   context,
 }) => {
@@ -116,20 +117,23 @@ test("network auto return confirms each team once and waits for the other viewer
       byId("quick").checked = true;
       Net.request("attack", { unitId: "0-0", targetId: "1-0", weaponId: "EF_BeamSprayGun" });
     });
+    await finishPlanning([page, other]);
     await expect(other.locator("#reaction")).toBeVisible();
     await other.locator("#responseDefend").click();
     await other.locator("#confirmResponse").click();
-    await expect(page.locator("#battle")).toBeVisible();
+    await expect(page.locator("#mapCombatControls")).toBeVisible();
+    await expect(page.locator("#battle")).toBeHidden();
     await other.locator("#roomSettings").click();
     await expect(other.locator("#roomPreparation")).toBeVisible();
-    await expect(page.locator("#battle")).toBeHidden({ timeout: 10000 });
-    await expect.poll(() => page.evaluate(() => Net.snapshot.battle?.ready[0])).toBe(true);
-    expect(app.rooms.get("AUTOFADE").phase).toBe("battle");
-    expect(await page.evaluate(() => window.readyRequests)).toBe(1);
+    await expect(page.locator("#mapCombatControls")).toBeHidden({ timeout: 10000 });
+    expect(app.rooms.get("AUTOFADE").game.team).toBe(0);
+    expect(app.rooms.get("AUTOFADE").phase).toBe("playback");
+    expect(await page.evaluate(() => window.readyRequests)).toBe(0);
     await other.locator("#roomMainMenu").click();
-    await expect(other.locator("#battle")).toBeHidden({ timeout: 10000 });
+    await expect(other.locator("#mapCombatControls")).toBeHidden({ timeout: 10000 });
+    await expect.poll(() => app.rooms.get("AUTOFADE").game.team).toBe(1);
     await expect.poll(() => page.evaluate(() => phase)).toBe("idle");
-    expect(await other.evaluate(() => window.readyRequests)).toBe(1);
+    expect(await other.evaluate(() => window.readyRequests)).toBe(0);
     expect(errors).toEqual([]);
   } finally {
     await other.close();

@@ -169,7 +169,7 @@ def visuals(unit_id, data):
     boost,turn,reaction = stat(data,"boostMoveSpeed"),stat(data,"baseTurnSpeed"),stat(data,"baseReactionLevel")
     # 转向与反应参考回避能力；推进速度只参考移动距离。大魔单独体现高移动、低机动。
     mobility=85 if unit_id=="MS_09" else round((.5*turn/1.75+.5*reaction/115)*20)*5
-    prefab["stats"]=dict(hp=hp,en=100,move=max(3,min(9,round(5*boost/1.4))),mobility=mobility,cost=300,counterLimit=2)
+    prefab["stats"]=dict(hp=hp,en=100,move=max(3,min(9,round(5*boost/1.4))),mobility=mobility,cost=300,counterLimit=1)
     prefab["attackBonuses"]=dict(melee=max(0,stat(data,"baseCqbLevel",100)-100),
         shooting=max(0,stat(data,"baseShootLevel",100)-100),beam=0,shell=0)
     channels=dict(beam="Beam",shell="Shell",melee="Cqb",dp="Dp",sp="Sp")
@@ -369,6 +369,11 @@ def build(unit, effects):
             layer["visibleWhen"]=dict(heldWeapon={"not":"ZN_Panzerfaust"} if "NotUsing" in layer["name"] else "ZN_Panzerfaust")
             if layer["name"].endswith("Used") or layer["name"].endswith("Step2"):
                 prefab["layers"].remove(layer)
+        elif layer["name"] in ("ZN_HeatHawk_A", "ZN_HeatHawk_A_Step2"):
+            # 同一斧头的两种握持方向，挥下时切换，收招后恢复；不能同时显影。
+            layer["visibleWhen"] = dict(heldWeapon="ZN_HeatHawk_A")
+            layer["animationVisibility"] = dict(clip="Common_Melee_A", start=0.6, end=2,
+                visibleInside=layer["name"].endswith("_Step2"))
         elif "nowWeaponIndex==11" in condition:
             prefab["layers"].remove(layer)
         elif "nowWeaponIndex==1" in condition:

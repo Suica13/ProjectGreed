@@ -43,19 +43,39 @@ const SpriteRenderer = (() => {
       visorClosed: false,
     };
   }
-  function visible(layer, variables) {
+  function visible(layer, variables, clip, time) {
+    // 图层切换按骨骼动画时间采样，快速演出和暂停不会改变切换位置。
+    const window = layer.animationVisibility;
+    if (window) {
+      const inside = clip === window.clip && time >= window.start && time < window.end;
+      if (inside !== window.visibleInside) return false;
+    }
     return Object.entries(layer.visibleWhen || {}).every(([key, expected]) => {
       if (Array.isArray(expected)) return expected.includes(variables[key]);
       if (expected && typeof expected === "object") return variables[key] !== expected.not;
       return variables[key] === expected;
     });
   }
-  function visibleLayers(model, heldWeapon, shieldVisible = true, moving = false) {
+  function visibleLayers(
+    model,
+    heldWeapon,
+    shieldVisible = true,
+    moving = false,
+    clip = null,
+    time = 0,
+    loop = false,
+  ) {
+    const animation = models[model].animations[clip];
+    const at = animation
+      ? loop
+        ? time % animation.duration
+        : Math.min(time, animation.duration)
+      : 0;
     const variables = state(model, heldWeapon);
     variables.shieldVisible = variables.shieldVisible && shieldVisible;
     variables.moving = moving;
     variables.boosting = models[model].presentation.movement === "boost";
-    return models[model].decals.filter((layer) => visible(layer, variables));
+    return models[model].decals.filter((layer) => visible(layer, variables, clip, at));
   }
   // offset.x 横向，offset.y 向前。贴图坐标则 x 向右、y 向下。
   function layerTransform(model, layer, angle, pose) {
@@ -139,7 +159,7 @@ const SpriteRenderer = (() => {
     ctx.translate(x, y);
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
-    for (const layer of visibleLayers(model, heldWeapon, shieldVisible, moving)) {
+    for (const layer of visibleLayers(model, heldWeapon, shieldVisible, moving, clip, time, loop)) {
       const image = images[layer.asset];
       if (!image) continue;
       const transform = layerTransform(model, layer, angle, sampled);

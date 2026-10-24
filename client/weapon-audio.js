@@ -69,7 +69,10 @@ const WeaponAudio = (() => {
       gain = context.createGain();
     source.buffer = buffers.get(sound.asset);
     source.playbackRate.value = rate;
-    gain.gain.value = sound.volume * ART.presentation.sfxVolume;
+    gain.gain.value =
+      sound.volume *
+      ART.presentation.sfxVolume *
+      (channel === "battle" ? (ART.presentation.battleSfxVolume ?? 0.5) : 1);
     source.connect(gain);
     gain.connect(context.destination);
     source.onended = () => {

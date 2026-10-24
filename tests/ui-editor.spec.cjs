@@ -1,3 +1,4 @@
+const { finishPlanning } = require("./planning-fixture.cjs");
 const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const { test: base, expect } = require("@playwright/test");
 const { createServer } = require("../server.js");
@@ -1215,19 +1216,19 @@ test("three players prepare, swap spectator/team roles and watch battles without
   await third.evaluate(() =>
     Net.request("attack", { unitId: "0-0", targetId: "1-0", weaponId: "EF_BeamSprayGun" }),
   );
+  await finishPlanning([third, first, second]);
   await expect(first.locator("#reaction")).toBeVisible();
   await first.locator("#responseDefend").click();
   await first.locator("#confirmResponse").click();
-  await expect(second.locator("#battle")).toBeVisible();
-  // 战斗弹窗显示时仍能进入席位页，然后返回同一场战斗。
+  await expect(second.locator("#mapCombatControls")).toBeVisible();
+  await expect(second.locator("#battle")).toBeHidden();
+  // 地图交战播放中打开席位页再返回，继续同一场本地演出。
   await second.locator("#roomSettings").click();
   await expect(second.locator("#roomPreparation")).toBeVisible();
   await second.locator("#roomMainMenu").click();
-  await expect(second.locator("#battle")).toBeVisible();
-  for (const client of [third, first]) {
-    // 切换多个页面时演出可能已经自然结束；禁用的跳过按钮无需再次点击。
-    await client.locator("#skipBattle").evaluate((button) => button.click());
-    await returnFromBattle(client);
+  await expect(second.locator("#mapCombatControls")).toBeVisible();
+  for (const client of [third, first, second]) {
+    await client.locator("#mapSkipBattle").evaluate((button) => button.click());
   }
   await expect.poll(() => third.evaluate(() => phase)).toBe("idle");
   await expect(second.locator("#battle")).toBeHidden();

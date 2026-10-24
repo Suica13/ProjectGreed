@@ -10,7 +10,7 @@
     "move": 5,
     "mobility": 100,
     "cost": 350,
-    "counterLimit": 2
+    "counterLimit": 1
   },
   "materials": {
     "icon": "RGM_79.png",

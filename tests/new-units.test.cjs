@@ -22,7 +22,7 @@ test("new native prefabs have real source stats, correct armor and shieldless un
       { MS_06F: 12000, MS_06J: 13500, MS_06K: 16000, MS_09: 22500, RGM_79_G: 20000 }[id],
     );
     assert.ok(p.stats.cost > 0);
-    assert.equal(p.stats.counterLimit, 2);
+    assert.equal(p.stats.counterLimit, 1);
     assert.ok(["zh", "en", "ja"].every((lang) => p.localization[lang].name));
     assert.ok(p.weaponKits.every((k) => k.weapons.every((w) => p.weapons[w])));
     if (id !== "RGM_79_G") {

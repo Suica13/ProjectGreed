@@ -1,3 +1,4 @@
+const { finishPlanning } = require("./planning-fixture.cjs");
 const { test, expect } = require("@playwright/test"),
   { createServer } = require("../server.js");
 test("English and Japanese players share stable unit and weapon IDs and authoritative combat results", async ({
@@ -41,13 +42,14 @@ test("English and Japanese players share stable unit and weapon IDs and authorit
     await english.evaluate(() =>
       Net.request("attack", { unitId: "0-0", targetId: "1-0", weaponId: "EF_BeamSprayGun" }),
     );
+    await finishPlanning([english, japanese]);
     await expect(japanese.locator("#reaction")).toBeVisible();
     await japanese.locator("#responseDefend").click();
     await japanese.locator("#confirmResponse").click();
-    await expect.poll(() => english.evaluate(() => Net.snapshot.phase)).toBe("battle");
-    await expect.poll(() => japanese.evaluate(() => Net.snapshot.phase)).toBe("battle");
-    const a = await english.evaluate(() => Net.snapshot.battle.events);
-    const b = await japanese.evaluate(() => Net.snapshot.battle.events);
+    await expect.poll(() => english.evaluate(() => phase)).toBe("battle");
+    await expect.poll(() => japanese.evaluate(() => phase)).toBe("battle");
+    const a = await english.evaluate(() => Net.snapshot.combats.at(-1).events);
+    const b = await japanese.evaluate(() => Net.snapshot.combats.at(-1).events);
     expect(a).toEqual(b);
     expect(a[0].weapon).toBe("EF_BeamSprayGun");
     expect(await english.evaluate(() => Net.snapshot.game.units)).toEqual(

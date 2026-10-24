@@ -269,6 +269,19 @@
         margin-bottom: 12px;
         gap: 15px;
       }
+      .phase-main {
+        flex: 1;
+        min-width: 0;
+      }
+      .phase-heading {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .phase-heading h2 {
+        flex-shrink: 0;
+        margin: 0;
+      }
       .phase-row p {
         margin: 3px 0 0;
         color: var(--muted);
@@ -1468,11 +1481,14 @@
         </aside>
         <main data-ui-node="node-28" class="center">
           <div data-ui-node="node-29" class="phase-row">
-            <div data-ui-node="node-30">
+            <div data-ui-node="node-30" class="phase-main">
               <div data-ui-node="node-31" class="eyebrow" id="phaseEyebrow">BLUE PHASE</div>
-              <h2 data-ui-node="node-32" id="phaseTitle">蓝方行动阶段</h2>
-              <div id="deploymentPanel" hidden data-ui-node="node-200">
-                <p id="deploymentStatus" data-ui-node="node-201"></p>
+              <div class="phase-heading">
+                <h2 data-ui-node="node-32" id="phaseTitle">蓝方行动阶段</h2>
+                <div id="deploymentPanel" hidden data-ui-node="node-200">
+                  <p id="deploymentStatus" data-ui-node="node-201"></p>
+                  <p id="deploymentHint">在高亮出生区内调整位置，两队确认后开始回合。</p>
+                </div>
               </div>
               <p data-ui-node="node-33" id="hint">点击己方单位，选择蓝色格子移动。</p>
             </div>
@@ -1483,6 +1499,11 @@
           </div>
           <div data-ui-node="node-35" class="map-wrap" id="mapWrap">
             <div class="map-camera-controls" aria-label="地图缩放">
+              <span id="mapCombatControls" hidden>
+                <span id="mapCombatStatus"></span>
+                <label><input type="checkbox" id="mapQuick" />快速演出</label>
+                <button id="mapSkipBattle">跳过本批演出</button>
+              </span>
               <button id="mapZoomOut" aria-label="缩小地图">−</button>
               <span id="mapZoomLabel">100%</span>
               <button id="mapZoomIn" aria-label="放大地图">＋</button>
@@ -1548,47 +1569,45 @@
     <div
       data-ui-node="node-56"
       id="reaction"
-      class="overlay"
+      class="reaction-overlay"
       hidden
-      role="dialog"
-      aria-modal="true"
+      role="region"
       aria-labelledby="reactionTitle"
     >
-      <div data-ui-node="node-57" class="modal">
-        <div data-ui-node="node-58" class="modal-top">
-          <div data-ui-node="node-59">
-            <div data-ui-node="node-60" class="eyebrow">DEFENDER RESPONSE</div>
-            <h2 data-ui-node="node-61" id="reactionTitle">防守方选择应战方式</h2>
-            <p data-ui-node="node-62" id="reactionSub"></p>
-          </div>
-          <button data-ui-node="node-63" id="cancelAttack">返回选目标</button>
-        </div>
-        <div data-ui-node="node-64" id="engagement" class="engagement"></div>
+      <aside class="response-side response-attacker">
+        <div class="eyebrow">进攻方</div>
+        <div data-ui-node="node-64" id="engagement"></div>
+        <div id="incomingEstimate" class="estimate"></div>
+      </aside>
+      <aside data-ui-node="node-57" class="response-side response-defender">
+        <div class="eyebrow">防守方</div>
+        <h2 data-ui-node="node-61" id="reactionTitle">选择应战方式</h2>
+        <p data-ui-node="node-62" id="reactionSub"></p>
+        <div id="defenderInfo"></div>
         <div data-ui-node="node-65" class="responses">
           <button data-ui-node="node-66" class="response" id="responseCounter">
             <strong data-ui-node="node-67">反击</strong
             ><small data-ui-node="node-68"
-              >承受攻击后回击；每回合默认最多2次，命中率×0.75。</small
+              >每回合只能选择一个敌人反击一次，命中率×0.75。</small
             ></button
           ><button data-ui-node="node-69" class="response" id="responseDefend">
             <strong data-ui-node="node-70">防御</strong
             ><small data-ui-node="node-71"
-              >所有防御力×1.25，格挡率+25个百分点，不反击。</small
+              >所有防御力×1.25，格挡率+25个百分点，最终伤害减少25%，不反击。</small
             ></button
           ><button data-ui-node="node-72" class="response" id="responseEvade">
             <strong data-ui-node="node-73">回避</strong
-            ><small data-ui-node="node-74">自身机动性×1.25计算回避，不反击。</small>
+            ><small data-ui-node="node-74">自身机动性×1.25，最终回避率+15个百分点，不反击。</small>
           </button>
         </div>
         <div data-ui-node="node-75" id="counterList" class="counter-list"></div>
+        <label id="counterTargetWrap"
+          >反击目标<select id="counterTarget" aria-label="反击目标"></select
+        ></label>
         <div data-ui-node="node-76" id="estimate" class="estimate"></div>
-        <div data-ui-node="node-77" class="modal-footer">
-          <span data-ui-node="node-78" class="muted">先攻方先结算；防守方被击破则无法反击。</span
-          ><button data-ui-node="node-79" id="confirmResponse" class="primary">
-            确认应战并开始战斗
-          </button>
-        </div>
-      </div>
+        <p class="muted response-note">先攻方先结算；防守方被击破则无法反击。</p>
+        <button data-ui-node="node-79" id="confirmResponse" class="primary">确认应战</button>
+      </aside>
     </div>
     <div
       data-ui-node="node-80"
@@ -1653,7 +1672,7 @@
             </p>
             <strong data-ui-node="node-110">③ 防守方应战</strong>
             <p data-ui-node="node-111">
-              选择反击、防御或回避。反击武器必须满足射程、EN和剩余反击次数。只有存活才能回击。
+              选择反击、防御或回避。反击先选武器，再点击可选的来袭敌人；每个单位每回合只反击一个目标。
             </p>
           </div>
           <div data-ui-node="node-112">
@@ -2477,10 +2496,8 @@
         height: 56px;
       }
       #deploymentPanel {
-        padding: 10px 14px;
-        background: #183b40;
-        border: 1px solid #59c4ab;
-        margin: 8px 0;
+        min-width: 0;
+        padding: 2px 0;
       }
     </style>
     <aside id="musicPlayer" aria-label="背景音乐播放器" data-ui-node="music-player">
@@ -2791,12 +2808,220 @@
         border-radius: 5px;
         background: #0b1c28e8;
       }
+      .map-camera-controls {
+        max-width: calc(100% - 20px);
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      #mapCombatControls {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        min-width: 0;
+      }
+      #mapCombatControls[hidden] {
+        display: none;
+      }
+      #mapCombatStatus {
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #mapCombatControls label {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        margin: 0;
+      }
+      #mapCombatControls input {
+        width: auto;
+        margin: 0;
+      }
       .map-camera-controls button {
         padding: 4px 8px;
       }
       #mapZoomLabel {
         min-width: 42px;
         text-align: center;
+      }
+      .reaction-overlay {
+        position: fixed;
+        inset: 94px 14px 20px;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+      .reaction-overlay[hidden] {
+        display: none;
+      }
+      .response-side {
+        pointer-events: auto;
+        width: 270px;
+        max-height: 100%;
+        min-width: 0;
+        overflow-y: auto;
+        padding: 12px;
+        border: 1px solid #526c7b;
+        border-radius: 7px;
+        background: #101f2bf5;
+        box-shadow: 0 6px 20px #0006;
+      }
+      #engagement {
+        max-height: 60vh;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+      .incoming-entry {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin: 8px 0;
+        text-align: left;
+        border: 1px solid transparent;
+        background: transparent;
+      }
+      .incoming-entry:disabled {
+        opacity: 1;
+        cursor: default;
+      }
+      .incoming-entry.selected {
+        border-color: var(--lime);
+      }
+      .incoming-forecast {
+        padding: 4px 8px;
+        color: var(--red);
+        font-size: 11px;
+      }
+      .response-attacker {
+        width: 204px;
+      }
+      .response-defender {
+        border-color: var(--lime);
+      }
+      .response-side h2 {
+        font-size: 17px;
+        margin: 6px 0;
+      }
+      .response-side p {
+        font-size: 11px;
+        margin: 6px 0;
+      }
+      .response-side .fighter {
+        padding: 8px;
+        margin-top: 8px;
+      }
+      .response-side .fighter img {
+        width: 44px;
+        height: 44px;
+      }
+      .response-side .fighter strong {
+        font-size: 14px;
+      }
+      .response-owner {
+        clear: both;
+        padding-top: 6px;
+        overflow-wrap: anywhere;
+      }
+      .response-side .responses {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        margin-top: 10px;
+      }
+      .response-side .response {
+        padding: 7px 4px;
+        text-align: center;
+      }
+      .response-side .response strong {
+        margin: 0;
+      }
+      .response-side .response small {
+        display: none;
+      }
+      #counterTargetWrap {
+        display: block;
+        margin-top: 8px;
+        font-size: 12px;
+      }
+      #counterTargetWrap[hidden] {
+        display: none;
+      }
+      #counterTarget {
+        width: 100%;
+        margin-top: 4px;
+      }
+      .response-side .counter-list {
+        margin-top: 8px;
+        max-height: 32vh;
+        overflow-y: auto;
+      }
+      .response-side .weapon {
+        font-size: 11px;
+        padding: 7px;
+      }
+      .response-side .estimate {
+        margin-top: 8px;
+        padding-top: 8px;
+      }
+      .response-side #confirmResponse {
+        width: 100%;
+        margin-top: 8px;
+        position: sticky;
+        bottom: 0;
+        z-index: 1;
+      }
+      @media (max-width: 700px) {
+        .reaction-overlay {
+          inset: auto 6px 78px;
+          gap: 6px;
+          align-items: flex-end;
+        }
+        .response-side {
+          width: calc(58% - 3px);
+          max-height: 30vh;
+          padding: 7px;
+        }
+        .response-attacker {
+          width: calc(42% - 3px);
+        }
+        #engagement {
+          max-height: 20vh;
+        }
+        .response-side h2 {
+          font-size: 13px;
+          margin: 3px 0;
+        }
+        .response-side p {
+          font-size: 10px;
+          margin: 3px 0;
+        }
+        .response-side .fighter {
+          padding: 5px;
+          margin-top: 4px;
+        }
+        .response-side .fighter .summary {
+          margin-top: 4px;
+          font-size: 10px;
+        }
+        .response-side .response:first-child {
+          grid-column: auto;
+        }
+        .response-side .response {
+          min-width: 0;
+          font-size: 11px;
+        }
+
+        .response-side .counter-list {
+          max-height: 17vh;
+        }
+        .response-side .fighter img {
+          width: 32px;
+          height: 32px;
+        }
       }
       #map {
         touch-action: none;
@@ -2828,7 +3053,11 @@
       __MAP_CAMERA__;
       __PLAYER_PROFILE__;
       __CHAT_CHANNELS__;
+      __ATTACK_PLANS__;
       __ROOM_ENGINE__;
+      __PLANNING_UI__;
+      __MAP_COMBAT__;
+      __COMBAT_PLAYBACK__;
       __NETWORK__;
       __LOCAL_ROOM__;
       __CHAT__;

@@ -5,6 +5,17 @@ const WeaponEffects = (() => {
       ? ART.presentation.meleeAnimationSpeed
       : ART.presentation.animationSpeed;
   }
+  // 开火挂点和可见机体共用同一根坐标，闪避后不会重复或遗漏位移。
+  function firingPose(weapon, source, event, originalTime) {
+    const animation = WeaponSequence.pose(weapon, originalTime);
+    return {
+      x: source.x,
+      y: source.y + (event?.sourceDodgeSlot || 0) * ART.presentation.dodgeDistance * source.scale,
+      angle: source.angle,
+      clip: animation.clip,
+      time: animation.time,
+    };
+  }
   function plan(weapon, source, target, event = null) {
     const speed = animationSpeed(weapon),
       effectSpeed = ART.presentation.animationSpeed,
@@ -13,12 +24,12 @@ const WeaponEffects = (() => {
       initialSlot = event?.targetDodgeSlot || 0;
     const shots = weapon.attack.shots.map((originalAt, index) => {
       const at = lead + originalAt / speed,
-        animation = WeaponSequence.pose(weapon, originalAt);
+        animation = firingPose(weapon, source, event, originalAt);
       const origin = weapon.projectile
         ? SpriteRenderer.muzzle(
             source.unit.model,
             weapon,
-            { ...source, y: source.y + sourceY },
+            { ...source, ...animation },
             animation.clip,
             animation.time,
             index,
@@ -293,7 +304,7 @@ const WeaponEffects = (() => {
         dy = shot.destination.y - shot.origin.y,
         angle = Math.atan2(dy, dx),
         scale = source.scale * weapon.projectile.scale * size,
-        offset = weapon.projectile.forwardOffset * source.scale;
+        offset = (source.projectileForwardOffset ?? weapon.projectile.forwardOffset) * source.scale;
       ctx.save();
       ctx.translate(
         shot.origin.x + dx * travel + Math.cos(angle) * offset,
@@ -306,5 +317,16 @@ const WeaponEffects = (() => {
       ctx.restore();
     }
   }
-  return { plan, meleeMotion, dodge, position, animationSpeed, health, shield, arrived, draw };
+  return {
+    plan,
+    firingPose,
+    meleeMotion,
+    dodge,
+    position,
+    animationSpeed,
+    health,
+    shield,
+    arrived,
+    draw,
+  };
 })();

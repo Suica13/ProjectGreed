@@ -1,3 +1,4 @@
+const { finishPlanning } = require("./planning-fixture.cjs");
 const { waitForRoomSettings } = require("./room-settings-fixture.cjs");
 const { test, expect } = require("@playwright/test"),
   { createServer } = require("../server.js");
@@ -143,15 +144,16 @@ test("six browser players deploy on the large map, only the unit owner responds,
     await pages[4].evaluate(() =>
       Net.request("attack", { unitId: "4-0", targetId: "5-0", weaponId: "EF_BeamSprayGun" }),
     );
+    await finishPlanning(pages);
     await expect(pages[5].locator("#reaction")).toBeVisible();
     await expect(pages[1].locator("#reaction")).toBeHidden();
     await expect(pages[3].locator("#reaction")).toBeHidden();
     await pages[5].locator("#responseEvade").click();
     await pages[5].locator("#confirmResponse").click();
     for (const p of pages) {
-      await expect(p.locator("#battle")).toBeVisible();
-      await p.locator("#skipBattle").click();
-      await p.locator("#continueBattle").click();
+      await expect(p.locator("#battle")).toBeHidden();
+      await expect(p.locator("#mapCombatControls")).toBeVisible();
+      await p.locator("#mapSkipBattle").click();
     }
     for (const p of pages) await expect.poll(() => p.evaluate(() => phase)).toBe("idle");
     const id = await pages[5].evaluate(() => Net.memberId);

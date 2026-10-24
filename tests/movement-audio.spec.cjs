@@ -1,3 +1,4 @@
+const { finishPlanning } = require("./planning-fixture.cjs");
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url");
 const path = require("node:path");
@@ -162,6 +163,7 @@ test("two real clients hear game start, own turn, attack lock and target warning
     await page.evaluate(() =>
       Net.request("attack", { unitId: "0-0", targetId: "1-0", weaponId: "EF_BeamSprayGun" }),
     );
+    await finishPlanning([page, guest]);
     await expect(guest.locator("#reaction")).toBeVisible();
     await expect
       .poll(() =>

@@ -175,6 +175,11 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     result.presentation.sfxVolume > 1
   )
     throw Error("Invalid SFX volume");
+  const battleVolume = result.presentation.battleSfxVolume ?? 0.5;
+  if (!Number.isFinite(battleVolume) || battleVolume < 0 || battleVolume > 1)
+    throw Error("Invalid battle SFX volume");
+  result.presentation.battleSfxVolume = battleVolume;
+
   const playlistFile = file(root, catalog.music);
   result.music = read(playlistFile);
   if (
@@ -204,6 +209,7 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     "projectileSpeed",
     "dodgeDistance",
     "dodgeOut",
+    "mapCellScale",
   ])
     if (!Number.isFinite(result.presentation[key]) || result.presentation[key] <= 0)
       throw Error("Invalid presentation setting: " + key);

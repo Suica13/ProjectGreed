@@ -1,3 +1,4 @@
+const { finishPlanning } = require("./planning-fixture.cjs");
 const { waitForRoomSettings } = require("./room-settings-fixture.cjs");
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url");
@@ -104,9 +105,10 @@ test("offline room resolves a real battle, returns to preparation and starts ano
       UnitModels[a.model].weapons.find((w) => w.type === "melee"),
     );
   });
-  await expect(page.locator("#battle")).toBeVisible();
-  await page.locator("#skipBattle").click();
-  await page.locator("#continueBattle").click();
+  await finishPlanning([page]);
+  await expect(page.locator("#battle")).toBeHidden();
+  await expect(page.locator("#mapCombatControls")).toBeVisible();
+  await page.locator("#mapSkipBattle").click();
   await expect(page.locator("#victory")).toBeVisible();
   await expect(page.locator("#victoryCountdown")).toContainText("返回房间");
   await page.locator("#playAgain").click();

@@ -88,7 +88,7 @@ const MovementEffects = (() => {
       const scale =
         (tile / 64) *
         1.2 *
-        BattleScene.settings().mapScale *
+        (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
         UnitModels[item.unit.model].presentation.mapScale;
       SpriteEffects.boostStart(ctx, item.unit, point.x, point.y, scale, time, item.angle);
     }
@@ -109,7 +109,7 @@ const MapEffects = (() => {
     for (const event of view.events) {
       if (!event.hit || event.after > 0 || !(event.before > 0)) continue;
       const key = battleId + ":" + event.to,
-        unit = getUnit(event.to);
+        unit = view.actors?.find((unit) => unit.id === event.to) || getUnit(event.to);
       if (seen.has(key) || !unit) continue;
       seen.add(key);
       queue.push({
@@ -153,7 +153,7 @@ const MapEffects = (() => {
       const scale =
         (tile / 64) *
         1.2 *
-        BattleScene.settings().mapScale *
+        (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
         UnitModels[item.unit.model].presentation.mapScale;
       if (age < 0)
         SpriteRenderer.draw(
@@ -176,7 +176,7 @@ const MapEffects = (() => {
         point.y,
         (tile / 64) *
           1.2 *
-          BattleScene.settings().mapScale *
+          (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
           UnitModels[item.unit.model].presentation.mapScale,
         age,
       );

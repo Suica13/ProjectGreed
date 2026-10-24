@@ -146,3 +146,29 @@ test("each Step creates one texture projectile and HP presentation reaches only 
   assert.equal(plan.shots[0].origin.x, 152);
   assert.equal(plan.shots[0].origin.y, 95);
 });
+
+test("Zaku heat hawk swaps its mirrored layer during the swing and restores after recovery", () => {
+  for (const unit of ["MS_06F", "MS_06J", "MS_06F2"]) {
+    const model = unit + "__machine_gun";
+    const names = (clip, time, loop = false, held = "ZN_HeatHawk_A") =>
+      Array.from(renderer.visibleLayers(model, held, true, false, clip, time, loop))
+        .filter((layer) => layer.name.startsWith("ZN_HeatHawk_A"))
+        .map((layer) => layer.name);
+    for (const time of [0, 0.3, 0.599999, 2, 2.5])
+      assert.deepEqual(names("Common_Melee_A", time), ["ZN_HeatHawk_A"]);
+    for (const time of [0.6, 0.75, 1, 1.999999])
+      assert.deepEqual(names("Common_Melee_A", time), ["ZN_HeatHawk_A_Step2"]);
+    assert.deepEqual(names(null, 1), ["ZN_HeatHawk_A"]);
+    assert.deepEqual(names("Common_Move", 1), ["ZN_HeatHawk_A"]);
+    assert.deepEqual(names("Common_Melee_A", 2, true), ["ZN_HeatHawk_A"]);
+    assert.deepEqual(names("Common_Melee_A", 2.75, true), ["ZN_HeatHawk_A_Step2"]);
+    assert.deepEqual(names("Common_Melee_A", 0.75, false, "ZN_120mmMG"), []);
+    const layers = renderer.models[model].decals;
+    const normal = layers.find((layer) => layer.name === "ZN_HeatHawk_A");
+    const flipped = layers.find((layer) => layer.name === "ZN_HeatHawk_A_Step2");
+    assert.equal(normal.scaleX, -1);
+    assert.equal(flipped.scaleX, 1);
+    assert.equal(flipped.rotation, 25);
+    assert.deepEqual(JSON.parse(JSON.stringify(flipped.offset)), { x: 12, y: 18 });
+  }
+});

@@ -4,7 +4,7 @@ const { test, expect } = require("@playwright/test"),
   path = require("node:path");
 async function open(page) {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
-  await expect(page).toHaveTitle("ProjectGreed V0.2");
+  await expect(page).toHaveTitle("ProjectGreed V03");
   await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
@@ -64,27 +64,31 @@ test("reaction UI honors exhausted counter budgets and displays the new defense 
   });
   await expect(page.locator("#reaction")).toBeVisible();
   await expect(page.locator("#responseCounter")).toBeDisabled();
-  await expect(page.locator("#reactionSub")).toContainText("本回合剩余反击 0 / 2");
+  await expect(page.locator("#reactionSub")).not.toContainText("剩余反击");
   await expect(page.locator("#responseEvade")).toContainText("机动性×1.25");
   await expect(page.locator("#responseDefend")).toContainText("格挡率+25个百分点");
+  await expect(page.locator("#responseDefend")).toContainText("最终伤害减少25%");
+  await expect(page.locator("#responseEvade")).toContainText("最终回避率+15个百分点");
   await page.locator("#responseEvade").click();
-  expect(
-    await page.evaluate(
-      () =>
-        Rules.estimate(
-          game,
-          game.units[0],
-          game.units[1],
-          getWeapon(game.units[0], "EF_90mmMG"),
-          response,
-        ).hit,
-    ),
-  ).toBe(71.8125);
+  const chances = await page.evaluate(() => {
+    const [a, b] = game.units,
+      weapon = getWeapon(a, "EF_90mmMG");
+    return {
+      normal: Rules.estimate(game, a, b, weapon, "counter").hit,
+      evade: Rules.estimate(game, a, b, weapon, response).hit,
+      mobility: Rules.modelOf(b).mobility,
+    };
+  });
+  expect(chances.normal - chances.evade).toBeCloseTo(chances.mobility * 0.25 * 0.25 + 15);
   await page.evaluate(() => I18n.setLanguage("en"));
-  await expect(page.locator("#reactionSub")).toContainText("Counters remaining this turn: 0 / 2");
+  await expect(page.locator("#reactionSub")).not.toContainText("Counters remaining");
   await expect(page.locator("#responseEvade")).toContainText("mobility ×1.25");
+  await expect(page.locator("#responseEvade")).toContainText("15 percentage points");
+  await expect(page.locator("#responseDefend")).toContainText("final damage taken −25%");
   await page.evaluate(() => I18n.setLanguage("ja"));
   await expect(page.locator("#responseEvade")).toContainText("機動性×1.25");
+  await expect(page.locator("#responseEvade")).toContainText("最終回避率+15ポイント");
+  await expect(page.locator("#responseDefend")).toContainText("最終被ダメージ25%軽減");
   expect(
     await page.evaluate(() =>
       UnitModels.RGM_79L__machine_gun.weapons.some((w) => w.id === "Common_DoubleVulcan_MS"),

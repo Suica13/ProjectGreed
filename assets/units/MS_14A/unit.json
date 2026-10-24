@@ -426,7 +426,7 @@
     "move": 6,
     "mobility": 115,
     "cost": 800,
-    "counterLimit": 2
+    "counterLimit": 1
   },
   "attackBonuses": {
     "shooting": 20,

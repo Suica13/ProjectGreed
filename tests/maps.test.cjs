@@ -26,8 +26,8 @@ test("enemy orthogonal zones cost at least three; allies, diagonal units and dea
   b.team = 0;
   assert.equal(G.movementCost(g, a, 4, 4), 1);
 });
-test("all fourteen preset maps hold independent full twelve-unit formations without overlapping spawn zones", () => {
-  assert.equal(Object.keys(G.catalog.maps).length, 14);
+test("all five rebuilt preset maps hold independent full twelve-unit formations without overlapping spawn zones", () => {
+  assert.equal(Object.keys(G.catalog.maps).length, 5);
   for (const map of Object.values(G.catalog.maps)) {
     const formations = Array.from({ length: map.spawns.length }, () => Array(12).fill(entry));
     const before = JSON.stringify(map);
@@ -74,31 +74,41 @@ test("room budget validation has bounds and every formation is checked against i
     assert.throws(() => G.getMap(id));
 });
 
-test("ten new maps have distinct layouts, balanced teams, connected routes and contrasting cover density", () => {
-  const maps = Object.values(G.catalog.maps).filter(
-    (m) => m.appearance && m.id !== "forest_front_5v5",
-  );
-  assert.equal(maps.length, 10);
+test("five asymmetric maps are capacity-sorted, connected and offer sparse cover or contiguous woods", () => {
+  const maps = Object.values(G.catalog.maps);
   assert.deepEqual(
-    [1, 2, 3].map((n) => maps.filter((m) => m.playersPerTeam === n).length),
-    [4, 3, 3],
+    maps.map((m) => m.playersPerTeam),
+    [1, 1, 2, 2, 3],
   );
-  assert.equal(new Set(maps.map((m) => JSON.stringify(m.tiles))).size, 10);
-  const cover = (m) =>
-    m.tiles.flat().filter((t) => ["forest", "rubble"].includes(t)).length / (m.width * m.height);
-  assert.ok(cover(G.getMap("new_york_ruins_1v1")) > 0.3);
-  assert.ok(cover(G.getMap("new_york_crossfire_3v3")) > 0.3);
-  assert.ok(cover(G.getMap("open_dunes_1v1")) < 0.02);
-  assert.ok(cover(G.getMap("desert_highway_3v3")) < 0.03);
-  assert.ok(
-    cover(G.getMap("desert_depots_2v2")) > 0.03 && cover(G.getMap("desert_depots_2v2")) < 0.1,
-  );
+  assert.deepEqual(G.defaultRoomSettings(), {
+    mapId: "frontier_1v1",
+    costLimit: 3000,
+    unitLimit: 6,
+    unitCostLimit: 500,
+    bannedFactions: [],
+    bannedEras: [],
+    teamRestrictions: [
+      { bannedFactions: [], bannedEras: [] },
+      { bannedFactions: [], bannedEras: [] },
+    ],
+  });
+  assert.equal(new Set(maps.map((m) => JSON.stringify(m.tiles))).size, 5);
   for (const map of maps) {
-    const [spawn] = map.spawns,
-      visited = new Set([spawn.x + "," + spawn.y]),
-      queue = [[spawn.x, spawn.y]];
+    assert.ok(
+      map.tiles.some((row) => JSON.stringify(row) !== JSON.stringify([...row].reverse())),
+      map.id,
+    );
+    assert.notDeepEqual(map.tiles, [...map.tiles].reverse(), map.id);
+    assert.notDeepEqual(
+      map.tiles,
+      [...map.tiles].reverse().map((row) => [...row].reverse()),
+      map.id,
+    );
+    const start = map.spawns[0],
+      seen = new Set([start.x + "," + start.y]),
+      queue = [start];
     for (let i = 0; i < queue.length; i++) {
-      const [x, y] = queue[i];
+      const { x, y } = queue[i];
       for (const [nx, ny] of [
         [x - 1, y],
         [x + 1, y],
@@ -114,74 +124,54 @@ test("ten new maps have distinct layouts, balanced teams, connected routes and c
         )
           continue;
         const key = nx + "," + ny;
-        if (!visited.has(key)) {
-          visited.add(key);
-          queue.push([nx, ny]);
+        if (!seen.has(key)) {
+          seen.add(key);
+          queue.push({ x: nx, y: ny });
         }
       }
     }
     assert.equal(
-      visited.size,
+      seen.size,
       map.tiles.flat().filter((t) => Number.isFinite(G.terrain[t].cost)).length,
       map.id,
     );
-    for (let y = 0; y < map.height; y++)
-      assert.deepEqual(map.tiles[y], [...map.tiles[y]].reverse(), map.id);
-    for (const lang of ["zh", "en", "ja"]) assert.ok(map.localization[lang].description.length > 0);
-    for (const kind of Object.keys(G.terrain)) {
-      const style = G.terrainStyle(map.id, kind);
-      assert.equal(style.cost, G.terrain[kind].cost);
-      assert.equal(style.cover, G.terrain[kind].cover);
-      assert.equal(style.color, map.appearance.colors[kind]);
-    }
+    for (const language of ["zh", "en", "ja"]) assert.ok(map.localization[language].description);
+    for (const kind of Object.keys(G.terrain))
+      assert.equal(G.terrainStyle(map.id, kind).color, map.appearance.colors[kind]);
   }
-});
-
-test("forest front supports five players per team and maps are ordered by ascending capacity", () => {
-  const map = G.getMap("forest_front_5v5"),
-    maps = Object.values(G.catalog.maps);
-  assert.equal(map.playersPerTeam, 5);
-  assert.equal(map.spawns.length, 10);
-  assert.deepEqual(
-    map.spawns.map((s) => s.team),
-    [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-  );
-  const capacities = maps.map((m) => m.spawns.length);
-  assert.deepEqual(
-    capacities,
-    [...capacities].sort((a, b) => a - b),
-  );
-  const seen = new Set([map.spawns[0].x + "," + map.spawns[0].y]),
-    queue = [[map.spawns[0].x, map.spawns[0].y]];
-  for (let i = 0; i < queue.length; i++) {
-    const [x, y] = queue[i];
-    for (const [nx, ny] of [
-      [x - 1, y],
-      [x + 1, y],
-      [x, y - 1],
-      [x, y + 1],
-    ]) {
-      if (
-        nx < 0 ||
-        ny < 0 ||
-        nx >= map.width ||
-        ny >= map.height ||
-        !Number.isFinite(G.terrain[map.tiles[ny][nx]].cost)
-      )
-        continue;
-      const key = nx + "," + ny;
-      if (!seen.has(key)) {
-        seen.add(key);
-        queue.push([nx, ny]);
-      }
-    }
-  }
-  assert.equal(
-    seen.size,
-    map.tiles.flat().filter((t) => Number.isFinite(G.terrain[t].cost)).length,
+  const forest = G.getMap("frontline_3v3");
+  assert.ok(
+    forest.tiles.flat().filter((t) => t === "forest").length > forest.width * forest.height * 0.25,
   );
   assert.ok(
-    map.tiles.flat().filter((t) => t === "forest").length / (map.width * map.height) > 0.25,
+    G.getMap("open_dunes_1v1")
+      .tiles.flat()
+      .filter((t) => t === "rubble").length < 10,
   );
-  for (const row of map.tiles) assert.deepEqual(row, [...row].reverse());
+});
+
+test("friendly units can be crossed in a single-cell corridor but never used as destinations", () => {
+  for (const ownerSeat of [0, 2]) {
+    const g = G.create(false, 1, [[entry, entry], [entry]]),
+      [a, ally, enemy] = g.units;
+    g.tiles = Array.from({ length: G.mapHeight(g) }, () => Array(G.mapWidth(g)).fill("rock"));
+    for (let x = 2; x <= 6; x++) g.tiles[4][x] = "plain";
+    Object.assign(a, { x: 2, y: 4 });
+    Object.assign(ally, { x: 3, y: 4, ownerSeat });
+    Object.assign(enemy, { x: 20, y: 15 });
+    const reachable = G.reachable(g, a);
+    assert.equal(reachable.has("3,4"), false);
+    assert.equal(reachable.get("5,4").cost, 3);
+    assert.deepEqual(reachable.get("5,4").path, [
+      { x: 3, y: 4 },
+      { x: 4, y: 4 },
+      { x: 5, y: 4 },
+    ]);
+    assert.throws(() => G.move(g, a, 3, 4));
+    G.move(g, a, 5, 4);
+    assert.deepEqual([a.x, a.y, ally.x, ally.y], [5, 4, 3, 4]);
+    G.undo(g, a);
+    ally.team = 1;
+    assert.equal(G.reachable(g, a).has("5,4"), false, "enemies still block traversal");
+  }
 });

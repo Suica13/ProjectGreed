@@ -35,27 +35,27 @@ test("only the latest successful move is undoable, and an occupied origin never 
   assert.throws(() => G.undo(occupied.g, occupied.a));
   assert.equal(occupied.a.x, 3);
 });
-test("defense multiplies flat and percentage defenses, raises shield block chance, and never changes stored attributes", () => {
+test("defense multiplies defenses, raises block chance and reduces final damage by 25 percent without changing stored attributes", () => {
   const { g, a, b, w } = duel(),
     model = G.models[b.model],
     before = JSON.stringify(model);
   const normal = G.estimate(g, a, b, w),
     defended = G.estimate(g, a, b, w, "defend");
   assert.equal(normal.damage, 9 * Math.round((725 * 1.1 - 75) * 0.9));
-  assert.equal(defended.damage, 9 * Math.round((725 * 1.1 - 75 * 1.25) * 0.875));
+  assert.equal(defended.damage, 9 * Math.round((725 * 1.1 - 75 * 1.25) * 0.875 * 0.75));
   assert.notEqual(defended.damage, Math.round(normal.damage * 0.5));
   assert.equal(defended.blockChance, 0);
   b.shield = model.shield.hp;
   assert.equal(G.estimate(g, a, b, w, "defend").blockChance, model.shield.blockChance + 0.25);
   assert.equal(JSON.stringify(model), before);
 });
-test("evade multiplies each defender's actual mobility instead of applying a fixed accuracy penalty", () => {
+test("evade multiplies mobility and adds 15 percentage points of final evasion", () => {
   for (const id of ["RGM_79__machine_gun", "RGC_80__machine_gun", "RGM_79L__machine_gun"]) {
     const { g, a, b, w } = duel();
     b.model = id;
     const base = G.estimate(g, a, b, w),
       evade = G.estimate(g, a, b, w, "evade");
-    assert.equal(base.hit - evade.hit, G.models[id].mobility * 0.25 * 0.25);
+    assert.equal(base.hit - evade.hit, G.models[id].mobility * 0.25 * 0.25 + 15);
     assert.equal(base.damage, evade.damage);
   }
 });
@@ -63,7 +63,7 @@ test("a volley consumes one counter, exhausted counters reject atomically, hando
   const { g, b, w } = duel(),
     attackers = g.units.filter((u) => u.team === 0);
   b.en = 1000;
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 1; i++) {
     const a = attackers[i];
     Object.assign(a, { x: 2, y: 3, hp: 100000, shield: 0 });
     G.fight(g, a, b, w, "counter", w.id);
@@ -78,9 +78,9 @@ test("a volley consumes one counter, exhausted counters reject atomically, hando
   assert.equal(JSON.stringify(g), before);
   G.fight(g, a, b, w, "defend");
   G.end(g);
-  assert.equal(G.countersRemaining(b), 2);
+  assert.equal(G.countersRemaining(b), 1);
 });
-test("V0.2 weapons, bonuses, HP, shield and Step multipliers match the editable configuration", () => {
+test("V03 weapons, bonuses, HP, shield and Step multipliers match the editable configuration", () => {
   const gm = G.models.RGM_79__beam_spray,
     light = G.models.RGM_79L__beam_gun,
     cannon = G.models.RGC_80__machine_gun;
@@ -190,4 +190,16 @@ test("map facing persists after combat and turns; movement updates its last path
     saved.units.map((u) => u.angle),
     g.units.map((u) => u.angle),
   );
+});
+
+test("final evasion applies after counter accuracy and never produces negative hit probability", () => {
+  const { g, a, b, w } = duel();
+  const evade = G.estimate(g, a, b, w, "evade"),
+    counterEvade = G.estimate(g, a, b, w, "evade", true);
+  assert.equal(counterEvade.hit, (evade.hit + 15) * 0.75 - 15);
+  const impossible = G.estimate(g, a, b, { ...w, hit: 0 }, "evade");
+  assert.equal(impossible.hit, 0);
+  const event = G.fight(g, a, b, { ...w, hit: 0 }, "evade")[0];
+  assert.ok(event.strikes.every((s) => !s.hit && s.hitChance === 0));
+  assert.equal(event.damage, 0);
 });

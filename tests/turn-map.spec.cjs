@@ -6,8 +6,8 @@ const { test, expect } = require("@playwright/test"),
 const url = pathToFileURL(path.resolve("public/client.html")).href;
 async function offline(page) {
   await page.goto(url);
-  await expect(page).toHaveTitle("ProjectGreed V0.2");
-  await expect(page.locator("#start")).toContainText("V0.2");
+  await expect(page).toHaveTitle("ProjectGreed V03");
+  await expect(page.locator("#start")).toContainText("V03");
   await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
@@ -133,9 +133,8 @@ test("map zoom anchors the cursor, drag pans without moving units, and zoomed cl
   const destination = await page.evaluate(() => mapPosition(12, 8));
   await page.mouse.click(box.x + destination.x, box.y + destination.y);
   await expect.poll(() => page.evaluate(() => [game.units[0].x, game.units[0].y])).toEqual([12, 8]);
-  await page.locator("#mapZoomIn").click();
-  await page.locator("#mapZoomIn").click();
-  await expect(page.locator("#mapZoomLabel")).toHaveText("300%");
+  for (let i = 0; i < 5; i++) await page.locator("#mapZoomIn").click();
+  await expect(page.locator("#mapZoomLabel")).toHaveText("500%");
   await expect(page.locator("#mapZoomIn")).toBeDisabled();
   await page.locator("#mapZoomReset").click();
   await expect(page.locator("#mapZoomLabel")).toHaveText("100%");
@@ -193,4 +192,61 @@ test("both network teams see one cutin per authoritative turn and repeated snaps
     await other.close();
     await server.close();
   }
+});
+
+test("map shows HP and proportional yellow EN at every zoom, names only from 300 percent", async ({
+  page,
+}) => {
+  await offline(page);
+  const samples = await page.evaluate(() => {
+    const canvas = byId("map"),
+      ctx = canvas.getContext("2d");
+    const fillText = ctx.fillText,
+      fillRect = ctx.fillRect;
+    const units = game.units.filter((u) => u.hp > 0);
+    const unit = units[0],
+      originalEn = unit.en;
+    unit.en = Rules.modelOf(unit).en / 2;
+    const samples = [];
+    try {
+      for (const zoom of [1, 2.999, 3, 5]) {
+        MapCamera.setZoom(zoom);
+        const names = [],
+          energy = [],
+          health = [];
+        ctx.fillText = function (text, ...args) {
+          if (units.some((u) => unitName(u) === text)) names.push(text);
+          return fillText.call(this, text, ...args);
+        };
+        ctx.fillRect = function (x, y, width, height) {
+          if (this.fillStyle === "#efd568") energy.push(width);
+          if (["#ed9685", "#83d6ee"].includes(this.fillStyle) && height === 4) health.push(width);
+          return fillRect.call(this, x, y, width, height);
+        };
+        drawMap(performance.now());
+        samples.push({
+          zoom: MapCamera.zoom,
+          names: names.length,
+          energy: energy.length,
+          health: health.length,
+          ratio: energy[0] / (mapGeo.tile * 0.72 * BattleScene.settings().mapBarScale),
+          units: units.length,
+        });
+      }
+    } finally {
+      ctx.fillText = fillText;
+      ctx.fillRect = fillRect;
+      unit.en = originalEn;
+    }
+    MapCamera.focus(unit.x, unit.y);
+    return samples;
+  });
+  for (const sample of samples) {
+    expect(sample.energy).toBe(sample.units);
+    expect(sample.health).toBe(sample.units);
+    expect(sample.ratio).toBeCloseTo(0.5, 6);
+    expect(sample.names).toBe(sample.zoom >= 3 ? sample.units : 0);
+  }
+  await expect(page.locator("#mapZoomLabel")).toHaveText("500%");
+  await page.locator("#map").screenshot({ path: ".openai/map-500-percent-bars.png" });
 });

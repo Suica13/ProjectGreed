@@ -87,7 +87,7 @@ test("sound clock schedules every MG Step once, uses original volume, and cancel
     r.starts.map((s) => Math.round((s.at - 10) * 10) / 10),
     [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1],
   );
-  assert.ok(r.gains.every((g) => g.gain.value === 0.15));
+  assert.ok(r.gains.every((g) => g.gain.value === 0.075));
   r.audio.sync(owner, 0, weapon("EF_90mmMG"), 0.01);
   assert.equal(r.starts.length, 9);
   r.audio.stop();
@@ -169,4 +169,13 @@ test("natural counter completion preserves the playing last shot, cancels future
   assert.equal(q.stops.includes(q.starts[1].node), true);
   q.audio.stop();
   assert.equal(q.stops.includes(q.starts[0].node), true);
+});
+
+test("battle effects are halved again while map and interface audio keep their current level", async () => {
+  const r = runtime();
+  await r.audio.unlock();
+  const sound = weapon("EF_90mmMG").sound;
+  r.audio.play(sound, undefined, 1, "battle");
+  r.audio.play(sound, undefined, 1, "map");
+  assert.equal(r.gains[0].gain.value, r.gains[1].gain.value * 0.5);
 });
