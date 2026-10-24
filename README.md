@@ -1,4 +1,4 @@
-# Battle Universe SLG
+# ProjectGreed V0.1
 
 单位、武器套件、编组与部署的最新配置见 [单位与编组配置](单位与编组配置.md)。可用单位、各类防护、原 MOD 素材与音乐播放列表均由项目内 JSON 配置。
 
@@ -25,7 +25,9 @@ npm start
 
 仓库保留已构建的 `public/*.html`，可直接用浏览器打开。联机时仍需运行服务端。仓库不提交 `node_modules`，首次运行需执行上面的依赖安装命令。
 
-给玩家分发可直接使用 `dist/0079-SLG-client.zip`，解压后双击 `client.html` 即可离线游玩。修改源码后运行 `npm run package:client` 重建 HTML 和客户端 ZIP；打包脚本需要开发电脑安装 Python 3，玩家无需安装。
+给玩家分发可直接使用 `dist/ProjectGreed-V0.1-client.zip`，解压后双击 `client.html` 即可离线游玩。修改源码后运行 `npm run package:client` 重建 HTML 和客户端 ZIP；打包脚本需要开发电脑安装 Python 3，玩家无需安装。
+
+`project.json` 统一保存项目名称与显示版本，构建时注入网页，服务端启动与 `/health` 也显示同一标识。反击命中率为正常最终命中率的 75%。每次队伍交接递增回合编号，播放「结束回合 → 回合编号 → 开始行动」横向 Cutin。没有合法移动或攻击时等待 1 秒自动结束回合；联机由服务端计时。地图支持滚轮及按钮缩放至 300%，放大后按住拖动平移，点击「复位」显示全图。
 
 ## 开发检查
 

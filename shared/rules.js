@@ -7,6 +7,7 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const turnTransitionMs = 3600;
   const W = catalog.map.width,
     H = catalog.map.height;
   function validateFormation(entries) {
@@ -226,16 +227,17 @@ const Tactics = (() => {
     );
   }
   // 返回预估命中率和命中后的伤害，不修改对局。
-  function estimate(g, a, b, w, response = "counter") {
+  function estimate(g, a, b, w, response = "counter", isCounter = false) {
     const bonuses = models[a.model].attackBonuses,
       categoryBonus = 1 + bonuses[w.type === "melee" ? "melee" : "shooting"] / 100;
     const defender = models[b.model],
       cover = terrain[g.tiles[b.y][b.x]].cover,
       mobilityPenalty = (defender.mobility - 100) * 0.25,
-      hit = Math.max(
-        10,
-        Math.min(100, w.hit - cover - mobilityPenalty - (response === "evade" ? 35 : 0)),
-      ),
+      hit =
+        Math.max(
+          10,
+          Math.min(100, w.hit - cover - mobilityPenalty - (response === "evade" ? 35 : 0)),
+        ) * (isCounter ? 0.75 : 1),
       multiplier = (w.type === "melee" ? 1 : 1 - cover / 100) * (response === "defend" ? 0.5 : 1),
       count = w.shotCount * w.hitsPerShot;
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.
@@ -294,7 +296,7 @@ const Tactics = (() => {
       dodgeSeed = (Math.imul(1664525, dodgeSeed) + 1013904223) >>> 0;
       return dodgeSeed < 0x80000000 ? -1 : 1;
     }
-    function fire(from, to, weapon, stance) {
+    function fire(from, to, weapon, stance, isCounter = false) {
       spend(from, weapon);
       const before = to.hp,
         shieldBefore = to.shield,
@@ -304,7 +306,7 @@ const Tactics = (() => {
       // One server roll per bullet / melee strike. Resources are spent once per attack.
       const single = { ...weapon, shotCount: 1, hitsPerShot: 1 };
       for (const step of weapon.attack.strikes) {
-        const e = estimate(g, from, to, single, stance),
+        const e = estimate(g, from, to, single, stance, isCounter),
           executed = to.hp > 0,
           hit = executed && random(g) < e.hit / 100,
           blocked = hit && to.shield > 0 && random(g) < e.blockChance,
@@ -361,7 +363,8 @@ const Tactics = (() => {
       });
     }
     fire(a, b, w, response);
-    if (response === "counter" && b.hp > 0 && canAttack(g, b, a, cw)) fire(b, a, cw, "counter");
+    if (response === "counter" && b.hp > 0 && canAttack(g, b, a, cw))
+      fire(b, a, cw, "counter", true);
     a.acted = true;
     a.origin = null;
     let alive = [0, 1].map((t) => g.units.some((u) => u.team === t && u.hp > 0));
@@ -376,7 +379,7 @@ const Tactics = (() => {
   function end(g) {
     if (g.winner !== null) throw Error("战斗已经结束");
     g.team = 1 - g.team;
-    if (!g.team) g.round++;
+    g.round++;
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0)) {
       u.acted = false;
       u.moved = false;
@@ -384,13 +387,23 @@ const Tactics = (() => {
       u.en = Math.min(models[u.model].en, u.en + 15);
     }
   }
+  // 没有技能系统时，合法行动由移动和攻击构成；待机不阻止自动结束。
+  function hasActions(g) {
+    if (g.winner !== null || (g.deployment && !g.deployment.every(Boolean))) return false;
+    const enemies = g.units.filter((u) => u.team !== g.team && u.hp > 0);
+    return g.units.some((u) => {
+      if (u.team !== g.team || u.hp <= 0 || u.acted) return false;
+      if (!u.moved && reachable(g, u).size > 1) return true;
+      return models[u.model].weapons.some((w) => enemies.some((e) => canAttack(g, u, e, w)));
+    });
+  }
   function bestResponse(g, a, b, w) {
     let attack = estimate(g, a, b, w),
       counter = models[b.model].weapons
         .filter((c) => canAttack(g, b, a, c))
         .sort((x, y) => {
-          let ex = estimate(g, b, a, x),
-            ey = estimate(g, b, a, y);
+          let ex = estimate(g, b, a, x, "counter", true),
+            ey = estimate(g, b, a, y, "counter", true);
           return ey.damage * ey.hit - ex.damage * ex.hit;
         })[0];
     if (b.hp <= attack.damage && b.hp > attack.damage / 2) return { response: "defend" };
@@ -451,6 +464,8 @@ const Tactics = (() => {
     fight,
     wait,
     end,
+    hasActions,
+    turnTransitionMs,
     bestResponse,
     aiChoice,
   };

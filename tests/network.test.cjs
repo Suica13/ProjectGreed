@@ -30,7 +30,7 @@ class Client {
   send(m) {
     this.ws.send(JSON.stringify(m));
   }
-  wait(pred, from = 0) {
+  wait(pred, from = 0, timeoutMs = 3000) {
     return new Promise((resolve, reject) => {
       const run = () => {
         const m = this.frames.slice(from).find(pred);
@@ -43,7 +43,7 @@ class Client {
       let timer = setTimeout(() => {
         this.listeners.delete(run);
         reject(Error("message timeout; last=" + JSON.stringify(this.frames.at(-1))));
-      }, 3000);
+      }, timeoutMs);
       this.listeners.add(run);
       run();
     });
@@ -461,6 +461,46 @@ test("authoritative rooms, combat, duplicate protection, phases, reconnect", asy
   await sameSession.hello("resume", "TEST1", token);
   assert.equal(sameSession.state.game.units[3].acted, true);
 });
+test("server automatically ends an exhausted turn after one second, cancels on undo, and pauses on disconnect", async (t) => {
+  const { client, app } = await setup(t),
+    blue = await client(),
+    red = await client();
+  await blue.hello("create", "AUTOTURN");
+  await red.hello("join", "AUTOTURN");
+  await readyMatch(blue, red);
+  await blue.act("wait", { unitId: "0-1" });
+  await blue.act("wait", { unitId: "0-2" });
+  await blue.act("move", { unitId: "0-0", x: 1, y: 4 });
+  await new Promise((r) => setTimeout(r, 400));
+  assert.equal(blue.state.game.team, 0);
+  await blue.act("undo", { unitId: "0-0" });
+  await new Promise((r) => setTimeout(r, 750));
+  assert.equal(blue.state.game.team, 0);
+  const started = Date.now();
+  await blue.act("move", { unitId: "0-0", x: 1, y: 4 });
+  const next = await blue.latest((s) => s.game.team === 1);
+  assert.ok(Date.now() - started >= 1000);
+  assert.equal(next.game.round, 2);
+  assert.equal(next.lastEvent.automatic, true);
+  assert.equal(next.lastEvent.fromTeam, 0);
+  await red.latest((s) => s.game.team === 1);
+  for (const unitId of ["1-0", "1-1", "1-2"]) await red.act("wait", { unitId });
+  const token = blue.joined.token;
+  blue.close();
+  await red.latest((s) => !s.connected[0]);
+  await new Promise((r) => setTimeout(r, 1100));
+  assert.equal(app.rooms.get("AUTOTURN").game.team, 1);
+  const resumed = await client();
+  await resumed.hello("resume", "AUTOTURN", token);
+  const final = await red.wait(
+    (s) => s.type === "state" && s.game.team === 0,
+    red.frames.length,
+    6000,
+  );
+  assert.equal(final.game.round, 3);
+  assert.equal(final.lastEvent.automatic, true);
+});
+
 test("two network clients can finish a complete match through the real protocol", async (t) => {
   let { client } = await setup(t),
     clients = [await client(), await client()];

@@ -673,7 +673,7 @@
       /(<script type="application\/json" id="ui-layout-data">)[\s\S]*?(<\/script>)/,
       (_, start, end) => start + data + end,
     );
-    download("0079_SLG_Release.html", result, "text/html");
+    download(`${PROJECT.name}_${PROJECT.version}_Release.html`, result, "text/html");
   };
   byId("ui-resize").addEventListener("pointerdown", pointerDown);
   document.addEventListener("pointermove", pointerMove);

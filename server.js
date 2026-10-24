@@ -8,6 +8,7 @@ const http = require("node:http"),
   os = require("node:os"),
   crypto = require("node:crypto");
 const { WebSocketServer, WebSocket } = require("ws"),
+  project = require("./project.json"),
   G = require("./shared/rules.js");
 function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {}) {
   const rooms = new Map(),
@@ -28,7 +29,15 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
     }
     if (pathname === "/health") {
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ ok: true, protocol: 1, rooms: rooms.size }));
+      res.end(
+        JSON.stringify({
+          ok: true,
+          project: project.name,
+          version: project.version,
+          protocol: 1,
+          rooms: rooms.size,
+        }),
+      );
       return;
     }
     const file =
@@ -158,6 +167,50 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
     room.updated = Date.now();
     for (const member of members(room)) send(member.ws, state(room, ack, member));
     broadcastRooms();
+    scheduleAutoEnd(room);
+  }
+  const autoEndTimers = new Map();
+  function canAutoEnd(room) {
+    return (
+      rooms.get(room.code) === room &&
+      room.started &&
+      room.phase === "idle" &&
+      room.game.winner === null &&
+      connected(room).every(Boolean) &&
+      !G.hasActions(room.game)
+    );
+  }
+  function advanceTurn(room, automatic = false) {
+    const fromTeam = room.game.team;
+    G.end(room.game);
+    room.turnNotBefore = Date.now() + G.turnTransitionMs;
+    log(room, `第${room.game.round}回合 · 队伍${room.game.team + 1}开始行动，恢复15 EN。`);
+    return { type: "turn", fromTeam, toTeam: room.game.team, round: room.game.round, automatic };
+  }
+  // 联机自动回合由服务端计时；断线、战斗或出现合法行动立即取消。
+  function scheduleAutoEnd(room) {
+    const old = autoEndTimers.get(room);
+    if (!canAutoEnd(room)) {
+      clearTimeout(old?.timer);
+      autoEndTimers.delete(room);
+      return;
+    }
+    if (old?.game === room.game && old.round === room.game.round) return;
+    clearTimeout(old?.timer);
+    const entry = { game: room.game, round: room.game.round };
+    entry.timer = setTimeout(
+      () => {
+        autoEndTimers.delete(room);
+        if (!canAutoEnd(room) || room.game !== entry.game || room.game.round !== entry.round)
+          return;
+        room.lastEvent = { id: crypto.randomUUID(), ...advanceTurn(room, true) };
+        room.revision++;
+        broadcast(room);
+      },
+      Math.max(0, (room.turnNotBefore || 0) - Date.now()) + 1000,
+    );
+    entry.timer.unref();
+    autoEndTimers.set(room, entry);
   }
   function log(room, text) {
     room.log.unshift(text);
@@ -313,12 +366,7 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
       }
       case "end_turn": {
         validateActive(room, seat);
-        G.end(room.game);
-        event = { type: "turn" };
-        log(
-          room,
-          `第${room.game.round}回合 · ${room.game.team ? "红方" : "蓝方"}行动开始，恢复15 EN。`,
-        );
+        event = advanceTurn(room);
         break;
       }
       case "attack": {
@@ -534,6 +582,8 @@ function createServer({ port = 1313, host = "0.0.0.0", heartbeatMs = 20000 } = {
   }
   async function close() {
     clearInterval(heartbeat);
+    for (const entry of autoEndTimers.values()) clearTimeout(entry.timer);
+    autoEndTimers.clear();
     for (const ws of wss.clients) ws.terminate();
     await new Promise((resolve) => wss.close(resolve));
     await new Promise((resolve) => server.close(resolve));
@@ -579,7 +629,7 @@ if (require.main === module) {
   app
     .listen()
     .then(() => {
-      console.log("\n0079 SLG 联机服务端已启动\n");
+      console.log(`\n${project.name} ${project.version} 联机服务端已启动\n`);
       console.log("发布版网页: http://127.0.0.1:" + port);
       console.log("开发者版: http://127.0.0.1:" + port + "/developer.html");
       let networkInterfaces = {};

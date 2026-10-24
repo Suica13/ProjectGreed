@@ -29,6 +29,7 @@ let pageView = "menu";
 let animationFrameId = null;
 // 页面生命周期：Menu 和房间准备只显示界面，不启动战斗 Canvas 绘制。
 function setPageView(view) {
+  if (view !== "game") TurnFlow.reset();
   if (view !== "game" && pageView === "game" && battleView) BattleWindow.suspend(battleView);
   if (view !== "game") WeaponAudio.stop();
   pageView = view;
@@ -56,7 +57,7 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
   unitName = (u) => UnitModels[u.model].name,
   formatNumber = (n) => Number(n).toLocaleString("en-US"),
   isAI = () => !Net.active && game.ai && game.team === 1,
-  isBusy = () => phase !== "idle" || !!Net.awaiting || MapEffects.pending();
+  isBusy = () => phase !== "idle" || !!Net.awaiting || MapEffects.pending() || TurnFlow.active;
 function note(text) {
   byId("toast").textContent = text;
   byId("toast").classList.add("show");
@@ -176,8 +177,10 @@ function update() {
   }
   if (phase === "deployment") hint = "在高亮出生区内调整位置，两队确认后开始回合。";
   if (MapEffects.pending()) hint = "单位击破演出中…";
+  if (TurnFlow.active) hint = "回合交接中…";
   byId("hint").textContent = hint;
   renderPanel();
+  TurnFlow.refreshAutoEnd();
 }
 // 右侧单位详情：属性、动作、武器和目标。选中单位后重新生成。
 function renderPanel() {
@@ -383,10 +386,7 @@ function drawMap(now) {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   const w = box.width,
     h = box.height,
-    pad = 18,
-    tile = Math.min((w - pad * 2) / Rules.W, (h - pad * 2) / Rules.H),
-    ox = (w - tile * Rules.W) / 2,
-    oy = (h - tile * Rules.H) / 2;
+    { tile, ox, oy } = MapCamera.geometry(w, h);
   mapGeo = { tile, ox, oy };
   ctx.fillStyle = "#111e27";
   ctx.fillRect(0, 0, w, h);
@@ -588,6 +588,7 @@ byId("map").onpointermove = (e) => {
 };
 byId("map").onpointerleave = () => (hover = null);
 byId("map").onclick = async (e) => {
+  if (TurnFlow.active) return;
   if (phase === "deployment") {
     const cell = cellAt(e);
     if (cell) Deployment.click(cell);
@@ -711,7 +712,7 @@ function renderReaction() {
   }
   let counter =
     response === "counter" && counterId
-      ? Rules.estimate(game, b, a, getWeapon(b, counterId))
+      ? Rules.estimate(game, b, a, getWeapon(b, counterId), "counter", true)
       : null;
   byId("estimate").innerHTML =
     `<span>来袭：命中 <strong>${initial.hit}%</strong><br>命中后约 <strong class="red">${formatNumber(initial.damage)}</strong> 伤害</span><span>${counter ? `反击：命中 <strong>${counter.hit}%</strong><br>命中后约 <strong class="blue">${formatNumber(counter.damage)}</strong> 伤害` : "本次不进行反击"}</span>`;
@@ -960,14 +961,14 @@ function endTurn() {
     Net.request("end_turn");
     return;
   }
-  if (phase !== "idle") return;
+  if (isBusy()) return;
+  const fromTeam = game.team;
   Rules.end(game);
   selected = null;
   weaponId = null;
   mode = "select";
   addLog(`第${game.round}回合 · ${teamName(game.team)}行动开始，存活单位恢复15 EN。`);
-  update();
-  autoAI();
+  TurnFlow.play(fromTeam, game.round, game.team);
 }
 byId("endTurn").onclick = () => {
   if (isBusy() || isAI() || (Net.active && !Net.canAct())) return;
@@ -985,13 +986,17 @@ byId("endTurn").onclick = () => {
 function autoAI() {
   if (Net.active) return;
   clearTimeout(aiTimer);
-  if (!isAI() || phase !== "idle" || game.winner !== null) return;
+  if (!isAI() || isBusy() || game.winner !== null) return;
+  if (!Rules.hasActions(game)) {
+    TurnFlow.refreshAutoEnd();
+    return;
+  }
   let stamp = session;
   aiTimer = setTimeout(async () => {
-    if (stamp !== session || !isAI() || phase !== "idle") return;
+    if (stamp !== session || !isAI() || isBusy()) return;
     let u = game.units.find((x) => x.team === 1 && x.hp > 0 && !x.acted);
     if (!u) {
-      endTurn();
+      TurnFlow.refreshAutoEnd();
       return;
     }
     selected = u.id;
@@ -1034,6 +1039,8 @@ function showVictory() {
 function start(ai) {
   if (!assetsReady) return;
   Net.leave();
+  TurnFlow.reset();
+  MapCamera.reset();
   session++;
   clearTimeout(aiTimer);
   const seed = Math.floor(Math.random() * 4294967296);

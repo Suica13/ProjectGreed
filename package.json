@@ -1,8 +1,8 @@
 {
-  "name": "battle-universe-slg-lan",
+  "name": "projectgreed",
   "version": "0.1.0",
   "private": true,
-  "description": "0079 turn-based SLG LAN/IP prototype",
+  "description": "ProjectGreed V0.1 turn-based tactical game",
   "engines": {
     "node": ">=22"
   },

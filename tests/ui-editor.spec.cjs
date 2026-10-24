@@ -987,12 +987,12 @@ test("network snapshots keep updating the real match while the preview stays iso
   await page.evaluate(() => Net.request("end_turn"));
   await expect.poll(() => guest.evaluate(() => game.team)).toBe(1);
   await guest.evaluate(() => Net.request("end_turn"));
-  await expect.poll(() => page.evaluate(() => game.round)).toBe(2);
+  await expect.poll(() => page.evaluate(() => game.round)).toBe(3);
   expect(await page.evaluate(() => Net.revision)).toBeGreaterThan(revision);
   expect(await preview(page, () => GamePreview.scene)).toBe("battle");
   expect(await preview(page, () => game.round)).toBe(1);
   await page.locator("#uie-close").click();
-  await expect(page.locator("#turnBadge")).toContainText("第2回合");
+  await expect(page.locator("#turnBadge")).toContainText("第3回合");
   expect(errors).toEqual([]);
 });
 
@@ -1040,11 +1040,11 @@ test("local HTML plays a complete AI turn with networking disabled and no server
   await page.locator("#endTurn").click();
   for (let step = 0; step < 8; step++) {
     await expect
-      .poll(() => page.evaluate(() => ["reaction", "battle"].includes(phase) || game.round >= 2), {
+      .poll(() => page.evaluate(() => ["reaction", "battle"].includes(phase) || game.round >= 3), {
         timeout: 15000,
       })
       .toBe(true);
-    if (await page.evaluate(() => game.round >= 2)) break;
+    if (await page.evaluate(() => game.round >= 3)) break;
     if (await page.evaluate(() => phase === "reaction")) {
       await page.locator("#responseDefend").click();
       await page.locator("#confirmResponse").click();
@@ -1052,7 +1052,7 @@ test("local HTML plays a complete AI turn with networking disabled and no server
     await page.locator("#skipBattle").click();
     await returnFromBattle(page);
   }
-  expect(await page.evaluate(() => game.round)).toBe(2);
+  expect(await page.evaluate(() => game.round)).toBe(3);
   expect(await page.evaluate(() => window.networkAttempts)).toBe(0);
   await leaveGame(page);
   await expect(page.locator("#startAI")).toBeVisible();

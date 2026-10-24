@@ -1,1 +1,16 @@
-{"version":"0.2.0","configurations":[{"name":"启动 SLG 联机服务端","type":"node","request":"launch","program":"${workspaceFolder}/server.js","cwd":"${workspaceFolder}","console":"integratedTerminal","skipFiles":["<node_internals>/**"]}]}
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ProjectGreed V0.1 Server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/server.js",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    }
+  ]
+}

@@ -1,11 +1,13 @@
 """Create the standalone client ZIP after npm run build. Uses only Python's standard library."""
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
+import json
 
 root = Path(__file__).resolve().parents[1]
 client = root / 'public/client.html'
 notes = root / 'dist/客户端使用说明.txt'
-archive = root / 'dist/0079-SLG-client.zip'
+project = json.loads((root / 'project.json').read_text(encoding='utf-8'))
+archive = root / f'dist/{project["name"]}-{project["version"]}-client.zip'
 with ZipFile(archive, 'w', compression=ZIP_DEFLATED, compresslevel=9) as bundle:
     bundle.write(client, 'client.html')
     bundle.write(notes, notes.name)

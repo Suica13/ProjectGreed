@@ -30,7 +30,10 @@ test("JSON port config, overrides and invalid values", async (t) => {
   await app.listen();
   try {
     const response = await fetch("http://127.0.0.1:" + address.port + "/health");
-    assert.equal((await response.json()).ok, true);
+    const health = await response.json();
+    assert.equal(health.ok, true);
+    assert.equal(health.project, "ProjectGreed");
+    assert.equal(health.version, "V0.1");
   } finally {
     await app.close();
   }

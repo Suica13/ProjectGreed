@@ -7,6 +7,11 @@ const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 // HTML 解析器会把字符串里的 </script> 也当作脚本结束符。
 const inlineScript = (source) => source.replace(/<\/script/gi, "<\\/script");
 let html = read("client/template.html");
+const project = JSON.parse(read("project.json"));
+html = html
+  .replaceAll("__PROJECT_NAME__", project.name)
+  .replaceAll("__PROJECT_VERSION__", project.version)
+  .replace("__PROJECT_META__", json(project));
 for (const [key, file] of [
   ["DATA", null],
   ["FORMATION", "client/formation.js"],
@@ -20,6 +25,8 @@ for (const [key, file] of [
   ["WEAPON_AUDIO", "client/weapon-audio.js"],
   ["MUSIC", "client/music.js"],
   ["APP", "client/app.js"],
+  ["TURN_FLOW", "client/turn-flow.js"],
+  ["MAP_CAMERA", "client/map-camera.js"],
   ["NETWORK", "client/network.js"],
   ["LOBBY", "client/lobby.js"],
   ["ROOM", "client/room.js"],
@@ -39,7 +46,10 @@ html = html.replace(
 );
 const release = html;
 const developer = release
-  .replace("<title>0079 SLG · IP联机版</title>", "<title>0079 SLG · 开发者版</title>")
+  .replace(
+    `<title>${project.name} ${project.version}</title>`,
+    `<title>${project.name} ${project.version} · 开发者版</title>`,
+  )
   .replace(
     "</body>",
     () =>

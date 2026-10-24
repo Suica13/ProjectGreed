@@ -17,6 +17,7 @@
     ["phaseTitle", "行动阶段标题", "#phaseTitle"],
     ["endTurn", "结束回合按钮", "#endTurn"],
     ["map", "战术地图", "#mapWrap"],
+    ["mapCameraControls", "地图缩放控件", ".map-camera-controls"],
     ["legend", "地图图例", ".legend"],
     ["combatLog", "战斗记录面板", ".log"],
     ["logLines", "战报内容", "#log"],

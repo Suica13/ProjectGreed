@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>0079 SLG · IP联机版</title>
+    <title>__PROJECT_NAME__ __PROJECT_VERSION__</title>
     <style>
       :root {
         color-scheme: dark;
@@ -989,10 +989,10 @@
     <div data-ui-node="node-173" id="gameScene" hidden>
       <header data-ui-node="node-1">
         <div data-ui-node="node-2" class="brand">
-          <span data-ui-node="node-3" class="logo">V</span>
+          <span data-ui-node="node-3" class="logo">P</span>
           <div data-ui-node="node-4">
-            <div data-ui-node="node-5" class="eyebrow">BATTLE UNIVERSE / IP MULTIPLAYER</div>
-            <h1 data-ui-node="node-6">V计划 · 0079 回合战术</h1>
+            <div data-ui-node="node-5" class="eyebrow">__PROJECT_VERSION__ / IP MULTIPLAYER</div>
+            <h1 data-ui-node="node-6">__PROJECT_NAME__</h1>
           </div>
         </div>
         <div data-ui-node="node-7" class="header-buttons">
@@ -1040,6 +1040,12 @@
             <button data-ui-node="node-34" id="endTurn" class="primary">结束蓝方回合</button>
           </div>
           <div data-ui-node="node-35" class="map-wrap" id="mapWrap">
+            <div class="map-camera-controls" aria-label="地图缩放">
+              <button id="mapZoomOut" aria-label="缩小地图">−</button>
+              <span id="mapZoomLabel">100%</span>
+              <button id="mapZoomIn" aria-label="放大地图">＋</button>
+              <button id="mapZoomReset">复位</button>
+            </div>
             <canvas data-ui-node="node-36" id="map" aria-label="24乘18格战术地图"></canvas
             ><span data-ui-node="node-37" class="map-label">SECTOR 07 / GROUND COMBAT</span
             ><span data-ui-node="node-38" class="hover-info" id="hoverInfo"
@@ -1204,9 +1210,9 @@
       aria-labelledby="startTitle"
     >
       <div data-ui-node="node-120" class="modal">
-        <div data-ui-node="node-121" class="eyebrow">V PROJECT / SQUAD SKIRMISH</div>
+        <div data-ui-node="node-121" class="eyebrow">__PROJECT_VERSION__ / SQUAD SKIRMISH</div>
         <h2 data-ui-node="node-122" id="startTitle" style="font-size: 29px; margin: 10px 0">
-          0079 · 回合战术
+          __PROJECT_NAME__
         </h2>
         <p data-ui-node="node-123" class="muted">
           配置单位武器套件，编组出击，在己方出生区部署后开始战斗。
@@ -1598,10 +1604,66 @@
         display: none;
       }
     </style>
+    <div id="turnCutin" hidden role="status" aria-live="polite" aria-label="回合交接">
+      <div id="turnCutinCard"></div>
+    </div>
+    <style>
+      #turnCutin {
+        position: fixed;
+        inset: 0;
+        z-index: 150;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: #07121b66;
+        pointer-events: auto;
+      }
+      #turnCutin[hidden] {
+        display: none;
+      }
+      #turnCutinCard {
+        width: min(760px, 92vw);
+        padding: 26px 16px;
+        text-align: center;
+        font-size: clamp(26px, 5vw, 54px);
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: var(--blue);
+        border-block: 2px solid currentColor;
+        background: linear-gradient(90deg, #0c263700, #102f42f5 20%, #102f42f5 80%, #0c263700);
+        text-shadow: 0 2px 12px #000;
+      }
+      #turnCutinCard[data-team="1"] {
+        color: var(--red);
+      }
+      .map-camera-controls {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px;
+        border-radius: 5px;
+        background: #0b1c28e8;
+      }
+      .map-camera-controls button {
+        padding: 4px 8px;
+      }
+      #mapZoomLabel {
+        min-width: 42px;
+        text-align: center;
+      }
+      #map {
+        touch-action: none;
+      }
+    </style>
     <script id="art" type="application/json">
       __DATA__
     </script>
     <script>
+      const PROJECT = __PROJECT_META__;
       const ART = JSON.parse(document.getElementById("art").textContent);
       __WEAPON_SEQUENCE__;
       __CORE__;
@@ -1613,6 +1675,8 @@
       __BATTLE_SCENE__;
       __BATTLE_WINDOW__;
       __APP__;
+      __TURN_FLOW__;
+      __MAP_CAMERA__;
       __NETWORK__;
       __LOBBY__;
       __ROOM__;

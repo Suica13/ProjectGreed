@@ -110,6 +110,8 @@ const Net = (() => {
     }, 8000);
   }
   function leave({ notify = true, forget = true } = {}) {
+    TurnFlow.reset();
+    MapCamera.reset();
     MapEffects.reset();
     n.manual = true;
     clearTimeout(n.reconnectTimer);
@@ -311,6 +313,7 @@ const Net = (() => {
     const online = s.connected.every(Boolean);
     byId("reaction").hidden = true;
     if (!online) {
+      TurnFlow.reset();
       if (battleView) BattleWindow.suspend(battleView);
       phase = "disconnected";
       status("房间 " + n.room + " · 等待队伍补位或离线玩家恢复，战局已暂停");
@@ -402,6 +405,8 @@ const Net = (() => {
         selected = null;
         weaponId = null;
         mode = "select";
+        if (n.applied && online)
+          TurnFlow.play(event.fromTeam ?? previousGame.team, game.round, game.team);
       }
     }
     if (selected && !game.units.some((u) => u.id === selected && u.hp > 0)) selected = null;
