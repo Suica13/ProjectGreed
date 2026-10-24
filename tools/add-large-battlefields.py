@@ -1,4 +1,4 @@
-"""Add four large battlefields without replacing existing hand-edited maps."""
+"""Add large ground battlefields and an orbital map without replacing existing hand-edited maps."""
 import json
 import math
 from collections import deque
@@ -19,7 +19,7 @@ def create_map(identifier, players, width, height, names, descriptions, biome="f
                 x, y = (4 if team == 0 else width - 5), 5 + position * 11 + team * 2
                 if players == 3: y = 5 + position * 12 + team
             spawns.append(dict(team=team, position=position + 1, x=x, y=y))
-    return dict(id=identifier, name=names[0]+f" · {players}v{players}", description=descriptions[0],
+    return dict(id=identifier, environment="ground", name=names[0]+f" · {players}v{players}", description=descriptions[0],
         localization={lang:dict(name=name+f" · {players}v{players}",description=description)
             for lang,name,description in zip(["zh","en","ja"],names,descriptions)},
         width=width,height=height,playersPerTeam=players,deploymentRadius=4,spawns=spawns,
@@ -49,6 +49,53 @@ def finish(m):
                 seen.add((xx,yy));queue.append((xx,yy))
     assert len(seen)==sum(t not in ("water","rock") for row in m["tiles"] for t in row),m["id"]
     (ASSETS/"maps"/(m["id"]+".json")).write_text(json.dumps(m,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+
+
+def space_expansion():
+    maps=[]
+    m=create_map("asteroid_crossing_1v1",1,26,22,
+        ["小行星航路","Asteroid Crossing","小惑星航路"],
+        ["紧凑宇宙战场：弯曲的小行星群切分中央航道，北侧残骸密集，南侧留有较宽的绕行空间。",
+         "A compact space battlefield with a curved asteroid chain, northern debris cover and a broad southern flank route.",
+         "湾曲する小惑星群が中央航路を分ける宇宙戦場。北の残骸地帯と南の広い迂回路を使い分ける。"],biome="space")
+    m["spawns"][0]["y"]=9;m["spawns"][1]["y"]=12
+    for x,y,w,h in [(9,3,2,2),(13,6,2,3),(16,12,2,2),(11,17,2,1),(19,3,1,2)]:rect(m,x,y,w,h,"rock")
+    for x,y,w,h in [(7,2,2,1),(16,4,3,2),(9,8,2,2),(13,12,2,1),(7,17,2,2),(19,18,2,1)]:rect(m,x,y,w,h,"rubble")
+    maps.append(m)
+
+    m=create_map("colony_wreck_3v3",3,40,38,
+        ["破碎殖民卫星","Shattered Colony","砕けたコロニー"],
+        ["三线宇宙战场：断裂的殖民卫星外壳与残骸形成交错掩体；中央缺口适合交火，南北外缘可跨线支援。",
+         "Three staggered fronts through broken colony hulls and wreckage, with a central breach and northern and southern reinforcement routes.",
+         "破断したコロニー外壁と残骸が三つの戦線を形成。中央の裂け目と南北の外周路から他戦線を支援できる。"],biome="space")
+    for x,y,w,h in [(12,4,2,3),(17,8,3,1),(25,5,2,2),(28,13,2,3),(21,18,2,2),(12,22,2,3),(19,28,3,1),(28,29,2,3),(23,34,2,1)]:rect(m,x,y,w,h,"rock")
+    for x,y,w,h in [(10,8,3,2),(19,4,3,2),(24,11,2,2),(14,15,3,2),(25,21,3,2),(17,24,2,2),(11,30,3,2),(24,31,2,2),(32,24,2,2)]:rect(m,x,y,w,h,"rubble")
+    maps.append(m)
+
+    m=create_map("outer_orbit_5v5",5,52,56,
+        ["外围宙域","Outer Orbit","外縁宙域"],
+        ["大型宇宙会战：北部密集舰船残骸、中部开阔航道与南部零散小行星带各具特点；多条横向通道便于五路协同。",
+         "A large space battle with dense northern shipwrecks, open central lanes and scattered southern asteroids, linked by lateral reinforcement corridors.",
+         "北の艦船残骸、中央の開けた航路、南の小惑星帯が特徴の大規模宇宙戦場。横断航路で五つの戦線を連携できる。"],biome="space")
+    for x,y,w,h in [(12,4,3,2),(22,8,4,2),(34,3,3,3),(16,14,2,3),(32,17,3,2),(25,27,2,2),(11,36,2,3),(22,42,2,2),(35,37,3,2),(31,49,2,2),(15,51,2,1)]:rect(m,x,y,w,h,"rock")
+    for x,y,w,h in [(10,8,4,2),(18,4,2,2),(28,5,3,2),(36,11,3,2),(22,14,4,2),(12,22,2,2),(34,26,2,2),(20,34,3,1),(28,39,3,2),(16,44,2,2),(38,46,2,2),(24,51,3,1)]:rect(m,x,y,w,h,"rubble")
+    maps.append(m)
+    for m in maps:
+        m["environment"]="space"
+        m["appearance"]["colors"].update(plain="#10152b",rubble="#60647f",rock="#47445e",water="#182147",highland="#77708e")
+    return maps
+
+
+def register_maps(maps):
+    for m in maps:finish(m)
+    catalog_path=ASSETS/"unit-catalog.json"
+    catalog=json.loads(catalog_path.read_text(encoding="utf-8"))
+    for m in maps:
+        reference="maps/"+m["id"]+".json"
+        if reference not in catalog["maps"]:catalog["maps"].append(reference)
+    catalog["maps"].sort(key=lambda ref:json.loads((ASSETS/ref).read_text(encoding="utf-8"))["playersPerTeam"])
+    catalog_path.write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    print("Added:",", ".join(m["id"] for m in maps))
 
 
 def main():
@@ -100,18 +147,30 @@ def main():
     patch(m,13,45,4,3,"forest");patch(m,34,49,3,4,"forest")
     rect(m,23,17,1,1,"rock");rect(m,30,39,1,1,"rock")
     maps.append(m)
-    for m in maps:finish(m)
-    catalog_path=ASSETS/"unit-catalog.json"
-    catalog=json.loads(catalog_path.read_text(encoding="utf-8"))
-    for m in maps:
-        reference="maps/"+m["id"]+".json"
-        if reference not in catalog["maps"]:catalog["maps"].append(reference)
-    catalog["maps"].sort(key=lambda ref:json.loads((ASSETS/ref).read_text(encoding="utf-8"))["playersPerTeam"])
-    catalog_path.write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    m=create_map("orbital_debris_2v2",2,32,28,
+        ["轨道残骸带","Orbital Debris Field","軌道デブリ帯"],
+        ["宇宙战场：小行星与殖民卫星残骸零散分布，中央航道开阔，两翼残骸提供掩护。",
+         "A space battlefield with scattered asteroids and colony wreckage, an open central lane and debris cover on both flanks.",
+         "小惑星とコロニー残骸が点在する宇宙戦場。中央の開けた航路と両翼の残骸を使い分ける。"],biome="space")
+    m["environment"]="space"
+    m["appearance"]["colors"].update(plain="#10152b",rubble="#60647f",rock="#47445e",water="#182147",highland="#77708e")
+    for x,y,w,h in [(8,2,2,2),(20,4,3,2),(11,10,2,2),(24,14,2,2),(8,23,3,2),(18,20,2,2)]:rect(m,x,y,w,h,"rock")
+    for x,y,w,h in [(13,4,3,2),(6,12,2,2),(20,11,2,1),(13,18,3,2),(23,24,3,1)]:rect(m,x,y,w,h,"rubble")
+    maps.append(m)
+    maps.extend(space_expansion())
+    register_maps(maps)
+    catalog=json.loads((ASSETS/"unit-catalog.json").read_text(encoding="utf-8"))
     for ref in catalog["maps"]:
         p=ASSETS/ref;d=json.loads(p.read_text(encoding="utf-8"))
+        d.setdefault("environment", "ground")
         d["appearance"]["colors"].setdefault("highland","#9c986b")
         p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print("Added:",", ".join(m["id"] for m in maps))
 
-if __name__=="__main__":main()
+if __name__=="__main__":
+    import argparse
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--space-only",action="store_true",help="Generate only the three additional space maps.")
+    options=parser.parse_args()
+    if options.space_only:register_maps(space_expansion())
+    else:main()

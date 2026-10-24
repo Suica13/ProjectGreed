@@ -26,10 +26,12 @@ test("terrain penalizes hit chance by attack category and no longer reduces raw 
   const { g, a, b, w } = pair();
   b.hp = 100000;
   const melee = G.modelOf(a).weapons.find((w) => w.type === "melee");
-  for (const [weapon, forest, rubble] of [
+  for (let [weapon, forest, rubble] of [
     [w, 10, 25],
     [melee, 10, 0],
   ]) {
+    // Stay below the hit cap so this fixture measures the full terrain penalty.
+    weapon = { ...weapon, hit: 60 };
     const plain = G.estimate(g, a, b, weapon);
     g.tiles[b.y][b.x] = "forest";
     const woods = G.estimate(g, a, b, weapon);
@@ -73,6 +75,7 @@ test("all native structural strengths, special weapon dependencies and per-strik
     MS_06J: 115,
     MS_06K: 110,
     MS_09: 110,
+    MS_09R: 120,
     MS_14A: 125,
     RGC_80: 115,
     RGM_79: 120,

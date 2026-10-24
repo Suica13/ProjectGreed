@@ -125,6 +125,7 @@ test("native introductions keep only the first content line and missing Japanese
     MS_14A: "吉翁军一年战争末期所开发的MS,性能匹敌高达",
     RX_79_G: "由V作战不合格零件设计组装而来的泛用型MS",
     MS_06F2: "扎古II的后期改修型,加强了装甲与推进器",
+    MS_09R: "大魔的宇宙战式样,性能差强人意",
   };
   for (const prefab of catalog.prefabs) {
     assert.equal(prefab.description, expected[prefab.id]);

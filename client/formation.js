@@ -97,7 +97,7 @@ const Formation = (() => {
       kits.add(new Option(`${kit.name} · COST ${prefab.stats.cost + kit.cost}`, kit.id));
     kits.value = entry.kitId;
     byId("formationDetailStats").textContent =
-      `HP ${model.hp.toLocaleString()} · EN ${model.en} · 移动 ${model.move} · 机动 ${model.mobility} · 零件强度 ${model.partStructuralStrength}`;
+      `HP ${model.hp.toLocaleString()} · EN ${model.en} · 移动 ${model.move} · 反应系数 ${model.mobility} · 命中系数 ${model.accuracy}% · 零件强度 ${model.partStructuralStrength} · 地面适应性 ${model.adaptability.ground}% · 宇宙适应性 ${model.adaptability.space}%`;
     const labels = {
       melee: "格斗",
       shooting: "射击",
@@ -155,6 +155,13 @@ const Formation = (() => {
     byId("formationUnitDetail").hidden = false;
     byId("formationMain").inert = true;
   }
+  function environmentLabel(adaptability) {
+    return ["ground", "space"]
+      .filter((environment) => (adaptability?.[environment] ?? 100) >= 100)
+      .map((environment) => I18n.text(environment === "ground" ? "地面" : "宇宙"))
+      .join("/");
+  }
+
   function unitTags(model) {
     const tags = element("span", "unit-tags");
     for (const value of model.tags) {
@@ -238,7 +245,11 @@ const Formation = (() => {
       label.append(
         unitTags(model),
         element("strong", "", `${i + 1}. ${model.code} ${entry.customName || model.name}`),
-        element("small", "formation-row-kit", `${kit.name} · COST ${model.cost}`),
+        element(
+          "small",
+          "formation-row-kit",
+          `${kit.name} · COST ${model.cost} · ${environmentLabel(model.adaptability)}`,
+        ),
         description,
       );
       if (entry.customName) label.querySelector("strong").setAttribute("data-i18n-ignore", "");
@@ -393,7 +404,16 @@ const Formation = (() => {
       info.append(
         unitTags(prefab),
         title,
-        element("small", "muted", "Cost:" + Math.min(...costs) + "-" + Math.max(...costs)),
+        element(
+          "small",
+          "muted",
+          "Cost:" +
+            Math.min(...costs) +
+            "-" +
+            Math.max(...costs) +
+            " · " +
+            environmentLabel(prefab.stats.adaptability),
+        ),
       );
       card.append(image, info);
       card.onclick = () => {

@@ -71,7 +71,7 @@ test("server-side shield blocks consume durability, spill to HP and disappear at
   const event = G.fight(g, a, b, w, "defend")[0];
   assert.equal(event.blocked, true);
   assert.equal(event.shieldDamage, 100);
-  assert.equal(event.damage, 3590);
+  assert.equal(event.damage, 4052);
   assert.equal(event.strikes[0].damage, 356);
   assert.equal(event.strikes[0].shieldAfter, 0);
   assert.equal(b.shield, 0);
@@ -79,7 +79,8 @@ test("server-side shield blocks consume durability, spill to HP and disappear at
   const miss = duel("RGM_79", 1900),
     before = miss.b.hp,
     shield = miss.b.shield;
-  const missedStrike = G.fight(miss.g, miss.a, miss.b, miss.w, "defend")[0].strikes[0];
+  const missedStrike = G.fight(miss.g, miss.a, miss.b, { ...miss.w, hit: 60 }, "defend")[0]
+    .strikes[0];
   assert.equal(missedStrike.hit, false);
   assert.equal(missedStrike.before, before);
   assert.equal(missedStrike.after, before);
@@ -89,7 +90,7 @@ test("server-side shield blocks consume durability, spill to HP and disappear at
 test("a burst rolls each projectile independently and spends ammo once; melee rolls both stages", () => {
   const { g, a, b, w } = duel("RGM_79", 13);
   b.shield = 0;
-  const result = G.fight(g, a, b, w, "defend")[0];
+  const result = G.fight(g, a, b, { ...w, hit: 80 }, "defend")[0];
   assert.deepEqual(
     result.strikes.map((s) => s.hit),
     [true, true, true, true, true, true, false, true, true],
@@ -102,7 +103,7 @@ test("a burst rolls each projectile independently and spends ammo once; melee ro
   const other = duel("RGM_79", 30);
   other.b.x = 3;
   other.b.shield = 0;
-  const saber = G.models.RGM_79__machine_gun.weapons[1];
+  const saber = { ...G.models.RGM_79__machine_gun.weapons[1], hit: 60 };
   const sword = G.fight(
     other.g,
     other.a,

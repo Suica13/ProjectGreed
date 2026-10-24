@@ -8,10 +8,15 @@
     "hp": 16500,
     "en": 100,
     "move": 5,
-    "mobility": 100,
+    "mobility": 115.0,
     "cost": 350,
     "counterLimit": 1,
-    "partStructuralStrength": 120.0
+    "partStructuralStrength": 120.0,
+    "adaptability": {
+      "ground": 100,
+      "space": 100
+    },
+    "accuracy": 115.0
   },
   "materials": {
     "icon": "RGM_79.png",
@@ -507,7 +512,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S"
+      ]
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -587,7 +595,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ]
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",
@@ -661,7 +672,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.25
+      "partBreakModifier": 1.25,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",
@@ -803,7 +817,10 @@
       "requiredParts": [
         "head"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1_S"
+      ]
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -992,8 +1009,9 @@
     "walkSpeed": 0.65,
     "boostSpeed": 1.4,
     "turnSpeed": 1.75,
-    "reaction": 115,
-    "partStructuralStrength": 120.0
+    "reaction": 115.0,
+    "partStructuralStrength": 120.0,
+    "accuracy": 115.0
   },
   "description": "联邦军主力泛用型MS",
   "localization": {

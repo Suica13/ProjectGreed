@@ -7,11 +7,25 @@ const MapCamera = (() => {
     centerY = Rules.mapHeight(game) / 2,
     drag = null,
     suppressClick = false;
+  // Fit-to-map is 100%; larger maps need more magnification to reach the same readable cell size.
+  const readableCellPixels = 160;
+  function baseTile(width, height) {
+    return (
+      Math.min(
+        (Math.max(37, width) - 36) / Rules.mapWidth(game),
+        (Math.max(37, height) - 36) / Rules.mapHeight(game),
+      ) * cellScale
+    );
+  }
+  function zoomLimit(width, height) {
+    return Math.max(5, Math.ceil((readableCellPixels / baseTile(width, height)) * 2) / 2);
+  }
+  function maximumZoom() {
+    const box = canvas.getBoundingClientRect();
+    return zoomLimit(box.width || 800, box.height || 600);
+  }
   function geometry(width, height) {
-    const tile =
-      Math.min((width - 36) / Rules.mapWidth(game), (height - 36) / Rules.mapHeight(game)) *
-      zoom *
-      cellScale;
+    const tile = baseTile(width, height) * zoom;
     const bound = (value, half, extent) =>
       half >= extent / 2 ? extent / 2 : Math.max(half, Math.min(extent - half, value));
     centerX = bound(centerX, width / (2 * tile), Rules.mapWidth(game));
@@ -20,10 +34,13 @@ const MapCamera = (() => {
   }
   function refresh() {
     const box = canvas.getBoundingClientRect();
-    if (box.width > 0 && box.height > 0) mapGeo = geometry(box.width, box.height);
+    if (box.width > 0 && box.height > 0) {
+      zoom = Math.min(zoom, zoomLimit(box.width, box.height));
+      mapGeo = geometry(box.width, box.height);
+    }
     byId("mapZoomLabel").textContent = Math.round(zoom * 100) + "%";
     byId("mapZoomOut").disabled = zoom <= 1;
-    byId("mapZoomIn").disabled = zoom >= 5;
+    byId("mapZoomIn").disabled = zoom >= maximumZoom();
     canvas.style.cursor = zoom * cellScale > 1 ? "grab" : "";
   }
   function setZoom(value, x, y) {
@@ -33,11 +50,8 @@ const MapCamera = (() => {
     y ??= box.height / 2;
     const cellX = (x - old.ox) / old.tile,
       cellY = (y - old.oy) / old.tile;
-    zoom = Math.max(1, Math.min(5, value));
-    const tile =
-      Math.min((box.width - 36) / Rules.mapWidth(game), (box.height - 36) / Rules.mapHeight(game)) *
-      zoom *
-      cellScale;
+    zoom = Math.max(1, Math.min(maximumZoom(), value));
+    const tile = baseTile(box.width, box.height) * zoom;
     centerX = cellX - (x - box.width / 2) / tile;
     centerY = cellY - (y - box.height / 2) / tile;
     refresh();
@@ -121,6 +135,7 @@ const MapCamera = (() => {
     },
     true,
   );
+  window.addEventListener("resize", refresh);
   byId("mapZoomIn").onclick = () => setZoom(zoom * 1.25);
   byId("mapZoomOut").onclick = () => setZoom(zoom / 1.25);
   byId("mapZoomReset").onclick = reset;
@@ -130,6 +145,9 @@ const MapCamera = (() => {
     focus,
     reset,
     setZoom,
+    get maxZoom() {
+      return maximumZoom();
+    },
     get zoom() {
       return zoom;
     },

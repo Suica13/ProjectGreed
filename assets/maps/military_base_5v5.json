@@ -1,5 +1,6 @@
 {
   "id": "military_base_5v5",
+  "environment": "ground",
   "name": "联合军事基地 · 5v5",
   "description": "十个出生点沿基地两侧展开；北部机库与中部仓库形成零散掩体，南部停机坪开阔，外围道路可跨线支援。",
   "localization": {

@@ -386,7 +386,7 @@ const MapCombat = (() => {
     ctx.translate(geometry.ox, geometry.oy);
     ctx.scale(geometry.tile / 64, geometry.tile / 64);
     const facing = Math.atan2(target.y - source.y, target.x - source.x);
-    WeaponEffects.draw(ctx, weapon, plan, time, source, event);
+    WeaponEffects.draw(ctx, weapon, plan, time, source, event, 1, sourcePose);
     for (const [index, contact] of plan.contacts.entries()) {
       if (weapon.swingEffects?.length)
         SpriteEffects.draw(

@@ -61,7 +61,7 @@ test("ground GM upgrades ordinary GM protection and HP; missiles offer accuracy 
     ground = G.models.RGM_79_G__machine_gun;
   assert.equal(G.models.MS_06F__machine_gun.hp, 12000);
   assert.equal(ground.hp, 20000);
-  assert.ok(ground.hp > gm.hp && ground.move >= gm.move && ground.mobility > gm.mobility);
+  assert.ok(ground.hp > gm.hp && ground.move >= gm.move && ground.mobility === gm.mobility);
   assert.ok(ground.defenses.shell.percent > gm.defenses.shell.percent);
   assert.ok(ground.defenses.shell.flat > gm.defenses.shell.flat);
   const missile = G.models.RGM_79_G__missile_launcher.weapons[0];
@@ -82,7 +82,7 @@ test("Dom moves farther with low evasion; movement and mobility affect separate 
   const dom = G.models.MS_09__bazooka,
     light = G.models.RGM_79L__beam_gun;
   assert.equal(dom.move, 7);
-  assert.equal(dom.mobility, 85);
+  assert.equal(dom.mobility, 100);
   assert.equal(dom.move, light.move);
   assert.ok(dom.mobility < light.mobility);
   const id = "MS_09__bazooka",
@@ -145,5 +145,5 @@ test("all primary weapon kits use fixed category surcharges on the unchanged pla
   assert.equal(G.models.RGM_79__bazooka.cost, 400);
   assert.equal(G.models.RGM_79__beam_spray.cost, 425);
   assert.equal(G.models.MS_14A__beam_rifle.cost, 850);
-  assert.equal(G.models.RX_79_G__cannon.cost, 925);
+  assert.equal(G.models.RX_79_G__cannon.cost, 850);
 });

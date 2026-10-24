@@ -123,7 +123,7 @@ test("parallel attacks draw each unit once and merge damage and shield loss into
     Object.assign(target, { x: 10, y: 8, hp: 100000, shield: 5000 });
     const battles = [];
     attackers.forEach((unit, index) => {
-      Object.assign(unit, { x: 6, y: 7 + index, hp: 100000, en: 100, acted: false });
+      Object.assign(unit, { x: 7, y: 7 + index, hp: 100000, en: 100, acted: false });
       game.tiles[unit.y][unit.x] = "plain";
       const weapon = UnitModels[unit.model].weapons.find((w) => w.type !== "melee");
       const actors = JSON.parse(JSON.stringify([unit, target]));
@@ -453,7 +453,7 @@ test("the last of four battles finishes automatically after a vertical cannon Mi
       Object.assign(a, { x: index ? 4 : 10, y: index ? 16 + index * 3 : 5, en: 100 });
       Object.assign(b, {
         x: index ? 8 : 10,
-        y: index ? 16 + index * 3 : 13,
+        y: index ? 16 + index * 3 : 11,
         hp: 100000,
         shield: 0,
       });

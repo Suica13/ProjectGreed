@@ -9,7 +9,15 @@ PARTS = {"head": "head", "backpack": "backpack", "armL": "leftArm",
 def apply_parts(prefab, data=None):
     import_tackle_assets()
     apply_body_tackle(prefab)
-    data = data or load(ROOT / f'Units/BattleUnits/{prefab["id"]}/{prefab["id"]}.ini')
+    folder = "MS_09" if prefab["id"] == "MS_09R" else prefab["id"]
+    data = data or load(ROOT / f'Units/BattleUnits/{folder}/{prefab["id"]}.ini')
+    # Native reaction is mobility; native accuracy is a percentage multiplier, not weapon hit.
+    prefab["stats"]["mobility"] = stat(data, "baseReactionLevel", 100)
+    prefab["stats"]["accuracy"] = stat(data, "baseAccuracyLevel", 100)
+    prefab.setdefault("sourceStats", {}).update(
+        reaction=prefab["stats"]["mobility"], accuracy=prefab["stats"]["accuracy"])
+    prefab["stats"].setdefault("adaptability", {"ground": 100,
+        "space": 50 if stat(data, "spaceAdaptability", 100) < 100 else 100})
     prefab["stats"]["partStructuralStrength"] = stat(data, "partStructuralStrength", 100)
     prefab.setdefault("sourceStats", {})["partStructuralStrength"] = prefab["stats"]["partStructuralStrength"]
     prefab["shield"]["requiredParts"] = ["leftArm"] if prefab["shield"]["hp"] > 0 else []

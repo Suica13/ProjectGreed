@@ -5,7 +5,7 @@ const { pathToFileURL } = require("node:url"),
 const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const url = pathToFileURL(path.resolve("public/client.html")).href;
 
-test("all nine maps can be selected in an offline room with descriptions and a new 3v3 map enters deployment", async ({
+test("all thirteen maps can be selected in an offline room with descriptions and a new 3v3 map enters deployment", async ({
   page,
 }) => {
   const errors = [];
@@ -13,7 +13,7 @@ test("all nine maps can be selected in an offline room with descriptions and a n
   await page.goto(url);
   await page.locator("#openSkirmish").click();
   await page.locator("#createOfflineRoom").click();
-  await expect(page.locator("#roomMapSelect option")).toHaveCount(9);
+  await expect(page.locator("#roomMapSelect option")).toHaveCount(13);
   await expect(page.locator("#roomCostLimit")).toHaveValue("3000");
   await expect(page.locator("#roomUnitCostLimit")).toHaveValue("500");
   await expect(page.locator("#roomUnitLimit")).toHaveValue("6");
@@ -48,7 +48,7 @@ test("all nine maps can be selected in an offline room with descriptions and a n
   expect(errors).toEqual([]);
 });
 
-test("new map themes render in battle and an overview shows all nine different layouts", async ({
+test("new map themes render in battle and an overview shows all ten different layouts", async ({
   page,
 }) => {
   const errors = [];

@@ -307,11 +307,14 @@ const Tactics = (() => {
   // Derive damage penalties from current parts; never modify a shared catalog or AI variant.
   function modelOf(unit) {
     const base = performanceModelOf(unit),
-      penalty = parts.penalties(unit);
+      penalty = parts.penalties(unit),
+      environment = unit.environment ?? "ground",
+      adaptability = (base.adaptability?.[environment] ?? 100) / 100;
     if (
       penalty.attackMultiplier === 1 &&
       penalty.moveMultiplier === 1 &&
-      !penalty.resistancePenalty
+      !penalty.resistancePenalty &&
+      adaptability === 1
     )
       return base;
     return {
@@ -325,7 +328,13 @@ const Tactics = (() => {
       get kitName() {
         return base.kitName;
       },
-      move: Math.max(1, Math.floor(base.move * penalty.moveMultiplier)),
+      move:
+        adaptability === 0
+          ? 0
+          : penalty.moveMultiplier < 1
+            ? Math.max(1, Math.floor(base.move * adaptability * penalty.moveMultiplier))
+            : base.move * adaptability,
+      mobility: base.mobility * adaptability,
       defenses: Object.fromEntries(
         Object.entries(base.defenses).map(([type, value]) => [
           type,
@@ -396,7 +405,11 @@ const Tactics = (() => {
   function terrainStyle(mapId, kind) {
     const base = terrain[kind],
       color = getMap(mapId).appearance?.colors?.[kind];
-    return color ? { ...base, color } : base;
+    const spaceName =
+      getMap(mapId).environment === "space"
+        ? { plain: "宇宙空域", rock: "小行星", rubble: "漂浮残骸" }[kind]
+        : null;
+    return { ...base, ...(color ? { color } : {}), ...(spaceName ? { name: spaceName } : {}) };
   }
   const key = (x, y) => x + "," + y,
     dist = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y),
@@ -439,10 +452,11 @@ const Tactics = (() => {
         if (!position) throw Error("出生区没有足够位置容纳编组，请检查目录配置");
         const performance = settings.performances?.[seat] ?? 1;
         if (![0.75, 1, 1.25].includes(performance)) throw Error("性能倍率无效");
-        let m = modelOf({ model, performance });
+        let m = modelOf({ model, performance, environment: map.environment });
         units.push({
           id: seat + "-" + (settings.formationIndices?.[seat]?.[i] ?? i),
           ownerSeat: seat,
+          environment: map.environment || "ground",
           model,
           ...(entry.customName ? { customName: entry.customName } : {}),
           performance,
@@ -467,6 +481,7 @@ const Tactics = (() => {
       units,
       deployment: deploying ? formations.map((army) => army === null) : null,
       mapId: map.id,
+      environment: map.environment || "ground",
       costLimit,
       unitLimit,
       team: 0,
@@ -609,7 +624,8 @@ const Tactics = (() => {
       cover = w.type === "melee" ? (ground.meleeCover ?? 0) : ground.cover,
       mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.25,
       baseHit =
-        Math.max(10, Math.min(100, w.hit - cover - mobilityPenalty)) * (isCounter ? 0.75 : 1),
+        Math.max(10, Math.min(100, w.hit * (modelOf(a).accuracy / 100) - cover - mobilityPenalty)) *
+        (isCounter ? 0.75 : 1),
       // 最终回避加成在机动性、地形与反击惩罚计算后生效。
       hit = Math.max(0, baseHit - (response === "evade" ? 15 : 0)),
       defenseMultiplier = response === "defend" ? 1.25 : 1,

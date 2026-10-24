@@ -1504,6 +1504,7 @@
             <button data-ui-node="node-34" id="endTurn" class="primary" hidden>结束蓝方回合</button>
           </div>
           <div data-ui-node="node-35" class="map-wrap" id="mapWrap">
+            <span id="mapEnvironment" class="map-environment is-ground">地面</span>
             <div class="map-camera-controls" aria-label="地图缩放">
               <span id="mapCombatControls" hidden>
                 <span id="mapCombatStatus"></span>
@@ -1516,7 +1517,7 @@
               <button id="mapZoomReset">复位</button>
             </div>
             <canvas data-ui-node="node-36" id="map" aria-label="24乘18格战术地图"></canvas
-            ><span data-ui-node="node-37" class="map-label">SECTOR 07 / GROUND COMBAT</span
+            ><span data-ui-node="node-37" class="map-label" id="mapSectorLabel">GROUND COMBAT</span
             ><span data-ui-node="node-38" class="hover-info" id="hoverInfo"
               >曼哈顿格距 · 山岩与水域不可通过</span
             >
@@ -1605,7 +1606,7 @@
             ></button
           ><button data-ui-node="node-72" class="response" id="responseEvade">
             <strong data-ui-node="node-73">回避</strong
-            ><small data-ui-node="node-74">自身机动性×1.25，最终回避率+15个百分点，不反击。</small>
+            ><small data-ui-node="node-74">自身反应系数×1.25，最终回避率+15个百分点，不反击。</small>
           </button>
         </div>
         <div data-ui-node="node-75" id="counterList" class="counter-list"></div>
@@ -2885,8 +2886,16 @@
         border-radius: 5px;
         background: #0b1c28e8;
       }
+      .map-environment {
+        position: absolute; top: 10px; left: 10px; z-index: 3;
+        padding: 5px 10px; border: 1px solid currentColor; border-radius: 5px;
+        background: #0b1724e8; font-size: 13px; font-weight: 700; pointer-events: none;
+      }
+      #mapSectorLabel { top: 48px; max-width: calc(100% - 24px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .map-environment.is-ground { color: #f2a044; }
+      .map-environment.is-space { color: #b788ff; }
       .map-camera-controls {
-        max-width: calc(100% - 20px);
+        max-width: calc(100% - 94px);
         flex-wrap: wrap;
         justify-content: flex-end;
       }

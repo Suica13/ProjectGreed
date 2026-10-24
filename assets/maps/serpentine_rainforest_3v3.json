@@ -1,5 +1,6 @@
 {
   "id": "serpentine_rainforest_3v3",
+  "environment": "ground",
   "name": "蛇河雨林 · 3v3",
   "description": "横贯中央的S型河将雨林分成南北两岸，西、中、东三处渡口连接大片林区，桥头零散遗迹提供掩护。",
   "localization": {

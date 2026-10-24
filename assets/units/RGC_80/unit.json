@@ -414,10 +414,15 @@
     "hp": 18500,
     "en": 100,
     "move": 4,
-    "mobility": 85,
+    "mobility": 105.0,
     "cost": 425,
     "counterLimit": 1,
-    "partStructuralStrength": 115.0
+    "partStructuralStrength": 115.0,
+    "adaptability": {
+      "ground": 100,
+      "space": 100
+    },
+    "accuracy": 120.0
   },
   "attackBonuses": {
     "melee": 0,
@@ -478,8 +483,9 @@
     "walkSpeed": 0.65,
     "boostSpeed": 1.25,
     "turnSpeed": 1.5,
-    "reaction": 105,
-    "partStructuralStrength": 115.0
+    "reaction": 105.0,
+    "partStructuralStrength": 115.0,
+    "accuracy": 120.0
   },
   "weapons": {
     "EF_BeamSprayGun": {
@@ -555,7 +561,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S"
+      ]
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -635,7 +644,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ]
     },
     "Common_Cannon": {
       "name": "肩部加农炮",
@@ -726,7 +738,10 @@
       "requiredParts": [
         "backpack"
       ],
-      "partBreakModifier": 0.5
+      "partBreakModifier": 0.5,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "Common_Cqb_A": {
       "name": "格斗",

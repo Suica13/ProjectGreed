@@ -6,8 +6,8 @@ const { test, expect } = require("@playwright/test"),
 const url = pathToFileURL(path.resolve("public/client.html")).href;
 async function offline(page) {
   await page.goto(url);
-  await expect(page).toHaveTitle("ProjectGreed V04");
-  await expect(page.locator("#start")).toContainText("V04");
+  await expect(page).toHaveTitle("ProjectGreed V05");
+  await expect(page.locator("#start")).toContainText("V05");
   await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
@@ -133,8 +133,10 @@ test("map zoom anchors the cursor, drag pans without moving units, and zoomed cl
   const destination = await page.evaluate(() => mapPosition(12, 8));
   await page.mouse.click(box.x + destination.x, box.y + destination.y);
   await expect.poll(() => page.evaluate(() => [game.units[0].x, game.units[0].y])).toEqual([12, 8]);
-  for (let i = 0; i < 5; i++) await page.locator("#mapZoomIn").click();
-  await expect(page.locator("#mapZoomLabel")).toHaveText("500%");
+  while (await page.locator("#mapZoomIn").isEnabled()) await page.locator("#mapZoomIn").click();
+  await expect(page.locator("#mapZoomLabel")).toHaveText(
+    String(await page.evaluate(() => Math.round(MapCamera.maxZoom * 100))) + "%",
+  );
   await expect(page.locator("#mapZoomIn")).toBeDisabled();
   await page.locator("#mapZoomReset").click();
   await expect(page.locator("#mapZoomLabel")).toHaveText("100%");

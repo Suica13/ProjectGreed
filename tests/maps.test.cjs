@@ -26,8 +26,8 @@ test("enemy orthogonal zones cost at least three; allies, diagonal units and dea
   b.team = 0;
   assert.equal(G.movementCost(g, a, 4, 4), 1);
 });
-test("all nine preset maps hold independent full twelve-unit formations without overlapping spawn zones", () => {
-  assert.equal(Object.keys(G.catalog.maps).length, 9);
+test("all thirteen preset maps hold independent full twelve-unit formations without overlapping spawn zones", () => {
+  assert.equal(Object.keys(G.catalog.maps).length, 13);
   for (const map of Object.values(G.catalog.maps)) {
     const formations = Array.from({ length: map.spawns.length }, () => Array(12).fill(entry));
     const before = JSON.stringify(map);
@@ -74,11 +74,11 @@ test("room budget validation has bounds and every formation is checked against i
     assert.throws(() => G.getMap(id));
 });
 
-test("nine asymmetric maps are capacity-sorted, connected and offer sparse cover or contiguous woods", () => {
+test("thirteen asymmetric maps are capacity-sorted, connected and offer sparse cover or contiguous woods", () => {
   const maps = Object.values(G.catalog.maps);
   assert.deepEqual(
     maps.map((m) => m.playersPerTeam),
-    [1, 1, 2, 2, 3, 3, 3, 5, 5],
+    [1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 5, 5, 5],
   );
   assert.deepEqual(G.defaultRoomSettings(), {
     mapId: "frontier_1v1",
@@ -92,7 +92,7 @@ test("nine asymmetric maps are capacity-sorted, connected and offer sparse cover
       { bannedFactions: [], bannedEras: [] },
     ],
   });
-  assert.equal(new Set(maps.map((m) => JSON.stringify(m.tiles))).size, 9);
+  assert.equal(new Set(maps.map((m) => JSON.stringify(m.tiles))).size, 13);
   for (const map of maps) {
     assert.ok(
       map.tiles.some((row) => JSON.stringify(row) !== JSON.stringify([...row].reverse())),

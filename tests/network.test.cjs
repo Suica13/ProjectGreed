@@ -327,11 +327,11 @@ test("custom squads and deployment are authoritative, versioned, deduplicated an
   await finishPlans(blue);
   await resumed.latest((v) => v.revision >= incoming.revision);
   const burstId = randomUUID();
-  const burst = await resumed.act("respond", { response: "defend" }, { id: burstId });
+  const burst = await resumed.act("respond", { response: "evade" }, { id: burstId });
   assert.equal(burst.phase, "idle");
   assert.equal(burst.combats.at(-1).events[0].shotCount, 9);
   assert.equal(burst.combats.at(-1).events[0].damagePerShot, 725);
-  // V04 防御提升属性与格挡率，所有逐发结果由服务端裁定。
+  // 回避确保该随机种子有命中与未命中，所有逐发结果由服务端裁定。
   const event = burst.combats.at(-1).events[0];
   assert.equal(event.strikes.length, 9);
   assert.ok(event.strikes.some((s) => s.hit) && event.strikes.some((s) => !s.hit));
@@ -434,6 +434,8 @@ test("authoritative rooms, combat, duplicate protection, phases, reconnect", asy
   await blue.hello("create", "TEST1");
   await red.hello("join", "TEST1");
   await readyMatch(blue, red);
+  // Keep this protocol fixture alive and intact so it always reaches its counterattack.
+  app.rooms.get("TEST1").game.units.find((u) => u.id === "1-0").hp = 100000;
   assert.ok(!("seed" in blue.state.game));
   assert.equal((await red.act("move", { unitId: "1-0", x: 9, y: 4 })).type, "error");
   assert.equal((await blue.act("move", { unitId: "1-0", x: 9, y: 4 })).type, "error");

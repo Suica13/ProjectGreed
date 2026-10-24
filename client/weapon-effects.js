@@ -131,6 +131,10 @@ const WeaponEffects = (() => {
         lead + weapon.attack.duration / speed,
         ...impacts,
         ...activeShots.map((shot) => shot.visibleUntil),
+        ...activeShots.map((shot) => {
+          const id = weapon.muzzleEffects?.[weapon.attack.muzzleIndices[shot.index] ?? 0];
+          return shot.at + (ART.effects[id]?.duration || 0) / effectSpeed;
+        }),
       ),
       deathAt = null,
       deathEffect = null,
@@ -290,7 +294,44 @@ const WeaponEffects = (() => {
         arrived(plan, time).reduce((sum, contact) => sum + (contact.shieldDamage || 0), 0),
     );
   }
-  function draw(ctx, weapon, plan, time, source, event, size = 1) {
+  function drawMuzzle(ctx, weapon, plan, time, source, event, pose = null) {
+    if (!weapon.muzzleEffects?.length) return;
+    const drawn = new Set();
+    for (const shot of plan.shots) {
+      const mountIndex = weapon.attack.muzzleIndices[shot.index] ?? 0,
+        id = weapon.muzzleEffects[mountIndex],
+        effect = ART.effects[id],
+        age = (time - shot.at) * ART.presentation.animationSpeed,
+        key = `${shot.at}:${mountIndex}`;
+      if (!effect || age < 0 || age >= effect.duration || drawn.has(key)) continue;
+      drawn.add(key);
+      let origin = shot.origin;
+      if (effect.attached) {
+        const current =
+          pose ||
+          firingPose(weapon, source, event, Math.max(0, time - plan.lead) * plan.actionSpeed);
+        origin = SpriteRenderer.muzzle(
+          source.unit.model,
+          weapon,
+          { ...source, ...current },
+          current.clip,
+          current.time,
+          shot.index,
+        );
+      }
+      SpriteEffects.draw(
+        ctx,
+        id,
+        origin.x,
+        origin.y,
+        source.scale,
+        age,
+        ((source.angle - 90) * Math.PI) / 180,
+      );
+    }
+  }
+  function draw(ctx, weapon, plan, time, source, event, size = 1, pose = null) {
+    drawMuzzle(ctx, weapon, plan, time, source, event, pose);
     if (!weapon.projectile) return;
     const image = SpriteRenderer.images[weapon.projectile.asset];
     if (!image) return;
@@ -325,6 +366,7 @@ const WeaponEffects = (() => {
     health,
     shield,
     arrived,
+    drawMuzzle,
     draw,
   };
 })();

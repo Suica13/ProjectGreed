@@ -1,5 +1,6 @@
 {
   "id": "central_heights_3v3",
+  "environment": "ground",
   "name": "中央高原 · 3v3",
   "description": "中央连片高地与南北侧道；西北废墟密集，东南坡面开阔，适合争夺中央后分线推进。",
   "localization": {

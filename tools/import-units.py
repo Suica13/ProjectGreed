@@ -11,6 +11,7 @@ import struct
 from unit_movement import configure_movement
 from unit_introductions import apply_introduction
 from unit_parts import apply_parts
+from unit_muzzle_effects import apply_muzzle_effects
 from pathlib import Path
 
 legacy = runpy.run_path(str(Path(__file__).with_name('import-rgm79.py')))
@@ -139,14 +140,14 @@ def import_weapon(prefab, weapon_id, filename, name, kind, clip, minimum, maximu
     return weapon
 
 
-def add_stats(prefab, data, hp, move, mobility, cost):
+def add_stats(prefab, data, hp, move, cost):
     text = ' '.join(v for section in data.values() for v in section.values())
 
     def number(name):
         return float(re.search(r'\b'+name+r'\s*=\s*([\d.]+)', text)[1])
 
     channels = dict(beam='Beam', shell='Shell', melee='Cqb', dp='Dp', sp='Sp')
-    prefab['stats'] = dict(hp=hp, en=100, move=move, mobility=mobility, cost=cost)
+    prefab['stats'] = dict(hp=hp, en=100, move=move, mobility=number("baseReactionLevel"), accuracy=number("baseAccuracyLevel"), cost=cost)
     prefab['attackBonuses'] = dict(melee=0, shooting=0, beam=0, shell=0)
     prefab['defenses'] = {key: dict(percent=number('base'+source+'Def'), flat=number('base'+source+'DefPlus')) for key, source in channels.items()}
     prefab['shield'] = dict(hp=float(data['core']['maxShield']), blockChance=number('finalShieldBlockPR'), coverage=number('finalShieldSize'),
@@ -157,7 +158,7 @@ def add_stats(prefab, data, hp, move, mobility, cost):
 gm_file = DEST / 'units/RGM_79/unit.json'
 gm = json.loads(gm_file.read_text(encoding='utf-8'))
 gm_data = load(ROOT / 'Units/BattleUnits/RGM_79/RGM_79.ini')
-add_stats(gm, gm_data, 21000, 5, 100, 300)
+add_stats(gm, gm_data, 21000, 5, 300)
 gm['description'] = '标准型：均衡的机动性与耐久，主武器可选三种套件。'
 # Retain separate melee/beam components instead of applying one defense to their sum.
 for key, weapon in gm['weapons'].items():
@@ -170,7 +171,7 @@ for unit_id in ('RGC_80', 'RGM_79L'):
     data, prefab = import_visuals(unit_id)
     if unit_id == 'RGC_80':
         prefab.update(name='吉姆加农', description='支援型：机动与耐久偏低，固定肩部加农炮不随主武器套件更换。')
-        add_stats(prefab, data, 16500, 4, 85, 300)
+        add_stats(prefab, data, 16500, 4, 300)
         prefab['weapons'] = {key: copy.deepcopy(gm['weapons'][key]) for key in ('EF_BeamSprayGun', 'EF_90mmMG')}
         prefab['weapons']['Common_Cannon'] = import_weapon(prefab, 'Common_Cannon', 'Shell/Common_Cannon.gw', '肩部加农炮', 'shell', 'Common_Cannon_Shoot_A', 3, 5, 75, dict(ammo=8))
         prefab['weapons']['Common_Cqb_A'] = import_weapon(prefab, 'Common_Cqb_A', 'Cqb/Common_Cqb_A.gw', '格斗', 'melee', 'Common_Melee_A', 1, 1, 96, {})
@@ -178,7 +179,7 @@ for unit_id in ('RGC_80', 'RGM_79L'):
         primary = [('beam_spray', '光束喷枪套件', 'EF_BeamSprayGun', 100), ('machine_gun', '机枪套件', 'EF_90mmMG', 0)]
     else:
         prefab.update(name='轻装吉姆', description='轻装型：高机动、移动距离较长，耐久中等，盾牌较小。')
-        add_stats(prefab, data, 18500, 7, 120, 325)
+        add_stats(prefab, data, 18500, 7, 325)
         prefab['weapons'] = {'EF_90mmMG': copy.deepcopy(gm['weapons']['EF_90mmMG'])}
         prefab['weapons']['EF_BOWA_BeamGun'] = import_weapon(prefab, 'EF_BOWA_BeamGun', 'Beam/EF_BOWA_BeamGun.gw', 'BOWA光束枪', 'beam', 'Common_Shoot_A', 2, 4, 85, dict(en=10))
         prefab['weapons']['EF_BeamSaber_BF'] = import_weapon(prefab, 'EF_BeamSaber_BF', 'Cqb/EF_BeamSaber_BF.gw', '光束军刀', 'melee', 'Common_Melee_B', 1, 1, 96, dict(en=8))
@@ -241,6 +242,7 @@ for prefab in (gm, *new_prefabs):
         weapon['hit'] = int((weapon['hit'] + 2.5) // 5 * 5)
         weapon['hitBonus'] = weapon['hit'] - int(weapon['sourceHit'] * weapon['hitMultiplier'] + .5)
     apply_introduction(prefab, load(ROOT / f'Units/BattleUnits/{prefab["id"]}/{prefab["id"]}.ini'))
+    apply_muzzle_effects(prefab, load(ROOT / f'Units/BattleUnits/{prefab["id"]}/{prefab["id"]}.ini'))
     apply_parts(prefab)
     write(DEST / f'units/{prefab["id"]}/unit.json', prefab)
 

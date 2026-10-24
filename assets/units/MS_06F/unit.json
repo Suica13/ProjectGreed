@@ -438,10 +438,15 @@
     "hp": 12000,
     "en": 100,
     "move": 4,
-    "mobility": 85,
+    "mobility": 105.0,
     "cost": 200,
     "counterLimit": 1,
-    "partStructuralStrength": 110.0
+    "partStructuralStrength": 110.0,
+    "adaptability": {
+      "ground": 100,
+      "space": 100
+    },
+    "accuracy": 105.0
   },
   "attackBonuses": {
     "melee": 0,
@@ -500,10 +505,11 @@
     "walkSpeed": 0.55,
     "boostSpeed": 1.1,
     "turnSpeed": 1.5,
-    "reaction": 105,
+    "reaction": 105.0,
     "shooting": 110,
     "melee": 100,
-    "partStructuralStrength": 110.0
+    "partStructuralStrength": 110.0,
+    "accuracy": 105.0
   },
   "presentation": {
     "shield": false,
@@ -624,7 +630,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ]
     },
     "ZN_270mmBazooka": {
       "name": "270mm火箭筒",
@@ -719,7 +728,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.25
+      "partBreakModifier": 1.25,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "ZN_HeatHawk_A": {
       "name": "热能斧",

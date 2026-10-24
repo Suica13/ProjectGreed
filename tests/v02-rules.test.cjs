@@ -53,8 +53,9 @@ test("evade multiplies mobility and adds 15 percentage points of final evasion",
   for (const id of ["RGM_79__machine_gun", "RGC_80__machine_gun", "RGM_79L__machine_gun"]) {
     const { g, a, b, w } = duel();
     b.model = id;
-    const base = G.estimate(g, a, b, w),
-      evade = G.estimate(g, a, b, w, "evade");
+    const weapon = { ...w, hit: 60 };
+    const base = G.estimate(g, a, b, weapon),
+      evade = G.estimate(g, a, b, weapon, "evade");
     assert.equal(base.hit - evade.hit, G.models[id].mobility * 0.25 * 0.25 + 15);
     assert.equal(base.damage, evade.damage);
   }

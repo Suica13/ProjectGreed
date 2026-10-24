@@ -438,10 +438,15 @@
     "hp": 15500,
     "en": 100,
     "move": 7,
-    "mobility": 135,
+    "mobility": 140.0,
     "cost": 425,
     "counterLimit": 1,
-    "partStructuralStrength": 100.0
+    "partStructuralStrength": 100.0,
+    "adaptability": {
+      "ground": 100,
+      "space": 100
+    },
+    "accuracy": 110.0
   },
   "attackBonuses": {
     "melee": 15,
@@ -502,8 +507,9 @@
     "walkSpeed": 0.75,
     "boostSpeed": 1.65,
     "turnSpeed": 2.5,
-    "reaction": 140,
-    "partStructuralStrength": 100.0
+    "reaction": 140.0,
+    "partStructuralStrength": 100.0,
+    "accuracy": 110.0
   },
   "weapons": {
     "EF_90mmMG": {
@@ -584,7 +590,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ]
     },
     "EF_BOWA_BeamGun": {
       "name": "BOWA光束枪",
@@ -659,7 +668,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S"
+      ]
     },
     "EF_BeamSaber_BF": {
       "name": "光束军刀",
@@ -809,7 +821,10 @@
       "requiredParts": [
         "head"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1_S"
+      ]
     },
     "Common_Push_A": {
       "name": "冲撞",

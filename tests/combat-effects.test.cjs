@@ -324,7 +324,8 @@ test("Dom shotgun resolves eight independent hit rolls and spends EN once at adj
   Object.assign(b, { x: 3, y: 4, hp: 100000, shield: 0 });
   g.tiles[4][2] = g.tiles[4][3] = g.tiles[4][4] = "plain";
   const w = G.modelOf(a).weapons.find((w) => w.id === "ZN_MS_09_ChestBeam");
-  assert.equal(G.estimate(g, a, b, w).hit, 75);
+  assert.equal(G.estimate(g, a, b, w).hit, 82.5);
+  g.seed = 3; // This seed produces both hits and misses at the native accuracy.
   assert.equal(G.canAttack(g, a, { ...b, x: 4 }, w), false);
   const event = G.fight(g, a, b, w, "defend")[0];
   assert.equal(event.strikes.length, 8);

@@ -59,6 +59,12 @@ const RoomPanel = (() => {
         oy + (spawn.y + 0.5) * cell + 3,
       );
     }
+    ctx.fillStyle = map.environment === "space" ? "#b788ff" : "#f2a044";
+    ctx.fillRect(6, 6, 56, 22);
+    ctx.fillStyle = "#101521";
+    ctx.font = "bold 12px sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText(I18n.text(map.environment === "space" ? "宇宙" : "地面"), 11, 22);
     canvas.setAttribute("aria-label", map.name + " · " + map.width + "×" + map.height);
     byId("roomMapInfo").textContent =
       map.name +

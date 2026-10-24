@@ -513,10 +513,15 @@
     "hp": 20000,
     "en": 100,
     "move": 5,
-    "mobility": 105,
+    "mobility": 115.0,
     "cost": 500,
     "counterLimit": 1,
-    "partStructuralStrength": 120.0
+    "partStructuralStrength": 120.0,
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "accuracy": 115.0
   },
   "attackBonuses": {
     "melee": 15,
@@ -577,10 +582,11 @@
     "walkSpeed": 0.65,
     "boostSpeed": 1.25,
     "turnSpeed": 1.55,
-    "reaction": 115,
+    "reaction": 115.0,
     "shooting": 120,
     "melee": 115,
-    "partStructuralStrength": 120.0
+    "partStructuralStrength": 120.0,
+    "accuracy": 115.0
   },
   "presentation": {
     "shield": true,
@@ -703,7 +709,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.25
+      "partBreakModifier": 1.25,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "EF_100mmMG": {
       "name": "100mm机枪",
@@ -796,7 +805,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ]
     },
     "EF_GroundTypeBeamRifle": {
       "name": "陆战型光束步枪",
@@ -891,7 +903,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink"
+      ]
     },
     "EF_180mmCannon": {
       "name": "180mm加农炮",
@@ -995,7 +1010,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "EF_GroundTypeMissileLauncher": {
       "name": "陆战型导弹发射器",
@@ -1089,7 +1107,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",

@@ -481,10 +481,15 @@
     "hp": 24500,
     "en": 100,
     "move": 6,
-    "mobility": 120,
+    "mobility": 125.0,
     "cost": 750,
     "counterLimit": 1,
-    "partStructuralStrength": 125.0
+    "partStructuralStrength": 125.0,
+    "adaptability": {
+      "ground": 100,
+      "space": 100
+    },
+    "accuracy": 125.0
   },
   "attackBonuses": {
     "shooting": 20,
@@ -545,10 +550,11 @@
     "walkSpeed": 0.65,
     "boostSpeed": 1.5,
     "turnSpeed": 2,
-    "reaction": 125,
+    "reaction": 125.0,
     "shooting": 135,
     "melee": 125,
-    "partStructuralStrength": 125.0
+    "partStructuralStrength": 125.0,
+    "accuracy": 125.0
   },
   "presentation": {
     "shield": true,
@@ -671,7 +677,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "Beam_Fire_1_Yellow"
+      ]
     },
     "ZN_360mmBazooka": {
       "name": "360mm火箭筒",
@@ -766,7 +775,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.25
+      "partBreakModifier": 1.25,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "ZN_MMP80MG": {
       "name": "MMP-80机枪",
@@ -859,7 +871,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ]
     },
     "ZN_TwinBeamSword_A": {
       "name": "双刃光束剑",

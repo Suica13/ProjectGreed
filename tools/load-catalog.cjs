@@ -75,6 +75,9 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
   for (const reference of catalog.maps) {
     const map = read(file(root, reference));
     validateLocalization(map.localization, map.id);
+    map.environment ??= "ground";
+    if (!["ground", "space"].includes(map.environment))
+      throw Error("Invalid map environment: " + map.id);
     if (
       !/^[a-z0-9_]+$/.test(map.id) ||
       result.maps[map.id] ||
@@ -104,7 +107,9 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     if (
       map.appearance !== undefined &&
       (!map.appearance ||
-        !["arctic", "urban", "desert", "wetland", "forest"].includes(map.appearance.biome) ||
+        !["arctic", "urban", "desert", "wetland", "forest", "space"].includes(
+          map.appearance.biome,
+        ) ||
         !map.appearance.colors ||
         Object.entries(map.appearance.colors).some(
           ([kind, color]) =>
@@ -289,6 +294,14 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     for (const key of ["hp", "en", "move", "cost"])
       if (!Number.isFinite(prefab.stats[key]) || prefab.stats[key] <= 0)
         throw Error("Invalid stat " + key + ": " + ref);
+    prefab.stats.adaptability ??= { ground: 100, space: 100 };
+    for (const environment of ["ground", "space"])
+      if (
+        !Number.isFinite(prefab.stats.adaptability[environment]) ||
+        prefab.stats.adaptability[environment] < 0 ||
+        prefab.stats.adaptability[environment] > 100
+      )
+        throw Error("Invalid unit adaptability: " + prefab.id + "/" + environment);
     prefab.stats.partStructuralStrength ??= 100;
     if (
       !Number.isFinite(prefab.stats.partStructuralStrength) ||
@@ -305,6 +318,13 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       throw Error("Invalid counter limit: " + ref);
     if (!Number.isFinite(prefab.stats.mobility) || prefab.stats.mobility <= 0)
       throw Error("Invalid mobility: " + ref);
+    prefab.stats.accuracy ??= 100;
+    if (
+      !Number.isFinite(prefab.stats.accuracy) ||
+      prefab.stats.accuracy < 0 ||
+      prefab.stats.accuracy > 1000
+    )
+      throw Error("Invalid accuracy: " + ref);
     for (const key of ["melee", "shooting", "beam", "shell"])
       if (
         !Number.isFinite(prefab.attackBonuses?.[key]) ||
@@ -376,6 +396,15 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
           validateParts(step.requiredParts, prefab.id + "/" + key + "/Step");
         const weapon = raw && WeaponSequence.compile(raw);
         if (!result.effects[weapon?.hitEffect]) throw Error("Missing hit effect: " + key);
+        if (
+          weapon.muzzleEffects !== undefined &&
+          (!Array.isArray(weapon.muzzleEffects) ||
+            !weapon.muzzleEffects.length ||
+            weapon.muzzleEffects.some((id) => !result.effects[id]) ||
+            weapon.attack.muzzleIndices.some((index) => index >= weapon.muzzleEffects.length))
+        )
+          throw Error("Invalid muzzle effects: " + key);
+
         if (
           weapon.swingEffects !== undefined &&
           (!Array.isArray(weapon.swingEffects) ||

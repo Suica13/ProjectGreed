@@ -389,5 +389,157 @@
     "drift": 21,
     "sounds": [],
     "source": "Resource/Image/Fx/Weapon/Cqb/Common/Cqb_Fire_2_Kick_White_R.gw"
+  },
+  "Beam_Fire_1_Pink_S": {
+    "texture": "textures/Beam_Fire_1_Pink.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 12.0,
+    "scaleFrom": 0.3,
+    "scaleTo": 0.3,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": 0.0,
+      "y": 25.0
+    },
+    "drift": 0.0,
+    "attached": true,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: Beam_Fire_1_Pink_S"
+  },
+  "MG_Fire_1": {
+    "texture": "textures/MG_Fire_1.png",
+    "frames": 2,
+    "startFrame": 0,
+    "endFrame": 1,
+    "fps": 18.0,
+    "scaleFrom": 0.75,
+    "scaleTo": 0.75,
+    "alpha": 1.0,
+    "rotation": -90.0,
+    "offset": {
+      "x": 0.0,
+      "y": 20.0
+    },
+    "drift": 0.0,
+    "attached": true,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: MG_Fire_1"
+  },
+  "BZ_Fire_1": {
+    "texture": "textures/BZ_Fire_1.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 6.0,
+    "scaleFrom": 1.25,
+    "scaleTo": 1.25,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": -2.5,
+      "y": 20.0
+    },
+    "drift": 0.0,
+    "attached": false,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: BZ_Fire_1"
+  },
+  "MG_Fire_1_S": {
+    "texture": "textures/MG_Fire_1.png",
+    "frames": 2,
+    "startFrame": 0,
+    "endFrame": 1,
+    "fps": 18.0,
+    "scaleFrom": 0.35,
+    "scaleTo": 0.35,
+    "alpha": 1.0,
+    "rotation": -90.0,
+    "offset": {
+      "x": 0.5,
+      "y": 7.5
+    },
+    "drift": 0.0,
+    "attached": true,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: MG_Fire_1_S"
+  },
+  "Beam_Fire_1_Yellow_S": {
+    "texture": "textures/Beam_Fire_1_Yellow.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 12.0,
+    "scaleFrom": 0.3,
+    "scaleTo": 0.3,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": 0.0,
+      "y": 25.0
+    },
+    "drift": 0.0,
+    "attached": true,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: Beam_Fire_1_Yellow_S"
+  },
+  "Beam_Fire_1_Pink": {
+    "texture": "textures/Beam_Fire_1_Pink.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 12.0,
+    "scaleFrom": 0.6,
+    "scaleTo": 0.6,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": 0.0,
+      "y": 25.0
+    },
+    "drift": 0.0,
+    "attached": true,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: Beam_Fire_1_Pink"
+  },
+  "BZ_Fire_1_S": {
+    "texture": "textures/BZ_Fire_1.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 6.0,
+    "scaleFrom": 0.75,
+    "scaleTo": 0.75,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": -2.5,
+      "y": 15.0
+    },
+    "drift": 0.0,
+    "attached": false,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: BZ_Fire_1_S"
+  },
+  "Beam_Fire_1_Yellow": {
+    "texture": "textures/Beam_Fire_1_Yellow.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 12.0,
+    "scaleFrom": 0.6,
+    "scaleTo": 0.6,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": 0.0,
+      "y": 25.0
+    },
+    "drift": 0.0,
+    "attached": true,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: Beam_Fire_1_Yellow"
   }
 }

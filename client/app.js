@@ -157,6 +157,11 @@ function update() {
     if (pageView === "room" && Net.snapshot) RoomPanel.render(Net.snapshot);
     return;
   }
+  const map = Rules.getMap(game.mapId),
+    space = map.environment === "space";
+  byId("mapEnvironment").className = "map-environment " + (space ? "is-space" : "is-ground");
+  byId("mapEnvironment").textContent = space ? "宇宙" : "地面";
+  byId("mapSectorLabel").textContent = map.name;
   Deployment.render();
   Chat.refreshStatus();
   const busy = isBusy(),
@@ -359,7 +364,10 @@ function renderPanel() {
     </div>
     <div><span>EN</span>${u.en} / ${m.en}</div>
     <div><span>移动力</span>${m.move} 格</div>
-    <div><span>机动性</span>${m.mobility}</div>
+    <div><span>反应系数</span>${m.mobility}</div>
+    <div><span>命中系数</span>${m.accuracy}%</div>
+    <div><span>地面适应性</span>${m.adaptability.ground}%</div>
+    <div><span>宇宙适应性</span>${m.adaptability.space}%</div>
     <div><span>零件强度</span>${m.partStructuralStrength}</div>
     <div>
       <span>盾牌</span
@@ -367,7 +375,7 @@ function renderPanel() {
     </div>
     <div>
       <span>当前位置</span>${String.fromCharCode(65 + u.x)}${u.y + 1} ·
-      ${Rules.terrain[game.tiles[u.y][u.x]].name}
+      ${Rules.terrainStyle(game.mapId, game.tiles[u.y][u.x]).name}
     </div>`;
   panel.append(stats);
   const partStatus = element("div", "rule-box");
@@ -619,6 +627,19 @@ function drawMap(now) {
         ctx.fillStyle = "#5ee4b344";
         ctx.fillRect(px, py, tile, tile);
       }
+      if (
+        kind === "plain" &&
+        Rules.getMap(game.mapId).environment === "space" &&
+        (x * 17 + y * 31) % 7 === 0
+      ) {
+        ctx.fillStyle = "#b7b9df99";
+        ctx.fillRect(
+          px + tile * 0.37,
+          py + tile * 0.62,
+          Math.max(1, tile * 0.025),
+          Math.max(1, tile * 0.025),
+        );
+      }
       if (kind === "forest" && Rules.getMap(game.mapId).appearance?.biome === "desert") {
         ctx.strokeStyle = "#d6bb83";
         ctx.lineWidth = Math.max(1, tile * 0.035);
@@ -844,7 +865,7 @@ byId("map").onpointermove = (e) => {
   hover = cellAt(e);
   if (hover) {
     let unit = Rules.at(game, hover.x, hover.y),
-      t = Rules.terrain[game.tiles[hover.y][hover.x]];
+      t = Rules.terrainStyle(game.mapId, game.tiles[hover.y][hover.x]);
     byId("hoverInfo").textContent =
       String.fromCharCode(65 + hover.x) +
       (hover.y + 1) +

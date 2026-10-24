@@ -1,5 +1,6 @@
 {
   "id": "great_plains_5v5",
+  "environment": "ground",
   "name": "双岭大平原 · 5v5",
   "description": "北部与南部两片高地夹着宽阔平原；中央掩体稀少，北岭散落废墟、南岭林带不规则分布，适合大范围机动。",
   "localization": {

@@ -1,4 +1,4 @@
-# V04 单位 COST 估算
+# V05 单位 COST 估算
 
 运行 node tools/evaluate-cost.cjs 查看战力估算与当前定价；加 --write 只按 assets/weapon-kit-costs.json 统一套件附加费，并更新本报告，不改机体基础 COST。
 

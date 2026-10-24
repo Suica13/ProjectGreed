@@ -21,7 +21,7 @@ test("every bazooka and beam rifle fires twice and every cannon fires three sepa
       assert.equal(weapon.damage, weapon.damagePerShot * count);
     }
   }
-  assert.equal(checked, 16);
+  assert.equal(checked, 17);
 });
 
 test("all weapon EN costs increase exactly 25%, including fractional costs and shared secondary weapons", () => {
@@ -95,7 +95,7 @@ test("weapons whose volley was increased keep the 30 percent reduction except su
         );
       }
     }
-  assert.equal(adjusted, 13);
+  assert.equal(adjusted, 14);
   const gmBazooka = G.models.RGM_79__bazooka.weapons[0];
   assert.equal(gmBazooka.damagePerShot, 5000);
   assert.deepEqual(gmBazooka.damageComponents, { shell: 5000 });

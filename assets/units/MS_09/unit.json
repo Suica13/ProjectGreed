@@ -418,10 +418,15 @@
     "hp": 22500,
     "en": 100,
     "move": 7,
-    "mobility": 85,
+    "mobility": 100.0,
     "cost": 475,
     "counterLimit": 1,
-    "partStructuralStrength": 110.0
+    "partStructuralStrength": 110.0,
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "accuracy": 115.0
   },
   "attackBonuses": {
     "melee": 20,
@@ -480,10 +485,11 @@
     "walkSpeed": 0.65,
     "boostSpeed": 1.8,
     "turnSpeed": 1.75,
-    "reaction": 100,
+    "reaction": 100.0,
     "shooting": 125,
     "melee": 105,
-    "partStructuralStrength": 110.0
+    "partStructuralStrength": 110.0,
+    "accuracy": 115.0
   },
   "presentation": {
     "shield": false,
@@ -604,7 +610,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ]
     },
     "ZN_380mmBazooka": {
       "name": "380mm火箭筒",
@@ -699,7 +708,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.25
+      "partBreakModifier": 1.25,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "ZN_MS_09_ChestBeam": {
       "name": "胸部扩散光束炮",
@@ -787,7 +799,10 @@
       "requiredParts": [
         "backpack"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "Beam_Fire_1_Yellow_S"
+      ]
     },
     "ZN_HeatSaber_A": {
       "name": "热能军刀",

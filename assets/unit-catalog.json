@@ -11,7 +11,8 @@
     "units/MS_06K/unit.json",
     "units/MS_14A/unit.json",
     "units/RX_79_G/unit.json",
-    "units/MS_06F2/unit.json"
+    "units/MS_06F2/unit.json",
+    "units/MS_09R/unit.json"
   ],
   "effects": "effects/effects.json",
   "presentation": "presentation.json",
@@ -44,13 +45,17 @@
   "maps": [
     "maps/frontier_1v1.json",
     "maps/open_dunes_1v1.json",
+    "maps/asteroid_crossing_1v1.json",
     "maps/crossroads_2v2.json",
     "maps/ice_bridges_2v2.json",
+    "maps/orbital_debris_2v2.json",
     "maps/frontline_3v3.json",
     "maps/central_heights_3v3.json",
     "maps/serpentine_rainforest_3v3.json",
+    "maps/colony_wreck_3v3.json",
     "maps/military_base_5v5.json",
-    "maps/great_plains_5v5.json"
+    "maps/great_plains_5v5.json",
+    "maps/outer_orbit_5v5.json"
   ],
   "defaultMap": "frontier_1v1"
 }

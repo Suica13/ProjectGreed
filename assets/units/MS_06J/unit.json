@@ -482,10 +482,15 @@
     "hp": 13500,
     "en": 100,
     "move": 4,
-    "mobility": 80,
+    "mobility": 95.0,
     "cost": 225,
     "counterLimit": 1,
-    "partStructuralStrength": 115.0
+    "partStructuralStrength": 115.0,
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "accuracy": 110.0
   },
   "attackBonuses": {
     "melee": 0,
@@ -544,10 +549,11 @@
     "walkSpeed": 0.55,
     "boostSpeed": 1.1,
     "turnSpeed": 1.5,
-    "reaction": 95,
+    "reaction": 95.0,
     "shooting": 115,
     "melee": 100,
-    "partStructuralStrength": 115.0
+    "partStructuralStrength": 115.0,
+    "accuracy": 110.0
   },
   "presentation": {
     "shield": false,
@@ -668,7 +674,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ]
     },
     "ZN_270mmBazooka": {
       "name": "270mm火箭筒",
@@ -763,7 +772,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.25
+      "partBreakModifier": 1.25,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "ZN_MagellaCannon": {
       "name": "马哲拉顶炮",
@@ -867,7 +879,10 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.0
+      "partBreakModifier": 1.0,
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ]
     },
     "ZN_MS_06J_LegMS": {
       "name": "腿部导弹发射器",
@@ -983,6 +998,10 @@
       "anyParts": [
         "leftLeg",
         "rightLeg"
+      ],
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
       ]
     },
     "ZN_HeatHawk_A": {

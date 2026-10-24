@@ -12,7 +12,7 @@ test("forest front presents six seats, capacity-sorted maps, AI preparation and 
   await page.goto(url);
   await page.locator("#openSkirmish").click();
   await page.locator("#createOfflineRoom").click();
-  await expect(page.locator("#roomMapSelect option")).toHaveCount(9);
+  await expect(page.locator("#roomMapSelect option")).toHaveCount(13);
   const counts = await page
     .locator("#roomMapSelect option")
     .evaluateAll((options) => options.map((o) => Rules.getMap(o.value).spawns.length));

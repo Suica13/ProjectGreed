@@ -15,6 +15,7 @@ from unit_visuals import normalize_visuals
 from unit_movement import configure_movement
 from unit_introductions import apply_introduction
 from unit_parts import apply_parts
+from unit_muzzle_effects import apply_muzzle_effects
 from unit_skills import import_tackle_assets
 
 def read(path):
@@ -76,6 +77,9 @@ UNITS = [
    "General-purpose unit without a shield; machine gun or bazooka with a Heat Hawk.",
    "独立した盾を持たない汎用機。マシンガンまたはバズーカとヒート・ホークを装備。"),
   [("machine_gun","ZN_120mmMG"),("bazooka","ZN_270mmBazooka")], ["ZN_HeatHawk_A"]),
+ ("MS_09R","力克大魔","Rick Dom","リック・ドム",
+  ("大魔的宇宙战式样，机动性略有提升。", "Space combat variant of the Dom with improved mobility.", "ドムの宇宙戦仕様。機動性を向上。"),
+  [("bazooka","ZN_360mmBazooka"),("machine_gun","ZN_120mmMG")], ["ZN_HeatSaber_A","ZN_MS_09_ChestBeam"]),
  ("MS_09","大魔","Dom","ドム",
   ("重装气垫型：高速移动、实弹防护较强，配备胸部扩散光束炮和热能军刀。",
    "Fast hovering heavy unit with strong ballistic protection, chest beam and Heat Saber.",
@@ -116,10 +120,14 @@ def animation_clip(hooks, animations):
             return match[1]
     return None
 
+def unit_source(unit_id):
+    folder = "MS_09" if unit_id == "MS_09R" else unit_id
+    return ROOT / f"Units/BattleUnits/{folder}/{unit_id}.ini"
+
 def visuals(unit_id, data):
     display_code = {"RGM_79_G":"RGM-79[G]", "RX_79_G":"RX-79[G]"}.get(unit_id, unit_id.replace("_","-"))
     prefab = dict(schemaVersion=2,id=unit_id,code=display_code,
-        source=str((ROOT/f"Units/BattleUnits/{unit_id}/{unit_id}.ini").relative_to(ROOT.parent)).replace("\\","/"),
+        source=str(unit_source(unit_id).relative_to(ROOT.parent)).replace("\\","/"),
         materials={"textures":{}},skeleton={},layers=[],animations={})
     for name in data:
         value = section(data,name)
@@ -169,8 +177,8 @@ def visuals(unit_id, data):
     hp=number(data["core"]["maxHp"])/2
     shield_hp=number(data["core"].get("maxShield",0))/2
     boost,turn,reaction = stat(data,"boostMoveSpeed"),stat(data,"baseTurnSpeed"),stat(data,"baseReactionLevel")
-    # 转向与反应参考回避能力；推进速度只参考移动距离。大魔单独体现高移动、低机动。
-    mobility=85 if unit_id=="MS_09" else round((.5*turn/1.75+.5*reaction/115)*20)*5
+    # Native reaction controls evasion; boost speed controls movement independently.
+    mobility=reaction
     prefab["stats"]=dict(hp=hp,en=100,move=max(3,min(9,round(5*boost/1.4))),mobility=mobility,cost=300,counterLimit=1)
     prefab["attackBonuses"]=dict(melee=max(0,stat(data,"baseCqbLevel",100)-100),
         shooting=max(0,stat(data,"baseShootLevel",100)-100),beam=0,shell=0)
@@ -182,7 +190,7 @@ def visuals(unit_id, data):
     prefab["sourceStats"]=dict(hp=number(data["core"]["maxHp"]),walkSpeed=stat(data,"baseMoveSpeed"),boostSpeed=boost,turnSpeed=turn,reaction=reaction,
         shooting=stat(data,"baseShootLevel"),melee=stat(data,"baseCqbLevel"))
     prefab["presentation"]=dict(shield=shield_hp>0,mapScale=1,battleScale=1,idle="Common_Idle",
-        move="OnMoving" if unit_id=="MS_09" else "OnMovingWalk",stagger="Common_Stagger",dodge="Common_Dodge_L",deathEffect="Explosion_Ground_1")
+        move="OnMoving" if unit_id in ("MS_09", "MS_09R") else "OnMovingWalk",stagger="Common_Stagger",dodge="Common_Dodge_L",deathEffect="Explosion_Ground_1")
     return configure_movement(prefab, data)
 
 def mount(prefab, turret, layer_name=None, bone="arm2"):
@@ -223,7 +231,7 @@ def import_effect(projectile, effects):
         drift=number(value.get("ySpeedRelative",0))*60,sounds=sounds,source="MOD native "+name)
     return name
 
-def weapon(prefab, reference, effects):
+def import_weapon(prefab, reference, effects):
     data=load(ROOT/reference)
     turret_names=[name for name in data if name.startswith("turret_")]
     key=turret_names[0][7:]
@@ -326,17 +334,17 @@ def weapon(prefab, reference, effects):
 
 def build(unit, effects):
     unit_id,zh,en,ja,descriptions,kits,secondary=unit
-    data=load(ROOT/f"Units/BattleUnits/{unit_id}/{unit_id}.ini")
+    data=load(unit_source(unit_id))
     prefab=visuals(unit_id,data)
     prefab.update(name=zh,description=descriptions[0],localization=localized(zh,en,ja,descriptions))
     prefab["weapons"]={}
     wanted={weapon for _,weapon in kits}|set(secondary)
-    own=load(ROOT/f"Units/BattleUnits/{unit_id}/{unit_id}.ini")
+    own=load(unit_source(unit_id))
     references=read_source_weapons(unit_id)
     for reference in references:
         key=next((name[7:] for name in load(ROOT/reference) if name.startswith("turret_")),None)
         if key in wanted:
-            key,value=weapon(prefab,reference,effects);prefab["weapons"][key]=value
+            key,value=import_weapon(prefab,reference,effects);prefab["weapons"][key]=value
     if set(prefab["weapons"])!=wanted:
         raise ValueError("Missing weapons: "+str(wanted-set(prefab["weapons"])))
     fixed={"Common_SingleVulcan_RX_79_G","ZN_MS_09_ChestBeam","ZN_MS_06J_LegMS","Common_Cannon_AntiAir"}
@@ -352,12 +360,12 @@ def build(unit, effects):
             localization=localized(names[0]+"套件",names[1]+" Kit",names[2]+"装備")))
     # Translate only understood visibility conditions into ordinary named data.
     for layer in list(prefab["layers"]):
-        condition=layer.pop("_visibility")
+        condition=layer.pop("_visibility", "")
         equipment=re.search(r"EquipmentIndex\s*==\s*(\d+)",condition)
         if equipment:
             original_index=int(equipment[1])
             # Native equipment index mapping differs from kit presentation order.
-            native = (["ZN_360mmBazooka","ZN_120mmMG"] if unit_id=="MS_09" else
+            native = (["ZN_360mmBazooka","ZN_120mmMG"] if unit_id in ("MS_09", "MS_09R") else
                 ["EF_100mmMG","EF_GroundTypeBazooka","EF_GroundTypeBeamRifle","EF_180mmCannon","EF_GroundTypeMissileLauncher"] if unit_id in ("RGM_79_G","RX_79_G") else
                 ["ZN_MS_14_BR","ZN_360mmBazooka","ZN_MMP80MG"] if unit_id=="MS_14A" else
                 ["ZN_120mmMG","ZN_270mmBazooka","ZN_MagellaCannon"] if unit_id=="MS_06J" else
@@ -390,12 +398,14 @@ def build(unit, effects):
     # Reject unhandled source expressions instead of embedding them in runtime JSON.
     if re.search(r"memory\.|self\.resource|\$\{",json.dumps(prefab)):
         raise ValueError("Untranslated MOD expression: "+unit_id)
+    if unit_id == "RX_79_G":
+        prefab["stats"]["cost"] = 750
     if unit_id == "MS_14A":
         prefab["stats"]["hp"] = 24000
         prefab["stats"]["cost"] = 750
     if unit_id == "MS_06F2":
         prefab["code"] = "MS-06F2"
-        prefab["stats"].update(hp=18000, move=5, mobility=95, cost=350)
+        prefab["stats"].update(hp=18000, move=5, cost=350)
         prefab["attackBonuses"].update(melee=5, shooting=15)
         # Keep native weapons, timing and mounts, with damage in the GM tier.
         for key, value in prefab["weapons"].items():
@@ -428,14 +438,14 @@ def build(unit, effects):
         kit["cost"] = kit_costs[kit["id"]]
     apply_introduction(prefab, data)
     prefab = normalize_visuals(prefab, ASSETS / "units" / unit_id)
-    if unit_id == "MS_09":
+    if unit_id in ("MS_09", "MS_09R"):
         def correct(value):
             if isinstance(value, dict):
                 return {key.replace("360mm", "380mm"): (item if key == "source" else correct(item)) for key, item in value.items()}
             if isinstance(value, list):
                 return [correct(item) for item in value]
             return value.replace("360mm", "380mm") if isinstance(value, str) else value
-        original = ASSETS / "units/MS_09/textures/ZN_360mmBazooka.png"
+        original = ASSETS / f"units/{unit_id}/textures/ZN_360mmBazooka.png"
         corrected = original.with_name("ZN_380mmBazooka.png")
         asset(original, corrected)
         original.unlink()
@@ -444,13 +454,27 @@ def build(unit, effects):
         # Keep native weapon/asset IDs; correct the displayed calibre in every language.
         for entry in [prefab["weapons"]["ZN_360mmBazooka"], *prefab["weaponKits"]]:
             entry["name"] = entry["name"].replace("360mm", "380mm")
-            for localized in entry.get("localization", {}).values():
-                localized["name"] = localized["name"].replace("360mm", "380mm")
+            for translation in entry.get("localization", {}).values():
+                translation["name"] = translation["name"].replace("360mm", "380mm")
+    if unit_id == "MS_09R":
+        # Use the balanced Dom platform, retaining Rick Dom's native visuals and mounts.
+        dom = read(ASSETS / "units/MS_09/unit.json")
+        for key in ("stats", "attackBonuses", "defenses", "shield", "weaponKits"):
+            prefab[key] = copy.deepcopy(dom[key])
+        prefab["stats"].update(adaptability={"ground": 50, "space": 100},
+                               partStructuralStrength=stat(data, "partStructuralStrength"))
+        for key, baseline in dom["weapons"].items():
+            native = prefab["weapons"].get(key)
+            if native:
+                prefab["weapons"][key] = copy.deepcopy(baseline)
+                if "muzzle" in native:
+                    prefab["weapons"][key]["muzzle"] = native["muzzle"]
+    apply_muzzle_effects(prefab, data, effects)
     return apply_parts(prefab, data)
 
 def read_source_weapons(unit_id):
     from mod_source import parse
-    own=parse(ROOT/f"Units/BattleUnits/{unit_id}/{unit_id}.ini")
+    own=parse(unit_source(unit_id))
     return re.findall(r"ROOT:(Units/BattleUnits/Weapon/[^,\s]+)",own["core"]["copyFrom"])
 
 def main():
