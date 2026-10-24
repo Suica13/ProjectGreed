@@ -8,10 +8,17 @@ const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 const inlineScript = (source) => source.replace(/<\/script/gi, "<\\/script");
 let html = read("client/template.html");
 const project = JSON.parse(read("project.json"));
+const clientConfig = JSON.parse(read("client/config.json"));
+if (
+  typeof clientConfig.defaultServerAddress !== "string" ||
+  !clientConfig.defaultServerAddress.trim()
+)
+  throw Error("client/config.json: defaultServerAddress must be a non-empty server address");
 html = html
   .replaceAll("__PROJECT_NAME__", project.name)
   .replaceAll("__PROJECT_VERSION__", project.version)
-  .replace("__PROJECT_META__", json(project));
+  .replace("__PROJECT_META__", json(project))
+  .replace("__CLIENT_CONFIG__", json(clientConfig));
 for (const [key, file] of [
   ["DATA", null],
   ["FORMATION", "client/formation.js"],

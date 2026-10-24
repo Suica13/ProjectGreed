@@ -1664,6 +1664,7 @@
     </script>
     <script>
       const PROJECT = {"name":"ProjectGreed","version":"V0.1"};
+      const CLIENT_CONFIG = {"defaultServerAddress":"114.66.40.147:1313"};
       const ART = JSON.parse(document.getElementById("art").textContent);
       /* 普通数据驱动的攻击时间轴。delay 是等待秒数，shots 是本 Step 发射数。 */
 const WeaponSequence = (() => {
@@ -5011,8 +5012,7 @@ const Net = (() => {
   try {
     last = JSON.parse(storage.get("slg-last") || "null");
   } catch {}
-  byId("serverAddress").value =
-    location.protocol === "file:" ? "127.0.0.1:1313" : location.host || "127.0.0.1:1313";
+  byId("serverAddress").value = CLIENT_CONFIG.defaultServerAddress;
   if (last) {
     byId("serverAddress").value = last.url;
     byId("roomCode").value = last.room;

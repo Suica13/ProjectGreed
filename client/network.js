@@ -424,8 +424,7 @@ const Net = (() => {
   try {
     last = JSON.parse(storage.get("slg-last") || "null");
   } catch {}
-  byId("serverAddress").value =
-    location.protocol === "file:" ? "127.0.0.1:1313" : location.host || "127.0.0.1:1313";
+  byId("serverAddress").value = CLIENT_CONFIG.defaultServerAddress;
   if (last) {
     byId("serverAddress").value = last.url;
     byId("roomCode").value = last.room;
