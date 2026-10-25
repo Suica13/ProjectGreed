@@ -50,6 +50,7 @@ const Net = (() => {
     if (n.local || n.connecting || !n.active) return;
     connect("resume", true);
   };
+  byId("abandonReconnect").onclick = () => openMenu();
   const storage = {
     get(k) {
       try {

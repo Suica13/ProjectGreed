@@ -1,5 +1,6 @@
 /* 大地图交战演出：使用地图坐标和已裁定逐发结果，不修改权威战局。 */
 const MapCombat = (() => {
+  const restingPoses = new Map();
   const displayed = new Map(),
     unitStartDelays = new Map();
   let frame = null,
@@ -11,6 +12,7 @@ const MapCombat = (() => {
   const clone = (value) => JSON.parse(JSON.stringify(value));
   function reset() {
     displayed.clear();
+    restingPoses.clear();
     unitStartDelays.clear();
     frame = null;
     lanes = [];
@@ -82,7 +84,8 @@ const MapCombat = (() => {
     // 演出沿用玩家当前的镜头位置与倍率。
   }
   function setup(view) {
-    const event = view.events[view.index];
+    const event = { ...view.events[view.index] };
+    const previousPoses = poses();
     const actors = [event.from, event.to].map((id) => {
       const unit = displayed.get(id) || view.actors.find((unit) => unit.id === id);
       return {
@@ -99,6 +102,13 @@ const MapCombat = (() => {
       };
     });
     const [source, target] = actors;
+    // Use the actual visible dodge position across weapon queues and counter delays.
+    for (const [actor, field] of [[source, "sourceDodgeSlot"], [target, "targetDodgeSlot"]]) {
+      const previous = previousPoses.get(actor.unit.id);
+      if (previous)
+        event[field] = Math.max(-1, Math.min(1,
+          (previous.y - actor.y) / (ART.presentation.dodgeDistance * actor.scale)));
+    }
     const aim = (Math.atan2(target.x - source.x, -(target.y - source.y)) * 180) / Math.PI;
     source.angle = Rules.modelOf(source.unit).ship ? source.unit.angle : aim;
     source.aimAngle = aim;
@@ -112,6 +122,9 @@ const MapCombat = (() => {
     return frame;
   }
   function commit(view, parallel = false) {
+    for (const [id, pose] of framePoses())
+      restingPoses.set(id, { x: pose.x, y: pose.y, angle: pose.angle,
+        clip: null, time: 0, moving: false, hidden: pose.hidden });
     const event = view.events[view.index],
       target = displayed.get(event.to),
       source = displayed.get(event.from);
@@ -304,8 +317,8 @@ const MapCombat = (() => {
     }
   }
   function poses() {
-    if (!lanes.length) return framePoses();
-    const result = new Map(),
+    if (!lanes.length) return new Map([...restingPoses, ...framePoses()]);
+    const result = new Map(restingPoses),
       priority = new Map(),
       saved = frame;
     for (const lane of lanes)

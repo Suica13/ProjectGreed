@@ -2300,7 +2300,10 @@
     >
       <h2 id="disconnectTitle">连接已断开</h2>
       <p id="disconnectStatus" role="status">点击重连，恢复当前房间和对局。</p>
-      <button id="reconnectRoom" class="primary">重连</button>
+      <div class="actions">
+        <button id="reconnectRoom" class="primary">重连</button>
+        <button id="abandonReconnect">放弃重试</button>
+      </div>
     </dialog>
     <style>
       .disconnect-dialog {

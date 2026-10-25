@@ -15,7 +15,8 @@ function createRoomEngine({
   roomReturnMs = 5000,
   aiDelayMs = 500,
   aiBattleMs = 10000,
-  hostReconnectMs = 10000,
+  hostReconnectMs = 60000,
+  reconnectGraceMs = 60000,
 }) {
   // 未参战的出生点不等待连接；参战席位掉线仍然暂停，保留重连/补位流程。
   const createPlanner =
@@ -30,6 +31,8 @@ function createRoomEngine({
         onlineMember(player) ||
         (room.started && !player && (room.phase === "assembly" || !room.activeSeats?.[seat])),
     );
+  const reconnectTimers = new Map();
+  const retained = (room) => members(room).some((m) => onlineMember(m) || reconnectTimers.has(m));
   const onlineMember = (member) => member?.ws?.readyState === 1;
   const members = (room) => [...room.members.values()];
   const returnTimers = new Map();
@@ -79,13 +82,14 @@ function createRoomEngine({
       room.seats[member.seat] = null;
       if (room.battle) room.battle.ready[member.seat] = false;
     }
+    clearReconnect(member);
     room.members.delete(member.id);
     delete ws.room;
     delete ws.memberId;
     delete ws.seat;
     send(ws, { type: "room_closed", message: "已离开房间。" });
     ws.close(1000, "Left room");
-    if (!members(room).some(onlineMember)) {
+    if (!retained(room)) {
       destroyRoom(room);
     } else {
       room.revision++;
@@ -134,18 +138,23 @@ function createRoomEngine({
       chat: room.chat.filter(
         (message) => recipient && chatChannels.canRead(recipient.seat, message.channel || "all"),
       ),
-      members: members(room).map((member) => ({
-        id: member.id,
-        name: member.name,
-        seat: member.seat,
-        ready: member.ready,
-        connected: !!member.bot || onlineMember(member),
-        bot: !!member.bot,
-        shareUnits: !!member.shareUnits,
-        aiSettings: member.bot ? member.aiSettings : undefined,
-        formationPreset: member.formationPreset || null,
-        armySettings: G.armySettings(member),
-      })),
+      reservedSeats: members(room)
+        .filter((m) => reconnectTimers.has(m) && m.seat !== null)
+        .map((m) => ({ seat: m.seat, until: m.disconnectedUntil })),
+      members: members(room)
+        .filter((m) => m.bot || onlineMember(m))
+        .map((member) => ({
+          id: member.id,
+          name: member.name,
+          seat: member.seat,
+          ready: member.ready,
+          connected: !!member.bot || onlineMember(member),
+          bot: !!member.bot,
+          shareUnits: !!member.shareUnits,
+          aiSettings: member.bot ? member.aiSettings : undefined,
+          formationPreset: member.formationPreset || null,
+          armySettings: G.armySettings(member),
+        })),
       you: recipient ? { id: recipient.id, seat: recipient.seat } : undefined,
       log: room.log,
       logNames: room.logNames || [],
@@ -190,7 +199,7 @@ function createRoomEngine({
     hostTimers.set(room, entry);
   }
   function broadcast(room, ack) {
-    if (!members(room).some(onlineMember)) {
+    if (!retained(room)) {
       destroyRoom(room);
       return;
     }
@@ -216,6 +225,7 @@ function createRoomEngine({
     clearTimeout(aiTimers.get(room));
     aiTimers.delete(room);
     clearHostTimer(room);
+    for (const member of members(room)) clearReconnect(member);
     rooms.delete(room.code);
     broadcastRooms();
   }
@@ -814,6 +824,11 @@ function createRoomEngine({
     for (const target of room.game.units.filter((t) => G.onMap(t) && t.team !== u.team))
       for (const weapon of G.modelOf(u).weapons)
         if (G.canAttack(room.game, u, target, weapon)) {
+          try {
+            G.attackQueue(room.game, u, target, [weapon]);
+          } catch {
+            continue;
+          }
           const estimate = G.estimate(room.game, u, target, weapon);
           const score = estimate.hit * estimate.damage;
           if (!best || score > best.score) best = { target, weapon, score };
@@ -883,21 +898,49 @@ function createRoomEngine({
     const timer = setTimeout(() => {
       aiTimers.delete(room);
       if (rooms.get(room.code) !== room || room.revision !== revision) return;
-      const intent = nextAIAction(room);
-      if (!intent) return;
-      if (intent.finishBattle) {
-        finishBattle(room);
-        broadcast(room);
-        return;
+      let intent;
+      try {
+        intent = nextAIAction(room);
+        if (!intent) return;
+        if (intent.finishBattle) {
+          finishBattle(room);
+          broadcast(room);
+          return;
+        }
+        action(intent.player.ws, {
+          id: randomId(),
+          revision: room.revision,
+          round: room.game.round,
+          reactionId: room.pending?.id,
+          action: intent.action,
+          ...intent.fields,
+        });
+      } catch (error) {
+        console.error("AI action failed", room.code, intent?.action, error);
+        // A rejected bot command must never terminate the shared server.
+        // End only this unit's action when it is still safe to do so.
+        const unit = room.game.units.find((u) => u.id === intent?.fields?.unitId);
+        if (
+          room.phase === "idle" &&
+          unit &&
+          !unit.acted &&
+          !unit.plan &&
+          G.onMap(unit) &&
+          unit.team === room.game.team
+        ) {
+          try {
+            action(intent.player.ws, {
+              id: randomId(),
+              revision: room.revision,
+              round: room.game.round,
+              action: "wait",
+              unitId: unit.id,
+            });
+          } catch (fallbackError) {
+            console.error("AI fallback failed", room.code, fallbackError);
+          }
+        }
       }
-      action(intent.player.ws, {
-        id: randomId(),
-        revision: room.revision,
-        round: room.game.round,
-        reactionId: room.pending?.id,
-        action: intent.action,
-        ...intent.fields,
-      });
     }, delay);
     timer.unref?.();
     aiTimers.set(room, timer);
@@ -1693,6 +1736,7 @@ function createRoomEngine({
         room.seats[seat] = member;
       }
     }
+    clearReconnect(member);
     let old = member.ws;
     member.ws = ws;
     ws.room = code;
@@ -1714,16 +1758,40 @@ function createRoomEngine({
     broadcast(room);
   }
 
+  function clearReconnect(member) {
+    clearTimeout(reconnectTimers.get(member));
+    reconnectTimers.delete(member);
+    delete member.disconnectedUntil;
+  }
   function disconnect(ws) {
     let room = rooms.get(ws.room);
     const member = room?.members.get(ws.memberId);
     if (member?.ws === ws) {
       member.ws = null;
+      clearReconnect(member);
+      member.disconnectedUntil = Date.now() + reconnectGraceMs;
+      const timer = setTimeout(() => {
+        if (
+          rooms.get(room.code) !== room ||
+          room.members.get(member.id) !== member ||
+          onlineMember(member)
+        )
+          return;
+        clearReconnect(member);
+        if (member.seat !== null && room.seats[member.seat] === member)
+          room.seats[member.seat] = null;
+        room.members.delete(member.id);
+        room.revision++;
+        broadcast(room);
+      }, reconnectGraceMs);
+      timer.unref?.();
+      reconnectTimers.set(member, timer);
       room.revision++;
       broadcast(room);
     }
   }
   function close() {
+    for (const member of [...reconnectTimers.keys()]) clearReconnect(member);
     for (const timer of returnTimers.values()) clearTimeout(timer);
     returnTimers.clear();
     for (const timer of resultTimers.values()) clearTimeout(timer);

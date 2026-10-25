@@ -763,5 +763,6 @@
   "搭乘": "Board",
   "房间名称需为1–20位中文、英文字母、数字、下划线或短横线": "Room names must contain 1–20 Chinese characters, English letters, numbers, underscores or hyphens.",
   "修改名称": "Edit Name",
-  "保存名称": "Save Name"
+  "保存名称": "Save Name",
+  "放弃重试": "Stop retrying"
 }

@@ -1754,7 +1754,8 @@ const Tactics = (() => {
       for (const e of enemies)
         for (const w of modelOf(u).weapons)
           if (
-            (!destinations || (w.slot !== "skill" && actionCost(w) <= actionPoints(u))) &&
+            (!destinations || w.slot !== "skill") &&
+            actionCost(w) <= actionPoints(u) + (u.plan?.actionCost ?? 0) &&
             canAttack(g, virtual, e, w)
           ) {
             let ex = estimate(g, virtual, e, w),

@@ -100,3 +100,25 @@ test("slow responses get fifteen seconds before recovery and an old timer cannot
     0,
   );
 });
+
+test("abandon reconnect closes modal and forgets the session", async ({ page }) => {
+  await fixture(page);
+  await page.evaluate(() => {
+    Net.serverURL = "ws://127.0.0.1:1313/ws";
+    Net.room = "ABANDON";
+    sessionStorage.setItem("slg-last", JSON.stringify({ url: Net.serverURL, room: Net.room }));
+    Net.connecting = true;
+    byId("disconnectDialog").showModal();
+  });
+  await page.locator("#abandonReconnect").click();
+  assert.deepEqual(
+    await page.evaluate(() => ({
+      active: Net.active,
+      connecting: Net.connecting,
+      open: byId("disconnectDialog").open,
+      page: pageView,
+      last: sessionStorage.getItem("slg-last"),
+    })),
+    { active: false, connecting: false, open: false, page: "menu", last: null },
+  );
+});

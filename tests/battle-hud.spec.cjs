@@ -916,3 +916,31 @@ test("counter targets switch from list and map and clear the entire incompatible
   await clickCell(page,11,10);
   assert.deepEqual(await page.evaluate(()=>[counterTargetId,counterDraftState.ids]),["0-1",[]]);
 });
+
+
+test("dodge position persists through counter delay and into gunfire", async ({ page }) => {
+  await fixture(page);
+  const result=await page.evaluate(()=>{
+    const a=game.units[0], b=game.units[2], w=Rules.modelOf(a).weapons.find(w=>w.id==="EF_90mmMG");
+    const actors=JSON.parse(JSON.stringify([a,b]));
+    const events=Rules.fight(game,a,b,w,"counter",w.id);
+    if(events.length!==2) throw Error("counter fixture missing");
+    for(const strike of events[0].strikes) Object.assign(strike,{hit:false,damage:0,shieldDamage:0,dodgeTo:1});
+    Object.assign(events[0],{hit:false,damage:0,targetDodgeEnd:1,after:events[0].before});
+    events[1].sourceDodgeSlot=0;
+    const record={id:"dodge-transition",actors,events,before:Object.fromEntries(actors.map(u=>[u.id,u.hp]))};
+    MapCombat.reset();MapCombat.seed([record]);
+    battleView={battles:[record],mapBattle:true};phase="battle";
+    MapCombat.begin(battleView,()=>0.5);
+    const now=performance.now()+600;MapCombat.update(now);
+    const f=MapCombat.frames[0];f.time=f.plan.duration;f.lastNow=now;
+    const before=MapCombat.units().find(u=>u.id===b.id).mapPose;
+    MapCombat.update(now);
+    const waiting=MapCombat.units().find(u=>u.id===b.id).mapPose;
+    MapCombat.update(now+501);
+    const firing=MapCombat.units().find(u=>u.id===b.id).mapPose;
+    return {before:{x:before.x,y:before.y},waiting:{x:waiting.x,y:waiting.y},firing:{x:firing.x,y:firing.y}};
+  });
+  assert.deepEqual(result.waiting,result.before);
+  assert.deepEqual(result.firing,result.before);
+});

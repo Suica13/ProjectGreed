@@ -652,10 +652,16 @@ const RoomPanel = (() => {
         );
         choose.id = "chooseSeat" + seat;
         choose.title = self.seat === seat ? "当前出生点" : "选择出生点" + spawn.position;
-        choose.disabled = busy || !!member;
+        const reserved = snapshot.reservedSeats?.some((item) => item.seat === seat);
+        choose.disabled = busy || !!member || !!reserved;
         choose.onclick = () => Net.request("switch_seat", { seat });
         spawnCell.append(choose);
-        if (!snapshot.started && self.id === snapshot.hostId && (!member || member.bot)) {
+        if (
+          !snapshot.started &&
+          self.id === snapshot.hostId &&
+          (!member || member.bot) &&
+          !reserved
+        ) {
           const aiButton = element("button", "choose-spawn", member ? "移除 AI" : "添加 AI");
           aiButton.id = (member ? "removeAI" : "addAI") + seat;
           aiButton.disabled = busy;
@@ -689,7 +695,11 @@ const RoomPanel = (() => {
       const button = joinButtons[team];
       const current =
         self.seat !== null && self.seat !== undefined && Rules.seatTeam(self.seat) === team;
-      const full = !seats.some((item) => !roster.some((player) => player.seat === item.seat));
+      const full = !seats.some(
+        (item) =>
+          !roster.some((player) => player.seat === item.seat) &&
+          !snapshot.reservedSeats?.some((reserved) => reserved.seat === item.seat),
+      );
       button.disabled = busy || current || full;
       button.textContent = current
         ? "当前队伍" + (team + 1)

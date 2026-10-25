@@ -20,7 +20,8 @@ function createServer({
   roomReturnMs = 5000,
   aiDelayMs = 500,
   aiBattleMs = 10000,
-  hostReconnectMs = 10000,
+  hostReconnectMs = 60000,
+  reconnectGraceMs = 60000,
 } = {}) {
   const rooms = new Map(),
     publicDir = path.join(__dirname, "public");
@@ -105,6 +106,7 @@ function createServer({
     aiDelayMs,
     aiBattleMs,
     hostReconnectMs,
+    reconnectGraceMs,
     randomId: () => crypto.randomUUID(),
     randomSeed: () => crypto.randomBytes(4).readUInt32LE(),
     randomToken: () => crypto.randomBytes(24).toString("hex"),

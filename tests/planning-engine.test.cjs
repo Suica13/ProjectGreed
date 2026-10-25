@@ -2,7 +2,7 @@ const test = require("node:test"),
   assert = require("node:assert/strict");
 const G = require("../shared/rules.js"),
   { createRoomEngine } = require("../shared/room-engine.js");
-function fixture(t, count = 2, unitCount = 1) {
+function fixture(t, count = 2, unitCount = 1, options = {}) {
   let seq = 0;
   const frames = new Map(),
     errors = new Map();
@@ -16,6 +16,7 @@ function fixture(t, count = 2, unitCount = 1) {
       if (m.type === "error") errors.set(ws, m);
     },
     aiDelayMs: 10,
+    ...options,
   });
   t.after(() => engine.close());
   const clients = Array.from({ length: count }, () => ({ readyState: 1 }));
@@ -564,4 +565,68 @@ test("deployment logs every occupied player's actual roster and total kit COST e
   act(0, "sync");
   act(1, "sync");
   assert.equal(room.log.filter((line) => line.includes("部署编制：")).length, 4);
+});
+
+for (const ap of [0, 1, 2, 4])
+  test(`AI timer uses only affordable attacks with ${ap} remaining AP`, async (t) => {
+    const { engine, room } = fixture(t);
+    const u = room.game.units.find((u) => u.team === 0);
+    u.actionPoints = ap;
+    u.moved = true;
+    room.seats[0].bot = true;
+    engine.broadcast(room);
+    await new Promise((resolve) => setTimeout(resolve, 45));
+    engine.close();
+    assert(u.acted);
+    assert(u.actionPoints >= 0);
+    if (u.plan) {
+      assert(u.plan.actionCost <= ap);
+      assert(
+        u.plan.weapons.every(
+          (id) => G.actionCost(G.modelOf(u).weapons.find((w) => w.id === id)) <= ap,
+        ),
+      );
+    } else assert.equal(ap, 0);
+  });
+
+test("disconnect hides player, reserves seat, and resumes within grace", async (t) => {
+  const { engine, room, clients, frames } = fixture(t, 2, 1, { reconnectGraceMs: 100 });
+  const member = room.seats[1],
+    token = member.token;
+  engine.disconnect(clients[1]);
+  assert.equal(room.seats[1], member);
+  assert(!frames.get(clients[0]).members.some((m) => m.id === member.id));
+  assert.equal(frames.get(clients[0]).reservedSeats[0].seat, 1);
+  const ws = { readyState: 1 };
+  engine.join(ws, { mode: "resume", room: room.code, token });
+  assert.equal(room.seats[1], member);
+  assert.equal(member.ws, ws);
+  assert.equal(frames.get(ws).reservedSeats.length, 0);
+  await new Promise((r) => setTimeout(r, 130));
+  assert.equal(room.seats[1], member);
+});
+
+test("expired disconnect frees seat and a replacement can take over", async (t) => {
+  const { engine, room, clients } = fixture(t, 2, 1, { reconnectGraceMs: 20 });
+  const member = room.seats[1];
+  engine.disconnect(clients[1]);
+  await new Promise((r) => setTimeout(r, 45));
+  assert.equal(room.seats[1], null);
+  assert(!room.members.has(member.id));
+  assert.throws(() =>
+    engine.join({ readyState: 1 }, { mode: "resume", room: room.code, token: member.token }),
+  );
+  const ws = { readyState: 1 };
+  engine.join(ws, { mode: "join", room: room.code });
+  engine.action(ws, {id:"takeover",revision:room.revision,round:room.game.round,
+    action:"switch_seat",seat:1});
+  assert.equal(ws.seat, 1);
+});
+
+test("all disconnected room survives grace then dissolves", async (t) => {
+  const { engine, room, clients } = fixture(t, 2, 1, { reconnectGraceMs: 20 });
+  clients.forEach((ws) => engine.disconnect(ws));
+  assert(engine.rooms.has(room.code));
+  await new Promise((r) => setTimeout(r, 45));
+  assert(!engine.rooms.has(room.code));
 });
