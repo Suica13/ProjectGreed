@@ -51,7 +51,7 @@ const Formation = (() => {
     if (Number.isInteger(active) && active >= 0 && active < squads.length) index = active;
   } catch {}
   const pickerKits = new Map();
-  const catalogFilters = { faction: "", era: "", types: "" };
+  const catalogFilters = { faction: "", era: "", types: "", environment: "" };
   const current = () =>
     Rules.validateFormation(squads[index].units, Infinity, Rules.catalog.formation.maxUnits * 3);
   const ownPlayer = () => Net.snapshot?.members.find((player) => player.id === Net.memberId);
@@ -70,6 +70,29 @@ const Formation = (() => {
       : Rules.catalog.formation.maxUnits * 3;
   const cost = (entries) =>
     entries.reduce((n, e) => n + UnitModels[e.unitId + "__" + e.kitId].cost, 0);
+  function renderPickerCost() {
+    const prefabId = byId("formationPrefab").value,
+      prefab = Rules.catalog.prefabs.find((candidate) => candidate.id === prefabId),
+      kitId = prefab && (pickerKits.get(prefab.id) || prefab.weaponKits[0].id),
+      model = kitId && UnitModels[prefab.id + "__" + kitId],
+      formationCost = cost(draft),
+      formationLimit = budget(),
+      unitCost = model?.cost,
+      unitCostLimit = restrictions().unitCostLimit ?? Infinity,
+      formation = element(
+        "span",
+        formationCost > formationLimit ? "danger-text" : "",
+        I18n.text("编组COST") + ": " + formationCost + " / " + displayLimit(formationLimit),
+      ),
+      unit = element(
+        "span",
+        Number.isFinite(unitCost) && unitCost > unitCostLimit ? "danger-text" : "",
+        I18n.text("单位COST") + ": " + (unitCost ?? "—") + " / " + displayLimit(unitCostLimit),
+      );
+    formation.id = "formationPickerSquadCost";
+    unit.id = "formationPickerUnitCost";
+    byId("formationPickerCost").replaceChildren(formation, unit);
+  }
   function persist() {
     try {
       localStorage.setItem(storageKey, JSON.stringify(squads));
@@ -77,6 +100,68 @@ const Formation = (() => {
     } catch {
       note("浏览器无法保存编组，本次会话仍可使用。");
     }
+  }
+  const sharePrefix = "PGF1.";
+  function encodeShare(name, units) {
+    const clean = Rules.validateFormation(units, Infinity, Rules.catalog.formation.maxUnits * 3),
+      payload = JSON.stringify({
+        version: 1,
+        name: name.trim().slice(0, 32) || "未命名编组",
+        units: clean,
+      }),
+      bytes = new TextEncoder().encode(payload);
+    let binary = "";
+    for (let offset = 0; offset < bytes.length; offset += 8192)
+      binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));
+    return sharePrefix + btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function decodeShare(code) {
+    code = code.trim();
+    if (!code.startsWith(sharePrefix) || code.length > 100000) throw Error("编组分享代码无效。");
+    let encoded = code.slice(sharePrefix.length).replace(/-/g, "+").replace(/_/g, "/");
+    encoded += "=".repeat((4 - (encoded.length % 4)) % 4);
+    let payload;
+    try {
+      const binary = atob(encoded),
+        bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+      payload = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    } catch {
+      throw Error("编组分享代码无效。");
+    }
+    if (
+      !payload ||
+      payload.version !== 1 ||
+      typeof payload.name !== "string" ||
+      !Array.isArray(payload.units)
+    )
+      throw Error("编组分享代码无效。");
+    const units = Rules.validateFormation(
+        payload.units,
+        Infinity,
+        Rules.catalog.formation.maxUnits * 3,
+      ),
+      name = payload.name.trim().slice(0, 32) || "分享编组";
+    return { name, units };
+  }
+  function uniqueSquadName(name) {
+    if (!squads.some((squad) => squad.name === name)) return name;
+    for (let number = 2; ; number++) {
+      const suffix = " (" + number + ")",
+        candidate = name.slice(0, 32 - suffix.length) + suffix;
+      if (!squads.some((squad) => squad.name === candidate)) return candidate;
+    }
+  }
+  function closeShare(focus = true) {
+    byId("formationSharePanel").hidden = true;
+    byId("formationMain").inert = false;
+    if (focus) byId("openFormationShare").focus();
+  }
+  function openShare() {
+    closeDetail();
+    byId("formationShareCode").value = "";
+    byId("formationSharePanel").hidden = false;
+    byId("formationMain").inert = true;
+    byId("formationShareCode").focus();
   }
   function refreshSelect() {
     const select = byId("formationSelect");
@@ -570,6 +655,7 @@ const Formation = (() => {
         ["射程", weapon.min + "–" + weapon.max],
         ["EN", weapon.en],
         ["AP", Rules.actionCost(weapon)],
+        ...(Number.isInteger(weapon.maxUses) ? [["\u4f7f\u7528\u6b21\u6570", weapon.maxUses]] : []),
       ]);
       card.append(metrics);
       const all = (weapon.requiredParts || [])
@@ -665,6 +751,19 @@ const Formation = (() => {
       .join("/");
   }
 
+  function unitSummaryTags(adaptability, kitName, cost) {
+    const tags = element("span", "unit-summary-tags");
+    const add = (label, kind, dim = false) =>
+      tags.append(element("span", "unit-summary-tag " + kind + (dim ? " is-dim" : ""), label));
+    const ground = adaptability?.ground ?? 0,
+      space = adaptability?.space ?? 0;
+    add(I18n.text("\u5730\u9762") + " " + ground + "%", "ground", ground < 90);
+    add(I18n.text("\u5b87\u5b99") + " " + space + "%", "space", space < 90);
+    add("COST " + cost, "cost");
+    if (kitName) add(kitName, "kit");
+    return tags;
+  }
+
   function unitTags(model) {
     const tags = element("span", "unit-tags"),
       primary = element("span", "unit-tags-primary"),
@@ -705,6 +804,7 @@ const Formation = (() => {
     byId("addFormationUnit").disabled =
       draft.length >= unitLimit() || !byId("formationPrefab").value;
     byId("openFormationPicker").disabled = draft.length >= unitLimit();
+    renderPickerCost();
     const plan = draft.length
       ? Rules.planFormation(draft, budget(), restrictions(), Rules.catalog.formation.maxUnits * 3)
       : { disabled: [] };
@@ -747,7 +847,7 @@ const Formation = (() => {
       row.dataset.formationIndex = String(i);
       if (entry.preload) row.dataset.carrierIndex = String(entry.preload.carrierIndex);
       const show = () => {
-        GameAudio.play("selectUnitSound");
+        GameAudio.selectUnit(model);
         detailIndex = i;
         catalogDetail = null;
         renderDetail();
@@ -786,13 +886,9 @@ const Formation = (() => {
         element(
           "strong",
           "",
-          `${entry.preload ? "→ " : i + 1 + ". "}${model.code} ${entry.customName || model.name}`,
+          `${entry.preload ? "" : i + 1 + ". "}${model.code} ${entry.customName || model.name}`,
         ),
-        element(
-          "small",
-          "formation-row-kit",
-          `${kit.name} · COST ${model.cost} · ${environmentLabel(model.adaptability)}`,
-        ),
+        unitSummaryTags(model.adaptability, kit.name, model.cost),
         description,
       );
       if (entry.customName) label.querySelector("strong").setAttribute("data-i18n-ignore", "");
@@ -1037,7 +1133,9 @@ const Formation = (() => {
           pickerCompatible(p) &&
           (!catalogFilters.faction || p.faction === catalogFilters.faction) &&
           (!catalogFilters.era || p.tags.includes(catalogFilters.era)) &&
-          (!catalogFilters.types || (p.unitTags || []).includes(catalogFilters.types)),
+          (!catalogFilters.types || (p.unitTags || []).includes(catalogFilters.types)) &&
+          (!catalogFilters.environment ||
+            (p.stats.adaptability?.[catalogFilters.environment] ?? 0) >= 90),
       )
       .sort(
         (a, b) =>
@@ -1064,20 +1162,20 @@ const Formation = (() => {
       info.append(
         unitTags(prefab),
         title,
-        element(
-          "small",
-          "muted",
-          "Cost:" +
-            Math.min(...costs) +
-            "-" +
-            Math.max(...costs) +
-            " · " +
-            environmentLabel(prefab.stats.adaptability),
+        unitSummaryTags(
+          prefab.stats.adaptability,
+          (
+            prefab.weaponKits.find((kit) => kit.id === pickerKits.get(prefab.id)) ||
+            prefab.weaponKits[0]
+          ).name,
+          Math.min(...costs) === Math.max(...costs)
+            ? Math.min(...costs)
+            : Math.min(...costs) + "?" + Math.max(...costs),
         ),
       );
       card.append(image, info);
       card.onclick = () => {
-        GameAudio.play("selectUnitSound");
+        GameAudio.selectUnit(prefab);
         byId("formationPrefab").value = prefab.id;
         renderCatalog();
       };
@@ -1086,7 +1184,7 @@ const Formation = (() => {
       details.setAttribute("aria-haspopup", "dialog");
       details.setAttribute("aria-label", `${prefab.code} ${prefab.name} · ${I18n.text("详情")}`);
       details.onclick = () => {
-        GameAudio.play("selectUnitSound");
+        GameAudio.selectUnit(prefab);
         byId("formationPrefab").value = prefab.id;
         renderCatalog();
         detailIndex = null;
@@ -1106,6 +1204,7 @@ const Formation = (() => {
     if (!prefabs.length) list.append(element("p", "empty", "没有符合筛选的单位"));
     list.scrollTop = scroll;
     byId("addFormationUnit").disabled = !prefabs.length || draft.length >= unitLimit();
+    renderPickerCost();
   }
   function setupCatalogFilter(id, key, values, translate = (tag) => tag) {
     const select = byId(id);
@@ -1123,6 +1222,9 @@ const Formation = (() => {
   }
   setupCatalogFilter("formationFaction", "faction", Rules.factions);
   setupCatalogFilter("formationEra", "era", Rules.eras);
+  setupCatalogFilter("formationEnvironment", "environment", ["ground", "space"], (value) =>
+    I18n.text(value === "ground" ? "\u5730\u9762" : "\u5b87\u5b99"),
+  );
   setupCatalogFilter(
     "formationType",
     "types",
@@ -1132,6 +1234,70 @@ const Formation = (() => {
     (tag) => I18n.text(Rules.unitTagName(tag)),
   );
   renderCatalog();
+  byId("openFormationShare").onclick = openShare;
+  byId("closeFormationShare").onclick = () => closeShare();
+  byId("formationSharePanel").addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeShare();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const controls = [...byId("formationSharePanel").querySelectorAll("button,input")].filter(
+      (control) => !control.disabled && control.getClientRects().length,
+    );
+    if (event.shiftKey && document.activeElement === controls[0]) {
+      event.preventDefault();
+      controls.at(-1)?.focus();
+    } else if (!event.shiftKey && document.activeElement === controls.at(-1)) {
+      event.preventDefault();
+      controls[0]?.focus();
+    }
+  });
+  byId("generateFormationShare").onclick = async () => {
+    try {
+      const input = byId("formationShareCode"),
+        code = encodeShare(byId("formationName").value, draft);
+      input.value = code;
+      input.focus();
+      input.select();
+      let copied = false;
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(code);
+          copied = true;
+        }
+      } catch {}
+      if (!copied) {
+        try {
+          copied = document.execCommand("copy");
+        } catch {}
+      }
+      note(copied ? "分享代码已复制。" : "分享代码已生成，请手动复制。");
+    } catch (error) {
+      note(error.message);
+    }
+  };
+  byId("loadSharedFormation").onclick = () => {
+    try {
+      const imported = decodeShare(byId("formationShareCode").value);
+      imported.name = uniqueSquadName(imported.name);
+      squads.push(imported);
+      index = squads.length - 1;
+      previousIndex = index;
+      draft = structuredClone(imported.units);
+      byId("formationName").value = imported.name;
+      persist();
+      refreshSelect();
+      render();
+      closeShare(false);
+      byId("formationSelect").focus();
+      note("分享编组已加载并保存。");
+    } catch (error) {
+      note(error.message || "编组分享代码无效。");
+      byId("formationShareCode").focus();
+    }
+  };
   byId("saveFormation").onclick = () => {
     try {
       const units = Rules.validateFormation(draft, Infinity, Rules.catalog.formation.maxUnits * 3);
@@ -1249,7 +1415,7 @@ const Deployment = (() => {
     const target = Rules.at(game, cell.x, cell.y),
       u = getUnit(selected);
     if (target && canEditUnit(target)) {
-      GameAudio.play("selectUnitSound");
+      GameAudio.selectUnit(target);
       selected = target.id;
       update();
       return;

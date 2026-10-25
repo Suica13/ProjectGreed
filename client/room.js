@@ -178,7 +178,9 @@ const RoomPanel = (() => {
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
     byId("roomShareAlliedUnits").checked = !!settings.shareAlliedUnits;
     byId("roomShareAlliedUnits").disabled = locked;
-    for (const id of ["roomMapSelect", "roomUnitLimit"]) byId(id).disabled = locked;
+    byId("roomFogMode").value = settings.fogMode || "full";
+    for (const id of ["roomMapSelect", "roomUnitLimit", "roomFogMode"])
+      byId(id).disabled = locked;
     // COST 输入时仍可继续打字，不因上一笔请求未确认而失去焦点。
     for (const id of ["roomCostLimit", "roomUnitCostLimit"])
       byId(id).disabled = snapshot.started || snapshot.you?.id !== snapshot.hostId;
@@ -187,11 +189,7 @@ const RoomPanel = (() => {
     });
     byId("roomCostLimit").step = Rules.catalog.formation.costStep;
     byId("roomCostLimit").min = Math.min(...Object.values(UnitModels).map((model) => model.cost));
-    byId("roomSettingsHint").textContent = snapshot.started
-      ? "对局开始后不能修改房间设置"
-      : snapshot.you?.id === snapshot.hostId
-        ? "所有房间设置自动生效；COST输入有效数值后自动更新。仅更换地图会取消准备。"
-        : "房间与队伍限制由房主设置。";
+
     drawMap(Rules.getMap(mapSelect.value));
   }
   function closeDetail() {
@@ -417,6 +415,7 @@ const RoomPanel = (() => {
     byId("roomLobbyContent").hidden = active;
     byId("roomActions").hidden = active;
     if (!active) return;
+    byId("roomStatus").hidden = false;
     byId("roomStatus").textContent = "最终编组确认后进入部署。";
     const squads = byId("finalSquads");
     squads.replaceChildren();
@@ -583,11 +582,10 @@ const RoomPanel = (() => {
     );
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local ? "离线遭遇战房间" : "房间 " + snapshot.room;
-    byId("roomStatus").textContent = snapshot.started
-      ? snapshot.connected.every(Boolean)
-        ? "游戏进行中，可切换席位或返回战斗。"
-        : "等待空队伍补位或离线玩家恢复，战局已暂停。"
-      : "房主可在出生席位未满时开始；其他出战玩家需先准备。";
+    byId("roomStatus").hidden = !snapshot.started;
+    byId("roomStatus").textContent = snapshot.connected.every(Boolean)
+      ? "游戏进行中，可切换席位或返回战斗。"
+      : "等待空队伍补位或离线玩家恢复，战局已暂停。";
     const teams = byId("teamSlots");
     const expandedFilters = [...teams.querySelectorAll(".team-filters")].map((panel) => panel.open);
     for (const button of joinButtons) button.remove();
@@ -869,6 +867,8 @@ const RoomPanel = (() => {
   }
   byId("roomShareAlliedUnits").onchange = () =>
     sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").checked });
+  byId("roomFogMode").onchange = () =>
+    sendSettings({ fogMode: byId("roomFogMode").value });
   byId("shareUnitsToAllies").onclick = () => Net.request("share_units");
   byId("roomSettings").onclick = () => {
     setPageView("room");

@@ -2262,7 +2262,17 @@
     },
     "commandAuras": [],
     "accuracyMultiplier": 1.1,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 17.36111111111111,
+      "antiDetection": -6.944444444444445,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -2336,6 +2346,11 @@
       "air": 10.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 500.0,
+      "antiDetection": -200.0
     }
   },
   "presentation": {
@@ -2348,7 +2363,8 @@
     "movement": "boost",
     "stagger": "ShipIdle",
     "dodge": "ShipIdle",
-    "deathEffect": "Explosion_Ground_1"
+    "deathEffect": "Explosion_Ground_1",
+    "moveSoundKey": "moveSound"
   },
   "weaponKits": [
     {
@@ -2383,7 +2399,36 @@
     "levelMultiplier": 0.25,
     "published": 500
   },
-  "skills": [],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 2,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "Ship"
@@ -2392,5 +2437,13 @@
     "slotCost": 1,
     "loadTags": []
   },
-  "hangars": []
+  "hangars": [],
+  "mechanics": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    }
+  ]
 }

@@ -357,7 +357,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -443,6 +453,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -455,7 +470,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "钢坦克",
   "faction": "EFSF",
@@ -856,7 +872,18 @@
           "hiddenAction_SetOnSkillOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "localization": {
+        "zh": {
+          "name": "迫击炮轰炸"
+        },
+        "en": {
+          "name": "Mortar Bombardment"
+        },
+        "ja": {
+          "name": "迫撃砲砲撃"
+        }
+      }
     },
     "Common_MortarDouble_RX_75_L": {
       "name": "迫击炮轰炸",
@@ -1927,8 +1954,8 @@
     {
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
-      "status": "review",
-      "name": "低压弹射"
+      "status": "not_applicable",
+      "name": "低压弹射：原MOD驾驶员经验成长×1.1（本项目无驾驶员经验系统）"
     }
   ],
   "weaponKits": [
@@ -2000,6 +2027,16 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "Common_MortarDouble_RX_75",
@@ -2070,15 +2107,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "MS"
-  ],
-  "transport": {
-    "slotCost": 2,
-    "loadTags": [
-      "CanLoadInto"
-    ]
-  },
-  "hangars": []
+  ]
 }

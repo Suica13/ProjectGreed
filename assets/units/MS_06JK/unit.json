@@ -572,7 +572,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -655,6 +665,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -667,7 +682,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "扎古半加农",
   "faction": "ZEON",
@@ -1456,8 +1472,8 @@
     "ZN_MS_06JK_Gatling": {
       "name": "导弹发射器",
       "type": "shell",
-      "min": 3,
-      "max": 4,
+      "min": 2,
+      "max": 3,
       "hit": 100.0,
       "en": 20.0,
       "sourceName": "ZN_MS_06JK_Gatling",
@@ -1635,7 +1651,7 @@
       "muzzleEffects": [
         "MG_Fire_1"
       ],
-      "category": "missile",
+      "category": "machine_gun",
       "nativePayload": {
         "offsetRandomXY": 5.0,
         "offsetDir": 2.5,
@@ -1699,7 +1715,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 3
     },
     "ZN_HeatHawk_A": {
       "name": "热能斧",
@@ -1896,6 +1912,16 @@
   "deferredWeapons": [],
   "skills": [],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "ZN_MS_06K_BigGun",
@@ -1920,15 +1946,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "MS"
-  ],
-  "transport": {
-    "slotCost": 2,
-    "loadTags": [
-      "CanLoadInto"
-    ]
-  },
-  "hangars": []
+  ]
 }

@@ -227,7 +227,17 @@
       }
     ],
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 12.5,
+      "radar": 17.36111111111111,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -311,6 +321,11 @@
       "air": 100.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 25.0,
+      "radar": 500.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -323,7 +338,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "鲁艮",
   "faction": "ZEON",
@@ -1529,21 +1545,16 @@
       "name": "空中缠斗"
     },
     {
-      "id": "special_Common_DetectArea",
-      "name": "special_Common_DetectArea",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw",
-      "status": "review"
-    },
-    {
       "id": "special_Common_MinovskyParticle_S",
       "name": "special_Common_MinovskyParticle_S",
       "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_S.gw",
       "status": "review"
     },
     {
-      "id": "ReconScan",
-      "name": "ReconScan",
-      "status": "adapted"
+      "id": "Common_MinovskyParticle_S",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_S.gw"
     }
   ],
   "weaponKits": [
@@ -1560,18 +1571,61 @@
   "description": "吉翁军高空侦察机",
   "skills": [
     {
-      "id": "ReconScan",
+      "id": "Common_DetectArea",
       "type": "recon",
-      "name": "战场侦察",
-      "range": 6,
+      "name": "索敌",
+      "reconMode": "scan",
+      "range": 31.25,
+      "enCost": 100,
+      "actionCost": 1,
       "maxUses": 99,
-      "consumeAction": true,
-      "enCost": 15,
+      "consumeAction": false,
       "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
       "effect": "Light_75_NotAttached",
       "sound": {
-        "file": "../../sounds/Transform_4.ogg",
-        "volume": 0.3
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "索敌"
+        },
+        "en": {
+          "name": "Active Scan"
+        },
+        "ja": {
+          "name": "索敵"
+        }
+      }
+    },
+    {
+      "id": "Common_MinovskyParticle_S",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[S]",
+      "radius": 7,
+      "enCost": 300,
+      "actionCost": 2,
+      "durationRounds": 2,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[S]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [S]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[S]"
+        }
       }
     }
   ],
@@ -1583,6 +1637,17 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "Aircraft",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadIntoAir"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "ZN_Luggun_AA_L",
@@ -1603,16 +1668,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "Aircraft",
-    "Recon"
-  ],
-  "transport": {
-    "slotCost": 1,
-    "loadTags": [
-      "CanLoadIntoAir"
-    ]
-  },
-  "hangars": []
+  ]
 }

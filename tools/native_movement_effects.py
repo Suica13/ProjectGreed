@@ -52,6 +52,24 @@ def correct_effects(prefab, native):
         else:
             layer.pop("visibleWhen", None)
             layer["independentClock"] = True
+    # Hover movement and its looping visual are one unit mechanic in ProjectGreed.
+    # HoverEffect/Lv2/Lv3 only vary the native real-time acceleration or animation cadence.
+    hover_ids = {"Hover", "HoverEffect", "Hover_Lv2", "Hover_Lv3"}
+    hover = prefab["stats"].get("movementType") == "hover" or "decal_Hover" in native or any(
+        mechanic.get("id") in hover_ids for mechanic in prefab.get("mechanics", [])
+    )
+    if hover:
+        mechanics = prefab.setdefault("mechanics", [])
+        mechanics[:] = [mechanic for mechanic in mechanics if mechanic.get("id") not in hover_ids]
+        movement = next((mechanic for mechanic in mechanics if mechanic.get("id") == "movement"), None)
+        if movement is None:
+            movement = {"id": "movement", "status": "implemented"}
+            mechanics.insert(0, movement)
+        movement.update(
+            status="implemented",
+            name="气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+        )
+
     # Native hull engines remain separate from the ordinary-unit reversing jets.
     prefab["layers"] = [l for l in prefab["layers"] if l["name"] != "EnvironmentBoost"]
     if thrusters and not prefab["stats"].get("ship"):

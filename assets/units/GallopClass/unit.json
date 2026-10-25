@@ -216,7 +216,17 @@
       "enPercent": 10
     },
     "accuracyMultiplier": 1.1,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 11.0,
+      "radar": 17.36111111111111,
+      "antiDetection": -5.208333333333333,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -307,6 +317,11 @@
       "air": 10.0,
       "mountain": 75.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 22.0,
+      "radar": 500.0,
+      "antiDetection": -150.0
     }
   },
   "presentation": {
@@ -320,7 +335,8 @@
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
     "movement": "walk",
-    "deathType": "large"
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
   },
   "name": "盖洛普级",
   "faction": "ZEON",
@@ -1019,26 +1035,14 @@
   "mechanics": [
     {
       "id": "movement",
-      "name": "气垫移动：可横越水域",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
       "status": "implemented"
-    },
-    {
-      "id": "AutoRepair",
-      "source": "Template/Unit/Skill/AutoRepair.gw",
-      "status": "adapted",
-      "name": "自动修复已并入补给光环（无EN消耗）"
     },
     {
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
       "status": "adapted",
-      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
-    },
-    {
-      "id": "Hover",
-      "source": "Template/Unit/Skill/Hover.gw",
-      "status": "implemented",
-      "name": "气垫：仅在地面移动时循环"
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
     },
     {
       "id": "CmdCom",
@@ -1047,22 +1051,16 @@
       "name": "通信指挥"
     },
     {
-      "id": "SupplyPoint",
-      "source": "Template/Unit/Skill/SupplyPoint.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
-      "id": "SupplyPoint_UseEN",
-      "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
       "id": "special_Common_MinovskyParticle_M",
       "name": "special_Common_MinovskyParticle_M",
       "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
       "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
     }
   ],
   "weaponKits": [
@@ -1077,7 +1075,36 @@
       ]
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 2,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    }
+  ],
   "description": "大型陆战舰,由于搭载了热核引擎可以进行渡海作战",
   "costBalance": {
     "nativeLevel": 2000.0,

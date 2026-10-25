@@ -22,7 +22,23 @@ def main():
             rebuilt.pop("tacticalDamageMultiplier", None)
             federation_space_turret_damage({"id": unit["id"], "weapons": {key: rebuilt}})
             for field in fields:
-                assert weapon[field] == rebuilt[field], (unit["id"], key, field)
+                if field == "attack":
+                    # Native source owns event count, order and delay. Muzzle indices are a
+                    # ProjectGreed layout adaptation after L/R and fake-turret merging.
+                    actual_attack = copy.deepcopy(weapon[field])
+                    rebuilt_attack = copy.deepcopy(rebuilt[field])
+                    for attack in [actual_attack, rebuilt_attack]:
+                        for step in attack.get("steps", []):
+                            step.pop("muzzleIndex", None)
+                    assert actual_attack == rebuilt_attack, (unit["id"], key, field)
+                    mount_count = len(weapon.get("muzzle", {}).get("mounts", [weapon.get("muzzle", {})]))
+                    assert all(
+                        0 <= step.get("muzzleIndex", 0) < mount_count
+                        for step in weapon[field].get("steps", [])
+                        if step.get("shots", 0) > 0
+                    ), (unit["id"], key, "muzzleIndex")
+                else:
+                    assert weapon[field] == rebuilt[field], (unit["id"], key, field)
             weapons += 1
     print(f"Native source audit passed: {units} prefabs, {weapons} weapon configurations.")
 

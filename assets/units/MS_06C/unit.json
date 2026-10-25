@@ -464,7 +464,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 9.0,
+      "radar": 11.25,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -549,6 +559,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 324.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -561,7 +576,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "扎古II C型",
   "faction": "ZEON",
@@ -582,17 +598,17 @@
   },
   "weapons": {
     "ZN_MS_06C_Bombing_Nuke": {
-      "name": "航空炸弹",
+      "name": "核弹轰炸",
       "type": "shell",
-      "min": 1,
-      "max": 2,
+      "min": 3,
+      "max": 8,
       "hit": 75.0,
       "en": 350.0,
       "sourceName": "ZN_MS_06C_Bombing_Nuke",
       "sourceHit": 75.0,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "primary",
+      "slot": "skill",
       "clip": "Common_Shoot_A_LongTime",
       "damagePerShot": 12000.0,
       "damageComponents": {
@@ -648,9 +664,10 @@
         "scale": 0.15,
         "speed": 25.0,
         "forwardOffset": -3.0,
-        "rotation": 0.0
+        "rotation": 0,
+        "motion": "mortar"
       },
-      "hitEffect": "Explosion_Hit_2",
+      "hitEffect": "Nuke_Hit_1",
       "muzzle": {
         "mounts": [
           {
@@ -675,7 +692,7 @@
       "muzzleEffects": [
         "Railgun_Fire_1_Yellow"
       ],
-      "category": "bomb",
+      "category": "nuke",
       "nativePayload": {
         "ShellDamage": 12000.0,
         "DpDamage": 600.0,
@@ -743,8 +760,27 @@
           "hiddenAction_SetAttackingCantTurnOff"
         ]
       },
-      "actionCost": 3,
-      "displayIndex": 0
+      "actionCost": 5,
+      "displayIndex": 0,
+      "noCounter": true,
+      "maxUses": 1,
+      "special": {
+        "type": "nuke",
+        "radius": 3,
+        "emptyCells": true
+      },
+      "description": "指定地面坐标发动核打击，对爆心3格内的地面目标造成伤害；每局限用1次。",
+      "localization": {
+        "zh": {
+          "name": "核弹轰炸"
+        },
+        "en": {
+          "name": "Nuclear Bombardment"
+        },
+        "ja": {
+          "name": "核爆撃"
+        }
+      }
     },
     "Common_Push_A": {
       "name": "冲撞",

@@ -40,8 +40,8 @@ def refresh_systems(catalog):
   if len(sound)>=2 and sound[0]=='ROOT':
    native=resolve('ROOT:'+sound[1]);dest=ASSETS/'sounds'/native.name;dest.write_bytes(native.read_bytes());skill['sound']={'file':'../../sounds/'+native.name,'volume':.5}
   p['skills']=[s for s in p.get('skills',[]) if s['id']!=system]+[skill]
-  for m in p['mechanics']:
-   if system in m['id'].upper():m.update(status='adapted',name=system+'：25%EN启动，强化3回合，每回合消耗10%耐久和5%EN')
+  # The actionable skill card is the single source of truth; imported mechanics used to duplicate it.
+  p['mechanics']=[m for m in p.get('mechanics',[]) if system not in str(m.get('id','')).upper() and system not in str(m.get('name','')).upper()]
   from weapon_policy import configure
   configure(form,load(source))
   for obj in [p,form]:

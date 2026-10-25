@@ -84,6 +84,6 @@ test("body tackle uses the shared planner without damage or resource changes bef
       a,
       G.modelOf(b).weapons.find((w) => w.id === id),
     ),
-    true,
+    false,
   );
 });

@@ -500,7 +500,17 @@
     },
     "accuracy": 115,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -574,6 +584,11 @@
       "air": 10.0,
       "mountain": 25.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -586,7 +601,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "movement": "boost",
-    "walk": "OnMovingWalk"
+    "walk": "OnMovingWalk",
+    "moveSoundKey": "moveSound"
   },
   "name": "力克大魔",
   "description": "大魔的宇宙战式样,性能差强人意",
@@ -1551,5 +1567,12 @@
       "CanLoadInto"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "mechanics": [
+    {
+      "id": "movement",
+      "status": "implemented",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效"
+    }
+  ]
 }

@@ -480,7 +480,7 @@ const Net = (() => {
       phase = "deployment";
       byId("battle").hidden = true;
       battleView = null;
-    } else if (s.phase === "reaction") {
+    } else if (s.phase === "reaction" && s.pending) {
       let b = getUnit(s.pending.target);
       if (canControl(b)) {
         phase = "reaction";
@@ -498,6 +498,8 @@ const Net = (() => {
         renderReaction();
         byId("reaction").hidden = false;
       } else phase = "reaction_wait";
+    } else if (s.phase === "reaction") {
+      phase = "reaction_wait";
     } else if (s.phase === "playback") {
       phase = "playback_wait";
       battleView = null;

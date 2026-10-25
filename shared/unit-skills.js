@@ -36,6 +36,42 @@ const UnitSkills = (() => {
           throw Error("Invalid flight skill: " + label);
         continue;
       }
+      if (skill?.type === "overboost") {
+        if (
+          !/^[A-Za-z0-9_]+$/.test(skill.id) ||
+          !skill.name ||
+          !Number.isInteger(skill.actionCost) ||
+          skill.actionCost < 0 ||
+          !Number.isFinite(skill.enCost) ||
+          skill.enCost < 0 ||
+          !Number.isFinite(skill.moveBonus) ||
+          !Number.isFinite(skill.mobilityMultiplier) ||
+          skill.mobilityMultiplier < 1 ||
+          !Number.isFinite(skill.hpDrainPercent) ||
+          skill.hpDrainPercent <= 0 ||
+          skill.hpDrainPercent > 100
+        )
+          throw Error("Invalid OverBoost skill: " + label);
+        continue;
+      }
+      if (skill?.type === "fullboost") {
+        if (
+          !/^[A-Za-z0-9_]+$/.test(skill.id) ||
+          !skill.name ||
+          skill.actionCost !== 0 ||
+          !Number.isFinite(skill.enCost) ||
+          skill.enCost <= 0 ||
+          !Number.isInteger(skill.duration) ||
+          skill.duration < 1 ||
+          !Number.isInteger(skill.cooldownTurns) ||
+          skill.cooldownTurns < 1 ||
+          !Number.isFinite(skill.moveBonus) ||
+          !Number.isFinite(skill.mobilityMultiplier) ||
+          skill.mobilityMultiplier < 1
+        )
+          throw Error("Invalid FullBoost skill: " + label);
+        continue;
+      }
       if (skill?.type === "overdrive") {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
@@ -56,9 +92,17 @@ const UnitSkills = (() => {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
           !skill.name ||
-          !Number.isInteger(skill.range) ||
+          (skill.reconMode !== undefined && !["camera", "scan"].includes(skill.reconMode)) ||
+          (skill.reconMode &&
+            (!Number.isInteger(skill.actionCost) ||
+              skill.actionCost < 1 ||
+              !Number.isInteger(skill.durationRounds) ||
+              skill.durationRounds < 1)) ||
+          (skill.reconMode === "camera" &&
+            ![skill.areaSight, skill.areaRadar].every((v) => Number.isFinite(v) && v > 0)) ||
+          !Number.isFinite(skill.range) ||
           skill.range < 1 ||
-          skill.range > 12 ||
+          skill.range > 100 ||
           !Number.isFinite(skill.enCost) ||
           skill.enCost <= 0 ||
           !Number.isInteger(skill.maxUses) ||
@@ -68,6 +112,28 @@ const UnitSkills = (() => {
           typeof skill.waterOnly !== "boolean"
         )
           throw Error("Invalid reconnaissance skill: " + label);
+        continue;
+      }
+      if (skill?.type === "minovsky") {
+        if (
+          !/^[A-Za-z0-9_]+$/.test(skill.id) ||
+          !skill.name ||
+          !Number.isInteger(skill.radius) ||
+          skill.radius < 1 ||
+          skill.radius > 20 ||
+          !Number.isFinite(skill.enCost) ||
+          skill.enCost <= 0 ||
+          !Number.isInteger(skill.actionCost) ||
+          skill.actionCost < 1 ||
+          !Number.isInteger(skill.durationRounds) ||
+          skill.durationRounds < 1 ||
+          !Number.isInteger(skill.cooldownTurns) ||
+          skill.cooldownTurns < 1 ||
+          !Number.isInteger(skill.maxUses) ||
+          skill.maxUses < 1 ||
+          typeof skill.consumeAction !== "boolean"
+        )
+          throw Error("Invalid Minovsky skill: " + label);
         continue;
       }
       if (skill?.type === "repair") {
@@ -123,25 +189,34 @@ const UnitSkills = (() => {
     }
   }
   function create(G) {
-    const { models, modelOf, fits, dist, mapWidth, mapHeight, dimensions, parts } = G;
+    const { models, modelOf, fits, dist, mapWidth, mapHeight, dimensions, center, parts, sensors } =
+      G;
     const of = (unit) => models[unit.model]?.skills || [];
     const usageKey = (unit, skill) => models[unit.model].prefabId + "/" + skill.id;
     function canUse(game, unit, skillId) {
       const skill = of(unit).find((s) => s.id === skillId);
       return (
         !!skill &&
+        (unit.skillReadyRound?.[skill.id] ?? 0) <= game.round &&
+        (!skill.actionCost ||
+          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost) &&
         (skill.type !== "transform" || !Object.values(unit.brokenParts || {}).some(Boolean)) &&
         (skill.type !== "flight" ||
           ((unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost &&
             !skill.requiredParts.some((part) => unit.brokenParts?.[part]) &&
             game.environment !== "space" &&
             (!unit.flying || fits(game, { ...unit, flying: false }, unit.x, unit.y)))) &&
+        (skill.type !== "overboost" ||
+          (!unit.overBoost &&
+            unit.en >= skill.enCost &&
+            (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost)) &&
+        (skill.type !== "fullboost" || (!unit.fullBoost && unit.en >= skill.enCost)) &&
         (skill.type !== "overdrive" ||
           (!unit.overdrive &&
             !unit.brokenParts?.head &&
             unit.en >= (modelOf(unit).en * skill.enPercent) / 100 &&
             !!models[skill.formUnitId + "__" + skill.formKits[models[unit.model].kitId]])) &&
-        (!["repair", "recon"].includes(skill.type) || unit.en >= skill.enCost) &&
+        (!["repair", "recon", "minovsky"].includes(skill.type) || unit.en >= skill.enCost) &&
         game.units.includes(unit) &&
         !(
           ["escape", "transform", "armor_purge", "overdrive"].includes(skill.type) &&
@@ -154,7 +229,8 @@ const UnitSkills = (() => {
         unit.team === game.team &&
         game.winner === null &&
         (!game.deployment || game.deployment.every(Boolean)) &&
-        (unit.skillUses?.[usageKey(unit, skill)] || 0) < skill.maxUses
+        (!Number.isInteger(skill.maxUses) ||
+          (unit.skillUses?.[usageKey(unit, skill)] || 0) < skill.maxUses)
       );
     }
     // Resource inheritance preserves the old percentage, then adds the configured percentage
@@ -248,6 +324,8 @@ const UnitSkills = (() => {
       return { uses, oldModel, source, world };
     }
     function reconTargets(game, unit, skill) {
+      if (skill.reconMode === "scan")
+        return sensors.scanTargets(game, unit, skill.range, skill.waterOnly);
       return game.units.filter(
         (other) =>
           other.team !== unit.team &&
@@ -255,15 +333,35 @@ const UnitSkills = (() => {
           !other.embarked &&
           dist(unit, other) <= skill.range &&
           (!skill.waterOnly || game.tiles[other.y][other.x] === "water") &&
-          !(other.spottedUntilRound >= game.round),
+          !(other.detectedBy?.[unit.team] >= game.round),
       );
     }
     function targets(game, unit, skillId) {
       if (!canUse(game, unit, skillId)) return [];
       const skill = of(unit).find((s) => s.id === skillId);
-      if (["overdrive", "flight"].includes(skill.type)) return [{ x: unit.x, y: unit.y }];
-      if (skill.type === "recon")
-        return reconTargets(game, unit, skill).length ? [{ x: unit.x, y: unit.y }] : [];
+      if (["overdrive", "overboost", "fullboost", "flight", "minovsky"].includes(skill.type))
+        return [{ x: unit.x, y: unit.y }];
+      if (skill.type === "recon") {
+        if (skill.reconMode === "camera") {
+          const result = [];
+          for (
+            let y = Math.max(0, Math.ceil(unit.y - skill.range));
+            y < Math.min(mapHeight(game), unit.y + skill.range + 1);
+            y++
+          )
+            for (
+              let x = Math.max(0, Math.ceil(unit.x - skill.range));
+              x < Math.min(mapWidth(game), unit.x + skill.range + 1);
+              x++
+            )
+              if (sensors.distance(unit, { x, y, groundTarget: true }) <= skill.range)
+                result.push({ x, y });
+          return result;
+        }
+        return skill.reconMode === "scan" || reconTargets(game, unit, skill).length
+          ? [{ x: unit.x, y: unit.y }]
+          : [];
+      }
       if (skill.type === "repair")
         return game.units
           .filter(
@@ -340,6 +438,58 @@ const UnitSkills = (() => {
           sound: skill.sound,
         };
       }
+      if (skill.type === "overboost") {
+        unit.en -= skill.enCost;
+        unit.actionPoints =
+          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
+        unit.overBoost = {
+          skillId: skill.id,
+          startedRound: game.round,
+          moveBonus: skill.moveBonus,
+          mobilityMultiplier: skill.mobilityMultiplier,
+          hpDrainPercent: skill.hpDrainPercent,
+        };
+        unit.skillUses = {
+          ...unit.skillUses,
+          [usageKey(unit, skill)]: (unit.skillUses?.[usageKey(unit, skill)] || 0) + 1,
+        };
+        if (skill.consumeAction) {
+          unit.acted = true;
+          unit.actionPoints = 0;
+        }
+        unit.origin = null;
+        return {
+          type: "skill",
+          skillId,
+          unitId: unit.id,
+          resultId: unit.id,
+          from: { x: unit.x, y: unit.y },
+          to: { x, y },
+          effect: skill.effect,
+          sound: skill.sound,
+        };
+      }
+      if (skill.type === "fullboost") {
+        unit.en -= skill.enCost;
+        unit.fullBoost = {
+          skillId: skill.id,
+          remaining: skill.duration,
+          cooldownTurns: skill.cooldownTurns,
+          moveBonus: skill.moveBonus,
+          mobilityMultiplier: skill.mobilityMultiplier,
+        };
+        unit.origin = null;
+        return {
+          type: "skill",
+          skillId,
+          unitId: unit.id,
+          resultId: unit.id,
+          from: { x: unit.x, y: unit.y },
+          to: { x, y },
+          effect: skill.effect,
+          sound: skill.sound,
+        };
+      }
       if (skill.type === "overdrive") {
         const baseModel = unit.model,
           maximum = modelOf(unit).en;
@@ -374,9 +524,75 @@ const UnitSkills = (() => {
           sound: skill.sound,
         };
       }
+      if (skill.type === "minovsky") {
+        const origin = center(unit);
+        game.minovskyFields = (game.minovskyFields || []).filter(
+          (field) => field.expiresRound > game.round,
+        );
+        game.minovskyFields.push({
+          id: `minovsky_${game.round}_${game.minovskyFields.length}`,
+          x: origin.x,
+          y: origin.y,
+          radius: skill.radius,
+          expiresRound: game.round + skill.durationRounds,
+        });
+        unit.en -= skill.enCost;
+        unit.actionPoints =
+          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
+        unit.skillReadyRound = {
+          ...unit.skillReadyRound,
+          [skill.id]: game.round + skill.cooldownTurns * 2,
+        };
+        unit.skillUses = {
+          ...unit.skillUses,
+          [usageKey(unit, skill)]: (unit.skillUses?.[usageKey(unit, skill)] || 0) + 1,
+        };
+        if (skill.consumeAction) {
+          unit.acted = true;
+          unit.actionPoints = 0;
+        }
+        unit.origin = null;
+        return {
+          type: "skill",
+          skillId,
+          unitId: unit.id,
+          resultId: unit.id,
+          from: { x: unit.x, y: unit.y },
+          to: { x, y },
+          radius: skill.radius,
+          expiresRound: game.round + skill.durationRounds,
+          effect: skill.effect,
+          sound: skill.sound,
+        };
+      }
       if (skill.type === "recon") {
-        const targets = reconTargets(game, unit, skill);
-        for (const other of targets) other.spottedUntilRound = game.round + 1;
+        const targets = skill.reconMode === "camera" ? [] : reconTargets(game, unit, skill);
+        if (skill.reconMode === "camera") {
+          game.visionAreas = (game.visionAreas || []).filter(
+            (area) => area.expiresRound > game.round,
+          );
+          game.visionAreas.push({
+            team: unit.team,
+            x,
+            y,
+            sight: skill.areaSight,
+            radar: skill.areaRadar,
+            expiresRound: game.round + skill.durationRounds,
+          });
+        }
+        for (const other of targets)
+          other.detectedBy = {
+            ...other.detectedBy,
+            [unit.team]: game.round + (skill.durationRounds ?? 2) - 1,
+          };
+        if (skill.cooldownTurns)
+          unit.skillReadyRound = {
+            ...unit.skillReadyRound,
+            [skill.id]: game.round + skill.cooldownTurns * 2,
+          };
+        if (skill.actionCost)
+          unit.actionPoints =
+            (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         unit.en -= skill.enCost;
         unit.skillUses = {
           ...unit.skillUses,
@@ -394,7 +610,8 @@ const UnitSkills = (() => {
           skillId,
           unitId: unit.id,
           resultId: unit.id,
-          spottedIds: targets.map((u) => u.id),
+          reconMode: skill.reconMode,
+          weaponDisplayIndex: skill.weaponDisplayIndex,
           from: { x: unit.x, y: unit.y },
           to: { x, y },
           effect: skill.effect,

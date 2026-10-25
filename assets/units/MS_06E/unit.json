@@ -480,7 +480,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 11.0,
+      "radar": 13.75,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -565,6 +575,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 22.0,
+      "radar": 396.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -577,7 +592,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "扎古强行侦查型",
   "faction": "ZEON",
@@ -1136,23 +1152,6 @@
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "review",
       "name": "换装／改修"
-    },
-    {
-      "id": "special_Common_DetectArea",
-      "name": "special_Common_DetectArea",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw",
-      "status": "review"
-    },
-    {
-      "id": "special_Common_CameraGun",
-      "name": "special_Common_CameraGun",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_CameraGun.gw",
-      "status": "review"
-    },
-    {
-      "id": "ReconScan",
-      "name": "ReconScan",
-      "status": "adapted"
     }
   ],
   "weaponKits": [
@@ -1170,18 +1169,66 @@
   "description": "改造用于侦查作战的扎古",
   "skills": [
     {
-      "id": "ReconScan",
+      "id": "Common_CameraGun",
       "type": "recon",
-      "name": "战场侦察",
-      "range": 6,
+      "name": "摄像枪",
+      "reconMode": "camera",
+      "range": 52.08333333333333,
+      "enCost": 30,
+      "actionCost": 1,
       "maxUses": 99,
-      "consumeAction": true,
-      "enCost": 15,
+      "consumeAction": false,
       "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
       "effect": "Light_75_NotAttached",
       "sound": {
-        "file": "../../sounds/Transform_4.ogg",
-        "volume": 0.3
+        "file": "../../sounds/Detect_4.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "摄像枪"
+        },
+        "en": {
+          "name": "Camera Gun"
+        },
+        "ja": {
+          "name": "カメラガン"
+        }
+      },
+      "areaSight": 7.5,
+      "areaRadar": 9.375,
+      "weaponDisplayIndex": 2
+    },
+    {
+      "id": "Common_DetectArea",
+      "type": "recon",
+      "name": "索敌",
+      "reconMode": "scan",
+      "range": 31.25,
+      "enCost": 100,
+      "actionCost": 1,
+      "maxUses": 99,
+      "consumeAction": false,
+      "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "索敌"
+        },
+        "en": {
+          "name": "Active Scan"
+        },
+        "ja": {
+          "name": "索敵"
+        }
       }
     }
   ],

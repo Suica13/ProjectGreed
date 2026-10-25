@@ -663,7 +663,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -748,6 +758,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -760,7 +775,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "兹达[指挥官机]",
   "faction": "ZEON",
@@ -2073,9 +2089,9 @@
     },
     {
       "id": "special_Common_OverBoost",
-      "name": "special_Common_OverBoost",
+      "name": "超限喷射：移动力+3、反应系数×1.15，每回合损失25%最大耐久",
       "source": "Units/BattleUnits/Weapon/Sp/Common_OverBoost.gw",
-      "status": "review"
+      "status": "adapted"
     }
   ],
   "weaponKits": [
@@ -2129,7 +2145,27 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "skills": [],
+  "skills": [
+    {
+      "id": "Common_OverBoost",
+      "type": "overboost",
+      "name": "超限喷射",
+      "actionCost": 1,
+      "enCost": 100,
+      "maxUses": 1,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "moveBonus": 3,
+      "mobilityMultiplier": 1.15,
+      "hpDrainPercent": 25,
+      "description": "启动后移动力+3、反应系数×1.15；从下一己方回合起每回合损失25%最大耐久，直至死亡。搭载中仍会持续。"
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "MS"

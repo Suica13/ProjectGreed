@@ -182,7 +182,17 @@
       }
     ],
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 15.625,
+      "antiDetection": 3.4722222222222223,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -265,6 +275,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 450.0,
+      "antiDetection": 100.0
     }
   },
   "presentation": {
@@ -277,7 +292,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
-    "movement": "walk"
+    "movement": "walk",
+    "moveSoundKey": null
   },
   "name": "邱伊",
   "faction": "ZEON",
@@ -568,7 +584,7 @@
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
       "status": "adapted",
-      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
     }
   ],
   "weaponKits": [

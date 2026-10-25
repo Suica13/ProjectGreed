@@ -68,4 +68,4 @@ def correct(prefab, native):
     if hangars and "Transport" not in tags: tags.append("Transport")
     for mechanic in prefab.get("mechanics", []):
         if mechanic["id"] == "LaunchAllUnits":
-            mechanic.update(status="adapted", name="格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）")
+            mechanic.update(status="adapted", name="格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位")

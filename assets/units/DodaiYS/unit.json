@@ -176,7 +176,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 17.36111111111111,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -260,6 +270,11 @@
       "air": 100.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 500.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -272,7 +287,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "德戴 YS",
   "faction": "ZEON",
@@ -769,6 +785,16 @@
   "deferredWeapons": [],
   "skills": [],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "Aircraft"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadIntoAir"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "Common_DoubleMS_DodaiYS",
@@ -789,15 +815,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "Aircraft"
-  ],
-  "transport": {
-    "slotCost": 2,
-    "loadTags": [
-      "CanLoadIntoAir"
-    ]
-  },
-  "hangars": []
+  ]
 }

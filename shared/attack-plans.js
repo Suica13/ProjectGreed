@@ -126,6 +126,46 @@ function createAttackPlanner(rules, randomId) {
         delete attacker.plan;
         continue;
       }
+      if (weapon.special?.type === "nuke") {
+        const target = intent.targetCell
+          ? rules.groundTarget(room.game, attacker, intent.targetCell.x, intent.targetCell.y)
+          : find(room, intent.target);
+        if (!target || !rules.canAttack(room.game, attacker, target, weapon)) {
+          delete attacker.plan;
+          continue;
+        }
+        const impact = rules.center(target);
+        const victims = room.game.units
+          .filter(
+            (unit) =>
+              unit.team !== attacker.team &&
+              rules.onMap(unit) &&
+              rules.dist(target, unit) <= weapon.special.radius &&
+              rules.canAttack(room.game, attacker, unit, weapon),
+          )
+          .sort((a, b) => a.id.localeCompare(b.id, "en"));
+        if (!victims.length) {
+          room.emptyImpacts.push({
+            ...intent,
+            target: null,
+            energySpent: weapon.en,
+            impactCell: impact,
+            noCounter: true,
+          });
+        } else
+          victims.forEach((victim, index) =>
+            result.push({
+              ...intent,
+              target: victim.id,
+              energySpent: index === 0 ? weapon.en : 0,
+              freeFollowup: index > 0,
+              impactCell: impact,
+              noCounter: true,
+              order: intent.order + index / 10000,
+            }),
+          );
+        continue;
+      }
       if (weapon.special?.type !== "mortar") {
         result.push(intent);
         continue;
@@ -206,7 +246,18 @@ function createAttackPlanner(rules, randomId) {
     attacker.acted = false;
     let events;
     try {
-      events = rules.fight(room.game, attacker, target, weapon, response, counterId, allowCounter);
+      const combatWeapon = room.pending.freeFollowup
+        ? { ...weapon, en: 0, maxUses: undefined }
+        : weapon;
+      events = rules.fight(
+        room.game,
+        attacker,
+        target,
+        combatWeapon,
+        response,
+        counterId,
+        allowCounter,
+      );
     } catch (error) {
       attacker.acted = acted;
       throw error;
@@ -322,6 +373,8 @@ function createAttackPlanner(rules, randomId) {
       const attacker = find(room, intent.attacker),
         target = find(room, intent.target);
       const weapon = attacker && rules.eventWeapon(attacker, intent);
+      const validationWeapon =
+        intent.freeFollowup && weapon ? { ...weapon, en: 0, maxUses: undefined } : weapon;
       if (attacker && weapon && intent.impactCell && (!target || target.hp <= 0)) {
         if (attacker.hp <= 0 || attacker.en < weapon.en) continue;
         const ghost = {
@@ -336,6 +389,8 @@ function createAttackPlanner(rules, randomId) {
         const before = Object.fromEntries([attacker, ghost].map((u) => [u.id, u.hp]));
         const actors = JSON.parse(JSON.stringify([attacker, ghost]));
         attacker.en -= weapon.en;
+        if (Number.isInteger(weapon.maxUses))
+          (attacker.weaponUses ||= {})[weapon.id] = (attacker.weaponUses[weapon.id] || 0) + 1;
         attacker.acted = true;
         delete attacker.plan;
         const event = {
@@ -385,7 +440,7 @@ function createAttackPlanner(rules, randomId) {
         !attacker ||
         !target ||
         !weapon ||
-        !rules.canAttack(room.game, attacker, target, weapon)
+        !rules.canAttack(room.game, attacker, target, validationWeapon)
       )
         continue;
       const counterIds = (choice.counterIds || [counterId]).filter((id) => {

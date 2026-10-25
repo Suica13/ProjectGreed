@@ -418,7 +418,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 9.0,
+      "radar": 11.25,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -503,6 +513,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 324.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -515,7 +530,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "水中型扎古",
   "faction": "ZEON",
@@ -1470,6 +1486,18 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Amphibious",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "ZN_MS_06M_SMS",
@@ -1494,17 +1522,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "MS",
-    "Amphibious",
-    "Recon"
-  ],
-  "transport": {
-    "slotCost": 2,
-    "loadTags": [
-      "CanLoadInto"
-    ]
-  },
-  "hangars": []
+  ]
 }

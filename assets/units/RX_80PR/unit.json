@@ -539,7 +539,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -627,6 +637,11 @@
       "air": 50.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -639,7 +654,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "苍白骑士",
   "faction": "EFSF",
@@ -2682,12 +2698,6 @@
       "id": "movement",
       "name": "地面移动",
       "status": "implemented"
-    },
-    {
-      "id": "HADES_Off",
-      "source": "Template/Unit/Skill/HADES_Off.gw",
-      "status": "adapted",
-      "name": "HADES：25%EN启动，强化3回合，每回合消耗10%耐久和5%EN"
     }
   ],
   "weaponKits": [
@@ -2771,6 +2781,16 @@
     }
   ],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "Common_ArmBR_Pink",
@@ -2819,15 +2839,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "MS"
-  ],
-  "transport": {
-    "slotCost": 2,
-    "loadTags": [
-      "CanLoadInto"
-    ]
-  },
-  "hangars": []
+  ]
 }

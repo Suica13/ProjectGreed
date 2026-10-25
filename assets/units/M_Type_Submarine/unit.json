@@ -387,7 +387,17 @@
       "enPercent": 10
     },
     "accuracyMultiplier": 1.1,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 20.833333333333332,
+      "antiDetection": -6.944444444444445,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": true,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -481,6 +491,11 @@
       "air": 10.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 600.0,
+      "antiDetection": -200.0
     }
   },
   "presentation": {
@@ -494,7 +509,8 @@
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
     "movement": "boost",
-    "deathType": "large"
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
   },
   "name": "M型潜水艇",
   "faction": "EFSF",
@@ -1240,28 +1256,10 @@
       "status": "implemented"
     },
     {
-      "id": "AutoRepair",
-      "source": "Template/Unit/Skill/AutoRepair.gw",
-      "status": "adapted",
-      "name": "自动修复已并入补给光环（无EN消耗）"
-    },
-    {
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
       "status": "adapted",
-      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
-    },
-    {
-      "id": "SupplyPoint",
-      "source": "Template/Unit/Skill/SupplyPoint.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
-      "id": "SupplyPoint_UseEN",
-      "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
     },
     {
       "id": "CmdCom",
@@ -1285,7 +1283,7 @@
       "id": "Stealth_Aqua",
       "source": "Template/Unit/Skill/Stealth_Aqua.gw",
       "status": "adapted",
-      "name": "水下隐蔽"
+      "name": "水下隐蔽：位于水中时降低敌方雷达有效距离"
     },
     {
       "id": "SonarScan",

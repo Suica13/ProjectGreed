@@ -1027,7 +1027,7 @@
     "energyMode": "perShot",
     "enPerEmission": 0.1,
     "declaredEnergy": 0.1,
-    "hidden": false,
+    "hidden": true,
     "source": "Units/BattleUnits/Army_Squad/Member/EFSF_0079/Army_Squad_EFSF_0079_O_G_Member_P.ini",
     "nativePayload": {
       "ShellDamage": 8.0,
@@ -1560,7 +1560,7 @@
     "energyMode": "perShot",
     "enPerEmission": 2.5,
     "declaredEnergy": 2.5,
-    "hidden": false,
+    "hidden": true,
     "source": "Units/BattleUnits/Army_Squad/Member/EFSF_0079/Army_Squad_EFSF_0079_N_G_Member_BZ.ini",
     "nativePayload": {
       "ShellDamage": 300.0,
@@ -1740,7 +1740,7 @@
     "energyMode": "perShot",
     "enPerEmission": 0.1,
     "declaredEnergy": 0.1,
-    "hidden": false,
+    "hidden": true,
     "source": "Units/BattleUnits/Army_Squad/Member/ZEON_0079/Army_Squad_ZEON_0079_O_G_Member_P.ini",
     "nativePayload": {
       "ShellDamage": 8.0,
@@ -2273,7 +2273,7 @@
     "energyMode": "perShot",
     "enPerEmission": 2.5,
     "declaredEnergy": 2.5,
-    "hidden": false,
+    "hidden": true,
     "source": "Units/BattleUnits/Army_Squad/Member/ZEON_0079/Army_Squad_ZEON_0079_N_G_Member_BZ.ini",
     "nativePayload": {
       "ShellDamage": 300.0,
@@ -7291,6 +7291,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -7401,6 +7405,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -7583,6 +7591,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
@@ -7693,6 +7705,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -7809,6 +7825,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -7924,6 +7944,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -8034,6 +8058,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -8195,6 +8223,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -8354,6 +8386,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -8515,6 +8551,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -8675,6 +8715,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
@@ -8744,6 +8788,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
@@ -8812,6 +8860,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -8923,6 +8975,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -9039,6 +9095,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -9111,6 +9171,10 @@
       "EquipmentIndex2": 150.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -9746,6 +9810,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -9892,6 +9960,10 @@
       "ProjectileBlastDpModifier": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -10028,6 +10100,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_F",
         "delay": 0
       },
@@ -10039,6 +10115,7 @@
         "delay": 0.3
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -10160,6 +10237,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -10308,6 +10389,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -10373,6 +10458,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
@@ -10441,6 +10530,10 @@
       "SubEquipmentIndex": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_Two_Handed_A_Stand",
         "delay": 0
@@ -10574,6 +10667,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_F",
         "delay": 0
       },
@@ -10585,6 +10682,7 @@
         "delay": 0.3
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -10640,6 +10738,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A_L",
         "delay": 0
@@ -11141,6 +11243,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -11215,6 +11321,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -11288,6 +11398,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -11588,6 +11702,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -11662,6 +11780,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -11735,6 +11857,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
@@ -12398,6 +12524,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -12508,6 +12638,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -12620,6 +12754,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -12730,6 +12868,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -12846,6 +12988,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -12919,6 +13065,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -12987,6 +13137,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -13084,6 +13238,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -13186,6 +13344,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -13287,6 +13449,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -13384,6 +13550,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
@@ -13453,6 +13623,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
@@ -13521,6 +13695,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -13632,6 +13810,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -13748,6 +13930,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -13832,6 +14018,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -13911,6 +14101,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -14027,6 +14221,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -14095,6 +14293,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -14206,6 +14408,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -14322,6 +14528,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -14409,6 +14619,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -14492,6 +14706,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -14561,6 +14779,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -14629,6 +14851,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -14740,6 +14966,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -14856,6 +15086,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -14943,6 +15177,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -15026,6 +15264,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
@@ -15088,6 +15330,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
@@ -15149,6 +15395,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -15617,6 +15867,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -15727,6 +15981,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -15843,6 +16101,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -15929,6 +16191,10 @@
       "EquipmentIndex2": 100.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -20971,6 +21237,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -21078,6 +21348,10 @@
       "EquipmentIndex2": 100.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -22280,6 +22554,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
@@ -22341,6 +22619,10 @@
       "ProjectileLife": 8.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -23226,8 +23508,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 14,
     "projectiles": 14,
-    "damagePerProjectile": 4000.0,
-    "totalRawDamage": 56000.0,
+    "damagePerProjectile": 5000.0,
+    "totalRawDamage": 70000.0,
     "accuracy": 75.0,
     "en": 560.0,
     "energyMode": "perShot",
@@ -23392,8 +23674,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 8,
     "projectiles": 8,
-    "damagePerProjectile": 1500.0,
-    "totalRawDamage": 12000.0,
+    "damagePerProjectile": 1875.0,
+    "totalRawDamage": 15000.0,
     "accuracy": 85.0,
     "en": 320.0,
     "energyMode": "perShot",
@@ -23510,8 +23792,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 140,
     "projectiles": 140,
-    "damagePerProjectile": 225.0,
-    "totalRawDamage": 31500.0,
+    "damagePerProjectile": 281.25,
+    "totalRawDamage": 39375.0,
     "accuracy": 125.0,
     "en": 70.0,
     "energyMode": "perShot",
@@ -24683,8 +24965,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 14,
     "projectiles": 14,
-    "damagePerProjectile": 4000.0,
-    "totalRawDamage": 56000.0,
+    "damagePerProjectile": 5000.0,
+    "totalRawDamage": 70000.0,
     "accuracy": 75.0,
     "en": 560.0,
     "energyMode": "perShot",
@@ -24849,8 +25131,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 8,
     "projectiles": 8,
-    "damagePerProjectile": 1500.0,
-    "totalRawDamage": 12000.0,
+    "damagePerProjectile": 1875.0,
+    "totalRawDamage": 15000.0,
     "accuracy": 85.0,
     "en": 320.0,
     "energyMode": "perShot",
@@ -24967,8 +25249,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 140,
     "projectiles": 140,
-    "damagePerProjectile": 225.0,
-    "totalRawDamage": 31500.0,
+    "damagePerProjectile": 281.25,
+    "totalRawDamage": 39375.0,
     "accuracy": 125.0,
     "en": 70.0,
     "energyMode": "perShot",
@@ -26551,6 +26833,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -26698,6 +26984,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_StandShoot_A",
         "delay": 0
       },
@@ -26765,6 +27055,10 @@
       "ProjectileLife": 20.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_StandShoot_A",
         "delay": 0
@@ -26863,6 +27157,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_StandShoot_A",
         "delay": 0
       },
@@ -26958,6 +27256,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -27091,6 +27393,10 @@
       "ProjectileLife": 20.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -27239,6 +27545,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -27306,6 +27616,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -27317,6 +27635,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -27440,6 +27759,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
       },
@@ -27509,6 +27832,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_Two_Handed_A_Stand",
         "delay": 0
       },
@@ -27571,6 +27898,10 @@
       "ProjectileLife": 20.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -27716,6 +28047,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -27727,6 +28066,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -27735,8 +28075,8 @@
     "unitId": "MS_06C",
     "unitName": "扎古II C型",
     "weaponId": "ZN_MS_06C_Bombing_Nuke",
-    "displayName": "航空炸弹",
-    "category": "bomb",
+    "displayName": "核弹轰炸",
+    "category": "nuke",
     "class": "长冷却（>10秒）",
     "flowClass": "中流程（2～5秒）",
     "firstShot": 3.0,
@@ -27784,6 +28124,10 @@
     "timeline": [
       {
         "animation": "Common_Shoot_A_LongTime",
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 0,
         "delay": 0
       },
       {
@@ -27923,6 +28267,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -27934,6 +28286,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -28055,6 +28408,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -28247,6 +28604,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_StandShoot_A",
         "delay": 0
       },
@@ -28345,6 +28706,10 @@
       "EquipmentIndex2": 200.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_StandShoot_A",
         "delay": 0
@@ -28696,6 +29061,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -28707,6 +29080,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -28828,6 +29202,10 @@
       "ProjectileLife": 20.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -28973,6 +29351,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -28984,6 +29370,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -29038,6 +29425,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -29186,6 +29577,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -29253,6 +29648,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -29264,6 +29667,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -29388,6 +29792,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 3,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -29397,6 +29805,10 @@
         "partBreakModifier": 1.25,
         "requiredParts": [],
         "delay": 0.25
+      },
+      {
+        "weaponDisplayIndex": 4,
+        "delay": 0.0
       },
       {
         "delay": 0.25
@@ -29453,6 +29865,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -29601,6 +30017,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -29667,6 +30087,10 @@
       "ProjectileLife": 35.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -29790,6 +30214,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -29801,6 +30233,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -29991,6 +30424,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
+      {
         "animation": "Common_Throw_A",
         "delay": 0
       },
@@ -30059,6 +30496,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 3,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -30068,6 +30509,10 @@
         "partBreakModifier": 1.25,
         "requiredParts": [],
         "delay": 0.25
+      },
+      {
+        "weaponDisplayIndex": 4,
+        "delay": 0.0
       },
       {
         "delay": 0.25
@@ -30124,6 +30569,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -30298,6 +30747,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -30364,6 +30817,10 @@
       "ProjectileLife": 35.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -30487,6 +30944,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_F",
         "delay": 0
       },
@@ -30498,6 +30959,7 @@
         "delay": 0.3
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -30619,6 +31081,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -30767,6 +31233,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -30834,6 +31304,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -30845,6 +31323,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -30966,6 +31445,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -31114,6 +31597,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -31183,6 +31670,10 @@
       "ProjectileBlastDpModifier": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -31258,6 +31749,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -31269,6 +31768,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -31323,6 +31823,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -31471,6 +31975,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -31537,6 +32045,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
@@ -31684,6 +32196,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -31695,6 +32215,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -31885,6 +32406,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.25,
@@ -32010,6 +32535,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_StandShoot_A",
         "delay": 0
       },
@@ -32109,6 +32638,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_StandShoot_A",
         "delay": 0
       },
@@ -32158,7 +32691,7 @@
     "unitName": "扎古半加农",
     "weaponId": "ZN_MS_06JK_Gatling",
     "displayName": "导弹发射器",
-    "category": "missile",
+    "category": "machine_gun",
     "class": "中循环（2～5秒）",
     "flowClass": "短流程（0.5～2秒）",
     "firstShot": 0.3,
@@ -32372,6 +32905,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -32383,6 +32924,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -32437,6 +32979,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -32584,6 +33130,10 @@
       "EquipmentIndex2": 200.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_StandShoot_A",
         "delay": 0
@@ -32750,6 +33300,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -32952,6 +33506,10 @@
       "ProjectileLife": 40.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -33247,6 +33805,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -33379,6 +33941,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -33527,6 +34093,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -33594,6 +34164,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -33605,6 +34183,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -33726,6 +34305,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -33874,6 +34457,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -33941,6 +34528,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -33952,6 +34547,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -34075,6 +34671,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
+      {
         "animation": "Common_Throw_A",
         "delay": 0
       },
@@ -34140,6 +34740,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -34288,6 +34892,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -34355,6 +34963,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -34366,6 +34982,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -34967,6 +35584,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -35114,6 +35735,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -35180,6 +35805,10 @@
       "ProjectileLife": 35.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -35303,6 +35932,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -35314,6 +35951,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -35436,6 +36074,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -35532,7 +36174,7 @@
     "unitId": "MS_07B",
     "unitName": "老虎 B型",
     "weaponId": "ZN_MS_07B_HeatRod",
-    "displayName": "近身格斗",
+    "displayName": "热能鞭",
     "category": "melee",
     "class": "中循环（2～5秒）",
     "flowClass": "短流程（0.5～2秒）",
@@ -35578,6 +36220,10 @@
       "ProjectileLife": 10.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -35646,6 +36292,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -35657,6 +36311,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -35779,6 +36434,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -35875,8 +36534,8 @@
     "unitId": "MS_07B3",
     "unitName": "老虎特装型",
     "weaponId": "ZN_MS_07B3_Minigun",
-    "displayName": "导弹发射器",
-    "category": "missile",
+    "displayName": "加特林盾牌",
+    "category": "machine_gun",
     "class": "中循环（2～5秒）",
     "flowClass": "中流程（2～5秒）",
     "firstShot": 0.3,
@@ -35925,6 +36584,10 @@
       "ProjectileLife": 15.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 2,
         "muzzleIndex": 0,
@@ -36099,7 +36762,7 @@
     "unitId": "MS_07B3",
     "unitName": "老虎特装型",
     "weaponId": "ZN_MS_07B_HeatRod",
-    "displayName": "近身格斗",
+    "displayName": "热能鞭",
     "category": "melee",
     "class": "中循环（2～5秒）",
     "flowClass": "短流程（0.5～2秒）",
@@ -36145,6 +36808,10 @@
       "ProjectileLife": 10.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -36213,6 +36880,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_B",
         "delay": 0
       },
@@ -36226,6 +36897,10 @@
       {
         "animation": "Common_Melee_F",
         "delay": 0.6
+      },
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0.0
       },
       {
         "shots": 1,
@@ -36356,6 +37031,10 @@
       "ProjectileLife": 20.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -36500,6 +37179,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -36647,6 +37330,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -36713,6 +37400,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -36847,6 +37538,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -36943,8 +37638,8 @@
     "unitId": "MS_07H8",
     "unitName": "老虎飞行型",
     "weaponId": "ZN_MS_07B3_Minigun",
-    "displayName": "导弹发射器",
-    "category": "missile",
+    "displayName": "加特林盾牌",
+    "category": "machine_gun",
     "class": "中循环（2～5秒）",
     "flowClass": "中流程（2～5秒）",
     "firstShot": 0.3,
@@ -36993,6 +37688,10 @@
       "ProjectileLife": 15.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 2,
         "muzzleIndex": 0,
@@ -37215,6 +37914,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -37226,6 +37933,7 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -37350,6 +38058,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -37419,6 +38131,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -37578,6 +38294,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -37645,6 +38365,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -37660,6 +38388,10 @@
         "delay": 0.6
       },
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0.0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.25,
@@ -37667,6 +38399,7 @@
         "delay": 0.3
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -37722,6 +38455,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -38033,6 +38770,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -38411,6 +39152,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_Double_B",
         "delay": 0
@@ -38580,6 +39325,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -38959,6 +39708,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_Double_B",
         "delay": 0
       },
@@ -39058,6 +39811,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_Double_G",
         "delay": 0.2
@@ -39175,6 +39932,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -39323,6 +40084,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -39452,6 +40217,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -39653,6 +40422,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -39810,6 +40583,10 @@
       "ProjectileBlastDpModifier": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -40009,6 +40786,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -40085,6 +40866,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -40233,6 +41018,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -40362,6 +41151,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -40567,6 +41360,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -40638,6 +41435,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -40704,6 +41505,10 @@
       "ProjectileLife": 50.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_StandShoot_A",
         "delay": 0
@@ -40779,6 +41584,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_StandShoot_A",
         "delay": 0
       },
@@ -40853,6 +41662,10 @@
       "ProjectileLife": 50.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_StandShoot_A",
         "delay": 0
@@ -40970,6 +41783,10 @@
       "ProjectileLife": 50.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_StandShoot_A",
         "delay": 0
@@ -41150,6 +41967,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_F",
         "delay": 0
       },
@@ -41284,6 +42105,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -41427,6 +42252,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -41494,6 +42323,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
       },
@@ -41505,6 +42342,7 @@
         "delay": 0.51
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -41628,6 +42466,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -41770,6 +42612,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -41838,6 +42684,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_F",
         "delay": 0
       },
@@ -41905,6 +42755,14 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
       },
@@ -41916,6 +42774,7 @@
         "delay": 0.51
       },
       {
+        "weaponDisplayIndex": 1,
         "delay": 1.4
       }
     ]
@@ -42328,6 +43187,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -42398,6 +43261,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -42463,6 +43330,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -42618,6 +43489,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -42824,6 +43699,10 @@
         "delay": 0
       },
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 6,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -42898,6 +43777,10 @@
         "delay": 0
       },
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 6,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -42968,6 +43851,10 @@
       "ProjectileLife": 50.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Cannon_Shoot_A",
         "delay": 0
@@ -43072,6 +43959,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Cannon_Shoot_A",
         "delay": 0
       },
@@ -43173,6 +44064,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_Double_A",
         "delay": 0
@@ -43482,6 +44377,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -43549,6 +44448,10 @@
       "ProjectileLife": 40.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -43638,6 +44541,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -47147,6 +48054,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Cannon_Shoot_A",
         "delay": 0
       },
@@ -47214,6 +48125,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -47280,6 +48195,10 @@
       "ProjectileLife": 35.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Cannon_Shoot_A",
         "delay": 0
@@ -47355,6 +48274,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Cannon_Shoot_A",
         "delay": 0
       },
@@ -47381,7 +48304,7 @@
     "unitId": "RB_79K",
     "unitName": "铁球K",
     "weaponId": "EF_RB_79K_Anchor",
-    "displayName": "近身格斗",
+    "displayName": "缆绳锚",
     "category": "melee",
     "class": "慢循环（5～10秒）",
     "flowClass": "短流程（0.5～2秒）",
@@ -47427,6 +48350,10 @@
       "ProjectileLife": 10.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Cannon_Shoot_A",
         "delay": 0
@@ -47573,6 +48500,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -47641,6 +48572,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Cannon_Shoot_A",
         "delay": 0
       },
@@ -47707,6 +48642,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -47840,6 +48779,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -47985,6 +48928,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
       },
@@ -48052,6 +48999,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -48118,6 +49069,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A2",
         "delay": 0
       },
@@ -48183,6 +49138,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -48409,6 +49368,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -48495,7 +49458,7 @@
     "unitId": "RGC_80",
     "unitName": "吉姆加农",
     "weaponId": "Common_Mortar",
-    "displayName": "Common Mortar",
+    "displayName": "迫击炮轰炸",
     "category": "mortar",
     "class": "长冷却（>10秒）",
     "flowClass": "长流程（>5秒）",
@@ -48630,6 +49593,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A2",
         "delay": 0
       },
@@ -48695,6 +49662,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -48854,6 +49825,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -48920,6 +49895,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -49285,6 +50264,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -49355,6 +50338,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -49420,6 +50407,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -49576,6 +50567,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -49642,6 +50637,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -49977,6 +50976,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -50135,6 +51138,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -50201,6 +51208,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -50436,6 +51447,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -50501,6 +51516,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -50645,6 +51664,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -50711,6 +51734,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
@@ -50779,6 +51806,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -50868,6 +51899,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -51070,6 +52105,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
       },
@@ -51139,6 +52178,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_Two_Handed_A_Stand",
         "delay": 0
       },
@@ -51202,6 +52245,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -51346,6 +52393,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -51483,6 +52534,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -51548,6 +52603,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -51692,6 +52751,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -51758,6 +52821,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
@@ -51826,6 +52893,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -51915,6 +52986,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -52053,6 +53128,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -52118,6 +53197,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -52262,6 +53345,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -52328,6 +53415,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
@@ -52396,6 +53487,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -52485,6 +53580,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -52620,6 +53719,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -52693,6 +53796,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -52771,6 +53878,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -52836,6 +53947,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -52992,6 +54107,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -53070,6 +54189,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_F",
         "delay": 0
       },
@@ -53135,6 +54258,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -53290,6 +54417,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -53356,6 +54487,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -55690,32 +56825,32 @@
     "category": "cannon",
     "class": "慢循环（5～10秒）",
     "flowClass": "极短流程（≤0.5秒）",
-    "firstShot": 0.0,
-    "lastShot": 0.0,
-    "recovery": 0.0,
+    "firstShot": 0,
+    "lastShot": 0,
+    "recovery": 0,
     "duration": 0,
-    "cooldown": 7.0,
-    "referenceCycle": 7.0,
+    "cooldown": 7,
+    "referenceCycle": 7,
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 2,
     "projectiles": 2,
-    "damagePerProjectile": 3000.0,
-    "totalRawDamage": 6000.0,
-    "accuracy": 75.0,
-    "en": 70.0,
+    "damagePerProjectile": 3000,
+    "totalRawDamage": 6000,
+    "accuracy": 75,
+    "en": 70,
     "energyMode": "perShot",
-    "enPerEmission": 35.0,
-    "declaredEnergy": 35.0,
+    "enPerEmission": 35,
+    "declaredEnergy": 35,
     "hidden": false,
     "source": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw",
     "nativePayload": {
-      "ShellDamage": 3000.0,
-      "DpDamage": 200.0,
-      "WeaponAccuracy": 75.0,
+      "ShellDamage": 3000,
+      "DpDamage": 200,
+      "WeaponAccuracy": 75,
       "PartBreakModifier": 0.5,
       "CockpitBreakModifier": 0.5,
-      "PilotDamageModifier": 1.0,
-      "PilotTrueDamage": 0.0,
+      "PilotDamageModifier": 1,
+      "PilotTrueDamage": 0,
       "AntiSizeLargeDamage": 1.25,
       "AntiSizeSmallDamage": 0.75,
       "AntiSizeLargeAccuracy": 1.25,
@@ -55723,17 +56858,17 @@
       "AntiBuilding": 1.5,
       "AntiAqua": 0.75,
       "AntiAir": 0.5,
-      "AntiLand": 1.0,
-      "AntiSpace": 1.0,
+      "AntiLand": 1,
+      "AntiSpace": 1,
       "HeightChangeSpeed": 0.5,
-      "HeightHitRange": 10.0,
-      "ProjectileSpeed": 25.0,
-      "ProjectileSpread": 0.0,
-      "ProjectileExplosionRange": 30.0,
-      "ProjectileLife": 50.0,
-      "ProjectileBlastRange": 60.0,
+      "HeightHitRange": 10,
+      "ProjectileSpeed": 25,
+      "ProjectileSpread": 0,
+      "ProjectileExplosionRange": 30,
+      "ProjectileLife": 50,
+      "ProjectileBlastRange": 60,
       "ProjectileBlastDamageModifier": 0.35,
-      "ProjectileBlastDpModifier": 1.0
+      "ProjectileBlastDpModifier": 1
     },
     "timeline": [
       {
@@ -55741,14 +56876,14 @@
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
         "requiredParts": [],
-        "delay": 0.0
+        "delay": 0
       },
       {
         "shots": 1,
-        "muzzleIndex": 0,
+        "muzzleIndex": 1,
         "partBreakModifier": 0.5,
         "requiredParts": [],
-        "delay": 0.0
+        "delay": 0
       }
     ]
   },
@@ -55760,32 +56895,32 @@
     "category": "cannon",
     "class": "慢循环（5～10秒）",
     "flowClass": "极短流程（≤0.5秒）",
-    "firstShot": 0.0,
-    "lastShot": 0.0,
-    "recovery": 0.0,
+    "firstShot": 0,
+    "lastShot": 0,
+    "recovery": 0,
     "duration": 0,
-    "cooldown": 7.0,
-    "referenceCycle": 7.0,
+    "cooldown": 7,
+    "referenceCycle": 7,
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 2,
     "projectiles": 2,
-    "damagePerProjectile": 3000.0,
-    "totalRawDamage": 6000.0,
-    "accuracy": 75.0,
-    "en": 70.0,
+    "damagePerProjectile": 3000,
+    "totalRawDamage": 6000,
+    "accuracy": 75,
+    "en": 70,
     "energyMode": "perShot",
-    "enPerEmission": 35.0,
-    "declaredEnergy": 35.0,
-    "hidden": false,
+    "enPerEmission": 35,
+    "declaredEnergy": 35,
+    "hidden": true,
     "source": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw",
     "nativePayload": {
-      "ShellDamage": 3000.0,
-      "DpDamage": 200.0,
-      "WeaponAccuracy": 75.0,
+      "ShellDamage": 3000,
+      "DpDamage": 200,
+      "WeaponAccuracy": 75,
       "PartBreakModifier": 0.5,
       "CockpitBreakModifier": 0.5,
-      "PilotDamageModifier": 1.0,
-      "PilotTrueDamage": 0.0,
+      "PilotDamageModifier": 1,
+      "PilotTrueDamage": 0,
       "AntiSizeLargeDamage": 1.25,
       "AntiSizeSmallDamage": 0.75,
       "AntiSizeLargeAccuracy": 1.25,
@@ -55793,17 +56928,17 @@
       "AntiBuilding": 1.5,
       "AntiAqua": 0.75,
       "AntiAir": 0.5,
-      "AntiLand": 1.0,
-      "AntiSpace": 1.0,
+      "AntiLand": 1,
+      "AntiSpace": 1,
       "HeightChangeSpeed": 0.5,
-      "HeightHitRange": 10.0,
-      "ProjectileSpeed": 25.0,
-      "ProjectileSpread": 0.0,
-      "ProjectileExplosionRange": 30.0,
-      "ProjectileLife": 50.0,
-      "ProjectileBlastRange": 60.0,
+      "HeightHitRange": 10,
+      "ProjectileSpeed": 25,
+      "ProjectileSpread": 0,
+      "ProjectileExplosionRange": 30,
+      "ProjectileLife": 50,
+      "ProjectileBlastRange": 60,
       "ProjectileBlastDamageModifier": 0.35,
-      "ProjectileBlastDpModifier": 1.0
+      "ProjectileBlastDpModifier": 1
     },
     "timeline": [
       {
@@ -55811,14 +56946,14 @@
         "muzzleIndex": 1,
         "partBreakModifier": 0.5,
         "requiredParts": [],
-        "delay": 0.0
+        "delay": 0
       },
       {
         "shots": 1,
         "muzzleIndex": 1,
         "partBreakModifier": 0.5,
         "requiredParts": [],
-        "delay": 0.0
+        "delay": 0
       }
     ]
   },
@@ -55830,129 +56965,129 @@
     "category": "machine_gun",
     "class": "中循环（2～5秒）",
     "flowClass": "短流程（0.5～2秒）",
-    "firstShot": 0.0,
+    "firstShot": 0,
     "lastShot": 1.375,
     "recovery": 0.0,
     "duration": 1.375,
-    "cooldown": 3.0,
+    "cooldown": 3,
     "referenceCycle": 4.375,
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 12,
     "projectiles": 12,
-    "damagePerProjectile": 350.0,
-    "totalRawDamage": 4200.0,
-    "accuracy": 75.0,
-    "en": 0.0,
+    "damagePerProjectile": 350,
+    "totalRawDamage": 4200,
+    "accuracy": 75,
+    "en": 0,
     "energyMode": "perShot",
-    "enPerEmission": 0.0,
-    "declaredEnergy": 0.0,
+    "enPerEmission": 0,
+    "declaredEnergy": 0,
     "hidden": false,
     "source": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_DoubleMG.gw",
     "nativePayload": {
-      "ShellDamage": 350.0,
-      "DpDamage": 25.0,
-      "WeaponAccuracy": 75.0,
-      "PartBreakModifier": 1.0,
-      "CockpitBreakModifier": 1.0,
-      "PilotDamageModifier": 1.0,
-      "PilotTrueDamage": 0.0,
-      "AntiSizeLargeDamage": 1.0,
+      "ShellDamage": 350,
+      "DpDamage": 25,
+      "WeaponAccuracy": 75,
+      "PartBreakModifier": 1,
+      "CockpitBreakModifier": 1,
+      "PilotDamageModifier": 1,
+      "PilotTrueDamage": 0,
+      "AntiSizeLargeDamage": 1,
       "AntiSizeSmallDamage": 0.75,
-      "AntiSizeLargeAccuracy": 1.0,
+      "AntiSizeLargeAccuracy": 1,
       "AntiSizeSmallAccuracy": 0.75,
-      "AntiBuilding": 1.0,
+      "AntiBuilding": 1,
       "AntiAqua": 0.75,
       "AntiAir": 0.75,
-      "AntiLand": 1.0,
-      "AntiSpace": 1.0,
-      "HeightChangeSpeed": 2.0,
-      "HeightHitRange": 20.0,
-      "ProjectileSpeed": 65.0,
-      "ProjectileSpread": 3.0,
-      "ProjectileLife": 30.0
+      "AntiLand": 1,
+      "AntiSpace": 1,
+      "HeightChangeSpeed": 2,
+      "HeightHitRange": 20,
+      "ProjectileSpeed": 65,
+      "ProjectileSpread": 3,
+      "ProjectileLife": 30
     },
     "timeline": [
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
-        "delay": 0.0
+        "delay": 0
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
-        "requiredParts": [],
-        "delay": 0.125
-      },
-      {
-        "shots": 1,
-        "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       },
       {
         "shots": 1,
         "muzzleIndex": 0,
-        "partBreakModifier": 1.0,
+        "partBreakModifier": 1,
+        "requiredParts": [],
+        "delay": 0.125
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 0,
+        "partBreakModifier": 1,
         "requiredParts": [],
         "delay": 0.125
       }
@@ -55970,43 +57105,43 @@
     "lastShot": 0.45,
     "recovery": 1.0,
     "duration": 1.45,
-    "cooldown": 3.0,
-    "referenceCycle": 3.0,
+    "cooldown": 3,
+    "referenceCycle": 3,
     "cooldownStarts": "技能/开火开始时",
     "emissions": 1,
     "projectiles": 1,
-    "damagePerProjectile": 5000.0,
-    "totalRawDamage": 5000.0,
-    "accuracy": 125.0,
+    "damagePerProjectile": 5000,
+    "totalRawDamage": 5000,
+    "accuracy": 125,
     "en": 0,
     "energyMode": "perVolley",
     "enPerEmission": 0,
-    "declaredEnergy": 0.0,
+    "declaredEnergy": 0,
     "hidden": false,
     "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
     "nativePayload": {
-      "CqbDamage": 2500.0,
-      "CqbShellDamage": 2500.0,
-      "DpDamage": 1000.0,
-      "WeaponAccuracy": 125.0,
+      "CqbDamage": 2500,
+      "CqbShellDamage": 2500,
+      "DpDamage": 1000,
+      "WeaponAccuracy": 125,
       "PartBreakModifier": 0.75,
       "CockpitBreakModifier": 0.75,
-      "PilotDamageModifier": 1.0,
-      "PilotTrueDamage": 0.0,
+      "PilotDamageModifier": 1,
+      "PilotTrueDamage": 0,
       "AntiSizeLargeDamage": 1.25,
       "AntiSizeSmallDamage": 0.75,
       "AntiSizeLargeAccuracy": 1.25,
       "AntiSizeSmallAccuracy": 0.75,
-      "AntiBuilding": 1.0,
+      "AntiBuilding": 1,
       "AntiAqua": 0.75,
       "AntiAir": 0.75,
-      "AntiLand": 1.0,
-      "AntiSpace": 1.0,
-      "HeightHitRange": 35.0,
-      "ProjectileSpeed": 0.0,
-      "ProjectileSpread": 0.0,
+      "AntiLand": 1,
+      "AntiSpace": 1,
+      "HeightHitRange": 35,
+      "ProjectileSpeed": 0,
+      "ProjectileSpread": 0,
       "ProjectileLife": 0.25,
-      "ProjectileAttackTimes": 1.0
+      "ProjectileAttackTimes": 1
     },
     "timeline": [
       {
@@ -56021,7 +57156,114 @@
         "delay": 0.45
       },
       {
-        "delay": 1.0
+        "delay": 1
+      }
+    ]
+  },
+  {
+    "unitId": "RX_75R",
+    "unitName": "量产型钢坦克",
+    "weaponId": "Common_MortarDouble_RX_75R",
+    "displayName": "迫击炮轰炸",
+    "category": "mortar",
+    "class": "长冷却（>10秒）",
+    "flowClass": "长流程（>5秒）",
+    "firstShot": 2.25,
+    "lastShot": 6.04,
+    "recovery": 2.0,
+    "duration": 8.04,
+    "cooldown": 120,
+    "referenceCycle": 120,
+    "cooldownStarts": "技能/开火开始时",
+    "emissions": 8,
+    "projectiles": 8,
+    "damagePerProjectile": 2500,
+    "totalRawDamage": 20000,
+    "accuracy": 75,
+    "en": 200,
+    "energyMode": "perVolley",
+    "enPerEmission": 0,
+    "declaredEnergy": 200,
+    "hidden": false,
+    "source": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw",
+    "nativePayload": {
+      "offsetRandomXY": 100,
+      "ShellDamage": 2500,
+      "DpDamage": 300,
+      "WeaponAccuracy": 75,
+      "PartBreakModifier": 0.5,
+      "CockpitBreakModifier": 0.5,
+      "PilotDamageModifier": 1,
+      "PilotTrueDamage": 0,
+      "AntiBuilding": 2,
+      "AntiAqua": 0.75,
+      "AntiAir": 0.5,
+      "AntiLand": 1,
+      "AntiSpace": 1,
+      "ProjectileSpeed": 25,
+      "ProjectileSpread": 25,
+      "ProjectileExplosionRange": 80,
+      "ProjectileLife": 200
+    },
+    "timeline": [
+      {
+        "shots": 1,
+        "muzzleIndex": 0,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 2.25
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 1,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 0.01
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 0,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 1.25
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 1,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 0.01
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 0,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 1.25
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 1,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 0.01
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 0,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 1.25
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 1,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 0.01
+      },
+      {
+        "delay": 2
       }
     ]
   },
@@ -56783,6 +58025,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
       },
@@ -56849,6 +58095,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -57674,6 +58924,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
       },
@@ -57741,6 +58995,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
+      {
         "animation": "Common_Throw_A",
         "delay": 0
       },
@@ -57807,6 +59065,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -58480,6 +59742,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
       },
@@ -58550,6 +59816,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -58615,6 +59885,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -58771,6 +60045,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
+      {
         "animation": "Common_Throw_A",
         "delay": 0
       },
@@ -58837,6 +60115,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -59084,6 +60366,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -59152,6 +60438,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -59217,6 +60507,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -59362,6 +60656,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
       },
@@ -59439,6 +60737,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -59543,6 +60845,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -59952,6 +61258,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -60017,6 +61327,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -60085,6 +61399,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_B",
         "delay": 0
       },
@@ -60151,6 +61469,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
@@ -60229,6 +61551,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -60333,6 +61659,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -60647,6 +61977,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -60712,6 +62046,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -60786,6 +62124,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -60942,6 +62284,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 3,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -61097,6 +62443,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_B",
         "delay": 0
       },
@@ -61174,6 +62524,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -61514,6 +62868,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -61579,6 +62937,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -61964,6 +63326,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -62041,6 +63407,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -62351,6 +63721,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -62504,6 +63878,10 @@
       "ProjectileLife": 20.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -62713,6 +64091,10 @@
       "ProjectileLife": 20.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -62924,6 +64306,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
+      {
         "animation": "Common_Throw_A",
         "delay": 0
       },
@@ -62990,6 +64376,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -63094,6 +64484,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0.0
@@ -63491,6 +64885,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -63644,6 +65042,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -64167,6 +65569,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -64477,6 +65883,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -64630,6 +66040,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -65154,6 +66568,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
       },
@@ -65530,6 +66948,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -66052,6 +67474,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -66362,6 +67788,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -66885,6 +68315,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -66962,6 +68396,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_F",
         "delay": 0
@@ -67198,6 +68636,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -67263,6 +68705,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -67407,6 +68853,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -67473,6 +68923,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
@@ -67541,6 +68995,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -67780,6 +69238,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -67985,6 +69447,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -68050,6 +69516,10 @@
       "ProjectileLife": 25.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -68194,6 +69664,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -68260,6 +69734,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_Two_Handed_A",
         "delay": 0
@@ -68328,6 +69806,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "shots": 1,
         "muzzleIndex": 0,
@@ -68567,6 +70049,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -68701,6 +70187,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -68855,6 +70345,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -68924,6 +70418,10 @@
       "ProjectileBlastDpModifier": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -69398,6 +70896,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
       },
@@ -69776,6 +71278,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -69844,6 +71350,10 @@
     "timeline": [
       {
         "animation": "Common_Shoot_A",
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 0,
         "delay": 0
       },
       {
@@ -70017,6 +71527,10 @@
         "delay": 0
       },
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0.25
       },
@@ -70104,6 +71618,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -70170,6 +71688,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -70482,6 +72004,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -70550,6 +72076,10 @@
     "timeline": [
       {
         "animation": "Common_Shoot_A",
+        "delay": 0
+      },
+      {
+        "weaponDisplayIndex": 0,
         "delay": 0
       },
       {
@@ -70723,6 +72253,10 @@
         "delay": 0
       },
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0.25
       },
@@ -70810,6 +72344,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -70876,6 +72414,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
@@ -70954,6 +72496,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_B",
         "delay": 0
@@ -71264,6 +72810,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -71418,6 +72968,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -71487,6 +73041,10 @@
       "ProjectileBlastDpModifier": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -71730,6 +73288,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -72027,6 +73589,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
@@ -72337,6 +73903,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -72491,6 +74061,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -72560,6 +74134,10 @@
       "ProjectileBlastDpModifier": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -72803,6 +74381,10 @@
       "ProjectileLife": 30.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 2,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -73101,6 +74683,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -73204,6 +74790,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_Double_G",
         "delay": 0.2
@@ -73554,6 +75144,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -73708,6 +75302,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "animation": "Common_Shoot_A",
         "delay": 0
       },
@@ -73777,6 +75375,10 @@
       "ProjectileBlastDpModifier": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
       {
         "animation": "Common_Shoot_A",
         "delay": 0
@@ -74251,6 +75853,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A_Fast",
         "delay": 0
       },
@@ -74328,6 +75934,10 @@
       "ProjectileAttackTimes": 2.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 11,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_A",
         "delay": 0
@@ -74563,8 +76173,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 6,
     "projectiles": 6,
-    "damagePerProjectile": 4000.0,
-    "totalRawDamage": 24000.0,
+    "damagePerProjectile": 5000.0,
+    "totalRawDamage": 30000.0,
     "accuracy": 75.0,
     "en": 240.0,
     "energyMode": "perShot",
@@ -74663,8 +76273,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 16,
     "projectiles": 16,
-    "damagePerProjectile": 1200.0,
-    "totalRawDamage": 19200.0,
+    "damagePerProjectile": 1500.0,
+    "totalRawDamage": 24000.0,
     "accuracy": 100.0,
     "en": 192.0,
     "energyMode": "perShot",
@@ -74845,8 +76455,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 4,
     "projectiles": 4,
-    "damagePerProjectile": 1500.0,
-    "totalRawDamage": 6000.0,
+    "damagePerProjectile": 1875.0,
+    "totalRawDamage": 7500.0,
     "accuracy": 85.0,
     "en": 160.0,
     "energyMode": "perShot",
@@ -74931,8 +76541,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 40,
     "projectiles": 40,
-    "damagePerProjectile": 225.0,
-    "totalRawDamage": 9000.0,
+    "damagePerProjectile": 281.25,
+    "totalRawDamage": 11250.0,
     "accuracy": 125.0,
     "en": 20.0,
     "energyMode": "perShot",
@@ -75304,8 +76914,8 @@
     "cooldownStarts": "弹仓耗尽后",
     "emissions": 20,
     "projectiles": 20,
-    "damagePerProjectile": 300.0,
-    "totalRawDamage": 6000.0,
+    "damagePerProjectile": 375.0,
+    "totalRawDamage": 7500.0,
     "accuracy": 125.0,
     "en": 10.0,
     "energyMode": "perShot",
@@ -76234,55 +77844,47 @@
   {
     "unitId": "Type61_SPG",
     "unitName": "61式主战坦克[榴弹炮搭载型]",
-    "weaponId": "EF_Type61_SPG_Cannon",
-    "displayName": "加农炮",
-    "category": "cannon",
-    "class": "中循环（2～5秒）",
-    "flowClass": "极短流程（≤0.5秒）",
-    "firstShot": 0.0,
-    "lastShot": 0.0,
-    "recovery": 0.0,
-    "duration": 0,
-    "cooldown": 5.0,
-    "referenceCycle": 5.0,
-    "cooldownStarts": "弹仓耗尽后",
-    "emissions": 1,
-    "projectiles": 1,
-    "damagePerProjectile": 4000.0,
-    "totalRawDamage": 4000.0,
-    "accuracy": 75.0,
-    "en": 30.0,
-    "energyMode": "perShot",
-    "enPerEmission": 30.0,
-    "declaredEnergy": 30.0,
+    "weaponId": "Common_Mortar_Type61_SPG",
+    "displayName": "迫击炮",
+    "category": "mortar",
+    "class": "长冷却（>10秒）",
+    "flowClass": "长流程（>5秒）",
+    "firstShot": 2.25,
+    "lastShot": 4.75,
+    "recovery": 2.0,
+    "duration": 6.75,
+    "cooldown": 120.0,
+    "referenceCycle": 120.0,
+    "cooldownStarts": "技能/开火开始时",
+    "emissions": 3,
+    "projectiles": 3,
+    "damagePerProjectile": 3500.0,
+    "totalRawDamage": 10500.0,
+    "accuracy": 65.0,
+    "en": 150.0,
+    "energyMode": "perVolley",
+    "enPerEmission": 0,
+    "declaredEnergy": 150.0,
     "hidden": false,
-    "source": "Units/BattleUnits/Weapon/Shell/EF_Type61_SPG_Cannon.gw",
+    "source": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw",
     "nativePayload": {
-      "ShellDamage": 4000.0,
-      "DpDamage": 500.0,
-      "WeaponAccuracy": 75.0,
+      "offsetRandomXY": 100.0,
+      "ShellDamage": 3500.0,
+      "DpDamage": 200.0,
+      "WeaponAccuracy": 65.0,
       "PartBreakModifier": 0.5,
       "CockpitBreakModifier": 0.5,
       "PilotDamageModifier": 1.0,
       "PilotTrueDamage": 0.0,
-      "AntiSizeLargeDamage": 1.25,
-      "AntiSizeSmallDamage": 0.75,
-      "AntiSizeLargeAccuracy": 1.25,
-      "AntiSizeSmallAccuracy": 0.75,
-      "AntiBuilding": 1.5,
+      "AntiBuilding": 2.0,
       "AntiAqua": 0.75,
-      "AntiAir": 0.75,
+      "AntiAir": 0.5,
       "AntiLand": 1.0,
       "AntiSpace": 1.0,
-      "HeightChangeSpeed": 0.5,
-      "HeightHitRange": 10.0,
-      "ProjectileSpeed": 30.0,
-      "ProjectileSpread": 0.0,
-      "ProjectileExplosionRange": 30.0,
-      "ProjectileLife": 50.0,
-      "ProjectileBlastRange": 50.0,
-      "ProjectileBlastDamageModifier": 0.35,
-      "ProjectileBlastDpModifier": 1.0
+      "ProjectileSpeed": 25.0,
+      "ProjectileSpread": 25.0,
+      "ProjectileExplosionRange": 80.0,
+      "ProjectileLife": 200.0
     },
     "timeline": [
       {
@@ -76290,7 +77892,24 @@
         "muzzleIndex": 0,
         "partBreakModifier": 0.5,
         "requiredParts": [],
-        "delay": 0.0
+        "delay": 2.25
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 0,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 1.25
+      },
+      {
+        "shots": 1,
+        "muzzleIndex": 0,
+        "partBreakModifier": 0.5,
+        "requiredParts": [],
+        "delay": 1.25
+      },
+      {
+        "delay": 2.0
       }
     ]
   },
@@ -77778,6 +79397,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 0,
+        "delay": 0
+      },
+      {
         "shots": 1,
         "muzzleIndex": 0,
         "partBreakModifier": 1.0,
@@ -77922,6 +79545,10 @@
     },
     "timeline": [
       {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
+      {
         "animation": "Common_Melee_A",
         "delay": 0
       },
@@ -77988,6 +79615,10 @@
       "ProjectileAttackTimes": 1.0
     },
     "timeline": [
+      {
+        "weaponDisplayIndex": 1,
+        "delay": 0
+      },
       {
         "animation": "Common_Melee_Double_A",
         "delay": 0

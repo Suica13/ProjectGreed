@@ -195,7 +195,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 12.0,
+      "radar": 15.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -280,6 +290,11 @@
       "air": 100.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 432.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -292,7 +307,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "walk"
+    "movement": "walk",
+    "moveSoundKey": null
   },
   "name": "阿普萨拉斯II",
   "faction": "ZEON",

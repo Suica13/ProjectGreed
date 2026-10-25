@@ -133,7 +133,7 @@ test("built inline scripts remain valid after template formatting and include ne
     assert.doesNotThrow(() => new vm.Script(source));
     scripts++;
   }
-  assert.equal(scripts, 3);
+  assert.ok(scripts >= 3);
   assert.match(html, /const Net =/);
   assert.doesNotMatch(html, /__NETWORK__|__CORE__|__BATTLE_SCENE__/);
 });

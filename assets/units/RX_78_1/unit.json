@@ -593,7 +593,17 @@
     "movementType": "ground",
     "partsBreakable": true,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 24.0,
@@ -672,6 +682,11 @@
       "air": 50.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -684,7 +699,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "movement": "boost",
-    "walk": "OnMovingWalk"
+    "walk": "OnMovingWalk",
+    "moveSoundKey": "moveSound"
   },
   "name": "试作型高达",
   "faction": "EFSF",
@@ -2429,5 +2445,6 @@
       "CanLoadInto"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "mechanics": []
 }

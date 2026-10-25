@@ -12,6 +12,7 @@ const SkillControls = (() => {
     );
   }
   function description(skill) {
+    if (skill.description) return skill.description;
     if (skill.type === "flight")
       return I18n.text(
         "部位完好时消耗1 AP切换飞行姿态；起飞后作为航空单位，可跨越山岩与水域，不消耗移动机会。降落需要合法地形。",
@@ -20,7 +21,11 @@ const SkillControls = (() => {
       return `启动消耗${skill.enPercent}%最大EN · 强化形态持续${skill.duration}个己方回合 · 每个己方回合结束扣除${skill.hpDrainPercent}%最大耐久、${skill.enDrainPercent}%最大EN · 到期或头部损毁时强制解除，保留资源和破损部位。`;
 
     if (skill.type === "recon")
-      return `范围 ${skill.range}${skill.waterOnly ? "，仅水域目标" : ""} · 标记敌军直到下次己方行动，友军对其命中率+10%，解除隐蔽命中惩罚 · 消耗EN ${skill.enCost}和本次行动。`;
+      return skill.reconMode === "camera"
+        ? `选择${Number(skill.range.toFixed(2))}格内的位置，提供${skill.areaSight}格视野与${Number(skill.areaRadar.toFixed(2))}格侦测，持续至下次己方回合。消耗${skill.enCost} EN、${skill.actionCost} AP；下次己方回合可再次使用。`
+        : `扫描${Number(skill.range.toFixed(2))}格内${skill.waterOnly ? "水域中的" : ""}敌军，标记持续至下次己方回合；消除己方未侦测命中惩罚，不直接揭露普通单位。消耗${skill.enCost} EN${skill.actionCost ? "、" + skill.actionCost + " AP" : "和本次行动"}。${skill.reconMode ? "下次己方回合可再次使用。" : ""}`;
+    if (skill.type === "minovsky")
+      return `以自身为中心散布半径 ${skill.radius} 格的米诺夫斯基粒子，持续一个完整回合周期。区域内所有防守单位的回避率乘以 1.25，反侦测距离 +5 格；来袭导弹与迫击炮命中率再乘以 0.75。消耗 ${skill.enCost} EN、${skill.actionCost} AP，冷却 ${skill.cooldownTurns} 个自身回合。`;
     if (skill.type === "repair")
       return `范围 ${skill.range} · 友军HP +${skill.hpRecoveryPercent}% · EN +${skill.enRecoveryPercent}% · 盾牌 +${skill.shieldRecoveryPercent}% · 消耗EN ${skill.enCost}和本次行动；不修复破损部位。`;
     if (["transform", "armor_purge"].includes(skill.type))
@@ -49,7 +54,7 @@ const SkillControls = (() => {
         0,
         skill.maxUses - (unit.skillUses?.[UnitModels[unit.model].prefabId + "/" + skill.id] || 0),
       );
-      if (skill.type !== "flight")
+      if (skill.type !== "flight" && Number.isInteger(skill.maxUses) && skill.maxUses < 99)
         button.append(
           element("small", "muted", `${I18n.text("剩余次数")} ${left}/${skill.maxUses}`),
         );
@@ -62,7 +67,18 @@ const SkillControls = (() => {
         AttackControls.reset();
         mode = "skill:" + skill.id;
         weaponId = null;
-        if (["overdrive", "transform", "armor_purge", "flight"].includes(skill.type))
+        if (
+          [
+            "overdrive",
+            "overboost",
+            "fullboost",
+            "transform",
+            "armor_purge",
+            "flight",
+            "minovsky",
+          ].includes(skill.type) ||
+          (skill.type === "recon" && skill.reconMode !== "camera")
+        )
           click({ x: unit.x, y: unit.y }, unit);
         else update();
       };

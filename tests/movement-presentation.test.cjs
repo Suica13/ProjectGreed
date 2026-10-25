@@ -1,11 +1,18 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const fs = require("node:fs"), vm = require("node:vm");
+const fs = require("node:fs"),
+  vm = require("node:vm");
 const ART = require("../tools/load-catalog.cjs").loadCatalog();
 const context = vm.createContext({ ART });
-vm.runInContext(fs.readFileSync("client/renderer.js", "utf8") + "\nglobalThis.renderer=SpriteRenderer", context);
+vm.runInContext(
+  fs.readFileSync("client/renderer.js", "utf8") + "\nglobalThis.renderer=SpriteRenderer",
+  context,
+);
 const model = (id) => ART.units.find((u) => u.id.startsWith(id + "__")).id;
-const visible = (id, moving, onLand) => context.renderer.visibleLayers(model(id), null, true, moving, null, 1, true, {}, null, onLand).map((l) => l.name);
+const visible = (id, moving, onLand) =>
+  context.renderer
+    .visibleLayers(model(id), null, true, moving, null, 1, true, {}, null, onLand)
+    .map((l) => l.name);
 
 test("all native hover decals loop only during land movement", () => {
   for (const p of ART.prefabs.filter((p) => p.layers.some((l) => l.name === "Hover"))) {
@@ -29,9 +36,16 @@ test("EXAM and HADES have native startup effects and persistent red loops only i
 
 test("every prefab has exactly one persistent movement bonus, wired missiles retain native IDs and mortar is one skill", () => {
   for (const p of ART.prefabs)
-    assert.equal(p.stats.move, p.sourceStats.tacticalMoveBeforeBonus + 1, p.id);
+    assert.equal(
+      p.stats.move,
+      p.sourceStats.tacticalMoveBeforeBonus + (p.stats.ship ? 3 : 1),
+      p.id,
+    );
   const bd = ART.prefabs.find((p) => p.id === "RX_79_BD_1");
-  assert.equal(bd.weapons.EF_RX_79_BD_ChestMS_Line.localization.en.name, "Chest Wire-Guided Missiles");
+  assert.equal(
+    bd.weapons.EF_RX_79_BD_ChestMS_Line.localization.en.name,
+    "Chest Wire-Guided Missiles",
+  );
   const tank = ART.prefabs.find((p) => p.id === "RMV_1");
   assert.equal(tank.weapons.Common_MortarDouble.slot, "skill");
   assert.equal(tank.weapons.Common_MortarDouble.special.type, "mortar");

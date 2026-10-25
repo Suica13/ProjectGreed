@@ -326,7 +326,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 11.0,
+      "radar": 17.36111111111111,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -410,6 +420,11 @@
       "air": 100.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 22.0,
+      "radar": 500.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -422,7 +437,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "米迪亚改",
   "faction": "EFSF",
@@ -452,7 +468,7 @@
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
       "status": "adapted",
-      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
     },
     {
       "id": "Deploy",

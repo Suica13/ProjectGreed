@@ -1,7 +1,7 @@
 /* 格纳库只保存现有单位的搭载关系；不复制单位，不恢复资源。 */
 "use strict";
 const UnitHangars = {
-  create({ modelOf, ownerOf, cells, fits, mapWidth, mapHeight, reachable, movementCost }) {
+  create({ modelOf, ownerOf, cells, fits, mapWidth, mapHeight, reachable, movementCost, sensors }) {
     const onMap = (u) => !!u && u.hp > 0 && !u.embarked;
     const deploying = (g) => !!g.deployment && !g.deployment.every(Boolean);
     const of = (u) => modelOf(u).hangars || [];
@@ -196,7 +196,10 @@ const UnitHangars = {
       const range = Math.max(6, attackReach(carrier));
       return g.units.some(
         (enemy) =>
-          onMap(enemy) && enemy.team !== carrier.team && edgeDistance(carrier, enemy) <= range,
+          onMap(enemy) &&
+          enemy.team !== carrier.team &&
+          sensors.visible(g, carrier.team, enemy) &&
+          edgeDistance(carrier, enemy) <= range,
       );
     }
     function shouldLaunch(g, u) {

@@ -507,7 +507,17 @@
     },
     "accuracy": 110,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 9.0,
+      "radar": 11.25,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": -25.0,
@@ -581,6 +591,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 324.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -593,7 +608,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "movement": "boost",
-    "walk": "OnMovingWalk"
+    "walk": "OnMovingWalk",
+    "moveSoundKey": "moveSound"
   },
   "name": "扎古加农",
   "description": "为进行对空作战而开发的机体",
@@ -1609,5 +1625,6 @@
       "CanLoadInto"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "mechanics": []
 }

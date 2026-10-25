@@ -68,13 +68,13 @@ test("unit accuracy multiplies ranged and melee base hit before cover, mobility,
 test("accuracy applies once to AI, survives snapshots and does not inherit defender adaptation or head damage", () => {
   const { g, a, b, w } = duel();
   a.performance = 1.25;
-  assert.equal(G.estimate(g, a, b, w).hit, 93.75);
-  assert.equal(G.estimate(g, a, b, G.weaponStats(w, a)).hit, 93.75);
+  assert.equal(G.estimate(g, a, b, w).hit, 75);
+  assert.equal(G.estimate(g, a, b, G.weaponStats(w, a)).hit, 75);
   const clone = JSON.parse(JSON.stringify(g));
-  assert.equal(G.estimate(clone, clone.units[0], clone.units[1], w).hit, 93.75);
+  assert.equal(G.estimate(clone, clone.units[0], clone.units[1], w).hit, 75);
   a.brokenParts = { head: true };
   assert.equal(G.modelOf(a).accuracy, 125);
-  assert.equal(G.estimate(g, a, b, w).hit, 93.75);
+  assert.equal(G.estimate(g, a, b, w).hit, 75);
   assert.equal(G.models.MS_14A__machine_gun.accuracy, 125);
 });
 

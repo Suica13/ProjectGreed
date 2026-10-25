@@ -212,7 +212,17 @@
       "hpPercent": 5,
       "enPercent": 10
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 9.5,
+      "radar": 11.875,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -299,6 +309,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 19.0,
+      "radar": 342.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -311,7 +326,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
-    "movement": "walk"
+    "movement": "walk",
+    "moveSoundKey": "moveSound"
   },
   "name": "气垫卡车",
   "faction": "EFSF",
@@ -539,14 +555,8 @@
   "mechanics": [
     {
       "id": "movement",
-      "name": "气垫移动：可横越水域",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
       "status": "implemented"
-    },
-    {
-      "id": "Hover",
-      "source": "Template/Unit/Skill/Hover.gw",
-      "status": "implemented",
-      "name": "气垫：仅在地面移动时循环"
     },
     {
       "id": "CmdCom",
@@ -555,27 +565,10 @@
       "name": "通信指挥"
     },
     {
-      "id": "SupplyPoint",
-      "source": "Template/Unit/Skill/SupplyPoint.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
-      "id": "SupplyPoint_UseEN",
-      "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "review",
       "name": "换装／改修"
-    },
-    {
-      "id": "ReconScan",
-      "name": "ReconScan",
-      "status": "adapted"
     }
   ],
   "weaponKits": [
@@ -588,23 +581,7 @@
       ]
     }
   ],
-  "skills": [
-    {
-      "id": "ReconScan",
-      "type": "recon",
-      "name": "战场侦察",
-      "range": 6,
-      "maxUses": 99,
-      "consumeAction": true,
-      "enCost": 15,
-      "waterOnly": false,
-      "effect": "Light_75_NotAttached",
-      "sound": {
-        "file": "../../sounds/Transform_4.ogg",
-        "volume": 0.3
-      }
-    }
-  ],
+  "skills": [],
   "description": "联邦军货运兼侦察车辆",
   "costBalance": {
     "nativeLevel": 200.0,
@@ -618,7 +595,6 @@
     "Vehicle",
     "Hover",
     "Support",
-    "Recon",
     "Transport"
   ],
   "transport": {

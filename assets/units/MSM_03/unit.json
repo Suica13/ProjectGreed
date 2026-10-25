@@ -372,7 +372,17 @@
       "waterOnly": true
     },
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": true,
+      "antiDetectAqua": true
+    }
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -459,6 +469,11 @@
       "air": 10.0,
       "mountain": 85.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -471,7 +486,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "战蟹",
   "faction": "ZEON",
@@ -1577,14 +1593,14 @@
     {
       "id": "AntiDetect_Aqua",
       "source": "Template/Unit/Skill/AntiDetect_Aqua.gw",
-      "status": "review",
-      "name": "水下反侦测"
+      "status": "adapted",
+      "name": "水下反侦测：位于水中时雷达与主动索敌距离减半"
     },
     {
       "id": "Stealth_Aqua",
       "source": "Template/Unit/Skill/Stealth_Aqua.gw",
       "status": "adapted",
-      "name": "水下隐蔽"
+      "name": "水下隐蔽：位于水中时降低敌方雷达有效距离"
     },
     {
       "id": "Sonar",
@@ -1643,6 +1659,18 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Amphibious",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "ZN_MSM_03_ChestBeam",
@@ -1690,17 +1718,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "MS",
-    "Amphibious",
-    "Recon"
-  ],
-  "transport": {
-    "slotCost": 2,
-    "loadTags": [
-      "CanLoadInto"
-    ]
-  },
-  "hangars": []
+  ]
 }

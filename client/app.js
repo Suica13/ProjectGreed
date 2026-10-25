@@ -56,11 +56,13 @@ function startRendering() {
 }
 const teamName = (t) => (t ? "红方" : "蓝方"),
   other = (t) => 1 - t,
-  getUnit = (id) => game.units.find((u) => u.id === id),
+  getUnit = (id) =>
+    game.units.find((u) => u.id === id) || Net.snapshot?.combatActors?.find((u) => u.id === id),
   battleUnit = (id) => battleView?.actors?.find((unit) => unit.id === id) || getUnit(id),
   getWeapon = (u, id) => Rules.modelOf(u).weapons.find((w) => w.id === id),
   unitIcon = (model) => ART.assets[SpriteRenderer.models[model].icon],
-  unitName = (u) => Rules.unitName(u),
+  unitName = (u) => (ClientSettings.trueUnitNames() ? Rules.modelOf(u).name : Rules.unitName(u)),
+  displaysCustomUnitName = (u) => !ClientSettings.trueUnitNames() && !!u.customName,
   formatNumber = (n) => Number(n).toLocaleString("en-US"),
   isAI = () => !Net.active && game.ai && game.team === 1,
   isBusy = () =>
@@ -75,9 +77,34 @@ function note(text) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => byId("toast").classList.remove("show"), 2200);
 }
+async function copyQqGroup() {
+  const value = "783420192";
+  let copied = false;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(value);
+      copied = true;
+    }
+  } catch {}
+  if (!copied) {
+    const input = document.createElement("textarea");
+    input.value = value;
+    input.setAttribute("readonly", "");
+    input.style.position = "fixed";
+    input.style.opacity = "0";
+    document.body.append(input);
+    input.select();
+    try {
+      copied = document.execCommand("copy");
+    } catch {}
+    input.remove();
+  }
+  note(copied ? "已复制" : "复制失败，请手动复制：783420192");
+}
+byId("copyQqGroup").onclick = copyQqGroup;
 function logUnit(unit) {
   const model = Rules.modelOf(unit);
-  return `[${teamName(unit.team)}][${UnitIdentity.owner(unit).name}]${unitName(unit)}(${model.code} ${model.name})`;
+  return `[${teamName(unit.team)}][${UnitIdentity.owner(unit).name}]${Rules.unitName(unit)}(${model.code} ${model.name})`;
 }
 function addLog(text) {
   log.unshift(text);
@@ -198,6 +225,7 @@ function htmlWeapon(w, u, target = null, response = "counter", isCounter = false
     <div class="weapon-meta">
       射程 ${w.min}–${w.max}　${damageLabel}${totals}<br />EN ${w.en} / 剩余 ${u.en} · AP
       ${Rules.actionCost(w)}
+      ${Number.isInteger(w.maxUses) ? `<br />${I18n.text("剩余次数")} ${Math.max(0, w.maxUses - (u.weaponUses?.[w.id] || 0))}/${w.maxUses}` : ""}
       ${["mortar", "snipe"].includes(w.special?.type) ? `<br />CD 1 ${I18n.text("回合")}${Rules.weaponCooldown(u, w) ? ` · <span class="red">${I18n.text("冷却中")}</span>` : ""}` : ""}
       ${w.nativePayload?.DpDamage ? `<br />DP ${formatNumber(w.nativePayload.DpDamage)}` : ""}
       ${w.nativeTiming ? `<br />${I18n.text("流程")} ${Number(w.nativeTiming.duration.toFixed(3))}s · ${I18n.text("原CD")} ${Number(w.nativeTiming.cooldown.toFixed(3))}s` : ""}
@@ -333,7 +361,7 @@ function renderRoster(busy) {
       image.alt = "";
       const info = element("span", "roster-unit-info");
       const name = element("strong", "roster-unit-name", unitName(unit));
-      if (unit.customName) name.setAttribute("data-i18n-ignore", "");
+      if (displaysCustomUnitName(unit)) name.setAttribute("data-i18n-ignore", "");
       info.append(name);
       for (const [kind, current, maximum] of [
         ["hp", unit.hp, model.hp],
@@ -389,7 +417,7 @@ function renderRoster(busy) {
         }
         MapCamera.focus(Rules.center(unit).x, Rules.center(unit).y);
         if (phase === "deployment") {
-          GameAudio.play("selectUnitSound");
+          GameAudio.selectUnit(unit);
           selected = unit.id;
           weaponId = null;
           mode = "select";
@@ -423,7 +451,7 @@ function renderPanel() {
       <strong class="${u.team ? "red" : "blue"}">${escapeHtml(unitName(u))}</strong
       ><small>${m.code} · ${m.kitName} · ${teamName(u.team)}</small>
     </div>`;
-  if (u.customName) head.querySelector("strong").setAttribute("data-i18n-ignore", "");
+  if (displaysCustomUnitName(u)) head.querySelector("strong").setAttribute("data-i18n-ignore", "");
   if (unitNameEdit && unitNameEdit.id !== u.id) unitNameEdit = null;
   if (
     (Net.active ? Net.canControl(u) : own) &&
@@ -458,7 +486,7 @@ function renderPanel() {
           const before = logUnit(u);
           if (name) u.customName = name;
           else delete u.customName;
-          addLog(`${before} 更名为 ${unitName(u)}。`);
+          addLog(`${before} 更名为 ${Rules.unitName(u)}。`);
         }
         unitNameEdit = null;
         update();
@@ -746,6 +774,22 @@ function renderPanel() {
     );
   if (u.snipeOrder)
     panel.append(element("p", "helper", "狙击蓄力中：下次己方回合检查射程并自动执行，命中率×2。"));
+  if (u.overBoost)
+    panel.append(
+      element(
+        "p",
+        "helper",
+        "超限喷射启动中 · 移动力+3、反应系数×1.15 · 每个后续己方回合损失25%最大耐久",
+      ),
+    );
+  if (u.fullBoost)
+    panel.append(
+      element(
+        "p",
+        "helper",
+        `全力推进中 · 移动力+2、反应系数×1.10 · 剩余${u.fullBoost.remaining}个己方回合`,
+      ),
+    );
   if (u.overdrive)
     panel.append(
       element(
@@ -827,7 +871,7 @@ function select(id) {
   if (isBusy()) return;
   let u = getUnit(id);
   if (!u || u.hp <= 0) return;
-  GameAudio.play("selectUnitSound");
+  GameAudio.selectUnit(u);
   selected = id;
   AttackControls.reset();
   weaponId = null;
@@ -1011,7 +1055,9 @@ function drawMap(now) {
     weapon = chosen && weaponId ? getWeapon(chosen, weaponId) : null;
   c.dataset.attackRangeCells = String(attackArea.size);
   c.dataset.attackableTargets = String(attackTargets.size);
-  const skillCells = new Set([...SkillControls.cells(chosen), ...(window.HangarUI?.cells() || [])]);
+  const skillCells = new Set([...SkillControls.cells(chosen), ...(window.HangarUI?.cells() || [])]),
+    minovskyCells = Rules.minovskyCells(game);
+  c.dataset.minovskyCells = String(minovskyCells.size);
   // Skip terrain cells outside the viewport when zoomed in.
   const firstX = Math.max(0, Math.floor(-ox / tile)),
     firstY = Math.max(0, Math.floor(-oy / tile)),
@@ -1141,6 +1187,19 @@ function drawMap(now) {
           ctx.stroke();
         }
       }
+      if (minovskyCells.has(Rules.key(x, y))) {
+        // Static, deterministic blocks provide a noisy field without animated particles or allocations.
+        const seed = (Math.imul(x + 17, 73856093) ^ Math.imul(y + 31, 19349663)) >>> 0;
+        ctx.fillStyle = "rgba(118, 103, 190, 0.13)";
+        ctx.fillRect(px, py, tile, tile);
+        ctx.fillStyle = "rgba(190, 213, 230, 0.12)";
+        for (let i = 0; i < 3; i++) {
+          const sx = ((seed >>> (i * 5)) & 15) / 16,
+            sy = ((seed >>> (i * 5 + 3)) & 15) / 16,
+            size = tile * (0.12 + ((seed >>> (i * 4 + 1)) & 3) / 32);
+          ctx.fillRect(px + sx * (tile - size), py + sy * (tile - size), size, size);
+        }
+      }
       if (moveHighlights.has(Rules.key(x, y))) {
         ctx.fillStyle = "#63caff2d";
         ctx.fillRect(px + 2, py + 2, tile - 4, tile - 4);
@@ -1173,8 +1232,29 @@ function drawMap(now) {
     ctx.fillText(Rules.columnLabel(x), ox + (x + 0.5) * tile, oy - 9);
   for (let y = 0; y < Rules.mapHeight(game); y++)
     ctx.fillText(String(y + 1), ox - 9, oy + (y + 0.5) * tile);
+  const intel = game.intel;
+  if (intel) {
+    const visible = new Set(intel.visibleCells);
+    ctx.fillStyle = "rgba(3, 10, 18, 0.78)";
+    for (let y = 0; y < Rules.mapHeight(game); y++)
+      for (let x = 0; x < Rules.mapWidth(game); x++)
+        if (!visible.has(x + "," + y)) ctx.fillRect(ox + x * tile, oy + y * tile, tile, tile);
+  }
+  // Effects from an unseen attacker must not reveal their position through the fog.
+  const visibilityClip = intel ? new Path2D() : null;
+  if (visibilityClip)
+    for (const cell of intel.visibleCells) {
+      const [x, y] = cell.split(",").map(Number);
+      visibilityClip.rect(ox + x * tile, oy + y * tile, tile, tile);
+    }
+  const drawVisibleEffects = (draw) => {
+    ctx.save();
+    if (visibilityClip) ctx.clip(visibilityClip);
+    draw();
+    ctx.restore();
+  };
   const mapUnitPoses = [];
-  MapCombat.drawUnderlay(ctx, mapGeo);
+  drawVisibleEffects(() => MapCombat.drawUnderlay(ctx, mapGeo));
   for (const u of MapCombat.units()) {
     if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden) continue;
     const motion = PlanningUI.motion(u, now) || (moving?.id === u.id ? moving : null);
@@ -1212,7 +1292,24 @@ function drawMap(now) {
       t = combatPose.time;
     }
     if (!combatPose) angle = PlanningUI.facing(u, angle);
-    mapUnitPoses.push({ u, pos, angle, anim, t, motion, unitSize, combatPose, groundCell });
+    const skillPose = !combatPose && SkillEffects.pose(u, now);
+    if (skillPose) {
+      angle = skillPose.angle;
+      anim = skillPose.clip;
+      t = skillPose.time;
+    }
+    mapUnitPoses.push({
+      u,
+      pos,
+      angle,
+      anim,
+      t,
+      motion,
+      unitSize,
+      combatPose,
+      skillPose,
+      groundCell,
+    });
   }
   // Ground overlays are drawn before every unit, including moving and dodging units.
   for (const { u, pos } of mapUnitPoses)
@@ -1221,7 +1318,18 @@ function drawMap(now) {
   byId("map").dataset.unitThumbnails = String(unitThumbnails);
   if (!unitThumbnails)
     for (const { u, pos } of mapUnitPoses) UnitIdentity.drawRing(ctx, u, pos, tile);
-  for (const { u, pos, angle, anim, t, motion, unitSize, combatPose, groundCell } of mapUnitPoses) {
+  for (const {
+    u,
+    pos,
+    angle,
+    anim,
+    t,
+    motion,
+    unitSize,
+    combatPose,
+    skillPose,
+    groundCell,
+  } of mapUnitPoses) {
     ctx.save();
     ctx.globalAlpha = 1;
     if (u.id === selected || (phase === "reaction" && pending?.target === u.id)) {
@@ -1296,7 +1404,7 @@ function drawMap(now) {
           game.tiles[groundCell.y]?.[groundCell.x] !== "water",
         game.environment,
         combatPose?.attackWeapon ?? null,
-        combatPose?.weaponDisplayIndex ?? null,
+        combatPose?.weaponDisplayIndex ?? skillPose?.weaponDisplayIndex ?? null,
         combatPose?.flying ?? !!u.flying,
         turretStatus,
       );
@@ -1365,11 +1473,23 @@ function drawMap(now) {
       ctx.strokeRect(pos.x - tile * 0.45, pos.y - tile * 0.45, tile * 0.9, tile * 0.9);
     }
   }
-  MapCombat.draw(ctx, mapGeo);
+  drawVisibleEffects(() => MapCombat.draw(ctx, mapGeo));
   PlanningUI.arrows(ctx);
+  // Radar contacts reveal only location, never a selectable enemy or its model/HP.
+  if (game.intel) {
+    ctx.save();
+    ctx.strokeStyle = "#ff4545";
+    ctx.lineWidth = 2;
+    for (const contact of game.intel.radarContacts) {
+      const p = mapPosition(contact.x, contact.y),
+        size = Math.max(10, tile * 0.65);
+      ctx.strokeRect(p.x - size / 2, p.y - size / 2, size, size);
+    }
+    ctx.restore();
+  }
   PlanningUI.sniperLocks(ctx, now);
-  SkillEffects.draw(ctx, now, mapPosition, tile);
-  MapEffects.draw(ctx, now, mapPosition, tile);
+  drawVisibleEffects(() => SkillEffects.draw(ctx, now, mapPosition, tile));
+  drawVisibleEffects(() => MapEffects.draw(ctx, now, mapPosition, tile));
   if (hover) {
     let p = mapPosition(hover.x, hover.y);
     ctx.strokeStyle = "#f2f1c9aa";
@@ -1442,7 +1562,8 @@ byId("map").onclick = async (e) => {
   if (SkillControls.click(cell, u)) return;
   if (mode === "target" && u && weaponId) {
     let w = getWeapon(u, weaponId);
-    if (w?.special?.type === "mortar") target = Rules.groundTarget(game, u, cell.x, cell.y);
+    if (["mortar", "nuke"].includes(w?.special?.type))
+      target = Rules.groundTarget(game, u, cell.x, cell.y);
     if (target && Rules.canAttack(game, u, target, w)) {
       beginAttack(u, target, w);
       return;
@@ -1503,8 +1624,7 @@ async function performMove(u, x, y) {
   }
   let from = { x: u.x, y: u.y },
     path = Rules.move(game, u, x, y);
-  if (Rules.modelOf(u).presentation.movement === "boost")
-    WeaponAudio.play(ART.presentation.moveSound);
+  GameAudio.moveUnit(u);
   phase = "moving";
   moving = {
     id: u.id,
@@ -1540,7 +1660,7 @@ function beginAttack(a, b, w, weapons = [w]) {
         weaponId: w.id,
         weaponIds: weapons.map((w) => w.id),
       });
-      if (w.special?.type === "mortar") {
+      if (["mortar", "nuke"].includes(w.special?.type)) {
         AttackControls.reset();
         selected = weaponId = null;
         mode = "select";
@@ -1624,7 +1744,7 @@ function renderReaction() {
         unitName(unit) + " · " + owner.name + " · " + Rules.columnLabel(unit.x) + (unit.y + 1),
         unit.id,
       );
-      if (unit.customName) option.setAttribute("data-i18n-ignore", "");
+      if (displaysCustomUnitName(unit)) option.setAttribute("data-i18n-ignore", "");
       option.disabled = !legalTargets.some((target) => target.attacker === entry.attacker);
       return option;
     }),
@@ -1652,7 +1772,7 @@ function renderReaction() {
     const owner = element("small", "response-owner", identity.name + " · " + identity.team);
     owner.setAttribute("data-i18n-ignore", "");
     const title = element("strong", "", unitName(unit));
-    if (unit.customName) title.setAttribute("data-i18n-ignore", "");
+    if (displaysCustomUnitName(unit)) title.setAttribute("data-i18n-ignore", "");
     const summary = element("div", "summary");
     summary.append(
       element("div", "", `HP ${formatNumber(unit.hp)} / ${formatNumber(Rules.modelOf(unit).hp)}`),
@@ -1807,7 +1927,7 @@ function legalCounterTargets() {
   const entries = pending.counterTargets || [
     { attacker: pending.attacker, options: pending.counterOptions },
   ];
-  return entries.filter(entry => {
+  return entries.filter((entry) => {
     const enemy = getUnit(entry.attacker);
     return enemy && Rules.onMap(enemy) && enemy.team !== defender.team;
   });
@@ -1819,9 +1939,9 @@ function selectCounterTarget(id) {
   const defender = getUnit(pending.target),
     draft = counterDraft(defender),
     enemy = getUnit(id);
-  const entry = legalCounterTargets().find(entry => entry.attacker === id);
+  const entry = legalCounterTargets().find((entry) => entry.attacker === id);
   try {
-    if (draft.ids.some(weaponId => entry.options && !entry.options.includes(weaponId)))
+    if (draft.ids.some((weaponId) => entry.options && !entry.options.includes(weaponId)))
       throw Error("目标不支持当前武器");
     Rules.counterQueue(game, defender, enemy, counterWeapons(defender));
   } catch {
@@ -2179,18 +2299,19 @@ function tick(now) {
 window.addEventListener("language-change", () => {
   update();
 });
+window.addEventListener("unit-name-display-change", () => {
+  update();
+});
 SpriteRenderer.load(StartupLoading.progress)
   .then(() => {
     assetsReady = true;
     StartupLoading.finish();
     byId("openSkirmish").disabled = false;
     byId("openRooms").disabled = false;
-    byId("loading").textContent = "原始素材已就绪 · 选择模式开始";
     update();
     if (pageView === "game" || window.isLayoutPreview) startRendering();
     window.dispatchEvent(new Event("game-assets-ready"));
   })
   .catch((err) => {
-    byId("loading").textContent = err.message;
     StartupLoading.fail(err);
   });

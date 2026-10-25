@@ -54,12 +54,21 @@ const LocalRoom = (() => {
       revision: engine.rooms.get("OFFLINE").revision,
     });
   }
+  function closeSetup() {
+    byId("skirmishSetup").hidden = true;
+    byId("openSkirmish").focus();
+  }
   byId("openSkirmish").onclick = () => {
     byId("skirmishSetup").hidden = false;
+    byId("createOfflineRoom").focus();
   };
-  byId("closeSkirmish").onclick = () => {
-    byId("skirmishSetup").hidden = true;
-  };
+  byId("closeSkirmish").onclick = closeSetup;
+  byId("skirmishSetup").addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeSetup();
+    }
+  });
   byId("createOfflineRoom").onclick = open;
   return { open };
 })();

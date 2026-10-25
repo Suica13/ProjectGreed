@@ -6,7 +6,6 @@
   "use strict";
   const targets = [
     ["musicPlayer", "背景音乐播放器", "#musicPlayer"],
-    ["languageSwitch", "语言切换", "#languageSwitch"],
     ["playerIdField", "玩家ID", ".player-id-label"],
     ["rosterScroll", "单位滚动窗", "#unitRoster"],
     ["consoleTabs", "聊天和LOG切换", ".log-tabs"],

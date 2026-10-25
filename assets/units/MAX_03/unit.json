@@ -228,7 +228,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 11.0,
+      "radar": 13.75,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -314,6 +324,11 @@
       "air": 100.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 22.0,
+      "radar": 396.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -326,7 +341,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "walk"
+    "movement": "walk",
+    "moveSoundKey": null
   },
   "name": "阿萨姆",
   "faction": "ZEON",

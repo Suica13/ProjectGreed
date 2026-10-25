@@ -368,7 +368,17 @@
       "enPercent": 10
     },
     "accuracyMultiplier": 1.1,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 17.36111111111111,
+      "antiDetection": -6.944444444444445,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -458,6 +468,11 @@
       "air": 10.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 500.0,
+      "antiDetection": -200.0
     }
   },
   "presentation": {
@@ -471,7 +486,8 @@
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
     "movement": "boost",
-    "deathType": "large"
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
   },
   "name": "姆塞级",
   "faction": "ZEON",
@@ -1124,40 +1140,16 @@
       "status": "implemented"
     },
     {
-      "id": "AutoRepair",
-      "source": "Template/Unit/Skill/AutoRepair.gw",
-      "status": "adapted",
-      "name": "自动修复已并入补给光环（无EN消耗）"
-    },
-    {
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
       "status": "adapted",
-      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
     },
     {
       "id": "CustomUnit_NewUnit",
       "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
       "status": "review",
       "name": "改修生成新机体"
-    },
-    {
-      "id": "SupplyPoint",
-      "source": "Template/Unit/Skill/SupplyPoint.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
-      "id": "SupplyPoint_UseEN",
-      "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
-      "id": "special_Common_FullBoost",
-      "name": "special_Common_FullBoost",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
-      "status": "review"
     },
     {
       "id": "special_Common_MinovskyParticle_M",
@@ -1170,6 +1162,12 @@
       "name": "special_Common_ReEntry_NeedBooster",
       "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
       "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
     }
   ],
   "weaponKits": [
@@ -1184,7 +1182,55 @@
       ]
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 2,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
   "description": "吉翁公国军舰队主力战舰",
   "costBalance": {
     "nativeLevel": 2000.0,

@@ -12,6 +12,8 @@ test("map, count, COST and room/team bans apply automatically without confirmati
   await page.locator("#createOfflineRoom").click();
   await page.locator("#roomCostLimit").fill("4000");
   await page.locator("#roomUnitCostLimit").fill("750");
+  await page.locator("#roomFogMode").selectOption("visible");
+  await expect.poll(() => page.evaluate(() => Net.snapshot.settings.fogMode)).toBe("visible");
   const preview = await page.evaluate(() => {
     byId("roomMapSelect").value = "frontline_3v3";
     byId("roomMapSelect").dispatchEvent(new Event("change"));

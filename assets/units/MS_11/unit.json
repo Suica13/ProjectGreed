@@ -508,7 +508,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -593,6 +603,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -605,7 +620,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "机动扎古",
   "faction": "ZEON",
@@ -1318,12 +1334,6 @@
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "review",
       "name": "换装／改修"
-    },
-    {
-      "id": "special_Common_FullBoost",
-      "name": "special_Common_FullBoost",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
-      "status": "review"
     }
   ],
   "weaponKits": [
@@ -1356,7 +1366,27 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "skills": [],
+  "skills": [
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "MS"

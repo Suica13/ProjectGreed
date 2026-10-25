@@ -1001,3 +1001,93 @@ test("attack draft facing survives snapshot angle changes without mutating autho
   assert.equal(result.unchanged, -45);
   assert.equal(result.cancelled, -45);
 });
+
+
+test("battle LOG download uses the current perspective and replaces it with full history on room return", async ({page}) => {
+  await fixture(page);
+  await page.evaluate(() => {
+    Chat.setSnapshot({game,log:["敌人从M11格失踪，朝向东方向。"],logNames:[],members:[],chat:[],
+      started:true,matchId:"fog-export-test",hostId:null});
+  });
+  const downloadScoped=page.waitForEvent("download");
+  await page.evaluate(()=>byId("downloadBattleLog").click());
+  const first=await downloadScoped;
+  const fs=require("node:fs/promises");
+  assert.equal(await fs.readFile(await first.path(),"utf8"),"\uFEFF敌人从M11格失踪，朝向东方向。\r\n");
+  await page.evaluate(() => {
+    Chat.setSnapshot({game,log:["SecretEnemy 移动至O11。","完整编制"],logNames:[],members:[],chat:[],
+      started:false,matchId:"fog-export-test",hostId:null});
+  });
+  const downloadFull=page.waitForEvent("download");
+  await page.evaluate(()=>byId("roomDownloadBattleLog").click());
+  const second=await downloadFull;
+  assert.equal(await fs.readFile(await second.path(),"utf8"),"\uFEFF完整编制\r\nSecretEnemy 移动至O11。\r\n");
+});
+
+
+test("fog clips combat effects outside visible cells", async ({page}) => {
+  await fixture(page);
+  const result=await page.evaluate(() => {
+    game.intel={team:0,visibleIds:[],detectedIds:[],radarContacts:[],visibleCells:["9,9"]};
+    const original=MapEffects.draw;
+    MapEffects.draw=ctx=>{ctx.fillStyle="#ff00ff";ctx.fillRect(-100000,-100000,200000,200000);};
+    try {
+      drawMap(performance.now());
+      const ctx=byId("map").getContext("2d");
+      const pixel=(x,y)=>{const p=mapPosition(x,y);return [...ctx.getImageData(Math.floor(p.x),Math.floor(p.y),1,1).data];};
+      return {inside:pixel(9,9),outside:pixel(10,9)};
+    } finally {MapEffects.draw=original;}
+  });
+  assert.deepEqual(result.inside,[255,0,255,255]);
+  assert.notDeepEqual(result.outside,[255,0,255,255]);
+});
+
+
+test("recon skill UI fires scan immediately but camera selects ground and temporarily shows its native gun", async ({page}) => {
+  await fixture(page);
+  const result=await page.evaluate(() => {
+    const model=Object.keys(UnitModels).find(k=>UnitModels[k].prefabId==="MS_06E");
+    const u=game.units[0];
+    Object.assign(u,{model,en:UnitModels[model].en,actionPoints:5,x:5,y:5,acted:false});
+    selected=u.id;mode="select";
+    const box=document.createElement("div");document.body.append(box);
+    SkillControls.render(box,u,true);
+    const en=u.en;
+    box.querySelector('[data-unit-skill="Common_DetectArea"]').click();
+    const scan={en:u.en,ap:u.actionPoints,mode};
+    box.replaceChildren();SkillControls.render(box,u,true);
+    box.querySelector('[data-unit-skill="Common_CameraGun"]').click();
+    const targetMode=mode;
+    SkillControls.click({x:20,y:8},u);
+    const pose=SkillEffects.pose(u,performance.now());
+    const layers=SpriteRenderer.visibleLayers(model,u.heldWeapon,true,false,pose.clip,pose.time,false,{},true,false,"ground",null,pose.weaponDisplayIndex);
+    drawMap(performance.now());
+    box.remove();
+    return {en,scan,targetMode,cameraEn:u.en,cameraAp:u.actionPoints,pose,visibleGun:layers.some(l=>l.name==="Common_CameraGun"),expired:SkillEffects.pose(u,performance.now()+800)};
+  });
+  assert.equal(result.scan.en,result.en-100);assert.equal(result.scan.ap,4);
+  assert.equal(result.scan.mode,"select");
+  assert.equal(result.targetMode,"skill:Common_CameraGun");
+  assert.equal(result.cameraEn,result.en-130);assert.equal(result.cameraAp,3);
+  assert.equal(result.pose.weaponDisplayIndex,2);assert(result.visibleGun);assert.equal(result.expired,null);
+});
+
+test("requested skill and selection sound assets decode in the browser", async ({page}) => {
+  await fixture(page);
+  const sounds=await page.evaluate(async () => {
+    const ctx=new AudioContext();
+    try {
+      const model=Object.values(UnitModels).find(m=>m.prefabId==="MS_06E");
+      const flight=Object.values(UnitModels).flatMap(m=>m.skills||[]).find(s=>s.type==="flight");
+      const sounds=[ART.presentation.selectEfsfMsSound,ART.presentation.selectZeonMsSound,ART.presentation.detectedSound,
+        ART.presentation.tankMoveSound,flight.sound,...model.skills.map(s=>s.sound)];
+      const durations=[];
+      for (const sound of sounds) {
+        const data=await (await fetch(ART.sounds[sound.asset])).arrayBuffer();
+        durations.push((await ctx.decodeAudioData(data)).duration);
+      }
+      return durations;
+    } finally {await ctx.close();}
+  });
+  assert.equal(sounds.length,7);assert(sounds.every(t=>t>0));
+});

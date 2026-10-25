@@ -212,7 +212,17 @@
       "hpPercent": 5,
       "enPercent": 10
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 17.36111111111111,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -298,6 +308,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 500.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -310,7 +325,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
-    "movement": "walk"
+    "movement": "walk",
+    "moveSoundKey": "moveSound"
   },
   "name": "气垫卡车[寻血猎犬]",
   "faction": "EFSF",
@@ -538,43 +554,14 @@
   "mechanics": [
     {
       "id": "movement",
-      "name": "气垫移动：可横越水域",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
       "status": "implemented"
-    },
-    {
-      "id": "Hover",
-      "source": "Template/Unit/Skill/Hover.gw",
-      "status": "implemented",
-      "name": "气垫：仅在地面移动时循环"
     },
     {
       "id": "CmdCom",
       "source": "Template/Unit/Skill/CmdCom.gw",
       "status": "review",
       "name": "通信指挥"
-    },
-    {
-      "id": "SupplyPoint",
-      "source": "Template/Unit/Skill/SupplyPoint.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
-      "id": "SupplyPoint_UseEN",
-      "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
-      "id": "special_Common_DetectArea",
-      "name": "special_Common_DetectArea",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw",
-      "status": "review"
-    },
-    {
-      "id": "ReconScan",
-      "name": "ReconScan",
-      "status": "adapted"
     }
   ],
   "weaponKits": [
@@ -589,18 +576,33 @@
   ],
   "skills": [
     {
-      "id": "ReconScan",
+      "id": "Common_DetectArea",
       "type": "recon",
-      "name": "战场侦察",
-      "range": 6,
+      "name": "索敌",
+      "reconMode": "scan",
+      "range": 31.25,
+      "enCost": 100,
+      "actionCost": 1,
       "maxUses": 99,
-      "consumeAction": true,
-      "enCost": 15,
+      "consumeAction": false,
       "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
       "effect": "Light_75_NotAttached",
       "sound": {
-        "file": "../../sounds/Transform_4.ogg",
-        "volume": 0.3
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "索敌"
+        },
+        "en": {
+          "name": "Active Scan"
+        },
+        "ja": {
+          "name": "索敵"
+        }
       }
     }
   ],

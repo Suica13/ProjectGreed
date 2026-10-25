@@ -76,8 +76,8 @@ test("actual body-tackle damage and counters use the same head penalty as foreca
     a.brokenParts.head = damaged;
     b.brokenParts.head = damaged;
     const w = G.modelOf(a).weapons.find((w) => w.id === "Common_Push_A");
-    const events = G.fight(g, a, b, w, "counter", "Common_Push_A");
-    assert.equal(events.length, 2);
+    const events = G.fight(g, a, b, w, "defend");
+    assert.equal(events.length, 1);
     for (const event of events) assert.equal(event.damagePerShot, damaged ? 3750 : 5000);
     assert.equal(G.weaponStats(w, a).damagePerShot, damaged ? 3750 : 5000);
   }

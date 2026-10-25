@@ -542,7 +542,17 @@
       "waterOnly": false
     },
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 5.208333333333333,
+      "revealOnDetection": false,
+      "antiDetect": true,
+      "stealth": true,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 50.0,
@@ -628,6 +638,11 @@
       "air": 50.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 150.0
     }
   },
   "presentation": {
@@ -640,7 +655,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "精灵高达",
   "faction": "EFSF",
@@ -2530,13 +2546,13 @@
       "id": "Stealth",
       "source": "Template/Unit/Skill/Stealth.gw",
       "status": "adapted",
-      "name": "隐蔽"
+      "name": "隐蔽：降低敌方雷达的有效侦测距离"
     },
     {
       "id": "AntiDetect",
       "source": "Template/Unit/Skill/AntiDetect.gw",
-      "status": "review",
-      "name": "反侦测"
+      "status": "adapted",
+      "name": "反侦测：雷达与主动索敌有效距离减半"
     },
     {
       "id": "special_Common_ThunderStrike",
@@ -2584,6 +2600,16 @@
   "deferredWeapons": [],
   "skills": [],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "EF_75mmMG_Double",
@@ -2608,15 +2634,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "MS"
-  ],
-  "transport": {
-    "slotCost": 2,
-    "loadTags": [
-      "CanLoadInto"
-    ]
-  },
-  "hangars": []
+  ]
 }

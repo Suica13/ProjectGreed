@@ -210,6 +210,10 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     "selectUnitSound",
     "selectWeaponSound",
     "changeEquipmentSound",
+    "detectedSound",
+    "selectEfsfMsSound",
+    "selectZeonMsSound",
+    "tankMoveSound",
   ]) {
     const sound = result.presentation[key];
     if (
@@ -501,6 +505,10 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
           throw Error("Unknown ship weapon module: " + ref);
       }
     }
+    prefab.stats.sensors ??= { sight: 10, radar: 12.5, antiDetection: 0, revealOnDetection: !!prefab.stats.ship };
+    for (const field of ["sight", "radar", "antiDetection"])
+      if (!Number.isFinite(prefab.stats.sensors[field]) || (field !== "antiDetection" && prefab.stats.sensors[field] < 0))
+        throw Error("Invalid sensor status: " + prefab.id + "/" + field);
     prefab.stats.accuracy ??= 100;
     if (
       !Number.isFinite(prefab.stats.accuracy) ||

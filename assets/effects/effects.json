@@ -1109,5 +1109,28 @@
     "drift": 0,
     "sounds": [],
     "source": "Weapon/Template/Shoot_Sniper.ini: decal_SniperMarker"
+  },
+  "Nuke_Hit_1": {
+    "texture": "textures/Nuke_Hit_1.png",
+    "frames": 50,
+    "startFrame": 0,
+    "endFrame": 49,
+    "fps": 9,
+    "scaleFrom": 6.0,
+    "scaleTo": 10.0,
+    "alpha": 0.85,
+    "rotation": -90,
+    "offset": {
+      "x": -1,
+      "y": 10
+    },
+    "drift": 0,
+    "sounds": [
+      {
+        "file": "../sounds/NukeWeapon_Hit_1.ogg",
+        "volume": 1.0
+      }
+    ],
+    "source": "Resource/Image/Fx/Weapon/Shell/Common/Nuke_Hit_1.gw"
   }
 }

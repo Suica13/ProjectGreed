@@ -229,7 +229,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 9.0,
+      "radar": 11.25,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -310,6 +320,11 @@
       "air": 10.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 324.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -322,7 +337,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "铁球M型",
   "faction": "EFSF",
@@ -495,12 +511,6 @@
       "name": "special_Common_MineLauncher_Continuous_Back_Space_RB_79M",
       "source": "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Space_RB_79M.gw",
       "status": "review"
-    },
-    {
-      "id": "special_Common_CameraGun",
-      "name": "special_Common_CameraGun",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_CameraGun.gw",
-      "status": "review"
     }
   ],
   "weaponKits": [
@@ -521,10 +531,44 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "skills": [],
+  "skills": [
+    {
+      "id": "Common_CameraGun",
+      "type": "recon",
+      "name": "摄像枪",
+      "reconMode": "camera",
+      "range": 52.08333333333333,
+      "enCost": 30,
+      "actionCost": 1,
+      "maxUses": 99,
+      "consumeAction": false,
+      "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_4.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "摄像枪"
+        },
+        "en": {
+          "name": "Camera Gun"
+        },
+        "ja": {
+          "name": "カメラガン"
+        }
+      },
+      "areaSight": 7.5,
+      "areaRadar": 9.375
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "MobilePod"
+    "MobilePod",
+    "Recon"
   ],
   "transport": {
     "slotCost": 1,

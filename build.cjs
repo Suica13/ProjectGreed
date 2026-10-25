@@ -9,6 +9,7 @@ const inlineScript = (source) => source.replace(/<\/script/gi, "<\\/script");
 let html = read("client/template.html").replace("__BATTLE_HUD_CSS__", () =>
   read("client/battle-hud.css") + "\n" + read("client/mobile-layout.css"),
 );
+html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
 const clientConfig = JSON.parse(read("client/config.json"));
 if (typeof clientConfig.defaultServerAddress !== "string")

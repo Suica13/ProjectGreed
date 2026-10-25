@@ -211,7 +211,17 @@
       "hpPercent": 5,
       "enPercent": 10
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 9.0,
+      "radar": 11.25,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -295,6 +305,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 324.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -307,7 +322,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
-    "movement": "walk"
+    "movement": "walk",
+    "moveSoundKey": null
   },
   "name": "萨姆森运输卡车",
   "faction": "ZEON",
@@ -1170,18 +1186,6 @@
       "id": "movement",
       "name": "地面移动",
       "status": "implemented"
-    },
-    {
-      "id": "SupplyPoint",
-      "source": "Template/Unit/Skill/SupplyPoint.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
-    },
-    {
-      "id": "SupplyPoint_UseEN",
-      "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
-      "status": "adapted",
-      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
     }
   ],
   "weaponKits": [
@@ -1204,27 +1208,6 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "nativeCombatRevision": 1,
-  "pairedWeapons": [
-    {
-      "id": "ZN_SamsonGroundTransportTruck_AA_L",
-      "channels": [
-        {
-          "id": "ZN_SamsonGroundTransportTruck_AA_L",
-          "weaponId": "ZN_SamsonGroundTransportTruck_AA_L",
-          "muzzleIndex": 0,
-          "requiredParts": [],
-          "limb": null
-        },
-        {
-          "id": "ZN_SamsonGroundTransportTruck_AA_R",
-          "weaponId": "ZN_SamsonGroundTransportTruck_AA_R",
-          "muzzleIndex": 1,
-          "requiredParts": [],
-          "limb": null
-        }
-      ]
-    }
-  ],
   "unitTags": [
     "Vehicle",
     "Support",
@@ -1248,6 +1231,27 @@
       "emergencyRange": 3,
       "source": "Units/CommonUnit/Hangar/Hangar_X2_Human_UseEN.ini",
       "sourceUnit": "Hangar_X2_Human_UseEN"
+    }
+  ],
+  "pairedWeapons": [
+    {
+      "id": "ZN_SamsonGroundTransportTruck_AA_L",
+      "channels": [
+        {
+          "id": "ZN_SamsonGroundTransportTruck_AA_L",
+          "weaponId": "ZN_SamsonGroundTransportTruck_AA_L",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "ZN_SamsonGroundTransportTruck_AA_R",
+          "weaponId": "ZN_SamsonGroundTransportTruck_AA_R",
+          "muzzleIndex": 1,
+          "requiredParts": [],
+          "limb": null
+        }
+      ]
     }
   ]
 }

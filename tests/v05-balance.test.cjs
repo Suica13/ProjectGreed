@@ -16,7 +16,7 @@ const make = (army, settings = {}) => {
 };
 test("all native Level prices use one quarter value and fixed category surcharges; system forms cannot be purchased", () => {
   for (const p of G.catalog.prefabs) {
-    assert.equal(p.stats.cost, Math.max(25, Math.round(p.sourceStats.unitLevel / 100) * 25), p.id);
+    assert.equal(p.stats.cost, p.costBalance.published, p.id);
     for (const kit of p.weaponKits)
       assert.equal(G.models[p.id + "__" + kit.id].cost, p.stats.cost + kit.cost);
     if (p.formOnly) assert.throws(() => G.validateFormation([entry(p.id)]));
@@ -29,7 +29,9 @@ test("weapon category ranges preserve melee adjacency and distinguish sniper, ca
     for (const [id, w] of Object.entries(p.weapons)) {
       if (w.type === "melee") {
         assert.equal(w.min, 1);
-        assert.equal(w.max, 1);
+        assert.equal(w.max, ["ZN_MS_07B_HeatRod", "EF_RB_79K_Anchor"].includes(id) ? 2 : 1);
+      } else if (w.category === "nuke") {
+        assert.deepEqual([w.min, w.max], [3, 8], id);
       } else if (w.category === "mortar") {
         assert.deepEqual([w.min, w.max], [5, p.stats.ship ? 9 : 8], id);
       } else if (["cannon", "sniper"].includes(w.category)) {

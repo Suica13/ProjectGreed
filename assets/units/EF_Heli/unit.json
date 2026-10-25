@@ -144,7 +144,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 15.625,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -225,6 +235,11 @@
       "air": 100.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 450.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -238,7 +253,8 @@
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
     "movement": "walk",
-    "thrusters": false
+    "thrusters": false,
+    "moveSoundKey": null
   },
   "name": "战斗直升机[EFSF][0079]",
   "faction": "EFSF",

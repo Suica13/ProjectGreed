@@ -14,4 +14,12 @@ def correct(prefab, native):
     # Tactical terrain types absent from the native environment attributes.
     for name in ["forest", "snow", "desert", "rubble"]:
         current.setdefault(name, 75)
+    from native_sensors import correct as correct_sensors
+    correct_sensors(prefab, native)
+    from native_recon import correct as correct_recon
+    correct_recon(prefab, native)
+    from native_minovsky import correct as correct_minovsky
+    correct_minovsky(prefab, native)
+    from native_passives import correct as correct_passives
+    correct_passives(prefab, native)
     return prefab

@@ -248,7 +248,17 @@
       "waterOnly": false
     },
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 9.0,
+      "radar": 11.25,
+      "antiDetection": 3.4722222222222223,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": true,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -333,6 +343,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 324.0,
+      "antiDetection": 100.0
     }
   },
   "presentation": {
@@ -345,7 +360,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
-    "movement": "walk"
+    "movement": "walk",
+    "moveSoundKey": null
   },
   "name": "步兵班[ZEON][0079]",
   "faction": "ZEON",
@@ -504,7 +520,14 @@
         "energy": 0.30000000000000004,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "paired_weapon"
+        ],
+        "mergedInto": "Army_Squad_ZEON_0079_N_G_Member_MG_Member2"
+      }
     },
     "Army_Squad_ZEON_0079_N_G_Member_MG_Member2": {
       "name": "机枪",
@@ -1396,7 +1419,14 @@
         "energy": 2.5,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "paired_weapon"
+        ],
+        "mergedInto": "Army_Squad_ZEON_0079_N_G_Member_MG_Member2"
+      }
     },
     "Army_Squad_ZEON_0079_N_G_Member_BZ_Member7": {
       "name": "步兵班武器",
@@ -1685,7 +1715,7 @@
       "id": "Stealth",
       "source": "Template/Unit/Skill/Stealth.gw",
       "status": "adapted",
-      "name": "隐蔽"
+      "name": "隐蔽：降低敌方雷达的有效侦测距离"
     }
   ],
   "weaponKits": [
@@ -1694,9 +1724,7 @@
       "name": "标准武装",
       "cost": 0,
       "weapons": [
-        "Army_Squad_ZEON_0079_O_G_Member_P_Member1",
-        "Army_Squad_ZEON_0079_N_G_Member_MG_Member2",
-        "Army_Squad_ZEON_0079_N_G_Member_BZ_Member6"
+        "Army_Squad_ZEON_0079_N_G_Member_MG_Member2"
       ]
     }
   ],
@@ -1720,5 +1748,69 @@
       "Human"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "Army_Squad_ZEON_0079_N_G_Member_MG_Member2",
+      "name": "步兵班齐射",
+      "channels": [
+        {
+          "id": "Army_Squad_ZEON_0079_O_G_Member_P_Member1",
+          "weaponId": "Army_Squad_ZEON_0079_O_G_Member_P_Member1",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "Army_Squad_ZEON_0079_N_G_Member_MG_Member2",
+          "weaponId": "Army_Squad_ZEON_0079_N_G_Member_MG_Member2",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "Army_Squad_ZEON_0079_N_G_Member_MG_Member3",
+          "weaponId": "Army_Squad_ZEON_0079_N_G_Member_MG_Member3",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "Army_Squad_ZEON_0079_N_G_Member_MG_Member4",
+          "weaponId": "Army_Squad_ZEON_0079_N_G_Member_MG_Member4",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "Army_Squad_ZEON_0079_N_G_Member_MG_Member5",
+          "weaponId": "Army_Squad_ZEON_0079_N_G_Member_MG_Member5",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "Army_Squad_ZEON_0079_N_G_Member_BZ_Member6",
+          "weaponId": "Army_Squad_ZEON_0079_N_G_Member_BZ_Member6",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "Army_Squad_ZEON_0079_N_G_Member_BZ_Member7",
+          "weaponId": "Army_Squad_ZEON_0079_N_G_Member_BZ_Member7",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "Army_Squad_ZEON_0079_N_G_Member_BZ_Member8",
+          "weaponId": "Army_Squad_ZEON_0079_N_G_Member_BZ_Member8",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        }
+      ]
+    }
+  ]
 }

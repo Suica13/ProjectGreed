@@ -28,7 +28,7 @@ test("native faction tags propagate across kits independently of room teams and 
 });
 test("all platform prices follow native Level while estimates remain informational", () => {
   for (const p of G.catalog.prefabs) {
-    assert.equal(p.stats.cost, Math.max(25, Math.round(p.sourceStats.unitLevel / 100) * 25), p.id);
+    assert.equal(p.stats.cost, p.costBalance.published, p.id);
   }
   for (const row of rows) {
     assert.equal(row.cost, G.models[row.id].cost);

@@ -4,7 +4,7 @@ const { test, expect } = require("@playwright/test"),
   path = require("node:path");
 async function open(page) {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
-  await expect(page).toHaveTitle("ProjectGreed V10");
+  await expect(page).toHaveTitle("ProjectGreed V11");
   await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
@@ -25,18 +25,20 @@ test("offline undo control locks earlier units after a later move and never over
     selected = a.id;
     update();
   });
-  const move = page.getByRole("button", { name: "移动", exact: true });
+  const move = page.locator('[data-unit-command="move"]');
   await expect(move).toBeEnabled();
   await move.click();
   await page.evaluate(() => {
     Rules.move(game, game.units[0], 3, 3);
+    mode = "select";
     update();
   });
-  await expect(move).toHaveCount(0);
-  const undo = page.getByRole("button", { name: "撤回移动", exact: true });
+  await expect(move).toContainText("撤回移动");
+  const undo = move;
   await expect(undo).toBeEnabled();
   await page.evaluate(() => {
     Rules.move(game, game.units[1], 2, 3);
+    mode = "select";
     selected = game.units[0].id;
     update();
   });
@@ -47,6 +49,7 @@ test("offline undo control locks earlier units after a later move and never over
   });
   await expect(undo).toBeEnabled();
   await undo.click();
+  await expect(move).toContainText("移动");
   await expect(move).toBeEnabled();
   await page.evaluate(() => {
     selected = game.units[0].id;

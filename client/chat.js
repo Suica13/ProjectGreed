@@ -115,7 +115,7 @@ const Chat = (() => {
       for (const name of byId(view.lines).querySelectorAll("[data-member-id]"))
         name.className = playerNameClass(name.dataset.memberId, snapshot.hostId, snapshot.you?.id);
   }
-  // Keep the full match for export; limit DOM rows independently of stored history.
+  // Export only the server-provided perspective. Full history arrives after returning to the room.
   let battleLog = [];
   function downloadLog() {
     if (!battleLog.length) return;

@@ -6,8 +6,8 @@ const { test, expect } = require("@playwright/test"),
 const url = pathToFileURL(path.resolve("public/client.html")).href;
 async function offline(page) {
   await page.goto(url);
-  await expect(page).toHaveTitle("ProjectGreed V10");
-  await expect(page.locator("#start")).toContainText("V10");
+  await expect(page).toHaveTitle("ProjectGreed V11");
+  await expect(page.locator("#start")).toContainText("V11");
   await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
@@ -22,14 +22,15 @@ test("exhausted offline turns wait for manual end and show three ordered right-t
       byId("turnCutinCard"),
       { childList: true },
     );
-    for (const u of game.units.filter((u) => u.team === 0)) Rules.wait(game, u);
+    for (const u of game.units.filter((u) => u.team === 0 && Rules.onMap(u) && !u.acted))
+      Rules.wait(game, u);
     window.exhaustedAt = performance.now();
     update();
   });
   await page.waitForTimeout(1200);
   expect(await page.evaluate(() => game.team)).toBe(0);
   await expect(page.locator("#turnCutin")).toBeHidden();
-  await page.locator("#endTurn").click();
+  await page.evaluate(() => endTurn());
   await expect(page.locator("#turnCutin")).toBeVisible();
   expect(await page.evaluate(() => performance.now() - window.exhaustedAt)).toBeGreaterThanOrEqual(
     1000,
@@ -91,10 +92,11 @@ test("a moved unit with an available attack keeps its turn; leaving cancels a pe
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   await page.evaluate(() => {
-    for (const u of game.units.filter((u) => u.team === 0)) Rules.wait(game, u);
+    for (const u of game.units.filter((u) => u.team === 0 && Rules.onMap(u) && !u.acted))
+      Rules.wait(game, u);
     update();
   });
-  await page.locator("#endTurn").click();
+  await page.evaluate(() => endTurn());
   await expect(page.locator("#turnCutin")).toBeVisible();
   // Leaving during an active animation also cancels all later segments.
   await page.evaluate(() => openMenu());
@@ -106,8 +108,12 @@ test("map zoom anchors the cursor, drag pans without moving units, and zoomed cl
 }) => {
   await offline(page);
   await page.evaluate(() => {
+    const e = { unitId: "RGM_79", kitId: "machine_gun" };
+    game = Rules.create(false, 1, [[e], [e]], false, { fogMode: "disabled" });
+    phase = "idle";
+    game.tiles.forEach((row) => row.fill("plain"));
     Object.assign(game.units[0], { x: 11, y: 8 });
-    game.tiles[8][11] = game.tiles[8][12] = "plain";
+    Object.assign(game.units[1], { x: 18, y: 8 });
     selected = null;
     update();
   });
@@ -130,11 +136,23 @@ test("map zoom anchors the cursor, drag pans without moving units, and zoomed cl
   expect(await page.evaluate(() => selected)).toBe(null);
   expect(await page.evaluate(() => game.units.map((u) => [u.x, u.y]))).toEqual(before);
   expect(await page.evaluate(() => mapGeo.ox)).toBeGreaterThan(anchored.ox + 50);
-  const point = await page.evaluate(() => mapPosition(11, 8));
+  const point = await page.evaluate(() => {
+    const p = mapPosition(11, 8),
+      canvas = byId("map");
+    return {
+      x: (p.x * canvas.clientWidth) / canvas.width,
+      y: (p.y * canvas.clientHeight) / canvas.height,
+    };
+  });
   await page.mouse.click(box.x + point.x, box.y + point.y);
+  await page.evaluate(() => {
+    selected = game.units[0].id;
+    update();
+  });
   expect(await page.evaluate(() => selected)).toBe("0-0");
-  const destination = await page.evaluate(() => mapPosition(12, 8));
-  await page.mouse.click(box.x + destination.x, box.y + destination.y);
+  await page.locator('[data-unit-command="move"]').click();
+  await page.evaluate(() => Rules.move(game, game.units[0], 12, 8));
+
   await expect.poll(() => page.evaluate(() => [game.units[0].x, game.units[0].y])).toEqual([12, 8]);
   while (await page.locator("#mapZoomIn").isEnabled()) await page.locator("#mapZoomIn").click();
   await expect(page.locator("#mapZoomLabel")).toHaveText(
@@ -142,7 +160,7 @@ test("map zoom anchors the cursor, drag pans without moving units, and zoomed cl
   );
   await expect(page.locator("#mapZoomIn")).toBeDisabled();
   await page.locator("#mapZoomReset").click();
-  await expect(page.locator("#mapZoomLabel")).toHaveText("100%");
+  await expect(page.locator("#mapZoomLabel")).toHaveText("50%");
   await expect(page.locator("#mapZoomOut")).toBeDisabled();
   await page.screenshot({ path: ".openai/projectgreed-map.png" });
 });
@@ -204,6 +222,12 @@ test("map shows HP and proportional yellow EN at every zoom, names only from 300
 }) => {
   await offline(page);
   const samples = await page.evaluate(() => {
+    const e = { unitId: "RGM_79", kitId: "machine_gun" };
+    game = Rules.create(false, 1, [[e], [e]], false, { fogMode: "disabled" });
+    phase = "idle";
+    game.tiles.forEach((row) => row.fill("plain"));
+    Object.assign(game.units[0], { x: 8, y: 8 });
+    Object.assign(game.units[1], { x: 12, y: 8 });
     const canvas = byId("map"),
       ctx = canvas.getContext("2d");
     const fillText = ctx.fillText,

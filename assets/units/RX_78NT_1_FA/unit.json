@@ -634,7 +634,18 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 12.0,
+      "radar": 15.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "shellFinalResistance": 25
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -723,6 +734,11 @@
       "air": 50.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 432.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -735,7 +751,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "高达NT-1［全装甲］",
   "faction": "EFSF",
@@ -2264,8 +2281,8 @@
     {
       "id": "ExplosiveReactiveArmor_Shell",
       "source": "Template/Unit/Skill/ExplosiveReactiveArmor_Shell.gw",
-      "status": "review",
-      "name": "ExplosiveReactiveArmor_Shell"
+      "status": "adapted",
+      "name": "爆炸反应装甲：最终实弹伤害降低25%"
     },
     {
       "id": "ExitUnit",
@@ -2276,8 +2293,8 @@
     {
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
-      "status": "review",
-      "name": "低压弹射"
+      "status": "not_applicable",
+      "name": "低压弹射：原MOD驾驶员经验成长×1.1（本项目无驾驶员经验系统）"
     }
   ],
   "weaponKits": [
@@ -2363,6 +2380,16 @@
     }
   ],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "Common_ArmMG",
@@ -2388,15 +2415,5 @@
       ],
       "name": "腕部机枪"
     }
-  ],
-  "unitTags": [
-    "MS"
-  ],
-  "transport": {
-    "slotCost": 2,
-    "loadTags": [
-      "CanLoadInto"
-    ]
-  },
-  "hangars": []
+  ]
 }

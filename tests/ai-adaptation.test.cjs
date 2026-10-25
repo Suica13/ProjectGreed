@@ -111,7 +111,9 @@ test("AI fleets reserve deployment space for every slot, including 200 percent u
           ...settings,
           seatUnitLimits: map.spawns.map(() => 24),
         });
-        const occupied = game.units.flatMap((u) => G.cells(u).map((c) => G.key(c.x, c.y)));
+        const occupied = game.units
+          .filter((u) => !u.embarked)
+          .flatMap((u) => G.cells(u).map((c) => G.key(c.x, c.y)));
         assert.equal(new Set(occupied).size, occupied.length);
         assert.equal(game.units.length, 24);
       }

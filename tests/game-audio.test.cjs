@@ -155,3 +155,32 @@ test("Lockon plays when a local attack target is planned, before ending the turn
     );
   }
 });
+
+
+test("MS selection replaces generic audio and tank/hover movement uses distinct assets", async () => {
+  const {audio,played}=runtime();
+  const model=id=>Object.values(G.models).find(m=>m.prefabId===id);
+  audio.selectUnit(model("RGM_79"));audio.selectUnit(model("MS_06E"));audio.selectUnit(model("Type61"));
+  for(const id of ["Type61","Type74","MS_09"]){
+    const m=Object.entries(G.models).find(([key,m])=>m.prefabId===id);
+    audio.moveUnit({model:m[0]});
+  }
+  await flush();
+  assert.deepEqual(played,["presentation/selectEfsfMsSound","presentation/selectZeonMsSound","presentation/selectUnitSound",
+    "presentation/tankMoveSound","presentation/moveSound","presentation/moveSound"]);
+});
+test("multiple new radar contacts emit one cue; duplicate snapshots, reconnect and seat changes do not replay it", async () => {
+  const {audio,played}=runtime();
+  const state=(revision,ids)=>{const s=snapshot("idle");s.revision=revision;s.game.units.forEach(u=>u.team=G.seatTeam(u.ownerSeat));
+    s.game.intel={team:0,detectedIds:["a",...ids]};return s;};
+  audio.receive(state(1,[]),0,false);
+  audio.receive(state(2,["b","x","y"]),0,true);
+  audio.receive(state(2,["b","x","y"]),0,true);
+  await flush();assert.deepEqual(played,["presentation/detectedSound"]);
+  audio.receive(state(3,["b","x","y","z"]),0,false);
+  audio.receive(state(3,["b","x","y","z"]),0,true);
+  audio.receive(state(4,["b","x","y","z","q"]),2,true);
+  await flush();assert.equal(played.length,1);
+  audio.receive(state(5,[]),2,true);audio.receive(state(6,["b"]),2,true);
+  await flush();assert.equal(played.length,2);
+});

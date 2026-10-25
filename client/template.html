@@ -5,14 +5,37 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>__PROJECT_NAME__ __PROJECT_VERSION__</title>
     <style>
-      .resources-loading #start { visibility: hidden; }
-      #resourceLoading { position: fixed; inset: 0; z-index: 2000; display: grid;
-        place-items: center; background: #0c1721; padding: 20px; }
-      #resourceLoading[hidden] { display: none; }
-      .resource-loading-card { width: min(420px, 100%); color: #e3edf0; }
-      #resourceProgress { width: 100%; height: 18px; accent-color: #66d5ff; }
-      #resourceProgressText { font-variant-numeric: tabular-nums; }
-      #resourceLoadingError { color: #ff9c93; overflow-wrap: anywhere; }
+      .resources-loading #start {
+        visibility: hidden;
+      }
+      #resourceLoading {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: grid;
+        place-items: center;
+        background: #0c1721;
+        padding: 20px;
+      }
+      #resourceLoading[hidden] {
+        display: none;
+      }
+      .resource-loading-card {
+        width: min(420px, 100%);
+        color: #e3edf0;
+      }
+      #resourceProgress {
+        width: 100%;
+        height: 18px;
+        accent-color: #66d5ff;
+      }
+      #resourceProgressText {
+        font-variant-numeric: tabular-nums;
+      }
+      #resourceLoadingError {
+        color: #ff9c93;
+        overflow-wrap: anywhere;
+      }
     </style>
     <style>
       :root {
@@ -683,6 +706,76 @@
       .help-grid strong {
         color: var(--text);
       }
+      #start > .modal {
+        position: relative;
+        padding-bottom: 60px;
+      }
+      .start-brand {
+        margin-bottom: 12px;
+      }
+      .start-brand h1 {
+        font-size: 18px;
+        margin: 0;
+      }
+      .menu-contact {
+        position: absolute;
+        right: 25px;
+        bottom: 18px;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .menu-contact-copy {
+        min-height: 0;
+        padding: 3px 0;
+        color: #91a9b5;
+        background: transparent;
+        border: 0;
+        font-size: 11px;
+        letter-spacing: 0.03em;
+      }
+      .menu-contact-copy:hover,
+      .menu-contact-copy:focus-visible {
+        color: #ffae62;
+        background: transparent;
+      }
+      .menu-contact-copy strong {
+        color: currentColor;
+      }
+      .release-warning {
+        display: grid;
+        grid-template-columns: 48px minmax(0, 1fr);
+        align-items: stretch;
+        margin: 16px 0;
+        overflow: hidden;
+        color: #ffe8c4;
+        background: rgba(145, 73, 17, 0.26);
+        border: 1px solid #d77b2e;
+        border-radius: 5px;
+        box-shadow: inset 0 0 18px rgba(255, 139, 43, 0.06);
+      }
+      .release-warning-icon {
+        display: grid;
+        place-items: center;
+        min-height: 48px;
+        color: #1b130b;
+        background: #e88a32;
+        font-size: 24px;
+        font-weight: 800;
+      }
+      .release-warning-text {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 3px;
+        min-width: 0;
+        padding: 10px 13px;
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      .release-warning-text strong {
+        color: #ffae62;
+        letter-spacing: 0.04em;
+      }
       .start-layout {
         display: flex;
         gap: 10px;
@@ -983,6 +1076,16 @@
       }
       .server-modal {
         width: min(480px, 100%);
+      }
+      .skirmish-dialog {
+        width: min(560px, calc(100vw - 32px));
+      }
+      .skirmish-dialog h3 {
+        margin-top: 0;
+        font-size: 22px;
+      }
+      .skirmish-dialog .net-buttons {
+        margin-top: 20px;
       }
       .preset-servers {
         display: grid;
@@ -1591,7 +1694,9 @@
         <button id="retryResourceLoading" type="button" hidden>重新加载</button>
       </div>
     </section>
-    <script>__STARTUP_LOADING__;</script>
+    <script>
+      __STARTUP_LOADING__;
+    </script>
     <div data-ui-node="node-173" id="gameScene" hidden>
       <header data-ui-node="node-1">
         <div data-ui-node="node-2" class="brand">
@@ -1938,47 +2043,22 @@
       aria-labelledby="startTitle"
     >
       <div data-ui-node="node-120" class="modal">
-        <div data-ui-node="node-121" class="eyebrow">__PROJECT_VERSION__ / SQUAD SKIRMISH</div>
-        <h2 data-ui-node="node-122" id="startTitle" style="font-size: 29px; margin: 10px 0">
-          __PROJECT_NAME__
-        </h2>
+        <div data-ui-node="node-121" class="brand start-brand">
+          <span class="logo" aria-hidden="true">P</span>
+          <div>
+            <div class="eyebrow">__PROJECT_VERSION__ / SQUAD SKIRMISH</div>
+            <h1 data-ui-node="node-122" id="startTitle">__PROJECT_NAME__</h1>
+          </div>
+        </div>
         <p data-ui-node="node-123" class="muted">
           配置单位武器套件，编组出击，在己方出生区部署后开始战斗。
         </p>
-        <div id="languageSwitch" role="group" aria-label="Language" data-i18n-ignore>
-          <button type="button" data-language="zh" lang="zh-CN" aria-label="简体中文">
-            <svg viewBox="0 0 30 20" aria-hidden="true">
-              <rect width="30" height="20" fill="#de2910" />
-              <g fill="#ffde00">
-                <path d="m5 2 1 3h3l-2.5 1.8 1 3L5 8 2.5 9.8l1-3L1 5h3z" />
-                <path
-                  id="flag-star"
-                  d="m10 1 .4 1.2h1.3l-1 .8.4 1.2-1.1-.8-1 .8.4-1.2-1.1-.8h1.3z"
-                />
-                <use href="#flag-star" x="3" y="3" />
-                <use href="#flag-star" x="3" y="7" />
-                <use href="#flag-star" y="10" />
-              </g>
-            </svg>
-            简体中文
-          </button>
-          <button type="button" data-language="ja" lang="ja" aria-label="日本語">
-            <svg viewBox="0 0 30 20" aria-hidden="true">
-              <rect width="30" height="20" fill="white" />
-              <circle cx="15" cy="10" r="6" fill="#bc002d" />
-            </svg>
-            日本語
-          </button>
-          <button type="button" data-language="en" lang="en" aria-label="English">
-            <svg viewBox="0 0 30 20" aria-hidden="true">
-              <rect width="30" height="20" fill="#012169" />
-              <path d="m0 0 30 20m0-20L0 20" stroke="white" stroke-width="5" />
-              <path d="m0 0 30 20m0-20L0 20" stroke="#c8102e" stroke-width="2" />
-              <path d="M15 0v20M0 10h30" stroke="white" stroke-width="7" />
-              <path d="M15 0v20M0 10h30" stroke="#c8102e" stroke-width="4" />
-            </svg>
-            English
-          </button>
+        <div id="releaseWarning" class="release-warning" role="note" aria-label="版本警告">
+          <div class="release-warning-icon" aria-hidden="true">⚠</div>
+          <div class="release-warning-text">
+            <span>目前版本:</span><strong data-i18n-ignore>__PROJECT_VERSION__</strong
+            ><span>,注意！测试版不代表最终品质</span>
+          </div>
         </div>
         <label class="player-id-label"
           ><span>玩家ID</span
@@ -1993,15 +2073,24 @@
           <button data-ui-node="node-198" id="openFormation">编组</button>
           <button data-ui-node="node-140" id="openSkirmish" class="primary" disabled>遭遇战</button>
         </div>
-        <section id="skirmishSetup" class="net-form" hidden>
-          <h3>遭遇战</h3>
-          <p class="muted">创建离线房间与 AI 对战，或连接服务器加入多人房间。</p>
-          <div class="net-buttons">
-            <button id="createOfflineRoom" class="primary">创建离线房间</button>
-            <button data-ui-node="node-150" id="openRooms">连接服务器</button>
-            <button id="closeSkirmish">返回</button>
-          </div>
-        </section>
+        <div
+          id="skirmishSetup"
+          class="overlay"
+          hidden
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="skirmishSetupTitle"
+        >
+          <section class="modal skirmish-dialog">
+            <h3 id="skirmishSetupTitle">遭遇战</h3>
+            <p class="muted">创建离线房间与 AI 对战，或连接服务器加入多人房间。</p>
+            <div class="net-buttons">
+              <button id="createOfflineRoom" class="primary">创建离线房间</button>
+              <button data-ui-node="node-150" id="openRooms">连接服务器</button>
+              <button id="closeSkirmish">返回</button>
+            </div>
+          </section>
+        </div>
         <div data-ui-node="node-124" id="lobby" class="net-form" hidden>
           <div data-ui-node="node-154" class="lobby-heading">
             <div data-ui-node="node-155">
@@ -2042,10 +2131,12 @@
             两队准备后开始；游戏中可加入观战，断网或刷新页面后自动恢复席位。
           </p>
         </div>
-        <p data-ui-node="node-141" class="muted" style="font-size: 11px">
-          离线房间无需服务器。全部素材已内置，可直接打开本地客户端开始遭遇战。
-        </p>
-        <p data-ui-node="node-142" id="loading" class="blue">正在载入原始单位贴图…</p>
+
+        <div class="menu-contact">
+          <button id="copyQqGroup" class="menu-contact-copy" type="button" title="点击复制QQ群号">
+            <span>QQ群:</span><strong data-i18n-ignore>783420192</strong>
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -2108,7 +2199,12 @@
       hidden
       aria-labelledby="roomTitle"
     >
-      <div data-ui-node="node-176" id="roomMain" data-mobile-tab="seats" class="modal room-preparation">
+      <div
+        data-ui-node="node-176"
+        id="roomMain"
+        data-mobile-tab="seats"
+        class="modal room-preparation"
+      >
         <div data-ui-node="node-177" class="lobby-heading">
           <h2 data-ui-node="node-178" id="roomTitle">房间准备</h2>
           <button data-ui-node="node-179" id="roomMainMenu">主菜单</button>
@@ -2134,56 +2230,64 @@
             </section>
             <div id="roomLobbyContent">
               <div id="roomSettingsPage">
-              <div class="room-options">
-                <label>地图<select id="roomMapSelect" aria-label="地图"></select></label>
-                <label
-                  >编组 COST 上限<input
-                    id="roomCostLimit"
-                    type="number"
-                    min="250"
-                    max="99999"
-                    step="25"
-                    aria-label="编组 COST 上限"
-                /></label>
-                <label
-                  >单位 COST 上限<input
-                    id="roomUnitCostLimit"
-                    type="number"
-                    min="1"
-                    max="99999"
-                    step="25"
-                    aria-label="单位 COST 上限"
-                /></label>
-                <label
-                  >每位玩家单位上限<input
-                    id="roomUnitLimit"
-                    type="number"
-                    min="3"
-                    max="12"
-                    step="1"
-                    aria-label="每位玩家单位上限"
-                /></label>
-              </div>
-              <label class="room-sharing-option"
-                ><input id="roomShareAlliedUnits" type="checkbox" />友军单位共享</label
-              >
-              <div id="roomTagRestrictions" class="tag-restrictions"></div>
-              <p id="roomSettingsHint" class="muted"></p>
-              <section class="room-map-panel" aria-label="地图信息">
-                <canvas
-                  id="roomMapPreview"
-                  width="520"
-                  height="190"
-                  role="img"
-                  aria-label="地图预览"
-                ></canvas>
-                <p id="roomMapInfo" class="muted"></p>
-              </section>
+                <div class="room-options">
+                  <label>地图<select id="roomMapSelect" aria-label="地图"></select></label>
+                  <label
+                    >编组 COST 上限<input
+                      id="roomCostLimit"
+                      type="number"
+                      min="250"
+                      max="99999"
+                      step="25"
+                      aria-label="编组 COST 上限"
+                  /></label>
+                  <label
+                    >单位 COST 上限<input
+                      id="roomUnitCostLimit"
+                      type="number"
+                      min="1"
+                      max="99999"
+                      step="25"
+                      aria-label="单位 COST 上限"
+                  /></label>
+                  <label
+                    >每位玩家单位上限<input
+                      id="roomUnitLimit"
+                      type="number"
+                      min="3"
+                      max="12"
+                      step="1"
+                      aria-label="每位玩家单位上限"
+                  /></label>
+                </div>
+                <label class="room-sharing-option"
+                  ><input id="roomShareAlliedUnits" type="checkbox" />友军单位共享</label
+                >
+                <label class="room-fog-option"
+                  >战争迷雾
+                  <select id="roomFogMode" aria-label="战争迷雾">
+                    <option value="full">完全</option>
+                    <option value="visible">可见</option>
+                    <option value="disabled">禁用</option>
+                  </select>
+                </label>
+                <div id="roomTagRestrictions" class="tag-restrictions"></div>
+
+                <section class="room-map-panel" aria-label="地图信息">
+                  <canvas
+                    id="roomMapPreview"
+                    width="520"
+                    height="190"
+                    role="img"
+                    aria-label="地图预览"
+                  ></canvas>
+                  <p id="roomMapInfo" class="muted"></p>
+                </section>
               </div>
               <div id="roomSeatsPage">
-              <div data-ui-node="node-181" id="teamSlots" class="team-slots"></div>
-              <h3 data-ui-node="node-188" class="spectator-title">观战玩家</h3>
-              <div data-ui-node="node-189" id="spectatorSlots"></div>
+                <div data-ui-node="node-181" id="teamSlots" class="team-slots"></div>
+                <h3 data-ui-node="node-188" class="spectator-title">观战玩家</h3>
+                <div data-ui-node="node-189" id="spectatorSlots"></div>
               </div>
             </div>
           </div>
@@ -2253,9 +2357,7 @@
           </div>
           <button id="shareUnitsToAllies" hidden>共享单位给友军</button>
         </div>
-        <p data-ui-node="node-190" class="muted">
-          每个出生点对应一名玩家的编组。房主开始后进入最终编组，确认后部署；随时可转入观战席或加入空席位。
-        </p>
+
       </div>
       <div id="roomDetailPanel" class="formation-detail-overlay" hidden>
         <div
@@ -2343,8 +2445,43 @@
           </section>
         </div>
         <div class="net-buttons" data-ui-node="node-219">
+          <button id="openFormationShare" type="button">分享编组</button>
           <button id="saveFormation" class="primary" data-ui-node="node-220">保存并选用</button
           ><button id="cancelFormation" data-ui-node="node-221">取消</button>
+        </div>
+      </div>
+      <div id="formationSharePanel" class="formation-detail-overlay" hidden>
+        <div
+          class="modal formation-share-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="formationShareTitle"
+        >
+          <header class="formation-share-heading">
+            <div>
+              <span class="eyebrow">SQUAD SHARE</span>
+              <h2 id="formationShareTitle">分享编组</h2>
+            </div>
+            <button id="closeFormationShare" type="button">关闭</button>
+          </header>
+          <p id="formationShareHint" class="muted">
+            粘贴他人的分享代码后加载，或生成当前编组的分享代码并复制。
+          </p>
+          <div class="formation-share-code-row">
+            <input
+              id="formationShareCode"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="编组分享代码"
+              aria-describedby="formationShareHint"
+              placeholder="粘贴编组分享代码"
+            />
+            <button id="loadSharedFormation" type="button" class="primary">加载编组</button>
+          </div>
+          <div class="formation-share-actions">
+            <button id="generateFormationShare" type="button">分享编组</button>
+          </div>
         </div>
       </div>
       <div id="formationUnitPicker" class="formation-detail-overlay" hidden>
@@ -2356,7 +2493,10 @@
         >
           <header class="formation-picker-heading">
             <h2 id="formationPickerTitle">添加单位</h2>
-            <button id="closeFormationPicker" type="button">关闭</button>
+            <div class="formation-picker-heading-actions">
+              <div id="formationPickerCost" class="formation-picker-cost" aria-live="polite"></div>
+              <button id="closeFormationPicker" type="button">关闭</button>
+            </div>
           </header>
           <aside class="formation-catalog">
             <div class="formation-catalog-heading">
@@ -2371,6 +2511,13 @@
               <label
                 ><span class="formation-filter-label">类型筛选</span
                 ><select id="formationType" aria-label="类型筛选"></select
+              ></label>
+              <label
+                ><span class="formation-filter-label">&#x73AF;&#x5883;&#x7B5B;&#x9009;</span
+                ><select
+                  id="formationEnvironment"
+                  aria-label="&#x73AF;&#x5883;&#x7B5B;&#x9009;"
+                ></select
               ></label>
             </div>
             <input
@@ -2529,6 +2676,36 @@
       }
       #formationBudget.danger-text {
         color: #ff9c93;
+      }
+      .formation-share-dialog {
+        width: min(760px, calc(100vw - 32px));
+        display: grid;
+        gap: 14px;
+      }
+      .formation-share-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .formation-share-heading h2,
+      .formation-share-dialog p {
+        margin: 0;
+      }
+      .formation-share-code-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+      }
+      #formationShareCode {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      }
+      .formation-share-actions {
+        display: flex;
+        justify-content: flex-end;
       }
       .formation-toolbar {
         display: grid;
@@ -2732,6 +2909,49 @@
       .type-tag {
         color: #9fc7bd;
         background: #9fc7bd0a;
+      }
+
+      .unit-summary-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        align-items: center;
+      }
+      .unit-summary-tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 21px;
+        padding: 2px 7px;
+        border: 1px solid #63808d;
+        border-radius: 4px;
+        background: #132b35;
+        color: #d7e5ea;
+        font-size: 11px;
+        line-height: 1.2;
+        white-space: nowrap;
+      }
+      .unit-summary-tag.cost {
+        border-color: #c7a856;
+        color: #f2da8b;
+        background: #3b321a66;
+      }
+      .unit-summary-tag.kit {
+        border-color: #72a9b9;
+        color: #b9e2ed;
+      }
+      .unit-summary-tag.ground {
+        border-color: #d98237;
+        color: #ffad62;
+        background: #4b281466;
+      }
+      .unit-summary-tag.space {
+        border-color: #9d70df;
+        color: #cda9ff;
+        background: #2c1d4b66;
+      }
+      .unit-summary-tag.is-dim {
+        opacity: 0.42;
+        filter: saturate(0.55);
       }
       .unit-detail-title-line {
         display: flex;
@@ -3086,6 +3306,27 @@
         margin: 0;
         font-size: 20px;
       }
+      .formation-picker-heading-actions,
+      .formation-picker-cost {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        min-width: 0;
+      }
+      .formation-picker-heading-actions {
+        flex: 1;
+      }
+      .formation-picker-cost {
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.25;
+        text-align: right;
+      }
+      .formation-picker-cost span {
+        white-space: nowrap;
+      }
       #formationUnitPicker .formation-catalog {
         display: flex;
         flex-direction: column;
@@ -3358,28 +3599,6 @@
       <small id="musicStatus" role="status"></small>
     </aside>
     <style>
-      #languageSwitch {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin: 14px 0;
-      }
-      #languageSwitch button {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-      }
-      #languageSwitch svg {
-        width: 27px;
-        height: 18px;
-        border-radius: 2px;
-        flex-shrink: 0;
-      }
-      #languageSwitch button.active {
-        border-color: var(--lime);
-        color: var(--lime);
-        background: #2a4036;
-      }
       .roster-scroll {
         min-width: 0;
         max-width: 100%;
@@ -3971,6 +4190,11 @@
         <option value="ja">日本語</option>
         <option value="en">English</option>
       </select>
+      <label class="settings-toggle" for="settingsTrueUnitNames">
+        <span>只显示单位真实名称</span>
+        <input id="settingsTrueUnitNames" type="checkbox" />
+      </label>
+      <p class="settings-help muted">隐藏玩家设置的单位昵称；战斗 LOG 仍保留昵称。</p>
       <label for="volume-master"
         >总音量 <output id="volume-master-value" for="volume-master"></output
       ></label>
@@ -4029,6 +4253,19 @@
       #clientSettingsDialog output {
         color: #f0ce67;
       }
+      #clientSettingsDialog .settings-toggle {
+        align-items: center;
+      }
+      #clientSettingsDialog .settings-toggle input {
+        width: auto;
+        min-width: 22px;
+        height: 22px;
+        margin: 0;
+      }
+      #clientSettingsDialog .settings-help {
+        margin: -4px 0 8px;
+        font-size: 12px;
+      }
       #clientSettingsDialog input {
         accent-color: #65cfff;
       }
@@ -4050,6 +4287,7 @@
       __UNIT_PARTS__;
       __UNIT_SKILLS__;
       __UNIT_HANGARS__;
+      __UNIT_SENSORS__;
       __CORE__;
       __RENDERER__;
       __SPRITE_EFFECTS__;

@@ -28,7 +28,7 @@ const CombatPlayback = (() => {
     if (battles.length) {
       queue.push({ id: batch.id, battles });
       MapCombat.seed(battles);
-    }
+    } else finished.add(batch.id);
   }
   function active() {
     return !!battleView?.networkId;

@@ -93,5 +93,25 @@
   "moduleDamage": {
     "effect": "Stun_1",
     "scale": 0.25
+  },
+  "detectedSound": {
+    "file": "sounds/Detect_1.ogg",
+    "volume": 0.5,
+    "duration": 0.9480272108843537
+  },
+  "selectEfsfMsSound": {
+    "file": "sounds/MS_Start_1.ogg",
+    "volume": 0.35,
+    "duration": 2.6874603174603173
+  },
+  "selectZeonMsSound": {
+    "file": "sounds/MS_Start_2.ogg",
+    "volume": 0.35,
+    "duration": 2.03734693877551
+  },
+  "tankMoveSound": {
+    "file": "sounds/TankFoot_1.ogg",
+    "volume": 0.5,
+    "duration": 4.514875283446712
   }
 }

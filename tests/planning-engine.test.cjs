@@ -714,3 +714,90 @@ test("active host can spectate and a newcomer takes over the existing army", (t)
     unitId: room.game.units[0].id, targetId: room.game.units[1].id, weaponId: "EF_90mmMG" });
   assert.equal(room.plans.length, 1);
 });
+
+
+test("fog logs hide unseen actions and rosters, report the last visible movement cell, and unlock on return", async t => {
+  const {engine, room, act, frames} = fixture(t, 2, 1, {roomReturnMs: 10});
+  const [a,b] = room.game.units;
+  const spectator = {readyState:1};
+  engine.join(spectator,{mode:"join",room:room.code});
+  assert.equal(spectator.seat,null);
+  assert(!act(0,"sync").log.some(x=>x.startsWith("[红方]") && x.includes("部署编制")));
+  assert(frames.get(spectator).log.some(x=>x.startsWith("[红方]") && x.includes("部署编制")));
+  room.game.tiles = Array.from({length:40},()=>Array(50).fill("plain"));
+  Object.assign(a,{x:2,y:10});
+  Object.assign(b,{x:12,y:10,moved:false,acted:false,customName:"SecretEnemy"});
+  room.game.team=1;
+  act(1,"move",{unitId:b.id,x:14,y:10});
+  let blue=act(0,"sync");
+  assert(blue.log.some(x=>x==="敌人从M11格失踪，朝向东方向。"));
+  assert(!blue.log.some(x=>x.includes("SecretEnemy") || x.includes("O11")));
+  assert.equal(blue.lastEvent,null);
+  assert(!blue.game.units.some(u=>u.id===b.id));
+  assert(frames.get(spectator).log.some(x=>x.includes("SecretEnemy") && x.includes("O11")));
+  const before=blue.log.slice();
+  act(1,"wait",{unitId:b.id});
+  assert.deepEqual(act(0,"sync").log,before,"hidden waiting must not leak through LOG/export");
+  assert(frames.get(spectator).log[0].includes("待机"));
+  act(0,"return_room");
+  await new Promise(r=>setTimeout(r,30));
+  blue=act(0,"sync");
+  assert.equal(blue.started,false);
+  assert.deepEqual(blue.log,room.log,"room view and download receive the complete authoritative log");
+  assert(blue.log.some(x=>x.includes("SecretEnemy") && x.includes("O11")));
+});
+
+test("entering vision strips the invisible portion of enemy movement", t => {
+  const {room,act}=fixture(t);
+  const [a,b]=room.game.units;
+  room.game.tiles=Array.from({length:40},()=>Array(50).fill("plain"));
+  Object.assign(a,{x:2,y:10});
+  Object.assign(b,{x:14,y:10,moved:false,acted:false});
+  room.game.team=1;
+  act(1,"move",{unitId:b.id,x:11,y:10});
+  const blue=act(0,"sync");
+  assert.equal(blue.lastEvent.type,"move");
+  assert.deepEqual(blue.lastEvent.from,{x:12,y:10});
+  assert(blue.lastEvent.path.every(p=>p.x<=12));
+  assert.equal(blue.game.units.find(u=>u.id===b.id).origin,null);
+});
+
+test("radar contacts use the centre of a rectangular footprint and keep the 1.25 conversion", () => {
+  const Sensor=require("../shared/unit-sensors.js");
+  const api=Sensor.create({modelOf:u=>({sensors:u.sensors}),onMap:u=>u.hp>0,
+    cells:u=>Array.from({length:u.w*u.h},(_,i)=>({x:u.x+i%u.w,y:u.y+Math.floor(i/u.w)}))});
+  const a={id:"a",team:0,hp:1,x:0,y:0,w:1,h:1,sensors:{sight:2,radar:20,antiDetection:0}};
+  const b={id:"b",team:1,hp:1,x:6,y:4,w:2,h:3,sensors:{sight:1,radar:1,antiDetection:0}};
+  const game={units:[a,b],round:1,tiles:Array.from({length:20},()=>Array(20).fill("plain"))};
+  assert.deepEqual(api.view(game,0).radarContacts,[{x:6.5,y:5}]);
+  b.w=3;b.h=2;
+  assert.deepEqual(api.view(game,0).radarContacts,[{x:7,y:4.5}]);
+  const gm=G.models.RGM_79__machine_gun.sensors;
+  assert.equal(gm.sight,10);
+  assert.equal(gm.radar,12.5);
+});
+
+
+test("recon skills are authoritative, deduplicated and synchronize only allied camera vision", t => {
+  const {room,act}=fixture(t);
+  const [a,b]=room.game.units;
+  const model=Object.keys(G.models).find(k=>G.models[k].prefabId==="MS_06E");
+  Object.assign(a,{model,en:G.models[model].en,x:2,y:10,actionPoints:5});
+  Object.assign(b,{x:25,y:10});
+  room.game.tiles=Array.from({length:40},()=>Array(70).fill("plain"));
+  const en=a.en;
+  const scan={id:"scan-dedupe",unitId:a.id,skillId:"Common_DetectArea",x:2,y:10};
+  const first=act(0,"skill",scan);
+  assert.equal(first.lastEvent.type,"skill");
+  assert.equal(first.lastEvent.sound.file,"../../sounds/Detect_3.ogg");
+  assert(first.game.intel.detectedIds.includes(b.id));
+  assert(!first.game.units.some(u=>u.id===b.id));
+  act(0,"skill",scan);assert.equal(a.en,en-100);assert.equal(a.actionPoints,4);
+  assert.throws(()=>act(1,"skill",{unitId:a.id,skillId:"Common_CameraGun",x:25,y:10}));
+  const camera=act(0,"skill",{unitId:a.id,skillId:"Common_CameraGun",x:25,y:10});
+  assert.equal(camera.lastEvent.type,"skill");
+  assert(camera.game.units.some(u=>u.id===b.id));
+  assert.equal(camera.game.visionAreas.length,1);
+  assert.equal(act(1,"sync").game.visionAreas.length,0);
+  assert.equal(a.en,en-130);
+});

@@ -6,6 +6,46 @@ def configure(prefab):
     prefab.pop("pairedWeapons", None)
     if prefab["stats"].get("ship"):
         return
+    if "Infantry" in prefab.get("unitTags", []):
+        kit_ids = list(dict.fromkeys(
+            weapon_id for kit in prefab.get("weaponKits", []) for weapon_id in kit.get("weapons", [])
+        ))
+        roots = [weapon_id for weapon_id in kit_ids if weapon_id in prefab["weapons"]]
+        if roots:
+            root = max(
+                roots,
+                key=lambda weapon_id: prefab["weapons"][weapon_id].get("nativeTiming", {}).get("projectiles", 1),
+            )
+            members = [
+                (weapon_id, weapon)
+                for weapon_id, weapon in prefab["weapons"].items()
+                if weapon_id == root or weapon.get("availability", {}).get("mergedInto") == root
+            ]
+            keys = []
+            for weapon_id, weapon in members:
+                keys.extend(weapon.get("mergedPositions", [weapon_id]))
+            keys = list(dict.fromkeys(key for key in keys if key in prefab["weapons"]))
+            channels = []
+            for key in keys:
+                weapon = prefab["weapons"][key]
+                channels.append(dict(
+                    id=key,
+                    weaponId=key,
+                    muzzleIndex=0,
+                    requiredParts=list(weapon.get("requiredParts", [])),
+                    limb=None,
+                ))
+            if len(channels) > 1:
+                prefab["pairedWeapons"] = [dict(id=root, name="\u6b65\u5175\u73ed\u9f50\u5c04", channels=channels)]
+                for key in roots:
+                    if key != root:
+                        prefab["weapons"][key]["availability"] = dict(
+                            hidden=True, reasons=["paired_weapon"], mergedInto=root
+                        )
+                for kit in prefab["weaponKits"]:
+                    if any(key in kit["weapons"] for key in roots):
+                        kit["weapons"] = [root]
+                return
     families = {}
     for key, weapon in prefab["weapons"].items():
         if weapon["type"] == "melee" or weapon.get("moduleIds"):

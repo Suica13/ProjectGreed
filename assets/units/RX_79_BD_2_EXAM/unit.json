@@ -504,7 +504,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 17.36111111111111,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 50.0,
@@ -595,6 +605,11 @@
       "air": 50.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 500.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -607,7 +622,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "苍蓝宿命二号机 [EXAM]",
   "faction": "EFSF",
@@ -2360,7 +2376,7 @@
   "mechanics": [
     {
       "id": "movement",
-      "name": "气垫移动：可横越水域",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
       "status": "implemented"
     },
     {
@@ -2368,18 +2384,6 @@
       "source": "Template/Unit/Skill/CantDeconstruct.gw",
       "status": "not_applicable",
       "name": "CantDeconstruct"
-    },
-    {
-      "id": "Hover",
-      "source": "Template/Unit/Skill/Hover.gw",
-      "status": "implemented",
-      "name": "气垫：仅在地面移动时循环"
-    },
-    {
-      "id": "Hover_Lv2",
-      "source": "Template/Unit/Skill/Hover_Lv2.gw",
-      "status": "review",
-      "name": "Hover_Lv2"
     },
     {
       "id": "Exam_On",
@@ -2422,6 +2426,17 @@
   "nativeCombatRevision": 1,
   "formOnly": true,
   "formOf": "RX_79_BD_2",
+  "unitTags": [
+    "MS",
+    "Hover"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "EF_RX_79_BD_ChestMS_Line",
@@ -2469,16 +2484,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "MS",
-    "Hover"
-  ],
-  "transport": {
-    "slotCost": 2,
-    "loadTags": [
-      "CanLoadInto"
-    ]
-  },
-  "hangars": []
+  ]
 }

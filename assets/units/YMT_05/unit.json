@@ -369,7 +369,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 11.0,
+      "radar": 13.75,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -455,6 +465,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 22.0,
+      "radar": 396.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -467,7 +482,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "walk"
+    "movement": "walk",
+    "moveSoundKey": "moveSound"
   },
   "name": "斗狼",
   "faction": "ZEON",
@@ -1670,7 +1686,7 @@
   "mechanics": [
     {
       "id": "movement",
-      "name": "地面移动",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
       "status": "implemented"
     },
     {
@@ -1678,12 +1694,6 @@
       "source": "Template/Unit/Skill/Transform_LandLand_Tank.gw",
       "status": "adapted",
       "name": "变形：原生形态转换，资源与部位规则使用显式配置"
-    },
-    {
-      "id": "HoverEffect",
-      "source": "Template/Unit/Skill/HoverEffect.gw",
-      "status": "implemented",
-      "name": "气垫：仅在地面移动时循环"
     },
     {
       "id": "special_Common_SmokingLauncher_NowPos",

@@ -9,6 +9,7 @@ RANGES = {
     "mortar": (5, 8),
     "sniper": (3, 6),
     "bomb": (1, 2),
+    "nuke": (3, 8),
     "bazooka": (2, 4),
     "cannon": (3, 5),
     "beam_gun": (2, 3),
@@ -33,6 +34,8 @@ def category(weapon_id, weapon):
         return "mortar"
     if "sniper" in text or "狙击" in text:
         return "sniper"
+    if weapon_id == "ZN_MS_06C_Bombing_Nuke":
+        return "nuke"
     if "bomb" in text or "航空炸弹" in text:
         return "bomb"
     if "bazooka" in text or "panzerfaust" in text or "火箭筒" in text or re.search(r"_bz(?:_|$)", short_id):
@@ -131,7 +134,7 @@ def flight_skill(prefab):
     prefab["skills"].append({"id":"flight_stance", "type":"flight", "name":"飞行姿态", "actionCost":1,
         "requiredParts":["head","backpack","leftArm","rightArm","leftLeg","rightLeg"],
         "maxUses":99999, "consumeAction":False, "range":0, "effect":"Light_75_NotAttached",
-        "sound":{"file":"../../sounds/Transform_4.ogg","volume":0.6},
+        "sound":{"file":"../../sounds/Fly_1.ogg","volume":0.6},
         "localization":{"zh":{"name":"飞行姿态"},"en":{"name":"Flight Stance"},"ja":{"name":"飛行形態"}}})
     for mechanic in prefab["mechanics"]:
         if mechanic["id"] == "FlyStyle":
@@ -217,6 +220,22 @@ def configure(prefab, native):
                         pass
             if key == "ZN_MS_09_ChestBeam":
                 weapon.update(min=1, max=1)
+        if kind == "nuke":
+            weapon.update(
+                name="\u6838\u5f39\u8f70\u70b8",
+                slot="skill",
+                noCounter=True,
+                maxUses=1,
+                special={"type": "nuke", "radius": 3, "emptyCells": True},
+                description="\u6307\u5b9a\u5730\u9762\u5750\u6807\u53d1\u52a8\u6838\u6253\u51fb\uff0c\u5bf9\u7206\u5fc33\u683c\u5185\u7684\u5730\u9762\u76ee\u6807\u9020\u6210\u4f24\u5bb3\uff1b\u6bcf\u5c40\u9650\u75281\u6b21\u3002",
+            )
+            weapon["localization"] = {
+                "zh": {"name": "\u6838\u5f39\u8f70\u70b8"},
+                "en": {"name": "Nuclear Bombardment"},
+                "ja": {"name": "\u6838\u7206\u6483"},
+            }
+            weapon["projectile"].update(motion="mortar", rotation=0)
+            weapon["hitEffect"] = "Nuke_Hit_1"
         if kind == "mortar":
             if prefab["id"] == "RGC_80" and "Common_Cannon" in prefab["weapons"]:
                 cannon = prefab["weapons"]["Common_Cannon"]

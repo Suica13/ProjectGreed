@@ -11,7 +11,11 @@ test("enemy orthogonal zones cost at least three; allies, diagonal units and dea
   assert.equal(G.movementCost(g, a, 4, 4), 3);
   assert.equal(G.movementCost(g, a, 4, 3), 1);
   assert.equal(G.reachable(g, a).get("4,4").cost, 4);
-  assert.equal(G.reachable(g, a).get("5,3").cost, 6, "the extra movement point permits a six-cost route");
+  assert.equal(
+    G.reachable(g, a).get("5,3").cost,
+    6,
+    "the extra movement point permits a six-cost route",
+  );
   g.tiles[4][4] = "forest";
   assert.equal(G.movementCost(g, a, 4, 4), 3);
   g.tiles[4][4] = "rock";
@@ -81,15 +85,18 @@ test("fourteen asymmetric maps are capacity-sorted, connected and offer sparse c
     [1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 5, 5, 5],
   );
   assert.deepEqual(G.defaultRoomSettings(), {
+    fogMode: "full",
     mapId: "frontier_1v1",
-    costLimit: 3000,
+    costLimit: 4500,
     unitLimit: 6,
-    unitCostLimit: 500,
+    unitCostLimit: 1500,
+    shareAlliedUnits: false,
     bannedFactions: [],
     bannedEras: [],
+    bannedTypes: [],
     teamRestrictions: [
-      { bannedFactions: [], bannedEras: [] },
-      { bannedFactions: [], bannedEras: [] },
+      { bannedFactions: [], bannedEras: [], bannedTypes: [] },
+      { bannedFactions: [], bannedEras: [], bannedTypes: [] },
     ],
   });
   assert.equal(new Set(maps.map((m) => JSON.stringify(m.tiles))).size, 14);

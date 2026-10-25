@@ -536,7 +536,17 @@
       "rubble": 75
     },
     "accuracy": 125,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "shooting": 35.0,
@@ -612,6 +622,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -624,7 +639,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "movement": "boost",
-    "walk": "OnMovingWalk"
+    "walk": "OnMovingWalk",
+    "moveSoundKey": "moveSound"
   },
   "name": "格鲁古古",
   "description": "吉翁军一年战争末期所开发的MS,性能匹敌高达",
@@ -1623,5 +1639,6 @@
       "CanLoadInto"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "mechanics": []
 }

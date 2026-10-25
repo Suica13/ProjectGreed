@@ -463,7 +463,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "movement": "boost",
-    "walk": "OnMovingWalk"
+    "walk": "OnMovingWalk",
+    "moveSoundKey": "moveSound"
   },
   "name": "轻装吉姆",
   "description": "拥有极高机动性的强袭型MS",
@@ -488,7 +489,17 @@
       "rubble": 75
     },
     "accuracy": 110,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 10.0,
+      "radar": 12.5,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -564,6 +575,11 @@
       "air": 50.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
     }
   },
   "weapons": {
@@ -1621,5 +1637,6 @@
       "CanLoadInto"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "mechanics": []
 }

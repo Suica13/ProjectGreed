@@ -176,7 +176,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 9.0,
+      "radar": 15.625,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -260,6 +270,11 @@
       "air": 100.0,
       "mountain": 10.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 450.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -272,7 +287,8 @@
     "dodge": "ImportedIdle",
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "唐·埃斯卡特",
   "faction": "EFSF",
@@ -1871,6 +1887,17 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "nativeCombatRevision": 1,
+  "unitTags": [
+    "Aircraft",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadIntoAir"
+    ]
+  },
+  "hangars": [],
   "pairedWeapons": [
     {
       "id": "Common_DoubleVulcan_DonEscargot",
@@ -1905,16 +1932,5 @@
         }
       ]
     }
-  ],
-  "unitTags": [
-    "Aircraft",
-    "Recon"
-  ],
-  "transport": {
-    "slotCost": 1,
-    "loadTags": [
-      "CanLoadIntoAir"
-    ]
-  },
-  "hangars": []
+  ]
 }

@@ -446,7 +446,17 @@
     },
     "ship": false,
     "commandAuras": [],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 9.0,
+      "radar": 11.25,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": -5.0,
@@ -529,6 +539,11 @@
       "air": 10.0,
       "mountain": 100.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 324.0,
+      "antiDetection": 0.0
     }
   },
   "presentation": {
@@ -541,7 +556,8 @@
     "dodge": "Common_Dodge_L",
     "deathEffect": "Explosion_Ground_1",
     "walk": "OnMovingWalk",
-    "movement": "boost"
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
   },
   "name": "扎尼",
   "faction": "EFSF",
@@ -1240,11 +1256,6 @@
       "id": "movement",
       "name": "地面移动",
       "status": "implemented"
-    },
-    {
-      "id": "ReconScan",
-      "name": "ReconScan",
-      "status": "adapted"
     }
   ],
   "weaponKits": [
@@ -1270,23 +1281,7 @@
     }
   ],
   "description": "联邦军捕获扎古后进行改修并利用的试验机",
-  "skills": [
-    {
-      "id": "ReconScan",
-      "type": "recon",
-      "name": "战场侦察",
-      "range": 6,
-      "maxUses": 99,
-      "consumeAction": true,
-      "enCost": 15,
-      "waterOnly": false,
-      "effect": "Light_75_NotAttached",
-      "sound": {
-        "file": "../../sounds/Transform_4.ogg",
-        "volume": 0.3
-      }
-    }
-  ],
+  "skills": [],
   "costBalance": {
     "nativeLevel": 400.0,
     "levelMultiplier": 0.25,
@@ -1296,8 +1291,7 @@
   "deferredWeapons": [],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "MS",
-    "Recon"
+    "MS"
   ],
   "transport": {
     "slotCost": 2,

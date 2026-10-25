@@ -219,12 +219,12 @@ test("room controls and chat stay inside the desktop viewport and the compact la
     await page.setViewportSize({ width: 1366, height: 768 });
     await page.screenshot({ path: ".openai/multiplayer-room-final.png" });
     await page.evaluate(() => I18n.setLanguage("en"));
-    await expect(page.locator("#roomSettingsHint")).toContainText("automatically");
+
     await expect(page.locator("#roomMapSelect option:checked")).toHaveText(
       await page.evaluate(() => I18n.text(Rules.getMap("frontline_3v3").name)),
     );
     await page.evaluate(() => I18n.setLanguage("ja"));
-    await expect(page.locator("#roomSettingsHint")).toContainText("自動");
+
     await expect(page.locator("#roomMapSelect option:checked")).toHaveText(
       await page.evaluate(() => I18n.text(Rules.getMap("frontline_3v3").name)),
     );

@@ -61,7 +61,7 @@ test("every footprint cell is selectable and blocks enemies; range uses closest 
   Object.assign(b, { x: 17, y: 10 });
   assert.equal(G.dist(a, b), 5);
   assert.equal(G.inRange(a, b, gun), true);
-  b.x = 18;
+  b.x = 21;
   assert.equal(G.inRange(a, b, gun), false);
 });
 test("ships cannot squeeze through a one-cell channel or end over a friendly unit", () => {

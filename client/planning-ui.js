@@ -9,8 +9,7 @@ const PlanningUI = (() => {
     const unit = getUnit(event.unitId);
     if (!unit) return;
     const start = performance.now();
-    if (Rules.modelOf(unit).presentation.movement === "boost")
-      WeaponAudio.play(ART.presentation.moveSound);
+    GameAudio.moveUnit(unit);
     moves.set(unit.id, {
       id: unit.id,
       from: event.from,

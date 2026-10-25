@@ -763,7 +763,17 @@
       }
     ],
     "accuracyMultiplier": 1.1,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "sensors": {
+      "sight": 12.0,
+      "radar": 17.36111111111111,
+      "antiDetection": -6.944444444444445,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -852,6 +862,11 @@
       "air": 10.0,
       "mountain": 75.0,
       "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 500.0,
+      "antiDetection": -200.0
     }
   },
   "presentation": {
@@ -865,7 +880,8 @@
     "deathEffect": "Explosion_Ground_1",
     "walk": "ImportedIdle",
     "movement": "walk",
-    "deathType": "large"
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
   },
   "name": "重叉级",
   "faction": "EFSF",
@@ -3158,7 +3174,7 @@
   "mechanics": [
     {
       "id": "movement",
-      "name": "气垫移动：可横越水域",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
       "status": "implemented"
     },
     {
@@ -3171,13 +3187,7 @@
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
       "status": "adapted",
-      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
-    },
-    {
-      "id": "Hover",
-      "source": "Template/Unit/Skill/Hover.gw",
-      "status": "implemented",
-      "name": "气垫：仅在地面移动时循环"
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
     },
     {
       "id": "CmdCom",
@@ -3190,6 +3200,12 @@
       "name": "special_Common_MinovskyParticle_M",
       "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
       "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
     }
   ],
   "weaponKits": [
@@ -3214,7 +3230,36 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "skills": [],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 2,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "Ship",

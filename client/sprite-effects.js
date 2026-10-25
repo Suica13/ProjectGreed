@@ -79,7 +79,7 @@ const SkillEffects = (() => {
   function start(event) {
     if (!ART.effects[event.effect]) return;
     active.push({ ...event, start: performance.now() });
-    WeaponAudio.play(event.sound);
+    GameAudio.playSound(event.sound);
   }
   function reset() {
     active.length = 0;
@@ -88,15 +88,23 @@ const SkillEffects = (() => {
     for (let i = active.length - 1; i >= 0; i--) {
       const item = active[i],
         time = (now - item.start) / 1000;
-      if (time >= ART.effects[item.effect].duration) {
+      if (time >= Math.max(ART.effects[item.effect].duration, item.reconMode === "camera" ? 0.75 : 0)) {
         active.splice(i, 1);
         continue;
       }
-      const point = position(item.from.x, item.from.y);
+      const location = item.reconMode === "camera" ? item.to : item.from;
+      const point = position(location.x, location.y);
       SpriteEffects.draw(ctx, item.effect, point.x, point.y, tile / 64, time);
     }
   }
-  return { start, reset, draw };
+  function pose(unit, now) {
+    const item = active.find(event => event.unitId === unit.id && event.reconMode === "camera" && now - event.start < 750);
+    if (!item) return null;
+    const point = Rules.center(unit);
+    return { weaponDisplayIndex: item.weaponDisplayIndex, clip: "Common_Shoot_A", time: (now-item.start)/1000,
+      angle: Math.atan2(item.to.x-point.x, -(item.to.y-point.y))*180/Math.PI };
+  }
+  return { start, reset, draw, pose };
 })();
 
 /* 战斗之后才在地图播放死亡爆炸。按战斗与单位去重，不从每帧 HP 检查触发。 */

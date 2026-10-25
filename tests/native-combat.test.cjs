@@ -51,6 +51,18 @@ test("native firearms keep original payload, hit, EN and firing cadence without 
   G.fight(g, a, b, mg, "defend");
   assert.equal(a.en, before - 20);
 });
+test("mass-production Guntank exposes one cannon and alternates its two physical muzzles", () => {
+  const tank = model("RX_75R"),
+    cannons = tank.weapons.filter((w) => w.name === "加农炮"),
+    mortar = tank.weapons.filter((w) => w.special?.type === "mortar"),
+    prefab = G.catalog.prefabs.find((entry) => entry.id === "RX_75R");
+  assert.equal(cannons.length, 1);
+  assert.equal(cannons[0].id, "EF_RX_75R_Cannon");
+  assert.deepEqual(cannons[0].attack.muzzleIndices, [0, 1]);
+  assert.equal(mortar.length, 1);
+  assert.ok(prefab.weaponKits.every((kit) => !kit.weapons.includes("EF_RX_75R_Cannon_Fake")));
+  assert.equal(prefab.weapons.EF_RX_75R_Cannon_Fake.availability.hidden, true);
+});
 test("native sniper skill restores its stronger AP payload and cost while keeping charged-turn mechanics", () => {
   const m = model("RGM_79_G_SP"),
     normal = m.weapons.find((w) => w.id === "EF_LongRangeBeamSniperRifle"),

@@ -11,6 +11,17 @@ const GameAudio = (() => {
   function play(key) {
     playSound(ART.presentation[key]);
   }
+  function selectUnit(unit) {
+    const model = unit?.model ? Rules.modelOf(unit) : unit;
+    const ms = model?.unitTags?.includes("MS");
+    play(ms && model.faction === "EFSF" ? "selectEfsfMsSound" :
+      ms && model.faction === "ZEON" ? "selectZeonMsSound" : "selectUnitSound");
+  }
+  function moveUnit(unit) {
+    const presentation = Rules.modelOf(unit).presentation;
+    const key = presentation.moveSoundKey;
+    if (key) play(key);
+  }
   function playSound(sound) {
     const stamp = generation;
     WeaponAudio.unlock().then(() => {
@@ -31,6 +42,9 @@ const GameAudio = (() => {
       phase: snapshot.phase,
       round: snapshot.game.round,
       team: snapshot.game.team,
+      seat,
+      detected: (snapshot.game.intel?.detectedIds || []).filter(id =>
+        !snapshot.game.units.some(u => u.id === id && u.team === snapshot.game.intel.team)),
     };
     if (!live || !last || !snapshot.started) return;
     const match = snapshot.matchId;
@@ -38,6 +52,9 @@ const GameAudio = (() => {
       emit(match + ":start", ART.presentation.gameStartSound);
     if (!snapshot.connected.every(Boolean)) return;
     const ownTeam = seat === null ? null : Rules.seatTeam(seat);
+    if (seat !== null && last.seat === seat && last.matchId === match &&
+        previous.detected.some(id => !last.detected.includes(id)))
+      emit(match + ":detected:" + ownTeam + ":" + snapshot.revision, ART.presentation.detectedSound);
     const turnStarted =
       (last.phase === "deployment" && snapshot.phase === "idle") ||
       (last.matchId === match &&
@@ -58,5 +75,5 @@ const GameAudio = (() => {
         emit(match + ":warning:" + request.id, ART.presentation.underAttackSound);
     }
   }
-  return { receive, reset, play };
+  return { receive, reset, play, playSound, selectUnit, moveUnit };
 })();

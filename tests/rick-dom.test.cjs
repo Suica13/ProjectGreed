@@ -13,7 +13,18 @@ test("Rick Dom retains Dom combat platform and kits with native strength and opp
     ...dom.stats,
     mobility: 110,
     partStructuralStrength: 120,
-    adaptability: { ground: 50, space: 100 },
+    adaptability: {
+      ground: 50,
+      space: 100,
+      water: 25,
+      air: 10,
+      atmosphere: 0,
+      mountain: 25,
+      forest: 75,
+      snow: 75,
+      desert: 75,
+      rubble: 75,
+    },
   });
   for (const key of ["attackBonuses", "defenses", "shield", "weaponKits"])
     assert.deepEqual(rick[key], dom[key]);

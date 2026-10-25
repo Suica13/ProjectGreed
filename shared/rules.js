@@ -10,7 +10,10 @@ const Tactics = (() => {
   const parts = typeof UnitParts !== "undefined" ? UnitParts : require("./unit-parts.js");
   const skillModule = typeof UnitSkills !== "undefined" ? UnitSkills : require("./unit-skills.js");
   const hangarModule = typeof UnitHangars !== "undefined" ? UnitHangars : require("./hangars.js");
+  const sensorModule =
+    typeof UnitSensors !== "undefined" ? UnitSensors : require("./unit-sensors.js");
   const onMap = (u) => !!u && u.hp > 0 && !u.embarked;
+  const sensors = sensorModule.create({ modelOf, cells, onMap, minovskyAt });
   const turnTransitionMs = 3600;
   const W = catalog.map.width,
     H = catalog.map.height;
@@ -172,8 +175,13 @@ const Tactics = (() => {
     if (!Array.isArray(value) || value.length !== 2) throw Error("队伍标签限制无效");
     return value.map(validateTagRestrictions);
   }
+  function validateFogMode(value = "full") {
+    if (!["full", "visible", "disabled"].includes(value)) throw Error("战争迷雾设置无效");
+    return value;
+  }
   function defaultRoomSettings() {
     return {
+      fogMode: "full",
       mapId: catalog.defaultMap,
       costLimit: catalog.formation.maxCost,
       unitLimit: catalog.formation.defaultUnits,
@@ -579,12 +587,17 @@ const Tactics = (() => {
       base = unit.flying ? { ...original, movementType: "air" } : original,
       penalty = parts.penalties(base.partsBreakable === false ? {} : unit),
       environment = unit.environment ?? "ground",
-      adaptability = (base.adaptability?.[environment] ?? 100) / 100;
+      adaptability = (base.adaptability?.[environment] ?? 100) / 100,
+      boostMove = (unit.overBoost?.moveBonus ?? 0) + (unit.fullBoost?.moveBonus ?? 0),
+      boostMobility =
+        (unit.overBoost?.mobilityMultiplier ?? 1) * (unit.fullBoost?.mobilityMultiplier ?? 1);
     if (
       penalty.attackMultiplier === 1 &&
       penalty.moveMultiplier === 1 &&
       !penalty.resistancePenalty &&
-      adaptability === 1
+      adaptability === 1 &&
+      !unit.overBoost &&
+      !unit.fullBoost
     )
       return base;
     return {
@@ -602,9 +615,12 @@ const Tactics = (() => {
         adaptability === 0
           ? 0
           : penalty.moveMultiplier < 1
-            ? Math.max(1, Math.floor(base.move * adaptability * penalty.moveMultiplier))
-            : base.move * adaptability,
-      mobility: base.mobility * adaptability,
+            ? Math.max(
+                1,
+                Math.floor((base.move + boostMove) * adaptability * penalty.moveMultiplier),
+              )
+            : (base.move + boostMove) * adaptability,
+      mobility: base.mobility * adaptability * boostMobility,
       defenses: Object.fromEntries(
         Object.entries(base.defenses).map(([type, value]) => [
           type,
@@ -701,7 +717,33 @@ const Tactics = (() => {
       );
     },
     typeNames = { beam: "光束", shell: "实弹", melee: "格斗" };
+  function activeMinovskyFields(g) {
+    return (g.minovskyFields || []).filter((field) => field.expiresRound > g.round);
+  }
+  function minovskyAt(g, unit) {
+    if (!g || !unit || unit.embarked || unit.hp <= 0) return false;
+    return activeMinovskyFields(g).some((field) =>
+      cells(unit).some((cell) => Math.hypot(cell.x - field.x, cell.y - field.y) <= field.radius),
+    );
+  }
+  function minovskyCells(g) {
+    const result = new Set();
+    for (const field of activeMinovskyFields(g))
+      for (
+        let y = Math.max(0, Math.ceil(field.y - field.radius));
+        y < Math.min(mapHeight(g), field.y + field.radius + 1);
+        y++
+      )
+        for (
+          let x = Math.max(0, Math.ceil(field.x - field.radius));
+          x < Math.min(mapWidth(g), field.x + field.radius + 1);
+          x++
+        )
+          if (Math.hypot(x - field.x, y - field.y) <= field.radius) result.add(key(x, y));
+    return result;
+  }
   const skills = skillModule.create({
+    sensors,
     models,
     modelOf,
     fits,
@@ -709,7 +751,9 @@ const Tactics = (() => {
     mapWidth,
     mapHeight,
     dimensions,
+    center,
     parts,
+    minovskyAt,
   });
   // Grid anchors remain integers; a ship's explicit heading determines its whole rectangle.
   function inSupplyRange(provider, target) {
@@ -908,7 +952,8 @@ const Tactics = (() => {
   function create(ai = false, seed = 7319, formations, deploying = false, settings = {}) {
     const map = getMap(settings.mapId),
       costLimit = validateCostLimit(settings.costLimit ?? catalog.formation.maxCost),
-      unitLimit = validateUnitLimit(settings.unitLimit ?? catalog.formation.maxUnits);
+      unitLimit = validateUnitLimit(settings.unitLimit ?? catalog.formation.maxUnits),
+      fogMode = validateFogMode(settings.fogMode);
     formations ??= map.spawns.map((_, seat) =>
       randomFormation(
         seed + seat,
@@ -998,6 +1043,7 @@ const Tactics = (() => {
       deployment: deploying ? formations.map((army) => army === null) : null,
       mapId: map.id,
       environment: map.environment || "ground",
+      fogMode,
       costLimit,
       unitLimit,
       team: 0,
@@ -1156,6 +1202,13 @@ const Tactics = (() => {
       throw Error("武器、目标、射程或部位条件不满足");
     if (weapons.some((w) => w.slot === "skill") && weapons.length !== 1)
       throw Error("技能武器须独立使用");
+    for (const weapon of new Set(weapons))
+      if (
+        Number.isInteger(weapon.maxUses) &&
+        (u.weaponUses?.[weapon.id] || 0) + weapons.filter((entry) => entry === weapon).length >
+          weapon.maxUses
+      )
+        throw Error("\u8be5\u6b66\u5668\u7684\u4f7f\u7528\u6b21\u6570\u5df2\u7ecf\u8017\u5c3d");
     const ap = weapons.reduce((n, w) => n + actionCost(w), 0);
     const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
     if (ap > actionPoints(u) + (u.plan?.actionCost ?? 0)) throw Error("行动点不足");
@@ -1185,6 +1238,7 @@ const Tactics = (() => {
     return (
       !!w &&
       !weaponCooldown(u, w) &&
+      (!Number.isInteger(w.maxUses) || (u.weaponUses?.[w.id] || 0) < w.maxUses) &&
       onMap(u) &&
       u.en >= weaponStats(w, u).en &&
       !parts.unavailable(u, w).length &&
@@ -1198,7 +1252,7 @@ const Tactics = (() => {
   function targetModifier(g, target, weapon) {
     const targetModel = modelOf(target);
     if (
-      ["bomb", "mortar"].includes(weapon.special?.type) &&
+      ["bomb", "mortar", "nuke"].includes(weapon.special?.type) &&
       (targetModel.movementType === "air" ||
         targetModel.sourceStats?.nativeTags?.includes("Aircraft"))
     )
@@ -1231,7 +1285,7 @@ const Tactics = (() => {
     if (b?.groundTarget)
       return (
         !!groundTarget(g, a, b.x, b.y) &&
-        w?.special?.type === "mortar" &&
+        ["mortar", "nuke"].includes(w?.special?.type) &&
         onMap(a) &&
         canUse(a, w) &&
         inRange(a, b, w) &&
@@ -1243,6 +1297,7 @@ const Tactics = (() => {
       onMap(a) &&
       onMap(b) &&
       a.team !== b.team &&
+      sensors.visible(g, a.team, b) &&
       canUse(a, w) &&
       targetModifier(g, b, w) > 0 &&
       inRange(a, b, w) &&
@@ -1316,14 +1371,7 @@ const Tactics = (() => {
       mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.25,
       sizeModifier = w.antiSize?.[defender.ship ? "large" : "small"] || { damage: 1, accuracy: 1 },
       targetFactor = targetModifier(g, b, w),
-      sensorBonus =
-        b.spottedUntilRound >= g.round
-          ? 10
-          : defender.stealth &&
-              (!defender.stealth.waterOnly || g.tiles[b.y][b.x] === "water") &&
-              dist(a, b) > 1
-            ? -10
-            : 0,
+      sensorFactor = sensors.detected(g, a.team, b) ? 1 : 0.75,
       baseHit =
         Math.max(
           10,
@@ -1334,16 +1382,27 @@ const Tactics = (() => {
               : w.hit) *
               (modelOf(a).accuracy / 100) *
               sizeModifier.accuracy *
-              targetFactor +
-              sensorBonus -
+              targetFactor -
               cover -
               mobilityPenalty,
           ),
         ) * (isCounter ? 0.75 : 1),
       // 最终回避加成在机动性、地形与反击惩罚计算后生效。
-      hit = Math.min(
+      rawHit = Math.min(
         100,
-        Math.max(0, baseHit - (response === "evade" ? 15 : 0)) * (w.hitScale || 1),
+        Math.max(0, baseHit - (response === "evade" ? 15 : 0)) * (w.hitScale || 1) * sensorFactor,
+      ),
+      particleDefense = minovskyAt(g, b),
+      particleEvasionHit = particleDefense ? 100 - (100 - rawHit) * 1.25 : rawHit,
+      hit = Math.max(
+        0,
+        Math.min(
+          100,
+          particleEvasionHit *
+            (particleDefense && (w.category === "missile" || w.special?.type === "mortar")
+              ? 0.75
+              : 1),
+        ),
       ),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier = response === "defend" ? 0.75 : 1,
@@ -1378,7 +1437,8 @@ const Tactics = (() => {
             ) *
               (1 -
                 Math.min(100, (defenses[percentKey].percent * defenseMultiplier) / (ap ? 4 : 1)) /
-                  100)
+                  100) *
+              (element === "shell" ? 1 - (defender.shellFinalResistance || 0) / 100 : 1)
           );
         }, 0) * finalDamageMultiplier
       );
@@ -1420,6 +1480,7 @@ const Tactics = (() => {
   }
   function spend(u, w) {
     if (w.en) u.en -= w.en;
+    if (Number.isInteger(w.maxUses)) (u.weaponUses ||= {})[w.id] = (u.weaponUses[w.id] || 0) + 1;
     if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
   }
   function random(g) {
@@ -1618,8 +1679,47 @@ const Tactics = (() => {
         en: u.en,
       });
     }
+    for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.overBoost)) {
+      const active = u.overBoost;
+      if (g.round > active.startedRound) {
+        const maximum = performanceModelOf(u).hp;
+        u.hp = Math.max(0, u.hp - Math.round((maximum * active.hpDrainPercent) / 100));
+        g.turnEffects.push({
+          type: "overboost",
+          unitId: u.id,
+          skillId: active.skillId,
+          hp: u.hp,
+          en: u.en,
+        });
+      }
+    }
+    for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.fullBoost)) {
+      const active = u.fullBoost;
+      active.remaining--;
+      const expired = active.remaining <= 0;
+      if (expired) {
+        delete u.fullBoost;
+        u.skillReadyRound = {
+          ...u.skillReadyRound,
+          [active.skillId]: g.round + (active.cooldownTurns + 1) * 2,
+        };
+      }
+      g.turnEffects.push({
+        type: "fullboost",
+        unitId: u.id,
+        skillId: active.skillId,
+        remaining: Math.max(0, active.remaining),
+        expired,
+      });
+    }
+    const teamsAlive = [0, 1].map((team) =>
+      g.units.some((unit) => unit.team === team && unit.hp > 0),
+    );
+    if (!teamsAlive[0] || !teamsAlive[1]) g.winner = teamsAlive[0] ? 0 : 1;
     g.team = 1 - g.team;
     g.round++;
+    g.visionAreas = (g.visionAreas || []).filter((area) => area.expiresRound > g.round);
+    g.minovskyFields = activeMinovskyFields(g);
     // One round number is one team action phase; all counter budgets refresh on handoff.
     for (const u of g.units) {
       u.counterCount = 0;
@@ -1727,7 +1827,9 @@ const Tactics = (() => {
     let cells =
         destinations ??
         (u.moved ? [{ x: u.x, y: u.y, cost: 0, path: [] }] : [...reachable(g, u).values()]),
-      enemies = g.units.filter((e) => e.team !== u.team && onMap(e)),
+      enemies = g.units.filter(
+        (e) => e.team !== u.team && onMap(e) && sensors.visible(g, u.team, e),
+      ),
       best = null;
     if (!destinations && models[u.model]?.ship && !u.moved)
       for (const direction of [-1, 1])
@@ -1747,7 +1849,9 @@ const Tactics = (() => {
           y: c.y,
           ...(c.rotation ? { angle: u.angle + c.rotation * 90 } : {}),
         },
-        near = Math.min(...enemies.map((e) => dist(virtual, e)));
+        near = enemies.length
+          ? Math.min(...enemies.map((e) => dist(virtual, e)))
+          : Math.hypot(c.x - (u.team === 0 ? mapWidth(g) - 3 : 2), c.y - mapHeight(g) / 2);
       let score = -near * 0.12 - c.cost * 0.025 + terrain[g.tiles[c.y][c.x]].cover * 0.006,
         target = null,
         weapon = null;
@@ -1797,8 +1901,13 @@ const Tactics = (() => {
     mapHeight,
     reachable,
     movementCost,
+    sensors,
   });
   return {
+    sensors,
+    activeMinovskyFields,
+    minovskyAt,
+    minovskyCells,
     onMap,
     unitTagName: (tag) =>
       ({
@@ -1831,6 +1940,7 @@ const Tactics = (() => {
     validateUnitCostLimit,
     validateTagRestrictions,
     validateTeamRestrictions,
+    validateFogMode,
     defaultRoomSettings,
     formationRestrictions,
     restrictionReason,
