@@ -125,7 +125,7 @@ def unit_source(unit_id):
     return ROOT / f"Units/BattleUnits/{folder}/{unit_id}.ini"
 
 def visuals(unit_id, data):
-    display_code = {"RGM_79_G":"RGM-79[G]", "RX_79_G":"RX-79[G]"}.get(unit_id, unit_id.replace("_","-"))
+    display_code = {"RGM_79_G":"RGM-79[G]", "RX_79_G":"RX-79[G]", "RGM_79_G_WithBackpack":"RGM-79[G][WR]", "RX_79_G_WithBackpack":"RX-79[G][WR]"}.get(unit_id, unit_id.replace("_","-"))
     prefab = dict(schemaVersion=2,id=unit_id,code=display_code,
         source=str(unit_source(unit_id).relative_to(ROOT.parent)).replace("\\","/"),
         materials={"textures":{}},skeleton={},layers=[],animations={})

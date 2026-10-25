@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "id": "RX_79_G_WithBackpack",
-  "code": "RX-79-G-WithBackpack",
+  "code": "RX-79[G][WR]",
   "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G_WithBackpack.ini",
   "materials": {
     "textures": {

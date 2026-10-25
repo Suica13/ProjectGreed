@@ -139,7 +139,7 @@ const Lobby = (() => {
       const button = element(
         "button",
         "",
-        room.joinable ? (room.started && room.phase !== "assembly" ? "观战" : "加入") : "不可加入",
+        room.joinable ? "加入" : "不可加入",
       );
       button.disabled = !room.joinable || !assetsReady;
       button.onclick = () => Net.connect("join", false, room.code);

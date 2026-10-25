@@ -966,3 +966,38 @@ test("reaction map gap allows wheel zoom while response columns keep their own s
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   assert.equal(await page.evaluate(()=>MapCamera.zoom),zoom);
 });
+
+test("attack draft facing survives snapshot angle changes without mutating authority", async ({ page }) => {
+  await fixture(page);
+  const result = await page.evaluate(() => {
+    const a = game.units[0], b = game.units[2];
+    selected = a.id;
+    a.angle = 180;
+    const chosen = AttackControls.choose(a, b);
+    const initial = PlanningUI.facing(a);
+    const authoritativeAngle = a.angle;
+    // A teammate action replaces every unit with a fresh authoritative snapshot.
+    game.units = structuredClone(game.units);
+    const fresh = getUnit(a.id), target = getUnit(b.id);
+    fresh.angle = -45;
+    const afterSnapshot = PlanningUI.facing(fresh);
+    PlanningUI.facing(game.units[1]); // Drawing teammates must not discard this draft.
+    const afterOtherUnit = PlanningUI.facing(fresh);
+    target.y = fresh.y - 1;
+    const expected = { ...fresh };
+    Rules.faceTarget(expected, target);
+    const afterTargetMove = PlanningUI.facing(fresh);
+    const unchanged = fresh.angle;
+    AttackControls.reset();
+    return { chosen, initial, authoritativeAngle, afterSnapshot, afterOtherUnit,
+      afterTargetMove, expected: expected.angle, unchanged, cancelled: PlanningUI.facing(fresh) };
+  });
+  assert.equal(result.chosen, true);
+  assert.equal(result.initial, 90);
+  assert.equal(result.authoritativeAngle, 180);
+  assert.equal(result.afterSnapshot, 90);
+  assert.equal(result.afterOtherUnit, 90);
+  assert.equal(result.afterTargetMove, result.expected);
+  assert.equal(result.unchanged, -45);
+  assert.equal(result.cancelled, -45);
+});

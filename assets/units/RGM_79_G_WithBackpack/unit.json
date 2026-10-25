@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "id": "RGM_79_G_WithBackpack",
-  "code": "RGM-79-G-WithBackpack",
+  "code": "RGM-79[G][WR]",
   "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G_WithBackpack.ini",
   "materials": {
     "textures": {

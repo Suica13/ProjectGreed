@@ -228,6 +228,7 @@ const Net = (() => {
       // 队友的广播不是自己的确认，弱网时尤其不能提前放开下一个请求。
       if (n.awaiting && msg.ack === n.awaiting.id) n.awaiting = null;
       n.revision = msg.revision;
+      msg.receivedAt = performance.now();
       n.snapshot = msg;
       closeDisconnect();
       applySnapshot(msg);
@@ -452,7 +453,7 @@ const Net = (() => {
       byId("finalAssemblyPanel").hidden = true;
       byId("roomLobbyContent").hidden = false;
       byId("roomActions").hidden = false;
-      setPageView("game");
+      setPageView(!wasStarted && n.seat === null ? "room" : "game");
     }
     if (pageView === "room" && s.phase === "finished") setPageView("game");
     if (pageView === "room") {

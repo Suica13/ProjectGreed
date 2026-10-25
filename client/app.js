@@ -2179,9 +2179,10 @@ function tick(now) {
 window.addEventListener("language-change", () => {
   update();
 });
-SpriteRenderer.load()
+SpriteRenderer.load(StartupLoading.progress)
   .then(() => {
     assetsReady = true;
+    StartupLoading.finish();
     byId("openSkirmish").disabled = false;
     byId("openRooms").disabled = false;
     byId("loading").textContent = "原始素材已就绪 · 选择模式开始";
@@ -2191,4 +2192,5 @@ SpriteRenderer.load()
   })
   .catch((err) => {
     byId("loading").textContent = err.message;
+    StartupLoading.fail(err);
   });

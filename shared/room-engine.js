@@ -74,6 +74,13 @@ function createRoomEngine({
   function broadcastRooms() {
     onRooms(roomList());
   }
+  function presenceMessage(room, member, event) {
+    room.chat.push({
+      id: randomId(), channel: "all", system: true, event,
+      memberId: member.id, name: member.name, at: Date.now(),
+    });
+    room.chat = room.chat.slice(-100);
+  }
   function leaveRoom(ws) {
     const room = rooms.get(ws.room);
     const member = room?.members.get(ws.memberId);
@@ -84,6 +91,7 @@ function createRoomEngine({
     }
     clearReconnect(member);
     room.members.delete(member.id);
+    presenceMessage(room, member, "离开了房间");
     delete ws.room;
     delete ws.memberId;
     delete ws.seat;
@@ -1343,6 +1351,7 @@ function createRoomEngine({
         }
         clearReconnect(target);
         room.members.delete(target.id);
+        presenceMessage(room, target, "被房主移出了房间");
         if (target.ws) {
           const targetSocket = target.ws;
           delete targetSocket.room;
@@ -1758,6 +1767,7 @@ function createRoomEngine({
       memberId: member.id,
       token: member.token,
     });
+    presenceMessage(room, member, msg.mode === "resume" ? "已重新连接" : "加入了房间");
     broadcast(room);
   }
 
@@ -1773,6 +1783,7 @@ function createRoomEngine({
       member.ws = null;
       clearReconnect(member);
       member.disconnectedUntil = Date.now() + reconnectGraceMs;
+      presenceMessage(room, member, "连接断开，等待重连");
       const timer = setTimeout(() => {
         if (
           rooms.get(room.code) !== room ||
@@ -1784,6 +1795,7 @@ function createRoomEngine({
         if (member.seat !== null && room.seats[member.seat] === member)
           room.seats[member.seat] = null;
         room.members.delete(member.id);
+        presenceMessage(room, member, "重连超时，已离开房间");
         room.revision++;
         broadcast(room);
       }, reconnectGraceMs);

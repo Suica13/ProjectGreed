@@ -6,8 +6,8 @@ const { test, expect } = require("@playwright/test"),
 const url = pathToFileURL(path.resolve("public/client.html")).href;
 async function offline(page) {
   await page.goto(url);
-  await expect(page).toHaveTitle("ProjectGreed V09");
-  await expect(page.locator("#start")).toContainText("V09");
+  await expect(page).toHaveTitle("ProjectGreed V10");
+  await expect(page.locator("#start")).toContainText("V10");
   await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();

@@ -691,3 +691,26 @@ test("host can kick reserved seat immediately and invalidate reconnect without w
  act(0,"add_ai",{seat:1});
  assert.equal(room.seats[1].bot,true);
 });
+
+
+test("active host can spectate and a newcomer takes over the existing army", (t) => {
+  const { engine, room, clients, act, frames } = fixture(t);
+  const originalArmy = JSON.stringify(room.game.units);
+  const hostId = room.hostId;
+  act(0, "switch_seat", { seat: null });
+  assert.equal(clients[0].seat, null);
+  assert.equal(room.seats[0], null);
+  assert.equal(room.hostId, hostId);
+  const newcomer = { readyState: 1 };
+  engine.join(newcomer, { mode: "join", room: room.code });
+  assert.equal(newcomer.seat, null);
+  engine.action(newcomer, { id: "take-host-seat", revision: room.revision,
+    action: "switch_seat", seat: 0 });
+  assert.equal(newcomer.seat, 0);
+  assert.equal(JSON.stringify(room.game.units), originalArmy);
+  assert(frames.get(newcomer).connected.every(Boolean));
+  engine.action(newcomer, { id: "takeover-plan", revision: room.revision,
+    matchId: room.matchId, round: room.game.round, action: "attack",
+    unitId: room.game.units[0].id, targetId: room.game.units[1].id, weaponId: "EF_90mmMG" });
+  assert.equal(room.plans.length, 1);
+});

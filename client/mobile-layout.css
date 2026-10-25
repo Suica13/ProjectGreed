@@ -1,0 +1,103 @@
+/* Menu layout depends on available space, not device resolution or CSS zoom. */
+#roomMobileTabs { display: none; }
+#roomSettingsPage, #roomSeatsPage { display: contents; }
+@media (max-width: 700px), (max-height: 600px) and (orientation: landscape) {
+  :is(#start, #roomPreparation, #formationScreen) {
+    position: fixed; inset: 0; width: 100%; height: 100dvh; min-height: 0;
+    padding: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+    overflow: hidden; align-items: stretch;
+  }
+  #start > .modal, #roomPreparation #roomMain, #formationScreen #formationMain {
+    width: 100%; max-width: none; height: 100%; max-height: 100%;
+    padding: 10px; border-radius: 5px; min-height: 0;
+  }
+  #start > .modal { overflow: auto; }
+  #start .net-buttons { flex-wrap: wrap; }
+  #start .player-id-label { flex-wrap: wrap; }
+  #serverConnect { padding: 6px; }
+  #serverForm { max-height: calc(100dvh - 12px); padding: 14px; }
+  :is(#start, #roomMain, #formationScreen, #serverForm) button {
+    min-height: 36px; font-size: 14px; padding: 6px 10px;
+  }
+  :is(#start, #roomMain, #formationScreen, #serverForm) :is(select, input:not([type=checkbox])) {
+    min-height: 36px; font-size: 16px; min-width: 0;
+  }
+  #roomPreparation #roomMain { display: flex; flex-direction: column; overflow: hidden; gap: 6px; }
+  #roomMain > .lobby-heading { flex: none; margin: 0; padding-right: 68px; align-items: center; }
+  #roomMain > .lobby-heading h2 { font-size: 18px; margin: 0; }
+  #roomMain > #roomStatus { margin: 0; flex: none; font-size: 12px; }
+  #roomMain > .muted { display: none; }
+  #roomMobileTabs { display: flex; flex: none; gap: 6px; }
+  #roomMobileTabs button { flex: 1; }
+  #roomMobileTabs button[aria-pressed=true] { background: #294c5e; border-color: #71cce8; }
+  #roomMain .room-columns { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; gap: 0; }
+  #roomMain .room-controls { flex: 1; min-height: 0; overflow: auto; padding: 0; }
+  #roomMain #roomSettingsPage, #roomMain #roomSeatsPage { display: block; }
+  #roomMain[data-mobile-tab=seats] #roomSettingsPage,
+  #roomMain[data-mobile-tab=settings] #roomSeatsPage,
+  #roomMain:not([data-mobile-tab=chat]) #roomChatPanel,
+  #roomMain[data-mobile-tab=chat] .room-controls { display: none; }
+  #roomMain[data-mobile-tab=chat] #roomChatPanel { display: flex; flex: 1; min-height: 0; margin: 0; padding: 0; border: 0; overflow: hidden; }
+  #roomMain #roomChatContent { flex: 1; min-height: 0; }
+  #roomMain #roomChatLines, #roomMain #roomCombatLog { flex: 1; height: auto; min-height: 0; max-height: none; overflow: auto; }
+  #roomMain .chat-status:empty { display: none; }
+  #roomMain .chat-form { flex-shrink: 0; }
+  #roomMain #roomActions { margin: 0; padding-top: 6px; flex: none; gap: 6px; flex-wrap: wrap; }
+  #roomMain .team-slots { margin: 0; gap: 8px; }
+  #roomMain .team-slot { padding: 8px; }
+  #roomMain .spawn-slot { padding: 6px 0; }
+  #roomMain .lineup-ready { font-size: 13px; }
+  #roomMain .room-options label { min-width: 130px; }
+  #roomMain #roomMapPreview { height: 140px; }
+  #roomMain:has(#finalAssemblyPanel:not([hidden])) #roomMobileTabs { display: none; }
+  #roomMain:has(#finalAssemblyPanel:not([hidden])) .room-controls { display: block; }
+  #roomMain:has(#finalAssemblyPanel:not([hidden])) #roomChatPanel { display: none; }
+
+  #formationScreen #formationMain { display: flex; flex-direction: column; overflow: hidden; gap: 6px; }
+  #formationScreen .formation-heading { flex: none; gap: 8px; }
+  #formationScreen .formation-heading h2 { font-size: 18px; }
+  #formationScreen .formation-toolbar {
+    flex: none; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+    padding: 4px; gap: 6px;
+  }
+  #formationScreen .formation-toolbar label { flex-direction: row; align-items: center; font-size: 13px; }
+  #formationScreen .formation-toolbar label > span { display: none; }
+  #formationScreen .formation-workspace { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+  #formationScreen .formation-squad { flex: 1; min-height: 0; gap: 6px; }
+  #formationScreen .formation-squad > h3 { display: none; }
+  #formationScreen #formationUnits { flex: 1; min-height: 0; padding: 0 6px; }
+  #formationScreen .formation-row { padding: 8px 0; }
+  #formationScreen .formation-row-description { display: none; }
+  #formationScreen #openFormationPicker { flex: none; }
+  #formationScreen .net-buttons { margin: 0; flex: none; }
+  #formationScreen .formation-detail-overlay, #roomPreparation .formation-detail-overlay { padding: 6px; }
+  #formationUnitPicker .formation-picker-dialog {
+    width: 100%; max-width: none; height: 100%; max-height: 100%; padding: 10px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  #formationUnitPicker .formation-picker-heading { flex: none; }
+  #formationUnitPicker .formation-catalog { min-height: 0; flex: 1; gap: 6px; }
+  #formationUnitPicker .formation-catalog-heading { flex: none; }
+  #formationUnitPicker #formationSearch { flex: none; }
+  #formationScreen .formation-filter-label { display: none; }
+  #formationUnitPicker #formationCatalog { min-height: 0; flex: 1; padding: 4px; }
+  #formationUnitPicker #addFormationUnit { flex: none; }
+  #formationUnitDetail .formation-detail-dialog, #roomDetailPanel .formation-detail-dialog {
+    width: 100%; max-width: none; max-height: 100%; padding: 0 10px 10px; overflow: auto;
+  }
+  #formationUnitDetail .unit-detail-heading { padding: 8px 0; }
+  #formationUnitDetail .formation-detail-preview { max-height: 160px; }
+  html:has(#formationScreen:not([hidden])) #openClientSettings,
+  html:has(#formationScreen:not([hidden])) #musicPlayer,
+  html:has(#roomPreparation:not([hidden])) #musicPlayer { display: none; }
+}
+@media (max-height: 600px) and (orientation: landscape) {
+  #roomMain .team-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #roomMain .spawn-slot, #roomMain .lineup-header { grid-template-columns: minmax(0, 1fr) 100px 66px; gap: 4px; }
+  #roomMain .choose-spawn { font-size: 12px; padding: 4px; }
+  #formationUnitDetail .unit-detail-summary { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+}
+@media (max-width: 500px) {
+  #formationScreen .formation-toolbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  #formationUnitPicker #formationCatalog { grid-template-columns: minmax(0, 1fr); }
+}

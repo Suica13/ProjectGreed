@@ -4,7 +4,7 @@ const { test, expect } = require("@playwright/test"),
   path = require("node:path");
 async function open(page) {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
-  await expect(page).toHaveTitle("ProjectGreed V09");
+  await expect(page).toHaveTitle("ProjectGreed V10");
   await openPresentationFixture(page, false);
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();

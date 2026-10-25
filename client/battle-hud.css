@@ -1068,58 +1068,6 @@
     gap: 5px 12px;
   }
 }
-.mobile-landscape-tip {
-  position: fixed;
-  inset: 0;
-  z-index: 1700;
-  display: grid;
-  place-items: center;
-  background: #0c1721;
-  padding: 24px;
-}
-.mobile-landscape-tip[hidden] {
-  display: none;
-}
-.mobile-landscape-card {
-  width: min(390px, 100%);
-  text-align: center;
-  padding: 28px 20px;
-  color: #d9e8ef;
-}
-.mobile-landscape-card h2 {
-  font-size: 22px;
-  margin: 22px 0 12px;
-}
-.mobile-landscape-card p {
-  font-size: 13px;
-  line-height: 1.8;
-  color: #9eb5c5;
-}
-.mobile-landscape-card button {
-  margin-top: 22px;
-  min-width: 180px;
-  border-radius: 2px;
-  padding: 11px 22px;
-}
-.mobile-landscape-device {
-  position: relative;
-  width: 88px;
-  height: 49px;
-  border: 2px solid #82c6dc;
-  border-radius: 6px;
-  margin: auto;
-}
-.mobile-landscape-device::after {
-  content: "";
-  position: absolute;
-  right: 7px;
-  top: 17px;
-  width: 5px;
-  height: 10px;
-  border-radius: 2px;
-  background: #82c6dc;
-}
-
 /* 资料默认收起；攻击编排借用右侧栏，武器和计划分别滚动。 */
 #gameScene .hud-unit-commands button[data-unit-command="info"] {
   order: 0;

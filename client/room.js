@@ -8,6 +8,19 @@ const RoomPanel = (() => {
   const costDrafts = { costLimit: null, unitCostLimit: null };
   const joinButtons = [byId("joinTeam1"), byId("joinTeam2")];
   let detail = null;
+  // 只更新席位文字；倒计时无需请求服务器或重建房间面板。
+  function updateReconnectCountdowns() {
+    const snapshot = Net.snapshot;
+    if (!snapshot) return;
+    const now = Number.isFinite(snapshot.receivedAt) && Number.isFinite(snapshot.serverTime)
+      ? snapshot.serverTime + performance.now() - snapshot.receivedAt
+      : Date.now();
+    for (const label of document.querySelectorAll("[data-reconnect-until]")) {
+      const seconds = Math.max(0, Math.ceil((Number(label.dataset.reconnectUntil) - now) / 1000));
+      label.textContent = I18n.text("等待重连") + " · " + seconds + "s";
+    }
+  }
+  setInterval(updateReconnectCountdowns, 250);
   function playerLabel(member, self, snapshot) {
     const label = element("strong", playerNameClass(member.id, snapshot.hostId, self.id)),
       name = element("span", "", member.name);
@@ -656,7 +669,7 @@ const RoomPanel = (() => {
         const choose = element(
           "button",
           "choose-spawn",
-          "出生点" + spawn.position + " · " + Rules.columnLabel(spawn.x) + (spawn.y + 1),
+          (inBattle && !member && !reserved ? "接管席位" : "出生点") + spawn.position + " · " + Rules.columnLabel(spawn.x) + (spawn.y + 1),
         );
         choose.id = "chooseSeat" + seat;
         choose.title = self.seat === seat ? "当前出生点" : "选择出生点" + spawn.position;
@@ -683,7 +696,7 @@ const RoomPanel = (() => {
                 (member.id === snapshot.hostId || member.ready ? "is-ready" : "not-ready")
               : "muted"),
           !member
-            ? reserved ? "席位保留（60秒内）" : "—"
+            ? reserved ? "等待重连" : "—"
             : !member.connected
               ? "离线 · 保留席位"
               : snapshot.started
@@ -695,10 +708,15 @@ const RoomPanel = (() => {
                     : "未准备",
         );
 
+        if (reserved && !member) {
+          ready.dataset.reconnectUntil = reserved.until;
+          ready.setAttribute("data-i18n-ignore", "");
+        }
         slot.append(spawnCell, ready);
         for (const cell of slot.children) cell.setAttribute("role", "cell");
         column.append(slot);
       }
+      updateReconnectCountdowns();
       const button = joinButtons[team];
       const current =
         self.seat !== null && self.seat !== undefined && Rules.seatTeam(self.seat) === team;
@@ -866,4 +884,16 @@ const RoomPanel = (() => {
     if (pageView === "room" && Net.snapshot) render(Net.snapshot);
   });
   return { render };
+})();
+
+// Tabs reorganize the existing room controls without cloning their state or handlers.
+(() => {
+  const room = document.getElementById("roomMain");
+  for (const button of document.querySelectorAll("[data-room-tab]")) {
+    button.onclick = () => {
+      room.dataset.mobileTab = button.dataset.roomTab;
+      for (const tab of document.querySelectorAll("[data-room-tab]"))
+        tab.setAttribute("aria-pressed", String(tab === button));
+    };
+  }
 })();

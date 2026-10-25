@@ -1,0 +1,72 @@
+﻿const { test, expect } = require('@playwright/test');
+const { pathToFileURL } = require('node:url');
+const path = require('node:path');
+async function open(page, viewport) {
+ await page.setViewportSize(viewport);
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);
+ await page.waitForFunction(() => assetsReady);
+ await page.evaluate(() => { I18n.setLanguage('zh'); });
+}
+for (const viewport of [{width:844,height:390},{width:880,height:396},{width:667,height:375},{width:390,height:844}]) {
+ test(`responsive menus and room tabs ${viewport.width}x${viewport.height}`, async ({page}) => {
+  await open(page, viewport);
+  await page.locator('#openSkirmish').click();
+  await page.locator('#openRooms').click();
+  await page.locator('#serverAddress').fill('127.0.0.1:1313');
+  await page.locator('#cancelServer').click();
+  await page.evaluate(() => LocalRoom.open());
+  await expect(page.locator('#roomPreparation')).toBeVisible();
+  await expect(page.locator('#start')).toBeHidden();
+  await expect(page.locator('#teamSlots')).toBeVisible();
+  await expect(page.locator('#roomSettingsPage')).toBeHidden();
+  await expect(page.locator('#roomChatPanel')).toBeHidden();
+  await expect(page.locator('#startRoomGame')).toBeInViewport();
+  const size = await page.locator('#startRoomGame').evaluate(el => ({height:el.getBoundingClientRect().height,font:parseFloat(getComputedStyle(el).fontSize)}));
+  expect(size.height).toBeGreaterThanOrEqual(36);
+  expect(size.font).toBeGreaterThanOrEqual(14);
+  await page.locator('[data-room-tab=settings]').click();
+  await page.locator('#roomMapSelect').selectOption('crossroads_2v2');
+  await expect(page.locator('#roomMapSelect')).toHaveValue('crossroads_2v2');
+  await page.locator('[data-room-tab=chat]').click();
+  await page.locator('#roomChatInput').fill('responsive layout');
+  await page.locator('#roomChatSend').click();
+  await expect(page.locator('#roomChatLines')).toContainText('responsive layout');
+  await page.locator('#roomShowLog').click();
+  await expect(page.locator('#roomCombatLog')).toBeVisible();
+  await page.locator('#roomShowChat').click();
+  await page.locator('[data-room-tab=seats]').click();
+  await page.setViewportSize({width:1600,height:1000});
+  await expect(page.locator('#roomMobileTabs')).toBeHidden();
+  await expect(page.locator('#roomSettingsPage')).toBeVisible();
+  await expect(page.locator('#roomSeatsPage')).toBeVisible();
+  await expect(page.locator('#roomChatPanel')).toBeVisible();
+  await page.setViewportSize(viewport);
+  await expect(page.locator('#startRoomGame')).toBeInViewport();
+  await page.locator('#startRoomGame').click();
+  await expect(page.locator('#finalAssemblyPanel')).toBeVisible();
+  await expect(page.locator('#roomMobileTabs')).toBeHidden();
+  await page.locator('#confirmFinalFormation').scrollIntoViewIfNeeded();
+  await expect(page.locator('#confirmFinalFormation')).toBeInViewport();
+ });
+ test(`responsive formation panels ${viewport.width}x${viewport.height}`, async ({page}) => {
+  await open(page, viewport);
+  await page.locator('#openFormation').click();
+  await expect(page.locator('#saveFormation')).toBeInViewport();
+  await expect(page.locator('#openFormationPicker')).toBeInViewport();
+  expect(await page.locator('#formationUnits').evaluate(el => el.getBoundingClientRect().height)).toBeGreaterThan(120);
+  await page.locator('#formationUnits .formation-detail-button').first().click();
+  await expect(page.locator('#closeFormationDetail')).toBeInViewport();
+  await page.locator('#closeFormationDetail').click();
+  await page.locator('#openFormationPicker').click();
+  await expect(page.locator('#addFormationUnit')).toBeInViewport();
+  expect(await page.locator('#formationCatalog').evaluate(el => el.getBoundingClientRect().height)).toBeGreaterThan(100);
+  await page.locator('#formationSearch').fill('RGM-79');
+  await page.locator('[data-detail-unit-id]').first().click();
+  await page.locator('#formationUnitDetail .formation-detail-dialog').evaluate(el => el.scrollTop = el.scrollHeight);
+  await expect(page.locator('#closeFormationDetail')).toBeInViewport();
+  await page.locator('#closeFormationDetail').click();
+  await page.locator('#closeFormationPicker').click();
+  await page.locator('#saveFormation').click();
+  await expect(page.locator('#formationScreen')).toBeHidden();
+ });
+}

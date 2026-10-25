@@ -776,5 +776,19 @@
   "搭载中每次己方回合恢复25%最大耐久、50%最大EN，并随机修复最多两个受损零件。": "Each friendly turn, cargo recovers 25% maximum HP and 50% maximum EN, and repairs up to two random damaged parts.",
   "舰毁紧急退出损失25%最大耐久和最大盾牌；无合法落点或耐久归零则损失载员。": "Emergency evacuation costs 25% maximum HP and shield. Cargo is lost if no valid exit exists or HP reaches zero.",
   "等待重连": "Awaiting reconnect",
-  "席位保留（60秒内）": "Reserved for up to 60s"
+  "席位保留（60秒内）": "Reserved for up to 60s",
+  "系统": "System",
+  "加入了房间": "joined the room",
+  "离开了房间": "left the room",
+  "已重新连接": "reconnected",
+  "连接断开，等待重连": "disconnected; awaiting reconnect",
+  "重连超时，已离开房间": "reconnect timed out; left the room",
+  "被房主移出了房间": "was removed by the host",
+  "接管席位": "Take seat ",
+  "席位": "Seats",
+  "房间设置": "Room settings",
+  "聊天 / LOG": "Chat / LOG",
+  "正在读取游戏数据…": "Reading game data…",
+  "正在加载单位贴图与特效…": "Loading unit textures and effects…",
+  "重新加载": "Reload"
 }

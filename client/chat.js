@@ -81,6 +81,15 @@ const Chat = (() => {
       const nodes = visible.map((message) => {
         const row = element("div", "chat-line");
         row.dataset.channel = message.channel || "all";
+        if (message.system) {
+          const label = element("span", "chat-channel-label", "[" + I18n.text("系统") + "]");
+          const name = element("strong", playerNameClass(message.memberId), message.name);
+          name.setAttribute("data-i18n-ignore", "");
+          name.dataset.memberId = message.memberId;
+          row.append(label, name, element("span", "", I18n.text(message.event)));
+          row.title = new Date(message.at).toLocaleTimeString();
+          return row;
+        }
         const name = element("strong", playerNameClass(message.memberId), message.name);
         const body = element("span", "", message.text);
         name.setAttribute("data-i18n-ignore", "");

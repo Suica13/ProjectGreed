@@ -117,10 +117,13 @@ const PlanningUI = (() => {
     )?.target;
     if (phase === "reaction" && pending?.target === unit.id && response === "counter" && counterId)
       targetId = counterTargetId;
-    const target = targetId && getUnit(targetId);
-    return target
-      ? (Math.atan2(target.x - unit.x, -(target.y - unit.y)) * 180) / Math.PI
-      : fallback;
+    const target = AttackControls.targetFor(unit) || (targetId && getUnit(targetId));
+    if (!target) return fallback;
+    // Draft facing is presentation-only: incoming snapshots still own unit.angle.
+    // Use the same footprint centers as authority (including large targets).
+    const preview = { ...unit, angle: fallback };
+    Rules.faceTarget(preview, target);
+    return preview.angle;
   }
   // White-only frames while charging; the native final red frame is reserved for a valid charged shot.
   const lockStarts = new Map();
@@ -179,6 +182,12 @@ const AttackControls = (() => {
       current = null;
     return current;
   }
+  function targetFor(unit) {
+    if (mode !== "attack-weapons" || !current || current.unitId !== unit.id ||
+        current.round !== game.round || current.session !== session) return null;
+    const target = getUnit(current.targetId);
+    return target?.hp > 0 ? target : null;
+  }
   function ordinary(unit) {
     return Rules.modelOf(unit).weapons.filter((w) => w.slot !== "skill");
   }
@@ -215,7 +224,6 @@ const AttackControls = (() => {
     };
     mode = "attack-weapons";
     weaponId = null;
-    Rules.faceTarget(unit, target);
     GameAudio.play("lockonSound");
     update();
     return true;
@@ -361,5 +369,5 @@ const AttackControls = (() => {
     buttons.append(confirm, clear, change);
     editor.append(buttons);
   }
-  return { reset, draft, canTarget, start, choose, render };
+  return { reset, draft, targetFor, canTarget, start, choose, render };
 })();

@@ -1,22 +1,18 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="resources-loading">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>__PROJECT_NAME__ __PROJECT_VERSION__</title>
     <style>
-      .mobile-intro-pending #start {
-        visibility: hidden;
-      }
-      .mobile-landscape-tip {
-        position: fixed;
-        inset: 0;
-        z-index: 1700;
-        background: #0c1721;
-      }
-      .mobile-landscape-tip[hidden] {
-        display: none;
-      }
+      .resources-loading #start { visibility: hidden; }
+      #resourceLoading { position: fixed; inset: 0; z-index: 2000; display: grid;
+        place-items: center; background: #0c1721; padding: 20px; }
+      #resourceLoading[hidden] { display: none; }
+      .resource-loading-card { width: min(420px, 100%); color: #e3edf0; }
+      #resourceProgress { width: 100%; height: 18px; accent-color: #66d5ff; }
+      #resourceProgressText { font-variant-numeric: tabular-nums; }
+      #resourceLoadingError { color: #ff9c93; overflow-wrap: anywhere; }
     </style>
     <style>
       :root {
@@ -1585,26 +1581,17 @@
     </style>
   </head>
   <body>
-    <div
-      id="mobileLandscapeTip"
-      class="mobile-landscape-tip"
-      hidden
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="mobileLandscapeTitle"
-    >
-      <div class="mobile-landscape-card">
-        <div class="mobile-landscape-device" aria-hidden="true"></div>
-        <h2 id="mobileLandscapeTitle">推荐以横屏游玩</h2>
-        <p>横屏可以显示更大的战斗地图，并更方便查看武器与攻击计划。</p>
-        <button id="continueFromLandscapeTip" type="button" class="primary">
-          继续，进入主菜单
-        </button>
+    <section id="resourceLoading" aria-label="读取资源" aria-busy="true">
+      <div class="resource-loading-card">
+        <h1>__PROJECT_NAME__</h1>
+        <p id="resourceLoadingStage">正在读取游戏数据…</p>
+        <progress id="resourceProgress" max="1" value="0" aria-label="资源加载进度"></progress>
+        <p id="resourceProgressText" data-i18n-ignore>0%</p>
+        <p id="resourceLoadingError" role="alert" hidden></p>
+        <button id="retryResourceLoading" type="button" hidden>重新加载</button>
       </div>
-    </div>
-    <script>
-      __MOBILE_INTRO__;
-    </script>
+    </section>
+    <script>__STARTUP_LOADING__;</script>
     <div data-ui-node="node-173" id="gameScene" hidden>
       <header data-ui-node="node-1">
         <div data-ui-node="node-2" class="brand">
@@ -2121,12 +2108,17 @@
       hidden
       aria-labelledby="roomTitle"
     >
-      <div data-ui-node="node-176" id="roomMain" class="modal room-preparation">
+      <div data-ui-node="node-176" id="roomMain" data-mobile-tab="seats" class="modal room-preparation">
         <div data-ui-node="node-177" class="lobby-heading">
           <h2 data-ui-node="node-178" id="roomTitle">房间准备</h2>
           <button data-ui-node="node-179" id="roomMainMenu">主菜单</button>
         </div>
         <p data-ui-node="node-180" id="roomStatus" role="status"></p>
+        <nav id="roomMobileTabs" aria-label="房间页面">
+          <button type="button" data-room-tab="seats" aria-pressed="true">席位</button>
+          <button type="button" data-room-tab="settings" aria-pressed="false">房间设置</button>
+          <button type="button" data-room-tab="chat" aria-pressed="false">聊天 / LOG</button>
+        </nav>
         <div class="room-columns">
           <div class="room-controls">
             <section id="finalAssemblyPanel" hidden aria-labelledby="finalAssemblyTitle">
@@ -2141,6 +2133,7 @@
               </div>
             </section>
             <div id="roomLobbyContent">
+              <div id="roomSettingsPage">
               <div class="room-options">
                 <label>地图<select id="roomMapSelect" aria-label="地图"></select></label>
                 <label
@@ -2186,9 +2179,12 @@
                 ></canvas>
                 <p id="roomMapInfo" class="muted"></p>
               </section>
+              </div>
+              <div id="roomSeatsPage">
               <div data-ui-node="node-181" id="teamSlots" class="team-slots"></div>
               <h3 data-ui-node="node-188" class="spectator-title">观战玩家</h3>
               <div data-ui-node="node-189" id="spectatorSlots"></div>
+              </div>
             </div>
           </div>
           <div id="roomChatPanel" class="room-chat">

@@ -387,14 +387,18 @@ const SpriteRenderer = (() => {
     const presentation = models[model].presentation;
     return presentation.movement === "walk" ? presentation.walk : presentation.move;
   }
-  async function load() {
+  async function load(onProgress = () => {}) {
+    const entries = Object.entries(ART.assets);
+    let loaded = 0;
+    onProgress(loaded, entries.length);
     await Promise.all(
-      Object.entries(ART.assets).map(
+      entries.map(
         ([key, source]) =>
           new Promise((resolve, reject) => {
             const image = new Image();
             image.onload = () => {
               images[key] = image;
+              onProgress(++loaded, entries.length);
               resolve();
             };
             image.onerror = () => reject(Error("素材加载失败：" + key));
