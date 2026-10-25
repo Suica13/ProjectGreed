@@ -891,3 +891,28 @@ test("50 percent zoom renders occupancy thumbnails and restores sprites above th
  assert.deepEqual(result.small,{zoom:.5,mode:'true',calls:0});assert.equal(result.large.mode,'false');assert(result.large.calls>0);
  await page.screenshot({path:'.openai/map-thumbnails.png'});
 });
+
+
+test("counter targets switch from list and map and clear the entire incompatible queue", async ({ page }) => {
+  await fixture(page);
+  await page.evaluate(() => {
+    const a=game.units[0], extra=game.units[1], b=game.units[2];
+    Object.assign(extra,{x:11,y:10});
+    pending={id:"switch-test",attacker:a.id,target:b.id,weapon:"EF_90mmMG",
+      counterTargets:[a,extra].map(u=>({attacker:u.id,weapon:"EF_90mmMG"}))};
+    phase="reaction"; response="counter"; counterTargetId=a.id; counterId="EF_90mmMG";
+    counterDraftState={key:pending.id,session,ids:["EF_90mmMG","Common_DoubleVulcan_MS"]};
+    renderReaction();
+    byId("reaction").hidden=false;
+    update();
+  });
+  await page.locator('.incoming-entry[data-unit-id="0-1"]').click();
+  assert.deepEqual(await page.evaluate(()=>[counterTargetId,counterDraftState.ids]),["0-1",[]]);
+  assert.ok(await page.locator('#confirmResponse').isDisabled());
+  await page.locator('[data-add-counter-weapon="Common_DoubleVulcan_MS"]').click();
+  await clickCell(page,10,10);
+  assert.deepEqual(await page.evaluate(()=>[counterTargetId,counterDraftState.ids]),["0-0",["Common_DoubleVulcan_MS"]]);
+  await page.locator('[data-add-counter-weapon="EF_90mmMG"]').click();
+  await clickCell(page,11,10);
+  assert.deepEqual(await page.evaluate(()=>[counterTargetId,counterDraftState.ids]),["0-1",[]]);
+});

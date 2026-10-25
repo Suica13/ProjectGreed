@@ -766,7 +766,8 @@ function renderPanel() {
       let b = element("button", "weapon" + (weaponId === w.id ? " active" : ""));
       b.innerHTML = htmlWeapon(w, u);
       if (w.description) b.append(element("span", "helper", w.description));
-      b.disabled = !canCommand || !Rules.canUse(u, w);
+      const enoughAP = Rules.actionCost(w) <= Rules.actionPoints(u) + (u.plan?.actionCost ?? 0);
+      b.disabled = !canCommand || !Rules.canUse(u, w) || !enoughAP;
       b.classList.toggle("part-disabled", Rules.brokenWeaponParts(u, w).length > 0);
       b.setAttribute("aria-label", (skills ? "技能 " : "攻击武器 ") + w.name);
       b.onclick = () => {
@@ -1524,6 +1525,12 @@ async function performMove(u, x, y) {
 }
 // a = 攻击方，b = 防守方，w = 武器。联机只发请求，离线进入本地应战。
 function beginAttack(a, b, w, weapons = [w]) {
+  try {
+    Rules.attackQueue(game, a, b, weapons);
+  } catch (error) {
+    note(error.message);
+    return;
+  }
   if (Net.active) {
     if (Net.canAct() && Net.canControl(a) && phase === "idle" && !Net.awaiting) {
       Net.request("attack", {
@@ -1599,17 +1606,9 @@ function renderReaction() {
         Rules.canCounter(game, b, getUnit(entry.attacker), weapon) &&
         (!entry.options || entry.options.includes(weapon.id)),
     );
-  // 先选武器，再按武器射程与 EN 条件筛选本组来袭目标。
-  const usableWeapons = Rules.modelOf(b).weapons.filter((weapon) =>
-    targets.some((entry) => available(entry).some((candidate) => candidate.id === weapon.id)),
-  );
-  if (!usableWeapons.some((weapon) => weapon.id === counterId))
-    counterId = usableWeapons[0]?.id || null;
-  const legalTargets = targets.filter((entry) =>
-    available(entry).some((weapon) => weapon.id === counterId),
-  );
-  if (!legalTargets.some((entry) => entry.attacker === counterTargetId))
-    counterTargetId = (legalTargets[0] || targets[0]).attacker;
+  const legalTargets = legalCounterTargets();
+  if (!targets.some((entry) => entry.attacker === counterTargetId))
+    counterTargetId = targets[0].attacker;
   const selectedTarget = targets.find((entry) => entry.attacker === counterTargetId) || targets[0];
   const incoming = response === "counter" ? selectedTarget : targets[0];
   const a = getUnit(incoming.attacker),
@@ -1747,7 +1746,7 @@ function renderReaction() {
       let button = element("button", "weapon" + (cw.id === counterId ? " active" : ""));
       const candidate = available(selectedTarget).some((w) => w.id === cw.id)
         ? selectedTarget
-        : targets.find((entry) => available(entry).some((w) => w.id === cw.id));
+        : null;
       const enemy = candidate && getUnit(candidate.attacker);
       const previous = enemy && queue.filter((w) => Rules.canCounter(game, b, enemy, w));
       button.innerHTML = htmlWeapon(cw, b, enemy || selectedEnemy, "counter", true);
@@ -1802,18 +1801,16 @@ for (const [id, value] of [
   };
 // 地图、左侧列表、下拉框统一走同一条合法目标选择路径。
 function legalCounterTargets() {
-  if (phase !== "reaction" || !pending || response !== "counter" || !counterId) return [];
-  const defender = getUnit(pending.target),
-    weapon = defender && getWeapon(defender, counterId);
-  if (!defender || !weapon) return [];
+  if (phase !== "reaction" || !pending || response !== "counter") return [];
+  const defender = getUnit(pending.target);
+  if (!defender) return [];
   const entries = pending.counterTargets || [
     { attacker: pending.attacker, options: pending.counterOptions },
   ];
-  return entries.filter(
-    (entry) =>
-      (!entry.options || entry.options.includes(counterId)) &&
-      Rules.canCounter(game, defender, getUnit(entry.attacker), weapon),
-  );
+  return entries.filter(entry => {
+    const enemy = getUnit(entry.attacker);
+    return enemy && Rules.onMap(enemy) && enemy.team !== defender.team;
+  });
 }
 function selectCounterTarget(id) {
   if (Net.awaiting || !legalCounterTargets().some((entry) => entry.attacker === id)) return false;
@@ -1822,9 +1819,16 @@ function selectCounterTarget(id) {
   const defender = getUnit(pending.target),
     draft = counterDraft(defender),
     enemy = getUnit(id);
-  draft.ids = draft.ids.filter((weaponId) =>
-    Rules.canCounter(game, defender, enemy, getWeapon(defender, weaponId)),
-  );
+  const entry = legalCounterTargets().find(entry => entry.attacker === id);
+  try {
+    if (draft.ids.some(weaponId => entry.options && !entry.options.includes(weaponId)))
+      throw Error("目标不支持当前武器");
+    Rules.counterQueue(game, defender, enemy, counterWeapons(defender));
+  } catch {
+    draft.ids = [];
+    counterId = null;
+  }
+  Rules.faceTarget(defender, enemy);
   GameAudio.play("lockonSound");
   renderReaction();
   return true;
