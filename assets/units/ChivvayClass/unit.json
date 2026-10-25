@@ -1213,7 +1213,7 @@
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 75.0,
       "en": 360.0,
       "sourceName": "ChivvayClass_Turret_BeamCannon",

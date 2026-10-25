@@ -1371,6 +1371,7 @@
 .battle-hud-active #reaction {
   overflow: hidden;
   scrollbar-gutter: auto;
+  pointer-events: none;
 }
 .battle-hud-active #reaction .response-side {
   max-height: 100%;
@@ -1396,3 +1397,8 @@
   flex: 0 0 auto; min-width: 0; min-height: 26px;
   padding: 4px 7px; font-size: 12px; line-height: 1.2;
 }
+
+.hangar-help { border-top: 1px solid #3c5662; margin-top: 10px; font-size: 12px; }
+.hangar-help p { margin: 6px 0; }
+.hangar-unit { flex-wrap: wrap; }
+.hangar-unit-info { flex-basis: 200px; }

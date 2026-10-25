@@ -420,7 +420,7 @@
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 75.0,
       "en": 40.0,
       "sourceName": "JotunheimClass_Turret_BeamCannon",

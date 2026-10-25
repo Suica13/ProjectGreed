@@ -5,6 +5,14 @@ from mod_source import ROOT, load, section
 
 
 def correct_shared_weapon_layers(prefab, native):
+    if prefab["id"] == "MS_10":
+        # Native cooldown selects equipment state, not a time-driven sprite loop.
+        layer = next(l for l in prefab["layers"] if l["name"] == "ZN_MS_10_MS_MS")
+        layer.pop("frameFps", None)
+        layer.pop("onlyAnimateWhenMoving", None)
+        layer["frame"] = 1
+        layer["attackFrame"] = {"frame": 0, "weapons": ["ZN_MS_10_MS_MS", "ZN_MS_10_MS_MS_R"]}
+        return
     if prefab["id"] == "RX_78_1":
         # Native EquipmentIndex2 selects saber (0) vs javelin (1), both at display index 1.
         # ProjectGreed exposes both attacks, so the selected held weapon is the discriminator.

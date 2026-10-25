@@ -20,20 +20,6 @@ const BattleHUD = (() => {
       mode,
     ) || mode.startsWith("skill:");
   scene.append(byId("reaction"));
-  // One scroll surface for both response columns; empty map space still selects counter targets.
-  byId("reaction").addEventListener("click", (event) => {
-    const overlay = event.currentTarget;
-    if (event.target !== overlay) return;
-    const rect = overlay.getBoundingClientRect();
-    if (event.clientX >= rect.left + overlay.clientWidth) return;
-    byId("map").dispatchEvent(
-      new MouseEvent("click", {
-        clientX: event.clientX,
-        clientY: event.clientY,
-        bubbles: true,
-      }),
-    );
-  });
   const defender = byId("reaction").querySelector(".response-defender"),
     responseBody = element("div", "hud-response-body"),
     confirm = byId("confirmResponse");

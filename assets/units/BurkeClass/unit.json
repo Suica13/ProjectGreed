@@ -672,7 +672,7 @@
       "name": "BurkeClass Turret CN",
       "type": "shell",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 75.0,
       "en": 40.0,
       "sourceName": "BurkeClass_Turret_CN",

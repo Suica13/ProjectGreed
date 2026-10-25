@@ -764,5 +764,17 @@
   "房间名称需为1–20位中文、英文字母、数字、下划线或短横线": "Room names must contain 1–20 Chinese characters, English letters, numbers, underscores or hyphens.",
   "修改名称": "Edit Name",
   "保存名称": "Save Name",
-  "放弃重试": "Stop retrying"
+  "放弃重试": "Stop retrying",
+  "查看状态": "View status",
+  "返回格纳库": "Back to hangar",
+  "当前状态": "Current status",
+  "受损部位": "Damaged parts",
+  "部位完好": "All parts intact",
+  "武器状态": "Weapon status",
+  "搭载结束本次行动，下次己方回合可出击；出击范围使用载员自身移动力。": "Boarding ends this action. Launch from your next turn using the passenger’s movement range.",
+  "出击视为已移动，仍可攻击或使用技能；剩余行动点×75%并向上取整，所属舰船不能撤回移动。": "Launching counts as movement but allows attacks and skills. Remaining AP becomes 75%, rounded up; the carrier cannot undo movement.",
+  "搭载中每次己方回合恢复25%最大耐久、50%最大EN，并随机修复最多两个受损零件。": "Each friendly turn, cargo recovers 25% maximum HP and 50% maximum EN, and repairs up to two random damaged parts.",
+  "舰毁紧急退出损失25%最大耐久和最大盾牌；无合法落点或耐久归零则损失载员。": "Emergency evacuation costs 25% maximum HP and shield. Cargo is lost if no valid exit exists or HP reaches zero.",
+  "等待重连": "Awaiting reconnect",
+  "席位保留（60秒内）": "Reserved for up to 60s"
 }

@@ -499,7 +499,7 @@
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 75.0,
       "en": 180.0,
       "sourceName": "FalmerClass_Turret_BeamCannon",

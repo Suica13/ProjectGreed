@@ -37,7 +37,7 @@ test("weapon category ranges preserve melee adjacency and distinguish sniper, ca
           [w.min, w.max],
           [
             3,
-            w.category === "sniper" ? (w.special?.type === "snipe" ? 9 : 6) : p.stats.ship ? 6 : 5,
+            w.category === "sniper" ? (w.special?.type === "snipe" ? 9 : 6) : p.stats.ship ? 8 : 5,
           ],
           id,
         );

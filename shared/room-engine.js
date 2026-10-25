@@ -140,7 +140,7 @@ function createRoomEngine({
       ),
       reservedSeats: members(room)
         .filter((m) => reconnectTimers.has(m) && m.seat !== null)
-        .map((m) => ({ seat: m.seat, until: m.disconnectedUntil })),
+        .map((m) => ({ memberId: m.id, seat: m.seat, until: m.disconnectedUntil })),
       members: members(room)
         .filter((m) => m.bot || onlineMember(m))
         .map((member) => ({
@@ -281,7 +281,6 @@ function createRoomEngine({
   }
   function reactionForSeat(room, seat) {
     return (
-      (room.reactions || []).find((request) => G.ownerOf(unit(room, request.target)) === seat) ||
       (room.reactions || []).find((request) =>
         canControl(room, seat, unit(room, request.target)),
       ) ||
@@ -291,7 +290,10 @@ function createRoomEngine({
   function botReaction(room) {
     return (
       (room.reactions || []).find(
-        (request) => room.seats[G.ownerOf(unit(room, request.target))]?.bot,
+        (request) => {
+          const owner = G.ownerOf(unit(room, request.target));
+          return room.seats[owner]?.bot && reactionForSeat(room, owner)?.id === request.id;
+        },
       ) || null
     );
   }
@@ -1339,6 +1341,7 @@ function createRoomEngine({
           room.seats[target.seat] = null;
           if (room.battle) room.battle.ready[target.seat] = false;
         }
+        clearReconnect(target);
         room.members.delete(target.id);
         if (target.ws) {
           const targetSocket = target.ws;

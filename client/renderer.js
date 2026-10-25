@@ -316,8 +316,12 @@ const SpriteRenderer = (() => {
           ART.models[model].movementType === "air");
       const effectTime =
         useWallClock && typeof performance !== "undefined" ? performance.now() / 1000 : time;
+      const attackFrame = layer.attackFrame;
+      const firing = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
       const frame =
-          layer.frameFps && (!layer.onlyAnimateWhenMoving || moving)
+          attackFrame && firing && attackFrame.weapons.includes(attackWeapon || heldWeapon)
+            ? attackFrame.frame
+            : layer.frameFps && (!layer.onlyAnimateWhenMoving || moving)
             ? Math.floor(Math.max(0, effectTime) * layer.frameFps) % frames
             : layer.frame || 0,
         columns = Math.floor(image.width / fw);

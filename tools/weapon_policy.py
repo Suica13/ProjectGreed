@@ -99,7 +99,7 @@ def extended_ranges(prefab):
             weapon["min"], weapon["max"] = RANGES["sniper"]
             weapon["actionCost"] = 4
         if prefab["stats"].get("ship") and kind in ["cannon", "mortar"] and weapon.get("rangeRole") != "ship_anti_air":
-            weapon["max"] = RANGES[kind][1] + 1
+            weapon["max"] = RANGES[kind][1] + (3 if kind == "cannon" else 1)
     for weapon in prefab["weapons"].values():
         special = weapon.get("special", {})
         if special.get("type") == "snipe":

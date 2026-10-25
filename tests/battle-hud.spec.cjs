@@ -944,3 +944,25 @@ test("dodge position persists through counter delay and into gunfire", async ({ 
   assert.deepEqual(result.waiting,result.before);
   assert.deepEqual(result.firing,result.before);
 });
+
+
+test("reaction map gap allows wheel zoom while response columns keep their own scrolling", async ({page})=>{
+  await fixture(page);
+  await page.evaluate(()=>{
+    const a=game.units[0],b=game.units[2];
+    beginAttack(a,b,getWeapon(a,"EF_90mmMG"));
+  });
+  const gap=await page.evaluate(()=>{
+    const left=byId("reaction").querySelector(".response-attacker").getBoundingClientRect();
+    const right=byId("reaction").querySelector(".response-defender").getBoundingClientRect();
+    return {x:(left.right+right.left)/2,y:Math.max(left.top,right.top)+90,zoom:MapCamera.zoom};
+  });
+  await page.mouse.move(gap.x,gap.y);
+  await page.mouse.wheel(0,-300);
+  await page.waitForFunction(z=>MapCamera.zoom>z,gap.zoom);
+  const zoom=await page.evaluate(()=>MapCamera.zoom);
+  await page.locator(".response-defender").hover();
+  await page.mouse.wheel(0,300);
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  assert.equal(await page.evaluate(()=>MapCamera.zoom),zoom);
+});

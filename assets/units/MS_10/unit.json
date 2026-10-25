@@ -309,7 +309,7 @@
       "scale": 0.75,
       "rotation": 0.0,
       "frames": 2.0,
-      "frame": 0,
+      "frame": 1,
       "offset": {
         "x": -9.0,
         "y": 24.0
@@ -323,8 +323,13 @@
       "requiredParts": [
         "rightArm"
       ],
-      "frameFps": 12,
-      "onlyAnimateWhenMoving": false
+      "attackFrame": {
+        "frame": 0,
+        "weapons": [
+          "ZN_MS_10_MS_MS",
+          "ZN_MS_10_MS_MS_R"
+        ]
+      }
     },
     {
       "name": "Body",

@@ -74,13 +74,13 @@ test("hangar preview boards and launches existing units through visible controls
   });
   assert.equal(await dialog.locator("[data-board-id]").count(), 0);
   await page.screenshot({ path: ".openai/hangar-preview.png" });
-  assert(await dialog.locator('[data-cargo-id="0-1"] button').isDisabled());
+  assert(await dialog.locator('[data-cargo-id="0-1"] button:not([data-inspect-cargo])').isDisabled());
   await page.evaluate(() => {
     Rules.end(game);
     Rules.end(game);
     update();
   });
-  await dialog.locator('[data-cargo-id="0-1"] button').click();
+  await dialog.locator('[data-cargo-id="0-1"] button:not([data-inspect-cargo])').click();
   assert(!(await dialog.isVisible()));
   assert(await page.locator("#hudCancelAction").isVisible());
   assert.equal(await page.locator("#hudCancelAction").textContent(), "取消出击");
@@ -161,3 +161,28 @@ async function clickCarrier(page) {
   });
   await page.mouse.click(point.x, point.y);
 }
+
+
+test("hangar shows resource maxima and opens live cargo status with bottom instructions",async({page})=>{
+ await fixture(page);
+ const expected=await page.evaluate(()=>{
+  const c=getUnit("0-0"),u=getUnit("0-1"),m=Rules.modelOf(u);
+  u.embarked={carrierId:c.id,hangarId:Rules.hangars.of(c)[0].id};
+  u.hp=1234;u.en=12;u.brokenParts={rightArm:true};
+  HangarUI.open(c);
+  return {hp:formatNumber(m.hp),en:formatNumber(m.en)};
+ });
+ const row=page.locator('[data-cargo-id="0-1"]');
+ assert((await row.textContent()).includes('HP 1,234 / '+expected.hp));
+ assert((await row.textContent()).includes('EN 12 / '+expected.en));
+ await page.locator('[data-inspect-cargo="0-1"]').click();
+ const panel=page.locator('#hangarCargoStatus');
+ assert(await panel.isVisible());
+ assert((await panel.textContent()).includes('右臂'));
+ await page.evaluate(()=>{getUnit("0-1").hp=2345;update();});
+ assert((await panel.textContent()).includes('2,345'));
+ assert.equal(await page.locator('#hangarDialog > .helper:not(.hangar-help)').count(),0);
+ assert.equal(await page.locator('#hangarDialog > :last-child').getAttribute('class'),'hangar-help helper');
+ await page.locator('#hangarStatusBack').click();
+ assert(await page.locator('[data-cargo-id="0-1"]').isVisible());
+});

@@ -42,7 +42,7 @@ test("categories have exact requested ranges and original native shooting/melee 
       }[w.category];
       if (w.special?.type === "snipe") expected = [3, 9];
       if (p.stats.ship && ["cannon", "mortar"].includes(w.category))
-        expected = [expected[0], expected[1] + 1];
+        expected = [expected[0], expected[1] + (w.category === "cannon" ? 3 : 1)];
       if (p.stats.ship && /_Turret_AA(?:_|$)/.test(w.sourceName || "")) {
         assert.equal(w.rangeRole, "ship_anti_air");
         assert.deepEqual([w.min, w.max], [1, 2], p.id + "/" + w.id);

@@ -630,3 +630,64 @@ test("all disconnected room survives grace then dissolves", async (t) => {
   await new Promise((r) => setTimeout(r, 45));
   assert(!engine.rooms.has(room.code));
 });
+
+
+test("shared allies resolve the same reaction in order and stale decisions cannot overwrite it", t => {
+  const {room,act,frames,clients}=fixture(t,4);
+  room.settings.shareAlliedUnits=true;
+  act(0,"attack",{unitId:"0-0",targetId:"1-0",weaponId:"EF_90mmMG"});
+  act(2,"attack",{unitId:"2-0",targetId:"3-0",weaponId:"EF_90mmMG"});
+  act(0,"end_turn");act(2,"end_turn");
+  const first=frames.get(clients[1]).pending.id;
+  assert.equal(frames.get(clients[3]).pending.id,first);
+  act(3,"respond",{reactionId:first,response:"defend"});
+  const next=frames.get(clients[1]).pending.id;
+  assert.notEqual(next,first);
+  assert.equal(frames.get(clients[3]).pending.id,next);
+  assert.equal(room.responses.length,1);
+  assert.equal(room.responses[0].response,"defend");
+  assert.throws(()=>act(1,"respond",{reactionId:first,response:"evade"}));
+  assert.equal(room.responses.length,1);
+  assert.equal(room.responses[0].response,"defend");
+  act(1,"respond",{reactionId:next,response:"evade"});
+  assert.equal(room.phase,"playback");
+});
+
+
+test("explicit departure immediately frees a seat for AI without reconnect reservation", t => {
+ const {engine,room,clients,act,frames}=fixture(t);
+ room.started=false;room.phase="waiting";
+ clients[1].close=()=>{};
+ engine.leaveRoom(clients[1]);
+ assert.equal(room.seats[1],null);
+ assert.deepEqual(frames.get(clients[0]).reservedSeats,[]);
+ act(0,"add_ai",{seat:1});
+ assert.equal(room.seats[1].bot,true);
+});
+
+test("expired reserved seat accepts AI in the waiting room", async t => {
+ const {engine,room,clients,act}=fixture(t,2,1,{reconnectGraceMs:20});
+ room.started=false;room.phase="waiting";
+ engine.disconnect(clients[1]);
+ assert.throws(()=>act(0,"add_ai",{seat:1}));
+ await new Promise(r=>setTimeout(r,45));
+ act(0,"add_ai",{seat:1});
+ assert.equal(room.seats[1].bot,true);
+});
+
+
+test("host can kick reserved seat immediately and invalidate reconnect without waiting for expiry",t=>{
+ const {engine,room,clients,act,frames}=fixture(t,4);
+ room.started=false;room.phase="waiting";
+ const member=room.seats[1],token=member.token;
+ engine.disconnect(clients[1]);
+ assert.equal(frames.get(clients[0]).reservedSeats[0].memberId,member.id);
+ assert.throws(()=>act(2,"kick_player",{memberId:member.id}));
+ assert.equal(room.seats[1],member);
+ act(0,"kick_player",{memberId:member.id});
+ assert.equal(room.seats[1],null);
+ assert.equal(frames.get(clients[0]).reservedSeats.length,0);
+ assert.throws(()=>engine.join({readyState:1},{mode:"resume",room:room.code,token}));
+ act(0,"add_ai",{seat:1});
+ assert.equal(room.seats[1].bot,true);
+});

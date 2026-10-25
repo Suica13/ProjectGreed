@@ -379,7 +379,7 @@
       "type": "beam",
       "slot": "primary",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 75.0,
       "en": 240.0,
       "clip": null,

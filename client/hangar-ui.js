@@ -4,6 +4,7 @@ const HangarUI = (() => {
   dialog.id = "hangarDialog";
   dialog.setAttribute("aria-label", "格纳库");
   document.body.append(dialog);
+  let statusUnit = null;
   let inspected = null,
     launching = null,
     boarding = null,
@@ -58,7 +59,7 @@ const HangarUI = (() => {
       element(
         "small",
         "muted",
-        `${UnitIdentity.owner(u).name} · ${Rules.modelOf(u).transport.slotCost} ${I18n.text("容量点")} · HP ${formatNumber(u.hp)} · EN ${formatNumber(u.en)}`,
+        `${UnitIdentity.owner(u).name} · ${Rules.modelOf(u).transport.slotCost} ${I18n.text("容量点")} · HP ${formatNumber(u.hp)} / ${formatNumber(Rules.modelOf(u).hp)} · EN ${formatNumber(u.en)} / ${formatNumber(Rules.modelOf(u).en)}`,
       ),
     );
     box.append(icon, info);
@@ -88,23 +89,13 @@ const HangarUI = (() => {
       }),
     );
     const content = element("div", "hangar-content");
-    dialog.append(
-      header,
-      element(
-        "p",
-        "helper",
-        "搭载结束本次行动；下次己方回合可出击。出击视为已移动，仍可攻击。部署阶段可预装。",
-      ),
-      element("p", "helper", "出击后行动点减少25%（向上取整），舰船不能撤回移动。"),
-      element("p", "helper", "搭载中每次己方回合恢复25%耐久、50% EN，并随机修复两个受损零件。"),
-      content,
-    );
+    dialog.append(header, content);
     if (Net.active && Net.team() !== null && selectedUnit.team !== Net.team()) {
       content.append(element("p", "helper", "无法查看敌军格纳库的载员"));
       return;
     }
     const carrierMode = Rules.hangars.of(selectedUnit).length > 0;
-    if (!carrierMode) dialog.querySelectorAll(":scope > .helper").forEach((node) => node.remove());
+
     const carriers = carrierMode ? [selectedUnit] : [getUnit(boardingCarrier)].filter(Boolean);
     if (!carrierMode && carriers.length)
       content.append(element("p", "helper", "选择搭乘格纳库" + " · " + unitName(carriers[0])));
@@ -136,6 +127,9 @@ const HangarUI = (() => {
         for (const u of Rules.hangars.cargo(game, carrier, h.id)) {
           const item = row(u);
           item.dataset.cargoId = u.id;
+          const inspect = button("查看状态", () => { statusUnit = u.id; render(); });
+          inspect.dataset.inspectCargo = u.id;
+          item.append(inspect);
           const locations = allowed(u) ? Rules.hangars.launchCells(game, u) : [];
           if (carrierMode)
             item.append(
@@ -168,10 +162,41 @@ const HangarUI = (() => {
         content.append(section);
       }
     }
-    if (carrierMode)
-      dialog.append(
-        element("p", "helper", "舰毁紧急退出会损失25%最大耐久和盾牌，无有效落点则损失载员。"),
-      );
+    const cargo = getUnit(statusUnit);
+    if (cargo && carriers.some(c => cargo.embarked?.carrierId === c.id)) {
+      const m = Rules.modelOf(cargo);
+      content.replaceChildren();
+      const back = button("返回格纳库", () => { statusUnit = null; render(); });
+      back.id = "hangarStatusBack";
+      content.append(back, row(cargo));
+      const panel = element("section", "hangar-section");
+      panel.id = "hangarCargoStatus";
+      const broken = Object.keys(cargo.brokenParts || {}).filter(k => cargo.brokenParts[k]);
+      panel.append(element("h4", "", "当前状态"),
+        element("p", "", `${m.name} · ${UnitIdentity.owner(cargo).team}`),
+        element("p", "", `HP ${formatNumber(cargo.hp)} / ${formatNumber(m.hp)} · EN ${formatNumber(cargo.en)} / ${formatNumber(m.en)}`),
+        element("p", "", `${I18n.text("盾牌")} ${formatNumber(cargo.shield || 0)} / ${formatNumber(m.shield?.hp || 0)} · AP ${Rules.actionPoints(cargo)} / ${Rules.actionBudget(cargo)}`),
+        element("p", broken.length ? "red" : "muted", broken.length
+          ? I18n.text("受损部位") + ": " + broken.map(k => I18n.text(Rules.partNames[k] || k)).join(" / ")
+          : I18n.text("部位完好")));
+      content.append(panel);
+      const weapons = element("section", "hangar-section");
+      weapons.append(element("h4", "", "武器状态"));
+      for (const weapon of m.weapons) {
+        const item = element("div", "weapon");
+        item.innerHTML = htmlWeapon(weapon, cargo);
+        weapons.append(item);
+      }
+      content.append(weapons);
+    } else statusUnit = null;
+    const help = element("div", "hangar-help helper");
+    for (const text of [
+      "搭载结束本次行动，下次己方回合可出击；出击范围使用载员自身移动力。",
+      "出击视为已移动，仍可攻击或使用技能；剩余行动点×75%并向上取整，所属舰船不能撤回移动。",
+      "搭载中每次己方回合恢复25%最大耐久、50%最大EN，并随机修复最多两个受损零件。",
+      "舰毁紧急退出损失25%最大耐久和最大盾牌；无合法落点或耐久归零则损失载员。",
+    ]) help.append(element("p", "", I18n.text(text)));
+    dialog.append(help);
   }
   function boardingTargets(u) {
     return game.units.filter((c) =>
@@ -179,6 +204,7 @@ const HangarUI = (() => {
     );
   }
   function open(u) {
+    statusUnit = null;
     if (!Rules.hangars.of(u).length) {
       if (!allowed(u) || !boardingTargets(u).length) return;
       cancel();

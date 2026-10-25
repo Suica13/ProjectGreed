@@ -632,6 +632,7 @@ const RoomPanel = (() => {
       column.append(header);
       for (const { spawn, seat } of seats) {
         const member = roster.find((player) => player.seat === seat);
+        const reserved = snapshot.reservedSeats?.find((item) => item.seat === seat);
         const slot = element("div", "spawn-slot");
         slot.dataset.seat = seat;
         slot.setAttribute("role", "row");
@@ -639,10 +640,17 @@ const RoomPanel = (() => {
         nameCell.append(
           member
             ? playerLabel(member, self, snapshot)
-            : element("strong", "player-name player-other", "空位"),
+            : element("strong", "player-name player-other", reserved ? "等待重连" : "空位"),
         );
         if (member?.bot || (member && self.id === snapshot.hostId))
           nameCell.append(detailButton(member, snapshot));
+        if (reserved && self.id === snapshot.hostId) {
+          const kick = element("button", "choose-spawn danger", "踢出");
+          kick.dataset.kickReservedSeat = seat;
+          kick.disabled = busy;
+          kick.onclick = () => Net.request("kick_player", { memberId: reserved.memberId });
+          nameCell.append(kick);
+        }
         slot.append(nameCell);
         const spawnCell = element("div", "spawn-cell");
         const choose = element(
@@ -652,7 +660,6 @@ const RoomPanel = (() => {
         );
         choose.id = "chooseSeat" + seat;
         choose.title = self.seat === seat ? "当前出生点" : "选择出生点" + spawn.position;
-        const reserved = snapshot.reservedSeats?.some((item) => item.seat === seat);
         choose.disabled = busy || !!member || !!reserved;
         choose.onclick = () => Net.request("switch_seat", { seat });
         spawnCell.append(choose);
@@ -676,7 +683,7 @@ const RoomPanel = (() => {
                 (member.id === snapshot.hostId || member.ready ? "is-ready" : "not-ready")
               : "muted"),
           !member
-            ? "—"
+            ? reserved ? "席位保留（60秒内）" : "—"
             : !member.connected
               ? "离线 · 保留席位"
               : snapshot.started

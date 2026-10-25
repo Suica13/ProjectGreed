@@ -482,7 +482,7 @@
       "name": "HimalayaClass Turret CN",
       "type": "shell",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 75.0,
       "en": 160.0,
       "sourceName": "HimalayaClass_Turret_CN",
