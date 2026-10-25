@@ -40,6 +40,8 @@ function runtime() {
   }
   const context = {
     ART,
+    fetch,
+    setTimeout,
     atob,
     Uint8Array,
     window: { AudioContext, addEventListener() {} },

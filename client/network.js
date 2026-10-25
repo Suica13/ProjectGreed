@@ -6,6 +6,7 @@ const Net = (() => {
   // active 表示已加入遭遇战房间（联机或离线），awaiting 表示等待某个请求的确认。
   const n = {
     active: false,
+    pingMs: null,
     local: false,
     socket: null,
     seat: null,
@@ -27,7 +28,8 @@ const Net = (() => {
     byId("networkStatus").textContent = t;
     byId("netBadge").textContent = t;
   };
-  let connectionTimer = null;
+  let connectionTimer = null,
+    pingStarted = null;
   const disconnectDialog = byId("disconnectDialog");
   function showDisconnect(connecting = false) {
     byId("disconnectStatus").textContent = connecting
@@ -101,11 +103,13 @@ const Net = (() => {
         n.seat !== null &&
         Rules.seatTeam(n.seat) === game.team &&
         !n.snapshot?.turnDone?.[n.seat] &&
-        !n.awaiting)
+        !n.awaiting &&
+        !n.snapshot?.returnCountdown)
     );
   }
   // 所有游戏动作从这里发送，自动附带唯一请求 ID 和当前版本号。
   function request(action, fields = {}) {
+    if (n.snapshot?.returnCountdown && !["sync", "return_room"].includes(action)) return;
     if (!n.active || n.socket?.readyState !== WebSocket.OPEN) {
       note("尚未连接服务端");
       return;
@@ -145,6 +149,7 @@ const Net = (() => {
     }, 8000);
   }
   function leave({ notify = true, forget = true } = {}) {
+    window.BattlePrompts?.reset();
     closeDisconnect();
     MatchResults.reset();
     CombatPlayback.reset();
@@ -167,6 +172,7 @@ const Net = (() => {
     n.socket?.close();
     n.socket = null;
     n.active = false;
+    n.pingMs = pingStarted = null;
     n.local = false;
     n.connecting = false;
     n.awaiting = null;
@@ -183,7 +189,13 @@ const Net = (() => {
   // 两种传输都将裁定后的消息交给同一套快照恢复逻辑。
   function receive(msg, socket, { url = n.serverURL, room = n.room, mode = "create" } = {}) {
     if (n.socket !== socket) return;
-    if (msg.type === "joined") {
+    if (msg.type === "pong") {
+      if (pingStarted !== null) {
+        n.pingMs = Math.max(0, Math.round(performance.now() - pingStarted));
+        pingStarted = null;
+        window.BattleHUD?.refreshRoomStatus();
+      }
+    } else if (msg.type === "joined") {
       n.seat = msg.seat;
       n.memberId = msg.memberId;
       n.token = msg.token;
@@ -192,6 +204,7 @@ const Net = (() => {
         storage.set(key(url, room), msg.token);
         storage.set("slg-last", JSON.stringify({ url, room }));
       }
+      keepAlive();
       byId("start").hidden = true;
       status("房间 " + room + " · " + roleName());
     } else if (msg.type === "chat") {
@@ -276,6 +289,7 @@ const Net = (() => {
     n.socket?.close();
     n.manual = false;
     n.active = true;
+    n.pingMs = pingStarted = null;
     n.local = false;
     n.memberId = null;
     n.started = false;
@@ -337,6 +351,7 @@ const Net = (() => {
       clearTimeout(connectionTimer);
       n.awaiting = null;
       n.connecting = false;
+      n.pingMs = pingStarted = null;
       if (n.manual || !n.token) {
         leave({ notify: false, forget: false });
         phase = "start";
@@ -378,6 +393,17 @@ const Net = (() => {
     log = s.log.slice();
 
     pending = s.pending;
+    window.BattlePrompts?.receive(s);
+    if (s.returnCountdown) {
+      TurnFlow.reset();
+      if (battleView?.mapBattle) MapCombat.suspend(battleView);
+      WeaponAudio.stopBattle();
+      phase = "returning";
+      if (pageView === "menu") setPageView(s.phase === "assembly" ? "room" : "game");
+      update();
+      n.applied = true;
+      return;
+    }
     if (s.phase === "assembly") {
       phase = "assembly";
       battleView = null;
@@ -402,7 +428,7 @@ const Net = (() => {
       }
       phase = "waiting";
       battleView = null;
-      if (pageView !== "formation") setPageView("room");
+      if (wasStarted || pageView !== "formation") setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
       update();
@@ -479,6 +505,8 @@ const Net = (() => {
       if (n.seen.size > 128) n.seen.delete(n.seen.values().next().value);
       if (event.type === "move" && s.phase === "idle" && online && n.applied) {
         PlanningUI.move(event);
+        // 只结束当前所选单位的移动选点，不打断队友或其他单位的操作。
+        if (selected === event.unitId && mode === "move") mode = "select";
       }
       if (event.type === "skill" && s.phase === "idle" && online && n.applied)
         SkillControls.applied(event);
@@ -508,7 +536,11 @@ const Net = (() => {
   function keepAlive(sync = false) {
     if (!n.active || n.local || n.manual || !n.memberId || n.socket?.readyState !== WebSocket.OPEN)
       return;
-    n.socket.send(JSON.stringify({ type: "ping" }));
+    // 复用现有保活测量往返延迟；不新增轮询或游戏动作请求。
+    if (pingStarted === null || performance.now() - pingStarted >= 20000) {
+      pingStarted = performance.now();
+      n.socket.send(JSON.stringify({ type: "ping" }));
+    }
     if (sync)
       n.socket.send(
         JSON.stringify({

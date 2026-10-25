@@ -540,6 +540,18 @@ const Formation = (() => {
       }
     },
     name: () => squads[index].name,
+    presetIndex: () => index,
+    selectPreset: (value) => {
+      if (!Number.isInteger(value) || value < 0 || value >= squads.length) return false;
+      index = value;
+      persist();
+      return true;
+    },
+    presets: () =>
+      squads.map((squad) => ({
+        name: squad.name,
+        units: Rules.validateFormation(squad.units, Infinity),
+      })),
   };
 })();
 

@@ -1,0 +1,1222 @@
+/* 地图优先的战斗 HUD。限定在战斗场景内，房间与编组不受影响。 */
+#gameScene {
+  --hud-dock: 158px;
+  --hud-planner: 0px;
+  --hud-action: 0px;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#gameScene[hidden],
+#gameScene [hidden] {
+  display: none !important;
+}
+#gameScene[data-console-size="collapsed"] {
+  --hud-dock: 42px;
+}
+#gameScene[data-console-size="expanded"] {
+  --hud-dock: min(341px, 46dvh);
+}
+#gameScene > header {
+  height: 54px;
+  min-height: 54px;
+  padding: 7px 18px;
+  gap: 12px;
+  border-bottom: 1px solid #33424d;
+  background: #111b24;
+}
+#gameScene .brand {
+  gap: 9px;
+}
+#gameScene .brand .logo {
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  border-radius: 0;
+}
+#gameScene .brand h1 {
+  font-size: 17px;
+  line-height: 1.1;
+  margin: 0;
+}
+#gameScene .brand .eyebrow {
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+#gameScene .header-buttons {
+  gap: 7px;
+}
+#gameScene #openClientSettings {
+  position: static;
+  z-index: auto;
+}
+#gameScene .header-buttons button,
+#gameScene .status-tag {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+#gameScene button {
+  border-radius: 2px;
+  box-shadow: none;
+}
+#gameScene .game-layout {
+  position: relative;
+  display: block;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  overflow: hidden;
+}
+#gameScene main.center {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  min-width: 0;
+}
+#gameScene #mapWrap {
+  position: absolute;
+  inset: 0 0 calc(var(--hud-dock) + var(--hud-planner) + var(--hud-action));
+  height: auto;
+  min-height: 0;
+  width: 100%;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  background: #101921;
+}
+#gameScene #map {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+#gameScene .phase-row {
+  position: absolute;
+  z-index: 3;
+  left: 16px;
+  top: 12px;
+  max-width: min(490px, calc(100% - 380px));
+  margin: 0;
+  padding: 9px 12px;
+  background: #111d27ed;
+  border-left: 3px solid #71c8e3;
+  pointer-events: none;
+}
+#gameScene .phase-row .eyebrow {
+  display: none;
+}
+#gameScene .phase-row h2 {
+  font-size: 16px;
+  margin: 0;
+}
+#gameScene .phase-row p {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: #a4b5bf;
+}
+#gameScene .phase-heading {
+  gap: 10px;
+  align-items: center;
+}
+#gameScene #deploymentPanel {
+  font-size: 11px;
+  margin: 0;
+}
+#gameScene #deploymentPanel p {
+  max-width: 360px;
+}
+#gameScene .map-camera-controls {
+  top: 12px;
+  right: 12px;
+  max-width: calc(100% - 24px);
+  padding: 5px 7px;
+  border: 1px solid #3b4b57;
+  border-radius: 2px;
+  background: #111d27ed;
+  font-size: 11px;
+}
+#gameScene .map-environment {
+  top: auto;
+  left: 16px;
+  bottom: 14px;
+  border-radius: 0;
+  font-size: 11px;
+}
+#gameScene .map-label {
+  display: none;
+}
+#gameScene .hover-info {
+  right: 16px;
+  bottom: 14px;
+  font-size: 11px;
+  background: #111d27ed;
+  padding: 5px 8px;
+  border-radius: 0;
+}
+#gameScene .left,
+#gameScene .right {
+  position: absolute;
+  z-index: 8;
+  top: 64px;
+  bottom: calc(var(--hud-dock) + 12px);
+  width: 350px;
+  padding: 0;
+  margin: 0;
+  min-height: 0;
+  max-height: none;
+  overflow: hidden;
+  border: 1px solid #445462;
+  border-top: 2px solid #7cc6dd;
+  background: #14212bf5;
+  box-shadow: none;
+  border-radius: 2px;
+}
+#gameScene .right {
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+}
+#gameScene .left {
+  left: 12px;
+  width: 256px;
+  display: flex;
+  flex-direction: column;
+}
+#gameScene .left > .section-title,
+#gameScene .left-note {
+  display: none;
+}
+.hud-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border-bottom: 1px solid #334551;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #a9bcc7;
+  text-transform: uppercase;
+}
+.hud-panel-heading button {
+  padding: 1px 8px;
+  font-size: 20px;
+  line-height: 1.1;
+  border: 0;
+  background: transparent;
+  color: #c2d1da;
+}
+#gameScene #unitRoster {
+  display: block;
+  padding: 8px;
+  min-height: 0;
+  max-height: none;
+  flex: 1;
+  overflow-y: auto;
+}
+#gameScene .roster-unit {
+  border-radius: 1px;
+  padding: 7px;
+  margin-top: 4px;
+}
+.hud-unit-tabs {
+  display: flex;
+  border-bottom: 1px solid #384957;
+  padding: 0 10px;
+  gap: 12px;
+}
+#gameScene .hud-unit-tabs button {
+  flex: 1;
+  padding: 9px 4px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #8fa6b7;
+  font-size: 12px;
+}
+#gameScene .hud-unit-tabs button[aria-selected="true"] {
+  color: #b5ebfa;
+  border-color: #82d3ed;
+}
+#gameScene #unitPanel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px;
+  overscroll-behavior: contain;
+}
+#gameScene .unit-card-head {
+  gap: 9px;
+  margin-bottom: 9px;
+}
+#gameScene .unit-card-head img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+#gameScene .unit-card-head strong {
+  font-size: 15px;
+}
+#gameScene .unit-ownership {
+  margin: 0 0 10px;
+  font-size: 11px;
+}
+#gameScene .stats {
+  margin: 12px 0;
+  padding: 0;
+  gap: 6px;
+  font-size: 12px;
+}
+#gameScene .stats > div {
+  padding: 6px 0;
+  border-bottom: 1px solid #ffffff0d;
+}
+#gameScene .rule-box {
+  border-radius: 1px;
+  margin: 8px 0;
+  padding: 8px 9px;
+  font-size: 11px;
+  background: #0e1b2460;
+  border-color: #344550;
+}
+#gameScene .section-title {
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 7px 0;
+}
+#gameScene .weapon,
+#gameScene .target-button {
+  border-radius: 1px;
+  padding: 9px;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#gameScene .weapon-meta {
+  font-size: 11px;
+  line-height: 1.55;
+}
+#gameScene .helper {
+  font-size: 11px;
+}
+.hud-resources {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 13px;
+}
+.hud-resource {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px;
+  font-size: 10px;
+  color: #92a5b5;
+}
+.hud-resource strong {
+  text-align: right;
+  font-weight: 500;
+  color: #d1e2eb;
+  font-variant-numeric: tabular-nums;
+}
+.hud-resource-track {
+  grid-column: 1 / -1;
+  height: 3px;
+  background: #071119;
+}
+.hud-resource-track i {
+  display: block;
+  height: 100%;
+  background: #7dcaaa;
+}
+.hud-resource.en .hud-resource-track i {
+  background: #e7c75f;
+}
+#gameScene .hud-unit-commands {
+  position: absolute;
+  z-index: 9;
+  right: 12px;
+  bottom: calc(var(--hud-dock) + 8px);
+  width: max-content;
+  max-width: calc(100% - 24px);
+  padding: 3px;
+  border: 1px solid #6c8b9d;
+  border-bottom: 2px solid #81d1e9;
+  background: #101c27f5;
+  box-shadow: none;
+  border-radius: 1px;
+}
+#gameScene .hud-unit-commands .actions {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  margin: 0;
+  overflow-x: auto;
+}
+#gameScene .hud-unit-commands button {
+  flex: 0 0 auto;
+  width: auto;
+  white-space: nowrap;
+  text-align: center;
+  padding: 9px 18px;
+  font-size: 12px;
+  border: 0;
+  border-right: 1px solid #ffffff12;
+  background: transparent;
+}
+#gameScene .hud-unit-commands button:hover:not(:disabled),
+#gameScene .hud-unit-commands button:focus-visible {
+  background: #335268;
+}
+#gameScene .hud-unit-commands button:disabled {
+  opacity: 0.32;
+}
+#gameScene .log {
+  position: absolute;
+  z-index: 9;
+  inset: auto 0 0;
+  height: var(--hud-dock);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  border-top: 1px solid #536779;
+  background: #111d27;
+  overflow: hidden;
+}
+#gameScene .log-tabs {
+  flex: 0 0 41px;
+  height: 41px;
+  margin: 0;
+  padding: 0 12px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 5px;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: 1px solid #2c3d4a;
+}
+#gameScene .log-tabs button {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 5px 9px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #a1b6c5;
+  font-size: 11px;
+}
+#gameScene .log-tabs button[aria-selected="true"] {
+  background: #213441;
+  border-color: #81d1e9;
+  color: #d4f4fd;
+}
+.hud-toolbar-divider {
+  height: 14px;
+  border-left: 1px solid #3e5363;
+  margin: 0 6px;
+}
+.hud-selection-summary {
+  min-width: 0;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  color: #728b9e;
+  margin: 0 10px;
+}
+#hudMusicSlot {
+  margin-left: auto;
+}
+#gameScene #hudTurnActions {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+  display: flex;
+  gap: 5px;
+  width: max-content;
+  max-width: calc(100% - 24px);
+}
+#gameScene #hudTurnActions button {
+  background: #b7d6d8;
+  color: #0c202b;
+  border: 0;
+  font-weight: 700;
+  min-width: 200px;
+  padding: 10px 28px;
+}
+#gameScene #confirmDeployment:not(:disabled) {
+  background: #78c989;
+  color: #0c2517;
+}
+#gameScene #hudTurnActions button.action-attention:not(:disabled),
+#roomFormation.action-attention:not(:disabled) {
+  animation: turn-action-pulse 1.4s ease-in-out infinite;
+}
+@keyframes turn-action-pulse {
+  0%,
+  100% {
+    background-color: #65b87a;
+    color: #092814;
+    box-shadow: 0 0 0 1px #83d998;
+  }
+  50% {
+    background-color: #b2f0b6;
+    color: #092814;
+    box-shadow: 0 0 14px #71d78a88;
+  }
+}
+#gameScene #hudTurnActions button:disabled {
+  background: #243846;
+  color: #647e91;
+}
+#gameScene #log {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  padding: 7px 18px;
+  overflow: auto;
+  font-size: 11px;
+  line-height: 1.7;
+}
+#gameScene #chatPanel {
+  flex: 1;
+  min-height: 0;
+  padding: 7px 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  gap: 4px;
+}
+#gameScene #chatLines {
+  grid-row: 1;
+  min-height: 0;
+  height: auto;
+  padding: 0 4px;
+  overflow: auto;
+  font-size: 11px;
+}
+#gameScene #chatForm {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  align-self: stretch;
+}
+#gameScene #chatForm input,
+#gameScene #chatForm select,
+#gameScene #chatForm button {
+  font-size: 11px;
+  border-radius: 1px;
+  min-height: 32px;
+}
+#gameScene #chatStatus {
+  grid-column: 1;
+  grid-row: 3;
+  padding: 0;
+  margin: 0;
+  font-size: 10px;
+}
+#gameScene[data-console-size="collapsed"] #log,
+#gameScene[data-console-size="collapsed"] #chatPanel {
+  display: none !important;
+}
+#gameScene .legend {
+  position: absolute;
+  z-index: 10;
+  left: 12px;
+  bottom: calc(var(--hud-dock) + 12px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  width: min(350px, calc(100% - 24px));
+  padding: 13px;
+  background: #13232ef5;
+  border: 1px solid #465968;
+  font-size: 11px;
+}
+.battle-hud-active #musicPlayer {
+  position: static;
+  display: flex;
+  flex-wrap: nowrap;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  gap: 3px;
+  max-width: 220px;
+  z-index: auto;
+}
+.battle-hud-active #musicTitle {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 400;
+  color: #7892a5;
+}
+.battle-hud-active #musicStatus {
+  display: none;
+}
+.battle-hud-active .reaction-overlay {
+  inset: 118px 12px calc(156px) 12px;
+}
+.battle-hud-active .response-side {
+  border-radius: 2px;
+  box-shadow: none;
+  background: #14212bf5;
+  border-color: #526a7b;
+}
+.battle-hud-active .response-defender {
+  border-top: 2px solid #c6bd7c;
+}
+@media (max-width: 1100px) {
+  #gameScene .right {
+    width: 310px;
+  }
+  .hud-selection-summary {
+    display: none;
+  }
+  .battle-hud-active #musicTitle {
+    display: none;
+  }
+  #gameScene .phase-row {
+    max-width: calc(100% - 330px);
+  }
+}
+@media (max-width: 700px) {
+  #gameScene {
+    --hud-dock: 165px;
+  }
+  #gameScene > header {
+    padding: 6px 10px;
+    height: 48px;
+    min-height: 48px;
+  }
+  #gameScene .brand .logo,
+  #gameScene .brand .eyebrow,
+  #gameScene #helpBtn {
+    display: none;
+  }
+  #gameScene .brand h1 {
+    font-size: 13px;
+  }
+  #gameScene .header-buttons {
+    gap: 3px;
+  }
+  #gameScene .header-buttons button,
+  #gameScene .status-tag {
+    font-size: 10px;
+    padding: 5px;
+  }
+  #gameScene .phase-row {
+    left: 8px;
+    top: 49px;
+    padding: 6px 8px;
+    max-width: calc(100% - 16px);
+  }
+  #gameScene .phase-row h2 {
+    font-size: 12px;
+  }
+  #gameScene .phase-row p {
+    font-size: 10px;
+  }
+  #gameScene .map-camera-controls {
+    top: 8px;
+    right: 8px;
+    max-width: calc(50% - 68px);
+    padding: 3px;
+    gap: 2px;
+    font-size: 10px;
+  }
+  #gameScene .map-camera-controls button {
+    padding: 4px 6px;
+    font-size: 10px;
+  }
+  #gameScene #mapZoomLabel {
+    min-width: 32px;
+  }
+  #gameScene .right {
+    top: 98px;
+    right: 8px;
+    width: min(302px, calc(100% - 16px));
+    bottom: calc(var(--hud-dock) + 8px);
+  }
+  #gameScene .left {
+    top: 98px;
+    left: 8px;
+    width: min(270px, calc(100% - 16px));
+    bottom: calc(var(--hud-dock) + 8px);
+  }
+  #gameScene .log-tabs {
+    padding: 0 5px;
+    gap: 2px;
+  }
+  #gameScene .log-tabs button {
+    font-size: 10px;
+    padding: 5px;
+  }
+  #gameScene .log-tabs #downloadBattleLog,
+  #gameScene .hud-toolbar-divider,
+  #hudMusicSlot {
+    display: none;
+  }
+  #gameScene #hudTurnActions button {
+    min-width: 120px;
+    font-size: 10px;
+    padding: 9px 14px;
+  }
+  #gameScene #chatPanel {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 4px;
+    padding: 5px 8px;
+  }
+  #gameScene #chatLines {
+    grid-row: 1;
+  }
+  #gameScene #chatForm {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  #gameScene #chatStatus {
+    display: none;
+  }
+  #gameScene .hover-info {
+    display: none;
+  }
+  #gameScene .hud-unit-commands {
+    right: 8px;
+    max-width: calc(100% - 16px);
+  }
+  #gameScene .hud-unit-commands button {
+    padding: 7px 8px;
+    font-size: 11px;
+  }
+  .battle-hud-active .reaction-overlay {
+    inset: 150px 8px 158px;
+    gap: 6px;
+  }
+  .battle-hud-active .response-attacker {
+    width: 112px;
+  }
+  .battle-hud-active .response-defender {
+    width: min(260px, calc(100% - 118px));
+  }
+}
+
+#gameScene #hudUnitPanel {
+  bottom: auto;
+  height: auto;
+  max-height: calc(100% - var(--hud-dock) - 76px);
+}
+#gameScene .hud-unit-commands button[data-unit-command="move"] {
+  order: 1;
+}
+#gameScene .hud-unit-commands button[data-unit-command="attack"] {
+  order: 2;
+}
+#gameScene .hud-unit-commands button[data-unit-command="skills"] {
+  order: 3;
+}
+#gameScene .hud-unit-commands button[data-unit-command="wait"] {
+  order: 4;
+}
+#gameScene .hud-unit-commands button[data-unit-command="cancel"] {
+  order: 5;
+}
+#gameScene .hud-unit-commands button[data-unit-command="cancel"]:disabled {
+  display: none;
+}
+@media (max-width: 700px) {
+  #gameScene #hudUnitPanel {
+    max-height: calc(100% - var(--hud-dock) - 106px);
+  }
+  #gameScene .log-tabs #downloadBattleLog {
+    display: block;
+    font-size: 0;
+  }
+  #gameScene .log-tabs #downloadBattleLog::after {
+    content: "↓";
+    font-size: 13px;
+  }
+}
+
+#gameScene .log-tabs #hudSelectionSummary:empty {
+  display: none;
+}
+@media (max-width: 1100px) {
+  #gameScene .log-tabs #hudSelectionSummary:not(:empty) {
+    display: block;
+    max-width: 85px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.battle-hud-active .reaction-overlay {
+  bottom: calc(var(--hud-dock) + 12px);
+}
+.battle-hud-active .response-defender {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  width: 300px;
+  overflow: hidden;
+}
+.battle-hud-active .hud-response-body {
+  padding: 12px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.battle-hud-active .response-defender #confirmResponse {
+  position: static;
+  flex-shrink: 0;
+  width: auto;
+  margin: 8px 12px 12px;
+  padding: 9px;
+  border-radius: 1px;
+  background: #c8d99b;
+  color: #15242b;
+  border: 0;
+}
+.battle-hud-active .response-defender .counter-list {
+  max-height: clamp(100px, 22vh, 220px);
+}
+@media (max-width: 700px) {
+  .battle-hud-active .reaction-overlay {
+    bottom: calc(var(--hud-dock) + 8px);
+  }
+  .battle-hud-active .response-side {
+    max-height: 100%;
+  }
+  .battle-hud-active .response-defender {
+    width: min(260px, calc(100% - 118px));
+  }
+  .battle-hud-active .hud-response-body {
+    padding: 8px;
+  }
+}
+
+/* Explicit command selection and the right-side weapon-plan editor. */
+#gameScene[data-action-stage="attack-weapons"] {
+  --hud-planner: 0px;
+}
+#gameScene .hud-action-band {
+  position: absolute;
+  z-index: 11;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+}
+#gameScene #hudCancelAction {
+  padding: 7px 20px;
+  white-space: nowrap;
+  border: 1px solid #a87771;
+  color: #f1b7b0;
+  background: #39282a;
+}
+#gameScene .hud-attack-planner {
+  position: absolute;
+  z-index: 9;
+  left: 0;
+  right: 0;
+  bottom: var(--hud-dock);
+  height: var(--hud-planner);
+  padding: 10px 16px;
+  background: #14232d;
+  border-top: 2px solid #86c5da;
+  overflow: hidden;
+}
+#gameScene .hud-attack-editor {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 32%);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px 18px;
+}
+#gameScene .hud-attack-heading {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  min-width: 0;
+}
+#gameScene .hud-attack-heading .rule-box {
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 0;
+  background: #1d3341;
+}
+#gameScene .hud-attack-available {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+#gameScene .hud-attack-planned {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  border-left: 1px solid #415767;
+  padding-left: 16px;
+}
+#gameScene .hud-attack-editor .section-title {
+  margin: 0;
+  padding: 3px 0 7px;
+  font-size: 11px;
+}
+#gameScene .hud-attack-available .weapon-list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: none;
+  grid-template-rows: minmax(0, 1fr);
+  grid-auto-columns: minmax(185px, 1fr);
+  gap: 8px;
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding-bottom: 4px;
+  align-items: stretch;
+}
+#gameScene .hud-attack-available .weapon {
+  margin: 0;
+  text-align: left;
+  padding: 8px 10px;
+  overflow: auto;
+}
+#gameScene .hud-attack-available .weapon-meta {
+  font-size: 11px;
+}
+#gameScene .hud-attack-queue {
+  min-height: 0;
+  overflow: auto;
+  padding-right: 3px;
+}
+#gameScene .hud-attack-queue .actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px solid #ffffff0e;
+}
+#gameScene .hud-attack-queue button {
+  padding: 3px 8px;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+#gameScene .hud-attack-confirm {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+#gameScene .hud-attack-confirm button {
+  flex: 1;
+  padding: 7px 9px;
+  font-size: 12px;
+}
+#gameScene #confirmAttackQueue:not(:disabled) {
+  background: #bbd6b2;
+  color: #10262a;
+  border-color: #bbd6b2;
+}
+#gameScene .hud-terrain-strip {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 24px);
+  padding: 4px 8px 4px 4px;
+  border: 1px solid #3b5261;
+  background: #111d27f0;
+  font-size: 11px;
+  pointer-events: none;
+}
+#gameScene .hud-terrain-strip #mapEnvironment {
+  position: static;
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: 11px;
+  padding: 3px 6px;
+}
+#gameScene .hud-terrain-strip #hoverInfo {
+  position: static;
+  display: block;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background: transparent;
+  font-size: 11px;
+}
+#gameScene #chatForm input {
+  min-width: 0;
+  width: 100%;
+}
+#gameScene #chatStatus:empty {
+  display: none;
+}
+@media (max-width: 700px) {
+  #gameScene[data-action-stage="attack-weapons"] {
+    --hud-planner: 0px;
+  }
+  #gameScene .hud-attack-planner {
+    padding: 8px;
+  }
+  #gameScene .hud-attack-editor {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) minmax(100px, 0.9fr);
+    gap: 6px;
+  }
+  #gameScene .hud-attack-heading {
+    display: block;
+    font-size: 11px;
+  }
+  #gameScene .hud-attack-heading .rule-box {
+    padding: 2px 0;
+    font-size: 11px;
+    background: transparent;
+  }
+  #gameScene .hud-attack-planned {
+    border-left: 0;
+    border-top: 1px solid #415767;
+    padding: 5px 0 0;
+  }
+  #gameScene .hud-attack-available .weapon-list {
+    grid-auto-columns: 180px;
+  }
+  #gameScene .hud-attack-available .weapon-meta {
+    font-size: 10px;
+  }
+  #gameScene #hudCancelAction {
+    padding: 6px 14px;
+  }
+  #gameScene .hud-terrain-strip {
+    left: 8px;
+    bottom: 8px;
+    max-width: calc(100% - 16px);
+    font-size: 10px;
+  }
+  #gameScene .hud-terrain-strip #hoverInfo {
+    font-size: 10px;
+  }
+}
+
+#gameScene #chatForm .chat-channel-select {
+  width: 82px;
+  max-width: none;
+}
+
+#gameScene[data-unit-commands="true"] #hudUnitPanel {
+  max-height: calc(100% - var(--hud-dock) - 124px);
+}
+@media (max-width: 700px) {
+  #gameScene[data-unit-commands="true"] #hudUnitPanel {
+    max-height: calc(100% - var(--hud-dock) - 154px);
+  }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  #gameScene {
+    --hud-dock: 106px;
+  }
+  #gameScene > header {
+    min-height: 42px;
+    height: 42px;
+    padding-block: 4px;
+  }
+  #gameScene .phase-row {
+    padding: 5px 8px;
+  }
+  #gameScene .hud-unit-commands button {
+    padding: 7px 13px;
+  }
+  #gameScene[data-action-stage="attack-weapons"] {
+    --hud-planner: 0px;
+  }
+  #gameScene .hud-attack-editor {
+    gap: 5px 12px;
+  }
+}
+.mobile-landscape-tip {
+  position: fixed;
+  inset: 0;
+  z-index: 1700;
+  display: grid;
+  place-items: center;
+  background: #0c1721;
+  padding: 24px;
+}
+.mobile-landscape-tip[hidden] {
+  display: none;
+}
+.mobile-landscape-card {
+  width: min(390px, 100%);
+  text-align: center;
+  padding: 28px 20px;
+  color: #d9e8ef;
+}
+.mobile-landscape-card h2 {
+  font-size: 22px;
+  margin: 22px 0 12px;
+}
+.mobile-landscape-card p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #9eb5c5;
+}
+.mobile-landscape-card button {
+  margin-top: 22px;
+  min-width: 180px;
+  border-radius: 2px;
+  padding: 11px 22px;
+}
+.mobile-landscape-device {
+  position: relative;
+  width: 88px;
+  height: 49px;
+  border: 2px solid #82c6dc;
+  border-radius: 6px;
+  margin: auto;
+}
+.mobile-landscape-device::after {
+  content: "";
+  position: absolute;
+  right: 7px;
+  top: 17px;
+  width: 5px;
+  height: 10px;
+  border-radius: 2px;
+  background: #82c6dc;
+}
+
+/* 资料默认收起；攻击编排借用右侧栏，武器和计划分别滚动。 */
+#gameScene .hud-unit-commands button[data-unit-command="info"] {
+  order: 0;
+}
+#gameScene .hud-unit-commands button[aria-pressed="true"] {
+  background: #375665;
+  color: #d9f5ff;
+}
+#gameScene #hudUnitPanel[data-planning="true"] {
+  bottom: calc(var(--hud-dock) + 64px);
+  height: auto;
+  max-height: none;
+}
+#gameScene #hudUnitPanel .hud-attack-planner {
+  position: static;
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  padding: 10px;
+  border: 0;
+}
+#gameScene #hudUnitPanel .hud-attack-editor {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(70px, 1fr) minmax(110px, 1fr);
+  gap: 8px;
+}
+#gameScene #hudUnitPanel .hud-attack-heading {
+  display: block;
+}
+#gameScene #hudUnitPanel .hud-attack-heading .rule-box {
+  padding: 4px 0;
+}
+#gameScene #hudUnitPanel .hud-attack-available .weapon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+#gameScene #hudUnitPanel .hud-attack-available .weapon {
+  flex: 0 0 auto;
+  overflow: visible;
+}
+#gameScene #hudUnitPanel .hud-attack-planned {
+  border-left: 0;
+  border-top: 1px solid #415767;
+  padding: 6px 0 0;
+}
+
+/* 房间信息与导航按钮处于同一行，中间区域随屏幕宽度伸缩。 */
+#gameScene > header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+#gameScene .hud-room-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-width: 0;
+  color: #9eb6c5;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+#gameScene #hudRoomName {
+  min-width: 0;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#gameScene .hud-room-status .status-tag {
+  display: block;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+#gameScene #hudPing,
+#gameScene .hud-room-status .status-tag {
+  flex-shrink: 0;
+}
+#gameScene #hudPlayerCount {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 700px) {
+  #gameScene > header {
+    gap: 8px;
+  }
+  #gameScene .hud-room-status {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2px 6px;
+    font-size: 9px;
+  }
+  #gameScene .hud-room-status > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

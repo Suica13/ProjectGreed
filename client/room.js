@@ -246,6 +246,42 @@ const RoomPanel = (() => {
         label.append(select);
         panel.append(label);
       }
+      const presets = Formation.presets(),
+        presetLabel = element("label", "", "编组预设"),
+        presetSelect = element("select");
+      presetSelect.id = "ai-formation-" + player.seat;
+      presetSelect.setAttribute("aria-label", "编组预设 AI " + (player.seat + 1));
+      presetSelect.add(new Option(I18n.text("随机编组"), "random"));
+      presets.forEach((preset, index) => {
+        const option = new Option(preset.name, String(index));
+        option.setAttribute("data-i18n-ignore", "");
+        presetSelect.add(option);
+      });
+      presetSelect.value = "random";
+      if (player.formationPreset) {
+        const index = presets.findIndex(
+          (preset) => JSON.stringify(preset) === JSON.stringify(player.formationPreset),
+        );
+        if (index >= 0) presetSelect.value = String(index);
+        else {
+          const option = new Option(player.formationPreset.name, "room");
+          option.setAttribute("data-i18n-ignore", "");
+          presetSelect.add(option);
+          presetSelect.value = "room";
+        }
+      }
+      presetSelect.disabled = locked;
+      presetSelect.onchange = () => {
+        if (presetSelect.value === "room") return;
+        Net.request("configure_ai", {
+          seat: player.seat,
+          config,
+          formationPreset:
+            presetSelect.value === "random" ? null : presets[Number(presetSelect.value)],
+        });
+      };
+      presetLabel.append(presetSelect);
+      panel.append(presetLabel);
       panel.append(
         element("p", "muted", "编组COST: " + Rules.aiBudget(snapshot.settings.costLimit, config)),
         element(
@@ -253,7 +289,13 @@ const RoomPanel = (() => {
           "muted",
           `单位数量上限: ${Rules.aiUnitLimit(snapshot.settings.unitLimit, config)} 台（房间上限 ${snapshot.settings.unitLimit} 台 × ${config.countPercent}%）`,
         ),
-        element("p", "muted", "优先填满单位槽位，遵守房间与所在队伍的标签限制。"),
+        element(
+          "p",
+          "muted",
+          player.formationPreset
+            ? "使用预设顺序，不随机补齐。超出数量上限的末尾单位不使用；COST与禁用标签仍生效。"
+            : "优先填满单位槽位，遵守房间与所在队伍的标签限制。",
+        ),
       );
       content.append(panel);
     } else {
@@ -405,6 +447,8 @@ const RoomPanel = (() => {
       snapshot.you?.id === snapshot.hostId &&
       snapshot.members.filter((player) => player.seat !== null).every((player) => player.bot);
     byId("confirmFinalFormation").hidden = !own && !allBots;
+    byId("returnAssemblyToRoom").hidden = snapshot.you?.id !== snapshot.hostId;
+    byId("returnAssemblyToRoom").disabled = busy || !!snapshot.returnCountdown;
     byId("editFinalFormation").disabled = busy;
     byId("confirmFinalFormation").disabled =
       busy ||
@@ -442,44 +486,40 @@ const RoomPanel = (() => {
     Chat.refreshNames(snapshot);
     renderSettings(snapshot, busy);
     byId("roomFormation").disabled = snapshot.started || busy;
-    const squadName = element("span", "", Formation.name());
-    squadName.setAttribute("data-i18n-ignore", "");
-    let cost = 0,
-      disabledCount = 0,
+    const formationSelect = byId("roomFormationSelect");
+    formationSelect.replaceChildren();
+    const presets = Formation.presets();
+    presets.forEach((preset, index) => {
+      const option = new Option(I18n.text("编组") + ": " + preset.name, String(index));
+      option.setAttribute("data-i18n-ignore", "");
+      formationSelect.add(option);
+    });
+    formationSelect.value = String(Formation.presetIndex());
+    formationSelect.disabled = snapshot.started || busy;
+    let disabledCount = 0,
       valid = true;
     try {
       const units = Formation.current();
-      cost = units.reduce((sum, e) => sum + UnitModels[e.unitId + "__" + e.kitId].cost, 0);
       Rules.validateFormation(units, Infinity, snapshot.settings.unitLimit);
       const plan = Rules.planFormation(
         units,
         limit,
         Rules.formationRestrictions(snapshot.settings, self.seat),
+        snapshot.settings.unitLimit,
       );
       valid = !!plan.deployable.length;
       disabledCount = plan.disabled.length;
     } catch {
       valid = false;
     }
-    byId("roomFormationSummary").replaceChildren(
-      element("span", "", "出战编组："),
-      squadName,
-      element(
-        "span",
-        "",
-        " · 编组COST: " +
-          cost +
-          " / " +
-          limit +
-          " · 单位COST上限: " +
-          snapshot.settings.unitCostLimit,
-      ),
+    const warning = byId("roomFormationWarning");
+    warning.textContent = !valid || disabledCount ? "不符合编组规则" : "";
+    warning.hidden = valid && !disabledCount;
+    byId("roomFormation").classList.toggle(
+      "action-attention",
+      !snapshot.started && (!valid || disabledCount > 0),
     );
-    byId("roomFormationWarning").textContent = !valid
-      ? "编组无效，请调整编组。"
-      : disabledCount
-        ? "部分单位超限或不被允许，进入对局时无法出击。"
-        : "";
+    formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local ? "离线遭遇战房间" : "房间 " + snapshot.room;
     byId("roomStatus").textContent = snapshot.started
       ? snapshot.connected.every(Boolean)
@@ -555,7 +595,7 @@ const RoomPanel = (() => {
         const choose = element(
           "button",
           "choose-spawn",
-          "出生点" + spawn.position + " · " + String.fromCharCode(65 + spawn.x) + (spawn.y + 1),
+          "出生点" + spawn.position + " · " + Rules.columnLabel(spawn.x) + (spawn.y + 1),
         );
         choose.id = "chooseSeat" + seat;
         choose.title = self.seat === seat ? "当前出生点" : "选择出生点" + spawn.position;
@@ -650,14 +690,26 @@ const RoomPanel = (() => {
   byId("joinTeam1").onclick = () => joinTeam(0);
   byId("joinTeam2").onclick = () => joinTeam(1);
   byId("becomeSpectator").onclick = () => Net.request("switch_seat", { seat: null });
-  byId("returnAllToRoom").onclick = () => {
-    const snapshot = Net.snapshot;
-    if (!snapshot?.started || snapshot.you?.id !== snapshot.hostId || Net.awaiting) return;
-    Net.request("return_room", { matchId: snapshot.matchId });
-  };
+  byId("returnAllToRoom").onclick = () => BattlePrompts.requestReturn();
+  byId("returnAssemblyToRoom").onclick = () => BattlePrompts.requestReturn();
   byId("toggleReady").onclick = () => {
     const self = Net.snapshot?.members.find((member) => member.id === Net.memberId);
     Net.request("set_ready", { ready: !self?.ready, formation: Formation.current() });
+  };
+  byId("roomFormationSelect").onchange = () => {
+    const snapshot = Net.snapshot;
+    if (!snapshot || snapshot.started || Net.awaiting) return;
+    if (!Formation.selectPreset(Number(byId("roomFormationSelect").value))) return;
+    const units = Formation.current();
+    if (snapshot.you?.seat !== null) {
+      try {
+        Rules.validateFormation(units, Infinity, snapshot.settings.unitLimit);
+      } catch {
+        render(snapshot);
+        return;
+      }
+      Net.request("update_formation", { formation: units });
+    } else render(snapshot);
   };
   byId("startRoomGame").onclick = () => {
     const snapshot = Net.snapshot;

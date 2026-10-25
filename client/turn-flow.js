@@ -1,4 +1,4 @@
-/* 离线自动回合与回合交接演出。联机计时在 server.js，快照只触发一次演出。 */
+/* 离线 AI 自动回合与回合交接演出。人类玩家始终手动结束行动。 */
 const TurnFlow = (() => {
   let timer = null,
     automaticTurn = null,
@@ -20,6 +20,7 @@ const TurnFlow = (() => {
   function refreshAutoEnd() {
     if (
       Net.active ||
+      !isAI() ||
       window.GamePreview?.active ||
       window.isLayoutPreview ||
       pageView !== "game" ||
@@ -36,7 +37,14 @@ const TurnFlow = (() => {
     timer = setTimeout(() => {
       const valid = automaticTurn?.game === game && automaticTurn.round === game.round;
       cancelAutoEnd();
-      if (valid && pageView === "game" && !Net.active && !isBusy() && !Rules.hasActions(game))
+      if (
+        valid &&
+        pageView === "game" &&
+        !Net.active &&
+        isAI() &&
+        !isBusy() &&
+        !Rules.hasActions(game)
+      )
         endTurn();
     }, 1000);
   }

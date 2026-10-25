@@ -103,8 +103,10 @@ const SpriteRenderer = (() => {
       ART.models[model].weapons.find((w) => w.id === variables.heldWeapon)?.displayIndex ??
       0;
     variables.brokenParts = brokenParts;
-    variables.boosting = models[model].presentation.movement === "boost";
-    variables.sustainedThrust = environment === "space" || ART.models[model].movementType === "air";
+    const thrusters = ART.models[model].presentation.thrusters !== false;
+    variables.boosting = thrusters && models[model].presentation.movement === "boost";
+    variables.sustainedThrust =
+      thrusters && (environment === "space" || ART.models[model].movementType === "air");
     variables.thrustActive =
       (moving && variables.boosting) || (ART.models[model].ship && variables.sustainedThrust);
     return models[model].decals.filter((layer) => visible(layer, variables, clip, at));

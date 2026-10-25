@@ -19,7 +19,7 @@ const MatchResults = (() => {
     const host = Net.active && Net.snapshot?.hostId === Net.memberId;
     byId("playAgain").textContent = Net.active
       ? host
-        ? "立即返回房间（全员）"
+        ? "返回房间（全员）"
         : "等待房主或倒计时返回"
       : "立即返回主菜单";
     byId("playAgain").disabled =
@@ -53,8 +53,7 @@ const MatchResults = (() => {
       openMenu();
       return;
     }
-    if (Net.snapshot?.hostId === Net.memberId && !Net.awaiting)
-      Net.request("return_room", { matchId: Net.snapshot.matchId });
+    BattlePrompts.requestReturn();
   };
   return { reset, show, render };
 })();

@@ -55,18 +55,38 @@ const WeaponAudio = (() => {
       stopNodes("tail");
     }
   }
+  async function loadSounds() {
+    // 不同单位复用了同一份 OGG；按素材内容解码一次，所有逻辑 ID 共用缓冲。
+    const groups = new Map();
+    for (const [key, source] of Object.entries(ART.sounds)) {
+      if (!groups.has(source)) groups.set(source, []);
+      groups.get(source).push(key);
+    }
+    const entries = [...groups];
+    // 控制解码并发，并在批次间交还主线程，避免首次点击阻塞网络消息。
+    for (let i = 0; i < entries.length; i += 2) {
+      await Promise.all(
+        entries.slice(i, i + 2).map(async ([source, keys]) => {
+          try {
+            // data URL 在浏览器内部读取，不访问服务器，也不在 JS 中逐字节转换。
+            const response = await fetch(source);
+            const buffer = await context.decodeAudioData(await response.arrayBuffer());
+            for (const key of keys) buffers.set(key, buffer);
+          } catch {
+            // 单份损坏素材不妨碍其余音效初始化。
+          }
+        }),
+      );
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+  }
   function unlock() {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return Promise.resolve();
       context ||= new AudioContext();
       if (context.state === "suspended") context.resume().catch(() => {});
-      loading ||= Promise.all(
-        Object.entries(ART.sounds).map(async ([key, source]) => {
-          const bytes = Uint8Array.from(atob(source.split(",")[1]), (c) => c.charCodeAt(0));
-          buffers.set(key, await context.decodeAudioData(bytes.buffer));
-        }),
-      ).catch(() => {});
+      loading ||= loadSounds().catch(() => {});
       return loading;
     } catch {
       return Promise.resolve();

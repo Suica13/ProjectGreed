@@ -184,6 +184,21 @@ const AttackControls = (() => {
         Rules.actionCost(w) <= Rules.actionPoints(unit) + (unit.plan?.actionCost ?? 0),
     );
   }
+  function start(unit) {
+    if (
+      !unit ||
+      unit.team !== game.team ||
+      (unit.acted && !unit.plan) ||
+      isBusy() ||
+      isAI() ||
+      (Net.active && (!Net.owns(unit) || !Net.canAct()))
+    )
+      return;
+    reset();
+    mode = "attack-target";
+    weaponId = null;
+    update();
+  }
   function choose(unit, target, existing = false) {
     if (!canTarget(unit, target)) return false;
     current = {
@@ -205,6 +220,21 @@ const AttackControls = (() => {
       target = plan && getUnit(plan.targetId);
     if (!target || target.hp <= 0) {
       if (plan) reset();
+      if (mode !== "attack-target") {
+        const startButton = element("button", "", "选择攻击目标");
+        startButton.id = "startAttackTarget";
+        startButton.disabled = !canCommand || !game.units.some((enemy) => canTarget(unit, enemy));
+        startButton.onclick = () => start(unit);
+        panel.append(startButton);
+        const catalog = element("div", "weapon-list");
+        for (const weapon of ordinary(unit)) {
+          const info = element("div", "weapon");
+          info.innerHTML = htmlWeapon(weapon, unit);
+          catalog.append(info);
+        }
+        panel.append(catalog);
+        return;
+      }
       panel.append(element("p", "helper", "先选择攻击目标，再按顺序加入武器。"));
       for (const enemy of game.units.filter((t) => canTarget(unit, t))) {
         const b = element(
@@ -234,14 +264,25 @@ const AttackControls = (() => {
     const cost = queue.reduce((n, w) => n + Rules.actionCost(w), 0),
       energy = queue.reduce((n, w) => n + Rules.weaponStats(w, unit).en, 0);
     const budget = Rules.actionPoints(unit) + (unit.plan?.actionCost ?? 0);
-    panel.append(element("strong", "", "目标：" + unitName(target)));
+    const editor = element("div", "hud-attack-editor");
+    editor.id = "attackEditor";
+    panel.append(editor);
+    const heading = element("div", "hud-attack-heading"),
+      available = element("section", "hud-attack-available"),
+      planned = element("section", "hud-attack-planned"),
+      queueList = element("div", "hud-attack-queue");
+    editor.append(heading, available, planned);
+    heading.append(element("strong", "", "目标：" + unitName(target)));
+    available.append(element("div", "section-title", "可用武器"));
+    planned.append(element("div", "section-title", "当前攻击计划"), queueList);
+    if (!queue.length) queueList.append(element("p", "helper", "尚未添加武器"));
     const summary = element(
       "div",
       "rule-box",
       `行动点 ${budget - cost}/${Rules.actionBudget(unit)} · 序列消耗 ${cost} AP · EN ${energy}/${unit.en}`,
     );
     summary.id = "attackQueueBudget";
-    panel.append(summary);
+    heading.append(summary);
     queue.forEach((w, index) => {
       const row = element("div", "actions");
       row.append(element("span", "", `${index + 1}. ${w.name} · ${Rules.actionCost(w)} AP`));
@@ -253,7 +294,7 @@ const AttackControls = (() => {
         update();
       };
       row.append(remove);
-      panel.append(row);
+      queueList.append(row);
     });
     const list = element("div", "weapon-list");
     for (const weapon of ordinary(unit)) {
@@ -274,7 +315,7 @@ const AttackControls = (() => {
       };
       list.append(b);
     }
-    panel.append(list);
+    available.append(list);
     const confirm = element("button", "", "确认攻击计划");
     confirm.id = "confirmAttackQueue";
     confirm.disabled = !canCommand || !queue.length;
@@ -300,10 +341,12 @@ const AttackControls = (() => {
     change.disabled = !canCommand;
     change.onclick = () => {
       reset();
-      mode = "select";
+      mode = "attack-target";
       update();
     };
-    panel.append(confirm, change);
+    const buttons = element("div", "hud-attack-confirm");
+    buttons.append(confirm, change);
+    planned.append(buttons);
   }
-  return { reset, draft, canTarget, choose, render };
+  return { reset, draft, canTarget, start, choose, render };
 })();

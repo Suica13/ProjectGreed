@@ -62,7 +62,7 @@ test("four players choose spawn seats, room budget gates readiness, names and ch
     await expect(guest.locator("#roomMapSelect")).toBeDisabled();
     await expect(guest.locator("#roomCostLimit")).toBeDisabled();
     await expect(host.locator("#toggleReady")).toBeHidden();
-    await expect(host.locator("#roomFormationWarning")).toContainText("超限");
+    await expect(host.locator("#roomFormationWarning")).toContainText("不符合编组规则");
     await expect(ally.locator("#chooseSeat3")).toBeDisabled();
     await ally.locator("#becomeSpectator").click();
     await joined(ally);

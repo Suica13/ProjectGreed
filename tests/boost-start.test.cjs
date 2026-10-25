@@ -22,6 +22,10 @@ test("reverse thrust stays active in space and flight; ships retain native engin
       .decals.find((l) =>
         unit.ship ? l.visibleWhen?.thrustActive : l.visibleWhen?.sustainedThrust,
       );
+    if (unit.presentation.thrusters === false) {
+      assert.equal(boost, undefined, id);
+      continue;
+    }
     if (unit.ship && !boost) continue;
     assert.ok(boost, id);
     assert.ok(layers(id, false, "space").includes(boost.name), id);
@@ -39,4 +43,14 @@ test("ground booster units still show loops on movement, and start bursts have n
       fs.readFileSync("client/" + f, "utf8"),
       /SpriteEffects\.boostStart|MovementEffects/,
     );
+});
+
+test("helicopters have no jet decals while stationary, moving or dodging in either environment", () => {
+  for (const id of ["EF_Heli", "ZN_Heli"])
+    for (const [model, unit] of Object.entries(ART.models).filter(([, m]) => m.prefabId === id)) {
+      assert.equal(unit.presentation.thrusters, false, id);
+      for (const environment of ["ground", "space"])
+        for (const moving of [false, true])
+          assert.ok(!layers(model, moving, environment).some((name) => /boost/i.test(name)), model);
+    }
 });

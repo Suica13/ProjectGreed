@@ -13,6 +13,7 @@ class Client {
     this.joined = null;
     this.playbackAcks = new Set();
     this.autoPlayback = true;
+    this.autoReturn = true;
     this.ws.on("message", (data) => {
       const m = JSON.parse(data);
       this.frames.push(m);
@@ -104,6 +105,13 @@ class Client {
         (m.type === "error" && m.id === (override.id || id)),
       from,
     );
+    if (
+      this.autoReturn &&
+      action === "return_room" &&
+      result.type === "state" &&
+      result.returnCountdown
+    )
+      return this.latest((state) => !state.started);
     if (this.autoPlayback && result.type === "state" && result.phase === "playback")
       return this.latest((state) => state.phase !== "playback");
     return result;
@@ -175,7 +183,7 @@ test("public lobby lists safe room summaries and tracks joins, disconnects and e
   }
 });
 async function setup(t, options = {}) {
-  let app = createServer({ port: 0, host: "127.0.0.1", ...options }),
+  let app = createServer({ port: 0, host: "127.0.0.1", roomReturnMs: 40, ...options }),
     address = await app.listen(),
     url = "ws://127.0.0.1:" + address.port + "/ws",
     clients = [];
@@ -480,44 +488,31 @@ test("authoritative rooms, combat, duplicate protection, phases, reconnect", asy
   assert.deepEqual(resumed.state.combats, result.combats);
   assert.equal((await resumed.act("wait", { unitId: "1-0" })).type, "state");
 });
-test("server automatically ends an exhausted turn after one second, cancels on undo, and pauses on disconnect", async (t) => {
+test("exhausted human turns wait for manual end, including after reconnect", async (t) => {
   const { client, app } = await setup(t),
     blue = await client(),
     red = await client();
   await blue.hello("create", "AUTOTURN");
   await red.hello("join", "AUTOTURN");
   await readyMatch(blue, red);
-  await blue.act("wait", { unitId: "0-1" });
-  await blue.act("wait", { unitId: "0-2" });
-  await blue.act("move", { unitId: "0-0", x: 1, y: 4 });
-  await new Promise((r) => setTimeout(r, 400));
+  for (const unitId of ["0-0", "0-1", "0-2"]) await blue.act("wait", { unitId });
+  assert.equal(G.hasActions(app.rooms.get("AUTOTURN").game, 0), false);
+  await new Promise((resolve) => setTimeout(resolve, 1200));
   assert.equal(blue.state.game.team, 0);
-  await blue.act("undo", { unitId: "0-0" });
-  await new Promise((r) => setTimeout(r, 750));
-  assert.equal(blue.state.game.team, 0);
-  const started = Date.now();
-  await blue.act("move", { unitId: "0-0", x: 1, y: 4 });
-  const next = await blue.latest((s) => s.game.team === 1);
-  assert.ok(Date.now() - started >= 1000);
-  assert.equal(next.game.round, 2);
-  assert.equal(next.lastEvent.automatic, true);
-  assert.equal(next.lastEvent.fromTeam, 0);
+  assert.equal(blue.state.turnDone[0], false);
+  assert.equal((await blue.act("end_turn")).game.team, 1);
   await red.latest((s) => s.game.team === 1);
   for (const unitId of ["1-0", "1-1", "1-2"]) await red.act("wait", { unitId });
   const token = blue.joined.token;
   blue.close();
   await red.latest((s) => !s.connected[0]);
-  await new Promise((r) => setTimeout(r, 1100));
-  assert.equal(app.rooms.get("AUTOTURN").game.team, 1);
   const resumed = await client();
   await resumed.hello("resume", "AUTOTURN", token);
-  const final = await red.wait(
-    (s) => s.type === "state" && s.game.team === 0,
-    red.frames.length,
-    6000,
-  );
-  assert.equal(final.game.round, 3);
-  assert.equal(final.lastEvent.automatic, true);
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+  assert.equal(app.rooms.get("AUTOTURN").game.team, 1);
+  const finished = await red.act("end_turn");
+  assert.equal(finished.game.team, 0);
+  assert.equal(finished.game.round, 3);
 });
 
 test("two network clients can finish a complete match through the real protocol", async (t) => {
@@ -2565,3 +2560,179 @@ for (const [unitId, skillId] of [
       assert.equal((await resumed.act("skill", fields)).type, "error");
     },
   );
+
+test("AI formation presets are host-only, validated, synchronized, retained on resume and used for deployment", async (t) => {
+  const { client, app } = await setup(t),
+    host = await client(),
+    guest = await client();
+  await host.hello("create", "AIPRESETS");
+  await host.act("configure_room", {
+    ...host.state.settings,
+    mapId: "crossroads_2v2",
+    costLimit: 3000,
+    unitCostLimit: 500,
+    unitLimit: 3,
+  });
+  await host.act("add_ai", { seat: 1 });
+  await host.act("add_ai", { seat: 2 });
+  await guest.hello("join", "AIPRESETS");
+  await host.latest((s) => s.members.length === 4);
+  const room = app.rooms.get("AIPRESETS"),
+    preset = {
+      name: "自定义AI",
+      units: [
+        { unitId: "RGM_79", kitId: "machine_gun", customName: "预设一号" },
+        { unitId: "RGM_79", kitId: "bazooka", customName: "预设二号" },
+        { unitId: "RGM_79", kitId: "machine_gun", customName: "预设三号" },
+        { unitId: "RGM_79", kitId: "machine_gun", customName: "不出击四号" },
+      ],
+    };
+  assert.equal(
+    (await guest.act("configure_ai", { seat: 1, config: {}, formationPreset: preset })).type,
+    "error",
+  );
+  assert.equal(
+    (
+      await host.act("configure_ai", {
+        seat: 1,
+        config: {},
+        formationPreset: { name: "坏预设", units: [{ unitId: "missing", kitId: "missing" }] },
+      })
+    ).type,
+    "error",
+  );
+  assert.equal(
+    (
+      await host.act("configure_ai", {
+        seat: 1,
+        config: {},
+        formationPreset: { name: "空预设", units: [] },
+      })
+    ).type,
+    "error",
+  );
+  assert.equal(
+    (
+      await host.act("configure_ai", {
+        seat: 1,
+        config: {},
+        formationPreset: {
+          name: "高COST预设",
+          units: [{ unitId: "RX_79_G", kitId: "beam_rifle" }],
+        },
+      })
+    ).type,
+    "error",
+  );
+  assert.equal(
+    (await host.act("configure_ai", { seat: 1, config: {}, formationPreset: preset })).type,
+    "state",
+  );
+  await guest.latest((s) => s.revision === room.revision);
+  assert.deepEqual(guest.state.members.find((m) => m.seat === 1).formationPreset, preset);
+  assert.equal(guest.state.members.find((m) => m.seat === 2).formationPreset, null);
+  await host.act("configure_ai", { seat: 1, config: { difficulty: "hard" } });
+  assert.deepEqual(room.seats[1].formationPreset, preset);
+  const token = host.joined.token;
+  host.close();
+  await guest.latest((s) => !s.connected[0]);
+  const resumed = await client();
+  await resumed.hello("resume", "AIPRESETS", token);
+  assert.deepEqual(resumed.state.members.find((m) => m.seat === 1).formationPreset, preset);
+  assert.equal(
+    (
+      await resumed.act("configure_ai", {
+        seat: 1,
+        config: { difficulty: "hard" },
+        formationPreset: null,
+      })
+    ).type,
+    "state",
+  );
+  assert.equal(room.seats[1].formationPreset, null);
+  await resumed.act("configure_ai", {
+    seat: 1,
+    config: { difficulty: "hard" },
+    formationPreset: preset,
+  });
+  await guest.latest((s) => s.revision === room.revision);
+  await resumed.act("set_ready", { ready: true });
+  await guest.latest((s) => s.revision === room.revision);
+  await guest.act("set_ready", { ready: true });
+  await startRoom(resumed);
+  assert.deepEqual(room.seats[1].formation, preset.units.slice(0, 3));
+  await confirmAssembly(resumed, guest);
+  assert.equal(room.phase, "deployment");
+  assert.deepEqual(
+    room.game.units
+      .filter((u) => u.ownerSeat === 1)
+      .map((u) => ({
+        unitId: u.model.split("__")[0],
+        kitId: u.model.split("__")[1],
+        customName: u.customName,
+      })),
+    preset.units.slice(0, 3),
+  );
+});
+
+test("host return counts down five seconds in assembly and battle, synchronizes on reconnect and freezes game actions", async (t) => {
+  const { client, app } = await setup(t, { roomReturnMs: 5000 });
+  const host = await client();
+  let guest = await client();
+  host.autoReturn = guest.autoReturn = false;
+  await host.hello("create", "RETURNCOUNTDOWN");
+  await guest.hello("join", "RETURNCOUNTDOWN");
+  const room = app.rooms.get("RETURNCOUNTDOWN");
+  for (const stage of ["assembly", "idle"]) {
+    await host.act("set_ready", { ready: true });
+    await guest.latest((s) => s.revision === room.revision);
+    await guest.act("set_ready", { ready: true });
+    await startRoom(host);
+    if (stage === "idle") {
+      await confirmAssembly(host, guest);
+      await host.act("confirm_deployment");
+      await guest.latest((s) => s.revision === room.revision);
+      await guest.act("confirm_deployment");
+      await host.latest((s) => s.phase === "idle");
+    }
+    assert.equal(room.phase, stage);
+    const matchId = room.matchId,
+      id = randomUUID();
+    const started = await host.act("return_room", { matchId }, { id });
+    assert.equal(started.started, true);
+    assert.equal(started.phase, stage);
+    assert.ok(
+      started.returnCountdown.at - started.serverTime >= 4900 &&
+        started.returnCountdown.at - started.serverTime <= 5000,
+    );
+    await guest.latest((s) => !!s.returnCountdown);
+    assert.deepEqual(guest.state.returnCountdown, started.returnCountdown);
+    assert.equal((await guest.act("return_room", { matchId })).type, "error");
+    assert.equal((await guest.act("end_turn")).type, "error");
+    assert.deepEqual(
+      (await host.act("return_room", { matchId }, { id })).returnCountdown,
+      started.returnCountdown,
+    );
+    assert.deepEqual(
+      (await host.act("return_room", { matchId })).returnCountdown,
+      started.returnCountdown,
+    );
+    const token = guest.joined.token;
+    guest.close();
+    await host.latest((s) => !s.connected[1]);
+    guest = await client();
+    guest.autoReturn = false;
+    await guest.hello("resume", "RETURNCOUNTDOWN", token);
+    assert.deepEqual(guest.state.returnCountdown, started.returnCountdown);
+    const returned = await host.wait(
+      (m) => m.type === "state" && !m.started,
+      host.frames.length,
+      7000,
+    );
+    assert.ok(returned.serverTime >= started.returnCountdown.at);
+    assert.equal(returned.phase, "waiting");
+    assert.equal(returned.returnCountdown, null);
+    await guest.latest((s) => !s.started);
+    assert.equal(room.returnCountdown, null);
+  }
+});

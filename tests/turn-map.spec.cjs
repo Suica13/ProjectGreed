@@ -12,7 +12,7 @@ async function offline(page) {
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
 }
-test("exhausted offline turns wait a second and show three ordered right-to-left cutins with a center hold", async ({
+test("exhausted offline turns wait for manual end and show three ordered right-to-left cutins with a center hold", async ({
   page,
 }) => {
   await offline(page);
@@ -26,8 +26,10 @@ test("exhausted offline turns wait a second and show three ordered right-to-left
     window.exhaustedAt = performance.now();
     update();
   });
-  await page.waitForTimeout(600);
+  await page.waitForTimeout(1200);
   expect(await page.evaluate(() => game.team)).toBe(0);
+  await expect(page.locator("#turnCutin")).toBeHidden();
+  await page.locator("#endTurn").click();
   await expect(page.locator("#turnCutin")).toBeVisible();
   expect(await page.evaluate(() => performance.now() - window.exhaustedAt)).toBeGreaterThanOrEqual(
     1000,
@@ -92,6 +94,7 @@ test("a moved unit with an available attack keeps its turn; leaving cancels a pe
     for (const u of game.units.filter((u) => u.team === 0)) Rules.wait(game, u);
     update();
   });
+  await page.locator("#endTurn").click();
   await expect(page.locator("#turnCutin")).toBeVisible();
   // Leaving during an active animation also cancels all later segments.
   await page.evaluate(() => openMenu());

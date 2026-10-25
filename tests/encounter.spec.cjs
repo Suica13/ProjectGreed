@@ -1,3 +1,4 @@
+const { waitForRoomReturn } = require("./room-return-fixture.cjs");
 const { finishPlanning } = require("./planning-fixture.cjs");
 const { waitForRoomSettings } = require("./room-settings-fixture.cjs");
 const { test, expect } = require("@playwright/test");
@@ -112,6 +113,7 @@ test("offline room resolves a real battle, returns to preparation and starts ano
   await expect(page.locator("#victory")).toBeVisible();
   await expect(page.locator("#victoryCountdown")).toContainText("返回房间");
   await page.locator("#playAgain").click();
+  await waitForRoomReturn(page);
   await expect(page.locator("#roomPreparation")).toBeVisible();
   await expect(page.locator("#removeAI1")).toBeVisible();
   expect(await page.evaluate(() => Net.snapshot.members.find((m) => m.bot).ready)).toBe(true);

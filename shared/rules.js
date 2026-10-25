@@ -17,6 +17,18 @@ const Tactics = (() => {
   const ownerOf = (unit) => unit.ownerSeat ?? unit.team;
   const mapWidth = (g) => g.tiles[0].length;
   const mapHeight = (g) => g.tiles.length;
+  // 列坐标从零开始，显示为 A…Z、AA…ZZ、AAA…，大型单位落在格间时取左侧格。
+  function columnLabel(index) {
+    let value = Math.floor(index) + 1,
+      label = "";
+    if (!Number.isSafeInteger(value) || value < 1) return "—";
+    while (value > 0) {
+      value--;
+      label = String.fromCharCode(65 + (value % 26)) + label;
+      value = Math.floor(value / 26);
+    }
+    return label;
+  }
   function getMap(id = catalog.defaultMap) {
     if (typeof id !== "string" || !Object.hasOwn(catalog.maps, id)) throw Error("未知地图");
     return catalog.maps[id];
@@ -1399,11 +1411,17 @@ const Tactics = (() => {
     if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
   }
   // 待机不阻止自动结束；仍可使用脱出等非攻击技能时保留行动机会。
-  function hasActions(g) {
+  function hasActions(g, ownerSeat = null) {
     if (g.winner !== null || (g.deployment && !g.deployment.every(Boolean))) return false;
     const enemies = g.units.filter((u) => u.team !== g.team && u.hp > 0);
     return g.units.some((u) => {
-      if (u.team !== g.team || u.hp <= 0 || u.acted) return false;
+      if (
+        u.team !== g.team ||
+        u.hp <= 0 ||
+        u.acted ||
+        (ownerSeat !== null && ownerOf(u) !== ownerSeat)
+      )
+        return false;
       if (skills.of(u).some((skill) => skills.targets(g, u, skill.id).length)) return true;
       if (!u.moved && (reachable(g, u).size > 1 || canRotate(g, u, 1) || canRotate(g, u, -1)))
         return true;
@@ -1477,6 +1495,7 @@ const Tactics = (() => {
     getMap,
     mapWidth,
     mapHeight,
+    columnLabel,
     seatTeam,
     ownerOf,
     validateCostLimit,

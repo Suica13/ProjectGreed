@@ -1,3 +1,4 @@
+const { waitForRoomReturn } = require("./room-return-fixture.cjs");
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url");
 const path = require("node:path");
@@ -28,6 +29,7 @@ test("offline host starts a 3v3 map with just one opposing AI and returns everyo
   await expect.poll(() => page.evaluate(() => phase)).toBe("idle");
   await page.locator("#roomSettings").click();
   await page.locator("#returnAllToRoom").click();
+  await waitForRoomReturn(page);
   await expect(page.locator("#startRoomGame")).toBeEnabled();
   await expect(page.locator("#toggleReady")).toBeHidden();
   expect(errors).toEqual([]);

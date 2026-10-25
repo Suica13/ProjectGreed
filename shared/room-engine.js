@@ -12,6 +12,7 @@ function createRoomEngine({
   randomSeed,
   randomToken,
   resultReturnMs = 30000,
+  roomReturnMs = 5000,
   aiDelayMs = 500,
   aiBattleMs = 10000,
   hostReconnectMs = 10000,
@@ -31,6 +32,7 @@ function createRoomEngine({
     );
   const onlineMember = (member) => member?.ws?.readyState === 1;
   const members = (room) => [...room.members.values()];
+  const returnTimers = new Map();
   const resultTimers = new Map(),
     hostTimers = new Map();
   function resetReady(room) {
@@ -124,6 +126,7 @@ function createRoomEngine({
       turnDone: room.turnDone,
       matchId: room.matchId,
       returnAt: room.returnAt,
+      returnCountdown: room.returnCountdown || null,
       serverTime: Date.now(),
       chat: room.chat.filter(
         (message) => recipient && chatChannels.canRead(recipient.seat, message.channel || "all"),
@@ -136,6 +139,7 @@ function createRoomEngine({
         connected: !!member.bot || onlineMember(member),
         bot: !!member.bot,
         aiSettings: member.bot ? member.aiSettings : undefined,
+        formationPreset: member.bot ? member.formationPreset || null : undefined,
       })),
       you: recipient ? { id: recipient.id, seat: recipient.seat } : undefined,
       log: room.log,
@@ -186,8 +190,10 @@ function createRoomEngine({
       return;
     }
     refreshHost(room);
-    completePlayback(room);
-    scheduleResultReturn(room);
+    if (!room.returnCountdown) {
+      completePlayback(room);
+      scheduleResultReturn(room);
+    }
     room.updated = Date.now();
     for (const member of members(room)) send(member.ws, state(room, ack, member));
     broadcastRooms();
@@ -198,6 +204,8 @@ function createRoomEngine({
     if (rooms.get(room.code) !== room) return;
     clearTimeout(autoEndTimers.get(room)?.timer);
     autoEndTimers.delete(room);
+    clearTimeout(returnTimers.get(room));
+    returnTimers.delete(room);
     clearTimeout(resultTimers.get(room));
     resultTimers.delete(room);
     clearTimeout(aiTimers.get(room));
@@ -208,6 +216,8 @@ function createRoomEngine({
   }
   function returnToRoom(room) {
     if (rooms.get(room.code) !== room || !room.started) return;
+    clearTimeout(returnTimers.get(room));
+    returnTimers.delete(room);
     clearTimeout(resultTimers.get(room));
     resultTimers.delete(room);
     room.game = G.create(false, randomSeed());
@@ -216,6 +226,7 @@ function createRoomEngine({
     room.pending = room.battle = null;
     planner.reset(room);
     room.returnAt = null;
+    room.returnCountdown = null;
     room.turnNotBefore = 0;
     room.turnDone = Array(room.seats.length).fill(false);
     resetReady(room);
@@ -238,9 +249,17 @@ function createRoomEngine({
     return (
       rooms.get(room.code) === room &&
       room.started &&
+      !room.returnCountdown &&
       room.phase === "idle" &&
       room.game.winner === null &&
       connected(room).every(Boolean) &&
+      room.seats.every(
+        (player) =>
+          !player ||
+          player.bot ||
+          G.seatTeam(player.seat) !== room.game.team ||
+          room.turnDone[player.seat],
+      ) &&
       !G.hasActions(room.game)
     );
   }
@@ -331,7 +350,7 @@ function createRoomEngine({
   }
   function completePlayback(room) {
     const playback = room.playback;
-    if (room.phase !== "playback" || !playback) return;
+    if (room.returnCountdown || room.phase !== "playback" || !playback) return;
     playback.members = playback.members.filter((id) => room.members.has(id));
     if (!playback.members.every((id) => playback.ready.includes(id))) return;
     room.playback = null;
@@ -380,7 +399,7 @@ function createRoomEngine({
     }
     return { type: "turn", fromTeam, toTeam: room.game.team, round: room.game.round, automatic };
   }
-  // 联机自动回合由服务端计时；断线、战斗或出现合法行动立即取消。
+  // 人类必须手动结束个人行动；仅在无需等待人类时保留 AI 的自动推进。
   function scheduleAutoEnd(room) {
     const old = autoEndTimers.get(room);
     if (!canAutoEnd(room)) {
@@ -418,6 +437,12 @@ function createRoomEngine({
       ? G.aiUnitLimit(room.settings.unitLimit, player.aiSettings)
       : room.settings.unitLimit;
   function randomArmy(room, player, seed = randomSeed()) {
+    if (player.formationPreset)
+      return G.validateFormation(
+        player.formationPreset.units.slice(0, playerUnitLimit(room, player)),
+        Infinity,
+        playerUnitLimit(room, player),
+      );
     return G.randomFormation(
       seed,
       playerBudget(room, player),
@@ -426,7 +451,14 @@ function createRoomEngine({
     );
   }
   function checkAIArmy(room, player) {
-    if (!randomArmy(room, player, 7319).length)
+    if (
+      !G.planFormation(
+        randomArmy(room, player, 7319),
+        playerBudget(room, player),
+        G.formationRestrictions(room.settings, player.seat),
+        playerUnitLimit(room, player),
+      ).deployable.length
+    )
       throw Error("AI 没有符合房间或队伍限制的可用单位，请调整限制或预算");
   }
   function formationPlan(room, player) {
@@ -507,6 +539,7 @@ function createRoomEngine({
     room.phase = "assembly";
     room.matchId = randomId();
     room.returnAt = null;
+    room.returnCountdown = null;
     resetFinalReady(room);
     // 上一局日志保留到新一局正式进入最终编组。
     room.log = [];
@@ -714,6 +747,7 @@ function createRoomEngine({
     // Delay expensive pathfinding until the timer fires; chat/sync never drives AI.
     if (
       !room.started ||
+      room.returnCountdown ||
       !connected(room).every(Boolean) ||
       !["idle", "reaction", "battle"].includes(room.phase)
     )
@@ -795,6 +829,8 @@ function createRoomEngine({
       } else send(ws, state(room, id, member));
       return;
     }
+    if (room.returnCountdown && !["sync", "chat", "return_room"].includes(msg.action))
+      throw Error("正在返回房间，请稍候。");
     if (msg.action === "playback_ready") {
       const playback = room.playback;
       if (
@@ -850,12 +886,31 @@ function createRoomEngine({
     }
     if (msg.action === "return_room") {
       if (!room.started) throw Error("当前没有正在进行的对局。");
-      if (room.hostId !== member.id) throw Error("只有房主可以让所有人立即返回房间。");
+      if (room.hostId !== member.id) throw Error("只有房主可以让所有人返回房间。");
       if (msg.matchId !== room.matchId) throw Error("对局已更新，请重新同步。");
       cache.set(id, true);
       if (cache.size > 512) cache.delete(cache.keys().next().value);
-      returnToRoom(room);
-      send(ws, state(room, id, member));
+      if (room.returnCountdown) {
+        send(ws, state(room, id, member));
+        return;
+      }
+      clearTimeout(resultTimers.get(room));
+      resultTimers.delete(room);
+      room.returnCountdown = {
+        id: randomId(),
+        at: Date.now() + roomReturnMs,
+        requestedBy: member.id,
+      };
+      const countdownId = room.returnCountdown.id;
+      const timer = setTimeout(() => {
+        returnTimers.delete(room);
+        if (room.returnCountdown?.id === countdownId) returnToRoom(room);
+      }, roomReturnMs);
+      timer.unref?.();
+      returnTimers.set(room, timer);
+      room.revision++;
+      room.lastEvent = { id: randomId(), type: "return_room_countdown", matchId: room.matchId };
+      broadcast(room, id);
       return;
     }
     // 准备和席位操作同样有请求 ID、版本校验和去重，观战者只能使用这些房间操作。
@@ -944,8 +999,26 @@ function createRoomEngine({
         const bot = room.seats[msg.seat];
         if (!Number.isInteger(msg.seat) || !bot?.bot) throw Error("该席位不是 AI");
         const config = G.validateAISettings(msg.config);
-        checkAIArmy(room, { ...bot, aiSettings: config });
+        let preset = bot.formationPreset || null;
+        if (Object.hasOwn(msg, "formationPreset")) {
+          const value = msg.formationPreset;
+          if (value === null) preset = null;
+          else {
+            if (
+              !value ||
+              typeof value !== "object" ||
+              typeof value.name !== "string" ||
+              !value.name.trim() ||
+              value.name.length > 80
+            )
+              throw Error("AI 编组预设无效");
+            preset = { name: value.name.trim(), units: G.validateFormation(value.units, Infinity) };
+          }
+        }
+        checkAIArmy(room, { ...bot, aiSettings: config, formationPreset: preset });
         bot.aiSettings = config;
+        bot.formationPreset = preset;
+        bot.formation = null;
       } else if (msg.action === "add_ai" || msg.action === "remove_ai") {
         if (room.hostId !== member.id) throw Error("只有房主可以添加或移除 AI");
         if (room.started) throw Error("对局开始后不能添加或移除 AI");
@@ -1156,7 +1229,7 @@ function createRoomEngine({
         G.deploy(room.game, seat, msg.unitId, msg.x, msg.y);
         log(
           room,
-          `${unitLabel(room, unit(room, msg.unitId))} 部署至${String.fromCharCode(65 + msg.x)}${msg.y + 1}。`,
+          `${unitLabel(room, unit(room, msg.unitId))} 部署至${G.columnLabel(msg.x)}${msg.y + 1}。`,
         );
         break;
       }
@@ -1188,7 +1261,7 @@ function createRoomEngine({
         const result = unit(room, event.resultId);
         log(
           room,
-          `${label} 使用${skill.name} → ${G.modelOf(result).name}，位于${String.fromCharCode(65 + result.x)}${result.y + 1}。`,
+          `${label} 使用${skill.name} → ${G.modelOf(result).name}，位于${G.columnLabel(result.x)}${result.y + 1}。`,
         );
         break;
       }
@@ -1199,7 +1272,7 @@ function createRoomEngine({
         let from = { x: u.x, y: u.y },
           steps = G.move(room.game, u, msg.x, msg.y);
         event = { type: "move", unitId: u.id, from, path: steps };
-        log(room, `${unitLabel(room, u)} 移动至${String.fromCharCode(65 + u.x)}${u.y + 1}。`);
+        log(room, `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`);
         break;
       }
       case "undo": {
@@ -1404,6 +1477,8 @@ function createRoomEngine({
     }
   }
   function close() {
+    for (const timer of returnTimers.values()) clearTimeout(timer);
+    returnTimers.clear();
     for (const timer of resultTimers.values()) clearTimeout(timer);
     for (const timer of aiTimers.values()) clearTimeout(timer);
     for (const entry of autoEndTimers.values()) clearTimeout(entry.timer);

@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>__PROJECT_NAME__ __PROJECT_VERSION__</title>
     <style>
+      .mobile-intro-pending #start {
+        visibility: hidden;
+      }
+      .mobile-landscape-tip {
+        position: fixed;
+        inset: 0;
+        z-index: 1700;
+        background: #0c1721;
+      }
+      .mobile-landscape-tip[hidden] {
+        display: none;
+      }
+    </style>
+    <style>
       :root {
         color-scheme: dark;
         --bg: #0e161e;
@@ -1424,8 +1438,43 @@
       .player-name .host-badge {
         color: inherit;
       }
+      #roomActions {
+        align-items: center;
+        gap: 8px;
+      }
+      .room-formation-controls {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        min-width: 0;
+        max-width: 100%;
+      }
+      #roomFormationSelect {
+        width: clamp(140px, 20vw, 240px);
+        min-width: 0;
+        max-width: 100%;
+        text-overflow: ellipsis;
+      }
       #roomFormationWarning {
         color: #ffb29a;
+        font-size: 12px;
+      }
+      .room-map-panel {
+        margin: 12px 0;
+        padding: 10px;
+        border: 1px solid #3c596a;
+        border-radius: 6px;
+        background: #0d2028;
+      }
+      .room-map-panel #roomMapPreview {
+        border: 0;
+        border-radius: 0;
+      }
+      .room-map-panel #roomMapInfo {
+        margin: 8px 0 0;
+        font-size: 12px;
+        line-height: 1.5;
       }
       @media (max-width: 700px) {
         .room-preparation {
@@ -1447,6 +1496,26 @@
     </style>
   </head>
   <body>
+    <div
+      id="mobileLandscapeTip"
+      class="mobile-landscape-tip"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mobileLandscapeTitle"
+    >
+      <div class="mobile-landscape-card">
+        <div class="mobile-landscape-device" aria-hidden="true"></div>
+        <h2 id="mobileLandscapeTitle">推荐以横屏游玩</h2>
+        <p>横屏可以显示更大的战斗地图，并更方便查看武器与攻击计划。</p>
+        <button id="continueFromLandscapeTip" type="button" class="primary">
+          继续，进入主菜单
+        </button>
+      </div>
+    </div>
+    <script>
+      __MOBILE_INTRO__;
+    </script>
     <div data-ui-node="node-173" id="gameScene" hidden>
       <header data-ui-node="node-1">
         <div data-ui-node="node-2" class="brand">
@@ -1456,15 +1525,24 @@
             <h1 data-ui-node="node-6">__PROJECT_NAME__</h1>
           </div>
         </div>
+        <div class="hud-room-status" aria-label="房间状态">
+          <span id="hudRoomName" data-i18n-ignore></span>
+          <span id="hudPing" data-i18n-ignore>PING —</span>
+          <span id="hudPlayerCount" data-i18n-ignore></span>
+          <span data-ui-node="node-8" class="status-tag" id="turnBadge">第1回合 · 蓝方</span>
+        </div>
         <div data-ui-node="node-7" class="header-buttons">
-          <span data-ui-node="node-8" class="status-tag" id="turnBadge">第1回合 · 蓝方</span
-          ><button data-ui-node="node-9" id="netSettings">主菜单</button
+          <button data-ui-node="node-9" id="netSettings">主菜单</button
           ><button data-ui-node="node-174" id="roomSettings" hidden>房间席位</button
           ><button data-ui-node="node-10" id="helpBtn">规则</button>
         </div>
       </header>
       <div data-ui-node="node-12" class="game-layout">
-        <aside data-ui-node="node-13" class="left">
+        <aside data-ui-node="node-13" class="left" id="hudRosterPanel" hidden>
+          <div class="hud-panel-heading">
+            <span>作战单位</span
+            ><button id="hudCloseRoster" type="button" aria-label="关闭单位列表">×</button>
+          </div>
           <div data-ui-node="node-14" class="section-title">TACTICAL SQUAD / 作战单位</div>
           <div
             id="unitRoster"
@@ -1504,6 +1582,7 @@
             <button data-ui-node="node-34" id="endTurn" class="primary" hidden>结束蓝方回合</button>
           </div>
           <div data-ui-node="node-35" class="map-wrap" id="mapWrap">
+            <span id="hudTurnActions" role="group" aria-label="回合操作"></span>
             <span id="mapEnvironment" class="map-environment is-ground">地面</span>
             <div class="map-camera-controls" aria-label="地图缩放">
               <span id="mapCombatControls" hidden>
@@ -1544,7 +1623,43 @@
               ><button id="showChat" role="tab" aria-selected="false" aria-controls="chatPanel">
                 聊天
               </button>
-              <button id="downloadBattleLog" type="button" disabled>下载战斗LOG</button>
+              <button id="downloadBattleLog" type="button" aria-label="下载战斗LOG" disabled>
+                下载战斗LOG
+              </button>
+              <span class="hud-toolbar-divider"></span>
+              <button
+                id="hudToggleRoster"
+                type="button"
+                aria-expanded="false"
+                aria-controls="hudRosterPanel"
+              >
+                单位列表
+              </button>
+              <button id="hudToggleLegend" type="button" aria-expanded="false">地图图例</button>
+              <button
+                id="hudSelectionSummary"
+                type="button"
+                class="hud-selection-summary"
+                aria-label="查看单位信息"
+              ></button>
+              <span id="hudMusicSlot"></span>
+              <button
+                id="hudExpandConsole"
+                type="button"
+                aria-label="展开信息栏"
+                title="展开信息栏"
+              >
+                ↕
+              </button>
+              <button
+                id="hudCollapseConsole"
+                type="button"
+                aria-expanded="true"
+                aria-label="收起信息栏"
+                title="收起信息栏"
+              >
+                −
+              </button>
             </h3>
             <div
               data-ui-node="node-52"
@@ -1570,10 +1685,40 @@
             </div>
           </div>
         </main>
-        <aside data-ui-node="node-53" class="right">
-          <div data-ui-node="node-54" class="section-title">UNIT COMMAND / 单位指令</div>
+        <aside data-ui-node="node-53" class="right" id="hudUnitPanel" hidden aria-label="单位信息">
+          <div class="hud-panel-heading">
+            <span data-ui-node="node-54">单位信息</span
+            ><button id="hudCloseUnit" type="button" aria-label="关闭单位信息">×</button>
+          </div>
+          <div class="hud-unit-tabs" role="tablist" aria-label="单位信息分类">
+            <button id="hudOverviewTab" data-hud-tab="overview" role="tab" aria-selected="true">
+              概览
+            </button>
+            <button id="hudWeaponsTab" data-hud-tab="weapons" role="tab" aria-selected="false">
+              武装
+            </button>
+            <button id="hudSkillsTab" data-hud-tab="skills" role="tab" aria-selected="false">
+              技能
+            </button>
+          </div>
           <div data-ui-node="node-55" id="unitPanel"></div>
+          <section
+            id="hudAttackPlanner"
+            class="hud-attack-planner"
+            hidden
+            aria-label="武器与攻击计划"
+          ></section>
         </aside>
+        <div id="hudActionBand" class="hud-action-band" hidden role="group" aria-label="当前操作">
+          <button id="hudCancelAction" type="button">取消</button>
+        </div>
+        <div
+          id="hudUnitCommands"
+          class="hud-unit-commands"
+          hidden
+          role="group"
+          aria-label="单位快捷指令"
+        ></div>
       </div>
     </div>
     <div
@@ -1902,6 +2047,7 @@
               <div class="net-buttons">
                 <button id="editFinalFormation">修改编组</button>
                 <button id="confirmFinalFormation" class="primary">确认出击编组</button>
+                <button id="returnAssemblyToRoom" hidden>返回房间（全员）</button>
               </div>
             </section>
             <div id="roomLobbyContent">
@@ -1937,19 +2083,16 @@
               </div>
               <div id="roomTagRestrictions" class="tag-restrictions"></div>
               <p id="roomSettingsHint" class="muted"></p>
-              <canvas
-                id="roomMapPreview"
-                width="520"
-                height="190"
-                role="img"
-                aria-label="地图预览"
-              ></canvas>
-              <p id="roomMapInfo" class="muted"></p>
-              <div class="net-buttons" data-ui-node="node-203">
-                <span id="roomFormationSummary" data-ui-node="node-204"></span
-                ><button id="roomFormation" data-ui-node="node-205">编组</button>
-              </div>
-              <p id="roomFormationWarning" role="status"></p>
+              <section class="room-map-panel" aria-label="地图信息">
+                <canvas
+                  id="roomMapPreview"
+                  width="520"
+                  height="190"
+                  role="img"
+                  aria-label="地图预览"
+                ></canvas>
+                <p id="roomMapInfo" class="muted"></p>
+              </section>
               <div data-ui-node="node-181" id="teamSlots" class="team-slots"></div>
               <h3 data-ui-node="node-188" class="spectator-title">观战玩家</h3>
               <div data-ui-node="node-189" id="spectatorSlots"></div>
@@ -2009,6 +2152,16 @@
           ><button id="returnAllToRoom" hidden>返回到房间</button
           ><button data-ui-node="node-186" id="toggleReady" class="primary">准备</button>
           <button id="startRoomGame" class="primary" hidden>开始游戏</button>
+          <div class="room-formation-controls" data-ui-node="node-203">
+            <select
+              id="roomFormationSelect"
+              data-ui-node="node-204"
+              aria-label="出战编组"
+              aria-describedby="roomFormationWarning"
+            ></select>
+            <button id="roomFormation" data-ui-node="node-205">编组</button>
+            <span id="roomFormationWarning" role="status" hidden></span>
+          </div>
         </div>
         <p data-ui-node="node-190" class="muted">
           每个出生点对应一名玩家的编组。房主开始后进入最终编组，确认后部署；随时可转入观战席或加入空席位。
@@ -2847,6 +3000,28 @@
         display: none;
       }
     </style>
+    <dialog
+      id="endActionConfirm"
+      class="cutin-dialog"
+      aria-labelledby="endActionTitle"
+      aria-describedby="endActionMessage"
+    >
+      <h2 id="endActionTitle">结束行动？</h2>
+      <p id="endActionMessage"></p>
+      <div class="net-buttons">
+        <button id="cancelEndAction" type="button">继续行动</button>
+        <button id="confirmEndAction" type="button" class="primary">确认结束行动</button>
+      </div>
+    </dialog>
+    <dialog
+      id="roomReturnCountdown"
+      class="cutin-dialog"
+      aria-labelledby="roomReturnTitle"
+      aria-describedby="roomReturnMessage"
+    >
+      <h2 id="roomReturnTitle">即将返回房间</h2>
+      <p id="roomReturnMessage" role="status" aria-live="polite"></p>
+    </dialog>
     <div id="turnCutin" hidden role="status" aria-live="polite" aria-label="回合交接">
       <div id="turnCutinCard"></div>
     </div>
@@ -2864,7 +3039,8 @@
       #turnCutin[hidden] {
         display: none;
       }
-      #turnCutinCard {
+      #turnCutinCard,
+      .cutin-dialog {
         width: min(760px, 92vw);
         padding: 26px 16px;
         text-align: center;
@@ -2875,6 +3051,31 @@
         border-block: 2px solid currentColor;
         background: linear-gradient(90deg, #0c263700, #102f42f5 20%, #102f42f5 80%, #0c263700);
         text-shadow: 0 2px 12px #000;
+      }
+      .cutin-dialog {
+        position: fixed;
+        margin: auto;
+        max-width: 92vw;
+        border: 0;
+        border-block: 2px solid currentColor;
+        color: var(--blue);
+      }
+      .cutin-dialog::backdrop {
+        background: #07121b99;
+      }
+      .cutin-dialog h2 {
+        margin: 0;
+        font-size: clamp(24px, 4vw, 42px);
+      }
+      .cutin-dialog p {
+        font-size: clamp(15px, 2vw, 22px);
+        letter-spacing: 0;
+        margin: 14px 0;
+      }
+      .cutin-dialog .net-buttons {
+        justify-content: center;
+        font-size: 14px;
+        letter-spacing: 0;
       }
       #turnCutinCard[data-team="1"] {
         color: var(--red);
@@ -3168,9 +3369,6 @@
         right: 14px;
         z-index: 1500;
       }
-      .header-buttons {
-        padding-right: 72px;
-      }
       #clientSettingsDialog {
         width: min(420px, calc(100vw - 28px));
         max-height: calc(100dvh - 28px);
@@ -3212,6 +3410,9 @@
       #clientSettingsDialog input {
         accent-color: #65cfff;
       }
+    </style>
+    <style id="battle-hud-styles">
+      __BATTLE_HUD_CSS__
     </style>
     <script id="art" type="application/json">
       __DATA__
@@ -3255,6 +3456,8 @@
       __LOBBY__;
       __ROOM__;
       __FORMATION__;
+      __BATTLE_PROMPTS__;
+      __BATTLE_HUD__;
       I18n.start();
     </script>
   </body>

@@ -43,6 +43,7 @@ function setPageView(view) {
   byId("roomSettings").hidden = !Net.active;
   if (view !== "game")
     for (const id of ["reaction", "battle", "victory", "help"]) byId(id).hidden = true;
+  window.BattleHUD?.refresh();
   if (view === "game") startRendering();
   else if (!window.isLayoutPreview) {
     cancelAnimationFrame(animationFrameId);
@@ -62,7 +63,11 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
   formatNumber = (n) => Number(n).toLocaleString("en-US"),
   isAI = () => !Net.active && game.ai && game.team === 1,
   isBusy = () =>
-    phase !== "idle" || !!Net.awaiting || (!Net.active && MapEffects.pending()) || TurnFlow.active;
+    phase !== "idle" ||
+    !!Net.awaiting ||
+    !!Net.snapshot?.returnCountdown ||
+    (!Net.active && MapEffects.pending()) ||
+    TurnFlow.active;
 function note(text) {
   setNamedText(byId("toast"), text);
   byId("toast").classList.add("show");
@@ -159,6 +164,7 @@ function htmlWeapon(w, u) {
 }
 // 刷新顶栏、单位列表、提示和右侧指令，不推进回合。
 function update() {
+  window.BattlePrompts?.refreshEnd();
   if (pageView !== "game" && !window.isLayoutPreview) {
     if (pageView === "room" && Net.snapshot) RoomPanel.render(Net.snapshot);
     return;
@@ -181,6 +187,14 @@ function update() {
     ? "完成计划 · 结束行动"
     : "结束" + teamName(game.team) + "回合";
   byId("endTurn").disabled = busy || isAI() || (Net.active && !Net.canAct());
+  byId("confirmDeployment").classList.toggle(
+    "action-attention",
+    phase === "deployment" && !byId("confirmDeployment").disabled,
+  );
+  byId("endTurn").classList.toggle(
+    "action-attention",
+    !byId("endTurn").disabled && !Rules.hasActions(game, Net.active ? Net.seat : null),
+  );
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线遭遇战" : "联机遭遇战") + " · " + Net.roleName()
     : "遭遇战";
@@ -197,9 +211,15 @@ function update() {
       ? "AI正在规划移动与攻击。"
       : mode === "target"
         ? "点击红色目标机体，或在右侧选择目标。"
-        : u?.team === game.team && !u.acted
-          ? "点击蓝色格子移动，或先选敌人编排攻击序列。"
-          : "选择己方尚未行动的单位。";
+        : mode === "attack-target"
+          ? "点击红色范围内的敌人，编排攻击序列。"
+          : mode === "move"
+            ? "点击蓝色格子选择移动位置，或在下方取消移动。"
+            : mode === "attack-weapons"
+              ? "在右侧选择武器，确认攻击计划或取消攻击。"
+              : u?.team === game.team && !u.acted
+                ? "先点击移动或攻击按钮，再选择格子或目标。"
+                : "选择己方尚未行动的单位。";
   if (Net.active) {
     if (phase === "reaction_wait") hint = "等待其他玩家选择反击、防御或回避。";
     else if (phase === "playback_wait") hint = "等待所有玩家完成演出。";
@@ -215,6 +235,7 @@ function update() {
   byId("hint").textContent = hint;
   byId("hint").hidden = phase === "deployment";
   renderPanel();
+  window.BattleHUD?.refresh();
   TurnFlow.refreshAutoEnd();
 }
 // 左侧只按当前视角显示我军；观战者可查看两队，每名所有者单独成组。
@@ -364,12 +385,29 @@ function renderPanel() {
   );
   ownership.id = "unitOwnership";
   panel.append(ownership);
+  const resources = element("div", "hud-resources");
+  for (const [label, value, maximum] of [
+    ["HP", u.hp, m.hp],
+    ["EN", u.en, m.en],
+  ]) {
+    const row = element("div", "hud-resource " + label.toLowerCase());
+    row.append(
+      element("span", "", label),
+      element("strong", "", `${formatNumber(value)} / ${formatNumber(maximum)}`),
+    );
+    const track = element("div", "hud-resource-track"),
+      fill = element("i", "");
+    fill.style.width = Math.max(0, Math.min(100, (value / Math.max(1, maximum)) * 100)) + "%";
+    track.append(fill);
+    row.append(track);
+    resources.append(row);
+  }
+  panel.append(resources);
+  const overview = element("section", "hud-tab-pane");
+  overview.dataset.hudPane = "overview";
+  panel.append(overview);
   let stats = element("div", "stats");
-  stats.innerHTML = /* HTML */ `<div>
-      <span>HP</span>${formatNumber(u.hp)} / ${formatNumber(m.hp)}
-    </div>
-    <div><span>EN</span>${u.en} / ${m.en}</div>
-    <div><span>移动力</span>${m.move} 格</div>
+  stats.innerHTML = /* HTML */ `<div><span>移动力</span>${m.move} 格</div>
     <div><span>反应系数</span>${m.mobility}</div>
     <div><span>命中系数</span>${m.accuracy}%</div>
     <div><span>地面适应性</span>${m.adaptability.ground}%</div>
@@ -380,11 +418,11 @@ function renderPanel() {
       >${m.shield.hp > 0 ? formatNumber(u.shield ?? 0) + " / " + formatNumber(m.shield.hp) : "无独立盾牌"}
     </div>
     <div>
-      <span>当前位置</span>${String.fromCharCode(65 + u.x)}${u.y + 1} ·
+      <span>当前位置</span>${Rules.columnLabel(u.x)}${u.y + 1} ·
       ${Rules.terrainStyle(game.mapId, game.tiles[u.y][u.x]).name}
     </div>`;
   stats.append(element("div", "", `行动点 ${Rules.actionPoints(u)}/${Rules.actionBudget(u)}`));
-  panel.append(stats);
+  overview.append(stats);
   const partStatus = element("div", "rule-box");
   partStatus.id = "unitPartStatus";
   partStatus.append(element("strong", "", "部位状态"));
@@ -438,7 +476,7 @@ function renderPanel() {
   if (penalty.resistancePenalty)
     effects.push(I18n.text("四肢损毁：抗性降低") + " " + penalty.resistancePenalty + "%");
   if (effects.length) partStatus.append(element("p", "red", effects.join(" · ")));
-  panel.append(partStatus);
+  overview.append(partStatus);
   const protection = element("details", "rule-box");
   protection.append(element("summary", "", "防护属性"));
   protection.append(element("p", "helper", m.description));
@@ -461,7 +499,7 @@ function renderPanel() {
       `盾牌格挡率 ${Math.round(m.shield.blockChance * 100)}% · 覆盖 ${Math.round(m.shield.coverage * 100)}%`,
     ),
   );
-  panel.append(protection);
+  overview.append(protection);
   const attacks = element("details", "rule-box");
   attacks.append(element("summary", "", "伤害加成"));
   for (const [key, label] of [
@@ -477,7 +515,7 @@ function renderPanel() {
         `${label}：${m.attackBonuses[key] >= 0 ? "+" : ""}${m.attackBonuses[key]}%`,
       ),
     );
-  panel.append(attacks);
+  overview.append(attacks);
   let actions = element("div", "actions");
   for (const [label, fn, disabled] of [
     [
@@ -516,6 +554,16 @@ function renderPanel() {
       !canCommand || (u.moved ? !Rules.canUndo(game, u) : u.acted),
     ],
     [
+      "攻击",
+      () => AttackControls.start(u),
+      !canCommand || !game.units.some((target) => AttackControls.canTarget(u, target)),
+    ],
+    [
+      "技能",
+      () => window.BattleHUD?.setTab("skills"),
+      !canCommand || (!m.weapons.some((w) => w.slot === "skill") && !Rules.unitSkills(u).length),
+    ],
+    [
       "取消选武器",
       () => {
         mode = "select";
@@ -526,6 +574,14 @@ function renderPanel() {
     ],
   ]) {
     let b = element("button", "", label);
+    b.dataset.unitCommand = {
+      待机: "wait",
+      移动: "move",
+      撤回移动: "move",
+      攻击: "attack",
+      技能: "skills",
+      取消选武器: "cancel",
+    }[label];
     b.disabled = disabled;
     b.onclick = fn;
     actions.append(b);
@@ -552,8 +608,15 @@ function renderPanel() {
       };
       actions.append(button);
     }
+  actions.id = "unitActions";
   panel.append(actions);
-  panel.append(element("div", "section-title", "ATTACK / 选择目标与攻击序列"));
+  const weaponSection = element("section", "hud-tab-pane");
+  weaponSection.dataset.hudPane = "weapons";
+  panel.append(weaponSection);
+  const skillSection = element("section", "hud-tab-pane");
+  skillSection.dataset.hudPane = "skills";
+  panel.append(skillSection);
+  weaponSection.append(element("div", "section-title", "ATTACK / 选择目标与攻击序列"));
   if (m.supplyAura)
     panel.append(
       element(
@@ -573,9 +636,10 @@ function renderPanel() {
       ),
     );
   for (const skills of [false, true]) {
-    if (skills) panel.append(element("div", "section-title", "SKILLS / 技能"));
+    const container = skills ? skillSection : weaponSection;
+    if (skills) container.append(element("div", "section-title", "SKILLS / 技能"));
     if (!skills) {
-      AttackControls.render(panel, u, canCommand);
+      AttackControls.render(container, u, canCommand);
       continue;
     }
     let list = element("div", "weapon-list");
@@ -597,14 +661,15 @@ function renderPanel() {
       list.append(b);
     }
     if (skills) SkillControls.render(list, u, canCommand);
-    panel.append(list);
+    container.append(list);
   }
   if (mode === "target" && weaponId && own) {
     let w = getWeapon(u, weaponId),
       targets = game.units.filter((t) => Rules.canAttack(game, u, t, w));
-    panel.append(element("div", "section-title", "TARGETS / 可选目标"));
+    const targetContainer = w.slot === "skill" ? skillSection : weaponSection;
+    targetContainer.append(element("div", "section-title", "TARGETS / 可选目标"));
     if (!targets.length)
-      panel.append(
+      targetContainer.append(
         element("p", "helper", "当前没有满足射程的敌机。可切换武器，或取消后继续移动。"),
       );
     for (const target of targets) {
@@ -617,7 +682,7 @@ function renderPanel() {
       );
       button.disabled = !canCommand;
       button.onclick = () => beginAttack(u, target, w);
-      panel.append(button);
+      targetContainer.append(button);
     }
   }
   let info = u.plan
@@ -629,13 +694,13 @@ function renderPanel() {
         : u.moved
           ? "已移动：仍可攻击或待机。攻击后不可再移动。"
           : "移动可选；原地攻击也会结束本单位行动。";
-  panel.append(element("div", "rule-box", info));
+  weaponSection.append(element("div", "rule-box", info));
   if (Net.active && u.plan && Net.owns(u) && phase === "idle") {
     const cancel = element("button", "", "取消攻击计划");
     cancel.id = "cancelAttackPlan";
     cancel.disabled = !Net.canAct();
     cancel.onclick = () => Net.request("cancel_attack", { unitId: u.id });
-    panel.append(cancel);
+    weaponSection.append(cancel);
   }
 }
 function select(id) {
@@ -984,7 +1049,7 @@ function drawMap(now) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "#8ea5af";
   for (let x = 0; x < Rules.mapWidth(game); x++)
-    ctx.fillText(String.fromCharCode(65 + x), ox + (x + 0.5) * tile, oy - 9);
+    ctx.fillText(Rules.columnLabel(x), ox + (x + 0.5) * tile, oy - 9);
   for (let y = 0; y < Rules.mapHeight(game); y++)
     ctx.fillText(String(y + 1), ox - 9, oy + (y + 0.5) * tile);
   const mapUnitPoses = [];
@@ -1165,7 +1230,7 @@ byId("map").onpointermove = (e) => {
     let unit = Rules.at(game, hover.x, hover.y),
       t = Rules.terrainStyle(game.mapId, game.tiles[hover.y][hover.x]);
     byId("hoverInfo").textContent =
-      String.fromCharCode(65 + hover.x) +
+      Rules.columnLabel(hover.x) +
       (hover.y + 1) +
       " · " +
       t.name +
@@ -1203,6 +1268,7 @@ byId("map").onclick = async (e) => {
   // 查看单位资料不需要操作权限；移动与攻击仍检查所属玩家。
   if (Net.active && !Net.canAct()) {
     if (target) select(target.id);
+    else window.BattleHUD?.clearSelection();
     return;
   }
   if (SkillControls.click(cell, u)) return;
@@ -1226,17 +1292,33 @@ byId("map").onclick = async (e) => {
     u.team === game.team &&
     (!Net.active || Net.owns(u)) &&
     (!u.acted || u.plan) &&
-    mode !== "move" &&
+    mode === "attack-target" &&
     AttackControls.canTarget(u, target)
   ) {
     AttackControls.choose(u, target);
+    return;
+  }
+  if (mode === "attack-weapons") return;
+  if (mode === "attack-target") {
+    note("请选择红色范围内的有效目标。");
     return;
   }
   if (target && !(target.id === u?.id && mode === "move")) {
     select(target.id);
     return;
   }
-  if (u && u.team === game.team && (!Net.active || Net.owns(u)) && !u.acted && !u.moved) {
+  if (!target && mode === "select") {
+    window.BattleHUD?.clearSelection();
+    return;
+  }
+  if (
+    mode === "move" &&
+    u &&
+    u.team === game.team &&
+    (!Net.active || Net.owns(u)) &&
+    !u.acted &&
+    !u.moved
+  ) {
     try {
       const anchor = Rules.anchorAt(u, cell.mapX ?? cell.x, cell.mapY ?? cell.y);
       await performMove(u, anchor.x, anchor.y);
@@ -1268,7 +1350,8 @@ async function performMove(u, x, y) {
   if (stamp !== session) return;
   moving = null;
   phase = "idle";
-  addLog(`${logUnit(u)} 移动至${String.fromCharCode(65 + x)}${y + 1}。`);
+  mode = "select";
+  addLog(`${logUnit(u)} 移动至${Rules.columnLabel(x)}${y + 1}。`);
   update();
 }
 // a = 攻击方，b = 防守方，w = 武器。联机只发请求，离线进入本地应战。
@@ -1343,12 +1426,7 @@ function renderReaction() {
       const unit = getUnit(entry.attacker),
         owner = UnitIdentity.owner(unit);
       const option = new Option(
-        unitName(unit) +
-          " · " +
-          owner.name +
-          " · " +
-          String.fromCharCode(65 + unit.x) +
-          (unit.y + 1),
+        unitName(unit) + " · " + owner.name + " · " + Rules.columnLabel(unit.x) + (unit.y + 1),
         unit.id,
       );
       if (unit.customName) option.setAttribute("data-i18n-ignore", "");
@@ -1461,7 +1539,7 @@ function renderReaction() {
     document.createTextNode(" " + targets.length),
   );
   byId("estimate").innerHTML =
-    `<span>${counter ? `反击：命中 <strong>${counter.hit}%</strong><br>命中后约 <strong class="blue">${formatNumber(counter.damage)}</strong> 伤害` : "本次不进行反击"}</span>`;
+    `<span>${counter ? `反击：命中 <strong>${formatNumber(Math.round(counter.hit * 10) / 10)}%</strong><br>命中后约 <strong class="blue">${formatNumber(counter.damage)}</strong> 伤害` : "本次不进行反击"}</span>`;
   byId("confirmResponse").disabled =
     response === "counter" && !legal.some((c) => c.id === counterId);
 }
@@ -1758,13 +1836,10 @@ byId("endTurn").onclick = () => {
   let remaining = game.units.filter(
     (u) => u.team === game.team && (!Net.active || Net.owns(u)) && u.hp > 0 && !u.acted,
   ).length;
-  if (remaining && !byId("endTurn").dataset.confirm) {
-    byId("endTurn").dataset.confirm = "1";
-    note(`尚有${remaining}台未行动；再次点击结束回合以确认。`);
-    setTimeout(() => delete byId("endTurn").dataset.confirm, 3000);
+  if (remaining && Rules.hasActions(game, Net.active ? Net.seat : null)) {
+    BattlePrompts.confirmEnd(remaining);
     return;
   }
-  delete byId("endTurn").dataset.confirm;
   endTurn();
 };
 function showVictory() {

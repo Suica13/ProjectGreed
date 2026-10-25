@@ -33,7 +33,10 @@ test("target-first editor permits repeating a weapon, enforces AP and preserves 
   page.on("pageerror", (e) => errors.push(e.message));
   await setup(page);
   await expect(page.locator("[data-queue-weapon]")).toHaveCount(0);
-  await page.locator('[data-attack-target="1-0"]').click();
+  await page.evaluate(() => {
+    document.querySelector('[data-unit-command="attack"]').click();
+    AttackControls.choose(game.units[0], game.units[1]);
+  });
   const rifle = page.locator('[data-queue-weapon="EF_RX_78NT_1_BR"]');
   await rifle.click();
   await rifle.click();

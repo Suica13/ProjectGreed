@@ -35,3 +35,5 @@
 - 持握武器显示只按实际开火动作链是否写入 `nowWeaponIndex` 决定 `changeHeldWeapon`，不能按肩部、头部或手臂位置推断；未写入时保留当前持握状态，也不能触发持握狙击枪的射击姿态。
 
 - `setWeaponIndex` 需要保留写入时刻和数值：原动作链中的 `nowWeaponIndex` 写入转换为 Step 的 `weaponDisplayIndex`，由 `WeaponSequence.pose` 采样并传给渲染层。图层按原始索引条件判断，不把普通／Step2 图层合并成同一个 heldWeapon 条件，也不沿用固定动画时间窗。原生无索引条件的固定附件不得凭空添加 heldWeapon 限制。
+
+- 直升机（EF_Heli、ZN_Heli 等旋翼机）的 `presentation.thrusters=false`，不得套用飞行单位的常驻后退推进器或移动／回避喷焰。导入器和渲染器同时遵守这一显式开关。

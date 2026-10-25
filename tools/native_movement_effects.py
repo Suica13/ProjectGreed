@@ -5,6 +5,16 @@ from unit_visuals import BONE_NAMES
 
 
 def correct_effects(prefab, native):
+    # Rotorcraft fly with rotors, not the inherited generic aircraft jet decal.
+    helicopter = any("heli" in tag.lower() for tag in prefab.get("sourceStats", {}).get("nativeTags", []))
+    if helicopter:
+        prefab["presentation"]["thrusters"] = False
+    thrusters = prefab["presentation"].get("thrusters", True)
+    if not thrusters:
+        prefab["layers"] = [layer for layer in prefab["layers"]
+            if "boost" not in layer["name"].lower()
+            and not layer.get("visibleWhen", {}).get("thrustActive")
+            and not layer.get("visibleWhen", {}).get("sustainedThrust")]
     for key in native:
         if key != "decal_Hover" and not key.startswith("decal_System_Red_"):
             continue
@@ -44,7 +54,7 @@ def correct_effects(prefab, native):
             layer["independentClock"] = True
     # Native hull engines remain separate from the ordinary-unit reversing jets.
     prefab["layers"] = [l for l in prefab["layers"] if l["name"] != "EnvironmentBoost"]
-    if not prefab["stats"].get("ship"):
+    if thrusters and not prefab["stats"].get("ship"):
         reversing = []
         for key in native:
             if not key.startswith("decal_BoostReversing"):

@@ -1,3 +1,4 @@
+const { waitForRoomReturn } = require("./room-return-fixture.cjs");
 const { finishPlanning } = require("./planning-fixture.cjs");
 const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const { test, expect } = require("@playwright/test"),
@@ -19,7 +20,7 @@ async function join(page, room) {
   await expect(page.locator("#roomPreparation")).toBeVisible();
 }
 async function startMatch(a, b) {
-  const host = await a.evaluate(() => Net.snapshot.hostId === Net.memberId) ? a : b;
+  const host = (await a.evaluate(() => Net.snapshot.hostId === Net.memberId)) ? a : b;
   const guest = host === a ? b : a;
   await guest.locator("#toggleReady").click();
   await host.locator("#startRoomGame").click();
@@ -205,6 +206,7 @@ test("room chat survives view changes; finished clients reconnect and the host r
     await expect.poll(() => red.evaluate(() => Net.snapshot.hostId === Net.memberId)).toBe(true);
     await expect(red.locator("#playAgain")).toBeEnabled();
     await red.locator("#playAgain").click();
+    await waitForRoomReturn(red);
     for (const client of [red, watch]) {
       await expect(client.locator("#roomPreparation")).toBeVisible();
       await expect(client.locator("#victory")).toBeHidden();
@@ -281,6 +283,7 @@ test("the host seat panel returns every player and spectator to the same room du
       "returnAllToRoom",
     );
     await page.locator("#returnAllToRoom").click();
+    await waitForRoomReturn(page);
     for (const client of pages) {
       await expect(client.locator("#roomPreparation")).toBeVisible();
       await expect(client.locator("#toggleReady")).toBeVisible({
@@ -301,6 +304,7 @@ test("the host seat panel returns every player and spectator to the same room du
     await expect(page.locator("#becomeSpectator")).toBeDisabled();
     await expect(page.locator("#returnAllToRoom")).toBeEnabled();
     await page.locator("#returnAllToRoom").click();
+    await waitForRoomReturn(page);
     await expect(guest.locator("#roomPreparation")).toBeVisible();
     expect(app.rooms.get("BACKROOM").started).toBe(false);
   } finally {
