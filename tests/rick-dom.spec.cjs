@@ -25,7 +25,7 @@ test("formation rows and catalog show native Rick Dom icon and all three adaptat
       new RegExp(`COST [0-9]+ · ${label}$`),
     );
     if (id === "MS_09R") {
-      await row.click();
+      await row.getByRole("button", { name: "详情", exact: true }).click();
       await expect(page.locator("#formationDetailStats")).toContainText("反应系数 110");
       await expect(page.locator("#formationDetailStats")).toContainText("命中系数 115%");
       await page.evaluate(() => I18n.setLanguage("en"));

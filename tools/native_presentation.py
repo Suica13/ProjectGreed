@@ -4,6 +4,34 @@ import re
 from mod_source import ROOT, load, section
 
 
+def correct_shared_weapon_layers(prefab, native):
+    if prefab["id"] == "RX_78_1":
+        # Native EquipmentIndex2 selects saber (0) vs javelin (1), both at display index 1.
+        # ProjectGreed exposes both attacks, so the selected held weapon is the discriminator.
+        for layer in prefab["layers"]:
+            weapon = {"EF_BeamSaber_AF_Fast":"EF_BeamSaber_AF_Fast_A", "EF_BeamJavelin_BF":"EF_BeamJavelin_BF_B"}.get(layer["name"])
+            if weapon:
+                layer.setdefault("visibleWhen", {})["heldWeapon"] = weapon
+        return
+    if prefab["id"] != "RX_78XX":
+        return
+    for kit in prefab["weaponKits"]:
+        if "EF_90mmMG" in kit["weapons"]:
+            kit["name"] = "90mm机枪套件"
+    # AALDE is pilot-gated, but its left dagger decal is shared by both native
+    # combos (nowWeaponIndex=1). Hiding the combo must not hide that physical blade.
+    right = next(layer for layer in prefab["layers"] if layer["name"] == "EF_BeamDagger_Double_AALDF")
+    left = next(layer for layer in prefab["layers"] if layer["name"] == "EF_BeamDagger_Double_AALDE_L")
+    source = section(native, "decal_" + left["name"])
+    if "memory.nowWeaponIndex==1" not in source.get("isVisible", ""):
+        raise ValueError("RX-78XX shared dagger visibility changed in source")
+    left.pop("hidden", None)
+    left["visibleWhen"] = {"weaponDisplayIndex": 1}
+    if "kit" in right.get("visibleWhen", {}):
+        left["visibleWhen"]["kit"] = list(right["visibleWhen"]["kit"])
+    left["requiredParts"] = ["leftArm"]
+
+
 def correct(prefab, native):
     from native_movement_effects import correct_effects
     correct_effects(prefab, native)
@@ -44,6 +72,7 @@ def correct(prefab, native):
             visibility = layer.setdefault("visibleWhen", {})
             visibility.pop("attacking", None)
             visibility["heldAttacking"] = name.endswith("_Attack")
+    correct_shared_weapon_layers(prefab, native)
     if prefab["id"] in ["RX_75", "RX_75R", "RMV_1", "RTX_440"]:
         body = max((layer.get("order", 0) for layer in layers if layer["name"] == "Body"), default=5)
         for layer in layers:
@@ -106,4 +135,10 @@ def correct(prefab, native):
         if kit["weapons"]:
             primary = min(kit["weapons"],key=priority)
             kit["weapons"] = [primary,*[key for key in kit["weapons"] if key != primary]]
+    from native_tethers import correct as correct_tethers
+    correct_tethers(prefab, native)
+    from native_hangars import correct as correct_hangars
+    correct_hangars(prefab, native)
+    from native_mobility import correct as correct_mobility
+    correct_mobility(prefab, native)
     layers.sort(key=lambda layer:layer.get("order",0))

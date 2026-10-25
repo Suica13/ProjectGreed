@@ -156,7 +156,15 @@
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 10.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "commandAuras": [],
@@ -235,7 +243,15 @@
     "balanceStatus": "native-level",
     "accuracy": 100.0,
     "unitLevel": 300.0,
-    "tacticalMoveBeforeBonus": 4
+    "tacticalMoveBeforeBonus": 4,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 10.0,
+      "water": 10.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -267,22 +283,22 @@
     "ja": {}
   },
   "weapons": {
-    "EF_Type61_SPG_Cannon": {
-      "name": "加农炮",
+    "Common_Mortar_Type61_SPG": {
+      "name": "迫击炮",
       "type": "shell",
-      "min": 3,
-      "max": 5,
-      "hit": 75.0,
-      "en": 30.0,
-      "sourceName": "EF_Type61_SPG_Cannon",
-      "sourceHit": 75.0,
+      "min": 5,
+      "max": 8,
+      "hit": 65.0,
+      "en": 150.0,
+      "sourceName": "Common_Mortar_Type61_SPG",
+      "sourceHit": 65.0,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "primary",
+      "slot": "skill",
       "clip": null,
-      "damagePerShot": 4000.0,
+      "damagePerShot": 3500.0,
       "damageComponents": {
-        "shell": 4000.0
+        "shell": 3500.0
       },
       "hitsPerShot": 1,
       "attack": {
@@ -292,7 +308,24 @@
             "muzzleIndex": 0,
             "partBreakModifier": 0.5,
             "requiredParts": [],
-            "delay": 0.0
+            "delay": 2.25
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 1.25
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 1.25
+          },
+          {
+            "delay": 2.0
           }
         ],
         "startAnimation": null
@@ -301,40 +334,41 @@
       "partBreakModifier": 0.5,
       "changeHeldWeapon": false,
       "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_Type61_SPG_Cannon.gw",
+        "file": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw",
         "barrels": [
           {
-            "id": "EF_Type61_SPG_Cannon",
+            "id": "Common_Mortar_Type61_SPG",
             "x": 0.0,
-            "y": 18.0
+            "y": 15.0
           }
         ]
       },
       "projectile": {
         "texture": "../../projectiles/Cannon_1.png",
-        "scale": 0.5,
-        "speed": 30.0,
+        "scale": 0.75,
+        "speed": 25.0,
         "forwardOffset": -5.0,
-        "rotation": 0.0
+        "rotation": 0,
+        "motion": "mortar"
       },
-      "hitEffect": "Explosion_Hit_1",
+      "hitEffect": "Explosion_Hit_1_XL",
       "muzzle": {
         "mounts": [
           {
             "bone": "Body",
             "offset": {
               "x": 0.0,
-              "y": 18.0
+              "y": 15.0
             }
           }
         ]
       },
       "sound": {
         "file": "../../sounds/ShellCannon_1.ogg",
-        "volume": 0.5
+        "volume": 0.6
       },
       "targetModifiers": {
-        "air": 0.75,
+        "air": 0.5,
         "water": 0.75,
         "ground": 1.0,
         "space": 1.0
@@ -342,61 +376,84 @@
       "muzzleEffects": [
         "BZ_Fire_1"
       ],
-      "category": "cannon",
+      "localization": {
+        "zh": {
+          "name": "迫击炮"
+        },
+        "en": {
+          "name": "Mortar"
+        },
+        "ja": {
+          "name": "迫撃砲"
+        }
+      },
       "nativePayload": {
-        "ShellDamage": 4000.0,
-        "DpDamage": 500.0,
-        "WeaponAccuracy": 75.0,
+        "offsetRandomXY": 100.0,
+        "ShellDamage": 3500.0,
+        "DpDamage": 200.0,
+        "WeaponAccuracy": 65.0,
         "PartBreakModifier": 0.5,
         "CockpitBreakModifier": 0.5,
         "PilotDamageModifier": 1.0,
         "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.5,
+        "AntiBuilding": 2.0,
         "AntiAqua": 0.75,
-        "AntiAir": 0.75,
+        "AntiAir": 0.5,
         "AntiLand": 1.0,
         "AntiSpace": 1.0,
-        "HeightChangeSpeed": 0.5,
-        "HeightHitRange": 10.0,
-        "ProjectileSpeed": 30.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 30.0,
-        "ProjectileLife": 50.0,
-        "ProjectileBlastRange": 50.0,
-        "ProjectileBlastDamageModifier": 0.35,
-        "ProjectileBlastDpModifier": 1.0
+        "ProjectileSpeed": 25.0,
+        "ProjectileSpread": 25.0,
+        "ProjectileExplosionRange": 80.0,
+        "ProjectileLife": 200.0
       },
       "antiSize": {
         "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          "damage": 1,
+          "accuracy": 1
         },
         "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+          "damage": 1,
+          "accuracy": 1
         }
       },
       "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_Type61_SPG_Cannon.gw",
-        "barrel": "EF_Type61_SPG_Cannon",
-        "entry": "automatic_turret",
-        "cooldown": 5.0,
-        "duration": 0,
-        "firstShot": 0.0,
-        "lastShot": 0.0,
-        "firingEvents": 1,
-        "projectiles": 1,
-        "declaredEnergy": 30.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 30.0,
-        "energy": 30.0,
-        "actions": []
+        "source": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw",
+        "barrel": "Common_Mortar_Type61_SPG",
+        "entry": "action_Common_Mortar_Type61_SPG_Trigger",
+        "cooldown": 120.0,
+        "duration": 6.75,
+        "firstShot": 2.25,
+        "lastShot": 4.75,
+        "firingEvents": 3,
+        "projectiles": 3,
+        "declaredEnergy": 150.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 150.0,
+        "actions": [
+          "action_Common_Mortar_Type61_SPG_Trigger",
+          "hiddenAction_SetOnSkillOn",
+          "hiddenAction_PlayCommon_Cannon_Shoot_A_Step_1",
+          "hiddenAction_PlayCommon_Cannon_Shoot_A_Step_2",
+          "hiddenAction_Common_Mortar_Type61_SPG_SetWeaponIndex",
+          "hiddenAction_Common_Mortar_Type61_SPG_B3_Step_1",
+          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_1",
+          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_2",
+          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_3",
+          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_4",
+          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_Final",
+          "hiddenAction_SetOnSkillOff"
+        ]
       },
-      "actionCost": 3
+      "category": "mortar",
+      "noCounter": true,
+      "special": {
+        "type": "mortar",
+        "radius": 1,
+        "emptyCells": true
+      },
+      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "actionCost": 5
     }
   },
   "mechanics": [
@@ -418,7 +475,7 @@
       "name": "标准武装",
       "cost": 0,
       "weapons": [
-        "EF_Type61_SPG_Cannon"
+        "Common_Mortar_Type61_SPG"
       ]
     }
   ],
@@ -431,5 +488,16 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "skills": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Tank",
+    "Vehicle"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

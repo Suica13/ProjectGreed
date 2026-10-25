@@ -313,7 +313,9 @@ test("melee approaches across the divider before swinging, stays close for both 
     }
   }
   for (const model of Object.values(ART.models))
-    for (const weapon of model.weapons.filter((w) => w.type === "melee" && w.id !== "Common_Cqb_A"))
+    for (const weapon of model.weapons.filter(
+      (w) => w.type === "melee" && w.id !== "Common_Cqb_A" && w.projectile?.motion !== "tether",
+    ))
       assert.ok(weapon.swingEffects?.length);
 });
 
@@ -406,6 +408,14 @@ test("miss lifetimes stop at the first arena edge for vertical, horizontal and d
         const plan = r.fx.plan(w, a, b, { from: "a", to: "b", weapon: w.id, hit: false });
         assert.ok(Number.isFinite(plan.duration), modelId + "/" + w.id);
         for (const shot of plan.shots) {
+          if (w.projectile.motion === "tether") {
+            assert.equal(
+              shot.visibleUntil,
+              shot.impactAt +
+                (w.projectile.tether.hold + w.projectile.tether.retract) / plan.actionSpeed,
+            );
+            continue;
+          }
           if (["bomb", "mortar"].includes(w.projectile.motion)) {
             assert.equal(shot.visibleUntil, shot.impactAt);
             continue;
@@ -533,5 +543,55 @@ test("mortar shells take twice as long and rotate along the arc in both directio
     }
     assert.ok(Math.abs(angles[0] - angles[2]) > 0.1);
     assert.ok(plan.duration >= shot.impactAt);
+  }
+});
+
+test("native heat rods and Ball K anchors extend, hold and retract from the animated hand even on Miss", () => {
+  const r = runtime();
+  for (const id of ["MS_07B", "MS_07B3", "RB_79K"]) {
+    const model = Object.values(ART.models).find((m) => m.prefabId === id);
+    const weapon = model.weapons.find((w) => w.projectile?.motion === "tether");
+    assert.ok(weapon, id);
+    assert.equal(weapon.type, "melee");
+    assert.equal(weapon.min, 1);
+    assert.equal(weapon.max, 2);
+    assert.equal(weapon.swingEffects, undefined);
+    assert.ok(ART.assets[weapon.projectile.asset]);
+    const a = { ...source, unit: { ...source.unit, model: model.prefabId + "__" + model.kitId } },
+      event = { hit: false, sourceDodgeSlot: 1 };
+    const plan = r.fx.plan(weapon, a, target, event),
+      shot = plan.shots[0];
+    if (id === "RB_79K") {
+      assert.equal(weapon.projectile.tether.mount.bone, "Body");
+      assert.equal(weapon.projectile.tether.mount.offset.x, weapon.muzzle.offset.x);
+      assert.equal(weapon.projectile.tether.mount.offset.y, weapon.muzzle.offset.y);
+      const start = r.fx.tetherState(weapon, plan, shot, shot.at, a, event);
+      assert.ok(Math.hypot(start.anchor.x - shot.origin.x, start.anchor.y - shot.origin.y) < 1e-9);
+    }
+    assert.equal(plan.melee, null);
+    assert.ok(plan.duration < 3, "a missed tether must not fly to the edge of a large map");
+    const extended = r.fx.tetherState(weapon, plan, shot, shot.at + shot.flight / 2, a, event);
+    const held = r.fx.tetherState(weapon, plan, shot, shot.impactAt + 0.01, a, event);
+    const returned = r.fx.tetherState(weapon, plan, shot, shot.visibleUntil - 0.001, a, event);
+    assert.equal(extended.stage, "extend");
+    assert.equal(held.stage, "contact");
+    assert.equal(returned.stage, "retract");
+    assert.ok(
+      Math.hypot(returned.head.x - returned.anchor.x, returned.head.y - returned.anchor.y) < 2,
+    );
+    assert.equal(r.fx.tetherState(weapon, plan, shot, shot.visibleUntil + 0.01, a, event), null);
+    const neutral = r.fx.plan(weapon, a, target, { hit: false, sourceDodgeSlot: 0 });
+    const neutralState = r.fx.tetherState(
+      weapon,
+      neutral,
+      neutral.shots[0],
+      neutral.shots[0].impactAt + 0.01,
+      a,
+      { hit: false, sourceDodgeSlot: 0 },
+    );
+    assert.ok(
+      Math.abs(held.anchor.y - neutralState.anchor.y - ART.presentation.dodgeDistance * a.scale) <
+        1e-9,
+    );
   }
 });

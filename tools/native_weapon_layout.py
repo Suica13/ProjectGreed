@@ -151,6 +151,8 @@ def visibility_and_deferred(p,data):
      layer['visibleWhen']={'heldWeapon':{'not':key} if 'NotUsing' in layer['name'] else key}
      kits=[k['id'] for k in p['weaponKits'] if key in k['weapons']]
      if kits:layer['visibleWhen']['kit']=kits
+ from native_presentation import correct_shared_weapon_layers
+ correct_shared_weapon_layers(p,data)
  known={Path(w['source']['file']).stem for w in p['weapons'].values()}
  deferred=[]
  for key in data:

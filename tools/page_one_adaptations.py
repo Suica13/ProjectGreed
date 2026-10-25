@@ -40,6 +40,7 @@ def populate_infantry(p,data):
  module.write(ASSETS/'effects/effects.json',effects)
 
 def weapon_label(key,w):
+ if key == 'ZN_MS_07B3_Minigun':return '加特林盾牌'
  if key in BALANCED:return BALANCED[key]['name']
  caliber=re.search(r'(\d+mm)',key);prefix=caliber[1] if caliber else ''
  if w.get('moduleIds'):prefix='舰载'
@@ -51,7 +52,7 @@ def weapon_label(key,w):
  if 'Mortar' in key:return '迫击炮轰炸'
  if 'Sniper' in key:return '光束狙击枪' if w['type']=='beam' else '狙击步枪'
  if 'Cannon' in key:return prefix+('光束炮' if w['type']=='beam' else '加农炮')
- if 'Vulcan' in key or 'MG' in key:return prefix+'机枪'
+ if 'Vulcan' in key or 'MG' in key or any(t in key.lower() for t in ['minigun','gatling','gattling']):return prefix+'机枪'
  if 'Rifle' in key or key.endswith('_BR'):return prefix+'光束步枪'
  if 'Bomb' in key:return prefix+'航空炸弹'
  if any(t in key for t in ['_MS','Missile','Rocket']):return prefix+'导弹发射器'

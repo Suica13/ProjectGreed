@@ -12,6 +12,10 @@ const SkillControls = (() => {
     );
   }
   function description(skill) {
+    if (skill.type === "flight")
+      return I18n.text(
+        "部位完好时消耗1 AP切换飞行姿态；起飞后作为航空单位，可跨越山岩与水域，不消耗移动机会。降落需要合法地形。",
+      );
     if (skill.type === "overdrive")
       return `启动消耗${skill.enPercent}%最大EN · 强化形态持续${skill.duration}个己方回合 · 每个己方回合结束扣除${skill.hpDrainPercent}%最大耐久、${skill.enDrainPercent}%最大EN · 到期或头部损毁时强制解除，保留资源和破损部位。`;
 
@@ -38,14 +42,17 @@ const SkillControls = (() => {
       const button = element("button", "weapon" + (activeId() === skill.id ? " active" : ""));
       button.dataset.unitSkill = skill.id;
       button.append(
-        element("strong", "", skill.name),
+        element("strong", "", skill.type === "flight" && unit.flying ? "降落" : skill.name),
         element("small", "helper", description(skill)),
       );
       const left = Math.max(
         0,
         skill.maxUses - (unit.skillUses?.[UnitModels[unit.model].prefabId + "/" + skill.id] || 0),
       );
-      button.append(element("small", "muted", `${I18n.text("剩余次数")} ${left}/${skill.maxUses}`));
+      if (skill.type !== "flight")
+        button.append(
+          element("small", "muted", `${I18n.text("剩余次数")} ${left}/${skill.maxUses}`),
+        );
       button.disabled =
         !canCommand ||
         !Rules.canUseSkill(game, unit, skill.id) ||
@@ -55,7 +62,7 @@ const SkillControls = (() => {
         AttackControls.reset();
         mode = "skill:" + skill.id;
         weaponId = null;
-        if (["overdrive", "transform", "armor_purge"].includes(skill.type))
+        if (["overdrive", "transform", "armor_purge", "flight"].includes(skill.type))
           click({ x: unit.x, y: unit.y }, unit);
         else update();
       };
@@ -69,7 +76,7 @@ const SkillControls = (() => {
       !unit ||
       !activeId() ||
       phase !== "idle" ||
-      (Net.active && (!Net.canAct() || !Net.owns(unit)))
+      (Net.active && (!Net.canAct() || !Net.canControl(unit)))
     )
       return new Set();
     return new Set(Rules.skillTargets(game, unit, activeId()).map((c) => Rules.key(c.x, c.y)));

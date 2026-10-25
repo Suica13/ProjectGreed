@@ -11,7 +11,11 @@ test("space room deployment halves ground-unit movement and mobility, shows purp
   await page.locator("#openFormation").click();
   await page.locator('[data-unit-id="RX_79_G"]').click();
   await page.locator("#addFormationUnit").click();
-  await page.locator(".formation-row").last().click();
+  await page
+    .locator(".formation-row")
+    .last()
+    .getByRole("button", { name: "详情", exact: true })
+    .click();
   await expect(page.locator("#formationDetailStats")).toContainText("宇宙适应性 50%");
   await page.locator("#closeFormationDetail").click();
   await page.locator("#saveFormation").click();

@@ -34,7 +34,7 @@ test("head damage scales every damage channel once, preserves accuracy and combi
     G.estimate(g, { ...a, brokenParts: {} }, b, manual).damage,
   );
   assert.equal(G.modelOf({ ...a, brokenParts: {} }).weapons[0].damagePerShot, raw.damagePerShot);
-  assert.equal(G.models[a.model].weapons[0].damagePerShot, raw.damagePerShot / 1.25);
+  assert.equal(G.models[a.model].weapons[0].damagePerShot, raw.damagePerShot);
 });
 test("destroyed backpacks reduce authoritative movement by 25 percent rounded down without reducing mobility", () => {
   const { g, a } = fixture(),

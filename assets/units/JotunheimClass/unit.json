@@ -160,7 +160,7 @@
   "stats": {
     "hp": 60000.0,
     "en": 22500.0,
-    "move": 4,
+    "move": 6,
     "mobility": 55.0,
     "cost": 500,
     "counterLimit": 1,
@@ -170,7 +170,15 @@
     "movementType": "ground",
     "adaptability": {
       "ground": 0,
-      "space": 100
+      "space": 100,
+      "water": 10.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": true,
     "footprint": {
@@ -367,7 +375,15 @@
     "balanceStatus": "native-level",
     "accuracy": 115.0,
     "unitLevel": 2000.0,
-    "tacticalMoveBeforeBonus": 3
+    "tacticalMoveBeforeBonus": 3,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 10.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -1039,8 +1055,8 @@
     {
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
-      "status": "review",
-      "name": "搭载与放出"
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
     },
     {
       "id": "CmdCom",
@@ -1081,5 +1097,44 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 4,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X4.ini",
+      "sourceUnit": "Hangar_X4"
+    },
+    {
+      "id": "Hangar_2",
+      "name": "格纳库 2",
+      "capacity": 4,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X4.ini",
+      "sourceUnit": "Hangar_X4"
+    }
+  ]
 }

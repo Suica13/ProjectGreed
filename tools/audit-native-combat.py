@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from mod_source import ASSETS, ROOT, load, stat
 from native_combat import native_weapon
+from weapon_policy import federation_space_turret_damage
 
 
 def main():
@@ -18,6 +19,8 @@ def main():
         units += 1
         for key, weapon in unit["weapons"].items():
             rebuilt = native_weapon(unit, copy.deepcopy(weapon), native)
+            rebuilt.pop("tacticalDamageMultiplier", None)
+            federation_space_turret_damage({"id": unit["id"], "weapons": {key: rebuilt}})
             for field in fields:
                 assert weapon[field] == rebuilt[field], (unit["id"], key, field)
             weapons += 1

@@ -74,4 +74,5 @@ def apply_parts(prefab, data=None):
             needed = [bones[layer["bone"]]]
         if needed:
             layer["requiredParts"] = list(dict.fromkeys(needed))
-    return prefab
+    from native_mobility import correct as correct_mobility
+    return correct_mobility(prefab, data)

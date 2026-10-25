@@ -31,27 +31,37 @@ const UnitIdentity = (() => {
     };
   }
   function drawCommandAura(ctx, unit, position, tile, selectedUnit) {
-    if (!selectedUnit || !Rules.modelOf(unit).ship) return;
-    for (const aura of Rules.modelOf(unit).commandAuras || []) {
-      if (
-        selectedUnit.id !== unit.id &&
-        (selectedUnit.team !== unit.team ||
-          Math.hypot(
-            Rules.center(unit).x - Rules.center(selectedUnit).x,
-            Rules.center(unit).y - Rules.center(selectedUnit).y,
-          ) > aura.radiusCells)
-      )
-        continue;
-      ctx.save();
-      ctx.strokeStyle = aura.type === "cmdDef" ? "#74aaff55" : "#f1ce7855";
-      ctx.fillStyle = aura.type === "cmdDef" ? "#74aaff09" : "#f1ce7809";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.arc(position.x, position.y, tile * aura.radiusCells, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
+    if (!selectedUnit || !Rules.modelOf(unit).supplyAura) return;
+    if (
+      selectedUnit.id !== unit.id &&
+      (selectedUnit.team !== unit.team || !Rules.inSupplyRange(unit, selectedUnit))
+    )
+      return;
+    const area = Rules.supplyCells(game, unit),
+      center = Rules.center(unit);
+    const occupied = new Set(area.map((c) => Rules.key(c.x, c.y)));
+    ctx.save();
+    ctx.fillStyle = "#35d6c130";
+    ctx.strokeStyle = "#51e5d3bb";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (const c of area) {
+      const x = position.x + (c.x - center.x - 0.5) * tile;
+      const y = position.y + (c.y - center.y - 0.5) * tile;
+      ctx.fillRect(x, y, tile, tile);
+      for (const [dx, dy, ax, ay, bx, by] of [
+        [0, -1, 0, 0, 1, 0],
+        [1, 0, 1, 0, 1, 1],
+        [0, 1, 1, 1, 0, 1],
+        [-1, 0, 0, 1, 0, 0],
+      ])
+        if (!occupied.has(Rules.key(c.x + dx, c.y + dy))) {
+          ctx.moveTo(x + ax * tile, y + ay * tile);
+          ctx.lineTo(x + bx * tile, y + by * tile);
+        }
     }
+    ctx.stroke();
+    ctx.restore();
   }
   function drawRing(ctx, unit, position, tile) {
     const palette = colors[relation(unit)];

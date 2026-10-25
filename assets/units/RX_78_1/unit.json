@@ -308,7 +308,8 @@
         "y": 22
       },
       "visibleWhen": {
-        "weaponDisplayIndex": 1
+        "weaponDisplayIndex": 1,
+        "heldWeapon": "EF_BeamJavelin_BF_B"
       },
       "requiredParts": [
         "rightArm"
@@ -435,7 +436,8 @@
         "y": 22
       },
       "visibleWhen": {
-        "weaponDisplayIndex": 1
+        "weaponDisplayIndex": 1,
+        "heldWeapon": "EF_BeamSaber_AF_Fast_A"
       },
       "requiredParts": [
         "rightArm"
@@ -578,7 +580,15 @@
     "partStructuralStrength": 124,
     "adaptability": {
       "ground": 100,
-      "space": 100
+      "space": 100,
+      "water": 75.0,
+      "air": 50.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "movementType": "ground",
     "partsBreakable": true,
@@ -654,7 +664,15 @@
     "partStructuralStrength": 124,
     "unitLevel": 2750.0,
     "balanceStatus": "native-level",
-    "tacticalMoveBeforeBonus": 6
+    "tacticalMoveBeforeBonus": 6,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 75.0,
+      "air": 50.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": true,
@@ -2401,5 +2419,15 @@
     "levelMultiplier": 0.25,
     "published": 700
   },
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

@@ -293,7 +293,15 @@
     "movementType": "amphibious",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 110.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "stealth": {
@@ -379,7 +387,15 @@
     "partStructuralStrength": 120.0,
     "balanceStatus": "native-level",
     "unitLevel": 900.0,
-    "tacticalMoveBeforeBonus": 5
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 25.0,
+      "water": 110.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -1340,5 +1356,17 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Amphibious",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

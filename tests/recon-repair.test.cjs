@@ -52,3 +52,20 @@ test("passive supply never resurrects a dead ship and does not consume EN", () =
   G.end(g);
   assert.equal(u.hp, 0);
 });
+
+
+test("supply overlay matches footprint range in both ship orientations", () => {
+  const g = G.create(false, 2, [[entry("ColumbusClass")], [entry("RGM_79")]], false,
+    {mapId:"asteroid_crossing_1v1",costLimit:50000,unitCostLimit:10000});
+  const u = g.units[0];
+  Object.assign(u,{x:10,y:10});
+  for (const angle of [0,90]) {
+    u.angle=angle;
+    const area=new Set(G.supplyCells(g,u).map(c=>G.key(c.x,c.y)));
+    for(let y=0;y<G.mapHeight(g);y++) for(let x=0;x<G.mapWidth(g);x++)
+      assert.equal(area.has(G.key(x,y)),G.inSupplyRange(u,{x,y}));
+    const size=G.dimensions(u), range=G.modelOf(u).supplyAura.range;
+    assert(area.has(G.key(u.x+size.width-1+range,u.y)));
+    assert(!area.has(G.key(u.x+size.width+range,u.y)));
+  }
+});

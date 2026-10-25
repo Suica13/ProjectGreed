@@ -28,6 +28,7 @@ function createAttackPlanner(rules, randomId) {
     const intent = {
       attacker: attacker.id,
       target: target.id,
+      targetCell: target.groundTarget ? { x: target.x, y: target.y } : undefined,
       weapon: weapon.id,
       seat,
       weapons: weapons.map((w) => w.id),
@@ -40,6 +41,7 @@ function createAttackPlanner(rules, randomId) {
     attacker.actionPoints = rules.actionPoints(attacker) + previousCost - budget.ap;
     attacker.plan = {
       target: target.id,
+      targetCell: intent.targetCell,
       weapon: weapon.id,
       weapons: intent.weapons,
       actionCost: budget.ap,
@@ -128,7 +130,9 @@ function createAttackPlanner(rules, randomId) {
         result.push(intent);
         continue;
       }
-      const target = find(room, intent.target);
+      const target = intent.targetCell
+        ? rules.groundTarget(room.game, attacker, intent.targetCell.x, intent.targetCell.y)
+        : find(room, intent.target);
       if (!target || !rules.canAttack(room.game, attacker, target, weapon)) {
         delete attacker.plan;
         continue;
@@ -147,7 +151,7 @@ function createAttackPlanner(rules, randomId) {
         if (!bag.length) bag = cells.map((c) => ({ ...c }));
         const cell = bag.splice(Math.floor(rules.random(room.game) * bag.length), 1)[0];
         const occupant = rules.at(room.game, cell.x, cell.y),
-          enemy = occupant && occupant.team !== attacker.team && occupant.hp > 0;
+          enemy = occupant && rules.canAttack(room.game, attacker, occupant, weapon);
         const expanded = {
           ...intent,
           target: enemy ? occupant.id : null,
@@ -234,10 +238,12 @@ function createAttackPlanner(rules, randomId) {
     const reserved = { ...target };
     for (const choice of room.responses || []) {
       if (choice.response !== "counter" || choice.intent.target !== target.id) continue;
-      const weapon = rules.modelOf(target).weapons.find((weapon) => weapon.id === choice.counterId);
+      const weapons = (choice.counterIds || [choice.counterId]).map((id) =>
+        rules.modelOf(target).weapons.find((w) => w.id === id),
+      );
       reserved.counterCount = (reserved.counterCount || 0) + 1;
       reserved.counterTargetId = choice.counterTargetId || choice.intent.attacker;
-      reserved.en -= weapon?.en || 0;
+      reserved.en -= weapons.reduce((sum, w) => sum + (w ? rules.weaponStats(w, target).en : 0), 0);
     }
     return {
       remaining: rules.countersRemaining(reserved),
@@ -261,19 +267,25 @@ function createAttackPlanner(rules, randomId) {
     if (response === "counter" && !attack) throw Error("反击目标必须是正在攻击该单位的敌人");
     const attacker = find(room, counterTargetId),
       target = find(room, pending.target);
-    const counter = rules.modelOf(target).weapons.find((weapon) => weapon.id === counterId);
-    if (
-      response === "counter" &&
-      (attack.noCounter ||
-        !counter ||
-        !counterOptions(room, attacker, target, attack).ids.includes(counterId))
-    )
-      throw Error("反击次数已用完，或武器不满足射程与 EN 条件");
+    const counterIds = Array.isArray(counterId) ? [...counterId] : [counterId];
+    if (response === "counter") {
+      if (attack.noCounter) throw Error("反击次数已用完，或武器不满足射程与 EN 条件");
+      const options = counterOptions(room, attacker, target, attack).ids;
+      if (counterIds.some((id) => !options.includes(id)))
+        throw Error("反击次数已用完，或武器不满足射程与 EN 条件");
+      rules.counterQueue(
+        room.game,
+        target,
+        attacker,
+        counterIds.map((id) => rules.modelOf(target).weapons.find((w) => w.id === id)),
+      );
+    }
     if (response === "counter") rules.faceTarget(target, attacker);
     (room.responses ||= []).push({
       intent: pending,
       response,
-      counterId,
+      counterId: counterIds[0],
+      counterIds: response === "counter" ? counterIds : [],
       counterTargetId: response === "counter" ? counterTargetId : null,
     });
     room.reactions = (room.reactions || []).filter((request) => request.id !== reactionId);
@@ -376,14 +388,26 @@ function createAttackPlanner(rules, randomId) {
         !rules.canAttack(room.game, attacker, target, weapon)
       )
         continue;
-      const counter = rules.modelOf(target).weapons.find((weapon) => weapon.id === counterId);
-      // 先前交战可能消耗了反击次数或 EN；此时保留防御，不能让整批结算失败。
-      const response =
-        allowCounter && (!counter || !rules.canCounter(room.game, target, attacker, counter))
-          ? "defend"
-          : choice.response;
+      const counterIds = (choice.counterIds || [counterId]).filter((id) => {
+        const weapon = rules.modelOf(target).weapons.find((w) => w.id === id);
+        return rules.canCounter(room.game, target, attacker, weapon);
+      });
+      // 先前交战破坏部位或消耗 EN 后，只保留仍可执行的序列。
+      const live = [];
+      for (const id of counterIds) {
+        try {
+          rules.counterQueue(
+            room.game,
+            target,
+            attacker,
+            [...live, id].map((id) => rules.modelOf(target).weapons.find((w) => w.id === id)),
+          );
+          live.push(id);
+        } catch {}
+      }
+      const response = allowCounter && !live.length ? "defend" : choice.response;
       room.pending = { ...intent, id: randomId() };
-      const battle = respond(room, room.pending.id, response, counterId, allowCounter);
+      const battle = respond(room, room.pending.id, response, live, allowCounter);
       if (allowCounter) counterExecutions.add(counterKey);
       battle.attackQueue = {
         attacker: intent.attacker,
@@ -397,6 +421,16 @@ function createAttackPlanner(rules, randomId) {
       const attacker = find(room, choice.intent.attacker);
       if (attacker) delete attacker.plan;
     }
+    // Apply after the entire batch so mortar pellets do not block one another.
+    for (const battle of room.combatBatch)
+      for (const event of battle.events) {
+        const unit = find(room, event.from);
+        if (unit && event.strikes?.some((strike) => strike.executed))
+          rules.startWeaponCooldown(
+            unit,
+            rules.modelOf(unit).weapons.find((w) => w.id === event.weapon),
+          );
+      }
     return room.combatBatch;
   }
   return {

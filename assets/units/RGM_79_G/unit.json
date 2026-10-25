@@ -577,7 +577,15 @@
     "partStructuralStrength": 120,
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 50.0,
+      "air": 50.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "accuracy": 115,
     "commandAuras": [],
@@ -649,7 +657,15 @@
     "accuracy": 115,
     "unitLevel": 1250.0,
     "balanceStatus": "native-level",
-    "tacticalMoveBeforeBonus": 5
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 25.0,
+      "water": 50.0,
+      "air": 50.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": true,
@@ -2033,5 +2049,15 @@
     "published": 325
   },
   "skills": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

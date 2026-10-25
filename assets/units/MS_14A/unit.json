@@ -525,7 +525,15 @@
     "partStructuralStrength": 125,
     "adaptability": {
       "ground": 100,
-      "space": 100
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "accuracy": 125,
     "actionPoints": 5
@@ -596,7 +604,15 @@
     "accuracy": 125,
     "unitLevel": 1500.0,
     "balanceStatus": "native-level",
-    "tacticalMoveBeforeBonus": 6
+    "tacticalMoveBeforeBonus": 6,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": true,
@@ -1597,5 +1613,15 @@
     "published": 375
   },
   "skills": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

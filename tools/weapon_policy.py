@@ -25,6 +25,8 @@ def category(weapon_id, weapon):
     text = (weapon_id + " " + weapon.get("source", {}).get("file", "") + " " + weapon.get("name", "")).lower()
     if weapon["type"] == "melee":
         return "melee"
+    if any(token in weapon_id.lower() for token in ["minigun", "gatling", "gattling"]):
+        return "machine_gun"
     if "chestbeam" in weapon_id.lower():
         return "other"  # 大魔的胸部扩散炮等特殊武器保留原来的专用射程。
     if "mortar" in text or "迫击" in text:
@@ -106,9 +108,66 @@ def extended_ranges(prefab):
             weapon["max"] = math.ceil(base["max"] * 1.5)
 
 
+def federation_space_turret_damage(prefab):
+    # Tactical bonus; preserve nativePayload as the original MOD audit source.
+    if prefab["id"] not in {"SalamisClass", "MagellanClass", "MagellanClass_Green"}:
+        return
+    for weapon in prefab["weapons"].values():
+        if not (weapon.get("moduleIds") or weapon.get("moduleId")):
+            continue
+        factor = 1.25 / weapon.get("tacticalDamageMultiplier", 1)
+        for payload in [weapon, *weapon.get("attack", {}).get("steps", [])]:
+            if "damagePerShot" in payload:
+                payload["damagePerShot"] *= factor
+            if "damageComponents" in payload:
+                payload["damageComponents"] = {k: v * factor for k, v in payload["damageComponents"].items()}
+        weapon["tacticalDamageMultiplier"] = 1.25
+
+
+def flight_skill(prefab):
+    if not any(m["id"] == "FlyStyle" for m in prefab.get("mechanics", [])):
+        return
+    prefab["skills"] = [s for s in prefab.get("skills", []) if s["id"] != "flight_stance"]
+    prefab["skills"].append({"id":"flight_stance", "type":"flight", "name":"飞行姿态", "actionCost":1,
+        "requiredParts":["head","backpack","leftArm","rightArm","leftLeg","rightLeg"],
+        "maxUses":99999, "consumeAction":False, "range":0, "effect":"Light_75_NotAttached",
+        "sound":{"file":"../../sounds/Transform_4.ogg","volume":0.6},
+        "localization":{"zh":{"name":"飞行姿态"},"en":{"name":"Flight Stance"},"ja":{"name":"飛行形態"}}})
+    for mechanic in prefab["mechanics"]:
+        if mechanic["id"] == "FlyStyle":
+            mechanic.update(status="adapted", name="飞行姿态：部位完好时消耗1 AP起飞或降落，保留移动机会")
+
+
+def type61_spg_mortar(prefab):
+    if prefab["id"] != "Type61_SPG":
+        return
+    key = "Common_Mortar_Type61_SPG"
+    if key not in prefab["weapons"]:
+        import importlib.util
+        from pathlib import Path
+        from mod_source import ASSETS
+        spec = importlib.util.spec_from_file_location("spg_importer", Path(__file__).with_name("import-0079-page-one.py"))
+        importer = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(importer)
+        effects = importer.read(ASSETS / "effects/effects.json")
+        for weapon_id, weapon in importer.weapon(prefab, ROOT / "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw", effects):
+            prefab["weapons"][weapon_id] = weapon
+        importer.write(ASSETS / "effects/effects.json", effects)
+    prefab["weapons"].pop("EF_Type61_SPG_Cannon", None)
+    for kit in prefab["weaponKits"]:
+        kit["weapons"] = [key]
+    prefab["weapons"][key]["name"] = "迫击炮"
+    prefab["weapons"][key]["localization"] = {"zh":{"name":"迫击炮"},"en":{"name":"Mortar"},"ja":{"name":"迫撃砲"}}
+
+
 def configure(prefab, native):
     from native_combat import restore
+    type61_spg_mortar(prefab)
     restore(prefab, native)
+    flight_skill(prefab)
+    for weapon in prefab["weapons"].values():
+        weapon.pop("tacticalDamageMultiplier", None)
+    federation_space_turret_damage(prefab)
     if prefab["stats"].get("ship"):
         native_accuracy = stat(native, "baseAccuracyLevel", 100)
         prefab["sourceStats"]["accuracy"] = native_accuracy
@@ -116,7 +175,7 @@ def configure(prefab, native):
         prefab["stats"]["accuracyMultiplier"] = 1.1
     # Store the pre-bonus distance so refreshes never add the bonus twice.
     baseline = prefab["sourceStats"].setdefault("tacticalMoveBeforeBonus", prefab["stats"]["move"])
-    prefab["stats"]["move"] = baseline + 1
+    prefab["stats"]["move"] = baseline + (3 if prefab["stats"].get("ship") else 1)
     shooting = stat(native, "baseShootLevel", 100)
     melee = stat(native, "baseCqbLevel", 100)
     prefab["attackBonuses"].update(shooting=shooting - 100, melee=melee - 100)
@@ -132,6 +191,9 @@ def configure(prefab, native):
                 "flat": stat(native, "shield" + source_name + "DefPlus"),
             }
     for key, weapon in prefab["weapons"].items():
+        if key == "ZN_MS_07B3_Minigun":
+            weapon["name"] = "加特林盾牌"
+            weapon["localization"] = {"zh":{"name":"加特林盾牌"},"en":{"name":"Gatling Shield"},"ja":{"name":"ガトリングシールド"}}
         if "ChestMS_Line" in key:
             weapon["name"] = "胸部有线导弹"
             weapon["localization"] = {"zh": {"name": weapon["name"]}, "en": {"name": "Chest Wire-Guided Missiles"}, "ja": {"name": "胸部有線ミサイル"}}

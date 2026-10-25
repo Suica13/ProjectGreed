@@ -143,7 +143,15 @@
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 10.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "commandAuras": [],
@@ -223,7 +231,15 @@
     "balanceStatus": "native-level",
     "accuracy": 110.0,
     "unitLevel": 200.0,
-    "tacticalMoveBeforeBonus": 3
+    "tacticalMoveBeforeBonus": 3,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 10.0,
+      "water": 10.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -497,5 +513,16 @@
   },
   "skills": [],
   "nativeCombatRevision": 1,
-  "formOnly": true
+  "formOnly": true,
+  "unitTags": [
+    "Tank",
+    "Vehicle"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

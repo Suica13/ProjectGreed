@@ -9,7 +9,7 @@ const MapCamera = (() => {
     suppressClick = false;
   // Fit-to-map is 100%; larger maps need more magnification to reach the same readable cell size.
   const readableCellPixels = 160;
-  const minimumZoom = Math.min(1, 1 / cellScale);
+  const minimumZoom = 0.5;
   function baseTile(width, height) {
     return (
       Math.min(

@@ -135,7 +135,10 @@ const Chat = (() => {
         scrollTop = list.scrollTop;
       list.replaceChildren(
         ...battleLog.slice(0, 80).map((text) => {
-          const line = element("div", "log-line");
+          const line = element(
+            "div",
+            "log-line" + (text.includes("\n") ? " deployment-roster" : ""),
+          );
           setNamedText(line, text, names);
           return line;
         }),
@@ -147,7 +150,7 @@ const Chat = (() => {
   function setSnapshot(snapshot) {
     if (snapshot.started && snapshot.matchId !== matchId) {
       matchId = snapshot.matchId;
-      if (!Net.local) selectTab("chat");
+      selectTab(Net.local ? "log" : "chat");
     }
     setLog(snapshot.log || [], [
       ...(snapshot.logNames || []),

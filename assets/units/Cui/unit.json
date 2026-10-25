@@ -162,7 +162,15 @@
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 10.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "visualTurrets": [
@@ -249,7 +257,15 @@
     "balanceStatus": "native-level",
     "accuracy": 100.0,
     "unitLevel": 200.0,
-    "tacticalMoveBeforeBonus": 5
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 10.0,
+      "water": 10.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -551,8 +567,8 @@
     {
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
-      "status": "review",
-      "name": "搭载与放出"
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
     }
   ],
   "weaponKits": [
@@ -574,5 +590,29 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "skills": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Vehicle",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 1,
+      "allowedTags": [
+        "Human"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X1_Human.ini",
+      "sourceUnit": "Hangar_X1_Human"
+    }
+  ]
 }

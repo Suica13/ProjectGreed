@@ -1,4 +1,4 @@
-/* seat 是出生席位；seat%2 是阵营。每个玩家只控制该席位自己的编组。 */
+/* seat 是出生席位；seat%2 是阵营。所有者保持不变，操作权限可由房间或本人共享给友军。 */
 const RoomPanel = (() => {
   let settingsKey = "",
     pendingSettings = null,
@@ -13,6 +13,8 @@ const RoomPanel = (() => {
       name = element("span", "", member.name);
     name.setAttribute("data-i18n-ignore", "");
     label.append(name);
+    if (member.shareUnits || snapshot.settings.shareAlliedUnits)
+      label.append(element("span", "host-badge", "共享"));
     if (member.bot) label.append(element("span", "host-badge", "AI"));
     if (member.id === snapshot.hostId) label.append(element("span", "host-badge", "房主"));
     return label;
@@ -82,6 +84,7 @@ const RoomPanel = (() => {
     for (const [key, title, values] of [
       ["bannedFactions", "禁用阵营", Rules.factions],
       ["bannedEras", "禁用年代", Rules.eras],
+      ["bannedTypes", "禁用类型", Rules.unitTags],
     ]) {
       const group = element("label", "tag-dropdown"),
         select = element("select");
@@ -97,7 +100,11 @@ const RoomPanel = (() => {
         select.dataset.bannedTags = JSON.stringify(selectedTags);
         select.replaceChildren();
         const summary = new Option(
-          selectedTags.length ? selectedTags.join(", ") : I18n.text("不禁用"),
+          selectedTags.length
+            ? selectedTags
+                .map((tag) => (key === "bannedTypes" ? I18n.text(Rules.unitTagName(tag)) : tag))
+                .join(", ")
+            : I18n.text("不禁用"),
           "",
         );
         summary.disabled = true;
@@ -106,7 +113,13 @@ const RoomPanel = (() => {
         select.add(new Option(I18n.text("不禁用"), "NONE"));
         select.add(new Option(I18n.text("禁用全部"), "ALL"));
         for (const tag of values)
-          select.add(new Option(tag + (selectedTags.includes(tag) ? " ✓" : ""), tag));
+          select.add(
+            new Option(
+              (key === "bannedTypes" ? I18n.text(Rules.unitTagName(tag)) : tag) +
+                (selectedTags.includes(tag) ? " ✓" : ""),
+              tag,
+            ),
+          );
       }
       select.onchange = () => {
         const value = select.value;
@@ -125,7 +138,7 @@ const RoomPanel = (() => {
     }
   }
   function readTags(parent) {
-    const restrictions = { bannedFactions: [], bannedEras: [] };
+    const restrictions = { bannedFactions: [], bannedEras: [], bannedTypes: [] };
     for (const select of parent.querySelectorAll("select[data-key]"))
       restrictions[select.dataset.key] = JSON.parse(select.dataset.bannedTags);
     return restrictions;
@@ -150,6 +163,8 @@ const RoomPanel = (() => {
     byId("roomCostLimit").value = costDrafts.costLimit ?? settings.costLimit;
     byId("roomUnitCostLimit").value = costDrafts.unitCostLimit ?? settings.unitCostLimit;
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
+    byId("roomShareAlliedUnits").checked = !!settings.shareAlliedUnits;
+    byId("roomShareAlliedUnits").disabled = locked;
     for (const id of ["roomMapSelect", "roomUnitLimit"]) byId(id).disabled = locked;
     // COST 输入时仍可继续打字，不因上一笔请求未确认而失去焦点。
     for (const id of ["roomCostLimit", "roomUnitCostLimit"])
@@ -171,6 +186,100 @@ const RoomPanel = (() => {
     byId("roomDetailPanel").hidden = true;
     byId("roomMain").inert = false;
   }
+  function armyControls(player, snapshot, locked) {
+    const panel = element("div", "ai-settings"),
+      config = Rules.armySettings(player);
+    const prefix = player.bot ? "ai-" : "player-",
+      suffix = player.bot ? player.seat : player.id;
+    const send = (patch = {}, extra = {}) =>
+      Net.request("configure_player", {
+        memberId: player.id,
+        config: { ...config, ...patch },
+        ...extra,
+      });
+    panel.append(element("h3", "", "编组设置"));
+    for (const [key, title, options] of [
+      ["difficulty", "单位强度", Rules.armyPercentages.map((n) => [n, n + "%"])],
+      ["fill", "编组COST比例", Rules.armyPercentages.map((n) => [n, n + "%"])],
+      ["countPercent", "编组数量比例", Rules.aiCountPercentages.map((n) => [n, n + "%"])],
+      ["unitCostPercent", "单机COST比例", Rules.armyPercentages.map((n) => [n, n + "%"])],
+    ]) {
+      const label = element("label", "", title),
+        select = element("select");
+      select.id = prefix + key + "-" + suffix;
+      if (key === "difficulty") select.title = I18n.text("仅影响耐久和EN上限");
+      select.setAttribute("aria-label", title + " " + player.name);
+      for (const [value, text] of options) select.add(new Option(text, value));
+      select.value =
+        key === "difficulty" ? Rules.aiPerformance[config.difficulty] * 100 : config[key];
+      select.disabled = locked || (!!player.formationPreset && key !== "difficulty");
+      select.onchange = () =>
+        send({
+          [key]: Number(select.value),
+          ...(key === "unitCostPercent" ? { unitCostLimit: null } : {}),
+        });
+      label.append(select);
+      panel.append(label);
+    }
+    const presets = Formation.presets(),
+      presetLabel = element("label", "", "编组预设"),
+      select = element("select");
+    select.id = prefix + "formation-" + suffix;
+    select.setAttribute("aria-label", "编组预设 " + player.name);
+    select.add(new Option(I18n.text(player.bot ? "随机编组" : "玩家自行编组"), "random"));
+    presets.forEach((preset, index) => {
+      const option = new Option(preset.name, String(index));
+      option.setAttribute("data-i18n-ignore", "");
+      select.add(option);
+    });
+    select.value = "random";
+    if (player.formationPreset) {
+      const index = presets.findIndex(
+        (preset) => JSON.stringify(preset) === JSON.stringify(player.formationPreset),
+      );
+      if (index >= 0) select.value = String(index);
+      else {
+        const option = new Option(player.formationPreset.name, "room");
+        option.setAttribute("data-i18n-ignore", "");
+        select.add(option);
+        select.value = "room";
+      }
+    }
+    select.disabled = locked;
+    select.onchange = () => {
+      if (select.value !== "room")
+        send(
+          {},
+          { formationPreset: select.value === "random" ? null : presets[Number(select.value)] },
+        );
+    };
+    presetLabel.append(select);
+    panel.append(presetLabel);
+    if (player.formationPreset)
+      panel.append(
+        element("p", "muted", "房主指定预设：忽略房间COST、单位数量及阵营、年代、类型限制。"),
+      );
+    else {
+      const costs = element("div", "army-cost-summary");
+      costs.append(
+        element("span", "", "编组COST: " + Rules.armyBudget(snapshot.settings, player)),
+        element(
+          "span",
+          "",
+          "单位COST上限: " + Rules.armyRestrictions(snapshot.settings, player).unitCostLimit,
+        ),
+      );
+      panel.append(
+        costs,
+        element(
+          "p",
+          "muted army-count-summary",
+          `单位数量上限: ${Rules.armyUnitLimit(snapshot.settings, player)} 台（房间上限 ${snapshot.settings.unitLimit} 台 × ${config.countPercent}%）`,
+        ),
+      );
+    }
+    return panel;
+  }
   function renderDetail(snapshot) {
     if (!detail) return;
     if (Number.isInteger(detail.team)) {
@@ -188,12 +297,17 @@ const RoomPanel = (() => {
         for (const [key, label] of [
           ["bannedFactions", "禁用阵营"],
           ["bannedEras", "禁用年代"],
+          ["bannedTypes", "禁用类型"],
         ])
           content.append(
             element(
               "p",
               "",
-              I18n.text(label) + ": " + (rules[key].join(", ") || I18n.text("不禁用")),
+              I18n.text(label) +
+                ": " +
+                ((rules[key] || [])
+                  .map((tag) => (key === "bannedTypes" ? I18n.text(Rules.unitTagName(tag)) : tag))
+                  .join(", ") || I18n.text("不禁用")),
             ),
           );
       }
@@ -212,97 +326,12 @@ const RoomPanel = (() => {
     const content = byId("roomDetailContent");
     content.replaceChildren();
     const locked = !!Net.awaiting || snapshot.started || snapshot.you.id !== snapshot.hostId;
-    if (player.bot) {
-      const panel = element("div", "ai-settings"),
-        config = player.aiSettings || Rules.aiDefaults;
-      for (const [key, title, options] of [
-        [
-          "difficulty",
-          "难度",
-          [
-            ["easy", "简单 · 75%"],
-            ["medium", "中等 · 100%"],
-            ["hard", "困难 · 125%"],
-          ],
-        ],
-        ["fill", "编组COST比例", [50, 75, 100, 125, 150].map((n) => [n, n + "%"])],
-        ["countPercent", "编组数量比例", Rules.aiCountPercentages.map((n) => [n, n + "%"])],
-      ]) {
-        const label = element("label", "", title),
-          select = element("select");
-        select.id = "ai-" + key + "-" + player.seat;
-        select.setAttribute("aria-label", title + " AI " + (player.seat + 1));
-        for (const [value, text] of options) select.add(new Option(text, value));
-        select.value = config[key];
-        select.disabled = locked;
-        select.onchange = () =>
-          Net.request("configure_ai", {
-            seat: player.seat,
-            config: {
-              ...config,
-              [key]: key === "difficulty" ? select.value : Number(select.value),
-            },
-          });
-        label.append(select);
-        panel.append(label);
-      }
-      const presets = Formation.presets(),
-        presetLabel = element("label", "", "编组预设"),
-        presetSelect = element("select");
-      presetSelect.id = "ai-formation-" + player.seat;
-      presetSelect.setAttribute("aria-label", "编组预设 AI " + (player.seat + 1));
-      presetSelect.add(new Option(I18n.text("随机编组"), "random"));
-      presets.forEach((preset, index) => {
-        const option = new Option(preset.name, String(index));
-        option.setAttribute("data-i18n-ignore", "");
-        presetSelect.add(option);
-      });
-      presetSelect.value = "random";
-      if (player.formationPreset) {
-        const index = presets.findIndex(
-          (preset) => JSON.stringify(preset) === JSON.stringify(player.formationPreset),
-        );
-        if (index >= 0) presetSelect.value = String(index);
-        else {
-          const option = new Option(player.formationPreset.name, "room");
-          option.setAttribute("data-i18n-ignore", "");
-          presetSelect.add(option);
-          presetSelect.value = "room";
-        }
-      }
-      presetSelect.disabled = locked;
-      presetSelect.onchange = () => {
-        if (presetSelect.value === "room") return;
-        Net.request("configure_ai", {
-          seat: player.seat,
-          config,
-          formationPreset:
-            presetSelect.value === "random" ? null : presets[Number(presetSelect.value)],
-        });
-      };
-      presetLabel.append(presetSelect);
-      panel.append(presetLabel);
-      panel.append(
-        element("p", "muted", "编组COST: " + Rules.aiBudget(snapshot.settings.costLimit, config)),
-        element(
-          "p",
-          "muted",
-          `单位数量上限: ${Rules.aiUnitLimit(snapshot.settings.unitLimit, config)} 台（房间上限 ${snapshot.settings.unitLimit} 台 × ${config.countPercent}%）`,
-        ),
-        element(
-          "p",
-          "muted",
-          player.formationPreset
-            ? "使用预设顺序，不随机补齐。超出数量上限的末尾单位不使用；COST与禁用标签仍生效。"
-            : "优先填满单位槽位，遵守房间与所在队伍的标签限制。",
-        ),
-      );
-      content.append(panel);
-    } else {
+    content.append(armyControls(player, snapshot, locked));
+    {
       const label = element("label", "", "队伍 / 出生地"),
         select = element("select");
       select.id = "managePlayerSeat";
-      select.add(new Option(I18n.text("观战席"), "spectator"));
+      if (!player.bot) select.add(new Option(I18n.text("观战席"), "spectator"));
       for (const [seat, spawn] of Rules.getMap(snapshot.settings.mapId).spawns.entries()) {
         if (snapshot.members.some((member) => member.seat === seat && member.id !== player.id))
           continue;
@@ -326,7 +355,7 @@ const RoomPanel = (() => {
           seat: select.value === "spectator" ? null : Number(select.value),
         });
       content.append(move);
-      if (player.id !== snapshot.you.id) {
+      if (!player.bot && player.id !== snapshot.you.id) {
         const kick = element("button", "danger", "踢出玩家");
         kick.id = "kickPlayer";
         kick.disabled = !!Net.awaiting || snapshot.you.id !== snapshot.hostId;
@@ -392,9 +421,9 @@ const RoomPanel = (() => {
           "编组COST: " +
             player.totalCost +
             " / " +
-            player.limit +
+            (player.assignedPreset ? I18n.text("无限") : player.limit) +
             " · 单位COST上限: " +
-            snapshot.settings.unitCostLimit +
+            (player.assignedPreset ? I18n.text("无限") : player.unitCostLimit) +
             " · 单位数量: " +
             player.entries.length +
             " / " +
@@ -449,7 +478,7 @@ const RoomPanel = (() => {
     byId("confirmFinalFormation").hidden = !own && !allBots;
     byId("returnAssemblyToRoom").hidden = snapshot.you?.id !== snapshot.hostId;
     byId("returnAssemblyToRoom").disabled = busy || !!snapshot.returnCountdown;
-    byId("editFinalFormation").disabled = busy;
+    byId("editFinalFormation").disabled = busy || !!own?.assignedPreset;
     byId("confirmFinalFormation").disabled =
       busy ||
       !!own?.ready ||
@@ -481,11 +510,23 @@ const RoomPanel = (() => {
       own = roster.find((member) => member.id === self.id);
     const busy = !!Net.awaiting,
       map = Rules.getMap(snapshot.settings?.mapId),
-      limit = snapshot.settings?.costLimit ?? Rules.catalog.formation.maxCost;
+      limit = Rules.armyBudget(snapshot.settings, own);
     Chat.refreshStatus();
     Chat.refreshNames(snapshot);
     renderSettings(snapshot, busy);
-    byId("roomFormation").disabled = snapshot.started || busy;
+    const inBattle = snapshot.started && snapshot.phase !== "assembly";
+    byId("roomFormationControls").hidden = inBattle;
+    const shareButton = byId("shareUnitsToAllies");
+    shareButton.hidden = !inBattle;
+    shareButton.disabled =
+      busy ||
+      self.seat === null ||
+      !!own?.shareUnits ||
+      !!snapshot.settings.shareAlliedUnits ||
+      snapshot.phase === "finished";
+    shareButton.textContent =
+      snapshot.settings.shareAlliedUnits || own?.shareUnits ? "已共享单位给友军" : "共享单位给友军";
+    byId("roomFormation").disabled = snapshot.started || busy || !!own?.formationPreset;
     const formationSelect = byId("roomFormationSelect");
     formationSelect.replaceChildren();
     const presets = Formation.presets();
@@ -494,18 +535,26 @@ const RoomPanel = (() => {
       option.setAttribute("data-i18n-ignore", "");
       formationSelect.add(option);
     });
-    formationSelect.value = String(Formation.presetIndex());
-    formationSelect.disabled = snapshot.started || busy;
+    if (own?.formationPreset) {
+      const option = new Option(
+        I18n.text("房主指定") + ": " + own.formationPreset.name,
+        "assigned",
+      );
+      option.setAttribute("data-i18n-ignore", "");
+      formationSelect.add(option);
+      formationSelect.value = "assigned";
+    } else formationSelect.value = String(Formation.presetIndex());
+    formationSelect.disabled = snapshot.started || busy || !!own?.formationPreset;
     let disabledCount = 0,
       valid = true;
     try {
-      const units = Formation.current();
-      Rules.validateFormation(units, Infinity, snapshot.settings.unitLimit);
+      const units = own?.formationPreset?.units || Formation.current();
+      Rules.validateFormation(units, Infinity, Rules.armyUnitLimit(snapshot.settings, own));
       const plan = Rules.planFormation(
         units,
         limit,
-        Rules.formationRestrictions(snapshot.settings, self.seat),
-        snapshot.settings.unitLimit,
+        Rules.armyRestrictions(snapshot.settings, own),
+        Rules.armyUnitLimit(snapshot.settings, own),
       );
       valid = !!plan.deployable.length;
       disabledCount = plan.disabled.length;
@@ -534,7 +583,11 @@ const RoomPanel = (() => {
       const column = element("section", "team-slot");
       const teamHeading = element("div", "team-heading");
       const effective = Rules.formationRestrictions(snapshot.settings, team);
-      const banned = [...effective.bannedFactions, ...effective.bannedEras];
+      const banned = [
+        ...effective.bannedFactions,
+        ...effective.bannedEras,
+        ...effective.bannedTypes.map((tag) => I18n.text(Rules.unitTagName(tag))),
+      ];
       const summary = element(
         "button",
         "team-ban-summary",
@@ -703,7 +756,14 @@ const RoomPanel = (() => {
     const units = Formation.current();
     if (snapshot.you?.seat !== null) {
       try {
-        Rules.validateFormation(units, Infinity, snapshot.settings.unitLimit);
+        Rules.validateFormation(
+          units,
+          Infinity,
+          Rules.armyUnitLimit(
+            snapshot.settings,
+            snapshot.members.find((p) => p.id === snapshot.you?.id),
+          ),
+        );
       } catch {
         render(snapshot);
         return;
@@ -772,6 +832,9 @@ const RoomPanel = (() => {
       }
     };
   }
+  byId("roomShareAlliedUnits").onchange = () =>
+    sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").checked });
+  byId("shareUnitsToAllies").onclick = () => Net.request("share_units");
   byId("roomSettings").onclick = () => {
     setPageView("room");
     render(Net.snapshot);

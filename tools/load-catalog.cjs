@@ -338,6 +338,35 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       throw Error("Unit must have exactly one EFSF or ZEON tag: " + ref);
     if (!prefab.tags.some((tag) => /^\d{4}$/.test(tag)))
       throw Error("Unit must have an era tag: " + ref);
+    prefab.unitTags ??= [];
+    prefab.transport ??= { slotCost: 1, loadTags: [] };
+    prefab.hangars ??= [];
+    const stringTags = (tags) =>
+      Array.isArray(tags) &&
+      tags.every((tag) => typeof tag === "string" && tag.trim()) &&
+      new Set(tags).size === tags.length;
+    if (
+      !stringTags(prefab.unitTags) ||
+      !Number.isInteger(prefab.transport.slotCost) ||
+      prefab.transport.slotCost < 1 ||
+      !stringTags(prefab.transport.loadTags) ||
+      !Array.isArray(prefab.hangars) ||
+      prefab.hangars.some(
+        (h) =>
+          !h ||
+          typeof h.id !== "string" ||
+          !h.id.trim() ||
+          !Number.isInteger(h.capacity) ||
+          h.capacity < 1 ||
+          !stringTags(h.allowedTags) ||
+          !h.allowedTags.length ||
+          [h.launchRange ?? 1, h.emergencyRange ?? 3].some(
+            (range) => !Number.isInteger(range) || range < 1 || range > 8,
+          ),
+      ) ||
+      new Set(prefab.hangars.map((h) => h.id)).size !== prefab.hangars.length
+    )
+      throw Error("Invalid unit transport / hangar configuration: " + ref);
     prefab.faction = prefab.tags.find((tag) => ["EFSF", "ZEON"].includes(tag));
     if (prefab.schemaVersion !== 2 || result.prefabs.some((p) => p.id === prefab.id))
       throw Error("Invalid prefab: " + ref);
@@ -395,11 +424,27 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       skill.sound.asset = asset;
     }
     prefab.stats.adaptability ??= { ground: 100, space: 100 };
-    for (const environment of ["ground", "space"])
+    for (const extra of ["water", "air", "atmosphere", "mountain"])
+      prefab.stats.adaptability[extra] ??= 0;
+    for (const extra of ["forest", "snow", "desert", "rubble"])
+      prefab.stats.adaptability[extra] ??= 75;
+    for (const environment of [
+      "ground",
+      "space",
+      "water",
+      "air",
+      "atmosphere",
+      "mountain",
+      "forest",
+      "snow",
+      "desert",
+      "rubble",
+    ])
       if (
         !Number.isFinite(prefab.stats.adaptability[environment]) ||
         prefab.stats.adaptability[environment] < 0 ||
-        prefab.stats.adaptability[environment] > 100
+        prefab.stats.adaptability[environment] >
+          (["ground", "space"].includes(environment) ? 100 : 1000)
       )
         throw Error("Invalid unit adaptability: " + prefab.id + "/" + environment);
     prefab.stats.partStructuralStrength ??= 100;
@@ -656,6 +701,25 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
               weapon.projectile.spreadDegrees > 90)
           )
             throw Error("Invalid projectile spread: " + key);
+          if (weapon.projectile.motion === "tether") {
+            const tether = weapon.projectile.tether;
+            if (
+              !tether ||
+              !prefab.skeleton[tether.mount?.bone] ||
+              ![
+                tether.mount?.offset?.x,
+                tether.mount?.offset?.y,
+                tether.width,
+                tether.hold,
+                tether.retract,
+              ].every(Number.isFinite) ||
+              tether.width <= 0 ||
+              tether.hold < 0 ||
+              tether.retract <= 0 ||
+              !/^#[0-9a-f]{6}$/i.test(tether.color)
+            )
+              throw Error("Invalid tether projectile: " + key);
+          }
           if (!Number.isFinite(weapon.projectile.speed) || weapon.projectile.speed <= 0)
             throw Error("Invalid projectile speed: " + key);
         }
@@ -742,6 +806,9 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         formOnly: prefab.formOnly === true,
         faction: prefab.faction,
         tags: prefab.tags,
+        unitTags: prefab.unitTags || [],
+        transport: prefab.transport || { slotCost: 1, loadTags: [] },
+        hangars: prefab.hangars || [],
         name: prefab.name,
         localization: prefab.localization,
         kitLocalization: kit.localization,

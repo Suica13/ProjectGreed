@@ -80,6 +80,7 @@ const SpriteRenderer = (() => {
     environment = "ground",
     attackWeapon = null,
     weaponDisplayIndex = null,
+    flying = false,
   ) {
     const animation = models[model].animations[clip];
     const at = animation
@@ -106,7 +107,7 @@ const SpriteRenderer = (() => {
     const thrusters = ART.models[model].presentation.thrusters !== false;
     variables.boosting = thrusters && models[model].presentation.movement === "boost";
     variables.sustainedThrust =
-      thrusters && (environment === "space" || ART.models[model].movementType === "air");
+      thrusters && (environment === "space" || flying || ART.models[model].movementType === "air");
     variables.thrustActive =
       (moving && variables.boosting) || (ART.models[model].ship && variables.sustainedThrust);
     return models[model].decals.filter((layer) => visible(layer, variables, clip, at));
@@ -211,6 +212,45 @@ const SpriteRenderer = (() => {
           actor.scale,
     };
   }
+  const outlineCache = new Map();
+  function turretOutline(asset, image, frame, columns, fw, fh, usable) {
+    const key = [asset, frame, usable].join(":");
+    if (outlineCache.has(key)) return outlineCache.get(key);
+    const canvas = document.createElement("canvas");
+    canvas.width = fw + 4;
+    canvas.height = fh + 4;
+    const c = canvas.getContext("2d");
+    const stamp = (x, y) =>
+      c.drawImage(
+        image,
+        (frame % columns) * fw,
+        Math.floor(frame / columns) * fh,
+        fw,
+        fh,
+        x,
+        y,
+        fw,
+        fh,
+      );
+    for (const [x, y] of [
+      [0, 0],
+      [2, 0],
+      [4, 0],
+      [0, 2],
+      [4, 2],
+      [0, 4],
+      [2, 4],
+      [4, 4],
+    ])
+      stamp(x, y);
+    c.globalCompositeOperation = "source-in";
+    c.fillStyle = usable ? "#48ff72" : "#ff4545";
+    c.fillRect(0, 0, canvas.width, canvas.height);
+    c.globalCompositeOperation = "destination-out";
+    stamp(2, 2);
+    outlineCache.set(key, canvas);
+    return canvas;
+  }
   function draw(
     ctx,
     model,
@@ -231,6 +271,8 @@ const SpriteRenderer = (() => {
     environment = "ground",
     attackWeapon = null,
     weaponDisplayIndex = null,
+    flying = false,
+    turretStatus = null,
   ) {
     const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
     const active = isFiring
@@ -243,6 +285,7 @@ const SpriteRenderer = (() => {
     ctx.translate(x, y);
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
+    const outlines = [];
     for (const layer of visibleLayers(
       model,
       heldWeapon,
@@ -257,6 +300,7 @@ const SpriteRenderer = (() => {
       environment,
       attackWeapon,
       weaponDisplayIndex,
+      flying,
     )) {
       const image = images[layer.asset];
       if (!image) continue;
@@ -268,6 +312,7 @@ const SpriteRenderer = (() => {
         layer.independentClock &&
         (!layer.visibleWhen?.thrustActive ||
           environment === "space" ||
+          flying ||
           ART.models[model].movementType === "air");
       const effectTime =
         useWallClock && typeof performance !== "undefined" ? performance.now() / 1000 : time;
@@ -276,6 +321,21 @@ const SpriteRenderer = (() => {
             ? Math.floor(Math.max(0, effectTime) * layer.frameFps) % frames
             : layer.frame || 0,
         columns = Math.floor(image.width / fw);
+      if (layer.moduleId && turretStatus && Object.hasOwn(turretStatus, layer.moduleId))
+        outlines.push({
+          transform,
+          fw,
+          fh,
+          image: turretOutline(
+            layer.asset,
+            image,
+            frame,
+            columns,
+            fw,
+            fh,
+            turretStatus[layer.moduleId],
+          ),
+        });
       ctx.save();
       ctx.translate(transform.x, transform.y);
       ctx.rotate(
@@ -298,6 +358,15 @@ const SpriteRenderer = (() => {
         fw,
         fh,
       );
+      ctx.restore();
+    }
+    for (const outline of outlines) {
+      const t = outline.transform;
+      ctx.save();
+      ctx.translate(t.x, t.y);
+      ctx.rotate(t.rotation);
+      ctx.scale(t.scaleX, t.scaleY);
+      ctx.drawImage(outline.image, -outline.fw / 2 - 2, -outline.fh / 2 - 2);
       ctx.restore();
     }
     ctx.restore();

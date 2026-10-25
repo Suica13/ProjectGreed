@@ -451,7 +451,15 @@
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "commandAuras": [],
@@ -532,7 +540,15 @@
     "partStructuralStrength": 120.0,
     "balanceStatus": "native-level",
     "unitLevel": 1250.0,
-    "tacticalMoveBeforeBonus": 4
+    "tacticalMoveBeforeBonus": 4,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 25.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -1480,8 +1496,8 @@
     {
       "id": "FlyStyle",
       "source": "Template/Unit/Skill/FlyStyle.gw",
-      "status": "review",
-      "name": "飞行形态"
+      "status": "adapted",
+      "name": "飞行姿态：部位完好时消耗1 AP起飞或降落，保留移动机会"
     }
   ],
   "weaponKits": [
@@ -1518,6 +1534,50 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "skills": [],
-  "nativeCombatRevision": 1
+  "skills": [
+    {
+      "id": "flight_stance",
+      "type": "flight",
+      "name": "飞行姿态",
+      "actionCost": 1,
+      "requiredParts": [
+        "head",
+        "backpack",
+        "leftArm",
+        "rightArm",
+        "leftLeg",
+        "rightLeg"
+      ],
+      "maxUses": 99999,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "localization": {
+        "zh": {
+          "name": "飞行姿态"
+        },
+        "en": {
+          "name": "Flight Stance"
+        },
+        "ja": {
+          "name": "飛行形態"
+        }
+      }
+    }
+  ],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

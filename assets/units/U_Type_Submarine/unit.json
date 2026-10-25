@@ -106,7 +106,7 @@
   "stats": {
     "hp": 75000.0,
     "en": 6000.0,
-    "move": 5,
+    "move": 7,
     "mobility": 75.0,
     "cost": 500,
     "counterLimit": 1,
@@ -116,7 +116,15 @@
     "movementType": "naval",
     "adaptability": {
       "ground": 100,
-      "space": 0
+      "space": 0,
+      "water": 100.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": true,
     "footprint": {
@@ -302,7 +310,15 @@
     "balanceStatus": "native-level",
     "accuracy": 100.0,
     "unitLevel": 2000.0,
-    "tacticalMoveBeforeBonus": 4
+    "tacticalMoveBeforeBonus": 4,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 10.0,
+      "water": 100.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -774,8 +790,8 @@
     {
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
-      "status": "review",
-      "name": "搭载与放出"
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
     },
     {
       "id": "ChangeStyle",
@@ -837,5 +853,30 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Recon",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 6,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X6.ini",
+      "sourceUnit": "Hangar_X6"
+    }
+  ]
 }

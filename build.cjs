@@ -47,6 +47,8 @@ for (const [key, file] of [
   ["FORMATION", "client/formation.js"],
   ["UNIT_PARTS", "shared/unit-parts.js"],
   ["UNIT_SKILLS", "shared/unit-skills.js"],
+  ["UNIT_HANGARS", "shared/hangars.js"],
+  ["HANGAR_UI", "client/hangar-ui.js"],
   ["CORE", "shared/rules.js"],
   ["WEAPON_SEQUENCE", "shared/weapon-sequence.js"],
   ["RENDERER", "client/renderer.js"],

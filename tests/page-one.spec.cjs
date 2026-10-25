@@ -10,7 +10,11 @@ test("Page_00 roster shows native icons, support skills and explicit pending mec
   await page.locator("#openFormation").click();
   await page.locator('[data-unit-id="Type74"]').click();
   await page.locator("#addFormationUnit").click();
-  await page.locator(".formation-row").last().click();
+  await page
+    .locator(".formation-row")
+    .last()
+    .getByRole("button", { name: "详情", exact: true })
+    .click();
   await expect(page.locator("#formationUnitDetail")).toContainText("自动补给");
   await expect(page.locator("#formationUnitDetail")).toContainText("战场侦察");
   await expect(page.locator("#formationUnitDetail")).toContainText("待接入");

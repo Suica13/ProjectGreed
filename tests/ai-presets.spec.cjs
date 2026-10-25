@@ -37,7 +37,7 @@ test("AI can copy a local formation preset, preserve it across settings changes 
     await page.evaluate(() => Net.snapshot.members.find((m) => m.bot).formationPreset),
     { name: "我的测试预设", units },
   );
-  await page.locator("#ai-difficulty-1").selectOption("hard");
+  await page.locator("#ai-difficulty-1").selectOption("125");
   assert.equal(
     await page.evaluate(() => Net.snapshot.members.find((m) => m.bot).formationPreset.name),
     "我的测试预设",
@@ -65,7 +65,7 @@ test("AI can copy a local formation preset, preserve it across settings changes 
         .filter((u) => u.ownerSeat === 1)
         .map((u) => ({ name: u.customName, model: u.model })),
     ),
-    units.slice(0, 6).map((u) => ({ name: u.customName, model: u.unitId + "__" + u.kitId })),
+    units.map((u) => ({ name: u.customName, model: u.unitId + "__" + u.kitId })),
   );
   assert.deepEqual(await page.evaluate(() => Formation.presets()[0].units), units);
   assert.deepEqual(errors, []);

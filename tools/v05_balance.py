@@ -9,6 +9,7 @@ def apply_balance(p,data):
  level=stat(data,'unitLevel',0)
  if level<=0:raise ValueError('Missing native unitLevel: '+p['id'])
  p['stats']['cost']=max(COST_STEP,math.floor(level*LEVEL_TO_COST/COST_STEP+.5)*COST_STEP)
+ if p['id']=='MS_07B3':p['stats']['cost']=375
  p['costBalance']={'nativeLevel':level,'levelMultiplier':LEVEL_TO_COST,'published':p['stats']['cost']}
  p.setdefault('sourceStats',{}).update(unitLevel=level,balanceStatus='native-level')
  if p['stats'].get('ship'):

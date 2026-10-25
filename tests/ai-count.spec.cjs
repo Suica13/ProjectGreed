@@ -2,7 +2,7 @@ const { waitForRoomSettings } = require("./room-settings-fixture.cjs");
 const { test, expect } = require("@playwright/test"),
   { pathToFileURL } = require("node:url"),
   path = require("node:path");
-test("AI quantity ratio has seven choices, localizes, stays independent per bot and deploys 24 units", async ({
+test("AI quantity ratio has twelve choices, localizes, stays independent per bot and deploys 36 units", async ({
   page,
 }) => {
   const errors = [];
@@ -22,15 +22,15 @@ test("AI quantity ratio has seven choices, localizes, stays independent per bot 
     await page
       .locator("#ai-countPercent-1 option")
       .evaluateAll((options) => options.map((o) => o.value)),
-  ).toEqual(["50", "75", "100", "125", "150", "175", "200"]);
-  await page.locator("#ai-countPercent-1").selectOption("200");
-  await expect(page.locator("#ai-countPercent-1")).toHaveValue("200");
+  ).toEqual(Array.from({ length: 12 }, (_, i) => String((i + 1) * 25)));
+  await page.locator("#ai-countPercent-1").selectOption("300");
+  await expect(page.locator("#ai-countPercent-1")).toHaveValue("300");
   await expect(page.locator("#ai-fill-1")).toHaveValue("100");
-  await expect(page.locator("#roomDetailContent")).toContainText("单位数量上限: 24 台");
+  await expect(page.locator("#roomDetailContent")).toContainText("单位数量上限: 36 台");
   await page.evaluate(() => I18n.setLanguage("en"));
   await expect(page.locator("#roomDetailContent")).toContainText("Squad size ratio");
   await expect(page.locator("#roomDetailContent")).toContainText(
-    "Unit limit: 24 (room limit 12 × 200%)",
+    "Unit limit: 36 (room limit 12 × 300%)",
   );
   await page.evaluate(() => I18n.setLanguage("ja"));
   await expect(page.locator("#roomDetailContent")).toContainText("編成機体数比率");
@@ -53,7 +53,7 @@ test("AI quantity ratio has seven choices, localizes, stays independent per bot 
     await page.evaluate(() =>
       [1, 2, 3].map((seat) => game.units.filter((u) => u.ownerSeat === seat).length),
     ),
-  ).toEqual([24, 6, 12]);
+  ).toEqual([36, 6, 12]);
   expect(
     await page.evaluate(
       () => new Set(game.units.map((u) => u.x + "," + u.y)).size === game.units.length,

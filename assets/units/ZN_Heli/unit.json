@@ -141,7 +141,15 @@
     "movementType": "air",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 10.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "commandAuras": [],
@@ -218,7 +226,15 @@
     "balanceStatus": "native-level",
     "accuracy": 100.0,
     "unitLevel": 250.0,
-    "tacticalMoveBeforeBonus": 6
+    "tacticalMoveBeforeBonus": 6,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 10.0,
+      "water": 10.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -650,5 +666,16 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "skills": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Helicopter",
+    "Aircraft"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadIntoAir"
+    ]
+  },
+  "hangars": []
 }

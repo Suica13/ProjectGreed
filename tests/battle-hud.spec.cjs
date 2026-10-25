@@ -599,3 +599,295 @@ test("room status measures a real WebSocket ping and counts connected seats and 
     await new Promise((resolve) => server.close(resolve));
   }
 });
+
+test("attack cards and every queued attack forecast armor using the same reaction estimates", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await fixture(page);
+  const expected = await page.evaluate(() => {
+    const attacker = game.units[0],
+      target = game.units[2];
+    select(attacker.id);
+    AttackControls.start(attacker);
+    AttackControls.choose(attacker, target);
+    const weapon = Rules.modelOf(attacker).weapons.find((w) => w.id === "EF_90mmMG");
+    const estimate = Rules.estimate(game, attacker, target, weapon);
+    return { damage: estimate.damage, hit: Math.round(estimate.hit * 10) / 10, raw: weapon.damage };
+  });
+  assert.ok(expected.damage < expected.raw, "armor must reduce the displayed damage");
+  const card = page.locator('[data-queue-weapon="EF_90mmMG"]');
+  const read = async (locator) =>
+    locator.evaluate((el) => ({ damage: Number(el.dataset.damage), hit: Number(el.dataset.hit) }));
+  assert.deepEqual(await read(card.locator(".attack-forecast")), {
+    damage: expected.damage,
+    hit: expected.hit,
+  });
+  await card.click();
+  const extra = await page.evaluate(() => {
+    const attacker = game.units[0],
+      target = game.units[2];
+    const weapon = Rules.modelOf(attacker).weapons.find(
+      (w) =>
+        w.slot !== "skill" &&
+        Rules.actionCost(w) === 1 &&
+        Rules.canAttack(game, attacker, target, w),
+    );
+    return { id: weapon.id, forecast: attackForecast(attacker, target, weapon) };
+  });
+  await page.locator('[data-queue-weapon="' + extra.id + '"]').click();
+  await page.locator('[data-queue-weapon="' + extra.id + '"]').click();
+  assert.deepEqual(
+    await page
+      .locator(".hud-attack-queue .attack-forecast")
+      .evaluateAll((elements) =>
+        elements.map((el) => ({ damage: Number(el.dataset.damage), hit: Number(el.dataset.hit) })),
+      ),
+    [{ damage: expected.damage, hit: expected.hit }, extra.forecast, extra.forecast],
+  );
+  const combined = await page.evaluate(() =>
+    attackForecast(game.units[0], game.units[2], [
+      getWeapon(game.units[0], "EF_90mmMG"),
+      ...Array(2).fill(Rules.modelOf(game.units[0]).weapons.find((w) => Rules.actionCost(w) === 1)),
+    ]),
+  );
+  await page.locator("#confirmAttackQueue").click();
+  assert.equal(await page.evaluate(() => phase), "reaction");
+  assert.equal(
+    await page.locator(".incoming-forecast").first().textContent(),
+    `${combined.hit}% · ${combined.damage.toLocaleString("en-US")}`,
+  );
+  await page.locator("#responseDefend").click();
+  const defending = await page.evaluate(() => {
+    const entry = pending.counterTargets?.[0] || pending;
+    return attackForecast(
+      getUnit(entry.attacker),
+      getUnit(pending.target),
+      entry.weapons.map((id) => getWeapon(getUnit(entry.attacker), id)),
+      "defend",
+    );
+  });
+  assert.ok(defending.damage < combined.damage);
+  assert.equal(
+    await page.locator(".incoming-forecast").first().textContent(),
+    `${defending.hit}% · ${defending.damage.toLocaleString("en-US")}`,
+  );
+  assert.deepEqual(errors, []);
+});
+
+test("counter editor adds different and repeated weapons, enforces total AP and plays every counter", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await fixture(page);
+  await page.evaluate(() => {
+    const a = game.units[0],
+      b = game.units[2];
+    a.hp = b.hp = 1000000;
+    beginAttack(a, b, getWeapon(a, "EF_90mmMG"));
+  });
+  const mg = page.locator('[data-add-counter-weapon="EF_90mmMG"]'),
+    vulcan = page.locator('[data-add-counter-weapon="Common_DoubleVulcan_MS"]');
+  await vulcan.click();
+  assert.equal(await page.locator("#counterQueue > .actions").count(), 2);
+  assert.ok(await mg.isDisabled());
+  assert.ok(await vulcan.isDisabled());
+  assert.ok((await page.locator("#counterActionPoints").textContent()).includes("0/4"));
+  await page.locator("#clearCounterQueue").click();
+  for (let i = 0; i < 4; i++) await vulcan.click();
+  assert.equal(await page.locator("#counterQueue > .actions").count(), 4);
+  assert.ok(await vulcan.isDisabled());
+  await page.locator("#clearCounterQueue").click();
+  assert.ok(await page.locator("#clearCounterQueue").isDisabled());
+  assert.equal(await page.locator("[data-remove-counter-weapon]").count(), 0);
+  assert.ok(await page.locator("#confirmResponse").isDisabled());
+  await mg.click();
+  await vulcan.click();
+  await page.locator("#confirmResponse").click();
+  assert.deepEqual(
+    await page.evaluate(() =>
+      battleView.events.filter((e) => e.from === game.units[2].id).map((e) => e.weapon),
+    ),
+    ["EF_90mmMG", "Common_DoubleVulcan_MS"],
+  );
+  assert.equal(await page.evaluate(() => game.units[2].counterCount), 1);
+  assert.deepEqual(errors, []);
+});
+
+test("attack editor and independent response columns clear the whole draft", async ({
+  page,
+}) => {
+  page.setDefaultTimeout(6000);
+  const scrollSurfaces = (root) =>
+    [root, ...root.querySelectorAll("*")]
+      .filter(
+        (el) =>
+          el.getClientRects().length &&
+          ["auto", "scroll"].includes(getComputedStyle(el).overflowY) &&
+          el.scrollHeight > el.clientHeight + 1,
+      )
+      .map((el) => el.id || el.className);
+  for (const viewport of [
+    { width: 1366, height: 768 },
+    { width: 844, height: 390 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await fixture(page);
+    await page.evaluate(() => {
+      const a = game.units[0],
+        b = game.units[2];
+      select(a.id);
+      AttackControls.start(a);
+      AttackControls.choose(a, b);
+    });
+    assert.deepEqual(await page.locator("#hudUnitPanel").evaluate(scrollSurfaces), [
+      "hudAttackPlanner",
+    ]);
+    const weapon = page.locator('[data-queue-weapon="Common_DoubleVulcan_MS"]');
+    await weapon.click();
+    await weapon.click();
+    assert.equal(await page.locator(".hud-attack-queue > .actions").count(), 2);
+    assert.equal(await page.locator("[data-remove-queue-weapon]").count(), 0);
+    await page.locator("#clearAttackQueue").click();
+    assert.equal(await page.locator(".hud-attack-queue > .actions").count(), 0);
+    assert.ok(await page.locator("#confirmAttackQueue").isDisabled());
+    assert.ok(await page.locator("#clearAttackQueue").isDisabled());
+    await weapon.click();
+    await page.locator("#confirmAttackQueue").click();
+    const surfaces = await page.locator("#reaction").evaluate(scrollSurfaces);
+    assert(surfaces.includes("response-side response-defender"));
+    assert(surfaces.every(name => name.includes("response-side")));
+    const scrollCheck = await page.locator("#reaction").evaluate(root => {
+      const left=root.querySelector('.response-attacker'), right=root.querySelector('.response-defender');
+      const before={top:left.getBoundingClientRect().top,scroll:left.scrollTop};
+      right.scrollTop=right.scrollHeight;
+      return {before,after:{top:left.getBoundingClientRect().top,scroll:left.scrollTop},right:right.scrollTop,root:root.scrollTop};
+    });
+    assert.deepEqual(scrollCheck.before,scrollCheck.after);
+    assert(scrollCheck.right>0);assert.equal(scrollCheck.root,0);
+    await page.locator("#clearCounterQueue").click();
+    assert.equal(await page.locator("#counterQueue > .actions").count(), 0);
+    assert.ok(await page.locator("#confirmResponse").isDisabled());
+    await page.locator('[data-add-counter-weapon="Common_DoubleVulcan_MS"]').click();
+    assert.equal(await page.locator("#counterQueue > .actions").count(), 1);
+    await page.locator("#reaction").evaluate((el) => {
+      el.scrollTop = 0;
+    });
+    if (viewport.width === 1366) {
+      // The shared scroll surface must not swallow clicks on a map target between the columns.
+      const target = await page.evaluate(() => {
+        const a = game.units[0],
+          extra = game.units[1];
+        Object.assign(extra, { x: a.x + 1, y: a.y });
+        const base = { ...pending, attacker: a.id };
+        pending.counterTargets = [base, { ...base, attacker: extra.id }];
+        renderReaction();
+        return extra.id;
+      });
+      await clickCell(page, 11, 10);
+      assert.equal(await page.evaluate(() => counterTargetId), target);
+    }
+    await page.screenshot({ path: `.openai/response-single-scroll-${viewport.width}.png` });
+  }
+});
+
+test("keyboard commands reuse buttons and ignore editable fields", async ({ page }) => {
+  await fixture(page);
+  await page.evaluate(() => select(game.units[0].id));
+  await page.keyboard.press("q");
+  assert.equal(await page.evaluate(() => mode), "move");
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("w");
+  assert.equal(await page.evaluate(() => mode), "attack-target");
+  await page.keyboard.press("Escape");
+  await page.evaluate(() => {
+    const input = document.createElement("input");
+    input.id = "shortcutTest";
+    document.body.append(input);
+    input.focus();
+  });
+  await page.keyboard.press("q");
+  assert.equal(await page.evaluate(() => mode), "select");
+  await page.locator("#shortcutTest").evaluate((e) => e.remove());
+  await page.keyboard.press("v");
+  assert.equal(await page.evaluate(() => game.units[0].acted), true);
+});
+
+test("ship attack outlines share the damage eligibility set", async ({ page }) => {
+  await fixture(page);
+  const result = await page.evaluate(() => {
+    const ship = game.units[0],
+      target = game.units.find((u) => u.team !== ship.team);
+    ship.model = "SalamisClass__standard";
+    ship.angle = 0;
+    ship.moduleHp = Object.fromEntries(Rules.modelOf(ship).modules.map((m) => [m.id, m.hp]));
+    Object.assign(target, { x: 10, y: 5 });
+    const weapon = Rules.modelOf(ship).weapons.find((w) => w.moduleIds?.length > 2);
+    selected = ship.id;
+    weaponId = weapon.id;
+    ship.plan = { target: target.id, weapon: weapon.id };
+    const valid = Rules.availableStrikes(ship, weapon, target);
+    ship.moduleHp[valid[0].moduleId] = 0;
+    ship.brokenParts = { [valid[0].moduleId]: true };
+    const original = SpriteRenderer.draw;
+    let status;
+    SpriteRenderer.draw = (...args) => {
+      if (args[1] === ship.model) status = args.at(-1);
+      original(...args);
+    };
+    update();
+    MapCamera.focus(10, 9, { preserveZoom: true });
+    drawMap(performance.now());
+    SpriteRenderer.draw = original;
+    const expected = Rules.availableStrikes(ship, weapon, target).map((s) => s.moduleId);
+    const forecast = Rules.estimate(game, ship, target, weapon);
+    const filtered = Rules.estimate(game, ship, target, {
+      ...weapon,
+      attack: {
+        ...weapon.attack,
+        strikes: weapon.attack.strikes.filter((s) => expected.includes(s.moduleId)),
+      },
+    });
+    return { status, expected, damage: forecast.damage, filteredDamage: filtered.damage };
+  });
+  assert(Object.values(result.status).includes(true));
+  assert(Object.values(result.status).includes(false));
+  assert.deepEqual(
+    Object.keys(result.status)
+      .filter((k) => result.status[k])
+      .sort(),
+    [...new Set(result.expected)].sort(),
+  );
+  assert.equal(result.damage, result.filteredDamage);
+  await page.screenshot({ path: ".openai/ship-turret-outlines.png" });
+});
+
+
+test("battle nickname applies only on the second button click",async({page})=>{
+ await fixture(page);await page.evaluate(()=>{select(game.units[0].id);BattleHUD.setTab('overview');});
+ const before=await page.evaluate(()=>unitName(game.units[0]));
+ await page.locator('#editBattleUnitName').click();await page.locator('#battleUnitNameInput').fill('新昵称');
+ assert.equal(await page.evaluate(()=>unitName(game.units[0])),before);
+ await page.locator('#editBattleUnitName').click();
+ assert.equal(await page.evaluate(()=>unitName(game.units[0])),'新昵称');
+});
+
+
+test("50 percent zoom renders occupancy thumbnails and restores sprites above the threshold",async({page})=>{
+ await fixture(page);
+ const result=await page.evaluate(()=>{
+  game.units[0].model='SalamisClass__standard';
+  const original=SpriteRenderer.draw;let calls=0;SpriteRenderer.draw=(...args)=>{calls++;return original(...args)};
+  MapCamera.setZoom(.1);drawMap(performance.now());
+  const small={zoom:MapCamera.zoom,mode:byId('map').dataset.unitThumbnails,calls};
+  calls=0;MapCamera.setZoom(.6);drawMap(performance.now());
+  const large={mode:byId('map').dataset.unitThumbnails,calls};
+  SpriteRenderer.draw=original;MapCamera.setZoom(.5);drawMap(performance.now());
+  return {small,large};
+ });
+ assert.deepEqual(result.small,{zoom:.5,mode:'true',calls:0});assert.equal(result.large.mode,'false');assert(result.large.calls>0);
+ await page.screenshot({path:'.openai/map-thumbnails.png'});
+});

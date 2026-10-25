@@ -314,24 +314,27 @@ test("room authority accepts paths through allied players while rejecting occupi
 test("unit action logs identify faction, owner and unit for movement, plans, stances and results", (t) => {
   const { room, act } = fixture(t),
     [a, b] = room.game.units;
+  a.customName = "先锋[A01]";
   room.seats[0].name = "Pilot01";
   room.seats[1].name = "Pilot02";
   room.game.tiles[4][3] = "plain";
   act(0, "move", { unitId: a.id, x: 3, y: 4 });
-  assert.equal(room.log[0], "[蓝方][Pilot01]吉姆 移动至D5。");
+  assert.equal(room.log[0], "[蓝方][Pilot01]先锋[A01](RGM-79 吉姆) 移动至D5。");
   act(0, "undo", { unitId: a.id });
-  assert.equal(room.log[0], "[蓝方][Pilot01]吉姆 撤销移动。");
+  assert.equal(room.log[0], "[蓝方][Pilot01]先锋[A01](RGM-79 吉姆) 撤销移动。");
   act(0, "attack", { unitId: a.id, targetId: b.id, weaponId: "EF_90mmMG" });
-  assert.match(room.log[0], /^\[蓝方\]\[Pilot01\]吉姆 计划使用/);
+  assert.ok(room.log[0].startsWith("[蓝方][Pilot01]先锋[A01](RGM-79 吉姆) 计划使用"));
   act(0, "cancel_attack", { unitId: a.id });
-  assert.equal(room.log[0], "[蓝方][Pilot01]吉姆 取消攻击计划。");
+  assert.equal(room.log[0], "[蓝方][Pilot01]先锋[A01](RGM-79 吉姆) 取消攻击计划。");
   act(0, "attack", { unitId: a.id, targetId: b.id, weaponId: "EF_90mmMG" });
   act(0, "end_turn");
   act(1, "respond", { response: "defend" });
-  assert.ok(room.log.includes("[红方][Pilot02]吉姆 选择防御。"));
+  assert.ok(room.log.includes("[红方][Pilot02]吉姆(RGM-79 吉姆) 选择防御。"));
   assert.ok(
     room.log.some((line) =>
-      line.startsWith("[蓝方][Pilot01]吉姆 使用90mm机枪 → [红方][Pilot02]吉姆"),
+      line.startsWith(
+        "[蓝方][Pilot01]先锋[A01](RGM-79 吉姆) 使用90mm机枪 → [红方][Pilot02]吉姆(RGM-79 吉姆)",
+      ),
     ),
   );
 });
@@ -531,4 +534,34 @@ test("ordered attack queue syncs AP reservations, rejects malformed packets and 
     room.combatBatch.map((b) => b.events[0].weapon),
     ids,
   );
+});
+
+test("deployment logs every occupied player's actual roster and total kit COST exactly once", (t) => {
+  const { room, act } = fixture(t, 4, 2),
+    summaries = room.log
+      .flatMap((text) => text.split("\n"))
+      .filter((line) => line.includes("部署编制："));
+  assert.equal(summaries.length, 4);
+  assert.equal(
+    room.log.flatMap((text) => text.split("\n")).filter((line) => line.includes(" 编制：")).length,
+    8,
+  );
+  for (const player of room.seats.filter(Boolean)) {
+    const prefix = `[${G.seatTeam(player.seat) ? "红方" : "蓝方"}][${player.name}]`,
+      units = room.game.units.filter((u) => G.ownerOf(u) === player.seat),
+      cost = units.reduce((n, u) => n + G.modelOf(u).cost, 0);
+    assert(summaries.includes(`${prefix}部署编制：2台 · 总计COST ${cost}。`));
+    for (const u of units)
+      assert(
+        room.log.some(
+          (line) =>
+            line.includes(prefix + G.unitName(u) + "(") &&
+            line.includes(" 编制：") &&
+            line.includes("COST " + G.modelOf(u).cost),
+        ),
+      );
+  }
+  act(0, "sync");
+  act(1, "sync");
+  assert.equal(room.log.filter((line) => line.includes("部署编制：")).length, 4);
 });

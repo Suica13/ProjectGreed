@@ -50,7 +50,11 @@ test("formation weapon kit changes play native ChangeEquipment while combat sele
     };
   });
   await page.locator("#openFormation").click();
-  await page.locator(".formation-row").first().click();
+  await page
+    .locator(".formation-row")
+    .first()
+    .getByRole("button", { name: "详情", exact: true })
+    .click();
   await page.locator("#formationDetailKit").selectOption("machine_gun");
   await expect
     .poll(() =>

@@ -100,14 +100,17 @@ test("every space spawn fits twelve horizontal warships without overlap and perm
     }
   }
 });
-test("command ranges use code circles below sprites, appear for selected enemy ships or in-range allies", () => {
+test("supply ranges use footprint cells below sprites, appear for selected enemy ships or in-range allies", () => {
   const sandbox = {
     Net: { active: true, seat: 0 },
     Rules: {
       ownerOf: (u) => u.ownerSeat,
       seatTeam: (s) => s % 2,
       center: (u) => ({ x: u.x || 0, y: u.y || 0 }),
-      modelOf: () => ({ ship: true, commandAuras: [{ type: "cmdCom", radiusCells: 2 }] }),
+      modelOf: () => ({ ship: true, supplyAura: { range: 2 } }),
+      inSupplyRange: (a,b) => Math.abs((b.x || 0) - (a.x || 0)) <= 2,
+      supplyCells: () => [{x:0,y:0}],
+      key: (x,y) => x + "," + y,
       models: { ship: { ship: true } },
     },
     game: {},
@@ -124,7 +127,9 @@ test("command ranges use code circles below sprites, appear for selected enemy s
       save() {},
       restore() {},
       beginPath() {},
-      arc(...a) {
+      moveTo() {},
+      lineTo() {},
+      fillRect(...a) {
         arcs.push(a);
       },
       fill() {},
@@ -141,7 +146,8 @@ test("command ranges use code circles below sprites, appear for selected enemy s
   assert.equal(arcs.length, 2);
   sandbox.identity.drawCommandAura(ctx, ship, { x: 0, y: 0 }, 64, { id: "c", team: 0, x: 0, y: 0 });
   assert.equal(arcs.length, 2);
-  assert.equal(arcs[0][2], 128);
+  assert.equal(arcs[0][2], 64);
+  assert.equal(ctx.fillStyle, "#35d6c130");
   for (const p of G.catalog.prefabs) assert.ok(!p.layers.some((l) => /^Ring/.test(l.texture)));
   const app = fs.readFileSync("client/app.js", "utf8");
   assert.ok(

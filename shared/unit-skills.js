@@ -26,6 +26,16 @@ const UnitSkills = (() => {
     if (!Array.isArray(skills) || new Set(skills.map((s) => s?.id)).size !== skills.length)
       throw Error("Invalid unit skills: " + label);
     for (const skill of skills) {
+      if (skill?.type === "flight") {
+        if (
+          skill.actionCost !== 1 ||
+          !Array.isArray(skill.requiredParts) ||
+          !skill.id ||
+          !skill.name
+        )
+          throw Error("Invalid flight skill: " + label);
+        continue;
+      }
       if (skill?.type === "overdrive") {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
@@ -120,6 +130,12 @@ const UnitSkills = (() => {
       const skill = of(unit).find((s) => s.id === skillId);
       return (
         !!skill &&
+        (skill.type !== "transform" || !Object.values(unit.brokenParts || {}).some(Boolean)) &&
+        (skill.type !== "flight" ||
+          ((unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost &&
+            !skill.requiredParts.some((part) => unit.brokenParts?.[part]) &&
+            game.environment !== "space" &&
+            (!unit.flying || fits(game, { ...unit, flying: false }, unit.x, unit.y)))) &&
         (skill.type !== "overdrive" ||
           (!unit.overdrive &&
             !unit.brokenParts?.head &&
@@ -127,7 +143,12 @@ const UnitSkills = (() => {
             !!models[skill.formUnitId + "__" + skill.formKits[models[unit.model].kitId]])) &&
         (!["repair", "recon"].includes(skill.type) || unit.en >= skill.enCost) &&
         game.units.includes(unit) &&
+        !(
+          ["escape", "transform", "armor_purge", "overdrive"].includes(skill.type) &&
+          game.units.some((other) => other.hp > 0 && other.embarked?.carrierId === unit.id)
+        ) &&
         unit.hp > 0 &&
+        !unit.embarked &&
         !unit.acted &&
         !unit.plan &&
         unit.team === game.team &&
@@ -185,9 +206,7 @@ const UnitSkills = (() => {
         next.moduleHp = Object.fromEntries(
           nextModel.modules.map((m) => [
             m.id,
-            config.repairAllParts
-              ? m.hp * next.performance
-              : (unit.moduleHp?.[m.id] ?? m.hp * next.performance),
+            config.repairAllParts ? m.hp : (unit.moduleHp?.[m.id] ?? m.hp),
           ]),
         );
       next.heldWeapon = nextModel.weapons[0]?.id ?? null;
@@ -233,6 +252,7 @@ const UnitSkills = (() => {
         (other) =>
           other.team !== unit.team &&
           other.hp > 0 &&
+          !other.embarked &&
           dist(unit, other) <= skill.range &&
           (!skill.waterOnly || game.tiles[other.y][other.x] === "water") &&
           !(other.spottedUntilRound >= game.round),
@@ -241,7 +261,7 @@ const UnitSkills = (() => {
     function targets(game, unit, skillId) {
       if (!canUse(game, unit, skillId)) return [];
       const skill = of(unit).find((s) => s.id === skillId);
-      if (skill.type === "overdrive") return [{ x: unit.x, y: unit.y }];
+      if (["overdrive", "flight"].includes(skill.type)) return [{ x: unit.x, y: unit.y }];
       if (skill.type === "recon")
         return reconTargets(game, unit, skill).length ? [{ x: unit.x, y: unit.y }] : [];
       if (skill.type === "repair")
@@ -251,6 +271,7 @@ const UnitSkills = (() => {
               other !== unit &&
               other.team === unit.team &&
               other.hp > 0 &&
+              !other.embarked &&
               dist(unit, other) <= skill.range &&
               (other.hp < modelOf(other).hp ||
                 other.en < modelOf(other).en ||
@@ -303,6 +324,22 @@ const UnitSkills = (() => {
       )
         throw Error("技能不可用，或目标不在合法范围内");
       const skill = of(unit).find((s) => s.id === skillId);
+      if (skill.type === "flight") {
+        unit.flying = !unit.flying;
+        unit.actionPoints =
+          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
+        unit.origin = null;
+        return {
+          type: "skill",
+          skillId,
+          unitId: unit.id,
+          resultId: unit.id,
+          from: { x: unit.x, y: unit.y },
+          to: { x, y },
+          effect: skill.effect,
+          sound: skill.sound,
+        };
+      }
       if (skill.type === "overdrive") {
         const baseModel = unit.model,
           maximum = modelOf(unit).en;
@@ -369,6 +406,7 @@ const UnitSkills = (() => {
           (other) =>
             other !== unit &&
             other.hp > 0 &&
+            !other.embarked &&
             other.team === unit.team &&
             other.x === x &&
             other.y === y,
@@ -434,7 +472,11 @@ const UnitSkills = (() => {
         delete unit.overdrive;
         delete unit.snipeOrder;
         delete unit.rotationPivot;
+        const baseForm = unit.defaultFormModel || unit.model;
         Object.assign(unit, plan.source);
+        delete unit.flying;
+        if (skill.type === "transform" && unit.model !== baseForm) unit.defaultFormModel = baseForm;
+        else delete unit.defaultFormModel;
       } else game.units.splice(index, 1);
       if (spawned) game.units.push(spawned);
       game.nextUnitSerial = serial;
@@ -449,6 +491,31 @@ const UnitSkills = (() => {
         sound: skill.sound,
       };
     }
+    function revertDamaged(unit) {
+      if (!Object.values(unit.brokenParts || {}).some(Boolean)) return false;
+      let changed = !!unit.flying;
+      delete unit.flying;
+      if (unit.overdrive && unit.brokenParts?.head) {
+        endOverdrive(unit);
+        changed = true;
+      }
+      if (unit.defaultFormModel) {
+        unit.model = unit.defaultFormModel;
+        delete unit.defaultFormModel;
+        const base = modelOf(unit);
+        unit.hp = Math.min(unit.hp, base.hp);
+        unit.en = Math.min(unit.en, base.en);
+        unit.shield = Math.min(unit.shield, base.shield.hp);
+        if (!base.weapons.some((w) => w.id === unit.heldWeapon))
+          unit.heldWeapon = base.weapons[0]?.id;
+        changed = true;
+      }
+      if (changed) {
+        unit.origin = null;
+        delete unit.snipeOrder;
+      }
+      return changed;
+    }
     function endOverdrive(unit) {
       if (!unit.overdrive) return false;
       unit.model = unit.overdrive.baseModel;
@@ -462,7 +529,7 @@ const UnitSkills = (() => {
       unit.origin = null;
       return true;
     }
-    return { of, canUse, targets, use, endOverdrive };
+    return { of, canUse, targets, use, endOverdrive, revertDamaged };
   }
   return { validate, create };
 })();

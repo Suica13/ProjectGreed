@@ -82,11 +82,20 @@ function createServer({
     server,
     path: "/ws",
     maxPayload: 16384,
-    perMessageDeflate: false,
+    // 快照含大量重复的地块、单位和演出数据；仅压缩较大的消息。
+    // 每连接不保留压缩历史，避免多人房间长期占用大量压缩上下文。
+    perMessageDeflate: {
+      threshold: 1024,
+      serverNoContextTakeover: true,
+      clientNoContextTakeover: true,
+      concurrencyLimit: 4,
+      zlibDeflateOptions: { level: 3 },
+    },
   });
   const send = (ws, data) => {
     if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify(data));
   };
+  let lastRoomList = "";
   const engine = createRoomEngine({
     rules: G,
     rooms,
@@ -100,6 +109,9 @@ function createServer({
     randomSeed: () => crypto.randomBytes(4).readUInt32LE(),
     randomToken: () => crypto.randomBytes(24).toString("hex"),
     onRooms: (list) => {
+      const serialized = JSON.stringify(list);
+      if (serialized === lastRoomList) return;
+      lastRoomList = serialized;
       for (const client of wss.clients)
         if (client.lobby) send(client, { type: "rooms", rooms: list });
     },

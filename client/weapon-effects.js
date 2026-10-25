@@ -68,7 +68,12 @@ const WeaponEffects = (() => {
   function plan(weapon, source, target, event = null) {
     const speed = animationSpeed(weapon),
       effectSpeed = ART.presentation.animationSpeed,
-      lead = weapon.projectile?.motion === "bomb" ? 0.6 : weapon.type === "melee" ? 0.35 : 0,
+      lead =
+        weapon.projectile?.motion === "bomb"
+          ? 0.6
+          : weapon.type === "melee" && weapon.projectile?.motion !== "tether"
+            ? 0.35
+            : 0,
       sourceY = (event?.sourceDodgeSlot || 0) * ART.presentation.dodgeDistance * source.scale,
       initialSlot = event?.targetDodgeSlot || 0;
     const shots = weapon.attack.shots.map((originalAt, index) => {
@@ -112,24 +117,36 @@ const WeaponEffects = (() => {
         destination.y = target.y;
       }
       const flight =
-        weapon.projectile?.motion === "mortar"
-          ? 2 *
-            Math.max(
+        weapon.projectile?.motion === "tether"
+          ? Math.max(
               0.18,
-              Math.min(0.45, Math.hypot(destination.x - origin.x, destination.y - origin.y) / 1800),
+              Math.min(
+                0.5,
+                Math.hypot(destination.x - origin.x, destination.y - origin.y) /
+                  (weapon.projectile.speed * 10 * source.scale),
+              ),
             )
-          : weapon.projectile?.motion === "bomb"
-            ? 0.6
-            : weapon.projectile
-              ? Math.max(
-                  0.001,
-                  Math.hypot(destination.x - origin.x, destination.y - origin.y) /
-                    (weapon.projectile.speed *
-                      60 *
-                      source.scale *
-                      ART.presentation.projectileSpeed),
-                )
-              : 0;
+          : weapon.projectile?.motion === "mortar"
+            ? 2 *
+              Math.max(
+                0.18,
+                Math.min(
+                  0.45,
+                  Math.hypot(destination.x - origin.x, destination.y - origin.y) / 1800,
+                ),
+              )
+            : weapon.projectile?.motion === "bomb"
+              ? 0.6
+              : weapon.projectile
+                ? Math.max(
+                    0.001,
+                    Math.hypot(destination.x - origin.x, destination.y - origin.y) /
+                      (weapon.projectile.speed *
+                        60 *
+                        source.scale *
+                        ART.presentation.projectileSpeed),
+                  )
+                : 0;
       return { index, at, origin, destination, spreadY, flight, impactAt: at + flight };
     });
     const steps = weapon.attack.strikes;
@@ -181,7 +198,7 @@ const WeaponEffects = (() => {
       if (
         shot.miss &&
         weapon.projectile &&
-        !["bomb", "mortar"].includes(weapon.projectile.motion)
+        !["bomb", "mortar", "tether"].includes(weapon.projectile.motion)
       ) {
         const image = SpriteRenderer.images[weapon.projectile.asset],
           margin =
@@ -200,7 +217,11 @@ const WeaponEffects = (() => {
           exit = Math.min(exitX, exitY);
         travel = Math.max(1, Number.isFinite(exit) ? exit : 1);
       }
-      shot.visibleUntil = shot.at + shot.flight * travel;
+      shot.visibleUntil =
+        weapon.projectile?.motion === "tether"
+          ? shot.impactAt +
+            (weapon.projectile.tether.hold + weapon.projectile.tether.retract) / speed
+          : shot.at + shot.flight * travel;
     }
     let end = Math.max(
         lead + weapon.attack.duration / speed,
@@ -264,7 +285,7 @@ const WeaponEffects = (() => {
         : null;
     if (bomb) end = Math.max(end, bomb.returnAt + bomb.retreat);
     const melee =
-      weapon.type === "melee"
+      weapon.type === "melee" && weapon.projectile?.motion !== "tether"
         ? {
             approach: lead,
             retreatAt: Math.max(
@@ -453,7 +474,77 @@ const WeaponEffects = (() => {
       );
     }
   }
-  function draw(ctx, weapon, plan, time, source, event, size = 1, pose = null) {
+  // The tether remains attached to the animated hand, including any existing dodge displacement.
+  function tetherState(weapon, plan, shot, time, source, event, pose = null) {
+    if (time < shot.at || time > shot.visibleUntil) return null;
+    const config = weapon.projectile.tether;
+    const animation =
+      pose || firingPose(weapon, source, event, Math.max(0, (time - plan.lead) * plan.actionSpeed));
+    const anchor = SpriteRenderer.muzzle(
+      source.unit.model,
+      { ...weapon, muzzle: config.mount },
+      { ...source, ...animation },
+      animation.clip,
+      animation.time,
+      shot.index,
+    );
+    const holdUntil = shot.impactAt + config.hold / plan.actionSpeed;
+    let head, stage;
+    if (time < shot.impactAt) {
+      const progress = Math.min(1, (time - shot.at) / shot.flight);
+      head = {
+        x: shot.origin.x + (shot.destination.x - shot.origin.x) * progress,
+        y: shot.origin.y + (shot.destination.y - shot.origin.y) * progress,
+      };
+      stage = "extend";
+    } else if (time < holdUntil) {
+      head = { ...shot.destination };
+      stage = "contact";
+    } else {
+      const progress = Math.min(1, (time - holdUntil) / (config.retract / plan.actionSpeed));
+      head = {
+        x: shot.destination.x + (anchor.x - shot.destination.x) * progress,
+        y: shot.destination.y + (anchor.y - shot.destination.y) * progress,
+      };
+      stage = "retract";
+    }
+    return { anchor, head, stage };
+  }
+  function drawTether(ctx, weapon, plan, time, source, event, size, pose, layer) {
+    const image = SpriteRenderer.images[weapon.projectile.asset],
+      config = weapon.projectile.tether;
+    for (const shot of plan.shots) {
+      const state = tetherState(weapon, plan, shot, time, source, event, pose);
+      if (!state) continue;
+      const { anchor, head } = state;
+      ctx.save();
+      if (layer !== "foreground") {
+        ctx.strokeStyle = config.color;
+        ctx.lineWidth = config.width * source.scale * size;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(anchor.x, anchor.y);
+        ctx.lineTo(head.x, head.y);
+        ctx.stroke();
+      }
+      if (layer !== "underlay" && image) {
+        ctx.translate(head.x, head.y);
+        ctx.rotate(Math.atan2(head.y - anchor.y, head.x - anchor.x) + Math.PI / 2);
+        ctx.scale(
+          source.scale * weapon.projectile.scale * size,
+          source.scale * weapon.projectile.scale * size,
+        );
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(image, -image.width / 2, -image.height / 2);
+      }
+      ctx.restore();
+    }
+  }
+  function draw(ctx, weapon, plan, time, source, event, size = 1, pose = null, layer = "all") {
+    if (weapon.projectile?.motion === "tether") {
+      drawTether(ctx, weapon, plan, time, source, event, size, pose, layer);
+      return;
+    }
     drawMuzzle(ctx, weapon, plan, time, source, event, pose);
     if (!weapon.projectile) return;
     const image = SpriteRenderer.images[weapon.projectile.asset];
@@ -497,6 +588,7 @@ const WeaponEffects = (() => {
     plan,
     firingPose,
     meleeMotion,
+    tetherState,
     dodge,
     position,
     animationSpeed,

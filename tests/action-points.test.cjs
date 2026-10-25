@@ -188,3 +188,79 @@ test("counter AP restrictions are enforced by the authoritative response path", 
     raw.actionCost = cost;
   }
 });
+
+test("counterattack queues use the reduced AP budget, allow repeats and execute in order once", () => {
+  const { a, b, queue, planner, room } = fixture();
+  a.hp = 1000000;
+  const counters = G.modelOf(b).weapons;
+  const mg = counters.find((w) => w.id === "EF_90mmMG"),
+    vulcan = counters.find((w) => w.id === "Common_DoubleVulcan_MS");
+  const en = b.en,
+    ownAP = b.actionPoints;
+  planner.plan(room, a, b, [queue[0]], 0);
+  const [request] = planner.prepare(room);
+  for (const ids of [[mg.id, mg.id], Array(5).fill(vulcan.id), [], ["invalid"]])
+    assert.throws(() => planner.choose(room, request.id, "counter", ids, a.id));
+  assert.equal(room.reactions.length, 1);
+  assert.equal(b.en, en);
+  planner.choose(room, request.id, "counter", [mg.id, vulcan.id], a.id);
+  assert.deepEqual(room.responses[0].counterIds, [mg.id, vulcan.id]);
+  assert.equal(b.en, en);
+  const battles = planner.resolve(room),
+    events = battles.flatMap((battle) => battle.events).filter((e) => e.from === b.id);
+  assert.deepEqual(
+    events.map((e) => e.weapon),
+    [mg.id, vulcan.id],
+  );
+  assert.equal(b.en, en - G.weaponStats(mg, b).en - G.weaponStats(vulcan, b).en);
+  assert.equal(b.actionPoints, ownAP);
+  assert.equal(b.counterCount, 1);
+  assert.equal(b.counterTargetId, a.id);
+});
+
+test("repeated counter weapons reserve their combined EN atomically and stop when their target dies", () => {
+  const { a, b, queue, planner, room } = fixture();
+  b.model = "RGM_79__beam_spray";
+  const vulcan = G.modelOf(b).weapons.find((w) => w.id === "EF_BeamSprayGun");
+  planner.plan(room, a, b, [queue[0]], 0);
+  const [request] = planner.prepare(room);
+  const en = b.en;
+  b.en = G.weaponStats(vulcan, b).en * 1.5;
+  assert.throws(
+    () => planner.choose(room, request.id, "counter", [vulcan.id, vulcan.id], a.id),
+    /EN/,
+  );
+  assert.equal(room.responses.length, 0);
+  b.en = en;
+  a.hp = 1;
+  room.game.seed = 2;
+  planner.choose(room, request.id, "counter", Array(2).fill(vulcan.id), a.id);
+  const events = planner
+    .resolve(room)
+    .flatMap((battle) => battle.events)
+    .filter((e) => e.from === b.id);
+  assert.equal(a.hp, 0);
+  assert.equal(events.length, 1);
+  assert.equal(b.en, en - G.weaponStats(vulcan, b).en);
+});
+
+test("lost weapon parts skip only unavailable counter weapons without spending their EN", () => {
+  const { a, b, queue, planner, room } = fixture();
+  a.hp = 1000000;
+  planner.plan(room, a, b, [queue[0]], 0);
+  const [request] = planner.prepare(room);
+  const mg = G.modelOf(b).weapons.find((w) => w.id === "EF_90mmMG"),
+    vulcan = G.modelOf(b).weapons.find((w) => w.id === "Common_DoubleVulcan_MS");
+  planner.choose(room, request.id, "counter", [mg.id, vulcan.id], a.id);
+  b.brokenParts.leftArm = b.brokenParts.rightArm = true;
+  const en = b.en;
+  const events = planner
+    .resolve(room)
+    .flatMap((battle) => battle.events)
+    .filter((e) => e.from === b.id);
+  assert.deepEqual(
+    events.map((e) => e.weapon),
+    [vulcan.id],
+  );
+  assert.equal(b.en, en - G.weaponStats(vulcan, b).en);
+});

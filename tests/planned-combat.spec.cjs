@@ -98,11 +98,23 @@ test("allied planning arrows, concurrent map moves, parallel owner responses and
       Net.request("attack", { unitId: "2-0", targetId: "3-0", weaponId: "EF_BeamSprayGun" }),
     );
     await expect.poll(() => page.locator("#map").getAttribute("data-plan-count")).toBe("2");
+    await pages[2].locator("#hudToggleRoster").click();
     await pages[2].locator('.roster-unit[data-unit-id="2-0"]').click();
+    await pages[2].locator('[data-unit-command="info"]').click();
+    await pages[2].locator("#hudWeaponsTab").click();
     await pages[2].locator("#cancelAttackPlan").click();
     await expect.poll(() => room.plans.length).toBe(1);
-    await pages[2].getByRole("button", { name: "攻击武器 光束喷枪", exact: true }).click();
-    await pages[2].locator('.target-button[data-target-id="3-0"]').click();
+    await pages[2].locator('[data-unit-command="attack"]').click();
+    const attackPoint = await pages[2].evaluate(() => {
+      drawMap(performance.now());
+      const target = getUnit("3-0"),
+        point = mapPosition(target.x, target.y),
+        bounds = byId("map").getBoundingClientRect();
+      return { x: bounds.left + point.x, y: bounds.top + point.y };
+    });
+    await pages[2].mouse.click(attackPoint.x, attackPoint.y);
+    await pages[2].locator('[data-queue-weapon="EF_BeamSprayGun"]').click();
+    await pages[2].locator("#confirmAttackQueue").click();
     await expect.poll(() => room.plans.length).toBe(2);
     await page.evaluate(() =>
       Net.request("attack", { unitId: "0-2", targetId: "1-0", weaponId: "EF_HypeBazooka" }),
@@ -121,6 +133,7 @@ test("allied planning arrows, concurrent map moves, parallel owner responses and
     expect(await pages[1].evaluate(() => MapCamera.zoom)).toBe(2.5);
     await expect(pages[1].locator("#counterTarget option")).toHaveCount(2);
     await pages[1].locator("#responseCounter").click();
+    await pages[1].locator('[data-remove-counter-weapon="0"]').click();
     await pages[1].getByRole("button", { name: "反击武器 头部火神炮", exact: true }).click();
     await expect(pages[1].locator("#counterTarget")).toHaveValue("0-0");
     expect(

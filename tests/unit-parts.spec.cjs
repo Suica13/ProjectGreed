@@ -12,7 +12,11 @@ test("formation details show native structural strength, weapon mounting parts a
   await page.locator("#openFormation").click();
   await page.locator('[data-unit-id="MS_14A"]').click();
   await page.locator("#addFormationUnit").click();
-  await page.locator(".formation-row").last().click();
+  await page
+    .locator(".formation-row")
+    .last()
+    .getByRole("button", { name: "详情", exact: true })
+    .click();
   await expect(page.locator("#formationDetailStats")).toContainText("零件强度 125");
   await page.locator("#formationDetailKit").selectOption("machine_gun");
   const gun = page.locator(".formation-weapon-detail").first();

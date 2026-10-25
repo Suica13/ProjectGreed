@@ -1,4 +1,4 @@
-# ProjectGreed V05 IP 联机工程
+# ProjectGreed V06 IP 联机工程
 
 - `shared/rules.js` 是回合、移动、武器、命中与伤害的共用规则。服务端是唯一裁定者；客户端只提交动作意图，不提交HP、伤害或随机结果。
 - `server.js` 提供 HTTP 和 `/ws`，默认绑定 `0.0.0.0:1313`，启动端口读取同目录 `cfg.json`，CLI和PORT环境变量可临时覆盖。房间状态只保存在内存。不要将席位 token、随机 seed 放入公开战局快照。

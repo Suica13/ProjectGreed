@@ -14,13 +14,28 @@ test("AI count percentage defaults to 100, validates discrete options and is ind
           );
           assert.equal(G.aiBudget(5000, config), (5000 * fill) / 100);
         }
-  for (const countPercent of [0, 25, 49, 51, 110, 201, 225, "200", null, NaN])
+  assert.deepEqual(
+    G.armyPercentages,
+    Array.from({ length: 12 }, (_, i) => (i + 1) * 25),
+  );
+  for (const percentage of G.armyPercentages) {
+    const settings = G.validateArmySettings({
+      difficulty: percentage,
+      fill: percentage,
+      countPercent: percentage,
+    });
+    assert.equal(G.aiPerformance[settings.difficulty], percentage / 100);
+  }
+  for (const field of ["difficulty", "fill", "countPercent"])
+    for (const value of [0, 24, 26, 301, "300", null, NaN])
+      assert.throws(() => G.validateArmySettings({ [field]: value }));
+  for (const countPercent of [0, 24, 49, 51, 110, 201, 301, "200", null, NaN])
     assert.throws(() => G.validateAISettings({ countPercent }));
   assert.throws(() =>
     G.validateFormation(Array(13).fill({ unitId: "MS_06F", kitId: "machine_gun" }), Infinity),
   );
 });
-test("AI percentage respects faction, era, per-unit COST and available budget when filling up to 24 units", () => {
+test("AI percentage respects faction, era, per-unit COST and available budget when filling up to 36 units", () => {
   for (const bannedFactions of [[], ["EFSF"], ["ZEON"]])
     for (const countPercent of G.aiCountPercentages)
       for (const fill of [50, 100, 150]) {
@@ -41,16 +56,16 @@ test("AI percentage respects faction, era, per-unit COST and available budget wh
       }
   assert.deepEqual(G.randomFormation(1, 10000, { bannedEras: ["0079"] }, 24), []);
 });
-test("every preset map deploys full 200-percent AI armies at every spawn without overlap", () => {
+test("every preset map deploys full 300-percent AI armies at every spawn without overlap", () => {
   const entry = { unitId: "MS_06F", kitId: "machine_gun" };
   for (const map of Object.values(G.catalog.maps)) {
-    const formations = map.spawns.map(() => Array(24).fill(entry));
+    const formations = map.spawns.map(() => Array(36).fill(entry));
     const g = G.create(false, 1, formations, true, {
       mapId: map.id,
       costLimit: 6000,
-      seatUnitLimits: map.spawns.map(() => 24),
+      seatUnitLimits: map.spawns.map(() => 36),
     });
-    assert.equal(g.units.length, map.spawns.length * 24);
+    assert.equal(g.units.length, map.spawns.length * 36);
     assert.equal(new Set(g.units.map((u) => u.x + "," + u.y)).size, g.units.length);
     for (let seat = 0; seat < map.spawns.length; seat++)
       assert.equal(G.confirmDeployment(g, seat), seat === map.spawns.length - 1);

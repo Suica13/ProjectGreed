@@ -22,7 +22,11 @@ test("RX-78-1 formation explains ejection and offline room uses a clicked legal 
   });
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.locator("#openFormation").click();
-  await page.locator(".formation-row").first().click();
+  await page
+    .locator(".formation-row")
+    .first()
+    .getByRole("button", { name: "详情", exact: true })
+    .click();
   await expect(page.locator("#formationDetailWeapons")).toContainText("原机体移除");
   await expect(page.locator("#formationDetailWeapons")).toContainText("HP +100%");
   await expect(page.locator("#formationDetailWeapons")).toContainText("修复所有破损部位");

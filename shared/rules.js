@@ -9,12 +9,24 @@ const Tactics = (() => {
   const models = catalog.models;
   const parts = typeof UnitParts !== "undefined" ? UnitParts : require("./unit-parts.js");
   const skillModule = typeof UnitSkills !== "undefined" ? UnitSkills : require("./unit-skills.js");
+  const hangarModule = typeof UnitHangars !== "undefined" ? UnitHangars : require("./hangars.js");
+  const onMap = (u) => !!u && u.hp > 0 && !u.embarked;
   const turnTransitionMs = 3600;
   const W = catalog.map.width,
     H = catalog.map.height;
   const maxCostLimit = 99999;
   const seatTeam = (seat) => (seat === null ? null : seat % 2);
   const ownerOf = (unit) => unit.ownerSeat ?? unit.team;
+  function canControlUnit(settings, members, seat, unit) {
+    if (!unit || !Number.isInteger(seat) || seat < 0 || !members?.some((m) => m.seat === seat))
+      return false;
+    if (ownerOf(unit) === seat) return true;
+    return (
+      unit.team === seatTeam(seat) &&
+      (settings?.shareAlliedUnits === true ||
+        members.some((m) => m.seat === ownerOf(unit) && m.shareUnits === true))
+    );
+  }
   const mapWidth = (g) => g.tiles[0].length;
   const mapHeight = (g) => g.tiles.length;
   // 列坐标从零开始，显示为 A…Z、AA…ZZ、AAA…，大型单位落在格间时取左侧格。
@@ -63,7 +75,7 @@ const Tactics = (() => {
     throw Error("没有可用的单位编号");
   }
   const unitName = (unit) => unit.customName || modelOf(unit).name;
-  // 玩家默认最多12台；裁定端可为AI显式传入倍率后的上限（最多24台）。
+  // 房间基础上限12台；玩家与AI可按数量比例扩展到36台。
   function validateFormation(
     entries,
     maxCost = catalog.formation.maxCost,
@@ -75,7 +87,7 @@ const Tactics = (() => {
       entries.length > unitLimit ||
       !Number.isInteger(unitLimit) ||
       unitLimit < 1 ||
-      unitLimit > catalog.formation.maxUnits * 2
+      unitLimit > catalog.formation.maxUnits * 3
     )
       throw Error("编组数量无效，请检查单位数量上限");
     let cost = 0;
@@ -88,6 +100,36 @@ const Tactics = (() => {
       const customName = normalizeUnitName(entry.customName);
       return { unitId: model.prefabId, kitId: model.kitId, ...(customName ? { customName } : {}) };
     });
+    const capacity = new Map();
+    entries.forEach((entry, index) => {
+      if (entry.preload === undefined) return;
+      const preload = entry.preload;
+      if (
+        !preload ||
+        !Number.isInteger(preload.carrierIndex) ||
+        preload.carrierIndex < 0 ||
+        preload.carrierIndex >= clean.length ||
+        preload.carrierIndex === index ||
+        typeof preload.hangarId !== "string"
+      )
+        throw Error("预先搭载关系无效");
+      const carrier =
+          models[clean[preload.carrierIndex].unitId + "__" + clean[preload.carrierIndex].kitId],
+        passenger = models[clean[index].unitId + "__" + clean[index].kitId],
+        hangar = carrier.hangars?.find((h) => h.id === preload.hangarId);
+      if (
+        !hangar ||
+        passenger.hangars?.length ||
+        entries[preload.carrierIndex].preload ||
+        !hangar.allowedTags.some((tag) => passenger.transport?.loadTags.includes(tag))
+      )
+        throw Error("该单位不能预先搭载至此格纳库");
+      const key = preload.carrierIndex + "/" + preload.hangarId,
+        used = (capacity.get(key) || 0) + (passenger.transport?.slotCost || 1);
+      if (used > hangar.capacity) throw Error("预先搭载超出格纳库容量");
+      capacity.set(key, used);
+      clean[index].preload = { carrierIndex: preload.carrierIndex, hangarId: preload.hangarId };
+    });
     if (cost > maxCost) throw Error("编组 COST 超出上限");
     return clean;
   }
@@ -97,6 +139,7 @@ const Tactics = (() => {
       catalog.prefabs.flatMap((prefab) => prefab.tags.filter((tag) => /^\d{4}$/.test(tag))),
     ),
   ].sort();
+  const unitTags = [...new Set(catalog.prefabs.flatMap((p) => p.unitTags || []))].sort();
   function validateUnitCostLimit(value) {
     if (!Number.isInteger(value) || value < 1 || value > maxCostLimit)
       throw Error("单位 COST 上限无效");
@@ -107,13 +150,16 @@ const Tactics = (() => {
       !value ||
       typeof value !== "object" ||
       Array.isArray(value) ||
-      Object.keys(value).some((key) => !["bannedFactions", "bannedEras"].includes(key))
+      Object.keys(value).some(
+        (key) => !["bannedFactions", "bannedEras", "bannedTypes"].includes(key),
+      )
     )
       throw Error("标签限制无效");
     const clean = {};
     for (const [key, allowed] of [
       ["bannedFactions", factions],
       ["bannedEras", eras],
+      ["bannedTypes", unitTags],
     ]) {
       const tags = value[key] ?? [];
       if (!Array.isArray(tags) || tags.some((tag) => !allowed.includes(tag)))
@@ -132,6 +178,7 @@ const Tactics = (() => {
       costLimit: catalog.formation.maxCost,
       unitLimit: catalog.formation.defaultUnits,
       unitCostLimit: catalog.formation.unitCostLimit,
+      shareAlliedUnits: false,
       ...validateTagRestrictions(),
       teamRestrictions: [validateTagRestrictions(), validateTagRestrictions()],
     };
@@ -151,6 +198,7 @@ const Tactics = (() => {
         ...new Set([...(settings.bannedFactions || []), ...(team.bannedFactions || [])]),
       ],
       bannedEras: [...new Set([...(settings.bannedEras || []), ...(team.bannedEras || [])])],
+      bannedTypes: [...new Set([...(settings.bannedTypes || []), ...(team.bannedTypes || [])])],
     };
   }
   function restrictionReason(model, restrictions = {}) {
@@ -164,7 +212,8 @@ const Tactics = (() => {
       return "not_allowed";
     if (
       restrictions.bannedFactions?.includes(model.faction) ||
-      model.tags.some((tag) => restrictions.bannedEras?.includes(tag))
+      model.tags.some((tag) => restrictions.bannedEras?.includes(tag)) ||
+      (model.unitTags || []).some((tag) => restrictions.bannedTypes?.includes(tag))
     )
       return "not_allowed";
     if (model.cost > (restrictions.unitCostLimit ?? Infinity)) return "cost";
@@ -200,19 +249,36 @@ const Tactics = (() => {
       deployCost,
       disabled,
       reasons,
-      deployable: clean.filter((_, index) => !reasons[index]),
+      deployable: clean
+        .filter((_, index) => !reasons[index])
+        .map((entry) => {
+          if (!entry.preload) return entry;
+          const indices = clean.map((_, index) => index).filter((index) => !reasons[index]),
+            carrierIndex = indices.indexOf(entry.preload.carrierIndex);
+          const { preload, ...plain } = entry;
+          return carrierIndex < 0 ? plain : { ...plain, preload: { ...preload, carrierIndex } };
+        }),
       indices: clean.map((_, index) => index).filter((index) => !reasons[index]),
     };
   }
-  const aiCountPercentages = Object.freeze([50, 75, 100, 125, 150, 175, 200]);
+  const armyPercentages = Object.freeze(Array.from({ length: 12 }, (_, i) => (i + 1) * 25));
+  const aiCountPercentages = armyPercentages;
   const aiDefaults = Object.freeze({ difficulty: "medium", fill: 100, countPercent: 100 });
-  const aiPerformance = Object.freeze({ easy: 0.75, medium: 1, hard: 1.25 });
+  const aiPerformance = Object.freeze({
+    easy: 0.75,
+    medium: 1,
+    hard: 1.25,
+    ...Object.fromEntries(armyPercentages.map((percent) => [percent, percent / 100])),
+  });
   function validateAISettings(value = {}) {
     if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("AI 设置无效");
     const clean = { ...aiDefaults, ...value };
     if (
-      !Object.hasOwn(aiPerformance, clean.difficulty) ||
-      ![50, 75, 100, 125, 150].includes(clean.fill) ||
+      !(
+        armyPercentages.includes(clean.difficulty) ||
+        ["easy", "medium", "hard"].includes(clean.difficulty)
+      ) ||
+      !armyPercentages.includes(clean.fill) ||
       !aiCountPercentages.includes(clean.countPercent) ||
       Object.keys(value).some((key) => !Object.hasOwn(aiDefaults, key))
     )
@@ -225,13 +291,72 @@ const Tactics = (() => {
       1,
       Math.floor((validateUnitLimit(limit) * validateAISettings(config).countPercent) / 100),
     );
+  // 玩家与 AI 共用编组设置；旧 AI 配置保留为兼容输入。
+  function validateArmySettings(value = {}) {
+    if (
+      !value ||
+      typeof value !== "object" ||
+      Array.isArray(value) ||
+      Object.keys(value).some(
+        (key) => ![...Object.keys(aiDefaults), "unitCostLimit", "unitCostPercent"].includes(key),
+      )
+    )
+      throw Error("玩家编组设置无效");
+    const config = validateAISettings(
+      Object.fromEntries(
+        Object.keys(aiDefaults)
+          .filter((key) => Object.hasOwn(value, key))
+          .map((key) => [key, value[key]]),
+      ),
+    );
+    const unitCostPercent = value.unitCostPercent ?? 100;
+    if (!armyPercentages.includes(unitCostPercent)) throw Error("单机COST比例无效");
+    return {
+      ...config,
+      unitCostPercent,
+      unitCostLimit:
+        value.unitCostLimit == null ? null : validateUnitCostLimit(value.unitCostLimit),
+    };
+  }
+  const armySettings = (player) =>
+    validateArmySettings(player?.armySettings || player?.aiSettings || {});
+  function armyBudget(settings, player) {
+    if (player?.formationPreset)
+      return Math.max(
+        maxCostLimit,
+        player.formationPreset.units.reduce(
+          (sum, e) => sum + models[e.unitId + "__" + e.kitId].cost,
+          0,
+        ),
+      );
+    return Math.floor((settings.costLimit * armySettings(player).fill) / 100);
+  }
+  function armyUnitLimit(settings, player) {
+    return player?.formationPreset
+      ? player.formationPreset.units.length
+      : Math.max(1, Math.floor((settings.unitLimit * armySettings(player).countPercent) / 100));
+  }
+  function armyRestrictions(settings, player) {
+    const rules = formationRestrictions(settings, player?.seat ?? null);
+    const config = armySettings(player);
+    rules.unitCostLimit =
+      config.unitCostLimit ??
+      Math.max(1, Math.floor((rules.unitCostLimit * config.unitCostPercent) / 100));
+    if (player?.formationPreset) {
+      rules.unitCostLimit = maxCostLimit;
+      rules.bannedFactions = [];
+      rules.bannedEras = [];
+      rules.bannedTypes = [];
+    }
+    return rules;
+  }
   function randomFormation(
     seed = 7319,
     maxCost = catalog.formation.maxCost,
     restrictions = {},
     unitLimit = catalog.formation.maxUnits,
   ) {
-    if (!Number.isInteger(unitLimit) || unitLimit < 1 || unitLimit > catalog.formation.maxUnits * 2)
+    if (!Number.isInteger(unitLimit) || unitLimit < 1 || unitLimit > catalog.formation.maxUnits * 3)
       throw Error("AI 编组数量上限无效");
     if (
       !Number.isInteger(maxCost) ||
@@ -260,6 +385,8 @@ const Tactics = (() => {
     const preferredMinimum = Math.min(
       ...choices.filter((model) => adaptation(model) === bestAdaptation).map((model) => model.cost),
     );
+    const shipInterval = 6 + ((seed >>> 0) % 3);
+    const desiredShips = count >= 6 ? Math.max(1, Math.floor(count / shipInterval)) : 0;
     let remaining = maxCost;
     for (let i = 0; i < count; i++) {
       // 优先填满槽位；能全员使用最佳适应性时，为后续单位保留对应预算。
@@ -320,7 +447,16 @@ const Tactics = (() => {
       });
       if (!legal.length) break;
       const bestLegalAdaptation = Math.max(...legal.map(adaptation));
-      const preferred = legal.filter((model) => adaptation(model) === bestLegalAdaptation);
+      let preferred = legal.filter((model) => adaptation(model) === bestLegalAdaptation);
+      const ships = entries.filter(
+        (entry) => models[entry.unitId + "__" + entry.kitId].ship,
+      ).length;
+      const kind = preferred.filter((model) => !!model.ship === ships < desiredShips);
+      if (kind.length) preferred = kind;
+      if (ships < desiredShips) {
+        const carriers = preferred.filter((model) => model.ship && model.hangars?.length);
+        if (carriers.length) preferred = carriers;
+      }
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
       const model = preferred[seed % preferred.length];
       entries.push({
@@ -330,13 +466,36 @@ const Tactics = (() => {
       });
       remaining -= model.cost;
     }
+    // Assign existing squad entries to compatible hangars; never create free passengers.
+    const hangars = entries.flatMap((entry, carrierIndex) =>
+      (models[entry.unitId + "__" + entry.kitId].hangars || []).map((h) => ({
+        carrierIndex,
+        hangar: h,
+        remaining: h.capacity,
+      })),
+    );
+    for (const [index, entry] of entries.entries()) {
+      const model = models[entry.unitId + "__" + entry.kitId];
+      if (model.hangars?.length || !model.transport) continue;
+      const compatible = hangars.filter(
+        (slot) =>
+          slot.carrierIndex !== index &&
+          slot.remaining >= model.transport.slotCost &&
+          slot.hangar.allowedTags.some((tag) => model.transport.loadTags.includes(tag)),
+      );
+      if (!compatible.length) continue;
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      if (seed / 4294967296 >= 0.5) continue;
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      const slot = compatible[seed % compatible.length];
+      entry.preload = { carrierIndex: slot.carrierIndex, hangarId: slot.hangar.id };
+      slot.remaining -= model.transport.slotCost;
+    }
     return entries;
   }
-  // 模型目录保持不变，每个 AI 实例只应用一次难度倍率。
+  // 武器只应用部位损坏惩罚；玩家强度仅影响本体耐久和 EN。
   function weaponStats(weapon, unit) {
-    const factor = unit.performance ?? 1,
-      attackMultiplier = parts.penalties(unit).attackMultiplier,
-      previousPerformance = weapon.performance ?? 1,
+    const attackMultiplier = parts.penalties(unit).attackMultiplier,
       previousAttack = weapon.partDamageMultiplier ?? 1;
     const liveChannels =
       weapon.pairedChannels && weapon.energySpent === undefined
@@ -353,14 +512,11 @@ const Tactics = (() => {
             ),
           ).size * weapon.nativeTiming.energyPerEmission
         : weapon.en;
-    if (factor === previousPerformance && attackMultiplier === previousAttack && en === weapon.en)
-      return weapon;
-    const performanceRatio = factor / previousPerformance,
-      damageRatio = (performanceRatio * attackMultiplier) / previousAttack;
+    if (attackMultiplier === previousAttack && en === weapon.en) return weapon;
+    const damageRatio = attackMultiplier / previousAttack;
     return {
       ...weapon,
       en,
-      performance: factor,
       partDamageMultiplier: attackMultiplier,
       get name() {
         return weapon.name;
@@ -370,7 +526,7 @@ const Tactics = (() => {
       },
       damagePerShot: weapon.damagePerShot * damageRatio,
       damage: weapon.damage * damageRatio,
-      hit: weapon.hit * performanceRatio,
+      hit: weapon.hit,
       attack: {
         ...weapon.attack,
         strikes: weapon.attack.strikes.map((step) => ({
@@ -400,13 +556,6 @@ const Tactics = (() => {
     let variants = scaledModels.get(base);
     if (!variants) scaledModels.set(base, (variants = new Map()));
     if (!variants.has(factor)) {
-      const defense = (channels) =>
-        Object.fromEntries(
-          Object.entries(channels).map(([key, value]) => [
-            key,
-            { flat: value.flat * factor, percent: Math.min(100, value.percent * factor) },
-          ]),
-        );
       variants.set(factor, {
         ...base,
         get name() {
@@ -420,23 +569,14 @@ const Tactics = (() => {
         },
         hp: Math.round(base.hp * factor),
         en: Math.round(base.en * factor),
-        move: Math.max(1, Math.round(base.move * factor)),
-        mobility: base.mobility * factor,
-        partStructuralStrength: base.partStructuralStrength * factor,
-        defenses: defense(base.defenses),
-        shield: {
-          ...base.shield,
-          hp: Math.round(base.shield.hp * factor),
-          defenses: defense(base.shield.defenses),
-        },
-        weapons: base.weapons.map((weapon) => weaponStats(weapon, { performance: factor })),
       });
     }
     return variants.get(factor);
   }
   // Derive damage penalties from current parts; never modify a shared catalog or AI variant.
   function modelOf(unit) {
-    const base = performanceModelOf(unit),
+    const original = performanceModelOf(unit),
+      base = unit.flying ? { ...original, movementType: "air" } : original,
       penalty = parts.penalties(base.partsBreakable === false ? {} : unit),
       environment = unit.environment ?? "ground",
       adaptability = (base.adaptability?.[environment] ?? 100) / 100;
@@ -512,7 +652,7 @@ const Tactics = (() => {
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再调整");
     const u = g.units.find((u) => u.id === id && ownerOf(u) === team);
     if (
-      !u ||
+      !onMap(u) ||
       !Number.isInteger(x) ||
       !Number.isInteger(y) ||
       !deploymentCells(g, team, u).some((c) => c.x === x && c.y === y)
@@ -525,7 +665,7 @@ const Tactics = (() => {
   }
   function confirmDeployment(g, team) {
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再次确认");
-    for (const u of g.units.filter((u) => ownerOf(u) === team)) {
+    for (const u of g.units.filter((u) => ownerOf(u) === team && onMap(u))) {
       if (!deploymentCells(g, team, u).some((c) => c.x === u.x && c.y === u.y))
         throw Error("单位不在有效部署区域");
       if (!fits(g, u, u.x, u.y, u.angle, false, team)) throw Error("部署位置重叠");
@@ -572,6 +712,28 @@ const Tactics = (() => {
     parts,
   });
   // Grid anchors remain integers; a ship's explicit heading determines its whole rectangle.
+  function inSupplyRange(provider, target) {
+    const aura = modelOf(provider).supplyAura;
+    return !!aura && dist(provider, target) <= aura.range;
+  }
+  function supplyCells(g, provider) {
+    const aura = modelOf(provider).supplyAura;
+    if (!aura) return [];
+    const size = dimensions(provider),
+      result = [];
+    for (
+      let y = Math.max(0, provider.y - aura.range);
+      y < Math.min(mapHeight(g), provider.y + size.height + aura.range);
+      y++
+    )
+      for (
+        let x = Math.max(0, provider.x - aura.range);
+        x < Math.min(mapWidth(g), provider.x + size.width + aura.range);
+        x++
+      )
+        if (inSupplyRange(provider, { x, y })) result.push({ x, y });
+    return result;
+  }
   function dimensions(unit, angle = unit.angle ?? 0) {
     if (unit.visualOnly) return { width: 1, height: 1 };
     const footprint = models[unit.model]?.footprint || { width: 1, height: 1 };
@@ -624,7 +786,7 @@ const Tactics = (() => {
         !(g.units || []).some(
           (other) =>
             other.id !== unit.id &&
-            other.hp > 0 &&
+            onMap(other) &&
             occupies(other, c.x, c.y) &&
             (!throughAllies || other.team !== unit.team),
         ),
@@ -634,7 +796,7 @@ const Tactics = (() => {
     if (
       !models[unit.model]?.ship ||
       ![-1, 1].includes(direction) ||
-      unit.hp <= 0 ||
+      !onMap(unit) ||
       unit.acted ||
       unit.plan
     )
@@ -669,7 +831,7 @@ const Tactics = (() => {
           x >= mapWidth(g) ||
           y >= mapHeight(g) ||
           !Number.isFinite(unit ? terrainCost(g, unit, x, y) : terrain[g.tiles[y][x]].cost) ||
-          g.units.some((other) => other.id !== unit.id && other.hp > 0 && occupies(other, x, y))
+          g.units.some((other) => other.id !== unit.id && onMap(other) && occupies(other, x, y))
         )
           return false;
       }
@@ -709,6 +871,7 @@ const Tactics = (() => {
       terrainCells = new Map();
     const entries = formation
       .map((entry, i) => ({ entry, i }))
+      .filter(({ entry }) => !entry.preload)
       .sort((a, b) => {
         const size = (entry) => {
           const f = models[entry.unitId + "__" + entry.kitId].footprint;
@@ -734,6 +897,12 @@ const Tactics = (() => {
       placed.units.push({ ...probe, ...position });
       result.push({ entry, i, position, heading });
     }
+    formation.forEach((entry, i) => {
+      if (!entry.preload) return;
+      const carrier = result.find((p) => p.i === entry.preload.carrierIndex);
+      if (carrier)
+        result.push({ entry, i, position: { ...carrier.position }, heading: carrier.heading });
+    });
     return result;
   }
   function create(ai = false, seed = 7319, formations, deploying = false, settings = {}) {
@@ -749,6 +918,9 @@ const Tactics = (() => {
       ),
     );
     if (formations.length !== map.spawns.length) throw Error("编组数量必须匹配地图席位");
+    const rulesForSeat = (seat) =>
+      settings.seatFormationRules?.[seat] ||
+      formationRestrictions({ ...settings, mapId: map.id }, seat);
     const tiles = map.tiles.map((row) => row.slice());
     let units = [];
     for (let seat = 0; seat < formations.length; seat++) {
@@ -766,21 +938,30 @@ const Tactics = (() => {
       );
       if (!placements) throw Error("出生区没有足够位置容纳编组，请检查目录配置");
       placements.forEach(({ entry, i, position, heading }) => {
-        if (
-          restrictionReason(
-            models[entry.unitId + "__" + entry.kitId],
-            formationRestrictions({ ...settings, mapId: map.id }, seat),
-          )
-        )
+        if (restrictionReason(models[entry.unitId + "__" + entry.kitId], rulesForSeat(seat)))
           throw Error("编组包含不被允许的单位");
         const team = seatTeam(seat);
         const model = entry.unitId + "__" + entry.kitId;
         const performance = settings.performances?.[seat] ?? 1;
-        if (![0.75, 1, 1.25].includes(performance)) throw Error("性能倍率无效");
+        if (!armyPercentages.some((percent) => percent / 100 === performance))
+          throw Error("性能倍率无效");
         let m = modelOf({ model, performance, environment: map.environment });
         units.push({
           id: seat + "-" + (settings.formationIndices?.[seat]?.[i] ?? i),
           ownerSeat: seat,
+          ...(entry.preload
+            ? {
+                embarked: {
+                  carrierId:
+                    seat +
+                    "-" +
+                    (settings.formationIndices?.[seat]?.[entry.preload.carrierIndex] ??
+                      entry.preload.carrierIndex),
+                  hangarId: entry.preload.hangarId,
+                  boardRound: null,
+                },
+              }
+            : {}),
           environment: map.environment || "ground",
           model,
           ...(entry.customName ? { customName: entry.customName } : {}),
@@ -792,9 +973,7 @@ const Tactics = (() => {
           brokenParts: {},
           ...(m.ship
             ? {
-                moduleHp: Object.fromEntries(
-                  m.modules.map((module) => [module.id, module.hp * performance]),
-                ),
+                moduleHp: Object.fromEntries(m.modules.map((module) => [module.id, module.hp])),
               }
             : {}),
           shield: m.shield.hp,
@@ -830,11 +1009,11 @@ const Tactics = (() => {
     };
   }
   function at(g, x, y) {
-    return g.units.find((u) => u.hp > 0 && occupies(u, x, y));
+    return g.units.find((u) => onMap(u) && occupies(u, x, y));
   }
   // 敌军上下左右相邻的格子消耗至少3点；地形更昂贵时仍按地形计算。
   function terrainCost(g, u, x, y) {
-    const movement = models[u.model]?.movementType;
+    const movement = modelOf(u).movementType;
     const tile = g.tiles[y][x];
     if (g.environment !== "space") {
       if (movement === "air") return 1;
@@ -846,16 +1025,18 @@ const Tactics = (() => {
   function movementCost(g, u, x, y) {
     const base = terrainCost(g, u, x, y);
     return g.units.some(
-      (enemy) => enemy.hp > 0 && enemy.team !== u.team && dist(enemy, { x, y }) === 1,
+      (enemy) => onMap(enemy) && enemy.team !== u.team && dist(enemy, { x, y }) === 1,
     )
       ? Math.max(base, 3)
       : base;
   }
   // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
-  function reachable(g, u) {
+  function reachable(g, u, starts = null) {
+    if (!onMap(u)) return new Map();
     const moveLimit = modelOf(u).move;
-    let best = new Map([[key(u.x, u.y), { x: u.x, y: u.y, cost: 0, path: [] }]]),
-      queue = [best.get(key(u.x, u.y))];
+    const initial = starts || [{ x: u.x, y: u.y, cost: 0, path: [] }];
+    let best = new Map(initial.filter((p) => p.cost <= moveLimit).map((p) => [key(p.x, p.y), p])),
+      queue = [...best.values()];
     while (queue.length) {
       queue.sort((a, b) => a.cost - b.cost);
       let n = queue.shift();
@@ -897,7 +1078,8 @@ const Tactics = (() => {
     }
   }
   function move(g, u, x, y) {
-    if (g.winner !== null || u.team !== g.team || u.acted || u.moved) throw Error("本单位无法移动");
+    if (!onMap(u) || g.winner !== null || u.team !== g.team || u.acted || u.moved)
+      throw Error("本单位无法移动");
     let tile = reachable(g, u).get(key(x, y));
     if (!tile || !tile.path.length) throw Error("该位置不可移动");
     // 只有同一玩家的后续成功移动才会提交先前移动；友军玩家独立撤回。
@@ -923,11 +1105,12 @@ const Tactics = (() => {
   function canUndo(g, u) {
     return (
       g.winner === null &&
-      u.hp > 0 &&
+      onMap(u) &&
       u.team === g.team &&
       !u.acted &&
       u.moved &&
       !!u.origin &&
+      u.lastCargoLaunchRound !== g.round &&
       fits(g, u, u.origin.x, u.origin.y, u.origin.angle)
     );
   }
@@ -979,10 +1162,30 @@ const Tactics = (() => {
     if (en > u.en) throw Error("武器序列总EN不足");
     return { ap, en };
   }
+  function counterQueue(g, u, target, weapons) {
+    if (!Array.isArray(weapons) || !weapons.length || weapons.length > 32)
+      throw Error("请选择有效的反击武器序列");
+    if (weapons.some((w) => !w || !canCounter(g, u, target, w)))
+      throw Error("反击次数已用完，或武器不满足射程与 EN 条件");
+    if (weapons.some((w) => w.slot === "skill") && weapons.length !== 1)
+      throw Error("技能武器须独立使用");
+    const ap = weapons.reduce((n, w) => n + actionCost(w), 0);
+    const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
+    if (ap > counterActionBudget(u)) throw Error("反击行动点不足");
+    if (en > u.en) throw Error("反击武器序列总EN不足");
+    return { ap, en };
+  }
+  function weaponCooldown(u, w) {
+    return u.weaponCooldowns?.[w?.id] || 0;
+  }
+  function startWeaponCooldown(u, w) {
+    if (["mortar", "snipe"].includes(w?.special?.type)) (u.weaponCooldowns ||= {})[w.id] = 2;
+  }
   function canUse(u, w) {
     return (
       !!w &&
-      u.hp > 0 &&
+      !weaponCooldown(u, w) &&
+      onMap(u) &&
       u.en >= weaponStats(w, u).en &&
       !parts.unavailable(u, w).length &&
       availableStrikes(u, w).length > 0
@@ -993,9 +1196,9 @@ const Tactics = (() => {
     return d >= w.min && d <= w.max;
   }
   function targetModifier(g, target, weapon) {
-    const targetModel = models[target.model];
+    const targetModel = modelOf(target);
     if (
-      weapon.special?.type === "bomb" &&
+      ["bomb", "mortar"].includes(weapon.special?.type) &&
       (targetModel.movementType === "air" ||
         targetModel.sourceStats?.nativeTags?.includes("Aircraft"))
     )
@@ -1004,19 +1207,41 @@ const Tactics = (() => {
     const category =
       g.environment === "space"
         ? "space"
-        : models[target.model].movementType === "air"
+        : targetModel.movementType === "air"
           ? "air"
           : g.tiles[target.y][target.x] === "water"
             ? "water"
             : "ground";
     return weapon.targetModifiers[category] ?? 1;
   }
+  function groundTarget(g, a, x, y) {
+    if (!Number.isInteger(x) || !Number.isInteger(y) || !g.tiles[y]?.[x]) return null;
+    return {
+      id: null,
+      x,
+      y,
+      team: 1 - a.team,
+      model: a.model,
+      hp: 1,
+      visualOnly: true,
+      groundTarget: true,
+    };
+  }
   function canAttack(g, a, b, w) {
+    if (b?.groundTarget)
+      return (
+        !!groundTarget(g, a, b.x, b.y) &&
+        w?.special?.type === "mortar" &&
+        onMap(a) &&
+        canUse(a, w) &&
+        inRange(a, b, w) &&
+        availableStrikes(a, w, b).length > 0
+      );
     return (
       !!a &&
       !!b &&
-      a.hp > 0 &&
-      b.hp > 0 &&
+      onMap(a) &&
+      onMap(b) &&
       a.team !== b.team &&
       canUse(a, w) &&
       targetModifier(g, b, w) > 0 &&
@@ -1206,9 +1431,14 @@ const Tactics = (() => {
     if (g.winner !== null || a.team !== g.team || a.acted || !canAttack(g, a, b, w))
       throw Error("攻击条件已失效");
     if (!["counter", "defend", "evade"].includes(response)) throw Error("未知应战方式");
-    let cw = modelOf(b).weapons.find((x) => x.id === counterId);
-    if (response === "counter" && allowCounter && (!cw || !canCounter(g, b, a, cw)))
-      throw Error("反击次数已用完，或武器不满足射程与 EN 条件");
+    const counterIds = Array.isArray(counterId) ? counterId : [counterId];
+    if (response === "counter" && allowCounter)
+      counterQueue(
+        g,
+        b,
+        a,
+        counterIds.map((id) => modelOf(b).weapons.find((w) => w.id === id)),
+      );
     let events = [],
       dodgeSeed = (g.seed ^ 0x9e3779b9) >>> 0;
     const dodgeSlots = { [a.id]: 0, [b.id]: 0 };
@@ -1260,7 +1490,9 @@ const Tactics = (() => {
               step.partBreakModifier ?? weapon.partBreakModifier ?? 1,
             )
           : null;
-        const overdriveEnded = !!to.overdrive && !!to.brokenParts?.head && skills.endOverdrive(to);
+        const wasOverdrive = !!to.overdrive;
+        const formReverted = skills.revertDamaged(to);
+        const overdriveEnded = wasOverdrive && !to.overdrive;
         let dodgeTo = null;
         if (executed && !hit) {
           dodgeTo = dodgeSlots[to.id] === 0 ? dodgeSide() : 0;
@@ -1281,6 +1513,8 @@ const Tactics = (() => {
           brokenParts: brokenPart ? [brokenPart] : [],
           partsAfter: { ...to.brokenParts },
           modelAfter: to.model,
+          flyingAfter: !!to.flying,
+          formReverted,
           overdriveEnded,
           ...(to.moduleHp ? { modulesAfter: { ...to.moduleHp } } : {}),
           hitChance: e.hit,
@@ -1321,20 +1555,41 @@ const Tactics = (() => {
       });
     }
     fire(a, b, w, response);
-    cw = modelOf(b).weapons.find((x) => x.id === counterId);
-    if (response === "counter" && allowCounter && b.hp > 0 && canCounter(g, b, a, cw)) {
-      b.counterCount = (b.counterCount ?? 0) + 1;
-      b.counterTargetId = a.id;
-      fire(b, a, cw, "counter", true);
+    if (response === "counter" && allowCounter && b.hp > 0 && a.hp > 0) {
+      let remaining = counterActionBudget(b),
+        started = false;
+      for (const id of counterIds) {
+        const weapon = modelOf(b).weapons.find((w) => w.id === id);
+        if (b.hp <= 0 || a.hp <= 0) break;
+        if (
+          !weapon ||
+          weapon.noCounter ||
+          actionCost(weapon) > remaining ||
+          !canAttack(g, b, a, weapon)
+        )
+          continue;
+        if (!started) {
+          b.counterCount = (b.counterCount ?? 0) + 1;
+          b.counterTargetId = a.id;
+          started = true;
+        }
+        remaining -= actionCost(weapon);
+        fire(b, a, weapon, "counter", true);
+      }
     }
     a.acted = true;
     a.origin = null;
+    const evacuations = hangars.evacuate(g);
+    for (const event of events)
+      event.evacuations = evacuations.filter(
+        (e) => e.carrierId === event.to && event.after <= 0 && event.before > 0,
+      );
     let alive = [0, 1].map((t) => g.units.some((u) => u.team === t && u.hp > 0));
     if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
     return events;
   }
   function wait(g, u) {
-    if (g.winner !== null || u.team !== g.team || u.acted) throw Error("无法待机");
+    if (!onMap(u) || g.winner !== null || u.team !== g.team || u.acted) throw Error("无法待机");
     u.acted = true;
     u.actionPoints = 0;
     u.origin = null;
@@ -1342,6 +1597,7 @@ const Tactics = (() => {
   function end(g) {
     if (g.winner !== null) throw Error("战斗已经结束");
     g.turnEffects = [];
+    for (const u of g.units) if (!u.overdrive) skills.revertDamaged(u);
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.overdrive)) {
       const active = u.overdrive,
         m = modelOf(u);
@@ -1370,6 +1626,25 @@ const Tactics = (() => {
       delete u.counterTargetId;
     }
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0)) {
+      for (const id of Object.keys(u.weaponCooldowns || {})) {
+        if (--u.weaponCooldowns[id] <= 0) delete u.weaponCooldowns[id];
+      }
+      // Hangar maintenance ticks only on the passenger team's incoming turn.
+      if (
+        u.embarked &&
+        g.units.some((carrier) => carrier.id === u.embarked.carrierId && carrier.hp > 0)
+      ) {
+        const m = modelOf(u);
+        u.hp = Math.min(m.hp, u.hp + Math.round(m.hp * 0.25));
+        u.en = Math.min(m.en, u.en + m.en * 0.5);
+        const damaged = Object.keys(u.brokenParts || {}).filter((part) => u.brokenParts[part]);
+        for (let i = 0; i < 2 && damaged.length; i++) {
+          const part = damaged.splice(Math.floor(random(g) * damaged.length), 1)[0];
+          delete u.brokenParts[part];
+          const module = m.modules?.find((entry) => entry.id === part);
+          if (module && u.moduleHp) u.moduleHp[part] = module.hp;
+        }
+      }
       const maintenance = modelOf(u).autoRepair;
       if (maintenance && u.hp < modelOf(u).hp && u.en >= maintenance.enCost) {
         u.en -= maintenance.enCost;
@@ -1384,11 +1659,11 @@ const Tactics = (() => {
       u.origin = null;
     }
     // Supply ticks once on the recipient team's turn, with no stacking from overlapping providers.
-    const providers = g.units.filter((u) => u.hp > 0 && u.team === g.team && modelOf(u).supplyAura);
-    for (const u of g.units.filter((u) => u.hp > 0 && u.team === g.team)) {
+    const providers = g.units.filter((u) => onMap(u) && u.team === g.team && modelOf(u).supplyAura);
+    for (const u of g.units.filter((u) => onMap(u) && u.team === g.team)) {
       const aura = providers
         .map((provider) => ({ provider, aura: modelOf(provider).supplyAura }))
-        .find(({ provider, aura }) => dist(u, provider) <= aura.range);
+        .find(({ provider, aura }) => inSupplyRange(provider, u));
       if (!aura) continue;
       const m = modelOf(u);
       u.hp = Math.min(m.hp, u.hp + Math.round((m.hp * aura.aura.hpPercent) / 100));
@@ -1407,21 +1682,24 @@ const Tactics = (() => {
         u.actionPoints = 0;
       }
     }
+    g.turnEffects.push(...hangars.evacuate(g).map((e) => ({ type: "evacuation", ...e })));
     const alive = [0, 1].map((team) => g.units.some((u) => u.team === team && u.hp > 0));
     if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
   }
   // 待机不阻止自动结束；仍可使用脱出等非攻击技能时保留行动机会。
   function hasActions(g, ownerSeat = null) {
     if (g.winner !== null || (g.deployment && !g.deployment.every(Boolean))) return false;
-    const enemies = g.units.filter((u) => u.team !== g.team && u.hp > 0);
+    const enemies = g.units.filter((u) => u.team !== g.team && onMap(u));
     return g.units.some((u) => {
       if (
         u.team !== g.team ||
         u.hp <= 0 ||
+        (u.embarked && !hangars.launchCells(g, u).length) ||
         u.acted ||
         (ownerSeat !== null && ownerOf(u) !== ownerSeat)
       )
         return false;
+      if (u.embarked) return true;
       if (skills.of(u).some((skill) => skills.targets(g, u, skill.id).length)) return true;
       if (!u.moved && (reachable(g, u).size > 1 || canRotate(g, u, 1) || canRotate(g, u, -1)))
         return true;
@@ -1445,11 +1723,13 @@ const Tactics = (() => {
       return { response: expected(defense) < expected(evasion) ? "defend" : "evade" };
     return counter ? { response: "counter", weapon: counter.id } : { response: "evade" };
   }
-  function aiChoice(g, u) {
-    let cells = u.moved ? [{ x: u.x, y: u.y, cost: 0, path: [] }] : [...reachable(g, u).values()],
-      enemies = g.units.filter((e) => e.team !== u.team && e.hp > 0),
+  function aiChoice(g, u, destinations = null) {
+    let cells =
+        destinations ??
+        (u.moved ? [{ x: u.x, y: u.y, cost: 0, path: [] }] : [...reachable(g, u).values()]),
+      enemies = g.units.filter((e) => e.team !== u.team && onMap(e)),
       best = null;
-    if (models[u.model]?.ship && !u.moved)
+    if (!destinations && models[u.model]?.ship && !u.moved)
       for (const direction of [-1, 1])
         if (canRotate(g, u, direction)) {
           const pivot = u.rotationPivot || center(u);
@@ -1473,13 +1753,17 @@ const Tactics = (() => {
         weapon = null;
       for (const e of enemies)
         for (const w of modelOf(u).weapons)
-          if (canAttack(g, virtual, e, w)) {
+          if (
+            (!destinations || (w.slot !== "skill" && actionCost(w) <= actionPoints(u))) &&
+            canAttack(g, virtual, e, w)
+          ) {
             let ex = estimate(g, virtual, e, w),
               s =
                 2 +
                 (ex.damage * ex.hit) / 100000 +
                 Math.min(1, ex.damage / e.hp) * 0.6 -
-                c.cost * 0.025;
+                c.cost * 0.025 -
+                (destinations ? near * 0.12 : 0);
             if (s > score) {
               score = s;
               target = e.id;
@@ -1490,7 +1774,49 @@ const Tactics = (() => {
     }
     return best;
   }
+  function aiLaunchChoice(g, u) {
+    if (!hangars.shouldLaunch(g, u)) return null;
+    const destinations = hangars.launchCells(g, u);
+    if (!destinations.length) return null;
+    const passenger = {
+      ...u,
+      embarked: undefined,
+      moved: true,
+      actionPoints: Math.ceil(actionPoints(u) * 0.75),
+    };
+    return aiChoice(g, passenger, destinations);
+  }
+  const hangars = hangarModule.create({
+    modelOf,
+    ownerOf,
+    canControlUnit,
+    cells,
+    fits,
+    mapWidth,
+    mapHeight,
+    reachable,
+    movementCost,
+  });
   return {
+    onMap,
+    unitTagName: (tag) =>
+      ({
+        MS: "MS",
+        MA: "MA",
+        MobilePod: "机动吊舱",
+        Ship: "舰船",
+        Tank: "坦克",
+        Vehicle: "车辆",
+        Aircraft: "航空器",
+        Helicopter: "直升机",
+        Infantry: "步兵",
+        Amphibious: "两栖",
+        Hover: "气垫",
+        Support: "补给",
+        Recon: "侦察",
+        Transport: "搭载",
+      })[tag] || tag,
+    hangars,
     W,
     getMap,
     mapWidth,
@@ -1498,6 +1824,7 @@ const Tactics = (() => {
     columnLabel,
     seatTeam,
     ownerOf,
+    canControlUnit,
     validateCostLimit,
     validateUnitLimit,
     validateUnitCostLimit,
@@ -1508,6 +1835,7 @@ const Tactics = (() => {
     restrictionReason,
     factions,
     eras,
+    unitTags,
     maxCostLimit,
     movementCost,
     H,
@@ -1524,14 +1852,22 @@ const Tactics = (() => {
     useSkill: skills.use,
     terrainCost,
     planFormation,
+    validateArmySettings,
+    armySettings,
+    armyBudget,
+    armyUnitLimit,
+    armyRestrictions,
     aiDefaults,
     aiCountPercentages,
+    armyPercentages,
     aiUnitLimit,
     aiPerformance,
     validateAISettings,
     aiBudget,
     modelOf,
     weaponStats,
+    inSupplyRange,
+    supplyCells,
     dimensions,
     cells,
     center,
@@ -1559,12 +1895,15 @@ const Tactics = (() => {
     canCounter,
     eventWeapon,
     random,
+    weaponCooldown,
+    startWeaponCooldown,
     canUse,
     actionBudget,
     counterActionBudget,
     actionPoints,
     actionCost,
     attackQueue,
+    counterQueue,
     moduleCanBear,
     availableStrikes,
     partNames: {
@@ -1577,6 +1916,7 @@ const Tactics = (() => {
     brokenWeaponParts: parts.unavailable,
     partBreakChance: parts.chance,
     inRange,
+    groundTarget,
     canAttack,
     estimate,
     fight,
@@ -1586,6 +1926,7 @@ const Tactics = (() => {
     turnTransitionMs,
     bestResponse,
     aiChoice,
+    aiLaunchChoice,
   };
 })();
 if (typeof module !== "undefined") module.exports = Tactics;

@@ -29,7 +29,8 @@ const Net = (() => {
     byId("netBadge").textContent = t;
   };
   let connectionTimer = null,
-    pingStarted = null;
+    pingStarted = null,
+    foregroundSyncAt = -Infinity;
   const disconnectDialog = byId("disconnectDialog");
   function showDisconnect(connecting = false) {
     byId("disconnectStatus").textContent = connecting
@@ -94,6 +95,8 @@ const Net = (() => {
     return u.href;
   }
   const key = (url, room) => "slg-seat:" + url + ":" + room;
+  const canControl = (unit) =>
+    Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
     return (
       !n.active ||
@@ -119,6 +122,7 @@ const Net = (() => {
       return;
     }
     let id = crypto.randomUUID?.() || Date.now() + "-" + Math.random().toString(16).slice(2);
+    const socket = n.socket;
     n.awaiting = { id, revision: n.revision };
     n.socket.send(
       JSON.stringify({
@@ -133,20 +137,27 @@ const Net = (() => {
       }),
     );
     update();
-    setTimeout(() => {
-      if (n.awaiting?.id === id) {
-        n.awaiting = null;
-        note("请求等待超时，正在同步战局");
-        n.socket?.send(
-          JSON.stringify({
-            type: "action",
-            action: "sync",
-            id: Date.now() + "-sync",
-          }),
-        );
-        update();
-      }
-    }, 8000);
+    setTimeout(
+      function checkRequest() {
+        if (n.socket === socket && socket.readyState === WebSocket.OPEN && n.awaiting?.id === id) {
+          if (document.hidden) {
+            setTimeout(checkRequest, 5000);
+            return;
+          }
+          n.awaiting = null;
+          note("请求等待超时，正在同步战局");
+          n.socket?.send(
+            JSON.stringify({
+              type: "action",
+              action: "sync",
+              id: Date.now() + "-sync",
+            }),
+          );
+          update();
+        }
+      },
+      Math.min(45000, Math.max(15000, (n.pingMs || 0) * 6)),
+    );
   }
   function leave({ notify = true, forget = true } = {}) {
     window.BattlePrompts?.reset();
@@ -213,8 +224,8 @@ const Net = (() => {
       Chat.receive(msg.message, msg.ack);
     } else if (msg.type === "state") {
       if (n.memberId === null || msg.revision < n.revision) return;
-      if (n.awaiting && (msg.ack === n.awaiting.id || msg.revision > n.awaiting.revision))
-        n.awaiting = null;
+      // 队友的广播不是自己的确认，弱网时尤其不能提前放开下一个请求。
+      if (n.awaiting && msg.ack === n.awaiting.id) n.awaiting = null;
       n.revision = msg.revision;
       n.snapshot = msg;
       closeDisconnect();
@@ -224,7 +235,7 @@ const Net = (() => {
         Chat.reject(msg.id, msg.message);
         return;
       }
-      n.awaiting = null;
+      if (!msg.id || msg.id === n.awaiting?.id) n.awaiting = null;
       status(msg.message);
       note(msg.message);
       if (n.connecting) {
@@ -257,6 +268,7 @@ const Net = (() => {
     n.room = "OFFLINE";
     n.serverURL = null;
     n.applied = false;
+    foregroundSyncAt = -Infinity;
     session++;
     moving = null;
     status("离线遭遇战");
@@ -272,8 +284,8 @@ const Net = (() => {
       url = auto ? n.serverURL : Lobby.endpoint();
       if (!url) throw Error("请先连接服务器。");
       room = (auto ? n.room : roomCode || byId("roomCode").value).trim().toUpperCase();
-      if (!/^[A-Z0-9_-]{3,20}$/.test(room))
-        throw Error("房间码需为3–20位英文、数字、下划线或短横线");
+      if (!/^[\p{Script=Han}A-Z0-9_-]{1,20}$/u.test(room))
+        throw Error("房间名称需为1–20位中文、英文字母、数字、下划线或短横线");
     } catch (e) {
       status(e.message);
       return;
@@ -303,6 +315,7 @@ const Net = (() => {
     n.revision = -1;
     n.seen.clear();
     n.applied = false;
+    foregroundSyncAt = -Infinity;
     session++;
     moving = null;
     phase = "connecting";
@@ -317,11 +330,11 @@ const Net = (() => {
         if (n.socket !== socket || n.snapshot) return;
         // 后台计时器可能比快照消息先恢复执行，不因此误关连接。
         if (document.hidden) {
-          connectionTimer = setTimeout(checkConnection, 8000);
+          connectionTimer = setTimeout(checkConnection, 20000);
           return;
         }
         socket.close();
-      }, 8000);
+      }, 20000);
     socket.onopen = () => {
       if (n.socket !== socket) return;
       socket.send(
@@ -451,7 +464,7 @@ const Net = (() => {
     const online = s.connected.every(Boolean);
     byId("reaction").hidden = true;
     const ownResponse =
-      s.phase === "reaction" && s.pending && Rules.ownerOf(getUnit(s.pending.target)) === n.seat;
+      s.phase === "reaction" && s.pending && canControl(getUnit(s.pending.target));
     if (CombatPlayback.active() && !ownResponse) {
       phase = "battle";
       MapCombat.resume(battleView);
@@ -467,7 +480,7 @@ const Net = (() => {
       battleView = null;
     } else if (s.phase === "reaction") {
       let b = getUnit(s.pending.target);
-      if (Rules.ownerOf(b) === n.seat) {
+      if (canControl(b)) {
         phase = "reaction";
         let a = getUnit(s.pending.attacker),
           legal = Rules.modelOf(b).weapons.filter((w) =>
@@ -503,7 +516,12 @@ const Net = (() => {
     if (event && !n.seen.has(event.id)) {
       n.seen.add(event.id);
       if (n.seen.size > 128) n.seen.delete(n.seen.values().next().value);
-      if (event.type === "move" && s.phase === "idle" && online && n.applied) {
+      if (
+        ["move", "launch"].includes(event.type) &&
+        ["idle", "deployment"].includes(s.phase) &&
+        online &&
+        n.applied
+      ) {
         PlanningUI.move(event);
         // 只结束当前所选单位的移动选点，不打断队友或其他单位的操作。
         if (selected === event.unitId && mode === "move") mode = "select";
@@ -541,7 +559,8 @@ const Net = (() => {
       pingStarted = performance.now();
       n.socket.send(JSON.stringify({ type: "ping" }));
     }
-    if (sync)
+    if (sync && !n.awaiting && performance.now() - foregroundSyncAt >= 5000) {
+      foregroundSyncAt = performance.now();
       n.socket.send(
         JSON.stringify({
           type: "action",
@@ -549,6 +568,7 @@ const Net = (() => {
           id: "foreground-" + Date.now(),
         }),
       );
+    }
   }
   setInterval(keepAlive, 20000);
   document.addEventListener("visibilitychange", () => {
@@ -593,6 +613,7 @@ const Net = (() => {
     beginLocal,
     receive,
     canAct,
+    canControl,
     team: () => Rules.seatTeam(n.seat),
     owns: (unit) => !!unit && n.seat !== null && Rules.ownerOf(unit) === n.seat,
     request,

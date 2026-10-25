@@ -118,6 +118,8 @@ const MapCombat = (() => {
     if (target) {
       if (event.targetModelAfter) target.model = event.targetModelAfter;
       if (event.overdriveEnded) delete target.overdrive;
+      const finalStrike = event.strikes?.at(-1);
+      if (finalStrike?.flyingAfter !== undefined) target.flying = finalStrike.flyingAfter;
       target.hp = event.after;
       target.shield = event.shieldAfter ?? target.shield;
       if (event.partsAfter) target.brokenParts = { ...event.partsAfter };
@@ -183,6 +185,7 @@ const MapCombat = (() => {
     const reach = Math.max(0, distance - gap) * progress;
     const moving = plan.melee && ["approach", "return"].includes(stage);
     let sourcePose = {
+      targetId: target.unit.id,
       x: animation.x + (distance ? ((target.x - source.x) / distance) * reach : 0),
       y:
         animation.y +
@@ -218,6 +221,7 @@ const MapCombat = (() => {
     result.set(source.unit.id, sourcePose);
     result.set(target.unit.id, {
       model: latest?.modelAfter ?? target.unit.model,
+      flying: latest?.flyingAfter ?? !!target.unit.flying,
       x: target.x + dodge.x,
       y: target.y + dodge.y,
       angle: target.angle,
@@ -339,14 +343,14 @@ const MapCombat = (() => {
           value -= item.weapon.en;
     return Math.max(0, value);
   }
-  function draw(ctx, geometry) {
-    if (!lanes.length) drawSingle(ctx, geometry);
+  function draw(ctx, geometry, underlay = false) {
+    if (!lanes.length) drawSingle(ctx, geometry, underlay);
     else {
       const saved = frame;
       for (const lane of lanes)
         if (lane.frame && !lane.view.completed) {
           frame = lane.frame;
-          drawSingle(ctx, geometry);
+          drawSingle(ctx, geometry, underlay);
         }
       frame = saved;
     }
@@ -366,24 +370,39 @@ const MapCombat = (() => {
   }
   function units() {
     const pose = poses();
-    return game.units.map((unit) => {
-      const visual = displayed.get(unit.id) || unit;
-      const effect = pose.get(unit.id);
-      return {
-        ...visual,
-        brokenParts: visibleParts(visual),
-        hp: (lanes.length ? health(unit.id) : effect?.hp) ?? visual.hp,
-        shield: (lanes.length ? health(unit.id, true) : effect?.shield) ?? visual.shield,
-        en: (lanes.length ? energy(unit.id) : undefined) ?? visual.en,
-        model: effect?.model ?? unit.model,
-        mapDying: effect?.keepVisible,
-        mapPose: effect,
-      };
-    });
+    const pendingExits = new Set(),
+      visibleExits = new Set();
+    for (const lane of lanes) {
+      for (const event of lane.view.events)
+        for (const exit of event.evacuations || []) pendingExits.add(exit.unitId);
+      for (const item of [...lane.finished, ...(lane.frame ? [lane.frame] : [])])
+        if (
+          item.time >= item.plan.duration ||
+          WeaponEffects.arrived(item.plan, item.time).some((contact) => contact.after <= 0)
+        )
+          for (const exit of item.event.evacuations || []) visibleExits.add(exit.unitId);
+    }
+    return game.units
+      .filter((u) => !u.embarked && (!pendingExits.has(u.id) || visibleExits.has(u.id)))
+      .map((unit) => {
+        const visual = displayed.get(unit.id) || unit;
+        const effect = pose.get(unit.id);
+        return {
+          ...visual,
+          brokenParts: visibleParts(visual),
+          hp: (lanes.length ? health(unit.id) : effect?.hp) ?? visual.hp,
+          shield: (lanes.length ? health(unit.id, true) : effect?.shield) ?? visual.shield,
+          en: (lanes.length ? energy(unit.id) : undefined) ?? visual.en,
+          model: effect?.model ?? unit.model,
+          mapDying: effect?.keepVisible,
+          mapPose: effect,
+        };
+      });
   }
-  function drawSingle(ctx, geometry) {
+  function drawSingle(ctx, geometry, underlay = false) {
     if (!frame || !battleView?.mapBattle) return;
     const { plan, event, source, target, time, weapon } = frame;
+    if (underlay && weapon.projectile?.motion !== "tether") return;
     const pose = framePoses(),
       targetPose = pose.get(target.unit.id),
       sourcePose = pose.get(source.unit.id);
@@ -391,7 +410,21 @@ const MapCombat = (() => {
     ctx.translate(geometry.ox, geometry.oy);
     ctx.scale(geometry.tile / 64, geometry.tile / 64);
     const facing = Math.atan2(target.y - source.y, target.x - source.x);
-    WeaponEffects.draw(ctx, weapon, plan, time, source, event, 1, sourcePose);
+    WeaponEffects.draw(
+      ctx,
+      weapon,
+      plan,
+      time,
+      source,
+      event,
+      1,
+      sourcePose,
+      underlay ? "underlay" : "foreground",
+    );
+    if (underlay) {
+      ctx.restore();
+      return;
+    }
     for (const [index, contact] of plan.contacts.entries()) {
       if (weapon.swingEffects?.length)
         SpriteEffects.draw(
@@ -509,6 +542,7 @@ const MapCombat = (() => {
     update,
     units,
     draw,
+    drawUnderlay: (ctx, geometry) => draw(ctx, geometry, true),
     suspend,
     resume,
     get frames() {

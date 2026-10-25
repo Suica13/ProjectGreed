@@ -249,7 +249,7 @@ for prefab in (gm, *new_prefabs):
 catalog = json.loads((DEST / 'unit-catalog.json').read_text(encoding='utf-8'))
 catalog['units'] = [f'units/{p["id"]}/unit.json' for p in (gm, *new_prefabs)]
 catalog['map'] = dict(width=24, height=18)
-catalog['formation'] = dict(maxUnits=12, maxCost=5000, aiUnits=12, unitCostLimit=500)
+catalog['formation'] = dict(maxUnits=12, maxCost=4500, aiUnits=12, unitCostLimit=1500, defaultUnits=6)
 catalog['deployment'] = dict(radius=4, spawns=[dict(x=2,y=8),dict(x=21,y=8)])
 catalog['music'] = 'music/playlist.json'
 write(DEST / 'unit-catalog.json', catalog)

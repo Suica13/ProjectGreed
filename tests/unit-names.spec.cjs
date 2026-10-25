@@ -5,7 +5,11 @@ const { createServer } = require("../server.js");
 const custom = "吉姆<1>";
 async function rename(page) {
   await page.locator("#openFormation").click();
-  await page.locator(".formation-row").first().click();
+  await page
+    .locator(".formation-row")
+    .first()
+    .getByRole("button", { name: "详情", exact: true })
+    .click();
   await page.locator("#formationDetailName").fill(custom);
   await page.locator("#formationDetailKit").selectOption("machine_gun");
   await expect(page.locator("#formationDetailName")).toHaveValue(custom);
@@ -21,7 +25,11 @@ test("unit detail renames only one entry, survives reload and reset restores the
   await page.reload();
   await page.locator("#openFormation").click();
   await expect(page.locator(".formation-row").first()).toContainText(custom);
-  await page.locator(".formation-row").first().click();
+  await page
+    .locator(".formation-row")
+    .first()
+    .getByRole("button", { name: "详情", exact: true })
+    .click();
   await page.evaluate(() => I18n.setLanguage("en"));
   await expect(page.locator("#formationDetailTitle")).toContainText(custom);
   await page.locator("#resetFormationUnitName").click();
@@ -135,13 +143,16 @@ test("two clients receive custom names in battle, action logs and reconnect snap
 test("adding units generates distinct named entries and persists their codes", async ({ page }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.locator("#openFormation").click();
+  await page.locator("#openFormationPicker").click();
   await page.locator('[data-unit-id="RGM_79"]').click();
   for (let i = 0; i < 2; i++) await page.locator("#addFormationUnit").click();
+  await page.locator("#closeFormationPicker").click();
   const names = [];
   for (let i = 0; i < 2; i++) {
     await page
       .locator(".formation-row")
       .nth(3 + i)
+      .getByRole("button", { name: "详情", exact: true })
       .click();
     const name = await page.locator("#formationDetailName").inputValue();
     expect(name).toMatch(/^吉姆\[[A-Z]\d{2}\]$/);

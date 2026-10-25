@@ -180,7 +180,15 @@
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 10.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "visualTurrets": [
@@ -279,7 +287,15 @@
     "balanceStatus": "native-level",
     "accuracy": 100.0,
     "unitLevel": 200.0,
-    "tacticalMoveBeforeBonus": 4
+    "tacticalMoveBeforeBonus": 4,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 10.0,
+      "water": 10.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -1207,6 +1223,31 @@
           "limb": null
         }
       ]
+    }
+  ],
+  "unitTags": [
+    "Vehicle",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 2,
+      "allowedTags": [
+        "Human"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X2_Human_UseEN.ini",
+      "sourceUnit": "Hangar_X2_Human_UseEN"
     }
   ]
 }

@@ -187,7 +187,15 @@
     "movementType": "naval",
     "adaptability": {
       "ground": 100,
-      "space": 0
+      "space": 0,
+      "water": 100.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "visualTurrets": [
@@ -273,7 +281,15 @@
     "balanceStatus": "native-level",
     "accuracy": 100.0,
     "unitLevel": 200.0,
-    "tacticalMoveBeforeBonus": 5
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 10.0,
+      "water": 100.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -597,5 +613,15 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "skills": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Vehicle"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

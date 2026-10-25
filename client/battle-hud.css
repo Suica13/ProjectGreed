@@ -1,6 +1,6 @@
 /* 地图优先的战斗 HUD。限定在战斗场景内，房间与编组不受影响。 */
 #gameScene {
-  --hud-dock: 158px;
+  --hud-dock: 174px;
   --hud-planner: 0px;
   --hud-action: 0px;
   height: 100dvh;
@@ -598,7 +598,7 @@
 }
 @media (max-width: 700px) {
   #gameScene {
-    --hud-dock: 165px;
+    --hud-dock: 182px;
   }
   #gameScene > header {
     padding: 6px 10px;
@@ -1048,7 +1048,7 @@
 }
 @media (max-height: 500px) and (orientation: landscape) {
   #gameScene {
-    --hud-dock: 106px;
+    --hud-dock: 117px;
   }
   #gameScene > header {
     min-height: 42px;
@@ -1219,4 +1219,180 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+/* 格纳库：容量和载员放在同一滚动面板，出击落点仍使用地图。 */
+.hangar-dialog {
+  width: min(720px, 94vw);
+  max-height: 85vh;
+  color: var(--text);
+  background: #12232d;
+  border: 1px solid #476675;
+  padding: 18px;
+}
+.hangar-dialog::backdrop {
+  background: #0009;
+}
+.hangar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.hangar-content {
+  max-height: 55vh;
+  overflow: auto;
+}
+.hangar-section {
+  border-top: 1px solid #3c5662;
+  padding: 10px 0;
+}
+.hangar-section h4 {
+  margin: 4px 0 8px;
+  color: var(--gold, #ecd57a);
+}
+.hangar-unit {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #ffffff12;
+}
+.hangar-unit img {
+  width: 54px;
+  height: 48px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.hangar-unit-info {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+.hangar-unit-info strong {
+  overflow-wrap: anywhere;
+}
+.hangar-unit button {
+  flex-shrink: 0;
+}
+
+/* Plan editors have one vertical scroll surface, never nested lists or cards. */
+#gameScene #hudUnitPanel .hud-attack-planner {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+#gameScene #hudUnitPanel .hud-attack-editor {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 100%;
+}
+#gameScene #hudUnitPanel .hud-attack-editor > * {
+  flex: 0 0 auto;
+}
+#gameScene #hudUnitPanel .hud-attack-planned,
+#gameScene #hudUnitPanel .hud-attack-available,
+#gameScene #hudUnitPanel .hud-attack-queue,
+#gameScene #hudUnitPanel .hud-attack-available .weapon-list,
+#gameScene #hudUnitPanel .hud-attack-available .weapon {
+  display: block;
+  overflow: visible;
+  max-height: none;
+}
+#gameScene #hudUnitPanel .hud-attack-available .weapon {
+  width: 100%;
+  margin-top: 6px;
+}
+#gameScene #hudUnitPanel .hud-attack-confirm {
+  position: sticky;
+  bottom: -10px;
+  margin-top: auto;
+  padding: 10px 0;
+  background: #14232d;
+  flex-wrap: wrap;
+  z-index: 1;
+}
+.battle-hud-active #reaction {
+  align-items: flex-start;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  pointer-events: auto;
+}
+.battle-hud-active #reaction .response-side,
+.battle-hud-active #reaction .hud-response-body,
+.battle-hud-active #reaction #engagement,
+.battle-hud-active #reaction .counter-list,
+.battle-hud-active #reaction .counter-queue,
+.battle-hud-active #reaction .weapon {
+  overflow: visible;
+  max-height: none;
+  flex-shrink: 0;
+}
+.battle-hud-active #reaction .counter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.battle-hud-active #reaction #confirmResponse {
+  position: sticky;
+  bottom: 8px;
+  z-index: 1;
+  box-shadow: 0 0 0 6px #14212b;
+}
+.battle-hud-active #clearCounterQueue {
+  width: 100%;
+  margin: 6px 0;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  #gameScene #hudUnitPanel[data-planning="true"] {
+    top: 54px;
+    bottom: calc(var(--hud-dock) + 48px);
+  }
+  #gameScene #hudUnitPanel .hud-attack-confirm {
+    gap: 4px;
+    padding: 6px 0;
+  }
+  #gameScene #hudUnitPanel .hud-attack-confirm button {
+    padding: 6px 3px;
+    font-size: 11px;
+  }
+  .battle-hud-active #reaction {
+    top: 54px;
+  }
+}
+
+/* Incoming attackers and response planning scroll independently, one surface per column. */
+.battle-hud-active #reaction {
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+.battle-hud-active #reaction .response-side {
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+/* Keep nickname editing secondary to the unit name. */
+#gameScene .unit-card-head > div { min-width: 0; flex: 1; }
+#gameScene .unit-name-row { display: flex; align-items: center; gap: 6px; min-width: 0; }
+#gameScene .unit-name-row > strong { min-width: 0; overflow-wrap: anywhere; }
+#gameScene #editBattleUnitName {
+  flex: 0 0 auto; width: auto; min-width: 0; min-height: 24px;
+  padding: 3px 6px; font-size: 11px; line-height: 1.2;
+  white-space: nowrap; border-radius: 2px;
+}
+#gameScene #battleUnitNameInput {
+  flex: 1; width: 0; min-width: 0; min-height: 26px; padding: 3px 5px; font-size: 13px;
+}
+#formationDetailNameEditor button {
+  flex: 0 0 auto; min-width: 0; min-height: 26px;
+  padding: 4px 7px; font-size: 12px; line-height: 1.2;
 }

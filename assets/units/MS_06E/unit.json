@@ -468,7 +468,15 @@
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
-      "space": 100
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "commandAuras": [],
@@ -549,7 +557,15 @@
     "partStructuralStrength": 100.0,
     "balanceStatus": "native-level",
     "unitLevel": 750.0,
-    "tacticalMoveBeforeBonus": 5
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -1179,5 +1195,16 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

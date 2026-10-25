@@ -46,7 +46,8 @@ test("categories have exact requested ranges and original native shooting/melee 
       if (p.stats.ship && /_Turret_AA(?:_|$)/.test(w.sourceName || "")) {
         assert.equal(w.rangeRole, "ship_anti_air");
         assert.deepEqual([w.min, w.max], [1, 2], p.id + "/" + w.id);
-      } else if (w.rangeRole === "short_secondary") assert.deepEqual([w.min, w.max], [1, 2]);
+      } else if (["short_secondary", "tether_melee"].includes(w.rangeRole))
+        assert.deepEqual([w.min, w.max], [1, 2]);
       else if (expected) assert.deepEqual([w.min, w.max], expected, p.id + "/" + w.name);
     }
     assert.equal(p.attackBonuses.shooting, p.sourceStats.shooting - 100);
@@ -137,6 +138,8 @@ test("sniper charging waits for next own phase, restores native skill damage and
   assert.equal(battles.length, 1);
   assert.equal(a.en, G.modelOf(a).en - skill.en);
   assert.equal(a.snipeOrder, undefined);
+  assert.equal(G.weaponCooldown(a, skill), 2);
+  assert.equal(G.canUse(a, skill), false);
 });
 test("sniper target that leaves range cancels the prepared shot without paying firing EN", () => {
   const { game, a, b, room, planner } = fixture("RGM_79_G_SP", 1);
@@ -225,4 +228,74 @@ test("sniper planning enforces the new range edges and spends four AP for either
   planner.cancel(room, a);
   b.x = 20;
   assert.equal(G.canAttack(game, a, b, charged), false);
+});
+
+test("mortar can plan an empty cell but cannot hit airborne occupants", () => {
+  const { game, a, room, planner } = fixture();
+  const w = G.modelOf(a).weapons.find((w) => w.special?.type === "mortar");
+  for (const enemy of game.units.slice(1)) enemy.flying = true;
+  const target = G.groundTarget(game, a, 16, 10);
+  assert.equal(G.canAttack(game, a, game.units[1], w), false);
+  assert.equal(G.canAttack(game, a, target, w), true);
+  assert.equal(
+    G.canAttack(
+      game,
+      a,
+      target,
+      G.modelOf(a).weapons.find((w) => !w.special),
+    ),
+    false,
+  );
+  assert.equal(G.groundTarget(game, a, -1, 10), null);
+  assert.equal(G.groundTarget(game, a, 16.5, 10), null);
+  const hp = game.units.slice(1).map((u) => u.hp),
+    en = a.en;
+  planner.plan(room, a, target, w, 0);
+  assert.deepEqual(a.plan.targetCell, { x: 16, y: 10 });
+  assert.deepEqual(planner.prepare(room), []);
+  const battles = planner.resolve(room);
+  assert.equal(battles.length, w.shotCount);
+  assert.ok(battles.every((b) => b.events[0].empty));
+  assert.deepEqual(
+    game.units.slice(1).map((u) => u.hp),
+    hp,
+  );
+  assert.equal(a.en, en - w.en);
+});
+
+test("empty mortar aim still hits eligible ground enemies in the surrounding cells", () => {
+  const { game, a, room, planner } = fixture();
+  const w = G.modelOf(a).weapons.find((w) => w.special?.type === "mortar");
+  game.units.splice(5, 1);
+  assert.equal(G.at(game, 16, 10), undefined);
+  planner.plan(room, a, G.groundTarget(game, a, 16, 10), w, 0);
+  const requests = planner.prepare(room);
+  assert.ok(requests.length > 0);
+  assert.ok(requests.every((r) => r.noCounter));
+  for (const r of requests) planner.choose(room, r.id, "defend");
+  assert.equal(planner.resolve(room).length, w.shotCount);
+});
+
+test("mortar cooldown skips one own turn, including shots into empty ground", () => {
+  const { game, a, room, planner } = fixture("RGC_80", 1);
+  const w = G.modelOf(a).weapons.find((w) => w.special?.type === "mortar");
+  const aim = G.groundTarget(game, a, 10, 16);
+  planner.plan(room, a, aim, w, 0);
+  planner.cancel(room, a);
+  assert.equal(G.weaponCooldown(a, w), 0);
+  planner.plan(room, a, aim, w, 0);
+  planner.prepare(room);
+  planner.resolve(room);
+  assert.equal(G.weaponCooldown(a, w), 2);
+  G.end(game);
+  assert.equal(G.weaponCooldown(a, w), 2);
+  G.end(game);
+  assert.equal(G.weaponCooldown(a, w), 1);
+  assert.equal(G.canUse(a, w), false);
+  assert.throws(() => planner.plan(room, a, aim, w, 0));
+  G.end(game);
+  G.end(game);
+  a.en = G.modelOf(a).en;
+  assert.equal(G.weaponCooldown(a, w), 0);
+  assert.equal(G.canUse(a, w), true);
 });

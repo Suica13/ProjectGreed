@@ -11,7 +11,11 @@ test("Salamis can join a formation, deploy as a six-cell hull, rotate and displa
   await page.locator("#openFormation").click();
   await page.locator('[data-unit-id="SalamisClass"]').click();
   await page.locator("#addFormationUnit").click();
-  await page.locator(".formation-row").last().click();
+  await page
+    .locator(".formation-row")
+    .last()
+    .getByRole("button", { name: "详情", exact: true })
+    .click();
   await expect(page.locator("#formationDetailStats")).toContainText("战舰占地 2×3");
   await expect(page.locator("#formationDetailStats")).toContainText("炮塔模块 16");
   await page.locator("#closeFormationDetail").click();

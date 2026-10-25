@@ -14,7 +14,15 @@
     "partStructuralStrength": 120,
     "adaptability": {
       "ground": 100,
-      "space": 100
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "accuracy": 115,
     "commandAuras": [],
@@ -1749,7 +1757,15 @@
     "balanceStatus": "native-level",
     "shooting": 120.0,
     "melee": 115.0,
-    "tacticalMoveBeforeBonus": 5
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "description": "联邦军主力泛用型MS",
   "localization": {
@@ -1777,5 +1793,15 @@
     "published": 250
   },
   "skills": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

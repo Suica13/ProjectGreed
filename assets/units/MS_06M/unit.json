@@ -406,7 +406,15 @@
     "movementType": "amphibious",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 100.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "commandAuras": [],
@@ -487,7 +495,15 @@
     "partStructuralStrength": 115.0,
     "balanceStatus": "native-level",
     "unitLevel": 480.0,
-    "tacticalMoveBeforeBonus": 3
+    "tacticalMoveBeforeBonus": 3,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 25.0,
+      "water": 100.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -1478,5 +1494,17 @@
         }
       ]
     }
-  ]
+  ],
+  "unitTags": [
+    "MS",
+    "Amphibious",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

@@ -62,23 +62,24 @@ test("AI team tag restrictions, fill budget and difficulty validate independentl
     assert.throws(() => G.validateAISettings(config));
   assert.deepEqual(G.validateAISettings(), { difficulty: "medium", fill: 100, countPercent: 100 });
 });
-test("AI difficulty scales instance performance once without changing art, costs or another player's model", () => {
+test("unit strength scales only hull HP and EN without changing other stats or another player's model", () => {
   const id = "RGM_79__machine_gun",
     base = G.models[id],
     before = JSON.stringify(base);
-  for (const performance of [0.75, 1, 1.25]) {
+  for (const performance of G.armyPercentages.map((n) => n / 100)) {
     const u = { model: id, performance },
       m = G.modelOf(u),
       w = m.weapons[0];
     assert.equal(m.hp, Math.round(base.hp * performance));
     assert.equal(m.en, Math.round(base.en * performance));
-    assert.equal(m.move, Math.round(base.move * performance));
-    assert.equal(m.mobility, base.mobility * performance);
-    assert.equal(m.shield.hp, Math.round(base.shield.hp * performance));
-    assert.equal(m.defenses.shell.flat, base.defenses.shell.flat * performance);
-    assert.equal(m.defenses.shell.percent, base.defenses.shell.percent * performance);
-    assert.equal(w.damage, base.weapons[0].damage * performance);
-    assert.equal(w.hit, base.weapons[0].hit * performance);
+    assert.equal(m.move, base.move);
+    assert.equal(m.mobility, base.mobility);
+    assert.equal(m.accuracy, base.accuracy);
+    assert.equal(m.shield.hp, base.shield.hp);
+    assert.equal(m.defenses.shell.flat, base.defenses.shell.flat);
+    assert.equal(m.defenses.shell.percent, base.defenses.shell.percent);
+    assert.equal(w.damage, base.weapons[0].damage);
+    assert.equal(w.hit, base.weapons[0].hit);
     assert.equal(w.en, base.weapons[0].en);
     assert.equal(m.cost, base.cost);
     assert.equal(w.max, base.weapons[0].max);
@@ -217,4 +218,41 @@ test("AI fills the maximum affordable slots before choosing stronger units and r
     G.validateFormation(Array(4).fill(entry("MS_06F", "machine_gun")), Infinity, 3),
   );
   assert.equal(G.create(false, 1, undefined, true, { unitLimit: 3 }).units.length, 6);
+});
+
+test("all unit platforms retain every non-resource stat at minimum and maximum strength", () => {
+  for (const model of Object.keys(G.models)) {
+    const baseline = G.modelOf({ model });
+    const { hp, en, ...baseStats } = baseline;
+    for (const performance of [0.25, 3]) {
+      const scaled = G.modelOf({ model, performance });
+      const { hp: scaledHp, en: scaledEn, ...stats } = scaled;
+      assert.equal(scaledHp, Math.round(hp * performance), model);
+      assert.equal(scaledEn, Math.round(en * performance), model);
+      assert.deepEqual(stats, baseStats, model);
+    }
+  }
+});
+
+test("ship turret module durability does not scale with hull strength", () => {
+  const [modelId, base] = Object.entries(G.models).find(([, m]) => m.ship && m.modules.length);
+  const [unitId, kitId] = modelId.split("__");
+  const map = Object.values(G.catalog.maps).find((m) => m.environment === "space");
+  const g = G.create(
+    false,
+    1,
+    [[{ unitId, kitId }], [{ unitId: "RGM_79", kitId: "machine_gun" }]],
+    false,
+    {
+      mapId: map.id,
+      costLimit: 99999,
+      unitCostLimit: 99999,
+      performances: [3, 0.25],
+    },
+  );
+  const ship = g.units.find((u) => u.ownerSeat === 0);
+  assert.equal(ship.hp, base.hp * 3);
+  assert.equal(ship.en, base.en * 3);
+  assert.equal(ship.shield, base.shield.hp);
+  assert.deepEqual(ship.moduleHp, Object.fromEntries(base.modules.map((m) => [m.id, m.hp])));
 });

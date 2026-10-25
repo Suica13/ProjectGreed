@@ -388,7 +388,7 @@
     "en": 650.0,
     "move": 6,
     "mobility": 125.0,
-    "cost": 350,
+    "cost": 375,
     "counterLimit": 1,
     "accuracy": 110.0,
     "partStructuralStrength": 120.0,
@@ -396,7 +396,15 @@
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "commandAuras": [
@@ -484,7 +492,15 @@
     "partStructuralStrength": 120.0,
     "balanceStatus": "native-level",
     "unitLevel": 1350.0,
-    "tacticalMoveBeforeBonus": 5
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 25.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": true,
@@ -896,10 +912,10 @@
       "displayIndex": 0
     },
     "ZN_MS_07B3_Minigun": {
-      "name": "导弹发射器",
+      "name": "加特林盾牌",
       "type": "shell",
-      "min": 3,
-      "max": 4,
+      "min": 2,
+      "max": 3,
       "hit": 85.0,
       "en": 40.0,
       "sourceName": "ZN_MS_07B3_Minigun",
@@ -1134,7 +1150,7 @@
       "muzzleEffects": [
         "MG_Fire_1"
       ],
-      "category": "missile",
+      "category": "machine_gun",
       "nativePayload": {
         "offsetRandomXY": 6.0,
         "offsetDir": 2.5,
@@ -1199,14 +1215,25 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
-      "displayIndex": 0
+      "actionCost": 3,
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "加特林盾牌"
+        },
+        "en": {
+          "name": "Gatling Shield"
+        },
+        "ja": {
+          "name": "ガトリングシールド"
+        }
+      }
     },
     "ZN_MS_07B_HeatRod": {
-      "name": "近身格斗",
+      "name": "热能鞭",
       "type": "melee",
       "min": 1,
-      "max": 1,
+      "max": 2,
       "hit": 85.0,
       "en": 0,
       "sourceName": "ZN_MS_07B_HeatRod",
@@ -1259,10 +1286,6 @@
         ]
       },
       "hitEffect": "Cqb_Hit_1",
-      "swingEffects": [
-        "Cqb_Fire_1_Pink_R",
-        "Cqb_Fire_1_Pink_L"
-      ],
       "sound": {
         "file": "../../sounds/Fist_2.ogg",
         "volume": 0.5
@@ -1341,7 +1364,40 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 2
+      "displayIndex": 2,
+      "localization": {
+        "en": {
+          "name": "Heat rod"
+        },
+        "ja": {
+          "name": "ヒートロッド"
+        },
+        "zh": {
+          "name": "热能鞭"
+        }
+      },
+      "projectile": {
+        "texture": "../../projectiles/ZN_HeatRod.png",
+        "scale": 1,
+        "speed": 55.0,
+        "forwardOffset": 0,
+        "rotation": 0,
+        "motion": "tether",
+        "tether": {
+          "mount": {
+            "bone": "RightArm",
+            "offset": {
+              "x": 6.0,
+              "y": 6.0
+            }
+          },
+          "color": "#333333",
+          "width": 5.0,
+          "hold": 0.25,
+          "retract": 0.35
+        }
+      },
+      "rangeRole": "tether_melee"
     },
     "ZN_HeatSword_MS_07B3_BF_B": {
       "name": "近身格斗",
@@ -1541,10 +1597,20 @@
   "costBalance": {
     "nativeLevel": 1350.0,
     "levelMultiplier": 0.25,
-    "published": 350
+    "published": 375
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "skills": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

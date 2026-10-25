@@ -172,3 +172,76 @@ test("head-broken active states are forcibly normalized at handoff without charg
   assert.equal(u.en, en);
   assert.equal(g.turnEffects[0].expired, true);
 });
+
+test("any broken part immediately cancels flight and reversible forms, never purge or escape", () => {
+  const original = Parts.applyHit;
+  try {
+    for (const id of ["MS_07H", "YMT_05", "RX_78NT_1_FA", "FA_78_1"]) {
+      const { g, u, enemy } = pair(id),
+        base = u.model;
+      const skill = G.unitSkills(u).find((s) =>
+        ["flight", "transform", "armor_purge"].includes(s.type),
+      );
+      assert(skill, id);
+      G.useSkill(g, u, skill.id, u.x, u.y);
+      const changed = u.model;
+      g.team = enemy.team;
+      Object.assign(enemy, { x: 12, y: 10, acted: false });
+      u.shield = 0;
+      Parts.applyHit = (game, target) => {
+        target.brokenParts = { ...target.brokenParts, leftArm: true };
+        return "leftArm";
+      };
+      const w = { ...G.modelOf(enemy).weapons[0], hit: 10000, damageComponents: { shell: 1000 } };
+      const events = G.fight(g, enemy, u, w, "defend");
+      if (skill.type === "armor_purge") assert.equal(u.model, changed);
+      else {
+        assert.equal(u.model, base);
+        assert(!u.flying);
+        assert(events[0].strikes.some((s) => s.formReverted));
+      }
+      assert(u.brokenParts.leftArm);
+    }
+  } finally {
+    Parts.applyHit = original;
+  }
+});
+
+test("EXAM and HADES allow non-head damage and retain the form across hits and upkeep", () => {
+  const original = Parts.applyHit;
+  try {
+    for (const base of G.catalog.prefabs.filter(
+      (p) => !p.formOnly && p.skills?.some((s) => s.type === "overdrive"),
+    )) {
+      const { g, u, enemy } = pair(base.id);
+      const skill = G.unitSkills(u).find((s) => s.type === "overdrive");
+      u.brokenParts = { leftArm: true };
+      assert(G.canUseSkill(g, u, skill.id), base.id);
+      G.useSkill(g, u, skill.id, u.x, u.y);
+      const active = u.model;
+      g.team = enemy.team;
+      Object.assign(enemy, { x: 12, y: 10, acted: false });
+      u.shield = 0;
+      Parts.applyHit = (game, target) => {
+        target.brokenParts = { ...target.brokenParts, backpack: true };
+        return "backpack";
+      };
+      G.fight(
+        g,
+        enemy,
+        u,
+        { ...G.modelOf(enemy).weapons[0], hit: 10000, damageComponents: { shell: 1000 } },
+        "defend",
+      );
+      assert.equal(u.model, active);
+      assert(u.overdrive);
+      g.team = u.team;
+      G.end(g);
+      assert.equal(u.model, active);
+      assert(u.overdrive);
+      assert.equal(u.overdrive.remaining, skill.duration - 1);
+    }
+  } finally {
+    Parts.applyHit = original;
+  }
+});

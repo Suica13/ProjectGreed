@@ -181,7 +181,7 @@ if (require.main === module) {
         "",
         "运行 node tools/evaluate-cost.cjs 查看战力估算与当前定价；加 --write 只按 assets/weapon-kit-costs.json 统一套件附加费，并更新本报告，不改机体基础 COST。",
         "",
-        "发布 COST = unit.json 的 stats.cost + 武器套件附加费。机枪（含对空机枪）+0；火箭筒、导弹发射器（含双联装大枪）+50；光束喷枪、光束枪+75；光束步枪、加农炮系+100。固定和副武器包含在机体基础 COST，不重复加价。机体基础 COST 按原MOD unitLevel÷4并按25取整；数学期望与 tools/cost-balance.json 中的旧档位只用于参考。默认编组3000 COST、单机500 COST、6台；房主可设置3～12台及禁用标签，AI使用相同的最终套件 COST 生成合法编组。进入房间前本地编组预算无限。",
+        "发布 COST = unit.json 的 stats.cost + 武器套件附加费。机枪（含对空机枪）+0；火箭筒、导弹发射器（含双联装大枪）+50；光束喷枪、光束枪+75；光束步枪、加农炮系+100。固定和副武器包含在机体基础 COST，不重复加价。机体基础 COST 按原MOD unitLevel÷4并按25取整；数学期望与 tools/cost-balance.json 中的旧档位只用于参考。默认编组4500 COST、单机1500 COST、6台；房主可设置3～12台及禁用标签，AI使用相同的最终套件 COST 生成合法编组。进入房间前本地编组预算无限。",
         "",
         "## 计算假设",
         "",

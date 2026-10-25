@@ -492,7 +492,15 @@
     "movementType": "hover",
     "adaptability": {
       "ground": 100,
-      "space": 100
+      "space": 100,
+      "water": 50.0,
+      "air": 50.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "commandAuras": [],
@@ -579,7 +587,15 @@
     "partStructuralStrength": 125.0,
     "balanceStatus": "native-level",
     "unitLevel": 2750.0,
-    "tacticalMoveBeforeBonus": 7
+    "tacticalMoveBeforeBonus": 7,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 50.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": true,
@@ -2453,5 +2469,16 @@
         }
       ]
     }
-  ]
+  ],
+  "unitTags": [
+    "MS",
+    "Hover"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": []
 }

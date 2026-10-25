@@ -88,8 +88,13 @@ const PlanningUI = (() => {
         Number((a.plan || a.snipeOrder).target === focusTarget) -
         Number((b.plan || b.snipeOrder).target === focusTarget),
     );
-    for (const unit of plans)
-      if (draw(unit, getUnit((unit.plan || unit.snipeOrder).target))) count++;
+    for (const unit of plans) {
+      const order = unit.plan || unit.snipeOrder;
+      const target = order.targetCell
+        ? Rules.groundTarget(game, unit, order.targetCell.x, order.targetCell.y)
+        : getUnit(order.target);
+      if (draw(unit, target)) count++;
+    }
     let candidateCount = 0;
     for (const entry of legalCounterTargets())
       if (draw(getUnit(pending.target), getUnit(entry.attacker), true, true)) candidateCount++;
@@ -191,7 +196,7 @@ const AttackControls = (() => {
       (unit.acted && !unit.plan) ||
       isBusy() ||
       isAI() ||
-      (Net.active && (!Net.owns(unit) || !Net.canAct()))
+      (Net.active && (!Net.canControl(unit) || !Net.canAct()))
     )
       return;
     reset();
@@ -271,7 +276,7 @@ const AttackControls = (() => {
       available = element("section", "hud-attack-available"),
       planned = element("section", "hud-attack-planned"),
       queueList = element("div", "hud-attack-queue");
-    editor.append(heading, available, planned);
+    editor.append(heading, planned, available);
     heading.append(element("strong", "", "目标：" + unitName(target)));
     available.append(element("div", "section-title", "可用武器"));
     planned.append(element("div", "section-title", "当前攻击计划"), queueList);
@@ -285,22 +290,21 @@ const AttackControls = (() => {
     heading.append(summary);
     queue.forEach((w, index) => {
       const row = element("div", "actions");
-      row.append(element("span", "", `${index + 1}. ${w.name} · ${Rules.actionCost(w)} AP`));
-      const remove = element("button", "", "移除");
-      remove.dataset.removeQueueWeapon = String(index);
-      remove.disabled = !canCommand;
-      remove.onclick = () => {
-        plan.weapons.splice(index, 1);
-        update();
-      };
-      row.append(remove);
+      const label = element("div", "");
+      label.append(element("div", "", `${index + 1}. ${w.name} · ${Rules.actionCost(w)} AP`));
+      const forecast = attackForecast(unit, target, w);
+      const detail = element("div", "helper attack-forecast", attackForecastText(forecast));
+      detail.dataset.damage = forecast.damage;
+      detail.dataset.hit = forecast.hit;
+      label.append(detail);
+      row.append(label);
       queueList.append(row);
     });
     const list = element("div", "weapon-list");
     for (const weapon of ordinary(unit)) {
       const b = element("button", "weapon");
       b.dataset.queueWeapon = weapon.id;
-      b.innerHTML = htmlWeapon(weapon, unit);
+      b.innerHTML = htmlWeapon(weapon, unit, target);
       b.setAttribute("aria-label", "加入序列 " + weapon.name);
       try {
         Rules.attackQueue(game, unit, target, [...queue, weapon]);
@@ -309,6 +313,7 @@ const AttackControls = (() => {
         b.disabled = true;
       }
       b.onclick = () => {
+        weaponId = weapon.id;
         plan.weapons.push(weapon.id);
         GameAudio.play("selectWeaponSound");
         update();
@@ -331,6 +336,7 @@ const AttackControls = (() => {
           });
         else beginAttack(unit, target, queue[0], queue);
         reset();
+        selected = weaponId = null;
         mode = "select";
         update();
       } catch (e) {
@@ -345,8 +351,15 @@ const AttackControls = (() => {
       update();
     };
     const buttons = element("div", "hud-attack-confirm");
-    buttons.append(confirm, change);
-    planned.append(buttons);
+    const clear = element("button", "", "清空计划");
+    clear.id = "clearAttackQueue";
+    clear.disabled = !canCommand || !queue.length;
+    clear.onclick = () => {
+      plan.weapons = [];
+      update();
+    };
+    buttons.append(confirm, clear, change);
+    editor.append(buttons);
   }
   return { reset, draft, canTarget, start, choose, render };
 })();

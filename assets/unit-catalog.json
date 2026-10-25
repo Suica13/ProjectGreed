@@ -157,10 +157,10 @@
   "presentation": "presentation.json",
   "formation": {
     "maxUnits": 12,
-    "maxCost": 3000,
+    "maxCost": 4500,
     "aiUnits": 12,
     "costStep": 25,
-    "unitCostLimit": 500,
+    "unitCostLimit": 1500,
     "defaultUnits": 6
   },
   "deployment": {

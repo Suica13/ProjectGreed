@@ -373,6 +373,10 @@
       .log-line {
         color: #a9bdc7;
       }
+      .log-line.deployment-roster {
+        white-space: pre-line;
+        line-height: 1.7;
+      }
       .log-line:first-child {
         color: var(--text);
       }
@@ -704,7 +708,7 @@
         border: 1px solid #66889b;
         border-radius: 6px;
         padding: 10px 20px;
-        z-index: 20;
+        z-index: 1300;
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.15s;
@@ -1102,6 +1106,15 @@
         width: 100%;
         margin-top: 8px;
       }
+      .army-cost-summary {
+        display: flex;
+        gap: 18px;
+        grid-column: 1 / -1;
+      }
+      .army-count-summary {
+        grid-column: 1 / -1;
+        margin: 0;
+      }
       .ai-settings label {
         display: flex;
         flex-wrap: wrap;
@@ -1109,7 +1122,8 @@
         gap: 5px;
         font-size: 11px;
       }
-      .ai-settings select {
+      .ai-settings select,
+      .ai-settings input {
         flex: 1;
         min-width: 80px;
         max-width: 100%;
@@ -1261,6 +1275,81 @@
         border: 1px solid var(--line);
         background: #0d2028;
         border-radius: 5px;
+      }
+      .room-sharing-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 0;
+        font-size: 13px;
+      }
+      .room-sharing-option input {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+      }
+      #roomMain .team-slot {
+        padding: 12px;
+        border-radius: 3px;
+      }
+      #roomMain .team-heading {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+      }
+      #roomMain .team-heading .team-ban-summary {
+        max-width: none;
+        width: 100%;
+        border: 0;
+        padding-inline: 6px;
+      }
+      #roomMain .team-filters {
+        padding: 10px;
+        border: 1px solid #334d5a;
+        background: #0d1922;
+        border-radius: 3px;
+      }
+      #roomMain .team-filters[open] summary {
+        padding-bottom: 9px;
+        border-bottom: 1px solid #334d5a;
+      }
+      #roomMain .team-filters .tag-restrictions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+      #roomMain .team-filters .tag-dropdown {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+      }
+      #roomMain .team-filters .tag-dropdown > span {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      #roomMain .team-filters select {
+        width: 100%;
+        min-width: 0;
+        text-overflow: ellipsis;
+      }
+      #roomMain #roomActions {
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+        gap: 8px;
+        align-items: center;
+      }
+      #roomMain [hidden] {
+        display: none !important;
+      }
+      @media (max-width: 600px) {
+        #roomMain .team-filters .tag-restrictions {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        #roomMain .team-filters .tag-dropdown {
+          display: grid;
+          grid-template-columns: 70px minmax(0, 1fr);
+          align-items: center;
+        }
       }
       .team-filters {
         margin: 8px 0;
@@ -1534,7 +1623,7 @@
         <div data-ui-node="node-7" class="header-buttons">
           <button data-ui-node="node-9" id="netSettings">主菜单</button
           ><button data-ui-node="node-174" id="roomSettings" hidden>房间席位</button
-          ><button data-ui-node="node-10" id="helpBtn">规则</button>
+          ><button data-ui-node="node-10" id="helpBtn" hidden>规则</button>
         </div>
       </header>
       <div data-ui-node="node-12" class="game-layout">
@@ -1619,10 +1708,10 @@
           </div>
           <div data-ui-node="node-50" class="log">
             <h3 data-ui-node="node-51" class="log-tabs" role="tablist" aria-label="聊天和战斗记录">
-              <button id="showLog" role="tab" aria-selected="true" aria-controls="log">LOG</button
-              ><button id="showChat" role="tab" aria-selected="false" aria-controls="chatPanel">
+              <button id="showChat" role="tab" aria-selected="true" aria-controls="chatPanel">
                 聊天
               </button>
+              <button id="showLog" role="tab" aria-selected="false" aria-controls="log">LOG</button>
               <button id="downloadBattleLog" type="button" aria-label="下载战斗LOG" disabled>
                 下载战斗LOG
               </button>
@@ -1668,8 +1757,9 @@
               role="tabpanel"
               aria-labelledby="showLog"
               aria-live="polite"
+              hidden
             ></div>
-            <div id="chatPanel" hidden role="tabpanel" aria-labelledby="showChat">
+            <div id="chatPanel" role="tabpanel" aria-labelledby="showChat">
               <div id="chatLines" class="chat-lines" role="log" aria-label="聊天消息"></div>
               <form id="chatForm" class="chat-form">
                 <select id="chatChannel" class="chat-channel-select" aria-label="聊天频道"></select>
@@ -2063,15 +2153,6 @@
                     aria-label="编组 COST 上限"
                 /></label>
                 <label
-                  >每位玩家单位上限<input
-                    id="roomUnitLimit"
-                    type="number"
-                    min="3"
-                    max="12"
-                    step="1"
-                    aria-label="每位玩家单位上限"
-                /></label>
-                <label
                   >单位 COST 上限<input
                     id="roomUnitCostLimit"
                     type="number"
@@ -2080,7 +2161,19 @@
                     step="25"
                     aria-label="单位 COST 上限"
                 /></label>
+                <label
+                  >每位玩家单位上限<input
+                    id="roomUnitLimit"
+                    type="number"
+                    min="3"
+                    max="12"
+                    step="1"
+                    aria-label="每位玩家单位上限"
+                /></label>
               </div>
+              <label class="room-sharing-option"
+                ><input id="roomShareAlliedUnits" type="checkbox" />友军单位共享</label
+              >
               <div id="roomTagRestrictions" class="tag-restrictions"></div>
               <p id="roomSettingsHint" class="muted"></p>
               <section class="room-map-panel" aria-label="地图信息">
@@ -2152,7 +2245,7 @@
           ><button id="returnAllToRoom" hidden>返回到房间</button
           ><button data-ui-node="node-186" id="toggleReady" class="primary">准备</button>
           <button id="startRoomGame" class="primary" hidden>开始游戏</button>
-          <div class="room-formation-controls" data-ui-node="node-203">
+          <div id="roomFormationControls" class="room-formation-controls" data-ui-node="node-203">
             <select
               id="roomFormationSelect"
               data-ui-node="node-204"
@@ -2162,6 +2255,7 @@
             <button id="roomFormation" data-ui-node="node-205">编组</button>
             <span id="roomFormationWarning" role="status" hidden></span>
           </div>
+          <button id="shareUnitsToAllies" hidden>共享单位给友军</button>
         </div>
         <p data-ui-node="node-190" class="muted">
           每个出生点对应一名玩家的编组。房主开始后进入最终编组，确认后部署；随时可转入观战席或加入空席位。
@@ -2246,33 +2340,50 @@
               role="region"
               aria-label="出战单位滚动列表"
             ></div>
+            <button id="openFormationPicker" type="button">添加单位</button>
           </section>
-          <aside class="formation-catalog">
-            <div class="formation-catalog-heading">
-              <h3>可用机体</h3>
-              <label for="formationFaction"
-                ><span class="formation-filter-label">阵营筛选</span>
-                <select id="formationFaction" aria-label="阵营筛选">
-                  <option value="ALL">全部阵营</option>
-                  <option value="EFSF">EFSF</option>
-                  <option value="ZEON">ZEON</option>
-                </select>
-              </label>
-              <label
-                ><span class="formation-filter-label">年代筛选</span
-                ><select id="formationEra" aria-label="年代筛选">
-                  <option value="ALL">全部年代</option>
-                </select></label
-              >
-            </div>
-            <input id="formationPrefab" type="hidden" />
-            <div id="formationCatalog" role="listbox" aria-label="可用单位"></div>
-            <button id="addFormationUnit" data-ui-node="node-218">添加到编组</button>
-          </aside>
         </div>
         <div class="net-buttons" data-ui-node="node-219">
           <button id="saveFormation" class="primary" data-ui-node="node-220">保存并选用</button
           ><button id="cancelFormation" data-ui-node="node-221">取消</button>
+        </div>
+      </div>
+      <div id="formationUnitPicker" class="formation-detail-overlay" hidden>
+        <div
+          class="modal formation-picker-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="formationPickerTitle"
+        >
+          <header class="formation-picker-heading">
+            <h2 id="formationPickerTitle">添加单位</h2>
+            <button id="closeFormationPicker" type="button">关闭</button>
+          </header>
+          <aside class="formation-catalog">
+            <div class="formation-catalog-heading">
+              <label
+                ><span class="formation-filter-label">阵营筛选</span
+                ><select id="formationFaction" aria-label="阵营筛选"></select
+              ></label>
+              <label
+                ><span class="formation-filter-label">年代筛选</span
+                ><select id="formationEra" aria-label="年代筛选"></select
+              ></label>
+              <label
+                ><span class="formation-filter-label">类型筛选</span
+                ><select id="formationType" aria-label="类型筛选"></select
+              ></label>
+            </div>
+            <input
+              id="formationSearch"
+              type="search"
+              placeholder="搜索单位名称或型号"
+              aria-label="搜索单位名称或型号"
+            />
+            <input id="formationPrefab" type="hidden" />
+            <div id="formationCatalog" role="listbox" aria-label="可用单位"></div>
+            <button id="addFormationUnit" data-ui-node="node-218">添加到编组</button>
+          </aside>
         </div>
       </div>
       <div id="formationUnitDetail" class="formation-detail-overlay" hidden>
@@ -2282,28 +2393,88 @@
           aria-modal="true"
           aria-labelledby="formationDetailTitle"
         >
-          <button id="closeFormationDetail">关闭</button>
-          <h2 id="formationDetailTitle"></h2>
-          <p id="formationDetailIntro" class="muted"></p>
-          <label
-            >单位名称
-            <div class="formation-name-editor">
-              <input
-                id="formationDetailName"
-                type="text"
-                maxlength="24"
-                aria-label="单位名称"
-                autocomplete="off"
-              />
-              <button id="resetFormationUnitName" type="button">重置名称</button>
+          <header class="unit-detail-heading">
+            <div>
+              <span class="eyebrow">UNIT PROFILE</span>
+              <div class="unit-detail-title-line">
+                <h2 id="formationDetailTitle"></h2>
+                <div id="formationDetailTags"></div>
+              </div>
             </div>
-          </label>
-          <label>武器套件<select id="formationDetailKit" aria-label="武器套件"></select></label>
-          <p id="formationDetailStats"></p>
-          <p id="formationDetailDefense"></p>
-          <p id="formationDetailBonuses"></p>
-          <p id="formationDetailShield"></p>
-          <div id="formationDetailWeapons"></div>
+            <button id="closeFormationDetail">关闭</button>
+          </header>
+          <div id="formationDetailForms" class="controls" hidden></div>
+          <div class="unit-detail-summary">
+            <div class="unit-detail-preview-box">
+              <canvas
+                id="formationDetailPreview"
+                class="formation-detail-preview"
+                width="840"
+                height="400"
+                role="img"
+              ></canvas>
+            </div>
+            <section class="unit-detail-block unit-detail-loadout">
+              <h3>单位与武器配置</h3>
+              <p id="formationDetailIntro" class="muted"></p>
+              <label id="formationDetailNameEditor"
+                >单位名称
+                <div class="formation-name-editor">
+                  <input
+                    id="formationDetailName"
+                    type="text"
+                    maxlength="24"
+                    aria-label="单位名称"
+                    autocomplete="off"
+                  /><button id="editFormationUnitName" type="button">修改名称</button
+                  ><button id="resetFormationUnitName" type="button">重置名称</button>
+                </div>
+              </label>
+              <label>武器套件<select id="formationDetailKit" aria-label="武器套件"></select></label>
+              <label id="formationDetailCarrierField"
+                ><span>搭载至</span
+                ><select id="formationDetailCarrier" aria-label="搭载至"></select
+                ><small id="formationDetailCarrierHint" class="muted"></small
+              ></label>
+            </section>
+          </div>
+          <section id="formationDetailHangarsBlock" class="unit-detail-block">
+            <h3>格纳库与预先搭载</h3>
+            <div id="formationDetailHangars"></div>
+          </section>
+          <div class="unit-detail-properties">
+            <section class="unit-detail-block">
+              <h3>基础属性</h3>
+              <dl id="formationDetailStats" class="unit-detail-metrics"></dl>
+            </section>
+            <section class="unit-detail-block">
+              <h3>防护属性</h3>
+              <div id="formationDetailDefense"></div>
+              <dl id="formationDetailShield" class="unit-detail-metrics"></dl>
+            </section>
+            <section class="unit-detail-block unit-detail-movement">
+              <h3>移动与适应性</h3>
+              <dl id="formationDetailMovement" class="unit-detail-metrics"></dl>
+            </section>
+            <section class="unit-detail-block unit-detail-bonuses">
+              <h3>伤害加成</h3>
+              <dl id="formationDetailBonuses" class="unit-detail-metrics"></dl>
+            </section>
+          </div>
+          <div id="formationDetailWeapons">
+            <section class="unit-detail-block">
+              <h3>武器槽位</h3>
+              <div id="formationDetailSlots" class="unit-detail-slots"></div>
+            </section>
+            <section id="formationDetailSkillsBlock" class="unit-detail-block">
+              <h3>技能与支援</h3>
+              <div id="formationDetailSkills" class="unit-detail-slots"></div>
+            </section>
+            <details id="formationDetailMechanicsBlock" class="unit-detail-block">
+              <summary>机制与未开放武装</summary>
+              <div id="formationDetailMechanics" class="unit-detail-slots"></div>
+            </details>
+          </div>
         </div>
       </div>
     </section>
@@ -2491,6 +2662,16 @@
         border: 3px solid #152c37;
         border-radius: 8px;
       }
+      .catalog-unit-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 6px;
+        align-items: stretch;
+        flex: 0 0 auto;
+      }
+      .catalog-detail {
+        padding: 8px;
+      }
       .catalog-unit {
         display: grid;
         grid-template-columns: 64px minmax(0, 1fr);
@@ -2526,7 +2707,9 @@
         align-items: center;
         gap: 6px;
       }
-      .unit-tags > span {
+      .unit-tags .faction-tag,
+      .unit-tags .era-tag,
+      .unit-tags .type-tag {
         display: inline-block;
         font-size: 11px;
         line-height: 1.3;
@@ -2534,6 +2717,63 @@
         padding: 2px 6px;
         border: 1px solid currentColor;
         margin: 0;
+      }
+      .unit-tags-primary,
+      .unit-tags-types {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        align-items: center;
+      }
+      .unit-tags-types {
+        border-left: 1px solid #57717e;
+        padding-left: 10px;
+        margin-left: 4px;
+      }
+      .type-tag {
+        color: #9fc7bd;
+        background: #9fc7bd0a;
+      }
+      .unit-detail-title-line {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+      }
+      .unit-detail-movement {
+        grid-column: 1/-1;
+      }
+      .unit-detail-movement .unit-detail-metrics {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      #formationScreen .formation-catalog-heading {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+      #formationScreen .formation-catalog-heading h3 {
+        grid-column: 1/-1;
+        margin: 0;
+      }
+      #formationScreen .formation-filter-label {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip: auto;
+        white-space: normal;
+        font-size: 11px;
+        color: #a8c4d1;
+      }
+      #formationScreen .formation-catalog-heading label {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+      }
+      @media (max-width: 650px) {
+        .unit-detail-movement .unit-detail-metrics {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
       .faction-tag {
         color: #81cfff;
@@ -2549,11 +2789,14 @@
       .formation-row {
         display: grid;
         grid-template-columns: 56px minmax(0, 1fr) auto;
-        cursor: pointer;
         align-items: center;
         gap: 12px;
         padding: 10px 0;
         border-bottom: 1px solid #344653;
+      }
+      .formation-row-actions {
+        display: grid;
+        gap: 6px;
       }
       .formation-row small {
         grid-column: 2 / -1;
@@ -2562,8 +2805,7 @@
         width: 100%;
       }
 
-      .formation-row:hover,
-      .formation-row:focus-visible {
+      .formation-row:focus-within {
         background: #203b45;
         outline: 1px solid #81cfff;
       }
@@ -2596,6 +2838,387 @@
         width: min(640px, 100%);
         max-height: 85vh;
         overflow-y: auto;
+      }
+      .formation-detail-preview {
+        display: block;
+        width: 420px;
+        height: auto;
+        max-width: 100%;
+        margin: 0 auto 12px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        background: #10232d;
+      }
+      #formationDetailNameEditor[hidden] {
+        display: none;
+      }
+      #formationUnitDetail .formation-detail-dialog {
+        width: min(980px, 100%);
+        padding: 0 20px 20px;
+      }
+      #formationUnitDetail .unit-detail-heading {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #142733;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 0;
+        border-bottom: 1px solid #3c596a;
+        margin-bottom: 16px;
+      }
+      #formationUnitDetail .unit-detail-heading h2 {
+        margin: 4px 0 0;
+        overflow-wrap: anywhere;
+        font-size: 21px;
+      }
+      #formationUnitDetail #closeFormationDetail {
+        float: none;
+        margin: 0;
+        flex-shrink: 0;
+      }
+      .unit-detail-summary {
+        display: grid;
+        grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr);
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .unit-detail-preview-box {
+        display: grid;
+        align-items: center;
+        border: 1px solid #36515f;
+        background: #10232d;
+        min-width: 0;
+      }
+      #formationUnitDetail .formation-detail-preview {
+        width: 100%;
+        margin: 0;
+        background: none;
+      }
+      .unit-detail-block {
+        min-width: 0;
+        border: 1px solid #36515f;
+        background: #10212a;
+        padding: 14px;
+      }
+      .unit-detail-block h3,
+      .unit-detail-block > summary {
+        margin: 0 0 12px;
+        color: #cbe8ef;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .unit-detail-block > summary {
+        cursor: pointer;
+        margin-bottom: 0;
+      }
+      .unit-detail-block[open] > summary {
+        margin-bottom: 12px;
+      }
+      .unit-detail-loadout {
+        display: grid;
+        gap: 12px;
+      }
+      .unit-detail-loadout h3,
+      .unit-detail-loadout p {
+        margin: 0;
+      }
+      .unit-detail-loadout label {
+        display: grid;
+        gap: 6px;
+        min-width: 0;
+        font-size: 12px;
+        color: #9fb9c7;
+      }
+      .unit-detail-properties {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .unit-detail-bonuses {
+        grid-column: 1/-1;
+      }
+      .unit-detail-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin: 0;
+      }
+      .unit-detail-metric {
+        min-width: 0;
+        padding: 9px;
+        background: #1b313c;
+      }
+      .unit-detail-metric dt {
+        font-size: 11px;
+        color: #9fb9c7;
+        overflow-wrap: anywhere;
+      }
+      .unit-detail-metric dd {
+        margin: 5px 0 0;
+        font-size: 15px;
+        color: #eff8fc;
+        overflow-wrap: anywhere;
+        font-variant-numeric: tabular-nums;
+      }
+      .unit-detail-bonuses .unit-detail-metrics {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .unit-defense-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 12px;
+        font-size: 12px;
+      }
+      .unit-defense-table th,
+      .unit-defense-table td {
+        padding: 7px 5px;
+        border-bottom: 1px solid #2c4553;
+        text-align: right;
+      }
+      .unit-defense-table th:first-child,
+      .unit-defense-table td:first-child {
+        text-align: left;
+      }
+      .unit-defense-table th {
+        color: #9fb9c7;
+        font-weight: 400;
+      }
+      #formationDetailWeapons {
+        display: grid;
+        gap: 14px;
+      }
+      .unit-detail-slots {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      #formationUnitDetail .formation-weapon-detail {
+        min-width: 0;
+        border: 1px solid #314d5c;
+        background: #182f3b;
+        padding: 12px;
+        margin: 0;
+      }
+      .unit-slot-heading {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .unit-slot-heading strong {
+        overflow-wrap: anywhere;
+      }
+      .unit-slot-badge {
+        color: #b6d4e0;
+        font-size: 11px;
+        border: 1px solid #527487;
+        padding: 2px 5px;
+        white-space: nowrap;
+      }
+      .unit-slot-mount {
+        font-size: 11px;
+        color: #9fb9c7;
+        line-height: 1.6;
+        margin: 10px 0 0;
+      }
+      @media (max-width: 650px) {
+        #formationUnitDetail .formation-detail-dialog {
+          padding: 0 12px 12px;
+        }
+        .unit-detail-summary,
+        .unit-detail-properties,
+        .unit-detail-slots {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .unit-detail-preview-box {
+          max-height: 170px;
+          overflow: hidden;
+        }
+        #formationUnitDetail .formation-detail-preview {
+          width: min(100%, 360px);
+          max-height: 170px;
+          margin: auto;
+          object-fit: contain;
+        }
+        .unit-detail-bonuses .unit-detail-metrics {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      #formationScreen .formation-workspace {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      #formationScreen .formation-squad {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        gap: 8px;
+      }
+      #formationScreen #formationUnits {
+        flex: 1;
+        min-height: 0;
+      }
+      #openFormationPicker {
+        width: 100%;
+        flex-shrink: 0;
+      }
+      #formationUnitPicker .formation-picker-dialog {
+        width: min(880px, 100%);
+        height: min(85vh, 900px);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow: hidden;
+      }
+      .formation-picker-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .formation-picker-heading h2 {
+        margin: 0;
+        font-size: 20px;
+      }
+      #formationUnitPicker .formation-catalog {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        gap: 12px;
+      }
+      #formationUnitPicker #formationCatalog {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-content: start;
+        gap: 8px;
+        flex: 1;
+        min-height: 0;
+        padding: 8px;
+      }
+      #formationUnitPicker .catalog-unit-row {
+        min-width: 0;
+      }
+      #formationUnitPicker #addFormationUnit {
+        flex-shrink: 0;
+      }
+      #formationDetailHangarsBlock {
+        margin-bottom: 14px;
+      }
+      .formation-preload-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 10px 0;
+      }
+      .formation-preload-heading strong {
+        color: #d7e6af;
+      }
+      .formation-cargo-note {
+        color: #b3d7e8;
+        font-size: 12px;
+      }
+      .formation-cargo-row {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) minmax(180px, 300px) auto;
+        align-items: end;
+        gap: 10px;
+        border-top: 1px solid #314d5c;
+        padding: 10px 0;
+      }
+      .formation-cargo-row > img,
+      .formation-cargo-row > span {
+        align-self: center;
+      }
+      .formation-cargo-equipment {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+      }
+      .formation-cargo-equipment select {
+        width: 100%;
+        min-width: 0;
+        height: 38px;
+        margin: 0;
+        padding: 7px;
+        font-size: 12px;
+      }
+      .formation-cargo-row > button {
+        height: 38px;
+        min-width: 64px;
+        margin: 0;
+        padding: 6px 12px;
+      }
+      .formation-row-actions button {
+        min-width: 64px;
+        margin: 0;
+      }
+      .formation-hangar-divider {
+        margin: 14px 0 4px 24px;
+        padding: 8px 12px 2px;
+        border-top: 1px dashed #527486;
+        color: #b4dce8;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      @media (max-width: 650px) {
+        .formation-hangar-divider {
+          margin-left: 12px;
+        }
+      }
+      .formation-preloaded-row {
+        margin-left: 24px;
+        padding-left: 12px;
+        border-left: 2px solid #638ea4;
+        background: #17303b66;
+      }
+      @media (max-width: 650px) {
+        .formation-cargo-row {
+          grid-template-columns: 44px minmax(0, 1fr) auto;
+        }
+        .formation-cargo-row > img {
+          grid-column: 1;
+          grid-row: 1 / 3;
+        }
+        .formation-cargo-row > span {
+          grid-column: 2 / -1;
+          grid-row: 1;
+        }
+        .formation-cargo-equipment {
+          grid-column: 2;
+          grid-row: 2;
+        }
+        .formation-cargo-row > button {
+          grid-column: 3;
+          grid-row: 2;
+        }
+        .formation-preloaded-row {
+          margin-left: 12px;
+          padding-left: 8px;
+        }
+      }
+      .formation-cargo-row img {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+      }
+      .formation-cargo-row span {
+        flex: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      @media (max-width: 650px) {
+        #formationUnitPicker #formationCatalog {
+          grid-template-columns: minmax(0, 1fr);
+        }
       }
       .formation-name-editor {
         display: flex;
@@ -3427,6 +4050,7 @@
       __WEAPON_SEQUENCE__;
       __UNIT_PARTS__;
       __UNIT_SKILLS__;
+      __UNIT_HANGARS__;
       __CORE__;
       __RENDERER__;
       __SPRITE_EFFECTS__;
@@ -3457,6 +4081,7 @@
       __ROOM__;
       __FORMATION__;
       __BATTLE_PROMPTS__;
+      __HANGAR_UI__;
       __BATTLE_HUD__;
       I18n.start();
     </script>

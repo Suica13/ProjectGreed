@@ -187,7 +187,15 @@
     "movementType": "air",
     "adaptability": {
       "ground": 100,
-      "space": 50
+      "space": 50,
+      "water": 10.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
     },
     "ship": false,
     "commandAuras": [],
@@ -267,7 +275,15 @@
     "balanceStatus": "native-level",
     "accuracy": 100.0,
     "unitLevel": 1000.0,
-    "tacticalMoveBeforeBonus": 7
+    "tacticalMoveBeforeBonus": 7,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 10.0,
+      "water": 10.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    }
   },
   "presentation": {
     "shield": false,
@@ -308,8 +324,8 @@
     {
       "id": "LaunchAllUnits",
       "source": "Template/Unit/Skill/LaunchAllUnits.gw",
-      "status": "review",
-      "name": "搭载与放出"
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
     },
     {
       "id": "Deploy",
@@ -335,5 +351,29 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "skills": [],
-  "nativeCombatRevision": 1
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Aircraft",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 6,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 6,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X6.ini",
+      "sourceUnit": "Hangar_X6"
+    }
+  ]
 }

@@ -16,9 +16,24 @@ const BattleHUD = (() => {
   terrainInfo.append(byId("mapEnvironment"), byId("hoverInfo"));
   byId("mapWrap").append(terrainInfo, byId("hudActionBand"));
   const pickingAction = () =>
-    ["move", "attack-target", "attack-weapons", "target"].includes(mode) ||
-    mode.startsWith("skill:");
+    ["move", "attack-target", "attack-weapons", "target", "hangar-launch", "hangar-board"].includes(
+      mode,
+    ) || mode.startsWith("skill:");
   scene.append(byId("reaction"));
+  // One scroll surface for both response columns; empty map space still selects counter targets.
+  byId("reaction").addEventListener("click", (event) => {
+    const overlay = event.currentTarget;
+    if (event.target !== overlay) return;
+    const rect = overlay.getBoundingClientRect();
+    if (event.clientX >= rect.left + overlay.clientWidth) return;
+    byId("map").dispatchEvent(
+      new MouseEvent("click", {
+        clientX: event.clientX,
+        clientY: event.clientY,
+        bubbles: true,
+      }),
+    );
+  });
   const defender = byId("reaction").querySelector(".response-defender"),
     responseBody = element("div", "hud-response-body"),
     confirm = byId("confirmResponse");
@@ -116,7 +131,8 @@ const BattleHUD = (() => {
     update();
   }
   function cancelAction() {
-    if (pageView !== "game" || phase !== "idle" || !pickingAction()) return;
+    if (pageView !== "game" || !["idle", "deployment"].includes(phase) || !pickingAction()) return;
+    window.HangarUI?.cancel();
     AttackControls.reset();
     weaponId = null;
     mode = "select";
@@ -131,6 +147,31 @@ const BattleHUD = (() => {
     infoEnabled = true;
     refresh();
   };
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.repeat ||
+      event.defaultPrevented ||
+      event.ctrlKey ||
+      event.altKey ||
+      event.metaKey ||
+      pageView !== "game" ||
+      phase !== "idle" ||
+      event.target.closest("input,textarea,select,[contenteditable=true]") ||
+      document.querySelector("dialog[open], .overlay:not([hidden])")
+    )
+      return;
+    const command = { q: "move", w: "attack", e: "skills", h: "hangar", v: "wait" }[
+      event.key.toLowerCase()
+    ];
+    if (!command) return;
+    const button = [...document.querySelectorAll(`[data-unit-command="${command}"]`)].find(
+      (b) => !b.disabled && b.getClientRects().length,
+    );
+    if (button) {
+      event.preventDefault();
+      button.click();
+    }
+  });
   document.addEventListener("keydown", (event) => {
     if (
       event.key !== "Escape" ||
@@ -185,7 +226,8 @@ const BattleHUD = (() => {
     }
     lastMode = mode;
     lastSelection = selected;
-    const actionActive = active && !!unit && phase === "idle" && pickingAction();
+    const actionActive =
+      active && !!unit && ["idle", "deployment"].includes(phase) && pickingAction();
     scene.dataset.actionStage = actionActive ? mode : "none";
     byId("hudActionBand").hidden = !actionActive;
     const attackPlanner = byId("hudAttackPlanner"),
@@ -208,13 +250,21 @@ const BattleHUD = (() => {
       const moving = mode === "move",
         attacking = mode.startsWith("attack");
       byId("hudCancelAction").textContent = I18n.text(
-        moving ? "取消移动" : attacking ? "取消攻击" : "取消技能",
+        moving
+          ? "取消移动"
+          : attacking
+            ? "取消攻击"
+            : mode === "hangar-launch"
+              ? "取消出击"
+              : mode === "hangar-board"
+                ? "取消搭载"
+                : "取消技能",
       );
     }
     roster.hidden = !active || !rosterOpen || inCombat;
     const actions = byId("unitActions");
     commands.replaceChildren();
-    const own = unit && unit.team === game.team && (!Net.active || Net.owns(unit));
+    const own = unit && unit.team === game.team && (!Net.active || Net.canControl(unit));
     commands.hidden =
       !active || !unit || inCombat || actionActive || !["idle", "deployment"].includes(phase);
     scene.dataset.unitCommands = String(!commands.hidden);
@@ -227,7 +277,11 @@ const BattleHUD = (() => {
         !isAI() &&
         (!Net.active || Net.canAct()) &&
         !isBusy();
-      for (const button of row.children) button.hidden = !canCommand;
+      for (const button of row.children)
+        button.hidden =
+          button.dataset.unitCommand === "hangar"
+            ? !["idle", "deployment"].includes(phase)
+            : !canCommand;
       row.prepend(infoButton);
       infoButton.hidden = false;
       row.hidden = false;

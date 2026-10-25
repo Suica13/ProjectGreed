@@ -280,7 +280,10 @@ async function readyGame(first, second) {
   for (const p of first.context().pages())
     if (
       await p.evaluate(
-        () => typeof Net !== "undefined" && !!Net.snapshot && Net.snapshot.you.id === Net.snapshot.hostId,
+        () =>
+          typeof Net !== "undefined" &&
+          !!Net.snapshot &&
+          Net.snapshot.you.id === Net.snapshot.hostId,
       )
     )
       await p.locator("#startRoomGame").click();
@@ -330,7 +333,11 @@ test("formation persists selected weapon kits and offline deployment uses map cl
   await page.locator("#formationName").fill("火箭筒单机编组");
   await page.locator(".formation-row button").last().click();
   await page.locator(".formation-row button").last().click();
-  await page.locator(".formation-row").first().click();
+  await page
+    .locator(".formation-row")
+    .first()
+    .getByRole("button", { name: "详情", exact: true })
+    .click();
   await page.locator("#formationDetailKit").selectOption("bazooka");
   await page.locator("#closeFormationDetail").click();
   await expect(page.locator("#formationName")).toHaveValue("火箭筒单机编组");
