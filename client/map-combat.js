@@ -48,16 +48,26 @@ const MapCombat = (() => {
     const earlier = [];
     for (const lane of lanes)
       lane.view.events.forEach((event, index) => {
-        if ((event.after <= 0 && event.before > 0) || event.brokenParts?.length)
-          lane.dependencies.set(
-            index,
-            earlier.filter(
+        const queueDependencies = earlier.filter(
+          (entry) =>
+            entry.lane !== lane &&
+            lane.view.attackQueue?.length > 1 &&
+            entry.lane.view.attackQueue?.attacker === lane.view.attackQueue.attacker,
+        );
+        if (
+          queueDependencies.length ||
+          (event.after <= 0 && event.before > 0) ||
+          event.brokenParts?.length
+        )
+          lane.dependencies.set(index, [
+            ...queueDependencies,
+            ...earlier.filter(
               (entry) =>
                 entry.lane !== lane &&
                 (entry.event.from === event.to ||
                   (event.after <= 0 && entry.event.to === event.to)),
             ),
-          );
+          ]);
         earlier.push({ lane, index, event });
       });
     for (const [id, unit] of displayed) {
@@ -77,8 +87,8 @@ const MapCombat = (() => {
       const unit = displayed.get(id) || view.actors.find((unit) => unit.id === id);
       return {
         unit,
-        x: (unit.x + 0.5) * 64,
-        y: (unit.y + 0.5) * 64,
+        x: (Rules.center(unit).x + 0.5) * 64,
+        y: (Rules.center(unit).y + 0.5) * 64,
         scale:
           1.2 *
           (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
@@ -89,13 +99,16 @@ const MapCombat = (() => {
       };
     });
     const [source, target] = actors;
-    source.angle = (Math.atan2(target.x - source.x, -(target.y - source.y)) * 180) / Math.PI;
-    target.angle = source.angle + 180;
-    const weapon = getWeapon(source.unit, event.weapon);
+    const aim = (Math.atan2(target.x - source.x, -(target.y - source.y)) * 180) / Math.PI;
+    source.angle = Rules.modelOf(source.unit).ship ? source.unit.angle : aim;
+    source.aimAngle = aim;
+    source.unit.aimAngle = aim;
+    target.angle = Rules.modelOf(target.unit).ship ? target.unit.angle : aim + 180;
+    const weapon = Rules.eventWeapon(source.unit, event);
     const plan = WeaponEffects.plan(weapon, source, target, event);
     frame = { view, index: view.index, event, source, target, weapon, plan, time: 0 };
     byId("mapCombatStatus").textContent =
-      `${unitName(source.unit)} → ${unitName(target.unit)} · ${weapon.name}`;
+      `${unitName(source.unit)} → ${event.empty ? "空地" : unitName(target.unit)} · ${weapon.name}`;
     return frame;
   }
   function commit(view, parallel = false) {
@@ -103,14 +116,20 @@ const MapCombat = (() => {
       target = displayed.get(event.to),
       source = displayed.get(event.from);
     if (target) {
+      if (event.targetModelAfter) target.model = event.targetModelAfter;
+      if (event.overdriveEnded) delete target.overdrive;
       target.hp = event.after;
       target.shield = event.shieldAfter ?? target.shield;
       if (event.partsAfter) target.brokenParts = { ...event.partsAfter };
     }
     // EN 的显示以此次交战结束值为准；最终状态仍由服务端快照覆盖。
-    if (source) source.en = Math.max(0, source.en - getWeapon(source, event.weapon).en);
-    if (source && frame) source.angle = frame.source.angle;
-    if (target && frame) target.angle = frame.target.angle;
+    if (source)
+      source.en = Math.max(
+        0,
+        source.en - (event.energySpent ?? getWeapon(source, event.weapon).en),
+      );
+    if (source && frame && !Rules.modelOf(source).ship) source.angle = frame.source.angle;
+    if (target && frame && !Rules.modelOf(target).ship) target.angle = frame.target.angle;
     view.displayHp[event.to] = event.after;
     view.index++;
     frame = null;
@@ -163,13 +182,14 @@ const MapCombat = (() => {
     }
     const reach = Math.max(0, distance - gap) * progress;
     const moving = plan.melee && ["approach", "return"].includes(stage);
-    const sourcePose = {
+    let sourcePose = {
       x: animation.x + (distance ? ((target.x - source.x) / distance) * reach : 0),
       y:
         animation.y +
         (distance ? ((target.y - source.y) / distance) * reach : 0) -
         plan.sourceY * progress,
       angle: source.angle,
+      aimAngle: source.aimAngle,
       clip: moving
         ? SpriteRenderer.movement(source.unit.model)
         : stage === "rest"
@@ -178,7 +198,17 @@ const MapCombat = (() => {
       time: moving ? stageTime : animation.time,
       moving,
       heldWeapon: event.heldWeapon ?? event.weapon,
+      attackWeapon: event.weapon,
+      weaponDisplayIndex: animation.weaponDisplayIndex,
+      attacking: time >= plan.lead && time <= plan.lead + weapon.attack.duration / plan.actionSpeed,
     };
+    if (plan.bomb)
+      sourcePose = {
+        ...sourcePose,
+        ...WeaponEffects.bombPose(plan, time, source, target),
+        clip: SpriteRenderer.movement(source.unit.model),
+        moving: true,
+      };
     const dodge = WeaponEffects.dodge(event, plan, time, source, target);
     const arrived = WeaponEffects.arrived(plan, time),
       latest = arrived.at(-1);
@@ -187,6 +217,7 @@ const MapCombat = (() => {
     const dying = plan.deathSoundAt !== null && time >= plan.deathSoundAt;
     result.set(source.unit.id, sourcePose);
     result.set(target.unit.id, {
+      model: latest?.modelAfter ?? target.unit.model,
       x: target.x + dodge.x,
       y: target.y + dodge.y,
       angle: target.angle,
@@ -204,8 +235,8 @@ const MapCombat = (() => {
       hp,
       shield: WeaponEffects.shield(event, plan, time, target.unit.shield),
       dying,
-      keepVisible: plan.deathAt !== null && time < plan.deathAt,
-      hidden: plan.deathAt !== null && time >= plan.deathAt,
+      keepVisible: plan.deathHideAt !== null && time < plan.deathHideAt,
+      hidden: plan.deathHideAt !== null && time >= plan.deathHideAt,
       dodge,
       sourcePose,
     });
@@ -319,33 +350,6 @@ const MapCombat = (() => {
         }
       frame = saved;
     }
-    drawBoosts(ctx, geometry);
-  }
-  // 同一机体可能同时出现在多条交战时间轴上，只在最终可见姿态处画一次推进启动特效。
-  function drawBoosts(ctx, geometry) {
-    ctx.save();
-    ctx.translate(geometry.ox, geometry.oy);
-    ctx.scale(geometry.tile / 64, geometry.tile / 64);
-    for (const [id, pose] of poses()) {
-      if (pose.hidden || pose.dying) continue;
-      const unit = displayed.get(id) || getUnit(id);
-      const dodge = pose.dodge?.started;
-      if (!unit || (!dodge && !pose.moving)) continue;
-      const scale =
-        1.2 *
-        (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
-        Rules.modelOf(unit).presentation.mapScale;
-      SpriteEffects.boostStart(
-        ctx,
-        unit,
-        pose.x,
-        pose.y,
-        scale,
-        dodge ? pose.dodge.time : pose.time,
-        pose.angle,
-      );
-    }
-    ctx.restore();
   }
   function visibleParts(unit) {
     const state = { ...(initialParts.get(unit.id) || unit.brokenParts) };
@@ -371,6 +375,7 @@ const MapCombat = (() => {
         hp: (lanes.length ? health(unit.id) : effect?.hp) ?? visual.hp,
         shield: (lanes.length ? health(unit.id, true) : effect?.shield) ?? visual.shield,
         en: (lanes.length ? energy(unit.id) : undefined) ?? visual.en,
+        model: effect?.model ?? unit.model,
         mapDying: effect?.keepVisible,
         mapPose: effect,
       };
@@ -398,7 +403,11 @@ const MapCombat = (() => {
           (time - contact.at) * plan.actionSpeed,
           facing,
         );
-      if (contact.hit)
+      if (
+        contact.hit ||
+        weapon.projectile?.motion === "mortar" ||
+        weapon.projectile?.motion === "bomb"
+      )
         SpriteEffects.draw(
           ctx,
           weapon.hitEffect,
@@ -422,9 +431,10 @@ const MapCombat = (() => {
         time - plan.deathSoundAt,
       );
     if (plan.deathAt !== null)
-      SpriteEffects.draw(
+      WeaponEffects.drawDeath(
         ctx,
-        plan.deathEffect,
+        plan.deathEvents,
+        target.unit,
         targetPose.x,
         targetPose.y,
         target.scale,

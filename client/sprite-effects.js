@@ -46,32 +46,40 @@ const SpriteEffects = (() => {
     if (!(hp > 0 && hp < maxHp * config.threshold)) return false;
     return draw(ctx, config.effect, x, y, scale, Math.max(0, time) % effect.duration);
   }
-  function boostStart(ctx, unit, x, y, scale, time, angle = unit.angle) {
-    if (UnitModels[unit.model].presentation.movement !== "boost") return false;
-    return draw(
-      ctx,
-      ART.presentation.boostStartEffect,
-      x,
-      y,
-      scale,
-      time,
-      ((angle - 90) * Math.PI) / 180,
-    );
+  // Broken turrets remain attached. This is visual only; their weapons stay disabled by shared rules.
+  function brokenModules(ctx, model, brokenParts, actor, time) {
+    const config = ART.presentation.moduleDamage;
+    const effect = ART.effects[config?.effect];
+    if (!ART.models[model]?.ship || !effect || !Number.isFinite(time)) return 0;
+    let count = 0;
+    for (const module of ART.models[model].modules || []) {
+      if (!brokenParts?.[module.id]) continue;
+      const point = SpriteRenderer.modulePosition(model, module.id, actor);
+      if (
+        point &&
+        draw(
+          ctx,
+          config.effect,
+          point.x,
+          point.y,
+          actor.scale * config.scale,
+          Math.max(0, time) % effect.duration,
+        )
+      )
+        count++;
+    }
+    return count;
   }
-  return { frame, sound, draw, lowHp, boostStart };
+  return { frame, sound, draw, lowHp, brokenModules };
 })();
 
-/* 推进启动爆光留在起步位置，短距离移动结束后也会自然播完，不影响行动。 */
-const MovementEffects = (() => {
+/* 脱出闪光留在原机体所在位置，不触发死亡电流或死亡爆炸。 */
+const SkillEffects = (() => {
   const active = [];
-  function start(unit, from, next, now) {
-    if (!next || UnitModels[unit.model].presentation.movement !== "boost") return;
-    active.push({
-      unit: { ...unit },
-      from,
-      start: now,
-      angle: (Math.atan2(next.x - from.x, -(next.y - from.y)) * 180) / Math.PI,
-    });
+  function start(event) {
+    if (!ART.effects[event.effect]) return;
+    active.push({ ...event, start: performance.now() });
+    WeaponAudio.play(event.sound);
   }
   function reset() {
     active.length = 0;
@@ -80,17 +88,12 @@ const MovementEffects = (() => {
     for (let i = active.length - 1; i >= 0; i--) {
       const item = active[i],
         time = (now - item.start) / 1000;
-      if (time >= ART.effects[ART.presentation.boostStartEffect].duration) {
+      if (time >= ART.effects[item.effect].duration) {
         active.splice(i, 1);
         continue;
       }
       const point = position(item.from.x, item.from.y);
-      const scale =
-        (tile / 64) *
-        1.2 *
-        (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
-        UnitModels[item.unit.model].presentation.mapScale;
-      SpriteEffects.boostStart(ctx, item.unit, point.x, point.y, scale, time, item.angle);
+      SpriteEffects.draw(ctx, item.effect, point.x, point.y, tile / 64, time);
     }
   }
   return { start, reset, draw };
@@ -115,10 +118,17 @@ const MapEffects = (() => {
       queue.push({
         key,
         unit: { ...unit },
-        effect: UnitModels[unit.model].presentation.deathEffect,
+        effect: WeaponEffects.deathSequence(unit).effect,
+        sequence: WeaponEffects.deathSequence(unit),
         delay: view.deathSoundHeard?.has(event.to) ? 0 : ART.presentation.deathDelay,
       });
     }
+  }
+  function captureTurn(game) {
+    const events = (game.turnEffects || [])
+      .filter((e) => e.type === "overdrive" && e.hp <= 0)
+      .map((e) => ({ hit: true, before: 1, after: 0, to: e.unitId }));
+    if (events.length) capture({ networkId: "upkeep-" + game.round, events });
   }
   const pending = () => !!(queue.length || active.length);
   function after(callback) {
@@ -126,7 +136,7 @@ const MapEffects = (() => {
     else callback();
   }
   function reset() {
-    MovementEffects.reset();
+    SkillEffects.reset();
     queue.length = active.length = 0;
     seen.clear();
     callbacks.clear();
@@ -141,21 +151,24 @@ const MapEffects = (() => {
     for (let i = active.length - 1; i >= 0; i--) {
       const item = active[i],
         age = ((now - item.start) / 1000 - item.delay) * ART.presentation.animationSpeed;
-      if (age >= ART.effects[item.effect].duration) {
+      if (age >= item.sequence.duration) {
         active.splice(i, 1);
         continue;
       }
-      const point = position(item.unit.x, item.unit.y);
-      if (age >= 0 && !item.explosionPlayed) {
-        item.explosionPlayed = true;
-        WeaponAudio.play(SpriteEffects.sound(item.effect));
-      }
+      const center = typeof Rules !== "undefined" ? Rules.center(item.unit) : item.unit;
+      const point = position(center.x, center.y);
+      item.played ||= new Set();
+      for (const [index, explosion] of item.sequence.events.entries())
+        if (age >= explosion.at && !item.played.has(index)) {
+          item.played.add(index);
+          WeaponAudio.play(SpriteEffects.sound(explosion.effect));
+        }
       const scale =
         (tile / 64) *
         1.2 *
         (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
         UnitModels[item.unit.model].presentation.mapScale;
-      if (age < 0)
+      if (age < 0 || item.sequence.keepSpriteUntilEnd)
         SpriteRenderer.draw(
           ctx,
           item.unit.model,
@@ -169,17 +182,7 @@ const MapEffects = (() => {
           false,
           (item.unit.shield ?? 0) > 0,
         );
-      SpriteEffects.draw(
-        ctx,
-        item.effect,
-        point.x,
-        point.y,
-        (tile / 64) *
-          1.2 *
-          (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
-          UnitModels[item.unit.model].presentation.mapScale,
-        age,
-      );
+      WeaponEffects.drawDeath(ctx, item.sequence, item.unit, point.x, point.y, scale, age);
     }
     if (!pending()) {
       const done = [...callbacks];
@@ -187,5 +190,5 @@ const MapEffects = (() => {
       for (const callback of done) callback();
     }
   }
-  return { capture, draw, pending, after, reset };
+  return { capture, captureTurn, draw, pending, after, reset };
 })();

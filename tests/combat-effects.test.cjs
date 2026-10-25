@@ -40,9 +40,13 @@ test("Miss keeps the same trajectory and triggers dodge for every defense stance
       for (const response of ["counter", "defend", "evade"]) {
         const event = { hit: false, response },
           plan = r.fx.plan(w, a, target, event);
-        for (const shot of plan.shots) assert.equal(shot.destination.x, target.x);
+        for (const shot of plan.shots) {
+          if (w.projectile?.motion === "bomb") assert.equal(shot.destination.x, shot.origin.x);
+          else assert.equal(shot.destination.x, target.x);
+        }
         assert.equal(r.fx.dodge(event, plan, plan.impacts[0], a, target).active, true);
-        assert.ok(plan.cues.every((c) => c.sound === w.sound));
+        if (!["bomb", "mortar"].includes(w.projectile?.motion))
+          assert.ok(plan.cues.every((c) => c.sound === w.sound));
       }
     }
 });
@@ -184,10 +188,10 @@ test("dodges move from the current position between bounded lanes and retain the
 
 test("melee steps and bone sampling use normal speed while shooting keeps 85 percent speed", () => {
   const r = runtime(),
-    saber = ART.models.RGM_79__machine_gun.weapons[1],
+    saber = ART.models.RGM_79L__beam_gun.weapons[1],
     plan = r.fx.plan(saber, source, target, { hit: true, damage: 1 });
   assert.equal(plan.actionSpeed, 1);
-  assert.equal(plan.shots[0].at - plan.lead, 0.6);
+  assert.equal(plan.shots[0].at - plan.lead, 0.4);
   assert.ok(Math.abs(plan.shots[1].at - plan.lead - 1.3) < 1e-10);
   assert.equal(r.fx.plan(weapon, source, target).actionSpeed, 0.85);
 });
@@ -251,9 +255,9 @@ test("Dom shotgun has eight simultaneous independent pellets, short range and a 
   const r = runtime(),
     model = "MS_09__bazooka",
     w = ART.models[model].weapons.find((w) => w.id === "ZN_MS_09_ChestBeam");
-  assert.equal(ART.models[model].hp, 22500);
-  assert.equal(ART.models.RGM_79_G__machine_gun.hp, 20000);
-  assert.equal(w.hit, 75);
+  assert.equal(ART.models[model].hp, 25000);
+  assert.equal(ART.models.RGM_79_G__machine_gun.hp, 25000);
+  assert.equal(w.hit, 95);
   assert.equal(w.min, 1);
   assert.equal(w.max, 1);
   assert.equal(w.damagePerShot, 400);
@@ -285,7 +289,7 @@ test("Dom shotgun has eight simultaneous independent pellets, short range and a 
 
 test("melee approaches across the divider before swinging, stays close for both strikes and returns home", () => {
   const r = runtime(),
-    saber = ART.models.RGM_79__machine_gun.weapons[1];
+    saber = ART.models.RGM_79L__beam_gun.weapons[1];
   for (const reverse of [false, true]) {
     const a = { ...source, x: reverse ? 750 : 250, arenaWidth: 1000 },
       b = { ...target, x: reverse ? 250 : 750 };
@@ -324,13 +328,13 @@ test("Dom shotgun resolves eight independent hit rolls and spends EN once at adj
   Object.assign(b, { x: 3, y: 4, hp: 100000, shield: 0 });
   g.tiles[4][2] = g.tiles[4][3] = g.tiles[4][4] = "plain";
   const w = G.modelOf(a).weapons.find((w) => w.id === "ZN_MS_09_ChestBeam");
-  assert.equal(G.estimate(g, a, b, w).hit, 82.5);
+  assert.equal(G.estimate(g, a, b, w).hit, 78.18749999999999);
   g.seed = 3; // This seed produces both hits and misses at the native accuracy.
   assert.equal(G.canAttack(g, a, { ...b, x: 4 }, w), false);
   const event = G.fight(g, a, b, w, "defend")[0];
   assert.equal(event.strikes.length, 8);
   assert.equal(event.shotCount, 8);
-  assert.equal(a.en, 90);
+  assert.equal(a.en, ART.models[a.model].en - w.en);
   assert.ok(event.hitCount > 0 && event.hitCount < 8);
   assert.equal(event.damagePerShot, 400);
 });
@@ -361,10 +365,10 @@ test("native low HP electricity loops five frames below 25 percent and stops at 
   assert.equal(e.alpha, 0.85);
   assert.equal(e.fps, 7.5);
   assert.equal(e.duration, 2 / 3);
-  for (const hp of [0, -1, 4125, 16500])
+  for (const hp of [0, -1, 5250, 21000])
     assert.equal(r.sprites.lowHp(ctx, u, 10, 20, 1, 0, hp), false);
-  assert.equal(r.sprites.lowHp(ctx, u, 10, 20, 1, 0, 4124), true);
-  assert.equal(r.sprites.lowHp(ctx, { ...u, performance: 0.75 }, 10, 20, 1, 0, 3500), false);
+  assert.equal(r.sprites.lowHp(ctx, u, 10, 20, 1, 0, 5249), true);
+  assert.equal(r.sprites.lowHp(ctx, { ...u, performance: 0.75 }, 10, 20, 1, 0, 4000), false);
   assert.equal(r.sprites.lowHp(ctx, { ...u, performance: 1.25 }, 10, 20, 1, 0, 4500), true);
   assert.equal(JSON.stringify(u), before);
   assert.equal(r.sounds.length, 0);
@@ -402,6 +406,10 @@ test("miss lifetimes stop at the first arena edge for vertical, horizontal and d
         const plan = r.fx.plan(w, a, b, { from: "a", to: "b", weapon: w.id, hit: false });
         assert.ok(Number.isFinite(plan.duration), modelId + "/" + w.id);
         for (const shot of plan.shots) {
+          if (["bomb", "mortar"].includes(w.projectile.motion)) {
+            assert.equal(shot.visibleUntil, shot.impactAt);
+            continue;
+          }
           const margin = 64 * a.scale * w.projectile.scale + 16,
             progress = (shot.visibleUntil - shot.at) / shot.flight,
             x = shot.origin.x + (shot.destination.x - shot.origin.x) * progress,
@@ -426,4 +434,104 @@ test("miss lifetimes stop at the first arena edge for vertical, horizontal and d
           assert.ok(shot.visibleUntil >= shot.impactAt, "Miss still travels through the target");
         }
       }
+});
+
+test("ship death keeps its sprite through the complete multi-explosion sequence in battle and map effects", () => {
+  const r = runtime();
+  const ship = {
+    ...target,
+    unit: { ...target.unit, model: "SalamisClass__standard", environment: "space", hp: 1 },
+  };
+  const event = { hit: true, before: 1, after: 0, damage: 1 };
+  const plan = r.fx.plan(weapon, source, ship, event);
+  assert.equal(plan.deathHideAt, plan.deathEnd);
+  assert.ok(plan.deathHideAt > plan.deathAt);
+  assert.equal(
+    r.fx.plan(weapon, source, target, event).deathHideAt,
+    r.fx.plan(weapon, source, target, event).deathAt,
+  );
+  Object.assign(r.unit, ship.unit);
+  const draws = [];
+  r.context.recordSprite = () => draws.push("ship");
+  vm.runInContext("SpriteRenderer.draw=recordSprite", r.context);
+  r.sprites.draw = () => true;
+  r.map.capture({ networkId: "ship-multi-explosion", events: [{ ...event, to: r.unit.id }] });
+  const sequence = r.fx.deathSequence(r.unit),
+    speed = ART.presentation.animationSpeed,
+    delay = ART.presentation.deathDelay;
+  r.map.draw({}, 0, () => ({ x: 100, y: 100 }), 64);
+  assert.equal(draws.length, 1);
+  for (const age of [0.01, sequence.events.at(-1).at, sequence.duration - 0.01]) {
+    const before = draws.length;
+    r.map.draw({}, (delay + age / speed) * 1000, () => ({ x: 100, y: 100 }), 64);
+    assert.equal(draws.length, before + 1);
+  }
+  const before = draws.length;
+  r.map.draw(
+    {},
+    (delay + (sequence.duration + 0.01) / speed) * 1000,
+    () => ({ x: 100, y: 100 }),
+    64,
+  );
+  assert.equal(draws.length, before);
+  assert.equal(r.map.pending(), false);
+});
+
+test("mortar shells take twice as long and rotate along the arc in both directions", () => {
+  const r = runtime();
+  const [modelId, m] = Object.entries(ART.models).find(([, m]) =>
+    m.weapons.some((w) => w.projectile?.motion === "mortar"),
+  );
+  const w = m.weapons.find((w) => w.projectile?.motion === "mortar");
+  // Access the same private renderer instance used by WeaponEffects.
+  vm.runInContext(
+    "SpriteRenderer.images[" + JSON.stringify(w.projectile.asset) + "] = {width:8,height:16};",
+    r.context,
+  );
+  for (const direction of [1, -1]) {
+    const a = {
+        ...source,
+        unit: { ...source.unit, model: modelId },
+        x: direction === 1 ? 100 : 600,
+      },
+      b = { ...target, x: direction === 1 ? 600 : 100 },
+      event = { hit: true },
+      plan = r.fx.plan(w, a, b, event),
+      shot = plan.shots[0],
+      dx = shot.destination.x - shot.origin.x,
+      dy = shot.destination.y - shot.origin.y,
+      previousFlight = Math.max(0.18, Math.min(0.45, Math.hypot(dx, dy) / 1800));
+    assert.ok(Math.abs(shot.flight - previousFlight * 2) < 1e-9);
+    const angles = [];
+    for (const travel of [0.2, 0.5, 0.8]) {
+      let angle, position;
+      const ctx = {
+        save() {},
+        restore() {},
+        translate(x, y) {
+          position = { x, y };
+        },
+        rotate(value) {
+          angle = value;
+        },
+        scale() {},
+        drawImage() {},
+      };
+      // Isolate one shell so later firing steps do not overwrite the capture.
+      r.fx.draw(ctx, w, { ...plan, shots: [shot] }, shot.at + shot.flight * travel, a, event);
+      const tangent = Math.atan2(dy - Math.PI * 80 * a.scale * Math.cos(Math.PI * travel), dx);
+      assert.ok(
+        Math.abs(angle - tangent - Math.PI / 2 - ((w.projectile.rotation || 0) * Math.PI) / 180) <
+          1e-9,
+      );
+      assert.ok(
+        Math.abs(
+          position.y - (shot.origin.y + dy * travel - Math.sin(Math.PI * travel) * 80 * a.scale),
+        ) < 1e-9,
+      );
+      angles.push(angle);
+    }
+    assert.ok(Math.abs(angles[0] - angles[2]) > 0.1);
+    assert.ok(plan.duration >= shot.impactAt);
+  }
 });

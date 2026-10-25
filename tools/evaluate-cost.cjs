@@ -9,13 +9,19 @@ const costBalance = require("./cost-balance.json");
 const kitCosts = require("../assets/weapon-kit-costs.json");
 const costStep = G.catalog.formation.costStep;
 // 每种机体等权，所有套件都进入武器威胁池，避免只用旧吉姆估价。
-const targets = G.catalog.prefabs.map((p) => p.id + "__" + p.weaponKits[0].id);
-const threats = Object.values(G.models).flatMap((m) =>
+// The published balance reference remains the explicitly tuned platforms.
+// All published prices use native Level; older design bands only explain historical estimates.
+const referencePrefabs = G.catalog.prefabs.filter((p) => Object.hasOwn(costBalance, p.id));
+const referenceModels = Object.fromEntries(
+  Object.entries(G.models).filter(([, m]) => Object.hasOwn(costBalance, m.prefabId)),
+);
+const targets = referencePrefabs.map((p) => p.id + "__" + p.weaponKits[0].id);
+const threats = Object.values(referenceModels).flatMap((m) =>
   m.weapons.map((w) => [
     m.prefabId + "__" + m.kitId,
     w.id,
     1 /
-      G.catalog.prefabs.length /
+      referencePrefabs.length /
       G.catalog.prefabs.find((p) => p.id === m.prefabId).weaponKits.length /
       m.weapons.length,
   ]),
@@ -28,9 +34,11 @@ function expectedVolley(attackerId, defenderId, weapon, distance) {
     ["plain", 0.8],
     ["forest", 0.2],
   ].reduce((total, [terrain, weight]) => {
-    const a = { model: attackerId, x: 0, y: 0 },
+    const a = { model: attackerId, x: 0, y: 0, angle: 90, environment: "space" },
       b = {
         model: defenderId,
+        angle: -90,
+        environment: "space",
         x: distance,
         y: 0,
         shield: G.models[defenderId].shield.hp,
@@ -40,7 +48,7 @@ function expectedVolley(attackerId, defenderId, weapon, distance) {
       damage = 0;
     for (const strike of weapon.attack.strikes) {
       const next = new Map(),
-        single = { ...weapon, attack: { strikes: [strike] } };
+        single = { ...weapon, attack: { ...weapon.attack, strikes: [strike] } };
       const add = (shield, probability) => next.set(shield, (next.get(shield) || 0) + probability);
       for (const [shield, probability] of states) {
         const e = G.estimate(g, a, { ...b, shield }, single),
@@ -69,7 +77,7 @@ function score(modelId) {
             0,
           ) /
             targets.length) *
-          (0.7 + 0.3 * Math.min(1, 15 / w.en)),
+          (0.7 + 0.3 * Math.min(1, model.en / Math.max(w.en, 1) / 5)),
       ),
     );
     return sum + weight * best;
@@ -87,9 +95,9 @@ function score(modelId) {
   const value = Math.sqrt(offense * effectiveHp) * Math.pow(model.move / 5, 0.65);
   return { offense, effectiveHp, value };
 }
-const metrics = Object.fromEntries(Object.keys(G.models).map((id) => [id, score(id)]));
+const metrics = Object.fromEntries(Object.keys(referenceModels).map((id) => [id, score(id)]));
 const platformValues = Object.fromEntries(
-  G.catalog.prefabs.map((prefab) => {
+  referencePrefabs.map((prefab) => {
     const values = prefab.weaponKits.map((kit) => metrics[prefab.id + "__" + kit.id].value);
     return [
       prefab.id,
@@ -99,7 +107,7 @@ const platformValues = Object.fromEntries(
   }),
 );
 const baseline = platformValues.MS_06F;
-const rows = Object.keys(G.models).map((id) => {
+const rows = Object.keys(referenceModels).map((id) => {
   const value = 0.8 * platformValues[G.models[id].prefabId] + 0.2 * metrics[id].value;
   const prefabId = G.models[id].prefabId;
   const band = costBalance[prefabId];
@@ -146,7 +154,7 @@ if (require.main === module) {
     })),
   );
   if (process.argv.includes("--write")) {
-    for (const prefab of G.catalog.prefabs) {
+    for (const prefab of referencePrefabs) {
       const file = path.join(__dirname, "../assets/units", prefab.id, "unit.json");
       const raw = JSON.parse(fs.readFileSync(file, "utf8"));
       for (const kit of raw.weaponKits) kit.cost = kitCosts[kit.id];
@@ -173,16 +181,16 @@ if (require.main === module) {
         "",
         "运行 node tools/evaluate-cost.cjs 查看战力估算与当前定价；加 --write 只按 assets/weapon-kit-costs.json 统一套件附加费，并更新本报告，不改机体基础 COST。",
         "",
-        "发布 COST = unit.json 的 stats.cost + 武器套件附加费。机枪（含对空机枪）+0；火箭筒、导弹发射器（含双联装大枪）+50；光束喷枪、光束枪+75；光束步枪、加农炮系+100。固定和副武器包含在机体基础 COST，不重复加价。机体基础 COST 保持现值；数学期望与 tools/cost-balance.json 中的档位只用于参考。默认编组5000 COST、单机1000 COST、9台；房主可设置3～12台及禁用标签，AI使用相同的最终套件 COST 生成合法编组。进入房间前本地编组预算无限。",
+        "发布 COST = unit.json 的 stats.cost + 武器套件附加费。机枪（含对空机枪）+0；火箭筒、导弹发射器（含双联装大枪）+50；光束喷枪、光束枪+75；光束步枪、加农炮系+100。固定和副武器包含在机体基础 COST，不重复加价。机体基础 COST 按原MOD unitLevel÷4并按25取整；数学期望与 tools/cost-balance.json 中的旧档位只用于参考。默认编组3000 COST、单机500 COST、6台；房主可设置3～12台及禁用标签，AI使用相同的最终套件 COST 生成合法编组。进入房间前本地编组预算无限。",
         "",
         "## 计算假设",
         "",
         "- 交战距离1～8格权重依次为22%、17%、16%、14%、11%、9%、7%、4%；地形80%平地、20%林地。",
-        `- 对手均匀取全部${G.catalog.prefabs.length}种机体。每个距离只选择一把期望伤害最高的合法武器，计入固定武装的覆盖范围。`,
+        `- 对手均匀取${referencePrefabs.length}种参考机体。每个距离只选择一把期望伤害最高的合法武器，计入固定武装的覆盖范围。`,
         "- 逐段枚举命中与格挡，沿用游戏的机动性、防御、伤害加成及盾牌损耗；不将格挡当成固定减伤，不把军刀第二段当作全伤害。",
-        "- 火力按70%短期爆发、30%按每回合15 EN恢复估算的续航加权。",
+        "- 火力按70%短期爆发、30%按没有自然EN恢复、按初始EN支持五回合战斗估算的续航加权。",
         "- 耐久威胁池覆盖全部机体、套件与武器：机体等权，机体内部套件等权，套件内部武器等权。有效耐久=HP×平均原始伤害/平均期望HP损伤，已计入盾牌、命中率与地形。",
-        "- 套件战力=sqrt(加权期望伤害×有效耐久)×(移动力/5)^0.65。平台值=75%最强套件+25%套件均值；套件计价值=80%平台值+20%套件自身战力。原始期望估值=200×计价值/扎古ⅡF平台值，仅作参考。最终COST=平台设计锚点×计价值/本平台值，四舍五入到25并限制在设计档位内。档位体现单位定位，套件相对溢价由期望值决定。",
+        "- 套件战力=sqrt(加权期望伤害×有效耐久)×(移动力/5)^0.65。平台值=75%最强套件+25%套件均值；套件计价值=80%平台值+20%套件自身战力。原始期望估值=200×计价值/扎古ⅡF平台值，仅作参考。旧档位期望估值仅保留作比较；发布基础COST=原MOD unitLevel÷4，四舍五入到25，再加统一武器套件费用。",
         "",
         "移动力只影响移动范围及估值的位置收益；机动性只通过命中公式影响生存能力。大魔为移动7格、机动85，不能用移动力推导回避能力。",
         "",

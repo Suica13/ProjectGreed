@@ -1,0 +1,4216 @@
+[
+  {
+    "id": "Army_Squad_EFSF_0079_N_G_A",
+    "faction": "EFSF",
+    "name": "步兵班[EFSF][0079]",
+    "source": "Units/BattleUnits/Army_Squad/Squad/Army_Squad_EFSF_0079_N_G_A.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      },
+      {
+        "id": "Stealth",
+        "source": "Template/Unit/Skill/Stealth.gw",
+        "status": "adapted",
+        "name": "隐蔽"
+      }
+    ]
+  },
+  {
+    "id": "Type61",
+    "faction": "EFSF",
+    "name": "61式主战坦克",
+    "source": "Units/BattleUnits/Type61/Type61.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      }
+    ]
+  },
+  {
+    "id": "Type74",
+    "faction": "EFSF",
+    "name": "气垫卡车",
+    "source": "Units/BattleUnits/Type74/Type74.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [
+      {
+        "id": "ReconScan",
+        "name": "战场侦察",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Hover",
+        "source": "Template/Unit/Skill/Hover.gw",
+        "status": "implemented",
+        "name": "气垫：仅在地面移动时循环"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "ReconScan",
+        "name": "ReconScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "AntiZakuTank",
+    "faction": "EFSF",
+    "name": "反扎古坦克",
+    "source": "Units/BattleUnits/AntiZakuTank/AntiZakuTank.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "FanFan",
+    "faction": "EFSF",
+    "name": "帆帆",
+    "source": "Units/BattleUnits/FanFan/FanFan.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "EF_Heli",
+    "faction": "EFSF",
+    "name": "战斗直升机[EFSF][0079]",
+    "source": "Units/BattleUnits/EF_Heli/EF_Heli.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "FF_4",
+    "faction": "EFSF",
+    "name": "托里亚斯",
+    "source": "Units/BattleUnits/FF_4/FF_4.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "FF_B2",
+    "faction": "EFSF",
+    "name": "飞鳐",
+    "source": "Units/BattleUnits/FF_B2/FF_B2.ini",
+    "status": "imported",
+    "weapons": 6,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "FF_6",
+    "faction": "EFSF",
+    "name": "听鳕",
+    "source": "Units/BattleUnits/FF_6/FF_6.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "FF_S3",
+    "faction": "EFSF",
+    "name": "剑鱼",
+    "source": "Units/BattleUnits/FF_S3/FF_S3.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "RFF_06",
+    "faction": "EFSF",
+    "name": "扎尼",
+    "source": "Units/BattleUnits/RFF_06/RFF_06.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [
+      {
+        "id": "ReconScan",
+        "name": "战场侦察",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "ReconScan",
+        "name": "ReconScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "Medea",
+    "faction": "EFSF",
+    "name": "米迪亚",
+    "source": "Units/BattleUnits/Medea/Medea.ini",
+    "status": "imported",
+    "weapons": 0,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "review",
+        "name": "展开／收起"
+      }
+    ]
+  },
+  {
+    "id": "EF_TorpedoBoat",
+    "faction": "EFSF",
+    "name": "鱼雷艇",
+    "source": "Units/BattleUnits/EF_TorpedoBoat/EF_TorpedoBoat.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "海军：只能在水域移动和部署",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "BurkeClass",
+    "faction": "EFSF",
+    "name": "伯克级驱逐舰",
+    "source": "Units/BattleUnits/BurkeClass/BurkeClass.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "海军：只能在水域移动和部署",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复：己方行动开始时消耗10 EN恢复10%HP"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "U_Type_Submarine",
+    "faction": "EFSF",
+    "name": "U型潜艇",
+    "source": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "海军：只能在水域移动和部署",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复：己方行动开始时消耗10 EN恢复10%HP"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "ChangeStyle",
+        "source": "Template/Unit/Skill/ChangeStyle.gw",
+        "status": "review",
+        "name": "姿态切换"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "Stealth_Aqua",
+        "source": "Template/Unit/Skill/Stealth_Aqua.gw",
+        "status": "adapted",
+        "name": "水下隐蔽"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "HimalayaClass",
+    "faction": "EFSF",
+    "name": "喜马拉雅级",
+    "source": "Units/BattleUnits/HimalayaClass/HimalayaClass.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "海军：只能在水域移动和部署",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "CmdAtk",
+        "source": "Template/Unit/Skill/CmdAtk.gw",
+        "status": "review",
+        "name": "攻击指挥"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "SalamisClass",
+    "faction": "EFSF",
+    "name": "萨拉米斯级",
+    "source": "Units/BattleUnits/SalamisClass/SalamisClass.ini",
+    "status": "existing",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "ColumbusClass",
+    "faction": "EFSF",
+    "name": "哥伦布级",
+    "source": "Units/BattleUnits/ColumbusClass/ColumbusClass.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "special_Common_ReEntry_NeedBooster",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "RGM_79_E",
+    "faction": "EFSF",
+    "name": "吉姆初期型",
+    "source": "Units/BattleUnits/RGM_79_E/RGM_79_E.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "Type61A5",
+    "faction": "EFSF",
+    "name": "61式主战坦克A5型",
+    "source": "Units/BattleUnits/Type61/Type61A5.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "Type74Kai",
+    "faction": "EFSF",
+    "name": "气垫卡车[寻血猎犬]",
+    "source": "Units/BattleUnits/Type74/Type74Kai.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [
+      {
+        "id": "ReconScan",
+        "name": "战场侦察",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Hover",
+        "source": "Template/Unit/Skill/Hover.gw",
+        "status": "implemented",
+        "name": "气垫：仅在地面移动时循环"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_DetectArea",
+        "name": "special_Common_DetectArea",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw",
+        "status": "review"
+      },
+      {
+        "id": "ReconScan",
+        "name": "ReconScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "Type61_SPG",
+    "faction": "EFSF",
+    "name": "61式主战坦克[榴弹炮搭载型]",
+    "source": "Units/BattleUnits/Type61_SPG/Type61_SPG.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "review",
+        "name": "展开／收起"
+      }
+    ]
+  },
+  {
+    "id": "MissileCar",
+    "faction": "EFSF",
+    "name": "导弹车",
+    "source": "Units/BattleUnits/MissileCar/MissileCar.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "EF_MinigunAPC",
+    "faction": "EFSF",
+    "name": "加特林装甲车",
+    "source": "Units/BattleUnits/EF_MinigunAPC/EF_MinigunAPC.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "Dash",
+    "faction": "EFSF",
+    "name": "天谍",
+    "source": "Units/BattleUnits/Dash/Dash.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_S",
+        "name": "special_Common_MinovskyParticle_S",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_S.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_DetectArea",
+        "name": "special_Common_DetectArea",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "DEPP_ROG",
+    "faction": "EFSF",
+    "name": "迪普·罗格",
+    "source": "Units/BattleUnits/DEPP_ROG/DEPP_ROG.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "DonEscargot",
+    "faction": "EFSF",
+    "name": "唐·埃斯卡特",
+    "source": "Units/BattleUnits/DonEscargot/DonEscargot.ini",
+    "status": "imported",
+    "weapons": 6,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "RB_79K",
+    "faction": "EFSF",
+    "name": "铁球K",
+    "source": "Units/BattleUnits/RB_79K/RB_79K.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "RB_79",
+    "faction": "EFSF",
+    "name": "铁球",
+    "source": "Units/BattleUnits/RB_79/RB_79.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      }
+    ]
+  },
+  {
+    "id": "M_Type_Submarine",
+    "faction": "EFSF",
+    "name": "M型潜水艇",
+    "source": "Units/BattleUnits/M_Type_Submarine/M_Type_Submarine.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "海军：只能在水域移动和部署",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "ChangeStyle",
+        "source": "Template/Unit/Skill/ChangeStyle.gw",
+        "status": "review",
+        "name": "姿态切换"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "Stealth_Aqua",
+        "source": "Template/Unit/Skill/Stealth_Aqua.gw",
+        "status": "adapted",
+        "name": "水下隐蔽"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "MiniTrayClass",
+    "faction": "EFSF",
+    "name": "小托盘级",
+    "source": "Units/BattleUnits/MiniTrayClass/MiniTrayClass.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "Hover",
+        "source": "Template/Unit/Skill/Hover.gw",
+        "status": "implemented",
+        "name": "气垫：仅在地面移动时循环"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "RX_79_G",
+    "faction": "EFSF",
+    "name": "陆战型高达",
+    "source": "Units/BattleUnits/RX_79_G/RX_79_G.ini",
+    "status": "existing",
+    "weapons": 8,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "RX_79_G_WithBackpack",
+    "faction": "EFSF",
+    "name": "陆战型高达[武器货柜]",
+    "source": "Units/BattleUnits/RX_79_G/RX_79_G_WithBackpack.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [
+      {
+        "id": "ExitUnit",
+        "name": "爆甲",
+        "type": "armor_purge"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "UnloadEquipment",
+        "source": "Template/Unit/Skill/UnloadEquipment.gw",
+        "status": "review",
+        "name": "装备分离"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "CustomUnit_PilotCustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit_PilotCustomUnit.gw",
+        "status": "not_applicable",
+        "name": "驾驶员专属改修"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "review",
+        "name": "防御指挥"
+      }
+    ]
+  },
+  {
+    "id": "RGM_79_G",
+    "faction": "EFSF",
+    "name": "陆战型吉姆",
+    "source": "Units/BattleUnits/RGM_79_G/RGM_79_G.ini",
+    "status": "existing",
+    "weapons": 7,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "RGM_79_G_WithBackpack",
+    "faction": "EFSF",
+    "name": "陆战型吉姆[武器货柜]",
+    "source": "Units/BattleUnits/RGM_79_G/RGM_79_G_WithBackpack.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "UnloadEquipment",
+        "source": "Template/Unit/Skill/UnloadEquipment.gw",
+        "status": "review",
+        "name": "装备分离"
+      }
+    ]
+  },
+  {
+    "id": "RGM_79_G_SPACE",
+    "faction": "EFSF",
+    "name": "先行量产型吉姆(宇宙式样)",
+    "source": "Units/BattleUnits/RGM_79_G_SPACE/RGM_79_G_SPACE.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      }
+    ]
+  },
+  {
+    "id": "RGM_79_G_SP",
+    "faction": "EFSF",
+    "name": "吉姆狙击型",
+    "source": "Units/BattleUnits/RGM_79_G_SP/RGM_79_G_SP.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "RX_75R",
+    "faction": "EFSF",
+    "name": "量产型钢坦克",
+    "source": "Units/BattleUnits/RX_75R/RX_75R.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "review",
+        "name": "展开／收起"
+      }
+    ]
+  },
+  {
+    "id": "RB_79N",
+    "faction": "EFSF",
+    "name": "鱼眼",
+    "source": "Units/BattleUnits/RB_79N/RB_79N.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "海军：只能在水域移动和部署",
+        "status": "implemented"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "RB_79M",
+    "faction": "EFSF",
+    "name": "铁球M型",
+    "source": "Units/BattleUnits/RB_79M/RB_79M.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "special_Common_MineLauncher_Continuous_Back_Space_RB_79M",
+        "name": "special_Common_MineLauncher_Continuous_Back_Space_RB_79M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Space_RB_79M.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_CameraGun",
+        "name": "special_Common_CameraGun",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_CameraGun.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "BigTrayClass",
+    "faction": "EFSF",
+    "name": "大托盘级",
+    "source": "Units/BattleUnits/BigTrayClass/BigTrayClass.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "Hover",
+        "source": "Template/Unit/Skill/Hover.gw",
+        "status": "implemented",
+        "name": "气垫：仅在地面移动时循环"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MagellanClass",
+    "faction": "EFSF",
+    "name": "麦哲伦级",
+    "source": "Units/BattleUnits/MagellanClass/MagellanClass.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复：己方行动开始时消耗10 EN恢复10%HP"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "review",
+        "name": "防御指挥"
+      },
+      {
+        "id": "CustomUnit_NewUnit",
+        "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+        "status": "review",
+        "name": "改修生成新机体"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "special_Common_ReEntry_NeedBooster",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "RX_78_2",
+    "faction": "EFSF",
+    "name": "高达",
+    "source": "Units/BattleUnits/RX_78_2/RX_78_2.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [
+      {
+        "id": "ExitUnit",
+        "name": "脱出",
+        "type": "escape"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "ExitUnit_NewUnit",
+        "source": "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+        "status": "implemented",
+        "name": "核心战斗机脱出：移除原机体，生成FF-X7"
+      },
+      {
+        "id": "LPC",
+        "source": "Template/Unit/Skill/LPC.gw",
+        "status": "review",
+        "name": "低压弹射"
+      },
+      {
+        "id": "FuseUnit_B",
+        "source": "Template/Unit/Skill/FuseUnit_B.gw",
+        "status": "review",
+        "name": "合体"
+      },
+      {
+        "id": "special_Common_ReEntry_MS_FromSpace",
+        "name": "special_Common_ReEntry_MS_FromSpace",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_MS_FromSpace.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "RX_77_2",
+    "faction": "EFSF",
+    "name": "钢加农",
+    "source": "Units/BattleUnits/RX_77_2/RX_77_2.ini",
+    "status": "imported",
+    "weapons": 10,
+    "skills": [
+      {
+        "id": "ExitUnit",
+        "name": "脱出",
+        "type": "escape"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "ExitUnit_NewUnit",
+        "source": "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+        "status": "implemented",
+        "name": "核心战斗机脱出：移除原机体，生成FF-X7"
+      },
+      {
+        "id": "LPC",
+        "source": "Template/Unit/Skill/LPC.gw",
+        "status": "review",
+        "name": "低压弹射"
+      }
+    ]
+  },
+  {
+    "id": "RX_75",
+    "faction": "EFSF",
+    "name": "钢坦克",
+    "source": "Units/BattleUnits/RX_75/RX_75.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [
+      {
+        "id": "ExitUnit",
+        "name": "脱出",
+        "type": "escape"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "ExitUnit_NewUnit",
+        "source": "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+        "status": "implemented",
+        "name": "核心战斗机脱出：移除原机体，生成FF-X7"
+      },
+      {
+        "id": "LPC",
+        "source": "Template/Unit/Skill/LPC.gw",
+        "status": "review",
+        "name": "低压弹射"
+      }
+    ]
+  },
+  {
+    "id": "RX_78_1",
+    "faction": "EFSF",
+    "name": "试作型高达",
+    "source": "Units/BattleUnits/RX_78_1/RX_78_1.ini",
+    "status": "existing",
+    "weapons": 8,
+    "skills": [
+      {
+        "id": "ExitUnit",
+        "name": "脱出",
+        "type": "escape"
+      }
+    ],
+    "mechanics": []
+  },
+  {
+    "id": "FF_X7",
+    "faction": "EFSF",
+    "name": "核心战斗机",
+    "source": "Units/BattleUnits/FF_X7/FF_X7.ini",
+    "status": "existing",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "FF_X7Bst",
+    "faction": "EFSF",
+    "name": "核心推进器",
+    "source": "Units/BattleUnits/FF_X7Bst/FF_X7Bst.ini",
+    "status": "imported",
+    "weapons": 6,
+    "skills": [
+      {
+        "id": "ExitUnit",
+        "name": "爆甲",
+        "type": "armor_purge"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      },
+      {
+        "id": "SFS",
+        "source": "Template/Unit/Skill/SFS.gw",
+        "status": "review",
+        "name": "辅助飞行平台"
+      },
+      {
+        "id": "ExitUnit",
+        "source": "Template/Unit/Skill/ExitUnit.gw",
+        "status": "adapted",
+        "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
+      },
+      {
+        "id": "LPC",
+        "source": "Template/Unit/Skill/LPC.gw",
+        "status": "review",
+        "name": "低压弹射"
+      }
+    ]
+  },
+  {
+    "id": "FFB_7Bst",
+    "faction": "EFSF",
+    "name": "喷气核心推进器",
+    "source": "Units/BattleUnits/FFB_7Bst/FFB_7Bst.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      },
+      {
+        "id": "SFS",
+        "source": "Template/Unit/Skill/SFS.gw",
+        "status": "review",
+        "name": "辅助飞行平台"
+      }
+    ]
+  },
+  {
+    "id": "Gunperry",
+    "faction": "EFSF",
+    "name": "钢佩利",
+    "source": "Units/BattleUnits/Gunperry/Gunperry.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "review",
+        "name": "展开／收起"
+      },
+      {
+        "id": "special_Common_SmokingLauncher_NowPos",
+        "name": "special_Common_SmokingLauncher_NowPos",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_S",
+        "name": "special_Common_MinovskyParticle_S",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_S.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "PegasusClass",
+    "faction": "EFSF",
+    "name": "飞马级",
+    "source": "Units/BattleUnits/PegasusClass/PegasusClass.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "review",
+        "name": "防御指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry",
+        "name": "special_Common_ReEntry",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_FromSpace",
+        "name": "special_Common_ReEntry_FromSpace",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_Both",
+        "name": "special_Common_ReEntry_Both",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MagellanClass_Green",
+    "faction": "EFSF",
+    "name": "麦哲伦级[指挥舰]",
+    "source": "Units/BattleUnits/MagellanClass_Green/MagellanClass_Green.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复：己方行动开始时消耗10 EN恢复10%HP"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "review",
+        "name": "防御指挥"
+      },
+      {
+        "id": "CustomUnit_NewUnit",
+        "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+        "status": "review",
+        "name": "改修生成新机体"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "special_Common_ReEntry_NeedBooster",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "RGM_79",
+    "faction": "EFSF",
+    "name": "吉姆",
+    "source": "Units/BattleUnits/RGM_79/RGM_79.ini",
+    "status": "existing",
+    "weapons": 6,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "RGM_79_Commander",
+    "faction": "EFSF",
+    "name": "吉姆[指挥官机]",
+    "source": "Units/BattleUnits/RGM_79/RGM_79_Commander.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      }
+    ]
+  },
+  {
+    "id": "MedeaKai",
+    "faction": "EFSF",
+    "name": "米迪亚改",
+    "source": "Units/BattleUnits/MedeaKai/MedeaKai.ini",
+    "status": "imported",
+    "weapons": 0,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "review",
+        "name": "展开／收起"
+      }
+    ]
+  },
+  {
+    "id": "RX_79_BD_1",
+    "faction": "EFSF",
+    "name": "苍蓝宿命一号机",
+    "source": "Units/BattleUnits/RX_79_BD_1/RX_79_BD_1.ini",
+    "status": "imported",
+    "weapons": 9,
+    "skills": [
+      {
+        "id": "EXAM",
+        "name": "EXAM系统",
+        "type": "overdrive"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "Exam_Off",
+        "source": "Template/Unit/Skill/Exam_Off.gw",
+        "status": "adapted",
+        "name": "EXAM：25%EN启动，强化3回合，每回合消耗10%耐久和5%EN"
+      }
+    ]
+  },
+  {
+    "id": "RX_80PR",
+    "faction": "EFSF",
+    "name": "苍白骑士",
+    "source": "Units/BattleUnits/RX_80PR/RX_80PR.ini",
+    "status": "imported",
+    "weapons": 11,
+    "skills": [
+      {
+        "id": "HADES",
+        "name": "HADES系统",
+        "type": "overdrive"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "HADES_Off",
+        "source": "Template/Unit/Skill/HADES_Off.gw",
+        "status": "adapted",
+        "name": "HADES：25%EN启动，强化3回合，每回合消耗10%耐久和5%EN"
+      }
+    ]
+  },
+  {
+    "id": "HeavyForkClass",
+    "faction": "EFSF",
+    "name": "重叉级",
+    "source": "Units/BattleUnits/HeavyForkClass/HeavyForkClass.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复：己方行动开始时消耗10 EN恢复10%HP"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "Hover",
+        "source": "Template/Unit/Skill/Hover.gw",
+        "status": "implemented",
+        "name": "气垫：仅在地面移动时循环"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "RX_80PR_GroundType",
+    "faction": "EFSF",
+    "name": "苍白骑士[陆战重装备规格]",
+    "source": "Units/BattleUnits/RX_80PR/RX_80PR_GroundType.ini",
+    "status": "imported",
+    "weapons": 11,
+    "skills": [
+      {
+        "id": "HADES",
+        "name": "HADES系统",
+        "type": "overdrive"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "HADES_Off",
+        "source": "Template/Unit/Skill/HADES_Off.gw",
+        "status": "adapted",
+        "name": "HADES：25%EN启动，强化3回合，每回合消耗10%耐久和5%EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "RX_80PR_2",
+    "faction": "EFSF",
+    "name": "苍白骑兵",
+    "source": "Units/BattleUnits/RX_80PR_2/RX_80PR_2.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [
+      {
+        "id": "HADES",
+        "name": "HADES系统",
+        "type": "overdrive"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "HADES_PR2_Off",
+        "source": "Template/Unit/Skill/HADES_PR2_Off.gw",
+        "status": "adapted",
+        "name": "HADES：25%EN启动，强化3回合，每回合消耗10%耐久和5%EN"
+      }
+    ]
+  },
+  {
+    "id": "RX_79_BD_2",
+    "faction": "EFSF",
+    "name": "苍蓝宿命二号机",
+    "source": "Units/BattleUnits/RX_79_BD_2/RX_79_BD_2.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [
+      {
+        "id": "EXAM",
+        "name": "EXAM系统",
+        "type": "overdrive"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "CustomUnit_PilotCustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit_PilotCustomUnit.gw",
+        "status": "not_applicable",
+        "name": "驾驶员专属改修"
+      },
+      {
+        "id": "Exam_Off",
+        "source": "Template/Unit/Skill/Exam_Off.gw",
+        "status": "adapted",
+        "name": "EXAM：25%EN启动，强化3回合，每回合消耗10%耐久和5%EN"
+      }
+    ]
+  },
+  {
+    "id": "RGM_79DO",
+    "faction": "EFSF",
+    "name": "吉姆优越型",
+    "source": "Units/BattleUnits/RGM_79DO/RGM_79DO.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      }
+    ]
+  },
+  {
+    "id": "RX_77_3",
+    "faction": "EFSF",
+    "name": "钢加农重装型",
+    "source": "Units/BattleUnits/RX_77_3/RX_77_3.ini",
+    "status": "imported",
+    "weapons": 10,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "RX_77_3D",
+    "faction": "EFSF",
+    "name": "钢加农重装型D",
+    "source": "Units/BattleUnits/RX_77_3D/RX_77_3D.ini",
+    "status": "imported",
+    "weapons": 11,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "RX_78XX",
+    "faction": "EFSF",
+    "name": "精灵高达",
+    "source": "Units/BattleUnits/RX_78XX/RX_78XX.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Stealth",
+        "source": "Template/Unit/Skill/Stealth.gw",
+        "status": "adapted",
+        "name": "隐蔽"
+      },
+      {
+        "id": "AntiDetect",
+        "source": "Template/Unit/Skill/AntiDetect.gw",
+        "status": "review",
+        "name": "反侦测"
+      },
+      {
+        "id": "special_Common_ThunderStrike",
+        "name": "special_Common_ThunderStrike",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ThunderStrike.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "RTX_440",
+    "faction": "EFSF",
+    "name": "强袭型钢坦克",
+    "source": "Units/BattleUnits/RTX_440/RTX_440.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Transform_LandLand_Tank",
+        "source": "Template/Unit/Skill/Transform_LandLand_Tank.gw",
+        "status": "review",
+        "name": "MS／坦克变形"
+      },
+      {
+        "id": "special_Common_MineLauncher_Continuous_Back_Ground_RTX_440",
+        "name": "special_Common_MineLauncher_Continuous_Back_Ground_RTX_440",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Ground_RTX_440.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "RMV_1",
+    "faction": "EFSF",
+    "name": "钢坦克II",
+    "source": "Units/BattleUnits/RMV_1/RMV_1.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "special_Common_SmokingLauncher_NowPos",
+        "name": "special_Common_SmokingLauncher_NowPos",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "Army_Squad_ZEON_0079_N_G_A",
+    "faction": "ZEON",
+    "name": "步兵班[ZEON][0079]",
+    "source": "Units/BattleUnits/Army_Squad/Squad/Army_Squad_ZEON_0079_N_G_A.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      },
+      {
+        "id": "Stealth",
+        "source": "Template/Unit/Skill/Stealth.gw",
+        "status": "adapted",
+        "name": "隐蔽"
+      }
+    ]
+  },
+  {
+    "id": "MTank",
+    "faction": "ZEON",
+    "name": "马哲兰坦克",
+    "source": "Units/BattleUnits/MTank/MTank.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [
+      {
+        "id": "ExitUnit",
+        "name": "脱出",
+        "type": "escape"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "ExitUnit",
+        "source": "Template/Unit/Skill/ExitUnit.gw",
+        "status": "adapted",
+        "name": "脱出：原生形态转换，资源与部位规则使用显式配置"
+      }
+    ]
+  },
+  {
+    "id": "SamsonGroundTransportTruck",
+    "faction": "ZEON",
+    "name": "萨姆森运输卡车",
+    "source": "Units/BattleUnits/SamsonGroundTransportTruck/SamsonGroundTransportTruck.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      }
+    ]
+  },
+  {
+    "id": "ZN_APC",
+    "faction": "ZEON",
+    "name": "装甲车",
+    "source": "Units/BattleUnits/ZN_APC/ZN_APC.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "Wappa",
+    "faction": "ZEON",
+    "name": "瓦帕",
+    "source": "Units/BattleUnits/Wappa/Wappa.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Hover",
+        "source": "Template/Unit/Skill/Hover.gw",
+        "status": "implemented",
+        "name": "气垫：仅在地面移动时循环"
+      },
+      {
+        "id": "Stealth",
+        "source": "Template/Unit/Skill/Stealth.gw",
+        "status": "adapted",
+        "name": "隐蔽"
+      }
+    ]
+  },
+  {
+    "id": "ZN_Heli",
+    "faction": "ZEON",
+    "name": "战斗直升机[ZEON][0079]",
+    "source": "Units/BattleUnits/ZN_Heli/ZN_Heli.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "FatUncle",
+    "faction": "ZEON",
+    "name": "胖叔叔",
+    "source": "Units/BattleUnits/FatUncle/FatUncle.ini",
+    "status": "imported",
+    "weapons": 0,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "review",
+        "name": "展开／收起"
+      }
+    ]
+  },
+  {
+    "id": "Dopp",
+    "faction": "ZEON",
+    "name": "多普",
+    "source": "Units/BattleUnits/Dopp/Dopp.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "DodaiYS",
+    "faction": "ZEON",
+    "name": "德戴 YS",
+    "source": "Units/BattleUnits/Dodai/DodaiYS.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      },
+      {
+        "id": "SFS",
+        "source": "Template/Unit/Skill/SFS.gw",
+        "status": "review",
+        "name": "辅助飞行平台"
+      }
+    ]
+  },
+  {
+    "id": "MS_05",
+    "faction": "ZEON",
+    "name": "旧扎古",
+    "source": "Units/BattleUnits/MS_05/MS_05.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MS_06C",
+    "faction": "ZEON",
+    "name": "扎古II C型",
+    "source": "Units/BattleUnits/MS_06F/MS_06C.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit_NewUnit",
+        "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+        "status": "review",
+        "name": "改修生成新机体"
+      }
+    ]
+  },
+  {
+    "id": "MS_06F",
+    "faction": "ZEON",
+    "name": "扎古II F型",
+    "source": "Units/BattleUnits/MS_06F/MS_06F.ini",
+    "status": "existing",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "MS_06S",
+    "faction": "ZEON",
+    "name": "扎古II S型",
+    "source": "Units/BattleUnits/MS_06F/MS_06S.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "CustomUnit_PilotCustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit_PilotCustomUnit.gw",
+        "status": "not_applicable",
+        "name": "驾驶员专属改修"
+      }
+    ]
+  },
+  {
+    "id": "Gattle",
+    "faction": "ZEON",
+    "name": "卡托尔",
+    "source": "Units/BattleUnits/Gattle/Gattle.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "JiccoClass",
+    "faction": "ZEON",
+    "name": "吉科级",
+    "source": "Units/BattleUnits/JiccoClass/JiccoClass.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "U_Type_Submarine_ZEON",
+    "faction": "ZEON",
+    "name": "尤康级",
+    "source": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_ZEON.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "海军：只能在水域移动和部署",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复：己方行动开始时消耗10 EN恢复10%HP"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "ChangeStyle",
+        "source": "Template/Unit/Skill/ChangeStyle.gw",
+        "status": "review",
+        "name": "姿态切换"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "Stealth_Aqua",
+        "source": "Template/Unit/Skill/Stealth_Aqua.gw",
+        "status": "adapted",
+        "name": "水下隐蔽"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "MusaiClass",
+    "faction": "ZEON",
+    "name": "姆塞级",
+    "source": "Units/BattleUnits/MusaiClass/MusaiClass.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CustomUnit_NewUnit",
+        "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+        "status": "review",
+        "name": "改修生成新机体"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "special_Common_ReEntry_NeedBooster",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "PapuaClass",
+    "faction": "ZEON",
+    "name": "巴布亚级",
+    "source": "Units/BattleUnits/PapuaClass/PapuaClass.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "special_Common_ReEntry_NeedBooster",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MS_06J",
+    "faction": "ZEON",
+    "name": "扎古II J型",
+    "source": "Units/BattleUnits/MS_06J/MS_06J.ini",
+    "status": "existing",
+    "weapons": 6,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "MS_07B",
+    "faction": "ZEON",
+    "name": "老虎 B型",
+    "source": "Units/BattleUnits/MS_07B/MS_07B.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      }
+    ]
+  },
+  {
+    "id": "MS_06K",
+    "faction": "ZEON",
+    "name": "扎古加农",
+    "source": "Units/BattleUnits/MS_06K/MS_06K.ini",
+    "status": "existing",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "MS_06M",
+    "faction": "ZEON",
+    "name": "水中型扎古",
+    "source": "Units/BattleUnits/MS_06M/MS_06M.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "两栖：可穿越陆地与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "MS_06R_1",
+    "faction": "ZEON",
+    "name": "扎古II高机动型R-1",
+    "source": "Units/BattleUnits/MS_06R_1/MS_06R_1.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      }
+    ]
+  },
+  {
+    "id": "MS_06F_MineLayer",
+    "faction": "ZEON",
+    "name": "扎古II[布雷者]",
+    "source": "Units/BattleUnits/MS_06F/MS_06F_MineLayer.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "special_Common_MineLauncher_Continuous_Back_Space",
+        "name": "special_Common_MineLauncher_Continuous_Back_Space",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Space.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MSM_03",
+    "faction": "ZEON",
+    "name": "战蟹",
+    "source": "Units/BattleUnits/MSM_03/MSM_03.ini",
+    "status": "imported",
+    "weapons": 6,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "两栖：可穿越陆地与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "AntiDetect_Aqua",
+        "source": "Template/Unit/Skill/AntiDetect_Aqua.gw",
+        "status": "review",
+        "name": "水下反侦测"
+      },
+      {
+        "id": "Stealth_Aqua",
+        "source": "Template/Unit/Skill/Stealth_Aqua.gw",
+        "status": "adapted",
+        "name": "水下隐蔽"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "Cui",
+    "faction": "ZEON",
+    "name": "邱伊",
+    "source": "Units/BattleUnits/Cui/Cui.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      }
+    ]
+  },
+  {
+    "id": "Luggun",
+    "faction": "ZEON",
+    "name": "鲁艮",
+    "source": "Units/BattleUnits/Luggun/Luggun.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [
+      {
+        "id": "ReconScan",
+        "name": "战场侦察",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      },
+      {
+        "id": "special_Common_DetectArea",
+        "name": "special_Common_DetectArea",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_S",
+        "name": "special_Common_MinovskyParticle_S",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_S.gw",
+        "status": "review"
+      },
+      {
+        "id": "ReconScan",
+        "name": "ReconScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "ZN_APC_WithMS",
+    "faction": "ZEON",
+    "name": "装甲车[加装导弹]",
+    "source": "Units/BattleUnits/ZN_APC/ZN_APC_WithMS.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "M_Type_Submarine_ZEON",
+    "faction": "ZEON",
+    "name": "魔鲨级",
+    "source": "Units/BattleUnits/M_Type_Submarine/M_Type_Submarine_ZEON.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "海军：只能在水域移动和部署",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "ChangeStyle",
+        "source": "Template/Unit/Skill/ChangeStyle.gw",
+        "status": "review",
+        "name": "姿态切换"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "Stealth_Aqua",
+        "source": "Template/Unit/Skill/Stealth_Aqua.gw",
+        "status": "adapted",
+        "name": "水下隐蔽"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "FalmerClass",
+    "faction": "ZEON",
+    "name": "法梅尔级",
+    "source": "Units/BattleUnits/FalmerClass/FalmerClass.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MS_07B3",
+    "faction": "ZEON",
+    "name": "老虎特装型",
+    "source": "Units/BattleUnits/MS_07B3/MS_07B3.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      }
+    ]
+  },
+  {
+    "id": "MS_06G",
+    "faction": "ZEON",
+    "name": "扎古II陆战高机动型",
+    "source": "Units/BattleUnits/MS_06G/MS_06G.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MS_06E",
+    "faction": "ZEON",
+    "name": "扎古强行侦查型",
+    "source": "Units/BattleUnits/MS_06E/MS_06E.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [
+      {
+        "id": "ReconScan",
+        "name": "战场侦察",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "special_Common_DetectArea",
+        "name": "special_Common_DetectArea",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_CameraGun",
+        "name": "special_Common_CameraGun",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_CameraGun.gw",
+        "status": "review"
+      },
+      {
+        "id": "ReconScan",
+        "name": "ReconScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "MS_06R_1A",
+    "faction": "ZEON",
+    "name": "扎古II高机动型R-1A",
+    "source": "Units/BattleUnits/MS_06R_1/MS_06R_1A.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MS_06D",
+    "faction": "ZEON",
+    "name": "扎古沙漠型",
+    "source": "Units/BattleUnits/MS_06D/MS_06D.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MS_06V",
+    "faction": "ZEON",
+    "name": "扎古坦克",
+    "source": "Units/BattleUnits/MS_06V/MS_06V.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "review",
+        "name": "展开／收起"
+      }
+    ]
+  },
+  {
+    "id": "MTank_Eins",
+    "faction": "ZEON",
+    "name": "马哲兰坦克一型",
+    "source": "Units/BattleUnits/MTank_Eins/MTank_Eins.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MSM_04",
+    "faction": "ZEON",
+    "name": "亚凯",
+    "source": "Units/BattleUnits/MSM_04/MSM_04.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [
+      {
+        "id": "SonarScan",
+        "name": "声呐搜索",
+        "type": "recon"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "两栖：可穿越陆地与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "AntiDetect_Aqua",
+        "source": "Template/Unit/Skill/AntiDetect_Aqua.gw",
+        "status": "review",
+        "name": "水下反侦测"
+      },
+      {
+        "id": "Stealth_Aqua",
+        "source": "Template/Unit/Skill/Stealth_Aqua.gw",
+        "status": "adapted",
+        "name": "水下隐蔽"
+      },
+      {
+        "id": "Sonar",
+        "source": "Template/Unit/Skill/Sonar.gw",
+        "status": "adapted",
+        "name": "声呐"
+      },
+      {
+        "id": "SonarScan",
+        "name": "SonarScan",
+        "status": "adapted"
+      }
+    ]
+  },
+  {
+    "id": "DabudeClass",
+    "faction": "ZEON",
+    "name": "达布德级",
+    "source": "Units/BattleUnits/DabudeClass/DabudeClass.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "ChivvayClass",
+    "faction": "ZEON",
+    "name": "契贝级",
+    "source": "Units/BattleUnits/ChivvayClass/ChivvayClass.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "review",
+        "name": "防御指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "CustomUnit_NewUnit",
+        "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+        "status": "review",
+        "name": "改修生成新机体"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "special_Common_ReEntry_NeedBooster",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MS_09",
+    "faction": "ZEON",
+    "name": "大魔",
+    "source": "Units/BattleUnits/MS_09/MS_09.ini",
+    "status": "existing",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "MS_09R",
+    "faction": "ZEON",
+    "name": "力克大魔",
+    "source": "Units/BattleUnits/MS_09/MS_09R.ini",
+    "status": "existing",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "MS_07A",
+    "faction": "ZEON",
+    "name": "老虎 A型",
+    "source": "Units/BattleUnits/MS_07B/MS_07A.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      }
+    ]
+  },
+  {
+    "id": "MAX_03",
+    "faction": "ZEON",
+    "name": "阿萨姆",
+    "source": "Units/BattleUnits/MAX_03/MAX_03.ini",
+    "status": "imported",
+    "weapons": 1,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "FlyHover",
+        "source": "Template/Unit/Skill/FlyHover.gw",
+        "status": "review",
+        "name": "悬浮飞行"
+      },
+      {
+        "id": "FlyUnit",
+        "source": "Template/Unit/Skill/FlyUnit.gw",
+        "status": "review",
+        "name": "飞行模式"
+      },
+      {
+        "id": "Unit_BreakableTurret",
+        "source": "Template/Unit/Skill/Unit_BreakableTurret.gw",
+        "status": "implemented",
+        "name": "独立炮塔损毁"
+      }
+    ]
+  },
+  {
+    "id": "GawClass",
+    "faction": "ZEON",
+    "name": "加乌级",
+    "source": "Units/BattleUnits/GawClass/GawClass.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "GallopClass",
+    "faction": "ZEON",
+    "name": "盖洛普级",
+    "source": "Units/BattleUnits/GallopClass/GallopClass.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "Hover",
+        "source": "Template/Unit/Skill/Hover.gw",
+        "status": "implemented",
+        "name": "气垫：仅在地面移动时循环"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "ZanzibarClass",
+    "faction": "ZEON",
+    "name": "桑吉巴尔级",
+    "source": "Units/BattleUnits/ZanzibarClass/ZanzibarClass.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "review",
+        "name": "防御指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "special_Common_ReEntry_NeedBooster",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_FromSpace",
+        "name": "special_Common_ReEntry_FromSpace",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster_Both",
+        "name": "special_Common_ReEntry_NeedBooster_Both",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster_Both.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "GwazineClass",
+    "faction": "ZEON",
+    "name": "格瓦金级",
+    "source": "Units/BattleUnits/GwazineClass/GwazineClass.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "review",
+        "name": "防御指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "SupplyPoint_UseEN",
+        "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_MinovskyParticle_M",
+        "name": "special_Common_MinovskyParticle_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "special_Common_ReEntry_NeedBooster",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MS_06F2",
+    "faction": "ZEON",
+    "name": "扎古II F2后期型",
+    "source": "Units/BattleUnits/MS_06F2/MS_06F2.ini",
+    "status": "existing",
+    "weapons": 6,
+    "skills": [],
+    "mechanics": []
+  },
+  {
+    "id": "MS_06F2_Commander",
+    "faction": "ZEON",
+    "name": "扎古II后期型[指挥官机]",
+    "source": "Units/BattleUnits/MS_06F2/MS_06F2_Commander.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      }
+    ]
+  },
+  {
+    "id": "MS_05SP",
+    "faction": "ZEON",
+    "name": "扎古狙击型",
+    "source": "Units/BattleUnits/MS_05SP/MS_05SP.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      }
+    ]
+  },
+  {
+    "id": "MS_06JK",
+    "faction": "ZEON",
+    "name": "扎古半加农",
+    "source": "Units/BattleUnits/MS_06JK/MS_06JK.ini",
+    "status": "imported",
+    "weapons": 6,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MS_09D",
+    "faction": "ZEON",
+    "name": "大魔热带式样",
+    "source": "Units/BattleUnits/MS_09D/MS_09D.ini",
+    "status": "imported",
+    "weapons": 6,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "Hover",
+        "source": "Template/Unit/Skill/Hover.gw",
+        "status": "implemented",
+        "name": "气垫：仅在地面移动时循环"
+      }
+    ]
+  },
+  {
+    "id": "FatUncleKai",
+    "faction": "ZEON",
+    "name": "胖叔叔改",
+    "source": "Units/BattleUnits/FatUncleKai/FatUncleKai.ini",
+    "status": "imported",
+    "weapons": 0,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "review",
+        "name": "展开／收起"
+      }
+    ]
+  },
+  {
+    "id": "EMS_10",
+    "faction": "ZEON",
+    "name": "兹达",
+    "source": "Units/BattleUnits/EMS_10/EMS_10.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "special_Common_OverBoost",
+        "name": "special_Common_OverBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_OverBoost.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "EMS_10_1",
+    "faction": "ZEON",
+    "name": "兹达[指挥官机]",
+    "source": "Units/BattleUnits/EMS_10_1/EMS_10_1.ini",
+    "status": "imported",
+    "weapons": 8,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "special_Common_OverBoost",
+        "name": "special_Common_OverBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_OverBoost.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MP_02A",
+    "faction": "ZEON",
+    "name": "食人魔",
+    "source": "Units/BattleUnits/MP_02A/MP_02A.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "YMT_05",
+    "faction": "ZEON",
+    "name": "斗狼",
+    "source": "Units/BattleUnits/YMT_05/YMT_05.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [
+      {
+        "id": "Transform",
+        "name": "变形",
+        "type": "transform"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Transform_LandLand_Tank",
+        "source": "Template/Unit/Skill/Transform_LandLand_Tank.gw",
+        "status": "adapted",
+        "name": "变形：原生形态转换，资源与部位规则使用显式配置"
+      },
+      {
+        "id": "HoverEffect",
+        "source": "Template/Unit/Skill/HoverEffect.gw",
+        "status": "implemented",
+        "name": "气垫：仅在地面移动时循环"
+      },
+      {
+        "id": "special_Common_SmokingLauncher_NowPos",
+        "name": "special_Common_SmokingLauncher_NowPos",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "JotunheimClass",
+    "faction": "ZEON",
+    "name": "尤顿海姆级",
+    "source": "Units/BattleUnits/JotunheimClass/JotunheimClass.ini",
+    "status": "imported",
+    "weapons": 2,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复已并入补给光环（无EN消耗）"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "review",
+        "name": "搭载与放出"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "SupplyPoint",
+        "source": "Template/Unit/Skill/SupplyPoint.gw",
+        "status": "adapted",
+        "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MS_10",
+    "faction": "ZEON",
+    "name": "培曾·多瓦吉",
+    "source": "Units/BattleUnits/MS_10/MS_10.ini",
+    "status": "imported",
+    "weapons": 9,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MS_11",
+    "faction": "ZEON",
+    "name": "机动扎古",
+    "source": "Units/BattleUnits/MS_11/MS_11.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MS_11S",
+    "faction": "ZEON",
+    "name": "机动扎古[指挥官式样]",
+    "source": "Units/BattleUnits/MS_11S/MS_11S.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "review",
+        "name": "通信指挥"
+      },
+      {
+        "id": "special_Common_FullBoost",
+        "name": "special_Common_FullBoost",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MS_12",
+    "faction": "ZEON",
+    "name": "吉刚",
+    "source": "Units/BattleUnits/MS_12/MS_12.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MS_08TX",
+    "faction": "ZEON",
+    "name": "伊芙利特",
+    "source": "Units/BattleUnits/MS_08TX/MS_08TX.ini",
+    "status": "imported",
+    "weapons": 7,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdAtk",
+        "source": "Template/Unit/Skill/CmdAtk.gw",
+        "status": "review",
+        "name": "攻击指挥"
+      }
+    ]
+  },
+  {
+    "id": "MS_07H",
+    "faction": "ZEON",
+    "name": "老虎飞行实验型",
+    "source": "Units/BattleUnits/MS_07H/MS_07H.ini",
+    "status": "imported",
+    "weapons": 5,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "FlyStyle",
+        "source": "Template/Unit/Skill/FlyStyle.gw",
+        "status": "review",
+        "name": "飞行形态"
+      }
+    ]
+  },
+  {
+    "id": "MS_08TX_Kai",
+    "faction": "ZEON",
+    "name": "伊芙利特改",
+    "source": "Units/BattleUnits/MS_08TX_Kai/MS_08TX_Kai.ini",
+    "status": "imported",
+    "weapons": 6,
+    "skills": [
+      {
+        "id": "EXAM",
+        "name": "EXAM系统",
+        "type": "overdrive"
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Exam_Off",
+        "source": "Template/Unit/Skill/Exam_Off.gw",
+        "status": "adapted",
+        "name": "EXAM：25%EN启动，强化3回合，每回合消耗10%耐久和5%EN"
+      }
+    ]
+  },
+  {
+    "id": "ApsarasII",
+    "faction": "ZEON",
+    "name": "阿普萨拉斯II",
+    "source": "Units/BattleUnits/ApsarasII/ApsarasII.ini",
+    "status": "imported",
+    "weapons": 3,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "FlyHover",
+        "source": "Template/Unit/Skill/FlyHover.gw",
+        "status": "review",
+        "name": "悬浮飞行"
+      },
+      {
+        "id": "FlyUnit",
+        "source": "Template/Unit/Skill/FlyUnit.gw",
+        "status": "review",
+        "name": "飞行模式"
+      },
+      {
+        "id": "special_Common_ReEntry_FromSpace",
+        "name": "special_Common_ReEntry_FromSpace",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_EMP_M",
+        "name": "special_Common_EMP_M",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_EMP_M.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MS_07H8",
+    "faction": "ZEON",
+    "name": "老虎飞行型",
+    "source": "Units/BattleUnits/MS_07H8/MS_07H8.ini",
+    "status": "imported",
+    "weapons": 4,
+    "skills": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "FlyStyle",
+        "source": "Template/Unit/Skill/FlyStyle.gw",
+        "status": "review",
+        "name": "飞行形态"
+      }
+    ]
+  }
+]

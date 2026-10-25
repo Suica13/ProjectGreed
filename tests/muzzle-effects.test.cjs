@@ -39,6 +39,10 @@ test("every ranged weapon resolves native muzzle sprites for each selected barre
         assert.equal(w.muzzleEffects, undefined);
         continue;
       }
+      if (!w.muzzleEffects && w.source?.muzzleNote) {
+        assert.equal(w.source.muzzleNote, "Native weapon has no standalone muzzle flash");
+        continue;
+      }
       assert.ok(w.muzzleEffects.length > 0, p.id + ":" + id);
       for (const effect of w.muzzleEffects) {
         const e = ART.effects[effect];
@@ -130,4 +134,27 @@ test("detached bazooka flashes stay at the original muzzle and finish before the
   f.draws.length = 0;
   f.fx.drawMuzzle({}, f.w, f.plan, last.at + duration + 0.01, f.source, f.event);
   assert.equal(f.draws.length, 0);
+});
+
+test("each Salamis anti-air turret alternates its own barrels independently during simultaneous volleys", () => {
+  const f = fixture("SalamisClass__standard", "SalamisClass_Turret_AA");
+  assert.deepEqual(Array.from(f.w.attack.muzzleShotIndices.slice(0, 8)), [0, 0, 0, 0, 1, 1, 1, 1]);
+  for (let mount = 0; mount < 4; mount++) {
+    const a = f.renderer.muzzle(f.source.unit.model, f.w, f.source, null, 0, mount);
+    const b = f.renderer.muzzle(f.source.unit.model, f.w, f.source, null, 0, mount + 4);
+    near(Math.hypot(a.x - b.x, a.y - b.y), 4 * f.source.scale);
+  }
+});
+
+test("new twin-barrel tank guns alternate between the original native muzzles at every facing", () => {
+  const r = runtime(),
+    model = "Type61__standard",
+    w = ART.models[model].weapons[0];
+  assert.equal(w.muzzle.mounts[0].alternatingOffsetX, -6);
+  for (const angle of [0, 90, 180, 270]) {
+    const actor = { x: 100, y: 200, angle, scale: 2 };
+    const first = r.renderer.muzzle(model, w, actor, w.clip, 0, 0),
+      second = r.renderer.muzzle(model, w, actor, w.clip, 0, 1);
+    near(Math.hypot(first.x - second.x, first.y - second.y), 12);
+  }
 });

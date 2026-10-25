@@ -38,12 +38,18 @@ const SpriteRenderer = (() => {
     const unit = models[model];
     return {
       kit: unit.kit,
-      heldWeapon: heldWeapon || ART.models[model].weapons[0].id,
+      keepBrokenModules: ART.models[model].ship === true,
+      heldWeapon: heldWeapon || ART.models[model].weapons[0]?.id || null,
       shieldVisible: unit.presentation.shield,
       visorClosed: false,
     };
   }
   function visible(layer, variables, clip, time) {
+    if (layer.hidden) return false;
+    if (variables.attacking && layer.hideWhenFiringIndex === variables.weaponDisplayIndex)
+      return false;
+    if (layer.moduleId && variables.brokenParts?.[layer.moduleId] && !variables.keepBrokenModules)
+      return false;
     if (layer.requiredParts?.some((part) => variables.brokenParts?.[part])) return false;
     // 图层切换按骨骼动画时间采样，快速演出和暂停不会改变切换位置。
     const window = layer.animationVisibility;
@@ -53,7 +59,10 @@ const SpriteRenderer = (() => {
     }
     return Object.entries(layer.visibleWhen || {}).every(([key, expected]) => {
       if (Array.isArray(expected)) return expected.includes(variables[key]);
-      if (expected && typeof expected === "object") return variables[key] !== expected.not;
+      if (expected && typeof expected === "object")
+        return Array.isArray(expected.not)
+          ? !expected.not.includes(variables[key])
+          : variables[key] !== expected.not;
       return variables[key] === expected;
     });
   }
@@ -66,6 +75,11 @@ const SpriteRenderer = (() => {
     time = 0,
     loop = false,
     brokenParts = {},
+    attacking = null,
+    onLand = false,
+    environment = "ground",
+    attackWeapon = null,
+    weaponDisplayIndex = null,
   ) {
     const animation = models[model].animations[clip];
     const at = animation
@@ -76,9 +90,44 @@ const SpriteRenderer = (() => {
     const variables = state(model, heldWeapon);
     variables.shieldVisible = variables.shieldVisible && shieldVisible;
     variables.moving = moving;
+    variables.onLand = onLand;
+    variables.attacking = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
+    variables.heldAttacking =
+      variables.attacking &&
+      (!attackWeapon ||
+        attackWeapon === variables.heldWeapon ||
+        ART.models[model].weapons.find((w) => w.id === attackWeapon)?.special?.baseWeapon ===
+          variables.heldWeapon);
+    variables.weaponDisplayIndex =
+      weaponDisplayIndex ??
+      ART.models[model].weapons.find((w) => w.id === variables.heldWeapon)?.displayIndex ??
+      0;
     variables.brokenParts = brokenParts;
     variables.boosting = models[model].presentation.movement === "boost";
+    variables.sustainedThrust = environment === "space" || ART.models[model].movementType === "air";
+    variables.thrustActive =
+      (moving && variables.boosting) || (ART.models[model].ship && variables.sustainedThrust);
     return models[model].decals.filter((layer) => visible(layer, variables, clip, at));
+  }
+  function turretPose(model, sampled, angle, aimAngle = angle, firingModules = []) {
+    const modules = [
+      ...(ART.models[model].modules || []),
+      ...(ART.models[model].visualTurrets || []),
+    ];
+    if (!modules) return sampled;
+    sampled = { ...sampled };
+    for (const module of modules) {
+      const delta = ((((aimAngle - angle - module.idleDir + 180) % 360) + 360) % 360) - 180;
+      sampled[module.bone] = {
+        ...(sampled[module.bone] || {}),
+        dir:
+          ART.models[model].ship &&
+          (!firingModules.includes(module.id) || Math.abs(delta) > module.arc)
+            ? 0
+            : Math.max(-module.arc, Math.min(module.arc, delta)),
+      };
+    }
+    return sampled;
   }
   // offset.x 横向，offset.y 向前。贴图坐标则 x 向右、y 向下。
   function layerTransform(model, layer, angle, pose) {
@@ -111,25 +160,42 @@ const SpriteRenderer = (() => {
       scaleY: (layer.scale ?? 1) * (layer.scaleY ?? 1),
     };
   }
+  function modulePosition(model, moduleId, actor) {
+    const module = ART.models[model].modules?.find((m) => m.id === moduleId);
+    if (!module) return null;
+    const transform = layerTransform(model, { bone: module.bone }, actor.angle, {});
+    return { x: actor.x + transform.x * actor.scale, y: actor.y + transform.y * actor.scale };
+  }
   // 在发射的那一刻采样，与枪的 PNG 同步移动、旋转、缩放和镜像。
   function muzzle(model, weapon, actor, clip, time, shotIndex = 0) {
+    const mountShotIndex = weapon.attack.muzzleShotIndices?.[shotIndex] ?? shotIndex;
     const mount = weapon.muzzle.mounts
         ? weapon.muzzle.mounts[weapon.attack.muzzleIndices[shotIndex] ?? 0]
         : weapon.muzzle,
       unit = models[model],
-      sampled = pose(model, clip, time);
+      sampled = turretPose(
+        model,
+        pose(model, clip, time),
+        actor.angle,
+        actor.aimAngle ?? actor.unit?.aimAngle ?? actor.angle,
+        weapon.moduleIds || [],
+      );
     const layer = mount.layer
       ? unit.decals.find((layer) => layer.name === mount.layer)
       : {
           bone: mount.bone,
           offset: {
             ...mount.offset,
-            x: mount.offset.x + (shotIndex % 2) * (mount.alternatingOffsetX || 0),
+            x: mount.offset.x + (mountShotIndex % 2) * (mount.alternatingOffsetX || 0),
           },
         };
     const transform = layerTransform(model, layer, actor.angle, sampled),
       point = { ...(mount.point || { x: 0, y: 0 }) };
-    if (mount.pairSpacing) point.x += ((shotIndex % 2 ? 1 : -1) * mount.pairSpacing) / 2;
+    if (mount.layer && mount.alternatingPoint && mountShotIndex % 2) {
+      point.x += mount.alternatingPoint.x;
+      point.y += mount.alternatingPoint.y;
+    }
+    if (mount.pairSpacing) point.x += ((mountShotIndex % 2 ? 1 : -1) * mount.pairSpacing) / 2;
     const px = point.x * transform.scaleX,
       py = point.y * transform.scaleY;
     return {
@@ -157,8 +223,20 @@ const SpriteRenderer = (() => {
     shieldVisible = true,
     moving = false,
     brokenParts = {},
+    aimAngle = angle,
+    attacking = null,
+    onLand = false,
+    environment = "ground",
+    attackWeapon = null,
+    weaponDisplayIndex = null,
   ) {
-    const sampled = pose(model, clip, time, loop);
+    const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
+    const active = isFiring
+      ? (ART.models[model].weapons.find((w) => w.id === heldWeapon)?.moduleIds || []).filter(
+          (id) => !brokenParts[id],
+        )
+      : [];
+    const sampled = turretPose(model, pose(model, clip, time, loop), angle, aimAngle, active);
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(scale, scale);
@@ -172,6 +250,11 @@ const SpriteRenderer = (() => {
       time,
       loop,
       brokenParts,
+      attacking,
+      onLand,
+      environment,
+      attackWeapon,
+      weaponDisplayIndex,
     )) {
       const image = images[layer.asset];
       if (!image) continue;
@@ -179,13 +262,27 @@ const SpriteRenderer = (() => {
       const frames = layer.frames || 1,
         fw = layer.frameWidth || Math.floor(image.width / frames),
         fh = layer.frameHeight || image.height;
-      const frame = layer.frameFps
-          ? Math.floor(Math.max(0, time) * layer.frameFps) % frames
-          : layer.frame || 0,
+      const useWallClock =
+        layer.independentClock &&
+        (!layer.visibleWhen?.thrustActive ||
+          environment === "space" ||
+          ART.models[model].movementType === "air");
+      const effectTime =
+        useWallClock && typeof performance !== "undefined" ? performance.now() / 1000 : time;
+      const frame =
+          layer.frameFps && (!layer.onlyAnimateWhenMoving || moving)
+            ? Math.floor(Math.max(0, effectTime) * layer.frameFps) % frames
+            : layer.frame || 0,
         columns = Math.floor(image.width / fw);
       ctx.save();
       ctx.translate(transform.x, transform.y);
-      ctx.rotate(transform.rotation);
+      ctx.rotate(
+        transform.rotation +
+          radians(
+            (layer.rotationSpeed || 0) *
+              (typeof performance !== "undefined" ? performance.now() / 1000 : time),
+          ),
+      );
       ctx.scale(transform.scaleX, transform.scaleY);
       ctx.globalAlpha *= layer.alpha ?? 1;
       ctx.drawImage(
@@ -202,6 +299,14 @@ const SpriteRenderer = (() => {
       ctx.restore();
     }
     ctx.restore();
+    if (typeof SpriteEffects !== "undefined")
+      SpriteEffects.brokenModules(
+        ctx,
+        model,
+        brokenParts,
+        { x, y, scale, angle },
+        typeof performance !== "undefined" ? performance.now() / 1000 : time,
+      );
   }
   function movement(model) {
     const presentation = models[model].presentation;
@@ -231,6 +336,7 @@ const SpriteRenderer = (() => {
     sample,
     pose,
     layerTransform,
+    modulePosition,
     muzzle,
     visibleLayers,
     movement,

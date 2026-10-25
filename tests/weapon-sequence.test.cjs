@@ -25,20 +25,20 @@ const weapon = (id) =>
 function near(a, b) {
   assert.ok(Math.abs(a - b) < 1e-8, `${a} != ${b}`);
 }
-test("MOD Steps preserve 9-round MG, 16-round alternating vulcan, one-shot weapons and saber double hit", () => {
+test("MOD Steps preserve 9-round MG, 16-round alternating vulcan, one-shot weapons and native single-swing saber", () => {
   assert.deepEqual(weapon("EF_90mmMG").attack.shots, [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1]);
   assert.equal(weapon("EF_90mmMG").damagePerShot, 725);
   assert.equal(weapon("EF_90mmMG").damage, 9 * 725);
   assert.equal(weapon("Common_DoubleVulcan_MS").shotCount, 16);
   assert.equal(weapon("Common_DoubleVulcan_MS").attack.shots.at(-1), 1.5);
-  assert.deepEqual(weapon("EF_BeamSprayGun").attack.shots, [0.25, 0.65, 1.05]);
-  near(weapon("EF_BeamSprayGun").damage, 10000);
-  near(weapon("EF_BeamSprayGun").damagePerShot, 10000 / 3);
-  assert.deepEqual(weapon("EF_HypeBazooka").attack.shots, [0.35, 0.75]);
-  assert.equal(weapon("EF_HypeBazooka").damage, 10000);
-  assert.equal(weapon("EF_BeamSaber_A").shotCount, 2);
+  assert.deepEqual(weapon("EF_BeamSprayGun").attack.shots, [0.25]);
+  near(weapon("EF_BeamSprayGun").damage, 5000);
+  near(weapon("EF_BeamSprayGun").damagePerShot, 5000);
+  assert.deepEqual(weapon("EF_HypeBazooka").attack.shots, [0.35]);
+  assert.equal(weapon("EF_HypeBazooka").damage, 8500);
+  assert.equal(weapon("EF_BeamSaber_A").shotCount, 1);
   assert.equal(weapon("EF_BeamSaber_A").hitsPerShot, 1);
-  assert.equal(WeaponSequence.pose(weapon("EF_BeamSaber_A"), 1.3).clip, "Common_Melee_F");
+  assert.equal(WeaponSequence.pose(weapon("EF_BeamSaber_A"), 1.3).clip, "Common_Melee_A");
   assert.equal(WeaponSequence.pose(weapon("EF_90mmMG"), 0.29).clip, null);
   assert.equal(WeaponSequence.pose(weapon("EF_90mmMG"), 0.3).clip, "Common_Shoot_A");
   assert.equal(WeaponSequence.pose(weapon("EF_90mmMG"), 0.4).clip, "Common_Shoot_A_FA");
@@ -83,7 +83,7 @@ test("vulcan is animation-free and does not change the held weapon in authoritat
     [a, b] = g.units;
   a.x = 2;
   a.y = 3;
-  b.x = 3;
+  b.x = 4;
   b.y = 3;
   const w = G.models[a.model].weapons.find((w) => w.id === "Common_DoubleVulcan_MS");
   for (const time of [0, 0.3, 1.5]) {
@@ -94,7 +94,7 @@ test("vulcan is animation-free and does not change the held weapon in authoritat
     events = G.fight(g, a, b, w, "defend");
   assert.equal(a.heldWeapon, held);
   assert.equal(events[0].heldWeapon, held);
-  assert.equal(a.en, 92.5);
+  assert.equal(a.en, G.modelOf(a).en);
 });
 test("muzzle matches original barrelX/Y and follows the weapon animation, both facings and unequal scales", () => {
   for (const id of ["EF_BeamSprayGun", "EF_90mmMG", "EF_HypeBazooka"]) {
@@ -150,19 +150,34 @@ test("each Step creates one texture projectile and HP presentation reaches only 
 test("Zaku heat hawk swaps its mirrored layer during the swing and restores after recovery", () => {
   for (const unit of ["MS_06F", "MS_06J", "MS_06F2"]) {
     const model = unit + "__machine_gun";
-    const names = (clip, time, loop = false, held = "ZN_HeatHawk_A") =>
-      Array.from(renderer.visibleLayers(model, held, true, false, clip, time, loop))
+    const w = ART.models[model].weapons.find((w) => w.id === "ZN_HeatHawk_A");
+    const names = (time, held = w.id, playing = true) => {
+      const pose = WeaponSequence.pose(w, time);
+      return Array.from(
+        renderer.visibleLayers(
+          model,
+          held,
+          true,
+          false,
+          pose.clip,
+          pose.time,
+          false,
+          {},
+          playing,
+          true,
+          "ground",
+          playing ? w.id : null,
+          playing ? pose.weaponDisplayIndex : null,
+        ),
+      )
         .filter((layer) => layer.name.startsWith("ZN_HeatHawk_A"))
         .map((layer) => layer.name);
-    for (const time of [0, 0.3, 0.599999, 2, 2.5])
-      assert.deepEqual(names("Common_Melee_A", time), ["ZN_HeatHawk_A"]);
-    for (const time of [0.6, 0.75, 1, 1.999999])
-      assert.deepEqual(names("Common_Melee_A", time), ["ZN_HeatHawk_A_Step2"]);
-    assert.deepEqual(names(null, 1), ["ZN_HeatHawk_A"]);
-    assert.deepEqual(names("Common_Move", 1), ["ZN_HeatHawk_A"]);
-    assert.deepEqual(names("Common_Melee_A", 2, true), ["ZN_HeatHawk_A"]);
-    assert.deepEqual(names("Common_Melee_A", 2.75, true), ["ZN_HeatHawk_A_Step2"]);
-    assert.deepEqual(names("Common_Melee_A", 0.75, false, "ZN_120mmMG"), []);
+    };
+    for (const time of [0, 0.3, 0.6, 1, 1.999999])
+      assert.deepEqual(names(time), ["ZN_HeatHawk_A_Step2"]);
+    for (const time of [2, 2.5]) assert.deepEqual(names(time), ["ZN_HeatHawk_A"]);
+    assert.deepEqual(names(0.75, w.id, false), ["ZN_HeatHawk_A"]);
+    assert.deepEqual(names(0.75, "ZN_120mmMG", false), []);
     const layers = renderer.models[model].decals;
     const normal = layers.find((layer) => layer.name === "ZN_HeatHawk_A");
     const flipped = layers.find((layer) => layer.name === "ZN_HeatHawk_A_Step2");
@@ -170,5 +185,86 @@ test("Zaku heat hawk swaps its mirrored layer during the swing and restores afte
     assert.equal(flipped.scaleX, 1);
     assert.equal(flipped.rotation, 25);
     assert.deepEqual(JSON.parse(JSON.stringify(flipped.offset)), { x: 12, y: 18 });
+  }
+});
+
+test("Gouf and Efreet melee layers follow native display writes through every stage", () => {
+  const cases = [
+    ["MS_07B", "ZN_HeatSword_A", "ZN_HeatSword_A", 2],
+    ["MS_07H8", "ZN_HeatSword_MS_07H8_A", "ZN_HeatSword_MS_07H8_A", 2],
+    ["MS_08TX", "ZN_HeatSword_AF_A", "ZN_HeatSword_AF", 1.2],
+  ];
+  for (const [id, weaponId, prefix, switchAt] of cases) {
+    const [model, m] = Object.entries(ART.models).find(
+      ([, m]) => m.prefabId === id && m.weapons.some((w) => w.id === weaponId),
+    );
+    const w = m.weapons.find((w) => w.id === weaponId),
+      source = { unit: { model }, x: 0, y: 0, angle: 90, scale: 1 };
+    const names = (at, brokenParts = {}) => {
+      const pose = effects.firingPose(w, source, null, at);
+      return Array.from(
+        renderer.visibleLayers(
+          model,
+          w.id,
+          true,
+          false,
+          pose.clip,
+          pose.time,
+          false,
+          brokenParts,
+          true,
+          true,
+          "ground",
+          w.id,
+          pose.weaponDisplayIndex,
+        ),
+      )
+        .filter((l) => l.name.startsWith(prefix))
+        .map((l) => l.name);
+    };
+    assert.deepEqual(names(0), [prefix + "_Step2"], id);
+    assert.deepEqual(names(switchAt - 0.0001), [prefix + "_Step2"], id);
+    assert.deepEqual(names(switchAt), [prefix], id);
+    assert.deepEqual(names(w.attack.duration), [prefix], id);
+    assert.deepEqual(names(0.5, { rightArm: true }), [], id);
+  }
+});
+
+test("Gouf Custom retains its shield gun during sword attacks and Efreet Kai draws both swords", () => {
+  const visible = (id, weaponId, at = 0, brokenParts = {}) => {
+    const [model, m] = Object.entries(ART.models).find(
+      ([, m]) => m.prefabId === id && m.weapons.some((w) => w.id === weaponId),
+    );
+    const w = m.weapons.find((w) => w.id === weaponId),
+      pose = WeaponSequence.pose(w, at);
+    return Array.from(
+      renderer.visibleLayers(
+        model,
+        w.id,
+        true,
+        false,
+        pose.clip,
+        pose.time,
+        false,
+        brokenParts,
+        true,
+        true,
+        "ground",
+        w.id,
+        pose.weaponDisplayIndex,
+      ),
+    ).map((l) => l.name);
+  };
+  assert.ok(visible("MS_07B3", "ZN_HeatSword_MS_07B3_BF_B").includes("ZN_MS_07B3_Minigun"));
+  for (const id of ["MS_08TX_Kai", "MS_08TX_Kai_EXAM"]) {
+    const names = visible(id, "ZN_HeatSword_Double_DBDF");
+    assert.ok(names.includes("ZN_HeatSword_Double_DBDF"));
+    assert.ok(names.includes("ZN_HeatSword_Double_DBDF_L"));
+    assert.ok(!names.some((n) => n.startsWith("ZN_HeatSword_Double_DBDF_NotUsing")));
+    assert.ok(
+      !visible(id, "ZN_HeatSword_Double_DBDF", 0, { leftArm: true }).includes(
+        "ZN_HeatSword_Double_DBDF_L",
+      ),
+    );
   }
 });

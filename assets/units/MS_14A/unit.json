@@ -23,7 +23,8 @@
       "ZN_TwinBeamSword.png": "textures/ZN_TwinBeamSword.png",
       "ZN_MS_14A_Shield.png": "textures/ZN_MS_14A_Shield.png",
       "MS_14A.png": "textures/MS_14A.png",
-      "Boost_1.png": "textures/Boost_1.png"
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
     },
     "icon": "MS_14A.png"
   },
@@ -104,8 +105,8 @@
       },
       "visibleWhen": {
         "kit": "bazooka",
-        "heldWeapon": {
-          "not": "ZN_360mmBazooka"
+        "weaponDisplayIndex": {
+          "not": 0
         }
       },
       "requiredParts": [
@@ -123,7 +124,8 @@
       },
       "requiredParts": [
         "leftLeg"
-      ]
+      ],
+      "visibleWhen": {}
     },
     {
       "name": "RightFoot",
@@ -136,7 +138,8 @@
       },
       "requiredParts": [
         "rightLeg"
-      ]
+      ],
+      "visibleWhen": {}
     },
     {
       "name": "LeftLeg",
@@ -149,7 +152,8 @@
       },
       "requiredParts": [
         "leftLeg"
-      ]
+      ],
+      "visibleWhen": {}
     },
     {
       "name": "RightLeg",
@@ -162,7 +166,8 @@
       },
       "requiredParts": [
         "rightLeg"
-      ]
+      ],
+      "visibleWhen": {}
     },
     {
       "name": "ZN_MS_14_BR_NotUsing",
@@ -177,8 +182,8 @@
       },
       "visibleWhen": {
         "kit": "beam_rifle",
-        "heldWeapon": {
-          "not": "ZN_MS_14_BR"
+        "weaponDisplayIndex": {
+          "not": 0
         }
       },
       "requiredParts": [
@@ -198,8 +203,8 @@
       },
       "visibleWhen": {
         "kit": "machine_gun",
-        "heldWeapon": {
-          "not": "ZN_MMP80MG"
+        "weaponDisplayIndex": {
+          "not": 0
         }
       },
       "requiredParts": [
@@ -218,6 +223,11 @@
       "offset": {
         "x": 10,
         "y": -7.5
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 1
+        }
       }
     },
     {
@@ -234,7 +244,7 @@
         "y": 24
       },
       "visibleWhen": {
-        "heldWeapon": "ZN_TwinBeamSword_A"
+        "weaponDisplayIndex": 1
       },
       "requiredParts": [
         "rightArm"
@@ -248,7 +258,8 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "visibleWhen": {}
     },
     {
       "name": "ArmL",
@@ -261,7 +272,8 @@
       },
       "requiredParts": [
         "leftArm"
-      ]
+      ],
+      "visibleWhen": {}
     },
     {
       "name": "ArmR",
@@ -274,7 +286,30 @@
       },
       "requiredParts": [
         "rightArm"
-      ]
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
     },
     {
       "name": "BoostLoop",
@@ -292,9 +327,9 @@
       "rotation": 0,
       "alpha": 0.75,
       "visibleWhen": {
-        "moving": true,
-        "boosting": true
-      }
+        "thrustActive": true
+      },
+      "independentClock": true
     },
     {
       "name": "ZN_MS_14_BR",
@@ -309,7 +344,7 @@
       },
       "visibleWhen": {
         "kit": "beam_rifle",
-        "heldWeapon": "ZN_MS_14_BR"
+        "weaponDisplayIndex": 0
       },
       "requiredParts": [
         "rightArm"
@@ -323,7 +358,8 @@
       "offset": {
         "x": 0,
         "y": 0
-      }
+      },
+      "visibleWhen": {}
     },
     {
       "name": "ZN_MMP80MG",
@@ -338,7 +374,7 @@
       },
       "visibleWhen": {
         "kit": "machine_gun",
-        "heldWeapon": "ZN_MMP80MG"
+        "weaponDisplayIndex": 0
       },
       "requiredParts": [
         "rightArm"
@@ -355,7 +391,8 @@
       },
       "requiredParts": [
         "leftArm"
-      ]
+      ],
+      "visibleWhen": {}
     },
     {
       "name": "ShoulderR",
@@ -368,7 +405,8 @@
       },
       "requiredParts": [
         "rightArm"
-      ]
+      ],
+      "visibleWhen": {}
     },
     {
       "name": "ZN_360mmBazooka",
@@ -383,7 +421,7 @@
       },
       "visibleWhen": {
         "kit": "bazooka",
-        "heldWeapon": "ZN_360mmBazooka"
+        "weaponDisplayIndex": 0
       },
       "requiredParts": [
         "rightArm"
@@ -478,67 +516,68 @@
     "Common_Melee_A": "../../animations/MS_14A__Common_Melee_A.json"
   },
   "stats": {
-    "hp": 24500,
-    "en": 100,
-    "move": 6,
-    "mobility": 125.0,
-    "cost": 750,
+    "hp": 28500.0,
+    "en": 750.0,
+    "move": 7,
+    "mobility": 125,
+    "cost": 375,
     "counterLimit": 1,
-    "partStructuralStrength": 125.0,
+    "partStructuralStrength": 125,
     "adaptability": {
       "ground": 100,
       "space": 100
     },
-    "accuracy": 125.0
+    "accuracy": 125,
+    "actionPoints": 5
   },
   "attackBonuses": {
-    "shooting": 20,
-    "melee": 20,
+    "shooting": 35.0,
+    "melee": 25.0,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 5,
-      "flat": 50
+      "percent": 5.0,
+      "flat": 50.0
     },
     "shell": {
-      "percent": 15,
-      "flat": 100
+      "percent": 10.0,
+      "flat": 100.0
     },
     "melee": {
-      "percent": 10,
-      "flat": 150
+      "percent": 10.0,
+      "flat": 150.0
     },
     "dp": {
-      "percent": 10,
-      "flat": 15
+      "percent": 10.0,
+      "flat": 15.0
     },
     "sp": {
-      "percent": 0,
-      "flat": 0
+      "percent": 0.0,
+      "flat": 0.0
     }
   },
   "shield": {
-    "hp": 3000,
+    "hp": 4500.0,
     "blockChance": 0.45,
     "coverage": 0.75,
     "defenses": {
       "beam": {
-        "percent": 5,
-        "flat": 35
+        "percent": 5.0,
+        "flat": 35.0
       },
       "shell": {
-        "percent": 10,
-        "flat": 35
+        "percent": 10.0,
+        "flat": 35.0
       },
       "melee": {
-        "percent": 5,
-        "flat": 175
+        "percent": 5.0,
+        "flat": 175.0
       },
       "dp": {
-        "percent": 10,
-        "flat": 25
+        "percent": 10.0,
+        "flat": 25.0
       }
     },
     "requiredParts": [
@@ -550,11 +589,14 @@
     "walkSpeed": 0.65,
     "boostSpeed": 1.5,
     "turnSpeed": 2,
-    "reaction": 125.0,
-    "shooting": 135,
-    "melee": 125,
-    "partStructuralStrength": 125.0,
-    "accuracy": 125.0
+    "reaction": 125,
+    "shooting": 135.0,
+    "melee": 125.0,
+    "partStructuralStrength": 125,
+    "accuracy": 125,
+    "unitLevel": 1500.0,
+    "balanceStatus": "native-level",
+    "tacticalMoveBeforeBonus": 6
   },
   "presentation": {
     "shield": true,
@@ -599,45 +641,42 @@
       },
       "type": "beam",
       "min": 2,
-      "max": 5,
-      "hit": 90,
-      "en": 17.5,
+      "max": 3,
+      "hit": 90.0,
+      "en": 40.0,
       "clip": "Common_Shoot_A",
       "slot": "primary",
       "sourceName": "ZN_MS_14_BR",
-      "sourceHit": 90,
-      "hitMultiplier": 0.8,
-      "hitBonus": 18,
-      "damagePerShot": 6160.0,
+      "sourceHit": 90.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "damagePerShot": 7500.0,
       "damageComponents": {
-        "beam": 6160.0
+        "beam": 7500.0
       },
       "hitsPerShot": 1,
       "attack": {
         "steps": [
           {
-            "delay": 0.25,
-            "animation": "Common_Shoot_A"
+            "weaponDisplayIndex": 0,
+            "delay": 0
           },
           {
-            "delay": 0,
+            "animation": "Common_Shoot_A",
+            "delay": 0
+          },
+          {
             "shots": 1,
-            "muzzleIndex": 0
-          },
-          {
-            "delay": 0.25,
-            "animation": "Common_Shoot_A"
-          },
-          {
-            "delay": 0,
-            "shots": 1,
-            "muzzleIndex": 0
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.25
           },
           {
             "delay": 0.25
           }
         ],
-        "startAnimation": "Common_Shoot_A"
+        "startAnimation": null
       },
       "sound": {
         "file": "../../sounds/BeamRifle_1.ogg",
@@ -654,8 +693,8 @@
         "barrels": [
           {
             "id": "ZN_MS_14_BR",
-            "x": 13,
-            "y": 29
+            "x": 13.0,
+            "y": 29.0
           }
         ]
       },
@@ -663,7 +702,7 @@
       "projectile": {
         "texture": "../../projectiles/Beam_2_Yellow.png",
         "scale": 1,
-        "speed": 85,
+        "speed": 85.0,
         "forwardOffset": -7.5,
         "rotation": 0
       },
@@ -671,7 +710,7 @@
         "layer": "ZN_MS_14_BR",
         "point": {
           "x": 7.960204194457795e-16,
-          "y": -13
+          "y": -13.0
         }
       },
       "requiredParts": [
@@ -680,7 +719,76 @@
       "partBreakModifier": 1.0,
       "muzzleEffects": [
         "Beam_Fire_1_Yellow"
-      ]
+      ],
+      "category": "beam_rifle",
+      "nativePayload": {
+        "BeamDamage": 7500.0,
+        "DpDamage": 250.0,
+        "WeaponAccuracy": 90.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 85.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 30.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR.gw",
+        "barrel": "ZN_MS_14_BR",
+        "entry": "hiddenAction_ZN_MS_14_BR_Fire",
+        "cooldown": 2.0,
+        "duration": 0.5,
+        "firstShot": 0.25,
+        "lastShot": 0.25,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 40.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 40.0,
+        "actions": [
+          "hiddenAction_ZN_MS_14_BR_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_MS_14_BR_SetWeaponIndex",
+          "hiddenAction_ZN_MS_14_BR_B1_Step_1",
+          "hiddenAction_ZN_MS_14_BR_Fire_Step_1",
+          "hiddenAction_ZN_MS_14_BR_Fire_Step_2",
+          "hiddenAction_ZN_MS_14_BR_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "changeHeldWeapon": true,
+      "displayIndex": 0
     },
     "ZN_360mmBazooka": {
       "name": "360mm火箭筒",
@@ -696,46 +804,43 @@
         }
       },
       "type": "shell",
-      "min": 3,
-      "max": 5,
-      "hit": 70,
-      "en": 25,
+      "min": 2,
+      "max": 4,
+      "hit": 75.0,
+      "en": 55.0,
       "clip": "Common_Shoot_A",
       "slot": "primary",
       "sourceName": "ZN_360mmBazooka",
-      "sourceHit": 75,
-      "hitMultiplier": 0.65,
-      "hitBonus": 21,
-      "damagePerShot": 6300,
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "damagePerShot": 12500.0,
       "damageComponents": {
-        "shell": 6300
+        "shell": 12500.0
       },
       "hitsPerShot": 1,
       "attack": {
         "steps": [
           {
-            "delay": 0.35,
-            "animation": "Common_Shoot_A"
+            "weaponDisplayIndex": 0,
+            "delay": 0
           },
           {
-            "delay": 0,
+            "animation": "Common_Shoot_A",
+            "delay": 0
+          },
+          {
             "shots": 1,
-            "muzzleIndex": 0
-          },
-          {
-            "delay": 0.35,
-            "animation": "Common_Shoot_A"
-          },
-          {
-            "delay": 0,
-            "shots": 1,
-            "muzzleIndex": 0
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.35
           },
           {
             "delay": 0.3
           }
         ],
-        "startAnimation": "Common_Shoot_A"
+        "startAnimation": null
       },
       "sound": {
         "file": "../../sounds/Bazooka_1.ogg",
@@ -752,8 +857,8 @@
         "barrels": [
           {
             "id": "ZN_360mmBazooka",
-            "x": 11,
-            "y": 27
+            "x": 11.0,
+            "y": 27.0
           }
         ]
       },
@@ -761,7 +866,7 @@
       "projectile": {
         "texture": "../../projectiles/Bazooka_1.png",
         "scale": 1,
-        "speed": 30,
+        "speed": 60.0,
         "forwardOffset": -5,
         "rotation": 0
       },
@@ -778,7 +883,80 @@
       "partBreakModifier": 1.25,
       "muzzleEffects": [
         "BZ_Fire_1"
-      ]
+      ],
+      "category": "bazooka",
+      "nativePayload": {
+        "ShellDamage": 12500.0,
+        "DpDamage": 400.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 60.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 30.0,
+        "ProjectileLife": 35.0,
+        "ProjectileBlastRange": 60.0,
+        "ProjectileBlastDamageModifier": 0.2,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka_Lv2.gw",
+        "barrel": "ZN_360mmBazooka",
+        "entry": "hiddenAction_ZN_360mmBazooka_Fire",
+        "cooldown": 4.0,
+        "duration": 0.6499999999999999,
+        "firstShot": 0.35,
+        "lastShot": 0.35,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 55.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 55.0,
+        "actions": [
+          "hiddenAction_ZN_360mmBazooka_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_360mmBazooka_SetWeaponIndex",
+          "hiddenAction_ZN_360mmBazooka_B1_Step_1",
+          "hiddenAction_ZN_360mmBazooka_Fire_Step_1",
+          "hiddenAction_ZN_360mmBazooka_Fire_Step_2",
+          "hiddenAction_ZN_360mmBazooka_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "changeHeldWeapon": true,
+      "displayIndex": 0
     },
     "ZN_MMP80MG": {
       "name": "MMP-80机枪",
@@ -795,37 +973,124 @@
       },
       "type": "shell",
       "min": 2,
-      "max": 4,
-      "hit": 90,
-      "en": 12.5,
+      "max": 3,
+      "hit": 100.0,
+      "en": 20.0,
       "clip": "Common_Shoot_A",
       "slot": "primary",
       "sourceName": "ZN_MMP80MG",
-      "sourceHit": 100,
-      "hitMultiplier": 0.75,
-      "hitBonus": 15,
-      "damagePerShot": 935,
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "damagePerShot": 750.0,
       "damageComponents": {
-        "shell": 935
+        "shell": 750.0
       },
       "hitsPerShot": 1,
       "attack": {
         "steps": [
           {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
             "delay": 0.3
           },
           {
-            "delay": 0,
-            "shots": 1,
-            "muzzleIndex": 0,
-            "animation": "Common_Shoot_A"
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
           },
           {
-            "delay": 0.1,
             "shots": 1,
             "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
             "animation": "Common_Shoot_A",
-            "repeat": 11
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
           },
           {
             "delay": 0.3
@@ -848,8 +1113,8 @@
         "barrels": [
           {
             "id": "ZN_MMP80MG",
-            "x": 13,
-            "y": 32
+            "x": 15.0,
+            "y": 32.0
           }
         ]
       },
@@ -857,15 +1122,15 @@
       "projectile": {
         "texture": "../../projectiles/MG_1.png",
         "scale": 0.5,
-        "speed": 75,
+        "speed": 75.0,
         "forwardOffset": -10,
         "rotation": 0
       },
       "muzzle": {
         "layer": "ZN_MMP80MG",
         "point": {
-          "x": -1.1111111111111098,
-          "y": -20
+          "x": 1.1111111111111123,
+          "y": -20.0
         }
       },
       "requiredParts": [
@@ -874,7 +1139,77 @@
       "partBreakModifier": 1.0,
       "muzzleEffects": [
         "MG_Fire_1"
-      ]
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 750.0,
+        "DpDamage": 30.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 75.0,
+        "ProjectileSpread": 5.0,
+        "ProjectileLife": 25.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Lv2.gw",
+        "barrel": "ZN_MMP80MG",
+        "entry": "hiddenAction_ZN_MMP80MG_Fire",
+        "cooldown": 2.0,
+        "duration": 1.4,
+        "firstShot": 0.3,
+        "lastShot": 1.0999999999999999,
+        "firingEvents": 9,
+        "projectiles": 9,
+        "declaredEnergy": 20.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 20.0,
+        "actions": [
+          "hiddenAction_ZN_MMP80MG_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_MMP80MG_SetWeaponIndex",
+          "hiddenAction_ZN_MMP80MG_B9_Step_1",
+          "hiddenAction_ZN_MMP80MG_Fire_Step_1",
+          "hiddenAction_ZN_MMP80MG_Fire_Step_2",
+          "hiddenAction_ZN_MMP80MG_Fire_Step_3",
+          "hiddenAction_ZN_MMP80MG_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 3,
+      "changeHeldWeapon": true,
+      "displayIndex": 0
     },
     "ZN_TwinBeamSword_A": {
       "name": "双刃光束剑",
@@ -892,35 +1227,42 @@
       "type": "melee",
       "min": 1,
       "max": 1,
-      "hit": 95,
-      "en": 10,
+      "hit": 125.0,
+      "en": 0,
       "clip": "Common_Melee_A",
       "slot": "secondary",
       "sourceName": "ZN_TwinBeamSword_A",
-      "sourceHit": 125,
-      "hitMultiplier": 0.85,
-      "hitBonus": -11,
-      "damagePerShot": 10000,
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "damagePerShot": 7000.0,
       "damageComponents": {
-        "melee": 5000,
-        "meleeBeam": 5000
+        "melee": 3500.0,
+        "meleeBeam": 3500.0
       },
       "hitsPerShot": 1,
       "attack": {
         "steps": [
           {
-            "delay": 0.6
+            "weaponDisplayIndex": 1,
+            "delay": 0
           },
           {
-            "delay": 0,
+            "animation": "Common_Melee_A",
+            "delay": 0
+          },
+          {
             "shots": 1,
-            "muzzleIndex": 0
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.6
           },
           {
             "delay": 1.4
           }
         ],
-        "startAnimation": "Common_Melee_A"
+        "startAnimation": null
       },
       "sound": {
         "file": "../../sounds/BeamSaber_1.ogg",
@@ -938,8 +1280,8 @@
         "barrels": [
           {
             "id": "ZN_TwinBeamSword_A",
-            "x": 0,
-            "y": 0
+            "x": 0.0,
+            "y": 0.0
           }
         ]
       },
@@ -951,7 +1293,84 @@
       "requiredParts": [
         "rightArm"
       ],
-      "partBreakModifier": 1.25
+      "partBreakModifier": 1.25,
+      "category": "melee",
+      "nativePayload": {
+        "CqbDamage": 3500.0,
+        "CqbBeamDamage": 3500.0,
+        "DpDamage": 850.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 2.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/ZN_TwinBeamSword_A_Lv2.gw",
+        "barrel": "ZN_TwinBeamSword_A",
+        "entry": "hiddenAction_ZN_TwinBeamSword_A_Fire",
+        "cooldown": 3.0,
+        "duration": 2.0,
+        "firstShot": 0.6,
+        "lastShot": 0.6,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_ZN_TwinBeamSword_A_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_ZN_TwinBeamSword_A_SetWeaponIndex",
+          "hiddenAction_ZN_TwinBeamSword_A_Step_1",
+          "hiddenAction_ZN_TwinBeamSword_A_Fire_Step_1",
+          "hiddenAction_ZN_TwinBeamSword_A_Fire_Step_2",
+          "hiddenAction_ZN_TwinBeamSword_A_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 2,
+      "changeHeldWeapon": true,
+      "displayIndex": 1
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -970,32 +1389,40 @@
       "type": "melee",
       "min": 1,
       "max": 1,
-      "hit": 95,
+      "hit": 125.0,
       "en": 0,
       "clip": "Common_Push_A",
       "sourceName": "Common_Push_A",
-      "sourceHit": 125,
-      "hitMultiplier": 0.85,
-      "hitBonus": -11,
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
       "changeHeldWeapon": false,
       "requiredParts": [],
       "partBreakModifier": 0.75,
-      "damagePerShot": 5000,
+      "damagePerShot": 6500.0,
       "damageComponents": {
-        "melee": 2500,
-        "meleeShell": 2500
+        "melee": 3250.0,
+        "meleeShell": 3250.0
       },
       "hitsPerShot": 1,
       "attack": {
         "steps": [
           {
-            "delay": 0.45,
-            "shots": 1
+            "animation": "Common_Push_A",
+            "delay": 0
           },
           {
-            "delay": 1
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.75,
+            "requiredParts": [],
+            "delay": 0.45
+          },
+          {
+            "delay": 1.0
           }
-        ]
+        ],
+        "startAnimation": null
       },
       "sound": {
         "file": "../../sounds/Fist_2.ogg",
@@ -1009,8 +1436,90 @@
         "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
         "barrelX": 0,
         "barrelY": 0,
-        "cooldownSeconds": 3
-      }
+        "cooldownSeconds": 3,
+        "barrels": [
+          {
+            "id": "Common_Push_A",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "category": "melee",
+      "nativePayload": {
+        "CqbDamage": 3250.0,
+        "CqbShellDamage": 3250.0,
+        "DpDamage": 1000.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 0.75,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrel": "Common_Push_A",
+        "entry": "hiddenAction_Common_Push_A_Fire",
+        "cooldown": 3.0,
+        "duration": 1.45,
+        "firstShot": 0.45,
+        "lastShot": 0.45,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_Common_Push_A_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_Common_Push_A_SetWeaponIndex",
+          "hiddenAction_Common_Push_A_Step_1",
+          "hiddenAction_Common_Push_A_Fire_Step_1",
+          "hiddenAction_Common_Push_A_Fire_Step_2",
+          "hiddenAction_Common_Push_A_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 5
     }
   },
   "weaponKits": [
@@ -1081,5 +1590,12 @@
   "tags": [
     "ZEON",
     "0079"
-  ]
+  ],
+  "costBalance": {
+    "nativeLevel": 1500.0,
+    "levelMultiplier": 0.25,
+    "published": 375
+  },
+  "skills": [],
+  "nativeCombatRevision": 1
 }

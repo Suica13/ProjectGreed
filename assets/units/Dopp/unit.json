@@ -1,0 +1,1128 @@
+{
+  "schemaVersion": 2,
+  "id": "Dopp",
+  "code": "Dopp",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/Dopp/Dopp.ini",
+  "materials": {
+    "textures": {
+      "Dopp_Body_1.png": "textures/Dopp_Body_1.png",
+      "Dopp.png": "textures/Dopp.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "Dopp.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 1.0,
+      "offset": {
+        "x": -1.0,
+        "y": -6.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "Dopp_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.5,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/Dopp__OnMoving.json",
+    "OnMovingReversing": "../../animations/Dopp__OnMovingReversing.json",
+    "Common_Dead": "../../animations/Dopp__Common_Dead.json",
+    "Common_Stun": "../../animations/Dopp__Common_Stun.json",
+    "Common_Idle": "../../animations/Dopp__Common_Idle.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 3500.0,
+    "en": 400.0,
+    "move": 10,
+    "mobility": 135.0,
+    "cost": 75,
+    "counterLimit": 1,
+    "accuracy": 110.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 10.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 20.0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 3500.0,
+    "walkSpeed": 1.5,
+    "boostSpeed": 2.5,
+    "turnSpeed": 2.0,
+    "reaction": 135.0,
+    "shooting": 110.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "Dopp",
+      "Unit",
+      "Aircraft",
+      "ZEON",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [
+      "Fighter",
+      "DogFight_A"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 110.0,
+    "unitLevel": 325.0,
+    "tacticalMoveBeforeBonus": 9
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost"
+  },
+  "name": "多普",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "多普",
+      "description": "吉翁军主力战斗机"
+    },
+    "en": {
+      "name": "Dopp",
+      "description": "Zeon Mainline Fighter"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_DoubleVulcan_Dopp": {
+      "name": "火神炮",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 100.0,
+      "en": 10.0,
+      "sourceName": "Common_DoubleVulcan_Dopp",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 200.0,
+      "damageComponents": {
+        "shell": 200.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Dopp.gw",
+        "barrels": [
+          {
+            "id": "Common_DoubleVulcan_Dopp",
+            "x": 3.0,
+            "y": 4.0
+          },
+          {
+            "id": "Common_DoubleVulcan_Dopp_L",
+            "x": -1.0,
+            "y": 4.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 100.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 3.0,
+              "y": 4.0
+            },
+            "alternatingOffsetX": -6.0
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -1.0,
+              "y": 4.0
+            },
+            "alternatingOffsetX": -6.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Vulcan_1.ogg",
+        "volume": 0.15
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 0.75,
+        "ground": 1.25,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "MG_Fire_1_S",
+        "MG_Fire_1_S"
+      ],
+      "mergedPositions": [
+        "Common_DoubleVulcan_Dopp",
+        "Common_DoubleVulcan_Dopp_L"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 200.0,
+        "DpDamage": 10.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.5,
+        "AntiLand": 1.25,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 100.0,
+        "ProjectileSpread": 6.0,
+        "ProjectileLife": 8.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Dopp.gw",
+        "barrel": "Common_DoubleVulcan_Dopp",
+        "entry": "hiddenAction_Common_DoubleVulcan_Dopp_Fire",
+        "cooldown": 1.5,
+        "duration": 0.625,
+        "firstShot": 0.0,
+        "lastShot": 0.525,
+        "firingEvents": 8,
+        "projectiles": 8,
+        "declaredEnergy": 10.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 10.0,
+        "actions": [
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_Common_DoubleVulcan_Dopp_SetWeaponIndex",
+          "hiddenAction_Common_DoubleVulcan_Dopp_B8_Step_1",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_1",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_2",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_3",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_4",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    },
+    "Common_DoubleVulcan_Dopp_L": {
+      "name": "火神炮",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 100.0,
+      "en": 10.0,
+      "sourceName": "Common_DoubleVulcan_Dopp_L",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 200.0,
+      "damageComponents": {
+        "shell": 200.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Dopp.gw",
+        "barrels": [
+          {
+            "id": "Common_DoubleVulcan_Dopp",
+            "x": 3.0,
+            "y": 4.0
+          },
+          {
+            "id": "Common_DoubleVulcan_Dopp_L",
+            "x": -1.0,
+            "y": 4.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 100.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 3.0,
+              "y": 4.0
+            },
+            "alternatingOffsetX": -6.0
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -1.0,
+              "y": 4.0
+            },
+            "alternatingOffsetX": -6.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Vulcan_1.ogg",
+        "volume": 0.15
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 0.75,
+        "ground": 1.25,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "MG_Fire_1_S",
+        "MG_Fire_1_S"
+      ],
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "paired_weapon"
+        ],
+        "mergedInto": "Common_DoubleVulcan_Dopp"
+      },
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 200.0,
+        "DpDamage": 10.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.5,
+        "AntiLand": 1.25,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 100.0,
+        "ProjectileSpread": 6.0,
+        "ProjectileLife": 8.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Dopp.gw",
+        "barrel": "Common_DoubleVulcan_Dopp",
+        "entry": "hiddenAction_Common_DoubleVulcan_Dopp_Fire",
+        "cooldown": 1.5,
+        "duration": 0.625,
+        "firstShot": 0.0,
+        "lastShot": 0.525,
+        "firingEvents": 8,
+        "projectiles": 8,
+        "declaredEnergy": 10.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 10.0,
+        "actions": [
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_Common_DoubleVulcan_Dopp_SetWeaponIndex",
+          "hiddenAction_Common_DoubleVulcan_Dopp_B8_Step_1",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_1",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_2",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_3",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_4",
+          "hiddenAction_Common_DoubleVulcan_Dopp_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    },
+    "Common_DoubleMS_Dopp": {
+      "name": "Common DoubleMS Dopp",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 90.0,
+      "en": 20.0,
+      "sourceName": "Common_DoubleMS_Dopp",
+      "sourceHit": 90.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 900.0,
+      "damageComponents": {
+        "shell": 900.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Dopp.gw",
+        "barrels": [
+          {
+            "id": "Common_DoubleMS_Dopp",
+            "x": 3.0,
+            "y": 0.0
+          },
+          {
+            "id": "Common_DoubleMS_Dopp_L",
+            "x": 3.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 50.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 3.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 3.0,
+              "y": 0.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.15
+      },
+      "targetModifiers": {
+        "air": 1.25,
+        "water": 0.75,
+        "ground": 1.25,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "mergedPositions": [
+        "Common_DoubleMS_Dopp",
+        "Common_DoubleMS_Dopp_L"
+      ],
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 900.0,
+        "DpDamage": 75.0,
+        "WeaponAccuracy": 90.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.25,
+        "AntiLand": 1.25,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 50.0,
+        "ProjectileTurnspeed": 3.5,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 20.0,
+        "EquipmentIndex": 1.0,
+        "EquipmentIndex2": 150.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Dopp.gw",
+        "barrel": "Common_DoubleMS_Dopp",
+        "entry": "hiddenAction_Common_DoubleMS_Dopp_Fire",
+        "cooldown": 3.0,
+        "duration": 0.4,
+        "firstShot": 0.0,
+        "lastShot": 0.1,
+        "firingEvents": 2,
+        "projectiles": 2,
+        "declaredEnergy": 20.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 20.0,
+        "actions": [
+          "hiddenAction_Common_DoubleMS_Dopp_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_Common_DoubleMS_Dopp_SetWeaponIndex",
+          "hiddenAction_Common_DoubleMS_Dopp_B2_Step_1",
+          "hiddenAction_Common_DoubleMS_Dopp_Fire_Step_1",
+          "hiddenAction_Common_DoubleMS_Dopp_Fire_Step_2",
+          "hiddenAction_Common_DoubleMS_Dopp_Fire_Step_3",
+          "hiddenAction_Common_DoubleMS_Dopp_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    },
+    "Common_DoubleMS_Dopp_L": {
+      "name": "Common DoubleMS Dopp L",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 90.0,
+      "en": 20.0,
+      "sourceName": "Common_DoubleMS_Dopp_L",
+      "sourceHit": 90.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 900.0,
+      "damageComponents": {
+        "shell": 900.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Dopp.gw",
+        "barrels": [
+          {
+            "id": "Common_DoubleMS_Dopp",
+            "x": 3.0,
+            "y": 0.0
+          },
+          {
+            "id": "Common_DoubleMS_Dopp_L",
+            "x": 3.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 50.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 3.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 3.0,
+              "y": 0.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.15
+      },
+      "targetModifiers": {
+        "air": 1.25,
+        "water": 0.75,
+        "ground": 1.25,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "paired_weapon"
+        ],
+        "mergedInto": "Common_DoubleMS_Dopp"
+      },
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 900.0,
+        "DpDamage": 75.0,
+        "WeaponAccuracy": 90.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.25,
+        "AntiLand": 1.25,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 50.0,
+        "ProjectileTurnspeed": 3.5,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 20.0,
+        "EquipmentIndex": 1.0,
+        "EquipmentIndex2": 150.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Dopp.gw",
+        "barrel": "Common_DoubleMS_Dopp",
+        "entry": "hiddenAction_Common_DoubleMS_Dopp_Fire",
+        "cooldown": 3.0,
+        "duration": 0.4,
+        "firstShot": 0.0,
+        "lastShot": 0.1,
+        "firingEvents": 2,
+        "projectiles": 2,
+        "declaredEnergy": 20.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 20.0,
+        "actions": [
+          "hiddenAction_Common_DoubleMS_Dopp_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_Common_DoubleMS_Dopp_SetWeaponIndex",
+          "hiddenAction_Common_DoubleMS_Dopp_B2_Step_1",
+          "hiddenAction_Common_DoubleMS_Dopp_Fire_Step_1",
+          "hiddenAction_Common_DoubleMS_Dopp_Fire_Step_2",
+          "hiddenAction_Common_DoubleMS_Dopp_Fire_Step_3",
+          "hiddenAction_Common_DoubleMS_Dopp_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "Fighter",
+      "source": "Template/Unit/Skill/Fighter.gw",
+      "status": "adapted",
+      "name": "战斗机特性"
+    },
+    {
+      "id": "DogFight_A",
+      "source": "Template/Unit/Skill/DogFight_A.gw",
+      "status": "review",
+      "name": "空中缠斗"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "main_0",
+      "name": "Common DoubleMS Dopp套件",
+      "cost": 0,
+      "weapons": [
+        "Common_DoubleMS_Dopp",
+        "Common_DoubleVulcan_Dopp"
+      ]
+    }
+  ],
+  "description": "吉翁军主力战斗机",
+  "kitAliases": {
+    "standard": "main_0"
+  },
+  "costBalance": {
+    "nativeLevel": 325.0,
+    "levelMultiplier": 0.25,
+    "published": 75
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "pairedWeapons": [
+    {
+      "id": "Common_DoubleVulcan_Dopp",
+      "channels": [
+        {
+          "id": "Common_DoubleVulcan_Dopp",
+          "weaponId": "Common_DoubleVulcan_Dopp",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "Common_DoubleVulcan_Dopp_L",
+          "weaponId": "Common_DoubleVulcan_Dopp_L",
+          "muzzleIndex": 1,
+          "requiredParts": [],
+          "limb": null
+        }
+      ]
+    }
+  ]
+}

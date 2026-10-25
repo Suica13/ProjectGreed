@@ -1,0 +1,2237 @@
+{
+  "schemaVersion": 2,
+  "id": "RTX_440",
+  "code": "RTX-440",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RTX_440/RTX_440.ini",
+  "materials": {
+    "textures": {
+      "RTX_440_Chassis_1.png": "textures/RTX_440_Chassis_1.png",
+      "RTX_440_Body_1.png": "textures/RTX_440_Body_1.png",
+      "RTX_440_ArmL_1.png": "textures/RTX_440_ArmL_1.png",
+      "RTX_440_ArmR_1.png": "textures/RTX_440_ArmR_1.png",
+      "RTX_440_ShoulderL_1.png": "textures/RTX_440_ShoulderL_1.png",
+      "RTX_440_ShoulderR_1.png": "textures/RTX_440_ShoulderR_1.png",
+      "RTX_440_Head_1.png": "textures/RTX_440_Head_1.png",
+      "RTX_440_Head_1_Close.png": "textures/RTX_440_Head_1_Close.png",
+      "RTX_440_LegL_1.png": "textures/RTX_440_LegL_1.png",
+      "RTX_440_LegR_1.png": "textures/RTX_440_LegR_1.png",
+      "RTX_440_Crotch_1.png": "textures/RTX_440_Crotch_1.png",
+      "RTX_440_GroundTypeRocket.png": "textures/RTX_440_GroundTypeRocket.png",
+      "RTX_440_GroundTypeMissile.png": "textures/RTX_440_GroundTypeMissile.png",
+      "RTX_440_GroundTypeMine.png": "textures/RTX_440_GroundTypeMine.png",
+      "RTX_440_Cannon_1.png": "textures/RTX_440_Cannon_1.png",
+      "RTX_440_LegL_S_1.png": "textures/RTX_440_LegL_S_1.png",
+      "RTX_440_LegR_S_1.png": "textures/RTX_440_LegR_S_1.png",
+      "RTX_440.png": "textures/RTX_440.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "RTX_440.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Crotch",
+      "texture": "RTX_440_Chassis_1.png",
+      "bone": "Pelvis",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 4.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "RTX_440_LegL_1.png",
+      "bone": "Pelvis",
+      "order": 2.0,
+      "rotation": 0.0,
+      "frames": 4.0,
+      "frame": 0,
+      "offset": {
+        "x": 1.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "frameFps": 12,
+      "onlyAnimateWhenMoving": true,
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "RTX_440_LegR_1.png",
+      "bone": "Pelvis",
+      "order": 2.0,
+      "rotation": 0.0,
+      "frames": 4.0,
+      "frame": 0,
+      "offset": {
+        "x": -0.5,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "frameFps": 12,
+      "onlyAnimateWhenMoving": true,
+      "visibleWhen": {}
+    },
+    {
+      "name": "RTX_440_GroundTypeRocket",
+      "texture": "RTX_440_GroundTypeRocket.png",
+      "bone": "Pelvis",
+      "order": 2.0,
+      "offset": {
+        "x": -18.0,
+        "y": 2.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "RTX_440_GroundTypeMissile",
+      "texture": "RTX_440_GroundTypeMissile.png",
+      "bone": "Pelvis",
+      "order": 2.0,
+      "offset": {
+        "x": 18.0,
+        "y": 2.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "RTX_440_GroundTypeMine",
+      "texture": "RTX_440_GroundTypeMine.png",
+      "bone": "Pelvis",
+      "order": 2.0,
+      "offset": {
+        "x": 15.0,
+        "y": 3.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg_S",
+      "texture": "RTX_440_LegL_S_1.png",
+      "bone": "Pelvis",
+      "order": 2.5,
+      "scale": 1.25,
+      "rotation": 0.0,
+      "frames": 4.0,
+      "frame": 0,
+      "offset": {
+        "x": 1.0,
+        "y": -4.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "frameFps": 12,
+      "onlyAnimateWhenMoving": true,
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg_S",
+      "texture": "RTX_440_LegR_S_1.png",
+      "bone": "Pelvis",
+      "order": 2.5,
+      "scale": 1.25,
+      "rotation": 0.0,
+      "frames": 4.0,
+      "frame": 0,
+      "offset": {
+        "x": -1.0,
+        "y": -4.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "frameFps": 12,
+      "onlyAnimateWhenMoving": true,
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch_2",
+      "texture": "RTX_440_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "offset": {
+        "x": 0.0,
+        "y": 8.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "RTX_440_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "RTX_440_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "RTX_440_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_Cannon",
+      "texture": "RTX_440_Cannon_1.png",
+      "bone": "Body",
+      "order": 5.2,
+      "offset": {
+        "x": -0.5,
+        "y": 8.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RTX_440_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RTX_440_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "RTX_440_Head_1.png",
+      "bone": "Body",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "RTX_440_Head_1_Close.png",
+      "bone": "Body",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/RTX_440__EnterPilot.json",
+    "QuitPilot": "../../animations/RTX_440__QuitPilot.json",
+    "NoPilotIdle": "../../animations/RTX_440__NoPilotIdle.json",
+    "Common_Idle": "../../animations/RTX_440__Common_Idle.json",
+    "Common_Dodge_L": "../../animations/RTX_440__Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/RTX_440__Common_Dodge_R.json",
+    "OnMoving": "../../animations/RTX_440__OnMoving.json",
+    "OnMovingReversing": "../../animations/RTX_440__OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/RTX_440__OnMovingWalk.json",
+    "Guard": "../../animations/RTX_440__Guard.json",
+    "Common_Dead": "../../animations/RTX_440__Common_Dead.json",
+    "Common_Stun": "../../animations/RTX_440__Common_Stun.json",
+    "Common_Daze": "../../animations/RTX_440__Common_Daze.json",
+    "Common_Stagger": "../../animations/RTX_440__Common_Stagger.json",
+    "Common_Push_A": "../../animations/RTX_440__Common_Push_A.json",
+    "Common_Cannon_Shoot_A": "../../animations/RTX_440__Common_Cannon_Shoot_A.json",
+    "Common_StandShoot_A": "../../animations/RTX_440__Common_StandShoot_A.json",
+    "Common_Shoot_A_L": "../../animations/RTX_440__Common_Shoot_A_L.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 27500.0,
+    "en": 900.0,
+    "move": 5,
+    "mobility": 110.0,
+    "cost": 375,
+    "counterLimit": 1,
+    "accuracy": 125.0,
+    "partStructuralStrength": 125.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 5.0,
+    "shooting": 25.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 10.0,
+      "flat": 50.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 150.0
+    },
+    "melee": {
+      "percent": 10.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 27500.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.0,
+    "turnSpeed": 1.5,
+    "reaction": 110.0,
+    "shooting": 125.0,
+    "melee": 105.0,
+    "nativeTags": [
+      "RTX_440",
+      "Unit",
+      "MS",
+      "EFSF",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [
+      "Transform_LandLand_Tank"
+    ],
+    "accuracy": 125.0,
+    "partStructuralStrength": 125.0,
+    "balanceStatus": "native-level",
+    "unitLevel": 1500.0,
+    "tacticalMoveBeforeBonus": 4
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost"
+  },
+  "name": "强袭型钢坦克",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "强袭型钢坦克",
+      "description": "钢坦克的局地战特化型,具备很强的突袭能力"
+    },
+    "en": {
+      "name": "Assault Guntank",
+      "description": "A local warfare specialized variant of the Guntank, with powerful assault capabilities"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 125.0,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 6500.0,
+      "damageComponents": {
+        "melee": 3250.0,
+        "meleeShell": 3250.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Push_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.75,
+            "requiredParts": [],
+            "delay": 0.45
+          },
+          {
+            "delay": 1.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3,
+        "barrels": [
+          {
+            "id": "Common_Push_A",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "category": "melee",
+      "nativePayload": {
+        "CqbDamage": 3250.0,
+        "CqbShellDamage": 3250.0,
+        "DpDamage": 1000.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 0.75,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrel": "Common_Push_A",
+        "entry": "hiddenAction_Common_Push_A_Fire",
+        "cooldown": 3.0,
+        "duration": 1.45,
+        "firstShot": 0.45,
+        "lastShot": 0.45,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_Common_Push_A_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_Common_Push_A_SetWeaponIndex",
+          "hiddenAction_Common_Push_A_Step_1",
+          "hiddenAction_Common_Push_A_Fire_Step_1",
+          "hiddenAction_Common_Push_A_Fire_Step_2",
+          "hiddenAction_Common_Push_A_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 5
+    },
+    "Common_Mortar_Bombing_MS": {
+      "name": "迫击炮轰炸",
+      "type": "shell",
+      "min": 5,
+      "max": 8,
+      "hit": 85.0,
+      "en": 150.0,
+      "sourceName": "Common_Mortar_Bombing_MS",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "skill",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "shell": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 2.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.5
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.5
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.5
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.5
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.5
+          },
+          {
+            "delay": 2.5
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Bombing_MS.gw",
+        "barrels": [
+          {
+            "id": "Common_Mortar_Bombing_MS",
+            "x": 15.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 25.0,
+        "forwardOffset": -5.0,
+        "rotation": 0,
+        "motion": "mortar"
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 15.0,
+              "y": 0.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.25
+      },
+      "targetModifiers": {
+        "air": 0.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S"
+      ],
+      "category": "mortar",
+      "noCounter": true,
+      "special": {
+        "type": "mortar",
+        "radius": 1,
+        "emptyCells": true
+      },
+      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "nativePayload": {
+        "ShellDamage": 2500.0,
+        "DpDamage": 100.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 0.5,
+        "HeightHitRange": 10.0,
+        "ProjectileSpeed": 25.0,
+        "ProjectileSpread": 75.0,
+        "ProjectileExplosionRange": 55.0,
+        "ProjectileLife": 45.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Bombing_MS.gw",
+        "barrel": "Common_Mortar_Bombing_MS",
+        "entry": "action_Common_Mortar_Bombing_MS_Trigger",
+        "cooldown": 120.0,
+        "duration": 7.0,
+        "firstShot": 2.0,
+        "lastShot": 4.5,
+        "firingEvents": 6,
+        "projectiles": 6,
+        "declaredEnergy": 150.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 150.0,
+        "actions": [
+          "action_Common_Mortar_Bombing_MS_Trigger",
+          "hiddenAction_SetAttackingCantAimOn",
+          "hiddenAction_SetAttackingCantTurnOn",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SetOnSkillOn",
+          "hiddenAction_Common_Mortar_Bombing_MS_SetWeaponIndex",
+          "hiddenAction_Common_Mortar_Bombing_MS_B12_Step_1",
+          "hiddenAction_Common_Mortar_Bombing_MS_Fire_Step_1",
+          "hiddenAction_Common_Mortar_Bombing_MS_Fire_Step_2",
+          "hiddenAction_Common_Mortar_Bombing_MS_Fire_Step_3",
+          "hiddenAction_Common_Mortar_Bombing_MS_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetOnSkillOff",
+          "hiddenAction_SetAttackingCantAimOff",
+          "hiddenAction_SetAttackingCantTurnOff"
+        ]
+      },
+      "actionCost": 5
+    },
+    "EF_RTX_440_Rocket": {
+      "name": "导弹发射器",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 100.0,
+      "en": 35.0,
+      "sourceName": "EF_RTX_440_Rocket",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 1750.0,
+      "damageComponents": {
+        "shell": 1750.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0.3
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "backpack"
+      ],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Rocket.gw",
+        "barrels": [
+          {
+            "id": "EF_RTX_440_Rocket",
+            "x": -16.0,
+            "y": 0.0
+          },
+          {
+            "id": "EF_RTX_440_Rocket_L",
+            "x": -18.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 35.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -16.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -18.0,
+              "y": 0.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.25
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "mergedPositions": [
+        "EF_RTX_440_Rocket",
+        "EF_RTX_440_Rocket_L"
+      ],
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 1750.0,
+        "DpDamage": 45.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 35.0,
+        "ProjectileTurnspeed": 0.15,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 45.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Rocket.gw",
+        "barrel": "EF_RTX_440_Rocket",
+        "entry": "hiddenAction_EF_RTX_440_Rocket_Fire",
+        "cooldown": 18.0,
+        "duration": 1.9499999999999997,
+        "firstShot": 0.3,
+        "lastShot": 1.6499999999999997,
+        "firingEvents": 10,
+        "projectiles": 10,
+        "declaredEnergy": 35.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 35.0,
+        "actions": [
+          "hiddenAction_EF_RTX_440_Rocket_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_EF_RTX_440_Rocket_SetWeaponIndex",
+          "hiddenAction_EF_RTX_440_Rocket_B10_Step_1",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_1",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_2",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_4",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_3",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2
+    },
+    "EF_RTX_440_Rocket_L": {
+      "name": "导弹发射器",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 100.0,
+      "en": 35.0,
+      "sourceName": "EF_RTX_440_Rocket_L",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 1750.0,
+      "damageComponents": {
+        "shell": 1750.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0.3
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Rocket.gw",
+        "barrels": [
+          {
+            "id": "EF_RTX_440_Rocket",
+            "x": -16.0,
+            "y": 0.0
+          },
+          {
+            "id": "EF_RTX_440_Rocket_L",
+            "x": -18.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 35.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -16.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -18.0,
+              "y": 0.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.25
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "paired_weapon"
+        ],
+        "mergedInto": "EF_RTX_440_Rocket"
+      },
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 1750.0,
+        "DpDamage": 45.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 35.0,
+        "ProjectileTurnspeed": 0.15,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 45.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Rocket.gw",
+        "barrel": "EF_RTX_440_Rocket",
+        "entry": "hiddenAction_EF_RTX_440_Rocket_Fire",
+        "cooldown": 18.0,
+        "duration": 1.9499999999999997,
+        "firstShot": 0.3,
+        "lastShot": 1.6499999999999997,
+        "firingEvents": 10,
+        "projectiles": 10,
+        "declaredEnergy": 35.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 35.0,
+        "actions": [
+          "hiddenAction_EF_RTX_440_Rocket_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_EF_RTX_440_Rocket_SetWeaponIndex",
+          "hiddenAction_EF_RTX_440_Rocket_B10_Step_1",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_1",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_2",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_4",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_3",
+          "hiddenAction_EF_RTX_440_Rocket_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2
+    },
+    "Common_Cannon_NoStop": {
+      "name": "加农炮",
+      "type": "shell",
+      "min": 3,
+      "max": 5,
+      "hit": 75.0,
+      "en": 55.0,
+      "sourceName": "Common_Cannon_NoStop",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 10000.0,
+      "damageComponents": {
+        "shell": 10000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.25
+          },
+          {
+            "delay": 1.25
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "backpack"
+      ],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_Cannon_NoStop.gw",
+        "barrels": [
+          {
+            "id": "Common_Cannon_NoStop",
+            "x": 7.0,
+            "y": 32.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Cannon_1.png",
+        "scale": 0.75,
+        "speed": 45.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_L",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 7.0,
+              "y": 32.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/ShellCannon_1.ogg",
+        "volume": 0.6
+      },
+      "targetModifiers": {
+        "air": 0.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ],
+      "category": "cannon",
+      "nativePayload": {
+        "ShellDamage": 10000.0,
+        "DpDamage": 450.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 0.5,
+        "HeightHitRange": 10.0,
+        "ProjectileSpeed": 45.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 40.0,
+        "ProjectileLife": 70.0,
+        "ProjectileBlastRange": 80.0,
+        "ProjectileBlastDamageModifier": 0.35,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_Cannon_NoStop.gw",
+        "barrel": "Common_Cannon_NoStop",
+        "entry": "hiddenAction_Common_Cannon_NoStop_Fire",
+        "cooldown": 9.0,
+        "duration": 1.85,
+        "firstShot": 0.6,
+        "lastShot": 0.6,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 55.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 55.0,
+        "actions": [
+          "hiddenAction_Common_Cannon_NoStop_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_Common_Cannon_NoStop_SetWeaponIndex",
+          "hiddenAction_Common_Cannon_NoStop_B1_Step_1",
+          "hiddenAction_Common_Cannon_NoStop_Fire_Step_1",
+          "hiddenAction_Common_Cannon_NoStop_Fire_Step_2",
+          "hiddenAction_Common_Cannon_NoStop_Fire_Step_3",
+          "hiddenAction_Common_Cannon_NoStop_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 3
+    },
+    "EF_RTX_440_HandGun": {
+      "name": "EF RTX 440 HandGun",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 85.0,
+      "en": 35.0,
+      "sourceName": "EF_RTX_440_HandGun",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_StandShoot_A",
+      "damagePerShot": 600.0,
+      "damageComponents": {
+        "shell": 600.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_StandShoot_A",
+            "delay": 0.3
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_HandGun.gw",
+        "barrels": [
+          {
+            "id": "EF_RTX_440_HandGun",
+            "x": 10.0,
+            "y": 10.0
+          },
+          {
+            "id": "EF_RTX_440_HandGun_L",
+            "x": -10.0,
+            "y": 10.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 40.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 10.0,
+              "y": 10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -10.0,
+              "y": 10.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.25
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "mergedPositions": [
+        "EF_RTX_440_HandGun",
+        "EF_RTX_440_HandGun_L"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 600.0,
+        "DpDamage": 30.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 40.0,
+        "ProjectileTurnspeed": 1.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 45.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_HandGun.gw",
+        "barrel": "EF_RTX_440_HandGun",
+        "entry": "hiddenAction_EF_RTX_440_HandGun_Fire",
+        "cooldown": 5.0,
+        "duration": 1.2,
+        "firstShot": 0.3,
+        "lastShot": 0.9,
+        "firingEvents": 10,
+        "projectiles": 10,
+        "declaredEnergy": 35.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 35.0,
+        "actions": [
+          "hiddenAction_EF_RTX_440_HandGun_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_EF_RTX_440_HandGun_SetWeaponIndex",
+          "hiddenAction_EF_RTX_440_HandGun_B10_Step_1",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_1",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_2",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_Sub",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_3",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "rangeRole": "short_secondary",
+      "actionCost": 2
+    },
+    "EF_RTX_440_HandGun_L": {
+      "name": "EF RTX 440 HandGun L",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 85.0,
+      "en": 35.0,
+      "sourceName": "EF_RTX_440_HandGun_L",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_StandShoot_A",
+      "damagePerShot": 600.0,
+      "damageComponents": {
+        "shell": 600.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_StandShoot_A",
+            "delay": 0.3
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_HandGun.gw",
+        "barrels": [
+          {
+            "id": "EF_RTX_440_HandGun",
+            "x": 10.0,
+            "y": 10.0
+          },
+          {
+            "id": "EF_RTX_440_HandGun_L",
+            "x": -10.0,
+            "y": 10.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 40.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 10.0,
+              "y": 10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -10.0,
+              "y": 10.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.25
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "paired_weapon"
+        ],
+        "mergedInto": "EF_RTX_440_HandGun"
+      },
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 600.0,
+        "DpDamage": 30.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 40.0,
+        "ProjectileTurnspeed": 1.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 45.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_HandGun.gw",
+        "barrel": "EF_RTX_440_HandGun",
+        "entry": "hiddenAction_EF_RTX_440_HandGun_Fire",
+        "cooldown": 5.0,
+        "duration": 1.2,
+        "firstShot": 0.3,
+        "lastShot": 0.9,
+        "firingEvents": 10,
+        "projectiles": 10,
+        "declaredEnergy": 35.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 35.0,
+        "actions": [
+          "hiddenAction_EF_RTX_440_HandGun_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_EF_RTX_440_HandGun_SetWeaponIndex",
+          "hiddenAction_EF_RTX_440_HandGun_B10_Step_1",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_1",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_2",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_Sub",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_3",
+          "hiddenAction_EF_RTX_440_HandGun_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "rangeRole": "short_secondary",
+      "actionCost": 2
+    },
+    "EF_RTX_440_Flamethrower": {
+      "name": "喷火器",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 85.0,
+      "en": 45.0,
+      "sourceName": "EF_RTX_440_Flamethrower",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 1250.0,
+      "damageComponents": {
+        "shell": 1250.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.75,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "partBreakModifier": 0.75,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Flamethrower.gw",
+        "barrels": [
+          {
+            "id": "EF_RTX_440_Flamethrower",
+            "x": -13.0,
+            "y": 15.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_Hit_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 45.0,
+        "forwardOffset": 20.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -13.0,
+              "y": 15.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Burned_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "category": "other",
+      "nativePayload": {
+        "ShellDamage": 1250.0,
+        "DpDamage": 75.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 0.75,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 10.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 45.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 4.5,
+        "ProjectileAttackTimes": 12.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "BurnedDamage": 3.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Flamethrower.gw",
+        "barrel": "EF_RTX_440_Flamethrower",
+        "entry": "automatic_turret",
+        "cooldown": 9.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 45.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 45.0,
+        "energy": 45.0,
+        "actions": []
+      },
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "Transform_LandLand_Tank",
+      "source": "Template/Unit/Skill/Transform_LandLand_Tank.gw",
+      "status": "review",
+      "name": "MS／坦克变形"
+    },
+    {
+      "id": "special_Common_MineLauncher_Continuous_Back_Ground_RTX_440",
+      "name": "special_Common_MineLauncher_Continuous_Back_Ground_RTX_440",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Ground_RTX_440.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "EF_RTX_440_Rocket",
+        "Common_Push_A",
+        "Common_Mortar_Bombing_MS",
+        "Common_Cannon_NoStop",
+        "EF_RTX_440_HandGun",
+        "EF_RTX_440_Flamethrower"
+      ]
+    }
+  ],
+  "description": "钢坦克的局地战特化型,具备很强的突袭能力",
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard",
+    "kit_2": "standard",
+    "kit_3": "standard",
+    "kit_4": "standard",
+    "kit_5": "standard",
+    "kit_6": "standard"
+  },
+  "costBalance": {
+    "nativeLevel": 1500.0,
+    "levelMultiplier": 0.25,
+    "published": 375
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "pairedWeapons": [
+    {
+      "id": "EF_RTX_440_Rocket",
+      "channels": [
+        {
+          "id": "EF_RTX_440_Rocket",
+          "weaponId": "EF_RTX_440_Rocket",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "EF_RTX_440_Rocket_L",
+          "weaponId": "EF_RTX_440_Rocket_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        }
+      ]
+    },
+    {
+      "id": "EF_RTX_440_HandGun",
+      "channels": [
+        {
+          "id": "EF_RTX_440_HandGun",
+          "weaponId": "EF_RTX_440_HandGun",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        },
+        {
+          "id": "EF_RTX_440_HandGun_L",
+          "weaponId": "EF_RTX_440_HandGun_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        }
+      ]
+    }
+  ]
+}

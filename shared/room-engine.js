@@ -269,17 +269,28 @@ function createRoomEngine({
           room,
           unit(room, pending.attacker),
           unit(room, pending.target),
+          pending,
         );
         pending.counterOptions = options.ids;
-        pending.counterTargets = pending.attacks.map((attack) => ({
-          attacker: attack.attacker,
-          weapon: attack.weapon,
-          options: planner.counterOptions(
-            room,
-            unit(room, attack.attacker),
-            unit(room, pending.target),
-          ).ids,
-        }));
+        const incoming = new Map();
+        for (const attack of pending.attacks) {
+          const previous = incoming.get(attack.attacker);
+          if (previous) {
+            previous.weapons.push(attack.weapon);
+            continue;
+          }
+          incoming.set(attack.attacker, {
+            ...attack,
+            weapons: [attack.weapon],
+            options: planner.counterOptions(
+              room,
+              unit(room, attack.attacker),
+              unit(room, pending.target),
+              attack,
+            ).ids,
+          });
+        }
+        pending.counterTargets = [...incoming.values()];
         pending.countersRemaining = options.remaining;
       }
       room.phase = "reaction";
@@ -288,12 +299,16 @@ function createRoomEngine({
     const battles = planner.resolve(room);
     for (const battle of battles)
       for (const e of battle.events) {
+        if (e.empty) {
+          log(room, `迫击炮落点 (${e.impactCell.x},${e.impactCell.y})：空地。`);
+          continue;
+        }
         const from = unit(room, e.from),
           to = unit(room, e.to);
         const weapon = G.modelOf(from).weapons.find((weapon) => weapon.id === e.weapon);
         log(
           room,
-          `${unitLabel(room, from)} 使用${weapon.name} → ${unitLabel(room, to)}：${e.hit ? e.damage + "伤害" : "未命中"}（命中 ${e.hitCount}/${e.strikeCount}）${e.brokenParts?.length ? "，部位破坏：" + e.brokenParts.map((part) => G.partNames[part]).join("、") : ""}${e.after <= 0 ? "，击破！" : ""}`,
+          `${unitLabel(room, from)} 使用${weapon.name} → ${unitLabel(room, to)}：${e.hit ? e.damage + "伤害" : "未命中"}（命中 ${e.hitCount}/${e.strikeCount}）${e.brokenParts?.length ? "，部位破坏：" + [...new Set(e.brokenParts)].map((part) => G.partNames[part] || part).join("、") : ""}${e.after <= 0 ? "，击破！" : ""}`,
         );
       }
     if (battles.length) {
@@ -305,11 +320,13 @@ function createRoomEngine({
           .map((member) => member.id),
         ready: [],
         automatic,
+        resumeTurn: !!room.openingSnipe,
       };
       room.phase = "playback";
       return { type: "combat_batch", batchId: room.playback.id };
     }
     room.phase = "idle";
+    if (room.openingSnipe) return resumeActionPhase(room, automatic);
     return advanceTurn(room, automatic);
   }
   function completePlayback(room) {
@@ -320,16 +337,47 @@ function createRoomEngine({
     room.playback = null;
     room.phase = room.game.winner === null ? "idle" : "finished";
     const event =
-      room.game.winner === null ? advanceTurn(room, playback.automatic) : { type: "match_end" };
+      room.game.winner === null
+        ? playback.resumeTurn
+          ? resumeActionPhase(room, playback.automatic)
+          : advanceTurn(room, playback.automatic)
+        : { type: "match_end" };
     room.revision++;
     room.lastEvent = { id: randomId(), ...event };
   }
+  function resumeActionPhase(room, automatic = false) {
+    delete room.openingSnipe;
+    room.turnNotBefore = Date.now() + G.turnTransitionMs;
+    return {
+      type: "turn",
+      fromTeam: room.game.team,
+      toTeam: room.game.team,
+      round: room.game.round,
+      automatic,
+    };
+  }
   function advanceTurn(room, automatic = false) {
+    delete room.openingSnipe;
     const fromTeam = room.game.team;
     G.end(room.game);
+    if (room.game.winner !== null) {
+      room.phase = "finished";
+      return { type: "match_end" };
+    }
+    for (const effect of room.game.turnEffects || [])
+      if (effect.type === "overdrive")
+        log(
+          room,
+          `${unitLabel(room, unit(room, effect.unitId))} ${effect.skillId}消耗耐久与EN${effect.expired ? "，强化解除" : ""}。`,
+        );
+    planner.resumeCharges(room);
     room.turnDone = Array(room.seats.length).fill(false);
     room.turnNotBefore = Date.now() + G.turnTransitionMs;
-    log(room, `第${room.game.round}回合 · 队伍${room.game.team + 1}开始行动，恢复15 EN。`);
+    log(room, `第${room.game.round}回合 · 队伍${room.game.team + 1}开始行动，不自动恢复EN。`);
+    if (room.plans.length) {
+      room.openingSnipe = true;
+      return resolvePlans(room, automatic);
+    }
     return { type: "turn", fromTeam, toTeam: room.game.team, round: room.game.round, automatic };
   }
   // 联机自动回合由服务端计时；断线、战斗或出现合法行动立即取消。
@@ -566,7 +614,54 @@ function createRoomEngine({
       return unfinished ? { player: unfinished, action: "end_turn", fields: {} } : null;
     }
     const u = room.game.units.find((u) => G.ownerOf(u) === player.seat && u.hp > 0 && !u.acted);
+    for (const skill of G.unitSkills(u).filter((s) => s.type === "overdrive")) {
+      if (
+        room.game.units.some(
+          (enemy) => enemy.team !== u.team && enemy.hp > 0 && G.dist(u, enemy) <= 6,
+        ) &&
+        G.canUseSkill(room.game, u, skill.id)
+      )
+        return {
+          player,
+          action: "skill",
+          fields: { unitId: u.id, skillId: skill.id, x: u.x, y: u.y },
+        };
+    }
+    for (const skill of G.unitSkills(u).filter((s) => ["repair", "recon"].includes(s.type))) {
+      const targets = G.skillTargets(room.game, u, skill.id).sort((a, b) => {
+        const left = G.at(room.game, a.x, a.y),
+          right = G.at(room.game, b.x, b.y);
+        return left.hp / G.modelOf(left).hp - right.hp / G.modelOf(right).hp;
+      });
+      if (targets.length)
+        return {
+          player,
+          action: "skill",
+          fields: { unitId: u.id, skillId: skill.id, ...targets[0] },
+        };
+    }
+    if (u.hp < G.modelOf(u).hp * 0.25 && !u.plan) {
+      for (const skill of G.unitSkills(u).filter((s) =>
+        ["escape", "armor_purge"].includes(s.type),
+      )) {
+        const enemies = room.game.units.filter((e) => e.hp > 0 && e.team !== u.team);
+        const targets = G.skillTargets(room.game, u, skill.id);
+        targets.sort(
+          (a, b) =>
+            Math.min(...enemies.map((e) => G.dist(b, e))) -
+            Math.min(...enemies.map((e) => G.dist(a, e))),
+        );
+        if (targets.length)
+          return {
+            player,
+            action: "skill",
+            fields: { unitId: u.id, skillId: skill.id, ...targets[0] },
+          };
+      }
+    }
     const choice = G.aiChoice(room.game, u);
+    if (choice?.rotation)
+      return { player, action: "rotate", fields: { unitId: u.id, direction: choice.rotation } };
     if (choice && !u.moved && (choice.x !== u.x || choice.y !== u.y))
       return { player, action: "move", fields: { unitId: u.id, x: choice.x, y: choice.y } };
     let best = null;
@@ -577,13 +672,41 @@ function createRoomEngine({
           const score = estimate.hit * estimate.damage;
           if (!best || score > best.score) best = { target, weapon, score };
         }
-    return best
-      ? {
-          player,
-          action: "attack",
-          fields: { unitId: u.id, targetId: best.target.id, weaponId: best.weapon.id },
-        }
-      : { player, action: "wait", fields: { unitId: u.id } };
+    if (!best) return { player, action: "wait", fields: { unitId: u.id } };
+    const weapons = [best.weapon];
+    if (best.weapon.slot !== "skill") {
+      const candidates = G.modelOf(u).weapons.filter(
+        (w) => w.slot !== "skill" && G.canAttack(room.game, u, best.target, w),
+      );
+      candidates.sort((a, b) => {
+        const x = G.estimate(room.game, u, best.target, a),
+          y = G.estimate(room.game, u, best.target, b);
+        return y.damage * y.hit - x.damage * x.hit;
+      });
+      while (weapons.length < 32) {
+        const next = candidates.find((w) => {
+          try {
+            G.attackQueue(room.game, u, best.target, [...weapons, w]);
+            return true;
+          } catch {
+            return false;
+          }
+        });
+        if (!next) break;
+        weapons.push(next);
+      }
+    }
+
+    return {
+      player,
+      action: "attack",
+      fields: {
+        unitId: u.id,
+        targetId: best.target.id,
+        weaponId: best.weapon.id,
+        weaponIds: weapons.map((w) => w.id),
+      },
+    };
   }
   function scheduleAI(room) {
     clearTimeout(aiTimers.get(room));
@@ -641,7 +764,6 @@ function createRoomEngine({
   }
   function log(room, text) {
     room.log.unshift(text);
-    room.log = room.log.slice(0, 80);
   }
   const unit = (room, id) => room.game.units.find((u) => u.id === id);
   function ownUnit(room, seat, id) {
@@ -1006,7 +1128,9 @@ function createRoomEngine({
       room.phase === "idle" &&
       msg.round === room.game.round &&
       msg.matchId === room.matchId &&
-      ["move", "undo", "wait", "attack", "cancel_attack", "end_turn"].includes(msg.action);
+      ["move", "rotate", "skill", "undo", "wait", "attack", "cancel_attack", "end_turn"].includes(
+        msg.action,
+      );
     const currentResponse =
       msg.action === "respond" &&
       !!reactionForSeat(room, seat) &&
@@ -1039,6 +1163,33 @@ function createRoomEngine({
       case "confirm_deployment": {
         if (room.phase !== "deployment") throw Error("Not deploying");
         if (G.confirmDeployment(room.game, seat)) room.phase = "idle";
+        break;
+      }
+      case "rotate": {
+        if (room.phase === "deployment") {
+          const u = ownUnit(room, seat, msg.unitId);
+          G.rotate(room.game, u, msg.direction);
+          event = { type: "rotate", unitId: u.id };
+        } else {
+          validateActive(room, seat);
+          const u = ownUnit(room, seat, msg.unitId);
+          G.rotate(room.game, u, msg.direction);
+          event = { type: "rotate", unitId: u.id };
+          log(room, `${unitLabel(room, u)} ${msg.direction < 0 ? "左转" : "右转"}。`);
+        }
+        break;
+      }
+      case "skill": {
+        validateActive(room, seat);
+        const u = ownUnit(room, seat, msg.unitId),
+          label = unitLabel(room, u);
+        const skill = G.unitSkills(u).find((s) => s.id === msg.skillId);
+        event = G.useSkill(room.game, u, msg.skillId, msg.x, msg.y);
+        const result = unit(room, event.resultId);
+        log(
+          room,
+          `${label} 使用${skill.name} → ${G.modelOf(result).name}，位于${String.fromCharCode(65 + result.x)}${result.y + 1}。`,
+        );
         break;
       }
       case "move": {
@@ -1089,13 +1240,17 @@ function createRoomEngine({
         validateActive(room, seat);
         const a = ownUnit(room, seat, msg.unitId),
           b = unit(room, msg.targetId),
-          w = G.modelOf(a).weapons.find((weapon) => weapon.id === msg.weaponId);
+          ids = msg.weaponIds ?? [msg.weaponId],
+          weapons = Array.isArray(ids)
+            ? ids.map((id) => G.modelOf(a).weapons.find((w) => w.id === id))
+            : [],
+          w = weapons[0];
         if (!w || !b) throw Error("武器或目标无效");
-        const plan = planner.plan(room, a, b, w, seat);
+        const plan = planner.plan(room, a, b, weapons, seat);
         event = { type: "plan_attack", ...plan };
         log(
           room,
-          `${unitLabel(room, a)} 计划使用${w.name}攻击${unitLabel(room, b)}，等待本队结束规划。`,
+          `${unitLabel(room, a)} 计划使用${weapons.map((w) => w.name).join(" → ")}攻击${unitLabel(room, b)}，等待本队结束规划。`,
         );
         break;
       }

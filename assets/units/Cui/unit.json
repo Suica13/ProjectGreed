@@ -1,0 +1,578 @@
+{
+  "schemaVersion": 2,
+  "id": "Cui",
+  "code": "Cui",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/Cui/Cui.ini",
+  "materials": {
+    "textures": {
+      "Cui_Body_1.png": "textures/Cui_Body_1.png",
+      "Cui.png": "textures/Cui.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "Cui_Turret_AA_1.png": "textures/Cui_Turret_AA_1.png"
+    },
+    "icon": "Cui.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "Turret_ZN_Cui_AA": {
+      "x": 0.0,
+      "y": 0.0,
+      "endDirOffset": 0
+    }
+  },
+  "layers": [
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "Cui_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.5,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ZN_Cui_AA",
+      "bone": "Turret_ZN_Cui_AA",
+      "texture": "Cui_Turret_AA_1.png",
+      "order": 5.0,
+      "scale": 0.65,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "rotation": 0,
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/Cui__OnMoving.json",
+    "OnMovingReversing": "../../animations/Cui__OnMovingReversing.json",
+    "Common_Dead": "../../animations/Cui__Common_Dead.json",
+    "Common_Stun": "../../animations/Cui__Common_Stun.json",
+    "Common_Idle": "../../animations/Cui__Common_Idle.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 2500.0,
+    "en": 600.0,
+    "move": 6,
+    "mobility": 85.0,
+    "cost": 50,
+    "counterLimit": 1,
+    "accuracy": 100.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "visualTurrets": [
+      {
+        "id": "ZN_Cui_AA",
+        "bone": "Turret_ZN_Cui_AA",
+        "idleDir": 0,
+        "arc": 180
+      }
+    ],
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 2500.0,
+    "walkSpeed": 0.75,
+    "boostSpeed": 1.45,
+    "turnSpeed": 0.75,
+    "reaction": 85.0,
+    "shooting": 100.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "Cui",
+      "Unit",
+      "Tank",
+      "ZEON",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [
+      "LaunchAllUnits"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 200.0,
+    "tacticalMoveBeforeBonus": 5
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk"
+  },
+  "name": "邱伊",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "邱伊",
+      "description": "吉翁军运兵车"
+    },
+    "en": {
+      "name": "Cui",
+      "description": "Zeon troop transport vehicle"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "ZN_Cui_AA": {
+      "name": "ZN Cui AA",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 100.0,
+      "en": 10.0,
+      "sourceName": "ZN_Cui_AA",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 30.0,
+      "damageComponents": {
+        "shell": 30.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_Cui_AA.gw",
+        "barrels": [
+          {
+            "id": "ZN_Cui_AA",
+            "x": 0.0,
+            "y": 3.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 100.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_ZN_Cui_AA",
+            "offset": {
+              "x": 0.0,
+              "y": 3.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 2.0,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 30.0,
+        "DpDamage": 1.5,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 1.0,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 1.0,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 2.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 100.0,
+        "ProjectileSpread": 6.0,
+        "ProjectileLife": 8.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_Cui_AA.gw",
+        "barrel": "ZN_Cui_AA",
+        "entry": "automatic_turret",
+        "cooldown": 3.0,
+        "duration": 1.9000000000000001,
+        "firstShot": 0.0,
+        "lastShot": 1.9000000000000001,
+        "firingEvents": 20,
+        "projectiles": 20,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 10.0,
+        "actions": []
+      },
+      "actionCost": 3
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "review",
+      "name": "搭载与放出"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "ZN_Cui_AA"
+      ]
+    }
+  ],
+  "description": "吉翁军运兵车",
+  "costBalance": {
+    "nativeLevel": 200.0,
+    "levelMultiplier": 0.25,
+    "published": 50
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1
+}

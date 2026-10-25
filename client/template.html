@@ -1479,7 +1479,7 @@
           <div data-ui-node="node-23" class="left-note">
             双方携带各自编组出击。<br
               data-ui-node="node-24"
-            />每台单位每回合可移动一次、攻击一次。反击消耗武器资源，不消耗自己的行动机会。
+            />每台单位每回合可移动一次，并用行动点编排攻击序列。反击消耗武器资源，可用行动点为正常上限的75%（向上取整），不扣除己方回合行动点。
             <p data-ui-node="node-25">胜利条件：击破全部敌机。</p>
             <span data-ui-node="node-26" id="modeLabel"></span>
             <p data-ui-node="node-27" id="netBadge">未连接</p>
@@ -1544,6 +1544,7 @@
               ><button id="showChat" role="tab" aria-selected="false" aria-controls="chatPanel">
                 聊天
               </button>
+              <button id="downloadBattleLog" type="button" disabled>下载战斗LOG</button>
             </h3>
             <div
               data-ui-node="node-52"
@@ -1606,9 +1607,12 @@
             ></button
           ><button data-ui-node="node-72" class="response" id="responseEvade">
             <strong data-ui-node="node-73">回避</strong
-            ><small data-ui-node="node-74">自身反应系数×1.25，最终回避率+15个百分点，不反击。</small>
+            ><small data-ui-node="node-74"
+              >自身反应系数×1.25，最终回避率+15个百分点，不反击。</small
+            >
           </button>
         </div>
+        <p id="counterActionPoints" class="muted"></p>
         <div data-ui-node="node-75" id="counterList" class="counter-list"></div>
         <label id="counterTargetWrap"
           >反击目标<select id="counterTarget" aria-label="反击目标"></select
@@ -1969,6 +1973,7 @@
               >
                 LOG
               </button>
+              <button id="roomDownloadBattleLog" type="button" disabled>下载战斗LOG</button>
             </div>
             <div
               id="roomCombatLog"
@@ -2887,13 +2892,31 @@
         background: #0b1c28e8;
       }
       .map-environment {
-        position: absolute; top: 10px; left: 10px; z-index: 3;
-        padding: 5px 10px; border: 1px solid currentColor; border-radius: 5px;
-        background: #0b1724e8; font-size: 13px; font-weight: 700; pointer-events: none;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 3;
+        padding: 5px 10px;
+        border: 1px solid currentColor;
+        border-radius: 5px;
+        background: #0b1724e8;
+        font-size: 13px;
+        font-weight: 700;
+        pointer-events: none;
       }
-      #mapSectorLabel { top: 48px; max-width: calc(100% - 24px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .map-environment.is-ground { color: #f2a044; }
-      .map-environment.is-space { color: #b788ff; }
+      #mapSectorLabel {
+        top: 48px;
+        max-width: calc(100% - 24px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .map-environment.is-ground {
+        color: #f2a044;
+      }
+      .map-environment.is-space {
+        color: #b788ff;
+      }
       .map-camera-controls {
         max-width: calc(100% - 94px);
         flex-wrap: wrap;
@@ -3115,29 +3138,80 @@
     </style>
     <button id="openClientSettings" type="button" aria-haspopup="dialog">设置</button>
     <dialog id="clientSettingsDialog" aria-labelledby="clientSettingsTitle">
-      <div class="settings-heading"><h2 id="clientSettingsTitle">设置</h2><button id="closeClientSettings" type="button">关闭</button></div>
+      <div class="settings-heading">
+        <h2 id="clientSettingsTitle">设置</h2>
+        <button id="closeClientSettings" type="button">关闭</button>
+      </div>
       <label for="settingsLanguage">语言</label>
       <select id="settingsLanguage" data-i18n-ignore aria-label="Language">
-        <option value="zh">简体中文</option><option value="ja">日本語</option><option value="en">English</option>
+        <option value="zh">简体中文</option>
+        <option value="ja">日本語</option>
+        <option value="en">English</option>
       </select>
-      <label for="volume-master">总音量 <output id="volume-master-value" for="volume-master"></output></label>
+      <label for="volume-master"
+        >总音量 <output id="volume-master-value" for="volume-master"></output
+      ></label>
       <input id="volume-master" aria-label="总音量" type="range" min="0" max="100" step="1" />
-      <label for="volume-music">音乐音量 <output id="volume-music-value" for="volume-music"></output></label>
+      <label for="volume-music"
+        >音乐音量 <output id="volume-music-value" for="volume-music"></output
+      ></label>
       <input id="volume-music" aria-label="音乐音量" type="range" min="0" max="100" step="1" />
-      <label for="volume-sfx">音效音量 <output id="volume-sfx-value" for="volume-sfx"></output></label>
+      <label for="volume-sfx"
+        >音效音量 <output id="volume-sfx-value" for="volume-sfx"></output
+      ></label>
       <input id="volume-sfx" aria-label="音效音量" type="range" min="0" max="100" step="1" />
     </dialog>
     <style>
-      #openClientSettings { position: fixed; top: 12px; right: 14px; z-index: 1500; }
-      .header-buttons { padding-right: 72px; }
-      #clientSettingsDialog { width: min(420px, calc(100vw - 28px)); max-height: calc(100dvh - 28px); overflow: auto; box-sizing: border-box; padding: 24px; border: 1px solid #496775; border-radius: 12px; background: #142530; color: var(--text); }
-      #clientSettingsDialog::backdrop { background: #000a; }
-      .settings-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
-      .settings-heading h2 { margin: 0; }
-      #clientSettingsDialog label { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; margin-bottom: 10px; }
-      #clientSettingsDialog select, #clientSettingsDialog input { width: 100%; }
-      #clientSettingsDialog output { color: #f0ce67; }
-      #clientSettingsDialog input { accent-color: #65cfff; }
+      #openClientSettings {
+        position: fixed;
+        top: 12px;
+        right: 14px;
+        z-index: 1500;
+      }
+      .header-buttons {
+        padding-right: 72px;
+      }
+      #clientSettingsDialog {
+        width: min(420px, calc(100vw - 28px));
+        max-height: calc(100dvh - 28px);
+        overflow: auto;
+        box-sizing: border-box;
+        padding: 24px;
+        border: 1px solid #496775;
+        border-radius: 12px;
+        background: #142530;
+        color: var(--text);
+      }
+      #clientSettingsDialog::backdrop {
+        background: #000a;
+      }
+      .settings-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .settings-heading h2 {
+        margin: 0;
+      }
+      #clientSettingsDialog label {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+      #clientSettingsDialog select,
+      #clientSettingsDialog input {
+        width: 100%;
+      }
+      #clientSettingsDialog output {
+        color: #f0ce67;
+      }
+      #clientSettingsDialog input {
+        accent-color: #65cfff;
+      }
     </style>
     <script id="art" type="application/json">
       __DATA__
@@ -3151,6 +3225,7 @@
       I18n.bindCatalog(ART);
       __WEAPON_SEQUENCE__;
       __UNIT_PARTS__;
+      __UNIT_SKILLS__;
       __CORE__;
       __RENDERER__;
       __SPRITE_EFFECTS__;
@@ -3161,6 +3236,7 @@
       __MUSIC__;
       __BATTLE_SCENE__;
       __BATTLE_WINDOW__;
+      __SKILL_CONTROLS__;
       __APP__;
       __UNIT_IDENTITY__;
       __TURN_FLOW__;

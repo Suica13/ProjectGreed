@@ -1,0 +1,601 @@
+{
+  "schemaVersion": 2,
+  "id": "Type74",
+  "code": "Type74",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/Type74/Type74.ini",
+  "materials": {
+    "textures": {
+      "Type74_Body_1.png": "textures/Type74_Body_1.png",
+      "Type74.png": "textures/Type74.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "HoverMove_1.png": "textures/HoverMove_1.png",
+      "Type74_Turret_1.png": "textures/Type74_Turret_1.png"
+    },
+    "icon": "Type74.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "Turret_EF_Type74_MG": {
+      "x": 4.0,
+      "y": 4.0,
+      "endDirOffset": 0
+    }
+  },
+  "layers": [
+    {
+      "name": "Hover",
+      "texture": "HoverMove_1.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.2,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "alpha": 0.5,
+      "frames": 6,
+      "frameFps": 10,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "onLand": true
+      }
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "Type74_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.65,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Turret",
+      "bone": "Turret_EF_Type74_MG",
+      "texture": "Type74_Turret_1.png",
+      "order": 5.0,
+      "scale": 0.65,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "rotation": 0,
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/Type74__OnMoving.json",
+    "OnMovingReversing": "../../animations/Type74__OnMovingReversing.json",
+    "Common_Dead": "../../animations/Type74__Common_Dead.json",
+    "Common_Stun": "../../animations/Type74__Common_Stun.json",
+    "Common_Idle": "../../animations/Type74__Common_Idle.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 4000.0,
+    "en": 7500.0,
+    "move": 6,
+    "mobility": 75.0,
+    "cost": 50,
+    "counterLimit": 1,
+    "accuracy": 100.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "hover",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "visualTurrets": [
+      {
+        "id": "EF_Type74_MG",
+        "bone": "Turret_EF_Type74_MG",
+        "idleDir": 0,
+        "arc": 180
+      }
+    ],
+    "commandAuras": [
+      {
+        "type": "cmdCom",
+        "radiusCells": 2
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 10.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 4000.0,
+    "walkSpeed": 0.6,
+    "boostSpeed": 1.45,
+    "turnSpeed": 1.5,
+    "reaction": 75.0,
+    "shooting": 110.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "Type74",
+      "Unit",
+      "Tank",
+      "EFSF",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [
+      "Hover",
+      "CmdCom",
+      "SupplyPoint",
+      "SupplyPoint_UseEN",
+      "CustomUnit"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 200.0,
+    "tacticalMoveBeforeBonus": 5
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk"
+  },
+  "name": "气垫卡车",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "气垫卡车",
+      "description": "联邦军货运兼侦察车辆"
+    },
+    "en": {
+      "name": "Hover Truck",
+      "description": "Federation transport and reconnaissance vehicle"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "EF_Type74_MG": {
+      "name": "机枪",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 125.0,
+      "en": 6.0,
+      "sourceName": "EF_Type74_MG",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 145.0,
+      "damageComponents": {
+        "shell": 145.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_Type74_MG.gw",
+        "barrels": [
+          {
+            "id": "EF_Type74_MG",
+            "x": 0.5,
+            "y": 3.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 85.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_EF_Type74_MG",
+            "offset": {
+              "x": -3.5,
+              "y": -1.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 145.0,
+        "DpDamage": 5.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 1.0,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 1.0,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 85.0,
+        "ProjectileSpread": 4.0,
+        "ProjectileLife": 20.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_Type74_MG.gw",
+        "barrel": "EF_Type74_MG",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 1.1,
+        "firstShot": 0.0,
+        "lastShot": 1.1,
+        "firingEvents": 12,
+        "projectiles": 12,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 6.0,
+        "actions": []
+      },
+      "actionCost": 3
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "气垫移动：可横越水域",
+      "status": "implemented"
+    },
+    {
+      "id": "Hover",
+      "source": "Template/Unit/Skill/Hover.gw",
+      "status": "implemented",
+      "name": "气垫：仅在地面移动时循环"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "review",
+      "name": "通信指挥"
+    },
+    {
+      "id": "SupplyPoint",
+      "source": "Template/Unit/Skill/SupplyPoint.gw",
+      "status": "adapted",
+      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+    },
+    {
+      "id": "SupplyPoint_UseEN",
+      "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "status": "adapted",
+      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+    },
+    {
+      "id": "CustomUnit",
+      "source": "Template/Unit/Skill/CustomUnit.gw",
+      "status": "review",
+      "name": "换装／改修"
+    },
+    {
+      "id": "ReconScan",
+      "name": "ReconScan",
+      "status": "adapted"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "EF_Type74_MG"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "ReconScan",
+      "type": "recon",
+      "name": "战场侦察",
+      "range": 6,
+      "maxUses": 99,
+      "consumeAction": true,
+      "enCost": 15,
+      "waterOnly": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.3
+      }
+    }
+  ],
+  "description": "联邦军货运兼侦察车辆",
+  "costBalance": {
+    "nativeLevel": 200.0,
+    "levelMultiplier": 0.25,
+    "published": 50
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "nativeCombatRevision": 1
+}

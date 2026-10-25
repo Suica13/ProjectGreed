@@ -11,7 +11,7 @@ test("enemy orthogonal zones cost at least three; allies, diagonal units and dea
   assert.equal(G.movementCost(g, a, 4, 4), 3);
   assert.equal(G.movementCost(g, a, 4, 3), 1);
   assert.equal(G.reachable(g, a).get("4,4").cost, 4);
-  assert.ok(!G.reachable(g, a).has("5,3"), "two threatened entries exceed five movement");
+  assert.equal(G.reachable(g, a).get("5,3").cost, 6, "the extra movement point permits a six-cost route");
   g.tiles[4][4] = "forest";
   assert.equal(G.movementCost(g, a, 4, 4), 3);
   g.tiles[4][4] = "rock";
@@ -26,8 +26,8 @@ test("enemy orthogonal zones cost at least three; allies, diagonal units and dea
   b.team = 0;
   assert.equal(G.movementCost(g, a, 4, 4), 1);
 });
-test("all thirteen preset maps hold independent full twelve-unit formations without overlapping spawn zones", () => {
-  assert.equal(Object.keys(G.catalog.maps).length, 13);
+test("all fourteen preset maps hold independent full twelve-unit formations without overlapping spawn zones", () => {
+  assert.equal(Object.keys(G.catalog.maps).length, 14);
   for (const map of Object.values(G.catalog.maps)) {
     const formations = Array.from({ length: map.spawns.length }, () => Array(12).fill(entry));
     const before = JSON.stringify(map);
@@ -74,11 +74,11 @@ test("room budget validation has bounds and every formation is checked against i
     assert.throws(() => G.getMap(id));
 });
 
-test("thirteen asymmetric maps are capacity-sorted, connected and offer sparse cover or contiguous woods", () => {
+test("fourteen asymmetric maps are capacity-sorted, connected and offer sparse cover or contiguous woods", () => {
   const maps = Object.values(G.catalog.maps);
   assert.deepEqual(
     maps.map((m) => m.playersPerTeam),
-    [1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 5, 5, 5],
+    [1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 5, 5, 5],
   );
   assert.deepEqual(G.defaultRoomSettings(), {
     mapId: "frontier_1v1",
@@ -92,7 +92,7 @@ test("thirteen asymmetric maps are capacity-sorted, connected and offer sparse c
       { bannedFactions: [], bannedEras: [] },
     ],
   });
-  assert.equal(new Set(maps.map((m) => JSON.stringify(m.tiles))).size, 13);
+  assert.equal(new Set(maps.map((m) => JSON.stringify(m.tiles))).size, 14);
   for (const map of maps) {
     assert.ok(
       map.tiles.some((row) => JSON.stringify(row) !== JSON.stringify([...row].reverse())),
@@ -132,7 +132,8 @@ test("thirteen asymmetric maps are capacity-sorted, connected and offer sparse c
     }
     assert.equal(
       seen.size,
-      map.tiles.flat().filter((t) => Number.isFinite(G.terrain[t].cost)).length,
+      map.tiles.flat().filter((t) => Number.isFinite(G.terrain[t].cost)).length /
+        (map.navalDeployment ? 2 : 1),
       map.id,
     );
     for (const language of ["zh", "en", "ja"]) assert.ok(map.localization[language].description);
@@ -141,7 +142,8 @@ test("thirteen asymmetric maps are capacity-sorted, connected and offer sparse c
   }
   const forest = G.getMap("frontline_3v3");
   assert.ok(
-    forest.tiles.flat().filter((t) => t === "forest").length > forest.width * forest.height * 0.25,
+    forest.tiles.flat().filter((t) => t === "forest").length >
+      forest.deploymentExpansion.baseWidth * forest.deploymentExpansion.baseHeight * 0.25,
   );
   assert.ok(
     G.getMap("open_dunes_1v1")

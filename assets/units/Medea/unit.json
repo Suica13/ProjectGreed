@@ -1,0 +1,429 @@
+{
+  "schemaVersion": 2,
+  "id": "Medea",
+  "code": "Medea",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/Medea/Medea.ini",
+  "materials": {
+    "textures": {
+      "Medea_Body_1.png": "textures/Medea_Body_1.png",
+      "Medea.png": "textures/Medea.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "Medea.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost_R3",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1.0,
+      "offset": {
+        "x": 62.0,
+        "y": -16.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 2.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L3",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1.0,
+      "offset": {
+        "x": -62.0,
+        "y": -16.0
+      },
+      "scaleX": -0.65,
+      "scaleY": 2.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "Medea_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 1.0,
+      "offset": {
+        "x": 10.0,
+        "y": -8.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R2",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 1.0,
+      "offset": {
+        "x": 20.0,
+        "y": -8.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 1.0,
+      "offset": {
+        "x": -10.0,
+        "y": -8.0
+      },
+      "scaleX": -0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L2",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 1.0,
+      "offset": {
+        "x": -20.0,
+        "y": -8.0
+      },
+      "scaleX": -0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 20000.0,
+    "en": 15000.0,
+    "move": 8,
+    "mobility": 115.0,
+    "cost": 250,
+    "counterLimit": 1,
+    "accuracy": 100.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 10.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 25.0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 20000.0,
+    "walkSpeed": 1.5,
+    "boostSpeed": 2.0,
+    "turnSpeed": 1.0,
+    "reaction": 115.0,
+    "shooting": 100.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "Medea",
+      "Unit",
+      "Aircraft",
+      "EFSF",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [
+      "LaunchAllUnits",
+      "CustomUnit",
+      "Deploy"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 1000.0,
+    "tacticalMoveBeforeBonus": 7
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost"
+  },
+  "name": "米迪亚",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "米迪亚",
+      "description": "联邦军补给运输机"
+    },
+    "en": {
+      "name": "Medea",
+      "description": "Federation supply transport aircraft"
+    },
+    "ja": {}
+  },
+  "weapons": {},
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "review",
+      "name": "搭载与放出"
+    },
+    {
+      "id": "CustomUnit",
+      "source": "Template/Unit/Skill/CustomUnit.gw",
+      "status": "review",
+      "name": "换装／改修"
+    },
+    {
+      "id": "Deploy",
+      "source": "Template/Unit/Skill/Deploy.gw",
+      "status": "review",
+      "name": "展开／收起"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": []
+    }
+  ],
+  "description": "联邦军补给运输机",
+  "costBalance": {
+    "nativeLevel": 1000.0,
+    "levelMultiplier": 0.25,
+    "published": 250
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1
+}

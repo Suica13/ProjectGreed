@@ -1,0 +1,517 @@
+{
+  "schemaVersion": 2,
+  "id": "Gunperry",
+  "code": "Gunperry",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/Gunperry/Gunperry.ini",
+  "materials": {
+    "textures": {
+      "Gunperry_Body_1.png": "textures/Gunperry_Body_1.png",
+      "Gunperry.png": "textures/Gunperry.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "Gunperry.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1.5,
+      "offset": {
+        "x": 8.0,
+        "y": -28.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1.5,
+      "offset": {
+        "x": -8.0,
+        "y": -28.0
+      },
+      "scaleX": -0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "Gunperry_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "Common_Cannon_Shoot_A": "../../animations/Gunperry__Common_Cannon_Shoot_A.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 40000.0,
+    "en": 12000.0,
+    "move": 9,
+    "mobility": 100.0,
+    "cost": 250,
+    "counterLimit": 1,
+    "accuracy": 100.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 50.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 50.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 50.0
+    },
+    "dp": {
+      "percent": 0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 40000.0,
+    "walkSpeed": 1.5,
+    "boostSpeed": 2.25,
+    "turnSpeed": 1.0,
+    "reaction": 100.0,
+    "shooting": 100.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "Gunperry",
+      "Unit",
+      "Aircraft",
+      "EFSF",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [
+      "LaunchAllUnits",
+      "Deploy"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 1000.0,
+    "tacticalMoveBeforeBonus": 8
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost"
+  },
+  "name": "钢佩利",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "钢佩利",
+      "description": "携带对地导弹的强袭运输机"
+    },
+    "en": {
+      "name": "Gunperry",
+      "description": "Assault transport aircraft equipped with surface-attack missiles"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_DoubleMS_Gunperry": {
+      "name": "Common DoubleMS Gunperry",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 85.0,
+      "en": 72.0,
+      "sourceName": "Common_DoubleMS_Gunperry",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2000.0,
+      "damageComponents": {
+        "shell": 2000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.35
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Gunperry.gw",
+        "barrels": [
+          {
+            "id": "Common_DoubleMS_Gunperry",
+            "x": 5.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.65,
+        "speed": 15.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 5.0,
+              "y": 0.0
+            },
+            "alternatingOffsetX": -10.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.15
+      },
+      "targetModifiers": {
+        "air": 0.25,
+        "water": 1.5,
+        "ground": 1.5,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S"
+      ],
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 2000.0,
+        "DpDamage": 200.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 0.5,
+        "AntiAqua": 1.5,
+        "AntiAir": 0.25,
+        "AntiLand": 1.5,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 15.0,
+        "ProjectileTurnspeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 55.0,
+        "ProjectileLife": 40.0,
+        "EquipmentIndex": 1.0,
+        "EquipmentIndex2": 100.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Gunperry.gw",
+        "barrel": "Common_DoubleMS_Gunperry",
+        "entry": "automatic_turret",
+        "cooldown": 9.0,
+        "duration": 1.75,
+        "firstShot": 0.0,
+        "lastShot": 1.75,
+        "firingEvents": 6,
+        "projectiles": 6,
+        "declaredEnergy": 12.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 12.0,
+        "energy": 72.0,
+        "actions": []
+      },
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "review",
+      "name": "搭载与放出"
+    },
+    {
+      "id": "Deploy",
+      "source": "Template/Unit/Skill/Deploy.gw",
+      "status": "review",
+      "name": "展开／收起"
+    },
+    {
+      "id": "special_Common_SmokingLauncher_NowPos",
+      "name": "special_Common_SmokingLauncher_NowPos",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_MinovskyParticle_S",
+      "name": "special_Common_MinovskyParticle_S",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_S.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "Common_DoubleMS_Gunperry"
+      ]
+    }
+  ],
+  "description": "携带对地导弹的强袭运输机",
+  "costBalance": {
+    "nativeLevel": 1000.0,
+    "levelMultiplier": 0.25,
+    "published": 250
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1
+}

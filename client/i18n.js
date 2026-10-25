@@ -95,12 +95,14 @@ const I18n = (() => {
       bind(prefab, "description");
       for (const kit of prefab.weaponKits) bind(kit);
       for (const weapon of Object.values(prefab.weapons)) bind(weapon);
+      for (const skill of prefab.skills || []) bind(skill);
     }
     for (const model of Object.values(catalog.models)) {
       bind(model);
       bind(model, "description");
       bind(model, "kitName", model.kitLocalization);
       for (const weapon of model.weapons) bind(weapon);
+      for (const skill of model.skills || []) bind(skill);
     }
     rebuildFragments();
   }

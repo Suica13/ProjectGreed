@@ -26,6 +26,7 @@ function scenario(config, check) {
     const w = {
       ...G.models[a.model].weapons[0],
       hit: 100,
+      antiSize: { small: { damage: 1, accuracy: 1 } },
       damagePerShot: 6000,
       damageComponents: config.components || { beam: 6000 },
       shotCount: config.shots ?? 1,

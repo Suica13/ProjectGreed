@@ -108,10 +108,10 @@ test("quick playback and counter attacks get distinct sound schedules without re
   assert.ok(r.starts.every((s) => s.node.playbackRate.value === 2));
   r.audio.sync(owner, 1, weapon("EF_HypeBazooka"), 0);
   assert.equal(r.stops.length, 9);
-  assert.equal(r.starts.length, 11);
-  assert.equal(r.starts.at(-1).at, 10.75);
+  assert.equal(r.starts.length, 10);
+  assert.equal(r.starts.at(-1).at, 10.35);
   r.audio.sync(owner, 1, weapon("EF_HypeBazooka"), 0.01);
-  assert.equal(r.starts.length, 11);
+  assert.equal(r.starts.length, 10);
 });
 
 test("a battle can start while sounds decode without losing its sound schedule", async () => {
@@ -152,7 +152,8 @@ test("natural counter completion preserves the playing last shot, cancels future
   const r = runtime();
   await r.audio.unlock();
   r.audio.sync({}, 1, weapon("EF_HypeBazooka"), 0);
-  const [first, last] = r.starts;
+  const first = r.starts[0],
+    last = r.starts.at(-1);
   r.clock().currentTime = last.at;
   r.audio.releaseBattle();
   r.audio.stopBattle();
@@ -166,7 +167,7 @@ test("natural counter completion preserves the playing last shot, cancels future
   q.clock().currentTime = q.starts[0].at;
   q.audio.releaseBattle();
   assert.equal(q.stops.includes(q.starts[0].node), false);
-  assert.equal(q.stops.includes(q.starts[1].node), true);
+  assert.equal(q.stops.length, 0);
   q.audio.stop();
   assert.equal(q.stops.includes(q.starts[0].node), true);
 });

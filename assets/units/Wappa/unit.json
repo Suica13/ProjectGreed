@@ -1,0 +1,664 @@
+{
+  "schemaVersion": 2,
+  "id": "Wappa",
+  "code": "Wappa",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/Wappa/Wappa.ini",
+  "materials": {
+    "textures": {
+      "Wappa_Body_1.png": "textures/Wappa_Body_1.png",
+      "ZEON_0079_Pilot_Green_3.png": "textures/ZEON_0079_Pilot_Green_3.png",
+      "Wappa_Top_1.png": "textures/Wappa_Top_1.png",
+      "Wappa.png": "textures/Wappa.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "HoverMove_1.png": "textures/HoverMove_1.png"
+    },
+    "icon": "Wappa.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Hover",
+      "texture": "HoverMove_1.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.15,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "alpha": 0.5,
+      "frames": 6,
+      "frameFps": 10,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "onLand": true
+      }
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "Wappa_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.6,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Pilot",
+      "texture": "ZEON_0079_Pilot_Green_3.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.5,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Top",
+      "texture": "Wappa_Top_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.6,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/Wappa__OnMoving.json",
+    "OnMovingReversing": "../../animations/Wappa__OnMovingReversing.json",
+    "Common_Dead": "../../animations/Wappa__Common_Dead.json",
+    "Common_Stun": "../../animations/Wappa__Common_Stun.json",
+    "Common_Idle": "../../animations/Wappa__Common_Idle.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 1500.0,
+    "en": 250.0,
+    "move": 8,
+    "mobility": 140.0,
+    "cost": 25,
+    "counterLimit": 1,
+    "accuracy": 105.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "hover",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "stealth": {
+      "waterOnly": false
+    },
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": -25.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 1500.0,
+    "walkSpeed": 1.25,
+    "boostSpeed": 2.0,
+    "turnSpeed": 1.25,
+    "reaction": 140.0,
+    "shooting": 100.0,
+    "melee": 75.0,
+    "nativeTags": [
+      "Wappa",
+      "Unit",
+      "Tank"
+    ],
+    "nativeSkills": [
+      "Hover",
+      "Stealth"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 105.0,
+    "unitLevel": 100.0,
+    "tacticalMoveBeforeBonus": 7
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk"
+  },
+  "name": "瓦帕",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "瓦帕",
+      "description": "吉翁军快速侦察单位"
+    },
+    "en": {
+      "name": "Wappa",
+      "description": "Zeon rapid reconnaissance unit"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "ZN_Wappa_MG": {
+      "name": "机枪",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 100.0,
+      "en": 5.0,
+      "sourceName": "ZN_Wappa_MG",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 25.0,
+      "damageComponents": {
+        "shell": 25.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_Wappa_MG.gw",
+        "barrels": [
+          {
+            "id": "ZN_Wappa_MG",
+            "x": 0.0,
+            "y": 3.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 85.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 0.0,
+              "y": 3.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "MG_Fire_1_S"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 25.0,
+        "DpDamage": 5.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 1.0,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 1.0,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 85.0,
+        "ProjectileSpread": 4.0,
+        "ProjectileLife": 20.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_Wappa_MG.gw",
+        "barrel": "ZN_Wappa_MG",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 0.9,
+        "firstShot": 0.0,
+        "lastShot": 0.9,
+        "firingEvents": 10,
+        "projectiles": 10,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 5.0,
+        "actions": []
+      },
+      "actionCost": 3
+    },
+    "ZN_Wappa_C4": {
+      "name": "ZN Wappa C4",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 75.0,
+      "en": 40.0,
+      "sourceName": "ZN_Wappa_C4",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 3500.0,
+      "damageComponents": {
+        "shell": 3500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_Wappa_C4.gw",
+        "barrels": [
+          {
+            "id": "ZN_Wappa_C4",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Grenade_C4.png",
+        "scale": 1.5,
+        "speed": 10.0,
+        "forwardOffset": 0.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Bomb_1.ogg",
+        "volume": 0.25
+      },
+      "targetModifiers": {
+        "air": 0.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "category": "other",
+      "nativePayload": {
+        "ShellDamage": 3500.0,
+        "DpDamage": 200.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 2.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 0.0,
+        "HeightHitRange": 10.0,
+        "ProjectileSpeed": 10.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 30.0,
+        "ProjectileLife": 55.0,
+        "ProjectileBlastRange": 55.0,
+        "ProjectileBlastDamageModifier": 0.2,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_Wappa_C4.gw",
+        "barrel": "ZN_Wappa_C4",
+        "entry": "automatic_turret",
+        "cooldown": 8.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 40.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 40.0,
+        "energy": 40.0,
+        "actions": []
+      },
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "气垫移动：可横越水域",
+      "status": "implemented"
+    },
+    {
+      "id": "Hover",
+      "source": "Template/Unit/Skill/Hover.gw",
+      "status": "implemented",
+      "name": "气垫：仅在地面移动时循环"
+    },
+    {
+      "id": "Stealth",
+      "source": "Template/Unit/Skill/Stealth.gw",
+      "status": "adapted",
+      "name": "隐蔽"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "ZN_Wappa_MG",
+        "ZN_Wappa_C4"
+      ]
+    }
+  ],
+  "description": "吉翁军快速侦察单位",
+  "costBalance": {
+    "nativeLevel": 100.0,
+    "levelMultiplier": 0.25,
+    "published": 25
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1
+}

@@ -130,7 +130,8 @@ const BattleScene = (() => {
       const dodging = unit.id === event.to && dodge.active && !completed;
       let offsetY = unit.id === event.to ? dodge.y : plan.sourceY;
       if (dodging) offsetX += dodge.x;
-      const destroyed = unit.id === event.to && plan.deathAt !== null && attackTime >= plan.deathAt;
+      const destroyed =
+        unit.id === event.to && plan.deathHideAt !== null && attackTime >= plan.deathHideAt;
       if (destroyed || (completed && displayHp[unit.id] <= 0)) continue;
       if (attacking && event.type === "melee") {
         offsetX += melee.x;
@@ -185,9 +186,14 @@ const BattleScene = (() => {
           ? WeaponEffects.shield(event, plan, attackTime, event.shieldBefore) > 0
           : (frame.displayShield?.[unit.id] ?? unit.shield ?? 1) > 0,
         dodging,
+        unit.brokenParts,
+        unit.aimAngle ?? angle,
+        attacking,
+        unit.environment !== "space",
+        unit.environment ?? "ground",
+        attacking ? event.weapon : null,
+        attacking ? animation.weaponDisplayIndex : null,
       );
-      if (!completed && unit.id === event.to && dodge.started)
-        SpriteEffects.boostStart(ctx, unit, x + offsetX, y + offsetY, scale, dodge.time, angle);
       const visibleHp =
         !completed && unit.id === event.to
           ? WeaponEffects.health(event, plan, attackTime, displayHp[unit.id] ?? unit.hp)
@@ -267,9 +273,10 @@ const BattleScene = (() => {
           angle,
         );
       if (plan.deathAt !== null)
-        SpriteEffects.draw(
+        WeaponEffects.drawDeath(
           ctx,
-          plan.deathEffect,
+          plan.deathEvents,
+          target.unit,
           target.x,
           target.y + dodge.y,
           target.scale,

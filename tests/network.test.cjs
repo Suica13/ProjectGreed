@@ -210,7 +210,7 @@ async function finishPlans(player) {
 function stageCombat(app, code) {
   const game = app.rooms.get(code).game;
   for (const unit of game.units) {
-    unit.x = unit.team ? 9 : 2;
+    unit.x = unit.team ? 8 : 2;
     unit.y = 4 - Number(unit.id.split("-")[1]);
     game.tiles[unit.y][unit.x] = "plain";
   }
@@ -245,7 +245,7 @@ async function readyMatch(first, second, app = first.app, stage = true) {
   assert.equal((await second.act("set_ready", { ready: true })).type, "state");
   await confirmAssembly(first, second);
   await first.latest((s) => s.started);
-  const placed = await first.act("deploy", { unitId: "0-0", x: 3, y: 8 });
+  const placed = await first.act("deploy", { unitId: "0-0", x: 2, y: 8 });
   await second.latest((s) => s.revision === placed.revision);
   const d0 = await first.act("confirm_deployment");
   await second.latest((s) => s.revision === d0.revision);
@@ -284,20 +284,24 @@ test("custom squads and deployment are authoritative, versioned, deduplicated an
   s = red.state;
   assert.equal(s.phase, "deployment");
   assert.equal(s.game.units.length, 3);
-  assert.equal(s.game.units[0].hp, 16500);
+  assert.equal(s.game.units[0].hp, G.models.RGM_79__machine_gun.hp);
   assert.equal(s.game.units[0].model, "RGM_79__machine_gun");
   assert.equal((await blue.act("end_turn")).type, "error");
   assert.equal((await watcher.act("confirm_deployment")).type, "error");
   for (const fields of [
     { unitId: "1-0", x: 2, y: 4 },
-    { unitId: "0-0", x: 6, y: 4 },
-    { unitId: "0-0", x: 1, y: 3 },
+    { unitId: "0-0", x: 14, y: 4 },
+    {
+      unitId: "0-0",
+      x: s.game.units.find((u) => u.id === "0-1").x,
+      y: s.game.units.find((u) => u.id === "0-1").y,
+    },
   ])
     assert.equal((await blue.act("deploy", fields)).type, "error");
   const id = randomUUID();
-  s = await blue.act("deploy", { unitId: "0-0", x: 3, y: 8 }, { id });
+  s = await blue.act("deploy", { unitId: "0-0", x: 2, y: 8 }, { id });
   assert.equal(
-    (await blue.act("deploy", { unitId: "0-0", x: 3, y: 8 }, { id, revision: 0 })).revision,
+    (await blue.act("deploy", { unitId: "0-0", x: 2, y: 8 }, { id, revision: 0 })).revision,
     s.revision,
   );
   s = await blue.act("confirm_deployment");
@@ -308,7 +312,7 @@ test("custom squads and deployment are authoritative, versioned, deduplicated an
   const resumed = await client();
   await resumed.hello("resume", "SQUADS", red.joined.token);
   assert.deepEqual(resumed.state.game.deployment, [true, false]);
-  assert.equal(resumed.state.game.units[0].x, 3);
+  assert.equal(resumed.state.game.units[0].x, 2);
   s = await resumed.act("confirm_deployment");
   assert.equal(s.phase, "idle");
   assert.ok(!("seed" in s.game));
@@ -339,7 +343,7 @@ test("custom squads and deployment are authoritative, versioned, deduplicated an
     event.damage,
     event.strikes.reduce((sum, s) => sum + s.damage, 0),
   );
-  assert.equal(burst.game.units[0].en, 87.5);
+  assert.equal(burst.game.units[0].en, G.models.RGM_79__machine_gun.en - 20);
   assert.equal("ammo" in burst.game.units[0], false);
   const duplicate = await resumed.act(
     "respond",
@@ -449,7 +453,7 @@ test("authoritative rooms, combat, duplicate protection, phases, reconnect", asy
     weaponId: "EF_BeamSprayGun",
   });
   assert.equal(plan.phase, "idle");
-  assert.equal(plan.game.units[0].en, 100);
+  assert.equal(plan.game.units[0].en, G.models.RGM_79__beam_spray.en);
   assert.equal((await red.act("respond", { response: "defend" })).type, "error");
   await finishPlans(blue);
   await red.latest((state) => state.phase === "reaction");
@@ -763,7 +767,7 @@ test("focused-fire response selects exactly one counter target, survives reconne
   Object.assign(b, { x: 5, y: 4, en: 1000 });
   for (let i = 0; i < 3; i++) {
     const a = g.units.find((u) => u.id === "0-" + i);
-    Object.assign(a, { x: 2, y: 3 + i });
+    Object.assign(a, { x: 2 + Math.abs(1 - i), y: 3 + i });
     g.tiles[a.y][a.x] = "plain";
     await blue.act("attack", { unitId: a.id, targetId: b.id, weaponId: "EF_BeamSprayGun" });
   }
@@ -941,7 +945,7 @@ test("3v3 prepares and independently deploys all six full formations", async (t)
   await startMulti(players, room, Array(6).fill({ unitId: "RGM_79", kitId: "machine_gun" }));
   assert.equal(room.game.units.length, 36);
   assert.equal(new Set(room.game.units.map((u) => u.x + "," + u.y)).size, 36);
-  assert.equal(room.game.tiles.length, 36);
+  assert.equal(room.game.tiles.length, 54);
   const controller = players[4],
     own = room.game.units.find((u) => G.ownerOf(u) === 4 && G.reachable(room.game, u).size > 1),
     destination = [...G.reachable(room.game, own).values()].find((cell) => cell.path.length > 0);
@@ -1011,6 +1015,9 @@ test("AI prepares six random units and kits, auto deploys, responds without any 
   await host.act("confirm_deployment");
   const a = room.game.units.find((u) => u.id === "0-0"),
     b = bots[0];
+  // Keep the playback assertion independent of random EXAM/upkeep form changes.
+  b.model = "RGM_79__machine_gun";
+  b.shield = 0;
   Object.assign(a, { x: 5, y: 5, hp: 100000 });
   Object.assign(b, { x: 6, y: 5, hp: 100000, en: 1000 });
   room.game.tiles[5][5] = room.game.tiles[5][6] = "plain";
@@ -1478,7 +1485,7 @@ test("final assembly edits retain teammate confirmations and disabled units neve
     guest = await client(),
     watch = await client();
   await host.hello("create", "OVERCOST");
-  await host.act("configure_room", { mapId: "crossroads_2v2", costLimit: 700, unitCostLimit: 500 });
+  await host.act("configure_room", { mapId: "crossroads_2v2", costLimit: 700, unitCostLimit: 400 });
   await host.act("add_ai", { seat: 1 });
   await guest.hello("join", "OVERCOST");
   await host.act("add_ai", { seat: 3 });
@@ -1513,7 +1520,7 @@ test("final assembly edits retain teammate confirmations and disabled units neve
   );
   const own = changed.assembly.players.find((p) => p.seat === 0);
   assert.deepEqual(own.disabled, [0]);
-  assert.equal(own.deployCost, 600);
+  assert.equal(own.deployCost, 300);
   const resumed = await client();
   await resumed.hello("resume", "OVERCOST", host.joined.token);
   assert.deepEqual(resumed.state.assembly.players.find((p) => p.seat === 0).disabled, [0]);
@@ -1523,7 +1530,7 @@ test("final assembly edits retain teammate confirmations and disabled units neve
     room.game.units.filter((u) => u.ownerSeat === 0).map((u) => u.id),
     ["0-1", "0-2", "0-3"],
   );
-  assert.equal((await resumed.act("deploy", { unitId: "0-0", x: 3, y: 8 })).type, "error");
+  assert.equal((await resumed.act("deploy", { unitId: "0-0", x: 2, y: 8 })).type, "error");
   assert.equal((await resumed.act("update_formation", { formation: small })).type, "error");
 });
 
@@ -1576,7 +1583,7 @@ test("room and team restrictions are authoritative, preserve readiness, constrai
   const settings = {
     ...host.state.settings,
     mapId: "crossroads_2v2",
-    costLimit: 600,
+    costLimit: 400,
     unitCostLimit: 400,
     teamRestrictions: [
       { bannedFactions: ["ZEON"], bannedEras: [] },
@@ -1643,7 +1650,7 @@ test("room and team restrictions are authoritative, preserve readiness, constrai
     const army = room.seats[seat].formation,
       restrictions = G.formationRestrictions(room.settings, seat);
     assert.ok(army.length > 0);
-    assert.equal(G.planFormation(army, 600, restrictions).disabled.length, 0);
+    assert.equal(G.planFormation(army, 400, restrictions).disabled.length, 0);
     assert.equal(Object.hasOwn(room.seats[seat].aiSettings, "faction"), false);
   }
   await confirmAssembly(host, guest);
@@ -2077,3 +2084,484 @@ test("broken weapon parts are authoritative, survive reconnect and never expose 
   );
   assert.equal("partSeed" in restored.state.game, false);
 });
+
+test("Salamis footprint rotations are owned, authoritative, atomic, deduplicated and resumable", async (t) => {
+  const { app, client } = await setup(t),
+    host = await client(),
+    guest = await client();
+  await host.hello("create", "SHIPNET");
+  await guest.hello("join", "SHIPNET");
+  assert.equal(
+    (
+      await host.act("configure_room", {
+        mapId: "orbital_debris_2v2",
+        unitCostLimit: 2000,
+        costLimit: 5000,
+      })
+    ).type,
+    "state",
+  );
+  const ready = await host.act("set_ready", {
+    ready: true,
+    formation: [{ unitId: "SalamisClass", kitId: "standard" }],
+  });
+  await guest.latest((s) => s.revision >= ready.revision);
+  assert.equal(
+    (
+      await guest.act("set_ready", {
+        ready: true,
+        formation: [{ unitId: "RGM_79", kitId: "machine_gun" }],
+      })
+    ).type,
+    "state",
+  );
+  await confirmAssembly(host, guest);
+  const room = app.rooms.get("SHIPNET"),
+    ship = room.game.units.find((u) => u.ownerSeat === 0);
+  assert.equal(Object.keys(ship.moduleHp).length, 16);
+  assert.equal((await guest.act("rotate", { unitId: ship.id, direction: 1 })).type, "error");
+  assert.equal((await host.act("rotate", { unitId: ship.id, direction: 1 })).type, "state");
+  assert.equal(ship.moved, false);
+  await host.act("confirm_deployment");
+  await guest.latest((s) => s.game.deployment[0]);
+  await guest.act("confirm_deployment");
+  await host.latest((s) => s.phase === "idle");
+  const id = randomUUID(),
+    before = ship.angle;
+  const result = await host.act("rotate", { unitId: ship.id, direction: 1 }, { id });
+  assert.equal(result.type, "state");
+  assert.equal(ship.angle, (before + 90 + 360) % 360);
+  assert.equal(ship.moved, true);
+  const duplicate = await host.act(
+    "rotate",
+    { unitId: ship.id, direction: 1 },
+    { id, revision: 0 },
+  );
+  assert.deepEqual(duplicate.game, result.game);
+  const invalid = await host.act("rotate", { unitId: ship.id, direction: 45 });
+  assert.equal(invalid.type, "error");
+  assert.equal(ship.angle, (before + 90 + 360) % 360);
+  const token = host.joined.token;
+  host.close();
+  await guest.latest((s) => !s.connected[0]);
+  const resumed = await client();
+  await resumed.hello("resume", "SHIPNET", token);
+  const restored = resumed.state.game.units.find((u) => u.id === ship.id);
+  assert.equal(restored.angle, ship.angle);
+  assert.deepEqual(restored.moduleHp, ship.moduleHp);
+});
+
+for (const [environment, mapId, previousMap] of [
+  ["ground", "frontier_1v1", "asteroid_crossing_1v1"],
+  ["space", "asteroid_crossing_1v1", "frontier_1v1"],
+]) {
+  test(`AI final assembly follows the latest ${environment} map after changing maps`, async (t) => {
+    const { app, client } = await setup(t);
+    const host = await client();
+    const code = environment === "space" ? "AISPACEMAP" : "AIGROUNDMAP";
+    await host.hello("create", code);
+    const settings = { costLimit: 3000, unitCostLimit: 500, unitLimit: 6 };
+    assert.equal(
+      (await host.act("configure_room", { ...settings, mapId: previousMap })).type,
+      "state",
+    );
+    assert.equal((await host.act("add_ai", { seat: 1 })).type, "state");
+    assert.equal((await host.act("configure_room", { ...settings, mapId })).type, "state");
+    await host.act("set_ready", { ready: true });
+    await startRoom(host);
+    assert.equal(host.state.phase, "assembly");
+    const army = app.rooms.get(code).seats[1].formation;
+    assert.equal(army.length, 6);
+    assert.ok(
+      army.every(
+        (entry) => G.models[entry.unitId + "__" + entry.kitId].adaptability[environment] === 100,
+      ),
+    );
+  });
+}
+
+test("ejection is owner-only, atomic, deduplicated and synchronizes the new craft through reconnect", async (t) => {
+  const { app, client } = await setup(t),
+    host = await client(),
+    guest = await client();
+  await host.hello("create", "EJECTNET");
+  await guest.hello("join", "EJECTNET");
+  await host.act("configure_room", { mapId: "frontier_1v1", costLimit: 5000, unitCostLimit: 1500 });
+  await host.act("set_ready", {
+    ready: true,
+    formation: [{ unitId: "RX_78_1", kitId: "beam_rifle", customName: "白色一号" }],
+  });
+  await guest.latest((s) => s.settings.unitCostLimit === 1500);
+  await guest.act("set_ready", { ready: true });
+  await confirmAssembly(host, guest);
+  await host.act("confirm_deployment");
+  await guest.latest((s) => s.game.deployment[0]);
+  await guest.act("confirm_deployment");
+  await host.latest((s) => s.phase === "idle");
+  const room = app.rooms.get("EJECTNET"),
+    original = room.game.units.find((u) => u.ownerSeat === 0);
+  assert.equal(
+    (
+      await guest.act("skill", {
+        unitId: original.id,
+        skillId: "ExitUnit",
+        x: original.x,
+        y: original.y,
+      })
+    ).type,
+    "error",
+  );
+  const before = JSON.stringify(room.game);
+  assert.equal(
+    (await host.act("skill", { unitId: original.id, skillId: "ExitUnit", x: -1, y: 0 })).type,
+    "error",
+  );
+  assert.equal(JSON.stringify(room.game), before);
+  original.hp = 100;
+  original.en = 0;
+  original.brokenParts = { head: true, rightArm: true };
+  const id = randomUUID(),
+    fields = {
+      unitId: original.id,
+      skillId: "ExitUnit",
+      ...G.skillTargets(room.game, original, "ExitUnit")[0],
+    };
+  const response = await host.act("skill", fields, { id });
+  assert.equal(response.type, "state");
+  const craft = room.game.units.find((u) => u.ownerSeat === 0);
+  assert.equal(craft.model, "FF_X7__standard");
+  assert.equal(craft.hp, 8500);
+  assert.equal(craft.en, G.modelOf(craft).en);
+  assert.equal(craft.customName, "白色一号");
+  assert.equal(craft.acted, true);
+  assert.deepEqual(craft.brokenParts, {});
+  assert.ok(response.log.some((line) => line.includes("白色一号") && line.includes("脱出")));
+  await guest.latest((s) => s.revision >= response.revision);
+  assert.deepEqual(guest.state.game, response.game);
+  const duplicate = await host.act("skill", fields, { id, revision: 0 });
+  assert.deepEqual(duplicate.game, response.game);
+  assert.equal(room.game.units.filter((u) => u.ownerSeat === 0).length, 1);
+  const token = host.joined.token;
+  host.close();
+  await guest.latest((s) => !s.connected[0]);
+  const resumed = await client();
+  await resumed.hello("resume", "EJECTNET", token);
+  const restored = resumed.state.game.units.find((u) => u.id === craft.id);
+  assert.deepEqual(restored, JSON.parse(JSON.stringify(craft)));
+  assert.equal((await resumed.act("skill", fields)).type, "error");
+});
+
+test("AI ejects a critically damaged RX-78-1 before moving or attacking", async (t) => {
+  const { app, client } = await setup(t, { aiDelayMs: 80, aiBattleMs: 20 });
+  const host = await client();
+  await host.hello("create", "AIEJECT");
+  await host.act("switch_seat", { seat: null });
+  await host.act("add_ai", { seat: 0 });
+  await host.act("add_ai", { seat: 1 });
+  await startRoom(host);
+  await confirmAssembly(host);
+  const room = app.rooms.get("AIEJECT");
+  assert.equal(room.phase, "idle");
+  const unit = room.game.units.find((u) => u.ownerSeat === 0);
+  Object.assign(unit, {
+    model: "RX_78_1__beam_rifle",
+    hp: 100,
+    en: 0,
+    acted: false,
+    moved: false,
+    brokenParts: { rightArm: true },
+  });
+  for (const ally of room.game.units.filter((u) => u !== unit && u.ownerSeat === 0))
+    ally.acted = true;
+  const from = host.frames.length;
+  const state = await host.wait((m) => m.type === "state" && m.lastEvent?.type === "skill", from);
+  const craft = state.game.units.find((u) => u.id === state.lastEvent.resultId);
+  assert.equal(craft.model, "FF_X7__standard");
+  assert.equal(craft.hp, 8500);
+  assert.equal(craft.en, G.modelOf(craft).en);
+  assert.equal(craft.ownerSeat, 0);
+  assert.ok(craft.acted);
+  assert.equal(
+    state.game.units.some((u) => u.id === unit.id),
+    false,
+  );
+});
+
+test("passive supply ticks through team handoff, duplicate end-turn is harmless and reconnect retains resources", async (t) => {
+  const { app, client } = await setup(t),
+    host = await client(),
+    guest = await client();
+  await host.hello("create", "REPAIRNET");
+  await guest.hello("join", "REPAIRNET");
+  await host.act("configure_room", { costLimit: 5000, unitCostLimit: 1500 });
+  await host.act("set_ready", {
+    ready: true,
+    formation: [
+      { unitId: "Type74", kitId: "standard" },
+      { unitId: "RGM_79", kitId: "machine_gun" },
+    ],
+  });
+  await guest.act("set_ready", { ready: true });
+  await confirmAssembly(host, guest);
+  await host.act("confirm_deployment");
+  await guest.latest((s) => s.game.deployment[0]);
+  await guest.act("confirm_deployment");
+  await host.latest((s) => s.phase === "idle");
+  const room = app.rooms.get("REPAIRNET"),
+    [source, target] = room.game.units.filter((u) => u.ownerSeat === 0);
+  Object.assign(source, { x: 3, y: 4, en: 100 });
+  Object.assign(target, { x: 4, y: 4, hp: 1, en: 0, shield: 0, brokenParts: { head: true } });
+  const fields = { unitId: source.id, skillId: "FieldMaintenance", x: target.x, y: target.y };
+  assert.equal((await guest.act("skill", fields)).type, "error");
+  assert.equal((await host.act("skill", fields)).type, "error");
+  const id = randomUUID();
+  const first = await host.act("end_turn", {}, { id });
+  assert.equal(first.type, "state");
+  const duplicate = await host.act("end_turn", {}, { id, revision: 0 });
+  assert.deepEqual(duplicate.game, first.game);
+  await guest.latest((s) => s.game.team === 1);
+  assert.equal((await guest.act("end_turn")).type, "state");
+  await host.latest((s) => s.game.team === 0);
+  assert.equal(source.en, 100 + G.modelOf(source).en * 0.1);
+  assert.equal(target.hp, 1 + Math.round(G.modelOf(target).hp * 0.05));
+  assert.equal(target.en, G.modelOf(target).en * 0.1);
+  assert.deepEqual(target.brokenParts, { head: true });
+  const token = host.joined.token;
+  host.close();
+  await guest.latest((s) => !s.connected[0]);
+  const resumed = await client();
+  await resumed.hello("resume", "REPAIRNET", token);
+  assert.deepEqual(
+    resumed.state.game.units.find((u) => u.id === target.id),
+    JSON.parse(JSON.stringify(target)),
+  );
+});
+test("EXAM activation is owned, atomic, deduplicated, temporary and survives reconnect", async (t) => {
+  const { app, client } = await setup(t),
+    host = await client(),
+    guest = await client();
+  await host.hello("create", "EXAMNET");
+  await guest.hello("join", "EXAMNET");
+  await host.act("configure_room", { costLimit: 5000, unitCostLimit: 2000 });
+  assert.equal(
+    (
+      await host.act("set_ready", {
+        ready: true,
+        formation: [{ unitId: "RX_79_BD_1_EXAM", kitId: "kit_0" }],
+      })
+    ).type,
+    "error",
+  );
+  await host.act("set_ready", {
+    ready: true,
+    formation: [{ unitId: "RX_79_BD_1", kitId: "kit_0" }],
+  });
+  await guest.act("set_ready", {
+    ready: true,
+    formation: [{ unitId: "RGM_79", kitId: "machine_gun" }],
+  });
+  await confirmAssembly(host, guest);
+  await host.act("confirm_deployment");
+  await guest.latest((s) => s.game.deployment[0]);
+  await guest.act("confirm_deployment");
+  await host.latest((s) => s.phase === "idle");
+  const room = app.rooms.get("EXAMNET"),
+    actor = room.game.units.find((u) => u.ownerSeat === 0),
+    base = actor.model;
+  const fields = { unitId: actor.id, skillId: "EXAM", x: actor.x, y: actor.y };
+  assert.equal((await guest.act("skill", fields)).type, "error");
+  const id = randomUUID(),
+    result = await host.act("skill", fields, { id });
+  assert.equal(result.type, "state");
+  assert.equal(actor.en, G.modelOf(actor).en * 0.75);
+  assert.equal(actor.overdrive.remaining, 3);
+  const duplicate = await host.act("skill", fields, { id, revision: 0 });
+  assert.deepEqual(duplicate.game, result.game);
+  assert.equal(actor.en, G.modelOf(actor).en * 0.75);
+  const token = host.joined.token;
+  host.close();
+  await guest.latest((s) => !s.connected[0]);
+  const resumed = await client();
+  await resumed.hello("resume", "EXAMNET", token);
+  assert.deepEqual(
+    resumed.state.game.units.find((u) => u.id === actor.id).overdrive,
+    actor.overdrive,
+  );
+  for (let tick = 1; tick <= 3; tick++) {
+    assert.equal((await resumed.act("end_turn")).type, "state");
+    await guest.latest((s) => s.game.team === 1);
+    assert.equal(actor.en, G.modelOf(actor).en * (0.75 - 0.05 * tick));
+    if (tick < 3) {
+      assert.equal((await guest.act("end_turn")).type, "state");
+      await resumed.latest((s) => s.game.team === 0);
+    }
+  }
+  assert.equal(actor.model, base);
+  assert.equal(actor.overdrive, undefined);
+  assert.equal(actor.en, G.modelOf(actor).en * 0.6);
+});
+
+test("mortar reactions are area-only and all viewers finish the occupied impact playback", async (t) => {
+  const { app, client } = await setup(t),
+    blue = await client(),
+    red = await client();
+  await blue.hello("create", "MORTAR01");
+  await red.hello("join", "MORTAR01");
+  await readyMatch(blue, red);
+  const room = app.rooms.get("MORTAR01"),
+    g = room.game,
+    a = g.units.find((u) => u.id === "0-0");
+  a.model = "RGC_80__machine_gun";
+  Object.assign(a, { x: 10, y: 10 });
+  const enemies = g.units.filter((u) => u.team === 1);
+  // Find a seed where the centre is among the first three samples, then place the three defenders there.
+  for (let seed = 0; ; seed++) {
+    const probe = { seed },
+      bag = [];
+    for (let y = -1; y <= 1; y++) for (let x = -1; x <= 1; x++) bag.push({ x: 16 + x, y: 10 + y });
+    const picked = Array.from(
+      { length: 3 },
+      () => bag.splice(Math.floor(G.random(probe) * bag.length), 1)[0],
+    );
+    if (picked.some((c) => c.x === 16 && c.y === 10)) {
+      g.seed = seed;
+      enemies.forEach((b, i) => Object.assign(b, picked[i]));
+      break;
+    }
+  }
+  const b = enemies.find((b) => b.x === 16 && b.y === 10),
+    w = G.modelOf(a).weapons.find((w) => w.special?.type === "mortar"),
+    energy = a.en;
+  assert.equal(
+    (await blue.act("attack", { unitId: a.id, targetId: b.id, weaponId: w.id })).type,
+    "state",
+  );
+  await finishPlans(blue);
+  await red.latest((s) => s.phase === "reaction");
+  blue.autoPlayback = red.autoPlayback = false;
+  let lastId, last;
+  for (let i = 0; i < 3; i++) {
+    const request = red.state.pending;
+    assert.ok(request);
+    assert.ok(request.counterTargets.every((t) => t.options.length === 0));
+    assert.equal(request.attacks[0].shotIndices.length, 1);
+    assert.equal(
+      (await red.act("respond", { response: "counter", counterId: "EF_HypeBazooka" })).type,
+      "error",
+    );
+    lastId = randomUUID();
+    last = await red.act("respond", { response: "defend" }, { id: lastId });
+  }
+  assert.equal(last.phase, "playback");
+  assert.equal(a.en, energy - w.en);
+  assert.equal(last.combats.length, 3);
+  assert.ok(last.combats.every((b) => b.events.length === 1));
+  const batchId = last.playback.id;
+  await blue.latest((s) => s.playback?.id === batchId);
+  await blue.act("playback_ready", { batchId });
+  assert.equal(room.phase, "playback");
+  const done = await red.act("playback_ready", { batchId });
+  assert.equal(done.game.team, 1);
+  assert.equal(done.phase, "idle");
+  const en = a.en;
+  await red.act("respond", { response: "defend" }, { id: lastId, revision: 0 });
+  assert.equal(a.en, en);
+});
+
+test("sniper charge survives reconnect and fires immediately at next own phase with native damage and doubled hit", async (t) => {
+  const { app, client } = await setup(t);
+  let blue = await client();
+  const red = await client();
+  await blue.hello("create", "SNIPE01");
+  await red.hello("join", "SNIPE01");
+  await readyMatch(blue, red);
+  const room = app.rooms.get("SNIPE01"),
+    g = room.game,
+    a = g.units[0],
+    b = g.units.find((u) => u.id === "1-0");
+  a.model = Object.keys(G.models).find((k) => G.models[k].prefabId === "RGM_79_G_SP");
+  Object.assign(a, { x: 10, y: 10 });
+  Object.assign(b, { x: 14, y: 10, hp: 100000, shield: 0 });
+  g.tiles.forEach((r) => r.fill("plain"));
+  const w = G.modelOf(a).weapons.find((w) => w.special?.type === "snipe");
+  await blue.act("attack", { unitId: a.id, targetId: b.id, weaponId: w.id });
+  await finishPlans(blue);
+  await red.latest((s) => s.game.team === 1);
+  assert.equal(a.en, G.modelOf(a).en);
+  assert.ok(a.snipeOrder);
+  assert.equal(room.combats.length, 0);
+  const token = blue.joined.token;
+  blue.close();
+  await red.latest((s) => !s.connected[0]);
+  blue = await client();
+  await blue.hello("resume", "SNIPE01", token);
+  assert.ok(blue.state.game.units[0].snipeOrder);
+  await finishPlans(red);
+  await blue.latest((s) => s.game.team === 0);
+  assert.equal(blue.state.game.units[0].plan.charged, true);
+  assert.equal(a.en, G.modelOf(a).en);
+  const base = G.modelOf(a).weapons.find((c) => c.id === w.special.baseWeapon),
+    expected = Math.min(100, G.estimate(g, a, b, { ...w, hitScale: 1 }, "defend").hit * 2);
+  assert.equal(room.phase, "reaction");
+  await red.latest((s) => s.phase === "reaction");
+  const done = await red.act("respond", { response: "defend" });
+  const event = done.combats.at(-1).events[0];
+  assert.equal(event.weapon, w.id);
+  assert.equal(event.damagePerShot, w.damagePerShot);
+  assert.equal(event.strikes[0].hitChance, expected);
+  assert.equal(a.en, G.modelOf(a).en - w.en);
+  assert.equal(a.snipeOrder, undefined);
+});
+
+for (const [unitId, skillId] of [
+  ["MTank", "ExitUnit"],
+  ["FA_78_1", "ExitUnit"],
+  ["YMT_05", "Transform"],
+])
+  test(
+    unitId + " conversion is owner-only, deduplicated and synchronized after reconnect",
+    async (t) => {
+      const { app, client } = await setup(t),
+        host = await client(),
+        guest = await client();
+      const code = ("FORM" + unitId.replace(/_/g, "").slice(0, 6)).toUpperCase();
+      await host.hello("create", code);
+      await guest.hello("join", code);
+      await host.act("configure_room", {
+        mapId: "frontier_1v1",
+        costLimit: 5000,
+        unitCostLimit: 1500,
+      });
+      const kitId = Object.values(G.models).find((m) => m.prefabId === unitId).kitId;
+      await host.act("set_ready", { ready: true, formation: [{ unitId, kitId }] });
+      await guest.latest((s) => s.settings.unitCostLimit === 1500);
+      await guest.act("set_ready", { ready: true });
+      await confirmAssembly(host, guest);
+      await host.act("confirm_deployment");
+      await guest.act("confirm_deployment");
+      const room = app.rooms.get(code),
+        unit = room.game.units.find((u) => u.ownerSeat === 0),
+        cell = G.skillTargets(room.game, unit, skillId)[0];
+      assert.ok(cell);
+      const fields = { unitId: unit.id, skillId, ...cell };
+      assert.equal((await guest.act("skill", fields)).type, "error");
+      const before = JSON.stringify(room.game);
+      assert.equal((await host.act("skill", { ...fields, x: -1 })).type, "error");
+      assert.equal(JSON.stringify(room.game), before);
+      const id = randomUUID(),
+        state = await host.act("skill", fields, { id });
+      assert.equal(state.type, "state");
+      const snapshot = JSON.parse(JSON.stringify(state.game));
+      const duplicate = await host.act("skill", fields, { id, revision: 0 });
+      assert.deepEqual(duplicate.game, state.game);
+      await guest.latest((s) => s.revision >= state.revision);
+      assert.deepEqual(guest.state.game, state.game);
+      const token = host.joined.token;
+      host.close();
+      await guest.latest((s) => !s.connected[0]);
+      const resumed = await client();
+      await resumed.hello("resume", code, token);
+      assert.deepEqual(resumed.state.game, snapshot);
+      assert.equal((await resumed.act("skill", fields)).type, "error");
+    },
+  );

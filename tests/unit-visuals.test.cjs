@@ -4,7 +4,9 @@ const ART = require("../tools/load-catalog.cjs").loadCatalog();
 test("all unit parts, weapon mounts and shared animation curves use semantic bone names", () => {
   const old = /^(arm|leg)\d+$/;
   for (const p of ART.prefabs) {
-    assert.ok(p.skeleton.Body && p.skeleton.Head && p.skeleton.Eye);
+    assert.ok(p.skeleton.Body);
+    if (!p.stats.ship && p.stats.movementType !== "air")
+      assert.ok(p.skeleton.Head && p.skeleton.Eye);
     assert.ok(Object.keys(p.skeleton).every((k) => !old.test(k)));
     for (const layer of p.layers) assert.ok(p.skeleton[layer.bone], p.id + "/" + layer.name);
     for (const kit of p.weaponKits)
@@ -48,6 +50,9 @@ test("Dom bazooka uses 380mm across runtime weapon IDs, names, kits, layers and 
   for (const lang of ["zh", "en", "ja"]) assert.ok(w.localization[lang].name.includes("380mm"));
   assert.ok(p.weaponKits.find((k) => k.id === "bazooka").weapons.includes(w.id));
   const runtime = JSON.parse(JSON.stringify(p));
-  for (const weapon of Object.values(runtime.weapons)) delete weapon.source;
+  for (const weapon of Object.values(runtime.weapons)) {
+    delete weapon.source;
+    delete weapon.nativeTiming;
+  }
   assert.doesNotMatch(JSON.stringify(runtime), /360mm/);
 });

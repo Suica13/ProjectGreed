@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 2,
+  "id": "FatUncleKai",
+  "code": "FatUncleKai",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/FatUncleKai/FatUncleKai.ini",
+  "materials": {
+    "textures": {
+      "FatUncleKai_Body_1.png": "textures/FatUncleKai_Body_1.png",
+      "FatuncleKai.png": "textures/FatuncleKai.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "FatuncleKai.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1.0,
+      "offset": {
+        "x": 30.0,
+        "y": -14.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 2.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1.0,
+      "offset": {
+        "x": -30.0,
+        "y": -14.0
+      },
+      "scaleX": -0.85,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "FatUncleKai_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/FatUncleKai__OnMoving.json",
+    "OnMovingReversing": "../../animations/FatUncleKai__OnMovingReversing.json",
+    "Common_Dead": "../../animations/FatUncleKai__Common_Dead.json",
+    "Common_Stun": "../../animations/FatUncleKai__Common_Stun.json",
+    "Common_Idle": "../../animations/FatUncleKai__Common_Idle.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 25000.0,
+    "en": 15000.0,
+    "move": 10,
+    "mobility": 110.0,
+    "cost": 250,
+    "counterLimit": 1,
+    "accuracy": 100.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 10.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 25.0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 25000.0,
+    "walkSpeed": 1.75,
+    "boostSpeed": 2.5,
+    "turnSpeed": 1.5,
+    "reaction": 110.0,
+    "shooting": 100.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "FatUncleKai",
+      "Unit",
+      "Aircraft",
+      "ZEON",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [
+      "LaunchAllUnits",
+      "Deploy"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 1000.0,
+    "tacticalMoveBeforeBonus": 9
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost"
+  },
+  "name": "胖叔叔改",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "胖叔叔改",
+      "description": "胖叔叔改良型,机动性得到了提升"
+    },
+    "en": {
+      "name": "FatUncleKai",
+      "description": "Improved FatUncleKai, with enhanced mobility"
+    },
+    "ja": {}
+  },
+  "weapons": {},
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "review",
+      "name": "搭载与放出"
+    },
+    {
+      "id": "Deploy",
+      "source": "Template/Unit/Skill/Deploy.gw",
+      "status": "review",
+      "name": "展开／收起"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": []
+    }
+  ],
+  "description": "胖叔叔改良型,机动性得到了提升",
+  "costBalance": {
+    "nativeLevel": 1000.0,
+    "levelMultiplier": 0.25,
+    "published": 250
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1
+}

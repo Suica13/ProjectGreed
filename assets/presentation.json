@@ -45,7 +45,6 @@
     "volume": 0.7,
     "duration": 0.49342403628117915
   },
-  "boostStartEffect": "Boost_Start",
   "infoSound": {
     "file": "sounds/Info_1.ogg",
     "volume": 0.5,
@@ -66,5 +65,33 @@
     "volume": 0.5,
     "duration": 1.584013605442177
   },
-  "mapCellScale": 1.125
+  "mapCellScale": 1.125,
+  "deathEffects": {
+    "standard": {
+      "ground": "Explosion_Ground_1",
+      "space": "Explosion_Space_1",
+      "water": "Explosion_Water_1"
+    },
+    "large": {
+      "ground": "Common_Explosion_MA_Ground_1",
+      "space": "Common_Explosion_MA_Space_1",
+      "water": "Common_Explosion_MA_Ground_1"
+    },
+    "largeBurst": {
+      "ground": "LargeUnitDie_1",
+      "space": "LargeUnitDie_1_Space",
+      "water": "LargeUnitDie_1"
+    },
+    "largeSequence": {
+      "count": 10,
+      "interval": 0.2,
+      "finalDelay": 2,
+      "spreadX": 60,
+      "spreadY": 100
+    }
+  },
+  "moduleDamage": {
+    "effect": "Stun_1",
+    "scale": 0.25
+  }
 }

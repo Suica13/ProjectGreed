@@ -21,15 +21,20 @@ function pair() {
   return { g, a, b, w: G.modelOf(a).weapons.find((w) => w.id === id) };
 }
 test("every kit exposes native arm-independent body tackle with one strike and original audio/effect", () => {
-  for (const model of Object.values(G.models)) {
+  for (const model of Object.values(G.models).filter(
+    (m) => !m.ship && m.movementType !== "air" && !m.sourceStats?.nativeTags,
+  )) {
     const w = model.weapons.find((w) => w.id === id);
     assert.ok(w, model.id);
     assert.equal(w.slot, "skill");
     assert.equal(w.en, 0);
-    assert.equal(w.damage, 5000);
-    assert.equal(w.hit, 95);
+    assert.equal(
+      w.damage,
+      Object.values(w.damageComponents).reduce((n, v) => n + v, 0),
+    );
+    assert.equal(w.hit, 125);
     assert.equal(w.shotCount, 1);
-    assert.deepEqual(w.damageComponents, { melee: 2500, meleeShell: 2500 });
+    assert.equal(w.damageComponents.melee, w.damageComponents.meleeShell);
     assert.deepEqual(w.requiredParts, []);
     assert.equal(w.partBreakModifier, 0.75);
     assert.equal(w.attack.strikes[0].at, 0.45);

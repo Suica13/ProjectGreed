@@ -4,7 +4,11 @@ const G = require("../shared/rules.js");
 const { rows } = require("../tools/evaluate-cost.cjs");
 test("native faction tags propagate across kits independently of room teams and resolve unit icons", () => {
   for (const prefab of G.catalog.prefabs) {
-    const faction = prefab.id.startsWith("R") ? "EFSF" : "ZEON";
+    const faction =
+      prefab.faction ||
+      (prefab.id.startsWith("R") || ["SalamisClass", "FF_X7"].includes(prefab.id)
+        ? "EFSF"
+        : "ZEON");
     assert.deepEqual(prefab.tags, [faction, "0079"]);
     for (const kit of prefab.weaponKits) {
       const id = prefab.id + "__" + kit.id;
@@ -22,66 +26,34 @@ test("native faction tags propagate across kits independently of room teams and 
   );
   assert.equal(G.models[game.units[0].model].faction, G.models[game.units[1].model].faction);
 });
-test("repriced platforms follow the requested tiers and top units share the same cost range", () => {
-  const order = ["MS_06F", "MS_06J", "MS_06K", "RGM_79", "RGC_80", "MS_09"];
-  const average = (id) => {
-    const models = Object.values(G.models).filter((m) => m.prefabId === id);
-    return models.reduce((sum, m) => sum + m.cost, 0) / models.length;
-  };
-  for (let i = 1; i < order.length; i++) assert.ok(average(order[i]) > average(order[i - 1]));
-  const range = (id) => {
-    const costs = Object.values(G.models)
-      .filter((m) => m.prefabId === id)
-      .map((m) => m.cost);
-    return [Math.min(...costs), Math.max(...costs)];
-  };
-  assert.deepEqual(range("RGC_80"), range("RGM_79L"));
-  assert.ok(average("MS_06J") <= average("MS_06F") * 1.25);
-  for (const id of ["MS_09", "RGM_79_G"]) {
-    assert.ok(
-      G.catalog.prefabs.find((p) => p.id === id).stats.cost >= 475 &&
-        G.catalog.prefabs.find((p) => p.id === id).stats.cost <= 550,
-    );
-    assert.ok(average(id) > average("RGM_79L"));
+test("all platform prices follow native Level while estimates remain informational", () => {
+  for (const p of G.catalog.prefabs) {
+    assert.equal(p.stats.cost, Math.max(25, Math.round(p.sourceStats.unitLevel / 100) * 25), p.id);
   }
   for (const row of rows) {
-    // Stored COST is manually published; estimates can change after weapon balancing.
-    const band = require("../tools/cost-balance.json")[G.models[row.id].prefabId];
-    const prefab = G.catalog.prefabs.find((p) => p.id === G.models[row.id].prefabId);
-    assert.ok(prefab.stats.cost >= band.min && prefab.stats.cost <= band.max);
     assert.equal(row.cost, G.models[row.id].cost);
-    assert.equal(G.models[row.id].cost % 25, 0);
-    assert.ok(row.platformEstimate >= band.min && row.platformEstimate <= band.max);
     assert.ok(Number.isFinite(row.offense) && row.offense > 0);
     assert.ok(Number.isFinite(row.effectiveHp) && row.effectiveHp > 0);
   }
 });
-test("ground GM upgrades ordinary GM protection and HP; missiles offer accuracy without heavy single-shot damage", () => {
+
+test("native ground GM retains superior armor and original missile payload", () => {
   const gm = G.models.RGM_79__machine_gun,
     ground = G.models.RGM_79_G__machine_gun;
-  assert.equal(G.models.MS_06F__machine_gun.hp, 12000);
-  assert.equal(ground.hp, 20000);
-  assert.ok(ground.hp > gm.hp && ground.move >= gm.move && ground.mobility === gm.mobility);
+  assert.equal(G.models.MS_06F__machine_gun.hp, 15000);
+  assert.equal(ground.hp, 25000);
+  assert.ok(ground.hp > gm.hp);
   assert.ok(ground.defenses.shell.percent > gm.defenses.shell.percent);
-  assert.ok(ground.defenses.shell.flat > gm.defenses.shell.flat);
   const missile = G.models.RGM_79_G__missile_launcher.weapons[0];
-  const cannon = G.models.RGM_79_G__cannon.weapons[0];
-  assert.ok(missile.hit > cannon.hit);
-  assert.ok(missile.damagePerShot < cannon.damagePerShot);
-  assert.ok(missile.damage < cannon.damage);
-  assert.equal(missile.shotCount, 3);
-  assert.equal(missile.max, 5);
-  assert.equal(missile.role, "guided_missile");
-  const legs = G.models.MS_06J__machine_gun.weapons.find((w) => w.id === "ZN_MS_06J_LegMS");
-  assert.equal(legs.shotCount, 2);
-  assert.equal(legs.hit, 95);
-  assert.equal(legs.en, 7.5);
+  assert.equal(missile.max, 4);
+  assert.equal(missile.hit, missile.sourceHit);
+  assert.equal(missile.damage, missile.damagePerShot * missile.shotCount);
 });
 
 test("Dom moves farther with low evasion; movement and mobility affect separate combat rules", () => {
   const dom = G.models.MS_09__bazooka,
     light = G.models.RGM_79L__beam_gun;
-  assert.equal(dom.move, 7);
+  assert.equal(dom.move, 8);
   assert.equal(dom.mobility, 100);
   assert.equal(dom.move, light.move);
   assert.ok(dom.mobility < light.mobility);
@@ -110,20 +82,19 @@ test("Dom moves farther with low evasion; movement and mobility affect separate 
   }
 });
 
-test("Gelgoog and ground Gundam machine guns gain ten percent damage with native firing cadence", () => {
-  for (const [model, baseline] of [
-    ["MS_14A__machine_gun", 850],
-    ["RX_79_G__machine_gun", 900],
-  ]) {
-    const weapon = G.models[model].weapons[0];
-    assert.equal(weapon.damagePerShot, Math.round(baseline * 1.1));
-    assert.deepEqual(weapon.damageComponents, { shell: Math.round(baseline * 1.1) });
-    assert.equal(weapon.damage, weapon.shotCount * weapon.damagePerShot);
+test("Gelgoog and ground Gundam machine guns use original payload and cadence", () => {
+  assert.equal(G.models.MS_14A__machine_gun.weapons[0].damagePerShot, 750);
+  for (const id of ["MS_14A__machine_gun", "RX_79_G__machine_gun"]) {
+    const w = G.models[id].weapons[0];
+    assert.equal(w.shotCount, w.nativeTiming.projectiles);
+    assert.equal(w.hit, 100);
+    assert.equal(w.en, 20);
   }
 });
 
 test("all primary weapon kits use fixed category surcharges on the unchanged platform base", () => {
   const costs = {
+    standard: 0,
     machine_gun: 0,
     anti_air: 0,
     bazooka: 50,
@@ -136,14 +107,14 @@ test("all primary weapon kits use fixed category surcharges on the unchanged pla
     magella_cannon: 100,
   };
   assert.deepEqual(require("../assets/weapon-kit-costs.json"), costs);
-  for (const prefab of G.catalog.prefabs)
+  for (const prefab of G.catalog.prefabs.filter((p) => !p.mechanics))
     for (const kit of prefab.weaponKits) {
       assert.equal(kit.cost, costs[kit.id], prefab.id + ":" + kit.id);
       assert.equal(G.models[prefab.id + "__" + kit.id].cost, prefab.stats.cost + costs[kit.id]);
     }
-  assert.equal(G.models.RGM_79__machine_gun.cost, 350);
-  assert.equal(G.models.RGM_79__bazooka.cost, 400);
-  assert.equal(G.models.RGM_79__beam_spray.cost, 425);
-  assert.equal(G.models.MS_14A__beam_rifle.cost, 850);
-  assert.equal(G.models.RX_79_G__cannon.cost, 850);
+  assert.equal(G.models.RGM_79__machine_gun.cost, 250);
+  assert.equal(G.models.RGM_79__bazooka.cost, 300);
+  assert.equal(G.models.RGM_79__beam_spray.cost, 325);
+  assert.equal(G.models.MS_14A__beam_rifle.cost, 475);
+  assert.equal(G.models.RX_79_G__cannon.cost, 600);
 });

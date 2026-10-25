@@ -2,7 +2,9 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const WeaponSequence = require("../shared/weapon-sequence.js");
+const PairedWeapons = require("./paired-weapons.cjs");
 const UnitParts = require("../shared/unit-parts.js");
+const UnitSkills = require("../shared/unit-skills.js");
 function validateParts(parts, label) {
   if (parts === undefined) return;
   if (
@@ -56,9 +58,9 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     !Number.isInteger(catalog.map?.width) ||
     !Number.isInteger(catalog.map?.height) ||
     catalog.map.width < 12 ||
-    catalog.map.width > 26 ||
+    catalog.map.width > 128 ||
     catalog.map.height < 9 ||
-    catalog.map.height > 26
+    catalog.map.height > 128
   )
     throw Error("Invalid map / AI formation size");
   if (!Number.isInteger(catalog.formation.costStep) || catalog.formation.costStep <= 0)
@@ -84,9 +86,9 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       !Number.isInteger(map.width) ||
       !Number.isInteger(map.height) ||
       map.width < 12 ||
-      map.width > 64 ||
+      map.width > 128 ||
       map.height < 9 ||
-      map.height > 64 ||
+      map.height > 128 ||
       !Number.isInteger(map.playersPerTeam) ||
       map.playersPerTeam < 1 ||
       map.playersPerTeam > 5 ||
@@ -119,6 +121,36 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         ))
     )
       throw Error("Invalid map appearance: " + map.id);
+    const areas = map.deploymentAreas;
+    const expansion = map.deploymentExpansion;
+    if (
+      expansion !== undefined &&
+      (!expansion ||
+        !areas ||
+        ![expansion.baseWidth, expansion.addedLeft, expansion.addedRight].every(Number.isInteger) ||
+        expansion.baseWidth < 12 ||
+        expansion.addedLeft < 1 ||
+        expansion.addedRight < 1 ||
+        expansion.baseWidth + expansion.addedLeft + expansion.addedRight !== map.width)
+    )
+      throw Error("Invalid deployment expansion: " + map.id);
+    if (
+      areas !== undefined &&
+      (!Array.isArray(areas) ||
+        areas.length !== map.spawns.length ||
+        areas.some(
+          (area) =>
+            !area ||
+            ![area.x, area.y, area.width, area.height].every(Number.isInteger) ||
+            area.x < 0 ||
+            area.y < 0 ||
+            area.width < 1 ||
+            area.height < 1 ||
+            area.x + area.width > map.width ||
+            area.y + area.height > map.height,
+        ))
+    )
+      throw Error("Invalid deployment areas: " + map.id);
     for (const [seat, spawn] of map.spawns.entries()) {
       if (
         spawn.team !== seat % 2 ||
@@ -131,23 +163,32 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         spawn.y >= map.height
       )
         throw Error("Invalid spawn: " + map.id);
+      const area = areas?.[seat];
+      const inside = (x, y) =>
+        area
+          ? x >= area.x && y >= area.y && x < area.x + area.width && y < area.y + area.height
+          : Math.abs(x - spawn.x) + Math.abs(y - spawn.y) <= map.deploymentRadius;
+      if (!inside(spawn.x, spawn.y)) throw Error("Spawn outside deployment area: " + map.id);
       let capacity = 0;
       for (let y = 0; y < map.height; y++)
         for (let x = 0; x < map.width; x++)
-          if (
-            Math.abs(x - spawn.x) + Math.abs(y - spawn.y) <= map.deploymentRadius &&
-            !["rock", "water"].includes(map.tiles[y][x])
-          )
-            capacity++;
+          if (inside(x, y) && !["rock", "water"].includes(map.tiles[y][x])) capacity++;
       if (capacity < catalog.formation.maxUnits * 2)
         throw Error("Spawn area too small for 200% AI: " + map.id);
       if (
-        map.spawns
-          .slice(0, seat)
-          .some(
-            (other) =>
-              Math.abs(other.x - spawn.x) + Math.abs(other.y - spawn.y) <= map.deploymentRadius * 2,
-          )
+        map.spawns.slice(0, seat).some((other, index) => {
+          if (!area)
+            return (
+              Math.abs(other.x - spawn.x) + Math.abs(other.y - spawn.y) <= map.deploymentRadius * 2
+            );
+          const otherArea = areas[index];
+          return (
+            area.x < otherArea.x + otherArea.width &&
+            otherArea.x < area.x + area.width &&
+            area.y < otherArea.y + otherArea.height &&
+            otherArea.y < area.y + area.height
+          );
+        })
       )
         throw Error("Overlapping deployment areas: " + map.id);
     }
@@ -258,10 +299,17 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       return { ...sound, asset };
     });
   }
-  if (!result.effects[result.presentation.boostStartEffect])
-    throw Error("Missing boost start effect");
   if (!result.effects[result.presentation.deathElectricEffect])
     throw Error("Invalid death electric effect");
+  const moduleDamage = result.presentation.moduleDamage;
+  if (
+    !moduleDamage ||
+    !result.effects[moduleDamage.effect] ||
+    !Number.isFinite(moduleDamage.scale) ||
+    moduleDamage.scale <= 0 ||
+    moduleDamage.scale > 1
+  )
+    throw Error("Invalid module damage presentation setting");
   const lowHp = result.presentation.lowHp;
   if (
     !lowHp ||
@@ -277,6 +325,12 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       prefab = read(source);
     if (prefab.enabled === false) continue;
     validateLocalization(prefab.localization, ref);
+    if (
+      !Number.isInteger(prefab.stats.actionPoints) ||
+      prefab.stats.actionPoints < 1 ||
+      prefab.stats.actionPoints > 99
+    )
+      throw Error("Invalid unit action points: " + prefab.id);
     if (
       !Array.isArray(prefab.tags) ||
       prefab.tags.filter((tag) => ["EFSF", "ZEON"].includes(tag)).length !== 1
@@ -294,6 +348,52 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     for (const key of ["hp", "en", "move", "cost"])
       if (!Number.isFinite(prefab.stats[key]) || prefab.stats[key] <= 0)
         throw Error("Invalid stat " + key + ": " + ref);
+    if (
+      prefab.stats.movementType !== undefined &&
+      !["ground", "air", "amphibious", "hover", "naval"].includes(prefab.stats.movementType)
+    )
+      throw Error("Invalid movement type: " + prefab.id);
+    if (
+      prefab.stats.autoRepair &&
+      (![prefab.stats.autoRepair.hpPercent, prefab.stats.autoRepair.enCost].every(
+        (v) => Number.isFinite(v) && v > 0,
+      ) ||
+        prefab.stats.autoRepair.hpPercent > 100 ||
+        prefab.stats.autoRepair.enCost > prefab.stats.en)
+    )
+      throw Error("Invalid auto-repair: " + prefab.id);
+    if (prefab.stats.stealth && typeof prefab.stats.stealth.waterOnly !== "boolean")
+      throw Error("Invalid concealment: " + prefab.id);
+    if (
+      prefab.mechanics &&
+      (!Array.isArray(prefab.mechanics) ||
+        prefab.mechanics.some(
+          (m) =>
+            !m.id ||
+            !m.name ||
+            !["implemented", "adapted", "review", "not_applicable"].includes(m.status),
+        ))
+    )
+      throw Error("Invalid mechanics audit: " + prefab.id);
+    UnitSkills.validate(prefab.skills, prefab.id);
+    for (const skill of prefab.skills || [])
+      if (["repair", "recon"].includes(skill.type) && skill.enCost > prefab.stats.en)
+        throw Error("Repair exceeds maximum EN: " + prefab.id);
+    for (const skill of prefab.skills || []) {
+      validateLocalization(skill.localization, prefab.id + "/" + skill.id);
+      if (!result.effects[skill.effect]) throw Error("Missing skill effect: " + skill.id);
+      if (
+        !skill.sound ||
+        !Number.isFinite(skill.sound.volume) ||
+        skill.sound.volume < 0 ||
+        skill.sound.volume > 1
+      )
+        throw Error("Invalid skill sound: " + skill.id);
+      const asset = prefab.id + "/skill/" + skill.id;
+      result.sounds[asset] =
+        "data:audio/ogg;base64," + fs.readFileSync(file(base, skill.sound.file)).toString("base64");
+      skill.sound.asset = asset;
+    }
     prefab.stats.adaptability ??= { ground: 100, space: 100 };
     for (const environment of ["ground", "space"])
       if (
@@ -318,6 +418,44 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       throw Error("Invalid counter limit: " + ref);
     if (!Number.isFinite(prefab.stats.mobility) || prefab.stats.mobility <= 0)
       throw Error("Invalid mobility: " + ref);
+    if (prefab.stats.ship) {
+      const footprint = prefab.stats.footprint,
+        modules = prefab.stats.modules;
+      if (
+        !footprint ||
+        !Number.isInteger(footprint.width) ||
+        footprint.width < 1 ||
+        footprint.width > 15 ||
+        !Number.isInteger(footprint.height) ||
+        footprint.height < 1 ||
+        footprint.height > 24 ||
+        !Array.isArray(modules) ||
+        new Set(modules.map((m) => m.id)).size !== modules.length ||
+        modules.some(
+          (m) => !m.id || !Number.isFinite(m.hp) || m.hp <= 0 || !prefab.skeleton[m.bone],
+        )
+      )
+        throw Error("Invalid ship footprint or modules: " + ref);
+      for (const module of modules) {
+        if (!module.visual) continue;
+        const layers = prefab.layers.filter((l) => l.moduleId === module.id);
+        if (
+          typeof module.visual.separateSprite !== "boolean" ||
+          layers.length !== module.visual.decals?.length ||
+          module.visual.separateSprite !== layers.length > 0
+        )
+          throw Error("Invalid ship module artwork: " + prefab.id + "/" + module.id);
+      }
+      for (const weapon of Object.values(prefab.weapons)) {
+        if (
+          (weapon.moduleIds || []).some((id) => !modules.some((m) => m.id === id)) ||
+          (weapon.attack.steps || []).some(
+            (step) => step.moduleId && !modules.some((m) => m.id === step.moduleId),
+          )
+        )
+          throw Error("Unknown ship weapon module: " + ref);
+      }
+    }
     prefab.stats.accuracy ??= 100;
     if (
       !Number.isFinite(prefab.stats.accuracy) ||
@@ -374,6 +512,19 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       result.assets[key] =
         "data:image/png;base64," + fs.readFileSync(file(base, ref)).toString("base64");
     }
+    for (const [alias, target] of Object.entries(prefab.kitAliases || {})) {
+      if (
+        !prefab.weaponKits.some((kit) => kit.id === target) ||
+        prefab.weaponKits.some((kit) => kit.id === alias)
+      )
+        throw Error("Invalid kit alias: " + prefab.id + "/" + alias);
+    }
+    const paired = new Map(
+      (prefab.pairedWeapons || []).map((group) => [
+        group.id,
+        PairedWeapons.compose(prefab, group, animations),
+      ]),
+    );
     for (const kit of prefab.weaponKits) {
       validateLocalization(kit.localization, prefab.id + "/" + kit.id);
       const id = prefab.id + "__" + kit.id;
@@ -383,18 +534,29 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         kit.cost < 0 ||
         kit.cost % catalog.formation.costStep !== 0 ||
         !Array.isArray(kit.weapons) ||
-        !kit.weapons.length ||
         new Set(kit.weapons).size !== kit.weapons.length
       )
         throw Error("Invalid kit: " + id);
       const weapons = kit.weapons.map((key) => {
-        const raw = prefab.weapons[key];
+        const raw = paired.get(key) || prefab.weapons[key];
+        if (raw?.availability?.hidden)
+          throw Error("Hidden native weapon cannot enter a kit: " + prefab.id + "/" + key);
         validateLocalization(raw?.localization, prefab.id + "/" + key);
+        if (!Number.isInteger(raw?.actionCost) || raw.actionCost < 1 || raw.actionCost > 99)
+          throw Error("Invalid weapon action cost: " + prefab.id + "/" + key);
         validateParts(raw?.requiredParts, prefab.id + "/" + key);
         validateParts(raw?.anyParts, prefab.id + "/" + key);
         for (const step of raw?.attack?.steps || [])
           validateParts(step.requiredParts, prefab.id + "/" + key + "/Step");
-        const weapon = raw && WeaponSequence.compile(raw);
+        const weapon =
+          raw &&
+          (() => {
+            try {
+              return WeaponSequence.compile(raw);
+            } catch (error) {
+              throw Error(prefab.id + "/" + key + ": " + error.message);
+            }
+          })();
         if (!result.effects[weapon?.hitEffect]) throw Error("Missing hit effect: " + key);
         if (
           weapon.muzzleEffects !== undefined &&
@@ -418,7 +580,6 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
           "ammo" in weapon ||
           !Number.isFinite(weapon.en) ||
           weapon.en < 0 ||
-          (weapon.en === 0 && weapon.slot !== "skill") ||
           weapon.en > prefab.stats.en
         )
           throw Error("Weapons must use EN: " + key);
@@ -437,7 +598,16 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
           !weapon.damageComponents ||
           Object.entries(weapon.damageComponents).some(
             ([channel, value]) =>
-              !["beam", "shell", "melee", "meleeBeam", "meleeShell"].includes(channel) ||
+              ![
+                "beam",
+                "shell",
+                "melee",
+                "meleeBeam",
+                "meleeShell",
+                "beamAP",
+                "shellAP",
+                "meleeAP",
+              ].includes(channel) ||
               !Number.isFinite(value) ||
               value < 0,
           ) ||
@@ -463,6 +633,16 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
             fs.readFileSync(file(base, weapon.sound.file)).toString("base64");
           weapon.sound = { ...weapon.sound, asset };
         }
+        if (
+          weapon.targetModifiers &&
+          (Object.keys(weapon.targetModifiers).some(
+            (k) => !["ground", "space", "water", "air"].includes(k),
+          ) ||
+            Object.values(weapon.targetModifiers).some(
+              (v) => !Number.isFinite(v) || v < 0 || v > 10,
+            ))
+        )
+          throw Error("Invalid weapon target modifiers: " + key);
         if (weapon.projectile) {
           const projectileKey = prefab.id + "/projectile/" + key;
           result.assets[projectileKey] =
@@ -515,6 +695,11 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         throw Error("Invalid movement presentation: " + prefab.id);
       const layers = prefab.layers.map((layer) => {
         validateParts(layer.requiredParts, prefab.id + "/layer/" + layer.name);
+        if (
+          layer.rotationSpeed !== undefined &&
+          (!Number.isFinite(layer.rotationSpeed) || Math.abs(layer.rotationSpeed) > 3600)
+        )
+          throw Error("Invalid rotor speed: " + prefab.id);
         if (!textureKeys[layer.texture] || !prefab.skeleton[layer.bone])
           throw Error("Invalid layer: " + layer.name);
         if (
@@ -525,10 +710,36 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
             layer.frames < 1)
         )
           throw Error("Invalid animated layer: " + layer.name);
-        return { ...layer, asset: textureKeys[layer.texture] };
+        // A paired weapon has one held ID, while each physical layer keeps its own part gate.
+        const aliases = new Map(
+          (prefab.pairedWeapons || []).flatMap((g) => g.channels.map((c) => [c.id, g.id])),
+        );
+        const remap = (value) =>
+          typeof value === "string"
+            ? aliases.get(value) || value
+            : Array.isArray(value)
+              ? [...new Set(value.map(remap))]
+              : value && typeof value === "object"
+                ? Object.fromEntries(Object.entries(value).map(([k, v]) => [k, remap(v)]))
+                : value;
+        return {
+          ...layer,
+          ...(layer.visibleWhen
+            ? {
+                visibleWhen: {
+                  ...layer.visibleWhen,
+                  ...(layer.visibleWhen.heldWeapon !== undefined
+                    ? { heldWeapon: remap(layer.visibleWhen.heldWeapon) }
+                    : {}),
+                },
+              }
+            : {}),
+          asset: textureKeys[layer.texture],
+        };
       });
       result.models[id] = {
         ...prefab.stats,
+        formOnly: prefab.formOnly === true,
         faction: prefab.faction,
         tags: prefab.tags,
         name: prefab.name,
@@ -540,12 +751,18 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         kitId: kit.id,
         cost: prefab.stats.cost + kit.cost,
         weapons,
+        skills: prefab.skills || [],
         presentation: prefab.presentation,
         defenses: prefab.defenses,
         attackBonuses: prefab.attackBonuses,
         shield: prefab.shield,
         description: prefab.description,
         sourceStats: prefab.sourceStats,
+        mechanics: prefab.mechanics || [],
+        hiddenWeapons: Object.entries(prefab.weapons)
+          .filter(([, w]) => w.availability?.hidden && !w.availability.mergedInto)
+          .map(([id, w]) => ({ id, name: w.name, ...w.availability }))
+          .concat(prefab.deferredWeapons || []),
       };
       result.units.push({
         id,
@@ -561,6 +778,48 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       });
     }
     result.prefabs.push(prefab);
+  }
+  for (const prefab of result.prefabs)
+    for (const skill of prefab.skills || [])
+      for (const target of [
+        !["escape", "transform", "armor_purge"].includes(skill.type) ||
+        skill.source.mode === "remove"
+          ? null
+          : skill.source,
+        skill.spawn,
+      ].filter(Boolean)) {
+        for (const kit of [target.kitId, ...Object.values(target.kitMap || {})])
+          if (!result.models[target.unitId + "__" + kit])
+            throw Error("Unknown skill result: " + prefab.id + "/" + skill.id);
+      }
+  for (const prefab of result.prefabs)
+    for (const skill of prefab.skills || [])
+      if (skill.type === "overdrive") {
+        for (const [baseKit, formKit] of Object.entries(skill.formKits))
+          if (
+            !result.models[prefab.id + "__" + baseKit] ||
+            !result.models[skill.formUnitId + "__" + formKit]?.formOnly
+          )
+            throw Error("Invalid overdrive form: " + prefab.id);
+      }
+  if (result.presentation.deathEffects) {
+    const death = result.presentation.deathEffects;
+    for (const group of ["standard", "large", "largeBurst"])
+      for (const env of ["ground", "space", "water"])
+        if (!result.effects[death[group]?.[env]])
+          throw Error("Invalid death effect: " + group + "/" + env);
+    const sequence = death.largeSequence;
+    if (
+      !Number.isInteger(sequence.count) ||
+      sequence.count < 1 ||
+      sequence.count > 50 ||
+      !Number.isFinite(sequence.interval) ||
+      sequence.interval <= 0 ||
+      !Number.isFinite(sequence.finalDelay) ||
+      sequence.finalDelay < (sequence.count - 1) * sequence.interval ||
+      ![sequence.spreadX, sequence.spreadY].every((v) => Number.isFinite(v) && v >= 0)
+    )
+      throw Error("Invalid large death sequence");
   }
   if (!result.prefabs.length) throw Error("No enabled units in catalog");
   return result;

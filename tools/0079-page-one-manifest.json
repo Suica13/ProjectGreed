@@ -1,0 +1,2713 @@
+[
+  {
+    "id": "Army_Squad_EFSF_0079_N_G_A",
+    "faction": "EFSF",
+    "name": "步兵班[EFSF][0079]",
+    "source": "Units/BattleUnits/Army_Squad/Squad/Army_Squad_EFSF_0079_N_G_A.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "Army_Squad,Unit,Human,EFSF,0079,UC,SmallUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/Stealth.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "Type61",
+    "faction": "EFSF",
+    "name": "61式主战坦克",
+    "source": "Units/BattleUnits/Type61/Type61.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "Type61,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_Type61_Cannon.gw"
+    ]
+  },
+  {
+    "id": "Type74",
+    "faction": "EFSF",
+    "name": "气垫卡车",
+    "source": "Units/BattleUnits/Type74/Type74.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "Type74,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Hover.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_Type74_MG.gw"
+    ]
+  },
+  {
+    "id": "AntiZakuTank",
+    "faction": "EFSF",
+    "name": "反扎古坦克",
+    "source": "Units/BattleUnits/AntiZakuTank/AntiZakuTank.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "AntiZakuTank,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_AntiZakuTank_MG.gw"
+    ]
+  },
+  {
+    "id": "FanFan",
+    "faction": "EFSF",
+    "name": "帆帆",
+    "source": "Units/BattleUnits/FanFan/FanFan.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "FanFan,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FanFan.gw"
+    ]
+  },
+  {
+    "id": "EF_Heli",
+    "faction": "EFSF",
+    "name": "战斗直升机[EFSF][0079]",
+    "source": "Units/BattleUnits/EF_Heli/EF_Heli.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "EF_Heli,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_EF_Heli.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Vulcan_EF_Heli.gw"
+    ]
+  },
+  {
+    "id": "FF_4",
+    "faction": "EFSF",
+    "name": "托里亚斯",
+    "source": "Units/BattleUnits/FF_4/FF_4.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "FF_4,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_4.gw"
+    ]
+  },
+  {
+    "id": "FF_B2",
+    "faction": "EFSF",
+    "name": "飞鳐",
+    "source": "Units/BattleUnits/FF_B2/FF_B2.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "FF_B2,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_B2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_B2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Bomb_FF_B2.gw"
+    ]
+  },
+  {
+    "id": "FF_6",
+    "faction": "EFSF",
+    "name": "听鳕",
+    "source": "Units/BattleUnits/FF_6/FF_6.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "FF_6,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_6.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_6.gw"
+    ]
+  },
+  {
+    "id": "FF_S3",
+    "faction": "EFSF",
+    "name": "剑鱼",
+    "source": "Units/BattleUnits/FF_S3/FF_S3.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "FF_S3,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_S3.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_S3.gw"
+    ]
+  },
+  {
+    "id": "RFF_06",
+    "faction": "EFSF",
+    "name": "扎尼",
+    "source": "Units/BattleUnits/RFF_06/RFF_06.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "RFF_06,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RFF_06_Cannon.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
+    ]
+  },
+  {
+    "id": "Medea",
+    "faction": "EFSF",
+    "name": "米迪亚",
+    "source": "Units/BattleUnits/Medea/Medea.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "Medea,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/CustomUnit.gw",
+      "Template/Unit/Skill/Deploy.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "EF_TorpedoBoat",
+    "faction": "EFSF",
+    "name": "鱼雷艇",
+    "source": "Units/BattleUnits/EF_TorpedoBoat/EF_TorpedoBoat.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "EF_TorpedoBoat,Unit,Boat,EFSF,0079,UC,NavyUnit",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_TorpedoBoat_Cannon.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_TorpedoBoat_AMS.gw"
+    ]
+  },
+  {
+    "id": "BurkeClass",
+    "faction": "EFSF",
+    "name": "伯克级驱逐舰",
+    "source": "Units/BattleUnits/BurkeClass/BurkeClass.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "BurkeClass,Unit,Ship,CmdUnit,EFSF,0079,UC,LargeUnit,NavyUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/Sonar.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "U_Type_Submarine",
+    "faction": "EFSF",
+    "name": "U型潜艇",
+    "source": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "U_Type_Submarine,Unit,Ship,CmdUnit,EFSF,0079,UC,LargeUnit,NavyUnit,MpUpUnit_X6",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/ChangeStyle.gw",
+      "Template/Unit/Skill/Sonar.gw",
+      "Template/Unit/Skill/Stealth_Aqua.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "HimalayaClass",
+    "faction": "EFSF",
+    "name": "喜马拉雅级",
+    "source": "Units/BattleUnits/HimalayaClass/HimalayaClass.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "HimalayaClass,Unit,Ship,CmdUnit,EFSF,0079,UC,LargeUnit,NavyUnit,MpUpUnit_X8",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "Template/Unit/Skill/CmdAtk.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/Sonar.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "SalamisClass",
+    "faction": "EFSF",
+    "name": "萨拉米斯级",
+    "source": "Units/BattleUnits/SalamisClass/SalamisClass.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "SalamisClass,Unit,CmdUnit,Ship,EFSF,0079,UC,LargeUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/CustomUnit_NewUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw"
+    ]
+  },
+  {
+    "id": "ColumbusClass",
+    "faction": "EFSF",
+    "name": "哥伦布级",
+    "source": "Units/BattleUnits/ColumbusClass/ColumbusClass.ini",
+    "tech": [
+      "Tech_EFSF_0079_BaseTech"
+    ],
+    "tags": "ColumbusClass,Unit,CmdUnit,Ship,EFSF,0079,UC,LargeUnit,MpUpUnit_X12",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/SupplyPoint.gw",
+      "Template/Unit/Skill/AutoRepair.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw"
+    ]
+  },
+  {
+    "id": "RGM_79_E",
+    "faction": "EFSF",
+    "name": "吉姆初期型",
+    "source": "Units/BattleUnits/RGM_79_E/RGM_79_E.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "RGM_79_E,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw"
+    ]
+  },
+  {
+    "id": "Type61A5",
+    "faction": "EFSF",
+    "name": "61式主战坦克A5型",
+    "source": "Units/BattleUnits/Type61/Type61A5.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "Type61A5,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_Type61A5_MG.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_Type61A5_Cannon.gw"
+    ]
+  },
+  {
+    "id": "Type74Kai",
+    "faction": "EFSF",
+    "name": "气垫卡车[寻血猎犬]",
+    "source": "Units/BattleUnits/Type74/Type74Kai.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "Type74Kai,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Hover.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_Type74_MG.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw"
+    ]
+  },
+  {
+    "id": "Type61_SPG",
+    "faction": "EFSF",
+    "name": "61式主战坦克[榴弹炮搭载型]",
+    "source": "Units/BattleUnits/Type61_SPG/Type61_SPG.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "Type61_SPG,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Deploy.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_Type61_SPG_Cannon.gw"
+    ]
+  },
+  {
+    "id": "MissileCar",
+    "faction": "EFSF",
+    "name": "导弹车",
+    "source": "Units/BattleUnits/MissileCar/MissileCar.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "MissileCar,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_MissileCar.gw"
+    ]
+  },
+  {
+    "id": "EF_MinigunAPC",
+    "faction": "EFSF",
+    "name": "加特林装甲车",
+    "source": "Units/BattleUnits/EF_MinigunAPC/EF_MinigunAPC.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "EF_MinigunAPC,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_MinigunAPC_MG.gw"
+    ]
+  },
+  {
+    "id": "Dash",
+    "faction": "EFSF",
+    "name": "天谍",
+    "source": "Units/BattleUnits/Dash/Dash.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "Dash,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_S.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Dash.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw"
+    ]
+  },
+  {
+    "id": "DEPP_ROG",
+    "faction": "EFSF",
+    "name": "迪普·罗格",
+    "source": "Units/BattleUnits/DEPP_ROG/DEPP_ROG.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "DEPP_ROG,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_DEPP_ROG.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Bomb_DEPP_ROG.gw"
+    ]
+  },
+  {
+    "id": "DonEscargot",
+    "faction": "EFSF",
+    "name": "唐·埃斯卡特",
+    "source": "Units/BattleUnits/DonEscargot/DonEscargot.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "DonEscargot,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/DogFight_A.gw",
+      "Template/Unit/Skill/Sonar.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_DonEscargot.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Bomb_DonEscargot.gw"
+    ]
+  },
+  {
+    "id": "RB_79K",
+    "faction": "EFSF",
+    "name": "铁球K",
+    "source": "Units/BattleUnits/RB_79K/RB_79K.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "RB_79K,Unit,MP,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_RB_79K_Cannon.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_RB_79K_Anchor.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_BF.gw"
+    ]
+  },
+  {
+    "id": "RB_79",
+    "faction": "EFSF",
+    "name": "铁球",
+    "source": "Units/BattleUnits/RB_79/RB_79.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "RB_79,Unit,MP,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_RB_79_Cannon.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
+    ]
+  },
+  {
+    "id": "Pilot_EFSF_0079_N_ACE_YDR",
+    "faction": "EFSF",
+    "name": "哈曼·杨德里[EFSF][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_YDR.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "EFSF,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE,TeamMarkerUnit_GravityFrontTeam",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "M_Type_Submarine",
+    "faction": "EFSF",
+    "name": "M型潜水艇",
+    "source": "Units/BattleUnits/M_Type_Submarine/M_Type_Submarine.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "M_Type_Submarine,Unit,Ship,CmdUnit,EFSF,0079,UC,LargeUnit,NavyUnit,MpUpUnit_X16",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/ChangeStyle.gw",
+      "Template/Unit/Skill/Sonar.gw",
+      "Template/Unit/Skill/Stealth_Aqua.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "MiniTrayClass",
+    "faction": "EFSF",
+    "name": "小托盘级",
+    "source": "Units/BattleUnits/MiniTrayClass/MiniTrayClass.ini",
+    "tech": [
+      "Tech_EFSF_0079_AntiMSPlan"
+    ],
+    "tags": "MiniTrayClass,Unit,Ship,CmdUnit,EFSF,0079,UC,LargeUnit,MpUpUnit_X6",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/Hover.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "Template/Unit/Skill/AutoRepair.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    ]
+  },
+  {
+    "id": "RX_79_G",
+    "faction": "EFSF",
+    "name": "陆战型高达",
+    "source": "Units/BattleUnits/RX_79_G/RX_79_G.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "RX_79_G,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit_PilotCustomUnit.gw",
+      "Template/Unit/Skill/CmdDef.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_180mmCannon_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeMissileLauncher_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_SHM.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_SingleVulcan_RX_79_G.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A_LV2.gw"
+    ]
+  },
+  {
+    "id": "RX_79_G_WithBackpack",
+    "faction": "EFSF",
+    "name": "陆战型高达[武器货柜]",
+    "source": "Units/BattleUnits/RX_79_G/RX_79_G_WithBackpack.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "RX_79_G_WithBackpack,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/UnloadEquipment.gw",
+      "Template/Unit/Skill/CustomUnit_PilotCustomUnit.gw",
+      "Template/Unit/Skill/CmdDef.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_180mmCannon_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeMissileLauncher_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_SingleVulcan_RX_79_G.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A_LV2.gw"
+    ]
+  },
+  {
+    "id": "RGM_79_G",
+    "faction": "EFSF",
+    "name": "陆战型吉姆",
+    "source": "Units/BattleUnits/RGM_79_G/RGM_79_G.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "RGM_79_G,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_180mmCannon.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeMissileLauncher.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw"
+    ]
+  },
+  {
+    "id": "RGM_79_G_WithBackpack",
+    "faction": "EFSF",
+    "name": "陆战型吉姆[武器货柜]",
+    "source": "Units/BattleUnits/RGM_79_G/RGM_79_G_WithBackpack.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "RGM_79_G_WithBackpack,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/UnloadEquipment.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_180mmCannon.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeMissileLauncher.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw"
+    ]
+  },
+  {
+    "id": "RGM_79_G_SPACE",
+    "faction": "EFSF",
+    "name": "先行量产型吉姆(宇宙式样)",
+    "source": "Units/BattleUnits/RGM_79_G_SPACE/RGM_79_G_SPACE.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "RGM_79_G_SPACE,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_180mmCannon.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeMissileLauncher.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw"
+    ]
+  },
+  {
+    "id": "RGM_79_G_SP",
+    "faction": "EFSF",
+    "name": "吉姆狙击型",
+    "source": "Units/BattleUnits/RGM_79_G_SP/RGM_79_G_SP.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "RGM_79_G_SP,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_LongRangeBeamSniperRifle.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_LongRangeBeamSniperRifle_Sniper.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw"
+    ]
+  },
+  {
+    "id": "RX_75R",
+    "faction": "EFSF",
+    "name": "量产型钢坦克",
+    "source": "Units/BattleUnits/RX_75R/RX_75R.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "RX_75R,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Deploy.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_75R_DoubleMG.gw"
+    ]
+  },
+  {
+    "id": "RB_79N",
+    "faction": "EFSF",
+    "name": "鱼眼",
+    "source": "Units/BattleUnits/RB_79N/RB_79N.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "RB_79N,Unit,MP,EFSF,0079,UC,NavyUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/Sonar.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/EF_RB_79N_Cannon.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_B.gw"
+    ]
+  },
+  {
+    "id": "RB_79M",
+    "faction": "EFSF",
+    "name": "铁球M型",
+    "source": "Units/BattleUnits/RB_79M/RB_79M.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "RB_79M,Unit,MP,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Space_RB_79M.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_CameraGun.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
+    ]
+  },
+  {
+    "id": "Pilot_EFSF_0079_N_ACE_RVL",
+    "faction": "EFSF",
+    "name": "约翰·亚伯拉罕·雷比尔[EFSF][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_RVL.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "EFSF,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "Pilot_EFSF_0079_N_ACE_SHR",
+    "faction": "EFSF",
+    "name": "天田士郎[EFSF][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SHR.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "EFSF,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE,TeamMarkerUnit_08MSTeam",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "BigTrayClass",
+    "faction": "EFSF",
+    "name": "大托盘级",
+    "source": "Units/BattleUnits/BigTrayClass/BigTrayClass.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "BigTrayClass,Unit,Ship,CmdUnit,EFSF,0079,UC,LargeUnit,MpUpUnit_X8",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/Hover.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "Template/Unit/Skill/AutoRepair.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_BigTrayClass_MainCannon.gw"
+    ]
+  },
+  {
+    "id": "MagellanClass",
+    "faction": "EFSF",
+    "name": "麦哲伦级",
+    "source": "Units/BattleUnits/MagellanClass/MagellanClass.ini",
+    "tech": [
+      "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+    ],
+    "tags": "MagellanClass,Unit,CmdUnit,Ship,EFSF,0079,UC,LargeUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/CmdDef.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/CustomUnit_NewUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw"
+    ]
+  },
+  {
+    "id": "RX_78_2",
+    "faction": "EFSF",
+    "name": "高达",
+    "source": "Units/BattleUnits/RX_78_2/RX_78_2.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "RX_78_2,Unit,MS,EFSF,0079,UC,CanFuse",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw",
+      "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+      "Template/Unit/Skill/LPC.gw",
+      "Template/Unit/Skill/FuseUnit_B.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_MS_FromSpace.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_RX_78_2_BR.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_SHM.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamJavelin_BF_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RX_77_2",
+    "faction": "EFSF",
+    "name": "钢加农",
+    "source": "Units/BattleUnits/RX_77_2/RX_77_2.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "RX_77_2,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+      "Template/Unit/Skill/LPC.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleCannon_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_77_2_MS.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_RX_77_2_BR.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_BF.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RX_75",
+    "faction": "EFSF",
+    "name": "钢坦克",
+    "source": "Units/BattleUnits/RX_75/RX_75.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "RX_75,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+      "Template/Unit/Skill/LPC.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_75_Cannon.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_75_MS.gw"
+    ]
+  },
+  {
+    "id": "RX_78_1",
+    "faction": "EFSF",
+    "name": "试作型高达",
+    "source": "Units/BattleUnits/RX_78_1/RX_78_1.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "RX_78_1,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+      "Template/Unit/Skill/LPC.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_MS_FromSpace.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_RX_78_1_BR.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamJavelin_BF_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "FF_X7",
+    "faction": "EFSF",
+    "name": "核心战斗机",
+    "source": "Units/BattleUnits/FF_X7/FF_X7.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "FF_X7,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/LPC.gw",
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw",
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_X7.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_X7.gw"
+    ]
+  },
+  {
+    "id": "FF_X7Bst",
+    "faction": "EFSF",
+    "name": "核心推进器",
+    "source": "Units/BattleUnits/FF_X7Bst/FF_X7Bst.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "FF_X7Bst,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw",
+      "Template/Unit/Skill/SFS.gw",
+      "Template/Unit/Skill/ExitUnit.gw",
+      "Template/Unit/Skill/LPC.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_X7Bst.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_X7Bst.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_FF_X7Bst_BR.gw"
+    ]
+  },
+  {
+    "id": "FFB_7Bst",
+    "faction": "EFSF",
+    "name": "喷气核心推进器",
+    "source": "Units/BattleUnits/FFB_7Bst/FFB_7Bst.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "FFB_7Bst,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw",
+      "Template/Unit/Skill/SFS.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FFB_7Bst.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FFB_7Bst.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Bomb_FFB_7Bst.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_FFB_7Bst_BR.gw"
+    ]
+  },
+  {
+    "id": "Gunperry",
+    "faction": "EFSF",
+    "name": "钢佩利",
+    "source": "Units/BattleUnits/Gunperry/Gunperry.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "Gunperry,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/Deploy.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_S.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Gunperry.gw"
+    ]
+  },
+  {
+    "id": "PegasusClass",
+    "faction": "EFSF",
+    "name": "飞马级",
+    "source": "Units/BattleUnits/PegasusClass/PegasusClass.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "PegasusClass,Unit,CmdUnit,Ship,EFSF,0079,UC,LargeUnit,MpUpUnit_X12",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/CmdDef.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw"
+    ]
+  },
+  {
+    "id": "MagellanClass_Green",
+    "faction": "EFSF",
+    "name": "麦哲伦级[指挥舰]",
+    "source": "Units/BattleUnits/MagellanClass_Green/MagellanClass_Green.ini",
+    "tech": [
+      "Tech_EFSF_0079_OperationVDataRecoveryProject"
+    ],
+    "tags": "MagellanClass,Unit,CmdUnit,Ship,EFSF,0079,UC,LargeUnit",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "RGM_79",
+    "faction": "EFSF",
+    "name": "吉姆",
+    "source": "Units/BattleUnits/RGM_79/RGM_79.ini",
+    "tech": [
+      "Tech_EFSF_0079_GMDevelopmentPlan"
+    ],
+    "tags": "RGM_79,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGun.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw"
+    ]
+  },
+  {
+    "id": "RGM_79_Commander",
+    "faction": "EFSF",
+    "name": "吉姆[指挥官机]",
+    "source": "Units/BattleUnits/RGM_79/RGM_79_Commander.ini",
+    "tech": [
+      "Tech_EFSF_0079_GMDevelopmentPlan"
+    ],
+    "tags": "RGM_79_Commander,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdCom.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_BeamGun.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw"
+    ]
+  },
+  {
+    "id": "MedeaKai",
+    "faction": "EFSF",
+    "name": "米迪亚改",
+    "source": "Units/BattleUnits/MedeaKai/MedeaKai.ini",
+    "tech": [
+      "Tech_EFSF_0079_GMDevelopmentPlan"
+    ],
+    "tags": "MedeaKai,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/Deploy.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "Pilot_EFSF_0079_N_ACE_TAM",
+    "faction": "EFSF",
+    "name": "提安姆[EFSF][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_TAM.ini",
+    "tech": [
+      "Tech_EFSF_0079_GMDevelopmentPlan"
+    ],
+    "tags": "EFSF,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "RX_79_BD_1",
+    "faction": "EFSF",
+    "name": "苍蓝宿命一号机",
+    "source": "Units/BattleUnits/RX_79_BD_1/RX_79_BD_1.ini",
+    "tech": [
+      "Tech_EFSF_0079_BlueDestinyProject"
+    ],
+    "tags": "RX_79_BD_1,Unit,MS,EFSF,0079,UC,EXAM_Unit",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw",
+      "Template/Unit/Skill/Exam_Off.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Blue.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle_Blue.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMS_Line.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMG.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RX_80PR",
+    "faction": "EFSF",
+    "name": "苍白骑士",
+    "source": "Units/BattleUnits/RX_80PR/RX_80PR.ini",
+    "tech": [
+      "Tech_EFSF_0079_BlueDestinyProject"
+    ],
+    "tags": "RX_80PR,Unit,MS,EFSF,0079,UC,HADES_Unit",
+    "nativeSkills": [
+      "Template/Unit/Skill/HADES_Off.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink.gw",
+      "Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink_L.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_B_L_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "HeavyForkClass",
+    "faction": "EFSF",
+    "name": "重叉级",
+    "source": "Units/BattleUnits/HeavyForkClass/HeavyForkClass.ini",
+    "tech": [
+      "Tech_EFSF_0079_BlueDestinyProject"
+    ],
+    "tags": "HeavyForkClass,Unit,Ship,CmdUnit,EFSF,0079,UC,LargeUnit,MpUpUnit_X6",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/Hover.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/AutoRepair.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    ]
+  },
+  {
+    "id": "Pilot_EFSF_0079_N_ACE_YUU",
+    "faction": "EFSF",
+    "name": "加岛勇[EFSF][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_YUU.ini",
+    "tech": [
+      "Tech_EFSF_0079_BlueDestinyProject"
+    ],
+    "tags": "EFSF,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE,TeamMarkerUnit_GuineaPigTeam",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "RX_80PR_GroundType",
+    "faction": "EFSF",
+    "name": "苍白骑士[陆战重装备规格]",
+    "source": "Units/BattleUnits/RX_80PR/RX_80PR_GroundType.ini",
+    "tech": [
+      "Tech_EFSF_0079_PaleRiderProject"
+    ],
+    "tags": "RX_80PR_GroundType,Unit,MS,EFSF,0079,UC,HADES_Unit",
+    "nativeSkills": [
+      "Template/Unit/Skill/HADES_Off.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink.gw",
+      "Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink_L.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_180mmCannon_PR.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RX_80PR_2",
+    "faction": "EFSF",
+    "name": "苍白骑兵",
+    "source": "Units/BattleUnits/RX_80PR_2/RX_80PR_2.ini",
+    "tech": [
+      "Tech_EFSF_0079_PaleRiderProject"
+    ],
+    "tags": "RX_80PR_2,Unit,MS,EFSF,0079,UC,HADES_Unit",
+    "nativeSkills": [
+      "Template/Unit/Skill/HADES_PR2_Off.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_RX_80_PR_2_FrameLauncher_BR.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_80_PR_2_FrameLauncher_MG.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_80_PR_2_FrameLauncher_MS.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_HyperBeamRifle.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RX_79_BD_2",
+    "faction": "EFSF",
+    "name": "苍蓝宿命二号机",
+    "source": "Units/BattleUnits/RX_79_BD_2/RX_79_BD_2.ini",
+    "tech": [
+      "Tech_EFSF_0079_PaleRiderProject"
+    ],
+    "tags": "RX_79_BD_2,Unit,MS,EFSF,0079,UC,EXAM_Unit",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit_PilotCustomUnit.gw",
+      "Template/Unit/Skill/Exam_Off.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle_Blue.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMS_Line.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMG.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RGM_79DO",
+    "faction": "EFSF",
+    "name": "吉姆优越型",
+    "source": "Units/BattleUnits/RGM_79DO/RGM_79DO.ini",
+    "tech": [
+      "Tech_EFSF_0079_PaleRiderProject"
+    ],
+    "tags": "RGM_79DO,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdCom.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_RGM_79DO_BR.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_F_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RX_77_3",
+    "faction": "EFSF",
+    "name": "钢加农重装型",
+    "source": "Units/BattleUnits/RX_77_3/RX_77_3.ini",
+    "tech": [
+      "Tech_EFSF_0079_HeavyGuncannonPlan"
+    ],
+    "tags": "RX_77_3,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_B4_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleCannon_B2_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_RX_77_4_BeamCannon.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_RX_77_2_BR.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Grenade_B_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RX_77_3D",
+    "faction": "EFSF",
+    "name": "钢加农重装型D",
+    "source": "Units/BattleUnits/RX_77_3D/RX_77_3D.ini",
+    "tech": [
+      "Tech_EFSF_0079_HeavyGuncannonPlan"
+    ],
+    "tags": "RX_77_3D,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleCannon_Lv2.gw",
+      "Units/BattleUnits/Weapon/Beam/EF_RX_77_2_BR.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_BalzacBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Grenade_B_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_BF_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RX_78XX",
+    "faction": "EFSF",
+    "name": "精灵高达",
+    "source": "Units/BattleUnits/RX_78XX/RX_78XX.ini",
+    "tech": [
+      "Tech_EFSF_0079_HeavyGuncannonPlan"
+    ],
+    "tags": "RX_78XX,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Stealth.gw",
+      "Template/Unit/Skill/AntiDetect.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_ThunderStrike.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_75mmMG_Double_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Grenade_B_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamDagger_Double_AALDF.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamDagger_Double_AALDE.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
+    ]
+  },
+  {
+    "id": "RTX_440",
+    "faction": "EFSF",
+    "name": "强袭型钢坦克",
+    "source": "Units/BattleUnits/RTX_440/RTX_440.ini",
+    "tech": [
+      "Tech_EFSF_0079_HeavyGuncannonPlan"
+    ],
+    "tags": "RTX_440,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Transform_LandLand_Tank.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Ground_RTX_440.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Mortar_Bombing_MS.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Rocket.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Cannon_NoStop_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RTX_440_HandGun.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Flamethrower.gw"
+    ]
+  },
+  {
+    "id": "RMV_1",
+    "faction": "EFSF",
+    "name": "钢坦克II",
+    "source": "Units/BattleUnits/RMV_1/RMV_1.ini",
+    "tech": [
+      "Tech_EFSF_0079_HeavyGuncannonPlan"
+    ],
+    "tags": "RMV_1,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_MortarDouble.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RMV_1_Cannon.gw",
+      "Units/BattleUnits/Weapon/Shell/EF_RMV_1_DoubleMS.gw"
+    ]
+  },
+  {
+    "id": "Army_Squad_ZEON_0079_N_G_A",
+    "faction": "ZEON",
+    "name": "步兵班[ZEON][0079]",
+    "source": "Units/BattleUnits/Army_Squad/Squad/Army_Squad_ZEON_0079_N_G_A.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "Army_Squad,Unit,Human,ZEON,0079,UC,SmallUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/Stealth.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "MTank",
+    "faction": "ZEON",
+    "name": "马哲兰坦克",
+    "source": "Units/BattleUnits/MTank/MTank.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "MTank,Unit,Tank,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/ExitUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MTank.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MTank_Cannon.gw"
+    ]
+  },
+  {
+    "id": "SamsonGroundTransportTruck",
+    "faction": "ZEON",
+    "name": "萨姆森运输卡车",
+    "source": "Units/BattleUnits/SamsonGroundTransportTruck/SamsonGroundTransportTruck.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "SamsonGroundTransportTruck,Unit,Tank,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_SamsonGroundTransportTruck_AA.gw"
+    ]
+  },
+  {
+    "id": "ZN_APC",
+    "faction": "ZEON",
+    "name": "装甲车",
+    "source": "Units/BattleUnits/ZN_APC/ZN_APC.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "ZN_APC,Unit,Tank,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_APC_MG.gw"
+    ]
+  },
+  {
+    "id": "Wappa",
+    "faction": "ZEON",
+    "name": "瓦帕",
+    "source": "Units/BattleUnits/Wappa/Wappa.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "Wappa,Unit,Tank",
+    "nativeSkills": [
+      "Template/Unit/Skill/Hover.gw",
+      "Template/Unit/Skill/Stealth.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_Wappa_MG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_Wappa_C4.gw"
+    ]
+  },
+  {
+    "id": "ZN_Heli",
+    "faction": "ZEON",
+    "name": "战斗直升机[ZEON][0079]",
+    "source": "Units/BattleUnits/ZN_Heli/ZN_Heli.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "ZN_Heli,Unit,Aircraft,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_ZN_Heli.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Vulcan_ZN_Heli.gw"
+    ]
+  },
+  {
+    "id": "FatUncle",
+    "faction": "ZEON",
+    "name": "胖叔叔",
+    "source": "Units/BattleUnits/FatUncle/FatUncle.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "FatUncle,Unit,Aircraft,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/Deploy.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "Dopp",
+    "faction": "ZEON",
+    "name": "多普",
+    "source": "Units/BattleUnits/Dopp/Dopp.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "Dopp,Unit,Aircraft,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Dopp.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Dopp.gw"
+    ]
+  },
+  {
+    "id": "DodaiYS",
+    "faction": "ZEON",
+    "name": "德戴 YS",
+    "source": "Units/BattleUnits/Dodai/DodaiYS.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "DodaiYS,Unit,Aircraft,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/DogFight_A.gw",
+      "Template/Unit/Skill/SFS.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_DodaiYS.gw"
+    ]
+  },
+  {
+    "id": "MS_05",
+    "faction": "ZEON",
+    "name": "旧扎古",
+    "source": "Units/BattleUnits/MS_05/MS_05.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "MS_05,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_105mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazookaEarly.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06C",
+    "faction": "ZEON",
+    "name": "扎古II C型",
+    "source": "Units/BattleUnits/MS_06F/MS_06C.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "MS_06C,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit_NewUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06C_Bombing_Nuke.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06F",
+    "faction": "ZEON",
+    "name": "扎古II",
+    "source": "Units/BattleUnits/MS_06F/MS_06F.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "MS_06F,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_TwoHand.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06S",
+    "faction": "ZEON",
+    "name": "扎古II S型",
+    "source": "Units/BattleUnits/MS_06F/MS_06S.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "MS_06S,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/CustomUnit_PilotCustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Grenade_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_TwoHand.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "Gattle",
+    "faction": "ZEON",
+    "name": "卡托尔",
+    "source": "Units/BattleUnits/Gattle/Gattle.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "Gattle,Unit,Aircraft,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Gattle.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Gattle.gw"
+    ]
+  },
+  {
+    "id": "JiccoClass",
+    "faction": "ZEON",
+    "name": "吉科级",
+    "source": "Units/BattleUnits/JiccoClass/JiccoClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "JiccoClass,Unit,Aircraft,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_JiccoClass.gw"
+    ]
+  },
+  {
+    "id": "U_Type_Submarine_ZEON",
+    "faction": "ZEON",
+    "name": "尤康级",
+    "source": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_ZEON.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "U_Type_Submarine_ZEON,Unit,Ship,CmdUnit,ZEON,0079,UC,LargeUnit,NavyUnit",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "MusaiClass",
+    "faction": "ZEON",
+    "name": "姆塞级",
+    "source": "Units/BattleUnits/MusaiClass/MusaiClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "MusaiClass,Unit,Ship,CmdUnit,ZEON,0079,UC,LargeUnit,MpUpUnit_X6",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw"
+    ]
+  },
+  {
+    "id": "PapuaClass",
+    "faction": "ZEON",
+    "name": "巴布亚级",
+    "source": "Units/BattleUnits/PapuaClass/PapuaClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_BaseTech"
+    ],
+    "tags": "PapuaClass,Unit,CmdUnit,Ship,ZEON,0079,UC,LargeUnit,MpUpUnit_X12",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/SupplyPoint.gw",
+      "Template/Unit/Skill/AutoRepair.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw"
+    ]
+  },
+  {
+    "id": "MS_06J",
+    "faction": "ZEON",
+    "name": "扎古II陆战型",
+    "source": "Units/BattleUnits/MS_06J/MS_06J.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "MS_06J,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MagellaCannon.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06J_LegMS.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_07B",
+    "faction": "ZEON",
+    "name": "老虎 B型",
+    "source": "Units/BattleUnits/MS_07B/MS_07B.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "MS_07B,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_07B_HandMG.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_MS_07B_HeatRod.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06K",
+    "faction": "ZEON",
+    "name": "扎古加农",
+    "source": "Units/BattleUnits/MS_06K/MS_06K.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "MS_06K,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06K_BigGun.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Cannon_AntiAir.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06M",
+    "faction": "ZEON",
+    "name": "水中型扎古",
+    "source": "Units/BattleUnits/MS_06M/MS_06M.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "MS_06M,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Sonar.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06M_MSL.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06M_SMS.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06R_1",
+    "faction": "ZEON",
+    "name": "扎古II高机动型R-1",
+    "source": "Units/BattleUnits/MS_06R_1/MS_06R_1.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "MS_06R_1,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06F_MineLayer",
+    "faction": "ZEON",
+    "name": "扎古II[布雷者]",
+    "source": "Units/BattleUnits/MS_06F/MS_06F_MineLayer.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "MS_06F_MineLayer,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Space.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_TwoHand.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MSM_03",
+    "faction": "ZEON",
+    "name": "战蟹",
+    "source": "Units/BattleUnits/MSM_03/MSM_03.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "MSM_03,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/AntiDetect_Aqua.gw",
+      "Template/Unit/Skill/Stealth_Aqua.gw",
+      "Template/Unit/Skill/Sonar.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_MSM_03_ChestBeam.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MSM_03_SMS.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A.gw"
+    ]
+  },
+  {
+    "id": "Cui",
+    "faction": "ZEON",
+    "name": "邱伊",
+    "source": "Units/BattleUnits/Cui/Cui.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "Cui,Unit,Tank,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_Cui_AA.gw"
+    ]
+  },
+  {
+    "id": "Luggun",
+    "faction": "ZEON",
+    "name": "鲁艮",
+    "source": "Units/BattleUnits/Luggun/Luggun.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "Luggun,Unit,Aircraft,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_S.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_Luggun_AA.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Bomb_Luggun.gw"
+    ]
+  },
+  {
+    "id": "ZN_APC_WithMS",
+    "faction": "ZEON",
+    "name": "装甲车[加装导弹]",
+    "source": "Units/BattleUnits/ZN_APC/ZN_APC_WithMS.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "ZN_APC_WithMS,Unit,Tank,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_APC_MG.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_ZN_APC.gw"
+    ]
+  },
+  {
+    "id": "Pilot_ZEON_0079_N_ACE_RBR",
+    "faction": "ZEON",
+    "name": "兰巴·拉尔[ZEON][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_RBR.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "ZEON,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "M_Type_Submarine_ZEON",
+    "faction": "ZEON",
+    "name": "魔鲨级",
+    "source": "Units/BattleUnits/M_Type_Submarine/M_Type_Submarine_ZEON.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "M_Type_Submarine_ZEON,Unit,Ship,CmdUnit,ZEON,0079,UC,LargeUnit,NavyUnit",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "FalmerClass",
+    "faction": "ZEON",
+    "name": "法梅尔级",
+    "source": "Units/BattleUnits/FalmerClass/FalmerClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+    ],
+    "tags": "FalmerClass,Unit,Ship,CmdUnit,ZEON,0079,UC,LargeUnit,MpUpUnit_X6",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    ]
+  },
+  {
+    "id": "MS_07B3",
+    "faction": "ZEON",
+    "name": "老虎特装型",
+    "source": "Units/BattleUnits/MS_07B3/MS_07B3.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MS_07B3,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdCom.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_07B3_HandMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_07B3_Minigun.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_MS_07B_HeatRod.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_MS_07B3_BF.gw"
+    ]
+  },
+  {
+    "id": "MS_06G",
+    "faction": "ZEON",
+    "name": "扎古II陆战高机动型",
+    "source": "Units/BattleUnits/MS_06G/MS_06G.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MS_06G,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_4XMSL.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06E",
+    "faction": "ZEON",
+    "name": "扎古强行侦查型",
+    "source": "Units/BattleUnits/MS_06E/MS_06E.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MS_06E,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_DetectArea.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_CameraGun.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_105mmMG.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06R_1A",
+    "faction": "ZEON",
+    "name": "扎古II高机动型R-1A",
+    "source": "Units/BattleUnits/MS_06R_1/MS_06R_1A.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MS_06R_1A,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06D",
+    "faction": "ZEON",
+    "name": "扎古沙漠型",
+    "source": "Units/BattleUnits/MS_06D/MS_06D.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MS_06D,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMGShortVer.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06K_BigGun.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06D_HandMS.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06V",
+    "faction": "ZEON",
+    "name": "扎古坦克",
+    "source": "Units/BattleUnits/MS_06V/MS_06V.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MS_06V,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Deploy.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06V_Cannon.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MTank.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06V_MG.gw"
+    ]
+  },
+  {
+    "id": "MTank_Eins",
+    "faction": "ZEON",
+    "name": "马哲兰坦克一型",
+    "source": "Units/BattleUnits/MTank_Eins/MTank_Eins.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MTank_Eins,Unit,Tank,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_MTank_Eins_Cannon.gw"
+    ]
+  },
+  {
+    "id": "MSM_04",
+    "faction": "ZEON",
+    "name": "亚凯",
+    "source": "Units/BattleUnits/MSM_04/MSM_04.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MSM_04,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/AntiDetect_Aqua.gw",
+      "Template/Unit/Skill/Stealth_Aqua.gw",
+      "Template/Unit/Skill/Sonar.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_MSM_04_BG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MSM_04_MS.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_B.gw"
+    ]
+  },
+  {
+    "id": "Pilot_ZEON_0079_N_ACE_GRN",
+    "faction": "ZEON",
+    "name": "基连·扎比[ZEON][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GRN.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "ZEON,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "Pilot_ZEON_0079_N_ACE_NRS",
+    "faction": "ZEON",
+    "name": "诺利斯·巴卡德[ZEON][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_NRS.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "ZEON,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE,TeamMarkerUnit_MineBaseTeam",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "DabudeClass",
+    "faction": "ZEON",
+    "name": "达布德级",
+    "source": "Units/BattleUnits/DabudeClass/DabudeClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "DabudeClass,Unit,Ship,CmdUnit,ZEON,0079,UC,LargeUnit,MpUpUnit_X8",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "Template/Unit/Skill/AutoRepair.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    ]
+  },
+  {
+    "id": "ChivvayClass",
+    "faction": "ZEON",
+    "name": "契贝级",
+    "source": "Units/BattleUnits/ChivvayClass/ChivvayClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "ChivvayClass,Unit,Ship,CmdUnit,ZEON,0079,UC,LargeUnit,MpUpUnit_X8",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/CmdDef.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "Template/Unit/Skill/CustomUnit_NewUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw"
+    ]
+  },
+  {
+    "id": "MS_09",
+    "faction": "ZEON",
+    "name": "大魔",
+    "source": "Units/BattleUnits/MS_09/MS_09.ini",
+    "tech": [
+      "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MS_09,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw",
+      "Template/Unit/Skill/Hover.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_A.gw"
+    ]
+  },
+  {
+    "id": "MS_09R",
+    "faction": "ZEON",
+    "name": "力克大魔",
+    "source": "Units/BattleUnits/MS_09/MS_09R.ini",
+    "tech": [
+      "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MS_09R,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw",
+      "Template/Unit/Skill/CustomUnit_PilotCustomUnit.gw",
+      "Template/Unit/Skill/Hover.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_BeamBazooka.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_A.gw"
+    ]
+  },
+  {
+    "id": "MS_07A",
+    "faction": "ZEON",
+    "name": "老虎 A型",
+    "source": "Units/BattleUnits/MS_07B/MS_07A.ini",
+    "tech": [
+      "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MS_07A,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MAX_03",
+    "faction": "ZEON",
+    "name": "阿萨姆",
+    "source": "Units/BattleUnits/MAX_03/MAX_03.ini",
+    "tech": [
+      "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "MAX_03,Unit,MA,ZEON,0079,UC,LargeUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/FlyHover.gw",
+      "Template/Unit/Skill/FlyUnit.gw",
+      "Template/Unit/Skill/Unit_BreakableTurret.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_MAX_03_Leader.gw"
+    ]
+  },
+  {
+    "id": "Pilot_ZEON_0079_N_ACE_GRM",
+    "faction": "ZEON",
+    "name": "卡尔马·扎比[ZEON][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GRM.ini",
+    "tech": [
+      "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "ZEON,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "GawClass",
+    "faction": "ZEON",
+    "name": "加乌级",
+    "source": "Units/BattleUnits/GawClass/GawClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "GawClass,Unit,CmdUnit,Ship,ZEON,0079,UC,LargeUnit,MpUpUnit_X6",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/DogFight_A.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    ]
+  },
+  {
+    "id": "GallopClass",
+    "faction": "ZEON",
+    "name": "盖洛普级",
+    "source": "Units/BattleUnits/GallopClass/GallopClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "GallopClass,Unit,Ship,CmdUnit,EFSF,0079,UC,LargeUnit,MpUpUnit_X8",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/Hover.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "Template/Unit/Skill/AutoRepair.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    ]
+  },
+  {
+    "id": "ZanzibarClass",
+    "faction": "ZEON",
+    "name": "桑吉巴尔级",
+    "source": "Units/BattleUnits/ZanzibarClass/ZanzibarClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "ZanzibarClass,Unit,CmdUnit,Ship,ZEON,0079,UC,LargeUnit,MpUpUnit_X12",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/CmdDef.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster_Both.gw"
+    ]
+  },
+  {
+    "id": "GwazineClass",
+    "faction": "ZEON",
+    "name": "格瓦金级",
+    "source": "Units/BattleUnits/GwazineClass/GwazineClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+    ],
+    "tags": "GwazineClass,Unit,Ship,CmdUnit,ZEON,0079,UC,LargeUnit,MpUpUnit_X16",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/CmdDef.gw",
+      "Template/Unit/Skill/AutoRepair.gw",
+      "Template/Unit/Skill/SupplyPoint_UseEN.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw"
+    ]
+  },
+  {
+    "id": "MS_06F2",
+    "faction": "ZEON",
+    "name": "扎古II后期型",
+    "source": "Units/BattleUnits/MS_06F2/MS_06F2.ini",
+    "tech": [
+      "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan"
+    ],
+    "tags": "MS_06F2,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06F2_Commander",
+    "faction": "ZEON",
+    "name": "扎古II后期型[指挥官机]",
+    "source": "Units/BattleUnits/MS_06F2/MS_06F2_Commander.ini",
+    "tech": [
+      "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan"
+    ],
+    "tags": "MS_06F2_Commander,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdCom.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Grenade_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Kai.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_F.gw"
+    ]
+  },
+  {
+    "id": "MS_05SP",
+    "faction": "ZEON",
+    "name": "扎古狙击型",
+    "source": "Units/BattleUnits/MS_05SP/MS_05SP.ini",
+    "tech": [
+      "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan"
+    ],
+    "tags": "MS_05SP,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdCom.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle_Sniper.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_105mmMG.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_06JK",
+    "faction": "ZEON",
+    "name": "扎古半加农",
+    "source": "Units/BattleUnits/MS_06JK/MS_06JK.ini",
+    "tech": [
+      "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan"
+    ],
+    "tags": "MS_06JK,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06K_BigGun.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_06JK_Gatling.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
+    ]
+  },
+  {
+    "id": "MS_09D",
+    "faction": "ZEON",
+    "name": "大魔热带式样",
+    "source": "Units/BattleUnits/MS_09D/MS_09D.ini",
+    "tech": [
+      "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan"
+    ],
+    "tags": "MS_09D,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw",
+      "Template/Unit/Skill/Hover.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust_L.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_AF.gw"
+    ]
+  },
+  {
+    "id": "FatUncleKai",
+    "faction": "ZEON",
+    "name": "胖叔叔改",
+    "source": "Units/BattleUnits/FatUncleKai/FatUncleKai.ini",
+    "tech": [
+      "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan"
+    ],
+    "tags": "FatUncleKai,Unit,Aircraft,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/Deploy.gw"
+    ],
+    "weapons": []
+  },
+  {
+    "id": "EMS_10",
+    "faction": "ZEON",
+    "name": "兹达",
+    "source": "Units/BattleUnits/EMS_10/EMS_10.ini",
+    "tech": [
+      "Tech_ZEON_0079_603TestTeam"
+    ],
+    "tags": "EMS_10,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_OverBoost.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust_Orange_L.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_F.gw"
+    ]
+  },
+  {
+    "id": "EMS_10_1",
+    "faction": "ZEON",
+    "name": "兹达[指挥官机]",
+    "source": "Units/BattleUnits/EMS_10_1/EMS_10_1.ini",
+    "tech": [
+      "Tech_ZEON_0079_603TestTeam"
+    ],
+    "tags": "EMS_10_1,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_OverBoost.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_135mmAntiShipSniper.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_135mmAntiShipSniper_Sniper.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust_Orange_L.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_F.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L.gw"
+    ]
+  },
+  {
+    "id": "MP_02A",
+    "faction": "ZEON",
+    "name": "食人魔",
+    "source": "Units/BattleUnits/MP_02A/MP_02A.ini",
+    "tech": [
+      "Tech_ZEON_0079_603TestTeam"
+    ],
+    "tags": "MP_02A,Unit,MP,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_Stand_MP_02A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka_Stand_MP_02A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MP_02A_MS.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
+    ]
+  },
+  {
+    "id": "YMT_05",
+    "faction": "ZEON",
+    "name": "斗狼",
+    "source": "Units/BattleUnits/YMT_05/YMT_05.ini",
+    "tech": [
+      "Tech_ZEON_0079_603TestTeam"
+    ],
+    "tags": "YMT_05,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Transform_LandLand_Tank.gw",
+      "Template/Unit/Skill/HoverEffect.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_Mortar_Bombing_Shell_Napalm.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_AP.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_HE.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_105mmMG_L_StandFire_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A_Lv2.gw"
+    ]
+  },
+  {
+    "id": "JotunheimClass",
+    "faction": "ZEON",
+    "name": "尤顿海姆级",
+    "source": "Units/BattleUnits/JotunheimClass/JotunheimClass.ini",
+    "tech": [
+      "Tech_ZEON_0079_603TestTeam"
+    ],
+    "tags": "JotunheimClass,Unit,CmdUnit,Ship,EFSF,0079,UC,LargeUnit,MpUpUnit_X8",
+    "nativeSkills": [
+      "Template/Unit/Skill/LaunchAllUnits.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/SupplyPoint.gw",
+      "Template/Unit/Skill/AutoRepair.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw"
+    ]
+  },
+  {
+    "id": "MS_10",
+    "faction": "ZEON",
+    "name": "培曾·多瓦吉",
+    "source": "Units/BattleUnits/MS_10/MS_10.ini",
+    "tech": [
+      "Tech_ZEON_0079_PezunProject"
+    ],
+    "tags": "MS_10,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_BeamBazooka.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_AMS.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_MS.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_F.gw"
+    ]
+  },
+  {
+    "id": "MS_11",
+    "faction": "ZEON",
+    "name": "机动扎古",
+    "source": "Units/BattleUnits/MS_11/MS_11.ini",
+    "tech": [
+      "Tech_ZEON_0079_PezunProject"
+    ],
+    "tags": "MS_11,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_ACT_Zaku_MG.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_ACT_Zaku_BR.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_ACT_A_Fast.gw"
+    ]
+  },
+  {
+    "id": "MS_11S",
+    "faction": "ZEON",
+    "name": "机动扎古[指挥官式样]",
+    "source": "Units/BattleUnits/MS_11S/MS_11S.ini",
+    "tech": [
+      "Tech_ZEON_0079_PezunProject"
+    ],
+    "tags": "MS_11S,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdCom.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_ACT_Zaku_MG.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_ACT_Zaku_BR.gw",
+      "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Yellow.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_ACT_A_Fast.gw"
+    ]
+  },
+  {
+    "id": "MS_12",
+    "faction": "ZEON",
+    "name": "吉刚",
+    "source": "Units/BattleUnits/MS_12/MS_12.ini",
+    "tech": [
+      "Tech_ZEON_0079_PezunProject"
+    ],
+    "tags": "MS_12,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Shell/Common_Mortar.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_12_Cannon.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_12_MG.gw"
+    ]
+  },
+  {
+    "id": "MS_08TX",
+    "faction": "ZEON",
+    "name": "伊芙利特",
+    "source": "Units/BattleUnits/MS_08TX/MS_08TX.ini",
+    "tech": [
+      "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan"
+    ],
+    "tags": "MS_08TX,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdAtk.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_AF.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_BF.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw"
+    ]
+  },
+  {
+    "id": "MS_07H",
+    "faction": "ZEON",
+    "name": "老虎飞行实验型",
+    "source": "Units/BattleUnits/MS_07H/MS_07H.ini",
+    "tech": [
+      "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan"
+    ],
+    "tags": "MS_07H,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/FlyStyle.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_07B_HandMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
+    ]
+  },
+  {
+    "id": "MS_08TX_Kai",
+    "faction": "ZEON",
+    "name": "伊芙利特改",
+    "source": "Units/BattleUnits/MS_08TX_Kai/MS_08TX_Kai.ini",
+    "tech": [
+      "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan"
+    ],
+    "tags": "MS_08TX_Kai,Unit,MS,ZEON,0079,UC,EXAM_Unit",
+    "nativeSkills": [
+      "Template/Unit/Skill/Exam_Off.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw",
+      "Units/BattleUnits/Weapon/Shell/Common_ArmGL_Lv2.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_08TX_Kai_LegMS.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_Double_DBDF.gw"
+    ]
+  },
+  {
+    "id": "Pilot_ZEON_0079_N_ACE_NMBS",
+    "faction": "ZEON",
+    "name": "尼姆巴斯·舒特森[ZEON][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_NMBS.ini",
+    "tech": [
+      "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan"
+    ],
+    "tags": "ZEON,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE,TeamMarkerUnit_NMBSTeam",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "ApsarasII",
+    "faction": "ZEON",
+    "name": "阿普萨拉斯II",
+    "source": "Units/BattleUnits/ApsarasII/ApsarasII.ini",
+    "tech": [
+      "Tech_ZEON_0079_ApsarasDevelopmentPlan"
+    ],
+    "tags": "ApsarasII,Unit,MA,ZEON,0079,UC,LargeUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/FlyHover.gw",
+      "Template/Unit/Skill/FlyUnit.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+      "Units/BattleUnits/Weapon/Sp/Common_EMP_M.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_ApsarasII_MegaBeamCannon.gw",
+      "Units/BattleUnits/Weapon/Beam/ZN_ApsarasII_ChestBeam.gw",
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A_Lv2.gw"
+    ]
+  },
+  {
+    "id": "MS_07H8",
+    "faction": "ZEON",
+    "name": "老虎飞行型",
+    "source": "Units/BattleUnits/MS_07H8/MS_07H8.ini",
+    "tech": [
+      "Tech_ZEON_0079_ApsarasDevelopmentPlan"
+    ],
+    "tags": "MS_07H8,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/FlyStyle.gw"
+    ],
+    "weapons": [
+      "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_07B3_HandMG.gw",
+      "Units/BattleUnits/Weapon/Shell/ZN_MS_07B3_Minigun.gw",
+      "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_MS_07H8_A.gw"
+    ]
+  },
+  {
+    "id": "Pilot_ZEON_0079_N_ACE_ANS",
+    "faction": "ZEON",
+    "name": "爱娜·萨哈林[ZEON][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_ANS.ini",
+    "tech": [
+      "Tech_ZEON_0079_ApsarasDevelopmentPlan"
+    ],
+    "tags": "ZEON,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE,TeamMarkerUnit_MineBaseTeam",
+    "nativeSkills": [],
+    "weapons": []
+  },
+  {
+    "id": "Pilot_ZEON_0079_N_ACE_GNS",
+    "faction": "ZEON",
+    "name": "基尼亚斯·萨哈林[ZEON][0079]",
+    "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GNS.ini",
+    "tech": [
+      "Tech_ZEON_0079_ApsarasDevelopmentPlan"
+    ],
+    "tags": "ZEON,0079,Unit,Pilot,Human,SmallUnit,ACE,Pilot_ACE,TeamMarkerUnit_MineBaseTeam",
+    "nativeSkills": [],
+    "weapons": []
+  }
+]

@@ -33,6 +33,10 @@ const UnitParts = (() => {
     const missing = (weapon.requiredParts || []).filter((part) => broken[part]);
     if (weapon.anyParts?.length && weapon.anyParts.every((part) => broken[part]))
       missing.push(...weapon.anyParts);
+    if (weapon.moduleId && (unit.moduleHp?.[weapon.moduleId] ?? 1) <= 0)
+      missing.push(weapon.moduleId);
+    if (weapon.moduleIds?.length && weapon.moduleIds.every((id) => (unit.moduleHp?.[id] ?? 1) <= 0))
+      missing.push(...weapon.moduleIds);
     return [...new Set(missing)];
   }
   function shieldUsable(unit, shield) {
@@ -51,6 +55,20 @@ const UnitParts = (() => {
     return game.partSeed / 4294967296;
   }
   function applyHit(game, unit, model, damage, modifier = 1) {
+    if (model.partsBreakable === false) return null;
+    if (model.ship) {
+      if (unit.hp <= 0 || damage <= 0 || !unit.moduleHp) return null;
+      // Four original hull hitboxes plus sixteen separately damageable turret modules.
+      const index = Math.floor(
+          random(game) * (model.modules.length + (model.hullHitboxes?.length ?? 4)),
+        ),
+        module = model.modules[index];
+      if (!module || unit.moduleHp[module.id] <= 0) return null;
+      unit.moduleHp[module.id] = Math.max(0, unit.moduleHp[module.id] - damage);
+      if (unit.moduleHp[module.id] > 0) return null;
+      unit.brokenParts = { ...unit.brokenParts, [module.id]: true };
+      return module.id;
+    }
     const probability = chance(unit, model, damage, modifier);
     if (probability <= 0 || random(game) <= 1 - probability) return null;
     const slot = Math.floor(random(game) * 71),

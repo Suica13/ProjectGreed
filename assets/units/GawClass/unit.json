@@ -1,0 +1,2458 @@
+{
+  "schemaVersion": 2,
+  "id": "GawClass",
+  "code": "GawClass",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/GawClass/GawClass.ini",
+  "materials": {
+    "textures": {
+      "GawClass.png": "textures/GawClass.png",
+      "GawClass_Body_1.png": "textures/GawClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "GawClass_Turret_BeamCannon_1.png": "textures/GawClass_Turret_BeamCannon_1.png",
+      "GawClass_Turret_AA_1.png": "textures/GawClass_Turret_AA_1.png"
+    },
+    "icon": "GawClass.png"
+  },
+  "skeleton": {
+    "Turret_GawClass_Turret_BeamCannon_L1": {
+      "x": -75.0,
+      "y": 11.0,
+      "endDirOffset": -35.0
+    },
+    "Turret_GawClass_Turret_BeamCannon_R1": {
+      "x": 75.0,
+      "y": 11.0,
+      "endDirOffset": 35.0
+    },
+    "Turret_GawClass_Turret_MS_L1": {
+      "x": -30.0,
+      "y": 17.0,
+      "endDirOffset": -25.0
+    },
+    "Turret_GawClass_Turret_MS_R1": {
+      "x": 30.0,
+      "y": 17.0,
+      "endDirOffset": 25.0
+    },
+    "Turret_GawClass_Turret_Bomb_L1": {
+      "x": -10.0,
+      "y": -60.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_GawClass_Turret_Bomb_R1": {
+      "x": 10.0,
+      "y": -60.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_GawClass_Turret_AA_L1": {
+      "x": -47.0,
+      "y": -3.5,
+      "endDirOffset": -15.0
+    },
+    "Turret_GawClass_Turret_AA_R1": {
+      "x": 47.0,
+      "y": -3.5,
+      "endDirOffset": 15.0
+    },
+    "Turret_GawClass_Turret_AA_L2": {
+      "x": -62.0,
+      "y": -11.0,
+      "endDirOffset": -45.0
+    },
+    "Turret_GawClass_Turret_AA_R2": {
+      "x": 62.0,
+      "y": -11.0,
+      "endDirOffset": 45.0
+    },
+    "Turret_GawClass_Turret_AA_L3": {
+      "x": -30.0,
+      "y": -45.0,
+      "endDirOffset": -125.0
+    },
+    "Turret_GawClass_Turret_AA_R3": {
+      "x": 30.0,
+      "y": -45.0,
+      "endDirOffset": 125.0
+    },
+    "Turret_GawClass_Turret_AA_L4": {
+      "x": -130.0,
+      "y": -45.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_GawClass_Turret_AA_R4": {
+      "x": 130.0,
+      "y": -45.0,
+      "endDirOffset": 90.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 1.15,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": -65.0,
+        "y": -60.0
+      },
+      "scaleX": -0.75,
+      "scaleY": 1.15,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": 65.0,
+        "y": -60.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 1.15,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L2",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 3.0,
+      "offset": {
+        "x": -108.0,
+        "y": -62.0
+      },
+      "scaleX": -0.75,
+      "scaleY": 1.15,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R2",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 3.0,
+      "offset": {
+        "x": 108.0,
+        "y": -62.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 1.15,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "GawClass_Turret_BeamCannon_L1",
+      "bone": "Turret_GawClass_Turret_BeamCannon_L1",
+      "moduleId": "GawClass_Turret_BeamCannon_L1",
+      "texture": "GawClass_Turret_BeamCannon_1.png",
+      "order": 3.001,
+      "scale": 1.15,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GawClass_Turret_BeamCannon_R1",
+      "bone": "Turret_GawClass_Turret_BeamCannon_R1",
+      "moduleId": "GawClass_Turret_BeamCannon_R1",
+      "texture": "GawClass_Turret_BeamCannon_1.png",
+      "order": 3.001,
+      "scale": 1.15,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GawClass_Turret_AA_L3",
+      "bone": "Turret_GawClass_Turret_AA_L3",
+      "moduleId": "GawClass_Turret_AA_L3",
+      "texture": "GawClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GawClass_Turret_AA_R3",
+      "bone": "Turret_GawClass_Turret_AA_R3",
+      "moduleId": "GawClass_Turret_AA_R3",
+      "texture": "GawClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GawClass_Turret_AA_L4",
+      "bone": "Turret_GawClass_Turret_AA_L4",
+      "moduleId": "GawClass_Turret_AA_L4",
+      "texture": "GawClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GawClass_Turret_AA_R4",
+      "bone": "Turret_GawClass_Turret_AA_R4",
+      "moduleId": "GawClass_Turret_AA_R4",
+      "texture": "GawClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "GawClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "GawClass_Turret_AA_L1",
+      "bone": "Turret_GawClass_Turret_AA_L1",
+      "moduleId": "GawClass_Turret_AA_L1",
+      "texture": "GawClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GawClass_Turret_AA_R1",
+      "bone": "Turret_GawClass_Turret_AA_R1",
+      "moduleId": "GawClass_Turret_AA_R1",
+      "texture": "GawClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GawClass_Turret_AA_L2",
+      "bone": "Turret_GawClass_Turret_AA_L2",
+      "moduleId": "GawClass_Turret_AA_L2",
+      "texture": "GawClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GawClass_Turret_AA_R2",
+      "bone": "Turret_GawClass_Turret_AA_R2",
+      "moduleId": "GawClass_Turret_AA_R2",
+      "texture": "GawClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 60000.0,
+    "en": 7500.0,
+    "move": 5,
+    "mobility": 65.0,
+    "cost": 750,
+    "counterLimit": 1,
+    "accuracy": 126.5,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": true,
+    "footprint": {
+      "width": 2,
+      "height": 3
+    },
+    "modules": [
+      {
+        "id": "GawClass_Turret_BeamCannon_L1",
+        "name": "GawClass_Turret_BeamCannon_L1",
+        "hp": 7500.0,
+        "bone": "Turret_GawClass_Turret_BeamCannon_L1",
+        "x": -75.0,
+        "y": 11.0,
+        "idleDir": -35.0,
+        "arc": 95.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GawClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GawClass_Turret_BeamCannon_R1",
+        "name": "GawClass_Turret_BeamCannon_R1",
+        "hp": 7500.0,
+        "bone": "Turret_GawClass_Turret_BeamCannon_R1",
+        "x": 75.0,
+        "y": 11.0,
+        "idleDir": 35.0,
+        "arc": 95.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GawClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GawClass_Turret_MS_L1",
+        "name": "GawClass_Turret_MS_L1",
+        "hp": 7500.0,
+        "bone": "Turret_GawClass_Turret_MS_L1",
+        "x": -30.0,
+        "y": 17.0,
+        "idleDir": -25.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": true,
+          "decals": []
+        }
+      },
+      {
+        "id": "GawClass_Turret_MS_R1",
+        "name": "GawClass_Turret_MS_R1",
+        "hp": 7500.0,
+        "bone": "Turret_GawClass_Turret_MS_R1",
+        "x": 30.0,
+        "y": 17.0,
+        "idleDir": 25.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": true,
+          "decals": []
+        }
+      },
+      {
+        "id": "GawClass_Turret_Bomb_L1",
+        "name": "GawClass_Turret_Bomb_L1",
+        "hp": 7500.0,
+        "bone": "Turret_GawClass_Turret_Bomb_L1",
+        "x": -10.0,
+        "y": -60.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_Bomb.ini",
+          "separateSprite": false,
+          "belowHull": true,
+          "decals": []
+        }
+      },
+      {
+        "id": "GawClass_Turret_Bomb_R1",
+        "name": "GawClass_Turret_Bomb_R1",
+        "hp": 7500.0,
+        "bone": "Turret_GawClass_Turret_Bomb_R1",
+        "x": 10.0,
+        "y": -60.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_Bomb.ini",
+          "separateSprite": false,
+          "belowHull": true,
+          "decals": []
+        }
+      },
+      {
+        "id": "GawClass_Turret_AA_L1",
+        "name": "GawClass_Turret_AA_L1",
+        "hp": 5000.0,
+        "bone": "Turret_GawClass_Turret_AA_L1",
+        "x": -47.0,
+        "y": -3.5,
+        "idleDir": -15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GawClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GawClass_Turret_AA_R1",
+        "name": "GawClass_Turret_AA_R1",
+        "hp": 5000.0,
+        "bone": "Turret_GawClass_Turret_AA_R1",
+        "x": 47.0,
+        "y": -3.5,
+        "idleDir": 15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GawClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GawClass_Turret_AA_L2",
+        "name": "GawClass_Turret_AA_L2",
+        "hp": 5000.0,
+        "bone": "Turret_GawClass_Turret_AA_L2",
+        "x": -62.0,
+        "y": -11.0,
+        "idleDir": -45.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GawClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GawClass_Turret_AA_R2",
+        "name": "GawClass_Turret_AA_R2",
+        "hp": 5000.0,
+        "bone": "Turret_GawClass_Turret_AA_R2",
+        "x": 62.0,
+        "y": -11.0,
+        "idleDir": 45.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GawClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GawClass_Turret_AA_L3",
+        "name": "GawClass_Turret_AA_L3",
+        "hp": 5000.0,
+        "bone": "Turret_GawClass_Turret_AA_L3",
+        "x": -30.0,
+        "y": -45.0,
+        "idleDir": -125.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GawClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GawClass_Turret_AA_R3",
+        "name": "GawClass_Turret_AA_R3",
+        "hp": 5000.0,
+        "bone": "Turret_GawClass_Turret_AA_R3",
+        "x": 30.0,
+        "y": -45.0,
+        "idleDir": 125.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GawClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GawClass_Turret_AA_L4",
+        "name": "GawClass_Turret_AA_L4",
+        "hp": 5000.0,
+        "bone": "Turret_GawClass_Turret_AA_L4",
+        "x": -130.0,
+        "y": -45.0,
+        "idleDir": -90.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GawClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GawClass_Turret_AA_R4",
+        "name": "GawClass_Turret_AA_R4",
+        "hp": 5000.0,
+        "bone": "Turret_GawClass_Turret_AA_R4",
+        "x": 130.0,
+        "y": -45.0,
+        "idleDir": 90.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GawClass_Turret_AA"
+          ]
+        }
+      }
+    ],
+    "commandAuras": [
+      {
+        "type": "cmdCom",
+        "radiusCells": 2
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "accuracyMultiplier": 1.1,
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 5.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 30.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 30.0,
+      "flat": 100.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 10.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 10.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 60000.0,
+    "walkSpeed": 0.75,
+    "boostSpeed": 1.25,
+    "turnSpeed": 0.35,
+    "reaction": 65.0,
+    "shooting": 105.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "GawClass",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "ZEON",
+      "0079",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X6"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "CmdCom",
+      "DogFight_A",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 115.0,
+    "unitLevel": 3000.0,
+    "tacticalMoveBeforeBonus": 4
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large"
+  },
+  "name": "加乌级",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "加乌级",
+      "description": "吉翁军所建造的大型空母,亦可用于轰炸计划"
+    },
+    "en": {
+      "name": "Gaw Class",
+      "description": "A large aircraft carrier built by Zeon, also usable for bombing operations"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "GawClass_Turret_BeamCannon": {
+      "name": "舰载光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 6,
+      "hit": 75.0,
+      "en": 120.0,
+      "sourceName": "GawClass_Turret_BeamCannon",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 3850.0,
+      "damageComponents": {
+        "beam": 3850.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_BeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_BeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_BeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_BeamCannon_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/GawClass/GawClass_Turret_BeamCannon.ini",
+        "barrels": [
+          {
+            "id": "GawClass_Turret_BeamCannon",
+            "x": 3.0,
+            "y": 12.0
+          },
+          {
+            "id": "GawClass_Turret_BeamCannon",
+            "x": 3.0,
+            "y": 12.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 45.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_GawClass_Turret_BeamCannon_L1",
+            "offset": {
+              "x": 3.0,
+              "y": 12.0
+            },
+            "alternatingOffsetX": -6.0
+          },
+          {
+            "bone": "Turret_GawClass_Turret_BeamCannon_R1",
+            "offset": {
+              "x": 3.0,
+              "y": 12.0
+            },
+            "alternatingOffsetX": -6.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "GawClass_Turret_BeamCannon_L1",
+        "GawClass_Turret_BeamCannon_R1"
+      ],
+      "muzzleEffects": [
+        "Beam_Fire_1_Yellow",
+        "Beam_Fire_1_Yellow"
+      ],
+      "category": "cannon",
+      "nativePayload": {
+        "BeamDamage": 3850.0,
+        "DpDamage": 150.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.5,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.5,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 45.0,
+        "ProjectileSpread": 3.0,
+        "ProjectileLife": 50.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.5,
+          "accuracy": 0.5
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/GawClass/GawClass_Turret_BeamCannon.ini",
+        "barrel": "GawClass_Turret_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 7.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 4,
+        "projectiles": 4,
+        "declaredEnergy": 30.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 30.0,
+        "energy": 120.0,
+        "actions": []
+      },
+      "actionCost": 3
+    },
+    "GawClass_Turret_MS": {
+      "name": "舰载导弹发射器",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 100.0,
+      "en": 192.0,
+      "sourceName": "GawClass_Turret_MS",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 1500.0,
+      "damageComponents": {
+        "shell": 1500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_MS_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/GawClass/GawClass_Turret_MS.ini",
+        "barrels": [
+          {
+            "id": "GawClass_Turret_MS",
+            "x": 3.0,
+            "y": 0.0
+          },
+          {
+            "id": "GawClass_Turret_MS",
+            "x": 3.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 35.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_GawClass_Turret_MS_L1",
+            "offset": {
+              "x": 3.0,
+              "y": 0.0
+            },
+            "alternatingOffsetX": -6.0
+          },
+          {
+            "bone": "Turret_GawClass_Turret_MS_R1",
+            "offset": {
+              "x": 3.0,
+              "y": 0.0
+            },
+            "alternatingOffsetX": -6.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.2
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "GawClass_Turret_MS_L1",
+        "GawClass_Turret_MS_R1"
+      ],
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 1500.0,
+        "DpDamage": 75.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 35.0,
+        "ProjectileTurnspeed": 1.25,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 40.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/GawClass/GawClass_Turret_MS.ini",
+        "barrel": "GawClass_Turret_MS",
+        "entry": "automatic_turret",
+        "cooldown": 12.0,
+        "duration": 5.25,
+        "firstShot": 0.0,
+        "lastShot": 5.25,
+        "firingEvents": 16,
+        "projectiles": 16,
+        "declaredEnergy": 12.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 12.0,
+        "energy": 192.0,
+        "actions": []
+      },
+      "actionCost": 2
+    },
+    "GawClass_Turret_Bomb": {
+      "name": "舰载航空炸弹",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 85.0,
+      "en": 240.0,
+      "sourceName": "GawClass_Turret_Bomb",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 1250.0,
+      "damageComponents": {
+        "shell": 1250.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_Bomb_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/GawClass/GawClass_Turret_Bomb.ini",
+        "barrels": [
+          {
+            "id": "GawClass_Turret_Bomb",
+            "x": 0.0,
+            "y": 0.0
+          },
+          {
+            "id": "GawClass_Turret_Bomb",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Grenade_2.png",
+        "scale": 1.0,
+        "speed": 1.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0,
+        "motion": "bomb"
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_GawClass_Turret_Bomb_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Turret_GawClass_Turret_Bomb_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Bomb_1.ogg",
+        "volume": 0.15
+      },
+      "targetModifiers": {
+        "air": 0,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "GawClass_Turret_Bomb_L1",
+        "GawClass_Turret_Bomb_R1"
+      ],
+      "category": "bomb",
+      "special": {
+        "type": "bomb"
+      },
+      "nativePayload": {
+        "ShellDamage": 1250.0,
+        "DpDamage": 75.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.25,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 1.0,
+        "ProjectileSpread": 5.0,
+        "ProjectileExplosionRange": 80.0,
+        "ProjectileLife": 8.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/GawClass/GawClass_Turret_Bomb.ini",
+        "barrel": "GawClass_Turret_Bomb",
+        "entry": "automatic_turret",
+        "cooldown": 12.0,
+        "duration": 1.8,
+        "firstShot": 0.0,
+        "lastShot": 1.8,
+        "firingEvents": 20,
+        "projectiles": 20,
+        "declaredEnergy": 12.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 12.0,
+        "energy": 240.0,
+        "actions": []
+      },
+      "actionCost": 3
+    },
+    "GawClass_Turret_AA": {
+      "name": "GawClass Turret AA",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 125.0,
+      "en": 40.0,
+      "sourceName": "GawClass_Turret_AA",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 175.0,
+      "damageComponents": {
+        "shell": 125.0,
+        "shellAP": 50.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GawClass_Turret_AA_R4",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+        "barrels": [
+          {
+            "id": "GawClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "GawClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "GawClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "GawClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "GawClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "GawClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "GawClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "GawClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 90.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_GawClass_Turret_AA_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_GawClass_Turret_AA_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_GawClass_Turret_AA_L2",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_GawClass_Turret_AA_R2",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_GawClass_Turret_AA_L3",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_GawClass_Turret_AA_R3",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_GawClass_Turret_AA_L4",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_GawClass_Turret_AA_R4",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "GawClass_Turret_AA_L1",
+        "GawClass_Turret_AA_R1",
+        "GawClass_Turret_AA_L2",
+        "GawClass_Turret_AA_R2",
+        "GawClass_Turret_AA_L3",
+        "GawClass_Turret_AA_R3",
+        "GawClass_Turret_AA_L4",
+        "GawClass_Turret_AA_R4"
+      ],
+      "muzzleEffects": [
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 125.0,
+        "ShellAPDamage": 50.0,
+        "DpDamage": 7.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 90.0,
+        "ProjectileSpread": 8.0,
+        "ProjectileLife": 7.5
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini",
+        "barrel": "GawClass_Turret_AA",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 0.9,
+        "firstShot": 0.0,
+        "lastShot": 0.9,
+        "firingEvents": 80,
+        "projectiles": 80,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 40.0,
+        "actions": []
+      },
+      "rangeRole": "ship_anti_air",
+      "actionCost": 3
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "AutoRepair",
+      "source": "Template/Unit/Skill/AutoRepair.gw",
+      "status": "adapted",
+      "name": "自动修复已并入补给光环（无EN消耗）"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "review",
+      "name": "搭载与放出"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "review",
+      "name": "通信指挥"
+    },
+    {
+      "id": "DogFight_A",
+      "source": "Template/Unit/Skill/DogFight_A.gw",
+      "status": "review",
+      "name": "空中缠斗"
+    },
+    {
+      "id": "SupplyPoint",
+      "source": "Template/Unit/Skill/SupplyPoint.gw",
+      "status": "adapted",
+      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+    },
+    {
+      "id": "SupplyPoint_UseEN",
+      "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "status": "adapted",
+      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+    },
+    {
+      "id": "special_Common_FullBoost",
+      "name": "special_Common_FullBoost",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_MinovskyParticle_M",
+      "name": "special_Common_MinovskyParticle_M",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "GawClass_Turret_BeamCannon",
+        "GawClass_Turret_MS",
+        "GawClass_Turret_Bomb",
+        "GawClass_Turret_AA"
+      ]
+    }
+  ],
+  "skills": [],
+  "description": "吉翁军所建造的大型空母,亦可用于轰炸计划",
+  "costBalance": {
+    "nativeLevel": 3000.0,
+    "levelMultiplier": 0.25,
+    "published": 750
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "nativeCombatRevision": 1
+}

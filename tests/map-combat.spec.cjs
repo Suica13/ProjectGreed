@@ -64,7 +64,7 @@ async function at(page, value) {
     };
   }, value);
 }
-test("map melee approaches vertically, plays the second swing and keeps real grid coordinates", async ({
+test("map melee approaches vertically, plays its native swing and keeps real grid coordinates", async ({
   page,
 }) => {
   const errors = [];
@@ -77,7 +77,7 @@ test("map melee approaches vertically, plays the second swing and keeps real gri
   expect(source.x).toBe(10);
   expect(source.y).toBe(7);
   const swing = await at(page, 1.3);
-  expect(swing.units.find((u) => u.id === swing.source).pose.clip).toBe("Common_Melee_F");
+  expect(swing.units.find((u) => u.id === swing.source).pose.clip).toBe("Common_Melee_A");
   expect(swing.events).toBe(2);
   await expect(page.locator("#battle")).toBeHidden();
   await page.screenshot({ path: ".openai/map-combat-melee.png" });
@@ -123,7 +123,7 @@ test("parallel attacks draw each unit once and merge damage and shield loss into
     Object.assign(target, { x: 10, y: 8, hp: 100000, shield: 5000 });
     const battles = [];
     attackers.forEach((unit, index) => {
-      Object.assign(unit, { x: 7, y: 7 + index, hp: 100000, en: 100, acted: false });
+      Object.assign(unit, { x: 8, y: 7 + index, hp: 100000, en: 100, acted: false });
       game.tiles[unit.y][unit.x] = "plain";
       const weapon = UnitModels[unit.model].weapons.find((w) => w.type !== "melee");
       const actors = JSON.parse(JSON.stringify([unit, target]));
@@ -194,7 +194,7 @@ test("parallel attacks draw each unit once and merge damage and shield loss into
   expect(result.shield).toBe(result.expectedShield);
 });
 
-test("repeated simultaneous dodges draw one boost at the actual visible unit pose", async ({
+test("repeated simultaneous dodges keep loop thrust at the visible unit pose without start bursts", async ({
   page,
 }) => {
   await stage(page);
@@ -208,7 +208,7 @@ test("repeated simultaneous dodges draw one boost at the actual visible unit pos
     for (const [index, unit] of attackers.entries()) {
       Object.assign(unit, {
         model: "RGM_79__machine_gun",
-        x: 9,
+        x: 10,
         y: 7 + index,
         hp: 100000,
         en: 100,
@@ -240,34 +240,34 @@ test("repeated simultaneous dodges draw one boost at the actual visible unit pos
     phase = "battle";
     MapCombat.begin(battleView, () => 0);
     MapCombat.update(performance.now());
-    const original = SpriteEffects.boostStart,
-      result = [];
-    try {
-      for (const index of [0, 1, 2]) {
-        for (const f of MapCombat.frames) {
-          f.time = f.plan.impacts[index] + 0.03;
-          f.lastNow = performance.now();
-        }
-        const calls = [];
-        SpriteEffects.boostStart = function (ctx, unit, x, y, scale, time, angle) {
-          if (unit.id === target.id) calls.push({ x, y, time, angle });
-          return original(...arguments);
-        };
-        drawMap(performance.now());
-        const pose = MapCombat.units().find((u) => u.id === target.id).mapPose;
-        result.push({ calls, pose });
+    const result = [];
+    for (const index of [0, 1, 2]) {
+      for (const f of MapCombat.frames) {
+        f.time = f.plan.impacts[index] + 0.03;
+        f.lastNow = performance.now();
       }
-    } finally {
-      SpriteEffects.boostStart = original;
+      drawMap(performance.now());
+      const pose = MapCombat.units().find((u) => u.id === target.id).mapPose;
+      const layers = SpriteRenderer.visibleLayers(
+        target.model,
+        null,
+        true,
+        pose.moving,
+        pose.clip,
+        pose.time,
+      );
+      result.push({
+        hasLoop: layers.some((l) => l.name === "BoostLoop"),
+        noStart: SpriteEffects.boostStart === undefined,
+        pose,
+      });
     }
     return result;
   });
-  for (const { calls, pose } of samples) {
-    expect(calls).toHaveLength(1);
-    expect(calls[0].x).toBeCloseTo(pose.x, 6);
-    expect(calls[0].y).toBeCloseTo(pose.y, 6);
-    expect(calls[0].time).toBeCloseTo(pose.dodge.time, 6);
-    expect(calls[0].angle).toBe(pose.angle);
+  for (const { hasLoop, noStart, pose } of samples) {
+    expect(hasLoop).toBe(true);
+    expect(noStart).toBe(true);
+    expect(pose.dodge.started).toBe(true);
   }
 });
 
@@ -302,7 +302,7 @@ test("a later lethal volley waits for an earlier authoritative counter before di
       model: "RGM_79__machine_gun",
       x: 10,
       y: 8,
-      hp: 6000,
+      hp: 7000,
       shield: 0,
       en: 100,
       counterCount: 0,
@@ -453,7 +453,7 @@ test("the last of four battles finishes automatically after a vertical cannon Mi
       Object.assign(a, { x: index ? 4 : 10, y: index ? 16 + index * 3 : 5, en: 100 });
       Object.assign(b, {
         x: index ? 8 : 10,
-        y: index ? 16 + index * 3 : 11,
+        y: index ? 16 + index * 3 : 10,
         hp: 100000,
         shield: 0,
       });
@@ -613,4 +613,63 @@ test("each attacking and countering unit gets its own delay, preserved across pa
   expect(result.checkpoints[6]).toContain(result.ids.counter);
   expect(result.timeDuringPause).toBe(result.pausedTime);
   expect(result.unchanged).toBe(true);
+});
+
+test("warship sprite remains through the last explosion and disappears only after its full sequence", async ({
+  page,
+}) => {
+  await stage(page, true);
+  const result = await page.evaluate(() => {
+    const targetId = battleView.b,
+      actors = structuredClone(battleView.actors);
+    actors.find((u) => u.id === targetId).model = "SalamisClass__standard";
+    getUnit(targetId).model = "SalamisClass__standard";
+    for (const event of battleView.events.filter((e) => e.to === targetId)) {
+      event.targetModelAfter = "SalamisClass__standard";
+      for (const strike of event.strikes || []) strike.modelAfter = "SalamisClass__standard";
+    }
+    const record = {
+      id: "ship-death-sequence",
+      a: battleView.a,
+      b: targetId,
+      actors,
+      events: structuredClone(battleView.events),
+      before: { ...battleView.before },
+    };
+    MapCombat.reset();
+    MapCombat.seed([record]);
+    battleView = { ...record, index: 0, networkId: record.id, displayHp: { ...record.before } };
+    MapCombat.begin(battleView, () => 0);
+    MapCombat.update(performance.now());
+    const frame = MapCombat.frame,
+      plan = frame.plan,
+      original = SpriteRenderer.draw,
+      samples = [];
+    let draws = 0;
+    SpriteRenderer.draw = function (...args) {
+      if (args[1] === "SalamisClass__standard") draws++;
+      return original(...args);
+    };
+    try {
+      for (const time of [
+        plan.deathAt + 0.01,
+        plan.deathAt + plan.deathEvents.events.at(-1).at / ART.presentation.animationSpeed,
+        plan.deathEnd - 0.01,
+        plan.deathEnd + 0.01,
+      ]) {
+        frame.time = time;
+        frame.lastNow = performance.now();
+        draws = 0;
+        drawMap(performance.now());
+        const u = MapCombat.units().find((u) => u.id === targetId);
+        samples.push({ hidden: u.mapPose.hidden, keepVisible: u.mapDying, draws });
+      }
+    } finally {
+      SpriteRenderer.draw = original;
+    }
+    return samples;
+  });
+  for (const sample of result.slice(0, 3))
+    expect(sample).toEqual({ hidden: false, keepVisible: true, draws: 1 });
+  expect(result[3]).toEqual({ hidden: true, keepVisible: false, draws: 0 });
 });

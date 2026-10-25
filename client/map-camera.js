@@ -9,6 +9,7 @@ const MapCamera = (() => {
     suppressClick = false;
   // Fit-to-map is 100%; larger maps need more magnification to reach the same readable cell size.
   const readableCellPixels = 160;
+  const minimumZoom = Math.min(1, 1 / cellScale);
   function baseTile(width, height) {
     return (
       Math.min(
@@ -39,7 +40,7 @@ const MapCamera = (() => {
       mapGeo = geometry(box.width, box.height);
     }
     byId("mapZoomLabel").textContent = Math.round(zoom * 100) + "%";
-    byId("mapZoomOut").disabled = zoom <= 1;
+    byId("mapZoomOut").disabled = zoom <= minimumZoom;
     byId("mapZoomIn").disabled = zoom >= maximumZoom();
     canvas.style.cursor = zoom * cellScale > 1 ? "grab" : "";
   }
@@ -50,7 +51,7 @@ const MapCamera = (() => {
     y ??= box.height / 2;
     const cellX = (x - old.ox) / old.tile,
       cellY = (y - old.oy) / old.tile;
-    zoom = Math.max(1, Math.min(maximumZoom(), value));
+    zoom = Math.max(minimumZoom, Math.min(maximumZoom(), value));
     const tile = baseTile(box.width, box.height) * zoom;
     centerX = cellX - (x - box.width / 2) / tile;
     centerY = cellY - (y - box.height / 2) / tile;
@@ -75,6 +76,10 @@ const MapCamera = (() => {
     drag = null;
     suppressClick = false;
     refresh();
+  }
+  function fit() {
+    reset();
+    setZoom(minimumZoom);
   }
   canvas.addEventListener(
     "wheel",
@@ -138,12 +143,13 @@ const MapCamera = (() => {
   window.addEventListener("resize", refresh);
   byId("mapZoomIn").onclick = () => setZoom(zoom * 1.25);
   byId("mapZoomOut").onclick = () => setZoom(zoom / 1.25);
-  byId("mapZoomReset").onclick = reset;
+  byId("mapZoomReset").onclick = fit;
   return {
     geometry,
     frame,
     focus,
     reset,
+    fit,
     setZoom,
     get maxZoom() {
       return maximumZoom();

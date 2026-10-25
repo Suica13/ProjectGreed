@@ -36,9 +36,9 @@ test("Rick Dom retains Dom combat platform and kits with native strength and opp
   assert.ok(!JSON.stringify(rick.materials).includes("360mm"));
   for (const kit of rick.weaponKits) {
     const model = rick.id + "__" + kit.id;
-    assert.equal(G.modelOf({ model, environment: "ground" }).move, 3.5);
+    assert.equal(G.modelOf({ model, environment: "ground" }).move, 4);
     assert.equal(G.modelOf({ model, environment: "ground" }).mobility, 55);
-    assert.equal(G.modelOf({ model, environment: "space" }).move, 7);
+    assert.equal(G.modelOf({ model, environment: "space" }).move, 8);
     assert.equal(G.modelOf({ model, environment: "space" }).mobility, 110);
     assert.deepEqual(G.validateFormation([{ unitId: rick.id, kitId: kit.id }]), [
       { unitId: rick.id, kitId: kit.id },

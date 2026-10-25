@@ -8,6 +8,7 @@ const Tactics = (() => {
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
   const parts = typeof UnitParts !== "undefined" ? UnitParts : require("./unit-parts.js");
+  const skillModule = typeof UnitSkills !== "undefined" ? UnitSkills : require("./unit-skills.js");
   const turnTransitionMs = 3600;
   const W = catalog.map.width,
     H = catalog.map.height;
@@ -67,9 +68,10 @@ const Tactics = (() => {
       throw Error("编组数量无效，请检查单位数量上限");
     let cost = 0;
     const clean = entries.map((entry) => {
-      const id = entry?.unitId + "__" + entry?.kitId,
+      const alias = catalog.prefabs.find((p) => p.id === entry?.unitId)?.kitAliases?.[entry?.kitId];
+      const id = entry?.unitId + "__" + (alias || entry?.kitId),
         model = models[id];
-      if (!model) throw Error("编组包含不可用单位或武器套件");
+      if (!model || model.formOnly) throw Error("编组包含不可用单位或武器套件");
       cost += model.cost;
       const customName = normalizeUnitName(entry.customName);
       return { unitId: model.prefabId, kitId: model.kitId, ...(customName ? { customName } : {}) };
@@ -125,6 +127,13 @@ const Tactics = (() => {
   function formationRestrictions(settings = {}, seat = null) {
     const team = seat === null ? {} : settings.teamRestrictions?.[seatTeam(seat)] || {};
     return {
+      ...(settings.mapId
+        ? {
+            environment: getMap(settings.mapId).environment,
+            mapId: settings.mapId,
+            deploymentSeat: seat ?? 0,
+          }
+        : {}),
       unitCostLimit: settings.unitCostLimit ?? Infinity,
       bannedFactions: [
         ...new Set([...(settings.bannedFactions || []), ...(team.bannedFactions || [])]),
@@ -133,6 +142,14 @@ const Tactics = (() => {
     };
   }
   function restrictionReason(model, restrictions = {}) {
+    if (restrictions.environment && (model.adaptability?.[restrictions.environment] ?? 100) <= 0)
+      return "not_allowed";
+    if (
+      model.movementType === "naval" &&
+      restrictions.mapId &&
+      !getMap(restrictions.mapId).navalDeployment
+    )
+      return "not_allowed";
     if (
       restrictions.bannedFactions?.includes(model.faction) ||
       model.tags.some((tag) => restrictions.bannedEras?.includes(tag))
@@ -213,19 +230,87 @@ const Tactics = (() => {
       Array.isArray(restrictions)
     )
       throw Error("AI 编组设置无效");
+    const environment = restrictions.environment ?? "ground";
+    const adaptation = (model) => model.adaptability?.[environment] ?? 100;
     const choices = Object.values(models).filter(
-        (model) => !restrictionReason(model, restrictions),
+        (model) =>
+          !model.formOnly &&
+          !restrictionReason(model, { ...restrictions, environment }) &&
+          adaptation(model) > 0 &&
+          (model.weapons.length > 0 ||
+            model.supplyAura ||
+            model.skills?.some((s) => ["repair", "recon"].includes(s.type))),
       ),
       entries = [];
     const minimum = Math.min(...choices.map((model) => model.cost));
     const count = Math.min(unitLimit, Math.floor(maxCost / minimum));
+    const bestAdaptation = Math.max(...choices.map(adaptation));
+    const preferredMinimum = Math.min(
+      ...choices.filter((model) => adaptation(model) === bestAdaptation).map((model) => model.cost),
+    );
     let remaining = maxCost;
     for (let i = 0; i < count; i++) {
-      const reserve = minimum * (count - i - 1);
-      const legal = choices.filter((model) => model.cost <= remaining - reserve);
+      // 优先填满槽位；能全员使用最佳适应性时，为后续单位保留对应预算。
+      const slots = count - i;
+      let reserveMinimum = remaining >= preferredMinimum * slots ? preferredMinimum : minimum;
+      if (restrictions.mapId && getMap(restrictions.mapId).navalDeployment) {
+        // 混合海陆出生带需保留能跨水的一格单位预算，避免末尾只剩水格却买不起空军。
+        const flexibleMinimum = Math.min(
+          ...choices
+            .filter(
+              (m) =>
+                !m.footprint &&
+                ["air", "hover", "amphibious"].includes(m.movementType) &&
+                adaptation(m) === bestAdaptation,
+            )
+            .map((m) => m.cost),
+        );
+        if (remaining >= flexibleMinimum * slots)
+          reserveMinimum = Math.max(reserveMinimum, flexibleMinimum);
+      }
+      const placementCache = new Map();
+      const legal = choices.filter((model) => {
+        if (model.cost > remaining - reserveMinimum * (slots - 1)) return false;
+        if (!restrictions.mapId) return true;
+        const shape = JSON.stringify([
+          model.footprint || null,
+          model.movementType || "ground",
+          !!model.ship,
+        ]);
+        if (!placementCache.has(shape)) {
+          const map = getMap(restrictions.mapId);
+          const area = map.deploymentAreas?.[restrictions.deploymentSeat ?? 0];
+          const size = (entry) => {
+            const f = models[entry.unitId + "__" + entry.kitId].footprint;
+            return f ? f.width * f.height : 1;
+          };
+          const candidate = { unitId: model.prefabId, kitId: model.kitId };
+          if (
+            area &&
+            entries.reduce((total, entry) => total + size(entry), 0) +
+              size(candidate) +
+              (slots - 1) >
+              area.width * area.height
+          ) {
+            placementCache.set(shape, false);
+            return false;
+          }
+          placementCache.set(
+            shape,
+            !!deploymentPlacements(
+              { mapId: map.id, tiles: map.tiles, environment: map.environment, units: [] },
+              [...entries, { unitId: model.prefabId, kitId: model.kitId }],
+              restrictions.deploymentSeat ?? 0,
+            ),
+          );
+        }
+        return placementCache.get(shape);
+      });
       if (!legal.length) break;
+      const bestLegalAdaptation = Math.max(...legal.map(adaptation));
+      const preferred = legal.filter((model) => adaptation(model) === bestLegalAdaptation);
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-      const model = legal[seed % legal.length];
+      const model = preferred[seed % preferred.length];
       entries.push({
         unitId: model.prefabId,
         kitId: model.kitId,
@@ -241,11 +326,28 @@ const Tactics = (() => {
       attackMultiplier = parts.penalties(unit).attackMultiplier,
       previousPerformance = weapon.performance ?? 1,
       previousAttack = weapon.partDamageMultiplier ?? 1;
-    if (factor === previousPerformance && attackMultiplier === previousAttack) return weapon;
+    const liveChannels =
+      weapon.pairedChannels && weapon.energySpent === undefined
+        ? new Set(availableStrikes(unit, weapon).map((s) => s.channelId))
+        : null;
+    const en = liveChannels
+      ? weapon.pairedChannels.filter((c) => liveChannels.has(c.id)).reduce((n, c) => n + c.en, 0)
+      : unit.model &&
+          weapon.nativeTiming?.energyMode === "perShot" &&
+          weapon.energySpent === undefined
+        ? new Set(
+            availableStrikes(unit, weapon).map(
+              (s) => `${s.at}:${weapon.attack.muzzleIndices[s.shotIndex]}`,
+            ),
+          ).size * weapon.nativeTiming.energyPerEmission
+        : weapon.en;
+    if (factor === previousPerformance && attackMultiplier === previousAttack && en === weapon.en)
+      return weapon;
     const performanceRatio = factor / previousPerformance,
       damageRatio = (performanceRatio * attackMultiplier) / previousAttack;
     return {
       ...weapon,
+      en,
       performance: factor,
       partDamageMultiplier: attackMultiplier,
       get name() {
@@ -256,7 +358,23 @@ const Tactics = (() => {
       },
       damagePerShot: weapon.damagePerShot * damageRatio,
       damage: weapon.damage * damageRatio,
-      hit: Math.min(100, weapon.hit * performanceRatio),
+      hit: weapon.hit * performanceRatio,
+      attack: {
+        ...weapon.attack,
+        strikes: weapon.attack.strikes.map((step) => ({
+          ...step,
+          ...(step.damageComponents
+            ? {
+                damageComponents: Object.fromEntries(
+                  Object.entries(step.damageComponents).map(([key, value]) => [
+                    key,
+                    value * damageRatio,
+                  ]),
+                ),
+              }
+            : {}),
+        })),
+      },
       damageComponents: Object.fromEntries(
         Object.entries(weapon.damageComponents).map(([key, value]) => [key, value * damageRatio]),
       ),
@@ -307,7 +425,7 @@ const Tactics = (() => {
   // Derive damage penalties from current parts; never modify a shared catalog or AI variant.
   function modelOf(unit) {
     const base = performanceModelOf(unit),
-      penalty = parts.penalties(unit),
+      penalty = parts.penalties(base.partsBreakable === false ? {} : unit),
       environment = unit.environment ?? "ground",
       adaptability = (base.adaptability?.[environment] ?? 100) / 100;
     if (
@@ -347,11 +465,19 @@ const Tactics = (() => {
           : base.weapons.map((w) => weaponStats(w, unit)),
     };
   }
-  function deploymentCells(g, seat) {
+  function deploymentCells(g, seat, unit = null) {
     const map = getMap(g.mapId),
       spawn = map.spawns[seat],
       cells = [];
     if (!spawn) return cells;
+    const area = map.deploymentAreas?.[seat];
+    if (area) {
+      for (let y = area.y; y < Math.min(mapHeight(g), area.y + area.height); y++)
+        for (let x = area.x; x < Math.min(mapWidth(g), area.x + area.width); x++)
+          if (Number.isFinite(unit ? terrainCost(g, unit, x, y) : terrain[g.tiles[y][x]].cost))
+            cells.push({ x, y });
+      return cells.sort((a, b) => dist(a, spawn) - dist(b, spawn) || a.y - b.y || a.x - b.x);
+    }
     const radius = map.deploymentRadius;
     for (
       let y = Math.max(0, spawn.y - radius);
@@ -363,7 +489,10 @@ const Tactics = (() => {
         x <= Math.min(mapWidth(g) - 1, spawn.x + radius);
         x++
       )
-        if (dist({ x, y }, spawn) <= radius && Number.isFinite(terrain[g.tiles[y][x]].cost))
+        if (
+          dist({ x, y }, spawn) <= radius &&
+          Number.isFinite(unit ? terrainCost(g, unit, x, y) : terrain[g.tiles[y][x]].cost)
+        )
           cells.push({ x, y });
     return cells.sort((a, b) => dist(a, spawn) - dist(b, spawn) || a.y - b.y || a.x - b.x);
   }
@@ -374,21 +503,20 @@ const Tactics = (() => {
       !u ||
       !Number.isInteger(x) ||
       !Number.isInteger(y) ||
-      !deploymentCells(g, team).some((c) => c.x === x && c.y === y)
+      !deploymentCells(g, team, u).some((c) => c.x === x && c.y === y)
     )
       throw Error("请在己方出生区的有效格子部署");
-    if (g.units.some((other) => other.id !== id && other.x === x && other.y === y))
-      throw Error("该部署位置已有单位");
+    if (!fits(g, u, x, y, u.angle, false, team)) throw Error("该部署位置已有单位");
+    delete u.rotationPivot;
     u.x = x;
     u.y = y;
   }
   function confirmDeployment(g, team) {
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再次确认");
     for (const u of g.units.filter((u) => ownerOf(u) === team)) {
-      if (!deploymentCells(g, team).some((c) => c.x === u.x && c.y === u.y))
+      if (!deploymentCells(g, team, u).some((c) => c.x === u.x && c.y === u.y))
         throw Error("单位不在有效部署区域");
-      if (g.units.some((other) => other.id !== u.id && other.x === u.x && other.y === u.y))
-        throw Error("部署位置重叠");
+      if (!fits(g, u, u.x, u.y, u.angle, false, team)) throw Error("部署位置重叠");
     }
     g.deployment[team] = true;
     return g.deployment.every(Boolean);
@@ -412,8 +540,190 @@ const Tactics = (() => {
     return { ...base, ...(color ? { color } : {}), ...(spaceName ? { name: spaceName } : {}) };
   }
   const key = (x, y) => x + "," + y,
-    dist = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y),
+    dist = (a, b) => {
+      const aa = dimensions(a),
+        bb = dimensions(b);
+      return (
+        Math.max(0, a.x - (b.x + bb.width - 1), b.x - (a.x + aa.width - 1)) +
+        Math.max(0, a.y - (b.y + bb.height - 1), b.y - (a.y + aa.height - 1))
+      );
+    },
     typeNames = { beam: "光束", shell: "实弹", melee: "格斗" };
+  const skills = skillModule.create({
+    models,
+    modelOf,
+    fits,
+    dist,
+    mapWidth,
+    mapHeight,
+    dimensions,
+    parts,
+  });
+  // Grid anchors remain integers; a ship's explicit heading determines its whole rectangle.
+  function dimensions(unit, angle = unit.angle ?? 0) {
+    if (unit.visualOnly) return { width: 1, height: 1 };
+    const footprint = models[unit.model]?.footprint || { width: 1, height: 1 };
+    const horizontal = Math.abs(Math.round(angle / 90)) % 2 === 1;
+    return horizontal ? { width: footprint.height, height: footprint.width } : footprint;
+  }
+  function cells(unit, x = unit.x, y = unit.y, angle = unit.angle) {
+    const size = dimensions(unit, angle),
+      result = [];
+    for (let yy = 0; yy < size.height; yy++)
+      for (let xx = 0; xx < size.width; xx++) result.push({ x: x + xx, y: y + yy });
+    return result;
+  }
+  function center(unit) {
+    const size = dimensions(unit);
+    return { x: unit.x + (size.width - 1) / 2, y: unit.y + (size.height - 1) / 2 };
+  }
+  // UI destinations denote the hull centre. Integer anchors remain an internal grid representation.
+  function anchorAt(unit, x, y, angle = unit.angle) {
+    const size = dimensions(unit, angle);
+    return { x: Math.round(x - (size.width - 1) / 2), y: Math.round(y - (size.height - 1) / 2) };
+  }
+  function occupies(unit, x, y) {
+    const size = dimensions(unit);
+    return x >= unit.x && x < unit.x + size.width && y >= unit.y && y < unit.y + size.height;
+  }
+  function fits(
+    g,
+    unit,
+    x = unit.x,
+    y = unit.y,
+    angle = unit.angle,
+    throughAllies = false,
+    seat = null,
+    deploymentArea = null,
+  ) {
+    const footprint = cells(unit, x, y, angle),
+      area =
+        seat === null
+          ? null
+          : deploymentArea || new Set(deploymentCells(g, seat, unit).map((c) => key(c.x, c.y)));
+    return footprint.every(
+      (c) =>
+        c.x >= 0 &&
+        c.y >= 0 &&
+        c.x < mapWidth(g) &&
+        c.y < mapHeight(g) &&
+        Number.isFinite(terrainCost(g, unit, c.x, c.y)) &&
+        (!area || area.has(key(c.x, c.y))) &&
+        !(g.units || []).some(
+          (other) =>
+            other.id !== unit.id &&
+            other.hp > 0 &&
+            occupies(other, c.x, c.y) &&
+            (!throughAllies || other.team !== unit.team),
+        ),
+    );
+  }
+  function canRotate(g, unit, direction) {
+    if (
+      !models[unit.model]?.ship ||
+      ![-1, 1].includes(direction) ||
+      unit.hp <= 0 ||
+      unit.acted ||
+      unit.plan
+    )
+      return false;
+    const deploying = g.deployment && !g.deployment.every(Boolean);
+    if (
+      deploying
+        ? g.deployment[ownerOf(unit)]
+        : unit.team !== g.team || unit.moved || g.winner !== null
+    )
+      return false;
+    const angle = (((unit.angle + direction * 90) % 360) + 360) % 360;
+    // Check the entire swept bounding square; rotation cannot clip an asteroid or another unit.
+    const size = dimensions(unit),
+      next = dimensions(unit, angle),
+      pivot = unit.rotationPivot || center(unit),
+      nextAnchor = anchorAt(unit, pivot.x, pivot.y, angle),
+      sweep = {
+        width:
+          Math.max(unit.x + size.width, nextAnchor.x + next.width) - Math.min(unit.x, nextAnchor.x),
+        height:
+          Math.max(unit.y + size.height, nextAnchor.y + next.height) -
+          Math.min(unit.y, nextAnchor.y),
+      };
+    const left = Math.min(unit.x, nextAnchor.x),
+      top = Math.min(unit.y, nextAnchor.y);
+    for (let y = top; y < top + sweep.height; y++)
+      for (let x = left; x < left + sweep.width; x++) {
+        if (
+          x < 0 ||
+          y < 0 ||
+          x >= mapWidth(g) ||
+          y >= mapHeight(g) ||
+          !Number.isFinite(unit ? terrainCost(g, unit, x, y) : terrain[g.tiles[y][x]].cost) ||
+          g.units.some((other) => other.id !== unit.id && other.hp > 0 && occupies(other, x, y))
+        )
+          return false;
+      }
+    return fits(
+      g,
+      unit,
+      nextAnchor.x,
+      nextAnchor.y,
+      angle,
+      false,
+      deploying ? ownerOf(unit) : null,
+    );
+  }
+  function rotate(g, unit, direction) {
+    if (!canRotate(g, unit, direction)) throw Error("战舰无法转向：行动已使用，或旋转区域被占用");
+    const deploying = g.deployment && !g.deployment.every(Boolean);
+    if (!deploying) {
+      for (const other of g.units) if (ownerOf(other) === ownerOf(unit)) other.origin = null;
+      unit.origin = {
+        x: unit.x,
+        y: unit.y,
+        angle: unit.angle,
+        ...(unit.rotationPivot ? { rotationPivot: { ...unit.rotationPivot } } : {}),
+      };
+      unit.moved = true;
+    }
+    unit.rotationPivot = unit.rotationPivot || center(unit);
+    const nextAngle = (((unit.angle + direction * 90) % 360) + 360) % 360;
+    Object.assign(unit, anchorAt(unit, unit.rotationPivot.x, unit.rotationPivot.y, nextAngle));
+    unit.angle = (((unit.angle + direction * 90) % 360) + 360) % 360;
+    unit.aimAngle = unit.angle;
+  }
+  // AI预选和真正创建单位共用完整占地检查；大舰优先，避免碎片化空位。
+  function deploymentPlacements(world, formation, seat) {
+    const placed = { ...world, units: [...(world.units || [])] },
+      result = [],
+      terrainCells = new Map();
+    const entries = formation
+      .map((entry, i) => ({ entry, i }))
+      .sort((a, b) => {
+        const size = (entry) => {
+          const f = models[entry.unitId + "__" + entry.kitId].footprint;
+          return f ? f.width * f.height : 1;
+        };
+        return size(b.entry) - size(a.entry) || a.i - b.i;
+      });
+    for (const { entry, i } of entries) {
+      const model = entry.unitId + "__" + entry.kitId,
+        team = seatTeam(seat);
+      const heading = team ? -90 : 90;
+      const probe = { id: seat + "-" + i, model, team, ownerSeat: seat, hp: 1, angle: heading };
+      const movement = models[model].movementType || "ground";
+      if (!terrainCells.has(movement)) {
+        const cells = deploymentCells(placed, seat, probe);
+        terrainCells.set(movement, { cells, area: new Set(cells.map((c) => key(c.x, c.y))) });
+      }
+      const available = terrainCells.get(movement);
+      const position = available.cells.find((cell) =>
+        fits(placed, probe, cell.x, cell.y, heading, false, seat, available.area),
+      );
+      if (!position) return null;
+      placed.units.push({ ...probe, ...position });
+      result.push({ entry, i, position, heading });
+    }
+    return result;
+  }
   function create(ai = false, seed = 7319, formations, deploying = false, settings = {}) {
     const map = getMap(settings.mapId),
       costLimit = validateCostLimit(settings.costLimit ?? catalog.formation.maxCost),
@@ -422,7 +732,7 @@ const Tactics = (() => {
       randomFormation(
         seed + seat,
         settings.seatCostLimits?.[seat] ?? costLimit,
-        formationRestrictions(settings, seat),
+        formationRestrictions({ ...settings, mapId: map.id }, seat),
         settings.seatUnitLimits?.[seat] ?? unitLimit,
       ),
     );
@@ -432,24 +742,27 @@ const Tactics = (() => {
     for (let seat = 0; seat < formations.length; seat++) {
       // null 明确表示空出生点，不生成单位，也无需确认部署。
       if (formations[seat] === null) continue;
-      validateFormation(
+      formations[seat] = validateFormation(
         formations[seat],
         settings.seatCostLimits?.[seat] ?? costLimit,
         settings.seatUnitLimits?.[seat] ?? unitLimit,
-      ).forEach((entry, i) => {
+      );
+      const placements = deploymentPlacements(
+        { tiles, units, mapId: map.id, environment: map.environment },
+        formations[seat],
+        seat,
+      );
+      if (!placements) throw Error("出生区没有足够位置容纳编组，请检查目录配置");
+      placements.forEach(({ entry, i, position, heading }) => {
         if (
           restrictionReason(
             models[entry.unitId + "__" + entry.kitId],
-            formationRestrictions(settings, seat),
+            formationRestrictions({ ...settings, mapId: map.id }, seat),
           )
         )
           throw Error("编组包含不被允许的单位");
         const team = seatTeam(seat);
         const model = entry.unitId + "__" + entry.kitId;
-        const position = deploymentCells({ tiles, mapId: map.id }, seat).filter(
-          (cell) => !units.some((u) => u.x === cell.x && u.y === cell.y),
-        )[0];
-        if (!position) throw Error("出生区没有足够位置容纳编组，请检查目录配置");
         const performance = settings.performances?.[seat] ?? 1;
         if (![0.75, 1, 1.25].includes(performance)) throw Error("性能倍率无效");
         let m = modelOf({ model, performance, environment: map.environment });
@@ -465,17 +778,29 @@ const Tactics = (() => {
           y: position.y,
           hp: m.hp,
           brokenParts: {},
+          ...(m.ship
+            ? {
+                moduleHp: Object.fromEntries(
+                  m.modules.map((module) => [module.id, module.hp * performance]),
+                ),
+              }
+            : {}),
           shield: m.shield.hp,
           en: m.en,
           moved: false,
           acted: false,
+          actionPoints: m.actionPoints ?? 5,
           origin: null,
           counterCount: 0,
-          angle: team ? -90 : 90,
-          heldWeapon: m.weapons[0].id,
+          angle: heading,
+          heldWeapon: m.weapons[0]?.id ?? null,
         });
       });
     }
+    units.sort(
+      (a, b) =>
+        a.ownerSeat - b.ownerSeat || Number(a.id.split("-")[1]) - Number(b.id.split("-")[1]),
+    );
     return {
       tiles,
       units,
@@ -493,11 +818,21 @@ const Tactics = (() => {
     };
   }
   function at(g, x, y) {
-    return g.units.find((u) => u.hp > 0 && u.x === x && u.y === y);
+    return g.units.find((u) => u.hp > 0 && occupies(u, x, y));
   }
   // 敌军上下左右相邻的格子消耗至少3点；地形更昂贵时仍按地形计算。
+  function terrainCost(g, u, x, y) {
+    const movement = models[u.model]?.movementType;
+    const tile = g.tiles[y][x];
+    if (g.environment !== "space") {
+      if (movement === "air") return 1;
+      if (movement === "naval") return tile === "water" ? 1 : Infinity;
+      if (tile === "water" && ["amphibious", "hover"].includes(movement)) return 1;
+    }
+    return terrain[g.tiles[y][x]].cost;
+  }
   function movementCost(g, u, x, y) {
-    const base = terrain[g.tiles[y][x]].cost;
+    const base = terrainCost(g, u, x, y);
     return g.units.some(
       (enemy) => enemy.hp > 0 && enemy.team !== u.team && dist(enemy, { x, y }) === 1,
     )
@@ -522,9 +857,8 @@ const Tactics = (() => {
         let x = n.x + dx,
           y = n.y + dy;
         if (x < 0 || x >= mapWidth(g) || y < 0 || y >= mapHeight(g)) continue;
-        let occupant = at(g, x, y);
-        if (occupant && occupant.team !== u.team) continue;
-        let cost = n.cost + movementCost(g, u, x, y);
+        if (!fits(g, u, x, y, u.angle, true)) continue;
+        let cost = n.cost + Math.max(...cells(u, x, y).map((c) => movementCost(g, u, c.x, c.y)));
         if (cost > moveLimit) continue;
         let k = key(x, y);
         if (best.has(k) && best.get(k).cost <= cost) continue;
@@ -535,16 +869,20 @@ const Tactics = (() => {
     }
     // 友军可作为路径中间点，但不能作为移动终点。
     for (const [cell, entry] of best) {
-      const occupant = at(g, entry.x, entry.y);
-      if (occupant && occupant.id !== u.id) best.delete(cell);
+      if (!fits(g, u, entry.x, entry.y)) best.delete(cell);
     }
     return best;
   }
   // 朝向由裁定状态保存，快照、重连和各客户端使用同一个结果。
   function faceTarget(unit, target) {
-    const dx = target.x - unit.x,
-      dy = target.y - unit.y;
-    if (dx || dy) unit.angle = (Math.atan2(dx, -dy) * 180) / Math.PI;
+    const sourceCenter = center(unit),
+      targetCenter = center(target),
+      dx = targetCenter.x - sourceCenter.x,
+      dy = targetCenter.y - sourceCenter.y;
+    if (dx || dy) {
+      const angle = (Math.atan2(dx, -dy) * 180) / Math.PI;
+      if (!models[unit.model]?.ship) unit.angle = angle;
+    }
   }
   function move(g, u, x, y) {
     if (g.winner !== null || u.team !== g.team || u.acted || u.moved) throw Error("本单位无法移动");
@@ -554,13 +892,19 @@ const Tactics = (() => {
     for (const other of g.units) {
       if (ownerOf(other) === ownerOf(u)) other.origin = null;
     }
-    u.origin = { x: u.x, y: u.y, angle: u.angle };
+    u.origin = {
+      x: u.x,
+      y: u.y,
+      angle: u.angle,
+      ...(u.rotationPivot ? { rotationPivot: { ...u.rotationPivot } } : {}),
+    };
     const from = tile.path.length > 1 ? tile.path[tile.path.length - 2] : u;
     const direction = { ...from };
     faceTarget(direction, { x, y });
-    u.angle = direction.angle;
+    if (!models[u.model]?.ship) u.angle = direction.angle;
     u.x = x;
     u.y = y;
+    delete u.rotationPivot;
     u.moved = true;
     return tile.path;
   }
@@ -572,24 +916,62 @@ const Tactics = (() => {
       !u.acted &&
       u.moved &&
       !!u.origin &&
-      !at(g, u.origin.x, u.origin.y)
+      fits(g, u, u.origin.x, u.origin.y, u.origin.angle)
     );
   }
   function undo(g, u) {
     if (!canUndo(g, u)) throw Error("无法撤销：己方编组的后续单位已移动或原位置被占用");
     Object.assign(u, u.origin);
+    if (!u.origin.rotationPivot) delete u.rotationPivot;
     u.origin = null;
     u.moved = false;
   }
-  function availableStrikes(u, w) {
+  function moduleCanBear(unit, moduleId, target) {
+    if (!moduleId || !target) return true;
+    const module = models[unit.model]?.modules?.find((m) => m.id === moduleId);
+    if (!module) return false;
+    const a = center(unit),
+      b = center(target),
+      aim = (Math.atan2(b.x - a.x, -(b.y - a.y)) * 180) / Math.PI;
+    const delta = ((((aim - (unit.angle ?? 0) - module.idleDir + 180) % 360) + 360) % 360) - 180;
+    return Math.abs(delta) <= module.arc;
+  }
+  function availableStrikes(u, w, target = null) {
     if (parts.unavailable(u, w).length) return [];
-    return w.attack.strikes.filter((step) => !parts.unavailable(u, step).length);
+    return w.attack.strikes.filter(
+      (step) => !parts.unavailable(u, step).length && moduleCanBear(u, step.moduleId, target),
+    );
+  }
+  function actionBudget(u) {
+    return modelOf(u).actionPoints ?? 5;
+  }
+  function counterActionBudget(u) {
+    return Math.ceil(actionBudget(u) * 0.75);
+  }
+  function actionPoints(u) {
+    return u.actionPoints ?? actionBudget(u);
+  }
+  function actionCost(w) {
+    return w.actionCost ?? 2;
+  }
+  function attackQueue(g, u, target, weapons) {
+    if (!Array.isArray(weapons) || !weapons.length || weapons.length > 32)
+      throw Error("请选择有效的武器序列");
+    if (weapons.some((w) => !w || !canAttack(g, u, target, w)))
+      throw Error("武器、目标、射程或部位条件不满足");
+    if (weapons.some((w) => w.slot === "skill") && weapons.length !== 1)
+      throw Error("技能武器须独立使用");
+    const ap = weapons.reduce((n, w) => n + actionCost(w), 0);
+    const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
+    if (ap > actionPoints(u) + (u.plan?.actionCost ?? 0)) throw Error("行动点不足");
+    if (en > u.en) throw Error("武器序列总EN不足");
+    return { ap, en };
   }
   function canUse(u, w) {
     return (
       !!w &&
       u.hp > 0 &&
-      u.en >= w.en &&
+      u.en >= weaponStats(w, u).en &&
       !parts.unavailable(u, w).length &&
       availableStrikes(u, w).length > 0
     );
@@ -598,10 +980,79 @@ const Tactics = (() => {
     let d = dist(a, b);
     return d >= w.min && d <= w.max;
   }
+  function targetModifier(g, target, weapon) {
+    const targetModel = models[target.model];
+    if (
+      weapon.special?.type === "bomb" &&
+      (targetModel.movementType === "air" ||
+        targetModel.sourceStats?.nativeTags?.includes("Aircraft"))
+    )
+      return 0;
+    if (!weapon.targetModifiers) return 1;
+    const category =
+      g.environment === "space"
+        ? "space"
+        : models[target.model].movementType === "air"
+          ? "air"
+          : g.tiles[target.y][target.x] === "water"
+            ? "water"
+            : "ground";
+    return weapon.targetModifiers[category] ?? 1;
+  }
   function canAttack(g, a, b, w) {
     return (
-      !!a && !!b && a.hp > 0 && b.hp > 0 && a.team !== b.team && canUse(a, w) && inRange(a, b, w)
+      !!a &&
+      !!b &&
+      a.hp > 0 &&
+      b.hp > 0 &&
+      a.team !== b.team &&
+      canUse(a, w) &&
+      targetModifier(g, b, w) > 0 &&
+      inRange(a, b, w) &&
+      availableStrikes(a, w, b).length > 0
     );
+  }
+  // Scatter records carry only shot indices and energy actually paid; clients rebuild the same visual slice.
+  function eventWeapon(unit, event) {
+    const weapon = modelOf(unit).weapons.find((w) => w.id === event.weapon);
+    if (!event.shotIndices) return weapon;
+    const indices = event.shotIndices;
+    const strikes = weapon.attack.strikes
+      .filter((s) => indices.includes(s.shotIndex))
+      .map((s, i) => ({
+        ...s,
+        shotIndex: indices.indexOf(s.shotIndex),
+        at: s.at,
+        hitIndex: s.hitIndex || 0,
+      }));
+    const attack = {
+      ...weapon.attack,
+      shots: indices.map((i) => weapon.attack.shots[i]),
+      duration: Math.max(...indices.map((i) => weapon.attack.shots[i])) + 0.3,
+      strikes,
+      muzzleIndices: indices.map((i) => weapon.attack.muzzleIndices[i] || 0),
+      muzzleShotIndices: indices.map((i) => weapon.attack.muzzleShotIndices?.[i] || 0),
+      animations: weapon.attack.animations,
+    };
+    return {
+      ...weapon,
+      en: event.energySpent ?? weapon.en,
+      energySpent: event.energySpent,
+      min: 0,
+      max: 1000,
+      shotCount: indices.length,
+      damage: strikes.reduce(
+        (n, s) =>
+          n +
+          Object.values(s.damageComponents || weapon.damageComponents).reduce(
+            (sum, value) => sum + value,
+            0,
+          ) *
+            (s.damageMultiplier ?? 1),
+        0,
+      ),
+      attack,
+    };
   }
   function countersRemaining(u) {
     return Math.max(0, Math.min(1, modelOf(u).counterLimit ?? 1) - (u.counterCount ?? 0));
@@ -609,6 +1060,9 @@ const Tactics = (() => {
   function canCounter(g, a, b, w) {
     return (
       !!a &&
+      !!w &&
+      !w.noCounter &&
+      actionCost(w) <= counterActionBudget(a) &&
       countersRemaining(a) > 0 &&
       (!a.counterTargetId || a.counterTargetId === b?.id) &&
       canAttack(g, a, b, w)
@@ -623,18 +1077,48 @@ const Tactics = (() => {
       ground = terrain[g.tiles[b.y][b.x]],
       cover = w.type === "melee" ? (ground.meleeCover ?? 0) : ground.cover,
       mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.25,
+      sizeModifier = w.antiSize?.[defender.ship ? "large" : "small"] || { damage: 1, accuracy: 1 },
+      targetFactor = targetModifier(g, b, w),
+      sensorBonus =
+        b.spottedUntilRound >= g.round
+          ? 10
+          : defender.stealth &&
+              (!defender.stealth.waterOnly || g.tiles[b.y][b.x] === "water") &&
+              dist(a, b) > 1
+            ? -10
+            : 0,
       baseHit =
-        Math.max(10, Math.min(100, w.hit * (modelOf(a).accuracy / 100) - cover - mobilityPenalty)) *
-        (isCounter ? 0.75 : 1),
+        Math.max(
+          10,
+          Math.min(
+            100,
+            (w.attack.strikes.length === 1 && w.attack.strikes[0].accuracy !== undefined
+              ? (w.attack.strikes[0].accuracy * w.hit) / (w.sourceHit || w.hit || 1)
+              : w.hit) *
+              (modelOf(a).accuracy / 100) *
+              sizeModifier.accuracy *
+              targetFactor +
+              sensorBonus -
+              cover -
+              mobilityPenalty,
+          ),
+        ) * (isCounter ? 0.75 : 1),
       // 最终回避加成在机动性、地形与反击惩罚计算后生效。
-      hit = Math.max(0, baseHit - (response === "evade" ? 15 : 0)),
+      hit = Math.min(
+        100,
+        Math.max(0, baseHit - (response === "evade" ? 15 : 0)) * (w.hitScale || 1),
+      ),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier = response === "defend" ? 0.75 : 1,
-      strikes = availableStrikes(a, w);
+      strikes = availableStrikes(a, w, b);
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.
+    let components = w.damageComponents;
     function protectedDamage(defenses, damageMultiplier, share = 1) {
       return (
-        Object.entries(w.damageComponents).reduce((sum, [channel, value]) => {
+        Object.entries(components).reduce((sum, [channel, value]) => {
+          const ap = channel.endsWith("AP");
+          if (ap && defenses === defender.shield.defenses) return sum;
+          if (ap) channel = channel.slice(0, -2);
           const percentKey =
               channel === "meleeBeam" ? "beam" : channel === "meleeShell" ? "shell" : channel,
             flatKey = channel.startsWith("melee") ? "melee" : channel;
@@ -646,10 +1130,18 @@ const Tactics = (() => {
             sum +
             Math.max(
               0,
-              value * damageMultiplier * categoryBonus * elementBonus * share -
-                defenses[flatKey].flat * defenseMultiplier,
+              value *
+                damageMultiplier *
+                categoryBonus *
+                elementBonus *
+                sizeModifier.damage *
+                targetFactor *
+                (ap ? 1 : share) -
+                (ap ? 0 : defenses[flatKey].flat * defenseMultiplier),
             ) *
-              (1 - Math.min(100, defenses[percentKey].percent * defenseMultiplier) / 100)
+              (1 -
+                Math.min(100, (defenses[percentKey].percent * defenseMultiplier) / (ap ? 4 : 1)) /
+                  100)
           );
         }, 0) * finalDamageMultiplier
       );
@@ -660,6 +1152,7 @@ const Tactics = (() => {
     const shieldAvailable = parts.shieldUsable(b, defender.shield);
     let shieldLeft = shieldAvailable ? Math.max(0, b.shield ?? 0) : 0;
     for (const strike of strikes) {
+      components = strike.damageComponents || w.damageComponents;
       const strikeMultiplier = strike.damageMultiplier ?? 1;
       damage += Math.round(protectedDamage(defender.defenses, strikeMultiplier));
       const coverage = shieldLeft > 0 ? defender.shield.coverage : 0;
@@ -720,6 +1213,7 @@ const Tactics = (() => {
       const before = to.hp,
         shieldBefore = to.shield,
         partsBefore = { ...to.brokenParts },
+        modulesBefore = to.moduleHp ? { ...to.moduleHp } : null,
         sourceDodgeSlot = dodgeSlots[from.id],
         targetDodgeSlot = dodgeSlots[to.id],
         strikes = [];
@@ -733,7 +1227,10 @@ const Tactics = (() => {
             stance,
             isCounter,
           ),
-          executed = to.hp > 0 && !parts.unavailable(from, step).length,
+          executed =
+            to.hp > 0 &&
+            !parts.unavailable(from, step).length &&
+            moduleCanBear(from, step.moduleId, to),
           hit = executed && random(g) < e.hit / 100,
           blocked = hit && to.shield > 0 && random(g) < e.blockChance,
           shieldDamage = blocked ? e.shieldDamage : 0,
@@ -751,6 +1248,7 @@ const Tactics = (() => {
               step.partBreakModifier ?? weapon.partBreakModifier ?? 1,
             )
           : null;
+        const overdriveEnded = !!to.overdrive && !!to.brokenParts?.head && skills.endOverdrive(to);
         let dodgeTo = null;
         if (executed && !hit) {
           dodgeTo = dodgeSlots[to.id] === 0 ? dodgeSide() : 0;
@@ -770,6 +1268,9 @@ const Tactics = (() => {
           shieldAfter: to.shield,
           brokenParts: brokenPart ? [brokenPart] : [],
           partsAfter: { ...to.brokenParts },
+          modelAfter: to.model,
+          overdriveEnded,
+          ...(to.moduleHp ? { modulesAfter: { ...to.moduleHp } } : {}),
           hitChance: e.hit,
         });
       }
@@ -788,7 +1289,10 @@ const Tactics = (() => {
         targetDodgeEnd: dodgeSlots[to.id],
         strikes,
         partsBefore,
+        ...(modulesBefore ? { modulesBefore, modulesAfter: { ...to.moduleHp } } : {}),
         partsAfter: { ...to.brokenParts },
+        targetModelAfter: to.model,
+        overdriveEnded: strikes.some((s) => s.overdriveEnded),
         brokenParts: strikes.flatMap((strike) => strike.brokenParts),
         hit: strikes.some((s) => s.hit),
         hitCount: strikes.filter((s) => s.hit).length,
@@ -805,6 +1309,7 @@ const Tactics = (() => {
       });
     }
     fire(a, b, w, response);
+    cw = modelOf(b).weapons.find((x) => x.id === counterId);
     if (response === "counter" && allowCounter && b.hp > 0 && canCounter(g, b, a, cw)) {
       b.counterCount = (b.counterCount ?? 0) + 1;
       b.counterTargetId = a.id;
@@ -819,10 +1324,32 @@ const Tactics = (() => {
   function wait(g, u) {
     if (g.winner !== null || u.team !== g.team || u.acted) throw Error("无法待机");
     u.acted = true;
+    u.actionPoints = 0;
     u.origin = null;
   }
   function end(g) {
     if (g.winner !== null) throw Error("战斗已经结束");
+    g.turnEffects = [];
+    for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.overdrive)) {
+      const active = u.overdrive,
+        m = modelOf(u);
+      const forced = !!u.brokenParts?.head;
+      if (!forced) {
+        u.hp = Math.max(0, u.hp - Math.round((m.hp * active.hpDrainPercent) / 100));
+        u.en = Math.max(0, u.en - (m.en * active.enDrainPercent) / 100);
+        active.remaining--;
+      }
+      const expired = forced || active.remaining <= 0;
+      if (expired) skills.endOverdrive(u);
+      g.turnEffects.push({
+        type: "overdrive",
+        unitId: u.id,
+        skillId: active.skillId,
+        expired,
+        hp: u.hp,
+        en: u.en,
+      });
+    }
     g.team = 1 - g.team;
     g.round++;
     // One round number is one team action phase; all counter budgets refresh on handoff.
@@ -831,19 +1358,55 @@ const Tactics = (() => {
       delete u.counterTargetId;
     }
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0)) {
+      const maintenance = modelOf(u).autoRepair;
+      if (maintenance && u.hp < modelOf(u).hp && u.en >= maintenance.enCost) {
+        u.en -= maintenance.enCost;
+        u.hp = Math.min(
+          modelOf(u).hp,
+          u.hp + Math.round((modelOf(u).hp * maintenance.hpPercent) / 100),
+        );
+      }
       u.acted = false;
+      u.actionPoints = actionBudget(u);
       u.moved = false;
       u.origin = null;
-      u.en = Math.min(modelOf(u).en, u.en + Math.round(15 * (u.performance ?? 1)));
     }
+    // Supply ticks once on the recipient team's turn, with no stacking from overlapping providers.
+    const providers = g.units.filter((u) => u.hp > 0 && u.team === g.team && modelOf(u).supplyAura);
+    for (const u of g.units.filter((u) => u.hp > 0 && u.team === g.team)) {
+      const aura = providers
+        .map((provider) => ({ provider, aura: modelOf(provider).supplyAura }))
+        .find(({ provider, aura }) => dist(u, provider) <= aura.range);
+      if (!aura) continue;
+      const m = modelOf(u);
+      u.hp = Math.min(m.hp, u.hp + Math.round((m.hp * aura.aura.hpPercent) / 100));
+      u.en = Math.min(m.en, u.en + (m.en * aura.aura.enPercent) / 100);
+    }
+    for (const u of g.units.filter((u) => u.team === g.team && u.snipeOrder)) {
+      const order = u.snipeOrder;
+      if (order.readyRound > g.round) continue;
+      delete u.snipeOrder;
+      const target = g.units.find((t) => t.id === order.target),
+        weapon = modelOf(u).weapons.find((w) => w.id === order.weapon);
+      if (target && weapon && canAttack(g, u, target, weapon)) {
+        u.readySnipe = { target: target.id, weapon: weapon.id };
+        u.plan = { ...u.readySnipe, charged: true };
+        u.acted = true;
+        u.actionPoints = 0;
+      }
+    }
+    const alive = [0, 1].map((team) => g.units.some((u) => u.team === team && u.hp > 0));
+    if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
   }
-  // 没有技能系统时，合法行动由移动和攻击构成；待机不阻止自动结束。
+  // 待机不阻止自动结束；仍可使用脱出等非攻击技能时保留行动机会。
   function hasActions(g) {
     if (g.winner !== null || (g.deployment && !g.deployment.every(Boolean))) return false;
     const enemies = g.units.filter((u) => u.team !== g.team && u.hp > 0);
     return g.units.some((u) => {
       if (u.team !== g.team || u.hp <= 0 || u.acted) return false;
-      if (!u.moved && reachable(g, u).size > 1) return true;
+      if (skills.of(u).some((skill) => skills.targets(g, u, skill.id).length)) return true;
+      if (!u.moved && (reachable(g, u).size > 1 || canRotate(g, u, 1) || canRotate(g, u, -1)))
+        return true;
       return modelOf(u).weapons.some((w) => enemies.some((e) => canAttack(g, u, e, w)));
     });
   }
@@ -868,8 +1431,24 @@ const Tactics = (() => {
     let cells = u.moved ? [{ x: u.x, y: u.y, cost: 0, path: [] }] : [...reachable(g, u).values()],
       enemies = g.units.filter((e) => e.team !== u.team && e.hp > 0),
       best = null;
+    if (models[u.model]?.ship && !u.moved)
+      for (const direction of [-1, 1])
+        if (canRotate(g, u, direction)) {
+          const pivot = u.rotationPivot || center(u);
+          cells.push({
+            ...anchorAt(u, pivot.x, pivot.y, u.angle + direction * 90),
+            cost: 1,
+            rotation: direction,
+            path: [],
+          });
+        }
     for (const c of cells) {
-      let virtual = { ...u, x: c.x, y: c.y },
+      let virtual = {
+          ...u,
+          x: c.x,
+          y: c.y,
+          ...(c.rotation ? { angle: u.angle + c.rotation * 90 } : {}),
+        },
         near = Math.min(...enemies.map((e) => dist(virtual, e)));
       let score = -near * 0.12 - c.cost * 0.025 + terrain[g.tiles[c.y][c.x]].cover * 0.006,
         target = null,
@@ -920,6 +1499,11 @@ const Tactics = (() => {
     generateUnitName,
     unitName,
     randomFormation,
+    unitSkills: skills.of,
+    canUseSkill: skills.canUse,
+    skillTargets: skills.targets,
+    useSkill: skills.use,
+    terrainCost,
     planFormation,
     aiDefaults,
     aiCountPercentages,
@@ -929,6 +1513,14 @@ const Tactics = (() => {
     aiBudget,
     modelOf,
     weaponStats,
+    dimensions,
+    cells,
+    center,
+    anchorAt,
+    occupies,
+    fits,
+    canRotate,
+    rotate,
     deploymentCells,
     deploy,
     confirmDeployment,
@@ -946,9 +1538,22 @@ const Tactics = (() => {
     canUndo,
     countersRemaining,
     canCounter,
+    eventWeapon,
+    random,
     canUse,
+    actionBudget,
+    counterActionBudget,
+    actionPoints,
+    actionCost,
+    attackQueue,
+    moduleCanBear,
     availableStrikes,
-    partNames: parts.names,
+    partNames: {
+      ...parts.names,
+      ...Object.fromEntries(
+        catalog.prefabs.flatMap((p) => (p.stats.modules || []).map((m) => [m.id, m.name])),
+      ),
+    },
     partPenalties: parts.penalties,
     brokenWeaponParts: parts.unavailable,
     partBreakChance: parts.chance,

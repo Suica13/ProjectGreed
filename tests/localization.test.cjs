@@ -114,6 +114,9 @@ test("catalog preflight rejects duplicate IDs without writing the real catalog",
 test("native introductions keep only the first content line and missing Japanese descriptions fall back to English", () => {
   const catalog = loadCatalog();
   const expected = {
+    SalamisClass: "地球联邦军舰队主力战舰",
+    RX_78_1: "联邦军试作型白刃战用MS,具备碾压扎古的性能",
+    FF_X7: "V计划产物之一,皆在保护MS驾驶员的安全",
     RGM_79: "联邦军主力泛用型MS",
     RGC_80: "擅长中距离支援的炮击型MS",
     RGM_79L: "拥有极高机动性的强袭型MS",
@@ -127,7 +130,7 @@ test("native introductions keep only the first content line and missing Japanese
     MS_06F2: "扎古II的后期改修型,加强了装甲与推进器",
     MS_09R: "大魔的宇宙战式样,性能差强人意",
   };
-  for (const prefab of catalog.prefabs) {
+  for (const prefab of catalog.prefabs.filter(p => Object.hasOwn(expected,p.id))) {
     assert.equal(prefab.description, expected[prefab.id]);
     assert.equal(prefab.localization.zh.description, prefab.description);
     assert.ok(prefab.localization.en.description.length > 0);

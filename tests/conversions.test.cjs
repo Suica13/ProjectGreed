@@ -1,0 +1,174 @@
+const test = require("node:test"),
+  assert = require("node:assert/strict");
+const G = require("../shared/rules.js"),
+  Parts = require("../shared/unit-parts.js");
+const entry = (id) => ({
+  unitId: id,
+  kitId: Object.values(G.models).find((m) => m.prefabId === id).kitId,
+});
+function pair(id) {
+  const g = G.create(false, 1, [[entry(id)], [entry("RGM_79")]], false, {
+    costLimit: 99999,
+    unitCostLimit: 10000,
+  });
+  g.tiles.forEach((r) => r.fill("plain"));
+  Object.assign(g.units[0], { x: 10, y: 10 });
+  Object.assign(g.units[1], { x: 15, y: 10 });
+  return { g, u: g.units[0], enemy: g.units[1] };
+}
+test("every ejection selects exactly one adjacent cell, rejecting self, diagonals and occupied cells", () => {
+  for (const id of ["RX_78_1", "RX_78_2", "RX_75", "RX_77_2", "FA_78_1_NA", "MTank"]) {
+    const { g, u } = pair(id === "FA_78_1_NA" ? "FA_78_1" : id);
+    if (id === "FA_78_1_NA") {
+      G.useSkill(g, u, "ExitUnit", u.x, u.y);
+      u.acted = u.moved = false;
+    }
+    const skill = G.unitSkills(u).find((s) => s.type === "escape");
+    assert.deepEqual([skill.minRange, skill.range], [1, 1]);
+    const targets = G.skillTargets(g, u, skill.id);
+    assert.equal(targets.length, 4, id);
+    assert.ok(targets.every((c) => G.dist(u, c) === 1));
+    for (const c of [
+      { x: u.x, y: u.y },
+      { x: u.x + 1, y: u.y + 1 },
+      { x: u.x + 2, y: u.y },
+    ])
+      assert.throws(() => G.useSkill(g, u, skill.id, c.x, c.y));
+  }
+});
+test("Magella separates a ground chassis from a fully restored flying top at the selected adjacent cell", () => {
+  const { g, u } = pair("MTank"),
+    oldId = u.id;
+  u.hp = 1;
+  u.en = 0;
+  u.customName = "Tank";
+  u.counterCount = 1;
+  const e = G.useSkill(g, u, "ExitUnit", 11, 10),
+    top = g.units.find((x) => x.id === e.resultId);
+  assert.equal(u.id, oldId);
+  assert.equal(u.model, "MTank_Chassis__standard");
+  assert.equal(top.model, "MTank_Top__standard");
+  assert.deepEqual([top.x, top.y], [11, 10]);
+  assert.deepEqual([u.x, u.y], [10, 10]);
+  for (const x of [u, top]) {
+    assert.equal(x.hp, G.modelOf(x).hp);
+    assert.equal(x.en, G.modelOf(x).en);
+    assert.equal(x.ownerSeat, 0);
+    assert.equal(x.acted, true);
+    assert.equal(x.counterCount, 1);
+  }
+  assert.equal(G.modelOf(top).movementType, "air");
+  assert.equal(G.modelOf(u).movementType, "ground");
+});
+test("NT-1 FA and FA-78-1 purge in place, add native 35 percent resources and retain damaged parts and identity", () => {
+  for (const [id, target] of [
+    ["RX_78NT_1_FA", "RX_78NT_1"],
+    ["FA_78_1", "FA_78_1_NA"],
+  ]) {
+    const { g, u } = pair(id),
+      old = G.modelOf(u),
+      count = g.units.length;
+    u.hp = old.hp * 0.2;
+    u.en = old.en * 0.1;
+    u.brokenParts = { leftArm: true };
+    u.customName = "Custom";
+    u.counterCount = 1;
+    const uid = u.id;
+    assert.equal(G.unitSkills(u)[0].type, "armor_purge");
+    G.useSkill(g, u, "ExitUnit", u.x, u.y);
+    const next = G.modelOf(u);
+    assert.equal(next.prefabId, target);
+    assert.equal(u.hp, Math.round(next.hp * 0.55));
+    assert.ok(Math.abs(u.en - next.en * 0.45) < 0.00001);
+    assert.equal(u.id, uid);
+    assert.equal(u.customName, "Custom");
+    assert.deepEqual(u.brokenParts, { leftArm: true });
+    assert.equal(u.counterCount, 1);
+    assert.equal(u.acted, true);
+    assert.equal(g.units.length, count);
+  }
+});
+test("FA-78-1's purged body can eject next turn and transformations cannot heal or reset spent actions", () => {
+  const { g, u } = pair("FA_78_1");
+  G.useSkill(g, u, "ExitUnit", 10, 10);
+  assert.equal(G.canUseSkill(g, u, "ExitUnit"), false);
+  G.end(g);
+  G.end(g);
+  const e = G.useSkill(g, u, "ExitUnit", 11, 10),
+    craft = g.units.find((x) => x.id === e.resultId);
+  assert.equal(craft.model, "FF_X7__standard");
+  assert.equal(craft.hp, G.modelOf(craft).hp);
+  const world = pair("YMT_05"),
+    unit = world.u,
+    id = unit.id;
+  unit.hp = G.modelOf(unit).hp * 0.3;
+  unit.en = G.modelOf(unit).en * 0.4;
+  G.useSkill(world.g, unit, "Transform", 10, 10);
+  assert.equal(G.modelOf(unit).prefabId, "YMT_05_ModeB");
+  assert.equal(unit.id, id);
+  assert.equal(unit.acted, true);
+  assert.equal(G.canUseSkill(world.g, unit, "Transform"), false);
+  assert.ok(Math.abs(unit.hp / G.modelOf(unit).hp - 0.3) < 0.0001);
+  assert.ok(Math.abs(unit.en / G.modelOf(unit).en - 0.4) < 0.0001);
+  G.end(world.g);
+  G.end(world.g);
+  G.useSkill(world.g, unit, "Transform", 10, 10);
+  assert.equal(G.modelOf(unit).prefabId, "YMT_05");
+});
+test("head destruction immediately disables EXAM/HADES, retains damage, stops form weapons and prohibits reactivation", () => {
+  const bases = G.catalog.prefabs.filter(
+    (p) => !p.formOnly && p.skills?.some((s) => s.type === "overdrive"),
+  );
+  const original = Parts.applyHit;
+  try {
+    for (const base of bases) {
+      const { g, u, enemy } = pair(base.id),
+        skill = G.unitSkills(u).find((s) => s.type === "overdrive"),
+        normal = u.model;
+      G.useSkill(g, u, skill.id, u.x, u.y);
+      const boosted = u.model,
+        en = u.en;
+      assert.notEqual(boosted, normal);
+      g.team = enemy.team;
+      Object.assign(enemy, { x: 12, y: 10, acted: false });
+      u.shield = 0;
+      Parts.applyHit = (game, target) => {
+        if (target.brokenParts?.head) return null;
+        target.brokenParts = { ...target.brokenParts, head: true };
+        return "head";
+      };
+      const w = { ...G.modelOf(enemy).weapons[0], hit: 10000, damageComponents: { shell: 1000 } },
+        hp = u.hp;
+      const events = G.fight(g, enemy, u, w, "defend");
+      assert.equal(u.model, normal, base.id);
+      assert.equal(u.overdrive, undefined);
+      assert.ok(u.hp < hp);
+      assert.equal(u.en, en);
+      assert.equal(u.brokenParts.head, true);
+      assert.ok(events[0].strikes.some((s) => s.overdriveEnded && s.modelAfter === normal));
+      assert.equal(events[0].targetModelAfter, normal);
+      g.team = u.team;
+      u.acted = false;
+      assert.equal(G.canUseSkill(g, u, skill.id), false);
+      assert.throws(() => G.useSkill(g, u, skill.id, u.x, u.y));
+    }
+  } finally {
+    Parts.applyHit = original;
+  }
+});
+
+test("head-broken active states are forcibly normalized at handoff without charging another upkeep", () => {
+  const { g, u } = pair("RX_79_BD_1"),
+    base = u.model,
+    s = G.unitSkills(u).find((s) => s.type === "overdrive");
+  G.useSkill(g, u, s.id, u.x, u.y);
+  u.brokenParts = { head: true };
+  const hp = u.hp,
+    en = u.en;
+  G.end(g);
+  assert.equal(u.model, base);
+  assert.equal(u.overdrive, undefined);
+  assert.equal(u.hp, hp);
+  assert.equal(u.en, en);
+  assert.equal(g.turnEffects[0].expired, true);
+});

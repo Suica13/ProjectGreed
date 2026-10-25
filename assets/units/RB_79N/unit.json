@@ -1,0 +1,678 @@
+{
+  "schemaVersion": 2,
+  "id": "RB_79N",
+  "code": "RB-79N",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RB_79N/RB_79N.ini",
+  "materials": {
+    "textures": {
+      "RB_79N_Body_1.png": "textures/RB_79N_Body_1.png",
+      "RB_79N_ArmL_1.png": "textures/RB_79N_ArmL_1.png",
+      "RB_79N_ArmR_1.png": "textures/RB_79N_ArmR_1.png",
+      "RB_79N_Cannon.png": "textures/RB_79N_Cannon.png",
+      "RB_79N.png": "textures/RB_79N.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "RB_79N.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "ArmL",
+      "texture": "RB_79N_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "scale": 0.35,
+      "offset": {
+        "x": 7.5,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "RB_79N_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "scale": 0.35,
+      "offset": {
+        "x": -7.5,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.0,
+      "offset": {
+        "x": -1.0,
+        "y": -20.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 1.0,
+      "offset": {
+        "x": -1.0,
+        "y": -15.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "RB_79N_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.35,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_Turret",
+      "texture": "RB_79N_Cannon.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.35,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/RB_79N__EnterPilot.json",
+    "QuitPilot": "../../animations/RB_79N__QuitPilot.json",
+    "NoPilotIdle": "../../animations/RB_79N__NoPilotIdle.json",
+    "Common_Idle": "../../animations/RB_79N__Common_Idle.json",
+    "Common_Dodge_L": "../../animations/RB_79N__Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/RB_79N__Common_Dodge_R.json",
+    "OnMoving": "../../animations/RB_79N__OnMoving.json",
+    "OnMovingReversing": "../../animations/RB_79N__OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/RB_79N__OnMovingWalk.json",
+    "Guard": "../../animations/RB_79N__Guard.json",
+    "Common_Dead": "../../animations/RB_79N__Common_Dead.json",
+    "Common_Stun": "../../animations/RB_79N__Common_Stun.json",
+    "Common_Daze": "../../animations/RB_79N__Common_Daze.json",
+    "Common_Stagger": "../../animations/RB_79N__Common_Stagger.json",
+    "Common_Cannon_Shoot_A": "../../animations/RB_79N__Common_Cannon_Shoot_A.json",
+    "Common_Melee_B": "../../animations/RB_79N__Common_Melee_B.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 6000.0,
+    "en": 450.0,
+    "move": 5,
+    "mobility": 90.0,
+    "cost": 100,
+    "counterLimit": 1,
+    "accuracy": 110.0,
+    "partStructuralStrength": 110.0,
+    "partsBreakable": false,
+    "movementType": "naval",
+    "adaptability": {
+      "ground": 100,
+      "space": 0
+    },
+    "ship": false,
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 25.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 50.0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 7.5,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 6000.0,
+    "walkSpeed": 0.5,
+    "boostSpeed": 1.0,
+    "turnSpeed": 0.75,
+    "reaction": 90.0,
+    "shooting": 100.0,
+    "melee": 125.0,
+    "nativeTags": [
+      "RB_79N",
+      "Unit",
+      "MP",
+      "EFSF",
+      "0079",
+      "UC",
+      "NavyUnit"
+    ],
+    "nativeSkills": [
+      "Sonar"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 110.0,
+    "unitLevel": 350.0,
+    "tacticalMoveBeforeBonus": 4
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost"
+  },
+  "name": "鱼眼",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "鱼眼",
+      "description": "进行水中用改修的铁球,配备磁轨炮与巨型钳"
+    },
+    "en": {
+      "name": "Fisheye",
+      "description": "A Ball unit modified for underwater use, equipped with a railgun and giant pincers"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "EF_RB_79N_Cannon": {
+      "name": "加农炮",
+      "type": "shell",
+      "min": 3,
+      "max": 5,
+      "hit": 75.0,
+      "en": 40.0,
+      "sourceName": "EF_RB_79N_Cannon",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 4000.0,
+      "damageComponents": {
+        "shell": 2000.0,
+        "shellAP": 2000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.75,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_RB_79N_Cannon.gw",
+        "barrels": [
+          {
+            "id": "EF_RB_79N_Cannon",
+            "x": 0.0,
+            "y": 16.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/RailShell_1.png",
+        "scale": 0.85,
+        "speed": 75.0,
+        "forwardOffset": -2.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_2_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 0.0,
+              "y": 16.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/RailGun_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.5,
+        "water": 2.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "Railgun_Fire_1"
+      ],
+      "category": "cannon",
+      "nativePayload": {
+        "ShellAPDamage": 2000.0,
+        "ShellDamage": 2000.0,
+        "DpDamage": 200.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 0.75,
+        "CockpitBreakModifier": 1.25,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 2.0,
+        "AntiAir": 0.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 0.5,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 75.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 30.0,
+        "ProjectileLife": 30.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_RB_79N_Cannon.gw",
+        "barrel": "EF_RB_79N_Cannon",
+        "entry": "hiddenAction_EF_RB_79N_Cannon_Fire",
+        "cooldown": 4.0,
+        "duration": 0.6499999999999999,
+        "firstShot": 0.35,
+        "lastShot": 0.35,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 40.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 40.0,
+        "actions": [
+          "hiddenAction_EF_RB_79N_Cannon_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_EF_RB_79N_Cannon_SetWeaponIndex",
+          "hiddenAction_EF_RB_79N_Cannon_B1_Step_1",
+          "hiddenAction_EF_RB_79N_Cannon_Fire_Step_1",
+          "hiddenAction_EF_RB_79N_Cannon_Fire_Step_2",
+          "hiddenAction_EF_RB_79N_Cannon_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 3,
+      "displayIndex": 0
+    },
+    "Common_Cqb_B": {
+      "name": "近身格斗",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 125.0,
+      "en": 0,
+      "sourceName": "Common_Cqb_B",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_B",
+      "damagePerShot": 4000.0,
+      "damageComponents": {
+        "melee": 2000.0,
+        "meleeShell": 2000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 1,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Melee_B",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.4
+          },
+          {
+            "delay": 1.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_B.gw",
+        "barrels": [
+          {
+            "id": "Common_Cqb_B",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/Fist_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "category": "melee",
+      "nativePayload": {
+        "CqbDamage": 2000.0,
+        "CqbShellDamage": 2000.0,
+        "DpDamage": 750.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_B.gw",
+        "barrel": "Common_Cqb_B",
+        "entry": "hiddenAction_Common_Cqb_B_Fire",
+        "cooldown": 3.0,
+        "duration": 1.4,
+        "firstShot": 0.4,
+        "lastShot": 0.4,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_Common_Cqb_B_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_Common_Cqb_B_SetWeaponIndex",
+          "hiddenAction_Common_Cqb_B_Step_1",
+          "hiddenAction_Common_Cqb_B_Fire_Step_1",
+          "hiddenAction_Common_Cqb_B_Fire_Step_2",
+          "hiddenAction_Common_Cqb_B_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 2,
+      "displayIndex": 1
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "海军：只能在水域移动和部署",
+      "status": "implemented"
+    },
+    {
+      "id": "Sonar",
+      "source": "Template/Unit/Skill/Sonar.gw",
+      "status": "adapted",
+      "name": "声呐"
+    },
+    {
+      "id": "SonarScan",
+      "name": "SonarScan",
+      "status": "adapted"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "EF_RB_79N_Cannon",
+        "Common_Cqb_B"
+      ]
+    }
+  ],
+  "description": "进行水中用改修的铁球,配备磁轨炮与巨型钳",
+  "skills": [
+    {
+      "id": "SonarScan",
+      "type": "recon",
+      "name": "声呐搜索",
+      "range": 6,
+      "maxUses": 99,
+      "consumeAction": true,
+      "enCost": 15,
+      "waterOnly": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.3
+      }
+    }
+  ],
+  "costBalance": {
+    "nativeLevel": 350.0,
+    "levelMultiplier": 0.25,
+    "published": 100
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "nativeCombatRevision": 1
+}

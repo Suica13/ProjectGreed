@@ -50,7 +50,7 @@ test("responses execute in planned order, independently of local playback, and r
   assert.equal(room.combats.length, 0);
   const battle = planner.respond(room, first.id, "defend");
   assert.ok(battle.events.length);
-  assert.equal(a.en, 87.5);
+  assert.equal(a.en, G.modelOf(a).en - weapon.en);
   assert.equal(room.combats.length, 1);
   assert.throws(() => planner.respond(room, first.id, "defend"));
   const second = planner.next(room);
@@ -68,11 +68,11 @@ test("dead or invalid targets are skipped without charging resources or substitu
   b.hp = 0;
   const next = planner.next(room);
   assert.equal(next.attacker, ally.id);
-  assert.equal(a.en, 100);
+  assert.equal(a.en, G.modelOf(a).en);
   assert.equal(a.plan, undefined);
   other.x = 20;
   assert.throws(() => planner.respond(room, next.id, "defend"));
-  assert.equal(ally.en, 100);
+  assert.equal(ally.en, G.modelOf(ally).en);
   assert.equal(ally.acted, true);
 });
 
@@ -97,8 +97,8 @@ test("one response covers focused fire and explicitly selects which attacker is 
   assert.throws(() => planner.choose(room, pending.id, "counter", weapon.id, other.id), /反击目标/);
   planner.choose(room, pending.id, "counter", weapon.id, ally.id);
   assert.equal(room.combats.length, 0);
-  assert.equal(a.en, 100);
-  assert.equal(b.en, 100);
+  assert.equal(a.en, G.modelOf(a).en);
+  assert.equal(b.en, G.modelOf(b).en);
   assert.equal(b.hp, 100000);
   assert.equal(room.game.seed, seed);
   assert.equal(planner.next(room), null);
@@ -125,7 +125,7 @@ test("a target destroyed by an earlier result cancels later planned attacks with
   const battles = planner.resolve(room);
   assert.equal(b.hp, 0);
   assert.equal(battles.length, 1);
-  assert.equal(ally.en, 100);
+  assert.equal(ally.en, G.modelOf(ally).en);
   assert.equal(ally.plan, undefined);
 });
 
@@ -162,6 +162,7 @@ test("planned weapons persist in snapshots and cancellation; built-in weapons pr
   planner.plan(room, a, b, melee, 0);
   assert.equal(a.heldWeapon, melee.id);
   assert.equal(JSON.parse(JSON.stringify(room.game)).units[0].heldWeapon, melee.id);
+  b.x = a.x + builtIn.min;
   planner.plan(room, a, b, builtIn, 0);
   assert.equal(a.heldWeapon, melee.id, "head vulcans do not replace the held weapon");
   planner.cancel(room, a);

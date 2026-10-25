@@ -7,6 +7,11 @@ const WeaponSequence = (() => {
       partBreakModifiers = [],
       requiredParts = [],
       muzzleIndices = [],
+      moduleIds = [],
+      muzzleShotIndices = [],
+      shotProperties = [],
+      muzzleShotCounts = new Map(),
+      displayStates = [],
       animations = [
         {
           at: 0,
@@ -43,19 +48,32 @@ const WeaponSequence = (() => {
       for (let i = 0; i < repeat; i++) {
         time = Math.round((time + step.delay) * 1000000) / 1000000;
         if (step.animation) animations.push({ at: time, clip: step.animation });
+        if (step.weaponDisplayIndex !== undefined) {
+          if (!Number.isInteger(step.weaponDisplayIndex)) throw Error("无效的武器显示状态");
+          displayStates.push({ at: time, index: step.weaponDisplayIndex });
+        }
         for (let n = 0; n < count; n++) {
           shots.push(time);
+          shotProperties.push({
+            ...(step.channelId ? { channelId: step.channelId } : {}),
+            ...(step.damageComponents ? { damageComponents: step.damageComponents } : {}),
+            ...(step.accuracy !== undefined ? { accuracy: step.accuracy } : {}),
+          });
           damageMultipliers.push(damageMultiplier);
           partBreakModifiers.push(partBreakModifier);
           requiredParts.push(step.requiredParts || []);
-          muzzleIndices.push(step.muzzleIndex ?? 0);
+          const mountIndex = step.muzzleIndex ?? 0;
+          muzzleShotIndices.push(muzzleShotCounts.get(mountIndex) || 0);
+          muzzleShotCounts.set(mountIndex, (muzzleShotCounts.get(mountIndex) || 0) + 1);
+          muzzleIndices.push(mountIndex);
+          moduleIds.push(step.moduleId);
         }
       }
     }
     const hitsPerShot = weapon.hitsPerShot ?? 1;
     if (
       !shots.length ||
-      shots.length > 128 ||
+      shots.length > 512 ||
       time > 30 ||
       !Number.isFinite(weapon.damagePerShot) ||
       weapon.damagePerShot <= 0 ||
@@ -68,23 +86,34 @@ const WeaponSequence = (() => {
       ...weapon,
       shotCount: shots.length,
       damage:
-        weapon.damagePerShot *
-        damageMultipliers.reduce((sum, value) => sum + value, 0) *
-        hitsPerShot,
+        damageMultipliers.reduce(
+          (sum, value, i) =>
+            sum +
+            Object.values(shotProperties[i].damageComponents || weapon.damageComponents).reduce(
+              (n, v) => n + v,
+              0,
+            ) *
+              value,
+          0,
+        ) * hitsPerShot,
       attack: {
         ...weapon.attack,
         shots,
         muzzleIndices,
+        muzzleShotIndices,
         animations,
+        displayStates,
         duration: time,
         strikes: shots
           .flatMap((at, shotIndex) =>
             Array.from({ length: hitsPerShot }, (_, hitIndex) => ({
               shotIndex,
               hitIndex,
+              ...shotProperties[shotIndex],
               damageMultiplier: damageMultipliers[shotIndex],
               partBreakModifier: partBreakModifiers[shotIndex],
               requiredParts: requiredParts[shotIndex],
+              ...(moduleIds[shotIndex] ? { moduleId: moduleIds[shotIndex] } : {}),
               at:
                 Math.round((at + hitIndex * (weapon.attack.hitInterval || 0)) * 1000000) / 1000000,
             })),
@@ -99,7 +128,16 @@ const WeaponSequence = (() => {
       if (event.at > time) break;
       current = event;
     }
-    return { clip: current.clip, time: current.clip ? Math.max(0, time - current.at) : 0 };
+    let weaponDisplayIndex = null;
+    for (const state of weapon.attack.displayStates || []) {
+      if (state.at > time) break;
+      weaponDisplayIndex = state.index;
+    }
+    return {
+      clip: current.clip,
+      time: current.clip ? Math.max(0, time - current.at) : 0,
+      weaponDisplayIndex,
+    };
   }
   return { compile, pose };
 })();

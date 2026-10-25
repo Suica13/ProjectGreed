@@ -10,12 +10,15 @@ test("OVERCOST removes from the end of the roster and sanitizes untrusted fields
     entry("MS_06F", "machine_gun"),
   ];
   const before = JSON.stringify(army),
-    plan = G.planFormation(army, 1000);
+    plan = G.planFormation(army, G.models.MS_06F__machine_gun.cost);
   assert.deepEqual(plan.disabled, [1, 2, 3]);
-  assert.equal(plan.deployCost, 200);
-  assert.equal(plan.totalCost, 2100);
+  assert.equal(plan.deployCost, 100);
+  assert.equal(
+    plan.totalCost,
+    army.reduce((n, e) => n + G.models[e.unitId + "__" + e.kitId].cost, 0),
+  );
   assert.equal(JSON.stringify(army), before);
-  const tied = G.planFormation(Array(3).fill(entry("MS_06F", "machine_gun")), 400);
+  const tied = G.planFormation(Array(3).fill(entry("MS_06F", "machine_gun")), 200);
   assert.deepEqual(tied.disabled, [2]);
   assert.deepEqual(tied.indices, [0, 1]);
   assert.deepEqual(G.planFormation([entry("MS_14A", "beam_rifle")], 200).disabled, [0]);
@@ -75,7 +78,7 @@ test("AI difficulty scales instance performance once without changing art, costs
     assert.equal(m.defenses.shell.flat, base.defenses.shell.flat * performance);
     assert.equal(m.defenses.shell.percent, base.defenses.shell.percent * performance);
     assert.equal(w.damage, base.weapons[0].damage * performance);
-    assert.equal(w.hit, Math.min(100, base.weapons[0].hit * performance));
+    assert.equal(w.hit, base.weapons[0].hit * performance);
     assert.equal(w.en, base.weapons[0].en);
     assert.equal(m.cost, base.cost);
     assert.equal(w.max, base.weapons[0].max);
@@ -96,7 +99,7 @@ test("AI difficulty scales instance performance once without changing art, costs
   );
   assert.deepEqual(
     g.units.map((u) => u.hp),
-    [12375, 20625],
+    [15750, 26250],
   );
   assert.throws(() =>
     G.create(
@@ -115,7 +118,7 @@ test("Gelgoog and Ground Gundam keep native assets, shield, eyes, fixed vulcan a
     assert.ok(p.stats.hp >= 23000);
     for (const kit of p.weaponKits) {
       const m = G.models[id + "__" + kit.id];
-      assert.ok(p.stats.cost >= 750 && p.stats.cost <= 850);
+      assert.ok(p.stats.cost === Math.round(p.sourceStats.unitLevel / 100) * 25);
       assert.equal(m.cost, p.stats.cost + kit.cost);
       assert.ok(m.shield.hp > 0);
       assert.ok(m.weapons.some((w) => w.type === "melee"));

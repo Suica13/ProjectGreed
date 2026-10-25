@@ -58,5 +58,20 @@
     "anchor": 500,
     "min": 475,
     "max": 550
+  },
+  "SalamisClass": {
+    "anchor": 1250,
+    "min": 1125,
+    "max": 1500
+  },
+  "RX_78_1": {
+    "anchor": 1000,
+    "min": 950,
+    "max": 1150
+  },
+  "FF_X7": {
+    "anchor": 300,
+    "min": 250,
+    "max": 400
   }
 }

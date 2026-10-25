@@ -3,6 +3,7 @@ const PlanningUI = (() => {
   const moves = new Map();
   function reset() {
     moves.clear();
+    lockStarts.clear();
   }
   function move(event) {
     const unit = getUnit(event.unitId);
@@ -10,7 +11,6 @@ const PlanningUI = (() => {
     const start = performance.now();
     if (Rules.modelOf(unit).presentation.movement === "boost")
       WeaponAudio.play(ART.presentation.moveSound);
-    MovementEffects.start(unit, event.from, event.path[0], start);
     moves.set(unit.id, {
       id: unit.id,
       from: event.from,
@@ -37,8 +37,8 @@ const PlanningUI = (() => {
     const focusTarget = responding ? pending?.target : null;
     function draw(unit, target, counter = false, candidate = false) {
       if (!unit || !target || unit.hp <= 0 || target.hp <= 0) return false;
-      const from = mapPosition(unit.x, unit.y),
-        to = mapPosition(target.x, target.y);
+      const from = mapPosition(Rules.center(unit).x, Rules.center(unit).y),
+        to = mapPosition(Rules.center(target).x, Rules.center(target).y);
       const angle = Math.atan2(to.y - from.y, to.x - from.x),
         gap = mapGeo.tile * 0.32;
       const offset = candidate ? 10 : counter ? 6 : 0;
@@ -79,12 +79,17 @@ const PlanningUI = (() => {
     let count = 0;
     // 先画淡化的其他交战，最后画当前来袭箭头，避免交叉处被覆盖。
     const plans = game.units.filter(
-      (unit) => unit.plan && (responding || viewerTeam === null || unit.team === viewerTeam),
+      (unit) =>
+        (unit.plan || unit.snipeOrder) &&
+        (responding || viewerTeam === null || unit.team === viewerTeam),
     );
     plans.sort(
-      (a, b) => Number(a.plan.target === focusTarget) - Number(b.plan.target === focusTarget),
+      (a, b) =>
+        Number((a.plan || a.snipeOrder).target === focusTarget) -
+        Number((b.plan || b.snipeOrder).target === focusTarget),
     );
-    for (const unit of plans) if (draw(unit, getUnit(unit.plan.target))) count++;
+    for (const unit of plans)
+      if (draw(unit, getUnit((unit.plan || unit.snipeOrder).target))) count++;
     let candidateCount = 0;
     for (const entry of legalCounterTargets())
       if (draw(getUnit(pending.target), getUnit(entry.attacker), true, true)) candidateCount++;
@@ -101,6 +106,7 @@ const PlanningUI = (() => {
     canvas.dataset.counterPlanCount = counterCount;
   }
   function facing(unit, fallback = unit.angle) {
+    if (Rules.modelOf(unit).ship) return fallback;
     let targetId = (Net.snapshot?.counterPlans || []).find(
       (plan) => plan.attacker === unit.id,
     )?.target;
@@ -111,5 +117,193 @@ const PlanningUI = (() => {
       ? (Math.atan2(target.x - unit.x, -(target.y - unit.y)) * 180) / Math.PI
       : fallback;
   }
-  return { reset, move, motion, arrows, facing };
+  // White-only frames while charging; the native final red frame is reserved for a valid charged shot.
+  const lockStarts = new Map();
+  function sniperLocks(ctx, now) {
+    const effect = ART.effects.SniperLock;
+    if (!effect) return;
+    const markers = new Map();
+    if (!(battleView?.mapBattle || Net.snapshot?.phase === "playback")) {
+      for (const unit of game.units) {
+        const order = unit.snipeOrder || unit.plan;
+        const weapon = order && Rules.modelOf(unit).weapons.find((w) => w.id === order.weapon);
+        const target = order && getUnit(order.target);
+        if (weapon?.special?.type === "snipe" && unit.hp > 0 && target?.hp > 0)
+          markers.set(unit.id, { target, red: !!order.charged });
+      }
+    } else {
+      for (const frame of MapCombat.frames.length
+        ? MapCombat.frames
+        : [MapCombat.frame].filter(Boolean))
+        if (frame.weapon.special?.type === "snipe" && frame.time <= frame.plan.shots[0]?.impactAt)
+          markers.set(frame.event.from, { target: frame.target.unit, red: true });
+    }
+    const result = [];
+    for (const [id, { target, red }] of markers) {
+      if (!lockStarts.has(id)) lockStarts.set(id, now);
+      const index = red ? 19 : Math.min(2, Math.floor(Math.max(0, now - lockStarts.get(id)) / 100));
+      const pos = mapPosition(Rules.center(target).x, Rules.center(target).y);
+      SpriteEffects.draw(
+        ctx,
+        "SniperLock",
+        pos.x,
+        pos.y,
+        mapGeo.tile / 64,
+        (index + 0.01) / effect.fps,
+        -Math.PI / 2,
+      );
+      result.push({ attacker: id, target: target.id, frame: index, red });
+    }
+    for (const id of lockStarts.keys()) if (!markers.has(id)) lockStarts.delete(id);
+    return result;
+  }
+  return { reset, move, motion, arrows, facing, sniperLocks };
+})();
+
+// Target-first attack editor. Draft choices never change the authoritative unit or its resources.
+const AttackControls = (() => {
+  let current = null;
+  function reset() {
+    current = null;
+  }
+  function draft(unit) {
+    if (
+      current &&
+      (current.round !== game.round || current.session !== session || current.unitId !== unit?.id)
+    )
+      current = null;
+    return current;
+  }
+  function ordinary(unit) {
+    return Rules.modelOf(unit).weapons.filter((w) => w.slot !== "skill");
+  }
+  function canTarget(unit, target) {
+    return ordinary(unit).some(
+      (w) =>
+        Rules.canAttack(game, unit, target, w) &&
+        Rules.actionCost(w) <= Rules.actionPoints(unit) + (unit.plan?.actionCost ?? 0),
+    );
+  }
+  function choose(unit, target, existing = false) {
+    if (!canTarget(unit, target)) return false;
+    current = {
+      unitId: unit.id,
+      targetId: target.id,
+      weapons: existing ? [...(unit.plan.weapons || [unit.plan.weapon])] : [],
+      round: game.round,
+      session,
+    };
+    mode = "attack-weapons";
+    weaponId = null;
+    Rules.faceTarget(unit, target);
+    GameAudio.play("lockonSound");
+    update();
+    return true;
+  }
+  function render(panel, unit, canCommand) {
+    const plan = draft(unit),
+      target = plan && getUnit(plan.targetId);
+    if (!target || target.hp <= 0) {
+      if (plan) reset();
+      panel.append(element("p", "helper", "先选择攻击目标，再按顺序加入武器。"));
+      for (const enemy of game.units.filter((t) => canTarget(unit, t))) {
+        const b = element(
+          "button",
+          "target-button",
+          unitName(enemy) + " · " + Rules.dist(unit, enemy) + "格",
+        );
+        b.dataset.attackTarget = enemy.id;
+        b.disabled = !canCommand;
+        b.onclick = () => choose(unit, enemy);
+        panel.append(b);
+      }
+      if (unit.plan)
+        panel.append(
+          element(
+            "p",
+            "helper",
+            "已计划：" +
+              (unit.plan.weapons || [unit.plan.weapon])
+                .map((id) => getWeapon(unit, id)?.name || id)
+                .join(" → "),
+          ),
+        );
+      return;
+    }
+    const queue = plan.weapons.map((id) => getWeapon(unit, id));
+    const cost = queue.reduce((n, w) => n + Rules.actionCost(w), 0),
+      energy = queue.reduce((n, w) => n + Rules.weaponStats(w, unit).en, 0);
+    const budget = Rules.actionPoints(unit) + (unit.plan?.actionCost ?? 0);
+    panel.append(element("strong", "", "目标：" + unitName(target)));
+    const summary = element(
+      "div",
+      "rule-box",
+      `行动点 ${budget - cost}/${Rules.actionBudget(unit)} · 序列消耗 ${cost} AP · EN ${energy}/${unit.en}`,
+    );
+    summary.id = "attackQueueBudget";
+    panel.append(summary);
+    queue.forEach((w, index) => {
+      const row = element("div", "actions");
+      row.append(element("span", "", `${index + 1}. ${w.name} · ${Rules.actionCost(w)} AP`));
+      const remove = element("button", "", "移除");
+      remove.dataset.removeQueueWeapon = String(index);
+      remove.disabled = !canCommand;
+      remove.onclick = () => {
+        plan.weapons.splice(index, 1);
+        update();
+      };
+      row.append(remove);
+      panel.append(row);
+    });
+    const list = element("div", "weapon-list");
+    for (const weapon of ordinary(unit)) {
+      const b = element("button", "weapon");
+      b.dataset.queueWeapon = weapon.id;
+      b.innerHTML = htmlWeapon(weapon, unit);
+      b.setAttribute("aria-label", "加入序列 " + weapon.name);
+      try {
+        Rules.attackQueue(game, unit, target, [...queue, weapon]);
+        b.disabled = !canCommand;
+      } catch {
+        b.disabled = true;
+      }
+      b.onclick = () => {
+        plan.weapons.push(weapon.id);
+        GameAudio.play("selectWeaponSound");
+        update();
+      };
+      list.append(b);
+    }
+    panel.append(list);
+    const confirm = element("button", "", "确认攻击计划");
+    confirm.id = "confirmAttackQueue";
+    confirm.disabled = !canCommand || !queue.length;
+    confirm.onclick = () => {
+      try {
+        Rules.attackQueue(game, unit, target, queue);
+        if (Net.active)
+          Net.request("attack", {
+            unitId: unit.id,
+            targetId: target.id,
+            weaponId: queue[0].id,
+            weaponIds: plan.weapons,
+          });
+        else beginAttack(unit, target, queue[0], queue);
+        reset();
+        mode = "select";
+        update();
+      } catch (e) {
+        note(e.message);
+      }
+    };
+    const change = element("button", "", "更换目标");
+    change.disabled = !canCommand;
+    change.onclick = () => {
+      reset();
+      mode = "select";
+      update();
+    };
+    panel.append(confirm, change);
+  }
+  return { reset, draft, canTarget, choose, render };
 })();

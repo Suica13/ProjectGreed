@@ -1,0 +1,1074 @@
+{
+  "schemaVersion": 2,
+  "id": "GallopClass",
+  "code": "GallopClass",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/GallopClass/GallopClass.ini",
+  "materials": {
+    "textures": {
+      "GallopClass.png": "textures/GallopClass.png",
+      "GallopClass_Body_1.png": "textures/GallopClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "HoverMove_1.png": "textures/HoverMove_1.png",
+      "Ring150_Action.png": "textures/Ring150_Action.png",
+      "GallopClass_Turret_CN_1.png": "textures/GallopClass_Turret_CN_1.png",
+      "GallopClass_Turret_AA_1.png": "textures/GallopClass_Turret_AA_1.png"
+    },
+    "icon": "GallopClass.png"
+  },
+  "skeleton": {
+    "Turret_GallopClass_Turret_Cannon_M1": {
+      "x": 0.0,
+      "y": -13.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_GallopClass_Turret_AA_L1": {
+      "x": -18.0,
+      "y": 40.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_GallopClass_Turret_AA_R1": {
+      "x": 18.0,
+      "y": 40.0,
+      "endDirOffset": 15.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Hover",
+      "texture": "HoverMove_1.png",
+      "bone": "Body",
+      "order": 0.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 15.0
+      },
+      "alpha": 0.5,
+      "frames": 6,
+      "frameFps": 10,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "onLand": true
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "GallopClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "GallopClass_Turret_AA_L1",
+      "bone": "Turret_GallopClass_Turret_AA_L1",
+      "moduleId": "GallopClass_Turret_AA_L1",
+      "texture": "GallopClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GallopClass_Turret_AA_R1",
+      "bone": "Turret_GallopClass_Turret_AA_R1",
+      "moduleId": "GallopClass_Turret_AA_R1",
+      "texture": "GallopClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GallopClass_Turret_Cannon_M1",
+      "bone": "Turret_GallopClass_Turret_Cannon_M1",
+      "moduleId": "GallopClass_Turret_Cannon_M1",
+      "texture": "GallopClass_Turret_CN_1.png",
+      "order": 5.005,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 45000.0,
+    "en": 6000.0,
+    "move": 4,
+    "mobility": 50.0,
+    "cost": 500,
+    "counterLimit": 1,
+    "accuracy": 115.5,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "hover",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": true,
+    "footprint": {
+      "width": 1,
+      "height": 2
+    },
+    "modules": [
+      {
+        "id": "GallopClass_Turret_Cannon_M1",
+        "name": "GallopClass_Turret_Cannon_M1",
+        "hp": 10000.0,
+        "bone": "Turret_GallopClass_Turret_Cannon_M1",
+        "x": 0.0,
+        "y": -13.0,
+        "idleDir": -180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GallopClass/GallopClass_Turret_Cannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GallopClass_Turret_Cannon"
+          ]
+        }
+      },
+      {
+        "id": "GallopClass_Turret_AA_L1",
+        "name": "GallopClass_Turret_AA_L1",
+        "hp": 10000.0,
+        "bone": "Turret_GallopClass_Turret_AA_L1",
+        "x": -18.0,
+        "y": 40.0,
+        "idleDir": -15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GallopClass/GallopClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GallopClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GallopClass_Turret_AA_R1",
+        "name": "GallopClass_Turret_AA_R1",
+        "hp": 10000.0,
+        "bone": "Turret_GallopClass_Turret_AA_R1",
+        "x": 18.0,
+        "y": 40.0,
+        "idleDir": 15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GallopClass/GallopClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GallopClass_Turret_AA"
+          ]
+        }
+      }
+    ],
+    "commandAuras": [
+      {
+        "type": "cmdCom",
+        "radiusCells": 2
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "accuracyMultiplier": 1.1,
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 100.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 45000.0,
+    "walkSpeed": 0.5,
+    "boostSpeed": 0.65,
+    "turnSpeed": 0.25,
+    "reaction": 50.0,
+    "shooting": 100.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "GallopClass",
+      "Unit",
+      "Ship",
+      "CmdUnit",
+      "EFSF",
+      "0079",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X8"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "Hover",
+      "CmdCom",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 105.0,
+    "unitLevel": 2000.0,
+    "tacticalMoveBeforeBonus": 3
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk",
+    "deathType": "large"
+  },
+  "name": "盖洛普级",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "盖洛普级",
+      "description": "大型陆战舰,由于搭载了热核引擎可以进行渡海作战"
+    },
+    "en": {
+      "name": "GallopClass",
+      "description": "Large land battleship equipped with thermonuclear engine, capable of crossing seas"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Turret_Mortar_DabudeClass": {
+      "name": "迫击炮轰炸",
+      "type": "shell",
+      "min": 5,
+      "max": 9,
+      "hit": 75.0,
+      "en": 0,
+      "sourceName": "Common_Turret_Mortar_DabudeClass",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "skill",
+      "clip": null,
+      "damagePerShot": 3000.0,
+      "damageComponents": {
+        "shell": 3000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 1.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.6
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.6
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.1
+          },
+          {
+            "delay": 1.5
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/GallopClass/GallopClass_Turret_Cannon.ini",
+        "barrels": [
+          {
+            "id": "Common_Turret_Mortar_DabudeClass",
+            "x": 0.0,
+            "y": 30.0
+          },
+          {
+            "id": "GallopClass_Turret_Cannon",
+            "x": -5.0,
+            "y": 37.5
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Cannon_1.png",
+        "scale": 0.75,
+        "speed": 60.0,
+        "forwardOffset": -5.0,
+        "rotation": 0,
+        "motion": "mortar"
+      },
+      "hitEffect": "Explosion_Hit_1_XL",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_GallopClass_Turret_Cannon_M1",
+            "offset": {
+              "x": 0.0,
+              "y": 30.0
+            }
+          },
+          {
+            "bone": "Turret_GallopClass_Turret_Cannon_M1",
+            "offset": {
+              "x": -5.0,
+              "y": 37.5
+            },
+            "alternatingOffsetX": 10.0
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "GallopClass_Turret_Cannon_M1"
+      ],
+      "muzzleEffects": [
+        "BZ_Fire_1",
+        "BZ_Fire_1"
+      ],
+      "category": "mortar",
+      "noCounter": true,
+      "special": {
+        "type": "mortar",
+        "radius": 1,
+        "emptyCells": true
+      },
+      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "nativePayload": {
+        "offsetRandomXY": 100.0,
+        "ShellDamage": 3000.0,
+        "DpDamage": 500.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiBuilding": 2.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "ProjectileSpeed": 60.0,
+        "ProjectileSpread": 25.0,
+        "ProjectileExplosionRange": 80.0,
+        "ProjectileLife": 70.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/GallopClass/GallopClass_Turret_Cannon.ini",
+        "barrel": "Common_Turret_Mortar_DabudeClass",
+        "entry": "action_Common_Turret_Mortar_DabudeClass_Trigger",
+        "cooldown": 180.0,
+        "duration": 4.4,
+        "firstShot": 1.1,
+        "lastShot": 2.900000000000001,
+        "firingEvents": 9,
+        "projectiles": 9,
+        "declaredEnergy": 100.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Common_Turret_Mortar_DabudeClass_Trigger",
+          "hiddenAction_Common_Turret_Mortar_DabudeClass_B3_Step_1",
+          "hiddenAction_Common_Turret_Mortar_DabudeClass_Fire_Step_1",
+          "hiddenAction_Common_Turret_Mortar_DabudeClass_Fire_Step_2",
+          "hiddenAction_Common_Turret_Mortar_DabudeClass_Fire_Step_3",
+          "hiddenAction_Common_Turret_Mortar_DabudeClass_Fire_Step_Final"
+        ]
+      },
+      "actionCost": 5
+    },
+    "GallopClass_Turret_Cannon": {
+      "name": "舰载加农炮",
+      "type": "shell",
+      "min": 3,
+      "max": 6,
+      "hit": 75.0,
+      "en": 100.0,
+      "sourceName": "GallopClass_Turret_Cannon",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 4000.0,
+      "damageComponents": {
+        "shell": 4000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_Cannon_M1",
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/GallopClass/GallopClass_Turret_Cannon.ini",
+        "barrels": [
+          {
+            "id": "Common_Turret_Mortar_DabudeClass",
+            "x": 0.0,
+            "y": 30.0
+          },
+          {
+            "id": "GallopClass_Turret_Cannon",
+            "x": -5.0,
+            "y": 37.5
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Cannon_1.png",
+        "scale": 0.75,
+        "speed": 25.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_L",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_GallopClass_Turret_Cannon_M1",
+            "offset": {
+              "x": 0.0,
+              "y": 30.0
+            }
+          },
+          {
+            "bone": "Turret_GallopClass_Turret_Cannon_M1",
+            "offset": {
+              "x": -5.0,
+              "y": 37.5
+            },
+            "alternatingOffsetX": 10.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/ShellCannon_1.ogg",
+        "volume": 0.6
+      },
+      "targetModifiers": {
+        "air": 0.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "GallopClass_Turret_Cannon_M1"
+      ],
+      "muzzleEffects": [
+        "BZ_Fire_1",
+        "BZ_Fire_1"
+      ],
+      "category": "cannon",
+      "nativePayload": {
+        "ShellDamage": 4000.0,
+        "DpDamage": 250.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 0.5,
+        "HeightHitRange": 10.0,
+        "ProjectileSpeed": 25.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 80.0,
+        "ProjectileLife": 75.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/GallopClass/GallopClass_Turret_Cannon.ini",
+        "barrel": "GallopClass_Turret_Cannon",
+        "entry": "automatic_turret",
+        "cooldown": 9.0,
+        "duration": 0.1,
+        "firstShot": 0.0,
+        "lastShot": 0.1,
+        "firingEvents": 2,
+        "projectiles": 2,
+        "declaredEnergy": 50.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 50.0,
+        "energy": 100.0,
+        "actions": []
+      },
+      "actionCost": 3
+    },
+    "GallopClass_Turret_AA": {
+      "name": "GallopClass Turret AA",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 125.0,
+      "en": 10.0,
+      "sourceName": "GallopClass_Turret_AA",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 300.0,
+      "damageComponents": {
+        "shell": 250.0,
+        "shellAP": 50.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "GallopClass_Turret_AA_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/GallopClass/GallopClass_Turret_AA.ini",
+        "barrels": [
+          {
+            "id": "GallopClass_Turret_AA",
+            "x": 2.0,
+            "y": 6.0
+          },
+          {
+            "id": "GallopClass_Turret_AA",
+            "x": 2.0,
+            "y": 6.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 90.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_GallopClass_Turret_AA_L1",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          },
+          {
+            "bone": "Turret_GallopClass_Turret_AA_R1",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1.25,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "GallopClass_Turret_AA_L1",
+        "GallopClass_Turret_AA_R1"
+      ],
+      "muzzleEffects": [
+        "MG_Fire_1_S",
+        "MG_Fire_1_S"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 250.0,
+        "ShellAPDamage": 50.0,
+        "DpDamage": 5.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.25,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 90.0,
+        "ProjectileSpread": 6.0,
+        "ProjectileLife": 7.5
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/GallopClass/GallopClass_Turret_AA.ini",
+        "barrel": "GallopClass_Turret_AA",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 1.3499999999999999,
+        "firstShot": 0.0,
+        "lastShot": 1.3499999999999999,
+        "firingEvents": 20,
+        "projectiles": 20,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 10.0,
+        "actions": []
+      },
+      "rangeRole": "ship_anti_air",
+      "actionCost": 3
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "气垫移动：可横越水域",
+      "status": "implemented"
+    },
+    {
+      "id": "AutoRepair",
+      "source": "Template/Unit/Skill/AutoRepair.gw",
+      "status": "adapted",
+      "name": "自动修复已并入补给光环（无EN消耗）"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "review",
+      "name": "搭载与放出"
+    },
+    {
+      "id": "Hover",
+      "source": "Template/Unit/Skill/Hover.gw",
+      "status": "implemented",
+      "name": "气垫：仅在地面移动时循环"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "review",
+      "name": "通信指挥"
+    },
+    {
+      "id": "SupplyPoint",
+      "source": "Template/Unit/Skill/SupplyPoint.gw",
+      "status": "adapted",
+      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+    },
+    {
+      "id": "SupplyPoint_UseEN",
+      "source": "Template/Unit/Skill/SupplyPoint_UseEN.gw",
+      "status": "adapted",
+      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+    },
+    {
+      "id": "special_Common_MinovskyParticle_M",
+      "name": "special_Common_MinovskyParticle_M",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "GallopClass_Turret_Cannon",
+        "Common_Turret_Mortar_DabudeClass",
+        "GallopClass_Turret_AA"
+      ]
+    }
+  ],
+  "skills": [],
+  "description": "大型陆战舰,由于搭载了热核引擎可以进行渡海作战",
+  "costBalance": {
+    "nativeLevel": 2000.0,
+    "levelMultiplier": 0.25,
+    "published": 500
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "nativeCombatRevision": 1
+}

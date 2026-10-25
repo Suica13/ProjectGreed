@@ -1,0 +1,67 @@
+{
+  "frontier_1v1": {
+    "width": 24,
+    "height": 18,
+    "terrainHash": "39e255596d1b7a13a4eb5acb39b2e3cf6bd3ce8a090d55b394834288c1c968f8"
+  },
+  "open_dunes_1v1": {
+    "width": 24,
+    "height": 18,
+    "terrainHash": "1b551ba4537228c2d76e89d7bd280311780df8a9d5a5971072899f98bad594f2"
+  },
+  "asteroid_crossing_1v1": {
+    "width": 26,
+    "height": 22,
+    "terrainHash": "e5097fc0abfb0d7d3c4ddf89fc6851a4f76ad1ba729856bbc57bdb31f682411f"
+  },
+  "crossroads_2v2": {
+    "width": 28,
+    "height": 26,
+    "terrainHash": "2fc6084bb02f78501bae8311c097100f295d91151c1cfc966ae0c15cad262b90"
+  },
+  "ice_bridges_2v2": {
+    "width": 28,
+    "height": 26,
+    "terrainHash": "bdbfbb311be77fc40c636d880761716f3504896445b7719a5fb13fa01a24ce7b"
+  },
+  "orbital_debris_2v2": {
+    "width": 32,
+    "height": 28,
+    "terrainHash": "696f0be0d0c483a3c32cb6e7526f5614456a0c6dd3b9eb7773180d948059edd6"
+  },
+  "frontline_3v3": {
+    "width": 32,
+    "height": 36,
+    "terrainHash": "7fa96c3976443f444747c35052ac8c4f408784de18e3d75c3f448b13e43e41df"
+  },
+  "central_heights_3v3": {
+    "width": 36,
+    "height": 36,
+    "terrainHash": "af8c0d8e9430ed7b9dd8d1bbd4c88366363cd16f201b7355482d21f06e775402"
+  },
+  "serpentine_rainforest_3v3": {
+    "width": 36,
+    "height": 36,
+    "terrainHash": "e6ab23504284d2e33c3475b959b556f3cdc30403e1109731bc4f897369936ce0"
+  },
+  "colony_wreck_3v3": {
+    "width": 40,
+    "height": 38,
+    "terrainHash": "606eb1d5214d076f77c70cd6ce2e9281999630259deb0051c23e702801ed4717"
+  },
+  "military_base_5v5": {
+    "width": 48,
+    "height": 56,
+    "terrainHash": "ef114ec80cfb322b672f082b6662982dfd3022de747bec9edf8d13d49c07b868"
+  },
+  "great_plains_5v5": {
+    "width": 48,
+    "height": 56,
+    "terrainHash": "81c9b0228be0b5a5d277f0aec10cf1561c08fbf408d29d3cbf3243fddce1f732"
+  },
+  "outer_orbit_5v5": {
+    "width": 52,
+    "height": 56,
+    "terrainHash": "d1a330aa3ddcc3873ca62325d22c400f132fb93698782863afa05f92f01224f3"
+  }
+}

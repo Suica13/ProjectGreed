@@ -435,6 +435,7 @@ const Net = (() => {
       phase = "disconnected";
       status("房间 " + n.room + " · 等待队伍补位或离线玩家恢复，战局已暂停");
     } else if (s.phase === "deployment") {
+      if (phase !== "deployment") MapCamera.fit();
       phase = "deployment";
       byId("battle").hidden = true;
       battleView = null;
@@ -479,6 +480,8 @@ const Net = (() => {
       if (event.type === "move" && s.phase === "idle" && online && n.applied) {
         PlanningUI.move(event);
       }
+      if (event.type === "skill" && s.phase === "idle" && online && n.applied)
+        SkillControls.applied(event);
       if (event.type === "turn") {
         selected = null;
         weaponId = null;
@@ -494,7 +497,7 @@ const Net = (() => {
     if (ownResponse && n.focusedReactionId !== s.pending.id) {
       n.focusedReactionId = s.pending.id;
       const b = getUnit(s.pending.target);
-      if (b) MapCamera.focus(b.x, b.y, { preserveZoom: true });
+      if (b) MapCamera.focus(Rules.center(b).x, Rules.center(b).y, { preserveZoom: true });
     }
     if (s.started && online) CombatPlayback.show();
     if (selected && !game.units.some((u) => u.id === selected && u.hp > 0)) selected = null;

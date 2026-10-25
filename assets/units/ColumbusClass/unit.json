@@ -1,0 +1,955 @@
+{
+  "schemaVersion": 2,
+  "id": "ColumbusClass",
+  "code": "ColumbusClass",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/ColumbusClass/ColumbusClass.ini",
+  "materials": {
+    "textures": {
+      "ColumbusClass.png": "textures/ColumbusClass.png",
+      "ColumbusClass_Body_1.png": "textures/ColumbusClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "ColumbusClass_Body_2.png": "textures/ColumbusClass_Body_2.png",
+      "ColumbusClass_UnloadLine_1.png": "textures/ColumbusClass_UnloadLine_1.png",
+      "RooketBooster.png": "textures/RooketBooster.png",
+      "ColumbusClass_Turret_AA_1.png": "textures/ColumbusClass_Turret_AA_1.png"
+    },
+    "icon": "ColumbusClass.png"
+  },
+  "skeleton": {
+    "Turret_ColumbusClass_Turret_AA_L1": {
+      "x": -50.0,
+      "y": 50.0,
+      "endDirOffset": -45.0
+    },
+    "Turret_ColumbusClass_Turret_AA_R1": {
+      "x": 50.0,
+      "y": 50.0,
+      "endDirOffset": 45.0
+    },
+    "Turret_ColumbusClass_Turret_AA_L2": {
+      "x": -50.0,
+      "y": -65.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_ColumbusClass_Turret_AA_R2": {
+      "x": 50.0,
+      "y": -65.0,
+      "endDirOffset": 90.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": -32.0,
+        "y": -85.0
+      },
+      "scaleX": -0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": 32.0,
+        "y": -85.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "ColumbusClass_Turret_AA_L1",
+      "bone": "Turret_ColumbusClass_Turret_AA_L1",
+      "moduleId": "ColumbusClass_Turret_AA_L1",
+      "texture": "ColumbusClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ColumbusClass_Turret_AA_R1",
+      "bone": "Turret_ColumbusClass_Turret_AA_R1",
+      "moduleId": "ColumbusClass_Turret_AA_R1",
+      "texture": "ColumbusClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ColumbusClass_Turret_AA_L2",
+      "bone": "Turret_ColumbusClass_Turret_AA_L2",
+      "moduleId": "ColumbusClass_Turret_AA_L2",
+      "texture": "ColumbusClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ColumbusClass_Turret_AA_R2",
+      "bone": "Turret_ColumbusClass_Turret_AA_R2",
+      "moduleId": "ColumbusClass_Turret_AA_R2",
+      "texture": "ColumbusClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "ColumbusClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 50000.0,
+    "en": 15000.0,
+    "move": 4,
+    "mobility": 50.0,
+    "cost": 500,
+    "counterLimit": 1,
+    "accuracy": 110.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 0,
+      "space": 100
+    },
+    "ship": true,
+    "footprint": {
+      "width": 2,
+      "height": 3
+    },
+    "modules": [
+      {
+        "id": "ColumbusClass_Turret_AA_L1",
+        "name": "ColumbusClass_Turret_AA_L1",
+        "hp": 3500.0,
+        "bone": "Turret_ColumbusClass_Turret_AA_L1",
+        "x": -50.0,
+        "y": 50.0,
+        "idleDir": -45.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ColumbusClass/ColumbusClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ColumbusClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ColumbusClass_Turret_AA_R1",
+        "name": "ColumbusClass_Turret_AA_R1",
+        "hp": 3500.0,
+        "bone": "Turret_ColumbusClass_Turret_AA_R1",
+        "x": 50.0,
+        "y": 50.0,
+        "idleDir": 45.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ColumbusClass/ColumbusClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ColumbusClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ColumbusClass_Turret_AA_L2",
+        "name": "ColumbusClass_Turret_AA_L2",
+        "hp": 3500.0,
+        "bone": "Turret_ColumbusClass_Turret_AA_L2",
+        "x": -50.0,
+        "y": -65.0,
+        "idleDir": -90.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ColumbusClass/ColumbusClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ColumbusClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ColumbusClass_Turret_AA_R2",
+        "name": "ColumbusClass_Turret_AA_R2",
+        "hp": 3500.0,
+        "bone": "Turret_ColumbusClass_Turret_AA_R2",
+        "x": 50.0,
+        "y": -65.0,
+        "idleDir": 90.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ColumbusClass/ColumbusClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ColumbusClass_Turret_AA"
+          ]
+        }
+      }
+    ],
+    "commandAuras": [],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "accuracyMultiplier": 1.1,
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 30.0,
+      "flat": 75.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 50000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 0.95,
+    "turnSpeed": 0.35,
+    "reaction": 50.0,
+    "shooting": 100.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "ColumbusClass",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "EFSF",
+      "0079",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X12"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "SupplyPoint"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 2000.0,
+    "tacticalMoveBeforeBonus": 3
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large"
+  },
+  "name": "哥伦布级",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "哥伦布级",
+      "description": "地球联邦军舰队主要的补给舰种"
+    },
+    "en": {
+      "name": "Columbus Class",
+      "description": "Main Supply Ship of the Earth Federation Fleet, capable of transporting a full squadron of MS"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "ColumbusClass_Turret_AA": {
+      "name": "ColumbusClass Turret AA",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 125.0,
+      "en": 20.0,
+      "sourceName": "ColumbusClass_Turret_AA",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 275.0,
+      "damageComponents": {
+        "shell": 200.0,
+        "shellAP": 75.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "ColumbusClass_Turret_AA_R2",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/ColumbusClass/ColumbusClass_Turret_AA.ini",
+        "barrels": [
+          {
+            "id": "ColumbusClass_Turret_AA",
+            "x": 2.0,
+            "y": 6.0
+          },
+          {
+            "id": "ColumbusClass_Turret_AA",
+            "x": 2.0,
+            "y": 6.0
+          },
+          {
+            "id": "ColumbusClass_Turret_AA",
+            "x": 2.0,
+            "y": 6.0
+          },
+          {
+            "id": "ColumbusClass_Turret_AA",
+            "x": 2.0,
+            "y": 6.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 90.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_ColumbusClass_Turret_AA_L1",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          },
+          {
+            "bone": "Turret_ColumbusClass_Turret_AA_R1",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          },
+          {
+            "bone": "Turret_ColumbusClass_Turret_AA_L2",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          },
+          {
+            "bone": "Turret_ColumbusClass_Turret_AA_R2",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "ColumbusClass_Turret_AA_L1",
+        "ColumbusClass_Turret_AA_R1",
+        "ColumbusClass_Turret_AA_L2",
+        "ColumbusClass_Turret_AA_R2"
+      ],
+      "muzzleEffects": [
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 200.0,
+        "ShellAPDamage": 75.0,
+        "DpDamage": 5.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 90.0,
+        "ProjectileSpread": 6.0,
+        "ProjectileLife": 7.5
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/ColumbusClass/ColumbusClass_Turret_AA.ini",
+        "barrel": "ColumbusClass_Turret_AA",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 1.3499999999999999,
+        "firstShot": 0.0,
+        "lastShot": 1.3499999999999999,
+        "firingEvents": 40,
+        "projectiles": 40,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 20.0,
+        "actions": []
+      },
+      "rangeRole": "ship_anti_air",
+      "actionCost": 3
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "AutoRepair",
+      "source": "Template/Unit/Skill/AutoRepair.gw",
+      "status": "adapted",
+      "name": "自动修复已并入补给光环（无EN消耗）"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "review",
+      "name": "搭载与放出"
+    },
+    {
+      "id": "SupplyPoint",
+      "source": "Template/Unit/Skill/SupplyPoint.gw",
+      "status": "adapted",
+      "name": "补给光环：范围内友军每回合恢复5%耐久、10%EN，不消耗EN"
+    },
+    {
+      "id": "special_Common_FullBoost",
+      "name": "special_Common_FullBoost",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_FullBoost.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_NeedBooster",
+      "name": "special_Common_ReEntry_NeedBooster",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "ColumbusClass_Turret_AA"
+      ]
+    }
+  ],
+  "skills": [],
+  "description": "地球联邦军舰队主要的补给舰种",
+  "costBalance": {
+    "nativeLevel": 2000.0,
+    "levelMultiplier": 0.25,
+    "published": 500
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "nativeCombatRevision": 1
+}

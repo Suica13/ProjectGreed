@@ -3,6 +3,7 @@ import json
 import math
 from collections import deque
 from pathlib import Path
+from map_deployment import widen_map
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets"
@@ -48,6 +49,7 @@ def finish(m):
             if 0<=xx<m["width"] and 0<=yy<m["height"] and (xx,yy) not in seen and m["tiles"][yy][xx] not in ("water","rock"):
                 seen.add((xx,yy));queue.append((xx,yy))
     assert len(seen)==sum(t not in ("water","rock") for row in m["tiles"] for t in row),m["id"]
+    widen_map(m)
     (ASSETS/"maps"/(m["id"]+".json")).write_text(json.dumps(m,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 
 

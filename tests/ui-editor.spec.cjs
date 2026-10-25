@@ -288,7 +288,7 @@ async function readyGame(first, second) {
   await second.locator("#confirmFinalFormation").click();
   await expect(first.locator("#gameScene")).toBeVisible();
   await expect(second.locator("#gameScene")).toBeVisible();
-  await first.evaluate(() => Net.request("deploy", { unitId: "0-0", x: 3, y: 8 }));
+  await first.evaluate(() => Net.request("deploy", { unitId: "0-0", x: 2, y: 8 }));
   await expect.poll(() => first.evaluate(() => Net.awaiting)).toBe(null);
   await first.locator("#confirmDeployment").click();
   await expect.poll(() => second.evaluate(() => game.deployment[0])).toBe(true);
@@ -1054,7 +1054,7 @@ test("local HTML plays a complete AI turn with networking disabled and no server
   await expect(page.locator("#unitPanel")).toContainText("吉姆");
   expect(await page.evaluate(() => game.units.filter((u) => u.team === 1).length)).toBe(12);
   expect(await page.evaluate(() => ({ width: Rules.W, height: Rules.H }))).toEqual({
-    width: 24,
+    width: 30,
     height: 18,
   });
   await page.evaluate(() => performMove(game.units[0], 3, 8));

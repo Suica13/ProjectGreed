@@ -1,0 +1,528 @@
+{
+  "schemaVersion": 2,
+  "id": "MAX_03",
+  "code": "MAX-03",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MAX_03/MAX_03.ini",
+  "materials": {
+    "textures": {
+      "MAX_03_Body_1.png": "textures/MAX_03_Body_1.png",
+      "MAX_03_Leg1.png": "textures/MAX_03_Leg1.png",
+      "MAX_03.png": "textures/MAX_03.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "Boost_FlyHover_1.png": "textures/Boost_FlyHover_1.png"
+    },
+    "icon": "MAX_03.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 26.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "FlyHover",
+      "texture": "Boost_FlyHover_1.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 1.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "alpha": 0.35,
+      "frames": 10.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "MAX_03_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_1",
+      "texture": "MAX_03_Leg1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": -22.5,
+        "y": 22.5
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_2",
+      "texture": "MAX_03_Leg1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scaleY": -1.0,
+      "offset": {
+        "x": -22.5,
+        "y": -22.5
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_3",
+      "texture": "MAX_03_Leg1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scaleX": -1.0,
+      "offset": {
+        "x": 22.5,
+        "y": 22.5
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_4",
+      "texture": "MAX_03_Leg1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scaleX": -1.0,
+      "scaleY": -1.0,
+      "offset": {
+        "x": 22.5,
+        "y": -22.5
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/MAX_03__EnterPilot.json",
+    "QuitPilot": "../../animations/MAX_03__QuitPilot.json",
+    "NoPilotIdle": "../../animations/MAX_03__NoPilotIdle.json",
+    "Common_Idle": "../../animations/MAX_03__Common_Idle.json",
+    "OnMoving": "../../animations/MAX_03__OnMoving.json",
+    "OnMovingReversing": "../../animations/MAX_03__OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/MAX_03__OnMovingWalk.json",
+    "Guard": "../../animations/MAX_03__Guard.json",
+    "Common_Dead": "../../animations/MAX_03__Common_Dead.json",
+    "Common_Stun": "../../animations/MAX_03__Common_Stun.json",
+    "Common_Daze": "../../animations/MAX_03__Common_Daze.json",
+    "Common_Stagger": "../../animations/MAX_03__Common_Stagger.json",
+    "Common_Cannon_Shoot_A": "../../animations/MAX_03__Common_Cannon_Shoot_A.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 30000.0,
+    "en": 900.0,
+    "move": 6,
+    "mobility": 55.0,
+    "cost": 500,
+    "counterLimit": 1,
+    "accuracy": 120.0,
+    "partStructuralStrength": 125.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 10.0,
+      "space": 50
+    },
+    "ship": false,
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 15.0,
+    "shooting": 15.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 10.0,
+      "flat": 200.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 200.0
+    },
+    "melee": {
+      "percent": 10.0,
+      "flat": 200.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 30.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 30000.0,
+    "walkSpeed": 0.85,
+    "boostSpeed": 1.5,
+    "turnSpeed": 0.75,
+    "reaction": 55.0,
+    "shooting": 115.0,
+    "melee": 115.0,
+    "nativeTags": [
+      "MAX_03",
+      "Unit",
+      "MA",
+      "ZEON",
+      "0079",
+      "UC",
+      "LargeUnit"
+    ],
+    "nativeSkills": [
+      "FlyHover",
+      "FlyUnit",
+      "Unit_BreakableTurret"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 120.0,
+    "unitLevel": 2000.0,
+    "tacticalMoveBeforeBonus": 5
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMovingWalk",
+    "stagger": "Common_Stagger",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "walk"
+  },
+  "name": "阿萨姆",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "阿萨姆",
+      "description": "吉翁公国军通过对移动式对地攻击兵器G87月神坦克进行改修而得到的移动炮座"
+    },
+    "en": {
+      "name": "Adzam",
+      "description": "A mobile gun emplacement obtained by the Principality of Zeon through modifications to the G87 \"Tsukuyomi\" mobile ground-attack tank"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "ZN_MAX_03_Leader": {
+      "name": "ZN MAX 03 Leader",
+      "type": "shell",
+      "min": 1,
+      "max": 3,
+      "hit": 75.0,
+      "en": 150.0,
+      "sourceName": "ZN_MAX_03_Leader",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 1500.0,
+      "damageComponents": {
+        "shell": 1500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 1.25
+          },
+          {
+            "delay": 2.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_MAX_03_Leader.gw",
+        "barrels": [
+          {
+            "id": "ZN_MAX_03_Leader",
+            "x": 7.0,
+            "y": 0.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/ZN_MAX_03_Leader_A.png",
+        "scale": 1.5,
+        "speed": 20.0,
+        "forwardOffset": 0.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Flash_1_N",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 7.0,
+              "y": 0.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Bomb_1.ogg",
+        "volume": 0.2
+      },
+      "targetModifiers": {
+        "air": 0.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "category": "other",
+      "nativePayload": {
+        "ShellDamage": 1500.0,
+        "DpDamage": 250.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 0.75,
+        "AntiSizeSmallDamage": 1.0,
+        "AntiSizeLargeAccuracy": 0.75,
+        "AntiSizeSmallAccuracy": 1.0,
+        "AntiBuilding": 1.5,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 0.5,
+        "HeightHitRange": 10.0,
+        "ProjectileSpeed": 20.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 55.0,
+        "ProjectileLife": 50.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        },
+        "large": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_MAX_03_Leader.gw",
+        "barrel": "ZN_MAX_03_Leader",
+        "entry": "action_ZN_MAX_03_Leader_Trigger",
+        "cooldown": 90.0,
+        "duration": 3.25,
+        "firstShot": 1.25,
+        "lastShot": 1.25,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 150.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 150.0,
+        "actions": [
+          "action_ZN_MAX_03_Leader_Trigger",
+          "hiddenAction_SetAttackingCantAimOn",
+          "hiddenAction_SetAttackingCantTurnOn",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SetOnSkillOn",
+          "hiddenAction_ZN_MAX_03_Leader_SetWeaponIndex",
+          "hiddenAction_ZN_MAX_03_Leader_B1_Step_1",
+          "hiddenAction_ZN_MAX_03_Leader_Fire_Step_1",
+          "hiddenAction_ZN_MAX_03_Leader_Fire_Step_2",
+          "hiddenAction_ZN_MAX_03_Leader_Fire_Step_3",
+          "hiddenAction_ZN_MAX_03_Leader_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetOnSkillOff",
+          "hiddenAction_SetAttackingCantAimOff",
+          "hiddenAction_SetAttackingCantTurnOff"
+        ]
+      },
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "FlyHover",
+      "source": "Template/Unit/Skill/FlyHover.gw",
+      "status": "review",
+      "name": "悬浮飞行"
+    },
+    {
+      "id": "FlyUnit",
+      "source": "Template/Unit/Skill/FlyUnit.gw",
+      "status": "review",
+      "name": "飞行模式"
+    },
+    {
+      "id": "Unit_BreakableTurret",
+      "source": "Template/Unit/Skill/Unit_BreakableTurret.gw",
+      "status": "implemented",
+      "name": "独立炮塔损毁"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "ZN_MAX_03_Leader"
+      ]
+    }
+  ],
+  "description": "吉翁公国军通过对移动式对地攻击兵器G87月神坦克进行改修而得到的移动炮座",
+  "costBalance": {
+    "nativeLevel": 2000.0,
+    "levelMultiplier": 0.25,
+    "published": 500
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1
+}

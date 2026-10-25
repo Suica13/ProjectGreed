@@ -14,12 +14,61 @@ const WeaponEffects = (() => {
       angle: source.angle,
       clip: animation.clip,
       time: animation.time,
+      weaponDisplayIndex: animation.weaponDisplayIndex,
     };
+  }
+  function deathEnvironment(unit) {
+    if (unit.environment === "space") return "space";
+    const tile = typeof game !== "undefined" ? game.tiles?.[unit.y]?.[unit.x] : null;
+    return tile === "water" ? "water" : "ground";
+  }
+  function deathSequence(unit, forceStandard = false) {
+    const model = ART.models[unit.model],
+      environment = deathEnvironment(unit);
+    const config = ART.presentation.deathEffects;
+    const large =
+      !forceStandard && (model.ship || model.largeUnit || model.presentation.deathType === "large");
+    const effect =
+      config?.[large ? "large" : "standard"]?.[environment] || model.presentation.deathEffect;
+    const events = [];
+    if (large && config?.largeSequence) {
+      const sequence = config.largeSequence;
+      let seed = Array.from(String(unit.id)).reduce(
+        (value, c) => (Math.imul(value, 31) + c.charCodeAt(0)) >>> 0,
+        7,
+      );
+      const random = () => {
+        seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+      for (let i = 0; i < sequence.count; i++)
+        events.push({
+          effect: config.largeBurst[environment],
+          at: i * sequence.interval,
+          x: (random() * 2 - 1) * sequence.spreadX,
+          y: (random() * 2 - 1) * sequence.spreadY,
+        });
+      events.push({ effect, at: sequence.finalDelay, x: 0, y: 0 });
+    } else events.push({ effect, at: 0, x: 0, y: 0 });
+    return {
+      effect,
+      events,
+      keepSpriteUntilEnd: model.ship === true,
+      duration: Math.max(...events.map((e) => e.at + ART.effects[e.effect].duration)),
+    };
+  }
+  function drawDeath(ctx, sequence, unit, x, y, scale, age) {
+    const angle = (((unit.angle ?? 90) - 90) * Math.PI) / 180;
+    for (const event of sequence.events) {
+      const dx = Math.cos(angle) * event.y - Math.sin(angle) * event.x;
+      const dy = Math.sin(angle) * event.y + Math.cos(angle) * event.x;
+      SpriteEffects.draw(ctx, event.effect, x + dx * scale, y + dy * scale, scale, age - event.at);
+    }
   }
   function plan(weapon, source, target, event = null) {
     const speed = animationSpeed(weapon),
       effectSpeed = ART.presentation.animationSpeed,
-      lead = weapon.type === "melee" ? 0.35 : 0,
+      lead = weapon.projectile?.motion === "bomb" ? 0.6 : weapon.type === "melee" ? 0.35 : 0,
       sourceY = (event?.sourceDodgeSlot || 0) * ART.presentation.dodgeDistance * source.scale,
       initialSlot = event?.targetDodgeSlot || 0;
     const shots = weapon.attack.shots.map((originalAt, index) => {
@@ -52,13 +101,35 @@ const WeaponEffects = (() => {
           : 0;
       const spreadY = Math.tan(spreadAngle) * Math.abs(destination.x - origin.x);
       destination.y += spreadY;
-      const flight = weapon.projectile
-        ? Math.max(
-            0.001,
-            Math.hypot(destination.x - origin.x, destination.y - origin.y) /
-              (weapon.projectile.speed * 60 * source.scale * ART.presentation.projectileSpeed),
-          )
-        : 0;
+      if (weapon.projectile?.motion === "bomb") {
+        const first = weapon.attack.shots[0],
+          last = weapon.attack.shots.at(-1),
+          drift =
+            last === first ? 0 : ((originalAt - first) / (last - first) - 0.5) * 28 * source.scale;
+        origin.x = target.x + drift;
+        origin.y = target.y - 60 * source.scale;
+        destination.x = origin.x;
+        destination.y = target.y;
+      }
+      const flight =
+        weapon.projectile?.motion === "mortar"
+          ? 2 *
+            Math.max(
+              0.18,
+              Math.min(0.45, Math.hypot(destination.x - origin.x, destination.y - origin.y) / 1800),
+            )
+          : weapon.projectile?.motion === "bomb"
+            ? 0.6
+            : weapon.projectile
+              ? Math.max(
+                  0.001,
+                  Math.hypot(destination.x - origin.x, destination.y - origin.y) /
+                    (weapon.projectile.speed *
+                      60 *
+                      source.scale *
+                      ART.presentation.projectileSpeed),
+                )
+              : 0;
       return { index, at, origin, destination, spreadY, flight, impactAt: at + flight };
     });
     const steps = weapon.attack.strikes;
@@ -86,7 +157,7 @@ const WeaponEffects = (() => {
       })
       .filter((contact) => contact.executed !== false)
       .sort((a, b) => a.at - b.at);
-    const moves = dodgeMoves(contacts, initialSlot, event),
+    const moves = event?.empty ? [] : dodgeMoves(contacts, initialSlot, event),
       motion = { moves, initialSlot };
     // Aim at the defender's current lane, without adding artificial Miss deviation.
     for (const shot of shots)
@@ -107,7 +178,11 @@ const WeaponEffects = (() => {
         .filter((contact) => contact.shotIndex === shot.index)
         .every((contact) => !contact.hit);
       let travel = 1;
-      if (shot.miss && weapon.projectile) {
+      if (
+        shot.miss &&
+        weapon.projectile &&
+        !["bomb", "mortar"].includes(weapon.projectile.motion)
+      ) {
         const image = SpriteRenderer.images[weapon.projectile.asset],
           margin =
             Math.max(image?.width || 64, image?.height || 64) *
@@ -140,11 +215,23 @@ const WeaponEffects = (() => {
       deathEffect = null,
       deathElectricEffect = null,
       deathSoundAt = null,
-      deathEnd = null;
+      deathEnd = null,
+      deathEvents = null;
     for (const [index, contact] of contacts.entries())
-      if (contact.hit) {
+      if (contact.hit || ["bomb", "mortar"].includes(weapon.projectile?.motion)) {
         cues.push({ at: contact.at, sound: SpriteEffects.sound(weapon.hitEffect, index) });
         end = Math.max(end, contact.at + ART.effects[weapon.hitEffect].duration / effectSpeed);
+      }
+    for (const contact of contacts)
+      if (ART.models[target.unit.model].ship && contact.brokenParts?.length) {
+        cues.push({
+          at: contact.at,
+          sound: SpriteEffects.sound(deathSequence(target.unit, true).effect),
+        });
+        end = Math.max(
+          end,
+          contact.at + ART.effects[deathSequence(target.unit, true).effect].duration / effectSpeed,
+        );
       }
     const lethal = contacts.find(
       (contact) => contact.hit && contact.after === 0 && contact.before > 0,
@@ -154,11 +241,28 @@ const WeaponEffects = (() => {
       cues.push({ at: deathSoundAt, sound: ART.presentation.deathSound });
       deathAt = deathSoundAt + ART.presentation.deathDelay;
       deathElectricEffect = ART.presentation.deathElectricEffect;
-      deathEffect = ART.models[target.unit.model].presentation.deathEffect;
-      cues.push({ at: deathAt, sound: SpriteEffects.sound(deathEffect) });
-      deathEnd = deathAt + ART.effects[deathEffect].duration / effectSpeed;
+      deathEvents = deathSequence(target.unit);
+      deathEffect = deathEvents.effect;
+      for (const explosion of deathEvents.events)
+        cues.push({
+          at: deathAt + explosion.at / effectSpeed,
+          sound: SpriteEffects.sound(explosion.effect),
+        });
+      deathEnd = deathAt + deathEvents.duration / effectSpeed;
       end = Math.max(end, deathEnd);
     }
+    const bomb =
+      weapon.projectile?.motion === "bomb"
+        ? {
+            start: shots[0]?.at ?? lead,
+            end: shots.at(-1)?.at ?? lead,
+            returnAt: (shots.at(-1)?.impactAt ?? lead) + 0.15,
+            retreat: 0.6,
+            span: shots.length > 1 ? 14 * source.scale : 0,
+            height: 60 * source.scale,
+          }
+        : null;
+    if (bomb) end = Math.max(end, bomb.returnAt + bomb.retreat);
     const melee =
       weapon.type === "melee"
         ? {
@@ -174,15 +278,18 @@ const WeaponEffects = (() => {
     return {
       lead,
       melee,
+      bomb,
       shots: activeShots,
       contacts,
       impacts,
       cues,
       deathAt,
       deathEffect,
+      deathEvents,
       deathElectricEffect,
       deathSoundAt,
       deathEnd,
+      deathHideAt: deathEvents?.keepSpriteUntilEnd ? deathEnd : deathAt,
       moves,
       initialSlot,
       sourceY,
@@ -294,6 +401,22 @@ const WeaponEffects = (() => {
         arrived(plan, time).reduce((sum, contact) => sum + (contact.shieldDamage || 0), 0),
     );
   }
+  function bombPose(plan, time, source, target) {
+    const b = plan.bomb,
+      smooth = (v) => (1 - Math.cos(Math.PI * Math.max(0, Math.min(1, v)))) / 2;
+    const end = { x: target.x + b.span, y: target.y - b.height },
+      start = { x: target.x - b.span, y: target.y - b.height };
+    if (time < b.start) {
+      const t = smooth(time / b.start);
+      return { x: source.x + (start.x - source.x) * t, y: source.y + (start.y - source.y) * t };
+    }
+    if (time < b.end) {
+      const t = (time - b.start) / Math.max(0.001, b.end - b.start);
+      return { x: start.x + (end.x - start.x) * t, y: start.y };
+    }
+    const t = smooth((time - b.returnAt) / b.retreat);
+    return { x: end.x + (source.x - end.x) * t, y: end.y + (source.y - end.y) * t };
+  }
   function drawMuzzle(ctx, weapon, plan, time, source, event, pose = null) {
     if (!weapon.muzzleEffects?.length) return;
     const drawn = new Set();
@@ -326,7 +449,7 @@ const WeaponEffects = (() => {
         origin.y,
         source.scale,
         age,
-        ((source.angle - 90) * Math.PI) / 180,
+        (((source.aimAngle ?? source.unit?.aimAngle ?? source.angle) - 90) * Math.PI) / 180,
       );
     }
   }
@@ -341,13 +464,25 @@ const WeaponEffects = (() => {
       const travel = age / shot.flight,
         dx = shot.destination.x - shot.origin.x,
         dy = shot.destination.y - shot.origin.y,
-        angle = Math.atan2(dy, dx),
+        // The shell follows the tangent of the same arc used for its position.
+        arcSlope =
+          weapon.projectile.motion === "mortar" && travel < 1
+            ? Math.PI * 80 * source.scale * Math.cos(Math.PI * Math.max(0, travel))
+            : 0,
+        angle = Math.atan2(dy - arcSlope, dx),
         scale = source.scale * weapon.projectile.scale * size,
-        offset = (source.projectileForwardOffset ?? weapon.projectile.forwardOffset) * source.scale;
+        offset = ["bomb", "mortar"].includes(weapon.projectile.motion)
+          ? 0
+          : (source.projectileForwardOffset ?? weapon.projectile.forwardOffset) * source.scale;
       ctx.save();
       ctx.translate(
         shot.origin.x + dx * travel + Math.cos(angle) * offset,
-        shot.origin.y + dy * travel + Math.sin(angle) * offset,
+        shot.origin.y +
+          dy * travel +
+          Math.sin(angle) * offset -
+          (weapon.projectile.motion === "mortar"
+            ? Math.sin(Math.PI * Math.min(1, travel)) * 80 * source.scale
+            : 0),
       );
       ctx.rotate(angle + Math.PI / 2 + ((weapon.projectile.rotation || 0) * Math.PI) / 180);
       ctx.scale(scale, scale);
@@ -357,6 +492,8 @@ const WeaponEffects = (() => {
     }
   }
   return {
+    deathSequence,
+    drawDeath,
     plan,
     firingPose,
     meleeMotion,
@@ -367,6 +504,7 @@ const WeaponEffects = (() => {
     shield,
     arrived,
     drawMuzzle,
+    bombPose,
     draw,
   };
 })();

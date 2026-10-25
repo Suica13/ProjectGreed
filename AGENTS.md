@@ -10,3 +10,5 @@
 
 - 维护同一套源码的开发者版与发布版。`public/developer.html` 含UI布局编辑器，发布版 `public/index.html` / `client.html` 必须排除编辑器代码、工具和本地开发布局缓存。
 - `client/ui-layout.json` 是构建时布局源；`ui-layout.js` 为共用白名单布局应用，`ui-editor.js` 仅注入开发者版。开发者版可导出带当前布局的发布HTML。不要复制两套游戏逻辑。
+
+- 原 MOD 单位移植、左右武器或衍生形态工作，请使用项目技能 `.agents/skills/projectgreed-mod-unit-import/SKILL.md`；状态报告由对应脚本生成，旧版本号本身不是删除脚本的依据。

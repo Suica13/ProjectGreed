@@ -8,5 +8,6 @@
   "beam_gun": 75,
   "beam_rifle": 100,
   "cannon": 100,
-  "magella_cannon": 100
+  "magella_cannon": 100,
+  "standard": 0
 }

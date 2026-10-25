@@ -1,0 +1,109 @@
+"""原生持枪／射击显示、炮管排序、套件和主手优先顺序。"""
+import math
+import re
+from mod_source import ROOT, load, section
+
+
+def correct(prefab, native):
+    from native_movement_effects import correct_effects
+    correct_effects(prefab, native)
+    if prefab["stats"].get("ship"):
+        from native_ship_arcs import correct_arcs
+        correct_arcs(prefab, native)
+        from native_ship_presentation import correct_layers
+        correct_layers(prefab, native)
+    layers = prefab["layers"]
+    for layer in layers:
+        name = layer["name"]
+        source_key = "decal_" + name
+        if source_key in native:
+            condition = section(native, source_key).get("isVisible", "")
+            match = re.search(r"memory\.nowWeaponIndex\s*(==|!=)\s*(-?\d+)", condition)
+            if match and any("displayIndex" in weapon for weapon in prefab["weapons"].values()):
+                matches = re.findall(r"memory\.nowWeaponIndex\s*(==|!=)\s*(-?\d+)", condition)
+                values = list(dict.fromkeys(int(value) for _, value in matches))
+                visibility = layer.setdefault("visibleWhen", {})
+                layer.pop("hideWhenFiringIndex", None)
+                if " or " in condition and "${onAttacking}==false" in condition:
+                    # NT-1's gun-arm sprite replaces the regular arm only during firing.
+                    layer["hideWhenFiringIndex"] = int(match[2])
+                    visibility.pop("weaponDisplayIndex", None)
+                else:
+                    value = values[0] if len(values) == 1 else values
+                    visibility["weaponDisplayIndex"] = {"not": value} if match[1] == "!=" else value
+                visibility.pop("heldWeapon", None)
+                # This native state replaces old hard-coded axe animation windows.
+                layer.pop("animationVisibility", None)
+            elif condition and "nowWeaponIndex" not in condition:
+                # Native fixed/attached equipment is not controlled by the held weapon.
+                visibility = layer.setdefault("visibleWhen", {})
+                visibility.pop("heldWeapon", None)
+                if re.search(r"self\.shield\s*>\s*0", condition):
+                    visibility["shieldVisible"] = True
+        if "Sniper" in name and name.endswith(("_Idle", "_Attack")):
+            visibility = layer.setdefault("visibleWhen", {})
+            visibility.pop("attacking", None)
+            visibility["heldAttacking"] = name.endswith("_Attack")
+    if prefab["id"] in ["RX_75", "RX_75R", "RMV_1", "RTX_440"]:
+        body = max((layer.get("order", 0) for layer in layers if layer["name"] == "Body"), default=5)
+        for layer in layers:
+            if "Cannon" in layer["name"]:
+                layer["order"] = max(layer.get("order", 0), body + 0.2)
+    # 固定炮口和持枪炮口均按单位覆盖后的原生barrelX/Y重新求挂点。
+    for key, weapon in prefab["weapons"].items():
+        if weapon.get("moduleIds"):
+            continue
+        own = load(ROOT / weapon["source"]["file"])
+        source = {name:{**own.get(name,{}),**native.get(name,{})} for name in own.keys() | native.keys()}
+        mounts = weapon.get("muzzle",{}).get("mounts",[weapon.get("muzzle",{})])
+        barrels = weapon["source"]["barrels"]
+        corrected = []
+        base = weapon.get("special",{}).get("baseWeapon",key)
+        attack_layer = next((layer for layer in layers if layer["name"] == base+"_Attack"),None)
+        for index,mount in enumerate(mounts):
+            barrel = weapon["nativeTiming"]["barrel"] if attack_layer else barrels[min(index,len(barrels)-1)]["id"]
+            turret = section(source,"turret_"+barrel)
+            layer = attack_layer or next((layer for layer in layers if layer["name"] == mount.get("layer")),None)
+            if layer:
+                joint = prefab["skeleton"][layer["bone"]]
+                facing = joint.get("endDirOffset",0)+joint.get("drawDirOffset",0)
+                angle=math.radians(facing+layer.get("pivot",0))
+                tx=joint["y"]+math.cos(angle)*layer["offset"]["y"]-math.sin(angle)*layer["offset"]["x"]
+                ty=joint["x"]+math.sin(angle)*layer["offset"]["y"]+math.cos(angle)*layer["offset"]["x"]-layer.get("height",0)
+                rotation=math.radians(facing+90+layer.get("rotation",0))
+                dx,dy=float(turret.get("barrelY",0))-tx,float(turret.get("barrelX",0))-ty
+                result={"layer":layer["name"],"point":{
+                    "x":(dx*math.cos(rotation)+dy*math.sin(rotation))/(layer.get("scale",1)*layer.get("scaleX",1)),
+                    "y":(-dx*math.sin(rotation)+dy*math.cos(rotation))/(layer.get("scale",1)*layer.get("scaleY",1)),
+                }}
+            else:
+                bone=mount.get("bone","Body" if "Body" in prefab["skeleton"] else next(iter(prefab["skeleton"])))
+                joint=prefab["skeleton"][bone]
+                result={"bone":bone,"offset":{"x":float(turret.get("barrelX",0))-joint["x"],"y":float(turret.get("barrelY",0))-joint["y"]}}
+            if turret.get("barrelOffsetX_onOddShots"):
+                result["alternatingOffsetX"]=float(turret["barrelOffsetX_onOddShots"])
+            corrected.append(result)
+        weapon["muzzle"]={"mounts":corrected} if "mounts" in weapon.get("muzzle",{}) or attack_layer else corrected[0]
+    if prefab["id"] == "RX_77_2":
+        for kit in prefab["weaponKits"]:
+            missile = "EF_RX_77_2_MS" in kit["weapons"]
+            kit["name"] = "导弹套件" if missile else "加农炮套件"
+            # 导弹套件不能携带加农炮的迫击炮分支。
+            if missile:
+                kit["weapons"] = [key for key in kit["weapons"] if prefab["weapons"][key].get("special",{}).get("type") != "mortar"]
+        for layer in layers:
+            if layer["name"] in ["RX_77_2_Cannon", "RX_77_2_SML"]:
+                missile = layer["name"].endswith("SML")
+                layer.setdefault("visibleWhen",{})["kit"] = [kit["id"] for kit in prefab["weaponKits"] if ("EF_RX_77_2_MS" in kit["weapons"]) == missile]
+    for kit in prefab["weaponKits"]:
+        def priority(key):
+            weapon = prefab["weapons"][key]
+            if weapon.get("special") or weapon["type"] == "melee" or "Grenade" in key:
+                return 3
+            # 有持枪贴图的主手武器优先；固定武器／腕部副武器随后。
+            held = any(layer["name"] in [key,key+"_Idle",key+"_Attack"] and layer["bone"] in ["RightArm","RightWeapon","LeftArm","LeftWeapon"] for layer in layers)
+            return 0 if held and weapon.get("rangeRole") != "short_secondary" else 2 if weapon.get("rangeRole") == "short_secondary" else 1
+        if kit["weapons"]:
+            primary = min(kit["weapons"],key=priority)
+            kit["weapons"] = [primary,*[key for key in kit["weapons"] if key != primary]]
+    layers.sort(key=lambda layer:layer.get("order",0))

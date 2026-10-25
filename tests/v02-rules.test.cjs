@@ -41,8 +41,8 @@ test("defense multiplies defenses, raises block chance and reduces final damage 
     before = JSON.stringify(model);
   const normal = G.estimate(g, a, b, w),
     defended = G.estimate(g, a, b, w, "defend");
-  assert.equal(normal.damage, 9 * Math.round((725 * 1.1 - 75) * 0.9));
-  assert.equal(defended.damage, 9 * Math.round((725 * 1.1 - 75 * 1.25) * 0.875 * 0.75));
+  assert.equal(normal.damage, 9 * Math.round((725 * 1.2 * 0.75 - 75) * 0.9));
+  assert.equal(defended.damage, 9 * Math.round((725 * 1.2 * 0.75 - 75 * 1.25) * 0.875 * 0.75));
   assert.notEqual(defended.damage, Math.round(normal.damage * 0.5));
   assert.equal(defended.blockChance, 0);
   b.shield = model.shield.hp;
@@ -81,12 +81,12 @@ test("a volley consumes one counter, exhausted counters reject atomically, hando
   G.end(g);
   assert.equal(G.countersRemaining(b), 1);
 });
-test("V04 weapons, bonuses, HP, shield and Step multipliers match the editable configuration", () => {
+test("native HP, shields, bonuses and full-strength melee steps replace earlier manual balance", () => {
   const gm = G.models.RGM_79__beam_spray,
     light = G.models.RGM_79L__beam_gun,
     cannon = G.models.RGC_80__machine_gun;
-  assert.deepEqual([gm.hp, cannon.hp, light.hp], [16500, 18500, 15500]);
-  assert.deepEqual([gm.shield.hp, cannon.shield.hp, light.shield.hp], [2000, 2000, 1625]);
+  assert.deepEqual([gm.hp, cannon.hp, light.hp], [21000, 18500, 17000]);
+  assert.deepEqual([gm.shield.hp, cannon.shield.hp, light.shield.hp], [4000, 4000, 3250]);
   assert.deepEqual(
     [
       gm.attackBonuses.shooting,
@@ -94,51 +94,17 @@ test("V04 weapons, bonuses, HP, shield and Step multipliers match the editable c
       cannon.attackBonuses.shooting,
       light.attackBonuses.melee,
     ],
-    [10, 10, 15, 15],
+    [20, 15, 30, 15],
   );
-  assert.ok(
-    light.weapons.some(
-      (w) => w.id === "Common_DoubleVulcan_MS" && w.clip === null && !w.changeHeldWeapon,
-    ),
-  );
-  assert.equal(gm.weapons[0].damage, 10000);
-  const rocket = G.models.RGM_79__bazooka.weapons[0];
-  assert.equal(rocket.damagePerShot, 5000);
-  assert.equal(rocket.damage, 10000);
-  assert.deepEqual(rocket.attack.shots, [0.35, 0.75]);
-  for (const model of Object.values(G.models).filter((m) =>
-    ["RGM_79", "RGC_80", "RGM_79L"].includes(m.prefabId),
-  ))
-    for (const w of model.weapons) {
-      assert.equal(
-        w.hit,
-        w.type === "melee"
-          ? 95
-          : {
-              EF_90mmMG: 90,
-              EF_BeamSprayGun: 90,
-              EF_HypeBazooka: 70,
-              Common_Cannon: 75,
-              Common_DoubleVulcan_MS: 95,
-              EF_BOWA_BeamGun: 90,
-            }[w.id],
-      );
-      if (w.type === "melee" && w.shotCount > 1) {
-        assert.deepEqual(
-          w.attack.strikes.map((s) => s.damageMultiplier),
-          [1, 0.5],
-        );
-        assert.equal(w.damage, w.damagePerShot * 1.5);
-      }
-    }
-  assert.throws(() =>
-    Sequence.compile({
-      ...rocket,
-      attack: { steps: [{ delay: 0, shots: 1, damageMultiplier: -1 }] },
-    }),
+  assert.equal(gm.weapons[0].damage, 5000);
+  assert.equal(G.models.RGM_79__bazooka.weapons[0].damage, 8500);
+  assert.deepEqual(
+    light.weapons.find((w) => w.type === "melee").attack.strikes.map((s) => s.damageMultiplier),
+    [1, 1],
   );
 });
-test("actual melee and its forecast both apply the reduced second strike before armor", () => {
+
+test("native single-strike melee and its forecast use the original full payload before armor", () => {
   const { g, a, b } = duel();
   b.x = 3;
   g.seed = 1;
@@ -150,10 +116,10 @@ test("actual melee and its forecast both apply the reduced second strike before 
     );
     const estimate = G.estimate(g, a, b, w),
       event = G.fight(g, a, b, w, "counter", w.id)[0];
-    assert.equal(estimate.damage, 8250);
+    assert.equal(estimate.damage, 4313);
     assert.deepEqual(
       event.strikes.map((s) => s.damage),
-      [5500, 2750],
+      [4313],
     );
     assert.equal(event.damage, estimate.damage);
   } finally {

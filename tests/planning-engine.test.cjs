@@ -67,7 +67,7 @@ test("room authority accepts an attack plan without opening a reaction or damagi
   assert.equal(state.phase, "idle");
   assert.equal(room.pending, null);
   assert.equal(state.plans.length, 1);
-  assert.equal(a.en, 100);
+  assert.equal(a.en, G.modelOf(a).en);
   assert.equal(b.hp, 100000);
   assert.equal(room.game.seed, seed);
 });
@@ -99,7 +99,7 @@ test("responses publish a batch and all players must finish playback before team
   act(1, "respond", { response: "defend" });
   assert.equal(room.combats.length, 0);
   assert.equal(room.responses.length, 1);
-  assert.equal(room.game.units.find((u) => u.id === "0-0").en, 100);
+  assert.equal(room.game.units.find((u) => u.id === "0-0").en, G.models.RGM_79__machine_gun.en);
   assert.equal(room.game.units.find((u) => u.id === "1-0").hp, 100000);
   assert.equal(room.phase, "reaction");
   assert.equal(room.pending.target, "3-0");
@@ -464,4 +464,71 @@ test("reconnect restores a player's own unfinished decision while preserving a t
   });
   assert.equal(room.phase, "playback");
   assert.equal(room.combats.length, 2);
+});
+
+test("charged sniper opens at own turn start and playback returns to the same team action phase", (t) => {
+  const { room, act } = fixture(t);
+  const [a, b] = room.game.units;
+  const [key, m] = Object.entries(G.models).find(([key, m]) => m.prefabId === "RGM_79_G_SP");
+  a.model = key;
+  a.en = m.en;
+  b.x = a.x + 4;
+  const skill = m.weapons.find((w) => w.special?.type === "snipe");
+  room.game.tiles[b.y][b.x] = "plain";
+  act(0, "attack", { unitId: a.id, targetId: b.id, weaponId: skill.id });
+  act(0, "end_turn");
+  assert.equal(room.game.team, 1);
+  assert.ok(a.snipeOrder);
+  assert.equal(a.en, m.en);
+  act(1, "end_turn");
+  assert.equal(room.game.team, 0);
+  assert.equal(room.game.round, 3);
+  assert.equal(room.phase, "reaction");
+  assert.equal(a.plan.charged, true);
+  assert.equal(room.pending.attacker, a.id);
+  assert.deepEqual(room.pending.counterOptions, []);
+  act(1, "respond", { response: "defend" });
+  assert.equal(room.phase, "playback");
+  assert.equal(room.playback.resumeTurn, true);
+  assert.equal(a.en, m.en - skill.en);
+  const batchId = room.playback.id;
+  act(0, "playback_ready", { batchId });
+  act(1, "playback_ready", { batchId });
+  assert.equal(room.phase, "idle");
+  assert.equal(room.game.team, 0);
+  assert.equal(room.game.round, 3);
+  assert.equal(a.acted, true);
+  assert.equal(room.turnDone[0], false);
+});
+
+test("ordered attack queue syncs AP reservations, rejects malformed packets and groups one response per attacker", (t) => {
+  const { room, act } = fixture(t, 4);
+  const a = room.game.units.find((u) => u.id === "0-0"),
+    ally = room.game.units.find((u) => u.id === "2-0");
+  a.model = "RX_78NT_1__kit_1";
+  a.en = 950;
+  const ids = ["EF_RX_78NT_1_BR", "Common_ArmMG", "Common_DoubleVulcan_MS"];
+  assert.throws(() =>
+    act(0, "attack", { unitId: a.id, targetId: "1-0", weaponIds: [ids[0], ids[0], ids[0]] }),
+  );
+  assert.equal(a.actionPoints, 5);
+  const s = act(0, "attack", { unitId: a.id, targetId: "1-0", weaponIds: ids });
+  assert.deepEqual(s.game.units.find((u) => u.id === a.id).plan.weapons, ids);
+  assert.equal(a.actionPoints, 0);
+  assert.equal(ally.actionPoints, 5);
+  act(0, "cancel_attack", { unitId: a.id });
+  assert.equal(a.actionPoints, 5);
+  act(0, "attack", { unitId: a.id, targetId: "1-0", weaponIds: ids });
+  act(0, "end_turn");
+  act(2, "end_turn");
+  assert.equal(room.phase, "reaction");
+  assert.equal(room.pending.counterTargets.length, 1);
+  assert.deepEqual(room.pending.counterTargets[0].weapons, ids);
+  act(1, "respond", { response: "defend" });
+  assert.equal(room.phase, "playback");
+  assert.equal(room.combatBatch.length, 3);
+  assert.deepEqual(
+    room.combatBatch.map((b) => b.events[0].weapon),
+    ids,
+  );
 });

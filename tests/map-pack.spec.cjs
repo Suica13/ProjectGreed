@@ -36,7 +36,7 @@ test("all thirteen maps can be selected in an offline room with descriptions and
   await expect(page.locator("#confirmDeployment")).toBeVisible();
   expect(await page.evaluate(() => game.mapId)).toBe("frontline_3v3");
   expect(await page.evaluate(() => [Rules.mapWidth(game), Rules.mapHeight(game)])).toEqual([
-    32, 36,
+    40, 36,
   ]);
   await expect(page.locator(".roster-owner")).toHaveCount(3);
   expect(

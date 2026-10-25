@@ -1,0 +1,469 @@
+{
+  "schemaVersion": 2,
+  "id": "MissileCar",
+  "code": "MissileCar",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MissileCar/MissileCar.ini",
+  "materials": {
+    "textures": {
+      "MissileCar_Body_1.png": "textures/MissileCar_Body_1.png",
+      "EFSF_0079_GroundArmy_Standard_7.png": "textures/EFSF_0079_GroundArmy_Standard_7.png",
+      "EFSF_0079_GroundArmy_Standard_3.png": "textures/EFSF_0079_GroundArmy_Standard_3.png",
+      "Vehicle.png": "textures/Vehicle.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "Vehicle.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "MissileCar_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.4,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Pilot_0",
+      "texture": "EFSF_0079_GroundArmy_Standard_7.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.5,
+      "offset": {
+        "x": 2.5,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Pilot_1",
+      "texture": "EFSF_0079_GroundArmy_Standard_3.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.5,
+      "offset": {
+        "x": -2.5,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/MissileCar__OnMoving.json",
+    "OnMovingReversing": "../../animations/MissileCar__OnMovingReversing.json",
+    "Common_Dead": "../../animations/MissileCar__Common_Dead.json",
+    "Common_Stun": "../../animations/MissileCar__Common_Stun.json",
+    "Common_Idle": "../../animations/MissileCar__Common_Idle.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 3000.0,
+    "en": 300.0,
+    "move": 7,
+    "mobility": 110.0,
+    "cost": 75,
+    "counterLimit": 1,
+    "accuracy": 115.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": -25.0,
+    "shooting": 25.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 3000.0,
+    "walkSpeed": 0.75,
+    "boostSpeed": 1.65,
+    "turnSpeed": 1.75,
+    "reaction": 110.0,
+    "shooting": 125.0,
+    "melee": 75.0,
+    "nativeTags": [
+      "MissileCar",
+      "Unit",
+      "Tank",
+      "EFSF",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "balanceStatus": "native-level",
+    "accuracy": 115.0,
+    "unitLevel": 250.0,
+    "tacticalMoveBeforeBonus": 6
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk"
+  },
+  "name": "导弹车",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "导弹车",
+      "description": "装备导弹发射器的战斗车辆"
+    },
+    "en": {
+      "name": "MissileCar",
+      "description": "Combat vehicle equipped with missile launcher"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_DoubleMS_MissileCar": {
+      "name": "导弹发射器",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 95.0,
+      "en": 25.0,
+      "sourceName": "Common_DoubleMS_MissileCar",
+      "sourceHit": 95.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 500.0,
+      "damageComponents": {
+        "shell": 500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_MissileCar.gw",
+        "barrels": [
+          {
+            "id": "Common_DoubleMS_MissileCar",
+            "x": 2.5,
+            "y": -12.5
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 50.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 2.5,
+              "y": -12.5
+            },
+            "alternatingOffsetX": -5.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.15
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S"
+      ],
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 500.0,
+        "DpDamage": 20.0,
+        "WeaponAccuracy": 95.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 50.0,
+        "ProjectileTurnspeed": 3.5,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 20.0,
+        "EquipmentIndex": 1.0,
+        "EquipmentIndex2": 150.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_MissileCar.gw",
+        "barrel": "Common_DoubleMS_MissileCar",
+        "entry": "automatic_turret",
+        "cooldown": 3.0,
+        "duration": 0.6,
+        "firstShot": 0.0,
+        "lastShot": 0.6,
+        "firingEvents": 5,
+        "projectiles": 5,
+        "declaredEnergy": 5.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 5.0,
+        "energy": 25.0,
+        "actions": []
+      },
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "Common_DoubleMS_MissileCar"
+      ]
+    }
+  ],
+  "description": "装备导弹发射器的战斗车辆",
+  "costBalance": {
+    "nativeLevel": 250.0,
+    "levelMultiplier": 0.25,
+    "published": 75
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1
+}

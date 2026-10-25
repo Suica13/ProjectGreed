@@ -1,0 +1,2286 @@
+{
+  "schemaVersion": 2,
+  "id": "MS_10",
+  "code": "MS-10",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_10/MS_10.ini",
+  "materials": {
+    "textures": {
+      "MS_10_Crotch_1.png": "textures/MS_10_Crotch_1.png",
+      "MS_10_Body_1.png": "textures/MS_10_Body_1.png",
+      "MS_10_ArmL_1.png": "textures/MS_10_ArmL_1.png",
+      "MS_10_ArmR_1.png": "textures/MS_10_ArmR_1.png",
+      "MS_10_ShoulderL_1.png": "textures/MS_10_ShoulderL_1.png",
+      "MS_10_ShoulderR_1.png": "textures/MS_10_ShoulderR_1.png",
+      "MS_10_Head_1.png": "textures/MS_10_Head_1.png",
+      "MS_10_Eye_1.png": "textures/MS_10_Eye_1.png",
+      "MS_10_LegL_1.png": "textures/MS_10_LegL_1.png",
+      "MS_10_LegR_1.png": "textures/MS_10_LegR_1.png",
+      "ZN_360mmBazooka.png": "textures/ZN_360mmBazooka.png",
+      "ZN_BeamBazooka.png": "textures/ZN_BeamBazooka.png",
+      "ZN_MS_10_MS.png": "textures/ZN_MS_10_MS.png",
+      "ZN_HeatSaber.png": "textures/ZN_HeatSaber.png",
+      "MS_10_ArmL_2.png": "textures/MS_10_ArmL_2.png",
+      "MS_10.png": "textures/MS_10.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MS_10.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "ZN_360mmBazooka_NotUsing",
+      "texture": "ZN_360mmBazooka.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.8,
+      "scaleY": -1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": -0.5,
+        "y": -8.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "ZN_BeamBazooka_NotUsing",
+      "texture": "ZN_BeamBazooka.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.85,
+      "scaleY": -1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": -1.0,
+        "y": -9.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MS_10_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 6.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MS_10_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 6.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "MS_10_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "MS_10_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 1
+        }
+      }
+    },
+    {
+      "name": "ArmR",
+      "texture": "MS_10_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_HeatSaber",
+      "texture": "ZN_HeatSaber.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scaleX": -1.0,
+      "rotation": -90.0,
+      "frames": 2.0,
+      "frame": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": -8.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 1
+        }
+      }
+    },
+    {
+      "name": "ArmL_1",
+      "texture": "MS_10_ArmL_2.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "ZN_MS_10_MS_MS",
+      "texture": "ZN_MS_10_MS.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 0.75,
+      "rotation": 0.0,
+      "frames": 2.0,
+      "frame": 0,
+      "offset": {
+        "x": -9.0,
+        "y": 24.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "frameFps": 12,
+      "onlyAnimateWhenMoving": false
+    },
+    {
+      "name": "Body",
+      "texture": "MS_10_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ZN_HeatSaber_F",
+      "texture": "ZN_HeatSaber.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 1.0,
+      "rotation": -15.0,
+      "frames": 2.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 3.0,
+        "y": 30.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ],
+        "weaponDisplayIndex": 1
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MS_10_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MS_10_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ZN_360mmBazooka",
+      "texture": "ZN_360mmBazooka.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.5,
+        "y": 12.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "ZN_BeamBazooka",
+      "texture": "ZN_BeamBazooka.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 4.0,
+        "y": 14.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Head",
+      "texture": "MS_10_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MS_10_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Eye",
+      "texture": "MS_10_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.5,
+      "offset": {
+        "x": 0.0,
+        "y": 1.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/MS_10__EnterPilot.json",
+    "QuitPilot": "../../animations/MS_10__QuitPilot.json",
+    "NoPilotIdle": "../../animations/MS_10__NoPilotIdle.json",
+    "Common_Idle": "../../animations/MS_10__Common_Idle.json",
+    "Common_Dodge_L": "../../animations/MS_10__Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/MS_10__Common_Dodge_R.json",
+    "OnMoving": "../../animations/MS_10__OnMoving.json",
+    "OnMovingReversing": "../../animations/MS_10__OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/MS_10__OnMovingWalk.json",
+    "Guard": "../../animations/MS_10__Guard.json",
+    "Common_Dead": "../../animations/MS_10__Common_Dead.json",
+    "Common_Stun": "../../animations/MS_10__Common_Stun.json",
+    "Common_Daze": "../../animations/MS_10__Common_Daze.json",
+    "Common_Stagger": "../../animations/MS_10__Common_Stagger.json",
+    "Common_Push_A": "../../animations/MS_10__Common_Push_A.json",
+    "Common_Shoot_A": "../../animations/MS_10__Common_Shoot_A.json",
+    "Common_Shoot_A_FA": "../../animations/MS_10__Common_Shoot_A_FA.json",
+    "Common_StandShoot_A": "../../animations/MS_10__Common_StandShoot_A.json",
+    "Common_Melee_F": "../../animations/MS_10__Common_Melee_F.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 28500.0,
+    "en": 750.0,
+    "move": 7,
+    "mobility": 115.0,
+    "cost": 350,
+    "counterLimit": 1,
+    "accuracy": 120.0,
+    "partStructuralStrength": 120.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100
+    },
+    "ship": false,
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 25.0,
+    "shooting": 30.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 15.0,
+      "flat": 125.0
+    },
+    "melee": {
+      "percent": 15.0,
+      "flat": 250.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 10.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 28500.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.55,
+    "turnSpeed": 1.45,
+    "reaction": 115.0,
+    "shooting": 130.0,
+    "melee": 125.0,
+    "nativeTags": [
+      "MS_10",
+      "Unit",
+      "MS",
+      "ZEON",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "accuracy": 120.0,
+    "partStructuralStrength": 120.0,
+    "balanceStatus": "native-level",
+    "unitLevel": 1350.0,
+    "tacticalMoveBeforeBonus": 6
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost"
+  },
+  "name": "培曾·多瓦吉",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "培曾·多瓦吉",
+      "description": "培曾计划的产物之一,皆在强化大魔的格斗性能"
+    },
+    "en": {
+      "name": "Pezun Dowadge",
+      "description": "One of the products of the Pezun Project, aimed at enhancing Dom's melee capabilities"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 125.0,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000.0,
+      "damageComponents": {
+        "melee": 2500.0,
+        "meleeShell": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Push_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.75,
+            "requiredParts": [],
+            "delay": 0.45
+          },
+          {
+            "delay": 1.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3,
+        "barrels": [
+          {
+            "id": "Common_Push_A",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "category": "melee",
+      "nativePayload": {
+        "CqbDamage": 2500.0,
+        "CqbShellDamage": 2500.0,
+        "DpDamage": 1000.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 0.75,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrel": "Common_Push_A",
+        "entry": "hiddenAction_Common_Push_A_Fire",
+        "cooldown": 3.0,
+        "duration": 1.45,
+        "firstShot": 0.45,
+        "lastShot": 0.45,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_Common_Push_A_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_Common_Push_A_SetWeaponIndex",
+          "hiddenAction_Common_Push_A_Step_1",
+          "hiddenAction_Common_Push_A_Fire_Step_1",
+          "hiddenAction_Common_Push_A_Fire_Step_2",
+          "hiddenAction_Common_Push_A_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 5
+    },
+    "ZN_360mmBazooka": {
+      "name": "360mm火箭筒",
+      "type": "shell",
+      "min": 2,
+      "max": 4,
+      "hit": 75.0,
+      "en": 55.0,
+      "sourceName": "ZN_360mmBazooka",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Shoot_A",
+      "damagePerShot": 9000.0,
+      "damageComponents": {
+        "shell": 9000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+        "barrels": [
+          {
+            "id": "ZN_360mmBazooka",
+            "x": 11.0,
+            "y": 27.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Bazooka_1.png",
+        "scale": 1.0,
+        "speed": 55.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "ZN_360mmBazooka",
+            "point": {
+              "x": -0.5555555555555545,
+              "y": -16.666666666666668
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Bazooka_1.ogg",
+        "volume": 0.4
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ],
+      "category": "bazooka",
+      "nativePayload": {
+        "ShellDamage": 9000.0,
+        "DpDamage": 350.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 55.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 30.0,
+        "ProjectileLife": 35.0,
+        "ProjectileBlastRange": 60.0,
+        "ProjectileBlastDamageModifier": 0.2,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw",
+        "barrel": "ZN_360mmBazooka",
+        "entry": "hiddenAction_ZN_360mmBazooka_Fire",
+        "cooldown": 4.0,
+        "duration": 0.6499999999999999,
+        "firstShot": 0.35,
+        "lastShot": 0.35,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 55.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 55.0,
+        "actions": [
+          "hiddenAction_ZN_360mmBazooka_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_360mmBazooka_SetWeaponIndex",
+          "hiddenAction_ZN_360mmBazooka_B1_Step_1",
+          "hiddenAction_ZN_360mmBazooka_Fire_Step_1",
+          "hiddenAction_ZN_360mmBazooka_Fire_Step_2",
+          "hiddenAction_ZN_360mmBazooka_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    },
+    "ZN_BeamBazooka": {
+      "name": "火箭筒",
+      "type": "beam",
+      "min": 2,
+      "max": 4,
+      "hit": 75.0,
+      "en": 120.0,
+      "sourceName": "ZN_BeamBazooka",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Shoot_A",
+      "damagePerShot": 13500.0,
+      "damageComponents": {
+        "beam": 9000.0,
+        "beamAP": 4500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.45
+          },
+          {
+            "delay": 0.45
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_BeamBazooka.gw",
+        "barrels": [
+          {
+            "id": "ZN_BeamBazooka",
+            "x": 12.0,
+            "y": 22.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_3_Yellow.png",
+        "scale": 1.0,
+        "speed": 55.0,
+        "forwardOffset": -15.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Exp_1_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "ZN_BeamBazooka",
+            "point": {
+              "x": -0.9999999999999996,
+              "y": -8.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_2.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Yellow"
+      ],
+      "category": "bazooka",
+      "nativePayload": {
+        "BeamDamage": 9000.0,
+        "BeamAPDamage": 4500.0,
+        "DpDamage": 500.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 55.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 40.0,
+        "ProjectileLife": 35.0,
+        "ProjectileBlastRange": 60.0,
+        "ProjectileBlastDamageModifier": 0.2,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_BeamBazooka.gw",
+        "barrel": "ZN_BeamBazooka",
+        "entry": "hiddenAction_ZN_BeamBazooka_Fire",
+        "cooldown": 10.0,
+        "duration": 0.9,
+        "firstShot": 0.45,
+        "lastShot": 0.45,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 120.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 120.0,
+        "actions": [
+          "hiddenAction_ZN_BeamBazooka_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_BeamBazooka_SetWeaponIndex",
+          "hiddenAction_ZN_BeamBazooka_B1_Step_1",
+          "hiddenAction_ZN_BeamBazooka_Fire_Step_1",
+          "hiddenAction_ZN_BeamBazooka_Fire_Step_2",
+          "hiddenAction_ZN_BeamBazooka_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    },
+    "ZN_MS_10_MS_AMS": {
+      "name": "导弹发射器",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 75.0,
+      "en": 120.0,
+      "sourceName": "ZN_MS_10_MS_AMS",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_StandShoot_A",
+      "damagePerShot": 3500.0,
+      "damageComponents": {
+        "shell": 3500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_StandShoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.5
+          },
+          {
+            "delay": 0.35
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_AMS.gw",
+        "barrels": [
+          {
+            "id": "ZN_MS_10_MS_AMS",
+            "x": -11.0,
+            "y": 22.0
+          },
+          {
+            "id": "ZN_MS_10_MS_AMS_R",
+            "x": 11.0,
+            "y": 22.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_4.png",
+        "scale": 0.5,
+        "speed": 25.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -11.0,
+              "y": 22.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 11.0,
+              "y": 22.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.4
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1",
+        "BZ_Fire_1"
+      ],
+      "mergedPositions": [
+        "ZN_MS_10_MS_AMS",
+        "ZN_MS_10_MS_AMS_R"
+      ],
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 3500.0,
+        "DpDamage": 100.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.5,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.5,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 25.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 55.0,
+        "ProjectileLife": 50.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.5,
+          "accuracy": 1.5
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_AMS.gw",
+        "barrel": "ZN_MS_10_MS_AMS",
+        "entry": "hiddenAction_ZN_MS_10_MS_AMS_Fire",
+        "cooldown": 12.0,
+        "duration": 1.2,
+        "firstShot": 0.35,
+        "lastShot": 0.85,
+        "firingEvents": 2,
+        "projectiles": 2,
+        "declaredEnergy": 120.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 120.0,
+        "actions": [
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_MS_10_MS_AMS_SetWeaponIndex",
+          "hiddenAction_ZN_MS_10_MS_AMS_B2_Step_1",
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire_Step_1",
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire_Step_2",
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire_Step_3",
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    },
+    "ZN_MS_10_MS_AMS_R": {
+      "name": "导弹发射器",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 75.0,
+      "en": 120.0,
+      "sourceName": "ZN_MS_10_MS_AMS_R",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_StandShoot_A",
+      "damagePerShot": 3500.0,
+      "damageComponents": {
+        "shell": 3500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_StandShoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.5
+          },
+          {
+            "delay": 0.35
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_AMS.gw",
+        "barrels": [
+          {
+            "id": "ZN_MS_10_MS_AMS",
+            "x": -11.0,
+            "y": 22.0
+          },
+          {
+            "id": "ZN_MS_10_MS_AMS_R",
+            "x": 11.0,
+            "y": 22.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_4.png",
+        "scale": 0.5,
+        "speed": 25.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -11.0,
+              "y": 22.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 11.0,
+              "y": 22.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.4
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1",
+        "BZ_Fire_1"
+      ],
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "paired_weapon"
+        ],
+        "mergedInto": "ZN_MS_10_MS_AMS"
+      },
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 3500.0,
+        "DpDamage": 100.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.5,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.5,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 25.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 55.0,
+        "ProjectileLife": 50.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.5,
+          "accuracy": 1.5
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_AMS.gw",
+        "barrel": "ZN_MS_10_MS_AMS",
+        "entry": "hiddenAction_ZN_MS_10_MS_AMS_Fire",
+        "cooldown": 12.0,
+        "duration": 1.2,
+        "firstShot": 0.35,
+        "lastShot": 0.85,
+        "firingEvents": 2,
+        "projectiles": 2,
+        "declaredEnergy": 120.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 120.0,
+        "actions": [
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_MS_10_MS_AMS_SetWeaponIndex",
+          "hiddenAction_ZN_MS_10_MS_AMS_B2_Step_1",
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire_Step_1",
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire_Step_2",
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire_Step_3",
+          "hiddenAction_ZN_MS_10_MS_AMS_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    },
+    "ZN_MS_10_MS_MS": {
+      "name": "导弹发射器",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 85.0,
+      "en": 40.0,
+      "sourceName": "ZN_MS_10_MS_MS",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_StandShoot_A",
+      "damagePerShot": 800.0,
+      "damageComponents": {
+        "shell": 800.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_StandShoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "delay": 0.35
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_MS.gw",
+        "barrels": [
+          {
+            "id": "ZN_MS_10_MS_MS",
+            "x": -3.0,
+            "y": 22.0
+          },
+          {
+            "id": "ZN_MS_10_MS_MS_R",
+            "x": 3.0,
+            "y": 22.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 30.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "ZN_MS_10_MS_MS",
+            "point": {
+              "x": -4.0,
+              "y": 2.6666666666666665
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 3.0,
+              "y": 22.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.2
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "mergedPositions": [
+        "ZN_MS_10_MS_MS",
+        "ZN_MS_10_MS_MS_R"
+      ],
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 800.0,
+        "DpDamage": 60.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 30.0,
+        "ProjectileTurnspeed": 1.5,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 50.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_MS.gw",
+        "barrel": "ZN_MS_10_MS_MS",
+        "entry": "hiddenAction_ZN_MS_10_MS_MS_Fire",
+        "cooldown": 7.0,
+        "duration": 1.3,
+        "firstShot": 0.35,
+        "lastShot": 0.9500000000000001,
+        "firingEvents": 8,
+        "projectiles": 8,
+        "declaredEnergy": 40.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 40.0,
+        "actions": [
+          "hiddenAction_ZN_MS_10_MS_MS_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_MS_10_MS_MS_SetWeaponIndex",
+          "hiddenAction_ZN_MS_10_MS_MS_B8_Step_1",
+          "hiddenAction_ZN_MS_10_MS_MS_Fire_Step_1",
+          "hiddenAction_ZN_MS_10_MS_MS_Fire_Step_2",
+          "hiddenAction_ZN_MS_10_MS_MS_Fire_Step_3",
+          "hiddenAction_ZN_MS_10_MS_MS_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    },
+    "ZN_MS_10_MS_MS_R": {
+      "name": "导弹发射器",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 85.0,
+      "en": 40.0,
+      "sourceName": "ZN_MS_10_MS_MS_R",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_StandShoot_A",
+      "damagePerShot": 800.0,
+      "damageComponents": {
+        "shell": 800.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_StandShoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "delay": 0.35
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_MS.gw",
+        "barrels": [
+          {
+            "id": "ZN_MS_10_MS_MS",
+            "x": -3.0,
+            "y": 22.0
+          },
+          {
+            "id": "ZN_MS_10_MS_MS_R",
+            "x": 3.0,
+            "y": 22.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 30.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "ZN_MS_10_MS_MS",
+            "point": {
+              "x": -4.0,
+              "y": 2.6666666666666665
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 3.0,
+              "y": 22.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.2
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "paired_weapon"
+        ],
+        "mergedInto": "ZN_MS_10_MS_MS"
+      },
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 800.0,
+        "DpDamage": 60.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 30.0,
+        "ProjectileTurnspeed": 1.5,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 50.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_MS.gw",
+        "barrel": "ZN_MS_10_MS_MS",
+        "entry": "hiddenAction_ZN_MS_10_MS_MS_Fire",
+        "cooldown": 7.0,
+        "duration": 1.3,
+        "firstShot": 0.35,
+        "lastShot": 0.9500000000000001,
+        "firingEvents": 8,
+        "projectiles": 8,
+        "declaredEnergy": 40.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 40.0,
+        "actions": [
+          "hiddenAction_ZN_MS_10_MS_MS_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_MS_10_MS_MS_SetWeaponIndex",
+          "hiddenAction_ZN_MS_10_MS_MS_B8_Step_1",
+          "hiddenAction_ZN_MS_10_MS_MS_Fire_Step_1",
+          "hiddenAction_ZN_MS_10_MS_MS_Fire_Step_2",
+          "hiddenAction_ZN_MS_10_MS_MS_Fire_Step_3",
+          "hiddenAction_ZN_MS_10_MS_MS_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2,
+      "displayIndex": 0
+    },
+    "ZN_MS_09_ChestBeam": {
+      "name": "胸部扩散光束炮",
+      "type": "beam",
+      "min": 1,
+      "max": 1,
+      "hit": 95.0,
+      "en": 20.0,
+      "sourceName": "ZN_MS_09_ChestBeam",
+      "sourceHit": 95.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 400.0,
+      "damageComponents": {
+        "beam": 400.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 8,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "backpack"
+      ],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw",
+        "barrels": [
+          {
+            "id": "ZN_MS_09_ChestBeam",
+            "x": -6.0,
+            "y": 5.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_1_Yellow.png",
+        "scale": 0.75,
+        "speed": 55.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_1_S_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -6.0,
+              "y": 5.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamSprayGun_2.ogg",
+        "volume": 0.75
+      },
+      "targetModifiers": {
+        "air": 0.5,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Yellow_S"
+      ],
+      "category": "other",
+      "nativePayload": {
+        "offsetRandomDir": 8.0,
+        "BeamDamage": 400.0,
+        "DpDamage": 140.0,
+        "WeaponAccuracy": 95.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 55.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 10.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw",
+        "barrel": "ZN_MS_09_ChestBeam",
+        "entry": "hiddenAction_ZN_MS_09_ChestBeam_Fire",
+        "cooldown": 10.0,
+        "duration": 0.2,
+        "firstShot": 0.1,
+        "lastShot": 0.1,
+        "firingEvents": 1,
+        "projectiles": 8,
+        "declaredEnergy": 20.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 20.0,
+        "actions": [
+          "hiddenAction_ZN_MS_09_ChestBeam_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_MS_09_ChestBeam_SetWeaponIndex",
+          "hiddenAction_ZN_MS_09_ChestBeam_B1_Step_1",
+          "hiddenAction_ZN_MS_09_ChestBeam_Fire_Step_1",
+          "hiddenAction_ZN_MS_09_ChestBeam_Fire_Step_2",
+          "hiddenAction_ZN_MS_09_ChestBeam_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "actionCost": 2
+    },
+    "ZN_HeatSaber_F": {
+      "name": "热能军刀",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 125.0,
+      "en": 0,
+      "sourceName": "ZN_HeatSaber_F",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_F",
+      "damagePerShot": 5000.0,
+      "damageComponents": {
+        "melee": 2500.0,
+        "meleeShell": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 1,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Melee_F",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.3
+          },
+          {
+            "delay": 1.4
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_F.gw",
+        "barrels": [
+          {
+            "id": "ZN_HeatSaber_F",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "category": "melee",
+      "nativePayload": {
+        "CqbDamage": 2500.0,
+        "CqbShellDamage": 2500.0,
+        "DpDamage": 750.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 2.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_F.gw",
+        "barrel": "ZN_HeatSaber_F",
+        "entry": "hiddenAction_ZN_HeatSaber_F_Fire",
+        "cooldown": 3.5,
+        "duration": 1.7,
+        "firstShot": 0.3,
+        "lastShot": 0.3,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_ZN_HeatSaber_F_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_ZN_HeatSaber_F_SetWeaponIndex",
+          "hiddenAction_ZN_HeatSaber_F_Step_1",
+          "hiddenAction_ZN_HeatSaber_F_Fire_Step_1",
+          "hiddenAction_ZN_HeatSaber_F_Fire_Step_2",
+          "hiddenAction_ZN_HeatSaber_F_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 2,
+      "displayIndex": 1
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "kit_0",
+      "name": "360mm火箭筒套件",
+      "cost": 50,
+      "weapons": [
+        "ZN_360mmBazooka",
+        "Common_Push_A",
+        "ZN_MS_09_ChestBeam",
+        "ZN_HeatSaber_F"
+      ]
+    },
+    {
+      "id": "kit_1",
+      "name": "火箭筒套件",
+      "cost": 50,
+      "weapons": [
+        "ZN_BeamBazooka",
+        "Common_Push_A",
+        "ZN_MS_09_ChestBeam",
+        "ZN_HeatSaber_F"
+      ]
+    },
+    {
+      "id": "kit_2",
+      "name": "导弹发射器套件",
+      "cost": 50,
+      "weapons": [
+        "ZN_MS_10_MS_MS",
+        "ZN_MS_10_MS_AMS",
+        "Common_Push_A",
+        "ZN_MS_09_ChestBeam",
+        "ZN_HeatSaber_F"
+      ]
+    }
+  ],
+  "description": "培曾计划的产物之一,皆在强化大魔的格斗性能",
+  "kitAliases": {
+    "kit_3": "kit_2",
+    "kit_4": "kit_2",
+    "kit_5": "kit_2",
+    "kit_6": "kit_0"
+  },
+  "costBalance": {
+    "nativeLevel": 1350.0,
+    "levelMultiplier": 0.25,
+    "published": 350
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "pairedWeapons": [
+    {
+      "id": "ZN_MS_10_MS_AMS",
+      "channels": [
+        {
+          "id": "ZN_MS_10_MS_AMS",
+          "weaponId": "ZN_MS_10_MS_AMS",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": null
+        },
+        {
+          "id": "ZN_MS_10_MS_AMS_R",
+          "weaponId": "ZN_MS_10_MS_AMS_R",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": null
+        }
+      ]
+    },
+    {
+      "id": "ZN_MS_10_MS_MS",
+      "channels": [
+        {
+          "id": "ZN_MS_10_MS_MS",
+          "weaponId": "ZN_MS_10_MS_MS",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": null
+        },
+        {
+          "id": "ZN_MS_10_MS_MS_R",
+          "weaponId": "ZN_MS_10_MS_MS_R",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": null
+        }
+      ]
+    }
+  ]
+}

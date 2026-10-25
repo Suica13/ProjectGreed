@@ -24,7 +24,7 @@ test("tail priority combines individual cost, room tags and team tags without mu
   assert.deepEqual(own.disabled, [1, 2, 3, 4]);
   assert.deepEqual(own.reasons, { 1: "cost", 2: "not_allowed", 3: "cost", 4: "cost" });
   assert.deepEqual(own.indices, [0]);
-  assert.equal(own.deployCost, 200);
+  assert.equal(own.deployCost, 100);
   assert.equal(
     G.planFormation(army, 500, G.formationRestrictions(settings, 1)).deployable.length,
     0,
@@ -32,7 +32,7 @@ test("tail priority combines individual cost, room tags and team tags without mu
   assert.equal(G.planFormation(army, Infinity).disabled.length, 0);
   assert.equal(JSON.stringify(army), original);
   assert.deepEqual(
-    G.planFormation([entry("MS_06F"), entry("RGM_79"), entry("MS_06F")], 550).indices,
+    G.planFormation([entry("MS_06F"), entry("RGM_79"), entry("MS_06F")], 350).indices,
     [0, 1],
   );
 });
@@ -79,7 +79,7 @@ test("MS-06F2 uses original body, eye, sound, projectiles, Steps and three non-b
   assert.equal(prefab.weaponKits.length, 3);
   for (const kit of prefab.weaponKits) {
     const model = G.models[prefab.id + "__" + kit.id];
-    assert.ok(model.cost >= 350 && model.cost <= 400);
+    assert.ok(model.cost >= 250 && model.cost <= 300);
     assert.ok(model.hp >= gm.hp && model.hp <= gm.hp * 1.2);
     assert.equal(model.move, gm.move);
     for (const weapon of model.weapons) {

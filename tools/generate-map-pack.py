@@ -3,6 +3,7 @@ import json
 import random
 from collections import deque
 from pathlib import Path
+from map_deployment import widen_map, sync_default
 
 ROOT = Path(__file__).resolve().parents[1]
 PALETTES = {
@@ -94,12 +95,14 @@ def main():
     # Rebuild the original presets, then restore the additive large-map pack.
     # Preserve additional maps and hand-authored files.
     for data in maps:
+        widen_map(data)
         (directory/(data['id']+'.json')).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         print(data['id'],data['width'],data['height'])
     path=ROOT/'assets/unit-catalog.json'
     catalog=json.loads(path.read_text(encoding='utf-8'))
     catalog['maps']=['maps/'+data['id']+'.json' for data in maps]+[ref for ref in catalog.get('maps',[]) if ref not in ['maps/'+data['id']+'.json' for data in maps]]
     catalog['defaultMap']=maps[0]['id']
+    sync_default(catalog)
     path.write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 

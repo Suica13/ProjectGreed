@@ -30,15 +30,44 @@ const UnitIdentity = (() => {
       team: "队伍" + (unit.team + 1),
     };
   }
+  function drawCommandAura(ctx, unit, position, tile, selectedUnit) {
+    if (!selectedUnit || !Rules.modelOf(unit).ship) return;
+    for (const aura of Rules.modelOf(unit).commandAuras || []) {
+      if (
+        selectedUnit.id !== unit.id &&
+        (selectedUnit.team !== unit.team ||
+          Math.hypot(
+            Rules.center(unit).x - Rules.center(selectedUnit).x,
+            Rules.center(unit).y - Rules.center(selectedUnit).y,
+          ) > aura.radiusCells)
+      )
+        continue;
+      ctx.save();
+      ctx.strokeStyle = aura.type === "cmdDef" ? "#74aaff55" : "#f1ce7855";
+      ctx.fillStyle = aura.type === "cmdDef" ? "#74aaff09" : "#f1ce7809";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(position.x, position.y, tile * aura.radiusCells, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
   function drawRing(ctx, unit, position, tile) {
     const palette = colors[relation(unit)];
     ctx.fillStyle = palette.fill;
     ctx.strokeStyle = palette.color;
     ctx.lineWidth = 1.8;
     ctx.beginPath();
-    ctx.arc(position.x, position.y, tile * 0.31, 0, Math.PI * 2);
+    ctx.arc(
+      position.x,
+      position.y,
+      tile * (Rules.models?.[unit.model]?.ship ? 0.45 : 0.31),
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
     ctx.stroke();
   }
-  return { colors, viewerSeat, relation, owner, drawRing };
+  return { colors, viewerSeat, relation, owner, drawRing, drawCommandAura };
 })();

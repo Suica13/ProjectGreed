@@ -60,24 +60,24 @@
     const weapon =
       UnitModels[left.model].weapons.find((item) => item.id === preview.weapon) ||
       UnitModels[left.model].weapons[0];
-    preview.weapon = weapon.id;
-    right.x = left.x + Math.max(1, weapon.min);
+    preview.weapon = weapon?.id || null;
+    right.x = left.x + Math.max(1, weapon?.min || 1);
     game.units = [left, right];
     selected = preview.unitState === "empty" ? null : left.id;
-    mode = preview.unitState === "targets" ? "target" : "select";
-    weaponId = mode === "target" ? weapon.id : null;
+    mode = preview.unitState === "targets" && weapon ? "target" : "select";
+    weaponId = mode === "target" ? weapon?.id || null : null;
     phase = "idle";
     if (preview.unitState === "acted") left.acted = true;
     if (preview.unitState === "dead") right.hp = 0;
     update();
     addLog("布局预览：选中机体、选择武器、交战。此处使用独立示例数据。");
-    pending = { attacker: left.id, target: right.id, weapon: weapon.id };
+    pending = weapon ? { attacker: left.id, target: right.id, weapon: weapon.id } : null;
     response = preview.response;
     const legalCounter = UnitModels[right.model].weapons.find((item) =>
       Rules.canAttack(game, right, left, item),
     );
     counterId = legalCounter?.id || null;
-    renderReaction();
+    if (weapon) renderReaction();
     // 即使该武器的实际距离不能反击，也能查看反击列表的排版。
     if (preview.response === "counter" && !legalCounter) {
       byId("counterList").innerHTML = UnitModels[right.model].weapons
@@ -125,8 +125,8 @@
     preview.left = left;
     preview.right = right;
     const counterWeapon = legalCounter || UnitModels[right.model].weapons[0];
-    preview.events = [makeEvent(left, right, weapon)];
-    if (preview.response === "counter" && preview.result !== "kill")
+    preview.events = weapon ? [makeEvent(left, right, weapon)] : [];
+    if (counterWeapon && preview.response === "counter" && preview.result !== "kill")
       preview.events.push(makeEvent(right, left, counterWeapon));
     if (preview.scene === "formation") Formation.open();
     if (preview.scene === "deployment") {
@@ -169,6 +169,12 @@
     }
     if (!preview.ready) configure();
     if (!["map", "deployment", "battle"].includes(preview.scene)) {
+      WeaponAudio.stop();
+      preview.boxes = [];
+      return;
+    }
+    if (!preview.events?.length) {
+      drawMap(now);
       WeaponAudio.stop();
       preview.boxes = [];
       return;

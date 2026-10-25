@@ -1,0 +1,668 @@
+{
+  "schemaVersion": 2,
+  "id": "ZN_APC_WithMS",
+  "code": "ZN-APC-WithMS",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/ZN_APC/ZN_APC_WithMS.ini",
+  "materials": {
+    "textures": {
+      "ZN_APC_Body_1.png": "textures/ZN_APC_Body_1.png",
+      "ZN_APC.png": "textures/ZN_APC.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "ZN_APC_Turret_1.png": "textures/ZN_APC_Turret_1.png",
+      "ZN_APC_Turret_2.png": "textures/ZN_APC_Turret_2.png"
+    },
+    "icon": "ZN_APC.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "Turret_ZN_APC_MG": {
+      "x": 0.0,
+      "y": 3.5,
+      "endDirOffset": 0
+    }
+  },
+  "layers": [
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "ZN_APC_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.5,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Turret_1",
+      "bone": "Turret_ZN_APC_MG",
+      "texture": "ZN_APC_Turret_1.png",
+      "order": 5.0,
+      "scale": 0.5,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "rotation": 0,
+      "visibleWhen": {}
+    },
+    {
+      "name": "Turret_2",
+      "bone": "Turret_ZN_APC_MG",
+      "texture": "ZN_APC_Turret_2.png",
+      "order": 5.0,
+      "scale": 0.5,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "rotation": 0,
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/ZN_APC_WithMS__OnMoving.json",
+    "OnMovingReversing": "../../animations/ZN_APC_WithMS__OnMovingReversing.json",
+    "Common_Dead": "../../animations/ZN_APC_WithMS__Common_Dead.json",
+    "Common_Stun": "../../animations/ZN_APC_WithMS__Common_Stun.json",
+    "Common_Idle": "../../animations/ZN_APC_WithMS__Common_Idle.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 3500.0,
+    "en": 250.0,
+    "move": 5,
+    "mobility": 50.0,
+    "cost": 25,
+    "counterLimit": 1,
+    "accuracy": 105.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "visualTurrets": [
+      {
+        "id": "ZN_APC_MG",
+        "bone": "Turret_ZN_APC_MG",
+        "idleDir": 0,
+        "arc": 180
+      }
+    ],
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": -25.0,
+    "shooting": 10.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 3500.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.0,
+    "turnSpeed": 1.25,
+    "reaction": 50.0,
+    "shooting": 110.0,
+    "melee": 75.0,
+    "nativeTags": [
+      "ZN_APC_WithMS",
+      "Unit",
+      "Tank",
+      "ZEON",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "balanceStatus": "native-level",
+    "accuracy": 105.0,
+    "unitLevel": 100.0,
+    "tacticalMoveBeforeBonus": 4
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk"
+  },
+  "name": "装甲车[加装导弹]",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "装甲车[加装导弹]",
+      "description": "加装了导弹的两栖装甲车"
+    },
+    "en": {
+      "name": "APC[WithMS]",
+      "description": "Amphibious armored vehicle equipped with missiles"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "ZN_APC_MG": {
+      "name": "机枪",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 125.0,
+      "en": 6.0,
+      "sourceName": "ZN_APC_MG",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 65.0,
+      "damageComponents": {
+        "shell": 65.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_APC_MG.gw",
+        "barrels": [
+          {
+            "id": "ZN_APC_MG",
+            "x": 0.0,
+            "y": 5.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 85.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_ZN_APC_MG",
+            "offset": {
+              "x": 0.0,
+              "y": 1.5
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 65.0,
+        "DpDamage": 5.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 1.0,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 1.0,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 85.0,
+        "ProjectileSpread": 4.0,
+        "ProjectileLife": 20.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_APC_MG.gw",
+        "barrel": "ZN_APC_MG",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 1.1,
+        "firstShot": 0.0,
+        "lastShot": 1.1,
+        "firingEvents": 12,
+        "projectiles": 12,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 6.0,
+        "actions": []
+      },
+      "actionCost": 3
+    },
+    "Common_DoubleMS_ZN_APC": {
+      "name": "Common DoubleMS ZN APC",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 90.0,
+      "en": 20.0,
+      "sourceName": "Common_DoubleMS_ZN_APC",
+      "sourceHit": 90.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 1000.0,
+      "damageComponents": {
+        "shell": 1000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.15
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_ZN_APC.gw",
+        "barrels": [
+          {
+            "id": "Common_DoubleMS_ZN_APC",
+            "x": 2.5,
+            "y": -12.5
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 50.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 2.5,
+              "y": -12.5
+            },
+            "alternatingOffsetX": -5.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.15
+      },
+      "targetModifiers": {
+        "air": 2.0,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S"
+      ],
+      "category": "missile",
+      "nativePayload": {
+        "ShellDamage": 1000.0,
+        "DpDamage": 50.0,
+        "WeaponAccuracy": 90.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 2.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 50.0,
+        "ProjectileTurnspeed": 3.5,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 20.0,
+        "EquipmentIndex": 1.0,
+        "EquipmentIndex2": 150.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_ZN_APC.gw",
+        "barrel": "Common_DoubleMS_ZN_APC",
+        "entry": "automatic_turret",
+        "cooldown": 3.0,
+        "duration": 0.15,
+        "firstShot": 0.0,
+        "lastShot": 0.15,
+        "firingEvents": 2,
+        "projectiles": 2,
+        "declaredEnergy": 10.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 10.0,
+        "energy": 20.0,
+        "actions": []
+      },
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "ZN_APC_MG",
+        "Common_DoubleMS_ZN_APC"
+      ]
+    }
+  ],
+  "description": "加装了导弹的两栖装甲车",
+  "costBalance": {
+    "nativeLevel": 100.0,
+    "levelMultiplier": 0.25,
+    "published": 25
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1
+}

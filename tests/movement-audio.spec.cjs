@@ -205,9 +205,7 @@ test("two real clients hear game start, own turn, attack lock and target warning
   }
 });
 
-test("every dodge starts a new Boost_Start burst and loop, with no burst before the first miss", async ({
-  page,
-}) => {
+test("every dodge shows loop thrust without any Boost_Start burst", async ({ page }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   const result = await page.evaluate(() => {
     byId("battle").hidden = false;
@@ -268,9 +266,9 @@ test("every dodge starts a new Boost_Start burst and loop, with no burst before 
     return output;
   });
   expect(result[0]).toEqual({ starts: [], loops: 0 });
-  expect(result[1].starts).toEqual([0]);
+  expect(result[1].starts).toEqual([]);
   expect(result[1].loops).toBeGreaterThan(0);
-  expect(result[2].starts).toEqual([0]);
+  expect(result[2].starts).toEqual([]);
   expect(result[2].loops).toBeGreaterThan(0);
   expect(result[3].starts).toEqual([]);
 });
@@ -322,6 +320,6 @@ test("map movement animation does not overwrite the authoritative combat facing"
     storedAngle: 37,
     stationaryAngle: 37,
     selectVolume: 0.35,
-    weaponVolume: 0.7,
+    weaponVolume: 0.5,
   });
 });

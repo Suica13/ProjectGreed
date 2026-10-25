@@ -28,7 +28,10 @@ test("remaining actions count legal movement and affordable in-range attacks, ex
   a.moved = true;
   assert.equal(G.hasActions(g), true);
   a.en = 0;
+  assert.equal(G.hasActions(g), true, "native free head vulcan remains usable");
+  a.brokenParts = { head: true };
   assert.equal(G.hasActions(g), false);
+  a.brokenParts = {};
   a.moved = false;
   assert.equal(G.hasActions(g), true);
   a.acted = true;
@@ -56,7 +59,7 @@ test("each team handoff increments the turn and refreshes only the incoming team
   a.acted = b.acted = true;
   a.moved = b.moved = true;
   G.end(g);
-  assert.deepEqual([g.team, g.round, a.en, b.en, a.acted, b.acted], [1, 2, 0, 15, true, false]);
+  assert.deepEqual([g.team, g.round, a.en, b.en, a.acted, b.acted], [1, 2, 0, 0, true, false]);
   G.end(g);
-  assert.deepEqual([g.team, g.round, a.en, b.en, a.acted], [0, 3, 15, 15, false]);
+  assert.deepEqual([g.team, g.round, a.en, b.en, a.acted], [0, 3, 0, 0, false]);
 });

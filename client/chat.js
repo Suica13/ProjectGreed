@@ -106,12 +106,35 @@ const Chat = (() => {
       for (const name of byId(view.lines).querySelectorAll("[data-member-id]"))
         name.className = playerNameClass(name.dataset.memberId, snapshot.hostId, snapshot.you?.id);
   }
+  // Keep the full match for export; limit DOM rows independently of stored history.
+  let battleLog = [];
+  function downloadLog() {
+    if (!battleLog.length) return;
+    const contents = "\uFEFF" + battleLog.slice().reverse().join("\r\n") + "\r\n";
+    const url = URL.createObjectURL(new Blob([contents], { type: "text/plain;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download =
+      "ProjectGreed-battle-log-" + new Date().toISOString().replace(/[:.]/g, "-") + ".txt";
+    link.hidden = true;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  for (const id of ["downloadBattleLog", "roomDownloadBattleLog"]) {
+    byId(id).onclick = downloadLog;
+    byId(id).disabled = true;
+  }
   function setLog(entries, names = game.units.map((unit) => unit.customName).filter(Boolean)) {
+    battleLog = entries.slice();
+    for (const id of ["downloadBattleLog", "roomDownloadBattleLog"])
+      byId(id).disabled = !battleLog.length;
     for (const id of ["log", "roomCombatLog"]) {
       const list = byId(id),
         scrollTop = list.scrollTop;
       list.replaceChildren(
-        ...entries.map((text) => {
+        ...battleLog.slice(0, 80).map((text) => {
           const line = element("div", "log-line");
           setNamedText(line, text, names);
           return line;

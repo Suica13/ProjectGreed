@@ -1,8 +1,11 @@
 const test = require("node:test"),
   assert = require("node:assert/strict");
 const G = require("../shared/rules.js");
-test("all twelve units use original MOD reaction and accuracy without changing weapon hit", () => {
+test("native reaction and non-ship accuracy remain unchanged while ships get their explicit bonus", () => {
   const expected = {
+    SalamisClass: [50, 115.5],
+    RX_78_1: [134, 124],
+    FF_X7: [140, 115],
     RGM_79: [115, 115],
     RGC_80: [105, 120],
     RGM_79L: [140, 110],
@@ -16,17 +19,20 @@ test("all twelve units use original MOD reaction and accuracy without changing w
     MS_06F2: [105, 115],
     MS_09R: [110, 115],
   };
-  assert.equal(G.catalog.prefabs.length, Object.keys(expected).length);
-  for (const p of G.catalog.prefabs) {
+  assert.ok(G.catalog.prefabs.length >= Object.keys(expected).length);
+  for (const p of G.catalog.prefabs.filter((p) => Object.hasOwn(expected, p.id))) {
     assert.deepEqual([p.stats.mobility, p.stats.accuracy], expected[p.id], p.id);
-    assert.deepEqual([p.sourceStats.reaction, p.sourceStats.accuracy], expected[p.id]);
+    assert.deepEqual(
+      [p.sourceStats.reaction, p.sourceStats.accuracy],
+      [expected[p.id][0], p.stats.ship ? Math.round(expected[p.id][1] / 1.1) : expected[p.id][1]],
+    );
     for (const kit of p.weaponKits) {
       const m = G.models[p.id + "__" + kit.id];
       assert.equal(m.mobility, p.stats.mobility);
       assert.equal(m.accuracy, p.stats.accuracy);
     }
   }
-  assert.equal(G.models.MS_14A__machine_gun.weapons[0].hit, 90);
+  assert.equal(G.models.MS_14A__machine_gun.weapons[0].hit, 100);
 });
 function duel() {
   const g = G.create(false, 1, [
@@ -37,7 +43,12 @@ function duel() {
   const [a, b] = g.units;
   Object.assign(a, { x: 2, y: 3 });
   Object.assign(b, { x: 3, y: 3 });
-  return { g, a, b, w: { ...G.modelOf(a).weapons[0], hit: 60 } };
+  return {
+    g,
+    a,
+    b,
+    w: { ...G.modelOf(a).weapons[0], hit: 60, antiSize: { small: { damage: 1, accuracy: 1 } } },
+  };
 }
 test("unit accuracy multiplies ranged and melee base hit before cover, mobility, counter and evade", () => {
   const { g, a, b, w } = duel();
@@ -65,4 +76,11 @@ test("accuracy applies once to AI, survives snapshots and does not inherit defen
   assert.equal(G.modelOf(a).accuracy, 125);
   assert.equal(G.estimate(g, a, b, w).hit, 93.75);
   assert.equal(G.models.MS_14A__machine_gun.accuracy, 125);
+});
+
+test("all ship accuracy coefficients receive one multiplicative ten percent bonus", () => {
+  for (const p of G.catalog.prefabs.filter((p) => p.stats.ship)) {
+    assert.ok(Math.abs(p.stats.accuracy - p.sourceStats.accuracy * 1.1) < 1e-8, p.id);
+    assert.equal(p.stats.accuracyMultiplier, 1.1);
+  }
 });

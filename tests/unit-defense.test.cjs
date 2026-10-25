@@ -10,57 +10,41 @@ function duel(defender = "RGM_79", seed = 1) {
   Object.assign(b, { x: 4, y: 3 });
   return { g, a, b, w: G.models[a.model].weapons[0] };
 }
-test("new variants retain native equipment, fixed cannon, different movement and durability", () => {
+test("variants retain original hull values, fixed cannon and native multi-stage light GM saber", () => {
   const gm = G.models.RGM_79__machine_gun,
     cannon = G.models.RGC_80__machine_gun,
-    light = G.models.RGM_79L__machine_gun;
-  assert.ok(cannon.move < gm.move && gm.move < light.move);
-  assert.ok(cannon.mobility < gm.mobility && gm.mobility < light.mobility);
-  assert.ok(light.hp < gm.hp && gm.hp < cannon.hp);
-  for (const model of Object.values(G.models).filter((m) => m.prefabId === "RGC_80")) {
-    const weapon = model.weapons.find((w) => w.id === "Common_Cannon");
-    assert.equal(weapon.slot, "fixed");
-    assert.equal(weapon.changeHeldWeapon, false);
-    assert.equal(weapon.damage, 12000);
-    assert.equal(weapon.max, 6);
-    assert.deepEqual(weapon.attack.shots, [0.6, 1.2, 1.8]);
-    assert.equal(Sequence.pose(weapon, 0).clip, null);
-    assert.equal(Sequence.pose(weapon, 0.4).clip, "Common_Cannon_Shoot_A");
-  }
-  const saber = G.models.RGM_79L__beam_gun.weapons.find((w) => w.id === "EF_BeamSaber_BF");
+    light = G.models.RGM_79L__beam_gun;
+  assert.deepEqual([gm.hp, cannon.hp, light.hp], [21000, 18500, 17000]);
+  assert.ok(cannon.move < gm.move && light.move > gm.move);
+  const w = cannon.weapons.find((w) => w.id === "Common_Cannon");
+  assert.equal(w.damage, 8000);
+  assert.equal(w.shotCount, 1);
+  assert.equal(w.changeHeldWeapon, false);
+  assert.equal(w.max, 5);
+  const saber = light.weapons.find((w) => w.type === "melee");
   assert.deepEqual(saber.attack.shots, [0.4, 1.3]);
-  assert.equal(Sequence.pose(saber, 1.3).clip, "Common_Melee_F");
-  assert.equal(G.models.RGM_79L__beam_gun.weapons[0].damage, 8400);
-  assert.deepEqual(G.models.RGM_79L__beam_gun.weapons[0].attack.shots, [0.15, 0.55, 0.95]);
+  assert.deepEqual(
+    saber.attack.strikes.map((s) => s.damageMultiplier),
+    [1, 1],
+  );
 });
-test("V04 accuracy boosts retain bazooka and cannon as the low tier", () => {
+
+test("all visible native weapon panels retain their original accuracy without artificial tiers", () => {
   for (const m of Object.values(G.models))
     for (const w of m.weapons) {
-      assert.equal(w.hit % 5, 0);
-      assert.ok(w.hitMultiplier >= 0.65 && w.hitMultiplier <= 0.85);
-      assert.equal(w.hit, Math.round(w.sourceHit * w.hitMultiplier) + w.hitBonus);
+      assert.equal(w.hit, w.sourceHit);
+      assert.equal(w.hitMultiplier, 1);
+      assert.equal(w.hitBonus, 0);
     }
-  assert.equal(G.models.RGM_79__bazooka.weapons[0].hit, 70);
-  assert.equal(G.models.RGC_80__beam_spray.weapons.find((w) => w.id === "Common_Cannon").hit, 75);
-  assert.equal(G.models.RGM_79L__machine_gun.move, 7);
-  const standard = duel(),
-    light = duel("RGM_79L"),
-    cannon = duel("RGC_80");
-  assert.ok(
-    G.estimate(light.g, light.a, light.b, light.w).hit <
-      G.estimate(standard.g, standard.a, standard.b, standard.w).hit,
-  );
-  assert.ok(
-    G.estimate(cannon.g, cannon.a, cannon.b, cannon.w).hit >
-      G.estimate(standard.g, standard.a, standard.b, standard.w).hit,
-  );
+  assert.equal(G.models.RGM_79__bazooka.weapons[0].hit, 75);
 });
+
 test("MOD protection subtracts flat damage per bullet before percentage; melee components use separate defenses", () => {
   const { g, a, b, w } = duel("RGM_79", 13);
-  assert.equal(G.estimate(g, a, b, w).damage, 5850); // (725*1.1-75)*.9*9, rounded per strike
-  assert.equal(G.estimate(g, a, b, w, "defend").damage, 4158);
+  assert.equal(G.estimate(g, a, b, w).damage, 4680); // (725*1.2*.75-75)*.9*9, rounded per strike
+  assert.equal(G.estimate(g, a, b, w, "defend").damage, 3303);
   const saber = G.models.RGM_79__beam_spray.weapons[1];
-  assert.equal(G.estimate(g, a, b, saber).damage, 7262); // First strike 4903, reduced second strike 2359 after armor
+  assert.equal(G.estimate(g, a, b, saber).damage, 3804); // Native 15% melee bonus, separate beam and melee armor
   const low = { ...w, damageComponents: { shell: 25 }, damagePerShot: 25 };
   assert.equal(G.estimate(g, a, b, low).damage, 0);
 });
@@ -71,8 +55,8 @@ test("server-side shield blocks consume durability, spill to HP and disappear at
   const event = G.fight(g, a, b, w, "defend")[0];
   assert.equal(event.blocked, true);
   assert.equal(event.shieldDamage, 100);
-  assert.equal(event.damage, 4052);
-  assert.equal(event.strikes[0].damage, 356);
+  assert.equal(event.damage, 2462);
+  assert.equal(event.strikes[0].damage, 260);
   assert.equal(event.strikes[0].shieldAfter, 0);
   assert.equal(b.shield, 0);
   assert.equal(G.estimate(g, a, b, w).blockChance, 0);
@@ -93,28 +77,21 @@ test("a burst rolls each projectile independently and spends ammo once; melee ro
   const result = G.fight(g, a, b, { ...w, hit: 80 }, "defend")[0];
   assert.deepEqual(
     result.strikes.map((s) => s.hit),
-    [true, true, true, true, true, true, false, true, true],
+    [true, true, false, true, true, true, false, true, true],
   );
-  assert.equal(result.hitCount, 8);
-  assert.equal(result.damage, 3696);
-  assert.equal(a.en, 87.5);
+  assert.equal(result.hitCount, 7);
+  assert.equal(result.damage, 2569);
+  assert.equal(a.en, G.modelOf(a).en - w.en);
   assert.equal("ammo" in a, false);
-  assert.equal(b.hp, 16500 - 3696);
+  assert.equal(b.hp, 21000 - 2569);
   const other = duel("RGM_79", 30);
   other.b.x = 3;
   other.b.shield = 0;
-  const saber = { ...G.models.RGM_79__machine_gun.weapons[1], hit: 60 };
-  const sword = G.fight(
-    other.g,
-    other.a,
-    other.b,
-    saber,
-    "counter",
-    G.models.RGM_79__machine_gun.weapons[1].id,
-  )[0];
+  const saber = { ...G.models.RGM_79L__beam_gun.weapons[1], hit: 60 };
+  const sword = G.fight(other.g, other.a, other.b, saber, "defend", null)[0];
   assert.equal(sword.strikes.length, 2);
   assert.notEqual(sword.strikes[0].hit, sword.strikes[1].hit);
-  assert.equal(other.a.en, 90);
+  assert.equal(other.a.en, G.modelOf(other.a).en);
 });
 test("server dodge lanes alternate through center, randomize both directions and carry into counter attacks", () => {
   const directions = new Set();
@@ -144,7 +121,7 @@ test("all weapons use EN once per volley and honor available energy", () => {
   for (const model of Object.values(G.models))
     for (const weapon of model.weapons) {
       assert.equal("ammo" in weapon, false);
-      assert.ok(weapon.en > 0 || (weapon.slot === "skill" && weapon.en === 0));
+      assert.ok(weapon.en >= 0);
       assert.equal(G.canUse({ hp: 1, en: weapon.en - 1 }, weapon), false);
       assert.equal(G.canUse({ hp: 1, en: weapon.en }, weapon), true);
     }
@@ -155,7 +132,8 @@ test("all weapons use EN once per volley and honor available energy", () => {
   a.en = w.en;
   G.fight(g, a, b, w, "defend");
   assert.equal(a.en, 0);
-  assert.ok(G.deploymentCells(G.create(), 0).some((c) => c.x === 6 && c.y === 8));
+  assert.ok(G.deploymentCells(G.create(), 0).some((c) => c.x === 2 && c.y === 8));
+  assert.ok(!G.deploymentCells(G.create(), 0).some((c) => c.x === 14 && c.y === 8));
 });
 test("shooting/melee and beam/shell bonuses multiply the right components before protection", () => {
   const { g, a, b, w } = duel(),
@@ -163,11 +141,11 @@ test("shooting/melee and beam/shell bonuses multiply the right components before
     before = { ...bonuses };
   try {
     Object.assign(bonuses, { shooting: 20, melee: 20, beam: 10, shell: 10 });
-    assert.equal(G.estimate(g, a, b, w).damage, 7146);
+    assert.equal(G.estimate(g, a, b, w).damage, 5202);
     const beam = G.models.RGM_79__beam_spray.weapons[0],
       saber = G.models.RGM_79__machine_gun.weapons[1];
-    assert.equal(G.estimate(g, a, b, beam).damage, 12540);
-    assert.equal(G.estimate(g, a, b, saber).damage, 8383);
+    assert.equal(G.estimate(g, a, b, beam).damage, 4703);
+    assert.equal(G.estimate(g, a, b, saber).damage, 4191);
   } finally {
     Object.assign(bonuses, before);
   }

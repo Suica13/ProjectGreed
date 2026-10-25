@@ -1,0 +1,2082 @@
+[
+  {
+    "id": "RGM_79",
+    "kits": 3,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "MS_06F",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 400.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "MS_09",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "RGM_79_G",
+    "kits": 5,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "MS_06J",
+    "kits": 3,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 450.0,
+      "levelMultiplier": 0.25,
+      "published": 125
+    }
+  },
+  {
+    "id": "MS_06K",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 500.0,
+      "levelMultiplier": 0.25,
+      "published": 125
+    }
+  },
+  {
+    "id": "RX_79_G",
+    "kits": 5,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "MS_06F2",
+    "kits": 3,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "MS_09R",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "SalamisClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "RX_78_1",
+    "kits": 3,
+    "hidden": {
+      "EF_BeamSaber_Double_AALDF": {
+        "hidden": true,
+        "reasons": [
+          "pilot_skill"
+        ],
+        "requirements": [
+          {
+            "stat": "pilotCqbSkillFinal",
+            "greaterThan": 145
+          }
+        ],
+        "secondarySlots": []
+      }
+    },
+    "cost": {
+      "nativeLevel": 2750.0,
+      "levelMultiplier": 0.25,
+      "published": 700
+    }
+  },
+  {
+    "id": "FF_X7",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 500.0,
+      "levelMultiplier": 0.25,
+      "published": 125
+    }
+  },
+  {
+    "id": "Army_Squad_EFSF_0079_N_G_A",
+    "kits": 1,
+    "hidden": {
+      "Army_Squad_EFSF_0079_N_G_Member_MG_Member3": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_EFSF_0079_N_G_Member_MG_Member2"
+      },
+      "Army_Squad_EFSF_0079_N_G_Member_MG_Member4": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_EFSF_0079_N_G_Member_MG_Member2"
+      },
+      "Army_Squad_EFSF_0079_N_G_Member_MG_Member5": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_EFSF_0079_N_G_Member_MG_Member2"
+      },
+      "Army_Squad_EFSF_0079_N_G_Member_BZ_Member7": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_EFSF_0079_N_G_Member_BZ_Member6"
+      },
+      "Army_Squad_EFSF_0079_N_G_Member_BZ_Member8": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_EFSF_0079_N_G_Member_BZ_Member6"
+      }
+    },
+    "cost": {
+      "nativeLevel": 100.0,
+      "levelMultiplier": 0.25,
+      "published": 25
+    }
+  },
+  {
+    "id": "Type61",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 200.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "Type74",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 200.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "AntiZakuTank",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 100.0,
+      "levelMultiplier": 0.25,
+      "published": 25
+    }
+  },
+  {
+    "id": "FanFan",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 150.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "EF_Heli",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 250.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "FF_4",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_FF_4_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_FF_4"
+      }
+    },
+    "cost": {
+      "nativeLevel": 150.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "FF_B2",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_FF_B2_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_FF_B2"
+      },
+      "Common_DoubleMS_FF_B2_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleMS_FF_B2"
+      },
+      "Common_Bomb_FF_B2_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_Bomb_FF_B2"
+      }
+    },
+    "cost": {
+      "nativeLevel": 350.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "FF_6",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_FF_6_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_FF_6"
+      },
+      "Common_DoubleMS_FF_6_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleMS_FF_6"
+      }
+    },
+    "cost": {
+      "nativeLevel": 300.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "FF_S3",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_FF_S3_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_FF_S3"
+      },
+      "Common_DoubleMS_FF_S3_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleMS_FF_S3"
+      }
+    },
+    "cost": {
+      "nativeLevel": 350.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "RFF_06",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 400.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "Medea",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "EF_TorpedoBoat",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 200.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "BurkeClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "U_Type_Submarine",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "HimalayaClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 4000.0,
+      "levelMultiplier": 0.25,
+      "published": 1000
+    }
+  },
+  {
+    "id": "ColumbusClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "RGM_79_E",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 650.0,
+      "levelMultiplier": 0.25,
+      "published": 175
+    }
+  },
+  {
+    "id": "Type61A5",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 250.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "Type74Kai",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 200.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "Type61_SPG",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 300.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "MissileCar",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 250.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "EF_MinigunAPC",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 200.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "Dash",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_Dash_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_Dash"
+      }
+    },
+    "cost": {
+      "nativeLevel": 450.0,
+      "levelMultiplier": 0.25,
+      "published": 125
+    }
+  },
+  {
+    "id": "DEPP_ROG",
+    "kits": 1,
+    "hidden": {
+      "Common_Bomb_DEPP_ROG_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_Bomb_DEPP_ROG"
+      }
+    },
+    "cost": {
+      "nativeLevel": 650.0,
+      "levelMultiplier": 0.25,
+      "published": 175
+    }
+  },
+  {
+    "id": "DonEscargot",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_DonEscargot_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_DonEscargot"
+      },
+      "Common_Bomb_DonEscargot_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_Bomb_DonEscargot"
+      }
+    },
+    "cost": {
+      "nativeLevel": 350.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "RB_79K",
+    "kits": 1,
+    "hidden": {
+      "EF_RB_79K_Cannon_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RB_79K_Cannon"
+      }
+    },
+    "cost": {
+      "nativeLevel": 600.0,
+      "levelMultiplier": 0.25,
+      "published": 150
+    }
+  },
+  {
+    "id": "RB_79",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 350.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "M_Type_Submarine",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 4000.0,
+      "levelMultiplier": 0.25,
+      "published": 1000
+    }
+  },
+  {
+    "id": "MiniTrayClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "RX_79_G_WithBackpack",
+    "kits": 5,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "RGM_79_G_WithBackpack",
+    "kits": 5,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "RGM_79_G_SPACE",
+    "kits": 5,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "RGM_79_G_SP",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1500.0,
+      "levelMultiplier": 0.25,
+      "published": 375
+    }
+  },
+  {
+    "id": "RX_75R",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 800.0,
+      "levelMultiplier": 0.25,
+      "published": 200
+    }
+  },
+  {
+    "id": "RB_79N",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 350.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "RB_79M",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 400.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "BigTrayClass",
+    "kits": 1,
+    "hidden": {
+      "EF_BigTrayClass_MainCannon_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_BigTrayClass_MainCannon"
+      }
+    },
+    "cost": {
+      "nativeLevel": 4000.0,
+      "levelMultiplier": 0.25,
+      "published": 1000
+    }
+  },
+  {
+    "id": "MagellanClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 4000.0,
+      "levelMultiplier": 0.25,
+      "published": 1000
+    }
+  },
+  {
+    "id": "RX_78_2",
+    "kits": 3,
+    "hidden": {
+      "EF_BeamSaber_Double_AALDF": {
+        "hidden": true,
+        "reasons": [
+          "pilot_skill"
+        ],
+        "requirements": [
+          {
+            "stat": "pilotCqbSkillFinal",
+            "greaterThan": 145.0
+          }
+        ],
+        "secondarySlots": []
+      },
+      "EF_BeamJavelin_BF_B": {
+        "hidden": true,
+        "reasons": [
+          "secondary_loadout"
+        ],
+        "requirements": [],
+        "secondarySlots": [
+          {
+            "slot": 2,
+            "choice": 1
+          }
+        ]
+      }
+    },
+    "cost": {
+      "nativeLevel": 3000.0,
+      "levelMultiplier": 0.25,
+      "published": 750
+    }
+  },
+  {
+    "id": "RX_77_2",
+    "kits": 2,
+    "hidden": {
+      "Common_MortarDouble_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_MortarDouble"
+      },
+      "Common_DoubleCannon_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleCannon"
+      },
+      "EF_RX_77_2_MS_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RX_77_2_MS"
+      }
+    },
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "RX_75",
+    "kits": 1,
+    "hidden": {
+      "Common_MortarDouble_RX_75_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_MortarDouble_RX_75"
+      },
+      "EF_RX_75_Cannon_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RX_75_Cannon"
+      },
+      "EF_RX_75_MS_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RX_75_MS"
+      }
+    },
+    "cost": {
+      "nativeLevel": 1500.0,
+      "levelMultiplier": 0.25,
+      "published": 375
+    }
+  },
+  {
+    "id": "FF_X7Bst",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_FF_X7Bst_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_FF_X7Bst"
+      },
+      "Common_DoubleMS_FF_X7Bst_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleMS_FF_X7Bst"
+      },
+      "EF_FF_X7Bst_BR_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_FF_X7Bst_BR"
+      }
+    },
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "FFB_7Bst",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_FFB_7Bst_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_FFB_7Bst"
+      },
+      "Common_DoubleMS_FFB_7Bst_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleMS_FFB_7Bst"
+      },
+      "Common_Bomb_FFB_7Bst_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_Bomb_FFB_7Bst"
+      }
+    },
+    "cost": {
+      "nativeLevel": 650.0,
+      "levelMultiplier": 0.25,
+      "published": 175
+    }
+  },
+  {
+    "id": "Gunperry",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "PegasusClass",
+    "kits": 1,
+    "hidden": {
+      "PegasusClass_Turret_Cannon_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "PegasusClass_Turret_Cannon"
+      },
+      "PegasusClass_Turret_Cannon_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "PegasusClass_Turret_Cannon"
+      },
+      "PegasusClass_Turret_MegaBeamCannon_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "PegasusClass_Turret_MegaBeamCannon"
+      },
+      "PegasusClass_Turret_MegaBeamCannon_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "PegasusClass_Turret_MegaBeamCannon"
+      }
+    },
+    "cost": {
+      "nativeLevel": 6000.0,
+      "levelMultiplier": 0.25,
+      "published": 1500
+    }
+  },
+  {
+    "id": "MagellanClass_Green",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 5000.0,
+      "levelMultiplier": 0.25,
+      "published": 1250
+    }
+  },
+  {
+    "id": "RGM_79_Commander",
+    "kits": 3,
+    "hidden": {
+      "EF_BeamSaber_Double_AALDF": {
+        "hidden": true,
+        "reasons": [
+          "pilot_skill"
+        ],
+        "requirements": [
+          {
+            "stat": "pilotCqbSkillFinal",
+            "greaterThan": 145.0
+          }
+        ],
+        "secondarySlots": []
+      }
+    },
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "MedeaKai",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "RX_79_BD_1",
+    "kits": 2,
+    "hidden": {
+      "EF_RX_79_BD_ChestMS_Line_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RX_79_BD_ChestMS_Line"
+      },
+      "EF_RX_79_BD_ChestMG_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RX_79_BD_ChestMG"
+      }
+    },
+    "cost": {
+      "nativeLevel": 2500.0,
+      "levelMultiplier": 0.25,
+      "published": 625
+    }
+  },
+  {
+    "id": "RX_80PR",
+    "kits": 3,
+    "hidden": {
+      "EF_RX_80PR_LegMS_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RX_80PR_LegMS"
+      },
+      "Common_Cqb_B_L": {
+        "hidden": true,
+        "reasons": [
+          "pilot_skill"
+        ],
+        "requirements": [
+          {
+            "stat": "pilotCqbSkillFinal",
+            "greaterThan": 145.0
+          }
+        ],
+        "secondarySlots": []
+      }
+    },
+    "cost": {
+      "nativeLevel": 3250.0,
+      "levelMultiplier": 0.25,
+      "published": 825
+    }
+  },
+  {
+    "id": "HeavyForkClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 5000.0,
+      "levelMultiplier": 0.25,
+      "published": 1250
+    }
+  },
+  {
+    "id": "RX_80PR_GroundType",
+    "kits": 3,
+    "hidden": {
+      "EF_RX_80PR_LegMS_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RX_80PR_LegMS"
+      }
+    },
+    "cost": {
+      "nativeLevel": 3750.0,
+      "levelMultiplier": 0.25,
+      "published": 950
+    }
+  },
+  {
+    "id": "RX_80PR_2",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2750.0,
+      "levelMultiplier": 0.25,
+      "published": 700
+    }
+  },
+  {
+    "id": "RX_79_BD_2",
+    "kits": 1,
+    "hidden": {
+      "EF_RX_79_BD_ChestMS_Line_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RX_79_BD_ChestMS_Line"
+      },
+      "EF_RX_79_BD_ChestMG_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RX_79_BD_ChestMG"
+      }
+    },
+    "cost": {
+      "nativeLevel": 2750.0,
+      "levelMultiplier": 0.25,
+      "published": 700
+    }
+  },
+  {
+    "id": "RGM_79DO",
+    "kits": 2,
+    "hidden": {
+      "EF_RGM_79DO_BR_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RGM_79DO_BR"
+      },
+      "Common_ArmBeamSaber_F": {
+        "hidden": true,
+        "reasons": [
+          "pilot_skill"
+        ],
+        "requirements": [
+          {
+            "stat": "pilotCqbSkillFinal",
+            "greaterThan": 145.0
+          }
+        ],
+        "secondarySlots": []
+      }
+    },
+    "cost": {
+      "nativeLevel": 1650.0,
+      "levelMultiplier": 0.25,
+      "published": 425
+    }
+  },
+  {
+    "id": "RX_77_3",
+    "kits": 2,
+    "hidden": {
+      "Common_MortarDouble_B4_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_MortarDouble_B4"
+      },
+      "Common_DoubleCannon_B2_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleCannon_B2"
+      }
+    },
+    "cost": {
+      "nativeLevel": 2500.0,
+      "levelMultiplier": 0.25,
+      "published": 625
+    }
+  },
+  {
+    "id": "RX_77_3D",
+    "kits": 3,
+    "hidden": {
+      "Common_MortarDouble_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_MortarDouble"
+      },
+      "Common_DoubleCannon_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleCannon"
+      }
+    },
+    "cost": {
+      "nativeLevel": 3000.0,
+      "levelMultiplier": 0.25,
+      "published": 750
+    }
+  },
+  {
+    "id": "RX_78XX",
+    "kits": 2,
+    "hidden": {
+      "EF_75mmMG_Double_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_75mmMG_Double"
+      },
+      "EF_BeamDagger_Double_AALDE": {
+        "hidden": true,
+        "reasons": [
+          "pilot_skill"
+        ],
+        "requirements": [
+          {
+            "stat": "pilotCqbSkillFinal",
+            "greaterThan": 145.0
+          }
+        ],
+        "secondarySlots": []
+      }
+    },
+    "cost": {
+      "nativeLevel": 3250.0,
+      "levelMultiplier": 0.25,
+      "published": 825
+    }
+  },
+  {
+    "id": "RTX_440",
+    "kits": 1,
+    "hidden": {
+      "EF_RTX_440_Rocket_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RTX_440_Rocket"
+      },
+      "EF_RTX_440_HandGun_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "EF_RTX_440_HandGun"
+      }
+    },
+    "cost": {
+      "nativeLevel": 1500.0,
+      "levelMultiplier": 0.25,
+      "published": 375
+    }
+  },
+  {
+    "id": "RMV_1",
+    "kits": 1,
+    "hidden": {
+      "Common_MortarDouble_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_MortarDouble"
+      }
+    },
+    "cost": {
+      "nativeLevel": 800.0,
+      "levelMultiplier": 0.25,
+      "published": 200
+    }
+  },
+  {
+    "id": "Army_Squad_ZEON_0079_N_G_A",
+    "kits": 1,
+    "hidden": {
+      "Army_Squad_ZEON_0079_N_G_Member_MG_Member3": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_ZEON_0079_N_G_Member_MG_Member2"
+      },
+      "Army_Squad_ZEON_0079_N_G_Member_MG_Member4": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_ZEON_0079_N_G_Member_MG_Member2"
+      },
+      "Army_Squad_ZEON_0079_N_G_Member_MG_Member5": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_ZEON_0079_N_G_Member_MG_Member2"
+      },
+      "Army_Squad_ZEON_0079_N_G_Member_BZ_Member7": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_ZEON_0079_N_G_Member_BZ_Member6"
+      },
+      "Army_Squad_ZEON_0079_N_G_Member_BZ_Member8": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Army_Squad_ZEON_0079_N_G_Member_BZ_Member6"
+      }
+    },
+    "cost": {
+      "nativeLevel": 100.0,
+      "levelMultiplier": 0.25,
+      "published": 25
+    }
+  },
+  {
+    "id": "MTank",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 350.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "SamsonGroundTransportTruck",
+    "kits": 1,
+    "hidden": {
+      "ZN_SamsonGroundTransportTruck_AA_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_SamsonGroundTransportTruck_AA_L"
+      }
+    },
+    "cost": {
+      "nativeLevel": 200.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "ZN_APC",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 100.0,
+      "levelMultiplier": 0.25,
+      "published": 25
+    }
+  },
+  {
+    "id": "Wappa",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 100.0,
+      "levelMultiplier": 0.25,
+      "published": 25
+    }
+  },
+  {
+    "id": "ZN_Heli",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 250.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "FatUncle",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "Dopp",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_Dopp_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_Dopp"
+      },
+      "Common_DoubleMS_Dopp_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleMS_Dopp"
+      }
+    },
+    "cost": {
+      "nativeLevel": 325.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "DodaiYS",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleMS_DodaiYS_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleMS_DodaiYS"
+      }
+    },
+    "cost": {
+      "nativeLevel": 300.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "MS_05",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 300.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "MS_06C",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 400.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "MS_06S",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 550.0,
+      "levelMultiplier": 0.25,
+      "published": 150
+    }
+  },
+  {
+    "id": "Gattle",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleVulcan_Gattle_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleVulcan_Gattle"
+      },
+      "Common_DoubleMS_Gattle_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleMS_Gattle"
+      }
+    },
+    "cost": {
+      "nativeLevel": 150.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "JiccoClass",
+    "kits": 1,
+    "hidden": {
+      "Common_DoubleMS_JiccoClass_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_DoubleMS_JiccoClass"
+      }
+    },
+    "cost": {
+      "nativeLevel": 400.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "U_Type_Submarine_ZEON",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "MusaiClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "PapuaClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "MS_07B",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 700.0,
+      "levelMultiplier": 0.25,
+      "published": 175
+    }
+  },
+  {
+    "id": "MS_06M",
+    "kits": 1,
+    "hidden": {
+      "ZN_MS_06M_SMS_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_MS_06M_SMS"
+      }
+    },
+    "cost": {
+      "nativeLevel": 480.0,
+      "levelMultiplier": 0.25,
+      "published": 125
+    }
+  },
+  {
+    "id": "MS_06R_1",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 600.0,
+      "levelMultiplier": 0.25,
+      "published": 150
+    }
+  },
+  {
+    "id": "MS_06F_MineLayer",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 400.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "MSM_03",
+    "kits": 1,
+    "hidden": {
+      "ZN_MSM_03_ChestBeam_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_MSM_03_ChestBeam"
+      },
+      "ZN_MSM_03_SMS_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_MSM_03_SMS"
+      }
+    },
+    "cost": {
+      "nativeLevel": 900.0,
+      "levelMultiplier": 0.25,
+      "published": 225
+    }
+  },
+  {
+    "id": "Cui",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 200.0,
+      "levelMultiplier": 0.25,
+      "published": 50
+    }
+  },
+  {
+    "id": "Luggun",
+    "kits": 1,
+    "hidden": {
+      "ZN_Luggun_AA_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_Luggun_AA_L"
+      },
+      "Common_Bomb_Luggun_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "Common_Bomb_Luggun"
+      }
+    },
+    "cost": {
+      "nativeLevel": 450.0,
+      "levelMultiplier": 0.25,
+      "published": 125
+    }
+  },
+  {
+    "id": "ZN_APC_WithMS",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 100.0,
+      "levelMultiplier": 0.25,
+      "published": 25
+    }
+  },
+  {
+    "id": "M_Type_Submarine_ZEON",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 4000.0,
+      "levelMultiplier": 0.25,
+      "published": 1000
+    }
+  },
+  {
+    "id": "FalmerClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2500.0,
+      "levelMultiplier": 0.25,
+      "published": 625
+    }
+  },
+  {
+    "id": "MS_07B3",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1350.0,
+      "levelMultiplier": 0.25,
+      "published": 350
+    }
+  },
+  {
+    "id": "MS_06G",
+    "kits": 3,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 750.0,
+      "levelMultiplier": 0.25,
+      "published": 200
+    }
+  },
+  {
+    "id": "MS_06E",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 750.0,
+      "levelMultiplier": 0.25,
+      "published": 200
+    }
+  },
+  {
+    "id": "MS_06R_1A",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 650.0,
+      "levelMultiplier": 0.25,
+      "published": 175
+    }
+  },
+  {
+    "id": "MS_06D",
+    "kits": 2,
+    "hidden": {
+      "ZN_MS_06K_BigGun_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_MS_06K_BigGun"
+      }
+    },
+    "cost": {
+      "nativeLevel": 500.0,
+      "levelMultiplier": 0.25,
+      "published": 125
+    }
+  },
+  {
+    "id": "MS_06V",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 600.0,
+      "levelMultiplier": 0.25,
+      "published": 150
+    }
+  },
+  {
+    "id": "MTank_Eins",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 250.0,
+      "levelMultiplier": 0.25,
+      "published": 75
+    }
+  },
+  {
+    "id": "MSM_04",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 900.0,
+      "levelMultiplier": 0.25,
+      "published": 225
+    }
+  },
+  {
+    "id": "DabudeClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 4000.0,
+      "levelMultiplier": 0.25,
+      "published": 1000
+    }
+  },
+  {
+    "id": "ChivvayClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 4000.0,
+      "levelMultiplier": 0.25,
+      "published": 1000
+    }
+  },
+  {
+    "id": "MS_07A",
+    "kits": 3,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 700.0,
+      "levelMultiplier": 0.25,
+      "published": 175
+    }
+  },
+  {
+    "id": "MAX_03",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "GawClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 3000.0,
+      "levelMultiplier": 0.25,
+      "published": 750
+    }
+  },
+  {
+    "id": "GallopClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "ZanzibarClass",
+    "kits": 1,
+    "hidden": {
+      "ZanzibarClass_Turret_Cannon_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZanzibarClass_Turret_Cannon"
+      },
+      "ZanzibarClass_Turret_Cannon_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZanzibarClass_Turret_Cannon"
+      },
+      "ZanzibarClass_Turret_MegaBeamCannon_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZanzibarClass_Turret_MegaBeamCannon"
+      },
+      "ZanzibarClass_Turret_MegaBeamCannon_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZanzibarClass_Turret_MegaBeamCannon"
+      }
+    },
+    "cost": {
+      "nativeLevel": 6000.0,
+      "levelMultiplier": 0.25,
+      "published": 1500
+    }
+  },
+  {
+    "id": "GwazineClass",
+    "kits": 1,
+    "hidden": {
+      "GwazineClass_Turret_MegaBeamCannon_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "GwazineClass_Turret_MegaBeamCannon"
+      },
+      "GwazineClass_Turret_MegaBeamCannon_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "GwazineClass_Turret_MegaBeamCannon"
+      }
+    },
+    "cost": {
+      "nativeLevel": 6000.0,
+      "levelMultiplier": 0.25,
+      "published": 1500
+    }
+  },
+  {
+    "id": "MS_06F2_Commander",
+    "kits": 3,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "MS_05SP",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "MS_06JK",
+    "kits": 2,
+    "hidden": {
+      "ZN_MS_06K_BigGun_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_MS_06K_BigGun"
+      }
+    },
+    "cost": {
+      "nativeLevel": 1200.0,
+      "levelMultiplier": 0.25,
+      "published": 300
+    }
+  },
+  {
+    "id": "MS_09D",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1450.0,
+      "levelMultiplier": 0.25,
+      "published": 375
+    }
+  },
+  {
+    "id": "FatUncleKai",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "EMS_10",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "EMS_10_1",
+    "kits": 3,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "MP_02A",
+    "kits": 3,
+    "hidden": {
+      "ZN_MP_02A_MS_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_MP_02A_MS"
+      }
+    },
+    "cost": {
+      "nativeLevel": 400.0,
+      "levelMultiplier": 0.25,
+      "published": 100
+    }
+  },
+  {
+    "id": "YMT_05",
+    "kits": 1,
+    "hidden": {
+      "Common_Cqb_A": {
+        "hidden": true,
+        "reasons": [
+          "pilot_skill"
+        ],
+        "requirements": [
+          {
+            "stat": "pilotCqbSkillFinal",
+            "greaterThan": 145.0
+          }
+        ],
+        "secondarySlots": []
+      }
+    },
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "JotunheimClass",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 2000.0,
+      "levelMultiplier": 0.25,
+      "published": 500
+    }
+  },
+  {
+    "id": "MS_10",
+    "kits": 3,
+    "hidden": {
+      "ZN_MS_10_MS_AMS_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_MS_10_MS_AMS"
+      },
+      "ZN_MS_10_MS_MS_R": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_MS_10_MS_MS"
+      }
+    },
+    "cost": {
+      "nativeLevel": 1350.0,
+      "levelMultiplier": 0.25,
+      "published": 350
+    }
+  },
+  {
+    "id": "MS_11",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1500.0,
+      "levelMultiplier": 0.25,
+      "published": 375
+    }
+  },
+  {
+    "id": "MS_11S",
+    "kits": 2,
+    "hidden": {
+      "EF_BeamSaber_F_Yellow": {
+        "hidden": true,
+        "reasons": [
+          "pilot_skill"
+        ],
+        "requirements": [
+          {
+            "stat": "pilotCqbSkillFinal",
+            "greaterThan": 145.0
+          }
+        ],
+        "secondarySlots": []
+      }
+    },
+    "cost": {
+      "nativeLevel": 1850.0,
+      "levelMultiplier": 0.25,
+      "published": 475
+    }
+  },
+  {
+    "id": "MS_12",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1000.0,
+      "levelMultiplier": 0.25,
+      "published": 250
+    }
+  },
+  {
+    "id": "MS_08TX",
+    "kits": 3,
+    "hidden": {
+      "ZN_HeatSword_BF_B": {
+        "hidden": true,
+        "reasons": [
+          "pilot_skill"
+        ],
+        "requirements": [
+          {
+            "stat": "pilotCqbSkillFinal",
+            "greaterThan": 145.0
+          }
+        ],
+        "secondarySlots": []
+      }
+    },
+    "cost": {
+      "nativeLevel": 1500.0,
+      "levelMultiplier": 0.25,
+      "published": 375
+    }
+  },
+  {
+    "id": "MS_07H",
+    "kits": 2,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1250.0,
+      "levelMultiplier": 0.25,
+      "published": 325
+    }
+  },
+  {
+    "id": "MS_08TX_Kai",
+    "kits": 1,
+    "hidden": {
+      "ZN_MS_08TX_Kai_LegMS_L": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "ZN_MS_08TX_Kai_LegMS"
+      }
+    },
+    "cost": {
+      "nativeLevel": 2500.0,
+      "levelMultiplier": 0.25,
+      "published": 625
+    }
+  },
+  {
+    "id": "ApsarasII",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 3000.0,
+      "levelMultiplier": 0.25,
+      "published": 750
+    }
+  },
+  {
+    "id": "MS_07H8",
+    "kits": 1,
+    "hidden": {},
+    "cost": {
+      "nativeLevel": 1450.0,
+      "levelMultiplier": 0.25,
+      "published": 375
+    }
+  }
+]

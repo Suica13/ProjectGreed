@@ -11,26 +11,50 @@ function createAttackPlanner(rules, randomId) {
     room.responses = [];
     room.combatBatch = [];
     room.playback = null;
+    delete room.openingSnipe;
     room.planSequence = 0;
+    room.emptyImpacts = [];
   }
   function plan(room, attacker, target, weapon, seat) {
-    if ((attacker.acted && !attacker.plan) || !rules.canAttack(room.game, attacker, target, weapon))
+    if (
+      (attacker.acted && !attacker.plan) ||
+      (!Array.isArray(weapon) && !rules.canAttack(room.game, attacker, target, weapon))
+    )
       throw Error("目标、武器、射程或资源不满足条件");
-    const intent = { attacker: attacker.id, target: target.id, weapon: weapon.id, seat };
+    const weapons = Array.isArray(weapon) ? weapon : [weapon];
+    const budget = rules.attackQueue(room.game, attacker, target, weapons);
+    const previousCost = attacker.plan?.actionCost ?? 0;
+    weapon = weapons[0];
+    const intent = {
+      attacker: attacker.id,
+      target: target.id,
+      weapon: weapon.id,
+      seat,
+      weapons: weapons.map((w) => w.id),
+      actionCost: budget.ap,
+    };
     const index = room.plans.findIndex((plan) => plan.attacker === attacker.id);
     intent.order = index < 0 ? ++room.planSequence : room.plans[index].order;
     if (index < 0) room.plans.push(intent);
     else room.plans[index] = intent;
-    attacker.plan = { target: target.id, weapon: weapon.id };
+    attacker.actionPoints = rules.actionPoints(attacker) + previousCost - budget.ap;
+    attacker.plan = {
+      target: target.id,
+      weapon: weapon.id,
+      weapons: intent.weapons,
+      actionCost: budget.ap,
+    };
     attacker.acted = true;
     // 持用武器随计划写入权威状态，避免快照刷新后恢复成初始武器。
     if (weapon.changeHeldWeapon !== false) attacker.heldWeapon = weapon.id;
+    if (weapon.special?.type === "snipe") attacker.heldWeapon = weapon.special.baseWeapon;
     rules.faceTarget(attacker, target);
     return intent;
   }
   function cancel(room, attacker) {
     if (!attacker.plan) throw Error("该单位没有攻击计划");
     room.plans = room.plans.filter((plan) => plan.attacker !== attacker.id);
+    attacker.actionPoints = rules.actionPoints(attacker) + (attacker.plan.actionCost ?? 0);
     delete attacker.plan;
     attacker.acted = false;
   }
@@ -45,8 +69,7 @@ function createAttackPlanner(rules, randomId) {
       const intent = room.plans.shift(),
         attacker = find(room, intent.attacker),
         target = find(room, intent.target);
-      const weapon =
-        attacker && rules.modelOf(attacker).weapons.find((weapon) => weapon.id === intent.weapon);
+      const weapon = attacker && rules.eventWeapon(attacker, intent);
       if (
         !attacker ||
         !target ||
@@ -65,8 +88,7 @@ function createAttackPlanner(rules, randomId) {
       room.plans = room.plans.filter((other) => {
         if (other.target !== intent.target) return true;
         const from = find(room, other.attacker);
-        const weapon =
-          from && rules.modelOf(from).weapons.find((weapon) => weapon.id === other.weapon);
+        const weapon = from && rules.eventWeapon(from, other);
         if (from && weapon && rules.canAttack(room.game, from, target, weapon)) attacks.push(other);
         else if (from) delete from.plan;
         return false;
@@ -76,10 +98,91 @@ function createAttackPlanner(rules, randomId) {
     }
     return null;
   }
+  function expandSpecials(room) {
+    const result = [];
+    room.emptyImpacts = [];
+    const expanded = room.plans.flatMap((intent) =>
+      (intent.weapons || [intent.weapon]).map((weapon, index) => ({
+        ...intent,
+        weapon,
+        weapons: undefined,
+        order: intent.order + index / 1000,
+        queueIndex: index,
+        queueLength: (intent.weapons || [intent.weapon]).length,
+      })),
+    );
+    for (const intent of expanded) {
+      const attacker = find(room, intent.attacker),
+        weapon = attacker && rules.modelOf(attacker).weapons.find((w) => w.id === intent.weapon);
+      if (!weapon) continue;
+      if (weapon.special?.type === "snipe" && !intent.charged) {
+        attacker.snipeOrder = {
+          target: intent.target,
+          weapon: intent.weapon,
+          readyRound: room.game.round + 2,
+        };
+        delete attacker.plan;
+        continue;
+      }
+      if (weapon.special?.type !== "mortar") {
+        result.push(intent);
+        continue;
+      }
+      const target = find(room, intent.target);
+      if (!target || !rules.canAttack(room.game, attacker, target, weapon)) {
+        delete attacker.plan;
+        continue;
+      }
+      const center = rules.center(target),
+        cells = [];
+      for (let y = -1; y <= 1; y++)
+        for (let x = -1; x <= 1; x++)
+          cells.push({ x: Math.floor(center.x) + x, y: Math.floor(center.y) + y });
+      let bag = [];
+      const usable = [
+        ...new Set(rules.availableStrikes(attacker, weapon, target).map((s) => s.shotIndex)),
+      ];
+      for (let index = 0; index < usable.length; index++) {
+        const shot = usable[index];
+        if (!bag.length) bag = cells.map((c) => ({ ...c }));
+        const cell = bag.splice(Math.floor(rules.random(room.game) * bag.length), 1)[0];
+        const occupant = rules.at(room.game, cell.x, cell.y),
+          enemy = occupant && occupant.team !== attacker.team && occupant.hp > 0;
+        const expanded = {
+          ...intent,
+          target: enemy ? occupant.id : null,
+          shotIndices: [shot],
+          energySpent: index === 0 ? weapon.en : 0,
+          impactCell: cell,
+          noCounter: true,
+          order: intent.order + shot / 10000,
+        };
+        if (enemy) result.push(expanded);
+        else room.emptyImpacts.push(expanded);
+      }
+    }
+    room.plans = result;
+  }
+  function resumeCharges(room) {
+    for (const unit of room.game.units) {
+      if (!unit.readySnipe) continue;
+      const order = unit.readySnipe;
+      delete unit.readySnipe;
+      room.plans.push({
+        attacker: unit.id,
+        target: order.target,
+        weapon: order.weapon,
+        seat: rules.ownerOf(unit),
+        charged: true,
+        order: ++room.planSequence,
+      });
+    }
+  }
   // 一次建立全部目标单位的应战请求，各玩家分别领取自己的第一项。
   function prepare(room) {
     if (room.reactions?.length) return room.reactions;
     room.reactions = [];
+    if (room.plans.length) expandSpecials(room);
     while (room.plans.length) {
       const request = next(room);
       if (request) room.reactions.push(request);
@@ -92,9 +195,7 @@ function createAttackPlanner(rules, randomId) {
       throw Error("应战请求已过期，请处理当前交战");
     const attacker = find(room, room.pending.attacker),
       target = find(room, room.pending.target);
-    const weapon = rules
-      .modelOf(attacker)
-      .weapons.find((weapon) => weapon.id === room.pending.weapon);
+    const weapon = rules.eventWeapon(attacker, room.pending);
     const actors = JSON.parse(JSON.stringify([attacker, target]));
     const before = Object.fromEntries(room.game.units.map((unit) => [unit.id, unit.hp]));
     const acted = attacker.acted;
@@ -105,6 +206,13 @@ function createAttackPlanner(rules, randomId) {
     } catch (error) {
       attacker.acted = acted;
       throw error;
+    }
+    for (const event of events) {
+      if (event.from === attacker.id) {
+        if (room.pending.shotIndices) event.shotIndices = room.pending.shotIndices;
+        event.energySpent = weapon.en;
+        if (room.pending.impactCell) event.impactCell = room.pending.impactCell;
+      }
     }
     delete attacker.plan;
     const battle = {
@@ -121,7 +229,8 @@ function createAttackPlanner(rules, randomId) {
     room.pending = null;
     return battle;
   }
-  function counterOptions(room, attacker, target) {
+  function counterOptions(room, attacker, target, intent = null) {
+    if (intent?.noCounter) return { remaining: 0, ids: [] };
     const reserved = { ...target };
     for (const choice of room.responses || []) {
       if (choice.response !== "counter" || choice.intent.target !== target.id) continue;
@@ -155,7 +264,9 @@ function createAttackPlanner(rules, randomId) {
     const counter = rules.modelOf(target).weapons.find((weapon) => weapon.id === counterId);
     if (
       response === "counter" &&
-      (!counter || !counterOptions(room, attacker, target).ids.includes(counterId))
+      (attack.noCounter ||
+        !counter ||
+        !counterOptions(room, attacker, target, attack).ids.includes(counterId))
     )
       throw Error("反击次数已用完，或武器不满足射程与 EN 条件");
     if (response === "counter") rules.faceTarget(target, attacker);
@@ -177,16 +288,86 @@ function createAttackPlanner(rules, randomId) {
     const executions = choices.flatMap((choice) =>
       (choice.intent.attacks || [choice.intent]).map((intent) => ({ ...choice, intent })),
     );
+    executions.push(...(room.emptyImpacts || []).map((intent) => ({ intent, response: "evade" })));
+    room.emptyImpacts = [];
     executions.sort((a, b) => (a.intent.order || 0) - (b.intent.order || 0));
+    const counterExecutions = new Set();
     for (const choice of executions) {
       const { intent, counterId } = choice;
+      const counterKey = choice.intent.target + ":" + (choice.counterTargetId || intent.attacker);
+      const later = executions.some(
+        (other) =>
+          other.intent.attacker === intent.attacker &&
+          other.intent.target === intent.target &&
+          (other.intent.order || 0) > (intent.order || 0),
+      );
       const allowCounter =
+        !later &&
+        !counterExecutions.has(counterKey) &&
         choice.response === "counter" &&
+        !intent.noCounter &&
         (choice.counterTargetId || intent.attacker) === intent.attacker;
       const attacker = find(room, intent.attacker),
         target = find(room, intent.target);
-      const weapon =
-        attacker && rules.modelOf(attacker).weapons.find((weapon) => weapon.id === intent.weapon);
+      const weapon = attacker && rules.eventWeapon(attacker, intent);
+      if (attacker && weapon && intent.impactCell && (!target || target.hp <= 0)) {
+        if (attacker.hp <= 0 || attacker.en < weapon.en) continue;
+        const ghost = {
+          ...JSON.parse(JSON.stringify(attacker)),
+          id: "impact-" + randomId(),
+          ...intent.impactCell,
+          team: 1 - attacker.team,
+          hp: 1,
+          shield: 0,
+          visualOnly: true,
+        };
+        const before = Object.fromEntries([attacker, ghost].map((u) => [u.id, u.hp]));
+        const actors = JSON.parse(JSON.stringify([attacker, ghost]));
+        attacker.en -= weapon.en;
+        attacker.acted = true;
+        delete attacker.plan;
+        const event = {
+          from: attacker.id,
+          to: ghost.id,
+          weapon: weapon.id,
+          type: weapon.type,
+          shotIndices: intent.shotIndices,
+          energySpent: weapon.en,
+          impactCell: intent.impactCell,
+          empty: true,
+          hit: false,
+          damage: 0,
+          before: 1,
+          after: 1,
+          shieldBefore: 0,
+          shieldAfter: 0,
+          shieldDamage: 0,
+          hitCount: 0,
+          strikeCount: weapon.attack.strikes.length,
+          response: "evade",
+          strikes: weapon.attack.strikes.map((step) => ({
+            ...step,
+            executed: true,
+            hit: false,
+            damage: 0,
+            shieldDamage: 0,
+            before: 1,
+            after: 1,
+          })),
+        };
+        const battle = {
+          id: randomId(),
+          matchId: room.matchId,
+          a: attacker.id,
+          b: ghost.id,
+          actors,
+          before,
+          events: [event],
+        };
+        room.combats.push(battle);
+        room.combatBatch.push(battle);
+        continue;
+      }
       if (
         room.game.winner !== null ||
         !attacker ||
@@ -202,7 +383,14 @@ function createAttackPlanner(rules, randomId) {
           ? "defend"
           : choice.response;
       room.pending = { ...intent, id: randomId() };
-      room.combatBatch.push(respond(room, room.pending.id, response, counterId, allowCounter));
+      const battle = respond(room, room.pending.id, response, counterId, allowCounter);
+      if (allowCounter) counterExecutions.add(counterKey);
+      battle.attackQueue = {
+        attacker: intent.attacker,
+        index: intent.queueIndex ?? 0,
+        length: intent.queueLength ?? 1,
+      };
+      room.combatBatch.push(battle);
     }
     room.pending = null;
     for (const choice of executions) {
@@ -211,6 +399,17 @@ function createAttackPlanner(rules, randomId) {
     }
     return room.combatBatch;
   }
-  return { reset, plan, cancel, next, prepare, respond, choose, resolve, counterOptions };
+  return {
+    reset,
+    plan,
+    cancel,
+    next,
+    prepare,
+    respond,
+    choose,
+    resolve,
+    counterOptions,
+    resumeCharges,
+  };
 }
 if (typeof module !== "undefined") module.exports = { createAttackPlanner };

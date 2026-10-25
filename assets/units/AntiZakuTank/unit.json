@@ -1,0 +1,529 @@
+{
+  "schemaVersion": 2,
+  "id": "AntiZakuTank",
+  "code": "AntiZakuTank",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/AntiZakuTank/AntiZakuTank.ini",
+  "materials": {
+    "textures": {
+      "AntiZakuTank_Body_1.png": "textures/AntiZakuTank_Body_1.png",
+      "Vehicle.png": "textures/Vehicle.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "AntiZakuTank_Turret_1.png": "textures/AntiZakuTank_Turret_1.png",
+      "EFSF_0079_GroundArmy_Standard_3.png": "textures/EFSF_0079_GroundArmy_Standard_3.png"
+    },
+    "icon": "Vehicle.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "Turret_EF_AntiZakuTank_MG": {
+      "x": 0.0,
+      "y": 3.0,
+      "endDirOffset": 0
+    }
+  },
+  "layers": [
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "AntiZakuTank_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.6,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Turret",
+      "bone": "Turret_EF_AntiZakuTank_MG",
+      "texture": "AntiZakuTank_Turret_1.png",
+      "order": 5.0,
+      "scale": 0.6,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "rotation": 0,
+      "visibleWhen": {}
+    },
+    {
+      "name": "Pilot_0",
+      "bone": "Turret_EF_AntiZakuTank_MG",
+      "texture": "EFSF_0079_GroundArmy_Standard_3.png",
+      "order": 6.0,
+      "scale": 0.5,
+      "offset": {
+        "x": 0.0,
+        "y": -2.0
+      },
+      "rotation": 0,
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/AntiZakuTank__OnMoving.json",
+    "OnMovingReversing": "../../animations/AntiZakuTank__OnMovingReversing.json",
+    "Common_Dead": "../../animations/AntiZakuTank__Common_Dead.json",
+    "Common_Stun": "../../animations/AntiZakuTank__Common_Stun.json",
+    "Common_Idle": "../../animations/AntiZakuTank__Common_Idle.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 3000.0,
+    "en": 250.0,
+    "move": 5,
+    "mobility": 65.0,
+    "cost": 25,
+    "counterLimit": 1,
+    "accuracy": 105.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50
+    },
+    "ship": false,
+    "visualTurrets": [
+      {
+        "id": "EF_AntiZakuTank_MG",
+        "bone": "Turret_EF_AntiZakuTank_MG",
+        "idleDir": 0,
+        "arc": 180
+      }
+    ],
+    "commandAuras": [],
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": -25.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 3000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.0,
+    "turnSpeed": 1.25,
+    "reaction": 65.0,
+    "shooting": 100.0,
+    "melee": 75.0,
+    "nativeTags": [
+      "AntiZakuTank",
+      "Unit",
+      "Tank",
+      "EFSF",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "balanceStatus": "native-level",
+    "accuracy": 105.0,
+    "unitLevel": 100.0,
+    "tacticalMoveBeforeBonus": 4
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk"
+  },
+  "name": "反扎古坦克",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0079"
+  ],
+  "localization": {
+    "zh": {
+      "name": "反扎古坦克",
+      "description": "联邦军为应对扎古制造的战车"
+    },
+    "en": {
+      "name": "Anti-Zaku Tank",
+      "description": "Federation tank developed to counter the Zaku"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "EF_AntiZakuTank_MG": {
+      "name": "机枪",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 125.0,
+      "en": 6.0,
+      "sourceName": "EF_AntiZakuTank_MG",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 100.0,
+      "damageComponents": {
+        "shell": 100.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_AntiZakuTank_MG.gw",
+        "barrels": [
+          {
+            "id": "EF_AntiZakuTank_MG",
+            "x": 2.0,
+            "y": 5.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 95.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_EF_AntiZakuTank_MG",
+            "offset": {
+              "x": 2.0,
+              "y": 2.0
+            },
+            "alternatingOffsetX": -4.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 3.0,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ],
+      "category": "machine_gun",
+      "nativePayload": {
+        "ShellDamage": 100.0,
+        "DpDamage": 10.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 1.0,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 1.0,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 3.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 95.0,
+        "ProjectileSpread": 7.0,
+        "ProjectileLife": 7.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_AntiZakuTank_MG.gw",
+        "barrel": "EF_AntiZakuTank_MG",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 1.1,
+        "firstShot": 0.0,
+        "lastShot": 1.1,
+        "firingEvents": 12,
+        "projectiles": 12,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 6.0,
+        "actions": []
+      },
+      "actionCost": 3
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "EF_AntiZakuTank_MG"
+      ]
+    }
+  ],
+  "description": "联邦军为应对扎古制造的战车",
+  "costBalance": {
+    "nativeLevel": 100.0,
+    "levelMultiplier": 0.25,
+    "published": 25
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "skills": [],
+  "nativeCombatRevision": 1
+}

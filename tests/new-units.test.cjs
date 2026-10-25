@@ -19,7 +19,7 @@ test("new native prefabs have real source stats, correct armor and shieldless un
     assert.ok(p);
     assert.equal(
       p.stats.hp,
-      { MS_06F: 12000, MS_06J: 13500, MS_06K: 16000, MS_09: 22500, RGM_79_G: 20000 }[id],
+      { MS_06F: 15000, MS_06J: 14500, MS_06K: 14500, MS_09: 25000, RGM_79_G: 25000 }[id],
     );
     assert.ok(p.stats.cost > 0);
     assert.equal(p.stats.counterLimit, 1);
@@ -33,7 +33,10 @@ test("new native prefabs have real source stats, correct armor and shieldless un
   }
   assert.equal(ART.prefabs.find((p) => p.id === "RGM_79_G").weaponKits.length, 5);
   assert.equal(ART.models.RGM_79_G__machine_gun.shield.hp, 2500);
-  assert.ok(!Object.keys(G.models).some((id) => id.includes("WithBackpack")));
+  assert.ok(
+    Object.keys(G.models).some((id) => id.includes("WithBackpack")),
+    "Page_00 now explicitly includes container variants",
+  );
   assert.ok(ART.models.MS_09__bazooka.move > ART.models.MS_06F__machine_gun.move);
   assert.ok(ART.models.MS_06K__machine_gun.mobility < ART.models.MS_06J__machine_gun.mobility);
   assert.doesNotMatch(
@@ -65,7 +68,7 @@ test("new weapons retain native shot cadence, alternate left and right mounts an
       assert.ok(ART.sounds[w.sound.asset]);
       if (w.type !== "melee") assert.ok(ART.assets[w.projectile.asset]);
       assert.equal("ammo" in w, false);
-      assert.ok(w.en > 0 || (w.slot === "skill" && w.en === 0));
+      assert.ok(w.en >= 0);
     }
   }
 });

@@ -45,31 +45,29 @@ test("terrain penalizes hit chance by attack category and no longer reduces raw 
   }
 });
 
-test("current weapon tuning preserves single-shot Panzerfaust and uses twelve independent high-tier MG rounds", () => {
+test("native high-tier machine guns and beam rifles use their unit-specific original payload", () => {
   const pf = G.models.MS_06F2__machine_gun.weapons.find((w) => w.id === "ZN_Panzerfaust");
-  assert.equal(pf.damagePerShot, 6562.5);
+  assert.equal(pf.damagePerShot, 6500);
   assert.equal(pf.shotCount, 1);
-  for (const [model, id, perShot] of [
-    ["MS_14A__machine_gun", "ZN_MMP80MG", 935],
-    ["RX_79_G__machine_gun", "EF_100mmMG", 990],
+  for (const [id, damage, count] of [
+    ["MS_14A__machine_gun", 750, 9],
+    ["RX_79_G__machine_gun", 1200, 8],
   ]) {
-    const w = G.models[model].weapons.find((w) => w.id === id);
-    assert.equal(w.shotCount, 12);
-    assert.equal(w.attack.strikes.length, 12);
-    assert.equal(w.damagePerShot, perShot);
-    assert.equal(w.damage, 12 * perShot);
+    const w = G.models[id].weapons[0];
+    assert.equal(w.shotCount, count);
+    assert.equal(w.attack.strikes.length, count);
+    assert.equal(w.damagePerShot, damage);
+    assert.equal(w.damage, damage * count);
   }
-  for (const model of ["MS_14A__beam_rifle", "RX_79_G__beam_rifle"])
-    assert.equal(G.models[model].weapons[0].damagePerShot, 6160);
-  assert.equal(
-    G.models.RGM_79_G__beam_rifle.weapons[0].damagePerShot,
-    5600,
-    "only the two named units receive the beam buff",
-  );
+  assert.equal(G.models.MS_14A__beam_rifle.weapons[0].damagePerShot, 7500);
+  assert.equal(G.models.RX_79_G__beam_rifle.weapons[0].damagePerShot, 7000);
 });
 
 test("all native structural strengths, special weapon dependencies and per-strike coefficients are present", () => {
   const strengths = {
+    SalamisClass: 100,
+    RX_78_1: 124,
+    FF_X7: 100,
     MS_06F: 110,
     MS_06F2: 120,
     MS_06J: 115,
@@ -84,7 +82,9 @@ test("all native structural strengths, special weapon dependencies and per-strik
     RX_79_G: 125,
   };
   for (const model of Object.values(G.models)) {
-    assert.equal(model.partStructuralStrength, strengths[model.prefabId]);
+    if (Object.hasOwn(strengths, model.prefabId))
+      assert.equal(model.partStructuralStrength, strengths[model.prefabId]);
+    else assert.ok(model.partStructuralStrength > 0);
     for (const w of model.weapons) assert.ok(Number.isFinite(w.partBreakModifier));
   }
   assert.equal(
@@ -215,6 +215,8 @@ test("paired guns and leg missiles lose only the destroyed side's shots and fore
     b.hp = 100000;
     const w = G.modelOf(a).weapons.find((w) => w.id === key),
       live = G.availableStrikes(a, w);
+    b.x = a.x + w.min;
+    b.y = a.y;
     assert.equal(live.length, w.attack.strikes.length / 2);
     assert.equal(
       G.estimate(g, a, b, w).damage,
