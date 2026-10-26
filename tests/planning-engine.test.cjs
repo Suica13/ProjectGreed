@@ -126,8 +126,8 @@ test("allies can submit against the same revision; occupancy and turn identity r
   const { room, act } = fixture(t, 4),
     revision = room.revision,
     round = room.game.round;
-  act(0, "move", { unitId: "0-0", x: 3, y: 4, revision, round });
-  act(2, "move", { unitId: "2-0", x: 3, y: 5, revision, round });
+  moveAndConfirm(act, 0, { unitId: "0-0", x: 3, y: 4, revision, round });
+  moveAndConfirm(act, 2, { unitId: "2-0", x: 3, y: 5, revision, round });
   assert.equal(room.game.units.find((u) => u.id === "2-0").moved, true);
   assert.throws(() => act(2, "attack", { unitId: "0-0", targetId: "3-0", weaponId: "EF_90mmMG" }));
   act(0, "attack", { unitId: "0-0", targetId: "3-0", weaponId: "EF_90mmMG", revision, round });
@@ -136,58 +136,52 @@ test("allies can submit against the same revision; occupancy and turn identity r
   act(0, "end_turn");
   assert.throws(() => act(0, "attack", { unitId: "0-0", targetId: "3-0", weaponId: "EF_90mmMG" }));
   act(2, "end_turn");
-  const stale = act(1, "move", { unitId: "1-0", x: 5, y: 4, revision, round });
+  const stale = moveAndConfirm(act, 1, { unitId: "1-0", x: 5, y: 4, revision, round });
   assert.equal(stale.code, "STALE");
 });
 
-test("allied players retain independent movement undo rights", (t) => {
+test("allied players retain independent movement previews and cancellation rights", (t) => {
   const { room, act } = fixture(t, 4),
-    g = room.game,
-    a = g.units.find((u) => u.id === "0-0"),
-    ally = g.units.find((u) => u.id === "2-0");
-  g.tiles[4][3] = g.tiles[5][3] = "plain";
+    [a, enemy, ally] = room.game.units;
+  room.game.tiles[4][3] = room.game.tiles[5][3] = "plain";
   act(0, "move", { unitId: a.id, x: 3, y: 4 });
   act(2, "move", { unitId: ally.id, x: 3, y: 5 });
-  assert.equal(G.canUndo(g, a), true, "another player's move does not commit this player's move");
-  assert.equal(G.canUndo(g, ally), true);
-  act(0, "undo", { unitId: a.id });
+  assert(a.pendingMove);
+  assert(ally.pendingMove);
+  act(0, "cancel_move", { unitId: a.id });
+  assert.equal(a.pendingMove, undefined);
+  assert(ally.pendingMove);
+  act(2, "confirm_move", { unitId: ally.id });
+  assert.deepEqual([ally.x, ally.y, ally.moved], [3, 5, true]);
   assert.deepEqual([a.x, a.y, a.moved], [2, 4, false]);
-  assert.equal(G.canUndo(g, ally), true, "another player's undo also leaves undo rights intact");
-  act(2, "undo", { unitId: ally.id });
-  assert.deepEqual([ally.x, ally.y, ally.moved], [2, 5, false]);
 });
 
-test("an allied unit occupying the origin temporarily blocks undo without discarding it", (t) => {
+test("provisional movement reserves its original footprint and destination so cancellation always succeeds", (t) => {
   const { room, act } = fixture(t, 4),
-    g = room.game,
-    a = g.units.find((u) => u.id === "0-0"),
-    ally = g.units.find((u) => u.id === "2-0");
-  g.tiles[4][3] = "plain";
+    a = room.game.units.find((u) => u.id === "0-0"),
+    ally = room.game.units.find((u) => u.id === "2-0");
+  room.game.tiles[4][3] = "plain";
   act(0, "move", { unitId: a.id, x: 3, y: 4 });
-  act(2, "move", { unitId: ally.id, x: 2, y: 4 });
-  assert.ok(a.origin, "the allied move preserves the original position");
-  assert.equal(G.canUndo(g, a), false);
-  assert.throws(() => act(0, "undo", { unitId: a.id }));
-  assert.deepEqual([a.x, a.y], [3, 4], "failed undo cannot overlap the allied unit");
-  act(2, "undo", { unitId: ally.id });
-  assert.equal(G.canUndo(g, a), true, "undo becomes available again after the origin is vacated");
-  act(0, "undo", { unitId: a.id });
+  assert.throws(() => act(2, "move", { unitId: ally.id, x: 2, y: 4 }));
+  assert.throws(() => act(2, "move", { unitId: ally.id, x: 3, y: 4 }));
+  act(0, "cancel_move", { unitId: a.id });
   assert.deepEqual([a.x, a.y, a.moved], [2, 4, false]);
+  assert.equal(a.pendingMove, undefined);
 });
 
 test("simultaneous move intents cannot overlap a cell, and waiting cancels a queued attack", (t) => {
   const { room, act } = fixture(t, 4),
     revision = room.revision,
     round = room.game.round;
-  act(0, "move", { unitId: "0-0", x: 3, y: 4, revision, round });
-  assert.throws(() => act(2, "move", { unitId: "2-0", x: 3, y: 4, revision, round }));
-  assert.equal(G.canUndo(room.game, room.game.units[0]), true);
+  moveAndConfirm(act, 0, { unitId: "0-0", x: 3, y: 4, revision, round });
+  assert.throws(() => moveAndConfirm(act, 2, { unitId: "2-0", x: 3, y: 4, revision, round }));
+  assert.equal(G.canUndo(room.game, room.game.units[0]), false);
   act(0, "attack", { unitId: "0-0", targetId: "3-0", weaponId: "EF_90mmMG" });
   act(0, "wait", { unitId: "0-0" });
   assert.equal(room.plans.length, 0);
   assert.equal(room.game.units[0].plan, undefined);
   assert.equal(room.game.units[0].acted, true);
-  const stale = act(2, "move", {
+  const stale = moveAndConfirm(act, 2, {
     unitId: "2-0",
     x: 3,
     y: 5,
@@ -304,8 +298,8 @@ test("room authority accepts paths through allied players while rejecting occupi
   Object.assign(a, { x: 2, y: 4 });
   Object.assign(ally, { x: 3, y: 4 });
   for (const enemy of g.units.filter((u) => u.team === 1)) enemy.x = 20;
-  assert.throws(() => act(0, "move", { unitId: a.id, x: 3, y: 4 }));
-  const result = act(0, "move", { unitId: a.id, x: 5, y: 4 });
+  assert.throws(() => moveAndConfirm(act, 0, { unitId: a.id, x: 3, y: 4 }));
+  const result = moveAndConfirm(act, 0, { unitId: a.id, x: 5, y: 4 });
   assert.equal(result.type, "state");
   assert.equal(a.x, 5);
   assert.equal(ally.x, 3);
@@ -319,10 +313,10 @@ test("unit action logs identify faction, owner and unit for movement, plans, sta
   room.seats[0].name = "Pilot01";
   room.seats[1].name = "Pilot02";
   room.game.tiles[4][3] = "plain";
-  act(0, "move", { unitId: a.id, x: 3, y: 4 });
+  moveAndConfirm(act, 0, { unitId: a.id, x: 3, y: 4 });
   assert.equal(room.log[0], "[蓝方][Pilot01]先锋[A01](RGM-79 吉姆) 移动至D5。");
-  act(0, "undo", { unitId: a.id });
-  assert.equal(room.log[0], "[蓝方][Pilot01]先锋[A01](RGM-79 吉姆) 撤销移动。");
+  assert.throws(() => act(0, "undo", { unitId: a.id }));
+  b.x = a.x + 2;
   act(0, "attack", { unitId: a.id, targetId: b.id, weaponId: "EF_90mmMG" });
   assert.ok(room.log[0].startsWith("[蓝方][Pilot01]先锋[A01](RGM-79 吉姆) 计划使用"));
   act(0, "cancel_attack", { unitId: a.id });
@@ -618,8 +612,13 @@ test("expired disconnect frees seat and a replacement can take over", async (t) 
   );
   const ws = { readyState: 1 };
   engine.join(ws, { mode: "join", room: room.code });
-  engine.action(ws, {id:"takeover",revision:room.revision,round:room.game.round,
-    action:"switch_seat",seat:1});
+  engine.action(ws, {
+    id: "takeover",
+    revision: room.revision,
+    round: room.game.round,
+    action: "switch_seat",
+    seat: 1,
+  });
   assert.equal(ws.seat, 1);
 });
 
@@ -631,67 +630,68 @@ test("all disconnected room survives grace then dissolves", async (t) => {
   assert(!engine.rooms.has(room.code));
 });
 
-
-test("shared allies resolve the same reaction in order and stale decisions cannot overwrite it", t => {
-  const {room,act,frames,clients}=fixture(t,4);
-  room.settings.shareAlliedUnits=true;
-  act(0,"attack",{unitId:"0-0",targetId:"1-0",weaponId:"EF_90mmMG"});
-  act(2,"attack",{unitId:"2-0",targetId:"3-0",weaponId:"EF_90mmMG"});
-  act(0,"end_turn");act(2,"end_turn");
-  const first=frames.get(clients[1]).pending.id;
-  assert.equal(frames.get(clients[3]).pending.id,first);
-  act(3,"respond",{reactionId:first,response:"defend"});
-  const next=frames.get(clients[1]).pending.id;
-  assert.notEqual(next,first);
-  assert.equal(frames.get(clients[3]).pending.id,next);
-  assert.equal(room.responses.length,1);
-  assert.equal(room.responses[0].response,"defend");
-  assert.throws(()=>act(1,"respond",{reactionId:first,response:"evade"}));
-  assert.equal(room.responses.length,1);
-  assert.equal(room.responses[0].response,"defend");
-  act(1,"respond",{reactionId:next,response:"evade"});
-  assert.equal(room.phase,"playback");
+test("shared allies resolve the same reaction in order and stale decisions cannot overwrite it", (t) => {
+  const { room, act, frames, clients } = fixture(t, 4);
+  room.settings.shareAlliedUnits = true;
+  act(0, "attack", { unitId: "0-0", targetId: "1-0", weaponId: "EF_90mmMG" });
+  act(2, "attack", { unitId: "2-0", targetId: "3-0", weaponId: "EF_90mmMG" });
+  act(0, "end_turn");
+  act(2, "end_turn");
+  const first = frames.get(clients[1]).pending.id;
+  assert.equal(frames.get(clients[3]).pending.id, first);
+  act(3, "respond", { reactionId: first, response: "defend" });
+  const next = frames.get(clients[1]).pending.id;
+  assert.notEqual(next, first);
+  assert.equal(frames.get(clients[3]).pending.id, next);
+  assert.equal(room.responses.length, 1);
+  assert.equal(room.responses[0].response, "defend");
+  assert.throws(() => act(1, "respond", { reactionId: first, response: "evade" }));
+  assert.equal(room.responses.length, 1);
+  assert.equal(room.responses[0].response, "defend");
+  act(1, "respond", { reactionId: next, response: "evade" });
+  assert.equal(room.phase, "playback");
 });
 
-
-test("explicit departure immediately frees a seat for AI without reconnect reservation", t => {
- const {engine,room,clients,act,frames}=fixture(t);
- room.started=false;room.phase="waiting";
- clients[1].close=()=>{};
- engine.leaveRoom(clients[1]);
- assert.equal(room.seats[1],null);
- assert.deepEqual(frames.get(clients[0]).reservedSeats,[]);
- act(0,"add_ai",{seat:1});
- assert.equal(room.seats[1].bot,true);
+test("explicit departure immediately frees a seat for AI without reconnect reservation", (t) => {
+  const { engine, room, clients, act, frames } = fixture(t);
+  room.started = false;
+  room.phase = "waiting";
+  clients[1].close = () => {};
+  engine.leaveRoom(clients[1]);
+  assert.equal(room.seats[1], null);
+  assert.deepEqual(frames.get(clients[0]).reservedSeats, []);
+  act(0, "add_ai", { seat: 1 });
+  assert.equal(room.seats[1].bot, true);
 });
 
-test("expired reserved seat accepts AI in the waiting room", async t => {
- const {engine,room,clients,act}=fixture(t,2,1,{reconnectGraceMs:20});
- room.started=false;room.phase="waiting";
- engine.disconnect(clients[1]);
- assert.throws(()=>act(0,"add_ai",{seat:1}));
- await new Promise(r=>setTimeout(r,45));
- act(0,"add_ai",{seat:1});
- assert.equal(room.seats[1].bot,true);
+test("expired reserved seat accepts AI in the waiting room", async (t) => {
+  const { engine, room, clients, act } = fixture(t, 2, 1, { reconnectGraceMs: 20 });
+  room.started = false;
+  room.phase = "waiting";
+  engine.disconnect(clients[1]);
+  assert.throws(() => act(0, "add_ai", { seat: 1 }));
+  await new Promise((r) => setTimeout(r, 45));
+  act(0, "add_ai", { seat: 1 });
+  assert.equal(room.seats[1].bot, true);
 });
 
-
-test("host can kick reserved seat immediately and invalidate reconnect without waiting for expiry",t=>{
- const {engine,room,clients,act,frames}=fixture(t,4);
- room.started=false;room.phase="waiting";
- const member=room.seats[1],token=member.token;
- engine.disconnect(clients[1]);
- assert.equal(frames.get(clients[0]).reservedSeats[0].memberId,member.id);
- assert.throws(()=>act(2,"kick_player",{memberId:member.id}));
- assert.equal(room.seats[1],member);
- act(0,"kick_player",{memberId:member.id});
- assert.equal(room.seats[1],null);
- assert.equal(frames.get(clients[0]).reservedSeats.length,0);
- assert.throws(()=>engine.join({readyState:1},{mode:"resume",room:room.code,token}));
- act(0,"add_ai",{seat:1});
- assert.equal(room.seats[1].bot,true);
+test("host can kick reserved seat immediately and invalidate reconnect without waiting for expiry", (t) => {
+  const { engine, room, clients, act, frames } = fixture(t, 4);
+  room.started = false;
+  room.phase = "waiting";
+  const member = room.seats[1],
+    token = member.token;
+  engine.disconnect(clients[1]);
+  assert.equal(frames.get(clients[0]).reservedSeats[0].memberId, member.id);
+  assert.throws(() => act(2, "kick_player", { memberId: member.id }));
+  assert.equal(room.seats[1], member);
+  act(0, "kick_player", { memberId: member.id });
+  assert.equal(room.seats[1], null);
+  assert.equal(frames.get(clients[0]).reservedSeats.length, 0);
+  assert.throws(() => engine.join({ readyState: 1 }, { mode: "resume", room: room.code, token }));
+  act(0, "add_ai", { seat: 1 });
+  assert.equal(room.seats[1].bot, true);
 });
-
 
 test("active host can spectate and a newcomer takes over the existing army", (t) => {
   const { engine, room, clients, act, frames } = fixture(t);
@@ -704,105 +704,146 @@ test("active host can spectate and a newcomer takes over the existing army", (t)
   const newcomer = { readyState: 1 };
   engine.join(newcomer, { mode: "join", room: room.code });
   assert.equal(newcomer.seat, null);
-  engine.action(newcomer, { id: "take-host-seat", revision: room.revision,
-    action: "switch_seat", seat: 0 });
+  engine.action(newcomer, {
+    id: "take-host-seat",
+    revision: room.revision,
+    action: "switch_seat",
+    seat: 0,
+  });
   assert.equal(newcomer.seat, 0);
   assert.equal(JSON.stringify(room.game.units), originalArmy);
   assert(frames.get(newcomer).connected.every(Boolean));
-  engine.action(newcomer, { id: "takeover-plan", revision: room.revision,
-    matchId: room.matchId, round: room.game.round, action: "attack",
-    unitId: room.game.units[0].id, targetId: room.game.units[1].id, weaponId: "EF_90mmMG" });
+  engine.action(newcomer, {
+    id: "takeover-plan",
+    revision: room.revision,
+    matchId: room.matchId,
+    round: room.game.round,
+    action: "attack",
+    unitId: room.game.units[0].id,
+    targetId: room.game.units[1].id,
+    weaponId: "EF_90mmMG",
+  });
   assert.equal(room.plans.length, 1);
 });
 
-
-test("fog logs hide unseen actions and rosters, report the last visible movement cell, and unlock on return", async t => {
-  const {engine, room, act, frames} = fixture(t, 2, 1, {roomReturnMs: 10});
-  const [a,b] = room.game.units;
-  const spectator = {readyState:1};
-  engine.join(spectator,{mode:"join",room:room.code});
-  assert.equal(spectator.seat,null);
-  assert(!act(0,"sync").log.some(x=>x.startsWith("[红方]") && x.includes("部署编制")));
-  assert(frames.get(spectator).log.some(x=>x.startsWith("[红方]") && x.includes("部署编制")));
-  room.game.tiles = Array.from({length:40},()=>Array(50).fill("plain"));
-  Object.assign(a,{x:2,y:10});
-  Object.assign(b,{x:12,y:10,moved:false,acted:false,customName:"SecretEnemy"});
-  room.game.team=1;
-  act(1,"move",{unitId:b.id,x:14,y:10});
-  let blue=act(0,"sync");
-  assert(blue.log.some(x=>x==="敌人从M11格失踪，朝向东方向。"));
-  assert(!blue.log.some(x=>x.includes("SecretEnemy") || x.includes("O11")));
-  assert.equal(blue.lastEvent,null);
-  assert(!blue.game.units.some(u=>u.id===b.id));
-  assert(frames.get(spectator).log.some(x=>x.includes("SecretEnemy") && x.includes("O11")));
-  const before=blue.log.slice();
-  act(1,"wait",{unitId:b.id});
-  assert.deepEqual(act(0,"sync").log,before,"hidden waiting must not leak through LOG/export");
+test("fog logs hide unseen actions and rosters, report the last visible movement cell, and unlock on return", async (t) => {
+  const { engine, room, act, frames } = fixture(t, 2, 1, { roomReturnMs: 10 });
+  const [a, b] = room.game.units;
+  const spectator = { readyState: 1 };
+  engine.join(spectator, { mode: "join", room: room.code });
+  assert.equal(spectator.seat, null);
+  assert(!act(0, "sync").log.some((x) => x.startsWith("[红方]") && x.includes("部署编制")));
+  assert(frames.get(spectator).log.some((x) => x.startsWith("[红方]") && x.includes("部署编制")));
+  room.game.tiles = Array.from({ length: 40 }, () => Array(50).fill("plain"));
+  Object.assign(a, { x: 2, y: 10 });
+  Object.assign(b, { x: 12, y: 10, moved: false, acted: false, customName: "SecretEnemy" });
+  room.game.team = 1;
+  moveAndConfirm(act, 1, { unitId: b.id, x: 14, y: 10 });
+  let blue = act(0, "sync");
+  assert(blue.log.some((x) => x === "敌人从M11格失踪，朝向东方向。"));
+  assert(!blue.log.some((x) => x.includes("SecretEnemy") || x.includes("O11")));
+  assert.equal(blue.lastEvent, null);
+  assert(!blue.game.units.some((u) => u.id === b.id));
+  assert(frames.get(spectator).log.some((x) => x.includes("SecretEnemy") && x.includes("O11")));
+  const before = blue.log.slice();
+  act(1, "wait", { unitId: b.id });
+  assert.deepEqual(act(0, "sync").log, before, "hidden waiting must not leak through LOG/export");
   assert(frames.get(spectator).log[0].includes("待机"));
-  act(0,"return_room");
-  await new Promise(r=>setTimeout(r,30));
-  blue=act(0,"sync");
-  assert.equal(blue.started,false);
-  assert.deepEqual(blue.log,room.teamLogs[0],"returning keeps the selected team history intact");
-  assert.deepEqual(blue.logExport.options,["global","team:0","team:1"]);
-  const download=act(0,"download_log",{perspective:"global"});
-  assert.deepEqual(download.log,room.log);
-  assert(download.log.some(x=>x.includes("SecretEnemy") && x.includes("O11")));
+  act(0, "return_room");
+  await new Promise((r) => setTimeout(r, 30));
+  blue = act(0, "sync");
+  assert.equal(blue.started, false);
+  assert.deepEqual(blue.log, room.teamLogs[0], "returning keeps the selected team history intact");
+  assert.deepEqual(blue.logExport.options, ["global", "team:0", "team:1"]);
+  const download = act(0, "download_log", { perspective: "global" });
+  assert.deepEqual(download.log, room.log);
+  assert(download.log.some((x) => x.includes("SecretEnemy") && x.includes("O11")));
 });
 
-test("entering vision strips the invisible portion of enemy movement", t => {
-  const {room,act}=fixture(t);
-  const [a,b]=room.game.units;
-  room.game.tiles=Array.from({length:40},()=>Array(50).fill("plain"));
-  Object.assign(a,{x:2,y:10});
-  Object.assign(b,{x:14,y:10,moved:false,acted:false});
-  room.game.team=1;
-  act(1,"move",{unitId:b.id,x:11,y:10});
-  const blue=act(0,"sync");
-  assert.equal(blue.lastEvent.type,"move");
-  assert.deepEqual(blue.lastEvent.from,{x:12,y:10});
-  assert(blue.lastEvent.path.every(p=>p.x<=12));
-  assert.equal(blue.game.units.find(u=>u.id===b.id).origin,null);
+test("entering vision strips the invisible portion of enemy movement", (t) => {
+  const { room, act } = fixture(t);
+  const [a, b] = room.game.units;
+  room.game.tiles = Array.from({ length: 40 }, () => Array(50).fill("plain"));
+  Object.assign(a, { x: 2, y: 10 });
+  Object.assign(b, { x: 14, y: 10, moved: false, acted: false });
+  room.game.team = 1;
+  moveAndConfirm(act, 1, { unitId: b.id, x: 11, y: 10 });
+  const blue = act(0, "sync");
+  assert.equal(blue.lastEvent.type, "move");
+  assert.deepEqual(blue.lastEvent.from, { x: 12, y: 10 });
+  assert(blue.lastEvent.path.every((p) => p.x <= 12));
+  assert.equal(blue.game.units.find((u) => u.id === b.id).origin, null);
 });
 
 test("radar contacts use the centre of a rectangular footprint and keep the 1.25 conversion", () => {
-  const Sensor=require("../shared/unit-sensors.js");
-  const api=Sensor.create({modelOf:u=>({sensors:u.sensors}),onMap:u=>u.hp>0,
-    cells:u=>Array.from({length:u.w*u.h},(_,i)=>({x:u.x+i%u.w,y:u.y+Math.floor(i/u.w)}))});
-  const a={id:"a",team:0,hp:1,x:0,y:0,w:1,h:1,sensors:{sight:2,radar:20,antiDetection:0}};
-  const b={id:"b",team:1,hp:1,x:6,y:4,w:2,h:3,sensors:{sight:1,radar:1,antiDetection:0}};
-  const game={units:[a,b],round:1,tiles:Array.from({length:20},()=>Array(20).fill("plain"))};
-  assert.deepEqual(api.view(game,0).radarContacts,[{x:6.5,y:5}]);
-  b.w=3;b.h=2;
-  assert.deepEqual(api.view(game,0).radarContacts,[{x:7,y:4.5}]);
-  const gm=G.models.RGM_79__machine_gun.sensors;
-  assert.equal(gm.sight,10);
-  assert.equal(gm.radar,12.5);
+  const Sensor = require("../shared/unit-sensors.js");
+  const api = Sensor.create({
+    modelOf: (u) => ({ sensors: u.sensors }),
+    onMap: (u) => u.hp > 0,
+    cells: (u) =>
+      Array.from({ length: u.w * u.h }, (_, i) => ({
+        x: u.x + (i % u.w),
+        y: u.y + Math.floor(i / u.w),
+      })),
+  });
+  const a = {
+    id: "a",
+    team: 0,
+    hp: 1,
+    x: 0,
+    y: 0,
+    w: 1,
+    h: 1,
+    sensors: { sight: 2, radar: 20, antiDetection: 0 },
+  };
+  const b = {
+    id: "b",
+    team: 1,
+    hp: 1,
+    x: 6,
+    y: 4,
+    w: 2,
+    h: 3,
+    sensors: { sight: 1, radar: 1, antiDetection: 0 },
+  };
+  const game = {
+    units: [a, b],
+    round: 1,
+    tiles: Array.from({ length: 20 }, () => Array(20).fill("plain")),
+  };
+  assert.deepEqual(api.view(game, 0).radarContacts, [{ x: 6.5, y: 5 }]);
+  b.w = 3;
+  b.h = 2;
+  assert.deepEqual(api.view(game, 0).radarContacts, [{ x: 7, y: 4.5 }]);
+  const gm = G.models.RGM_79__machine_gun.sensors;
+  assert.equal(gm.sight, 10);
+  assert.equal(gm.radar, 12.5);
 });
 
-
-test("recon skills are authoritative, deduplicated and synchronize only allied camera vision", t => {
-  const {room,act}=fixture(t);
-  const [a,b]=room.game.units;
-  const model=Object.keys(G.models).find(k=>G.models[k].prefabId==="MS_06E");
-  Object.assign(a,{model,en:G.models[model].en,x:2,y:10,actionPoints:5});
-  Object.assign(b,{x:25,y:10});
-  room.game.tiles=Array.from({length:40},()=>Array(70).fill("plain"));
-  const en=a.en;
-  const scan={id:"scan-dedupe",unitId:a.id,skillId:"Common_DetectArea",x:2,y:10};
-  const first=act(0,"skill",scan);
-  assert.equal(first.lastEvent.type,"skill");
-  assert.equal(first.lastEvent.sound.file,"../../sounds/Detect_3.ogg");
+test("recon skills are authoritative, deduplicated and synchronize only allied camera vision", (t) => {
+  const { room, act } = fixture(t);
+  const [a, b] = room.game.units;
+  const model = Object.keys(G.models).find((k) => G.models[k].prefabId === "MS_06E");
+  Object.assign(a, { model, en: G.models[model].en, x: 2, y: 10, actionPoints: 5 });
+  Object.assign(b, { x: 25, y: 10 });
+  room.game.tiles = Array.from({ length: 40 }, () => Array(70).fill("plain"));
+  const en = a.en;
+  const scan = { id: "scan-dedupe", unitId: a.id, skillId: "Common_DetectArea", x: 2, y: 10 };
+  const first = act(0, "skill", scan);
+  assert.equal(first.lastEvent.type, "skill");
+  assert.equal(first.lastEvent.sound.file, "../../sounds/Detect_3.ogg");
   assert(first.game.intel.detectedIds.includes(b.id));
-  assert(!first.game.units.some(u=>u.id===b.id));
-  act(0,"skill",scan);assert.equal(a.en,en-100);assert.equal(a.actionPoints,4);
-  assert.throws(()=>act(1,"skill",{unitId:a.id,skillId:"Common_CameraGun",x:25,y:10}));
-  const camera=act(0,"skill",{unitId:a.id,skillId:"Common_CameraGun",x:25,y:10});
-  assert.equal(camera.lastEvent.type,"skill");
-  assert(camera.game.units.some(u=>u.id===b.id));
-  assert.equal(camera.game.visionAreas.length,1);
-  assert.equal(act(1,"sync").game.visionAreas.length,0);
-  assert.equal(a.en,en-130);
+  assert(!first.game.units.some((u) => u.id === b.id));
+  act(0, "skill", scan);
+  assert.equal(a.en, en - 100);
+  assert.equal(a.actionPoints, 4);
+  assert.throws(() => act(1, "skill", { unitId: a.id, skillId: "Common_CameraGun", x: 25, y: 10 }));
+  const camera = act(0, "skill", { unitId: a.id, skillId: "Common_CameraGun", x: 25, y: 10 });
+  assert.equal(camera.lastEvent.type, "skill");
+  assert(camera.game.units.some((u) => u.id === b.id));
+  assert.equal(camera.game.visionAreas.length, 1);
+  assert.equal(act(1, "sync").game.visionAreas.length, 0);
+  assert.equal(a.en, en - 130);
 });
 
 test("playback visibility survives lethal resolution without revealing the other team's intel", (t) => {
@@ -958,72 +999,127 @@ test("fog effects use a separate presentation feed without hidden health, orders
   assert.deepEqual(state.logExport.options, ["team:0"]);
 });
 
-test('records preserve team privacy, delta playback, synchronized barriers and exact turn-start forks',async(t)=>{
-  const Records=require('../shared/match-records.js');
-  const {room,act,frames,clients,engine}=fixture(t,2,1,{roomReturnMs:1,aiDelayMs:100000});
-  assert(room.record.frames.length>0);
-  const own=act(0,'record_export',{perspective:'team:0'}).record;
-  assert.deepEqual(own.perspectives,['team:0']);assert.deepEqual(own.checkpoints,[]);
-  assert(!JSON.stringify(own).includes('"seed":'));assert(!JSON.stringify(own).includes('"token":'));
-  assert.throws(()=>act(0,'record_export',{perspective:'global'}));
-  assert.throws(()=>act(1,'replay_open'));
-  assert.throws(()=>act(0,'replay_open'));
-  const [a]=room.game.units;
-  const target=[...G.reachable(room.game,a).values()].find(c=>c.path.length);
-  act(0,'move',{unitId:a.id,x:target.x,y:target.y});
-  const moved=room.record.frames.length-1;
-  const decoded=Records.view(room.record,moved,'global');assert.equal(decoded.game.units.find(u=>u.id===a.id).x,target.x);
-  assert(!room.record.checkpoints.some(c=>c.frame===moved));
-  act(0,'return_room');await new Promise(r=>setTimeout(r,20));
-  const full=act(0,'record_export',{perspective:'global'}).record;
-  assert(full.checkpoints.length>0);assert.equal(Records.validate(G,full).frames.length,full.frames.length);
-  const original=JSON.stringify(full),checkpoint=full.checkpoints[0],oldMatch=room.matchId;
-  act(0,'replay_open');const replay=room.replay;
-  assert.throws(()=>act(1,'replay_control',{replayId:replay.id,playing:true}));
-  act(0,'replay_control',{replayId:replay.id,playing:true});
-  const token=replay.token,index=replay.index;
-  assert.throws(()=>act(0,'replay_control',{replayId:replay.id,index:index+1,speed:3}));
-  assert.equal(replay.index,index,'invalid speed cannot partially seek');
-  act(0,'replay_ready',{replayId:replay.id,token});assert.equal(replay.index,index);
-  act(1,'replay_ready',{replayId:replay.id,token});assert.equal(replay.index,index+1);
-  assert.throws(()=>act(0,'replay_ready',{replayId:replay.id,token}));
-  act(1,'replay_view',{perspective:'team:1'});engine.broadcast(room);
-  assert.equal(frames.get(clients[1]).replay.perspective,'team:1');
-  act(0,'replay_control',{replayId:replay.id,index:moved,playing:false});
-  assert.throws(()=>act(0,'replay_fork',{replayId:replay.id,index:moved,assignments:[room.hostId,'ai']}));
-  act(0,'replay_control',{replayId:replay.id,index:checkpoint.frame,playing:false});
-  assert.throws(()=>act(0,'replay_fork',{replayId:replay.id,index:checkpoint.frame,assignments:[room.hostId,room.hostId]}));
-  act(0,'replay_fork',{replayId:replay.id,index:checkpoint.frame,assignments:[room.hostId,'ai']});
-  assert.notEqual(room.matchId,oldMatch);assert.equal(room.replay,null);assert.equal(room.phase,'idle');
-  assert.equal(room.game.seed,checkpoint.game.seed);assert.equal(room.game.partSeed,checkpoint.game.partSeed);
-  assert.deepEqual(room.game.units,checkpoint.game.units);assert.equal(room.seats[1].bot,true);
-  assert.equal(clients[1].seat,null);assert.equal(room.record.parent.id,full.id);
-  assert.equal(JSON.stringify(full),original,'branching never mutates the original record');
+test("records preserve public playback, synchronized barriers and turn navigation without takeover", async (t) => {
+  const Records = require("../shared/match-records.js");
+  const { room, act, frames, clients, engine } = fixture(t, 2, 1, {
+    roomReturnMs: 1,
+    aiDelayMs: 100000,
+  });
+  assert(room.record.frames.length > 0);
+  assert.throws(() => act(0, "record_export", { perspective: "team:0" }));
+  assert(!JSON.stringify(room.record).includes('"seed":'));
+  assert(!JSON.stringify(room.record).includes('"token":'));
+  assert.throws(() => act(1, "replay_open"));
+  assert.throws(() => act(0, "replay_open"));
+  const [a] = room.game.units;
+  const target = [...G.reachable(room.game, a).values()].find((c) => c.path.length);
+  moveAndConfirm(act, 0, { unitId: a.id, x: target.x, y: target.y });
+  const moved = room.record.frames.length - 1;
+  const decoded = Records.view(room.record, moved, "global");
+  assert.equal(decoded.game.units.find((u) => u.id === a.id).x, target.x);
+  assert(!room.record.checkpoints.some((c) => c.frame === moved));
+  act(0, "return_room");
+  await new Promise((r) => setTimeout(r, 20));
+  const full = room.record;
+  assert(full.checkpoints.length > 0);
+  assert.equal(Records.validate(G, full).frames.length, full.frames.length);
+  const original = JSON.stringify(full),
+    checkpoint = full.checkpoints[0],
+    oldMatch = room.matchId;
+  act(0, "replay_open");
+  const replay = room.replay;
+  assert.throws(() => act(1, "replay_control", { replayId: replay.id, playing: true }));
+  act(0, "replay_control", { replayId: replay.id, playing: true });
+  const token = replay.token,
+    index = replay.index;
+  assert.throws(() =>
+    act(0, "replay_control", { replayId: replay.id, index: index + 1, speed: 3 }),
+  );
+  assert.equal(replay.index, index, "invalid speed cannot partially seek");
+  act(0, "replay_ready", { replayId: replay.id, token });
+  assert.equal(replay.index, index);
+  act(1, "replay_ready", { replayId: replay.id, token });
+  assert.equal(replay.index, index + 1);
+  assert.throws(() => act(0, "replay_ready", { replayId: replay.id, token }));
+  act(1, "replay_view", { perspective: "team:1" });
+  engine.broadcast(room);
+  assert.equal(frames.get(clients[1]).replay.perspective, "team:1");
+  act(0, "replay_control", { replayId: replay.id, index: moved, playing: false });
+  assert.throws(() =>
+    act(0, "replay_fork", { replayId: replay.id, index: moved, assignments: [room.hostId, "ai"] }),
+  );
+  act(0, "replay_control", { replayId: replay.id, index: checkpoint.frame, playing: false });
+  assert.throws(() =>
+    act(0, "replay_fork", {
+      replayId: replay.id,
+      index: checkpoint.frame,
+      assignments: [room.hostId, room.hostId],
+    }),
+  );
+  assert.throws(() =>
+    act(0, "replay_fork", {
+      replayId: replay.id,
+      index: checkpoint.frame,
+      assignments: [room.hostId, "ai"],
+    }),
+  );
+  assert.equal(room.matchId, oldMatch);
+  assert.equal(room.replay, replay);
+  assert.equal(room.started, false);
+  assert.equal(JSON.stringify(full), original, "watching never mutates the original record");
 });
 
-test('record upload is chunked, validated, host-only and does not replace a live match',async(t)=>{
-  const {room,act}=fixture(t,2,1,{roomReturnMs:1});
-  assert.throws(()=>act(0,'record_upload_begin',{length:100}));
-  act(0,'return_room');await new Promise(r=>setTimeout(r,20));
-  const raw=JSON.stringify(room.record);
-  assert.throws(()=>act(1,'record_upload_begin',{length:raw.length}));
-  const upload=act(0,'record_upload_begin',{length:raw.length});
-  assert.throws(()=>act(0,'record_upload_chunk',{uploadId:upload.uploadId,sequence:1,text:'x'}));
-  for(let offset=0,sequence=0;offset<raw.length;offset+=20000,sequence++)act(0,'record_upload_chunk',{uploadId:upload.uploadId,sequence,text:raw.slice(offset,offset+20000)});
-  act(0,'record_upload_finish',{uploadId:upload.uploadId});
-  act(0,'replay_open',{loaded:true});assert.equal(room.replay.record.id,room.record.id);
-  assert.throws(()=>act(0,'start_game'));
-  act(0,'replay_close');assert.equal(room.replay,null);
+test("record upload is chunked, validated, host-only and does not replace a live match", async (t) => {
+  const { room, act } = fixture(t, 2, 1, { roomReturnMs: 1 });
+  assert.throws(() => act(0, "record_upload_begin", { length: 100 }));
+  act(0, "return_room");
+  await new Promise((r) => setTimeout(r, 20));
+  const raw = JSON.stringify(room.record);
+  assert.throws(() => act(1, "record_upload_begin", { length: raw.length }));
+  const upload = act(0, "record_upload_begin", { length: raw.length });
+  assert.throws(() =>
+    act(0, "record_upload_chunk", { uploadId: upload.uploadId, sequence: 1, text: "x" }),
+  );
+  for (let offset = 0, sequence = 0; offset < raw.length; offset += 20000, sequence++)
+    act(0, "record_upload_chunk", {
+      uploadId: upload.uploadId,
+      sequence,
+      text: raw.slice(offset, offset + 20000),
+    });
+  act(0, "record_upload_finish", { uploadId: upload.uploadId });
+  act(0, "replay_open", { loaded: true });
+  assert.equal(room.replay.record.id, room.record.id);
+  assert.throws(() => act(0, "start_game"));
+  act(0, "replay_close");
+  assert.equal(room.replay, null);
 });
 
-test('forking a replay tolerates disconnected original players and preserves their spectator reconnect',async(t)=>{
-  const {room,act,engine,clients}=fixture(t,2,1,{roomReturnMs:1,aiDelayMs:100000});
-  act(0,'return_room');await new Promise(r=>setTimeout(r,20));
-  act(0,'replay_open');const replay=room.replay,checkpoint=replay.record.checkpoints[0];
-  act(0,'replay_control',{replayId:replay.id,index:checkpoint.frame});
-  const guest=room.members.get(clients[1].memberId),token=guest.token;
+test("replay rejects takeover without changing disconnected players or their reconnect seats", async (t) => {
+  const { room, act, engine, clients } = fixture(t, 2, 1, { roomReturnMs: 1, aiDelayMs: 100000 });
+  act(0, "return_room");
+  await new Promise((r) => setTimeout(r, 20));
+  act(0, "replay_open");
+  const replay = room.replay,
+    checkpoint = replay.record.checkpoints[0];
+  act(0, "replay_control", { replayId: replay.id, index: checkpoint.frame });
+  const guest = room.members.get(clients[1].memberId),
+    token = guest.token;
   engine.disconnect(clients[1]);
-  act(0,'replay_fork',{replayId:replay.id,index:checkpoint.frame,assignments:[room.hostId,'ai']});
-  assert.equal(guest.seat,null);assert.equal(room.seats[1].bot,true);
-  const socket={readyState:1};engine.join(socket,{mode:'resume',room:room.code,token});assert.equal(socket.seat,null);
+  assert.throws(() =>
+    act(0, "replay_fork", {
+      replayId: replay.id,
+      index: checkpoint.frame,
+      assignments: [room.hostId, "ai"],
+    }),
+  );
+  assert.equal(guest.seat, 1);
+  assert.equal(room.replay, replay);
+  const socket = { readyState: 1 };
+  engine.join(socket, { mode: "resume", room: room.code, token });
+  assert.equal(socket.seat, 1);
 });
+
+function moveAndConfirm(act, seat, fields) {
+  const preview = act(seat, "move", fields);
+  return preview.type === "error" ? preview : act(seat, "confirm_move", { unitId: fields.unitId });
+}

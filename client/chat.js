@@ -38,11 +38,13 @@ const Chat = (() => {
     renderStatus();
   }
   function renderStatus() {
-    const text = !connected()
-      ? "聊天仅在房间内可用。"
-      : !ChatChannels.canSend(seat(), selectedChannel)
-        ? "观战玩家只能查看队伍频道，请在全部或观战频道发送。"
-        : notice;
+    const text = window.ReplayPlayer?.active
+      ? "回放聊天记录（只读）"
+      : !connected()
+        ? "聊天仅在房间内可用。"
+        : !ChatChannels.canSend(seat(), selectedChannel)
+          ? "观战玩家只能查看队伍频道，请在全部或观战频道发送。"
+          : notice;
     for (const view of views) byId(view.status).textContent = text;
   }
   function refreshChannels() {
@@ -64,7 +66,8 @@ const Chat = (() => {
   function refreshStatus() {
     refreshExports();
     refreshChannels();
-    const writable = connected() && ChatChannels.canSend(seat(), selectedChannel);
+    const writable =
+      connected() && !window.ReplayPlayer?.active && ChatChannels.canSend(seat(), selectedChannel);
     for (const view of views) {
       byId(view.send).disabled = !writable || !!pending;
       byId(view.input).disabled = !writable;
@@ -123,7 +126,16 @@ const Chat = (() => {
   const perspectiveLabel = (value) =>
     value === "global" ? I18n.text("上帝视角") : I18n.text("队伍") + (Number(value.slice(5)) + 1);
   function refreshExports() {
-    const options = logExport?.options || [];
+    const replayOptions = window.ReplayPlayer?.logOptions();
+    const available = replayOptions || logExport?.options || [];
+    const teams = new Set(
+      Rules.getMap(Net.snapshot?.settings?.mapId).spawns.map((_, seat) => Rules.seatTeam(seat)),
+    );
+    const options = [...new Set([...teams].map((team) => "team:" + team).concat(available))]
+      .filter((value) => value !== "global")
+      .sort((a, b) => Number(a.slice(5)) - Number(b.slice(5)));
+    options.push("global");
+    if (!available.includes(exportChoice)) exportChoice = available[0] || options[0];
     for (const id of ["showLog", "roomShowLog"])
       byId(id).textContent = logExport ? "LOG · " + perspectiveLabel(logExport.perspective) : "LOG";
     for (const id of exportSelectors) {
@@ -138,20 +150,26 @@ const Chat = (() => {
         for (const value of options) select.add(new Option(perspectiveLabel(value), value));
       }
       select.value = exportChoice || "";
-      select.hidden = options.length < 2;
+      for (const option of select.options) option.disabled = !available.includes(option.value);
+      select.hidden = false;
       select.disabled = !!Net.awaiting;
     }
     for (const id of ["downloadBattleLog", "roomDownloadBattleLog"]) {
-      byId(id).disabled = Net.active
-        ? !options.includes(exportChoice) || !!Net.awaiting
-        : !battleLog.length;
+      byId(id).disabled =
+        Net.active || replayOptions
+          ? !available.includes(exportChoice) || !!Net.awaiting
+          : !battleLog.length;
       byId(id).title =
-        Net.active && !options.length
+        Net.active && !available.length
           ? "全局战报在对局结束或全员返回房间时开放下载。"
           : "下载战斗LOG";
     }
   }
   function downloadLog() {
+    if (window.ReplayPlayer?.active) {
+      ReplayPlayer.downloadLog(exportChoice).catch((error) => note(error.message));
+      return;
+    }
     if (Net.active) {
       if (!logExport?.options.includes(exportChoice) || Net.awaiting) return;
       Net.request("download_log", { perspective: exportChoice });
@@ -235,6 +253,7 @@ const Chat = (() => {
     if (connected() && !pending) status("");
   }
   function receive(message, ack) {
+    if (window.ReplayPlayer?.active) return;
     if (!messages.some((old) => old.id === message.id)) {
       if (message.memberId !== Net.memberId) GameAudio.play("infoSound");
       messages.push(message);

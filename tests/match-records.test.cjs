@@ -27,13 +27,13 @@ test("record deltas preserve changed, removed and new units and prepend logs wit
   assert.deepEqual(archive.frames[1].views.global.log, { prepend: ["second"] });
   assert.equal(R.validate(G, archive).frames.length, 2);
 });
-test("record import rejects incompatible rules, invalid models, prototype keys and non-turn resume points", () => {
+test("record import rejects incompatible rules, invalid models, prototype keys and invalid turn indices", () => {
   const { archive } = record();
   for (const mutate of [
     (r) => (r.rules = "other"),
     (r) => (r.frames[0].turnStart = false),
-    (r) => (r.checkpoints[0].game.units[0].model = "missing"),
-    (r) => (r.checkpoints[0].game.seed = null),
+    (r) => (r.frames[0].views.global.units[0].model = "missing"),
+    (r) => (r.checkpoints[0].frame = -1),
     (r) => (r.frames[0].views.global.units[0].x = -1),
   ]) {
     const bad = R.clone(archive);
@@ -45,4 +45,11 @@ test("record import rejects incompatible rules, invalid models, prototype keys a
   );
   assert.throws(() => R.validate(G, bad));
   assert.equal({}.polluted, undefined);
+});
+
+test("older recordings retain turn navigation while discarding takeover state", () => {
+  const { archive, g } = record();
+  const imported = R.validate(G, archive);
+  assert.deepEqual(imported.checkpoints, [{ frame: 0, round: g.round, team: g.team }]);
+  assert.equal(JSON.stringify(imported.checkpoints).includes('"seed"'), false);
 });

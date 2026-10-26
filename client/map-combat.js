@@ -1,6 +1,9 @@
 /* 大地图交战演出：使用地图坐标和已裁定逐发结果，不修改权威战局。 */
 const MapCombat = (() => {
   const restingPoses = new Map();
+  const dodgeStarts = new Map();
+  let dodgeClock = 0,
+    dodgeLastNow = null;
   const visibleActors = new Set();
   const displayed = new Map(),
     unitStartDelays = new Map();
@@ -15,6 +18,9 @@ const MapCombat = (() => {
     displayed.clear();
     visibleActors.clear();
     restingPoses.clear();
+    dodgeStarts.clear();
+    dodgeClock = 0;
+    dodgeLastNow = null;
     unitStartDelays.clear();
     frame = null;
     lanes = [];
@@ -35,6 +41,9 @@ const MapCombat = (() => {
     frame = null;
     view.mapBattle = true;
     const now = performance.now();
+    dodgeStarts.clear();
+    dodgeClock = 0;
+    dodgeLastNow = now;
     // 每台执行攻击或反击的单位独立抽取一次，本地随机数不使用战斗判定 seed。
     unitStartDelays.clear();
     for (const battle of view.battles || [])
@@ -87,7 +96,7 @@ const MapCombat = (() => {
     byId("mapCombatControls").hidden = false;
     // 演出沿用玩家当前的镜头位置与倍率。
   }
-  function setup(view) {
+  function setup(view, start = dodgeClock) {
     const event = { ...view.events[view.index] };
     const previousPoses = poses();
     const actors = [event.from, event.to].map((id) => {
@@ -124,7 +133,11 @@ const MapCombat = (() => {
     source.unit.aimAngle = aim;
     target.angle = Rules.modelOf(target.unit).ship ? target.unit.angle : aim + 180;
     const weapon = Rules.eventWeapon(source.unit, event);
-    const plan = WeaponEffects.plan(weapon, source, target, event);
+    if (!dodgeStarts.has(event.to)) dodgeStarts.set(event.to, []);
+    const plan = WeaponEffects.plan(weapon, source, target, event, {
+      start,
+      starts: dodgeStarts.get(event.to),
+    });
     frame = { view, index: view.index, event, source, target, weapon, plan, time: 0 };
     byId("mapCombatStatus").textContent = event.effectsOnly
       ? I18n.text("战斗演出")
@@ -278,6 +291,10 @@ const MapCombat = (() => {
   }
   // 每个攻击计划有自己的时间轴；不同交战同时推进，单场中的反击仍在受击后开始。
   function update(now) {
+    const dodgeRate = window.ReplayPlayer?.active ? 1 : byId("quick").checked ? 1 / 0.35 : 1;
+    if (battleView?.mapBattle && battleView.suspendedAt === undefined && pageView === "game")
+      dodgeClock += (Math.max(0, now - (dodgeLastNow ?? now)) / 1000) * dodgeRate;
+    dodgeLastNow = now;
     if (!lanes.length) return updateSingle(now);
     if (!battleView?.mapBattle || battleView.suspendedAt !== undefined || pageView !== "game")
       return;
@@ -296,7 +313,7 @@ const MapCombat = (() => {
         const startDelay = unitStartDelays.get(lane.view.events[lane.view.index].from) || 0;
         if (lane.delayElapsed < startDelay) continue;
         lane.started = true;
-        lane.frame = setup(lane.view);
+        lane.frame = setup(lane.view, dodgeClock - (lane.delayElapsed - startDelay));
         // 保留跨越起播时刻的这一帧时间，低帧率下也不会把延迟额外拉长。
         lane.frame.lastNow = now - ((lane.delayElapsed - startDelay) * 1000) / rate;
       }
@@ -490,13 +507,14 @@ const MapCombat = (() => {
         );
     }
     if (targetPose.dying && !targetPose.hidden)
-      SpriteEffects.draw(
+      SpriteEffects.deathElectric(
         ctx,
-        plan.deathElectricEffect,
         targetPose.x,
         targetPose.y,
         target.scale,
         time - plan.deathSoundAt,
+        plan.deathAt - plan.deathSoundAt,
+        plan.deathAt - plan.deathSoundAt,
       );
     if (plan.deathAt !== null)
       WeaponEffects.drawDeath(
@@ -573,6 +591,7 @@ const MapCombat = (() => {
     if (view.suspendedAt !== undefined) {
       delete view.suspendedAt;
       const now = performance.now();
+      dodgeLastNow = now;
       if (frame) frame.lastNow = now;
       for (const lane of lanes) {
         lane.delayAt = now;

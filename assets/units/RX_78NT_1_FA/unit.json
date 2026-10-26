@@ -614,7 +614,7 @@
     "en": 1000.0,
     "move": 7,
     "mobility": 145.0,
-    "cost": 875,
+    "cost": 1350,
     "counterLimit": 1,
     "accuracy": 150.0,
     "partStructuralStrength": 175.0,
@@ -2335,7 +2335,7 @@
   "costBalance": {
     "nativeLevel": 3500.0,
     "levelMultiplier": 0.25,
-    "published": 875
+    "published": 1350
   },
   "skills": [
     {
@@ -2413,6 +2413,7 @@
           "limb": "leftArm"
         }
       ],
+      "fireMode": "independent",
       "name": "腕部机枪"
     }
   ]

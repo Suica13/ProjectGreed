@@ -265,7 +265,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CustomUnit",
@@ -327,7 +327,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "Sonar",
@@ -372,7 +372,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "ChangeStyle",
@@ -423,7 +423,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdAtk",
@@ -497,7 +497,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "special_Common_ReEntry_NeedBooster",
@@ -795,7 +795,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -852,7 +852,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -1107,7 +1107,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -1454,7 +1454,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "Deploy",
@@ -1511,7 +1511,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -1676,7 +1676,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "Deploy",
@@ -1766,7 +1766,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -2153,7 +2153,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "Deploy",
@@ -2387,7 +2387,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "ChangeStyle",
@@ -2443,7 +2443,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CustomUnit_NewUnit",
@@ -2495,7 +2495,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "special_Common_ReEntry_NeedBooster",
@@ -2687,7 +2687,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       }
     ]
   },
@@ -2782,7 +2782,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -2844,7 +2844,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -3076,7 +3076,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -3127,7 +3127,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -3284,7 +3284,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -3336,7 +3336,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -3387,7 +3387,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -3462,7 +3462,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",
@@ -3606,7 +3606,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "Deploy",
@@ -3746,7 +3746,7 @@
         "id": "LaunchAllUnits",
         "source": "Template/Unit/Skill/LaunchAllUnits.gw",
         "status": "adapted",
-        "name": "格纳库：搭载、逐台出击与舰毁紧急退出（整备和独立舱体损坏待接入）"
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
       },
       {
         "id": "CmdCom",

@@ -1509,18 +1509,19 @@
           "requiredParts": [
             "rightArm"
           ],
-          "limb": null
+          "limb": "rightArm"
         },
         {
           "id": "ZN_MS_06M_SMS_L",
           "weaponId": "ZN_MS_06M_SMS_L",
           "muzzleIndex": 1,
           "requiredParts": [
-            "rightArm"
+            "leftArm"
           ],
-          "limb": null
+          "limb": "leftArm"
         }
-      ]
+      ],
+      "fireMode": "independent"
     }
   ]
 }

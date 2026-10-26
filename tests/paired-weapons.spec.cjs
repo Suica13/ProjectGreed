@@ -1,9 +1,9 @@
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url"),
   path = require("node:path");
-test("paired hands render independently with simultaneous separated muzzles after a position change", async ({
+test("independent hand weapons render at their own muzzle after a position change", async ({
   page,
-}) => {
+}, testInfo) => {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
@@ -27,14 +27,29 @@ test("paired hands render independently with simultaneous separated muzzles afte
       const w = m.weapons.find(
         (w) => w.id === (id === "RX_78XX" ? "EF_75mmMG_Double" : "Common_ArmMG"),
       );
+      const hands = [w, m.weapons.find((a) => a.id === w.id + "_L")];
       const pose = WeaponSequence.pose(w, w.attack.shots[0]);
       const actor = { x: 200, y: 110 + row * 200, angle: 90, scale: 2.5 };
       const points = [0, 1].map((i) =>
-        SpriteRenderer.muzzle(key, w, actor, pose.clip, pose.time, i),
+        SpriteRenderer.muzzle(
+          key,
+          hands[i],
+          actor,
+          WeaponSequence.pose(hands[i], hands[i].attack.shots[0]).clip,
+          WeaponSequence.pose(hands[i], hands[i].attack.shots[0]).time,
+          0,
+        ),
       );
       const shifted = { ...actor, x: actor.x + 17, y: actor.y - 29 };
       const translated = [0, 1].map((i) =>
-        SpriteRenderer.muzzle(key, w, shifted, pose.clip, pose.time, i),
+        SpriteRenderer.muzzle(
+          key,
+          hands[i],
+          shifted,
+          WeaponSequence.pose(hands[i], hands[i].attack.shots[0]).clip,
+          WeaponSequence.pose(hands[i], hands[i].attack.shots[0]).time,
+          0,
+        ),
       );
       for (const [col, broken] of [{}, { leftArm: true }, { rightArm: true }].entries())
         SpriteRenderer.draw(
@@ -56,8 +71,13 @@ test("paired hands render independently with simultaneous separated muzzles afte
       rows.push({
         id,
         points,
+        sides: hands.map((hand) => hand.requiredParts),
+        clips: hands.map((hand) => WeaponSequence.pose(hand, hand.attack.shots[0]).clip),
         translated,
         shots: live.length,
+        ownBroken: Rules.availableStrikes({ model: key, brokenParts: { rightArm: true } }, w)
+          .length,
+        expected: w.shotCount,
         finite: points.every((p) => Number.isFinite(p.x) && Number.isFinite(p.y)),
       });
     }
@@ -65,14 +85,15 @@ test("paired hands render independently with simultaneous separated muzzles afte
   });
   for (const row of result) {
     expect(row.finite).toBe(true);
-    expect(
-      Math.hypot(row.points[0].x - row.points[1].x, row.points[0].y - row.points[1].y),
-    ).toBeGreaterThan(5);
+    expect(row.shots).toBe(row.expected);
+    expect(row.ownBroken).toBe(0);
+    expect(row.sides).toEqual([["rightArm"], ["leftArm"]]);
+    expect(row.clips[0]).not.toBe(row.clips[1]);
     for (let i = 0; i < 2; i++) {
       expect(row.translated[i].x - row.points[i].x).toBeCloseTo(17);
       expect(row.translated[i].y - row.points[i].y).toBeCloseTo(-29);
     }
   }
-  await page.screenshot({ path: ".openai/paired-weapon-hands.png" });
+  await page.screenshot({ path: testInfo.outputPath("independent-weapon-hands.png") });
   expect(errors).toEqual([]);
 });

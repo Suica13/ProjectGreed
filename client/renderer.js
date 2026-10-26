@@ -308,7 +308,12 @@ const SpriteRenderer = (() => {
         layer.visibleWhen?.thrustActive ||
         layer.visibleWhen?.sustainedThrust ||
         layer.independentClock;
-      if (effectsOnly && (!effectLayer || layer.visibleInFog === false)) continue;
+      const movementEffect =
+        layer.visibleWhen?.thrustActive ||
+        layer.visibleWhen?.sustainedThrust ||
+        layer.visibleWhen?.moving ||
+        layer.onlyAnimateWhenMoving;
+      if (effectsOnly && (!effectLayer || movementEffect || layer.visibleInFog === false)) continue;
       const image = images[layer.asset];
       if (!image) continue;
       const transform = layerTransform(model, layer, angle, sampled);
@@ -352,7 +357,7 @@ const SpriteRenderer = (() => {
           ),
         });
       ctx.save();
-      if (layer.visibleInFog === false) SpriteEffects.clipFog(ctx);
+      if (movementEffect || layer.visibleInFog === false) SpriteEffects.clipFog(ctx);
       ctx.translate(transform.x, transform.y);
       ctx.rotate(
         transform.rotation +

@@ -444,7 +444,7 @@
     "en": 450.0,
     "move": 5,
     "mobility": 105.0,
-    "cost": 100,
+    "cost": 1000,
     "counterLimit": 1,
     "accuracy": 105.0,
     "partStructuralStrength": 110.0,
@@ -610,9 +610,9 @@
       "hitBonus": 0,
       "slot": "skill",
       "clip": "Common_Shoot_A_LongTime",
-      "damagePerShot": 12000.0,
+      "damagePerShot": 30000,
       "damageComponents": {
-        "shell": 12000.0
+        "shell": 30000
       },
       "hitsPerShot": 1,
       "attack": {
@@ -636,7 +636,11 @@
             "requiredParts": [
               "rightArm"
             ],
-            "delay": 0.0
+            "delay": 0.0,
+            "damageComponents": {
+              "shell": 30000
+            },
+            "damageMultiplier": 1
           },
           {
             "delay": 1.5
@@ -767,9 +771,10 @@
       "special": {
         "type": "nuke",
         "radius": 3,
-        "emptyCells": true
+        "emptyCells": true,
+        "shape": "circle"
       },
-      "description": "指定地面坐标发动核打击，对爆心3格内的地面目标造成伤害；每局限用1次。",
+      "description": "指定目标格为圆心，半径3格圆形范围造成30000基础实弹伤害；每条命限用1次。",
       "localization": {
         "zh": {
           "name": "核弹轰炸"
@@ -1110,7 +1115,7 @@
   "costBalance": {
     "nativeLevel": 400.0,
     "levelMultiplier": 0.25,
-    "published": 100
+    "published": 1000
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],

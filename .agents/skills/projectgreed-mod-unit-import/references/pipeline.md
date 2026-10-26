@@ -13,7 +13,7 @@
 | `tools/native_combat.py` | 原资源与武器实际流程、发数、载荷和扣能；不能把声明的 EN 宏当成实际消费 |
 | `tools/weapon_policy.py`、`tools/v05_balance.py` | 战术射程、技能政策、COST/占地/补给；文件名带版本不代表已废弃 |
 | `tools/native_presentation.py`、`tools/native_movement_effects.py` | 持握/射击显示、炮管层级、原生气垫和系统特效 |
-| `tools/paired_weapons.py`、`tools/paired-weapons.cjs` | 声明物理枪口分组，在加载阶段合成同时射击的运行时流程 |
+| `tools/paired_weapons.py`、`tools/paired-weapons.cjs` | 声明物理枪口分组；加载阶段双臂拆为独立武器，非手臂保留齐射 |
 | `tools/native_conversions.py`、`tools/import-conversion-forms.py` | 形态/脱出配置与必要衍生预制体 |
 | `tools/load-catalog.cjs` | 完整资源、部位、套件、流程、转换目标校验 |
 | `shared/rules.js`、`shared/weapon-sequence.js`、`shared/unit-parts.js` | 共享服务器裁定和攻击步骤/部位规则 |

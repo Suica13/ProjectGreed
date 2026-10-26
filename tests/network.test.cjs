@@ -1,4 +1,4 @@
-const test = require("node:test"),
+﻿const test = require("node:test"),
   assert = require("node:assert/strict"),
   { randomUUID } = require("node:crypto"),
   WebSocket = require("ws"),
@@ -101,7 +101,11 @@ class Client {
     });
     const result = await this.wait(
       (m) =>
-        ((m.type === "state" || m.type === "chat" || m.type === "battle_log" || m.type === "record_reply") && m.ack === (override.id || id)) ||
+        ((m.type === "state" ||
+          m.type === "chat" ||
+          m.type === "battle_log" ||
+          m.type === "record_reply") &&
+          m.ack === (override.id || id)) ||
         (m.type === "error" && m.id === (override.id || id)),
       from,
     );
@@ -330,7 +334,7 @@ test("custom squads and deployment are authoritative, versioned, deduplicated an
   await blue.latest((v) => v.revision === s.revision && v.connected.every(Boolean));
   app.rooms.get("SQUADS").game.seed = 1900;
   stageCombat(app, "SQUADS");
-  await blue.act("move", { unitId: "0-0", x: 5, y: 4 });
+  await moveAndConfirm(blue, { unitId: "0-0", x: 5, y: 4 });
   const incoming = await blue.act("attack", {
     unitId: "0-0",
     targetId: "1-0",
@@ -379,7 +383,7 @@ test("preparation roles, spectator authority, seat revision races and reconnect 
   await watcher.latest((s) => s.members.length === 4);
   assert.equal(first.state.started, false);
   assert.equal(watcher.joined.seat, null);
-  assert.equal((await first.act("move", { unitId: "0-0", x: 2, y: 1 })).type, "error");
+  assert.equal((await moveAndConfirm(first, { unitId: "0-0", x: 2, y: 1 })).type, "error");
   assert.equal((await watcher.act("set_ready", { ready: true })).type, "error");
   assert.equal((await watcher.act("end_turn")).type, "error");
   assert.equal((await first.act("set_ready", { ready: true })).type, "state");
@@ -425,7 +429,7 @@ test("spectators can replace a vacated defending seat; playback never gates the 
   await red.hello("join", "REPLACE");
   await watch.hello("join", "REPLACE");
   await readyMatch(blue, red);
-  await blue.act("move", { unitId: "0-0", x: 5, y: 4 });
+  await moveAndConfirm(blue, { unitId: "0-0", x: 5, y: 4 });
   await blue.act("attack", { unitId: "0-0", targetId: "1-0", weaponId: "EF_BeamSprayGun" });
   await finishPlans(blue);
   await red.latest((state) => state.phase === "reaction");
@@ -454,12 +458,12 @@ test("authoritative rooms, combat, duplicate protection, phases, reconnect", asy
   // Keep this protocol fixture alive and intact so it always reaches its counterattack.
   app.rooms.get("TEST1").game.units.find((u) => u.id === "1-0").hp = 100000;
   assert.ok(!("seed" in blue.state.game));
-  assert.equal((await red.act("move", { unitId: "1-0", x: 9, y: 4 })).type, "error");
-  assert.equal((await blue.act("move", { unitId: "1-0", x: 9, y: 4 })).type, "error");
+  assert.equal((await moveAndConfirm(red, { unitId: "1-0", x: 9, y: 4 })).type, "error");
+  assert.equal((await moveAndConfirm(blue, { unitId: "1-0", x: 9, y: 4 })).type, "error");
   await blue.act("move", { unitId: "0-0", x: 5, y: 4 });
-  await blue.act("undo", { unitId: "0-0" });
+  await blue.act("cancel_move", { unitId: "0-0" });
   assert.equal(app.rooms.get("TEST1").game.units[0].x, 2);
-  await blue.act("move", { unitId: "0-0", x: 5, y: 4 });
+  await moveAndConfirm(blue, { unitId: "0-0", x: 5, y: 4 });
   const plan = await blue.act("attack", {
     unitId: "0-0",
     targetId: "1-0",
@@ -560,7 +564,7 @@ test("two network clients can finish a complete match through the real protocol"
     const choice = G.aiChoice(room.game, u);
     if (choice && !u.moved && (choice.x !== u.x || choice.y !== u.y)) {
       assert.equal(
-        (await player.act("move", { unitId: u.id, x: choice.x, y: choice.y })).type,
+        (await moveAndConfirm(player, { unitId: u.id, x: choice.x, y: choice.y })).type,
         "state",
       );
       moves++;
@@ -730,11 +734,13 @@ test("server countdown automatically returns all members without any client retu
   assert.ok(finished.log.every((line) => red.state.log.includes(line)));
   assert.deepEqual(red.state.log, app.rooms.get("AUTOBACK").teamLogs[1]);
   assert.deepEqual(blue.state.log, app.rooms.get("AUTOBACK").teamLogs[0]);
-  assert.deepEqual((await blue.act("download_log", { perspective: "global" })).log,
-    app.rooms.get("AUTOBACK").log);
+  assert.deepEqual(
+    (await blue.act("download_log", { perspective: "global" })).log,
+    app.rooms.get("AUTOBACK").log,
+  );
 });
 
-test("a later unit movement commits earlier moves and rejects undo through the authoritative protocol", async (t) => {
+test("confirmed movements cannot be undone; another preview cancels without changing committed positions", async (t) => {
   const { app, client } = await setup(t),
     blue = await client(),
     red = await client();
@@ -743,20 +749,20 @@ test("a later unit movement commits earlier moves and rejects undo through the a
   await readyMatch(blue, red);
   const room = app.rooms.get("UNDO02"),
     [a, other] = room.game.units;
-  const first = await blue.act("move", { unitId: a.id, x: 3, y: 4 });
-  assert.ok(first.game.units[0].origin);
-  const second = await blue.act("move", { unitId: other.id, x: 2, y: 4 });
-  assert.equal(second.game.units[0].origin, null);
-  const before = JSON.stringify(room.game),
-    revision = room.revision;
+  await moveAndConfirm(blue, { unitId: a.id, x: 3, y: 4 });
+  assert.equal(a.origin, null);
+  await blue.act("move", { unitId: other.id, x: 2, y: 4 });
+  assert.equal(other.x, 2);
+  assert.equal(other.y, 3);
   assert.equal((await blue.act("undo", { unitId: a.id })).type, "error");
-  assert.equal(JSON.stringify(room.game), before);
-  assert.equal(room.revision, revision);
-  assert.equal(new Set(room.game.units.map((u) => u.x + "," + u.y)).size, room.game.units.length);
-  const undone = await blue.act("undo", { unitId: other.id });
-  assert.equal(undone.game.units[1].y, 3);
+  assert.equal((await blue.act("move", { unitId: a.id, x: 4, y: 4 })).type, "error");
+  const cancelled = await blue.act("cancel_move", { unitId: other.id });
+  assert.equal(cancelled.type, "state");
+  assert.deepEqual([a.x, a.y], [3, 4]);
+  assert.deepEqual([other.x, other.y], [2, 3]);
   assert.equal((await blue.act("undo", { unitId: a.id })).type, "error");
 });
+
 test("focused-fire response selects exactly one counter target, survives reconnect, rejects unrelated targets and deduplicates", async (t) => {
   const { app, client } = await setup(t),
     blue = await client();
@@ -892,7 +898,10 @@ test("host map and budget settings validate atomically, reset readiness, resize 
   assert.equal(changed.connected.length, 4);
   assert.ok(changed.members.every((member) => !member.ready));
   assert.equal(changed.members.filter((member) => member.seat === null).length, 2);
-  assert.equal(changed.chat.find((message) => message.text === "Settings chat")?.text, "Settings chat");
+  assert.equal(
+    changed.chat.find((message) => message.text === "Settings chat")?.text,
+    "Settings chat",
+  );
   const duplicate = await host.act(
     "configure_room",
     { mapId: "frontier_1v1", costLimit: 300 },
@@ -954,7 +963,7 @@ test("3v3 prepares and independently deploys all six full formations", async (t)
     own = room.game.units.find((u) => G.ownerOf(u) === 4 && G.reachable(room.game, u).size > 1),
     destination = [...G.reachable(room.game, own).values()].find((cell) => cell.path.length > 0);
   assert.ok(destination);
-  const moved = await controller.act("move", {
+  const moved = await moveAndConfirm(controller, {
     unitId: own.id,
     x: destination.x,
     y: destination.y,
@@ -2253,7 +2262,10 @@ test("ejection is owner-only, atomic, deduplicated and synchronizes the new craf
   assert.deepEqual(craft.brokenParts, {});
   assert.ok(response.log.some((line) => line.includes("白色一号") && line.includes("脱出")));
   await guest.latest((s) => s.revision >= response.revision);
-  assert.equal(guest.state.game.units.some((u) => u.id === craft.id), false);
+  assert.equal(
+    guest.state.game.units.some((u) => u.id === craft.id),
+    false,
+  );
   const duplicate = await host.act("skill", fields, { id, revision: 0 });
   assert.deepEqual(duplicate.game, response.game);
   assert.equal(room.game.units.filter((u) => u.ownerSeat === 0).length, 1);
@@ -2575,7 +2587,10 @@ for (const [unitId, skillId] of [
       const duplicate = await host.act("skill", fields, { id, revision: 0 });
       assert.deepEqual(duplicate.game, state.game);
       await guest.latest((s) => s.revision >= state.revision);
-      assert.equal(guest.state.game.units.some((u) => u.id === unit.id), false);
+      assert.equal(
+        guest.state.game.units.some((u) => u.id === unit.id),
+        false,
+      );
       const token = host.joined.token;
       host.close();
       await guest.latest((s) => !s.connected[0]);
@@ -2889,7 +2904,16 @@ test("large snapshots negotiate compression while legacy clients keep the same a
   const jsonBytes = Buffer.byteLength(JSON.stringify(state));
   assert.ok(wireBytes < jsonBytes / 2, `${wireBytes} / ${jsonBytes} bytes`);
   const other = await guest.act("sync");
-  for (const field of ["mapId", "environment", "fogMode", "costLimit", "unitLimit", "team", "round", "winner"])
+  for (const field of [
+    "mapId",
+    "environment",
+    "fogMode",
+    "costLimit",
+    "unitLimit",
+    "team",
+    "round",
+    "winner",
+  ])
     assert.deepEqual(state.game[field], other.game[field]);
   assert.deepEqual(state.game.deployment, other.game.deployment);
   assert.ok(!("seed" in state.game));
@@ -3191,15 +3215,15 @@ test("personal unit sharing grants allied commands and responses, survives resum
   await host.latest((s) => s.revision === room.revision);
   const destination = [...G.reachable(room.game, shared).values()].find((p) => p.path.length === 1);
   assert.equal(
-    (await host.act("move", { unitId: shared.id, x: destination.x, y: destination.y })).type,
+    (await moveAndConfirm(host, { unitId: shared.id, x: destination.x, y: destination.y })).type,
     "state",
   );
   assert.equal(G.ownerOf(shared), 2);
   assert.equal(
-    (await host.act("move", { unitId: shared.id, x: destination.x, y: destination.y })).type,
+    (await moveAndConfirm(host, { unitId: shared.id, x: destination.x, y: destination.y })).type,
     "error",
   );
-  assert.equal((await host.act("undo", { unitId: shared.id })).type, "state");
+  assert.equal((await host.act("undo", { unitId: shared.id })).type, "error");
   Object.assign(target, { x: shared.x + 2, y: shared.y });
   const weapon = G.modelOf(shared).weapons.find((w) => w.id === "EF_90mmMG");
   assert.equal(
@@ -3283,13 +3307,19 @@ test("flight stance is authoritative, deduplicated and synchronized without spen
   assert.equal(u.actionPoints, 4);
   assert.equal(u.moved, false);
   await guest.latest((s) => s.revision === state.revision);
-  assert.equal(guest.state.game.units.some((x) => x.id === u.id), false);
+  assert.equal(
+    guest.state.game.units.some((x) => x.id === u.id),
+    false,
+  );
   await host.act("skill", fields, { id });
   assert.equal(u.actionPoints, 4);
   assert.equal(u.flying, true);
   const target = [...G.reachable(room.game, u).values()].find((p) => p.x !== u.x || p.y !== u.y);
   assert(target);
-  assert.equal((await host.act("move", { unitId: u.id, x: target.x, y: target.y })).type, "state");
+  assert.equal(
+    (await moveAndConfirm(host, { unitId: u.id, x: target.x, y: target.y })).type,
+    "state",
+  );
   assert.equal(u.actionPoints, 4);
 });
 
@@ -3332,7 +3362,10 @@ test("battle nicknames synchronize and log once with ownership validation", asyn
   assert.equal(result.type, "state");
   await b.latest((s) => s.revision === result.revision);
   assert.equal(room.game.units.find((x) => x.id === u.id).customName, "白色小队长");
-  assert.equal(b.state.game.units.some((x) => x.id === u.id), false);
+  assert.equal(
+    b.state.game.units.some((x) => x.id === u.id),
+    false,
+  );
   assert(room.log.some((line) => line.includes(before) && line.includes("白色小队长")));
   const count = room.log.length;
   await a.act("rename_unit", { unitId: u.id, name: "白色小队长" }, { id });
@@ -3398,32 +3431,123 @@ test("spectator perspective and permissioned log downloads work over WebSocket a
   );
 });
 
-test('records replay over WebSocket with host controls, independent views, reconnect and checkpoint resume',async(t)=>{
-  const {app,client}=await setup(t),host=await client(),guest=await client();
-  await host.hello('create','RECORD');await guest.hello('join','RECORD');
-  await readyMatch(host,guest,app,false);
-  const room=app.rooms.get('RECORD');
-  const restricted=await host.act('record_export',{perspective:'team:0'});
-  assert.equal(restricted.type,'record_reply');assert.deepEqual(restricted.record.checkpoints,[]);
-  assert.equal((await guest.act('record_export',{perspective:'global'})).type,'error');
-  await host.act('return_room');
-  const full=(await host.act('record_export',{perspective:'global'})).record;
-  const raw=JSON.stringify(full),upload=await host.act('record_upload_begin',{length:raw.length});
-  for(let offset=0,sequence=0;offset<raw.length;offset+=20000,sequence++)assert.equal((await host.act('record_upload_chunk',{uploadId:upload.uploadId,sequence,text:raw.slice(offset,offset+20000)})).type,'record_reply');
-  assert.equal((await host.act('record_upload_finish',{uploadId:upload.uploadId})).type,'record_reply');
-  assert.equal((await host.act('replay_open',{loaded:true})).type,'record_reply');
-  await guest.latest(s=>!!s.replay);
-  const replayId=host.state.replay.id;
-  assert.equal((await guest.act('replay_control',{replayId,playing:true})).type,'error');
-  await guest.act('replay_view',{perspective:'team:1'});
-  assert.equal(guest.state.replay.perspective,'team:1');
-  const resumed=await client();await resumed.hello('resume','RECORD',guest.joined.token);
-  assert.equal(resumed.state.replay.id,replayId);assert.equal(resumed.state.replay.perspective,'team:1');
-  const cp=host.state.replay.checkpoints[0];assert(cp);
-  await host.act('replay_control',{replayId,index:cp.frame});
-  const seed=room.replay.record.checkpoints[0].game.seed;
-  const result=await host.act('replay_fork',{replayId,index:cp.frame,assignments:[host.joined.memberId,'ai']});
-  assert.equal(result.type,'record_reply');assert.equal(room.game.seed,seed);assert.equal(room.phase,'idle');
-  await resumed.latest(s=>!s.replay&&s.started);
-  assert.equal(resumed.state.you.seat,null);assert.equal(room.seats[1].bot,true);
+test("records replay over WebSocket with host controls, independent views and reconnect, without saving or takeover", async (t) => {
+  const { app, client } = await setup(t),
+    host = await client(),
+    guest = await client();
+  await host.hello("create", "RECORD");
+  await guest.hello("join", "RECORD");
+  await readyMatch(host, guest, app, false);
+  const room = app.rooms.get("RECORD");
+  assert.equal((await host.act("record_export", { perspective: "team:0" })).type, "error");
+  await host.act("return_room");
+  assert.equal((await host.act("replay_open")).type, "record_reply");
+  await guest.latest((s) => !!s.replay);
+  const replayId = host.state.replay.id;
+  assert.equal((await guest.act("replay_control", { replayId, playing: true })).type, "error");
+  await guest.act("replay_view", { perspective: "team:1" });
+  assert.equal(guest.state.replay.perspective, "team:1");
+  const resumed = await client();
+  await resumed.hello("resume", "RECORD", guest.joined.token);
+  assert.equal(resumed.state.replay.id, replayId);
+  assert.equal(resumed.state.replay.perspective, "team:1");
+  for (const perspective of ["team:0", "team:1", "global"]) {
+    const reply = await host.act("replay_log", { replayId, perspective });
+    assert.equal(reply.type, "record_reply");
+    const expected = require("../shared/match-records.js").view(
+      room.replay.record,
+      room.replay.record.frames.length - 1,
+      perspective,
+    ).log;
+    assert.deepEqual(reply.log, expected);
+  }
+  assert.equal(
+    (await resumed.act("replay_log", { replayId, perspective: "team:99" })).type,
+    "error",
+  );
+  assert.equal(
+    (await resumed.act("replay_log", { replayId: "stale", perspective: "global" })).type,
+    "error",
+  );
+  const before = JSON.stringify(room.game),
+    revision = room.revision;
+  for (const action of ["record_export", "replay_fork"]) {
+    assert.equal(
+      (await host.act(action, { replayId, index: 0, assignments: [host.joined.memberId, "ai"] }))
+        .type,
+      "error",
+    );
+    assert.equal(JSON.stringify(room.game), before);
+    assert.equal(room.revision, revision);
+    assert.equal(room.replay.id, replayId);
+  }
+  assert.equal((await host.act("replay_close")).type, "record_reply");
+  await resumed.latest((s) => !s.replay);
+  assert.equal(room.started, false);
+});
+
+async function moveAndConfirm(player, fields, override) {
+  const preview = await player.act("move", fields, override);
+  return preview.type === "state" ? player.act("confirm_move", { unitId: fields.unitId }) : preview;
+}
+test("movement preview preserves intel, survives reconnect, cancels atomically and confirms exactly once over WebSocket", async (t) => {
+  const { app, client } = await setup(t),
+    blue = await client(),
+    red = await client();
+  await blue.hello("create", "PREVIEW");
+  await red.hello("join", "PREVIEW");
+  await readyMatch(blue, red, app, false);
+  const room = app.rooms.get("PREVIEW");
+  for (const unit of room.game.units)
+    Object.assign(unit, { x: unit.team ? 45 : 0, y: 1 + Number(unit.id.split("-")[1]) });
+  const own = room.game.units[0],
+    enemy = room.game.units.find((unit) => unit.id === "1-0");
+  Object.assign(own, { x: 4, y: 8 });
+  Object.assign(enemy, { x: 19, y: 8 });
+  room.game.tiles = room.game.tiles.map((row) => row.map(() => "plain"));
+  const initial = await blue.act("sync"),
+    original = structuredClone(initial.game.intel);
+  const previewId = randomUUID();
+  const preview = await blue.act("move", { unitId: own.id, x: 10, y: 8 }, { id: previewId });
+  assert.equal(preview.type, "state");
+  assert.equal(own.x, 4);
+  assert.equal(own.pendingMove.x, 10);
+  assert.deepEqual(preview.game.intel, original);
+  const revision = room.revision;
+  await blue.act("move", { unitId: own.id, x: 10, y: 8 }, { id: previewId });
+  assert.equal(room.revision, revision);
+  assert.equal((await blue.act("end_turn")).type, "error");
+  assert.equal(
+    (await blue.act("attack", { unitId: own.id, targetId: enemy.id, weaponId: "EF_BeamSprayGun" }))
+      .type,
+    "error",
+  );
+  const enemyView = await red.act("sync");
+  assert.equal(enemyView.lastEvent, null);
+  assert.equal(enemyView.effectEvent, null);
+  assert.ok(!JSON.stringify(enemyView.game.units).includes('"pendingMove":{"'));
+  const resumed = await client();
+  await resumed.hello("resume", "PREVIEW", blue.joined.token);
+  assert.equal(resumed.state.game.units.find((unit) => unit.id === own.id).pendingMove.x, 10);
+  assert.deepEqual(resumed.state.game.intel, original);
+  const cancelled = await resumed.act("cancel_move", { unitId: own.id });
+  assert.equal(cancelled.type, "state");
+  assert.equal(own.pendingMove, undefined);
+  assert.deepEqual([own.x, own.y, own.moved], [4, 8, false]);
+  assert.deepEqual(cancelled.game.intel, original);
+  await resumed.act("move", { unitId: own.id, x: 10, y: 8 });
+  const confirmId = randomUUID();
+  const confirmed = await resumed.act("confirm_move", { unitId: own.id }, { id: confirmId });
+  assert.equal(confirmed.type, "state");
+  assert.equal(own.x, 10);
+  assert.equal(own.moved, true);
+  assert.equal(own.origin, null);
+  assert.ok(confirmed.game.intel.visibleIds.includes(enemy.id));
+  assert.ok(confirmed.game.intel.detectedIds.includes(enemy.id));
+  const after = JSON.stringify(room.game),
+    finalRevision = room.revision;
+  await resumed.act("confirm_move", { unitId: own.id }, { id: confirmId });
+  assert.equal(JSON.stringify(room.game), after);
+  assert.equal(room.revision, finalRevision);
+  assert.equal((await resumed.act("cancel_move", { unitId: own.id })).type, "error");
 });

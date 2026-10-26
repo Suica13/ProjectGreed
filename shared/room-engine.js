@@ -21,23 +21,34 @@ function createRoomEngine({
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
   function captureRecord(room) {
+    const chatOnly = ["move_preview", "move_cancel"].includes(room.lastEvent?.type);
+    if (chatOnly && room.recordChat === room.chat.at(-1)?.id) return;
     if (!room.started || ["assembly", "waiting", "replay"].includes(room.phase) || room.replay)
       return;
     if (!room.record || room.record.id !== room.matchId) {
-      room.record = Records.create(
-        G,
-        room.matchId,
-        room.settings,
-        room.game.tiles,
-        room.recordParent || null,
-      );
+      room.record = Records.create(G, room.matchId, room.settings, room.game.tiles);
       room.recordPrevious = {};
       room.recordBytes = 0;
       room.recordEvent = null;
       room.recordTurn = null;
-      delete room.recordParent;
+      room.saveTurn = null;
+      room.recordChat = null;
+      room.recordSourceEvent = null;
     }
-    const key = room.lastEvent?.id + ":" + room.phase;
+    const saveTurn = room.game.round + ":" + room.game.team;
+    if (
+      room.phase === "idle" &&
+      room.game.winner === null &&
+      room.saveTurn !== saveTurn &&
+      !room.plans?.length &&
+      !chatOnly
+    ) {
+      room.turnSave = Records.createSave(G, room);
+      room.saveTurn = saveTurn;
+    }
+    const sourceEvent = room.lastEvent?.id + ":" + room.phase;
+    const chatFrame = chatOnly || room.recordSourceEvent === sourceEvent;
+    const key = sourceEvent + ":" + (room.chat.at(-1)?.id || "");
     if (room.recordEvent === key || room.record.truncated) return;
     const turn = room.game.round + ":" + room.game.team;
     const turnStart =
@@ -55,7 +66,21 @@ function createRoomEngine({
     const next = {};
     for (const perspective of room.record.perspectives) {
       const team = perspective === "global" ? null : Number(perspective.slice(5));
-      const snapshot = Records.publicView(state(room, undefined, { seat: null, viewTeam: team }));
+      const snapshot =
+        chatFrame && room.recordPrevious[perspective]
+          ? Records.clone(room.recordPrevious[perspective])
+          : Records.publicView(state(room, undefined, { seat: null, viewTeam: team }));
+      snapshot.chat = room.chat.filter((message) =>
+        chatChannels.canRead(team, message.channel || "all"),
+      );
+      if (chatFrame) {
+        // A chat frame must not replay the previous volley, move or turn cut-in.
+        snapshot.lastEvent = { id: room.chat.at(-1)?.id, type: "chat" };
+        snapshot.effectEvent = null;
+        snapshot.combats = [];
+        snapshot.effectCombats = [];
+        snapshot.combatActors = [];
+      }
       frame.views[perspective] = Records.pack(room.recordPrevious[perspective], snapshot);
       next[perspective] = Records.unpack(
         room.recordPrevious[perspective],
@@ -63,9 +88,8 @@ function createRoomEngine({
         room.record.tiles,
       );
     }
-    const { tiles, ...checkpointGame } = room.game;
     const checkpoint = turnStart
-      ? { frame: room.record.frames.length, game: Records.clone(checkpointGame) }
+      ? { frame: room.record.frames.length, round: room.game.round, team: room.game.team }
       : null;
     const size =
       new TextEncoder().encode(JSON.stringify(frame)).length +
@@ -81,6 +105,8 @@ function createRoomEngine({
     room.recordBytes += size;
     room.recordPrevious = next;
     room.recordEvent = key;
+    room.recordSourceEvent = sourceEvent;
+    room.recordChat = room.chat.at(-1)?.id;
     if (checkpoint) {
       room.record.checkpoints.push(checkpoint);
       room.recordTurn = turn;
@@ -108,6 +134,7 @@ function createRoomEngine({
     return {
       id: replay.id,
       recordId: replay.record.id,
+      gameVersion: replay.record.gameVersion || "unknown",
       index: replay.index,
       total: replay.record.frames.length,
       token: replay.token,
@@ -115,12 +142,7 @@ function createRoomEngine({
       speed: replay.speed,
       perspective,
       perspectives: replay.record.perspectives,
-      checkpoints: replay.record.checkpoints.map((c) => ({
-        frame: c.frame,
-        round: c.game.round,
-        team: c.game.team,
-        seats: [...new Set(c.game.units.filter((u) => u.hp > 0).map(G.ownerOf))],
-      })),
+      checkpoints: replay.record.checkpoints,
       frame: cached.frame,
       truncated: !!replay.record.truncated,
     };
@@ -139,112 +161,27 @@ function createRoomEngine({
     replay.ready.clear();
     room.revision++;
   }
-  function forkRecord(room, record, index, assignments) {
-    const checkpoint = record.checkpoints.find((c) => c.frame === index);
-    if (!checkpoint) throw Error("只能从回合开始节点继续。");
-    const game = Records.clone(checkpoint.game);
-    game.tiles = Records.clone(record.tiles);
-    const slots = G.getMap(game.mapId).spawns.length,
-      occupied = [...new Set(game.units.filter((u) => u.hp > 0).map(G.ownerOf))];
-    if (!Array.isArray(assignments) || assignments.length !== slots)
-      throw Error("请选择续局席位。");
-    const used = new Set();
-    for (const seat of occupied) {
-      const choice = assignments[seat];
-      if (choice === "ai") continue;
-      const player = room.members.get(choice);
-      if (!player || player.bot || !onlineMember(player) || used.has(choice))
-        throw Error("续局席位必须分配给不同的在线玩家或AI。");
-      used.add(choice);
-    }
-    const newBots = occupied.filter((seat) => assignments[seat] === "ai").length;
-    if (members(room).filter((m) => !m.bot).length + newBots > 32) throw Error("房间人数已满。");
-    // Validate everything before replacing members, timers or authoritative game state.
-    const views = Object.fromEntries(
-      record.perspectives.map((p) => [p, Records.view(record, index, p)]),
-    );
-    clearTimeout(resultTimers.get(room));
-    resultTimers.delete(room);
-    clearTimeout(returnTimers.get(room));
-    returnTimers.delete(room);
-    for (const player of members(room)) {
-      if (player.bot) room.members.delete(player.id);
-      else {
-        player.seat = null;
-        if (player.ws) player.ws.seat = null;
-        player.ready = false;
-        player.shareUnits = false;
-      }
-    }
-    room.seats = Array(slots).fill(null);
-    for (const seat of occupied) {
-      let player = room.members.get(assignments[seat]);
-      if (assignments[seat] === "ai") {
-        const id = randomId();
-        player = {
-          id,
-          name: "AI " + (seat + 1),
-          bot: true,
-          aiSettings: G.validateAISettings(),
-          requests: new Map(),
-          ws: { room: room.code, memberId: id, seat },
-        };
-        room.members.set(id, player);
-      }
-      player.seat = seat;
-      player.ws.seat = seat;
-      player.ready = true;
-      room.seats[seat] = player;
-    }
-    planner.reset(room);
-    room.game = game;
-    room.settings = Records.clone(record.settings);
-    room.phase = "idle";
-    room.started = true;
-    room.activeSeats = room.seats.map(Boolean);
-    room.turnDone = Array(slots).fill(false);
-    room.returnAt = null;
-    room.returnCountdown = null;
-    room.turnNotBefore = Date.now() + 1000;
-    room.log = Records.clone(views.global.log);
-    room.teamLogs = Object.fromEntries(
-      [0, 1].map((t) => [t, Records.clone(views["team:" + t]?.log || [])]),
-    );
-    room.logTeamIds = [0, 1];
-    room.logsUnlocked = false;
-    room.matchId = randomId();
-    room.logNames = views.global.logNames || [];
-    room.recordParent = { id: record.id, frame: index };
-    room.record = null;
-    room.replay = null;
-    room.lastEvent = { id: randomId(), type: "record_fork" };
-  }
   function recordAction(room, member, msg) {
-    if (!msg.action.startsWith("record_") && !msg.action.startsWith("replay_")) return false;
+    if (
+      !msg.action.startsWith("record_") &&
+      !msg.action.startsWith("replay_") &&
+      !msg.action.startsWith("save_")
+    )
+      return false;
     const host = room.hostId === member.id,
-      read = ["record_export", "replay_ready", "replay_view"].includes(msg.action);
+      read = ["replay_log", "replay_ready", "replay_view"].includes(msg.action);
     if (!read && !host) throw Error("只有房主可以控制回放或载入存档。");
-    if (msg.action === "record_export") {
-      if (msg.matchId !== room.matchId) throw Error("对局已更新，请重新同步。");
-      const record = room.replay?.record || room.record;
-      if (!record?.frames.length) throw Error("当前没有可保存的对局记录。");
-      const full = !!room.replay || logsUnlocked(room),
-        perspective = msg.perspective || logPerspective(viewTeam(member));
-      if (!full && !exportPerspectives(room, member).includes(perspective))
-        throw Error("对局中只能保存本队视角录像。");
-      if (!record.perspectives.includes(perspective)) throw Error("记录不包含这个视角。");
-      const exported = full
-        ? record
-        : {
-            ...record,
-            perspectives: [perspective],
-            checkpoints: [],
-            frames: record.frames.map((f) => ({
-              ...f,
-              views: { [perspective]: f.views[perspective] },
-            })),
-          };
-      send(member.ws, { type: "record_reply", ack: msg.id, record: exported });
+    if (msg.action === "replay_fork") throw Error("回放不能接管游戏，请在房间加载存档。");
+    if (msg.action === "replay_log") {
+      const replay = room.replay;
+      if (
+        !replay ||
+        msg.replayId !== replay.id ||
+        !replay.record.perspectives.includes(msg.perspective)
+      )
+        throw Error("回放视角无效。");
+      const log = Records.view(replay.record, replay.record.frames.length - 1, msg.perspective).log;
+      send(member.ws, { type: "record_reply", ack: msg.id, log });
       return true;
     }
     const cached = member.requests.get(msg.id);
@@ -254,16 +191,33 @@ function createRoomEngine({
     }
     if (!Number.isSafeInteger(msg.revision) || msg.revision > room.revision)
       throw Error("回放状态已更新。");
-    if (room.started && !["replay_ready", "replay_view"].includes(msg.action))
+    if (
+      room.started &&
+      !["replay_ready", "replay_view", "record_export", "save_export"].includes(msg.action)
+    )
       throw Error("请先让全员返回大厅，再载入或开始回放。");
     let result = {};
     switch (msg.action) {
+      case "record_export":
+        if (!room.record?.frames.length) throw Error("当前没有回放记录。");
+        result.record = room.record;
+        break;
+      case "save_export":
+        if (!room.turnSave) throw Error("进入对局回合后才能保存存档。");
+        result.save = room.turnSave;
+        break;
+      case "save_load":
+        if (msg.revision !== room.revision) throw Error("房间状态已更新，请重新加载存档。");
+        if (!room.loadedSave) throw Error("请先选择存档文件。");
+        loadSavedRoom(room, room.loadedSave);
+        break;
       case "record_upload_begin":
         if (!Number.isInteger(msg.length) || msg.length < 1 || msg.length > Records.maxBytes)
           throw Error("对局记录大小无效。");
         room.recordUpload = {
           id: randomId(),
           owner: member.id,
+          kind: msg.kind === "save" ? "save" : "replay",
           length: msg.length,
           text: "",
           sequence: 0,
@@ -295,7 +249,9 @@ function createRoomEngine({
           upload.text.length !== upload.length
         )
           throw Error("记录上传尚未完成。");
-        room.loadedRecord = Records.validate(G, JSON.parse(upload.text));
+        if (upload.kind === "save")
+          room.loadedSave = Records.validateSave(G, JSON.parse(upload.text));
+        else room.loadedRecord = Records.validate(G, JSON.parse(upload.text));
         delete room.recordUpload;
         result.loaded = true;
         break;
@@ -361,20 +317,16 @@ function createRoomEngine({
         replay.ready.delete(member.id);
         break;
       }
-      case "replay_fork": {
-        const replay = room.replay;
-        if (!replay || msg.replayId !== replay.id || msg.index !== replay.index)
-          throw Error("回放位置已更新。");
-        forkRecord(room, replay.record, msg.index, msg.assignments);
-        break;
-      }
       default:
         throw Error("不支持的对局记录操作。");
     }
     const reply = { type: "record_reply", ack: msg.id, ...result };
     member.requests.set(msg.id, reply);
     if (member.requests.size > 512) member.requests.delete(member.requests.keys().next().value);
-    if (!msg.action.startsWith("record_upload")) {
+    if (
+      !msg.action.startsWith("record_upload") &&
+      !["record_export", "save_export"].includes(msg.action)
+    ) {
       room.revision++;
       broadcast(room);
     }
@@ -453,6 +405,7 @@ function createRoomEngine({
     const room = rooms.get(ws.room);
     const member = room?.members.get(ws.memberId);
     if (!member || member.ws !== ws) return;
+    cancelSeatMoves(room, member.seat);
     if (member.seat !== null) {
       room.seats[member.seat] = null;
       if (room.battle) room.battle.ready[member.seat] = false;
@@ -496,7 +449,7 @@ function createRoomEngine({
     if (intel)
       view.units = game.units
         .filter((u) => u.team === intel.team || intel.visibleIds.includes(u.id))
-        .map((u) => (u.team === intel.team ? u : { ...u, origin: null }));
+        .map((u) => (u.team === intel.team ? u : { ...u, origin: null, pendingMove: null }));
     if (intel) {
       view.visionAreas = (game.visionAreas || []).filter((area) => area.team === intel.team);
       view.intel = intel;
@@ -615,6 +568,12 @@ function createRoomEngine({
       !hiddenIds.some((id) => JSON.stringify(room.lastEvent).includes('"' + id + '"'))
         ? room.lastEvent
         : null;
+    if (
+      team !== null &&
+      ["move_preview", "move_cancel"].includes(lastEvent?.type) &&
+      unit(room, lastEvent.unitId)?.team !== team
+    )
+      lastEvent = null;
     if (team !== null && lastEvent?.type === "move") {
       const actor = unit(room, lastEvent.unitId);
       if (actor && actor.team !== team) {
@@ -634,6 +593,18 @@ function createRoomEngine({
             unlocked: logsUnlocked(room),
           }
         : null,
+      saveAvailable: !!room.turnSave,
+      loadedSave: room.resumeSave
+        ? {
+            round: room.resumeSave.game.round,
+            team: room.resumeSave.game.team,
+            gameVersion: room.resumeSave.gameVersion,
+          }
+        : null,
+      savedFormation:
+        room.resumeSave && recipient?.seat !== null && recipient?.seat !== undefined
+          ? savedPlan(room, recipient.seat).entries
+          : null,
       replay: replaySnapshot(room, recipient),
       type: "state",
       room: room.code,
@@ -830,6 +801,7 @@ function createRoomEngine({
     clearTimeout(resultTimers.get(room));
     resultTimers.delete(room);
     room.logsUnlocked = true;
+    room.resumeSave = null;
     room.game = G.create(false, randomSeed());
     room.started = false;
     room.phase = "waiting";
@@ -1036,7 +1008,7 @@ function createRoomEngine({
     planner.resumeCharges(room);
     room.turnDone = Array(room.seats.length).fill(false);
     room.turnNotBefore = Date.now() + G.turnTransitionMs;
-    log(room, `第${room.game.round}回合 · 队伍${room.game.team + 1}开始行动，不自动恢复EN。`);
+    log(room, `第${room.game.round}回合 · 队伍${room.game.team + 1}开始行动。`);
     if (room.plans.length) {
       room.openingSnipe = true;
       return resolvePlans(room, automatic);
@@ -1100,6 +1072,7 @@ function createRoomEngine({
     return army;
   }
   function checkAIArmy(room, player) {
+    if (room.resumeSave) return;
     if (
       !G.planFormation(
         randomArmy(room, player, 7319),
@@ -1110,7 +1083,90 @@ function createRoomEngine({
     )
       throw Error("AI 没有符合房间或队伍限制的可用单位，请调整限制或预算");
   }
+  function savedPlan(room, seat) {
+    const units = room.resumeSave.game.units.filter((unit) => G.ownerOf(unit) === seat);
+    const entries = units.map((unit) => {
+      const model = G.models[unit.model];
+      return {
+        unitId: model.prefabId,
+        kitId: model.kitId,
+        ...(unit.customName ? { customName: unit.customName } : {}),
+      };
+    });
+    const cost = units.reduce((sum, unit) => sum + G.models[unit.model].cost, 0);
+    return {
+      entries,
+      totalCost: cost,
+      deployCost: cost,
+      disabled: [],
+      reasons: {},
+      deployable: entries,
+      indices: entries.map((_, i) => i),
+      dead: units.flatMap((unit, i) => (unit.hp <= 0 ? [i] : [])),
+    };
+  }
+  function loadSavedRoom(room, save) {
+    const count = G.getMap(save.settings.mapId).spawns.length;
+    const lobbyGame = G.create(false, randomSeed(), Array(count).fill(null), false, save.settings);
+    room.resumeSave = Records.clone(save);
+    room.turnSave = Records.clone(save);
+    room.settings = Records.clone(save.settings);
+    room.replay = null;
+    room.started = false;
+    room.phase = "waiting";
+    room.seats = Array(count).fill(null);
+    for (const player of members(room)) {
+      if (player.seat !== null && player.seat >= count) {
+        if (player.bot) {
+          room.members.delete(player.id);
+          continue;
+        }
+        player.seat = null;
+      }
+      if (player.ws) player.ws.seat = player.seat;
+      if (player.seat !== null) {
+        room.seats[player.seat] = player;
+        if (save.armies[player.seat]) player.armySettings = Records.clone(save.armies[player.seat]);
+      }
+      player.ready = !!player.bot;
+      player.finalReady = false;
+      player.formationPreset = null;
+    }
+    planner.reset(room);
+    room.game = lobbyGame;
+    room.turnDone = Array(count).fill(false);
+    room.returnAt = room.returnCountdown = null;
+    room.lastEvent = { id: randomId(), type: "save_loaded" };
+  }
+  function resumeSavedGame(room) {
+    const save = room.resumeSave;
+    room.game = Records.clone(save.game);
+    room.game.fogMode = room.settings.fogMode;
+    room.game.costLimit = room.settings.costLimit;
+    room.game.unitLimit = room.settings.unitLimit;
+    for (const unit of room.game.units) {
+      const player = room.seats[G.ownerOf(unit)];
+      if (!player) continue;
+      unit.performance = G.aiPerformance[G.armySettings(player).difficulty];
+      const model = G.modelOf(unit);
+      unit.hp = Math.min(unit.hp, model.hp);
+      unit.en = Math.min(unit.en, model.en);
+    }
+    room.activeSeats = room.seats.map(Boolean);
+    room.phase = "idle";
+    planner.reset(room);
+    room.battle = null;
+    room.turnDone = Array(room.seats.length).fill(false);
+    room.turnNotBefore = 0;
+    room.log = Records.clone(save.log);
+    room.teamLogs = Records.clone(save.teamLogs);
+    room.logNames = Records.clone(save.logNames);
+    room.resumeSave = null;
+    room.lastEvent = { id: randomId(), type: "save_resumed" };
+    log(room, "存档编组已确认，继续对局。");
+  }
   function formationPlan(room, player) {
+    if (room.resumeSave) return savedPlan(room, player.seat);
     const entries =
       player.formationPreset?.units || player.formation || randomArmy(room, player, 7319);
     if (!entries.length)
@@ -1170,26 +1226,31 @@ function createRoomEngine({
       return;
     const armies = room.seats.map((player) =>
       player
-        ? player.formationPreset?.units ||
-          (player.bot ? randomArmy(room, player) : player.formation)
+        ? room.resumeSave
+          ? savedPlan(room, player.seat).entries
+          : player.formationPreset?.units ||
+            (player.bot ? randomArmy(room, player) : player.formation)
         : null,
     );
-    armies.forEach((army, seat) => {
-      if (!room.seats[seat]) return;
-      if (
-        !army?.length ||
-        !G.planFormation(
-          army,
-          playerBudget(room, room.seats[seat]),
-          playerRestrictions(room, room.seats[seat]),
-          playerUnitLimit(room, room.seats[seat]),
-        ).deployable.length
-      )
-        throw Error("每名玩家至少需要一台符合限制的可出击单位");
-    });
+    if (!room.resumeSave)
+      armies.forEach((army, seat) => {
+        if (!room.seats[seat]) return;
+        if (
+          !army?.length ||
+          !G.planFormation(
+            army,
+            playerBudget(room, room.seats[seat]),
+            playerRestrictions(room, room.seats[seat]),
+            playerUnitLimit(room, room.seats[seat]),
+          ).deployable.length
+        )
+          throw Error("每名玩家至少需要一台符合限制的可出击单位");
+      });
     room.seats.forEach((player, seat) => {
       if (player?.bot) player.formation = armies[seat];
     });
+    room.turnSave = room.resumeSave ? Records.clone(room.resumeSave) : null;
+    room.saveTurn = null;
     room.started = true;
     room.phase = "assembly";
     room.matchId = randomId();
@@ -1214,6 +1275,10 @@ function createRoomEngine({
     )
       return;
     const plans = room.seats.map((player) => (player ? formationPlan(room, player) : null));
+    if (room.resumeSave) {
+      resumeSavedGame(room);
+      return;
+    }
     if (plans.some((plan) => plan && !plan.deployable.length)) return;
     if (
       ![0, 1].every((team) =>
@@ -1354,6 +1419,15 @@ function createRoomEngine({
       };
     }
     if (room.phase !== "idle") return null;
+    const pendingMover = room.game.units.find(
+      (u) => u.pendingMove && room.seats[u.pendingMove.seat]?.bot,
+    );
+    if (pendingMover)
+      return {
+        player: room.seats[pendingMover.pendingMove.seat],
+        action: "confirm_move",
+        fields: { unitId: pendingMover.id },
+      };
     for (const passenger of room.game.units.filter((u) => u.embarked && u.hp > 0)) {
       const owner = room.seats[G.ownerOf(passenger)];
       if (!owner?.bot || room.turnDone[owner.seat]) continue;
@@ -1652,11 +1726,19 @@ function createRoomEngine({
     }
   }
   const unit = (room, id) => room.game.units.find((u) => u.id === id);
+  function cancelSeatMoves(room, seat) {
+    for (const u of room.game.units)
+      if (u.pendingMove?.seat === seat) {
+        G.cancelMove(room.game, u);
+        room.lastEvent = { id: randomId(), type: "move_cancel", unitId: u.id };
+      }
+  }
   const canControl = (room, seat, u) => G.canControlUnit(room.settings, members(room), seat, u);
-  function ownUnit(room, seat, id, allowCargo = false) {
+  function ownUnit(room, seat, id, allowCargo = false, allowPending = false) {
     let u = unit(room, id);
     if (!u || !canControl(room, seat, u) || u.hp <= 0 || (!allowCargo && u.embarked))
       throw Error("不能操作该单位");
+    if (u.pendingMove && !allowPending) throw Error("请先确认或取消移动");
     return u;
   }
   function validateActive(room, seat) {
@@ -1771,6 +1853,7 @@ function createRoomEngine({
       };
       room.chat.push(message);
       room.chat = room.chat.slice(-100);
+      captureRecord(room);
       cache.set(id, { type: "chat", message });
       if (cache.size > 512) cache.delete(cache.keys().next().value);
       for (const player of members(room))
@@ -1873,11 +1956,12 @@ function createRoomEngine({
           oldReady = member.ready;
         try {
           if (member.seat !== null) {
-            member.formation = G.validateFormation(
-              member.formationPreset?.units ?? msg.formation ?? member.formation,
-              Infinity,
-              playerUnitLimit(room, member),
-            );
+            if (!room.resumeSave)
+              member.formation = G.validateFormation(
+                member.formationPreset?.units ?? msg.formation ?? member.formation,
+                Infinity,
+                playerUnitLimit(room, member),
+              );
             member.ready = true;
           }
           startGame(room);
@@ -1887,6 +1971,18 @@ function createRoomEngine({
           throw error;
         }
       } else if (msg.action === "update_formation" || msg.action === "confirm_formation") {
+        if (room.resumeSave) {
+          if (msg.action !== "confirm_formation" || room.phase !== "assembly")
+            throw Error("存档编组不可更改。");
+          if (member.seat === null && member.id !== room.hostId)
+            throw Error("观战玩家不能确认编组。");
+          if (member.seat !== null) member.finalReady = true;
+          startDeployment(room);
+          room.revision++;
+          cache.set(id, true);
+          broadcast(room, id);
+          return;
+        }
         if (room.phase !== "assembly" && (room.started || msg.action !== "update_formation"))
           throw Error("当前不是最终编组阶段");
         if (member.seat === null) {
@@ -1920,12 +2016,15 @@ function createRoomEngine({
         if (msg.action === "confirm_formation") member.finalReady = true;
         if (room.phase === "assembly") startDeployment(room);
       } else if (msg.action === "configure_player") {
-        if (room.hostId !== member.id) throw Error("只有房主可以设置玩家编组");
+        if (room.hostId !== member.id && !(room.resumeSave && msg.memberId === member.id))
+          throw Error("只有房主可以设置其他玩家编组");
         if (room.started) throw Error("对局开始后不能修改玩家编组设置");
         const target = room.members.get(msg.memberId);
         if (!target) throw Error("玩家不存在");
         const config = G.validateArmySettings(msg.config);
         let preset = target.formationPreset || null;
+        if (room.resumeSave && Object.hasOwn(msg, "formationPreset"))
+          throw Error("存档编组不可更改。");
         if (Object.hasOwn(msg, "formationPreset")) {
           const value = msg.formationPreset;
           if (value === null) preset = null;
@@ -1971,6 +2070,8 @@ function createRoomEngine({
         if (!Number.isInteger(msg.seat) || !bot?.bot) throw Error("该席位不是 AI");
         const config = G.validateAISettings(msg.config);
         let preset = bot.formationPreset || null;
+        if (room.resumeSave && Object.hasOwn(msg, "formationPreset"))
+          throw Error("存档编组不可更改。");
         if (Object.hasOwn(msg, "formationPreset")) {
           const value = msg.formationPreset;
           if (value === null) preset = null;
@@ -2015,6 +2116,8 @@ function createRoomEngine({
             requests: new Map(),
             ws: { room: room.code, memberId: botId, seat: destination },
           };
+          if (room.resumeSave?.armies[destination])
+            bot.armySettings = Records.clone(room.resumeSave.armies[destination]);
           checkAIArmy(room, bot);
           for (const existing of room.seats.filter((player) => player?.bot))
             checkAIArmy(room, existing);
@@ -2029,6 +2132,8 @@ function createRoomEngine({
       } else if (msg.action === "configure_room") {
         if (room.hostId !== member.id) throw Error("只有房主可以修改房间设置");
         if (room.started) throw Error("对局开始后不能修改地图和 COST");
+        if (room.resumeSave && msg.mapId !== room.resumeSave.settings.mapId)
+          throw Error("存档地图不可更改。");
         const map = G.getMap(msg.mapId);
         if (msg.shareAlliedUnits !== undefined && typeof msg.shareAlliedUnits !== "boolean")
           throw Error("友军单位共享设置无效");
@@ -2071,6 +2176,7 @@ function createRoomEngine({
         if (room.hostId !== member.id) throw Error("只有房主可以踢出玩家");
         const target = room.members.get(msg.memberId);
         if (!target || target.id === member.id || target.bot) throw Error("无效的玩家");
+        cancelSeatMoves(room, target.seat);
         if (target.seat !== null) {
           room.seats[target.seat] = null;
           if (room.battle) room.battle.ready[target.seat] = false;
@@ -2120,6 +2226,7 @@ function createRoomEngine({
         )
           throw Error("这个队伍已有玩家");
         if (movingMember.seat !== destination) {
+          cancelSeatMoves(room, movingMember.seat);
           if (movingMember.seat !== null) {
             room.seats[movingMember.seat] = null;
             if (room.battle) room.battle.ready[movingMember.seat] = false;
@@ -2148,7 +2255,7 @@ function createRoomEngine({
         const oldFormation = member.formation,
           oldReady = member.ready;
         try {
-          if (msg.ready) {
+          if (msg.ready && !room.resumeSave) {
             const formation = G.validateFormation(
               member.formationPreset?.units || msg.formation,
               Infinity,
@@ -2199,6 +2306,8 @@ function createRoomEngine({
       msg.matchId === room.matchId &&
       [
         "move",
+        "confirm_move",
+        "cancel_move",
         "rotate",
         "skill",
         "undo",
@@ -2230,6 +2339,23 @@ function createRoomEngine({
       send(ws, state(room, undefined, member));
       return;
     }
+    const pendingMove = room.game.units.find((u) => u.pendingMove?.seat === seat);
+    if (
+      pendingMove &&
+      [
+        "move",
+        "rotate",
+        "skill",
+        "undo",
+        "wait",
+        "attack",
+        "cancel_attack",
+        "end_turn",
+        "embark",
+        "launch",
+      ].includes(msg.action)
+    )
+      throw Error("请先确认或取消移动");
     let event;
     switch (msg.action) {
       case "embark":
@@ -2303,12 +2429,34 @@ function createRoomEngine({
         let u = ownUnit(room, seat, msg.unitId);
         if (!Number.isInteger(msg.x) || !Number.isInteger(msg.y)) throw Error("目标格无效");
         let from = { x: u.x, y: u.y },
-          steps = G.move(room.game, u, msg.x, msg.y);
-        event = { type: "move", unitId: u.id, from, path: steps };
-        log(room, `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`, {
-          units: [u],
-          movement: event,
-        });
+          steps = member.bot
+            ? G.move(room.game, u, msg.x, msg.y)
+            : G.previewMove(room.game, u, msg.x, msg.y, seat);
+        event = { type: member.bot ? "move" : "move_preview", unitId: u.id, from, path: steps };
+        if (member.bot)
+          log(room, `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`, {
+            units: [u],
+            movement: event,
+          });
+        break;
+      }
+      case "confirm_move":
+      case "cancel_move": {
+        validateActive(room, seat);
+        const u = ownUnit(room, seat, msg.unitId, false, true);
+        if (!u.pendingMove || u.pendingMove.seat !== seat) throw Error("没有属于你的待确认移动");
+        if (msg.action === "cancel_move") {
+          G.cancelMove(room.game, u);
+          event = { type: "move_cancel", unitId: u.id };
+        } else {
+          const from = { x: u.x, y: u.y },
+            path = G.confirmMove(room.game, u);
+          event = { type: "move", unitId: u.id, from, path, previewTeam: u.team };
+          log(room, `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`, {
+            units: [u],
+            movement: event,
+          });
+        }
         break;
       }
       case "undo": {
@@ -2533,6 +2681,7 @@ function createRoomEngine({
         )
           return;
         clearReconnect(member);
+        cancelSeatMoves(room, member.seat);
         if (member.seat !== null && room.seats[member.seat] === member)
           room.seats[member.seat] = null;
         room.members.delete(member.id);

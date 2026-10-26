@@ -1,5 +1,4 @@
-/* Versioned resolved-state records: deltas for playback, authoritative turn-start
-   checkpoints for forks. No credentials or RNG enter public playback frames. */
+/* 回放记录保存公开状态增量与回合索引，不保留接管游戏所需的随机状态。 */
 "use strict";
 const MatchRecords = (() => {
   const version = 1,
@@ -96,6 +95,7 @@ const MatchRecords = (() => {
   function publicView(snapshot) {
     const keys = [
       "game",
+      "chat",
       "phase",
       "log",
       "logNames",
@@ -123,6 +123,7 @@ const MatchRecords = (() => {
   function create(G, id, settings, tiles, parent = null) {
     return {
       format: "ProjectGreed-record",
+      gameVersion: gameVersion(),
       version,
       rules: fingerprint(G),
       id,
@@ -140,7 +141,88 @@ const MatchRecords = (() => {
       checkpoints: [],
     };
   }
-  function validateGame(G, g, tiles, authoritative = false) {
+  function gameVersion() {
+    return typeof PROJECT !== "undefined" ? PROJECT.version : require("../project.json").version;
+  }
+  // Saves contain authoritative state and are exported only to the host. They
+  // are never embedded in public replay frames or ordinary room snapshots.
+  function createSave(G, room) {
+    return {
+      format: "ProjectGreed-save",
+      version: 1,
+      gameVersion: gameVersion(),
+      rules: fingerprint(G),
+      createdAt: new Date().toISOString(),
+      settings: clone(room.settings),
+      game: clone(room.game),
+      armies: room.seats.map((player) => (player ? G.armySettings(player) : null)),
+      log: clone(room.log || []),
+      teamLogs: clone(room.teamLogs || {}),
+      logNames: clone(room.logNames || []),
+      chat: clone(room.chat || []),
+    };
+  }
+  function validateSave(G, input) {
+    const raw = JSON.stringify(input);
+    if (new TextEncoder().encode(raw).length > maxBytes) throw Error("存档超过32MB限制。");
+    const save = JSON.parse(raw, (key, value) => {
+      if (blocked.has(key)) throw Error("存档包含无效字段。");
+      return value;
+    });
+    if (save?.format !== "ProjectGreed-save" || save.version !== 1 || save.rules !== fingerprint(G))
+      throw Error("存档版本或单位规则不兼容。");
+    validateGame(G, save.game, save.game?.tiles);
+    const g = save.game,
+      settings = save.settings;
+    if (
+      !settings ||
+      settings.mapId !== g.mapId ||
+      g.winner !== null ||
+      !Number.isInteger(g.seed) ||
+      g.seed < 0 ||
+      g.seed > 0xffffffff ||
+      !Number.isInteger(g.partSeed) ||
+      g.partSeed < 0 ||
+      g.partSeed > 0xffffffff
+    )
+      throw Error("存档对局状态无效。");
+    G.validateCostLimit(settings.costLimit);
+    G.validateUnitLimit(settings.unitLimit);
+    G.validateUnitCostLimit(settings.unitCostLimit);
+    G.validateFogMode(settings.fogMode);
+    G.validateTagRestrictions(settings);
+    G.validateTeamRestrictions(settings.teamRestrictions);
+    if (typeof settings.shareAlliedUnits !== "boolean") throw Error("存档房间规则无效。");
+    const seats = G.getMap(g.mapId).spawns.length;
+    if (!Array.isArray(save.armies) || save.armies.length !== seats) throw Error("存档席位无效。");
+    save.armies = save.armies.map((army) => (army ? G.validateArmySettings(army) : null));
+    for (const u of g.units) {
+      const owner = G.ownerOf(u);
+      if (
+        !Number.isInteger(owner) ||
+        owner < 0 ||
+        owner >= seats ||
+        u.team !== G.seatTeam(owner) ||
+        u.pendingMove ||
+        u.plan ||
+        !Number.isFinite(u.shield) ||
+        !Number.isFinite(u.angle) ||
+        !Number.isFinite(u.performance ?? 1) ||
+        (u.performance ?? 1) <= 0 ||
+        (u.performance ?? 1) > 10 ||
+        !Number.isFinite(u.actionPoints) ||
+        u.actionPoints < 0
+      )
+        throw Error("存档单位状态无效。");
+      if (u.embarked && !g.units.some((carrier) => carrier.id === u.embarked.carrierId))
+        throw Error("存档载员状态无效。");
+    }
+    for (const key of ["log", "logNames", "chat"])
+      if (!Array.isArray(save[key])) throw Error("存档历史无效。");
+    if (!save.teamLogs || typeof save.teamLogs !== "object") throw Error("存档战报无效。");
+    return save;
+  }
+  function validateGame(G, g, tiles) {
     if (!g || !Object.hasOwn(G.catalog.maps, g.mapId)) throw Error("存档地图不受支持。");
     const map = G.getMap(g.mapId);
     if (
@@ -179,20 +261,7 @@ const MatchRecords = (() => {
       )
         throw Error("存档单位无效。");
       ids.add(u.id);
-      if (
-        authoritative &&
-        (!Number.isInteger(G.ownerOf(u)) ||
-          G.ownerOf(u) < 0 ||
-          G.ownerOf(u) >= map.spawns.length ||
-          u.team !== G.seatTeam(G.ownerOf(u)))
-      )
-        throw Error("存档单位席位无效。");
     }
-    if (
-      authoritative &&
-      (!Number.isSafeInteger(g.seed) || !Number.isSafeInteger(g.partSeed) || g.winner !== null)
-    )
-      throw Error("存档随机状态或续局节点无效。");
   }
   function validate(G, input) {
     const raw = JSON.stringify(input);
@@ -274,34 +343,20 @@ const MatchRecords = (() => {
       }
     }
     const checkpointFrames = new Set();
-    for (const checkpoint of record.checkpoints) {
+    record.checkpoints = record.checkpoints.map((checkpoint) => {
+      const frame = record.frames[checkpoint.frame];
       if (
-        !record.perspectives.includes("global") ||
         !Number.isInteger(checkpoint.frame) ||
-        !record.frames[checkpoint.frame]?.turnStart ||
+        checkpoint.frame < 0 ||
+        !frame?.turnStart ||
         checkpointFrames.has(checkpoint.frame)
       )
-        throw Error("只能从回合开始节点继续。");
+        throw Error("回放回合索引无效。");
       checkpointFrames.add(checkpoint.frame);
-      validateGame(G, checkpoint.game, record.tiles, true);
-      if (checkpoint.game.mapId !== record.settings.mapId) throw Error("存档地图不一致。");
-      const shown = view(record, checkpoint.frame, "global").game;
-      const { seed, partSeed, ...stored } = checkpoint.game;
-      const { tiles, ...visible } = shown;
-      if (
-        Object.keys(stored).length !== Object.keys(visible).length ||
-        Object.entries(stored).some(([key, value]) => !same(value, visible[key]))
-      )
-        throw Error("续局节点与录像状态不一致。");
-      if (
-        checkpoint.game.deployment !== null &&
-        (!Array.isArray(checkpoint.game.deployment) ||
-          !checkpoint.game.deployment.every((value) => value === true))
-      )
-        throw Error("部署中不能创建续局节点。");
-      G.sensors.view({ ...checkpoint.game, tiles: record.tiles }, 0);
-      G.sensors.view({ ...checkpoint.game, tiles: record.tiles }, 1);
-    }
+      // Older imports may contain private resume state. Keep only the public turn index.
+      const shown = view(record, checkpoint.frame, record.perspectives[0]).game;
+      return { frame: checkpoint.frame, round: shown.round, team: shown.team };
+    });
     return record;
   }
   return {
@@ -316,6 +371,9 @@ const MatchRecords = (() => {
     create,
     validate,
     fingerprint,
+    gameVersion,
+    createSave,
+    validateSave,
   };
 })();
 if (typeof module !== "undefined") module.exports = MatchRecords;

@@ -2632,7 +2632,8 @@
           ],
           "limb": "leftArm"
         }
-      ]
+      ],
+      "fireMode": "simultaneous"
     }
   ]
 }

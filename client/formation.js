@@ -1262,15 +1262,14 @@ const Formation = (() => {
       input.focus();
       input.select();
       let copied = false;
+      // Preserve the click gesture for offline and HTTP clipboard access.
       try {
-        if (navigator.clipboard?.writeText) {
+        copied = document.execCommand("copy");
+      } catch {}
+      if (!copied && navigator.clipboard?.writeText) {
+        try {
           await navigator.clipboard.writeText(code);
           copied = true;
-        }
-      } catch {}
-      if (!copied) {
-        try {
-          copied = document.execCommand("copy");
         } catch {}
       }
       note(copied ? "分享代码已复制。" : "分享代码已生成，请手动复制。");

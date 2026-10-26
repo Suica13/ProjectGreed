@@ -17,6 +17,18 @@ const PlanningUI = (() => {
       start,
       step: byId("quick").checked ? 50 : 120,
     });
+    const preview = moves.get(unit.id);
+    if (unit.pendingMove)
+      setTimeout(
+        () => {
+          if (
+            (!moves.has(unit.id) || moves.get(unit.id) === preview) &&
+            getUnit(unit.id)?.pendingMove
+          )
+            update();
+        },
+        preview.path.length * preview.step + 20,
+      );
   }
   function motion(unit, now) {
     const move = moves.get(unit.id);
@@ -166,7 +178,7 @@ const PlanningUI = (() => {
     for (const id of lockStarts.keys()) if (!markers.has(id)) lockStarts.delete(id);
     return result;
   }
-  return { reset, move, motion, arrows, facing, sniperLocks };
+  return { reset, move, stop: (id) => moves.delete(id), motion, arrows, facing, sniperLocks };
 })();
 
 // Target-first attack editor. Draft choices never change the authoritative unit or its resources.

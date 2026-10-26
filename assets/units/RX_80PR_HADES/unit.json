@@ -2939,6 +2939,7 @@
           "limb": "leftArm"
         }
       ],
+      "fireMode": "independent",
       "name": "腕部光束枪"
     },
     {

@@ -715,14 +715,18 @@
             "shots": 1,
             "muzzleIndex": 0,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.5
           },
           {
             "shots": 1,
             "muzzleIndex": 1,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.0
           },
           {
@@ -733,14 +737,18 @@
             "shots": 1,
             "muzzleIndex": 0,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.5
           },
           {
             "shots": 1,
             "muzzleIndex": 1,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.0
           },
           {
@@ -751,14 +759,18 @@
             "shots": 1,
             "muzzleIndex": 0,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.5
           },
           {
             "shots": 1,
             "muzzleIndex": 1,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.0
           },
           {
@@ -769,14 +781,18 @@
             "shots": 1,
             "muzzleIndex": 0,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.5
           },
           {
             "shots": 1,
             "muzzleIndex": 1,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.0
           },
           {
@@ -786,7 +802,7 @@
         "startAnimation": null
       },
       "requiredParts": [
-        "rightArm"
+        "backpack"
       ],
       "partBreakModifier": 0.5,
       "changeHeldWeapon": false,
@@ -949,14 +965,18 @@
             "shots": 1,
             "muzzleIndex": 0,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.5
           },
           {
             "shots": 1,
             "muzzleIndex": 1,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.0
           },
           {
@@ -967,14 +987,18 @@
             "shots": 1,
             "muzzleIndex": 0,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.5
           },
           {
             "shots": 1,
             "muzzleIndex": 1,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.0
           },
           {
@@ -985,14 +1009,18 @@
             "shots": 1,
             "muzzleIndex": 0,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.5
           },
           {
             "shots": 1,
             "muzzleIndex": 1,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.0
           },
           {
@@ -1003,14 +1031,18 @@
             "shots": 1,
             "muzzleIndex": 0,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.5
           },
           {
             "shots": 1,
             "muzzleIndex": 1,
             "partBreakModifier": 0.5,
-            "requiredParts": [],
+            "requiredParts": [
+              "backpack"
+            ],
             "delay": 0.0
           },
           {
@@ -1020,7 +1052,7 @@
         "startAnimation": null
       },
       "requiredParts": [
-        "rightArm"
+        "backpack"
       ],
       "partBreakModifier": 0.5,
       "changeHeldWeapon": false,
@@ -2456,7 +2488,7 @@
           "weaponId": "Common_MortarDouble_B4",
           "muzzleIndex": 0,
           "requiredParts": [
-            "rightArm"
+            "backpack"
           ],
           "limb": null
         },
@@ -2465,7 +2497,7 @@
           "weaponId": "Common_MortarDouble_B4_L",
           "muzzleIndex": 1,
           "requiredParts": [
-            "rightArm"
+            "backpack"
           ],
           "limb": null
         }

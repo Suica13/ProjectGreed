@@ -56,7 +56,7 @@ const Tactics = (() => {
   }
   function validateUnitLimit(value = catalog.formation.maxUnits) {
     if (!Number.isInteger(value) || value < 3 || value > catalog.formation.maxUnits)
-      throw Error("编组单位上限必须为3～12台");
+      throw Error("编组单位上限必须为3～" + catalog.formation.maxUnits + "台");
     return value;
   }
   function normalizeUnitName(value) {
@@ -390,14 +390,19 @@ const Tactics = (() => {
     const minimum = Math.min(...choices.map((model) => model.cost));
     const count = Math.min(unitLimit, Math.floor(maxCost / minimum));
     const bestAdaptation = Math.max(...choices.map(adaptation));
+    // 达到正常适应性即可进入预算竞争；不能因少数廉价机体的适应性更高，
+    // 将所有正常适应性的高级机体永久排除。全员不足100%时仍优先最高适应性。
+    const preferredAdaptation = Math.min(100, bestAdaptation);
     const preferredMinimum = Math.min(
-      ...choices.filter((model) => adaptation(model) === bestAdaptation).map((model) => model.cost),
+      ...choices
+        .filter((model) => adaptation(model) >= preferredAdaptation)
+        .map((model) => model.cost),
     );
     const shipInterval = 6 + ((seed >>> 0) % 3);
     const desiredShips = count >= 6 ? Math.max(1, Math.floor(count / shipInterval)) : 0;
     let remaining = maxCost;
     for (let i = 0; i < count; i++) {
-      // 优先填满槽位；能全员使用最佳适应性时，为后续单位保留对应预算。
+      // 优先填满槽位，并为后续单位保留达到优先适应性档位的最低预算。
       const slots = count - i;
       let reserveMinimum = remaining >= preferredMinimum * slots ? preferredMinimum : minimum;
       if (restrictions.mapId && getMap(restrictions.mapId).navalDeployment) {
@@ -408,7 +413,7 @@ const Tactics = (() => {
               (m) =>
                 !m.footprint &&
                 ["air", "hover", "amphibious"].includes(m.movementType) &&
-                adaptation(m) === bestAdaptation,
+                adaptation(m) >= preferredAdaptation,
             )
             .map((m) => m.cost),
         );
@@ -455,7 +460,9 @@ const Tactics = (() => {
       });
       if (!legal.length) break;
       const bestLegalAdaptation = Math.max(...legal.map(adaptation));
-      let preferred = legal.filter((model) => adaptation(model) === bestLegalAdaptation);
+      let preferred = legal.filter(
+        (model) => adaptation(model) >= Math.min(100, bestLegalAdaptation),
+      );
       const ships = entries.filter(
         (entry) => models[entry.unitId + "__" + entry.kitId].ship,
       ).length;
@@ -465,8 +472,36 @@ const Tactics = (() => {
         const carriers = preferred.filter((model) => model.ship && model.hangars?.length);
         if (carriers.length) preferred = carriers;
       }
+      // 按剩余名额分摊预算，避免高预算时仍随机抽满廉价单位。
+      // 舰船配额、适应性和可部署性已在上方筛选，价格选择不绕过这些约束。
+      const budgetPerSlot = remaining / slots;
+      const highestCost = Math.max(...preferred.map((model) => model.cost));
+      let affordableTier;
+      if (budgetPerSlot >= highestCost) {
+        // 预算足以全员采用当前最高档时，不再主动降档浪费名额。
+        affordableTier = preferred.filter((model) => model.cost === highestCost);
+      } else {
+        affordableTier = preferred.filter(
+          (model) => model.cost >= budgetPerSlot * 0.9 && model.cost <= budgetPerSlot * 1.15,
+        );
+        if (!affordableTier.length) {
+          const closestCost = preferred.reduce((best, model) => {
+            const distance = Math.abs(model.cost - budgetPerSlot);
+            const bestDistance = Math.abs(best - budgetPerSlot);
+            return distance < bestDistance || (distance === bestDistance && model.cost > best)
+              ? model.cost
+              : best;
+          }, preferred[0].cost);
+          affordableTier = preferred.filter((model) => model.cost === closestCost);
+        }
+      }
+      // 先抽机体再抽套件，避免套件更多的廉价机体获得额外抽取权重。
+      const prefabIds = [...new Set(affordableTier.map((model) => model.prefabId))];
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-      const model = preferred[seed % preferred.length];
+      const prefabId = prefabIds[seed % prefabIds.length];
+      const kits = affordableTier.filter((model) => model.prefabId === prefabId);
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      const model = kits[seed % kits.length];
       entries.push({
         unitId: model.prefabId,
         kitId: model.kitId,
@@ -848,7 +883,8 @@ const Tactics = (() => {
           (other) =>
             other.id !== unit.id &&
             onMap(other) &&
-            occupies(other, c.x, c.y) &&
+            (occupies(other, c.x, c.y) ||
+              (other.pendingMove && occupies({ ...other, ...other.pendingMove }, c.x, c.y))) &&
             (!throughAllies || other.team !== unit.team),
         ),
     );
@@ -1201,6 +1237,44 @@ const Tactics = (() => {
       fits(g, u, u.origin.x, u.origin.y, u.origin.angle)
     );
   }
+  // 预览只保留落点与路径，不改变裁定位置，因此不会提前更新视野或索敌。
+  function previewMove(g, u, x, y, seat = ownerOf(u)) {
+    if (
+      !onMap(u) ||
+      g.winner !== null ||
+      u.team !== g.team ||
+      u.acted ||
+      u.moved ||
+      u.pendingMove ||
+      g.units.some((unit) => unit.pendingMove?.seat === seat)
+    )
+      throw Error("请先确认或取消移动");
+    const tile = reachable(g, u).get(key(x, y));
+    if (!tile?.path.length) throw Error("该位置不可移动");
+    const previous = tile.path.at(-2) || u;
+    const angle = models[u.model]?.ship
+      ? u.angle
+      : (Math.atan2(x - previous.x, -(y - previous.y)) * 180) / Math.PI;
+    u.pendingMove = { x, y, angle, seat, from: { x: u.x, y: u.y }, path: tile.path };
+    return tile.path;
+  }
+  function confirmMove(g, u) {
+    const pending = u.pendingMove;
+    if (!pending) throw Error("没有待确认的移动");
+    delete u.pendingMove;
+    try {
+      const path = move(g, u, pending.x, pending.y);
+      u.origin = null;
+      return path;
+    } catch (error) {
+      u.pendingMove = pending;
+      throw error;
+    }
+  }
+  function cancelMove(g, u) {
+    if (!u.pendingMove) throw Error("没有待取消的移动");
+    delete u.pendingMove;
+  }
   function undo(g, u) {
     if (!canUndo(g, u)) throw Error("无法撤销：己方编组的后续单位已移动或原位置被占用");
     Object.assign(u, u.origin);
@@ -1286,6 +1360,12 @@ const Tactics = (() => {
       availableStrikes(u, w).length > 0
     );
   }
+  // A large unit is hit once when any occupied cell intersects the circular blast.
+  function blastContains(impact, unit, radius) {
+    return cells(unit).some(
+      (cell) => (cell.x - impact.x) ** 2 + (cell.y - impact.y) ** 2 <= radius ** 2,
+    );
+  }
   function inRange(a, b, w) {
     let d = dist(a, b);
     return d >= w.min && d <= w.max;
@@ -1316,6 +1396,7 @@ const Tactics = (() => {
     };
   }
   function canAttack(g, a, b, w) {
+    if (a?.pendingMove) return false;
     if (b?.groundTarget)
       return (
         !!groundTarget(g, a, b.x, b.y) &&
@@ -1331,16 +1412,19 @@ const Tactics = (() => {
       onMap(a) &&
       onMap(b) &&
       a.team !== b.team &&
-      sensors.visible(g, a.team, b) &&
+      (w?.blastCenter || sensors.visible(g, a.team, b)) &&
       canUse(a, w) &&
       targetModifier(g, b, w) > 0 &&
-      inRange(a, b, w) &&
+      (w.blastCenter ? blastContains(w.blastCenter, b, w.special.radius) : inRange(a, b, w)) &&
       availableStrikes(a, w, b).length > 0
     );
   }
   // Scatter records carry only shot indices and energy actually paid; clients rebuild the same visual slice.
   function eventWeapon(unit, event) {
     const weapon = modelOf(unit).weapons.find((w) => w.id === event.weapon);
+    // Only server-expanded impact events carry a blast centre; launch requests still check range.
+    if (weapon?.special?.type === "nuke" && event.impactCell)
+      return { ...weapon, blastCenter: event.impactCell };
     if (!event.shotIndices) return weapon;
     const indices = event.shotIndices;
     const strikes = weapon.attack.strikes
@@ -2049,6 +2133,9 @@ const Tactics = (() => {
     reachable,
     faceTarget,
     move,
+    previewMove,
+    confirmMove,
+    cancelMove,
     undo,
     canUndo,
     countersRemaining,
@@ -2076,6 +2163,7 @@ const Tactics = (() => {
     brokenWeaponParts: parts.unavailable,
     partBreakChance: parts.chance,
     inRange,
+    blastContains,
     groundTarget,
     canAttack,
     estimate,

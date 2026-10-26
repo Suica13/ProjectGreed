@@ -249,6 +249,7 @@ const UnitSkills = (() => {
         ...(unit.customName ? { customName: unit.customName } : {}),
         angle: unit.angle,
         skillUses: { ...skillUses },
+        weaponUses: { ...unit.weaponUses },
         brokenParts: config.repairAllParts ? {} : { ...unit.brokenParts },
         moved: consumeAction || unit.moved,
         acted: consumeAction || unit.acted,

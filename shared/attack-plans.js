@@ -140,8 +140,8 @@ function createAttackPlanner(rules, randomId) {
             (unit) =>
               unit.team !== attacker.team &&
               rules.onMap(unit) &&
-              rules.dist(target, unit) <= weapon.special.radius &&
-              rules.canAttack(room.game, attacker, unit, weapon),
+              rules.blastContains(impact, unit, weapon.special.radius) &&
+              rules.canAttack(room.game, attacker, unit, { ...weapon, blastCenter: impact }),
           )
           .sort((a, b) => a.id.localeCompare(b.id, "en"));
         if (!victims.length) {
@@ -376,7 +376,7 @@ function createAttackPlanner(rules, randomId) {
       const validationWeapon =
         intent.freeFollowup && weapon ? { ...weapon, en: 0, maxUses: undefined } : weapon;
       if (attacker && weapon && intent.impactCell && (!target || target.hp <= 0)) {
-        if (attacker.hp <= 0 || attacker.en < weapon.en) continue;
+        if (attacker.hp <= 0 || attacker.en < validationWeapon.en) continue;
         const ghost = {
           ...JSON.parse(JSON.stringify(attacker)),
           id: "impact-" + randomId(),
@@ -388,8 +388,8 @@ function createAttackPlanner(rules, randomId) {
         };
         const before = Object.fromEntries([attacker, ghost].map((u) => [u.id, u.hp]));
         const actors = JSON.parse(JSON.stringify([attacker, ghost]));
-        attacker.en -= weapon.en;
-        if (Number.isInteger(weapon.maxUses))
+        attacker.en -= validationWeapon.en;
+        if (Number.isInteger(validationWeapon.maxUses))
           (attacker.weaponUses ||= {})[weapon.id] = (attacker.weaponUses[weapon.id] || 0) + 1;
         attacker.acted = true;
         delete attacker.plan;

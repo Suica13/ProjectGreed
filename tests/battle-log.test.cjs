@@ -39,6 +39,7 @@ function chatFixture() {
   };
   const context = vm.createContext({
     Net: { active: false },
+    Rules: G,
     WebSocket: { OPEN: 1 },
     game: { units: [] },
     byId,
@@ -158,6 +159,9 @@ test("network download controls follow authorized perspectives and never export 
   byId("downloadBattleLog").onclick();
   assert.equal(requests.length, 0);
   show("team:0", ["team:0"]);
+  assert.deepEqual(Array.from(byId("battleLogPerspective").options, (option) => option.value), ["team:0", "team:1", "global"]);
+  assert.equal(byId("battleLogPerspective").hidden, false);
+  assert.deepEqual(Array.from(byId("battleLogPerspective").options, (option) => option.disabled), [false, true, true]);
   byId("downloadBattleLog").onclick();
   assert.deepEqual(requests[0], { action: "download_log", perspective: "team:0" });
   assert.equal(blobs.length, 0, "wait for an authorized server response before saving");

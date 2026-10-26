@@ -2,19 +2,20 @@
 const RoomPanel = (() => {
   let settingsKey = "",
     pendingSettings = null,
-    submittedCosts = null,
-    costTimer = null,
-    queuedCosts = {};
-  const costDrafts = { costLimit: null, unitCostLimit: null };
+    submittedNumericSettings = null,
+    numericSettingsTimer = null,
+    queuedNumericSettings = {};
+  const numericDrafts = { costLimit: null, unitCostLimit: null, unitLimit: null };
   const joinButtons = [byId("joinTeam1"), byId("joinTeam2")];
   let detail = null;
   // 只更新席位文字；倒计时无需请求服务器或重建房间面板。
   function updateReconnectCountdowns() {
     const snapshot = Net.snapshot;
     if (!snapshot) return;
-    const now = Number.isFinite(snapshot.receivedAt) && Number.isFinite(snapshot.serverTime)
-      ? snapshot.serverTime + performance.now() - snapshot.receivedAt
-      : Date.now();
+    const now =
+      Number.isFinite(snapshot.receivedAt) && Number.isFinite(snapshot.serverTime)
+        ? snapshot.serverTime + performance.now() - snapshot.receivedAt
+        : Date.now();
     for (const label of document.querySelectorAll("[data-reconnect-until]")) {
       const seconds = Math.max(0, Math.ceil((Number(label.dataset.reconnectUntil) - now) / 1000));
       label.textContent = I18n.text("等待重连") + " · " + seconds + "s";
@@ -81,6 +82,7 @@ const RoomPanel = (() => {
     ctx.textAlign = "left";
     ctx.fillText(I18n.text(map.environment === "space" ? "宇宙" : "地面"), 11, 22);
     canvas.setAttribute("aria-label", map.name + " · " + map.width + "×" + map.height);
+    byId("roomMapTitle").textContent = "[" + map.spawns.length + "P]" + map.name;
     byId("roomMapInfo").textContent =
       map.name +
       " · " +
@@ -165,28 +167,44 @@ const RoomPanel = (() => {
     const nextKey = JSON.stringify([snapshot.room, snapshot.you?.id, snapshot.hostId]);
     if (nextKey !== settingsKey) {
       settingsKey = nextKey;
-      costDrafts.costLimit = costDrafts.unitCostLimit = null;
-      submittedCosts = null;
-      queuedCosts = {};
-      clearTimeout(costTimer);
-      costTimer = null;
+      numericDrafts.costLimit = numericDrafts.unitCostLimit = numericDrafts.unitLimit = null;
+      submittedNumericSettings = null;
+      queuedNumericSettings = {};
+      clearTimeout(numericSettingsTimer);
+      numericSettingsTimer = null;
     }
     mapSelect.value = settings.mapId;
-    byId("roomUnitLimit").value = settings.unitLimit;
-    byId("roomCostLimit").value = costDrafts.costLimit ?? settings.costLimit;
-    byId("roomUnitCostLimit").value = costDrafts.unitCostLimit ?? settings.unitCostLimit;
+    byId("roomUnitLimit").value = numericDrafts.unitLimit ?? settings.unitLimit;
+    byId("roomCostLimit").value = numericDrafts.costLimit ?? settings.costLimit;
+    byId("roomUnitCostLimit").value = numericDrafts.unitCostLimit ?? settings.unitCostLimit;
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
-    byId("roomShareAlliedUnits").checked = !!settings.shareAlliedUnits;
+    byId("roomShareAlliedUnits").value = settings.shareAlliedUnits ? "enabled" : "disabled";
     byId("roomShareAlliedUnits").disabled = locked;
     byId("roomFogMode").value = settings.fogMode || "full";
-    for (const id of ["roomMapSelect", "roomUnitLimit", "roomFogMode"])
-      byId(id).disabled = locked;
-    // COST 输入时仍可继续打字，不因上一笔请求未确认而失去焦点。
-    for (const id of ["roomCostLimit", "roomUnitCostLimit"])
+    for (const id of ["roomMapSelect", "roomFogMode"])
+      byId(id).disabled = locked || (id === "roomMapSelect" && !!snapshot.loadedSave);
+    byId("roomMapChoiceHint").textContent = I18n.text(
+      snapshot.loadedSave ? "存档地图已锁定" : locked ? "地图由房主选择" : "点击更换地图",
+    );
+    // 数值输入时仍可继续打字，不因上一笔请求未确认而失去焦点。
+    for (const id of ["roomCostLimit", "roomUnitCostLimit", "roomUnitLimit"])
       byId(id).disabled = snapshot.started || snapshot.you?.id !== snapshot.hostId;
     tagControls(byId("roomTagRestrictions"), "roomBan", settings, locked, () => {
       sendSettings(readTags(byId("roomTagRestrictions")));
     });
+    const teamRulesPanel = byId("roomTeamRestrictions");
+    teamRulesPanel.replaceChildren();
+    for (let team = 0; team < 2; team++) {
+      const group = element("section", "room-team-rules");
+      const controls = element("div", "tag-restrictions");
+      group.append(element("h4", "", "队伍" + (team + 1)), controls);
+      tagControls(controls, "teamBan-" + team, settings.teamRestrictions[team], locked, () => {
+        const restrictions = structuredClone(Net.snapshot.settings.teamRestrictions);
+        restrictions[team] = readTags(controls);
+        sendSettings({ teamRestrictions: restrictions });
+      });
+      teamRulesPanel.append(group);
+    }
     byId("roomCostLimit").step = Rules.catalog.formation.costStep;
     byId("roomCostLimit").min = Math.min(...Object.values(UnitModels).map((model) => model.cost));
 
@@ -256,7 +274,7 @@ const RoomPanel = (() => {
         select.value = "room";
       }
     }
-    select.disabled = locked;
+    select.disabled = locked || !!snapshot.loadedSave;
     select.onchange = () => {
       if (select.value !== "room")
         send(
@@ -337,7 +355,9 @@ const RoomPanel = (() => {
     const content = byId("roomDetailContent");
     content.replaceChildren();
     const locked = !!Net.awaiting || snapshot.started || snapshot.you.id !== snapshot.hostId;
-    content.append(armyControls(player, snapshot, locked));
+    const ownSavedSettings =
+      snapshot.loadedSave && player.id === snapshot.you.id && !snapshot.started && !Net.awaiting;
+    content.append(armyControls(player, snapshot, locked && !ownSavedSettings));
     {
       const label = element("label", "", "队伍 / 出生地"),
         select = element("select");
@@ -416,7 +436,9 @@ const RoomPanel = (() => {
     byId("roomActions").hidden = active;
     if (!active) return;
     byId("roomStatus").hidden = false;
-    byId("roomStatus").textContent = "最终编组确认后进入部署。";
+    byId("roomStatus").textContent = snapshot.loadedSave
+      ? "最终编组确认后继续存档对局。"
+      : "最终编组确认后进入部署。";
     const squads = byId("finalSquads");
     squads.replaceChildren();
     for (const player of snapshot.assembly?.players || []) {
@@ -459,6 +481,10 @@ const RoomPanel = (() => {
                 (player.reasons?.[index] === "not_allowed" ? "not-allowed" : "overcost")
               : ""),
         );
+        if (player.dead?.includes(index)) {
+          icon.classList.add("unit-dead");
+          icon.setAttribute("aria-label", I18n.text("阵亡"));
+        }
         icon.dataset.index = index;
         icon.dataset.model = id;
         icon.title =
@@ -483,7 +509,7 @@ const RoomPanel = (() => {
       squads.append(card);
     }
     const own = snapshot.assembly?.players.find((player) => player.memberId === snapshot.you?.id);
-    byId("editFinalFormation").hidden = !own;
+    byId("editFinalFormation").hidden = !own || !!snapshot.loadedSave;
     const allBots =
       snapshot.you?.id === snapshot.hostId &&
       snapshot.members.filter((player) => player.seat !== null).every((player) => player.bot);
@@ -494,26 +520,28 @@ const RoomPanel = (() => {
     byId("confirmFinalFormation").disabled =
       busy ||
       !!own?.ready ||
-      (!allBots && !own?.deployable.length) ||
+      (!snapshot.loadedSave && !allBots && !own?.deployable.length) ||
       !snapshot.connected.every(Boolean);
     byId("confirmFinalFormation").textContent = own?.ready
       ? "已确认，等待其他玩家"
       : "确认出击编组";
     byId("finalAssemblyStatus").textContent = !snapshot.connected.every(Boolean)
       ? "等待全部席位玩家连接。"
-      : own && !own.deployable.length
-        ? "至少需要一台可出击单位"
-        : "超限时从编组末尾向前禁用；不符合标签限制的单位无法出击。";
+      : snapshot.loadedSave
+        ? "存档编组不可修改；黑色遮罩表示阵亡单位。"
+        : own && !own.deployable.length
+          ? "至少需要一台可出击单位"
+          : "超限时从编组末尾向前禁用；不符合标签限制的单位无法出击。";
   }
   function render(snapshot) {
     if (!Net.awaiting) {
       pendingSettings = null;
-      for (const [key, value] of Object.entries(submittedCosts || {})) {
-        if (snapshot.settings?.[key] === value && Number(costDrafts[key]) === value)
-          costDrafts[key] = null;
+      for (const [key, value] of Object.entries(submittedNumericSettings || {})) {
+        if (snapshot.settings?.[key] === value && Number(numericDrafts[key]) === value)
+          numericDrafts[key] = null;
       }
-      submittedCosts = null;
-      if (costTimer === null && Object.keys(queuedCosts).length) queueMicrotask(flushCosts);
+      submittedNumericSettings = null;
+      if (numericSettingsTimer === null && Object.keys(queuedNumericSettings).length) queueMicrotask(flushNumericSettings);
     }
     // 选择后立即预览；操作仍由服务端确认，失败时恢复已确认的设置。
     if (pendingSettings) snapshot = { ...snapshot, settings: pendingSettings };
@@ -538,7 +566,8 @@ const RoomPanel = (() => {
       snapshot.phase === "finished";
     shareButton.textContent =
       snapshot.settings.shareAlliedUnits || own?.shareUnits ? "已共享单位给友军" : "共享单位给友军";
-    byId("roomFormation").disabled = snapshot.started || busy || !!own?.formationPreset;
+    byId("roomFormation").disabled =
+      !!snapshot.loadedSave || snapshot.started || busy || !!own?.formationPreset;
     const formationSelect = byId("roomFormationSelect");
     formationSelect.replaceChildren();
     const presets = Formation.presets();
@@ -556,7 +585,11 @@ const RoomPanel = (() => {
       formationSelect.add(option);
       formationSelect.value = "assigned";
     } else formationSelect.value = String(Formation.presetIndex());
-    formationSelect.disabled = snapshot.started || busy || !!own?.formationPreset;
+    if (snapshot.loadedSave) {
+      formationSelect.replaceChildren(new Option(I18n.text("存档编组"), "saved"));
+    }
+    formationSelect.disabled =
+      !!snapshot.loadedSave || snapshot.started || busy || !!own?.formationPreset;
     let disabledCount = 0,
       valid = true;
     try {
@@ -573,6 +606,10 @@ const RoomPanel = (() => {
     } catch {
       valid = false;
     }
+    if (snapshot.loadedSave) {
+      valid = true;
+      disabledCount = 0;
+    }
     const warning = byId("roomFormationWarning");
     warning.textContent = !valid || disabledCount ? "不符合编组规则" : "";
     warning.hidden = valid && !disabledCount;
@@ -582,12 +619,19 @@ const RoomPanel = (() => {
     );
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local ? "离线遭遇战房间" : "房间 " + snapshot.room;
-    byId("roomStatus").hidden = !snapshot.started;
+    byId("roomStatus").hidden = !snapshot.started && !snapshot.loadedSave;
     byId("roomStatus").textContent = snapshot.connected.every(Boolean)
       ? "游戏进行中，可切换席位或返回战斗。"
       : "等待空队伍补位或离线玩家恢复，战局已暂停。";
+    if (snapshot.loadedSave)
+      byId("roomStatus").textContent =
+        I18n.text("已加载存档") +
+        " · " +
+        I18n.text("回合") +
+        snapshot.loadedSave.round +
+        " · " +
+        I18n.text("编组已锁定");
     const teams = byId("teamSlots");
-    const expandedFilters = [...teams.querySelectorAll(".team-filters")].map((panel) => panel.open);
     for (const button of joinButtons) button.remove();
     teams.replaceChildren();
     for (let team = 0; team < 2; team++) {
@@ -614,19 +658,6 @@ const RoomPanel = (() => {
       };
       teamHeading.append(element("h3", "", "队伍" + (team + 1)), summary, joinButtons[team]);
       column.append(teamHeading);
-      const filterDetails = element("details", "team-filters"),
-        filterControls = element("div", "tag-restrictions");
-      filterDetails.append(element("summary", "", "队伍禁用标签"));
-      const locked = snapshot.started || self.id !== snapshot.hostId || busy;
-      filterDetails.open = expandedFilters[team] ?? false;
-      const teamRules = snapshot.settings.teamRestrictions[team];
-      tagControls(filterControls, "teamBan-" + team, teamRules, locked, () => {
-        const restrictions = structuredClone(Net.snapshot.settings.teamRestrictions);
-        restrictions[team] = readTags(filterControls);
-        sendSettings({ teamRestrictions: restrictions });
-      });
-      filterDetails.append(filterControls);
-      column.append(filterDetails);
       column.setAttribute("role", "table");
       column.setAttribute("aria-label", "队伍" + (team + 1));
       const seats = map.spawns
@@ -653,7 +684,11 @@ const RoomPanel = (() => {
             ? playerLabel(member, self, snapshot)
             : element("strong", "player-name player-other", reserved ? "等待重连" : "空位"),
         );
-        if (member?.bot || (member && self.id === snapshot.hostId))
+        if (
+          member?.bot ||
+          (member &&
+            (self.id === snapshot.hostId || (snapshot.loadedSave && member.id === self.id)))
+        )
           nameCell.append(detailButton(member, snapshot));
         if (reserved && self.id === snapshot.hostId) {
           const kick = element("button", "choose-spawn danger", "踢出");
@@ -667,7 +702,11 @@ const RoomPanel = (() => {
         const choose = element(
           "button",
           "choose-spawn",
-          (inBattle && !member && !reserved ? "接管席位" : "出生点") + spawn.position + " · " + Rules.columnLabel(spawn.x) + (spawn.y + 1),
+          (inBattle && !member && !reserved ? "接管席位" : "出生点") +
+            spawn.position +
+            " · " +
+            Rules.columnLabel(spawn.x) +
+            (spawn.y + 1),
         );
         choose.id = "chooseSeat" + seat;
         choose.title = self.seat === seat ? "当前出生点" : "选择出生点" + spawn.position;
@@ -694,7 +733,9 @@ const RoomPanel = (() => {
                 (member.id === snapshot.hostId || member.ready ? "is-ready" : "not-ready")
               : "muted"),
           !member
-            ? reserved ? "等待重连" : "—"
+            ? reserved
+              ? "等待重连"
+              : "—"
             : !member.connected
               ? "离线 · 保留席位"
               : snapshot.started
@@ -819,56 +860,53 @@ const RoomPanel = (() => {
     Net.request("configure_room", pendingSettings);
   }
   byId("roomMapSelect").onchange = () => sendSettings({ mapId: byId("roomMapSelect").value });
-  byId("roomUnitLimit").oninput = () => {
-    const value = Number(byId("roomUnitLimit").value);
-    if (Number.isInteger(value) && value >= 3 && value <= Rules.catalog.formation.maxUnits)
-      sendSettings({ unitLimit: value });
-  };
-  function flushCosts() {
-    clearTimeout(costTimer);
-    costTimer = null;
+  function flushNumericSettings() {
+    clearTimeout(numericSettingsTimer);
+    numericSettingsTimer = null;
     const snapshot = Net.snapshot;
     if (!Net.active || !snapshot || snapshot.started || snapshot.you?.id !== snapshot.hostId) {
-      queuedCosts = {};
+      queuedNumericSettings = {};
       return;
     }
     // 先等正在进行的操作确认；render 会提交这期间继续输入的最新值。
     if (Net.awaiting || Net.socket?.readyState !== WebSocket.OPEN) return;
     const patch = Object.fromEntries(
-      Object.entries(queuedCosts).filter(([key, value]) => value !== snapshot.settings[key]),
+      Object.entries(queuedNumericSettings).filter(([key, value]) => value !== snapshot.settings[key]),
     );
-    queuedCosts = {};
+    queuedNumericSettings = {};
     if (!Object.keys(patch).length) return;
-    submittedCosts = patch;
+    submittedNumericSettings = patch;
     sendSettings(patch);
   }
-  for (const [id, key, validate] of [
-    ["roomCostLimit", "costLimit", Rules.validateCostLimit],
-    ["roomUnitCostLimit", "unitCostLimit", Rules.validateUnitCostLimit],
+  for (const [id, key, validate, maximum] of [
+    ["roomCostLimit", "costLimit", Rules.validateCostLimit, Rules.maxCostLimit],
+    ["roomUnitCostLimit", "unitCostLimit", Rules.validateUnitCostLimit, Rules.maxCostLimit],
+    ["roomUnitLimit", "unitLimit", Rules.validateUnitLimit, Rules.catalog.formation.maxUnits],
   ]) {
     const input = byId(id);
+    input.max = String(maximum);
     input.oninput = () => {
-      costDrafts[key] = input.value;
-      delete queuedCosts[key];
+      if (Number(input.value) > maximum) input.value = String(maximum);
+      numericDrafts[key] = input.value;
+      delete queuedNumericSettings[key];
       try {
         if (!input.value.trim()) throw Error("empty");
-        queuedCosts[key] = validate(Number(input.value));
+        queuedNumericSettings[key] = validate(Number(input.value));
       } catch {}
-      clearTimeout(costTimer);
-      costTimer = Object.keys(queuedCosts).length ? setTimeout(flushCosts, 300) : null;
+      clearTimeout(numericSettingsTimer);
+      numericSettingsTimer = Object.keys(queuedNumericSettings).length ? setTimeout(flushNumericSettings, 300) : null;
     };
-    input.onchange = flushCosts;
+    input.onchange = flushNumericSettings;
     input.onkeydown = (event) => {
       if (event.key === "Enter") {
         event.preventDefault();
-        flushCosts();
+        flushNumericSettings();
       }
     };
   }
   byId("roomShareAlliedUnits").onchange = () =>
-    sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").checked });
-  byId("roomFogMode").onchange = () =>
-    sendSettings({ fogMode: byId("roomFogMode").value });
+    sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").value === "enabled" });
+  byId("roomFogMode").onchange = () => sendSettings({ fogMode: byId("roomFogMode").value });
   byId("shareUnitsToAllies").onclick = () => Net.request("share_units");
   byId("roomSettings").onclick = () => {
     setPageView("room");

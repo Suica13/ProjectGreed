@@ -2157,7 +2157,8 @@
           ],
           "limb": "leftArm"
         }
-      ]
+      ],
+      "fireMode": "independent"
     }
   ]
 }

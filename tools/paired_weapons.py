@@ -83,7 +83,7 @@ def configure(prefab):
             all(r in ["merged_position", "paired_weapon"] for r in weapon.get("availability", {}).get("reasons", []))]))
         processed.update(keys)
         channels = []
-        arm_pair = bool(re.search(r"ArmMG|ArmBR|ArmGL|HandGun|HandMG|75mmMG_Double|BigGun", family))
+        arm_pair = bool(re.search(r"ArmMG|ArmBR|ArmGL|HandGun|HandMG|75mmMG_Double|BigGun", family)) or family in ["EF_RX_75_MS", "ZN_MS_06M_SMS"]
         leg_pair = "LegMS" in family
         for ident, (key, index, barrel) in physical.items():
             weapon = prefab["weapons"][key]
@@ -95,6 +95,10 @@ def configure(prefab):
                 required = [p for p in required if p not in ["leftArm", "rightArm", "leftLeg", "rightLeg"]] + [limb]
             channels.append(dict(id=ident, weaponId=key, muzzleIndex=index, requiredParts=required, limb=limb))
         group = dict(id=root, channels=channels)
+        if {c["limb"] for c in channels} == {"leftArm", "rightArm"}:
+            # Pixy's 75mm machine guns are an explicit simultaneous-fire exception.
+            simultaneous = prefab["id"] == "RX_78XX" and family == "EF_75mmMG_Double"
+            group["fireMode"] = "simultaneous" if simultaneous else "independent"
         if "ArmMG" in family:group["name"] = "腕部机枪"
         elif "ArmBR" in family:group["name"] = "腕部光束枪"
         groups.append(group)

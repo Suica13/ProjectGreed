@@ -561,15 +561,23 @@ const Net = (() => {
       n.seen.add(event.id);
       if (n.seen.size > 128) n.seen.delete(n.seen.values().next().value);
       if (
-        ["move", "launch"].includes(event.type) &&
+        ["move", "move_preview", "launch"].includes(event.type) &&
         ["idle", "deployment"].includes(s.phase) &&
         online &&
         n.applied
       ) {
-        PlanningUI.move(event);
+        if (event.previewTeam === undefined || event.previewTeam !== s.viewTeam)
+          PlanningUI.move(event);
         // 只结束当前所选单位的移动选点，不打断队友或其他单位的操作。
         if (selected === event.unitId && mode === "move") mode = "select";
       }
+      if (
+        event.type === "move_cancel" ||
+        (event.type === "move" &&
+          event.previewTeam !== undefined &&
+          event.previewTeam === s.viewTeam)
+      )
+        PlanningUI.stop(event.unitId);
       if (event.type === "skill" && s.phase === "idle" && online && n.applied)
         SkillControls.applied(event);
       if (event.type === "turn") {

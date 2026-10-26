@@ -1944,7 +1944,8 @@
           ],
           "limb": "leftArm"
         }
-      ]
+      ],
+      "fireMode": "independent"
     }
   ]
 }

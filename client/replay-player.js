@@ -1,4 +1,4 @@
-/* One record entry point for save/load, text LOG and synchronized replay. */
+/* 对局回放与文字战报入口；回放只供观看，不能接管为新对局。 */
 window.ReplayPlayer = (() => {
   let active = false,
     shared = false,
@@ -43,60 +43,99 @@ window.ReplayPlayer = (() => {
     actions = create("div");
   actions.className = "record-actions";
   const close = button("关闭", () => dialog.close());
-  const save = button("保存记录", async () => {
-    if (active && !shared) {
-      download(record);
-      return;
-    }
-    const result = await request("record_export", {
-      perspective: active ? perspective : (live || Net.snapshot)?.logExport?.options?.[0],
-    });
-    download(result.record);
+  close.className = "record-close";
+  const heading = create("div");
+  heading.className = "record-heading";
+  heading.append(title, close);
+  function download(value, suffix) {
+    const link = create("a");
+    const url = URL.createObjectURL(
+      new Blob([JSON.stringify(value)], { type: "application/json" }),
+    );
+    link.href = url;
+    link.download = "ProjectGreed-" + new Date().toISOString().replace(/[:.]/g, "-") + suffix;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  const saveGame = button("保存存档", async () => {
+    const result = await request("save_export");
+    download(result.save, ".save.greed");
   });
-  const playCurrent = button("回放本局", async () => {
-    await request("replay_open");
-    dialog.close();
+  const saveReplay = button("保存回放", async () => {
+    const value = active && !shared ? record : (await request("record_export")).record;
+    download(value, ".replay.greed");
   });
   const file = create("input");
   file.type = "file";
   file.accept = ".json,.greed,application/json";
   file.hidden = true;
-  const load = button("载入记录", () => file.click());
+  const menuReplay = button("播放回放", () => {});
+  menuReplay.id = "openReplayFile";
+  menuReplay.onclick = () => file.click();
+  byId("openSkirmish").after(menuReplay);
   file.onchange = async () => {
     try {
       const selected = file.files[0];
       if (!selected) return;
       if (selected.size > MatchRecords.maxBytes) throw Error("对局记录超过32MB限制。");
       const imported = MatchRecords.validate(Rules, JSON.parse(await selected.text()));
-      if (Net.active) {
-        if (Net.memberId !== (live || Net.snapshot)?.hostId)
-          throw Error("只有房主可以载入房间回放。");
-        await upload(imported);
-        await request("replay_open", { loaded: true });
-      } else startLocal(imported);
-      dialog.close();
+      startLocal(imported);
     } catch (error) {
       note(error.message);
     } finally {
       file.value = "";
     }
   };
-  actions.append(save, playCurrent, load, close);
-  dialog.append(title, hint, actions, file, create("h3", "文字战报"));
-  // Keep the original IDs and handlers; there is now just one visible download location.
-  dialog.append(byId("battleLogPerspective"), byId("downloadBattleLog"));
-  const originalLogDownload = byId("downloadBattleLog").onclick;
-  byId("downloadBattleLog").onclick = () =>
-    active ? Chat.saveLog(log, perspective) : originalLogDownload();
+  const saveFile = create("input");
+  saveFile.type = "file";
+  saveFile.accept = ".json,.greed,application/json";
+  saveFile.hidden = true;
+  const loadSave = button("加载存档", () => {});
+  loadSave.id = "roomLoadSave";
+  loadSave.onclick = () => saveFile.click();
+  saveFile.onchange = async () => {
+    try {
+      const selected = saveFile.files[0];
+      if (!selected) return;
+      if (selected.size > MatchRecords.maxBytes) throw Error("存档超过32MB限制。");
+      const value = MatchRecords.validateSave(Rules, JSON.parse(await selected.text()));
+      await upload(value, "save");
+      await request("save_load");
+      note("存档已加载，请选择席位并准备。");
+    } catch (error) {
+      note(error.message);
+    } finally {
+      saveFile.value = "";
+    }
+  };
+  actions.append(saveGame, saveReplay);
+  dialog.append(heading, create("h3", "存档"), actions, create("h3", "战斗LOG"));
+  document.body.append(dialog, file, saveFile);
+  const logActions = create("div");
+  logActions.className = "record-actions";
+  // Keep shared controls attached so byId can still find them during startup.
+  dialog.append(logActions, hint);
+  const logPerspective = byId("battleLogPerspective");
+  const logDownload = byId("downloadBattleLog");
+  logActions.append(logPerspective, logDownload);
+  logDownload.textContent = "下载战斗LOG";
   byId("roomDownloadBattleLog").hidden = true;
   byId("roomLogPerspective").style.display = "none";
-  document.body.append(dialog);
   const access = button("对局记录", () => {
     refresh();
     dialog.showModal();
   });
   access.id = "openMatchRecords";
-  document.body.append(access);
+  byId("netSettings").before(access);
+  const roomAccess = button("对局记录", () => {
+    refresh();
+    dialog.showModal();
+  });
+  roomAccess.id = "roomOpenMatchRecords";
+  byId("roomShowLog").after(roomAccess);
+  byId("roomRulesActions").append(loadSave);
   const bar = create("div");
   bar.id = "replayControls";
   bar.hidden = true;
@@ -138,16 +177,16 @@ window.ReplayPlayer = (() => {
     ReplayPresentation.setImmersive(immersiveInput.checked);
     if (immersiveInput.checked) cutinDone = true;
   };
-  const resume = button("从此回合继续", () => showSeats());
   const exit = button("退出回放", async () => {
     if (shared) await request("replay_close");
     else stop();
   });
-  bar.append(play, previous, next, timeline, position, rates, views, immersive, resume, exit);
-  document.body.append(bar);
-  const seatDialog = create("dialog");
-  seatDialog.id = "recordSeatsDialog";
-  document.body.append(seatDialog);
+  bar.append(play, previous, next, timeline, position, rates, views, immersive, exit);
+  byId("mapWrap").append(bar);
+  // Wrapped mobile controls change height; keep terrain details above the whole bar.
+  new ResizeObserver(() => {
+    byId("mapWrap").style.setProperty("--replay-controls-height", bar.offsetHeight + "px");
+  }).observe(bar);
   function request(action, fields = {}) {
     if (!Net.active || Net.socket?.readyState !== 1)
       return Promise.reject(Error("请先创建离线房间或连接房间。"));
@@ -180,10 +219,10 @@ window.ReplayPlayer = (() => {
     else entry.resolve(message);
     return true;
   }
-  async function upload(value) {
+  async function upload(value, kind = "replay") {
     if (active && shared && playing) await control({ playing: false });
     const text = JSON.stringify(value),
-      { uploadId } = await request("record_upload_begin", { length: text.length });
+      { uploadId } = await request("record_upload_begin", { length: text.length, kind });
     for (let offset = 0, sequence = 0; offset < text.length; offset += 20000, sequence++) {
       await request("record_upload_chunk", {
         uploadId,
@@ -193,16 +232,6 @@ window.ReplayPlayer = (() => {
       if (sequence % 12 === 11) await new Promise((resolve) => setTimeout(resolve, 300));
     }
     await request("record_upload_finish", { uploadId });
-  }
-  function download(value) {
-    const url = URL.createObjectURL(
-      new Blob([JSON.stringify(value)], { type: "application/json" }),
-    );
-    const a = create("a");
-    a.href = url;
-    a.download = "ProjectGreed-record-" + new Date().toISOString().replaceAll(":", "-") + ".greed";
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   function begin(isShared) {
     if (!active)
@@ -238,6 +267,7 @@ window.ReplayPlayer = (() => {
         game = saved.game;
         phase = saved.phase;
         Net.snapshot = live || saved.snapshot;
+        if (Net.snapshot) Chat.setSnapshot(Net.snapshot);
         setPageView(saved.page);
         if (Net.active && live) Net.applySnapshot(live);
         else update();
@@ -257,6 +287,7 @@ window.ReplayPlayer = (() => {
   }
   function receive(snapshot) {
     live = snapshot;
+    if (active && !shared) return true;
     if (!snapshot.replay) {
       if (active && shared) stop(false);
       refresh();
@@ -417,84 +448,24 @@ window.ReplayPlayer = (() => {
     TurnFlow.setReplayPaused?.(!playing);
     refresh();
   }
-  const checkpoints = () =>
-    shared
-      ? state?.checkpoints || []
-      : record?.checkpoints.map((c) => ({
-          frame: c.frame,
-          round: c.game.round,
-          team: c.game.team,
-          seats: [...new Set(c.game.units.filter((u) => u.hp > 0).map(Rules.ownerOf))],
-        })) || [];
+  const checkpoints = () => (shared ? state?.checkpoints : record?.checkpoints) || [];
   function seekTurn(direction) {
     const list = checkpoints().map((c) => c.frame);
     const target =
       direction < 0 ? list.filter((f) => f < index).at(-1) : list.find((f) => f > index);
     if (target !== undefined) return control({ index: target });
   }
-  async function showSeats() {
-    const checkpoint = checkpoints().find((c) => c.frame === index);
-    if (!checkpoint) throw Error("只能从回合开始节点继续。");
-    if (!shared) {
-      const copy = record,
-        frame = index;
-      stop();
-      LocalRoom.open();
-      await new Promise((resolve, reject) => {
-        let tries = 0;
-        const timer = setInterval(() => {
-          if (Net.active && Net.snapshot) {
-            clearInterval(timer);
-            resolve();
-          } else if (++tries > 100) {
-            clearInterval(timer);
-            reject(Error("离线房间创建失败。"));
-          }
-        }, 50);
-      });
-      await upload(copy);
-      await request("replay_open", { loaded: true });
-      await request("replay_control", { replayId: state.id, index: frame });
-    }
-    const room = live;
-    seatDialog.replaceChildren(create("h2", "续局席位"));
-    const selects = new Map();
-    for (const seat of checkpoint.seats) {
-      const row = create("label", "队伍" + (Rules.seatTeam(seat) + 1) + " · 席位" + (seat + 1)),
-        select = create("select");
-      select.add(new Option("AI", "ai"));
-      for (const member of room.members.filter((m) => !m.bot && m.connected))
-        select.add(new Option(member.name, member.id));
-      const current = room.members.find((m) => m.seat === seat && !m.bot);
-      if (current) select.value = current.id;
-      row.append(select);
-      seatDialog.append(row);
-      selects.set(seat, select);
-    }
-    seatDialog.append(
-      button("开始新对局", async () => {
-        const assignments = Array(Rules.getMap(game.mapId).spawns.length).fill(null);
-        for (const [seat, select] of selects) assignments[seat] = select.value;
-        await request("replay_fork", { replayId: state.id, index, assignments });
-        seatDialog.close();
-      }),
-      button("取消", () => seatDialog.close()),
-    );
-    seatDialog.showModal();
-  }
   function refresh() {
     const room = live || Net.snapshot,
       isHost = Net.active && room?.hostId === Net.memberId;
-    save.disabled = !(active && !shared) && !(room?.record?.frames || room?.replay);
-    playCurrent.disabled = !isHost || room?.started || !room?.record?.frames;
-    load.disabled = Net.active && (!isHost || room?.started);
+    saveGame.disabled = !isHost || !room?.saveAvailable || active;
+    saveReplay.disabled = active && !shared ? !record : !isHost || !room?.record?.frames;
+    loadSave.disabled = !isHost || !!room?.started || !!room?.replay || !!Net.awaiting;
     hint.textContent = room?.record?.truncated
       ? "记录已达到容量上限，已保留此前内容。"
-      : room?.started
-        ? "对局中保存本队录像；结束或全员返回大厅后可保存完整存档并续局。"
-        : "一份对局记录同时用于保存、回放和从回合开始继续。";
+      : "存档保存当前回合开始时的状态；回放仅供观看。";
     if (!active) return;
-    byId("downloadBattleLog").disabled = false;
+    Chat.refreshStatus();
     const total = shared ? state.total : record.frames.length,
       options = shared ? state.perspectives : record.perspectives;
     timeline.max = total - 1;
@@ -503,8 +474,7 @@ window.ReplayPlayer = (() => {
     rates.value = speed;
     const canControl = !shared || isHost;
     for (const e of [play, previous, next, timeline, rates, exit]) e.disabled = !canControl;
-    resume.disabled = !canControl || !checkpoints().some((c) => c.frame === index);
-    position.textContent = `${index + 1} / ${total} · 回合${game.round} · 队伍${game.team + 1}`;
+    position.textContent = `${index + 1} / ${total} · 回合${game.round} · 队伍${game.team + 1} · ${shared ? state.gameVersion : record.gameVersion || "unknown"}`;
     if ([...views.options].map((o) => o.value).join() !== options.join()) {
       views.replaceChildren();
       for (const value of options)
@@ -517,8 +487,21 @@ window.ReplayPlayer = (() => {
     }
     views.value = perspective;
   }
+  function logOptions() {
+    if (!active) return null;
+    return shared ? state.perspectives : record.perspectives;
+  }
+  async function downloadLog(choice) {
+    if (!logOptions()?.includes(choice)) throw Error("记录不包含这个视角。");
+    const entries = shared
+      ? (await request("replay_log", { replayId: state.id, perspective: choice })).log
+      : MatchRecords.view(record, record.frames.length - 1, choice).log;
+    Chat.saveLog(entries, choice);
+  }
   window.addEventListener("language-change", refresh);
   return {
+    logOptions,
+    downloadLog,
     receive,
     response,
     tick,

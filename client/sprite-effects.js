@@ -62,6 +62,20 @@ const SpriteEffects = (() => {
     if (!(hp > 0 && hp < maxHp * config.threshold)) return false;
     return draw(ctx, config.effect, x, y, scale, Math.max(0, time) % effect.duration);
   }
+  // 死亡到爆炸之间持续循环电流；爆炸开始的同一帧停止。
+  function deathElectric(ctx, x, y, scale, elapsed, explosionDelay) {
+    const id = ART.presentation.deathElectricEffect,
+      effect = ART.effects[id];
+    if (!effect || !(effect.duration > 0) || elapsed < 0 || elapsed >= explosionDelay) return false;
+    return SpriteEffects.draw(ctx, id, x, y, scale, elapsed % effect.duration);
+  }
+  // 死亡到爆炸之间持续循环电流；爆炸开始的同一帧停止。
+  function deathElectric(ctx, x, y, scale, elapsed, explosionDelay) {
+    const id = ART.presentation.deathElectricEffect,
+      effect = ART.effects[id];
+    if (!effect || !(effect.duration > 0) || elapsed < 0 || elapsed >= explosionDelay) return false;
+    return SpriteEffects.draw(ctx, id, x, y, scale, elapsed % effect.duration);
+  }
   // Broken turrets remain attached. This is visual only; their weapons stay disabled by shared rules.
   function brokenModules(ctx, model, brokenParts, actor, time) {
     const config = ART.presentation.moduleDamage;
@@ -86,7 +100,7 @@ const SpriteEffects = (() => {
     }
     return count;
   }
-  return { frame, sound, draw, lowHp, brokenModules, setFogClip, clipFog };
+  return { frame, sound, draw, lowHp, deathElectric, brokenModules, setFogClip, clipFog };
 })();
 
 /* 脱出闪光留在原机体所在位置，不触发死亡电流或死亡爆炸。 */
@@ -215,6 +229,22 @@ const MapEffects = (() => {
           false,
           (item.unit.shield ?? 0) > 0,
         );
+      SpriteEffects.deathElectric(
+        ctx,
+        point.x,
+        point.y,
+        scale,
+        (now - item.start) / 1000,
+        item.delay,
+      );
+      SpriteEffects.deathElectric(
+        ctx,
+        point.x,
+        point.y,
+        scale,
+        (now - item.start) / 1000,
+        item.delay,
+      );
       WeaponEffects.drawDeath(ctx, item.sequence, item.unit, point.x, point.y, scale, age);
     }
     if (!pending()) {
@@ -230,7 +260,16 @@ const MapEffects = (() => {
 const EnvironmentVisuals = (() => {
   let matchKey = null,
     fogKey = null,
-    fogCanvas = null;
+    fogCanvas = null,
+    smoothFogCanvas = null,
+    fogCells = null,
+    fogWidth = 0,
+    fogHeight = 0,
+    smoothRadius = null,
+    visibleMapPath = null,
+    screenClip = null,
+    screenClipKey = null;
+  const fogPixelsPerCell = 8;
   const water = new Map(),
     splashes = [];
   function pose(unit, cell) {
@@ -263,7 +302,7 @@ const EnvironmentVisuals = (() => {
       }
       const p = position(splash.x, splash.y);
       ctx.save();
-      if (ART.presentation.waterEntry?.visibleInFog === false) SpriteEffects.clipFog(ctx);
+      SpriteEffects.clipFog(ctx);
       ctx.strokeStyle = `rgba(175,230,255,${1 - age})`;
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -292,30 +331,79 @@ const EnvironmentVisuals = (() => {
       ctx.restore();
     }
   }
-  function fog(ctx, intel, ox, oy, tile) {
-    if (!intel) return;
+  function prepareFog(intel) {
     const width = Rules.mapWidth(game),
       height = Rules.mapHeight(game);
+    // Visibility lists are immutable snapshots. Compare their contents only when
+    // a new snapshot arrives, not on every animation frame.
+    if (fogCells === intel.visibleCells && fogWidth === width && fogHeight === height) return;
+    fogCells = intel.visibleCells;
+    fogWidth = width;
+    fogHeight = height;
     const key = JSON.stringify([width, height, intel.visibleCells]);
-    if (key !== fogKey) {
-      fogKey = key;
-      fogCanvas = document.createElement("canvas");
-      fogCanvas.width = width * 8;
-      fogCanvas.height = height * 8;
-      const c = fogCanvas.getContext("2d"),
-        visible = new Set(intel.visibleCells);
-      c.fillStyle = "rgba(3,10,18,0.78)";
-      for (let y = 0; y < height; y++)
-        for (let x = 0; x < width; x++)
-          if (!visible.has(x + "," + y)) c.fillRect(x * 8, y * 8, 8, 8);
+    if (key === fogKey) return;
+    fogKey = key;
+    fogCanvas = document.createElement("canvas");
+    fogCanvas.width = width * fogPixelsPerCell;
+    fogCanvas.height = height * fogPixelsPerCell;
+    const c = fogCanvas.getContext("2d"),
+      visible = new Set(intel.visibleCells);
+    c.fillStyle = "rgba(3,10,18,0.78)";
+    visibleMapPath = new Path2D();
+    // Merge each horizontal run: effect layers no longer clip thousands of
+    // individual rectangles when the entire battlefield is on screen.
+    for (let y = 0; y < height; y++) {
+      let run = -1;
+      for (let x = 0; x <= width; x++) {
+        const seen = x < width && visible.has(x + "," + y);
+        if (seen && run < 0) run = x;
+        if (!seen && run >= 0) {
+          visibleMapPath.rect(run, y, x - run, 1);
+          run = -1;
+        }
+        if (!seen && x < width)
+          c.fillRect(
+            x * fogPixelsPerCell,
+            y * fogPixelsPerCell,
+            fogPixelsPerCell,
+            fogPixelsPerCell,
+          );
+      }
+    }
+    smoothRadius = null;
+    screenClipKey = null;
+  }
+  function visibilityClip(intel, ox, oy, tile) {
+    if (!intel) return null;
+    prepareFog(intel);
+    const key = [ox, oy, tile].join(":");
+    if (screenClipKey !== key) {
+      screenClipKey = key;
+      screenClip = new Path2D();
+      screenClip.addPath(visibleMapPath, new DOMMatrix([tile, 0, 0, tile, ox, oy]));
+    }
+    return screenClip;
+  }
+  function fog(ctx, intel, ox, oy, tile) {
+    if (!intel) return;
+    prepareFog(intel);
+    // Apply blur to the small cached mask. Most zoom levels share one radius;
+    // very small cells retain the original minimum one-screen-pixel softness.
+    const radius = Math.ceil(Math.max(0.12 * fogPixelsPerCell, fogPixelsPerCell / tile) * 4) / 4;
+    if (smoothRadius !== radius) {
+      smoothRadius = radius;
+      smoothFogCanvas ??= document.createElement("canvas");
+      smoothFogCanvas.width = fogCanvas.width;
+      smoothFogCanvas.height = fogCanvas.height;
+      const c = smoothFogCanvas.getContext("2d");
+      c.filter = `blur(${radius}px)`;
+      c.drawImage(fogCanvas, 0, 0);
+      c.filter = "none";
     }
     ctx.save();
-    ctx.beginPath();
-    ctx.rect(ox, oy, width * tile, height * tile);
-    ctx.clip();
-    ctx.filter = `blur(${Math.max(1, tile * 0.12)}px)`;
-    ctx.drawImage(fogCanvas, ox, oy, width * tile, height * tile);
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(smoothFogCanvas, ox, oy, fogWidth * tile, fogHeight * tile);
     ctx.restore();
   }
-  return { pose, observe, drawWater, fog };
+  return { pose, observe, drawWater, fog, visibilityClip };
 })();

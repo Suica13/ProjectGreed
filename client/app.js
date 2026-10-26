@@ -235,6 +235,13 @@ function htmlWeapon(w, u, target = null, response = "counter", isCounter = false
 }
 // 刷新顶栏、单位列表、提示和右侧指令，不推进回合。
 function update() {
+  const pendingMove = pendingMovement();
+  if (!pendingMove && mode === "move-confirm") mode = "select";
+  if (pendingMove && phase === "idle") {
+    selected = pendingMove.id;
+    mode = "move-confirm";
+    weaponId = null;
+  }
   window.BattlePrompts?.refreshEnd();
   if (pageView !== "game" && !window.isLayoutPreview) {
     if (pageView === "room" && Net.snapshot) RoomPanel.render(Net.snapshot);
@@ -257,7 +264,7 @@ function update() {
   byId("endTurn").textContent = Net.active
     ? "完成计划 · 结束行动"
     : "结束" + teamName(game.team) + "回合";
-  byId("endTurn").disabled = busy || isAI() || (Net.active && !Net.canAct());
+  byId("endTurn").disabled = !!pendingMove || busy || isAI() || (Net.active && !Net.canAct());
   byId("confirmDeployment").classList.toggle(
     "action-attention",
     phase === "deployment" && !byId("confirmDeployment").disabled,
@@ -289,7 +296,7 @@ function update() {
             : mode === "attack-weapons"
               ? "在右侧选择武器，确认攻击计划或取消攻击。"
               : u?.team === game.team && !u.acted
-                ? "先点击移动或攻击按钮，再选择格子或目标。"
+                ? "点击可达格子移动，或点击敌人编排攻击。"
                 : "选择己方尚未行动的单位。";
   if (Net.active) {
     if (phase === "reaction_wait") hint = "等待其他玩家选择反击、防御或回避。";
@@ -301,6 +308,7 @@ function update() {
     else if (!busy && game.team !== Net.team()) hint = "对手回合，可查看单位并等待行动。";
   }
   if (phase === "deployment") hint = "在高亮出生区内调整位置，两队确认后开始回合。";
+  if (pendingMove && phase === "idle") hint = "确认移动后更新视野与索敌，取消则返回原位。";
   if (MapEffects.pending()) hint = "单位击破演出中…";
   if (TurnFlow.active) hint = "回合交接中…";
   byId("hint").textContent = hint;
@@ -442,7 +450,12 @@ function renderPanel() {
   let m = Rules.modelOf(u),
     own = u.team === game.team && (!Net.active || Net.canControl(u)),
     canCommand =
-      own && (!u.acted || !!u.plan) && !isBusy() && !isAI() && (!Net.active || Net.canAct());
+      own &&
+      !pendingMovement() &&
+      (!u.acted || !!u.plan) &&
+      !isBusy() &&
+      !isAI() &&
+      (!Net.active || Net.canAct());
   panel.replaceChildren();
   let head = element("div", "unit-card-head");
   head.innerHTML = /* HTML */ `<img src="${unitIcon(u.model)}" alt="" />
@@ -664,24 +677,13 @@ function renderPanel() {
       !canCommand,
     ],
     [
-      u.moved ? "撤回移动" : "移动",
+      "移动",
       () => {
-        if (!u.moved) {
-          mode = "move";
-          weaponId = null;
-          update();
-          return;
-        }
-        if (Net.active) {
-          Net.request("undo", { unitId: u.id });
-          return;
-        }
-        Rules.undo(game, u);
-        mode = "select";
+        mode = "move";
         weaponId = null;
         update();
       },
-      !canCommand || (u.moved ? !Rules.canUndo(game, u) : u.acted),
+      !canCommand || u.moved || u.acted,
     ],
     [
       "攻击",
@@ -867,6 +869,7 @@ function renderPanel() {
   }
 }
 function select(id) {
+  if (pendingMovement()) return;
   if (isBusy()) return;
   let u = getUnit(id);
   if (!u || u.hp <= 0) return;
@@ -923,6 +926,7 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
       u.actionPoints,
       u.plan,
       u.embarked,
+      u.pendingMove,
     ]),
   ]);
   if (
@@ -967,32 +971,44 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
   const attackArea = new Set(),
     attackTargets = new Set();
   if (showAttack && chosen) {
+    // 射程可随预览落点更新；视野与索敌仍使用未确认的裁定状态。
+    const attackOrigin = chosen.pendingMove
+      ? {
+          ...chosen,
+          x: chosen.pendingMove.x,
+          y: chosen.pendingMove.y,
+          angle: chosen.pendingMove.angle,
+          pendingMove: null,
+        }
+      : chosen;
     const budget = Rules.actionPoints(chosen) + (chosen.plan?.actionCost ?? 0);
     const weapons = Rules.modelOf(chosen).weapons.filter(
       (w) => w.slot !== "skill" && Rules.canUse(chosen, w) && Rules.actionCost(w) <= budget,
     );
     const radius = Math.max(0, ...weapons.map((w) => w.max)),
-      size = Rules.dimensions(chosen);
+      size = Rules.dimensions(attackOrigin);
     for (
-      let y = Math.max(0, chosen.y - radius);
-      y < Math.min(Rules.mapHeight(game), chosen.y + size.height + radius);
+      let y = Math.max(0, attackOrigin.y - radius);
+      y < Math.min(Rules.mapHeight(game), attackOrigin.y + size.height + radius);
       y++
     )
       for (
-        let x = Math.max(0, chosen.x - radius);
-        x < Math.min(Rules.mapWidth(game), chosen.x + size.width + radius);
+        let x = Math.max(0, attackOrigin.x - radius);
+        x < Math.min(Rules.mapWidth(game), attackOrigin.x + size.width + radius);
         x++
       ) {
         const cell = { x, y };
         if (
           weapons.some(
-            (w) => Rules.inRange(chosen, cell, w) && Rules.availableStrikes(chosen, w, cell).length,
+            (w) =>
+              Rules.inRange(attackOrigin, cell, w) &&
+              Rules.availableStrikes(attackOrigin, w, cell).length,
           )
         )
           attackArea.add(Rules.key(x, y));
       }
     for (const target of game.units)
-      if (weapons.some((w) => Rules.canAttack(game, chosen, target, w)))
+      if (weapons.some((w) => Rules.canAttack(game, attackOrigin, target, w)))
         attackTargets.add(target.id);
   }
   return (mapRangeCache = {
@@ -1006,6 +1022,185 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
     attackTargets,
   });
 }
+// Cache only the viewport-sized terrain image, so large maps do not allocate giant canvases.
+// Tiles are immutable during a battle; replacement snapshots are compared once on arrival.
+const mapTerrainCache = { canvas: null, tiles: null, tilesKey: "", viewKey: "" };
+function drawCachedMapTerrain(target, w, h, dpr, tile, ox, oy, immersive, deploymentArea) {
+  const cache = mapTerrainCache;
+  if (cache.tiles !== game.tiles) {
+    const tilesKey = JSON.stringify(game.tiles);
+    if (tilesKey !== cache.tilesKey) cache.viewKey = "";
+    cache.tiles = game.tiles;
+    cache.tilesKey = tilesKey;
+  }
+  const deploying = !immersive && phase === "deployment";
+  const viewKey = JSON.stringify([
+    game.mapId,
+    w,
+    h,
+    dpr,
+    tile,
+    ox,
+    oy,
+    !!immersive,
+    deploying,
+    deploying ? Deployment.team() : null,
+    deploying ? [...deploymentArea] : null,
+  ]);
+  if (viewKey !== cache.viewKey) {
+    const canvas = cache.canvas || (cache.canvas = document.createElement("canvas"));
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const firstX = Math.max(0, Math.floor(-ox / tile)),
+      firstY = Math.max(0, Math.floor(-oy / tile)),
+      lastX = Math.min(Rules.mapWidth(game), Math.ceil((w - ox) / tile)),
+      lastY = Math.min(Rules.mapHeight(game), Math.ceil((h - oy) / tile));
+    for (let y = firstY; y < lastY; y++)
+      for (let x = firstX; x < lastX; x++) {
+        let kind = game.tiles[y][x],
+          t = Rules.terrainStyle(game.mapId, kind),
+          px = ox + x * tile,
+          py = oy + y * tile;
+        ctx.fillStyle = t.color;
+        ctx.fillRect(px, py, tile, tile);
+        ctx.fillStyle = "rgba(255,255,255,.018)";
+        if ((x + y) % 2) ctx.fillRect(px, py, tile, tile);
+        ctx.strokeStyle = "#49616b55";
+        ctx.lineWidth = 0.7;
+        if (!immersive) ctx.strokeRect(px + 0.4, py + 0.4, tile - 0.8, tile - 0.8);
+        if (!immersive && phase === "deployment") {
+          const expansion = Rules.getMap(game.mapId).deploymentExpansion;
+          if (
+            expansion &&
+            (x < expansion.addedLeft || x >= expansion.addedLeft + expansion.baseWidth)
+          ) {
+            ctx.fillStyle = x < expansion.addedLeft ? "#59b9f333" : "#f36b7933";
+            ctx.fillRect(px, py, tile, tile);
+          }
+        }
+        if (
+          !immersive &&
+          phase === "deployment" &&
+          Deployment.team() !== null &&
+          deploymentArea.has(Rules.key(x, y))
+        ) {
+          ctx.fillStyle = "#5ee4b344";
+          ctx.fillRect(px, py, tile, tile);
+        }
+        if (
+          kind === "plain" &&
+          Rules.getMap(game.mapId).environment === "space" &&
+          (x * 17 + y * 31) % 7 === 0
+        ) {
+          ctx.fillStyle = "#b7b9df99";
+          ctx.fillRect(
+            px + tile * 0.37,
+            py + tile * 0.62,
+            Math.max(1, tile * 0.025),
+            Math.max(1, tile * 0.025),
+          );
+        }
+        if (kind === "forest" && Rules.getMap(game.mapId).appearance?.biome === "desert") {
+          ctx.strokeStyle = "#d6bb83";
+          ctx.lineWidth = Math.max(1, tile * 0.035);
+          for (let i = 0; i < 3; i++) {
+            ctx.beginPath();
+            ctx.moveTo(px + tile * 0.1, py + tile * (0.4 + i * 0.18));
+            ctx.quadraticCurveTo(
+              px + tile * 0.5,
+              py + tile * (0.1 + i * 0.18),
+              px + tile * 0.9,
+              py + tile * (0.4 + i * 0.18),
+            );
+            ctx.stroke();
+          }
+        } else if (kind === "forest") {
+          for (let i = 0; i < 4; i++) {
+            let tx = px + tile * (0.22 + (i % 2) * 0.48),
+              ty = py + tile * (0.18 + Math.floor(i / 2) * 0.42);
+            ctx.fillStyle = "#193629";
+            ctx.fillRect(tx - 3, ty + 5, 8, 15);
+            ctx.fillStyle = "#395d3d";
+            ctx.beginPath();
+            ctx.moveTo(tx + 1, ty - 2);
+            ctx.lineTo(tx - 7, ty + 12);
+            ctx.lineTo(tx + 9, ty + 12);
+            ctx.fill();
+          }
+        } else if (kind === "highland") {
+          ctx.strokeStyle = "#e8d9ad99";
+          ctx.lineWidth = Math.max(1, tile * 0.04);
+          ctx.beginPath();
+          if (game.tiles[y - 1]?.[x] !== "highland") {
+            ctx.moveTo(px + tile * 0.1, py + tile * 0.14);
+            ctx.lineTo(px + tile * 0.9, py + tile * 0.14);
+          }
+          if (game.tiles[y + 1]?.[x] !== "highland") {
+            ctx.moveTo(px + tile * 0.1, py + tile * 0.86);
+            ctx.lineTo(px + tile * 0.9, py + tile * 0.86);
+          }
+          if (game.tiles[y]?.[x - 1] !== "highland") {
+            ctx.moveTo(px + tile * 0.14, py + tile * 0.1);
+            ctx.lineTo(px + tile * 0.14, py + tile * 0.9);
+          }
+          if (game.tiles[y]?.[x + 1] !== "highland") {
+            ctx.moveTo(px + tile * 0.86, py + tile * 0.1);
+            ctx.lineTo(px + tile * 0.86, py + tile * 0.9);
+          }
+          ctx.stroke();
+        } else if (kind === "rock") {
+          ctx.fillStyle = "#727978";
+          ctx.beginPath();
+          ctx.moveTo(px + tile * 0.15, py + tile * 0.7);
+          ctx.lineTo(px + tile * 0.4, py + tile * 0.19);
+          ctx.lineTo(px + tile * 0.75, py + tile * 0.35);
+          ctx.lineTo(px + tile * 0.87, py + tile * 0.8);
+          ctx.closePath();
+          ctx.fill();
+          ctx.fillStyle = "#424c50";
+          ctx.beginPath();
+          ctx.moveTo(px + tile * 0.4, py + tile * 0.19);
+          ctx.lineTo(px + tile * 0.87, py + tile * 0.8);
+          ctx.lineTo(px + tile * 0.5, py + tile * 0.76);
+          ctx.closePath();
+          ctx.fill();
+        } else if (kind === "rubble") {
+          ctx.fillStyle = "#6b7470";
+          ctx.fillRect(px + tile * 0.2, py + tile * 0.2, tile * 0.25, tile * 0.45);
+          ctx.fillStyle = "#303b3f";
+          ctx.fillRect(px + tile * 0.45, py + tile * 0.35, tile * 0.33, tile * 0.37);
+          ctx.strokeStyle = "#8d9180";
+          ctx.strokeRect(px + tile * 0.2, py + tile * 0.2, tile * 0.25, tile * 0.45);
+        } else if (kind === "water") {
+          ctx.strokeStyle = "#628a9a55";
+          for (let i = 1; i < 4; i++) {
+            ctx.beginPath();
+            ctx.moveTo(px + 5, py + (i * tile) / 4);
+            ctx.lineTo(px + tile - 5, py + (i * tile) / 4);
+            ctx.stroke();
+          }
+        }
+      }
+
+    cache.viewKey = viewKey;
+  }
+  target.drawImage(cache.canvas, 0, 0, w, h);
+}
+
+let mapMinovskyCache = { key: "", cells: new Set() };
+function mapMinovskyCells() {
+  const key = JSON.stringify([
+    game.round,
+    Rules.mapWidth(game),
+    Rules.mapHeight(game),
+    game.minovskyFields,
+  ]);
+  if (key !== mapMinovskyCache.key) mapMinovskyCache = { key, cells: Rules.minovskyCells(game) };
+  return mapMinovskyCache.cells;
+}
+
 // 地图画布：先画地形与范围，再画单位、血条和名称。now 是毫秒时间。
 function drawMap(now) {
   let c = byId("map"),
@@ -1056,138 +1251,24 @@ function drawMap(now) {
   c.dataset.attackRangeCells = String(attackArea.size);
   c.dataset.attackableTargets = String(attackTargets.size);
   const skillCells = new Set([...SkillControls.cells(chosen), ...(window.HangarUI?.cells() || [])]),
-    minovskyCells = Rules.minovskyCells(game);
+    minovskyCells = mapMinovskyCells();
   c.dataset.minovskyCells = String(minovskyCells.size);
   // Skip terrain cells outside the viewport when zoomed in.
   const firstX = Math.max(0, Math.floor(-ox / tile)),
     firstY = Math.max(0, Math.floor(-oy / tile)),
     lastX = Math.min(Rules.mapWidth(game), Math.ceil((w - ox) / tile)),
     lastY = Math.min(Rules.mapHeight(game), Math.ceil((h - oy) / tile));
-  for (let y = firstY; y < lastY; y++)
+  drawCachedMapTerrain(ctx, w, h, dpr, tile, ox, oy, immersive, deploymentArea);
+  const hasCellOverlays =
+    minovskyCells.size ||
+    (!immersive &&
+      (moveHighlights.size || attackArea.size || skillCells.size || (mode === "target" && weapon)));
+  // Idle frames with no range/field overlays need no per-cell traversal at all.
+  for (let y = firstY; hasCellOverlays && y < lastY; y++)
     for (let x = firstX; x < lastX; x++) {
-      let kind = game.tiles[y][x],
-        t = Rules.terrainStyle(game.mapId, kind),
-        px = ox + x * tile,
+      const px = ox + x * tile,
         py = oy + y * tile;
-      ctx.fillStyle = t.color;
-      ctx.fillRect(px, py, tile, tile);
-      ctx.fillStyle = "rgba(255,255,255,.018)";
-      if ((x + y) % 2) ctx.fillRect(px, py, tile, tile);
-      ctx.strokeStyle = "#49616b55";
       ctx.lineWidth = 0.7;
-      if (!immersive) ctx.strokeRect(px + 0.4, py + 0.4, tile - 0.8, tile - 0.8);
-      if (!immersive && phase === "deployment") {
-        const expansion = Rules.getMap(game.mapId).deploymentExpansion;
-        if (
-          expansion &&
-          (x < expansion.addedLeft || x >= expansion.addedLeft + expansion.baseWidth)
-        ) {
-          ctx.fillStyle = x < expansion.addedLeft ? "#59b9f333" : "#f36b7933";
-          ctx.fillRect(px, py, tile, tile);
-        }
-      }
-      if (
-        !immersive &&
-        phase === "deployment" &&
-        Deployment.team() !== null &&
-        deploymentArea.has(Rules.key(x, y))
-      ) {
-        ctx.fillStyle = "#5ee4b344";
-        ctx.fillRect(px, py, tile, tile);
-      }
-      if (
-        kind === "plain" &&
-        Rules.getMap(game.mapId).environment === "space" &&
-        (x * 17 + y * 31) % 7 === 0
-      ) {
-        ctx.fillStyle = "#b7b9df99";
-        ctx.fillRect(
-          px + tile * 0.37,
-          py + tile * 0.62,
-          Math.max(1, tile * 0.025),
-          Math.max(1, tile * 0.025),
-        );
-      }
-      if (kind === "forest" && Rules.getMap(game.mapId).appearance?.biome === "desert") {
-        ctx.strokeStyle = "#d6bb83";
-        ctx.lineWidth = Math.max(1, tile * 0.035);
-        for (let i = 0; i < 3; i++) {
-          ctx.beginPath();
-          ctx.moveTo(px + tile * 0.1, py + tile * (0.4 + i * 0.18));
-          ctx.quadraticCurveTo(
-            px + tile * 0.5,
-            py + tile * (0.1 + i * 0.18),
-            px + tile * 0.9,
-            py + tile * (0.4 + i * 0.18),
-          );
-          ctx.stroke();
-        }
-      } else if (kind === "forest") {
-        for (let i = 0; i < 4; i++) {
-          let tx = px + tile * (0.22 + (i % 2) * 0.48),
-            ty = py + tile * (0.18 + Math.floor(i / 2) * 0.42);
-          ctx.fillStyle = "#193629";
-          ctx.fillRect(tx - 3, ty + 5, 8, 15);
-          ctx.fillStyle = "#395d3d";
-          ctx.beginPath();
-          ctx.moveTo(tx + 1, ty - 2);
-          ctx.lineTo(tx - 7, ty + 12);
-          ctx.lineTo(tx + 9, ty + 12);
-          ctx.fill();
-        }
-      } else if (kind === "highland") {
-        ctx.strokeStyle = "#e8d9ad99";
-        ctx.lineWidth = Math.max(1, tile * 0.04);
-        ctx.beginPath();
-        if (game.tiles[y - 1]?.[x] !== "highland") {
-          ctx.moveTo(px + tile * 0.1, py + tile * 0.14);
-          ctx.lineTo(px + tile * 0.9, py + tile * 0.14);
-        }
-        if (game.tiles[y + 1]?.[x] !== "highland") {
-          ctx.moveTo(px + tile * 0.1, py + tile * 0.86);
-          ctx.lineTo(px + tile * 0.9, py + tile * 0.86);
-        }
-        if (game.tiles[y]?.[x - 1] !== "highland") {
-          ctx.moveTo(px + tile * 0.14, py + tile * 0.1);
-          ctx.lineTo(px + tile * 0.14, py + tile * 0.9);
-        }
-        if (game.tiles[y]?.[x + 1] !== "highland") {
-          ctx.moveTo(px + tile * 0.86, py + tile * 0.1);
-          ctx.lineTo(px + tile * 0.86, py + tile * 0.9);
-        }
-        ctx.stroke();
-      } else if (kind === "rock") {
-        ctx.fillStyle = "#727978";
-        ctx.beginPath();
-        ctx.moveTo(px + tile * 0.15, py + tile * 0.7);
-        ctx.lineTo(px + tile * 0.4, py + tile * 0.19);
-        ctx.lineTo(px + tile * 0.75, py + tile * 0.35);
-        ctx.lineTo(px + tile * 0.87, py + tile * 0.8);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = "#424c50";
-        ctx.beginPath();
-        ctx.moveTo(px + tile * 0.4, py + tile * 0.19);
-        ctx.lineTo(px + tile * 0.87, py + tile * 0.8);
-        ctx.lineTo(px + tile * 0.5, py + tile * 0.76);
-        ctx.closePath();
-        ctx.fill();
-      } else if (kind === "rubble") {
-        ctx.fillStyle = "#6b7470";
-        ctx.fillRect(px + tile * 0.2, py + tile * 0.2, tile * 0.25, tile * 0.45);
-        ctx.fillStyle = "#303b3f";
-        ctx.fillRect(px + tile * 0.45, py + tile * 0.35, tile * 0.33, tile * 0.37);
-        ctx.strokeStyle = "#8d9180";
-        ctx.strokeRect(px + tile * 0.2, py + tile * 0.2, tile * 0.25, tile * 0.45);
-      } else if (kind === "water") {
-        ctx.strokeStyle = "#628a9a55";
-        for (let i = 1; i < 4; i++) {
-          ctx.beginPath();
-          ctx.moveTo(px + 5, py + (i * tile) / 4);
-          ctx.lineTo(px + tile - 5, py + (i * tile) / 4);
-          ctx.stroke();
-        }
-      }
       if (minovskyCells.has(Rules.key(x, y))) {
         // Static, deterministic blocks provide a noisy field without animated particles or allocations.
         const seed = (Math.imul(x + 17, 73856093) ^ Math.imul(y + 31, 19349663)) >>> 0;
@@ -1225,6 +1306,31 @@ function drawMap(now) {
         ctx.fillRect(px + 2, py + 2, tile - 4, tile - 4);
       }
     }
+  if (!immersive && mode === "target" && weapon?.special?.type === "nuke" && hover) {
+    const target = Rules.groundTarget(game, chosen, hover.x, hover.y);
+    if (target && Rules.canAttack(game, chosen, target, weapon)) {
+      const radius = weapon.special.radius;
+      ctx.fillStyle = "rgba(255, 116, 64, 0.35)";
+      ctx.strokeStyle = "#ffb36b";
+      ctx.lineWidth = 1;
+      for (
+        let y = Math.max(firstY, hover.y - radius);
+        y < Math.min(lastY, hover.y + radius + 1);
+        y++
+      )
+        for (
+          let x = Math.max(firstX, hover.x - radius);
+          x < Math.min(lastX, hover.x + radius + 1);
+          x++
+        ) {
+          if (!Rules.blastContains(hover, { x, y }, radius)) continue;
+          const px = ox + x * tile,
+            py = oy + y * tile;
+          ctx.fillRect(px, py, tile, tile);
+          ctx.strokeRect(px, py, tile, tile);
+        }
+    }
+  }
   ctx.font = "9px ui-monospace,monospace";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -1236,12 +1342,7 @@ function drawMap(now) {
   const intel = game.intel;
   EnvironmentVisuals.fog(ctx, intel, ox, oy, tile);
   // The clip remains available for individual effects opting out of fog visibility.
-  const visibilityClip = intel ? new Path2D() : null;
-  if (visibilityClip)
-    for (const cell of intel.visibleCells) {
-      const [x, y] = cell.split(",").map(Number);
-      visibilityClip.rect(ox + x * tile, oy + y * tile, tile, tile);
-    }
+  const visibilityClip = EnvironmentVisuals.visibilityClip(intel, ox, oy, tile);
   const drawVisibleEffects = (draw) => {
     ctx.save();
 
@@ -1254,13 +1355,16 @@ function drawMap(now) {
   for (const u of MapCombat.units()) {
     if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden) continue;
     const motion = PlanningUI.motion(u, now) || (moving?.id === u.id ? moving : null);
-    const unitCenter = Rules.center(u),
+    const visualUnit = u.pendingMove
+      ? { ...u, x: u.pendingMove.x, y: u.pendingMove.y, angle: u.pendingMove.angle }
+      : u;
+    const unitCenter = Rules.center(visualUnit),
       unitSize = Rules.dimensions(u);
     let pos = mapPosition(unitCenter.x, unitCenter.y),
-      angle = u.angle,
+      angle = visualUnit.angle,
       anim = Rules.modelOf(u).presentation.idle,
       t = now / 1000,
-      groundCell = { x: u.x, y: u.y };
+      groundCell = { x: visualUnit.x, y: visualUnit.y };
     if (!!motion) {
       let part = Math.min(motion.path.length - 0.0001, (now - motion.start) / motion.step),
         index = Math.floor(Math.max(0, part)),
@@ -1312,7 +1416,7 @@ function drawMap(now) {
   if (!immersive)
     for (const { u, pos } of mapUnitPoses)
       UnitIdentity.drawCommandAura(ctx, u, pos, tile, getUnit(selected));
-  const unitThumbnails = !immersive && MapCamera.zoom <= 0.5;
+  const unitThumbnails = !immersive && MapCamera.unitThumbnails;
   byId("map").dataset.unitThumbnails = String(unitThumbnails);
   if (!immersive && !unitThumbnails)
     for (const { u, pos } of mapUnitPoses) UnitIdentity.drawRing(ctx, u, pos, tile);
@@ -1636,6 +1740,7 @@ byId("map").onclick = async (e) => {
     return;
   }
   if (isBusy() || isAI()) return;
+  if (pendingMovement()) return;
   let cell = cellAt(e);
   if (!cell) return;
   let target = Rules.at(game, cell.x, cell.y),
@@ -1669,7 +1774,7 @@ byId("map").onclick = async (e) => {
     u.team === game.team &&
     (!Net.active || Net.canControl(u)) &&
     (!u.acted || u.plan) &&
-    mode === "attack-target" &&
+    ["select", "move", "attack-target"].includes(mode) &&
     AttackControls.canTarget(u, target)
   ) {
     AttackControls.choose(u, target);
@@ -1685,11 +1790,21 @@ byId("map").onclick = async (e) => {
     return;
   }
   if (!target && mode === "select") {
-    window.BattleHUD?.clearSelection();
-    return;
+    const anchor = u && Rules.anchorAt(u, cell.mapX ?? cell.x, cell.mapY ?? cell.y);
+    if (
+      !u ||
+      u.team !== game.team ||
+      (Net.active && !Net.canControl(u)) ||
+      u.acted ||
+      u.moved ||
+      !Rules.reachable(game, u).has(Rules.key(anchor.x, anchor.y))
+    ) {
+      window.BattleHUD?.clearSelection();
+      return;
+    }
   }
   if (
-    mode === "move" &&
+    ["select", "move"].includes(mode) &&
     u &&
     u.team === game.team &&
     (!Net.active || Net.canControl(u)) &&
@@ -1710,7 +1825,7 @@ async function performMove(u, x, y) {
     return;
   }
   let from = { x: u.x, y: u.y },
-    path = Rules.move(game, u, x, y);
+    path = Rules.previewMove(game, u, x, y);
   GameAudio.moveUnit(u);
   phase = "moving";
   moving = {
@@ -1726,8 +1841,27 @@ async function performMove(u, x, y) {
   if (stamp !== session) return;
   moving = null;
   phase = "idle";
+  mode = "move-confirm";
+  update();
+}
+function pendingMovement() {
+  if (window.ReplayPlayer?.active) return null;
+  return game.units.find(
+    (unit) =>
+      unit.pendingMove &&
+      (Net.active ? unit.pendingMove.seat === Net.seat : unit.team === game.team),
+  );
+}
+function finishMovement(confirm) {
+  const unit = pendingMovement();
+  if (!unit || isBusy() || PlanningUI.motion(unit, performance.now())) return;
+  if (Net.active) return Net.request(confirm ? "confirm_move" : "cancel_move", { unitId: unit.id });
+  if (confirm) {
+    Rules.confirmMove(game, unit);
+    addLog(`${logUnit(unit)} 移动至${Rules.columnLabel(unit.x)}${unit.y + 1}。`);
+  } else Rules.cancelMove(game, unit);
+  PlanningUI.stop(unit.id);
   mode = "select";
-  addLog(`${logUnit(u)} 移动至${Rules.columnLabel(x)}${y + 1}。`);
   update();
 }
 // a = 攻击方，b = 防守方，w = 武器。联机只发请求，离线进入本地应战。
@@ -2294,7 +2428,7 @@ function endTurn() {
   selected = null;
   weaponId = null;
   mode = "select";
-  addLog(`第${game.round}回合 · ${teamName(game.team)}行动开始，存活单位不自动恢复EN。`);
+  addLog(`第${game.round}回合 · ${teamName(game.team)}行动开始。`);
   if (game.winner !== null) {
     showVictory();
     return;
@@ -2302,7 +2436,7 @@ function endTurn() {
   TurnFlow.play(fromTeam, game.round, game.team);
 }
 byId("endTurn").onclick = () => {
-  if (isBusy() || isAI() || (Net.active && !Net.canAct())) return;
+  if (pendingMovement() || isBusy() || isAI() || (Net.active && !Net.canAct())) return;
   let remaining = game.units.filter(
     (u) =>
       u.team === game.team &&

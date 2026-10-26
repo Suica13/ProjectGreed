@@ -15,10 +15,25 @@ const BattleHUD = (() => {
   terrainInfo.id = "hudTerrainInfo";
   terrainInfo.append(byId("mapEnvironment"), byId("hoverInfo"));
   byId("mapWrap").append(terrainInfo, byId("hudActionBand"));
+  // 小屏中让回合操作与缩放共享一个纵向容器，避免独立定位互相遮挡。
+  const topControls = element("div", "hud-top-controls");
+  byId("mapWrap").append(scene.querySelector(".phase-row"), topControls);
+  topControls.append(byId("hudTurnActions"), scene.querySelector(".map-camera-controls"));
+  const confirmMove = element("button", "primary", "确认移动");
+  confirmMove.id = "hudConfirmMove";
+  confirmMove.hidden = true;
+  confirmMove.onclick = () => finishMovement(true);
+  byId("hudCancelAction").after(confirmMove);
   const pickingAction = () =>
-    ["move", "attack-target", "attack-weapons", "target", "hangar-launch", "hangar-board"].includes(
-      mode,
-    ) || mode.startsWith("skill:");
+    [
+      "move",
+      "move-confirm",
+      "attack-target",
+      "attack-weapons",
+      "target",
+      "hangar-launch",
+      "hangar-board",
+    ].includes(mode) || mode.startsWith("skill:");
   scene.append(byId("reaction"));
   const defender = byId("reaction").querySelector(".response-defender"),
     responseBody = element("div", "hud-response-body"),
@@ -110,6 +125,7 @@ const BattleHUD = (() => {
       if (consoleSize === "collapsed") resizeConsole("normal");
     });
   function clearSelection() {
+    if (pendingMovement()) return;
     if (pageView !== "game" || !["idle", "deployment"].includes(phase)) return;
     selected = weaponId = null;
     mode = "select";
@@ -118,6 +134,7 @@ const BattleHUD = (() => {
   }
   function cancelAction() {
     if (pageView !== "game" || !["idle", "deployment"].includes(phase) || !pickingAction()) return;
+    if (pendingMovement()) return finishMovement(false);
     window.HangarUI?.cancel();
     AttackControls.reset();
     weaponId = null;
@@ -146,9 +163,16 @@ const BattleHUD = (() => {
       document.querySelector("dialog[open], .overlay:not([hidden])")
     )
       return;
-    const command = { q: "move", w: "attack", e: "skills", h: "hangar", v: "wait" }[
-      event.key.toLowerCase()
-    ];
+    const key = event.key.toLowerCase();
+    if (pendingMovement()) {
+      const button = key === "q" ? confirmMove : key === "w" ? byId("hudCancelAction") : null;
+      if (button) {
+        event.preventDefault();
+        if (!button.disabled && button.getClientRects().length) button.click();
+      }
+      return;
+    }
+    const command = { q: "move", w: "attack", e: "skills", h: "hangar", v: "wait" }[key];
     if (!command) return;
     const button = [...document.querySelectorAll(`[data-unit-command="${command}"]`)].find(
       (b) => !b.disabled && b.getClientRects().length,
@@ -220,6 +244,16 @@ const BattleHUD = (() => {
       active && !!unit && ["idle", "deployment"].includes(phase) && pickingAction();
     scene.dataset.actionStage = actionActive ? mode : "none";
     const spectating = active && Net.active && Net.seat === null && Net.started;
+    const pendingMove = pendingMovement();
+    const confirmingMove = !!pendingMove && mode === "move-confirm";
+    const movingPreview = pendingMove && PlanningUI.motion(pendingMove, performance.now());
+    confirmMove.textContent = I18n.text("确认移动") + " (Q)";
+    confirmMove.setAttribute("aria-keyshortcuts", "Q");
+    if (confirmingMove) byId("hudCancelAction").setAttribute("aria-keyshortcuts", "W");
+    else byId("hudCancelAction").removeAttribute("aria-keyshortcuts");
+    confirmMove.hidden = !actionActive || !confirmingMove;
+    confirmMove.disabled = !!movingPreview || isBusy();
+    byId("hudCancelAction").disabled = confirmingMove && (!!movingPreview || isBusy());
     byId("hudActionBand").hidden = !actionActive && !spectating;
     byId("hudCancelAction").hidden = spectating;
     byId("spectatorViewControl").hidden = !spectating;
@@ -259,7 +293,7 @@ const BattleHUD = (() => {
     byId("hudCloseUnit").hidden = !attackPlanner.hidden;
     infoButton.setAttribute("aria-pressed", String(infoEnabled));
     if (actionActive) {
-      const moving = mode === "move",
+      const moving = mode === "move" || mode === "move-confirm",
         attacking = mode.startsWith("attack");
       byId("hudCancelAction").textContent = I18n.text(
         moving
@@ -272,6 +306,7 @@ const BattleHUD = (() => {
                 ? "取消搭载"
                 : "取消技能",
       );
+      if (confirmingMove) byId("hudCancelAction").textContent += " (W)";
     }
     roster.hidden = !active || !rosterOpen || inCombat;
     const actions = byId("unitActions");

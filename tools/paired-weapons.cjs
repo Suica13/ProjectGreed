@@ -47,7 +47,7 @@ function compose(prefab, group, animations) {
   if (
     !group ||
     !Array.isArray(group.channels) ||
-    group.channels.length < 2 ||
+    group.channels.length < (group.fireMode === "independent" ? 1 : 2) ||
     group.channels.length > 32 ||
     new Set(group.channels.map((c) => c.id)).size !== group.channels.length
   )
@@ -188,4 +188,37 @@ function compose(prefab, group, animations) {
     };
   return result;
 }
-module.exports = { compose };
+// Split physical arms, including native flows that already contain both barrels.
+// Exposing the raw aliases instead would duplicate their payload.
+function variants(prefab, group, animations) {
+  if (group.fireMode !== "independent") return [compose(prefab, group, animations)];
+  return ["rightArm", "leftArm"].map((limb) => {
+    const channels = group.channels.filter((c) => c.limb === limb);
+    if (!channels.length) throw Error("Missing independent arm: " + prefab.id + "/" + limb);
+    const id = channels[0].id;
+    const weapon = compose(prefab, { ...group, id, channels }, animations);
+    delete weapon.availability;
+    const suffix =
+      limb === "rightArm" ? ["右臂", "Right Arm", "右腕"] : ["左臂", "Left Arm", "左腕"];
+    weapon.id = id;
+    const names = weapon.localization;
+    weapon.name += "（" + suffix[0] + "）";
+    weapon.localization = Object.fromEntries(
+      ["zh", "en", "ja"].map((lang, i) => [
+        lang,
+        {
+          ...names?.[lang],
+          name:
+            (names?.[lang]?.name ||
+              prefab.weapons[group.id].localization?.[lang]?.name ||
+              prefab.weapons[group.id].name) +
+            " (" +
+            suffix[i] +
+            ")",
+        },
+      ]),
+    );
+    return weapon;
+  });
+}
+module.exports = { compose, variants };

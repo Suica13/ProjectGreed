@@ -156,7 +156,7 @@
   "effects": "effects/effects.json",
   "presentation": "presentation.json",
   "formation": {
-    "maxUnits": 12,
+    "maxUnits": 36,
     "maxCost": 4500,
     "aiUnits": 12,
     "costStep": 25,

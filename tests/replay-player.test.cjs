@@ -23,6 +23,8 @@ function runtime() {
       append(...v) {
         this.children.push(...v);
       },
+      before() {},
+      after() {},
       replaceChildren(...v) {
         this.children = v;
         this.options = [];
@@ -105,7 +107,7 @@ function runtime() {
       },
       immersive: false,
     },
-    Chat: { setSnapshot() {}, saveLog() {} },
+    Chat: { setSnapshot() {}, saveLog() {}, refreshStatus() {} },
     MatchResults: { reset() {} },
     CombatPlayback: { reset() {} },
     PlanningUI: { reset() {}, move() {} },

@@ -214,7 +214,8 @@ test("map death effects queue after battle and deduplicate each battle/unit, inc
   r.map.draw({}, 0, () => ({ x: 100, y: 100 }), 64);
   r.map.draw({}, 500, () => ({ x: 100, y: 100 }), 64);
   assert.equal(r.sounds.length, 1);
-  assert.ok(r.frames.every((id) => id === "Explosion_Ground_1"));
+  assert.ok(r.frames.includes(ART.presentation.deathElectricEffect));
+  assert.ok(r.frames.every((id) => [ART.presentation.deathElectricEffect, "Explosion_Ground_1"].includes(id)));
   r.map.draw({}, 2000, () => ({ x: 100, y: 100 }), 64);
   assert.equal(r.sounds.length, 2);
   r.map.draw({}, 4000, () => ({ x: 100, y: 100 }), 64);
@@ -376,7 +377,7 @@ test("native low HP electricity loops five frames below 25 percent and stops at 
   assert.equal(r.sounds.length, 0);
 });
 
-test("miss lifetimes stop at the first arena edge for vertical, horizontal and diagonal native projectiles", () => {
+test("miss lifetimes stop at the first arena edge or two seconds for native projectiles", () => {
   const r = runtime();
   for (const [modelId, model] of Object.entries(ART.models))
     for (const w of model.weapons.filter((w) => w.projectile))
@@ -438,10 +439,11 @@ test("miss lifetimes stop at the first arena edge for vertical, horizontal and d
               Math.abs(x - a.arenaWidth - margin),
               Math.abs(y + margin),
               Math.abs(y - a.arenaHeight - margin),
-            ) < 1e-6,
-            modelId + "/" + w.id + " finishes on a boundary",
+            ) < 1e-6 || Math.abs(shot.visibleUntil - shot.at - 2) < 1e-6,
+            modelId + "/" + w.id + " finishes on a boundary or times out",
           );
-          assert.ok(shot.visibleUntil >= shot.impactAt, "Miss still travels through the target");
+          assert.ok(shot.visibleUntil - shot.at <= 2 + 1e-6);
+          assert.ok(shot.visibleUntil >= Math.min(shot.impactAt, shot.at + 2));
         }
       }
 });
@@ -594,4 +596,57 @@ test("native heat rods and Ball K anchors extend, hold and retract from the anim
         1e-9,
     );
   }
+});
+
+test("slow missed volleys finish within two seconds of the last shot without shortening hit playback", () => {
+  const r = runtime();
+  const slow = { ...weapon, projectile: { ...weapon.projectile, speed: 0.01 } };
+  const a = { ...source, arenaWidth: 100000, arenaHeight: 100000 };
+  const miss = r.fx.plan(slow, a, target, { hit: false });
+  for (const shot of miss.shots) {
+    assert.ok(shot.flight > 2);
+    assert.equal(shot.visibleUntil, shot.at + 2);
+  }
+  assert.ok(miss.contacts.every((contact) => contact.at <= miss.shots[contact.shotIndex].at + 2));
+  assert.equal(miss.duration, miss.shots.at(-1).at + 2);
+  assert.equal(miss.shots.length, weapon.attack.shots.length);
+  const hit = r.fx.plan(slow, a, target, { hit: true, damage: 1 });
+  assert.ok(hit.duration > miss.duration);
+  for (const shot of hit.shots) assert.equal(shot.visibleUntil, shot.impactAt);
+});
+
+test("death electricity loops continuously until the first explosion frame", () => {
+  const r = runtime(), calls = [];
+  const effect = ART.effects[ART.presentation.deathElectricEffect];
+  const wait = ART.presentation.deathDelay;
+  r.sprites.draw = (...args) => { calls.push(args); return true; };
+  assert.equal(r.sprites.deathElectric({}, 10, 20, 1, -0.01, wait), false);
+  for (const time of [0, effect.duration, effect.duration * 2, wait - 0.0001]) {
+    assert.ok(time < wait);
+    assert.equal(r.sprites.deathElectric({}, 10, 20, 1, time, wait), true);
+    const call = calls.at(-1);
+    assert.equal(call[1], ART.presentation.deathElectricEffect);
+    assert.ok(call[5] >= 0 && call[5] < effect.duration);
+  }
+  const count = calls.length;
+  assert.equal(r.sprites.deathElectric({}, 10, 20, 1, wait, wait), false);
+  assert.equal(r.sprites.deathElectric({}, 10, 20, 1, wait + 1, wait), false);
+  assert.equal(calls.length, count);
+});
+
+test("queued map deaths keep electricity active throughout the wait and stop at explosion onset", () => {
+  const r = runtime(), calls = [];
+  vm.runInContext("SpriteRenderer.draw=()=>{}", r.context);
+  r.sprites.draw = (...args) => { calls.push(args); return true; };
+  r.map.capture({ networkId: "loop-until-explosion", events: [{ hit: true, before: 1, after: 0, to: "1-0" }] });
+  const waitMs = ART.presentation.deathDelay * 1000;
+  for (const time of [0, 500, 1000, waitMs - 0.01]) {
+    const before = calls.length;
+    r.map.draw({}, time, () => ({ x: 100, y: 100 }), 64);
+    assert.ok(calls.slice(before).some((call) => call[1] === ART.presentation.deathElectricEffect));
+  }
+  calls.length = 0;
+  r.map.draw({}, waitMs, () => ({ x: 100, y: 100 }), 64);
+  assert.ok(!calls.some((call) => call[1] === ART.presentation.deathElectricEffect));
+  assert.ok(calls.some((call) => call[1] === "Explosion_Ground_1"));
 });

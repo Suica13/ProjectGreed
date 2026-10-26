@@ -764,17 +764,29 @@
       }
       .release-warning-text {
         display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 3px;
+        flex-direction: column;
+        justify-content: center;
         min-width: 0;
         padding: 10px 13px;
         font-size: 12px;
-        line-height: 1.55;
+        line-height: 18px;
       }
-      .release-warning-text strong {
-        color: #ffae62;
-        letter-spacing: 0.04em;
+      .release-warning-icon {
+        font-size: 32px;
+        line-height: 1;
+      }
+      @media (max-width: 480px) {
+        .release-warning {
+          grid-template-columns: 36px minmax(0, 1fr);
+        }
+        .release-warning-text {
+          padding: 8px;
+          font-size: 10px;
+          line-height: 15px;
+        }
+        .release-warning-icon {
+          font-size: 26px;
+        }
       }
       .start-layout {
         display: flex;
@@ -2061,8 +2073,8 @@
         <div id="releaseWarning" class="release-warning" role="note" aria-label="版本警告">
           <div class="release-warning-icon" aria-hidden="true">⚠</div>
           <div class="release-warning-text">
-            <span>目前版本:</span><strong data-i18n-ignore>__PROJECT_VERSION__</strong
-            ><span>,注意！测试版不代表最终品质</span>
+            <span>注意，这是野望计划的测试版本，</span>
+            <span>测试版本不代表最终品质，祝你好运！</span>
           </div>
         </div>
         <label class="player-id-label"
@@ -2235,58 +2247,91 @@
             </section>
             <div id="roomLobbyContent">
               <div id="roomSettingsPage">
-                <div class="room-options">
-                  <label>地图<select id="roomMapSelect" aria-label="地图"></select></label>
-                  <label
-                    >编组 COST 上限<input
-                      id="roomCostLimit"
-                      type="number"
-                      min="250"
-                      max="99999"
-                      step="25"
-                      aria-label="编组 COST 上限"
-                  /></label>
-                  <label
-                    >单位 COST 上限<input
-                      id="roomUnitCostLimit"
-                      type="number"
-                      min="1"
-                      max="99999"
-                      step="25"
-                      aria-label="单位 COST 上限"
-                  /></label>
-                  <label
-                    >每位玩家单位上限<input
-                      id="roomUnitLimit"
-                      type="number"
-                      min="3"
-                      max="12"
-                      step="1"
-                      aria-label="每位玩家单位上限"
-                  /></label>
-                </div>
-                <label class="room-sharing-option"
-                  ><input id="roomShareAlliedUnits" type="checkbox" />友军单位共享</label
-                >
-                <label class="room-fog-option"
-                  >战争迷雾
-                  <select id="roomFogMode" aria-label="战争迷雾">
-                    <option value="full">完全</option>
-                    <option value="visible">可见</option>
-                    <option value="disabled">禁用</option>
-                  </select>
-                </label>
-                <div id="roomTagRestrictions" class="tag-restrictions"></div>
-
                 <section class="room-map-panel" aria-label="地图信息">
-                  <canvas
-                    id="roomMapPreview"
-                    width="520"
-                    height="190"
-                    role="img"
-                    aria-label="地图预览"
-                  ></canvas>
+                  <div id="roomMapTitle" class="room-map-title" data-i18n-ignore></div>
+                  <div class="room-map-choice">
+                    <canvas
+                      id="roomMapPreview"
+                      width="520"
+                      height="190"
+                      role="img"
+                      aria-label="地图预览"
+                    ></canvas>
+                    <span id="roomMapChoiceHint" class="room-map-choice-hint"
+                      >点击更换地图</span
+                    >
+                    <select
+                      id="roomMapSelect"
+                      aria-label="更换地图"
+                      aria-describedby="roomMapChoiceHint"
+                    ></select>
+                  </div>
                   <p id="roomMapInfo" class="muted"></p>
+                </section>
+                <section id="roomRulesPanel" aria-labelledby="roomRulesTitle">
+                  <div class="room-rules-heading">
+                    <h3 id="roomRulesTitle">房间规则</h3>
+                    <div id="roomRulesActions"></div>
+                  </div>
+                  <details class="room-rule-group" open>
+                    <summary>编组限制</summary>
+                    <div class="room-options">
+                      <label
+                        >编组 COST 上限<input
+                          id="roomCostLimit"
+                          type="number"
+                          min="250"
+                          max="99999"
+                          step="25"
+                          aria-label="编组 COST 上限"
+                      /></label>
+                      <label
+                        >单位 COST 上限<input
+                          id="roomUnitCostLimit"
+                          type="number"
+                          min="1"
+                          max="99999"
+                          step="25"
+                          aria-label="单位 COST 上限"
+                      /></label>
+                      <label
+                        >每位玩家单位上限<input
+                          id="roomUnitLimit"
+                          type="number"
+                          min="3"
+                          max="36"
+                          step="1"
+                          aria-label="每位玩家单位上限"
+                      /></label>
+                    </div>
+                  </details>
+                  <details class="room-rule-group" open>
+                    <summary>战场规则</summary>
+                    <div class="room-battle-rules">
+                      <label class="room-fog-option"
+                        >战争迷雾
+                        <select id="roomFogMode" aria-label="战争迷雾">
+                          <option value="full">完全</option>
+                          <option value="visible">可见</option>
+                          <option value="disabled">禁用</option>
+                        </select>
+                      </label>
+                      <label class="room-sharing-option">友军单位共享
+                        <select id="roomShareAlliedUnits" aria-label="友军单位共享">
+                          <option value="disabled">禁用</option>
+                          <option value="enabled">启用</option>
+                        </select>
+                      </label>
+                    </div>
+                  </details>
+                  <details class="room-rule-group">
+                    <summary>房间禁用标签</summary>
+                    <div id="roomTagRestrictions" class="tag-restrictions"></div>
+                  </details>
+                  <details class="room-rule-group">
+                    <summary>队伍禁用标签</summary>
+                    <div id="roomTeamRestrictions"></div>
+                  </details>
                 </section>
               </div>
               <div id="roomSeatsPage">
@@ -2482,9 +2527,9 @@
               aria-describedby="formationShareHint"
               placeholder="粘贴编组分享代码"
             />
-            <button id="loadSharedFormation" type="button" class="primary">加载编组</button>
           </div>
           <div class="formation-share-actions">
+            <button id="loadSharedFormation" type="button" class="primary">加载编组</button>
             <button id="generateFormationShare" type="button">分享编组</button>
           </div>
         </div>
@@ -2699,7 +2744,7 @@
       }
       .formation-share-code-row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: minmax(0, 1fr);
         gap: 8px;
       }
       #formationShareCode {
@@ -2709,8 +2754,9 @@
         font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
       }
       .formation-share-actions {
-        display: flex;
-        justify-content: flex-end;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
       }
       .formation-toolbar {
         display: grid;

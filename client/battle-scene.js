@@ -198,20 +198,20 @@ const BattleScene = (() => {
         !completed && unit.id === event.to
           ? WeaponEffects.health(event, plan, attackTime, displayHp[unit.id] ?? unit.hp)
           : (displayHp[unit.id] ?? unit.hp);
-      // 致命命中后播放一次电流，使用战斗时间轴，暂停、快进和重绘不会重复触发。
+      // 致命命中后持续循环电流，直到死亡爆炸开始。
       const dying =
         !completed &&
         unit.id === event.to &&
         plan.deathSoundAt !== null &&
         attackTime >= plan.deathSoundAt;
       if (dying)
-        SpriteEffects.draw(
+        SpriteEffects.deathElectric(
           ctx,
-          plan.deathElectricEffect,
           x + offsetX,
           y + offsetY,
           scale,
           attackTime - plan.deathSoundAt,
+          plan.deathAt - plan.deathSoundAt,
         );
       else SpriteEffects.lowHp(ctx, unit, x + offsetX, y + offsetY, scale, time, visibleHp);
       ctx.restore();

@@ -46,7 +46,7 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
   if (
     !Number.isInteger(catalog.formation.maxUnits) ||
     catalog.formation.maxUnits < 1 ||
-    catalog.formation.maxUnits > 12 ||
+    catalog.formation.maxUnits > 36 ||
     !Number.isFinite(catalog.formation.maxCost) ||
     catalog.formation.maxCost <= 0
   )
@@ -505,9 +505,17 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
           throw Error("Unknown ship weapon module: " + ref);
       }
     }
-    prefab.stats.sensors ??= { sight: 10, radar: 12.5, antiDetection: 0, revealOnDetection: !!prefab.stats.ship };
+    prefab.stats.sensors ??= {
+      sight: 10,
+      radar: 12.5,
+      antiDetection: 0,
+      revealOnDetection: !!prefab.stats.ship,
+    };
     for (const field of ["sight", "radar", "antiDetection"])
-      if (!Number.isFinite(prefab.stats.sensors[field]) || (field !== "antiDetection" && prefab.stats.sensors[field] < 0))
+      if (
+        !Number.isFinite(prefab.stats.sensors[field]) ||
+        (field !== "antiDetection" && prefab.stats.sensors[field] < 0)
+      )
         throw Error("Invalid sensor status: " + prefab.id + "/" + field);
     prefab.stats.accuracy ??= 100;
     if (
@@ -575,7 +583,7 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     const paired = new Map(
       (prefab.pairedWeapons || []).map((group) => [
         group.id,
-        PairedWeapons.compose(prefab, group, animations),
+        PairedWeapons.variants(prefab, group, animations),
       ]),
     );
     for (const kit of prefab.weaponKits) {
@@ -590,172 +598,179 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
         new Set(kit.weapons).size !== kit.weapons.length
       )
         throw Error("Invalid kit: " + id);
-      const weapons = kit.weapons.map((key) => {
-        const raw = paired.get(key) || prefab.weapons[key];
-        if (raw?.availability?.hidden)
-          throw Error("Hidden native weapon cannot enter a kit: " + prefab.id + "/" + key);
-        validateLocalization(raw?.localization, prefab.id + "/" + key);
-        if (!Number.isInteger(raw?.actionCost) || raw.actionCost < 1 || raw.actionCost > 99)
-          throw Error("Invalid weapon action cost: " + prefab.id + "/" + key);
-        validateParts(raw?.requiredParts, prefab.id + "/" + key);
-        validateParts(raw?.anyParts, prefab.id + "/" + key);
-        for (const step of raw?.attack?.steps || [])
-          validateParts(step.requiredParts, prefab.id + "/" + key + "/Step");
-        const weapon =
-          raw &&
-          (() => {
-            try {
-              return WeaponSequence.compile(raw);
-            } catch (error) {
-              throw Error(prefab.id + "/" + key + ": " + error.message);
-            }
-          })();
-        if (!result.effects[weapon?.hitEffect]) throw Error("Missing hit effect: " + key);
-        if (
-          weapon.muzzleEffects !== undefined &&
-          (!Array.isArray(weapon.muzzleEffects) ||
-            !weapon.muzzleEffects.length ||
-            weapon.muzzleEffects.some((id) => !result.effects[id]) ||
-            weapon.attack.muzzleIndices.some((index) => index >= weapon.muzzleEffects.length))
+      const weapons = kit.weapons
+        .flatMap(
+          (key) =>
+            paired.get(key)?.map((raw) => ({ ...raw, id: raw.id || key })) || [
+              { ...prefab.weapons[key], id: key },
+            ],
         )
-          throw Error("Invalid muzzle effects: " + key);
+        .map((raw) => {
+          const key = raw?.id;
+          if (raw?.availability?.hidden)
+            throw Error("Hidden native weapon cannot enter a kit: " + prefab.id + "/" + key);
+          validateLocalization(raw?.localization, prefab.id + "/" + key);
+          if (!Number.isInteger(raw?.actionCost) || raw.actionCost < 1 || raw.actionCost > 99)
+            throw Error("Invalid weapon action cost: " + prefab.id + "/" + key);
+          validateParts(raw?.requiredParts, prefab.id + "/" + key);
+          validateParts(raw?.anyParts, prefab.id + "/" + key);
+          for (const step of raw?.attack?.steps || [])
+            validateParts(step.requiredParts, prefab.id + "/" + key + "/Step");
+          const weapon =
+            raw &&
+            (() => {
+              try {
+                return WeaponSequence.compile(raw);
+              } catch (error) {
+                throw Error(prefab.id + "/" + key + ": " + error.message);
+              }
+            })();
+          if (!result.effects[weapon?.hitEffect]) throw Error("Missing hit effect: " + key);
+          if (
+            weapon.muzzleEffects !== undefined &&
+            (!Array.isArray(weapon.muzzleEffects) ||
+              !weapon.muzzleEffects.length ||
+              weapon.muzzleEffects.some((id) => !result.effects[id]) ||
+              weapon.attack.muzzleIndices.some((index) => index >= weapon.muzzleEffects.length))
+          )
+            throw Error("Invalid muzzle effects: " + key);
 
-        if (
-          weapon.swingEffects !== undefined &&
-          (!Array.isArray(weapon.swingEffects) ||
-            !weapon.swingEffects.length ||
-            weapon.swingEffects.some((id) => !result.effects[id]))
-        )
-          throw Error("Missing melee swing effect: " + key);
-        if (!weapon || (weapon.clip !== null && !animations[weapon.clip]))
-          throw Error("Missing weapon/animation: " + key);
-        if (
-          "ammo" in weapon ||
-          !Number.isFinite(weapon.en) ||
-          weapon.en < 0 ||
-          weapon.en > prefab.stats.en
-        )
-          throw Error("Weapons must use EN: " + key);
-        if (
-          !["beam", "shell", "melee"].includes(weapon.type) ||
-          !Number.isInteger(weapon.min) ||
-          !Number.isInteger(weapon.max) ||
-          weapon.min < 1 ||
-          weapon.max < weapon.min ||
-          !Number.isFinite(weapon.damage) ||
-          weapon.damage <= 0 ||
-          !Number.isFinite(weapon.hit)
-        )
-          throw Error("Invalid weapon: " + key);
-        if (
-          !weapon.damageComponents ||
-          Object.entries(weapon.damageComponents).some(
-            ([channel, value]) =>
-              ![
-                "beam",
-                "shell",
-                "melee",
-                "meleeBeam",
-                "meleeShell",
-                "beamAP",
-                "shellAP",
-                "meleeAP",
-              ].includes(channel) ||
-              !Number.isFinite(value) ||
-              value < 0,
-          ) ||
-          Math.abs(
-            Object.values(weapon.damageComponents).reduce((a, b) => a + b, 0) -
-              weapon.damagePerShot,
-          ) > 0.001
-        )
-          throw Error("Invalid damage components: " + key);
-        for (const animation of weapon.attack.animations)
-          if (animation.clip !== null && !animations[animation.clip])
-            throw Error("Missing Step animation: " + animation.clip);
-        if (weapon.sound) {
           if (
-            !Number.isFinite(weapon.sound.volume) ||
-            weapon.sound.volume < 0 ||
-            weapon.sound.volume > 1
+            weapon.swingEffects !== undefined &&
+            (!Array.isArray(weapon.swingEffects) ||
+              !weapon.swingEffects.length ||
+              weapon.swingEffects.some((id) => !result.effects[id]))
           )
-            throw Error("Invalid sound volume: " + key);
-          const asset = prefab.id + "/" + key;
-          result.sounds[asset] =
-            "data:audio/ogg;base64," +
-            fs.readFileSync(file(base, weapon.sound.file)).toString("base64");
-          weapon.sound = { ...weapon.sound, asset };
-        }
-        if (
-          weapon.targetModifiers &&
-          (Object.keys(weapon.targetModifiers).some(
-            (k) => !["ground", "space", "water", "air"].includes(k),
-          ) ||
-            Object.values(weapon.targetModifiers).some(
-              (v) => !Number.isFinite(v) || v < 0 || v > 10,
-            ))
-        )
-          throw Error("Invalid weapon target modifiers: " + key);
-        if (weapon.projectile) {
-          const projectileKey = prefab.id + "/projectile/" + key;
-          result.assets[projectileKey] =
-            "data:image/png;base64," +
-            fs.readFileSync(file(base, weapon.projectile.texture)).toString("base64");
-          weapon.projectile = { ...weapon.projectile, asset: projectileKey };
+            throw Error("Missing melee swing effect: " + key);
+          if (!weapon || (weapon.clip !== null && !animations[weapon.clip]))
+            throw Error("Missing weapon/animation: " + key);
           if (
-            weapon.projectile.spreadDegrees !== undefined &&
-            (!Number.isFinite(weapon.projectile.spreadDegrees) ||
-              weapon.projectile.spreadDegrees < 0 ||
-              weapon.projectile.spreadDegrees > 90)
+            "ammo" in weapon ||
+            !Number.isFinite(weapon.en) ||
+            weapon.en < 0 ||
+            weapon.en > prefab.stats.en
           )
-            throw Error("Invalid projectile spread: " + key);
-          if (weapon.projectile.motion === "tether") {
-            const tether = weapon.projectile.tether;
+            throw Error("Weapons must use EN: " + key);
+          if (
+            !["beam", "shell", "melee"].includes(weapon.type) ||
+            !Number.isInteger(weapon.min) ||
+            !Number.isInteger(weapon.max) ||
+            weapon.min < 1 ||
+            weapon.max < weapon.min ||
+            !Number.isFinite(weapon.damage) ||
+            weapon.damage <= 0 ||
+            !Number.isFinite(weapon.hit)
+          )
+            throw Error("Invalid weapon: " + key);
+          if (
+            !weapon.damageComponents ||
+            Object.entries(weapon.damageComponents).some(
+              ([channel, value]) =>
+                ![
+                  "beam",
+                  "shell",
+                  "melee",
+                  "meleeBeam",
+                  "meleeShell",
+                  "beamAP",
+                  "shellAP",
+                  "meleeAP",
+                ].includes(channel) ||
+                !Number.isFinite(value) ||
+                value < 0,
+            ) ||
+            Math.abs(
+              Object.values(weapon.damageComponents).reduce((a, b) => a + b, 0) -
+                weapon.damagePerShot,
+            ) > 0.001
+          )
+            throw Error("Invalid damage components: " + key);
+          for (const animation of weapon.attack.animations)
+            if (animation.clip !== null && !animations[animation.clip])
+              throw Error("Missing Step animation: " + animation.clip);
+          if (weapon.sound) {
             if (
-              !tether ||
-              !prefab.skeleton[tether.mount?.bone] ||
-              ![
-                tether.mount?.offset?.x,
-                tether.mount?.offset?.y,
-                tether.width,
-                tether.hold,
-                tether.retract,
-              ].every(Number.isFinite) ||
-              tether.width <= 0 ||
-              tether.hold < 0 ||
-              tether.retract <= 0 ||
-              !/^#[0-9a-f]{6}$/i.test(tether.color)
+              !Number.isFinite(weapon.sound.volume) ||
+              weapon.sound.volume < 0 ||
+              weapon.sound.volume > 1
             )
-              throw Error("Invalid tether projectile: " + key);
+              throw Error("Invalid sound volume: " + key);
+            const asset = prefab.id + "/" + key;
+            result.sounds[asset] =
+              "data:audio/ogg;base64," +
+              fs.readFileSync(file(base, weapon.sound.file)).toString("base64");
+            weapon.sound = { ...weapon.sound, asset };
           }
-          if (!Number.isFinite(weapon.projectile.speed) || weapon.projectile.speed <= 0)
-            throw Error("Invalid projectile speed: " + key);
-        }
-        if (weapon.type !== "melee" && !weapon.projectile)
-          throw Error("Missing projectile: " + key);
-        const mounts = weapon.muzzle?.mounts || (weapon.muzzle ? [weapon.muzzle] : []);
-        if (
-          weapon.type !== "melee" &&
-          (!mounts.length ||
-            mounts.length > 32 ||
-            weapon.attack.muzzleIndices.some((index) => index >= mounts.length))
-        )
-          throw Error("Missing or invalid muzzle selection: " + key);
-        for (const mount of mounts) {
-          if (mount.layer) {
-            if (
-              !prefab.layers.some((layer) => layer.name === mount.layer) ||
-              ![mount.point?.x, mount.point?.y].every(Number.isFinite)
-            )
-              throw Error("Invalid muzzle layer/point: " + key);
-          } else if (
-            !prefab.skeleton[mount.bone] ||
-            ![mount.offset?.x, mount.offset?.y].every(Number.isFinite)
+          if (
+            weapon.targetModifiers &&
+            (Object.keys(weapon.targetModifiers).some(
+              (k) => !["ground", "space", "water", "air"].includes(k),
+            ) ||
+              Object.values(weapon.targetModifiers).some(
+                (v) => !Number.isFinite(v) || v < 0 || v > 10,
+              ))
           )
-            throw Error("Invalid muzzle bone/offset: " + key);
-        }
-        return { ...weapon, id: key };
-      });
+            throw Error("Invalid weapon target modifiers: " + key);
+          if (weapon.projectile) {
+            const projectileKey = prefab.id + "/projectile/" + key;
+            result.assets[projectileKey] =
+              "data:image/png;base64," +
+              fs.readFileSync(file(base, weapon.projectile.texture)).toString("base64");
+            weapon.projectile = { ...weapon.projectile, asset: projectileKey };
+            if (
+              weapon.projectile.spreadDegrees !== undefined &&
+              (!Number.isFinite(weapon.projectile.spreadDegrees) ||
+                weapon.projectile.spreadDegrees < 0 ||
+                weapon.projectile.spreadDegrees > 90)
+            )
+              throw Error("Invalid projectile spread: " + key);
+            if (weapon.projectile.motion === "tether") {
+              const tether = weapon.projectile.tether;
+              if (
+                !tether ||
+                !prefab.skeleton[tether.mount?.bone] ||
+                ![
+                  tether.mount?.offset?.x,
+                  tether.mount?.offset?.y,
+                  tether.width,
+                  tether.hold,
+                  tether.retract,
+                ].every(Number.isFinite) ||
+                tether.width <= 0 ||
+                tether.hold < 0 ||
+                tether.retract <= 0 ||
+                !/^#[0-9a-f]{6}$/i.test(tether.color)
+              )
+                throw Error("Invalid tether projectile: " + key);
+            }
+            if (!Number.isFinite(weapon.projectile.speed) || weapon.projectile.speed <= 0)
+              throw Error("Invalid projectile speed: " + key);
+          }
+          if (weapon.type !== "melee" && !weapon.projectile)
+            throw Error("Missing projectile: " + key);
+          const mounts = weapon.muzzle?.mounts || (weapon.muzzle ? [weapon.muzzle] : []);
+          if (
+            weapon.type !== "melee" &&
+            (!mounts.length ||
+              mounts.length > 32 ||
+              weapon.attack.muzzleIndices.some((index) => index >= mounts.length))
+          )
+            throw Error("Missing or invalid muzzle selection: " + key);
+          for (const mount of mounts) {
+            if (mount.layer) {
+              if (
+                !prefab.layers.some((layer) => layer.name === mount.layer) ||
+                ![mount.point?.x, mount.point?.y].every(Number.isFinite)
+              )
+                throw Error("Invalid muzzle layer/point: " + key);
+            } else if (
+              !prefab.skeleton[mount.bone] ||
+              ![mount.offset?.x, mount.offset?.y].every(Number.isFinite)
+            )
+              throw Error("Invalid muzzle bone/offset: " + key);
+          }
+          return { ...weapon, id: key };
+        });
       if (!textureKeys[prefab.materials.icon]) throw Error("Missing unit icon: " + prefab.id);
       for (const key of ["idle", "move", "stagger"])
         if (!animations[prefab.presentation[key]])
@@ -784,7 +799,9 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
           throw Error("Invalid animated layer: " + layer.name);
         // A paired weapon has one held ID, while each physical layer keeps its own part gate.
         const aliases = new Map(
-          (prefab.pairedWeapons || []).flatMap((g) => g.channels.map((c) => [c.id, g.id])),
+          (prefab.pairedWeapons || [])
+            .filter((g) => g.fireMode !== "independent")
+            .flatMap((g) => g.channels.map((c) => [c.id, g.id])),
         );
         const remap = (value) =>
           typeof value === "string"

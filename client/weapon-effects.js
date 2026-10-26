@@ -65,7 +65,11 @@ const WeaponEffects = (() => {
       SpriteEffects.draw(ctx, event.effect, x + dx * scale, y + dy * scale, scale, age - event.at);
     }
   }
-  function plan(weapon, source, target, event = null) {
+  function plan(weapon, source, target, event = null, dodgeSchedule = null) {
+    // 每发未命中子弹从发射起最多等待两秒；连射中的后续子弹独立计时。
+    const missTimeout = 2,
+      timedProjectile =
+        weapon.projectile && !["bomb", "mortar", "tether"].includes(weapon.projectile.motion);
     const speed = animationSpeed(weapon),
       effectSpeed = ART.presentation.animationSpeed,
       lead =
@@ -169,12 +173,15 @@ const WeaponEffects = (() => {
         return {
           ...step,
           ...result,
-          at: shot.impactAt + (step.hitIndex * (weapon.attack.hitInterval || 0)) / speed,
+          at: Math.min(
+            shot.impactAt + (step.hitIndex * (weapon.attack.hitInterval || 0)) / speed,
+            timedProjectile && !result.hit ? shot.at + missTimeout : Infinity,
+          ),
         };
       })
       .filter((contact) => contact.executed !== false)
       .sort((a, b) => a.at - b.at);
-    const moves = event?.empty ? [] : dodgeMoves(contacts, initialSlot, event),
+    const moves = event?.empty ? [] : dodgeMoves(contacts, initialSlot, event, dodgeSchedule),
       motion = { moves, initialSlot };
     // Aim at the defender's current lane, without adding artificial Miss deviation.
     for (const shot of shots)
@@ -222,6 +229,8 @@ const WeaponEffects = (() => {
           ? shot.impactAt +
             (weapon.projectile.tether.hold + weapon.projectile.tether.retract) / speed
           : shot.at + shot.flight * travel;
+      if (timedProjectile && shot.miss)
+        shot.visibleUntil = Math.min(shot.visibleUntil, shot.at + missTimeout);
     }
     let end = Math.max(
         lead + weapon.attack.duration / speed,
@@ -296,6 +305,15 @@ const WeaponEffects = (() => {
           }
         : null;
     if (melee) end = Math.max(end, melee.retreatAt + melee.retreat);
+    let duration = end + 0.35 / effectSpeed;
+    if (timedProjectile && activeShots.length && activeShots.every((shot) => shot.miss))
+      duration = Math.min(
+        duration,
+        Math.max(
+          lead + weapon.attack.duration / speed + 0.35 / effectSpeed,
+          ...activeShots.map((shot) => shot.at + missTimeout),
+        ),
+      );
     return {
       lead,
       melee,
@@ -315,7 +333,7 @@ const WeaponEffects = (() => {
       initialSlot,
       sourceY,
       actionSpeed: speed,
-      duration: end + 0.35 / effectSpeed,
+      duration,
     };
   }
   function meleeMotion(plan, source, target, time, travel = 0.18) {
@@ -361,9 +379,17 @@ const WeaponEffects = (() => {
     const t = Math.max(0, Math.min(1, (time - move.at) / move.duration));
     return move.from + ((move.to - move.from) * (1 - Math.cos(Math.PI * t))) / 2;
   }
-  function dodgeMoves(contacts, initialSlot, event) {
-    const misses = contacts.filter((contact) => !contact.hit),
+  function dodgeMoves(contacts, initialSlot, event, schedule) {
+    const misses = [],
       moves = [];
+    // 同一目标每秒最多开始一次闪避；其他 Miss 只让子弹沿原弹道穿过。
+    for (const contact of contacts) {
+      if (contact.hit || contact.at - (misses.at(-1)?.at ?? -Infinity) < 1) continue;
+      const at = (schedule?.start || 0) + contact.at;
+      if (schedule?.starts.some((previous) => Math.abs(at - previous) < 1)) continue;
+      misses.push(contact);
+      schedule?.starts.push(at);
+    }
     let goal = initialSlot,
       hash = 2166136261;
     for (const char of `${event?.from}:${event?.to}:${event?.weapon}:${event?.before}`)

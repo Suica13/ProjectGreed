@@ -163,6 +163,31 @@ def type61_spg_mortar(prefab):
     prefab["weapons"][key]["localization"] = {"zh":{"name":"迫击炮"},"en":{"name":"Mortar"},"ja":{"name":"迫撃砲"}}
 
 
+def configure_nuke(weapon):
+    weapon.update(
+        name="\u6838\u5f39\u8f70\u70b8",
+        slot="skill",
+        noCounter=True,
+        maxUses=1,
+        special={"type": "nuke", "radius": 3, "emptyCells": True},
+    )
+    weapon["localization"] = {
+        "zh": {"name": "\u6838\u5f39\u8f70\u70b8"},
+        "en": {"name": "Nuclear Bombardment"},
+        "ja": {"name": "\u6838\u7206\u6483"},
+    }
+    weapon["projectile"].update(motion="mortar", rotation=0)
+    weapon["hitEffect"] = "Nuke_Hit_1"
+    weapon["damagePerShot"] = 30000
+    weapon["damageComponents"] = {"shell": 30000}
+    weapon["special"]["shape"] = "circle"
+    weapon["description"] = "指定目标格为圆心，半径3格圆形范围造成30000基础实弹伤害；每条命限用1次。"
+    for step in weapon.get("attack", {}).get("steps", []):
+        if step.get("shots", 0):
+            step["damageComponents"] = {"shell": 30000}
+            step["damageMultiplier"] = 1
+
+
 def configure(prefab, native):
     from native_combat import restore
     type61_spg_mortar(prefab)
@@ -221,22 +246,15 @@ def configure(prefab, native):
             if key == "ZN_MS_09_ChestBeam":
                 weapon.update(min=1, max=1)
         if kind == "nuke":
-            weapon.update(
-                name="\u6838\u5f39\u8f70\u70b8",
-                slot="skill",
-                noCounter=True,
-                maxUses=1,
-                special={"type": "nuke", "radius": 3, "emptyCells": True},
-                description="\u6307\u5b9a\u5730\u9762\u5750\u6807\u53d1\u52a8\u6838\u6253\u51fb\uff0c\u5bf9\u7206\u5fc33\u683c\u5185\u7684\u5730\u9762\u76ee\u6807\u9020\u6210\u4f24\u5bb3\uff1b\u6bcf\u5c40\u9650\u75281\u6b21\u3002",
-            )
-            weapon["localization"] = {
-                "zh": {"name": "\u6838\u5f39\u8f70\u70b8"},
-                "en": {"name": "Nuclear Bombardment"},
-                "ja": {"name": "\u6838\u7206\u6483"},
-            }
-            weapon["projectile"].update(motion="mortar", rotation=0)
-            weapon["hitEffect"] = "Nuke_Hit_1"
+            configure_nuke(weapon)
         if kind == "mortar":
+            if prefab["id"] in ["RX_77_2", "RX_77_3", "RX_77_3D"]:
+                weapon["requiredParts"] = ["backpack"]
+                weapon.pop("anyParts", None)
+                weapon["changeHeldWeapon"] = False
+                for step in weapon.get("attack", {}).get("steps", []):
+                    if step.get("shots", 0):
+                        step["requiredParts"] = ["backpack"]
             if prefab["id"] == "RGC_80" and "Common_Cannon" in prefab["weapons"]:
                 cannon = prefab["weapons"]["Common_Cannon"]
                 weapon["requiredParts"] = copy.deepcopy(cannon.get("requiredParts", []))
