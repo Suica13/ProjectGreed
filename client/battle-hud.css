@@ -1391,3 +1391,61 @@ body.replay-immersive #mapWrap {
 body.replay-immersive #map {
   pointer-events: none;
 }
+
+#openMatchRecords {
+  position: fixed;
+  top: 12px;
+  right: 88px;
+  z-index: 40;
+}
+#matchRecordsDialog,
+#recordSeatsDialog {
+  max-width: min(640px, 94vw);
+  color: #dce9ee;
+  background: #12232e;
+  border: 1px solid #567183;
+  padding: 20px;
+}
+#matchRecordsDialog::backdrop,
+#recordSeatsDialog::backdrop {
+  background: #0009;
+}
+.record-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+#recordSeatsDialog label {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 12px 0;
+}
+#replayControls {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1100px, 96vw);
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  background: #10232fee;
+  border: 1px solid #628295;
+  z-index: 100;
+}
+#replayControls[hidden] {
+  display: none;
+}
+#replayControls input[type="range"] {
+  flex: 1;
+  min-width: 120px;
+}
+body.replay-active #mapCombatControls,
+body.replay-active #spectatorViewControl,
+body.replay-active #hudUnitCommands,
+body.replay-active #hudTurnActions {
+  display: none !important;
+}

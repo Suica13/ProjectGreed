@@ -175,7 +175,7 @@ const MapCombat = (() => {
     const view = battleView;
     if (!view?.mapBattle || view.suspendedAt !== undefined || pageView !== "game") return;
     const current = frame?.view === view && frame.index === view.index ? frame : setup(view);
-    const rate = byId("quick").checked ? 1 / 0.35 : 1;
+    const rate = window.ReplayPlayer?.active ? 1 : byId("quick").checked ? 1 / 0.35 : 1;
     // 累积时间允许播放中切换速度，不会令演出倒退或重复触发音效。
     current.time += (Math.max(0, now - (current.lastNow ?? now)) / 1000) * rate;
     current.lastNow = now;
@@ -281,7 +281,7 @@ const MapCombat = (() => {
     if (!lanes.length) return updateSingle(now);
     if (!battleView?.mapBattle || battleView.suspendedAt !== undefined || pageView !== "game")
       return;
-    const rate = byId("quick").checked ? 1 / 0.35 : 1;
+    const rate = window.ReplayPlayer?.active ? 1 : byId("quick").checked ? 1 / 0.35 : 1;
     WeaponAudio.setBattleMuted(byId("quick").checked);
     for (const lane of lanes) {
       if (lane.view.completed) continue;

@@ -82,7 +82,7 @@ function createServer({
   const wss = new WebSocketServer({
     server,
     path: "/ws",
-    maxPayload: 16384,
+    maxPayload: 128 * 1024,
     // 快照含大量重复的地块、单位和演出数据；仅压缩较大的消息。
     // 每连接不保留压缩历史，避免多人房间长期占用大量压缩上下文。
     perMessageDeflate: {
@@ -148,6 +148,7 @@ function createServer({
         }
         if (++ws.rateCount > 60) throw Error("操作过于频繁");
         msg = JSON.parse(data.toString());
+        if (data.length > 16384 && msg?.action !== "record_upload_chunk") throw Error("消息过大。");
         if (!msg || typeof msg !== "object" || Array.isArray(msg)) throw Error("消息格式无效");
         if (msg.type === "ping") send(ws, { type: "pong" });
         else if (msg.type === "list_rooms") {

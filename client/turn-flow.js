@@ -5,6 +5,7 @@ const TurnFlow = (() => {
     animation = null,
     generation = 0,
     active = false;
+  let replayPaused = false;
   function cancelAutoEnd() {
     clearTimeout(timer);
     timer = automaticTurn = null;
@@ -80,8 +81,15 @@ const TurnFlow = (() => {
             { transform: "translateX(0)", offset: 0.72 },
             { transform: "translateX(-110vw)", offset: 1 },
           ],
-          { duration: Rules.turnTransitionMs / 3, easing: "linear", fill: "both" },
+          {
+            duration:
+              Rules.turnTransitionMs /
+              (3 * (window.ReplayPlayer?.active ? window.ReplayPlayer.speed : 1)),
+            easing: "linear",
+            fill: "both",
+          },
         );
+        if (replayPaused) animation.pause();
         await animation.finished;
         animation.cancel();
       }
@@ -100,6 +108,13 @@ const TurnFlow = (() => {
     reset,
     play,
     refreshAutoEnd,
+    setReplayPaused(value) {
+      replayPaused = !!value;
+      if (animation) {
+        if (replayPaused) animation.pause();
+        else animation.play();
+      }
+    },
     get active() {
       return active;
     },

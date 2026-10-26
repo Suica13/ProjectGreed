@@ -66,6 +66,7 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
   formatNumber = (n) => Number(n).toLocaleString("en-US"),
   isAI = () => !Net.active && game.ai && game.team === 1,
   isBusy = () =>
+    !!window.ReplayPlayer?.active ||
     phase !== "idle" ||
     !!Net.awaiting ||
     !!Net.snapshot?.returnCountdown ||
@@ -2371,6 +2372,7 @@ byId("closeHelp").onclick = () => {
 // 每帧入口：独立预览接管自己的绘制，实际游戏绘制正常地图与战斗。
 function tick(now) {
   animationFrameId = null;
+  if (window.ReplayPlayer?.active) now = window.ReplayPlayer.tick(now);
   clock = now / 1000;
   if (assetsReady) {
     if (window.GamePreview?.active) window.GamePreview.tick(now);

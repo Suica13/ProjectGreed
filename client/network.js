@@ -97,8 +97,10 @@ const Net = (() => {
   }
   const key = (url, room) => "slg-seat:" + url + ":" + room;
   const canControl = (unit) =>
+    !window.ReplayPlayer?.active &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
+    if (window.ReplayPlayer?.active) return false;
     return (
       !n.active ||
       (n.socket?.readyState === WebSocket.OPEN &&
@@ -113,6 +115,7 @@ const Net = (() => {
   }
   // 所有游戏动作从这里发送，自动附带唯一请求 ID 和当前版本号。
   function request(action, fields = {}) {
+    if (window.ReplayPlayer?.active && action !== "sync") return;
     if (
       n.snapshot?.returnCountdown &&
       !["sync", "return_room", "download_log", "spectate"].includes(action)
@@ -165,6 +168,7 @@ const Net = (() => {
     );
   }
   function leave({ notify = true, forget = true } = {}) {
+    if (window.ReplayPlayer?.active) window.ReplayPlayer.stop(false);
     window.BattlePrompts?.reset();
     closeDisconnect();
     MatchResults.reset();
@@ -228,6 +232,8 @@ const Net = (() => {
       if (n.snapshot && !(n.snapshot.chat || []).some((old) => old.id === msg.message.id))
         n.snapshot.chat = [...(n.snapshot.chat || []), msg.message].slice(-100);
       Chat.receive(msg.message, msg.ack);
+    } else if (msg.type === "record_reply") {
+      window.ReplayPlayer?.response(msg);
     } else if (msg.type === "battle_log") {
       if (msg.ack !== n.awaiting?.id) return;
       n.awaiting = null;
@@ -241,8 +247,9 @@ const Net = (() => {
       msg.receivedAt = performance.now();
       n.snapshot = msg;
       closeDisconnect();
-      applySnapshot(msg);
+      if (!window.ReplayPlayer?.receive(msg)) applySnapshot(msg);
     } else if (msg.type === "error") {
+      if (window.ReplayPlayer?.response(msg)) return;
       if (chatRequestIds.has(msg.id)) {
         Chat.reject(msg.id, msg.message);
         return;
@@ -615,7 +622,7 @@ const Net = (() => {
   document.addEventListener("resume", () => keepAlive(true));
   byId("createRoom").onclick = () => connect("create");
   function isSpectator() {
-    return n.active && n.seat === null;
+    return window.ReplayPlayer?.active || (n.active && n.seat === null);
   }
   function roleName() {
     return n.seat === null

@@ -6,6 +6,7 @@ const UnitIdentity = (() => {
     enemy: { color: "#fa8b79", fill: "#ff887c2c" },
   };
   function viewerSeat() {
+    if (globalThis.ReplayPlayer?.active) return null;
     if (Net.active) return Net.seat;
     if (game.ai) return 0;
     return phase === "deployment" ? Deployment.team() : game.team;
@@ -13,7 +14,11 @@ const UnitIdentity = (() => {
   function relation(unit) {
     const seat = viewerSeat();
     if (seat !== null && Rules.ownerOf(unit) === seat) return "own";
-    const team = seat === null ? 0 : Rules.seatTeam(seat);
+    const team = globalThis.ReplayPlayer?.active
+      ? (Net.snapshot?.viewTeam ?? 0)
+      : seat === null
+        ? 0
+        : Rules.seatTeam(seat);
     return unit.team === team ? "ally" : "enemy";
   }
   function owner(unit) {

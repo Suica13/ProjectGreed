@@ -75,6 +75,10 @@ const CombatPlayback = (() => {
     return true;
   }
   function finish() {
+    if (globalThis.ReplayPlayer?.active) {
+      globalThis.ReplayPlayer.combatFinished();
+      return;
+    }
     if (!battleView) return;
     finished.add(battleView.networkId);
     battleView = null;

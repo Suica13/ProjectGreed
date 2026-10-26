@@ -957,3 +957,73 @@ test("fog effects use a separate presentation feed without hidden health, orders
   assert.deepEqual(state.log, room.teamLogs[0]);
   assert.deepEqual(state.logExport.options, ["team:0"]);
 });
+
+test('records preserve team privacy, delta playback, synchronized barriers and exact turn-start forks',async(t)=>{
+  const Records=require('../shared/match-records.js');
+  const {room,act,frames,clients,engine}=fixture(t,2,1,{roomReturnMs:1,aiDelayMs:100000});
+  assert(room.record.frames.length>0);
+  const own=act(0,'record_export',{perspective:'team:0'}).record;
+  assert.deepEqual(own.perspectives,['team:0']);assert.deepEqual(own.checkpoints,[]);
+  assert(!JSON.stringify(own).includes('"seed":'));assert(!JSON.stringify(own).includes('"token":'));
+  assert.throws(()=>act(0,'record_export',{perspective:'global'}));
+  assert.throws(()=>act(1,'replay_open'));
+  assert.throws(()=>act(0,'replay_open'));
+  const [a]=room.game.units;
+  const target=[...G.reachable(room.game,a).values()].find(c=>c.path.length);
+  act(0,'move',{unitId:a.id,x:target.x,y:target.y});
+  const moved=room.record.frames.length-1;
+  const decoded=Records.view(room.record,moved,'global');assert.equal(decoded.game.units.find(u=>u.id===a.id).x,target.x);
+  assert(!room.record.checkpoints.some(c=>c.frame===moved));
+  act(0,'return_room');await new Promise(r=>setTimeout(r,20));
+  const full=act(0,'record_export',{perspective:'global'}).record;
+  assert(full.checkpoints.length>0);assert.equal(Records.validate(G,full).frames.length,full.frames.length);
+  const original=JSON.stringify(full),checkpoint=full.checkpoints[0],oldMatch=room.matchId;
+  act(0,'replay_open');const replay=room.replay;
+  assert.throws(()=>act(1,'replay_control',{replayId:replay.id,playing:true}));
+  act(0,'replay_control',{replayId:replay.id,playing:true});
+  const token=replay.token,index=replay.index;
+  assert.throws(()=>act(0,'replay_control',{replayId:replay.id,index:index+1,speed:3}));
+  assert.equal(replay.index,index,'invalid speed cannot partially seek');
+  act(0,'replay_ready',{replayId:replay.id,token});assert.equal(replay.index,index);
+  act(1,'replay_ready',{replayId:replay.id,token});assert.equal(replay.index,index+1);
+  assert.throws(()=>act(0,'replay_ready',{replayId:replay.id,token}));
+  act(1,'replay_view',{perspective:'team:1'});engine.broadcast(room);
+  assert.equal(frames.get(clients[1]).replay.perspective,'team:1');
+  act(0,'replay_control',{replayId:replay.id,index:moved,playing:false});
+  assert.throws(()=>act(0,'replay_fork',{replayId:replay.id,index:moved,assignments:[room.hostId,'ai']}));
+  act(0,'replay_control',{replayId:replay.id,index:checkpoint.frame,playing:false});
+  assert.throws(()=>act(0,'replay_fork',{replayId:replay.id,index:checkpoint.frame,assignments:[room.hostId,room.hostId]}));
+  act(0,'replay_fork',{replayId:replay.id,index:checkpoint.frame,assignments:[room.hostId,'ai']});
+  assert.notEqual(room.matchId,oldMatch);assert.equal(room.replay,null);assert.equal(room.phase,'idle');
+  assert.equal(room.game.seed,checkpoint.game.seed);assert.equal(room.game.partSeed,checkpoint.game.partSeed);
+  assert.deepEqual(room.game.units,checkpoint.game.units);assert.equal(room.seats[1].bot,true);
+  assert.equal(clients[1].seat,null);assert.equal(room.record.parent.id,full.id);
+  assert.equal(JSON.stringify(full),original,'branching never mutates the original record');
+});
+
+test('record upload is chunked, validated, host-only and does not replace a live match',async(t)=>{
+  const {room,act}=fixture(t,2,1,{roomReturnMs:1});
+  assert.throws(()=>act(0,'record_upload_begin',{length:100}));
+  act(0,'return_room');await new Promise(r=>setTimeout(r,20));
+  const raw=JSON.stringify(room.record);
+  assert.throws(()=>act(1,'record_upload_begin',{length:raw.length}));
+  const upload=act(0,'record_upload_begin',{length:raw.length});
+  assert.throws(()=>act(0,'record_upload_chunk',{uploadId:upload.uploadId,sequence:1,text:'x'}));
+  for(let offset=0,sequence=0;offset<raw.length;offset+=20000,sequence++)act(0,'record_upload_chunk',{uploadId:upload.uploadId,sequence,text:raw.slice(offset,offset+20000)});
+  act(0,'record_upload_finish',{uploadId:upload.uploadId});
+  act(0,'replay_open',{loaded:true});assert.equal(room.replay.record.id,room.record.id);
+  assert.throws(()=>act(0,'start_game'));
+  act(0,'replay_close');assert.equal(room.replay,null);
+});
+
+test('forking a replay tolerates disconnected original players and preserves their spectator reconnect',async(t)=>{
+  const {room,act,engine,clients}=fixture(t,2,1,{roomReturnMs:1,aiDelayMs:100000});
+  act(0,'return_room');await new Promise(r=>setTimeout(r,20));
+  act(0,'replay_open');const replay=room.replay,checkpoint=replay.record.checkpoints[0];
+  act(0,'replay_control',{replayId:replay.id,index:checkpoint.frame});
+  const guest=room.members.get(clients[1].memberId),token=guest.token;
+  engine.disconnect(clients[1]);
+  act(0,'replay_fork',{replayId:replay.id,index:checkpoint.frame,assignments:[room.hostId,'ai']});
+  assert.equal(guest.seat,null);assert.equal(room.seats[1].bot,true);
+  const socket={readyState:1};engine.join(socket,{mode:'resume',room:room.code,token});assert.equal(socket.seat,null);
+});

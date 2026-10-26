@@ -880,5 +880,22 @@
   "观战队伍无效。": "Invalid spectator team.",
   "单位阴影（实验功能）": "Unit shadows (experimental)",
   "沉浸模式": "Immersive mode",
-  "隐藏战斗界面，跳过回合交接；按 Esc 退出": "Hide battle UI and skip turn transitions; press Esc to exit"
+  "隐藏战斗界面，跳过回合交接；按 Esc 退出": "Hide battle UI and skip turn transitions; press Esc to exit",
+  "对局记录": "Match records",
+  "保存记录": "Save record",
+  "回放本局": "Replay this match",
+  "载入记录": "Load record",
+  "文字战报": "Text battle log",
+  "回放时间轴": "Replay timeline",
+  "回放速度": "Replay speed",
+  "回放视角": "Replay perspective",
+  "上一回合": "Previous turn",
+  "下一回合": "Next turn",
+  "从此回合继续": "Continue from this turn",
+  "退出回放": "Exit replay",
+  "续局席位": "Resume seat assignments",
+  "开始新对局": "Start new match",
+  "对局中保存本队录像；结束或全员返回大厅后可保存完整存档并续局。": "During a match, save your team replay. After the match or everyone returns to the lobby, save a full record to resume.",
+  "一份对局记录同时用于保存、回放和从回合开始继续。": "One match record supports saving, replay and resuming from a turn start.",
+  "记录已达到容量上限，已保留此前内容。": "Recording reached its limit. Earlier content has been preserved."
 }

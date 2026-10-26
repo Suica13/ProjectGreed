@@ -18,6 +18,369 @@ function createRoomEngine({
   hostReconnectMs = 60000,
   reconnectGraceMs = 60000,
 }) {
+  const Records =
+    typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
+  function captureRecord(room) {
+    if (!room.started || ["assembly", "waiting", "replay"].includes(room.phase) || room.replay)
+      return;
+    if (!room.record || room.record.id !== room.matchId) {
+      room.record = Records.create(
+        G,
+        room.matchId,
+        room.settings,
+        room.game.tiles,
+        room.recordParent || null,
+      );
+      room.recordPrevious = {};
+      room.recordBytes = 0;
+      room.recordEvent = null;
+      room.recordTurn = null;
+      delete room.recordParent;
+    }
+    const key = room.lastEvent?.id + ":" + room.phase;
+    if (room.recordEvent === key || room.record.truncated) return;
+    const turn = room.game.round + ":" + room.game.team;
+    const turnStart =
+      room.phase === "idle" &&
+      room.game.winner === null &&
+      room.recordTurn !== turn &&
+      !room.plans?.length;
+    const frame = {
+      at: Date.now(),
+      round: room.game.round,
+      team: room.game.team,
+      turnStart,
+      views: {},
+    };
+    const next = {};
+    for (const perspective of room.record.perspectives) {
+      const team = perspective === "global" ? null : Number(perspective.slice(5));
+      const snapshot = Records.publicView(state(room, undefined, { seat: null, viewTeam: team }));
+      frame.views[perspective] = Records.pack(room.recordPrevious[perspective], snapshot);
+      next[perspective] = Records.unpack(
+        room.recordPrevious[perspective],
+        frame.views[perspective],
+        room.record.tiles,
+      );
+    }
+    const { tiles, ...checkpointGame } = room.game;
+    const checkpoint = turnStart
+      ? { frame: room.record.frames.length, game: Records.clone(checkpointGame) }
+      : null;
+    const size =
+      new TextEncoder().encode(JSON.stringify(frame)).length +
+      (checkpoint ? new TextEncoder().encode(JSON.stringify(checkpoint)).length : 0);
+    if (
+      room.recordBytes + size > Records.maxBytes - 100000 ||
+      room.record.frames.length >= Records.maxFrames
+    ) {
+      room.record.truncated = true;
+      return;
+    }
+    room.record.frames.push(frame);
+    room.recordBytes += size;
+    room.recordPrevious = next;
+    room.recordEvent = key;
+    if (checkpoint) {
+      room.record.checkpoints.push(checkpoint);
+      room.recordTurn = turn;
+    }
+  }
+  function replaySnapshot(room, member) {
+    const replay = room.replay;
+    if (!replay) return null;
+    const perspective = replay.record.perspectives.includes(member?.replayView)
+      ? member.replayView
+      : replay.record.perspectives[0];
+    let cached = replay.cache.get(perspective);
+    if (cached?.index !== replay.index) {
+      const frame =
+        cached?.index + 1 === replay.index
+          ? Records.unpack(
+              cached.frame,
+              replay.record.frames[replay.index].views[perspective],
+              replay.record.tiles,
+            )
+          : Records.view(replay.record, replay.index, perspective);
+      cached = { index: replay.index, frame };
+      replay.cache.set(perspective, cached);
+    }
+    return {
+      id: replay.id,
+      recordId: replay.record.id,
+      index: replay.index,
+      total: replay.record.frames.length,
+      token: replay.token,
+      playing: replay.playing,
+      speed: replay.speed,
+      perspective,
+      perspectives: replay.record.perspectives,
+      checkpoints: replay.record.checkpoints.map((c) => ({
+        frame: c.frame,
+        round: c.game.round,
+        team: c.game.team,
+        seats: [...new Set(c.game.units.filter((u) => u.hp > 0).map(G.ownerOf))],
+      })),
+      frame: cached.frame,
+      truncated: !!replay.record.truncated,
+    };
+  }
+  function advanceReplay(room) {
+    const replay = room.replay;
+    if (!replay?.playing) return;
+    const viewers = members(room).filter((m) => !m.bot && onlineMember(m));
+    if (!viewers.length || !viewers.every((m) => replay.ready.has(m.id))) return;
+    if (replay.index + 1 >= replay.record.frames.length) {
+      replay.playing = false;
+      return;
+    }
+    replay.index++;
+    replay.token = randomId();
+    replay.ready.clear();
+    room.revision++;
+  }
+  function forkRecord(room, record, index, assignments) {
+    const checkpoint = record.checkpoints.find((c) => c.frame === index);
+    if (!checkpoint) throw Error("只能从回合开始节点继续。");
+    const game = Records.clone(checkpoint.game);
+    game.tiles = Records.clone(record.tiles);
+    const slots = G.getMap(game.mapId).spawns.length,
+      occupied = [...new Set(game.units.filter((u) => u.hp > 0).map(G.ownerOf))];
+    if (!Array.isArray(assignments) || assignments.length !== slots)
+      throw Error("请选择续局席位。");
+    const used = new Set();
+    for (const seat of occupied) {
+      const choice = assignments[seat];
+      if (choice === "ai") continue;
+      const player = room.members.get(choice);
+      if (!player || player.bot || !onlineMember(player) || used.has(choice))
+        throw Error("续局席位必须分配给不同的在线玩家或AI。");
+      used.add(choice);
+    }
+    const newBots = occupied.filter((seat) => assignments[seat] === "ai").length;
+    if (members(room).filter((m) => !m.bot).length + newBots > 32) throw Error("房间人数已满。");
+    // Validate everything before replacing members, timers or authoritative game state.
+    const views = Object.fromEntries(
+      record.perspectives.map((p) => [p, Records.view(record, index, p)]),
+    );
+    clearTimeout(resultTimers.get(room));
+    resultTimers.delete(room);
+    clearTimeout(returnTimers.get(room));
+    returnTimers.delete(room);
+    for (const player of members(room)) {
+      if (player.bot) room.members.delete(player.id);
+      else {
+        player.seat = null;
+        if (player.ws) player.ws.seat = null;
+        player.ready = false;
+        player.shareUnits = false;
+      }
+    }
+    room.seats = Array(slots).fill(null);
+    for (const seat of occupied) {
+      let player = room.members.get(assignments[seat]);
+      if (assignments[seat] === "ai") {
+        const id = randomId();
+        player = {
+          id,
+          name: "AI " + (seat + 1),
+          bot: true,
+          aiSettings: G.validateAISettings(),
+          requests: new Map(),
+          ws: { room: room.code, memberId: id, seat },
+        };
+        room.members.set(id, player);
+      }
+      player.seat = seat;
+      player.ws.seat = seat;
+      player.ready = true;
+      room.seats[seat] = player;
+    }
+    planner.reset(room);
+    room.game = game;
+    room.settings = Records.clone(record.settings);
+    room.phase = "idle";
+    room.started = true;
+    room.activeSeats = room.seats.map(Boolean);
+    room.turnDone = Array(slots).fill(false);
+    room.returnAt = null;
+    room.returnCountdown = null;
+    room.turnNotBefore = Date.now() + 1000;
+    room.log = Records.clone(views.global.log);
+    room.teamLogs = Object.fromEntries(
+      [0, 1].map((t) => [t, Records.clone(views["team:" + t]?.log || [])]),
+    );
+    room.logTeamIds = [0, 1];
+    room.logsUnlocked = false;
+    room.matchId = randomId();
+    room.logNames = views.global.logNames || [];
+    room.recordParent = { id: record.id, frame: index };
+    room.record = null;
+    room.replay = null;
+    room.lastEvent = { id: randomId(), type: "record_fork" };
+  }
+  function recordAction(room, member, msg) {
+    if (!msg.action.startsWith("record_") && !msg.action.startsWith("replay_")) return false;
+    const host = room.hostId === member.id,
+      read = ["record_export", "replay_ready", "replay_view"].includes(msg.action);
+    if (!read && !host) throw Error("只有房主可以控制回放或载入存档。");
+    if (msg.action === "record_export") {
+      if (msg.matchId !== room.matchId) throw Error("对局已更新，请重新同步。");
+      const record = room.replay?.record || room.record;
+      if (!record?.frames.length) throw Error("当前没有可保存的对局记录。");
+      const full = !!room.replay || logsUnlocked(room),
+        perspective = msg.perspective || logPerspective(viewTeam(member));
+      if (!full && !exportPerspectives(room, member).includes(perspective))
+        throw Error("对局中只能保存本队视角录像。");
+      if (!record.perspectives.includes(perspective)) throw Error("记录不包含这个视角。");
+      const exported = full
+        ? record
+        : {
+            ...record,
+            perspectives: [perspective],
+            checkpoints: [],
+            frames: record.frames.map((f) => ({
+              ...f,
+              views: { [perspective]: f.views[perspective] },
+            })),
+          };
+      send(member.ws, { type: "record_reply", ack: msg.id, record: exported });
+      return true;
+    }
+    const cached = member.requests.get(msg.id);
+    if (cached?.type === "record_reply") {
+      send(member.ws, cached);
+      return true;
+    }
+    if (!Number.isSafeInteger(msg.revision) || msg.revision > room.revision)
+      throw Error("回放状态已更新。");
+    if (room.started && !["replay_ready", "replay_view"].includes(msg.action))
+      throw Error("请先让全员返回大厅，再载入或开始回放。");
+    let result = {};
+    switch (msg.action) {
+      case "record_upload_begin":
+        if (!Number.isInteger(msg.length) || msg.length < 1 || msg.length > Records.maxBytes)
+          throw Error("对局记录大小无效。");
+        room.recordUpload = {
+          id: randomId(),
+          owner: member.id,
+          length: msg.length,
+          text: "",
+          sequence: 0,
+        };
+        result.uploadId = room.recordUpload.id;
+        break;
+      case "record_upload_chunk": {
+        const upload = room.recordUpload;
+        if (
+          !upload ||
+          upload.id !== msg.uploadId ||
+          upload.owner !== member.id ||
+          msg.sequence !== upload.sequence ||
+          typeof msg.text !== "string" ||
+          msg.text.length > 20000 ||
+          upload.text.length + msg.text.length > upload.length
+        )
+          throw Error("记录上传分块无效。");
+        upload.text += msg.text;
+        upload.sequence++;
+        break;
+      }
+      case "record_upload_finish": {
+        const upload = room.recordUpload;
+        if (
+          !upload ||
+          upload.id !== msg.uploadId ||
+          upload.owner !== member.id ||
+          upload.text.length !== upload.length
+        )
+          throw Error("记录上传尚未完成。");
+        room.loadedRecord = Records.validate(G, JSON.parse(upload.text));
+        delete room.recordUpload;
+        result.loaded = true;
+        break;
+      }
+      case "replay_open": {
+        const record = msg.loaded ? room.loadedRecord : room.record;
+        if (!record?.frames.length) throw Error("当前没有对局记录。");
+        room.replay = {
+          id: randomId(),
+          record,
+          index: 0,
+          token: randomId(),
+          playing: false,
+          speed: 1,
+          ready: new Set(),
+          cache: new Map(),
+        };
+        break;
+      }
+      case "replay_close":
+        room.replay = null;
+        break;
+      case "replay_control": {
+        const replay = room.replay;
+        if (!replay || msg.replayId !== replay.id) throw Error("回放已结束。");
+        if (msg.playing !== undefined && typeof msg.playing !== "boolean")
+          throw Error("播放状态无效。");
+        if (msg.speed !== undefined && ![0.5, 1, 2, 4].includes(msg.speed))
+          throw Error("播放速度无效。");
+        if (msg.index !== undefined) {
+          if (
+            !Number.isInteger(msg.index) ||
+            msg.index < 0 ||
+            msg.index >= replay.record.frames.length
+          )
+            throw Error("回放位置无效。");
+          replay.index = msg.index;
+          replay.token = randomId();
+          replay.ready.clear();
+        }
+        if (msg.playing !== undefined) {
+          if (typeof msg.playing !== "boolean") throw Error("播放状态无效。");
+          replay.playing = msg.playing;
+        }
+        if (msg.speed !== undefined) {
+          if (![0.5, 1, 2, 4].includes(msg.speed)) throw Error("播放速度无效。");
+          replay.speed = msg.speed;
+        }
+        break;
+      }
+      case "replay_ready": {
+        const replay = room.replay;
+        if (!replay || msg.replayId !== replay.id || msg.token !== replay.token)
+          throw Error("回放帧已更新。");
+        replay.ready.add(member.id);
+        break;
+      }
+      case "replay_view": {
+        const replay = room.replay;
+        if (!replay || !replay.record.perspectives.includes(msg.perspective))
+          throw Error("回放视角无效。");
+        member.replayView = msg.perspective;
+        replay.ready.delete(member.id);
+        break;
+      }
+      case "replay_fork": {
+        const replay = room.replay;
+        if (!replay || msg.replayId !== replay.id || msg.index !== replay.index)
+          throw Error("回放位置已更新。");
+        forkRecord(room, replay.record, msg.index, msg.assignments);
+        break;
+      }
+      default:
+        throw Error("不支持的对局记录操作。");
+    }
+    const reply = { type: "record_reply", ack: msg.id, ...result };
+    member.requests.set(msg.id, reply);
+    if (member.requests.size > 512) member.requests.delete(member.requests.keys().next().value);
+    if (!msg.action.startsWith("record_upload")) {
+      room.revision++;
+      broadcast(room);
+    }
+    send(member.ws, reply);
+    return true;
+  }
   // 未参战的出生点不等待连接；参战席位掉线仍然暂停，保留重连/补位流程。
   const createPlanner =
     typeof createAttackPlanner === "undefined"
@@ -263,6 +626,15 @@ function createRoomEngine({
       }
     }
     return {
+      record: room.record
+        ? {
+            frames: room.record.frames.length,
+            checkpoints: room.record.checkpoints.length,
+            truncated: !!room.record.truncated,
+            unlocked: logsUnlocked(room),
+          }
+        : null,
+      replay: replaySnapshot(room, recipient),
       type: "state",
       room: room.code,
       revision: room.revision,
@@ -428,6 +800,8 @@ function createRoomEngine({
       completePlayback(room);
       scheduleResultReturn(room);
     }
+    captureRecord(room);
+    advanceReplay(room);
     room.updated = Date.now();
     for (const member of members(room)) send(member.ws, state(room, ack, member));
     broadcastRooms();
@@ -1300,6 +1674,9 @@ function createRoomEngine({
     let id = msg.id;
     if (typeof id !== "string" || id.length < 4 || id.length > 100) throw Error("请求编号无效");
     const cache = member.requests;
+    if (typeof msg.action !== "string") throw Error("无效的操作。");
+    if (recordAction(room, member, msg)) return;
+    if (room.replay && !["sync", "chat"].includes(msg.action)) throw Error("请先结束回放。");
     // Recheck every download, including retried IDs after a seat or match change.
     if (msg.action === "download_log") {
       if (msg.matchId !== room.matchId || !room.matchId) throw Error("战报所属对局已更新。");

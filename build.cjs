@@ -6,8 +6,9 @@ const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 // HTML 解析器会把字符串里的 </script> 也当作脚本结束符。
 const inlineScript = (source) => source.replace(/<\/script/gi, "<\\/script");
-let html = read("client/template.html").replace("__BATTLE_HUD_CSS__", () =>
-  read("client/battle-hud.css") + "\n" + read("client/mobile-layout.css"),
+let html = read("client/template.html").replace(
+  "__BATTLE_HUD_CSS__",
+  () => read("client/battle-hud.css") + "\n" + read("client/mobile-layout.css"),
 );
 html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
@@ -74,6 +75,8 @@ for (const [key, file] of [
   ["CHAT", "client/chat.js"],
   ["MATCH_RESULTS", "client/match-results.js"],
   ["ATTACK_PLANS", "shared/attack-plans.js"],
+  ["MATCH_RECORDS", "shared/match-records.js"],
+  ["REPLAY_PLAYER", "client/replay-player.js"],
   ["ROOM_ENGINE", "shared/room-engine.js"],
   ["PLANNING_UI", "client/planning-ui.js"],
   ["MAP_COMBAT", "client/map-combat.js"],

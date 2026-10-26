@@ -101,7 +101,7 @@ class Client {
     });
     const result = await this.wait(
       (m) =>
-        ((m.type === "state" || m.type === "chat" || m.type === "battle_log") && m.ack === (override.id || id)) ||
+        ((m.type === "state" || m.type === "chat" || m.type === "battle_log" || m.type === "record_reply") && m.ack === (override.id || id)) ||
         (m.type === "error" && m.id === (override.id || id)),
       from,
     );
@@ -1461,6 +1461,7 @@ test("per-seat AI configuration is host-only, atomic and applied separately at d
   await startRoom(host);
   assert.equal(room.phase, "assembly");
   await host.latest((s) => s.phase === "assembly");
+  await guest.latest((s) => s.phase === "assembly");
   await watch.latest((s) => s.phase === "assembly");
   assert.deepEqual(
     host.state.assembly.players.map((p) => p.seat),
@@ -3395,4 +3396,34 @@ test("spectator perspective and permissioned log downloads work over WebSocket a
   assert.ok(
     (await resumed.act("download_log", { perspective: "team:0" })).log.includes("blue-only"),
   );
+});
+
+test('records replay over WebSocket with host controls, independent views, reconnect and checkpoint resume',async(t)=>{
+  const {app,client}=await setup(t),host=await client(),guest=await client();
+  await host.hello('create','RECORD');await guest.hello('join','RECORD');
+  await readyMatch(host,guest,app,false);
+  const room=app.rooms.get('RECORD');
+  const restricted=await host.act('record_export',{perspective:'team:0'});
+  assert.equal(restricted.type,'record_reply');assert.deepEqual(restricted.record.checkpoints,[]);
+  assert.equal((await guest.act('record_export',{perspective:'global'})).type,'error');
+  await host.act('return_room');
+  const full=(await host.act('record_export',{perspective:'global'})).record;
+  const raw=JSON.stringify(full),upload=await host.act('record_upload_begin',{length:raw.length});
+  for(let offset=0,sequence=0;offset<raw.length;offset+=20000,sequence++)assert.equal((await host.act('record_upload_chunk',{uploadId:upload.uploadId,sequence,text:raw.slice(offset,offset+20000)})).type,'record_reply');
+  assert.equal((await host.act('record_upload_finish',{uploadId:upload.uploadId})).type,'record_reply');
+  assert.equal((await host.act('replay_open',{loaded:true})).type,'record_reply');
+  await guest.latest(s=>!!s.replay);
+  const replayId=host.state.replay.id;
+  assert.equal((await guest.act('replay_control',{replayId,playing:true})).type,'error');
+  await guest.act('replay_view',{perspective:'team:1'});
+  assert.equal(guest.state.replay.perspective,'team:1');
+  const resumed=await client();await resumed.hello('resume','RECORD',guest.joined.token);
+  assert.equal(resumed.state.replay.id,replayId);assert.equal(resumed.state.replay.perspective,'team:1');
+  const cp=host.state.replay.checkpoints[0];assert(cp);
+  await host.act('replay_control',{replayId,index:cp.frame});
+  const seed=room.replay.record.checkpoints[0].game.seed;
+  const result=await host.act('replay_fork',{replayId,index:cp.frame,assignments:[host.joined.memberId,'ai']});
+  assert.equal(result.type,'record_reply');assert.equal(room.game.seed,seed);assert.equal(room.phase,'idle');
+  await resumed.latest(s=>!s.replay&&s.started);
+  assert.equal(resumed.state.you.seat,null);assert.equal(room.seats[1].bot,true);
 });

@@ -322,7 +322,11 @@ const SpriteRenderer = (() => {
           flying ||
           ART.models[model].movementType === "air");
       const effectTime =
-        useWallClock && typeof performance !== "undefined" ? performance.now() / 1000 : time;
+        useWallClock && typeof performance !== "undefined"
+          ? globalThis.ReplayPlayer?.active
+            ? globalThis.ReplayPlayer.time
+            : performance.now() / 1000
+          : time;
       const attackFrame = layer.attackFrame;
       const firing = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
       const frame =
@@ -354,7 +358,11 @@ const SpriteRenderer = (() => {
         transform.rotation +
           radians(
             (layer.rotationSpeed || 0) *
-              (typeof performance !== "undefined" ? performance.now() / 1000 : time),
+              (typeof performance !== "undefined"
+                ? globalThis.ReplayPlayer?.active
+                  ? globalThis.ReplayPlayer.time
+                  : performance.now() / 1000
+                : time),
           ),
       );
       ctx.scale(transform.scaleX, transform.scaleY);
@@ -388,7 +396,11 @@ const SpriteRenderer = (() => {
         model,
         brokenParts,
         { x, y, scale, angle },
-        typeof performance !== "undefined" ? performance.now() / 1000 : time,
+        typeof performance !== "undefined"
+          ? globalThis.ReplayPlayer?.active
+            ? globalThis.ReplayPlayer.time
+            : performance.now() / 1000
+          : time,
       );
   }
   function movement(model) {
