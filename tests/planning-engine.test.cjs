@@ -908,3 +908,52 @@ test("spectators switch map fog and LOG together without gaining unit control or
   assert.deepEqual(command("download_log", { perspective: "global" }).log, room.log);
   assert.deepEqual(command("download_log", { perspective: "team:1" }).log, room.teamLogs[1]);
 });
+
+test("fog effects use a separate presentation feed without hidden health, orders or team log access", (t) => {
+  const { room, act } = fixture(t, 4);
+  room.game.tiles = Array.from({ length: 40 }, () => Array(50).fill("plain"));
+  for (const u of room.game.units) Object.assign(u, { x: u.team ? 35 : 2, y: 5 + G.ownerOf(u) });
+  const hidden = room.game.units.filter((u) => u.team === 1);
+  hidden[0].hp = 12345;
+  hidden[0].en = 6789;
+  hidden[0].plan = { target: "secret-target" };
+  room.combatBatch = [
+    {
+      id: "hidden-battle",
+      matchId: room.matchId,
+      a: hidden[0].id,
+      b: hidden[1].id,
+      actors: structuredClone(hidden),
+      before: Object.fromEntries(hidden.map((u) => [u.id, u.hp])),
+      events: [
+        {
+          from: hidden[0].id,
+          to: hidden[1].id,
+          before: 12345,
+          after: 10,
+          damage: 12335,
+          hitChance: 77,
+          strikes: [
+            { executed: true, hit: true, before: 12345, after: 10, damage: 12335, hitChance: 77 },
+          ],
+        },
+      ],
+    },
+  ];
+  const state = act(0, "sync");
+  assert.equal(state.combats.length, 0);
+  assert.equal(state.effectCombats.length, 1);
+  assert(!state.game.units.some((u) => u.id === hidden[0].id));
+  const actor = state.effectActors.find((u) => u.id === hidden[0].id);
+  assert.equal(actor.hp, 1);
+  assert.equal(actor.en, 1);
+  assert.equal(actor.plan, undefined);
+  const battle = state.effectCombats[0];
+  assert.deepEqual(battle.visibleActorIds, []);
+  assert.equal(battle.events[0].before, 1);
+  assert.equal(battle.events[0].damage, 0);
+  assert.equal(battle.events[0].hitChance, undefined);
+  assert.equal(battle.events[0].strikes[0].hitChance, undefined);
+  assert.deepEqual(state.log, room.teamLogs[0]);
+  assert.deepEqual(state.logExport.options, ["team:0"]);
+});

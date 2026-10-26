@@ -24,7 +24,7 @@ const CombatPlayback = (() => {
       return;
     }
     seen.add(batch.id);
-    const battles = snapshot.combats || [];
+    const battles = [...(snapshot.combats || []), ...(snapshot.effectCombats || [])];
     if (battles.length) {
       queue.push({ id: batch.id, battles });
       MapCombat.seed(battles);

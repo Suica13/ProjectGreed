@@ -48,8 +48,7 @@ test("air, amphibious, hover and naval movement use distinct terrain rules", () 
   const g = game([entry("MSM_03"), entry("EF_Heli"), entry("Type74"), entry("RGM_79")]);
   const own = g.units.filter((u) => u.team === 0);
   g.tiles[10][10] = "water";
-  for (const u of own)
-    assert.equal(G.movementCost(g, u, 10, 10), G.modelOf(u).prefabId === "RGM_79" ? Infinity : 1);
+  for (const u of own) assert.equal(G.movementCost(g, u, 10, 10), 1);
   g.tiles[10][10] = "rock";
   assert.equal(G.movementCost(g, own[1], 10, 10), 1);
   assert.equal(G.movementCost(g, own[0], 10, 10), Infinity);

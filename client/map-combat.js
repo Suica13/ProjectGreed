@@ -95,7 +95,7 @@ const MapCombat = (() => {
       return {
         unit,
         x: (Rules.center(unit).x + 0.5) * 64,
-        y: (Rules.center(unit).y + 0.5) * 64,
+        y: (Rules.center(unit).y + 0.5 + EnvironmentVisuals.pose(unit, unit).offset) * 64,
         scale:
           1.2 *
           (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
@@ -126,8 +126,9 @@ const MapCombat = (() => {
     const weapon = Rules.eventWeapon(source.unit, event);
     const plan = WeaponEffects.plan(weapon, source, target, event);
     frame = { view, index: view.index, event, source, target, weapon, plan, time: 0 };
-    byId("mapCombatStatus").textContent =
-      `${unitName(source.unit)} → ${event.empty ? "空地" : unitName(target.unit)} · ${weapon.name}`;
+    byId("mapCombatStatus").textContent = event.effectsOnly
+      ? I18n.text("战斗演出")
+      : `${unitName(source.unit)} → ${event.empty ? "空地" : unitName(target.unit)} · ${weapon.name}`;
     return frame;
   }
   function commit(view, parallel = false) {
@@ -509,7 +510,12 @@ const MapCombat = (() => {
       );
     const contacts = WeaponEffects.arrived(plan, time),
       latest = contacts.at(-1);
-    if (latest && time < latest.at + 0.65) {
+    if (
+      !event.effectsOnly &&
+      !window.ReplayPresentation?.immersive &&
+      latest &&
+      time < latest.at + 0.65
+    ) {
       ctx.font = "bold 12px system-ui";
       ctx.textAlign = "center";
       ctx.fillStyle = latest.hit ? "#ffe7aa" : "#b9dbe8";
@@ -522,7 +528,12 @@ const MapCombat = (() => {
       );
     }
     const partContact = contacts.filter((contact) => contact.brokenParts?.length).at(-1);
-    if (partContact && time < partContact.at + 1.2) {
+    if (
+      !event.effectsOnly &&
+      !window.ReplayPresentation?.immersive &&
+      partContact &&
+      time < partContact.at + 1.2
+    ) {
       ctx.font = "bold 12px system-ui";
       ctx.textAlign = "center";
       ctx.fillStyle = "#ffad65";

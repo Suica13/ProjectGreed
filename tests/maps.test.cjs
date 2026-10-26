@@ -45,7 +45,9 @@ test("all fourteen preset maps hold independent full twelve-unit formations with
       assert.equal(own.length, 12);
       assert.ok(own.every((u) => u.team === spawn.team));
       const cells = G.deploymentCells(g, seat);
-      assert.ok(own.every((u) => cells.some((c) => c.x === u.x && c.y === u.y)));
+      assert.ok(
+        own.every((u) => G.deploymentCells(g, seat, u).some((c) => c.x === u.x && c.y === u.y)),
+      );
       if (seat > 1) assert.throws(() => G.deploy(g, seat, g.units[0].id, cells[0].x, cells[0].y));
       assert.equal(G.confirmDeployment(g, seat), seat === map.spawns.length - 1);
     }

@@ -541,6 +541,15 @@ const WeaponEffects = (() => {
     }
   }
   function draw(ctx, weapon, plan, time, source, event, size = 1, pose = null, layer = "all") {
+    ctx.save();
+    if (weapon.projectile?.visibleInFog === false) SpriteEffects.clipFog(ctx);
+    try {
+      drawUnclipped(ctx, weapon, plan, time, source, event, size, pose, layer);
+    } finally {
+      ctx.restore();
+    }
+  }
+  function drawUnclipped(ctx, weapon, plan, time, source, event, size, pose, layer) {
     if (weapon.projectile?.motion === "tether") {
       drawTether(ctx, weapon, plan, time, source, event, size, pose, layer);
       return;

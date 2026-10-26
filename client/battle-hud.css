@@ -1370,3 +1370,24 @@
   background: #14232d;
   border: 1px solid #4e778c;
 }
+
+/* Escape restores the interface; no exit button remains over immersive footage. */
+body.replay-immersive * {
+  visibility: hidden !important;
+}
+body.replay-immersive #map {
+  visibility: visible !important;
+  width: 100vw;
+  height: 100vh;
+}
+body.replay-immersive #mapWrap {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 2147483647;
+  border: 0;
+}
+body.replay-immersive #map {
+  pointer-events: none;
+}

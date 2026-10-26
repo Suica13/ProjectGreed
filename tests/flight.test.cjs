@@ -31,13 +31,13 @@ for (const id of ["MS_07H", "MS_07H8"])
     g.tiles[10][12] = "rock";
     assert.equal(G.terrainCost(g, u, 11, 10), 1);
     assert.equal(G.terrainCost(g, u, 12, 10), 1);
-    assert(G.reachable(g, u).has(G.key(12, 10)));
+    assert.equal(G.reachable(g, u).has(G.key(12, 10)), G.modelOf(u, g).move >= 2);
     g.tiles[u.y][u.x] = "water";
-    assert.equal(G.canUseSkill(g, u, "flight_stance"), false);
+    assert.equal(G.canUseSkill(g, u, "flight_stance"), m.adaptability.water > 0);
     g.tiles[u.y][u.x] = "plain";
     G.useSkill(g, u, "flight_stance", u.x, u.y);
     assert.equal(u.flying, false);
     assert.equal(u.actionPoints, 3);
     assert.equal(u.moved, false);
-    assert.equal(G.terrainCost(g, u, 11, 10), Infinity);
+    assert.equal(G.terrainCost(g, u, 11, 10), m.adaptability.water > 0 ? 1 : Infinity);
   });

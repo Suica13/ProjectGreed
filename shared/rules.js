@@ -582,11 +582,27 @@ const Tactics = (() => {
     return variants.get(factor);
   }
   // Derive damage penalties from current parts; never modify a shared catalog or AI variant.
-  function modelOf(unit) {
+  function environmentOf(g, unit, x = unit.x, y = unit.y) {
+    if ((g?.environment ?? unit.environment) === "space") return "space";
+    const movement = unit.flying ? "air" : models[unit.model].movementType;
+    if (movement === "air") return "air";
+    if (movement === "hover") return "ground";
+    return g?.tiles
+      ? g.tiles[y]?.[x] === "water"
+        ? "water"
+        : "ground"
+      : unit.environment === "water"
+        ? "water"
+        : "ground";
+  }
+  function adaptationOf(g, unit, x = unit.x, y = unit.y) {
+    return (models[unit.model].adaptability?.[environmentOf(g, unit, x, y)] ?? 100) / 100;
+  }
+  function modelOf(unit, g = null) {
     const original = performanceModelOf(unit),
       base = unit.flying ? { ...original, movementType: "air" } : original,
       penalty = parts.penalties(base.partsBreakable === false ? {} : unit),
-      environment = unit.environment ?? "ground",
+      environment = environmentOf(g, unit),
       adaptability = (base.adaptability?.[environment] ?? 100) / 100,
       boostMove = (unit.overBoost?.moveBonus ?? 0) + (unit.fullBoost?.moveBonus ?? 0),
       boostMobility =
@@ -619,8 +635,9 @@ const Tactics = (() => {
                 1,
                 Math.floor((base.move + boostMove) * adaptability * penalty.moveMultiplier),
               )
-            : (base.move + boostMove) * adaptability,
+            : Math.max(1, (base.move + boostMove) * adaptability),
       mobility: base.mobility * adaptability * boostMobility,
+      accuracy: base.accuracy * adaptability,
       defenses: Object.fromEntries(
         Object.entries(base.defenses).map(([type, value]) => [
           type,
@@ -928,7 +945,10 @@ const Tactics = (() => {
         team = seatTeam(seat);
       const heading = team ? -90 : 90;
       const probe = { id: seat + "-" + i, model, team, ownerSeat: seat, hp: 1, angle: heading };
-      const movement = models[model].movementType || "ground";
+      const movement =
+        (models[model].movementType || "ground") +
+        ":" +
+        ((models[model].adaptability?.water ?? 0) > 0);
       if (!terrainCells.has(movement)) {
         const cells = deploymentCells(placed, seat, probe);
         terrainCells.set(movement, { cells, area: new Set(cells.map((c) => key(c.x, c.y))) });
@@ -1064,7 +1084,10 @@ const Tactics = (() => {
     if (g.environment !== "space") {
       if (movement === "air") return 1;
       if (movement === "naval") return tile === "water" ? 1 : Infinity;
-      if (tile === "water" && ["amphibious", "hover"].includes(movement)) return 1;
+      if (tile === "water") {
+        if (movement === "hover") return 1;
+        return (models[u.model].adaptability?.water ?? 0) > 0 ? 1 : Infinity;
+      }
     }
     return terrain[g.tiles[y][x]].cost;
   }
@@ -1079,7 +1102,8 @@ const Tactics = (() => {
   // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
   function reachable(g, u, starts = null) {
     if (!onMap(u)) return new Map();
-    const moveLimit = modelOf(u).move;
+    const startAdaptation = adaptationOf(g, u);
+    const moveLimit = startAdaptation > 0 ? modelOf(u, g).move / startAdaptation : modelOf(u).move;
     // A search does not mutate the board. Evaluate each destination's expensive
     // collision/terrain/ZOC checks once, even when reached from several edges.
     const stepCosts = new Map();
@@ -1089,7 +1113,11 @@ const Tactics = (() => {
         stepCosts.set(
           id,
           fits(g, u, x, y, u.angle, true)
-            ? Math.max(...cells(u, x, y).map((c) => movementCost(g, u, c.x, c.y)))
+            ? Math.max(
+                ...cells(u, x, y).map(
+                  (c) => movementCost(g, u, c.x, c.y) / (adaptationOf(g, u, c.x, c.y) || 0),
+                ),
+              )
             : Infinity,
         );
       return stepCosts.get(id);
@@ -1271,14 +1299,7 @@ const Tactics = (() => {
     )
       return 0;
     if (!weapon.targetModifiers) return 1;
-    const category =
-      g.environment === "space"
-        ? "space"
-        : targetModel.movementType === "air"
-          ? "air"
-          : g.tiles[target.y][target.x] === "water"
-            ? "water"
-            : "ground";
+    const category = environmentOf(g, target);
     return weapon.targetModifiers[category] ?? 1;
   }
   function groundTarget(g, a, x, y) {
@@ -1378,9 +1399,14 @@ const Tactics = (() => {
     w = weaponStats(w, a);
     const bonuses = modelOf(a).attackBonuses,
       categoryBonus = 1 + bonuses[w.type === "melee" ? "melee" : "shooting"] / 100;
-    const defender = modelOf(b),
+    const defender = modelOf(b, g),
       ground = terrain[g.tiles[b.y][b.x]],
-      cover = w.type === "melee" ? (ground.meleeCover ?? 0) : ground.cover,
+      cover =
+        environmentOf(g, b) === "air"
+          ? 0
+          : w.type === "melee"
+            ? (ground.meleeCover ?? 0)
+            : ground.cover,
       mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.25,
       sizeModifier = w.antiSize?.[defender.ship ? "large" : "small"] || { damage: 1, accuracy: 1 },
       targetFactor = targetModifier(g, b, w),
@@ -1393,7 +1419,7 @@ const Tactics = (() => {
             (w.attack.strikes.length === 1 && w.attack.strikes[0].accuracy !== undefined
               ? (w.attack.strikes[0].accuracy * w.hit) / (w.sourceHit || w.hit || 1)
               : w.hit) *
-              (modelOf(a).accuracy / 100) *
+              (modelOf(a, g).accuracy / 100) *
               sizeModifier.accuracy *
               targetFactor -
               cover -
@@ -1982,6 +2008,8 @@ const Tactics = (() => {
     canUseSkill: skills.canUse,
     skillTargets: skills.targets,
     useSkill: skills.use,
+    environmentOf,
+    adaptationOf,
     terrainCost,
     planFormation,
     validateArmySettings,

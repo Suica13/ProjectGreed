@@ -537,6 +537,18 @@ const Net = (() => {
     }
     if (s.started && online)
       status((n.local ? "离线遭遇战" : "房间 " + n.room) + " · " + roleName());
+    const effectEvent = s.effectEvent;
+    if (effectEvent && !n.seen.has("effect:" + effectEvent.id)) {
+      n.seen.add("effect:" + effectEvent.id);
+      if (n.applied && online) {
+        if (["move", "launch"].includes(effectEvent.type))
+          PlanningUI.move(
+            effectEvent,
+            s.effectActors?.find((actor) => actor.id === effectEvent.unitId),
+          );
+        if (effectEvent.effect) SkillEffects.start(effectEvent);
+      }
+    }
     const event = s.lastEvent;
     if (event && !n.seen.has(event.id)) {
       n.seen.add(event.id);

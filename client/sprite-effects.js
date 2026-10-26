@@ -1,5 +1,20 @@
 /* 原 MOD 序列帧。命中/爆炸播放一次，低耐久电流单独循环；都不生成伤害。 */
 const SpriteEffects = (() => {
+  let fogClip = null,
+    fogTransform = null;
+  // Every effect is visible through fog by default. Catalog entries may opt out.
+  function setFogClip(path, ctx) {
+    fogClip = path;
+    fogTransform = ctx?.getTransform();
+  }
+  function clipFog(ctx) {
+    if (!fogClip || !fogTransform) return;
+    const transform = ctx.getTransform();
+    ctx.setTransform(fogTransform);
+    ctx.clip(fogClip);
+    ctx.setTransform(transform);
+  }
+
   function frame(id, time) {
     const effect = ART.effects[id];
     if (!effect || time < 0 || time >= effect.duration) return null;
@@ -22,6 +37,7 @@ const SpriteEffects = (() => {
     const forward = effect.offset.y + effect.drift * time,
       lateral = effect.offset.x;
     ctx.save();
+    if (effect.visibleInFog === false) clipFog(ctx);
     ctx.translate(
       x + (Math.cos(angle) * forward - Math.sin(angle) * lateral) * scale,
       y + (Math.sin(angle) * forward + Math.cos(angle) * lateral) * scale,
@@ -70,7 +86,7 @@ const SpriteEffects = (() => {
     }
     return count;
   }
-  return { frame, sound, draw, lowHp, brokenModules };
+  return { frame, sound, draw, lowHp, brokenModules, setFogClip, clipFog };
 })();
 
 /* 脱出闪光留在原机体所在位置，不触发死亡电流或死亡爆炸。 */
@@ -88,7 +104,9 @@ const SkillEffects = (() => {
     for (let i = active.length - 1; i >= 0; i--) {
       const item = active[i],
         time = (now - item.start) / 1000;
-      if (time >= Math.max(ART.effects[item.effect].duration, item.reconMode === "camera" ? 0.75 : 0)) {
+      if (
+        time >= Math.max(ART.effects[item.effect].duration, item.reconMode === "camera" ? 0.75 : 0)
+      ) {
         active.splice(i, 1);
         continue;
       }
@@ -98,11 +116,18 @@ const SkillEffects = (() => {
     }
   }
   function pose(unit, now) {
-    const item = active.find(event => event.unitId === unit.id && event.reconMode === "camera" && now - event.start < 750);
+    const item = active.find(
+      (event) =>
+        event.unitId === unit.id && event.reconMode === "camera" && now - event.start < 750,
+    );
     if (!item) return null;
     const point = Rules.center(unit);
-    return { weaponDisplayIndex: item.weaponDisplayIndex, clip: "Common_Shoot_A", time: (now-item.start)/1000,
-      angle: Math.atan2(item.to.x-point.x, -(item.to.y-point.y))*180/Math.PI };
+    return {
+      weaponDisplayIndex: item.weaponDisplayIndex,
+      clip: "Common_Shoot_A",
+      time: (now - item.start) / 1000,
+      angle: (Math.atan2(item.to.x - point.x, -(item.to.y - point.y)) * 180) / Math.PI,
+    };
   }
   return { start, reset, draw, pose };
 })();
@@ -199,4 +224,98 @@ const MapEffects = (() => {
     }
   }
   return { capture, captureTurn, draw, pending, after, reset };
+})();
+
+/* Presentation-only altitude, water entry and cached soft fog. No gameplay mutations. */
+const EnvironmentVisuals = (() => {
+  let matchKey = null,
+    fogKey = null,
+    fogCanvas = null;
+  const water = new Map(),
+    splashes = [];
+  function pose(unit, cell) {
+    const environment = Rules.environmentOf(game, unit, cell.x, cell.y);
+    return {
+      environment,
+      offset: environment === "air" ? -0.2 : environment === "water" ? 0.14 : 0,
+      alpha: environment === "water" ? 0.58 : 1,
+    };
+  }
+  function observe(unit, cell, now) {
+    const currentMatch = typeof Net !== "undefined" && Net.active ? Net.snapshot?.matchId : game;
+    if (currentMatch !== matchKey) {
+      water.clear();
+      splashes.length = 0;
+      matchKey = currentMatch;
+    }
+    const submerged = pose(unit, cell).environment === "water";
+    if (water.get(unit.id) === false && submerged) splashes.push({ ...cell, start: now });
+    water.set(unit.id, submerged);
+  }
+  function drawWater(ctx, now, position, tile) {
+    // TODO: Find and import the original MOD water-entry effect; replace this procedural fallback.
+    for (let i = splashes.length - 1; i >= 0; i--) {
+      const splash = splashes[i],
+        age = (now - splash.start) / 700;
+      if (age >= 1) {
+        splashes.splice(i, 1);
+        continue;
+      }
+      const p = position(splash.x, splash.y);
+      ctx.save();
+      if (ART.presentation.waterEntry?.visibleInFog === false) SpriteEffects.clipFog(ctx);
+      ctx.strokeStyle = `rgba(175,230,255,${1 - age})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(
+        p.x,
+        p.y,
+        tile * (0.15 + age * 0.55),
+        tile * (0.06 + age * 0.22),
+        0,
+        0,
+        Math.PI * 2,
+      );
+      ctx.stroke();
+      for (let n = 0; n < 8; n++) {
+        const a = (n * Math.PI) / 4;
+        ctx.beginPath();
+        ctx.arc(
+          p.x + Math.cos(a) * age * tile * 0.45,
+          p.y + Math.sin(a) * age * tile * 0.18 - Math.sin(age * Math.PI) * tile * 0.3,
+          Math.max(1, tile * 0.025),
+          0,
+          Math.PI * 2,
+        );
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+  function fog(ctx, intel, ox, oy, tile) {
+    if (!intel) return;
+    const width = Rules.mapWidth(game),
+      height = Rules.mapHeight(game);
+    const key = JSON.stringify([width, height, intel.visibleCells]);
+    if (key !== fogKey) {
+      fogKey = key;
+      fogCanvas = document.createElement("canvas");
+      fogCanvas.width = width * 8;
+      fogCanvas.height = height * 8;
+      const c = fogCanvas.getContext("2d"),
+        visible = new Set(intel.visibleCells);
+      c.fillStyle = "rgba(3,10,18,0.78)";
+      for (let y = 0; y < height; y++)
+        for (let x = 0; x < width; x++)
+          if (!visible.has(x + "," + y)) c.fillRect(x * 8, y * 8, 8, 8);
+    }
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(ox, oy, width * tile, height * tile);
+    ctx.clip();
+    ctx.filter = `blur(${Math.max(1, tile * 0.12)}px)`;
+    ctx.drawImage(fogCanvas, ox, oy, width * tile, height * tile);
+    ctx.restore();
+  }
+  return { pose, observe, drawWater, fog };
 })();

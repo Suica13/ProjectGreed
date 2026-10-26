@@ -5,8 +5,8 @@ const PlanningUI = (() => {
     moves.clear();
     lockStarts.clear();
   }
-  function move(event) {
-    const unit = getUnit(event.unitId);
+  function move(event, actor = null) {
+    const unit = actor || getUnit(event.unitId);
     if (!unit) return;
     const start = performance.now();
     GameAudio.moveUnit(unit);
@@ -184,8 +184,14 @@ const AttackControls = (() => {
     return current;
   }
   function targetFor(unit) {
-    if (mode !== "attack-weapons" || !current || current.unitId !== unit.id ||
-        current.round !== game.round || current.session !== session) return null;
+    if (
+      mode !== "attack-weapons" ||
+      !current ||
+      current.unitId !== unit.id ||
+      current.round !== game.round ||
+      current.session !== session
+    )
+      return null;
     const target = getUnit(current.targetId);
     return target?.hp > 0 ? target : null;
   }

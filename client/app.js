@@ -1023,7 +1023,8 @@ function drawMap(now) {
   mapGeo = { tile, ox, oy };
   ctx.fillStyle = "#111e27";
   ctx.fillRect(0, 0, w, h);
-  const chosen = getUnit(selected),
+  const immersive = window.ReplayPresentation?.immersive;
+  const chosen = immersive ? null : getUnit(selected),
     canMove = !!(
       chosen &&
       chosen.hp > 0 &&
@@ -1073,8 +1074,8 @@ function drawMap(now) {
       if ((x + y) % 2) ctx.fillRect(px, py, tile, tile);
       ctx.strokeStyle = "#49616b55";
       ctx.lineWidth = 0.7;
-      ctx.strokeRect(px + 0.4, py + 0.4, tile - 0.8, tile - 0.8);
-      if (phase === "deployment") {
+      if (!immersive) ctx.strokeRect(px + 0.4, py + 0.4, tile - 0.8, tile - 0.8);
+      if (!immersive && phase === "deployment") {
         const expansion = Rules.getMap(game.mapId).deploymentExpansion;
         if (
           expansion &&
@@ -1085,6 +1086,7 @@ function drawMap(now) {
         }
       }
       if (
+        !immersive &&
         phase === "deployment" &&
         Deployment.team() !== null &&
         deploymentArea.has(Rules.key(x, y))
@@ -1198,26 +1200,26 @@ function drawMap(now) {
           ctx.fillRect(px + sx * (tile - size), py + sy * (tile - size), size, size);
         }
       }
-      if (moveHighlights.has(Rules.key(x, y))) {
+      if (!immersive && moveHighlights.has(Rules.key(x, y))) {
         ctx.fillStyle = "#63caff2d";
         ctx.fillRect(px + 2, py + 2, tile - 4, tile - 4);
         ctx.strokeStyle = "#6ac6f05f";
         ctx.strokeRect(px + 2, py + 2, tile - 4, tile - 4);
       }
-      if (attackArea.has(Rules.key(x, y))) {
+      if (!immersive && attackArea.has(Rules.key(x, y))) {
         ctx.fillStyle = "rgba(242, 107, 115, 0.25)";
         ctx.fillRect(px + 2, py + 2, tile - 4, tile - 4);
         ctx.strokeStyle = "#f26b73aa";
         ctx.lineWidth = 1;
         ctx.strokeRect(px + 2, py + 2, tile - 4, tile - 4);
       }
-      if (skillCells.has(Rules.key(x, y))) {
+      if (!immersive && skillCells.has(Rules.key(x, y))) {
         ctx.fillStyle = "#e4c56c45";
         ctx.fillRect(px + 2, py + 2, tile - 4, tile - 4);
         ctx.strokeStyle = "#f1d781bb";
         ctx.strokeRect(px + 2, py + 2, tile - 4, tile - 4);
       }
-      if (mode === "target" && weapon && Rules.inRange(chosen, { x, y }, weapon)) {
+      if (!immersive && mode === "target" && weapon && Rules.inRange(chosen, { x, y }, weapon)) {
         ctx.fillStyle = "#d19a552b";
         ctx.fillRect(px + 2, py + 2, tile - 4, tile - 4);
       }
@@ -1226,19 +1228,13 @@ function drawMap(now) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = "#8ea5af";
-  for (let x = 0; x < Rules.mapWidth(game); x++)
+  for (let x = 0; !immersive && x < Rules.mapWidth(game); x++)
     ctx.fillText(Rules.columnLabel(x), ox + (x + 0.5) * tile, oy - 9);
-  for (let y = 0; y < Rules.mapHeight(game); y++)
+  for (let y = 0; !immersive && y < Rules.mapHeight(game); y++)
     ctx.fillText(String(y + 1), ox - 9, oy + (y + 0.5) * tile);
   const intel = game.intel;
-  if (intel) {
-    const visible = new Set(intel.visibleCells);
-    ctx.fillStyle = "rgba(3, 10, 18, 0.78)";
-    for (let y = 0; y < Rules.mapHeight(game); y++)
-      for (let x = 0; x < Rules.mapWidth(game); x++)
-        if (!visible.has(x + "," + y)) ctx.fillRect(ox + x * tile, oy + y * tile, tile, tile);
-  }
-  // Effects from an unseen attacker must not reveal their position through the fog.
+  EnvironmentVisuals.fog(ctx, intel, ox, oy, tile);
+  // The clip remains available for individual effects opting out of fog visibility.
   const visibilityClip = intel ? new Path2D() : null;
   if (visibilityClip)
     for (const cell of intel.visibleCells) {
@@ -1247,10 +1243,11 @@ function drawMap(now) {
     }
   const drawVisibleEffects = (draw) => {
     ctx.save();
-    if (visibilityClip) ctx.clip(visibilityClip);
+
     draw();
     ctx.restore();
   };
+  SpriteEffects.setFogClip(visibilityClip, ctx);
   const mapUnitPoses = [];
   drawVisibleEffects(() => MapCombat.drawUnderlay(ctx, mapGeo));
   for (const u of MapCombat.units()) {
@@ -1296,6 +1293,7 @@ function drawMap(now) {
       anim = skillPose.clip;
       t = skillPose.time;
     }
+    EnvironmentVisuals.observe(u, groundCell, now);
     mapUnitPoses.push({
       u,
       pos,
@@ -1310,11 +1308,12 @@ function drawMap(now) {
     });
   }
   // Ground overlays are drawn before every unit, including moving and dodging units.
-  for (const { u, pos } of mapUnitPoses)
-    UnitIdentity.drawCommandAura(ctx, u, pos, tile, getUnit(selected));
-  const unitThumbnails = MapCamera.zoom <= 0.5;
+  if (!immersive)
+    for (const { u, pos } of mapUnitPoses)
+      UnitIdentity.drawCommandAura(ctx, u, pos, tile, getUnit(selected));
+  const unitThumbnails = !immersive && MapCamera.zoom <= 0.5;
   byId("map").dataset.unitThumbnails = String(unitThumbnails);
-  if (!unitThumbnails)
+  if (!immersive && !unitThumbnails)
     for (const { u, pos } of mapUnitPoses) UnitIdentity.drawRing(ctx, u, pos, tile);
   for (const {
     u,
@@ -1329,8 +1328,23 @@ function drawMap(now) {
     groundCell,
   } of mapUnitPoses) {
     ctx.save();
-    ctx.globalAlpha = 1;
-    if (u.id === selected || (phase === "reaction" && pending?.target === u.id)) {
+    const environmentPose = EnvironmentVisuals.pose(u, groundCell);
+    if (ClientSettings.unitShadows() && game.environment !== "space") {
+      ctx.fillStyle = "rgba(0,0,0,0.28)";
+      ctx.beginPath();
+      ctx.ellipse(
+        pos.x + tile * 0.05,
+        pos.y + tile * 0.12,
+        tile * unitSize.width * 0.3,
+        tile * unitSize.height * 0.12,
+        0,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+    }
+    ctx.globalAlpha = environmentPose.alpha;
+    if (!immersive && (u.id === selected || (phase === "reaction" && pending?.target === u.id))) {
       ctx.strokeStyle = "#e1edaa";
       ctx.lineWidth = 2;
       ctx.strokeRect(
@@ -1341,7 +1355,12 @@ function drawMap(now) {
       );
     }
     let turretStatus = null;
-    if (Rules.modelOf(u).ship && !combatPose && ["idle", "reaction"].includes(phase)) {
+    if (
+      !immersive &&
+      Rules.modelOf(u).ship &&
+      !combatPose &&
+      ["idle", "reaction"].includes(phase)
+    ) {
       const draft = selected === u.id ? AttackControls.draft(u) : null;
       const reacting = pending?.target === u.id && response === "counter";
       const target = getUnit(
@@ -1383,7 +1402,7 @@ function drawMap(now) {
         ctx,
         u.model,
         pos.x,
-        pos.y + (combatPose ? 0 : tile * 0.035),
+        pos.y + (combatPose ? 0 : tile * (0.035 + environmentPose.offset)),
         (tile / 64) *
           1.2 *
           (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
@@ -1410,7 +1429,7 @@ function drawMap(now) {
         ctx,
         u,
         pos.x,
-        pos.y + (combatPose ? 0 : tile * 0.035),
+        pos.y + (combatPose ? 0 : tile * (0.035 + environmentPose.offset)),
         (tile / 64) *
           1.2 *
           (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
@@ -1419,6 +1438,7 @@ function drawMap(now) {
       );
     }
     ctx.restore();
+    if (immersive) continue;
     let hpw =
         tile *
         0.72 *
@@ -1471,10 +1491,77 @@ function drawMap(now) {
       ctx.strokeRect(pos.x - tile * 0.45, pos.y - tile * 0.45, tile * 0.9, tile * 0.9);
     }
   }
+  // Hidden actors contribute effects only; never silhouettes, bars or selectable units.
+  for (const actor of Net.snapshot?.effectActors || []) {
+    const motion = PlanningUI.motion(actor, now);
+    let location = Rules.center(actor),
+      angle = actor.angle;
+    if (motion?.path.length) {
+      const part = Math.min(motion.path.length - 0.0001, (now - motion.start) / motion.step),
+        index = Math.floor(Math.max(0, part)),
+        fraction = Math.max(0, part - index);
+      const from = index ? motion.path[index - 1] : motion.from,
+        to = motion.path[index] || from;
+      const size = Rules.dimensions(actor);
+      location = {
+        x: from.x + (to.x - from.x) * fraction + (size.width - 1) / 2,
+        y: from.y + (to.y - from.y) * fraction + (size.height - 1) / 2,
+      };
+      if (!Rules.modelOf(actor).ship)
+        angle = (Math.atan2(to.x - from.x, -(to.y - from.y)) * 180) / Math.PI;
+    }
+    const point = mapPosition(location.x, location.y);
+    const size = Rules.dimensions(actor);
+    const cell = {
+      x: Math.round(location.x - (size.width - 1) / 2),
+      y: Math.round(location.y - (size.height - 1) / 2),
+    };
+    EnvironmentVisuals.observe(actor, cell, now);
+    const presentation = EnvironmentVisuals.pose(actor, cell);
+    const scale =
+      (tile / 64) *
+      1.2 *
+      (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
+      Rules.modelOf(actor).presentation.mapScale;
+    SpriteRenderer.draw(
+      ctx,
+      actor.model,
+      point.x,
+      point.y + tile * presentation.offset,
+      scale,
+      angle,
+      motion ? SpriteRenderer.movement(actor.model) : Rules.modelOf(actor).presentation.idle,
+      motion ? (now - motion.start) / 1000 : now / 1000,
+      actor.heldWeapon,
+      true,
+      false,
+      !!motion,
+      actor.brokenParts,
+      actor.aimAngle,
+      false,
+      presentation.environment === "ground",
+      game.environment,
+      null,
+      null,
+      actor.flying,
+      null,
+      true,
+    );
+    if (actor.lowHp)
+      SpriteEffects.lowHp(
+        ctx,
+        actor,
+        point.x,
+        point.y + tile * presentation.offset,
+        scale,
+        now / 1000,
+      );
+  }
   drawVisibleEffects(() => MapCombat.draw(ctx, mapGeo));
-  PlanningUI.arrows(ctx);
+  EnvironmentVisuals.drawWater(ctx, now, mapPosition, tile);
+  if (!immersive) PlanningUI.arrows(ctx);
   // Radar contacts reveal only location, never a selectable enemy or its model/HP.
-  if (game.intel) {
+  if (!immersive && game.intel) {
     ctx.save();
     ctx.strokeStyle = "#ff4545";
     ctx.lineWidth = 2;
@@ -1485,15 +1572,16 @@ function drawMap(now) {
     }
     ctx.restore();
   }
-  PlanningUI.sniperLocks(ctx, now);
+  if (!immersive) PlanningUI.sniperLocks(ctx, now);
   drawVisibleEffects(() => SkillEffects.draw(ctx, now, mapPosition, tile));
   drawVisibleEffects(() => MapEffects.draw(ctx, now, mapPosition, tile));
-  if (hover) {
+  if (!immersive && hover) {
     let p = mapPosition(hover.x, hover.y);
     ctx.strokeStyle = "#f2f1c9aa";
     ctx.lineWidth = 1;
     ctx.strokeRect(p.x - tile * 0.5 + 1, p.y - tile * 0.5 + 1, tile - 2, tile - 2);
   }
+  SpriteEffects.setFogClip(null);
 }
 function cellAt(e) {
   if (!mapGeo) return null;

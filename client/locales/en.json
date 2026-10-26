@@ -877,5 +877,8 @@
   "战报所属对局已更新。": "This battle log belongs to a different match.",
   "对局中只能下载当前队伍视角的战报。": "During a match, only the current team perspective log can be downloaded.",
   "只有观战玩家可以切换视角。": "Only spectators can change perspective.",
-  "观战队伍无效。": "Invalid spectator team."
+  "观战队伍无效。": "Invalid spectator team.",
+  "单位阴影（实验功能）": "Unit shadows (experimental)",
+  "沉浸模式": "Immersive mode",
+  "隐藏战斗界面，跳过回合交接；按 Esc 退出": "Hide battle UI and skip turn transitions; press Esc to exit"
 }

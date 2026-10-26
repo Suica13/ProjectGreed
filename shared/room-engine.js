@@ -142,6 +142,71 @@ function createRoomEngine({
     }
     return view;
   };
+  // Fog presentation is separate from tactical intel and team logs. Only visual
+  // state leaves the server; real HP, EN, hit probabilities and orders do not.
+  function effectActor(actor) {
+    const fields = [
+      "id",
+      "model",
+      "x",
+      "y",
+      "angle",
+      "aimAngle",
+      "flying",
+      "heldWeapon",
+      "brokenParts",
+      "environment",
+      "visualOnly",
+    ];
+    return {
+      ...Object.fromEntries(
+        fields.filter((key) => actor[key] !== undefined).map((key) => [key, actor[key]]),
+      ),
+      hp: actor.hp > 0 ? 1 : 0,
+      shield: actor.shield > 0 ? 1 : 0,
+      en: 1,
+      effectsOnly: true,
+    };
+  }
+  function effectBattle(battle) {
+    const scrub = (value, key = "") => {
+      if (
+        ["before", "after", "shieldBefore", "shieldAfter"].includes(key) &&
+        typeof value === "number"
+      )
+        return value > 0 ? 1 : 0;
+      if (["damage", "shieldDamage", "damagePerShot", "energySpent"].includes(key)) return 0;
+      if (Array.isArray(value)) return value.map((item) => scrub(item));
+      if (value && typeof value === "object")
+        return Object.fromEntries(
+          Object.entries(value)
+            .filter(
+              ([field]) =>
+                ![
+                  "hitChance",
+                  "accuracy",
+                  "modulesBefore",
+                  "modulesAfter",
+                  "moduleHp",
+                  "evacuations",
+                ].includes(field),
+            )
+            .map(([field, item]) => [field, scrub(item, field)]),
+        );
+      return value;
+    };
+    return {
+      id: battle.id,
+      matchId: battle.matchId,
+      a: battle.a,
+      b: battle.b,
+      effectsOnly: true,
+      visibleActorIds: [],
+      actors: battle.actors.map(effectActor),
+      before: Object.fromEntries(battle.actors.map((actor) => [actor.id, actor.hp > 0 ? 1 : 0])),
+      events: battle.events.map((event) => ({ ...scrub(event), effectsOnly: true })),
+    };
+  }
   const combatVisibility = new WeakMap();
   function state(room, ack, recipient) {
     const team = viewTeam(recipient);
@@ -203,6 +268,37 @@ function createRoomEngine({
       revision: room.revision,
       game: safeGame(room.game, recipient, intel),
       combatActors,
+      effectActors:
+        team === null
+          ? []
+          : room.game.units
+              .filter((actor) => actor.hp > 0 && !actor.embarked && !known(actor.id))
+              .map((actor) => ({
+                ...effectActor(actor),
+                lowHp: actor.hp < G.modelOf(actor).hp * 0.25,
+              })),
+      effectEvent:
+        room.lastEvent && !lastEvent && ["move", "launch", "skill"].includes(room.lastEvent.type)
+          ? Object.fromEntries(
+              [
+                "id",
+                "type",
+                "unitId",
+                "from",
+                "to",
+                "path",
+                "effect",
+                "sound",
+                "reconMode",
+                "weaponDisplayIndex",
+              ]
+                .filter((key) => room.lastEvent[key] !== undefined)
+                .map((key) => [key, room.lastEvent[key]]),
+            )
+          : null,
+      effectCombats: (room.combatBatch || [])
+        .filter((battle) => !combats.includes(battle))
+        .map(effectBattle),
       phase: room.phase,
       pending,
       reactions,

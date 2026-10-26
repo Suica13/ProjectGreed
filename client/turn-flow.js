@@ -50,7 +50,13 @@ const TurnFlow = (() => {
   }
   async function play(fromTeam, round, toTeam) {
     reset();
-    if (pageView !== "game" || window.GamePreview?.active || window.isLayoutPreview) return;
+    if (
+      window.ReplayPresentation?.immersive ||
+      pageView !== "game" ||
+      window.GamePreview?.active ||
+      window.isLayoutPreview
+    )
+      return;
     const stamp = generation,
       overlay = byId("turnCutin"),
       card = byId("turnCutinCard");

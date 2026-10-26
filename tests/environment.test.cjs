@@ -48,7 +48,10 @@ test("space movement applies adaptation, uses effective mobility for evasion and
   assert.equal(G.reachable(g, a).has("13,10"), true);
   assert.throws(() => G.move(g, a, 14, 10));
   const w = { ...G.modelOf(b).weapons[0], hit: 50 };
-  assert.ok(G.estimate(g, b, a, w).hit > G.estimate(g, b, { ...a, environment: "ground" }, w).hit);
+  assert.ok(
+    G.estimate(g, b, a, w).hit >
+      G.estimate({ ...g, environment: "ground" }, b, { ...a, environment: "ground" }, w).hit,
+  );
   const copy = JSON.parse(JSON.stringify(g));
   assert.equal(G.modelOf(copy.units[0]).move, 3);
 });

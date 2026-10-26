@@ -273,6 +273,7 @@ const SpriteRenderer = (() => {
     weaponDisplayIndex = null,
     flying = false,
     turretStatus = null,
+    effectsOnly = false,
   ) {
     const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
     const active = isFiring
@@ -302,6 +303,12 @@ const SpriteRenderer = (() => {
       weaponDisplayIndex,
       flying,
     )) {
+      const effectLayer =
+        layer.effect === true ||
+        layer.visibleWhen?.thrustActive ||
+        layer.visibleWhen?.sustainedThrust ||
+        layer.independentClock;
+      if (effectsOnly && (!effectLayer || layer.visibleInFog === false)) continue;
       const image = images[layer.asset];
       if (!image) continue;
       const transform = layerTransform(model, layer, angle, sampled);
@@ -322,8 +329,8 @@ const SpriteRenderer = (() => {
           attackFrame && firing && attackFrame.weapons.includes(attackWeapon || heldWeapon)
             ? attackFrame.frame
             : layer.frameFps && (!layer.onlyAnimateWhenMoving || moving)
-            ? Math.floor(Math.max(0, effectTime) * layer.frameFps) % frames
-            : layer.frame || 0,
+              ? Math.floor(Math.max(0, effectTime) * layer.frameFps) % frames
+              : layer.frame || 0,
         columns = Math.floor(image.width / fw);
       if (layer.moduleId && turretStatus && Object.hasOwn(turretStatus, layer.moduleId))
         outlines.push({
@@ -341,6 +348,7 @@ const SpriteRenderer = (() => {
           ),
         });
       ctx.save();
+      if (layer.visibleInFog === false) SpriteEffects.clipFog(ctx);
       ctx.translate(transform.x, transform.y);
       ctx.rotate(
         transform.rotation +
