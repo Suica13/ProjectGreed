@@ -367,7 +367,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 60000.0,
+    "hp": 75000,
     "en": 7500.0,
     "move": 7,
     "mobility": 65.0,
@@ -772,7 +772,8 @@
       "sight": 20.0,
       "radar": 600.0,
       "antiDetection": -200.0
-    }
+    },
+    "v17BaseHp": 60000.0
   },
   "presentation": {
     "shield": false,
@@ -1259,9 +1260,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 1250.0,
+      "damagePerShot": 1562.5,
       "damageComponents": {
-        "shell": 1250.0
+        "shell": 1562.5
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1542,7 +1543,8 @@
         "energy": 240.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "v17BombMultiplier": 1.25
     },
     "GawClass_Turret_AA": {
       "name": "GawClass Turret AA",

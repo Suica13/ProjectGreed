@@ -78,7 +78,7 @@
     "AircraftIdle": "../../animations/AircraftIdle.json"
   },
   "stats": {
-    "hp": 8500.0,
+    "hp": 10625,
     "en": 450.0,
     "move": 10,
     "mobility": 140,
@@ -191,7 +191,8 @@
       "sight": 22.0,
       "radar": 500.0,
       "antiDetection": 0.0
-    }
+    },
+    "v17BaseHp": 8500.0
   },
   "presentation": {
     "shield": false,

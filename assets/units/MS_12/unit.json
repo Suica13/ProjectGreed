@@ -197,7 +197,7 @@
     "Common_Push_A": "../../animations/Common_Push_A.json"
   },
   "stats": {
-    "hp": 16500.0,
+    "hp": 20625,
     "en": 750.0,
     "move": 5,
     "mobility": 75.0,
@@ -333,7 +333,8 @@
       "sight": 20.0,
       "radar": 360.0,
       "antiDetection": 0.0
-    }
+    },
+    "v17BaseHp": 16500.0
   },
   "presentation": {
     "shield": false,

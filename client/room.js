@@ -6,6 +6,21 @@ const RoomPanel = (() => {
     numericSettingsTimer = null,
     queuedNumericSettings = {};
   const numericDrafts = { costLimit: null, unitCostLimit: null, unitLimit: null };
+  const formationPresets = new Set([
+    "1800,300,12",
+    "2400,400,12",
+    "3600,600,12",
+    "4800,800,12",
+    "6000,1000,12",
+    "99999,99999,72",
+  ]);
+  function showFormationPreset(settings) {
+    const values = ["costLimit", "unitCostLimit", "unitLimit"].map(
+      (key) => numericDrafts[key] ?? settings[key],
+    );
+    const preset = values.join(",");
+    byId("roomFormationPreset").value = formationPresets.has(preset) ? preset : "custom";
+  }
   const joinButtons = [byId("joinTeam1"), byId("joinTeam2")];
   let detail = null;
   // 只更新席位文字；倒计时无需请求服务器或重建房间面板。
@@ -18,20 +33,38 @@ const RoomPanel = (() => {
         : Date.now();
     for (const label of document.querySelectorAll("[data-reconnect-until]")) {
       const seconds = Math.max(0, Math.ceil((Number(label.dataset.reconnectUntil) - now) / 1000));
-      label.textContent = I18n.text("等待重连") + " · " + seconds + "s";
+      label.textContent = "重连 " + seconds + "s";
     }
   }
   setInterval(updateReconnectCountdowns, 250);
   function playerLabel(member, self, snapshot) {
-    const label = element("strong", playerNameClass(member.id, snapshot.hostId, self.id)),
+    const label = element("strong", "player-name player-other"),
       name = element("span", "", member.name);
     name.setAttribute("data-i18n-ignore", "");
     label.append(name);
     if (member.shareUnits || snapshot.settings.shareAlliedUnits)
       label.append(element("span", "host-badge", "共享"));
     if (member.bot) label.append(element("span", "host-badge", "AI"));
-    if (member.id === snapshot.hostId) label.append(element("span", "host-badge", "房主"));
     return label;
+  }
+  function factionControl(member, self, snapshot) {
+    const badge = PlayerProfile.badge(member, snapshot.settings.mode);
+    if (!badge) return element("span", "faction-badge", "—");
+    if (member.id !== self.id || snapshot.started) return badge;
+    const forced = member.seat === null ? null :
+      snapshot.settings.teamFactions?.[Rules.seatTeam(member.seat)];
+    const select = element("select", badge.className);
+    for (const faction of ["PMC", "EFSF", "ZEON"])
+      select.add(new Option(PlayerProfile.displayFaction(faction), faction));
+    select.value = member.characterFaction;
+    select.disabled = !!Net.awaiting || !!forced || snapshot.settings.mode === "quick";
+    select.title = snapshot.settings.mode === "quick"
+      ? "快速战固定使用 PMC 阵营"
+      : forced ? "本队已设置强制阵营" : "选择自己的阵营";
+    select.setAttribute("aria-label", "选择自己的阵营");
+    select.setAttribute("data-i18n-ignore", "");
+    select.onchange = () => Net.request("set_faction", { faction: select.value });
+    return select;
   }
   function drawMap(map) {
     const canvas = byId("roomMapPreview"),
@@ -178,13 +211,16 @@ const RoomPanel = (() => {
     byId("roomCostLimit").value = numericDrafts.costLimit ?? settings.costLimit;
     byId("roomUnitCostLimit").value = numericDrafts.unitCostLimit ?? settings.unitCostLimit;
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
+    showFormationPreset(settings);
+    byId("roomFormationPreset").disabled = locked;
     byId("roomShareAlliedUnits").value = settings.shareAlliedUnits ? "enabled" : "disabled";
     byId("roomShareAlliedUnits").disabled = locked;
     byId("roomFogMode").value = settings.fogMode || "full";
-    for (const id of ["roomMapSelect", "roomFogMode"])
+    byId("roomBattleMode").value = settings.mode || "regular";
+    for (const id of ["roomMapSelect", "roomFogMode", "roomBattleMode"])
       byId(id).disabled = locked || (id === "roomMapSelect" && !!snapshot.loadedSave);
     byId("roomMapChoiceHint").textContent = I18n.text(
-      snapshot.loadedSave ? "存档地图已锁定" : locked ? "地图由房主选择" : "点击更换地图",
+      snapshot.loadedSave ? "存档地图已锁定" : locked ? "地图由房主选择" : "点击名称更换地图",
     );
     // 数值输入时仍可继续打字，不因上一笔请求未确认而失去焦点。
     for (const id of ["roomCostLimit", "roomUnitCostLimit", "roomUnitLimit"])
@@ -193,17 +229,44 @@ const RoomPanel = (() => {
       sendSettings(readTags(byId("roomTagRestrictions")));
     });
     const teamRulesPanel = byId("roomTeamRestrictions");
+    const expandedTeams = [...teamRulesPanel.querySelectorAll(".team-filters")].map((item) => item.open);
     teamRulesPanel.replaceChildren();
-    for (let team = 0; team < 2; team++) {
-      const group = element("section", "room-team-rules");
-      const controls = element("div", "tag-restrictions");
-      group.append(element("h4", "", "队伍" + (team + 1)), controls);
-      tagControls(controls, "teamBan-" + team, settings.teamRestrictions[team], locked, () => {
-        const restrictions = structuredClone(Net.snapshot.settings.teamRestrictions);
-        restrictions[team] = readTags(controls);
-        sendSettings({ teamRestrictions: restrictions });
-      });
-      teamRulesPanel.append(group);
+    byId("roomTeamRulesTitle").textContent =
+      settings.mode === "quick" ? "队伍禁用标签" : "队伍强制阵营";
+    if (settings.mode === "quick") {
+      for (let team = 0; team < 2; team++) {
+        const group = element("details", "team-filters");
+        group.open = expandedTeams[team] || false;
+        group.append(element("summary", "", "队伍" + (team + 1) + "禁用标签"));
+        const controls = element("div", "tag-restrictions");
+        tagControls(controls, "teamBan-" + team,
+          settings.teamRestrictions?.[team] || {}, locked, () => {
+            const restrictions = [...(Net.snapshot.settings.teamRestrictions || [{}, {}])];
+            restrictions[team] = readTags(controls);
+            sendSettings({ teamRestrictions: restrictions });
+          });
+        group.append(controls);
+        teamRulesPanel.append(group);
+      }
+    } else {
+      for (let team = 0; team < 2; team++) {
+        const group = element("label", "room-team-rules");
+        const select = element("select");
+        select.id = "teamForcedFaction" + team;
+        select.add(new Option("不限", ""));
+        select.add(new Option("PMC", "PMC"));
+        select.add(new Option("地球联邦军[0079]", "EFSF"));
+        select.add(new Option("吉翁公国军[0079]", "ZEON"));
+        select.value = settings.teamFactions?.[team] || "";
+        select.disabled = locked;
+        select.onchange = () => {
+          const factions = [...(Net.snapshot.settings.teamFactions || [null, null])];
+          factions[team] = select.value || null;
+          sendSettings({ teamFactions: factions });
+        };
+        group.append(element("span", "", "队伍" + (team + 1) + "强制阵营"), select);
+        teamRulesPanel.append(group);
+      }
     }
     byId("roomCostLimit").step = Rules.catalog.formation.costStep;
     byId("roomCostLimit").min = Math.min(...Object.values(UnitModels).map((model) => model.cost));
@@ -216,130 +279,106 @@ const RoomPanel = (() => {
     byId("roomMain").inert = false;
   }
   function armyControls(player, snapshot, locked) {
-    const panel = element("div", "ai-settings"),
-      config = Rules.armySettings(player);
-    const prefix = player.bot ? "ai-" : "player-",
-      suffix = player.bot ? player.seat : player.id;
-    const send = (patch = {}, extra = {}) =>
-      Net.request("configure_player", {
-        memberId: player.id,
-        config: { ...config, ...patch },
-        ...extra,
-      });
-    panel.append(element("h3", "", "编组设置"));
-    for (const [key, title, options] of [
-      ["difficulty", "单位强度", Rules.armyPercentages.map((n) => [n, n + "%"])],
-      ["fill", "编组COST比例", Rules.armyPercentages.map((n) => [n, n + "%"])],
-      ["countPercent", "编组数量比例", Rules.aiCountPercentages.map((n) => [n, n + "%"])],
-      ["unitCostPercent", "单机COST比例", Rules.armyPercentages.map((n) => [n, n + "%"])],
-    ]) {
-      const label = element("label", "", title),
-        select = element("select");
-      select.id = prefix + key + "-" + suffix;
-      if (key === "difficulty") select.title = I18n.text("仅影响耐久和EN上限");
-      select.setAttribute("aria-label", title + " " + player.name);
-      for (const [value, text] of options) select.add(new Option(text, value));
-      select.value =
-        key === "difficulty" ? Rules.aiPerformance[config.difficulty] * 100 : config[key];
-      select.disabled = locked || (!!player.formationPreset && key !== "difficulty");
-      select.onchange = () =>
-        send({
-          [key]: Number(select.value),
-          ...(key === "unitCostPercent" ? { unitCostLimit: null } : {}),
-        });
-      label.append(select);
-      panel.append(label);
-    }
-    const presets = Formation.presets(),
-      presetLabel = element("label", "", "编组预设"),
-      select = element("select");
-    select.id = prefix + "formation-" + suffix;
-    select.setAttribute("aria-label", "编组预设 " + player.name);
-    select.add(new Option(I18n.text(player.bot ? "随机编组" : "玩家自行编组"), "random"));
-    presets.forEach((preset, index) => {
-      const option = new Option(preset.name, String(index));
-      option.setAttribute("data-i18n-ignore", "");
-      select.add(option);
+    const panel = element("div", "ai-settings");
+    const required = player.seat === null ? null :
+      snapshot.settings.teamFactions?.[Rules.seatTeam(player.seat)];
+    const factionLabel = element("label", "", "AI 阵营");
+    const faction = element("select");
+    for (const [value, label] of [
+      ["PMC", "PMC"], ["EFSF", "地球联邦军[0079]"],
+      ["ZEON", "吉翁公国军[0079]"],
+    ]) faction.add(new Option(label, value));
+    faction.value = player.characterFaction || "PMC";
+    faction.disabled = locked || !!required || snapshot.settings.mode === "quick";
+    faction.onchange = () => Net.request("configure_ai", {
+      seat: player.seat, config: {}, characterFaction: faction.value,
     });
-    select.value = "random";
-    if (player.formationPreset) {
-      const index = presets.findIndex(
-        (preset) => JSON.stringify(preset) === JSON.stringify(player.formationPreset),
-      );
-      if (index >= 0) select.value = String(index);
-      else {
-        const option = new Option(player.formationPreset.name, "room");
-        option.setAttribute("data-i18n-ignore", "");
-        select.add(option);
-        select.value = "room";
-      }
-    }
-    select.disabled = locked || !!snapshot.loadedSave;
-    select.onchange = () => {
-      if (select.value !== "room")
-        send(
-          {},
-          { formationPreset: select.value === "random" ? null : presets[Number(select.value)] },
-        );
-    };
-    presetLabel.append(select);
-    panel.append(presetLabel);
-    if (player.formationPreset)
-      panel.append(
-        element("p", "muted", "房主指定预设：忽略房间COST、单位数量及阵营、年代、类型限制。"),
-      );
-    else {
-      const costs = element("div", "army-cost-summary");
-      costs.append(
-        element("span", "", "编组COST: " + Rules.armyBudget(snapshot.settings, player)),
-        element(
-          "span",
-          "",
-          "单位COST上限: " + Rules.armyRestrictions(snapshot.settings, player).unitCostLimit,
-        ),
-      );
-      panel.append(
-        costs,
-        element(
-          "p",
-          "muted army-count-summary",
-          `单位数量上限: ${Rules.armyUnitLimit(snapshot.settings, player)} 台（房间上限 ${snapshot.settings.unitLimit} 台 × ${config.countPercent}%）`,
-        ),
-      );
-    }
+    factionLabel.append(faction);
+    const strengthLabel = element("label", "", "AI 单位强度");
+    const strength = element("select");
+    for (const percent of Rules.armyPercentages)
+      strength.add(new Option(percent + "%", String(percent)));
+    const config = Rules.armySettings(player);
+    strength.value = String(Rules.aiPerformance[config.difficulty] * 100);
+    strength.disabled = locked;
+    strength.onchange = () => Net.request("configure_ai", {
+      seat: player.seat, config: { difficulty: Number(strength.value) },
+    });
+    strengthLabel.append(strength);
+    panel.append(factionLabel, strengthLabel);
     return panel;
+  }
+  function quickArmyControls(player, snapshot, locked) {
+    const section = element("section", "room-detail-section");
+    section.append(element("h3", "", "COST 与强度设置"));
+    const grid = element("div", "room-army-rules");
+    const config = Rules.armySettings(player);
+    for (const [key, label, value] of [
+      ["fill", "编组 COST 比例", config.fill],
+      ["unitCostPercent", "单位 COST 比例", config.unitCostPercent],
+      ["countPercent", "编组点数比例", config.countPercent],
+      ["difficulty", "单位强度", Math.round(Rules.aiPerformance[config.difficulty] * 100)],
+    ]) {
+      const field = element("label", "", label);
+      const select = element("select");
+      for (const percent of Rules.armyPercentages)
+        select.add(new Option(percent + "%", String(percent)));
+      select.value = String(value);
+      select.disabled = locked;
+      select.onchange = () => Net.request(player.bot ? "configure_ai" : "configure_player",
+        player.bot
+          ? { seat: player.seat, config: { [key]: Number(select.value) } }
+          : { memberId: player.id, config: { [key]: Number(select.value) } });
+      field.append(select);
+      grid.append(field);
+    }
+    section.append(grid);
+    const budget = Rules.armyBudget(snapshot.settings, player);
+    const unitLimit = Rules.armyUnitLimit(snapshot.settings, player);
+    const unitCost = Rules.armyRestrictions(snapshot.settings, player).unitCostLimit;
+    section.append(element("p", "muted room-army-summary",
+      "当前上限：编组 COST " + budget + " · 单位 COST " + unitCost +
+      " · 单位点数 " + unitLimit));
+    return section;
+  }
+  function restrictionSummary(restrictions = {}) {
+    const tags = [
+      ...(restrictions.bannedFactions || []),
+      ...(restrictions.bannedEras || []),
+      ...(restrictions.bannedTypes || []).map((tag) => I18n.text(Rules.unitTagName(tag))),
+    ];
+    return tags.join("、") || "不禁用";
+  }
+  function appendTagDetails(content, restrictions) {
+    for (const [key, title] of [
+      ["bannedFactions", "禁用阵营"], ["bannedEras", "禁用年代"],
+      ["bannedTypes", "禁用类型"],
+    ]) {
+      const tags = restrictions?.[key] || [];
+      content.append(element("p", "", title + "：" +
+        (tags.map((tag) => key === "bannedTypes" ?
+          I18n.text(Rules.unitTagName(tag)) : tag).join("、") || "不禁用")));
+    }
   }
   function renderDetail(snapshot) {
     if (!detail) return;
     if (Number.isInteger(detail.team)) {
-      const team = detail.team,
-        settings = snapshot.settings;
+      const team = detail.team;
+      const quick = snapshot.settings.mode === "quick";
       byId("roomDetailTitle").textContent =
-        I18n.text("队伍" + (team + 1)) + " · " + I18n.text("队伍禁用标签");
+        "队伍" + (team + 1) + (quick ? " · 禁用标签" : " · 阵营规则");
       const content = byId("roomDetailContent");
+      content.classList.remove("member-management");
       content.replaceChildren();
-      for (const [title, rules] of [
-        ["房间禁用标签", settings],
-        ["队伍禁用标签", settings.teamRestrictions[team]],
-      ]) {
-        content.append(element("h3", "", title));
-        for (const [key, label] of [
-          ["bannedFactions", "禁用阵营"],
-          ["bannedEras", "禁用年代"],
-          ["bannedTypes", "禁用类型"],
-        ])
-          content.append(
-            element(
-              "p",
-              "",
-              I18n.text(label) +
-                ": " +
-                ((rules[key] || [])
-                  .map((tag) => (key === "bannedTypes" ? I18n.text(Rules.unitTagName(tag)) : tag))
-                  .join(", ") || I18n.text("不禁用")),
-            ),
-          );
+      if (quick) {
+        content.append(element("h3", "", "队伍禁用标签"));
+        appendTagDetails(content, snapshot.settings.teamRestrictions?.[team]);
+      } else {
+        content.append(element("p", "", "强制阵营：" +
+          (snapshot.settings.teamFactions?.[team] || "不限")));
       }
+      content.append(element("h3", "", "房间禁用标签"));
+      appendTagDetails(content, snapshot.settings);
       byId("roomDetailPanel").hidden = false;
       byId("roomMain").inert = true;
       return;
@@ -350,59 +389,87 @@ const RoomPanel = (() => {
     playerName.setAttribute("data-i18n-ignore", "");
     byId("roomDetailTitle").replaceChildren(
       playerName,
-      element("span", "", " · " + I18n.text(player.bot ? "AI 设置" : "玩家管理")),
+      element("span", "", " · " + I18n.text(player.bot ? "AI 管理" : "玩家管理")),
     );
     const content = byId("roomDetailContent");
+    content.classList.add("member-management");
     content.replaceChildren();
     const locked = !!Net.awaiting || snapshot.started || snapshot.you.id !== snapshot.hostId;
-    const ownSavedSettings =
-      snapshot.loadedSave && player.id === snapshot.you.id && !snapshot.started && !Net.awaiting;
-    content.append(armyControls(player, snapshot, locked && !ownSavedSettings));
-    {
-      const label = element("label", "", "队伍 / 出生地"),
-        select = element("select");
-      select.id = "managePlayerSeat";
-      if (!player.bot) select.add(new Option(I18n.text("观战席"), "spectator"));
-      for (const [seat, spawn] of Rules.getMap(snapshot.settings.mapId).spawns.entries()) {
-        if (snapshot.members.some((member) => member.seat === seat && member.id !== player.id))
-          continue;
-        select.add(
-          new Option(
-            I18n.text("队伍" + (spawn.team + 1)) + " · " + I18n.text("出生点" + spawn.position),
-            seat,
-          ),
-        );
+    if (snapshot.settings.mode === "quick") {
+      const switchView = element("button", "room-detail-switch",
+        detail.view === "rules" ? "返回玩家管理" : "COST 与强度设置");
+      switchView.type = "button";
+      switchView.onclick = () => {
+        detail.view = detail.view === "rules" ? "manage" : "rules";
+        renderDetail(Net.snapshot);
+        content.querySelector(".room-detail-switch")?.focus();
+      };
+      content.append(switchView);
+      if (detail.view === "rules") {
+        content.append(quickArmyControls(player, snapshot, locked));
+        byId("roomDetailPanel").hidden = false;
+        byId("roomMain").inert = true;
+        return;
       }
-      select.value = player.seat === null ? "spectator" : String(player.seat);
-      select.disabled = locked;
-      label.append(select);
-      content.append(label);
-      const move = element("button", "primary", "调整席位");
-      move.id = "applyPlayerSeat";
-      move.disabled = locked;
-      move.onclick = () =>
-        Net.request("move_player", {
-          memberId: player.id,
-          seat: select.value === "spectator" ? null : Number(select.value),
-        });
-      content.append(move);
-      if (!player.bot && player.id !== snapshot.you.id) {
-        const kick = element("button", "danger", "踢出玩家");
-        kick.id = "kickPlayer";
-        kick.disabled = !!Net.awaiting || snapshot.you.id !== snapshot.hostId;
-        kick.onclick = () => Net.request("kick_player", { memberId: player.id });
-        content.append(kick);
-      }
+    } else if (player.bot) {
+      const aiSection = element("section", "room-detail-section");
+      aiSection.append(element("h3", "", "AI 设置"), armyControls(player, snapshot, locked));
+      content.append(aiSection);
+    }
+    const seatSection = element("section", "room-detail-section");
+    seatSection.append(element("h3", "", "席位"));
+    const seatRow = element("div", "room-detail-seat-row");
+    const label = element("label", "", "队伍 / 位置");
+    const select = element("select");
+    select.id = "managePlayerSeat";
+    if (!player.bot) select.add(new Option(I18n.text("观战席"), "spectator"));
+    for (const [seat, spawn] of Rules.getMap(snapshot.settings.mapId).spawns.entries()) {
+      if (snapshot.members.some((member) => member.seat === seat && member.id !== player.id))
+        continue;
+      select.add(new Option(
+        I18n.text("队伍" + (spawn.team + 1)) + " · 位置" + spawn.position,
+        seat,
+      ));
+    }
+    select.value = player.seat === null ? "spectator" : String(player.seat);
+    select.disabled = locked;
+    label.append(select);
+    const move = element("button", "primary", "调整席位");
+    move.id = "applyPlayerSeat";
+    move.disabled = locked;
+    move.onclick = () => Net.request("move_player", {
+      memberId: player.id,
+      seat: select.value === "spectator" ? null : Number(select.value),
+    });
+    seatRow.append(label, move);
+    seatSection.append(seatRow);
+    content.append(seatSection);
+    if (player.bot || player.id !== snapshot.you.id) {
+      const actionSection = element("section", "room-detail-section room-detail-danger");
+      actionSection.append(element("h3", "", player.bot ? "移除 AI" : "玩家操作"));
+      const remove = element("button", "danger", player.bot ? "移除 AI" : "踢出玩家");
+      remove.id = player.bot ? "removeAI" + player.seat : "kickPlayer";
+      remove.disabled = !!Net.awaiting || snapshot.started || snapshot.you.id !== snapshot.hostId;
+      remove.onclick = () => {
+        Net.request(player.bot ? "remove_ai" : "kick_player",
+          player.bot ? { seat: player.seat } : { memberId: player.id });
+      };
+      actionSection.append(remove);
+      content.append(actionSection);
     }
     byId("roomDetailPanel").hidden = false;
     byId("roomMain").inert = true;
   }
   function detailButton(player, snapshot) {
-    const button = element("button", "choose-spawn", player.bot ? "设置" : "管理");
-    button.id =
-      (player.bot ? "aiSettings" : "managePlayer-") + (player.bot ? player.seat : player.id);
+    const button = element("button", "room-member-button");
+    button.type = "button";
+    button.id = (player.bot ? "aiSettings" : "managePlayer-") +
+      (player.bot ? player.seat : player.id);
+    button.append(playerLabel(player, snapshot.you, snapshot));
+    button.title = player.bot ? "管理 AI" : "管理玩家";
+    button.setAttribute("aria-label", button.title + "：" + player.name);
     button.onclick = () => {
-      detail = { memberId: player.id };
+      detail = { memberId: player.id, view: "manage" };
       renderDetail(Net.snapshot);
       byId("closeRoomDetail").focus();
     };
@@ -447,6 +514,9 @@ const RoomPanel = (() => {
       const heading = element("div", "final-squad-heading"),
         name = element("strong", playerNameClass(player.memberId), player.name);
       name.setAttribute("data-i18n-ignore", "");
+      const member = snapshot.members.find((entry) => entry.id === player.memberId);
+      const badge = PlayerProfile.badge(member, snapshot.settings.mode);
+      if (badge) heading.append(badge);
       heading.append(
         name,
         element(
@@ -458,8 +528,8 @@ const RoomPanel = (() => {
             (player.assignedPreset ? I18n.text("无限") : player.limit) +
             " · 单位COST上限: " +
             (player.assignedPreset ? I18n.text("无限") : player.unitCostLimit) +
-            " · 单位数量: " +
-            player.entries.length +
+            " · 单位点数: " +
+            Rules.formationPoints(player.entries) +
             " / " +
             player.unitLimit,
         ),
@@ -478,7 +548,9 @@ const RoomPanel = (() => {
           "final-unit-icon" +
             (player.disabled.includes(index)
               ? " unit-disabled " +
-                (player.reasons?.[index] === "not_allowed" ? "not-allowed" : "overcost")
+                (["not_allowed", "not_developed"].includes(player.reasons?.[index])
+                  ? "not-allowed"
+                  : "overcost")
               : ""),
         );
         if (player.dead?.includes(index)) {
@@ -500,7 +572,15 @@ const RoomPanel = (() => {
             element(
               "span",
               "overcost-label",
-              player.reasons?.[index] === "not_allowed" ? "不被允许的单位" : "OVER COST",
+              player.reasons?.[index] === "faction_mismatch"
+                ? "阵营不匹配"
+                : player.reasons?.[index] === "not_developed"
+                  ? "尚未开发"
+                  : player.reasons?.[index] === "count"
+                    ? "超过单位点数"
+                  : player.reasons?.[index] === "not_allowed"
+                    ? "不被允许的单位"
+                    : "OVER COST",
             ),
           );
         icons.append(icon);
@@ -520,6 +600,7 @@ const RoomPanel = (() => {
     byId("confirmFinalFormation").disabled =
       busy ||
       !!own?.ready ||
+      (!!snapshot.loadedSave && Object.keys(own?.reasons || {}).length > 0) ||
       (!snapshot.loadedSave && !allBots && !own?.deployable.length) ||
       !snapshot.connected.every(Boolean);
     byId("confirmFinalFormation").textContent = own?.ready
@@ -534,6 +615,7 @@ const RoomPanel = (() => {
           : "超限时从编组末尾向前禁用；不符合标签限制的单位无法出击。";
   }
   function render(snapshot) {
+    Formation.alignWithRoom(snapshot);
     if (!Net.awaiting) {
       pendingSettings = null;
       for (const [key, value] of Object.entries(submittedNumericSettings || {})) {
@@ -541,7 +623,8 @@ const RoomPanel = (() => {
           numericDrafts[key] = null;
       }
       submittedNumericSettings = null;
-      if (numericSettingsTimer === null && Object.keys(queuedNumericSettings).length) queueMicrotask(flushNumericSettings);
+      if (numericSettingsTimer === null && Object.keys(queuedNumericSettings).length)
+        queueMicrotask(flushNumericSettings);
     }
     // 选择后立即预览；操作仍由服务端确认，失败时恢复已确认的设置。
     if (pendingSettings) snapshot = { ...snapshot, settings: pendingSettings };
@@ -618,7 +701,9 @@ const RoomPanel = (() => {
       !snapshot.started && (!valid || disabledCount > 0),
     );
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
-    byId("roomTitle").textContent = Net.local ? "离线遭遇战房间" : "房间 " + snapshot.room;
+    byId("roomTitle").textContent = Net.local
+      ? "离线" + (snapshot.settings.mode === "quick" ? "快速战" : "常规战") + "房间"
+      : "房间 " + snapshot.room;
     byId("roomStatus").hidden = !snapshot.started && !snapshot.loadedSave;
     byId("roomStatus").textContent = snapshot.connected.every(Boolean)
       ? "游戏进行中，可切换席位或返回战斗。"
@@ -637,16 +722,12 @@ const RoomPanel = (() => {
     for (let team = 0; team < 2; team++) {
       const column = element("section", "team-slot");
       const teamHeading = element("div", "team-heading");
-      const effective = Rules.formationRestrictions(snapshot.settings, team);
-      const banned = [
-        ...effective.bannedFactions,
-        ...effective.bannedEras,
-        ...effective.bannedTypes.map((tag) => I18n.text(Rules.unitTagName(tag))),
-      ];
+      const forced = snapshot.settings.teamFactions?.[team];
       const summary = element(
-        "button",
-        "team-ban-summary",
-        banned.length ? I18n.text("禁用标签") + ": " + banned.join(", ") : I18n.text("不禁用"),
+        "button", "team-ban-summary",
+        snapshot.settings.mode === "quick"
+          ? "队伍禁用：" + restrictionSummary(snapshot.settings.teamRestrictions?.[team])
+          : "强制阵营：" + (forced || "不限"),
       );
       summary.id = "teamBanSummary" + team;
       summary.title = summary.textContent;
@@ -665,9 +746,10 @@ const RoomPanel = (() => {
         .filter((item) => item.spawn.team === team);
       const header = element("div", "lineup-header");
       header.append(
-        element("span", "", "玩家ID/空位"),
-        element("span", "", "出生地"),
-        element("span", "", "准备状态"),
+        element("span", "", "玩家ID / 空位"),
+        element("span", "", "位置"),
+        element("span", "", "阵营"),
+        element("span", "", "状态"),
       );
       header.setAttribute("role", "row");
       for (const cell of header.children) cell.setAttribute("role", "columnheader");
@@ -679,17 +761,9 @@ const RoomPanel = (() => {
         slot.dataset.seat = seat;
         slot.setAttribute("role", "row");
         const nameCell = element("div", "lineup-name");
-        nameCell.append(
-          member
-            ? playerLabel(member, self, snapshot)
-            : element("strong", "player-name player-other", reserved ? "等待重连" : "空位"),
-        );
-        if (
-          member?.bot ||
-          (member &&
-            (self.id === snapshot.hostId || (snapshot.loadedSave && member.id === self.id)))
-        )
-          nameCell.append(detailButton(member, snapshot));
+        nameCell.append(member
+          ? detailButton(member, snapshot)
+          : element("strong", "player-name player-other", reserved ? "等待重连" : "空位"));
         if (reserved && self.id === snapshot.hostId) {
           const kick = element("button", "choose-spawn danger", "踢出");
           kick.dataset.kickReservedSeat = seat;
@@ -697,34 +771,29 @@ const RoomPanel = (() => {
           kick.onclick = () => Net.request("kick_player", { memberId: reserved.memberId });
           nameCell.append(kick);
         }
-        slot.append(nameCell);
-        const spawnCell = element("div", "spawn-cell");
-        const choose = element(
-          "button",
-          "choose-spawn",
-          (inBattle && !member && !reserved ? "接管席位" : "出生点") +
-            spawn.position +
-            " · " +
-            Rules.columnLabel(spawn.x) +
-            (spawn.y + 1),
-        );
-        choose.id = "chooseSeat" + seat;
-        choose.title = self.seat === seat ? "当前出生点" : "选择出生点" + spawn.position;
-        choose.disabled = busy || !!member || !!reserved;
-        choose.onclick = () => Net.request("switch_seat", { seat });
-        spawnCell.append(choose);
-        if (
-          !snapshot.started &&
-          self.id === snapshot.hostId &&
-          (!member || member.bot) &&
-          !reserved
-        ) {
-          const aiButton = element("button", "choose-spawn", member ? "移除 AI" : "添加 AI");
-          aiButton.id = (member ? "removeAI" : "addAI") + seat;
-          aiButton.disabled = busy;
-          aiButton.onclick = () => Net.request(member ? "remove_ai" : "add_ai", { seat });
-          spawnCell.append(aiButton);
+        if (!snapshot.started && self.id === snapshot.hostId && !member && !reserved) {
+          const addAI = element("button", "choose-spawn", "添加 AI");
+          addAI.id = "addAI" + seat;
+          addAI.disabled = busy;
+          addAI.onclick = () => Net.request("add_ai", { seat });
+          nameCell.append(addAI);
         }
+        const positionCell = element("div", "spawn-cell");
+        if (member || reserved) {
+          positionCell.append(element("span", "spawn-position", "位置" + spawn.position));
+        } else {
+          const choose = element("button", "choose-spawn",
+            (inBattle ? "接管" : "位置") + spawn.position);
+          choose.id = "chooseSeat" + seat;
+          choose.title = inBattle ? "接管位置" + spawn.position : "选择位置" + spawn.position;
+          choose.disabled = busy;
+          choose.onclick = () => Net.request("switch_seat", { seat });
+          positionCell.append(choose);
+        }
+        const factionCell = element("div", "lineup-faction");
+        factionCell.append(member
+          ? factionControl(member, self, snapshot)
+          : element("span", "faction-badge", "—"));
         const ready = element(
           "span",
           "lineup-ready " +
@@ -734,10 +803,10 @@ const RoomPanel = (() => {
               : "muted"),
           !member
             ? reserved
-              ? "等待重连"
+              ? "重连"
               : "—"
             : !member.connected
-              ? "离线 · 保留席位"
+              ? "离线"
               : snapshot.started
                 ? "游戏中"
                 : member.id === snapshot.hostId
@@ -746,12 +815,11 @@ const RoomPanel = (() => {
                     ? "已准备"
                     : "未准备",
         );
-
         if (reserved && !member) {
           ready.dataset.reconnectUntil = reserved.until;
           ready.setAttribute("data-i18n-ignore", "");
         }
-        slot.append(spawnCell, ready);
+        slot.append(nameCell, positionCell, factionCell, ready);
         for (const cell of slot.children) cell.setAttribute("role", "cell");
         column.append(slot);
       }
@@ -778,8 +846,7 @@ const RoomPanel = (() => {
     const watching = roster.filter((member) => member.seat === null);
     for (const member of watching) {
       const slot = element("div", "spectator-slot");
-      slot.append(playerLabel(member, self, snapshot));
-      if (self.id === snapshot.hostId) slot.append(detailButton(member, snapshot));
+      slot.append(detailButton(member, snapshot), factionControl(member, self, snapshot));
       if (!member.connected) slot.append(element("span", "", " · 离线"));
       spectators.append(slot);
     }
@@ -860,6 +927,20 @@ const RoomPanel = (() => {
     Net.request("configure_room", pendingSettings);
   }
   byId("roomMapSelect").onchange = () => sendSettings({ mapId: byId("roomMapSelect").value });
+  byId("roomFormationPreset").onchange = () => {
+    const preset = byId("roomFormationPreset").value;
+    if (!formationPresets.has(preset)) return;
+    const [costLimit, unitCostLimit, unitLimit] = preset.split(",").map(Number);
+    clearTimeout(numericSettingsTimer);
+    numericSettingsTimer = null;
+    queuedNumericSettings = {};
+    submittedNumericSettings = null;
+    numericDrafts.costLimit = numericDrafts.unitCostLimit = numericDrafts.unitLimit = null;
+    byId("roomCostLimit").value = costLimit;
+    byId("roomUnitCostLimit").value = unitCostLimit;
+    byId("roomUnitLimit").value = unitLimit;
+    sendSettings({ costLimit, unitCostLimit, unitLimit });
+  };
   function flushNumericSettings() {
     clearTimeout(numericSettingsTimer);
     numericSettingsTimer = null;
@@ -871,7 +952,9 @@ const RoomPanel = (() => {
     // 先等正在进行的操作确认；render 会提交这期间继续输入的最新值。
     if (Net.awaiting || Net.socket?.readyState !== WebSocket.OPEN) return;
     const patch = Object.fromEntries(
-      Object.entries(queuedNumericSettings).filter(([key, value]) => value !== snapshot.settings[key]),
+      Object.entries(queuedNumericSettings).filter(
+        ([key, value]) => value !== snapshot.settings[key],
+      ),
     );
     queuedNumericSettings = {};
     if (!Object.keys(patch).length) return;
@@ -888,13 +971,16 @@ const RoomPanel = (() => {
     input.oninput = () => {
       if (Number(input.value) > maximum) input.value = String(maximum);
       numericDrafts[key] = input.value;
+      showFormationPreset(Net.snapshot?.settings || Rules.defaultRoomSettings());
       delete queuedNumericSettings[key];
       try {
         if (!input.value.trim()) throw Error("empty");
         queuedNumericSettings[key] = validate(Number(input.value));
       } catch {}
       clearTimeout(numericSettingsTimer);
-      numericSettingsTimer = Object.keys(queuedNumericSettings).length ? setTimeout(flushNumericSettings, 300) : null;
+      numericSettingsTimer = Object.keys(queuedNumericSettings).length
+        ? setTimeout(flushNumericSettings, 300)
+        : null;
     };
     input.onchange = flushNumericSettings;
     input.onkeydown = (event) => {
@@ -907,6 +993,8 @@ const RoomPanel = (() => {
   byId("roomShareAlliedUnits").onchange = () =>
     sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").value === "enabled" });
   byId("roomFogMode").onchange = () => sendSettings({ fogMode: byId("roomFogMode").value });
+  byId("roomBattleMode").onchange = () =>
+    sendSettings({ battleMode: byId("roomBattleMode").value });
   byId("shareUnitsToAllies").onclick = () => Net.request("share_units");
   byId("roomSettings").onclick = () => {
     setPageView("room");

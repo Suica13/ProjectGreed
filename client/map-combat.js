@@ -175,6 +175,7 @@ const MapCombat = (() => {
       );
     if (source && frame && !Rules.modelOf(source).ship) source.angle = frame.source.angle;
     if (target && frame && !Rules.modelOf(target).ship) target.angle = frame.target.angle;
+    if (event.before > 0 && event.after <= 0) DevelopmentUI.defeated(event.to);
     view.displayHp[event.to] = event.after;
     view.index++;
     frame = null;

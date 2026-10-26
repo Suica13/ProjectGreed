@@ -96,6 +96,10 @@ const Net = (() => {
     return u.href;
   }
   const key = (url, room) => "slg-seat:" + url + ":" + room;
+  const lastKey = () => "slg-last";
+  const legacyToken = (url, room) =>
+    ["PMC", "EFSF", "ZEON"].map((faction) =>
+      storage.get("slg-seat:" + faction + ":" + url + ":" + room)).find(Boolean);
   const canControl = (unit) =>
     !window.ReplayPlayer?.active &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
@@ -187,7 +191,7 @@ const Net = (() => {
       n.socket.send(JSON.stringify({ type: "leave" }));
     if (forget) {
       if (n.serverURL && n.room) storage.remove(key(n.serverURL, n.room));
-      storage.remove("slg-last");
+      storage.remove(lastKey());
     }
     n.socket?.close();
     n.socket = null;
@@ -223,7 +227,7 @@ const Net = (() => {
       n.connecting = false;
       if (!n.local) {
         storage.set(key(url, room), msg.token);
-        storage.set("slg-last", JSON.stringify({ url, room }));
+        storage.set(lastKey(), JSON.stringify({ url, room }));
       }
       keepAlive();
       byId("start").hidden = true;
@@ -260,7 +264,7 @@ const Net = (() => {
       if (n.connecting) {
         if (mode === "resume") {
           storage.remove(key(url, room));
-          storage.remove("slg-last");
+          storage.remove(lastKey());
         }
         n.manual = true;
         n.connecting = false;
@@ -290,9 +294,10 @@ const Net = (() => {
     foregroundSyncAt = -Infinity;
     session++;
     moving = null;
-    status("离线遭遇战");
+    status("离线常规战");
   }
   function connect(mode = "join", auto = false, roomCode = null) {
+    if (!PlayerProfile.selected()) return note("请先选择角色阵营。");
     if (window.isLayoutPreview) return;
     if (!assetsReady) {
       note("贴图尚未加载完成");
@@ -311,7 +316,8 @@ const Net = (() => {
     }
     Lobby.close();
     const token =
-      (n.serverURL === url && n.room === room ? n.token : null) || storage.get(key(url, room));
+      (n.serverURL === url && n.room === room ? n.token : null) ||
+      storage.get(key(url, room)) || legacyToken(url, room);
     if (mode === "resume" && !token) {
       status("本页面没有该房间的重连凭据，请创建或加入房间");
       return;
@@ -359,6 +365,9 @@ const Net = (() => {
       socket.send(
         JSON.stringify({
           type: "hello",
+          version: PROJECT.version,
+          characterFaction: PlayerProfile.faction(),
+          roomMode: mode === "create" ? byId("newRoomMode").value : undefined,
           mode,
           room,
           token: mode === "resume" ? token : undefined,
@@ -416,12 +425,14 @@ const Net = (() => {
     CombatPlayback.receive(s, n.applied);
     const wasStarted = n.started;
     Chat.setSnapshot(s);
+    DevelopmentUI.receiveAwards(s);
     const previousSeat = n.seat;
     if (s.you) {
       n.seat = s.you.seat;
       n.memberId = s.you.id;
     }
     n.started = s.started;
+    MusicPlayer.sync();
     Formation.refresh();
     if (previousSeat !== n.seat) {
       selected = weaponId = null;
@@ -543,7 +554,11 @@ const Net = (() => {
       battleView = null;
     }
     if (s.started && online)
-      status((n.local ? "离线遭遇战" : "房间 " + n.room) + " · " + roleName());
+      status(
+        (n.local
+          ? "离线" + (s.settings?.mode === "quick" ? "快速战" : "常规战")
+          : "房间 " + n.room) + " · " + roleName(),
+      );
     const effectEvent = s.effectEvent;
     if (effectEvent && !n.seen.has("effect:" + effectEvent.id)) {
       n.seen.add("effect:" + effectEvent.id);
@@ -639,7 +654,10 @@ const Net = (() => {
   }
   let last;
   try {
-    last = JSON.parse(storage.get("slg-last") || "null");
+    last = JSON.parse(
+      storage.get(lastKey()) || storage.get("slg-last:PMC") ||
+      storage.get("slg-last:EFSF") || storage.get("slg-last:ZEON") || "null"
+    );
   } catch {}
   // 预设地址只保存在配置和连接状态里，不回填到自定义输入框。
   const presetURLs = CLIENT_CONFIG.presetServers.map((server) => endpoint(server.address));
@@ -650,17 +668,28 @@ const Net = (() => {
   } catch {}
   byId("serverAddress").value = savedIsPreset ? "" : savedAddress;
   if (last) byId("roomCode").value = last.room;
-  // 刷新页面时自动恢复；意外掉线后由居中弹窗中的按钮发起重连。
-  window.addEventListener(
-    "game-assets-ready",
-    () => {
-      if (window.isLayoutPreview || !last || !storage.get(key(last.url, last.room))) return;
-      n.serverURL = last.url;
-      n.room = last.room;
-      connect("resume", true);
-    },
-    { once: true },
-  );
+  // Wait for both assets and the character choice before restoring that character's seat.
+  let restoredCharacter = false;
+  function restoreCharacter() {
+    if (restoredCharacter || !assetsReady || !PlayerProfile.selected() || window.isLayoutPreview)
+      return;
+    restoredCharacter = true;
+    try {
+      last = JSON.parse(
+        storage.get(lastKey()) || storage.get("slg-last:PMC") ||
+        storage.get("slg-last:EFSF") || storage.get("slg-last:ZEON") || "null"
+      );
+    } catch {
+      last = null;
+    }
+    if (!last || !(storage.get(key(last.url, last.room)) ||
+        legacyToken(last.url, last.room))) return;
+    n.serverURL = last.url;
+    n.room = last.room;
+    connect("resume", true);
+  }
+  window.addEventListener("game-assets-ready", restoreCharacter, { once: true });
+  window.addEventListener("character-selected", restoreCharacter);
   return Object.assign(n, {
     beginLocal,
     receive,

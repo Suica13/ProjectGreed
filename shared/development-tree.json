@@ -1,0 +1,428 @@
+{
+  "EFSF": [
+    {
+      "id": "Tech_EFSF_0079_BaseTech",
+      "name": "基础科技",
+      "description": "解锁地球联邦军基础单位",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_BaseTech.png",
+      "row": "mid",
+      "column": 1,
+      "points": 0,
+      "requires": [],
+      "unlocks": [
+        "Army_Squad_EFSF_0079_N_G_A",
+        "Type61",
+        "Type74",
+        "AntiZakuTank",
+        "FanFan",
+        "EF_Heli",
+        "FF_4",
+        "FF_B2",
+        "FF_6",
+        "FF_S3",
+        "RFF_06",
+        "Medea",
+        "EF_TorpedoBoat",
+        "BurkeClass",
+        "U_Type_Submarine",
+        "HimalayaClass",
+        "SalamisClass",
+        "ColumbusClass",
+        "Factory_EFSF_0079_Land",
+        "Factory_EFSF_0079_Air",
+        "Factory_EFSF_0079_Aqua",
+        "Factory_EFSF_0079_Mega",
+        "Factory_EFSF_0079_Space",
+        "Factory_EFSF_0079_Space_Mega",
+        "Refinery_Common_T1",
+        "Institute_Common_T1",
+        "SupplyDepot_Common_T1",
+        "Academy_Common_T1",
+        "Beacon_ACE_0079",
+        "HLV_0079_Build",
+        "Turret_AA_A",
+        "Turret_MG_A",
+        "Turret_CN_A",
+        "Turret_MS_A",
+        "Turret_Radar_A",
+        "Wall_T1_A",
+        "Wall_T1_B"
+      ]
+    },
+    {
+      "id": "Tech_EFSF_0079_AntiMSPlan",
+      "name": "反MS计划",
+      "description": "解锁反MS单位",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_AntiMSPlan.png",
+      "row": "mid",
+      "column": 2,
+      "points": 1200,
+      "requires": [
+        "Tech_EFSF_0079_BaseTech"
+      ],
+      "unlocks": [
+        "RGM_79_E",
+        "Type61A5",
+        "Type74Kai",
+        "Type61_SPG",
+        "MissileCar",
+        "EF_MinigunAPC",
+        "Dash",
+        "DEPP_ROG",
+        "DonEscargot",
+        "RB_79K",
+        "RB_79",
+        "Pilot_EFSF_0079_N_ACE_YDR",
+        "M_Type_Submarine",
+        "MiniTrayClass"
+      ]
+    },
+    {
+      "id": "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan",
+      "name": "先期量产型MS开发计划",
+      "description": "解锁先期量产型MS",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan.png",
+      "row": "mid",
+      "column": 3,
+      "points": 3600,
+      "requires": [
+        "Tech_EFSF_0079_AntiMSPlan"
+      ],
+      "unlocks": [
+        "RX_79_G",
+        "RX_79_G_WithBackpack",
+        "RGM_79_G",
+        "RGM_79_G_WithBackpack",
+        "RGM_79_G_SPACE",
+        "RGM_79_G_SP",
+        "RX_75R",
+        "RB_79N",
+        "RB_79M",
+        "Pilot_EFSF_0079_N_ACE_RVL",
+        "Pilot_EFSF_0079_N_ACE_SHR",
+        "BigTrayClass",
+        "MagellanClass"
+      ]
+    },
+    {
+      "id": "Tech_EFSF_0079_OperationVDataRecoveryProject",
+      "name": "V计划数据回收计划",
+      "description": "解锁V计划单位",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_OperationVDataRecoveryProject.png",
+      "row": "mid",
+      "column": 4,
+      "points": 6000,
+      "requires": [
+        "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RX_78_2",
+        "RX_77_2",
+        "RX_75",
+        "RX_78_1",
+        "FF_X7",
+        "FF_X7Bst",
+        "FFB_7Bst",
+        "Gunperry",
+        "PegasusClass",
+        "MagellanClass_Green"
+      ]
+    },
+    {
+      "id": "Tech_EFSF_0079_GMDevelopmentPlan",
+      "name": "吉姆开发计划",
+      "description": "解锁吉姆",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_GMDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "points": 8400,
+      "requires": [
+        "Tech_EFSF_0079_OperationVDataRecoveryProject"
+      ],
+      "unlocks": [
+        "RGM_79",
+        "RGM_79_Commander",
+        "MedeaKai",
+        "Pilot_EFSF_0079_N_ACE_TAM",
+        "Turret_MS_A",
+        "Turret_BM_A"
+      ]
+    },
+    {
+      "id": "Tech_EFSF_0079_BlueDestinyProject",
+      "name": "苍蓝宿命计划",
+      "description": "解锁苍蓝宿命一号机",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_BlueDestinyProject.png",
+      "row": "top",
+      "column": 3,
+      "points": 4800,
+      "requires": [
+        "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RX_79_BD_1",
+        "RX_80PR",
+        "HeavyForkClass",
+        "Pilot_EFSF_0079_N_ACE_YUU"
+      ]
+    },
+    {
+      "id": "Tech_EFSF_0079_PaleRiderProject",
+      "name": "苍白骑士计划",
+      "description": "解锁苍白骑士",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_PaleRiderProject.png",
+      "row": "top",
+      "column": 5,
+      "points": 9600,
+      "requires": [
+        "Tech_EFSF_0079_BlueDestinyProject"
+      ],
+      "unlocks": [
+        "RX_80PR_GroundType",
+        "RX_80PR_2",
+        "RX_79_BD_2",
+        "RGM_79DO"
+      ]
+    },
+    {
+      "id": "Tech_EFSF_0079_HeavyGuncannonPlan",
+      "name": "重型钢加农开发计划",
+      "description": "解锁重型钢加农",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_HeavyGuncannonPlan.png",
+      "row": "bot",
+      "column": 4,
+      "points": 7200,
+      "requires": [
+        "Tech_EFSF_0079_OperationVDataRecoveryProject"
+      ],
+      "unlocks": [
+        "RX_77_3",
+        "RX_77_3D",
+        "RX_78XX",
+        "RTX_440",
+        "RMV_1"
+      ]
+    }
+  ],
+  "ZEON": [
+    {
+      "id": "Tech_ZEON_0079_BaseTech",
+      "name": "基础科技",
+      "description": "解锁吉翁公国军基础单位",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_BaseTech.png",
+      "row": "mid",
+      "column": 1,
+      "points": 0,
+      "requires": [],
+      "unlocks": [
+        "Army_Squad_ZEON_0079_N_G_A",
+        "MTank",
+        "SamsonGroundTransportTruck",
+        "ZN_APC",
+        "Wappa",
+        "ZN_Heli",
+        "FatUncle",
+        "Dopp",
+        "DodaiYS",
+        "MS_05",
+        "MS_06C",
+        "MS_06F",
+        "MS_06S",
+        "Gattle",
+        "JiccoClass",
+        "U_Type_Submarine_ZEON",
+        "MusaiClass",
+        "PapuaClass",
+        "Factory_ZEON_0079_Land",
+        "Factory_ZEON_0079_Air",
+        "Factory_ZEON_0079_Aqua",
+        "Factory_ZEON_0079_Mega",
+        "Factory_ZEON_0079_Space",
+        "Refinery_Common_T1",
+        "Institute_Common_T1",
+        "SupplyDepot_Common_T1",
+        "Academy_Common_T1",
+        "Beacon_ACE_0079",
+        "HLV_0079_Build",
+        "Turret_AA_A",
+        "Turret_MG_A",
+        "Turret_CN_A",
+        "Turret_MS_A",
+        "Turret_Radar_A",
+        "Wall_T1_A",
+        "Wall_T1_B"
+      ]
+    },
+    {
+      "id": "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan",
+      "name": "陆地用扎古开发计划",
+      "description": "解锁陆地用扎古",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan.png",
+      "row": "mid",
+      "column": 2,
+      "points": 1200,
+      "requires": [
+        "Tech_ZEON_0079_BaseTech"
+      ],
+      "unlocks": [
+        "MS_06J",
+        "MS_07B",
+        "MS_06K",
+        "MS_06M",
+        "MS_06R_1",
+        "MS_06F_MineLayer",
+        "MSM_03",
+        "Cui",
+        "Luggun",
+        "ZN_APC_WithMS",
+        "Pilot_ZEON_0079_N_ACE_RBR",
+        "M_Type_Submarine_ZEON",
+        "FalmerClass"
+      ]
+    },
+    {
+      "id": "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan",
+      "name": "陆地用MS开发计划",
+      "description": "解锁陆地用MS",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_GroundTypeMSDevelopmentPlan.png",
+      "row": "mid",
+      "column": 3,
+      "points": 3600,
+      "requires": [
+        "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MS_07B3",
+        "MS_06G",
+        "MS_06E",
+        "MS_06R_1A",
+        "MS_06D",
+        "MS_06V",
+        "MTank_Eins",
+        "MSM_04",
+        "Pilot_ZEON_0079_N_ACE_GRN",
+        "Pilot_ZEON_0079_N_ACE_NRS",
+        "DabudeClass",
+        "ChivvayClass"
+      ]
+    },
+    {
+      "id": "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan",
+      "name": "新型陆地用MS开发计划",
+      "description": "解锁新型陆地用MS",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan.png",
+      "row": "mid",
+      "column": 4,
+      "points": 6000,
+      "requires": [
+        "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MS_09",
+        "MS_09R",
+        "MS_07A",
+        "MAX_03",
+        "Pilot_ZEON_0079_N_ACE_GRM",
+        "GawClass",
+        "GallopClass",
+        "ZanzibarClass",
+        "GwazineClass"
+      ]
+    },
+    {
+      "id": "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan",
+      "name": "扎古2后期型开发计划",
+      "description": "解锁扎古2后期型",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "points": 8400,
+      "requires": [
+        "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MS_06F2",
+        "MS_06F2_Commander",
+        "MS_05SP",
+        "MS_06JK",
+        "MS_09D",
+        "FatUncleKai",
+        "Turret_MS_A",
+        "Turret_BM_A_Yellow"
+      ]
+    },
+    {
+      "id": "Tech_ZEON_0079_603TestTeam",
+      "name": "603测试部队",
+      "description": "解锁603测试部队的单位",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_603TestTeam.png",
+      "row": "top",
+      "column": 3,
+      "points": 4800,
+      "requires": [
+        "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "EMS_10",
+        "EMS_10_1",
+        "MP_02A",
+        "YMT_05",
+        "JotunheimClass"
+      ]
+    },
+    {
+      "id": "Tech_ZEON_0079_PezunProject",
+      "name": "培曾计划",
+      "description": "解锁培曾计划单位",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_PezunProject.png",
+      "row": "top",
+      "column": 5,
+      "points": 9600,
+      "requires": [
+        "Tech_ZEON_0079_603TestTeam"
+      ],
+      "unlocks": [
+        "MS_10",
+        "MS_11",
+        "MS_11S",
+        "MS_12"
+      ]
+    },
+    {
+      "id": "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan",
+      "name": "老虎飞行型开发计划",
+      "description": "解锁老虎飞行型",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan.png",
+      "row": "bot",
+      "column": 3,
+      "points": 4800,
+      "requires": [
+        "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MS_08TX",
+        "MS_07H",
+        "MS_08TX_Kai",
+        "Pilot_ZEON_0079_N_ACE_NMBS"
+      ]
+    },
+    {
+      "id": "Tech_ZEON_0079_ApsarasDevelopmentPlan",
+      "name": "阿普萨拉斯开发计划",
+      "description": "解锁阿普萨拉斯II",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_ApsarasDevelopmentPlan.png",
+      "row": "bot",
+      "column": 5,
+      "points": 9600,
+      "requires": [
+        "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan"
+      ],
+      "unlocks": [
+        "ApsarasII",
+        "MS_07H8",
+        "Pilot_ZEON_0079_N_ACE_ANS",
+        "Pilot_ZEON_0079_N_ACE_GNS"
+      ]
+    }
+  ]
+}

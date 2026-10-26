@@ -9,7 +9,8 @@ const HangarUI = (() => {
     launching = null,
     boarding = null,
     boardingCarrier = null,
-    launchLocations = [];
+    launchLocations = [],
+    reopenCarrier = null;
   const mine = (u) =>
     Net.active
       ? Net.canControl(u)
@@ -238,13 +239,18 @@ const HangarUI = (() => {
     return b;
   }
   function cancel() {
-    launching = boarding = boardingCarrier = null;
+    launching = boarding = boardingCarrier = reopenCarrier = null;
     launchLocations = [];
     if (["hangar-launch", "hangar-board"].includes(mode)) mode = "select";
   }
   function refresh() {
-    if (launching && (!getUnit(launching)?.embarked || !["idle", "deployment"].includes(phase)))
+    if (launching && (!getUnit(launching)?.embarked || !["idle", "deployment"].includes(phase))) {
+      const carrier = getUnit(reopenCarrier);
+      const hasCargo = carrier?.hp > 0 &&
+        Rules.hangars.of(carrier).some((hangar) => Rules.hangars.cargo(game, carrier, hangar.id).length);
       cancel();
+      if (hasCargo && ["idle", "deployment"].includes(phase)) open(carrier);
+    }
     if (
       boarding &&
       (!allowed(getUnit(boarding)) ||
@@ -287,6 +293,7 @@ const HangarUI = (() => {
       note("请选择单位移动范围内的有效出击格子");
       return true;
     }
+    reopenCarrier = getUnit(launching)?.embarked?.carrierId || null;
     request("launch", { unitId: launching, x: cell.x, y: cell.y });
     return true;
   }

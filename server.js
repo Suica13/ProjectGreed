@@ -155,8 +155,22 @@ function createServer({
           ws.lobby = true;
           send(ws, { type: "rooms", rooms: roomList() });
         } else if (msg.type === "leave") leaveRoom(ws);
-        else if (msg.type === "hello") join(ws, msg);
-        else if (msg.type === "action") action(ws, msg);
+        else if (msg.type === "hello") {
+          // Check before creating a room or consuming a reconnect token. Older
+          // clients without this field must not enter a newer server either.
+          if (msg.version !== project.version) {
+            send(ws, {
+              type: "error",
+              code: "VERSION_MISMATCH",
+              serverVersion: project.version,
+              message: `版本不匹配：服务器为 ${project.version}，客户端为 ${typeof msg.version === "string" ? msg.version.slice(0, 32) : "旧版本（未提供版本号）"}。请使用与服务器相同版本的客户端。`,
+            });
+            return;
+          }
+          if (!["PMC", "EFSF", "ZEON"].includes(msg.characterFaction))
+            throw Error("请使用最新客户端并选择角色阵营后加入房间。");
+          join(ws, msg);
+        } else if (msg.type === "action") action(ws, msg);
         else throw Error("未知消息类型");
       } catch (err) {
         send(ws, {

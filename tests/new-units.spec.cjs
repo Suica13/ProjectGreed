@@ -132,7 +132,16 @@ class Peer {
     return this.frames.find(predicate);
   }
   async hello(room, name) {
-    this.ws.send(JSON.stringify({ type: "hello", mode: "join", room, name }));
+    this.ws.send(
+      JSON.stringify({
+        type: "hello",
+        version: require("../project.json").version,
+        characterFaction: "PMC",
+        mode: "join",
+        room,
+        name,
+      }),
+    );
     await this.wait((m) => m.type === "joined");
   }
   async act(room, action, fields = {}) {

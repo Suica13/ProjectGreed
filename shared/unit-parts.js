@@ -55,10 +55,9 @@ const UnitParts = (() => {
     return game.partSeed / 4294967296;
   }
   function applyHit(game, unit, model, damage, modifier = 1) {
-    if (model.partsBreakable === false) return null;
-    if (model.ship) {
+    if (model.modules?.length && unit.moduleHp) {
       if (unit.hp <= 0 || damage <= 0 || !unit.moduleHp) return null;
-      // Four original hull hitboxes plus sixteen separately damageable turret modules.
+      // Module platforms absorb hits through hull and separately damageable turret slots.
       const index = Math.floor(
           random(game) * (model.modules.length + (model.hullHitboxes?.length ?? 4)),
         ),
@@ -69,6 +68,7 @@ const UnitParts = (() => {
       unit.brokenParts = { ...unit.brokenParts, [module.id]: true };
       return module.id;
     }
+    if (model.partsBreakable === false) return null;
     const probability = chance(unit, model, damage, modifier);
     if (probability <= 0 || random(game) <= 1 - probability) return null;
     const slot = Math.floor(random(game) * 71),

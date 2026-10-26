@@ -53,3 +53,20 @@ test("older recordings retain turn navigation while discarding takeover state", 
   assert.deepEqual(imported.checkpoints, [{ frame: 0, round: g.round, team: g.team }]);
   assert.equal(JSON.stringify(imported.checkpoints).includes('"seed"'), false);
 });
+
+test("replay conversion saves the turn start with fresh seeds and leaves the record unchanged", () => {
+  const { archive, first, g } = record();
+  const later = R.clone(first);
+  later.game.units[0].hp -= 100;
+  archive.frames.push({ at: 1, views: { global: R.pack(first, later) } });
+  const input = R.validate(G, archive),
+    before = JSON.stringify(input);
+  const save = R.saveFromReplay(G, input, 1, 987, 654);
+  assert.equal(save.game.units[0].hp, g.units[0].hp);
+  assert.equal(save.game.seed, 987);
+  assert.equal(save.game.partSeed, 654);
+  assert.equal(save.format, "ProjectGreed-save");
+  assert.equal(R.validateSave(G, save).game.round, g.round);
+  assert.equal(JSON.stringify(input), before);
+  assert.throws(() => R.saveFromReplay(G, { ...input, perspectives: ["team:0"] }, 0, 1, 2));
+});

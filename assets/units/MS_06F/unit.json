@@ -470,7 +470,7 @@
     "Common_Melee_A": "../../animations/MS_06F__Common_Melee_A.json"
   },
   "stats": {
-    "hp": 15000.0,
+    "hp": 18750,
     "en": 450.0,
     "move": 5,
     "mobility": 105,
@@ -580,7 +580,8 @@
       "sight": 18.0,
       "radar": 324.0,
       "antiDetection": 0.0
-    }
+    },
+    "v17BaseHp": 15000.0
   },
   "presentation": {
     "shield": false,

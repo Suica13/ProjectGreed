@@ -7,6 +7,8 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const development =
+    typeof Development !== "undefined" ? Development : require("./development.js");
   const parts = typeof UnitParts !== "undefined" ? UnitParts : require("./unit-parts.js");
   const skillModule = typeof UnitSkills !== "undefined" ? UnitSkills : require("./unit-skills.js");
   const hangarModule = typeof UnitHangars !== "undefined" ? UnitHangars : require("./hangars.js");
@@ -56,7 +58,7 @@ const Tactics = (() => {
   }
   function validateUnitLimit(value = catalog.formation.maxUnits) {
     if (!Number.isInteger(value) || value < 3 || value > catalog.formation.maxUnits)
-      throw Error("编组单位上限必须为3～" + catalog.formation.maxUnits + "台");
+      throw Error("编组单位点数上限必须为3～" + catalog.formation.maxUnits + "点");
     return value;
   }
   function normalizeUnitName(value) {
@@ -78,7 +80,12 @@ const Tactics = (() => {
     throw Error("没有可用的单位编号");
   }
   const unitName = (unit) => unit.customName || modelOf(unit).name;
-  // 房间基础上限12台；玩家与AI可按数量比例扩展到36台。
+  const formationWeight = (model) => model.ship ? 4 : model.unitTags?.includes("MS") ? 2 : 1;
+  const formationPoints = (entries) => entries.reduce((total, entry) => {
+    const model = models[entry.unitId + "__" + entry.kitId];
+    return total + (model ? formationWeight(model) : 0);
+  }, 0);
+  // 编组与房间的单位限制均按占用点数计算。
   function validateFormation(
     entries,
     maxCost = catalog.formation.maxCost,
@@ -90,9 +97,9 @@ const Tactics = (() => {
       entries.length > unitLimit ||
       !Number.isInteger(unitLimit) ||
       unitLimit < 1 ||
-      unitLimit > catalog.formation.maxUnits * 3
+      unitLimit > catalog.formation.maxUnits
     )
-      throw Error("编组数量无效，请检查单位数量上限");
+      throw Error("编组无效，请检查单位点数上限");
     let cost = 0;
     const clean = entries.map((entry) => {
       const alias = catalog.prefabs.find((p) => p.id === entry?.unitId)?.kitAliases?.[entry?.kitId];
@@ -103,6 +110,8 @@ const Tactics = (() => {
       const customName = normalizeUnitName(entry.customName);
       return { unitId: model.prefabId, kitId: model.kitId, ...(customName ? { customName } : {}) };
     });
+    if (formationPoints(clean) > unitLimit)
+      throw Error("编组单位点数超出上限");
     const capacity = new Map();
     entries.forEach((entry, index) => {
       if (entry.preload === undefined) return;
@@ -171,6 +180,12 @@ const Tactics = (() => {
     }
     return clean;
   }
+  function validateTeamFactions(value) {
+    if (!Array.isArray(value) || value.length !== 2 ||
+        value.some((faction) => faction !== null && !["PMC", "EFSF", "ZEON"].includes(faction)))
+      throw Error("队伍强制阵营无效。");
+    return [...value];
+  }
   function validateTeamRestrictions(value) {
     if (!Array.isArray(value) || value.length !== 2) throw Error("队伍标签限制无效");
     return value.map(validateTagRestrictions);
@@ -179,20 +194,27 @@ const Tactics = (() => {
     if (!["full", "visible", "disabled"].includes(value)) throw Error("战争迷雾设置无效");
     return value;
   }
+  function validateBattleMode(value = "regular") {
+    if (!["regular", "quick"].includes(value)) throw Error("对战模式无效");
+    return value;
+  }
   function defaultRoomSettings() {
     return {
+      mode: "regular",
       fogMode: "full",
       mapId: catalog.defaultMap,
-      costLimit: catalog.formation.maxCost,
-      unitLimit: catalog.formation.defaultUnits,
-      unitCostLimit: catalog.formation.unitCostLimit,
+      costLimit: 1800,
+      unitLimit: 12,
+      unitCostLimit: 300,
       shareAlliedUnits: false,
       ...validateTagRestrictions(),
       teamRestrictions: [validateTagRestrictions(), validateTagRestrictions()],
+      teamFactions: [null, null],
     };
   }
   function formationRestrictions(settings = {}, seat = null) {
-    const team = seat === null ? {} : settings.teamRestrictions?.[seatTeam(seat)] || {};
+    const teamRules = seat === null || settings.mode !== "quick"
+      ? null : settings.teamRestrictions?.[seatTeam(seat)];
     return {
       ...(settings.mapId
         ? {
@@ -202,14 +224,28 @@ const Tactics = (() => {
           }
         : {}),
       unitCostLimit: settings.unitCostLimit ?? Infinity,
-      bannedFactions: [
-        ...new Set([...(settings.bannedFactions || []), ...(team.bannedFactions || [])]),
-      ],
-      bannedEras: [...new Set([...(settings.bannedEras || []), ...(team.bannedEras || [])])],
-      bannedTypes: [...new Set([...(settings.bannedTypes || []), ...(team.bannedTypes || [])])],
+      bannedFactions: [...new Set([
+        ...(settings.bannedFactions || []), ...(teamRules?.bannedFactions || []),
+      ])],
+      bannedEras: [...new Set([
+        ...(settings.bannedEras || []), ...(teamRules?.bannedEras || []),
+      ])],
+      bannedTypes: [...new Set([
+        ...(settings.bannedTypes || []), ...(teamRules?.bannedTypes || []),
+      ])],
     };
   }
   function restrictionReason(model, restrictions = {}) {
+    if (
+      ["EFSF", "ZEON"].includes(restrictions.characterFaction) &&
+      model.faction !== restrictions.characterFaction
+    )
+      return "faction_mismatch";
+    if (
+      ["PMC", "EFSF", "ZEON"].includes(restrictions.characterFaction) &&
+      !development.allows(restrictions.characterFaction, model.prefabId)
+    )
+      return "not_developed";
     if (restrictions.environment && (model.adaptability?.[restrictions.environment] ?? 100) <= 0)
       return "not_allowed";
     if (
@@ -234,13 +270,20 @@ const Tactics = (() => {
     restrictions = {},
     unitLimit = catalog.formation.maxUnits,
   ) {
-    const clean = validateFormation(entries, Infinity, unitLimit);
+    const clean = validateFormation(entries, Infinity, catalog.formation.maxUnits);
     const costs = clean.map((entry) => models[entry.unitId + "__" + entry.kitId].cost);
     const totalCost = costs.reduce((sum, value) => sum + value, 0);
     const reasons = {};
     clean.forEach((entry, index) => {
       const reason = restrictionReason(models[entry.unitId + "__" + entry.kitId], restrictions);
       if (reason) reasons[index] = reason;
+    });
+    let occupied = 0;
+    clean.forEach((entry, index) => {
+      if (reasons[index]) return;
+      const weight = formationWeight(models[entry.unitId + "__" + entry.kitId]);
+      if (occupied + weight > unitLimit) reasons[index] = "count";
+      else occupied += weight;
     });
     let deployCost = costs.reduce((sum, value, index) => sum + (reasons[index] ? 0 : value), 0);
     for (let index = clean.length - 1; index >= 0 && deployCost > maxCost; index--) {
@@ -341,20 +384,20 @@ const Tactics = (() => {
   }
   function armyUnitLimit(settings, player) {
     return player?.formationPreset
-      ? player.formationPreset.units.length
-      : Math.max(1, Math.floor((settings.unitLimit * armySettings(player).countPercent) / 100));
+      ? formationPoints(player.formationPreset.units)
+      : Math.min(catalog.formation.maxUnits,
+          Math.max(1, Math.floor((settings.unitLimit * armySettings(player).countPercent) / 100)));
   }
   function armyRestrictions(settings, player) {
     const rules = formationRestrictions(settings, player?.seat ?? null);
+    rules.characterFaction = ["PMC", "EFSF", "ZEON"].includes(player?.characterFaction)
+      ? player.characterFaction : null;
     const config = armySettings(player);
     rules.unitCostLimit =
       config.unitCostLimit ??
       Math.max(1, Math.floor((rules.unitCostLimit * config.unitCostPercent) / 100));
     if (player?.formationPreset) {
       rules.unitCostLimit = maxCostLimit;
-      rules.bannedFactions = [];
-      rules.bannedEras = [];
-      rules.bannedTypes = [];
     }
     return rules;
   }
@@ -364,8 +407,8 @@ const Tactics = (() => {
     restrictions = {},
     unitLimit = catalog.formation.maxUnits,
   ) {
-    if (!Number.isInteger(unitLimit) || unitLimit < 1 || unitLimit > catalog.formation.maxUnits * 3)
-      throw Error("AI 编组数量上限无效");
+    if (!Number.isInteger(unitLimit) || unitLimit < 1 || unitLimit > catalog.formation.maxUnits)
+      throw Error("AI 编组点数上限无效");
     if (
       !Number.isInteger(maxCost) ||
       maxCost <= 0 ||
@@ -388,7 +431,8 @@ const Tactics = (() => {
       ),
       entries = [];
     const minimum = Math.min(...choices.map((model) => model.cost));
-    const count = Math.min(unitLimit, Math.floor(maxCost / minimum));
+    const minimumWeight = Math.min(...choices.map(formationWeight));
+    const count = Math.min(Math.floor(unitLimit / minimumWeight), Math.floor(maxCost / minimum));
     const bestAdaptation = Math.max(...choices.map(adaptation));
     // 达到正常适应性即可进入预算竞争；不能因少数廉价机体的适应性更高，
     // 将所有正常适应性的高级机体永久排除。全员不足100%时仍优先最高适应性。
@@ -401,6 +445,7 @@ const Tactics = (() => {
     const shipInterval = 6 + ((seed >>> 0) % 3);
     const desiredShips = count >= 6 ? Math.max(1, Math.floor(count / shipInterval)) : 0;
     let remaining = maxCost;
+    let remainingPoints = unitLimit;
     for (let i = 0; i < count; i++) {
       // 优先填满槽位，并为后续单位保留达到优先适应性档位的最低预算。
       const slots = count - i;
@@ -422,6 +467,7 @@ const Tactics = (() => {
       }
       const placementCache = new Map();
       const legal = choices.filter((model) => {
+        if (formationWeight(model) > remainingPoints) return false;
         if (model.cost > remaining - reserveMinimum * (slots - 1)) return false;
         if (!restrictions.mapId) return true;
         const shape = JSON.stringify([
@@ -508,6 +554,7 @@ const Tactics = (() => {
         customName: generateUnitName(model.name, entries, () => seed / 4294967296),
       });
       remaining -= model.cost;
+      remainingPoints -= formationWeight(model);
     }
     // Assign existing squad entries to compatible hangars; never create free passengers.
     const hangars = entries.flatMap((entry, carrierIndex) =>
@@ -1072,7 +1119,7 @@ const Tactics = (() => {
           y: position.y,
           hp: m.hp,
           brokenParts: {},
-          ...(m.ship
+          ...(m.modules?.length
             ? {
                 moduleHp: Object.fromEntries(m.modules.map((module) => [module.id, module.hp])),
               }
@@ -2071,7 +2118,9 @@ const Tactics = (() => {
     validateUnitCostLimit,
     validateTagRestrictions,
     validateTeamRestrictions,
+    validateTeamFactions,
     validateFogMode,
+    validateBattleMode,
     defaultRoomSettings,
     formationRestrictions,
     restrictionReason,
@@ -2084,6 +2133,8 @@ const Tactics = (() => {
     models,
     catalog,
     validateFormation,
+    formationWeight,
+    formationPoints,
     normalizeUnitName,
     generateUnitName,
     unitName,

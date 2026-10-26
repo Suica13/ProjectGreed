@@ -26,7 +26,9 @@ def correct_layers(prefab, native):
     for module in prefab["stats"].get("modules", []):
         attachment, data, source = module_source(native, module)
         art = artwork(data)
-        below = attachment.get("setDrawLayerOnBottom") == "true"
+        below = attachment.get("setDrawLayerOnBottom") == "true" or (
+            not prefab["stats"].get("ship") and any(layer.get("layer") == "beforeBody" for _, layer in art)
+        )
         module["visual"] = dict(source=source.relative_to(ROOT).as_posix(),
             separateSprite=bool(art), belowHull=below, decals=[name for name, _ in art])
         for i, (name, native_layer) in enumerate(art):

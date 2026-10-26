@@ -789,15 +789,130 @@
         }
       }
       .start-layout {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 10px;
-        flex-wrap: wrap;
         margin: 18px 0;
       }
+      #start.server-connected .start-layout {
+        display: none;
+      }
       .start-layout button {
-        flex: 1;
         padding: 14px;
-        min-width: 180px;
+        min-width: 0;
+      }
+      .menu-profile {
+        display: grid;
+        gap: 12px;
+        margin: 12px 0;
+      }
+      .menu-profile-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: end;
+        gap: 12px;
+      }
+      .lobby-selection {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 12px;
+        margin: 12px 0;
+        border: 2px solid #75c6e9;
+        border-radius: 7px;
+        background: #102b39;
+      }
+      .lobby-selection label {
+        display: grid;
+        gap: 6px;
+        min-width: 0;
+        color: #d9f4ff;
+        font-weight: 700;
+      }
+      .lobby-selection select {
+        width: 100%;
+        min-width: 0;
+        min-height: 38px;
+      }
+      .lobby-selection small {
+        grid-column: 1 / -1;
+        color: var(--muted);
+      }
+      @media (max-width: 560px) {
+        .lobby-selection { grid-template-columns: minmax(0, 1fr); }
+        .lobby-selection small { grid-column: 1; }
+      }
+      .menu-profile .player-id-label,
+      .menu-faction {
+        display: grid;
+        gap: 5px;
+        margin: 0;
+        min-width: 0;
+      }
+      .menu-profile .player-id-label > span,
+      .menu-faction > label {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      #menuFactionSelect {
+        width: 100%;
+        min-height: 38px;
+        margin: 0;
+        padding: 7px 10px;
+        border: 1px solid currentColor;
+        background: #0c1b25;
+        color: #f4f6fa;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      #menuFactionSelect[data-faction="EFSF"] { color: #65baff; }
+      #menuFactionSelect[data-faction="ZEON"] { color: #ff7277; }
+      #menuFactionSelect option,
+      #lobbyFaction option,
+      #roomMain select.faction-badge option { background: #0c1b25; }
+      #menuFactionSelect option[value="PMC"],
+      #lobbyFaction option[value="PMC"],
+      #roomMain select.faction-badge option[value="PMC"] { color: #f4f6fa; }
+      #menuFactionSelect option[value="EFSF"],
+      #lobbyFaction option[value="EFSF"],
+      #roomMain select.faction-badge option[value="EFSF"] { color: #65baff; }
+      #menuFactionSelect option[value="ZEON"],
+      #lobbyFaction option[value="ZEON"],
+      #roomMain select.faction-badge option[value="ZEON"] { color: #ff7277; }
+      .menu-tech-progress {
+        display: grid;
+        gap: 5px;
+        align-content: end;
+        min-width: 0;
+      }
+      .menu-tech-progress-heading {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 11px;
+      }
+      .menu-tech-progress-heading > span:first-child { color: var(--muted); }
+      .menu-tech-progress-heading > span:last-child { white-space: nowrap; }
+      .tech-progress-track {
+        height: 8px;
+        overflow: hidden;
+        border: 1px solid #527082;
+        border-radius: 4px;
+        background: #0c1d29;
+      }
+      .tech-progress-fill {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #4aa9f2, #b8e4ff);
+      }
+      [data-character="ZEON"] .tech-progress-fill,
+      .menu-tech-progress[data-faction="ZEON"] .tech-progress-fill {
+        background: linear-gradient(90deg, #cf555c, #ffadaf);
+      }
+      .menu-profile #playerId {
+        max-width: none;
+        width: 100%;
       }
       .toast {
         position: fixed;
@@ -1085,6 +1200,11 @@
       }
       .room-list .room-action {
         text-align: right;
+      }
+      .room-list th:nth-child(2),
+      .room-list td:nth-child(2) {
+        min-width: 130px;
+        width: 28%;
       }
       .server-modal {
         width: min(480px, 100%);
@@ -1476,12 +1596,30 @@
         gap: 6px;
         min-width: 0;
       }
+      .room-member-button {
+        min-width: 0;
+        padding: 3px 4px;
+        border: 0;
+        background: transparent;
+        text-align: left;
+        cursor: pointer;
+      }
+      .room-member-button:hover,
+      .room-member-button:focus-visible {
+        background: #294658;
+        outline: 1px solid #6ba9c9;
+      }
+      .room-member-button .player-name {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
       .lineup-name strong {
         min-width: 0;
         overflow-wrap: anywhere;
         font-size: 13px;
       }
-      .lineup-name > button {
+      .lineup-name > .choose-spawn {
         flex-shrink: 0;
         padding: 4px 6px;
         font-size: 11px;
@@ -1568,7 +1706,7 @@
       .spawn-slot,
       .lineup-header {
         display: grid;
-        grid-template-columns: minmax(0, 1.4fr) minmax(95px, 1fr) minmax(65px, 0.8fr);
+        grid-template-columns: minmax(0, 1.3fr) minmax(56px, 0.55fr) minmax(140px, 0.85fr) minmax(54px, 0.4fr);
         align-items: center;
         gap: 8px;
         padding: 10px 0;
@@ -1586,12 +1724,48 @@
       }
       .spawn-cell {
         display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
+        align-items: center;
         min-width: 0;
         padding-left: 8px;
         border-left: 1px solid #30444f;
       }
+      .lineup-faction {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        padding-left: 8px;
+        border-left: 1px solid #30444f;
+      }
+      #roomMain .lineup-faction .faction-badge {
+        width: 100%;
+        min-width: 0;
+        height: 26px;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin: 0;
+        padding: 2px 8px;
+        background: #142430;
+        font-size: 10px;
+        font-weight: 700;
+        text-align: left;
+      }
+      #roomMain button.faction-badge { cursor: pointer; }
+      #roomMain select.faction-badge {
+        cursor: pointer;
+        border-color: currentColor;
+      }
+      #roomMain select.faction-efsf { color: #65baff; }
+      #roomMain select.faction-zeon { color: #ff7277; }
+      #roomMain select.faction-pmc { color: #f4f6fa; }
+      #roomMain .spectator-slot .faction-badge {
+        width: 140px;
+        box-sizing: border-box;
+        margin: 0;
+        text-align: left;
+      }
+      .spawn-position { font-size: 12px; white-space: nowrap; }
       .ready-status.not-ready {
         color: var(--blue);
       }
@@ -1637,6 +1811,19 @@
       }
       .player-name .host-badge {
         color: inherit;
+      }
+      #roomTeamRestrictions {
+        display: grid;
+        gap: 8px;
+      }
+      .room-team-rules {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .room-team-rules select {
+        min-width: 180px;
       }
       #roomActions {
         align-items: center;
@@ -1692,6 +1879,12 @@
           height: 180px;
           flex: none;
         }
+      }
+    </style>
+    <style id="character-styles">
+      .faction-mismatch > .overcost-label {
+        font-size: 14px;
+        color: #fff;
       }
     </style>
   </head>
@@ -1769,10 +1962,10 @@
               </div>
               <p data-ui-node="node-33" id="hint">点击己方单位，选择蓝色格子移动。</p>
             </div>
-            <button id="confirmDeployment" class="primary" hidden data-ui-node="node-202">
+            <button id="confirmDeployment" class="primary" aria-keyshortcuts="B" hidden data-ui-node="node-202">
               确认部署
             </button>
-            <button data-ui-node="node-34" id="endTurn" class="primary" hidden>结束蓝方回合</button>
+            <button data-ui-node="node-34" id="endTurn" class="primary" aria-keyshortcuts="B" hidden>结束蓝方回合</button>
           </div>
           <div data-ui-node="node-35" class="map-wrap" id="mapWrap">
             <span id="hudTurnActions" role="group" aria-label="回合操作"></span>
@@ -1911,6 +2104,7 @@
             <select id="spectatorView" aria-label="观战视角"></select>
           </label>
         </div>
+        <div id="techRewardStack" class="tech-reward-stack" role="status" aria-live="polite"></div>
         <div
           id="hudUnitCommands"
           class="hud-unit-commands"
@@ -2077,18 +2271,37 @@
             <span>测试版本不代表最终品质，祝你好运！</span>
           </div>
         </div>
-        <label class="player-id-label"
-          ><span>玩家ID</span
-          ><input
-            id="playerId"
-            maxlength="24"
-            autocomplete="nickname"
-            aria-label="玩家ID"
-            placeholder="输入用于房间和聊天的玩家ID"
-        /></label>
+        <div class="menu-profile">
+          <div class="menu-profile-row">
+            <label class="player-id-label"><span>玩家ID</span><input
+              id="playerId"
+              maxlength="24"
+              autocomplete="nickname"
+              aria-label="玩家ID"
+              placeholder="输入用于房间和聊天的玩家ID"
+            /></label>
+            <div class="menu-faction">
+              <label for="menuFactionSelect">当前阵营</label>
+              <select id="menuFactionSelect" aria-label="当前阵营" data-i18n-ignore>
+                <option value="PMC">PMC</option>
+                <option value="EFSF">地球联邦军[0079]</option>
+                <option value="ZEON">吉翁公国军[0079]</option>
+              </select>
+            </div>
+          </div>
+          <div id="menuTechProgress" class="menu-tech-progress">
+            <div class="menu-tech-progress-heading">
+              <span>科技树总进度</span>
+              <span id="menuTechProgressText">0/0 已解锁</span>
+            </div>
+            <div id="menuTechProgressBar" class="tech-progress-track" role="progressbar" aria-label="科技树总进度" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"><span id="menuTechProgressFill" class="tech-progress-fill"></span></div>
+          </div>
+        </div>
         <div data-ui-node="node-138" class="start-layout">
-          <button data-ui-node="node-198" id="openFormation">编组</button>
-          <button data-ui-node="node-140" id="openSkirmish" class="primary" disabled>遭遇战</button>
+          <button id="openDevelopment" type="button">开发</button>
+          <button data-ui-node="node-198" id="openFormation">编成</button>
+          <button data-ui-node="node-140" id="openSkirmish" class="primary" disabled>战斗</button>
+          <button id="openReplayFile" type="button">回放</button>
         </div>
         <div
           id="skirmishSetup"
@@ -2099,11 +2312,14 @@
           aria-labelledby="skirmishSetupTitle"
         >
           <section class="modal skirmish-dialog">
-            <h3 id="skirmishSetupTitle">遭遇战</h3>
+            <h3 id="skirmishSetupTitle">创建对战</h3>
             <p class="muted">创建离线房间与 AI 对战，或连接服务器加入多人房间。</p>
+            <label>离线房间模式<select id="offlineRoomMode">
+              <option value="regular">常规战</option><option value="quick">快速战</option>
+            </select></label>
             <div class="net-buttons">
-              <button id="createOfflineRoom" class="primary">创建离线房间</button>
-              <button data-ui-node="node-150" id="openRooms">连接服务器</button>
+              <button id="createOfflineRoom" class="primary">单机 · 创建房间</button>
+              <button data-ui-node="node-150" id="openRooms">联机 · 连接服务器</button>
               <button id="closeSkirmish">返回</button>
             </div>
           </section>
@@ -2117,6 +2333,19 @@
             <button data-ui-node="node-157" id="refreshRooms">刷新服务器列表</button>
           </div>
           <p data-ui-node="node-152" id="roomListStatus" role="status">连接成功后显示房间。</p>
+          <div class="lobby-selection">
+            <label for="lobbyFaction">我的阵营
+              <select id="lobbyFaction" data-i18n-ignore>
+                <option value="PMC">PMC</option>
+                <option value="EFSF">地球联邦军[0079]</option>
+                <option value="ZEON">吉翁公国军[0079]</option>
+              </select>
+            </label>
+            <label for="lobbyFormation">出战编组预设
+              <select id="lobbyFormation" data-i18n-ignore></select>
+            </label>
+            <small id="lobbyFactionHint">常规战可选择阵营；快速战固定使用 PMC。</small>
+          </div>
           <div data-ui-node="node-158" class="room-list-scroll">
             <table data-ui-node="node-159" class="room-list" aria-label="房间列表">
               <thead data-ui-node="node-160">
@@ -2138,6 +2367,9 @@
               maxlength="20"
               autocomplete="off"
           /></label>
+          <label>新房间模式<select id="newRoomMode">
+            <option value="regular">常规战</option><option value="quick">快速战</option>
+          </select></label>
           <div data-ui-node="node-129" class="net-buttons">
             <button data-ui-node="node-130" id="createRoom">创建房间</button>
           </div>
@@ -2248,7 +2480,15 @@
             <div id="roomLobbyContent">
               <div id="roomSettingsPage">
                 <section class="room-map-panel" aria-label="地图信息">
-                  <div id="roomMapTitle" class="room-map-title" data-i18n-ignore></div>
+                  <div class="room-map-title-choice">
+                    <div id="roomMapTitle" class="room-map-title" data-i18n-ignore></div>
+                    <span id="roomMapChoiceHint" class="room-map-choice-hint">点击名称更换地图</span>
+                    <select
+                      id="roomMapSelect"
+                      aria-label="更换地图"
+                      aria-describedby="roomMapChoiceHint"
+                    ></select>
+                  </div>
                   <div class="room-map-choice">
                     <canvas
                       id="roomMapPreview"
@@ -2257,14 +2497,6 @@
                       role="img"
                       aria-label="地图预览"
                     ></canvas>
-                    <span id="roomMapChoiceHint" class="room-map-choice-hint"
-                      >点击更换地图</span
-                    >
-                    <select
-                      id="roomMapSelect"
-                      aria-label="更换地图"
-                      aria-describedby="roomMapChoiceHint"
-                    ></select>
                   </div>
                   <p id="roomMapInfo" class="muted"></p>
                 </section>
@@ -2275,7 +2507,7 @@
                   </div>
                   <details class="room-rule-group" open>
                     <summary>编组限制</summary>
-                    <div class="room-options">
+                    <div class="room-options room-formation-options">
                       <label
                         >编组 COST 上限<input
                           id="roomCostLimit"
@@ -2295,19 +2527,33 @@
                           aria-label="单位 COST 上限"
                       /></label>
                       <label
-                        >每位玩家单位上限<input
+                        >每位玩家单位点数上限<input
                           id="roomUnitLimit"
                           type="number"
                           min="3"
-                          max="36"
+                          max="72"
                           step="1"
-                          aria-label="每位玩家单位上限"
+                          aria-label="每位玩家单位点数上限"
                       /></label>
+                      <label
+                        >规则预设<select id="roomFormationPreset" aria-label="编组限制预设">
+                          <option value="1800,300,12">1800/300/12</option>
+                          <option value="2400,400,12">2400/400/12</option>
+                          <option value="3600,600,12">3600/600/12</option>
+                          <option value="4800,800,12">4800/800/12</option>
+                          <option value="6000,1000,12">6000/1000/12</option>
+                          <option value="99999,99999,72">上限/上限/上限</option>
+                          <option value="custom">自定义</option>
+                        </select></label
+                      >
                     </div>
                   </details>
                   <details class="room-rule-group" open>
                     <summary>战场规则</summary>
                     <div class="room-battle-rules">
+                      <label>对战模式<select id="roomBattleMode" aria-label="对战模式">
+                        <option value="regular">常规战</option><option value="quick">快速战</option>
+                      </select></label>
                       <label class="room-fog-option"
                         >战争迷雾
                         <select id="roomFogMode" aria-label="战争迷雾">
@@ -2316,7 +2562,8 @@
                           <option value="disabled">禁用</option>
                         </select>
                       </label>
-                      <label class="room-sharing-option">友军单位共享
+                      <label class="room-sharing-option"
+                        >友军单位共享
                         <select id="roomShareAlliedUnits" aria-label="友军单位共享">
                           <option value="disabled">禁用</option>
                           <option value="enabled">启用</option>
@@ -2329,7 +2576,7 @@
                     <div id="roomTagRestrictions" class="tag-restrictions"></div>
                   </details>
                   <details class="room-rule-group">
-                    <summary>队伍禁用标签</summary>
+                    <summary id="roomTeamRulesTitle">队伍强制阵营</summary>
                     <div id="roomTeamRestrictions"></div>
                   </details>
                 </section>
@@ -2464,12 +2711,241 @@
         backdrop-filter: blur(5px);
       }
     </style>
+    <style>
+      #developmentMain {
+        width: min(1160px, 96vw);
+        max-height: min(850px, 94vh);
+        overflow: auto;
+        --dev-accent: #8ba6b5;
+        --dev-node-accent: #80caff;
+        --dev-node: #173854;
+      }
+      #developmentMain[data-faction="ZEON"] {
+        --dev-node-accent: #ff9298;
+        --dev-node: #512432;
+      }
+      .development-heading {
+        display: grid;
+        grid-template-columns: auto minmax(230px, 1fr) auto auto;
+        align-items: center;
+        gap: 12px;
+      }
+      .development-heading-title {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        white-space: nowrap;
+      }
+      .development-heading h2 { margin: 0; }
+      .development-faction-picker {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        color: #e0eaf1;
+        white-space: nowrap;
+      }
+      .development-faction-picker select {
+        flex: 1;
+        min-width: 0;
+        min-height: 38px;
+        border-color: var(--dev-accent);
+        color: #f3f8fc;
+      }
+      .development-balance {
+        padding: 8px 12px;
+        border: 1px solid var(--dev-accent);
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+      .development-balance strong { margin-left: 8px; color: var(--dev-accent); }
+      .development-workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+        gap: 16px;
+        height: clamp(390px, calc(94dvh - 220px), 650px);
+        min-height: 0;
+        align-items: stretch;
+      }
+      .development-tree-scroll,
+      .development-details {
+        min-width: 0;
+        min-height: 0;
+        box-sizing: border-box;
+        overflow: auto;
+        border: 1px solid var(--dev-accent);
+        border-radius: 6px;
+        background: #10232d;
+      }
+      .development-tree-scroll { padding: 16px; }
+      .development-tree {
+        display: grid;
+        position: relative;
+        grid-template-columns: repeat(3, minmax(170px, 1fr));
+        grid-template-rows: repeat(5, minmax(110px, auto));
+        gap: 36px 16px;
+        min-width: 560px;
+      }
+      .development-lines {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: visible;
+      }
+      .development-lines path {
+        fill: none;
+        stroke: var(--dev-accent);
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .development-lines path[data-state="unlocked"] { stroke-width: 4; }
+      .development-node {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 6px;
+        min-width: 0;
+        min-height: 110px;
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #536a77;
+        border-radius: 5px;
+        background: var(--dev-node);
+      }
+      .development-node:hover,
+      .development-node[aria-pressed="true"] {
+        border-color: var(--dev-node-accent);
+        box-shadow: 0 0 0 2px var(--dev-node-accent);
+      }
+      .development-node[data-state="unlocked"] { border-color: var(--dev-node-accent); }
+      .development-node[data-state="locked"] { color: #aebec6; }
+      .development-node[data-prerequisite-locked="true"]::after {
+        content: "已锁定";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        border-radius: inherit;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        pointer-events: none;
+      }
+      .development-node strong { font-size: 13px; line-height: 1.3; }
+      .development-node small { font-size: 10px; color: var(--muted); }
+      .development-node-main { display: flex; align-items: center; gap: 8px; width: 100%; }
+      .development-node-icon {
+        flex: none;
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        image-rendering: pixelated;
+      }
+      .development-node .development-cost { color: #f0ce67; }
+      .development-details {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 16px;
+      }
+      .development-details h3 { margin: 0 0 8px; }
+      .development-details p { margin: 8px 0; }
+      .development-units {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        margin: 10px 0;
+        padding-right: 4px;
+        align-content: start;
+      }
+      .development-units .development-unit {
+        display: flex;
+        flex: none;
+        align-items: center;
+        gap: 9px;
+        min-height: 48px;
+        padding: 4px 8px;
+        border: 1px solid #49616e;
+        border-radius: 3px;
+        background: #172c38;
+        text-align: left;
+      }
+      .development-unit img { width: 38px; height: 38px; object-fit: contain; image-rendering: pixelated; }
+      .development-unit .development-unit-placeholder {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        color: var(--muted);
+        background: #26353c;
+      }
+      .development-unit[disabled] { opacity: 0.6; }
+      .development-details > button {
+        flex: none;
+        width: 100%;
+        margin-top: auto;
+      }
+      .development-details .development-unit { margin-top: 0; }
+      @media (max-width: 900px) {
+        .development-heading { grid-template-columns: auto minmax(0, 1fr); }
+        .development-heading-title .eyebrow { display: none; }
+        .development-balance { justify-self: start; }
+        .development-heading > #closeDevelopment { justify-self: end; }
+        .development-workspace {
+          grid-template-columns: minmax(0, 1fr);
+          grid-template-rows: repeat(2, clamp(320px, 48dvh, 500px));
+          height: auto;
+        }
+      }
+    </style>
+    <section id="developmentScreen" class="menu-screen" hidden aria-labelledby="developmentTitle">
+      <div id="developmentMain" class="modal development-dialog">
+        <header class="development-heading">
+          <div class="development-heading-title">
+            <span class="eyebrow">0079 / PAGE 01</span>
+            <h2 id="developmentTitle">开发</h2>
+          </div>
+          <label class="development-faction-picker" for="developmentFactionSelect">阵营
+            <select id="developmentFactionSelect" data-i18n-ignore>
+              <option value="EFSF">地球联邦军[0079]</option>
+              <option value="ZEON">吉翁公国军[0079]</option>
+            </select>
+          </label>
+          <div class="development-balance">阵营科技点 <strong id="developmentPoints">0</strong></div>
+          <button id="closeDevelopment" type="button">返回主菜单</button>
+        </header>
+        <div class="development-workspace">
+          <div class="development-tree-scroll">
+            <div id="developmentTree" class="development-tree" aria-label="0079 第一页科技树"></div>
+          </div>
+          <aside id="developmentDetails" class="development-details" aria-live="polite"></aside>
+        </div>
+      </div>
+    </section>
     <section id="formationScreen" class="menu-screen" hidden data-ui-node="node-199">
       <div id="formationMain" class="modal formation-dialog" data-ui-node="node-206">
         <div class="formation-heading">
           <h2 data-ui-node="node-207">单位编组</h2>
           <p id="formationBudget" data-ui-node="node-213"></p>
         </div>
+        <label class="formation-group-banner" for="formationGroup">
+          <strong>编组阵营</strong>
+          <select id="formationGroup" aria-label="编组阵营">
+            <option value="PMC">PMC</option>
+            <option value="EFSF">地球联邦军[0079]</option>
+            <option value="ZEON">吉翁公国军[0079]</option>
+          </select>
+        </label>
         <div class="formation-toolbar" data-ui-node="node-208">
           <label for="formationSelect" class="formation-picker"
             ><span>已保存编组</span
@@ -2561,13 +3037,6 @@
               <label
                 ><span class="formation-filter-label">类型筛选</span
                 ><select id="formationType" aria-label="类型筛选"></select
-              ></label>
-              <label
-                ><span class="formation-filter-label">&#x73AF;&#x5883;&#x7B5B;&#x9009;</span
-                ><select
-                  id="formationEnvironment"
-                  aria-label="&#x73AF;&#x5883;&#x7B5B;&#x9009;"
-                ></select
               ></label>
             </div>
             <input
@@ -2757,6 +3226,27 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
+      }
+      .formation-group-banner {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 10px 14px;
+        border: 2px solid #75c6e9;
+        border-radius: 7px;
+        background: linear-gradient(90deg, #163c51, #112631);
+        color: #e0f7ff;
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+      .formation-group-banner select {
+        flex: 1;
+        min-width: 0;
+        height: 40px;
+        margin: 0;
+        border-color: #75c6e9;
+        font-size: 15px;
+        font-weight: 700;
       }
       .formation-toolbar {
         display: grid;
@@ -3108,6 +3598,71 @@
         width: min(640px, 100%);
         max-height: 85vh;
         overflow-y: auto;
+      }
+      #roomDetailPanel .formation-detail-dialog {
+        width: min(680px, 100%);
+      }
+      #roomDetailTitle { margin: 0 0 20px; }
+      #roomDetailContent.member-management {
+        display: grid;
+        gap: 16px;
+      }
+      .room-detail-switch {
+        width: 100%;
+        margin: 0;
+        border-color: #6ba9c9;
+        background: #1a394b;
+      }
+      .room-detail-section {
+        padding: 16px;
+        border: 1px solid #3c596a;
+        border-radius: 6px;
+        background: #10232d;
+      }
+      .room-detail-section h3 { margin: 0 0 14px; }
+      #roomDetailPanel .ai-settings {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin: 0;
+      }
+      .room-army-rules {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+      #roomDetailPanel .ai-settings label,
+      .room-army-rules label,
+      .room-detail-seat-row label {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+        font-size: 13px;
+      }
+      #roomDetailPanel .ai-settings select,
+      .room-army-rules select,
+      .room-detail-seat-row select {
+        width: 100%;
+        min-height: 36px;
+        padding: 7px;
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        background: #0b1a23;
+        color: var(--text);
+      }
+      .room-detail-seat-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        gap: 12px;
+      }
+      .room-detail-seat-row button { margin: 0; min-height: 36px; }
+      .room-army-summary { margin: 16px 0 0; line-height: 1.5; }
+      .room-detail-danger { border-color: #79505a; }
+      .room-detail-danger button { margin: 0; }
+      @media (max-width: 520px) {
+        #roomDetailPanel .ai-settings,
+        .room-army-rules,
+        .room-detail-seat-row { grid-template-columns: minmax(0, 1fr); }
       }
       .formation-detail-preview {
         display: block;
@@ -3738,6 +4293,20 @@
         font-size: 11px;
         margin-left: 6px;
       }
+      .faction-badge {
+        display: inline-block;
+        margin-right: 6px;
+        padding: 1px 5px;
+        border: 1px solid currentColor;
+        border-radius: 3px;
+        font-size: 10px;
+        line-height: 1.4;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      .faction-efsf { color: #65baff; }
+      .faction-zeon { color: #ff7277; }
+      .faction-pmc { color: #f4f6fa; }
       .player-id-label {
         display: flex;
         align-items: center;
@@ -4332,6 +4901,7 @@
     </script>
     <script>
       const PROJECT = __PROJECT_META__;
+      const DEVELOPMENT_TREE = __DEVELOPMENT_TREE__;
       const CLIENT_CONFIG = __CLIENT_CONFIG__;
       const UI_LOCALES = __UI_LOCALES__;
       const ART = JSON.parse(document.getElementById("art").textContent);
@@ -4341,6 +4911,7 @@
       __UNIT_PARTS__;
       __UNIT_SKILLS__;
       __UNIT_HANGARS__;
+      __DEVELOPMENT__;
       __UNIT_SENSORS__;
       __CORE__;
       __RENDERER__;
@@ -4372,6 +4943,7 @@
       __LOBBY__;
       __ROOM__;
       __FORMATION__;
+      __DEVELOPMENT_UI__;
       __BATTLE_PROMPTS__;
       __HANGAR_UI__;
       __BATTLE_HUD__;

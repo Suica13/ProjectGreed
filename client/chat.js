@@ -88,6 +88,8 @@ const Chat = (() => {
         if (message.system) {
           const label = element("span", "chat-channel-label", "[" + I18n.text("系统") + "]");
           const name = element("strong", playerNameClass(message.memberId), message.name);
+          const badge = PlayerProfile.badge(message, Net.snapshot?.settings?.mode);
+          if (badge) name.prepend(badge);
           name.setAttribute("data-i18n-ignore", "");
           name.dataset.memberId = message.memberId;
           row.append(label, name, element("span", "", I18n.text(message.event)));
@@ -95,6 +97,8 @@ const Chat = (() => {
           return row;
         }
         const name = element("strong", playerNameClass(message.memberId), message.name);
+        const badge = PlayerProfile.badge(message, Net.snapshot?.settings?.mode);
+        if (badge) name.prepend(badge);
         const body = element("span", "", message.text);
         name.setAttribute("data-i18n-ignore", "");
         name.dataset.memberId = message.memberId;

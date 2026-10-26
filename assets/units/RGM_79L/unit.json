@@ -469,7 +469,7 @@
   "name": "轻装吉姆",
   "description": "拥有极高机动性的强袭型MS",
   "stats": {
-    "hp": 17000.0,
+    "hp": 21250,
     "en": 650.0,
     "move": 8,
     "mobility": 140,
@@ -580,7 +580,8 @@
       "sight": 20.0,
       "radar": 360.0,
       "antiDetection": 0.0
-    }
+    },
+    "v17BaseHp": 17000.0
   },
   "weapons": {
     "EF_90mmMG": {

@@ -22,7 +22,16 @@ test("heartbeat tolerates multiple missed pongs, accepts transport-only keepaliv
   let pings = 0;
   ws.on("ping", () => pings++);
   await once(ws, "open");
-  ws.send(JSON.stringify({ type: "hello", mode: "create", room: "HEARTBEAT", name: "Background" }));
+  ws.send(
+    JSON.stringify({
+      type: "hello",
+      version: require("../project.json").version,
+      characterFaction: "PMC",
+      mode: "create",
+      room: "HEARTBEAT",
+      name: "Background",
+    }),
+  );
   async function until(check) {
     const end = Date.now() + 1500;
     while (!check()) {

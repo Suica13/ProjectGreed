@@ -253,7 +253,7 @@ const WeaponEffects = (() => {
         end = Math.max(end, contact.at + ART.effects[weapon.hitEffect].duration / effectSpeed);
       }
     for (const contact of contacts)
-      if (ART.models[target.unit.model].ship && contact.brokenParts?.length) {
+      if (ART.models[target.unit.model].modules?.length && contact.brokenParts?.length) {
         cues.push({
           at: contact.at,
           sound: SpriteEffects.sound(deathSequence(target.unit, true).effect),

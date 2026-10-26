@@ -1907,7 +1907,7 @@
     }
   },
   "stats": {
-    "hp": 60000.0,
+    "hp": 75000,
     "en": 4500.0,
     "move": 7,
     "mobility": 50,
@@ -2351,7 +2351,8 @@
       "sight": 20.0,
       "radar": 500.0,
       "antiDetection": -200.0
-    }
+    },
+    "v17BaseHp": 60000.0
   },
   "presentation": {
     "shield": false,

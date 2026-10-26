@@ -1006,7 +1006,7 @@ test("records preserve public playback, synchronized barriers and turn navigatio
     aiDelayMs: 100000,
   });
   assert(room.record.frames.length > 0);
-  assert.throws(() => act(0, "record_export", { perspective: "team:0" }));
+  assert.doesNotThrow(() => act(0, "record_export", { perspective: "team:0" }));
   assert(!JSON.stringify(room.record).includes('"seed":'));
   assert(!JSON.stringify(room.record).includes('"token":'));
   assert.throws(() => act(1, "replay_open"));
@@ -1123,3 +1123,23 @@ function moveAndConfirm(act, seat, fields) {
   const preview = act(seat, "move", fields);
   return preview.type === "error" ? preview : act(seat, "confirm_move", { unitId: fields.unitId });
 }
+
+for (const count of [4, 6])
+  test(`${count} humans ending at the same revision advance once and clear every waiting flag`, (t) => {
+    const { room, act, frames, clients } = fixture(t, count);
+    for (let turn = 0; turn < 4; turn++) {
+      const round = room.game.round,
+        team = room.game.team,
+        revision = room.revision;
+      const seats = room.seats.filter((p) => G.seatTeam(p.seat) === team).map((p) => p.seat);
+      for (const seat of seats) act(seat, "end_turn", { revision, round });
+      assert.equal(room.game.round, round + 1);
+      assert.equal(room.game.team, 1 - team);
+      for (const client of clients) {
+        const snapshot = frames.get(client);
+        assert.equal(snapshot.game.round, round + 1);
+        assert.ok(snapshot.turnDone.every((done) => !done));
+        assert.equal(snapshot.phase, "idle");
+      }
+    }
+  });

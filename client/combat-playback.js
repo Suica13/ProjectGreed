@@ -80,6 +80,7 @@ const CombatPlayback = (() => {
       return;
     }
     if (!battleView) return;
+    DevelopmentUI.finishPlayback();
     finished.add(battleView.networkId);
     battleView = null;
     MapCombat.reset();

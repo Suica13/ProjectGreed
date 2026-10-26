@@ -236,12 +236,14 @@ const MatchRecords = (() => {
     G.validateUnitLimit(settings.unitLimit);
     G.validateUnitCostLimit(settings.unitCostLimit);
     G.validateFogMode(settings.fogMode);
+    G.validateBattleMode(settings.mode);
     G.validateTagRestrictions(
       Object.fromEntries(
         ["bannedFactions", "bannedEras", "bannedTypes"].map((key) => [key, settings[key]]),
       ),
     );
     G.validateTeamRestrictions(settings.teamRestrictions);
+    G.validateTeamFactions(settings.teamFactions ?? [null, null]);
     if (typeof settings.shareAlliedUnits !== "boolean") throw Error("存档房间规则无效。");
     const seats = G.getMap(g.mapId).spawns.length;
     if (!Array.isArray(save.armies) || save.armies.length !== seats) throw Error("存档席位无效。");
@@ -346,12 +348,14 @@ const MatchRecords = (() => {
     G.validateUnitLimit(record.settings.unitLimit);
     G.validateUnitCostLimit(record.settings.unitCostLimit);
     G.validateFogMode(record.settings.fogMode);
+    G.validateBattleMode(record.settings.mode);
     G.validateTagRestrictions(
       Object.fromEntries(
         ["bannedFactions", "bannedEras", "bannedTypes"].map((k) => [k, record.settings[k]]),
       ),
     );
     G.validateTeamRestrictions(record.settings.teamRestrictions);
+    G.validateTeamFactions(record.settings.teamFactions ?? [null, null]);
     if (
       typeof record.settings.shareAlliedUnits !== "boolean" ||
       !Array.isArray(record.settings.teamRestrictions)

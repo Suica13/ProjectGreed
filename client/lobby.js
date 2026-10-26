@@ -6,6 +6,7 @@ const Lobby = (() => {
   let currentURL = null;
   let ready = false;
   let timeout = null;
+  let listedRooms = [];
   const presets = CLIENT_CONFIG.presetServers;
   const probes = new Set();
   let probeGeneration = 0,
@@ -90,17 +91,49 @@ const Lobby = (() => {
     previous?.close();
   }
 
+  function updateRoomEligibility() {
+    byId("createRoom").disabled = false;
+    byId("createRoom").title = "";
+  }
+  function refreshSelections() {
+    byId("lobbyFaction").value = Formation.group();
+    const presets = Formation.presets();
+    const select = byId("lobbyFormation");
+    select.replaceChildren();
+    for (let index = 0; index < presets.length; index++) {
+      const option = new Option(presets[index].name, String(index));
+      option.setAttribute("data-i18n-ignore", "");
+      select.add(option);
+    }
+    select.value = String(Formation.presetIndex());
+    byId("lobbyFactionHint").textContent = byId("newRoomMode").value === "quick"
+      ? "快速战固定使用 PMC，进入房间后自动切换为 PMC 编组。"
+      : "常规战可选择阵营；进入房间后仍可切换。";
+    updateRoomEligibility();
+  }
+  byId("lobbyFaction").onchange = (event) => {
+    Formation.setGroup(event.target.value);
+    refreshSelections();
+    render(listedRooms);
+  };
+  byId("lobbyFormation").onchange = (event) => {
+    Formation.selectPreset(Number(event.target.value));
+  };
+  byId("newRoomMode").onchange = refreshSelections;
+
   function close() {
     stopChecks();
     stopConnection();
     byId("lobby").hidden = true;
     byId("serverConnect").hidden = true;
+    byId("start").classList.remove("server-connected");
     setConnecting(false);
   }
 
   function open(message = "选择预设服务器，或输入自定义 IP 和端口。") {
     if (window.isLayoutPreview) return;
     close();
+    refreshSelections();
     byId("skirmishSetup").hidden = true;
     byId("start").hidden = false;
     byId("serverConnect").hidden = false;
@@ -112,6 +145,7 @@ const Lobby = (() => {
 
   // 行内各列始终使用同一顺序，便于比较多个房间。
   function render(rooms) {
+    listedRooms = rooms;
     const list = byId("roomList");
     list.replaceChildren();
     byId("roomListStatus").textContent = rooms.length
@@ -119,7 +153,7 @@ const Lobby = (() => {
       : "暂无房间，可以创建一个。";
     for (const room of rooms) {
       const row = element("tr", "room-card");
-      const roomName = element("th", "", room.code);
+      const roomName = element("th", "", room.code + " · " + (room.mode === "quick" ? "快速战" : "常规战"));
       roomName.scope = "row";
       const label =
         {
@@ -152,6 +186,7 @@ const Lobby = (() => {
   function fail(message) {
     stopConnection();
     byId("lobby").hidden = true;
+    byId("start").classList.remove("server-connected");
     byId("serverConnect").hidden = false;
     byId("serverStatus").textContent = message;
     setConnecting(false);
@@ -208,6 +243,8 @@ const Lobby = (() => {
       ready = true;
       byId("serverConnect").hidden = true;
       byId("lobby").hidden = false;
+      byId("start").classList.add("server-connected");
+      refreshSelections();
       setConnecting(false);
       stopChecks();
       byId("connectedServer").textContent = presetFor(currentURL)?.name || new URL(currentURL).host;

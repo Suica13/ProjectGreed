@@ -32,7 +32,10 @@ test("AI count percentage defaults to 100, validates discrete options and is ind
   for (const countPercent of [0, 24, 49, 51, 110, 201, 301, "200", null, NaN])
     assert.throws(() => G.validateAISettings({ countPercent }));
   assert.throws(() =>
-    G.validateFormation(Array(13).fill({ unitId: "MS_06F", kitId: "machine_gun" }), Infinity),
+    G.validateFormation(
+      Array(G.catalog.formation.maxUnits + 1).fill({ unitId: "MS_06F", kitId: "machine_gun" }),
+      Infinity,
+    ),
   );
 });
 test("AI percentage respects faction, era, per-unit COST and available budget when filling up to 36 units", () => {

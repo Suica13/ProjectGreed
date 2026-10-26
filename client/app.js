@@ -36,10 +36,12 @@ function setPageView(view) {
   }
   if (view !== "game") WeaponAudio.stop();
   pageView = view;
+  MusicPlayer.sync();
   byId("gameScene").hidden = view !== "game";
   byId("start").hidden = view !== "menu";
   byId("roomPreparation").hidden = view !== "room";
   byId("formationScreen").hidden = view !== "formation";
+  byId("developmentScreen").hidden = view !== "development";
   byId("roomSettings").hidden = !Net.active;
   if (view !== "game")
     for (const id of ["reaction", "battle", "victory", "help"]) byId(id).hidden = true;
@@ -262,8 +264,8 @@ function update() {
   if (phase === "deployment") byId("phaseTitle").textContent = "开局部署";
   byId("phaseEyebrow").textContent = game.team ? "RED PHASE" : "BLUE PHASE";
   byId("endTurn").textContent = Net.active
-    ? "完成计划 · 结束行动"
-    : "结束" + teamName(game.team) + "回合";
+    ? "完成计划 · 结束行动 (B)"
+    : "结束" + teamName(game.team) + "回合 (B)";
   byId("endTurn").disabled = !!pendingMove || busy || isAI() || (Net.active && !Net.canAct());
   byId("confirmDeployment").classList.toggle(
     "action-attention",
@@ -274,8 +276,10 @@ function update() {
     !byId("endTurn").disabled && !Rules.hasActions(game, Net.active ? Net.seat : null),
   );
   byId("modeLabel").textContent = Net.active
-    ? (Net.local ? "离线遭遇战" : "联机遭遇战") + " · " + Net.roleName()
-    : "遭遇战";
+    ? (Net.local ? "离线" : "联机") +
+      (Net.snapshot?.settings?.mode === "quick" ? "快速战" : "常规战") +
+      " · " + Net.roleName()
+    : "常规战";
   renderRoster(busy);
   let hint = busy
     ? phase === "moving"
@@ -586,7 +590,7 @@ function renderPanel() {
   }
   if (m.movementType === "air")
     partStatus.append(element("span", "muted", " · 空军：可跨越山岩和水域"));
-  if (m.ship) {
+  if (m.modules?.length) {
     const moduleList = element("details", "ship-modules");
     moduleList.append(
       element(
@@ -606,10 +610,12 @@ function renderPanel() {
       moduleList.append(row);
     }
     partStatus.append(moduleList);
-    const size = Rules.dimensions(u);
-    partStatus.append(
-      element("p", "helper", `战舰占地 ${size.width}×${size.height} · 转向占用移动行动`),
-    );
+    if (m.ship) {
+      const size = Rules.dimensions(u);
+      partStatus.append(
+        element("p", "helper", `战舰占地 ${size.width}×${size.height} · 转向占用移动行动`),
+      );
+    }
   }
   const penalty = Rules.partPenalties(u),
     effects = [];
@@ -1339,7 +1345,8 @@ function drawMap(now) {
     ctx.fillText(Rules.columnLabel(x), ox + (x + 0.5) * tile, oy - 9);
   for (let y = 0; !immersive && y < Rules.mapHeight(game); y++)
     ctx.fillText(String(y + 1), ox - 9, oy + (y + 0.5) * tile);
-  const intel = game.intel;
+  const intel = Net.snapshot?.phase === "playback"
+    ? Net.snapshot.combatIntel || game.intel : game.intel;
   EnvironmentVisuals.fog(ctx, intel, ox, oy, tile);
   // The clip remains available for individual effects opting out of fog visibility.
   const visibilityClip = EnvironmentVisuals.visibilityClip(intel, ox, oy, tile);

@@ -43,7 +43,7 @@ def correct_shared_weapon_layers(prefab, native):
 def correct(prefab, native):
     from native_movement_effects import correct_effects
     correct_effects(prefab, native)
-    if prefab["stats"].get("ship"):
+    if prefab["stats"].get("modules"):
         from native_ship_arcs import correct_arcs
         correct_arcs(prefab, native)
         from native_ship_presentation import correct_layers

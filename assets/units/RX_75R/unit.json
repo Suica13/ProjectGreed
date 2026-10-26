@@ -294,7 +294,7 @@
     "Common_Push_A": "../../animations/Common_Push_A.json"
   },
   "stats": {
-    "hp": 12500,
+    "hp": 15625,
     "en": 750,
     "move": 4,
     "mobility": 75,
@@ -398,8 +398,17 @@
     "reaction": 75,
     "shooting": 130,
     "melee": 100,
-    "nativeTags": ["RX_75R", "Unit", "MS", "EFSF", "0079", "UC"],
-    "nativeSkills": ["Deploy"],
+    "nativeTags": [
+      "RX_75R",
+      "Unit",
+      "MS",
+      "EFSF",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [
+      "Deploy"
+    ],
     "accuracy": 110,
     "partStructuralStrength": 100,
     "balanceStatus": "native-level",
@@ -417,7 +426,8 @@
       "sight": 17,
       "radar": 306,
       "antiDetection": 0
-    }
+    },
+    "v17BaseHp": 12500
   },
   "presentation": {
     "shield": false,
@@ -434,7 +444,10 @@
   },
   "name": "量产型钢坦克",
   "faction": "EFSF",
-  "tags": ["EFSF", "0079"],
+  "tags": [
+    "EFSF",
+    "0079"
+  ],
   "localization": {
     "zh": {
       "name": "量产型钢坦克",
@@ -484,7 +497,9 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": ["rightArm"],
+      "requiredParts": [
+        "rightArm"
+      ],
       "partBreakModifier": 0.5,
       "changeHeldWeapon": false,
       "source": {
@@ -540,7 +555,10 @@
         "ground": 1,
         "space": 1
       },
-      "muzzleEffects": ["BZ_Fire_1", "BZ_Fire_1"],
+      "muzzleEffects": [
+        "BZ_Fire_1",
+        "BZ_Fire_1"
+      ],
       "category": "cannon",
       "nativePayload": {
         "ShellDamage": 3000,
@@ -634,7 +652,9 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": ["rightArm"],
+      "requiredParts": [
+        "rightArm"
+      ],
       "partBreakModifier": 0.5,
       "changeHeldWeapon": false,
       "source": {
@@ -690,7 +710,10 @@
         "ground": 1,
         "space": 1
       },
-      "muzzleEffects": ["BZ_Fire_1", "BZ_Fire_1"],
+      "muzzleEffects": [
+        "BZ_Fire_1",
+        "BZ_Fire_1"
+      ],
       "category": "cannon",
       "nativePayload": {
         "ShellDamage": 3000,
@@ -748,7 +771,9 @@
       "actionCost": 3,
       "availability": {
         "hidden": true,
-        "reasons": ["merged_position"],
+        "reasons": [
+          "merged_position"
+        ],
         "mergedInto": "EF_RX_75R_Cannon"
       }
     },
@@ -859,7 +884,9 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": ["rightArm"],
+      "requiredParts": [
+        "rightArm"
+      ],
       "partBreakModifier": 1,
       "changeHeldWeapon": false,
       "source": {
@@ -902,7 +929,9 @@
         "ground": 1,
         "space": 1
       },
-      "muzzleEffects": ["MG_Fire_1"],
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ],
       "category": "machine_gun",
       "nativePayload": {
         "ShellDamage": 350,
@@ -1012,7 +1041,9 @@
         "volume": 0.5
       },
       "hitEffect": "Cqb_Hit_1",
-      "swingEffects": ["Cqb_Fire_2_Kick_White_R"],
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
       "source": {
         "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
         "barrelX": 0,
@@ -1184,7 +1215,9 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": ["rightArm"],
+      "requiredParts": [
+        "rightArm"
+      ],
       "partBreakModifier": 0.5,
       "changeHeldWeapon": false,
       "source": {
@@ -1239,7 +1272,10 @@
         "ground": 1,
         "space": 1
       },
-      "muzzleEffects": ["BZ_Fire_1", "BZ_Fire_1"],
+      "muzzleEffects": [
+        "BZ_Fire_1",
+        "BZ_Fire_1"
+      ],
       "nativePayload": {
         "offsetRandomXY": 100,
         "ShellDamage": 2500,
@@ -1362,10 +1398,14 @@
   "deferredWeapons": [],
   "skills": [],
   "nativeCombatRevision": 1,
-  "unitTags": ["MS"],
+  "unitTags": [
+    "MS"
+  ],
   "transport": {
     "slotCost": 2,
-    "loadTags": ["CanLoadInto"]
+    "loadTags": [
+      "CanLoadInto"
+    ]
   },
   "hangars": []
 }

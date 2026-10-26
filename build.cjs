@@ -12,6 +12,14 @@ let html = read("client/template.html").replace(
 );
 html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
+const developmentTree = JSON.parse(read("shared/development-tree.json"));
+for (const nodes of Object.values(developmentTree))
+  for (const node of nodes) {
+    if (!/^assets\/tech-icons\/[\w-]+\.png$/.test(node.icon))
+      throw Error("Invalid technology icon: " + node.id);
+    node.icon =
+      "data:image/png;base64," + fs.readFileSync(path.join(root, node.icon)).toString("base64");
+  }
 const clientConfig = JSON.parse(read("client/config.json"));
 if (typeof clientConfig.defaultServerAddress !== "string")
   throw Error(
@@ -35,6 +43,7 @@ html = html
   .replaceAll("__PROJECT_NAME__", project.name)
   .replaceAll("__PROJECT_VERSION__", project.version)
   .replace("__PROJECT_META__", json(project))
+  .replace("__DEVELOPMENT_TREE__", json(developmentTree))
   .replace("__CLIENT_CONFIG__", json(clientConfig));
 html = html.replace(
   "__UI_LOCALES__",
@@ -47,9 +56,11 @@ for (const [key, file] of [
   ["DATA", null],
   ["I18N", "client/i18n.js"],
   ["FORMATION", "client/formation.js"],
+  ["DEVELOPMENT_UI", "client/development.js"],
   ["UNIT_PARTS", "shared/unit-parts.js"],
   ["UNIT_SKILLS", "shared/unit-skills.js"],
   ["UNIT_HANGARS", "shared/hangars.js"],
+  ["DEVELOPMENT", "shared/development.js"],
   ["HANGAR_UI", "client/hangar-ui.js"],
   ["CORE", "shared/rules.js"],
   ["WEAPON_SEQUENCE", "shared/weapon-sequence.js"],

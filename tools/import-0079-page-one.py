@@ -152,7 +152,7 @@ def weapon(p,path,effects,attach=None):
 
 def build(row,effects):
  path=ROOT/row['source'];data=load(path);files=graph(path);refs=[f for f in files if '/Units/BattleUnits/Weapon/' in f.as_posix()]
- p=visual(row,data);tags=[t.strip() for t in row['tags'].split(',')];ship='Ship' in tags;air='Aircraft' in tags;amphib='Amphibious' in tags or stat(data,'waterAdaptability')>=100 and 'MS' in tags
+ p=visual(row,data);tags=[t.strip() for t in row['tags'].split(',')];ship='Ship' in tags;modular=ship or row['id'] in ('Medea','FatUncle');air='Aircraft' in tags;amphib='Amphibious' in tags or stat(data,'waterAdaptability')>=100 and 'MS' in tags
  skillfiles=[f for f in files if '/Template/Unit/Skill/' in f.as_posix()];skillnames=[f.stem for f in skillfiles]
  moveType='air' if air else 'naval' if 'NavyUnit' in tags else 'amphibious' if amphib else 'hover' if 'Hover' in skillnames else 'ground'
  p.update(name=row['name'],faction=row['faction'],tags=[row['faction'],'0079'],localization={'zh':{'name':row['name']},'en':{'name':data['core'].get('displayText',row['id'])}})
@@ -162,8 +162,9 @@ def build(row,effects):
  for f in refs:
   if '/Sp/' in f.as_posix():continue
   for k,w in weapon(p,f,effects):p['weapons'].setdefault(k,w)
- if ship:
-  p['stats'].update(footprint={'width':3,'height':6},modules=[])
+ if modular:
+  p['stats']['modules']=[]
+  if ship:p['stats']['footprint']={'width':3,'height':6}
   # Native attached weapons are not merged into hull guns: each module retains its own HP and muzzle.
   for key in data:
    if not key.startswith('attachment_') or not ('Turret' in key or 'Weapon' in key):continue
@@ -182,8 +183,8 @@ def build(row,effects):
     image=resolve(layer['image']);asset(image,ASSETS/f"units/{p['id']}/textures"/image.name);p['materials']['textures'][image.name]='textures/'+image.name
     p['layers'].append({'name':module,'bone':bone,'texture':image.name,'order':3,'scale':numeric(layer.get('imageScale',1)),'moduleId':module})
    for k,w in weapon(p,source,effects,{'id':module,'bone':bone}):p['weapons'][k+'__'+module]=w
-  p['presentation'].update(mapScale=1,battleScale=.9,deathType='large')
- if ship:
+  if ship:p['presentation'].update(mapScale=1,battleScale=.9,deathType='large')
+ if modular:
   groups={}
   for key,w in p['weapons'].items():
    native=w['sourceName']

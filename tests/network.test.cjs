@@ -71,7 +71,15 @@ class Client {
   }
   async hello(mode, room, token, name) {
     let from = this.frames.length;
-    this.send({ type: "hello", mode, room, token, name });
+    this.send({
+      type: "hello",
+      version: require("../project.json").version,
+      characterFaction: "PMC",
+      mode,
+      room,
+      token,
+      name,
+    });
     let joined = await this.wait((m) => m.type === "joined" || m.type === "error", from);
     if (joined.type === "joined") await this.wait((m) => m.type === "state", from);
     return joined;
@@ -128,6 +136,45 @@ class Client {
     this.ws.terminate();
   }
 }
+
+test("room handshake rejects missing or different versions before create, join and resume", async () => {
+  const app = createServer({ port: 0, host: "127.0.0.1" });
+  const address = await app.listen();
+  const url = `ws://127.0.0.1:${address.port}/ws`;
+  const host = await new Client(url).open(),
+    guest = await new Client(url).open();
+  const version = require("../project.json").version;
+  try {
+    assert.equal((await host.hello("create", "VERSION")).type, "joined");
+    const room = app.rooms.get("VERSION");
+    for (const clientVersion of [undefined, "V12", "V999", null]) {
+      for (const mode of ["create", "join", "resume"]) {
+        const from = guest.frames.length;
+        guest.send({
+          type: "hello",
+          version: clientVersion,
+          mode,
+          room: mode === "create" ? "OLDCLIENT" : "VERSION",
+          token: host.joined.token,
+        });
+        const reply = await guest.wait((m) => m.type === "error" || m.type === "joined", from);
+        assert.equal(reply.type, "error");
+        assert.equal(reply.code, "VERSION_MISMATCH");
+        assert.equal(reply.serverVersion, version);
+        assert.match(reply.message, /版本不匹配/);
+        assert.equal(app.rooms.size, 1);
+        assert.equal(room.members.size, 1);
+        assert.equal(room.seats[0].token, host.joined.token);
+      }
+    }
+    assert.equal((await guest.hello("join", "VERSION")).type, "joined");
+    assert.equal(room.members.size, 2);
+  } finally {
+    host.close();
+    guest.close();
+    await app.close();
+  }
+});
 
 test("public lobby lists safe room summaries and tracks joins, disconnects and explicit exits", async () => {
   const app = createServer({ port: 0, host: "127.0.0.1", reconnectGraceMs: 40 });
@@ -1127,7 +1174,7 @@ test("budgeted AI formations respect low COST limits and remain deterministic", 
   for (const budget of [200, 400, 900, 3600, 99999]) {
     const formation = G.randomFormation(1234, budget);
     assert.deepEqual(G.randomFormation(1234, budget), formation);
-    assert.ok(formation.length > 0 && formation.length <= 12);
+    assert.ok(formation.length > 0 && formation.length <= G.catalog.formation.maxUnits);
     assert.ok(
       formation.reduce((sum, u) => sum + G.models[u.unitId + "__" + u.kitId].cost, 0) <= budget,
     );
@@ -1568,7 +1615,7 @@ test("host controls room unit cap; invalid and oversized requests are atomic, ch
   assert.equal(host.state.settings.unitLimit, 6);
   const config = { mapId: "frontier_1v1", costLimit: 3600, unitLimit: 3 };
   assert.equal((await guest.act("configure_room", config)).type, "error");
-  for (const unitLimit of [2, 13, 3.5, "12"]) {
+  for (const unitLimit of [2, 37, 3.5, "12"]) {
     const revision = host.state.revision;
     assert.equal((await host.act("configure_room", { ...config, unitLimit })).type, "error");
     assert.equal(host.state.revision, revision);
@@ -3439,7 +3486,7 @@ test("records replay over WebSocket with host controls, independent views and re
   await guest.hello("join", "RECORD");
   await readyMatch(host, guest, app, false);
   const room = app.rooms.get("RECORD");
-  assert.equal((await host.act("record_export", { perspective: "team:0" })).type, "error");
+  assert.equal((await host.act("record_export", { perspective: "team:0" })).type, "record_reply");
   await host.act("return_room");
   assert.equal((await host.act("replay_open")).type, "record_reply");
   await guest.latest((s) => !!s.replay);
@@ -3471,7 +3518,7 @@ test("records replay over WebSocket with host controls, independent views and re
   );
   const before = JSON.stringify(room.game),
     revision = room.revision;
-  for (const action of ["record_export", "replay_fork"]) {
+  for (const action of ["replay_fork"]) {
     assert.equal(
       (await host.act(action, { replayId, index: 0, assignments: [host.joined.memberId, "ai"] }))
         .type,

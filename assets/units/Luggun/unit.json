@@ -189,7 +189,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 4500.0,
+    "hp": 5625,
     "en": 1000.0,
     "move": 10,
     "mobility": 155.0,
@@ -326,7 +326,8 @@
       "sight": 25.0,
       "radar": 500.0,
       "antiDetection": 0.0
-    }
+    },
+    "v17BaseHp": 4500.0
   },
   "presentation": {
     "shield": false,
@@ -1209,9 +1210,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 4500.0,
+      "damagePerShot": 6750.0,
       "damageComponents": {
-        "shell": 4500.0
+        "shell": 6750.0
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1357,7 +1358,8 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "v17BombMultiplier": 1.5
     },
     "Common_Bomb_Luggun_L": {
       "name": "航空炸弹",
@@ -1372,9 +1374,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 4500.0,
+      "damagePerShot": 6750.0,
       "damageComponents": {
-        "shell": 4500.0
+        "shell": 6750.0
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1523,7 +1525,8 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "v17BombMultiplier": 1.5
     }
   },
   "mechanics": [

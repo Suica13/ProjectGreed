@@ -152,7 +152,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 13500.0,
+    "hp": 16875,
     "en": 750.0,
     "move": 9,
     "mobility": 85.0,
@@ -274,7 +274,8 @@
       "sight": 22.0,
       "radar": 450.0,
       "antiDetection": 0.0
-    }
+    },
+    "v17BaseHp": 13500.0
   },
   "presentation": {
     "shield": false,
@@ -459,9 +460,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 1500.0,
+      "damagePerShot": 2250.0,
       "damageComponents": {
-        "shell": 1500.0
+        "shell": 2250.0
       },
       "hitsPerShot": 1,
       "attack": {
@@ -657,7 +658,8 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "v17BombMultiplier": 1.5
     },
     "Common_Bomb_DEPP_ROG_L": {
       "name": "航空炸弹",
@@ -672,9 +674,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 1500.0,
+      "damagePerShot": 2250.0,
       "damageComponents": {
-        "shell": 1500.0
+        "shell": 2250.0
       },
       "hitsPerShot": 1,
       "attack": {
@@ -873,7 +875,8 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "v17BombMultiplier": 1.5
     }
   },
   "mechanics": [

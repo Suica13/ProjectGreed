@@ -38,7 +38,7 @@ const SpriteRenderer = (() => {
     const unit = models[model];
     return {
       kit: unit.kit,
-      keepBrokenModules: ART.models[model].ship === true,
+      keepBrokenModules: !!ART.models[model].modules?.length,
       heldWeapon: heldWeapon || ART.models[model].weapons[0]?.id || null,
       shieldVisible: unit.presentation.shield,
       visorClosed: false,
@@ -124,7 +124,7 @@ const SpriteRenderer = (() => {
       sampled[module.bone] = {
         ...(sampled[module.bone] || {}),
         dir:
-          ART.models[model].ship &&
+          ART.models[model].modules?.length &&
           (!firingModules.includes(module.id) || Math.abs(delta) > module.arc)
             ? 0
             : Math.max(-module.arc, Math.min(module.arc, delta)),

@@ -76,7 +76,7 @@ for (const p of G.catalog.prefabs)
       },
     );
   }
-for (const id of ["RX_78NT_1", "RX_78NT_1_FA", "RX_78XX"])
+for (const id of ["RX_78NT_1", "RX_78NT_1_FA"])
   test(id + " fires one arm per action with its own animation and energy", () => {
     const root = id === "RX_78XX" ? "EF_75mmMG_Double" : "Common_ArmMG";
     for (const suffix of ["", "_L"]) {
@@ -117,3 +117,15 @@ for (const id of ["RX_77_2", "RX_77_3", "RX_77_3D"])
     u.brokenParts = { backpack: true };
     assert.equal(G.availableStrikes(u, w).length, 0);
   });
+
+test("Pixy fires both 75mm guns together, retaining per-arm damage and energy when broken", () => {
+  const { u, w } = setup("RX_78XX", "EF_75mmMG_Double");
+  assert.equal(w.shotCount, 14);
+  assert.equal(w.en, 45);
+  assert.equal(w.muzzle.mounts.length, 2);
+  for (let i = 0; i < w.attack.shots.length; i += 2)
+    assert.equal(w.attack.shots[i], w.attack.shots[i + 1]);
+  u.brokenParts.leftArm = true;
+  assert.equal(G.availableStrikes(u, w).length, 7);
+  assert.equal(G.weaponStats(w, u).en, 22.5);
+});

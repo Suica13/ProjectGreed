@@ -71,10 +71,8 @@ window.ReplayPlayer = (() => {
   file.type = "file";
   file.accept = ".json,.greed,application/json";
   file.hidden = true;
-  const menuReplay = button("播放回放", () => {});
-  menuReplay.id = "openReplayFile";
+  const menuReplay = byId("openReplayFile");
   menuReplay.onclick = () => file.click();
-  byId("openSkirmish").after(menuReplay);
   file.onchange = async () => {
     try {
       const selected = file.files[0];

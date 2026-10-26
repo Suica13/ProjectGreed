@@ -197,7 +197,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 15500.0,
+    "hp": 19375,
     "en": 750.0,
     "move": 10,
     "mobility": 145.0,
@@ -323,7 +323,8 @@
       "sight": 24.0,
       "radar": 550.0,
       "antiDetection": 0.0
-    }
+    },
+    "v17BaseHp": 15500.0
   },
   "presentation": {
     "shield": false,

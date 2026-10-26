@@ -40,6 +40,7 @@ def populate_infantry(p,data):
  module.write(ASSETS/'effects/effects.json',effects)
 
 def weapon_label(key,w):
+ if key.startswith(('Medea_Turret_MG', 'FatUncle_Turret_MG')):return '\u9632\u7a7a\u673a\u67aa'
  if key == 'ZN_MS_07B3_Minigun':return '加特林盾牌'
  if key in BALANCED:return BALANCED[key]['name']
  caliber=re.search(r'(\d+mm)',key);prefix=caliber[1] if caliber else ''

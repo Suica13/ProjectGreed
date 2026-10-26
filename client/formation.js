@@ -1,39 +1,40 @@
 /* 编组保存单位/套件 ID 与可选自定义名称；数值和部署合法性由共用规则决定。 */
 const Formation = (() => {
-  const storageKey = "slg-formations-v1";
-  let saved;
-  try {
-    saved = JSON.parse(localStorage.getItem(storageKey));
-  } catch {}
-  const fallback = [
-    { unitId: "PegasusClass", kitId: "standard" },
-    { unitId: "RX_78_2", kitId: "kit_1", preload: { carrierIndex: 0, hangarId: "Hangar_1" } },
-    { unitId: "RX_77_2", kitId: "kit_2", preload: { carrierIndex: 0, hangarId: "Hangar_1" } },
-    { unitId: "RX_77_2", kitId: "kit_2", preload: { carrierIndex: 0, hangarId: "Hangar_1" } },
-    { unitId: "FF_X7Bst", kitId: "main_0", preload: { carrierIndex: 0, hangarId: "Hangar_2" } },
-    { unitId: "FF_X7Bst", kitId: "main_0", preload: { carrierIndex: 0, hangarId: "Hangar_2" } },
-  ];
-  for (const entry of fallback)
-    entry.customName = Rules.generateUnitName(
-      UnitModels[entry.unitId + "__" + entry.kitId].name,
-      fallback,
-    );
-  let squads = Array.isArray(saved)
-    ? saved
-        .filter((s) => {
-          try {
-            Rules.validateFormation(s.units, Infinity, Rules.catalog.formation.maxUnits * 3);
-            return typeof s.name === "string";
-          } catch {
-            return false;
-          }
-        })
-        .map((s) => ({
-          ...s,
-          units: Rules.validateFormation(s.units, Infinity, Rules.catalog.formation.maxUnits * 3),
-        }))
-    : [];
-  if (!squads.length) squads = [{ name: I18n.text("V作战小队"), units: fallback }];
+  const legacyStorageKey = "slg-formations-v1";
+  const formationSaveVersion = 3;
+  let group = "PMC";
+  let storageKey = legacyStorageKey + "." + group;
+  const sessionSaves = new Map();
+  function defaultSquads(faction) {
+    const carrier = (unitId) => ({ unitId, kitId: "standard" });
+    const passenger = (unitId, kitId) => ({
+      unitId,
+      kitId,
+      preload: { carrierIndex: 0, hangarId: "Hangar_1" },
+    });
+    const units = {
+      EFSF: [
+        carrier("Medea"),
+        passenger("FF_B2", "main_0"),
+        passenger("FF_B2", "main_0"),
+        ...Array.from({ length: 4 }, () => passenger("Type61", "standard")),
+      ],
+      ZEON: [
+        carrier("FatUncle"),
+        passenger("MS_06F", "machine_gun"),
+        passenger("MS_06F", "machine_gun"),
+        passenger("MS_06S", "kit_1"),
+      ],
+      PMC: [
+        carrier("Medea"),
+        passenger("MS_06F", "machine_gun"),
+        passenger("MS_06F", "machine_gun"),
+        passenger("MS_06S", "kit_1"),
+      ],
+    };
+    return [{ name: faction + " 默认编组", units: units[faction] }];
+  }
+  let squads = defaultSquads(group);
   let index = 0,
     returnView = "menu",
     draft = [],
@@ -45,31 +46,39 @@ const Formation = (() => {
     catalogDetail = null,
     pickerContext = null,
     pickerReturnIndex = null,
-    detailFromPicker = false;
-  try {
-    const active = Number(localStorage.getItem(storageKey + "-active"));
-    if (Number.isInteger(active) && active >= 0 && active < squads.length) index = active;
-  } catch {}
+    detailFromPicker = false,
+    detailFromDevelopment = false,
+    developmentPreviewFocus = null;
   const pickerKits = new Map();
-  const catalogFilters = { faction: "", era: "", types: "", environment: "" };
+  const catalogFilters = { faction: "", era: "", type: "" };
   const current = () =>
-    Rules.validateFormation(squads[index].units, Infinity, Rules.catalog.formation.maxUnits * 3);
+    Rules.validateFormation(squads[index].units, Infinity, Rules.catalog.formation.maxUnits);
   const ownPlayer = () => Net.snapshot?.members.find((player) => player.id === Net.memberId);
   const budget = () =>
     Net.active && Net.snapshot?.settings
       ? Rules.armyBudget(Net.snapshot.settings, ownPlayer())
       : Infinity;
-  const restrictions = () =>
-    Net.active && Net.snapshot?.settings
+  const restrictions = () => ({
+    ...(Net.active && Net.snapshot?.settings
       ? Rules.armyRestrictions(Net.snapshot.settings, ownPlayer())
-      : {};
+      : {}),
+    characterFaction: group,
+  });
   const displayLimit = (value) => (Number.isFinite(value) ? value : I18n.text("无限"));
   const unitLimit = () =>
     Net.active && Net.snapshot?.settings
       ? Rules.armyUnitLimit(Net.snapshot.settings, ownPlayer())
-      : Rules.catalog.formation.maxUnits * 3;
+      : Rules.catalog.formation.maxUnits;
+  const points = (entries) => Rules.formationPoints(entries);
   const cost = (entries) =>
     entries.reduce((n, e) => n + UnitModels[e.unitId + "__" + e.kitId].cost, 0);
+  function pickerWeight() {
+    const prefab = Rules.catalog.prefabs.find((item) => item.id === byId("formationPrefab").value);
+    if (!prefab) return Infinity;
+    const kitId = pickerKits.get(prefab.id) || prefab.weaponKits[0].id;
+    const model = UnitModels[prefab.id + "__" + kitId];
+    return model ? Rules.formationWeight(model) : Infinity;
+  }
   function renderPickerCost() {
     const prefabId = byId("formationPrefab").value,
       prefab = Rules.catalog.prefabs.find((candidate) => candidate.id === prefabId),
@@ -94,16 +103,89 @@ const Formation = (() => {
     byId("formationPickerCost").replaceChildren(formation, unit);
   }
   function persist() {
+    sessionSaves.set(storageKey, {
+      version: formationSaveVersion,
+      squads: structuredClone(squads),
+      index,
+    });
     try {
-      localStorage.setItem(storageKey, JSON.stringify(squads));
+      localStorage.setItem(storageKey, JSON.stringify({ version: formationSaveVersion, squads }));
+      localStorage.removeItem(legacyStorageKey);
+      localStorage.removeItem(legacyStorageKey + "-active");
       localStorage.setItem(storageKey + "-active", String(index));
     } catch {
       note("浏览器无法保存编组，本次会话仍可使用。");
     }
   }
+  function loadCharacter() {
+    storageKey = legacyStorageKey + "." + group;
+    let stored = null;
+    let active = 0;
+    try {
+      const save = JSON.parse(localStorage.getItem(storageKey) || "null");
+      if (save?.version === formationSaveVersion && Array.isArray(save.squads)) {
+        stored = save.squads;
+        active = Number(localStorage.getItem(storageKey + "-active"));
+      }
+    } catch {}
+    const cached = sessionSaves.get(storageKey);
+    if (cached?.version === formationSaveVersion) {
+      stored = cached.squads;
+      active = cached.index;
+    }
+    squads = (stored || []).flatMap((squad) => {
+      try {
+        if (typeof squad.name !== "string") return [];
+        return [
+          {
+            name: squad.name,
+            units: Rules.validateFormation(
+              squad.units,
+              Infinity,
+              Rules.catalog.formation.maxUnits,
+            ),
+          },
+        ];
+      } catch {
+        return [];
+      }
+    });
+    // Restore the untouched A5 default from the previous build; custom squads stay intact.
+    if (group === "EFSF") {
+      const modernDefault = defaultSquads("EFSF")[0];
+      const oldUnits = modernDefault.units.map((unit) =>
+        unit.unitId === "Type61" ? { ...unit, unitId: "Type61A5" } : unit,
+      );
+      for (const squad of squads)
+        if (
+          squad.name === modernDefault.name &&
+          JSON.stringify(squad.units) === JSON.stringify(oldUnits)
+        )
+          squad.units = structuredClone(modernDefault.units);
+    }
+    if (!squads.length) squads = defaultSquads(group);
+    index = Number.isInteger(active) && active >= 0 && active < squads.length ? active : 0;
+    previousIndex = index;
+    draft = structuredClone(current());
+    persist();
+    byId("formationGroup").value = group;
+    refreshSelect();
+    renderCatalog();
+  }
+  function setGroup(next) {
+    if (!["PMC", "EFSF", "ZEON"].includes(next) || group === next) return;
+    group = next;
+    PlayerProfile.setFormationGroup(group);
+    if (!Net.active) PlayerProfile.setFaction(next);
+    loadCharacter();
+    if (pageView === "formation") {
+      byId("formationName").value = squads[index].name;
+      render();
+    }
+  }
   const sharePrefix = "PGF1.";
   function encodeShare(name, units) {
-    const clean = Rules.validateFormation(units, Infinity, Rules.catalog.formation.maxUnits * 3),
+    const clean = Rules.validateFormation(units, Infinity, Rules.catalog.formation.maxUnits),
       payload = JSON.stringify({
         version: 1,
         name: name.trim().slice(0, 32) || "未命名编组",
@@ -138,7 +220,7 @@ const Formation = (() => {
     const units = Rules.validateFormation(
         payload.units,
         Infinity,
-        Rules.catalog.formation.maxUnits * 3,
+        Rules.catalog.formation.maxUnits,
       ),
       name = payload.name.trim().slice(0, 32) || "分享编组";
     return { name, units };
@@ -181,6 +263,16 @@ const Formation = (() => {
     previewRoot = null;
     byId("formationUnitDetail").hidden = true;
     byId("formationMain").inert = false;
+    if (detailFromDevelopment) {
+      detailFromDevelopment = false;
+      byId("formationScreen").append(byId("formationUnitDetail"));
+      byId("developmentMain").inert = false;
+      detailIndex = null;
+      catalogDetail = null;
+      developmentPreviewFocus?.focus();
+      developmentPreviewFocus = null;
+      return;
+    }
     if (detailFromPicker) {
       detailFromPicker = false;
       const inspectedId = catalogDetail?.unitId;
@@ -304,10 +396,10 @@ const Formation = (() => {
       }
     });
     select.value = entry.preload ? JSON.stringify(entry.preload) : "";
-    const atLimit = detailIndex === null && draft.length >= unitLimit();
+    const atLimit = detailIndex === null && points(draft) + Rules.formationWeight(model) > unitLimit();
     select.disabled = select.options.length === 1 || atLimit;
     hint.textContent = atLimit
-      ? "已达到编组数量上限。"
+      ? "已达到编组单位点数上限。"
       : select.disabled
         ? "没有兼容且有剩余容量的格纳库。"
         : detailIndex === null
@@ -333,8 +425,9 @@ const Formation = (() => {
         heading = element("div", "formation-preload-heading"),
         add = element("button", "", "预先搭载");
       add.dataset.preloadHangar = h.id;
-      add.disabled = draft.length + (detailIndex === null ? 1 : 0) >= unitLimit();
+      add.disabled = points(draft) + (detailIndex === null ? Rules.formationWeight(model) : 0) > unitLimit();
       add.onclick = () => {
+        if (!PlayerProfile.allows(model)) return note("单位尚未开发，或与当前阵营不匹配。");
         if (detailIndex === null) {
           const entry = { ...catalogDetail, customName: Rules.generateUnitName(model.name, draft) };
           try {
@@ -391,7 +484,7 @@ const Formation = (() => {
             Rules.validateFormation(
               draft.map((e, index) => (index === i ? { ...e, kitId } : e)),
               Infinity,
-              Rules.catalog.formation.maxUnits * 3,
+              Rules.catalog.formation.maxUnits,
             );
           } catch (error) {
             kits.value = entry.kitId;
@@ -784,6 +877,7 @@ const Formation = (() => {
     return tags;
   }
   function render() {
+    byId("formationGroup").disabled = Net.active && Net.snapshot?.settings?.mode === "quick";
     const unitCostLimit = restrictions().unitCostLimit;
     const unitCostRule = element(
       "span",
@@ -795,18 +889,22 @@ const Formation = (() => {
       element(
         "span",
         "",
-        `${draft.length} / ${unitLimit()} 台 · 编组COST: ${cost(draft)} / ${displayLimit(budget())}`,
+        `${points(draft)} / ${unitLimit()} 点（${draft.length} 台）· 编组COST: ${cost(draft)} / ${displayLimit(budget())}`,
       ),
       document.createTextNode(" · "),
       unitCostRule,
     );
-    byId("formationBudget").classList.toggle("danger-text", draft.length > unitLimit());
+    byId("formationBudget").classList.toggle("danger-text", points(draft) > unitLimit());
     byId("addFormationUnit").disabled =
-      draft.length >= unitLimit() || !byId("formationPrefab").value;
-    byId("openFormationPicker").disabled = draft.length >= unitLimit();
+      points(draft) + pickerWeight() > unitLimit() ||
+      !byId("formationPrefab").value ||
+      !PlayerProfile.allows(
+        Rules.catalog.prefabs.find((p) => p.id === byId("formationPrefab").value),
+      );
+    byId("openFormationPicker").disabled = points(draft) >= unitLimit();
     renderPickerCost();
     const plan = draft.length
-      ? Rules.planFormation(draft, budget(), restrictions(), Rules.catalog.formation.maxUnits * 3)
+      ? Rules.planFormation(draft, budget(), restrictions(), Rules.catalog.formation.maxUnits)
       : { disabled: [] };
     const list = byId("formationUnits"),
       scrollTop = list.scrollTop;
@@ -862,17 +960,29 @@ const Formation = (() => {
       image.width = 56;
       image.alt = entry.customName || model.name;
       icon.append(image);
+      if (["faction_mismatch", "not_developed"].includes(plan.reasons[i]))
+        row.classList.add("faction-mismatch");
       if (plan.disabled.includes(i)) {
         row.classList.add(
           "unit-disabled",
-          plan.reasons[i] === "not_allowed" ? "not-allowed" : "overcost",
+          ["not_allowed", "not_developed"].includes(plan.reasons[i])
+            ? "not-allowed"
+            : "overcost",
         );
         row.append(
           element("span", "disabled-panel"),
           element(
             "span",
             "overcost-label",
-            plan.reasons[i] === "not_allowed" ? "不被允许的单位" : "OVER COST",
+            plan.reasons[i] === "faction_mismatch"
+              ? "阵营不匹配"
+              : plan.reasons[i] === "not_developed"
+                ? "尚未开发"
+                : plan.reasons[i] === "count"
+                  ? "超过单位点数"
+                : plan.reasons[i] === "not_allowed"
+                  ? "不被允许的单位"
+                  : "OVER COST",
           ),
         );
       }
@@ -992,8 +1102,10 @@ const Formation = (() => {
       if (event.target.value) next.preload = JSON.parse(event.target.value);
       else delete next.preload;
       if (detailIndex === null) {
+        if (!PlayerProfile.allows(UnitModels[next.unitId + "__" + next.kitId]))
+          throw Error("单位尚未开发，或与当前阵营不匹配。");
         if (!next.preload) return;
-        if (draft.length >= unitLimit()) throw Error("已达到编组数量上限。");
+        if (points(draft) >= unitLimit()) throw Error("已达到编组单位点数上限。");
         next.customName = Rules.generateUnitName(
           UnitModels[next.unitId + "__" + next.kitId].name,
           draft,
@@ -1003,7 +1115,7 @@ const Formation = (() => {
         detailIndex === null
           ? [...draft, next]
           : draft.map((e, i) => (i === detailIndex ? next : e));
-      Rules.validateFormation(entries, Infinity, Rules.catalog.formation.maxUnits * 3);
+      Rules.validateFormation(entries, Infinity, Rules.catalog.formation.maxUnits);
       const adding = detailIndex === null;
       if (adding) {
         appendUnit(next);
@@ -1020,6 +1132,21 @@ const Formation = (() => {
       byId("formationDetailCarrier").focus();
     }
   };
+  function previewUnit(prefabId, trigger) {
+    const prefab = Rules.catalog.prefabs.find((item) => item.id === prefabId);
+    if (!prefab) return false;
+    detailFromPicker = false;
+    detailFromDevelopment = true;
+    developmentPreviewFocus = trigger || document.activeElement;
+    detailIndex = null;
+    catalogDetail = { unitId: prefabId, kitId: prefab.weaponKits[0].id };
+    previewRoot = null;
+    document.body.append(byId("formationUnitDetail"));
+    byId("developmentMain").inert = true;
+    renderDetail();
+    byId("closeFormationDetail").focus();
+    return true;
+  }
   function open() {
     if (Net.active && ownPlayer()?.formationPreset) {
       note("房主已指定编组预设，请由房主调整。");
@@ -1043,6 +1170,20 @@ const Formation = (() => {
     renderCatalog();
     setPageView("formation");
   }
+  byId("formationGroup").onchange = (event) => {
+    const next = event.target.value;
+    if (Net.active) {
+      event.target.value = group;
+      const own = ownPlayer();
+      if (Net.snapshot?.settings?.mode === "quick") return note("快速战固定使用 PMC 阵营。");
+      const forced = own?.seat == null ? null :
+        Net.snapshot?.settings?.teamFactions?.[Rules.seatTeam(own?.seat)];
+      if (forced && forced !== next) return note("本队已设置强制阵营。");
+      if (next !== own?.characterFaction) Net.request("set_faction", { faction: next });
+      return;
+    }
+    setGroup(next);
+  };
   byId("formationSelect").onchange = (e) => {
     closeDetail();
     index = Number(e.target.value);
@@ -1052,7 +1193,10 @@ const Formation = (() => {
   };
   byId("newFormation").onclick = () => {
     closeDetail();
-    squads.push({ name: `编组${squads.length + 1}`, units: structuredClone(fallback) });
+    squads.push({
+      name: `新编组 ${squads.length + 1}`,
+      units: structuredClone(defaultSquads(group)[0].units),
+    });
     index = squads.length - 1;
     byId("formationName").value = squads[index].name;
     draft = structuredClone(current());
@@ -1099,7 +1243,8 @@ const Formation = (() => {
   byId("addFormationUnit").onclick = () => {
     const prefab = Rules.catalog.prefabs.find((p) => p.id === byId("formationPrefab").value);
     if (!prefab || !pickerCompatible(prefab)) return;
-    if (draft.length >= unitLimit()) return note("已达到编组数量上限。");
+    if (!PlayerProfile.allows(prefab)) return note("单位尚未开发，或与当前阵营不匹配。");
+    if (points(draft) >= unitLimit()) return note("已达到编组单位点数上限。");
     const entry = {
       unitId: prefab.id,
       kitId: pickerKits.get(prefab.id) || prefab.weaponKits[0].id,
@@ -1121,6 +1266,7 @@ const Formation = (() => {
   byId("formationSearch").oninput = () => renderCatalog();
   function renderCatalog() {
     const query = byId("formationSearch").value.trim().toLocaleLowerCase();
+    const [typeKind, typeValue] = catalogFilters.type.split(":", 2);
     const prefabs = Rules.catalog.prefabs
       .filter(
         (p) =>
@@ -1133,12 +1279,14 @@ const Formation = (() => {
           pickerCompatible(p) &&
           (!catalogFilters.faction || p.faction === catalogFilters.faction) &&
           (!catalogFilters.era || p.tags.includes(catalogFilters.era)) &&
-          (!catalogFilters.types || (p.unitTags || []).includes(catalogFilters.types)) &&
-          (!catalogFilters.environment ||
-            (p.stats.adaptability?.[catalogFilters.environment] ?? 0) >= 90),
+          (!catalogFilters.type ||
+            (typeKind === "type" && (p.unitTags || []).includes(typeValue)) ||
+            (typeKind === "environment" &&
+              (p.stats.adaptability?.[typeValue] ?? 0) >= 90)),
       )
       .sort(
         (a, b) =>
+          Number(PlayerProfile.allows(b)) - Number(PlayerProfile.allows(a)) ||
           a.faction.localeCompare(b.faction, "en") ||
           a.name.localeCompare(b.name, I18n.language, { numeric: true, sensitivity: "base" }) ||
           a.id.localeCompare(b.id, "en"),
@@ -1199,11 +1347,23 @@ const Formation = (() => {
       };
       const row = element("div", "catalog-unit-row");
       row.append(card, details);
+      const restriction = PlayerProfile.restriction(prefab);
+      if (restriction) {
+        row.classList.add("unit-disabled", "faction-mismatch");
+        row.append(
+          element("span", "disabled-panel"),
+          element("span", "overcost-label",
+            restriction === "faction_mismatch" ? "阵营不匹配" : "尚未开发"),
+        );
+      }
       list.append(row);
     }
     if (!prefabs.length) list.append(element("p", "empty", "没有符合筛选的单位"));
     list.scrollTop = scroll;
-    byId("addFormationUnit").disabled = !prefabs.length || draft.length >= unitLimit();
+    byId("addFormationUnit").disabled =
+      !prefabs.length ||
+      points(draft) + pickerWeight() > unitLimit() ||
+      !PlayerProfile.allows(prefabs.find((p) => p.id === byId("formationPrefab").value));
     renderPickerCost();
   }
   function setupCatalogFilter(id, key, values, translate = (tag) => tag) {
@@ -1222,17 +1382,31 @@ const Formation = (() => {
   }
   setupCatalogFilter("formationFaction", "faction", Rules.factions);
   setupCatalogFilter("formationEra", "era", Rules.eras);
-  setupCatalogFilter("formationEnvironment", "environment", ["ground", "space"], (value) =>
-    I18n.text(value === "ground" ? "\u5730\u9762" : "\u5b87\u5b99"),
-  );
-  setupCatalogFilter(
-    "formationType",
-    "types",
-    [
-      ...new Set(Rules.catalog.prefabs.filter((p) => !p.formOnly).flatMap((p) => p.unitTags || [])),
-    ].sort(),
-    (tag) => I18n.text(Rules.unitTagName(tag)),
-  );
+  const typeSelect = byId("formationType");
+  const unitTypes = [
+    ...new Set(Rules.catalog.prefabs.filter((p) => !p.formOnly).flatMap((p) => p.unitTags || [])),
+  ].sort();
+  function refreshTypeFilter() {
+    const typeGroup = document.createElement("optgroup");
+    typeGroup.label = I18n.text("\u5355\u4f4d\u7c7b\u578b");
+    for (const tag of unitTypes)
+      typeGroup.append(new Option(I18n.text(Rules.unitTagName(tag)), `type:${tag}`));
+    const environmentGroup = document.createElement("optgroup");
+    environmentGroup.label = I18n.text("\u73af\u5883\u7b5b\u9009");
+    for (const environment of ["ground", "space"])
+      environmentGroup.append(
+        new Option(I18n.text(environment === "ground" ? "\u5730\u9762" : "\u5b87\u5b99"),
+          `environment:${environment}`),
+      );
+    typeSelect.replaceChildren(new Option(I18n.text("\u4e0d\u9650"), ""), typeGroup, environmentGroup);
+    typeSelect.value = catalogFilters.type;
+  }
+  typeSelect.onchange = () => {
+    catalogFilters.type = typeSelect.value;
+    renderCatalog();
+  };
+  window.addEventListener("language-change", refreshTypeFilter);
+  refreshTypeFilter();
   renderCatalog();
   byId("openFormationShare").onclick = openShare;
   byId("closeFormationShare").onclick = () => closeShare();
@@ -1299,7 +1473,7 @@ const Formation = (() => {
   };
   byId("saveFormation").onclick = () => {
     try {
-      const units = Rules.validateFormation(draft, Infinity, Rules.catalog.formation.maxUnits * 3);
+      const units = Rules.validateFormation(draft, Infinity, Rules.catalog.formation.maxUnits);
       squads[index] = {
         name: byId("formationName").value.trim().slice(0, 32) || "未命名编组",
         units,
@@ -1308,7 +1482,7 @@ const Formation = (() => {
       if (
         Net.active &&
         Net.seat !== null &&
-        units.length <= unitLimit() &&
+        points(units) <= unitLimit() &&
         (!Net.snapshot.started || Net.snapshot.phase === "assembly")
       )
         Net.request("update_formation", { formation: units });
@@ -1338,9 +1512,20 @@ const Formation = (() => {
       if (detailIndex !== null || catalogDetail) renderDetail();
     }
   });
+  loadCharacter();
+  PlayerProfile.setFaction(group);
   return {
     current,
     open,
+    group: () => group,
+    setGroup,
+    alignWithRoom: (snapshot) => {
+      const member = snapshot?.members?.find((item) => item.id === snapshot.you?.id);
+      if (!member || !["PMC", "EFSF", "ZEON"].includes(member.characterFaction)) return;
+      setGroup(member.characterFaction);
+      PlayerProfile.setFaction(member.characterFaction);
+    },
+    previewUnit,
     refresh: () => {
       if (pageView === "formation") {
         render();
@@ -1358,7 +1543,7 @@ const Formation = (() => {
     presets: () =>
       squads.map((squad) => ({
         name: squad.name,
-        units: Rules.validateFormation(squad.units, Infinity, Rules.catalog.formation.maxUnits * 3),
+        units: Rules.validateFormation(squad.units, Infinity, Rules.catalog.formation.maxUnits),
       })),
   };
 })();
@@ -1407,7 +1592,7 @@ const Deployment = (() => {
         : `${teamName(Rules.seatTeam(seat))}出生区部署 · 选中己方单位，再点击高亮空格调整位置。`;
     byId("confirmDeployment").disabled = !canEdit();
     byId("confirmDeployment").textContent =
-      seat !== null && game.deployment[seat] ? "已确认，等待对方" : "确认部署";
+      seat !== null && game.deployment[seat] ? "已确认，等待对方" : "确认部署 (B)";
   }
   function click(cell) {
     if (phase !== "deployment" || Net.awaiting || !cell) return;

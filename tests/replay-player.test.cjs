@@ -63,6 +63,10 @@ function runtime() {
     TextEncoder,
     Blob,
     URL,
+    ResizeObserver: class {
+      observe() {}
+      disconnect() {}
+    },
     performance: { now: () => 1000 },
     crypto: { randomUUID: () => String(sent.length) + "-request" },
     document: {

@@ -378,6 +378,19 @@ function createRoomEngine({
   function resetReady(room) {
     for (const member of members(room)) member.ready = !!member.bot;
   }
+  function forcedFaction(room, seat) {
+    if (room.settings.mode === "quick") return "PMC";
+    return seat === null ? null : room.settings.teamFactions?.[G.seatTeam(seat)] || null;
+  }
+  function applyForcedFaction(room, member) {
+    const faction = forcedFaction(room, member.seat);
+    if (!faction || member.characterFaction === faction) return false;
+    member.characterFaction = faction;
+    member.formation = null;
+    member.formationPreset = null;
+    member.ready = !!member.bot;
+    return true;
+  }
   // 大厅只公开房间摘要，绝不发送战局 seed、席位 token 或完整对局数据。
   function roomList() {
     return [...rooms.values()]
@@ -388,6 +401,7 @@ function createRoomEngine({
           players: room.seats.filter((player) => player?.bot || onlineMember(player)).length,
           capacity: room.seats.length,
           mapId: room.settings.mapId,
+          mode: room.settings.mode || "regular",
           costLimit: room.settings.costLimit,
           unitLimit: room.settings.unitLimit,
           spectators: members(room).filter((member) => member.seat === null && onlineMember(member))
@@ -419,6 +433,7 @@ function createRoomEngine({
       event,
       memberId: member.id,
       name: member.name,
+      characterFaction: member.characterFaction,
       at: Date.now(),
     });
     room.chat = room.chat.slice(-100);
@@ -628,6 +643,11 @@ function createRoomEngine({
           ? savedPlan(room, recipient.seat).entries
           : null,
       replay: replaySnapshot(room, recipient),
+      combatIntel: room.phase === "playback" && team !== null
+        ? room.playbackIntel?.[team] || null : null,
+      techAwards: recipient ? (room.techAwards || [])
+        .filter((award) => award.memberId === recipient.id)
+        .map(({ memberId, ...award }) => award) : [],
       type: "state",
       room: room.code,
       revision: room.revision,
@@ -716,6 +736,7 @@ function createRoomEngine({
         .map((member) => ({
           id: member.id,
           name: member.name,
+          characterFaction: member.characterFaction || null,
           seat: member.seat,
           ready: member.ready,
           connected: !!member.bot || onlineMember(member),
@@ -824,6 +845,8 @@ function createRoomEngine({
     resultTimers.delete(room);
     room.logsUnlocked = true;
     room.resumeSave = null;
+    room.startedFromSave = false;
+    room.techAwards = [];
     room.game = G.create(false, randomSeed());
     room.started = false;
     room.phase = "waiting";
@@ -922,11 +945,13 @@ function createRoomEngine({
       room.phase = "reaction";
       return { type: "attack", ...room.pending };
     }
-    const visibleBeforeCombat = Object.fromEntries(
+    const intelBeforeCombat = Object.fromEntries(
       [...new Set(room.game.units.map((u) => u.team))].map((team) => [
-        team,
-        G.sensors.view(room.game, team).visibleIds,
+        team, G.sensors.view(room.game, team),
       ]),
+    );
+    const visibleBeforeCombat = Object.fromEntries(
+      Object.entries(intelBeforeCombat).map(([team, intel]) => [team, intel.visibleIds]),
     );
     const battles = planner.resolve(room);
     for (const battle of battles) combatVisibility.set(battle, visibleBeforeCombat);
@@ -946,6 +971,21 @@ function createRoomEngine({
         }
         const from = unit(room, e.from),
           to = unit(room, e.to);
+        const defeatedModel = G.models[battle.actors.find((actor) => actor.id === e.to)?.model] ||
+          G.modelOf(to);
+        if (e.before > 0 && e.after <= 0 && !room.startedFromSave &&
+            ["EFSF", "ZEON"].includes(G.modelOf(from).faction)) {
+          const owner = room.seats[G.ownerOf(from)];
+          if (owner && !owner.bot) {
+            const rate = (owner.characterFaction === "PMC" ? 0.5 : 1) *
+              (room.settings.mode === "quick" ? 0.25 : 1);
+            room.techAwards.push({
+              id: randomId(), matchId: room.matchId, memberId: owner.id,
+              faction: G.modelOf(from).faction, targetId: e.to,
+              points: Math.max(1, Math.floor(defeatedModel.cost * rate)),
+            });
+          }
+        }
         const weapon = G.modelOf(from).weapons.find((weapon) => weapon.id === e.weapon);
         log(
           room,
@@ -961,6 +1001,7 @@ function createRoomEngine({
         );
       }
     if (battles.length) {
+      room.playbackIntel = intelBeforeCombat;
       room.playback = {
         id: randomId(),
         matchId: room.matchId,
@@ -984,6 +1025,7 @@ function createRoomEngine({
     playback.members = playback.members.filter((id) => room.members.has(id));
     if (!playback.members.every((id) => playback.ready.includes(id))) return;
     room.playback = null;
+    room.playbackIntel = null;
     room.phase = room.game.winner === null ? "idle" : "finished";
     const event =
       room.game.winner === null
@@ -1116,12 +1158,19 @@ function createRoomEngine({
       };
     });
     const cost = units.reduce((sum, unit) => sum + G.models[unit.model].cost, 0);
+    const restrictions = G.armyRestrictions(room.settings, room.seats[seat]);
+    const reasons = {};
+    units.forEach((unit, index) => {
+      if (unit.hp <= 0) return;
+      const reason = G.restrictionReason(G.models[unit.model], restrictions);
+      if (reason) reasons[index] = reason;
+    });
     return {
       entries,
       totalCost: cost,
       deployCost: cost,
-      disabled: [],
-      reasons: {},
+      disabled: Object.keys(reasons).map(Number),
+      reasons,
       deployable: entries,
       indices: entries.map((_, i) => i),
       dead: units.flatMap((unit, i) => (unit.hp <= 0 ? [i] : [])),
@@ -1132,7 +1181,7 @@ function createRoomEngine({
     const lobbyGame = G.create(false, randomSeed(), Array(count).fill(null), false, save.settings);
     room.resumeSave = Records.clone(save);
     room.turnSave = Records.clone(save);
-    room.settings = Records.clone(save.settings);
+    room.settings = { ...G.defaultRoomSettings(), ...Records.clone(save.settings) };
     room.replay = null;
     room.started = false;
     room.phase = "waiting";
@@ -1272,6 +1321,8 @@ function createRoomEngine({
       if (player?.bot) player.formation = armies[seat];
     });
     room.turnSave = room.resumeSave ? Records.clone(room.resumeSave) : null;
+    room.startedFromSave = !!room.resumeSave;
+    room.techAwards = [];
     room.saveTurn = null;
     room.started = true;
     room.phase = "assembly";
@@ -1298,6 +1349,8 @@ function createRoomEngine({
       return;
     const plans = room.seats.map((player) => (player ? formationPlan(room, player) : null));
     if (room.resumeSave) {
+      if (plans.some((plan) => plan && Object.keys(plan.reasons).length))
+        throw Error("存档编组不符合当前模式或房间禁用标签规则。");
       resumeSavedGame(room);
       return;
     }
@@ -1869,6 +1922,7 @@ function createRoomEngine({
         id: randomId(),
         memberId: member.id,
         name: member.name,
+        characterFaction: member.characterFaction,
         text,
         channel,
         at: Date.now(),
@@ -1928,6 +1982,7 @@ function createRoomEngine({
         "remove_ai",
         "configure_ai",
         "configure_player",
+        "set_faction",
         "update_formation",
         "confirm_formation",
       ].includes(msg.action)
@@ -1998,6 +2053,8 @@ function createRoomEngine({
             throw Error("存档编组不可更改。");
           if (member.seat === null && member.id !== room.hostId)
             throw Error("观战玩家不能确认编组。");
+          if (member.seat !== null && Object.keys(savedPlan(room, member.seat).reasons).length)
+            throw Error("存档编组不符合当前模式或房间禁用标签规则。");
           if (member.seat !== null) member.finalReady = true;
           startDeployment(room);
           room.revision++;
@@ -2038,85 +2095,73 @@ function createRoomEngine({
         if (msg.action === "confirm_formation") member.finalReady = true;
         if (room.phase === "assembly") startDeployment(room);
       } else if (msg.action === "configure_player") {
-        if (room.hostId !== member.id && !(room.resumeSave && msg.memberId === member.id))
-          throw Error("只有房主可以设置其他玩家编组");
-        if (room.started) throw Error("对局开始后不能修改玩家编组设置");
+        if (room.settings.mode !== "quick")
+          throw Error("常规战不能调整玩家独立规则。");
+        if (room.hostId !== member.id) throw Error("只有房主可以调整玩家独立规则。");
+        if (room.started) throw Error("对局开始后不能修改玩家独立规则。");
         const target = room.members.get(msg.memberId);
-        if (!target) throw Error("玩家不存在");
-        const config = G.validateArmySettings(msg.config);
-        let preset = target.formationPreset || null;
-        if (room.resumeSave && Object.hasOwn(msg, "formationPreset"))
-          throw Error("存档编组不可更改。");
-        if (Object.hasOwn(msg, "formationPreset")) {
-          const value = msg.formationPreset;
-          if (value === null) preset = null;
-          else {
-            if (
-              !value ||
-              typeof value.name !== "string" ||
-              !value.name.trim() ||
-              value.name.length > 80
-            )
-              throw Error("编组预设无效");
-            preset = {
-              name: value.name.trim(),
-              units: G.validateFormation(value.units, Infinity, G.catalog.formation.maxUnits * 3),
-            };
-          }
-        }
-        const next = { ...target, armySettings: config, formationPreset: preset };
-        if (target.bot || preset) checkAIArmy(room, next);
-        if (!target.bot && preset && !target.formationPreset)
-          target.formationBeforePreset = target.formation;
-        const previousPreset = target.formationPreset;
-        target.armySettings = config;
-        target.formationPreset = preset;
-        if (target.bot) {
-          const { difficulty, fill, countPercent } = config;
-          target.aiSettings = { difficulty, fill, countPercent };
-          target.formation = null;
-        } else if (preset)
-          target.formation = G.validateFormation(
-            preset.units,
-            Infinity,
-            G.catalog.formation.maxUnits * 3,
-          );
-        else if (previousPreset) {
-          target.formation = target.formationBeforePreset || randomArmy(room, target);
-          target.formationBeforePreset = null;
+        if (!target || target.bot) throw Error("目标玩家无效。");
+        if (!msg.config || typeof msg.config !== "object" || Array.isArray(msg.config) ||
+            !Object.keys(msg.config).length ||
+            Object.keys(msg.config).some((key) =>
+              !["fill", "countPercent", "unitCostPercent", "difficulty"].includes(key)))
+          throw Error("玩家独立规则无效。");
+        target.armySettings = G.validateArmySettings({
+          ...G.armySettings(target), ...msg.config,
+          ...(Object.hasOwn(msg.config, "unitCostPercent") ? { unitCostLimit: null } : {}),
+        });
+        target.ready = false;
+      } else if (msg.action === "set_faction") {
+        if (room.started) throw Error("对局开始后不能切换阵营。");
+        if (room.settings.mode === "quick" && msg.faction !== "PMC")
+          throw Error("快速战固定使用 PMC 阵营。");
+        if (!["PMC", "EFSF", "ZEON"].includes(msg.faction))
+          throw Error("玩家阵营无效。");
+        const required = forcedFaction(room, member.seat);
+        if (required && required !== msg.faction)
+          throw Error("本队已设置强制阵营。");
+        if (member.characterFaction !== msg.faction) {
+          member.characterFaction = msg.faction;
+          member.formation = null;
+          member.formationPreset = null;
+          member.ready = false;
         }
       } else if (msg.action === "configure_ai") {
-        if (room.hostId !== member.id) throw Error("只有房主可以设置 AI");
-        if (room.started) throw Error("对局开始后不能修改 AI");
+        if (room.hostId !== member.id) throw Error("只有房主可以设置 AI。");
+        if (room.started) throw Error("对局开始后不能修改 AI。");
         const bot = room.seats[msg.seat];
-        if (!Number.isInteger(msg.seat) || !bot?.bot) throw Error("该席位不是 AI");
-        const config = G.validateAISettings(msg.config);
-        let preset = bot.formationPreset || null;
-        if (room.resumeSave && Object.hasOwn(msg, "formationPreset"))
-          throw Error("存档编组不可更改。");
-        if (Object.hasOwn(msg, "formationPreset")) {
-          const value = msg.formationPreset;
-          if (value === null) preset = null;
-          else {
-            if (
-              !value ||
-              typeof value !== "object" ||
-              typeof value.name !== "string" ||
-              !value.name.trim() ||
-              value.name.length > 80
-            )
-              throw Error("AI 编组预设无效");
-            preset = {
-              name: value.name.trim(),
-              units: G.validateFormation(value.units, Infinity, G.catalog.formation.maxUnits * 3),
-            };
-          }
-        }
-        const armySettings = { ...G.armySettings(bot), ...config };
-        checkAIArmy(room, { ...bot, aiSettings: config, armySettings, formationPreset: preset });
+        if (!Number.isInteger(msg.seat) || !bot?.bot) throw Error("该席位不是 AI。");
+        if (Object.hasOwn(msg, "formationPreset"))
+          throw Error("房主不能修改 AI 编组预设。");
+        const allowed = room.settings.mode === "quick"
+          ? ["fill", "countPercent", "unitCostPercent", "difficulty"] : ["difficulty"];
+        if (!msg.config || typeof msg.config !== "object" ||
+            Array.isArray(msg.config) ||
+            Object.keys(msg.config).some((key) => !allowed.includes(key)))
+          throw Error(room.settings.mode === "quick"
+            ? "AI 独立规则无效。" : "房主只能调整 AI 单位强度。");
+        const armySettings = G.validateArmySettings({
+          ...G.armySettings(bot), ...msg.config,
+          ...(Object.hasOwn(msg.config, "unitCostPercent") ? { unitCostLimit: null } : {}),
+        });
+        const characterFaction = msg.characterFaction ?? bot.characterFaction;
+        if (!["PMC", "EFSF", "ZEON"].includes(characterFaction))
+          throw Error("AI 阵营无效。");
+        if (room.settings.mode === "quick" && characterFaction !== "PMC")
+          throw Error("快速战 AI 固定使用 PMC 阵营。");
+        const required = forcedFaction(room, bot.seat);
+        if (required && required !== characterFaction)
+          throw Error("本队已设置强制阵营。");
+        checkAIArmy(room, {
+          ...bot, armySettings, characterFaction,
+        });
         bot.armySettings = armySettings;
-        bot.aiSettings = config;
-        bot.formationPreset = preset;
+        bot.aiSettings = {
+          difficulty: armySettings.difficulty,
+          fill: armySettings.fill,
+          countPercent: armySettings.countPercent,
+        };
+        bot.characterFaction = characterFaction;
         bot.formation = null;
       } else if (msg.action === "add_ai" || msg.action === "remove_ai") {
         if (room.hostId !== member.id) throw Error("只有房主可以添加或移除 AI");
@@ -2132,12 +2177,17 @@ function createRoomEngine({
             id: botId,
             name: "AI " + (destination + 1),
             bot: true,
+            characterFaction:
+              forcedFaction(room, destination) || msg.characterFaction ||
+              (G.seatTeam(destination) === 0 ? "EFSF" : "ZEON"),
             aiSettings: G.validateAISettings(),
             seat: destination,
             ready: true,
             requests: new Map(),
             ws: { room: room.code, memberId: botId, seat: destination },
           };
+          if (!["PMC", "EFSF", "ZEON"].includes(bot.characterFaction))
+            throw Error("AI 阵营角色无效");
           if (room.resumeSave?.armies[destination])
             bot.armySettings = Records.clone(room.resumeSave.armies[destination]);
           checkAIArmy(room, bot);
@@ -2160,6 +2210,7 @@ function createRoomEngine({
         if (msg.shareAlliedUnits !== undefined && typeof msg.shareAlliedUnits !== "boolean")
           throw Error("友军单位共享设置无效");
         const settings = {
+          mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
           mapId: map.id,
           fogMode: G.validateFogMode(msg.fogMode ?? room.settings.fogMode),
           shareAlliedUnits: msg.shareAlliedUnits ?? room.settings.shareAlliedUnits ?? false,
@@ -2171,12 +2222,24 @@ function createRoomEngine({
             bannedEras: msg.bannedEras ?? room.settings.bannedEras,
             bannedTypes: msg.bannedTypes ?? room.settings.bannedTypes,
           }),
-          teamRestrictions: G.validateTeamRestrictions(
-            msg.teamRestrictions ?? room.settings.teamRestrictions,
-          ),
+          teamRestrictions: G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "quick"
+            ? G.validateTeamRestrictions(
+                msg.teamRestrictions ?? room.settings.teamRestrictions ?? [{}, {}],
+              )
+            : [G.validateTagRestrictions(), G.validateTagRestrictions()],
+          teamFactions: G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "quick"
+            ? [null, null]
+            : G.validateTeamFactions(
+                msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
+              ),
         };
         if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
           const mapChanged = settings.mapId !== room.settings.mapId;
+          const modeChanged = settings.mode !== room.settings.mode;
+          const factionsChanged =
+            JSON.stringify(settings.teamFactions) !== JSON.stringify(room.settings.teamFactions);
+          const tagsChanged = ["bannedFactions", "bannedEras", "bannedTypes", "teamRestrictions"]
+            .some((key) => JSON.stringify(settings[key]) !== JSON.stringify(room.settings[key]));
           room.settings = settings;
           for (const player of members(room)) {
             if (player.seat !== null && player.seat >= map.spawns.length) {
@@ -2191,8 +2254,18 @@ function createRoomEngine({
           room.seats = Array(map.spawns.length).fill(null);
           for (const player of members(room))
             if (player.seat !== null) room.seats[player.seat] = player;
+          for (const player of members(room)) applyForcedFaction(room, player);
+          if (modeChanged && settings.mode === "regular") {
+            for (const player of members(room)) {
+              const difficulty = player.bot ? G.armySettings(player).difficulty : "medium";
+              player.armySettings = G.validateArmySettings({ difficulty });
+              if (player.bot) player.aiSettings = {
+                difficulty, fill: 100, countPercent: 100,
+              };
+            }
+          }
           room.turnDone = Array(map.spawns.length).fill(false);
-          if (mapChanged) resetReady(room);
+          if (mapChanged || modeChanged || factionsChanged || tagsChanged) resetReady(room);
         }
       } else if (msg.action === "kick_player") {
         if (room.hostId !== member.id) throw Error("只有房主可以踢出玩家");
@@ -2256,6 +2329,8 @@ function createRoomEngine({
           movingMember.seat = destination;
           movingMember.shareUnits = false;
           if (movingMember.ws) movingMember.ws.seat = destination;
+          applyForcedFaction(room, movingMember);
+          movingMember.ready = !!movingMember.bot;
           if (destination !== null) {
             room.seats[destination] = movingMember;
             if (room.battle) room.battle.ready[destination] = false;
@@ -2578,6 +2653,8 @@ function createRoomEngine({
   }
   function join(ws, msg) {
     if (ws.room) throw Error("当前连接已经加入房间");
+    let characterFaction = msg.characterFaction;
+    if (!["PMC", "EFSF", "ZEON"].includes(characterFaction)) throw Error("角色阵营无效。");
     let code = String(msg.room || "")
       .trim()
       .toUpperCase();
@@ -2602,12 +2679,17 @@ function createRoomEngine({
         phase: "waiting",
         revision: 0,
         seats: [null, null],
-        settings: G.defaultRoomSettings(),
+        settings: {
+          ...G.defaultRoomSettings(),
+          mode: G.validateBattleMode(msg.roomMode),
+        },
         turnDone: [false, false],
         members: new Map(),
         nextPlayerNumber: 1,
         hostId: null,
         matchId: null,
+        startedFromSave: false,
+        techAwards: [],
         returnAt: null,
         chat: [],
         pending: null,
@@ -2629,24 +2711,29 @@ function createRoomEngine({
           : room.seats.findIndex((player) => !player);
       if (seat === -1) seat = null;
     }
+    if (msg.mode !== "resume")
+      characterFaction = forcedFaction(room, seat) || characterFaction;
     let member;
     if (msg.mode === "resume") {
       if (typeof msg.token !== "string") throw Error("缺少重连凭据");
       member = members(room).find((player) => player.token === msg.token);
       if (!member) throw Error("重连凭据无效，请重新加入房间");
+
       seat = member.seat;
+      applyForcedFaction(room, member);
     } else {
       if (room.members.size >= 32) throw Error("房间人数已满");
       member = {
         id: randomId(),
         name: displayName || "玩家" + room.nextPlayerNumber++,
+        characterFaction,
         seat,
         ready: false,
         finalReady: false,
         formation: G.randomFormation(
           randomSeed(),
           room.settings.costLimit,
-          G.formationRestrictions(room.settings, seat),
+          G.armyRestrictions(room.settings, { seat, characterFaction }),
           room.settings.unitLimit,
         ),
         token: randomToken(),

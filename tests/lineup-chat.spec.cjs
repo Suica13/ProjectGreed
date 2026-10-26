@@ -61,7 +61,14 @@ test("lineup buttons, three-column observers and shared room/game channel permis
         ws.on("error", reject);
         ws.on("open", () =>
           ws.send(
-            JSON.stringify({ type: "hello", mode: "join", room: "LINEUP", name: "Watcher" + i }),
+            JSON.stringify({
+              type: "hello",
+              version: require("../project.json").version,
+              characterFaction: "PMC",
+              mode: "join",
+              room: "LINEUP",
+              name: "Watcher" + i,
+            }),
           ),
         );
         ws.on("message", (d) => {

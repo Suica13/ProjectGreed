@@ -267,6 +267,9 @@ def configure(prefab, native):
             weapon.setdefault("projectile", {})["motion"] = "bomb"
             weapon["special"] = {"type": "bomb"}
     for key, weapon in prefab["weapons"].items():
+        if prefab["id"] in ["Medea", "FatUncle"] and "_Turret_MG" in key:
+            weapon["min"], weapon["max"] = 1, 2
+            weapon["rangeRole"] = "ship_anti_air"
         if prefab["stats"].get("ship") and re.search(r"_Turret_AA(?:_|$)", key):
             weapon["min"], weapon["max"] = 1, 2
             weapon["rangeRole"] = "ship_anti_air"
@@ -286,4 +289,5 @@ def configure(prefab, native):
     prefab["stats"].setdefault("actionPoints", 5)
     for key, weapon in prefab["weapons"].items():
         weapon["actionCost"] = action_cost(prefab, key, weapon)
-    return prefab
+    from v17_balance import apply as apply_v17_balance
+    return apply_v17_balance(prefab)

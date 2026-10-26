@@ -1,15 +1,17 @@
-/* 独立音乐播放器：首个用户操作后播放；曲终顺序循环，“下一首”随机且不重复当前曲。 */
+/* 菜单使用 SDGO；战斗音乐按当前玩家阵营筛选，曲终顺序循环，“下一首”随机切换。 */
 const MusicPlayer = (() => {
-  const audio = new Audio(),
-    playlist = ART.music.tracks,
-    toggle = document.getElementById("musicToggle"),
-    next = document.getElementById("musicNext"),
-    title = document.getElementById("musicTitle"),
-    status = document.getElementById("musicStatus");
-  let index = 0,
-    wantsPlayback = true,
-    started = false,
-    request = 0;
+  const audio = new Audio();
+  const playlist = ART.music.tracks;
+  const toggle = document.getElementById("musicToggle");
+  const next = document.getElementById("musicNext");
+  const title = document.getElementById("musicTitle");
+  const status = document.getElementById("musicStatus");
+  let available = playlist.filter((track) => track.scene === "menu");
+  let index = playlist.indexOf(available[0]);
+  let wantsPlayback = true;
+  let started = false;
+  let request = 0;
+
   function applyVolume() {
     audio.volume = Math.max(
       0,
@@ -23,6 +25,8 @@ const MusicPlayer = (() => {
   applyVolume();
   window.addEventListener("audio-settings-change", applyVolume);
   audio.preload = "none";
+  audio.loop = available.length === 1;
+
   function render() {
     title.textContent = playlist[index].name;
     toggle.textContent = audio.paused ? "播放" : "暂停";
@@ -41,12 +45,28 @@ const MusicPlayer = (() => {
     }
     render();
   }
-  function select(value) {
+  function select(value, shouldPlay = started) {
     request++;
     index = value;
     audio.src = playlist[index].source;
-    if (wantsPlayback) play();
+    if (wantsPlayback && shouldPlay) play();
     render();
+  }
+  function currentFaction() {
+    const snapshot = typeof Net === "undefined" ? null : Net.snapshot;
+    const member = snapshot?.members?.find((entry) => entry.id === snapshot.you?.id);
+    if (member) return member.characterFaction;
+    return typeof PlayerProfile === "undefined" ? null : PlayerProfile.faction();
+  }
+  function sync() {
+    const scene = typeof pageView !== "undefined" && pageView === "game" ? "battle" : "menu";
+    const faction = currentFaction();
+    available = playlist.filter(
+      (track) => track.scene === scene && (!track.faction || track.faction === faction),
+    );
+    if (!available.length) return;
+    audio.loop = available.length === 1;
+    if (!available.includes(playlist[index])) select(playlist.indexOf(available[0]));
   }
   toggle.addEventListener("click", () => {
     wantsPlayback = !wantsPlayback || audio.paused;
@@ -57,13 +77,20 @@ const MusicPlayer = (() => {
       render();
     }
   });
-  // Pause intent must survive later pointer/keyboard events.
   toggle.addEventListener("pointerdown", (event) => event.stopPropagation());
-  next.addEventListener("click", () =>
-    select((index + 1 + Math.floor(Math.random() * (playlist.length - 1))) % playlist.length),
-  );
+  next.addEventListener("click", () => {
+    if (available.length === 1) {
+      audio.currentTime = 0;
+      if (wantsPlayback) play();
+      return;
+    }
+    const choices = available.filter((track) => track !== playlist[index]);
+    select(playlist.indexOf(choices[Math.floor(Math.random() * choices.length)]), true);
+  });
   audio.addEventListener("ended", () => {
-    if (wantsPlayback) select((index + 1) % playlist.length);
+    if (!wantsPlayback) return;
+    const position = available.indexOf(playlist[index]);
+    select(playlist.indexOf(available[(position + 1) % available.length]));
   });
   audio.addEventListener("play", render);
   audio.addEventListener("pause", render);
@@ -76,10 +103,12 @@ const MusicPlayer = (() => {
   }
   window.addEventListener("pointerdown", unlock);
   window.addEventListener("keydown", unlock);
+  window.addEventListener("character-selected", sync);
   window.addEventListener("pagehide", () => audio.pause());
   render();
   return {
     audio,
+    sync,
     get index() {
       return index;
     },

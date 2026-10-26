@@ -50,6 +50,11 @@
     "volume": 0.5,
     "duration": 0.43201814058956917
   },
+  "killInfoSound": {
+    "file": "sounds/KilledInfo_1.ogg",
+    "volume": 0.7,
+    "duration": 1.456
+  },
   "selectUnitSound": {
     "file": "sounds/Select_1.ogg",
     "volume": 0.35,

@@ -8,7 +8,7 @@ const LocalRoom = (() => {
     );
   }
   function open() {
-    if (!assetsReady || window.isLayoutPreview) return;
+    if (!assetsReady || window.isLayoutPreview || !PlayerProfile.selected()) return;
     Net.leave();
     let engine;
     const socket = {
@@ -46,7 +46,13 @@ const LocalRoom = (() => {
     });
     Net.beginLocal(socket);
     byId("skirmishSetup").hidden = true;
-    engine.join(socket, { mode: "create", room: "OFFLINE", name: PlayerProfile.name() });
+    engine.join(socket, {
+      mode: "create",
+      room: "OFFLINE",
+      name: PlayerProfile.name(),
+      characterFaction: PlayerProfile.faction(),
+      roomMode: byId("offlineRoomMode").value,
+    });
     engine.action(socket, {
       action: "add_ai",
       seat: 1,

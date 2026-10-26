@@ -158,12 +158,21 @@ const BattleHUD = (() => {
       event.altKey ||
       event.metaKey ||
       pageView !== "game" ||
-      phase !== "idle" ||
+      !["idle", "deployment"].includes(phase) ||
       event.target.closest("input,textarea,select,[contenteditable=true]") ||
       document.querySelector("dialog[open], .overlay:not([hidden])")
     )
       return;
     const key = event.key.toLowerCase();
+    if (key === "b") {
+      const button = phase === "deployment" ? byId("confirmDeployment") : byId("endTurn");
+      if (!button.hidden && !button.disabled && button.getClientRects().length) {
+        event.preventDefault();
+        button.click();
+      }
+      return;
+    }
+    if (phase !== "idle") return;
     if (pendingMovement()) {
       const button = key === "q" ? confirmMove : key === "w" ? byId("hudCancelAction") : null;
       if (button) {
@@ -197,7 +206,9 @@ const BattleHUD = (() => {
   });
   function refreshRoomStatus() {
     const snapshot = Net.active ? Net.snapshot : null;
-    const roomName = Net.local ? I18n.text("离线遭遇战") : snapshot?.room || Net.room || "—";
+    const roomName = Net.local
+      ? "离线" + (snapshot?.settings?.mode === "quick" ? "快速战" : "常规战")
+      : snapshot?.room || Net.room || "—";
     const roomLabel = byId("hudRoomName");
     roomLabel.textContent = I18n.text("房间名") + ": " + roomName;
     roomLabel.title = roomName;

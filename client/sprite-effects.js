@@ -80,7 +80,7 @@ const SpriteEffects = (() => {
   function brokenModules(ctx, model, brokenParts, actor, time) {
     const config = ART.presentation.moduleDamage;
     const effect = ART.effects[config?.effect];
-    if (!ART.models[model]?.ship || !effect || !Number.isFinite(time)) return 0;
+    if (!ART.models[model]?.modules?.length || !effect || !Number.isFinite(time)) return 0;
     let count = 0;
     for (const module of ART.models[model].modules || []) {
       if (!brokenParts?.[module.id]) continue;

@@ -46,7 +46,7 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
   if (
     !Number.isInteger(catalog.formation.maxUnits) ||
     catalog.formation.maxUnits < 1 ||
-    catalog.formation.maxUnits > 36 ||
+    catalog.formation.maxUnits > 72 ||
     !Number.isFinite(catalog.formation.maxCost) ||
     catalog.formation.maxCost <= 0
   )
@@ -173,8 +173,8 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       for (let y = 0; y < map.height; y++)
         for (let x = 0; x < map.width; x++)
           if (inside(x, y) && !["rock", "water"].includes(map.tiles[y][x])) capacity++;
-      if (capacity < catalog.formation.maxUnits * 2)
-        throw Error("Spawn area too small for 200% AI: " + map.id);
+      if (capacity < catalog.formation.maxUnits)
+        throw Error("Spawn area too small for maximum formation: " + map.id);
       if (
         map.spawns.slice(0, seat).some((other, index) => {
           if (!area)
@@ -207,6 +207,7 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     "underAttackSound",
     "lockonSound",
     "infoSound",
+    "killInfoSound",
     "selectUnitSound",
     "selectWeaponSound",
     "changeEquipmentSound",
@@ -379,7 +380,9 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
     if (!/^[A-Za-z0-9_]+$/.test(prefab.id) || !prefab.weaponKits?.length)
       throw Error("Invalid unit ID or kits: " + ref);
     for (const key of ["hp", "en", "move", "cost"])
-      if (!Number.isFinite(prefab.stats[key]) || prefab.stats[key] <= 0)
+      if (!Number.isFinite(prefab.stats[key]) ||
+          (prefab.stats[key] <= 0 &&
+            !(key === "cost" && prefab.id.startsWith("Army_Squad_") && prefab.stats.cost === 0)))
         throw Error("Invalid stat " + key + ": " + ref);
     if (
       prefab.stats.movementType !== undefined &&
@@ -467,17 +470,18 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       throw Error("Invalid counter limit: " + ref);
     if (!Number.isFinite(prefab.stats.mobility) || prefab.stats.mobility <= 0)
       throw Error("Invalid mobility: " + ref);
-    if (prefab.stats.ship) {
+    if (prefab.stats.ship || prefab.stats.modules) {
       const footprint = prefab.stats.footprint,
         modules = prefab.stats.modules;
       if (
-        !footprint ||
-        !Number.isInteger(footprint.width) ||
-        footprint.width < 1 ||
-        footprint.width > 15 ||
-        !Number.isInteger(footprint.height) ||
-        footprint.height < 1 ||
-        footprint.height > 24 ||
+        (prefab.stats.ship &&
+          (!footprint ||
+            !Number.isInteger(footprint.width) ||
+            footprint.width < 1 ||
+            footprint.width > 15 ||
+            !Number.isInteger(footprint.height) ||
+            footprint.height < 1 ||
+            footprint.height > 24)) ||
         !Array.isArray(modules) ||
         new Set(modules.map((m) => m.id)).size !== modules.length ||
         modules.some(
