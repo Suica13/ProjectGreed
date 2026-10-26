@@ -1538,7 +1538,7 @@ const Tactics = (() => {
           : w.type === "melee"
             ? (ground.meleeCover ?? 0)
             : ground.cover,
-      mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.25,
+      mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.1875,
       sizeModifier = w.antiSize?.[defender.ship ? "large" : "small"] || { damage: 1, accuracy: 1 },
       targetFactor = targetModifier(g, b, w),
       sensorFactor = sensors.detected(g, a.team, b) ? 1 : 0.75,
@@ -1993,7 +1993,7 @@ const Tactics = (() => {
       return { response: expected(defense) < expected(evasion) ? "defend" : "evade" };
     return counter ? { response: "counter", weapon: counter.id } : { response: "evade" };
   }
-  // Count damage already committed by this team before assigning another AI attack.
+  // Count both committed damage and attackers so AI spreads fire across viable targets.
   function aiTargetPressure(g, team) {
     const pressure = new Map();
     for (const attacker of g.units) {
@@ -2001,11 +2001,20 @@ const Tactics = (() => {
       if (attacker.team !== team || !onMap(attacker) || !plan) continue;
       const target = g.units.find((unit) => unit.id === plan.target);
       if (!target || !onMap(target) || target.team === team) continue;
+      const commitment = pressure.get(target.id) || { damage: 0, attackers: 0 };
+      let assigned = false;
       for (const id of plan.weapons || [plan.weapon]) {
         const weapon = modelOf(attacker).weapons.find((entry) => entry.id === id);
         if (!weapon || (weapon.special?.type === "snipe" && !plan.charged)) continue;
         const result = estimate(g, attacker, target, weapon);
-        pressure.set(target.id, (pressure.get(target.id) || 0) + result.damage * result.hit / 100);
+        const expected = result.damage * result.hit / 100;
+        if (expected <= 0) continue;
+        commitment.damage += expected;
+        assigned = true;
+      }
+      if (assigned) {
+        commitment.attackers++;
+        pressure.set(target.id, commitment);
       }
     }
     return pressure;
@@ -2049,7 +2058,8 @@ const Tactics = (() => {
           : Math.hypot(c.x - (u.team === 0 ? mapWidth(g) - 3 : 2), c.y - mapHeight(g) / 2);
       let score = -near * 0.12 - c.cost * 0.025 + terrain[g.tiles[c.y][c.x]].cover * 0.006,
         target = null,
-        weapon = null;
+        weapon = null,
+        assignedAttackers = Infinity;
       for (const e of enemies)
         for (const w of weapons)
           if (
@@ -2059,7 +2069,8 @@ const Tactics = (() => {
             canAttack(decisionGame, virtual, e, w)
           ) {
             let ex = estimate(g, virtual, e, w),
-              remaining = Math.max(0, e.hp - (pressure.get(e.id) || 0)),
+              commitment = pressure.get(e.id),
+              remaining = Math.max(0, e.hp - (commitment?.damage || 0)),
               expected = ex.damage * ex.hit / 100,
               s =
                 2 +
@@ -2067,13 +2078,18 @@ const Tactics = (() => {
                 (remaining > 0 ? Math.min(1, expected / remaining) * 0.6 : 0) -
                 c.cost * 0.025 -
                 (destinations ? near * 0.12 : 0);
-            if (s > score) {
+            if (expected > 0 &&
+              ((commitment?.attackers || 0) < assignedAttackers ||
+                ((commitment?.attackers || 0) === assignedAttackers && s > score))) {
               score = s;
               target = e.id;
               weapon = w.id;
+              assignedAttackers = commitment?.attackers || 0;
             }
           }
-      if (!best || score > best.score) best = { ...c, score, target, weapon };
+      if (!best || assignedAttackers < best.assignedAttackers ||
+        (assignedAttackers === best.assignedAttackers && score > best.score))
+        best = { ...c, score, target, weapon, assignedAttackers };
     }
     return best;
   }

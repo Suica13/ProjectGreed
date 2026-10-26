@@ -1630,11 +1630,18 @@ function createRoomEngine({
             continue;
           }
           const estimate = G.estimate(room.game, u, target, weapon);
-          const remaining = Math.max(0, target.hp - (pressure.get(target.id) || 0));
+          const commitment = pressure.get(target.id);
+          const remaining = Math.max(0, target.hp - (commitment?.damage || 0));
           const expected = estimate.hit * estimate.damage / 100;
           const score = Math.min(expected, remaining) +
             (remaining > 0 && expected >= remaining ? remaining * 0.1 : 0);
-          if (!best || score > best.score) best = { target, weapon, score, remaining };
+          const useful = score > 0;
+          const assignedAttackers = commitment?.attackers || 0;
+          if (!best || (useful && !best.useful) ||
+            (useful === best.useful &&
+              (assignedAttackers < best.assignedAttackers ||
+                (assignedAttackers === best.assignedAttackers && score > best.score))))
+            best = { target, weapon, score, remaining, useful, assignedAttackers };
         }
     if (!best) return { player, action: "wait", fields: { unitId: u.id } };
     const weapons = [best.weapon];
