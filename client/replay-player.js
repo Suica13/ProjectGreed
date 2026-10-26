@@ -140,8 +140,30 @@ window.ReplayPlayer = (() => {
   bar.id = "replayControls";
   bar.hidden = true;
   const play = button("播放", () => control({ playing: !playing }));
-  const previous = button("上一回合", () => seekTurn(-1)),
-    next = button("下一回合", () => seekTurn(1));
+  const previous = button("◀", () => seekTurn(-1)),
+    next = button("▶", () => seekTurn(1));
+  for (const [control, label] of [
+    [previous, "上一回合"],
+    [next, "下一回合"],
+  ]) {
+    control.title = label;
+    control.setAttribute("aria-label", label);
+    control.classList.add("replay-turn-arrow");
+  }
+  const convertSave = button("转存为对局存档", async () => {
+    const at = index;
+    let save;
+    if (shared)
+      save = (await request("replay_save_export", { replayId: state.id, index: at })).save;
+    else {
+      const seeds = crypto.getRandomValues(new Uint32Array(2));
+      save = MatchRecords.saveFromReplay(Rules, record, at, seeds[0], seeds[1]);
+    }
+    download(save, ".save.greed");
+    note("已转存回合初状态，可在房间中加载存档。");
+  });
+  convertSave.id = "replayConvertSave";
+  convertSave.title = "转存当前回合开始时的状态，后续随机结果重新生成";
   const timeline = create("input");
   timeline.type = "range";
   timeline.min = 0;
@@ -181,7 +203,9 @@ window.ReplayPlayer = (() => {
     if (shared) await request("replay_close");
     else stop();
   });
-  bar.append(play, previous, next, timeline, position, rates, views, immersive, exit);
+  timeline.className = "replay-timeline";
+  position.className = "replay-position";
+  bar.append(play, previous, next, timeline, position, rates, views, immersive, convertSave, exit);
   byId("mapWrap").append(bar);
   // Wrapped mobile controls change height; keep terrain details above the whole bar.
   new ResizeObserver(() => {
@@ -463,7 +487,7 @@ window.ReplayPlayer = (() => {
     loadSave.disabled = !isHost || !!room?.started || !!room?.replay || !!Net.awaiting;
     hint.textContent = room?.record?.truncated
       ? "记录已达到容量上限，已保留此前内容。"
-      : "存档保存当前回合开始时的状态；回放仅供观看。";
+      : "存档保存回合初状态；回放可转存为对局存档后在房间加载。";
     if (!active) return;
     Chat.refreshStatus();
     const total = shared ? state.total : record.frames.length,
@@ -473,6 +497,8 @@ window.ReplayPlayer = (() => {
     play.textContent = playing ? "暂停" : "播放";
     rates.value = speed;
     const canControl = !shared || isHost;
+    convertSave.disabled =
+      !canControl || !options.includes("global") || !checkpoints().some((c) => c.frame <= index);
     for (const e of [play, previous, next, timeline, rates, exit]) e.disabled = !canControl;
     position.textContent = `${index + 1} / ${total} · 回合${game.round} · 队伍${game.team + 1} · ${shared ? state.gameVersion : record.gameVersion || "unknown"}`;
     if ([...views.options].map((o) => o.value).join() !== options.join()) {

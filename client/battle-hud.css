@@ -1728,3 +1728,43 @@ body.replay-active #gameScene .hud-terrain-strip {
   font-weight: 700;
   overflow-wrap: anywhere;
 }
+
+/* Keep playback navigation compact, with a dedicated full-width timeline on phones. */
+#replayControls {
+  box-sizing: border-box;
+  max-width: calc(100% - 16px);
+}
+#replayControls button,
+#replayControls select {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+#replayControls .replay-turn-arrow {
+  min-width: 32px;
+  padding-inline: 8px;
+}
+#replayControls .replay-position {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  #replayControls {
+    gap: 5px;
+    padding: 6px;
+  }
+  #replayControls input.replay-timeline[type="range"] {
+    order: -2;
+    flex: 1 0 100%;
+    min-width: 0;
+  }
+  #replayControls .replay-position {
+    order: -1;
+    flex-basis: 100%;
+    font-size: 11px;
+  }
+  #replayControls button,
+  #replayControls select {
+    padding: 5px 7px;
+    font-size: 12px;
+  }
+}

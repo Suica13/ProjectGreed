@@ -112,11 +112,12 @@ const MatchRecords = (() => {
     const result = Object.fromEntries(
       keys.filter((k) => snapshot[k] !== undefined).map((k) => [k, snapshot[k]]),
     );
-    result.members = (snapshot.members || []).map(({ id, name, seat, bot }) => ({
+    result.members = (snapshot.members || []).map(({ id, name, seat, bot, armySettings }) => ({
       id,
       name,
       seat,
       bot,
+      ...(armySettings ? { armySettings: clone(armySettings) } : {}),
     }));
     return result;
   }
@@ -162,6 +163,51 @@ const MatchRecords = (() => {
       chat: clone(room.chat || []),
     };
   }
+  // Convert a public omniscient turn start into a new save. Fresh random streams
+  // deliberately do not reconstruct or expose the original server's private seeds.
+  function saveFromReplay(G, record, index, seed, partSeed) {
+    if (!Number.isInteger(index) || index < 0 || index >= record.frames.length)
+      throw Error("回放位置无效。");
+    if (!record.perspectives.includes("global"))
+      throw Error("此回放缺少完整上帝视角，无法转存对局。");
+    const checkpoint = record.checkpoints.filter((c) => c.frame <= index).at(-1);
+    if (!checkpoint) throw Error("此位置之前没有可转存的回合初状态。");
+    const snapshot = view(record, checkpoint.frame, "global");
+    if (snapshot.phase !== "idle" || snapshot.game.winner !== null)
+      throw Error("只能转存尚未结束的对局回合初状态。");
+    const game = clone(snapshot.game);
+    game.seed = seed >>> 0;
+    game.partSeed = partSeed >>> 0;
+    game.ai = false;
+    delete game.intel;
+    const seats = G.getMap(game.mapId).spawns.map((_, seat) => {
+      const member = snapshot.members?.find((m) => m.seat === seat);
+      const unit = game.units.find((u) => G.ownerOf(u) === seat);
+      if (!member && !unit) return null;
+      const performance = unit?.performance ?? 1;
+      return {
+        armySettings: member?.armySettings || {
+          difficulty: Math.round(performance * 100),
+          fill: 100,
+          countPercent: 100,
+        },
+      };
+    });
+    const teamLogs = {};
+    for (const perspective of record.perspectives)
+      if (perspective.startsWith("team:"))
+        teamLogs[perspective.slice(5)] = view(record, checkpoint.frame, perspective).log;
+    const save = createSave(G, {
+      settings: record.settings,
+      game,
+      seats,
+      log: snapshot.log,
+      teamLogs,
+      logNames: snapshot.logNames,
+      chat: snapshot.chat,
+    });
+    return validateSave(G, save);
+  }
   function validateSave(G, input) {
     const raw = JSON.stringify(input);
     if (new TextEncoder().encode(raw).length > maxBytes) throw Error("存档超过32MB限制。");
@@ -190,7 +236,11 @@ const MatchRecords = (() => {
     G.validateUnitLimit(settings.unitLimit);
     G.validateUnitCostLimit(settings.unitCostLimit);
     G.validateFogMode(settings.fogMode);
-    G.validateTagRestrictions(settings);
+    G.validateTagRestrictions(
+      Object.fromEntries(
+        ["bannedFactions", "bannedEras", "bannedTypes"].map((key) => [key, settings[key]]),
+      ),
+    );
     G.validateTeamRestrictions(settings.teamRestrictions);
     if (typeof settings.shareAlliedUnits !== "boolean") throw Error("存档房间规则无效。");
     const seats = G.getMap(g.mapId).spawns.length;
@@ -373,6 +423,7 @@ const MatchRecords = (() => {
     fingerprint,
     gameVersion,
     createSave,
+    saveFromReplay,
     validateSave,
   };
 })();

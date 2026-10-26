@@ -23,7 +23,11 @@ function createRoomEngine({
   function captureRecord(room) {
     const chatOnly = ["move_preview", "move_cancel"].includes(room.lastEvent?.type);
     if (chatOnly && room.recordChat === room.chat.at(-1)?.id) return;
-    if (!room.started || ["assembly", "waiting", "replay"].includes(room.phase) || room.replay)
+    if (
+      !room.started ||
+      ["assembly", "waiting", "deployment", "replay"].includes(room.phase) ||
+      room.replay
+    )
       return;
     if (!room.record || room.record.id !== room.matchId) {
       room.record = Records.create(G, room.matchId, room.settings, room.game.tiles);
@@ -193,7 +197,13 @@ function createRoomEngine({
       throw Error("回放状态已更新。");
     if (
       room.started &&
-      !["replay_ready", "replay_view", "record_export", "save_export"].includes(msg.action)
+      ![
+        "replay_ready",
+        "replay_view",
+        "record_export",
+        "save_export",
+        "replay_save_export",
+      ].includes(msg.action)
     )
       throw Error("请先让全员返回大厅，再载入或开始回放。");
     let result = {};
@@ -202,6 +212,18 @@ function createRoomEngine({
         if (!room.record?.frames.length) throw Error("当前没有回放记录。");
         result.record = room.record;
         break;
+      case "replay_save_export": {
+        const replay = room.replay;
+        if (!replay || msg.replayId !== replay.id) throw Error("回放已结束。");
+        result.save = Records.saveFromReplay(
+          G,
+          replay.record,
+          msg.index,
+          randomSeed(),
+          randomSeed(),
+        );
+        break;
+      }
       case "save_export":
         if (!room.turnSave) throw Error("进入对局回合后才能保存存档。");
         result.save = room.turnSave;
