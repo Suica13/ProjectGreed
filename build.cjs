@@ -13,6 +13,13 @@ let html = read("client/template.html").replace(
 html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
 const developmentTree = JSON.parse(read("shared/development-tree.json"));
+const pilotData = JSON.parse(read("shared/pilots.json"));
+for (const pilot of pilotData.named) {
+  if (!/^assets\/pilots\/[\w-]+\.png$/.test(pilot.icon))
+    throw Error("Invalid pilot icon: " + pilot.id);
+  pilot.icon = "data:image/png;base64," +
+    fs.readFileSync(path.join(root, pilot.icon)).toString("base64");
+}
 for (const nodes of Object.values(developmentTree))
   for (const node of nodes) {
     if (!/^assets\/tech-icons\/[\w-]+\.png$/.test(node.icon))
@@ -44,6 +51,7 @@ html = html
   .replaceAll("__PROJECT_VERSION__", project.version)
   .replace("__PROJECT_META__", json(project))
   .replace("__DEVELOPMENT_TREE__", json(developmentTree))
+  .replace("__PILOT_DATA__", json(pilotData))
   .replace("__CLIENT_CONFIG__", json(clientConfig));
 html = html.replace(
   "__UI_LOCALES__",
@@ -56,10 +64,12 @@ for (const [key, file] of [
   ["DATA", null],
   ["I18N", "client/i18n.js"],
   ["FORMATION", "client/formation.js"],
+  ["WEAPON_INFO", "client/weapon-info.js"],
   ["DEVELOPMENT_UI", "client/development.js"],
   ["UNIT_PARTS", "shared/unit-parts.js"],
   ["UNIT_SKILLS", "shared/unit-skills.js"],
   ["UNIT_HANGARS", "shared/hangars.js"],
+  ["PILOTS", "shared/pilots.js"],
   ["DEVELOPMENT", "shared/development.js"],
   ["HANGAR_UI", "client/hangar-ui.js"],
   ["CORE", "shared/rules.js"],

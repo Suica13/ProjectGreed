@@ -3081,6 +3081,7 @@
                 ><select id="formationDetailCarrier" aria-label="搭载至"></select
                 ><small id="formationDetailCarrierHint" class="muted"></small
               ></label>
+              <button id="formationDetailPilot" type="button">配属驾驶员</button>
             </section>
           </div>
           <section id="formationDetailHangarsBlock" class="unit-detail-block">
@@ -3120,6 +3121,16 @@
               <div id="formationDetailMechanics" class="unit-detail-slots"></div>
             </details>
           </div>
+        </div>
+      </div>
+      <div id="formationPilotPanel" class="formation-detail-overlay" hidden>
+        <div class="modal formation-pilot-dialog" role="dialog" aria-modal="true" aria-labelledby="formationPilotTitle">
+          <header class="formation-pilot-heading">
+            <div><span class="eyebrow">PILOT ASSIGNMENT</span><h2 id="formationPilotTitle">驾驶员配属</h2></div>
+            <button id="closeFormationPilot" type="button">关闭</button>
+          </header>
+          <p class="muted">驾驶员属性在每局开始时随机生成；未配属时自动生成默认驾驶员；指挥单位默认配属指挥官，只有指挥官能驾驶。</p>
+          <div id="formationPilotList" class="formation-pilot-list"></div>
         </div>
       </div>
     </section>
@@ -3538,6 +3549,31 @@
         display: grid;
         gap: 6px;
       }
+      #formationPilotPanel { z-index: 1100; }
+      .formation-pilot-dialog {
+        width: min(700px, 94vw);
+        max-height: min(86vh, 850px);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow: hidden;
+      }
+      .formation-pilot-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      .formation-pilot-list { overflow-y: auto; display: grid; gap: 8px; min-height: 0; }
+      .formation-pilot-card {
+        display: grid;
+        grid-template-columns: 48px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border: 1px solid #435d6c;
+        border-radius: 8px;
+        background: #142a35;
+      }
+      .formation-pilot-card[data-selected="true"] { border-color: #b8e681; }
+      .formation-pilot-card img { width: 48px; height: 48px; object-fit: contain; }
+      .formation-pilot-card strong, .formation-pilot-card small { display: block; }
+      .formation-pilot-card small { color: #b8ceda; }
       .formation-row small {
         grid-column: 2 / -1;
       }
@@ -3808,6 +3844,20 @@
         padding: 12px;
         margin: 0;
       }
+      .unit-size-tag { color: #e6c994; border-color: #9b8151 !important; background: #9b81511c; }
+      .weapon-effect-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0; }
+      .weapon-effect-tag { font-size: 10px; border: 1px solid #536b78; border-radius: 3px; padding: 3px 6px; color: #c9d9df; }
+      .weapon-effect-tag.bonus { color: #9de1ba; border-color: #4d8c69; background: #4d8c691d; }
+      .weapon-effect-tag.penalty { color: #e8b49d; border-color: #936753; background: #9367531d; }
+      .weapon-inspector { border-top: 1px solid #476170; margin-top: 10px; padding-top: 8px; font-size: 11px; }
+      .weapon-inspector summary { cursor: pointer; color: #b8dbe7; font-weight: 600; }
+      .weapon-inspector-body { display: grid; gap: 10px; padding-top: 10px; }
+      .weapon-flow { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-height: 260px; overflow-y: auto; }
+      .weapon-flow li { line-height: 1.5; color: #c8d8df; }
+      .weapon-flow time { color: #9de1ba; font-variant-numeric: tabular-nums; margin-right: 6px; }
+      .weapon-card { min-width: 0; border: 1px solid #46606f; border-radius: 5px; background: #172b36; padding: 9px; }
+      .weapon-card > .weapon { margin: 0; }
+      .weapon-card:has(> .weapon.active) { border-color: var(--lime); }
       .unit-slot-heading {
         display: flex;
         align-items: start;
@@ -4882,6 +4932,7 @@
     <script>
       const PROJECT = __PROJECT_META__;
       const DEVELOPMENT_TREE = __DEVELOPMENT_TREE__;
+      const PILOT_DATA = __PILOT_DATA__;
       const CLIENT_CONFIG = __CLIENT_CONFIG__;
       const UI_LOCALES = __UI_LOCALES__;
       const ART = JSON.parse(document.getElementById("art").textContent);
@@ -4891,9 +4942,11 @@
       __UNIT_PARTS__;
       __UNIT_SKILLS__;
       __UNIT_HANGARS__;
+      __PILOTS__;
       __DEVELOPMENT__;
       __UNIT_SENSORS__;
       __CORE__;
+      __WEAPON_INFO__;
       __RENDERER__;
       __SPRITE_EFFECTS__;
       __WEAPON_EFFECTS__;

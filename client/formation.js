@@ -48,7 +48,8 @@ const Formation = (() => {
     pickerReturnIndex = null,
     detailFromPicker = false,
     detailFromDevelopment = false,
-    developmentPreviewFocus = null;
+    developmentPreviewFocus = null,
+    pilotIndex = null;
   const pickerKits = new Map();
   const catalogFilters = { faction: "", era: "", type: "" };
   const current = () =>
@@ -630,6 +631,10 @@ const Formation = (() => {
     byId("formationDetailTitle").toggleAttribute("data-i18n-ignore", !!entry.customName);
     byId("formationDetailTags").replaceChildren(unitTags(model));
     byId("formationDetailNameEditor").hidden = detailIndex === null || !!previewModel;
+    const pilotButton = byId("formationDetailPilot");
+    pilotButton.hidden = detailIndex === null || !!previewModel;
+    pilotButton.textContent = "配属驾驶员 · " +
+      (PilotSystem.profile(originalEntry.pilotId)?.name || PilotSystem.defaultName(model));
     renderPreview(entry.unitId + "__" + entry.kitId);
     renderPreloads(model);
     renderCarrierChoice(entry, model);
@@ -733,44 +738,34 @@ const Formation = (() => {
     abilities.replaceChildren();
     mechanics.replaceChildren();
     for (const [index, weapon] of model.weapons.entries()) {
-      const card = element("div", "formation-weapon-detail"),
+      const card = element("article", "formation-weapon-detail"),
         heading = element("div", "unit-slot-heading");
       heading.append(
         element("strong", "", weapon.name),
-        element("span", "unit-slot-badge", I18n.text("槽位") + " " + (index + 1)),
+        element("span", "unit-slot-badge", "槽位 " + (index + 1) + " · " +
+          (Rules.typeNames[weapon.type] || weapon.type)),
       );
       card.append(heading);
       const metrics = element("dl", "unit-detail-metrics");
       detailMetrics(metrics, [
-        ["威力", Math.round(weapon.damage).toLocaleString()],
-        ["发射次数", weapon.shotCount],
+        ["总威力", Math.round(weapon.damage).toLocaleString()],
+        ["发射", weapon.shotCount + " 发" +
+          (weapon.hitsPerShot > 1 ? " · 每发 " + weapon.hitsPerShot + " 段" : "")],
         ["命中", weapon.hit + "%"],
         ["射程", weapon.min + "–" + weapon.max],
         ["EN", weapon.en],
         ["AP", Rules.actionCost(weapon)],
-        ...(Number.isInteger(weapon.maxUses) ? [["\u4f7f\u7528\u6b21\u6570", weapon.maxUses]] : []),
+        ...(Number.isInteger(weapon.maxUses) ? [["使用次数", weapon.maxUses]] : []),
       ]);
-      card.append(metrics);
+      card.append(metrics, WeaponInfo.effects(weapon), WeaponInfo.inspector(weapon));
       const all = (weapon.requiredParts || [])
-        .map((part) => I18n.text(Rules.partNames[part]))
-        .join(" / ");
+        .map((part) => I18n.text(Rules.partNames[part])).join(" / ");
       const any = (weapon.anyParts || [])
-        .map((part) => I18n.text(Rules.partNames[part]))
-        .join(" / ");
-      card.append(
-        element(
-          "p",
-          "unit-slot-mount",
-          I18n.text("安装部位") +
-            ": " +
-            (all || any || I18n.text("躯干")) +
-            (any ? " · " + I18n.text("任一部位完好即可") : "") +
-            " · " +
-            I18n.text("部位破坏系数") +
-            " " +
-            weapon.partBreakModifier,
-        ),
-      );
+        .map((part) => I18n.text(Rules.partNames[part])).join(" / ");
+      card.append(element("p", "unit-slot-mount",
+        "安装部位：" + (all || any || "躯干") +
+        (any ? " · 任一部位完好即可" : "") +
+        " · 部位破坏系数 " + weapon.partBreakModifier));
       weapons.append(card);
     }
     if (model.supplyAura) {
@@ -867,7 +862,13 @@ const Formation = (() => {
       if (value === model.faction) tag.dataset.faction = value;
       primary.append(tag);
     }
+    const size = Rules.unitSize(model);
+    const sizeTag = element("span", "type-tag unit-size-tag",
+      { small: "小型", medium: "中型", large: "大型" }[size]);
+    sizeTag.dataset.tag = size + "Unit";
+    types.append(sizeTag);
     for (const value of model.unitTags || []) {
+      if (value === "SmallUnit" || value === "LargeUnit" || value === "MediumUnit") continue;
       const tag = element("span", "type-tag", I18n.text(Rules.unitTagName(value)));
       tag.dataset.tag = value;
       types.append(tag);
@@ -1028,12 +1029,83 @@ const Formation = (() => {
         render();
       };
       const actions = element("div", "formation-row-actions");
-      actions.append(details, remove);
+      const pilot = element("button", "formation-pilot-button",
+        "驾驶员 · " + (PilotSystem.profile(entry.pilotId)?.name || PilotSystem.defaultName(model)));
+      pilot.setAttribute("aria-haspopup", "dialog");
+      pilot.onclick = () => openPilot(i);
+      actions.append(details, pilot, remove);
       row.append(icon, label, actions);
       list.append(row);
     });
     list.scrollTop = scrollTop;
   }
+  function closePilot() {
+    if (pilotIndex === null) return;
+    const index = pilotIndex;
+    pilotIndex = null;
+    byId("formationPilotPanel").hidden = true;
+    byId("formationUnitDetail").inert = false;
+    byId("formationMain").inert = !byId("formationUnitDetail").hidden;
+    if (!byId("formationUnitDetail").hidden) byId("formationDetailPilot").focus();
+    else byId("formationUnits")
+      .querySelector('[data-formation-index="' + index + '"] .formation-pilot-button')?.focus();
+  }
+  function openPilot(index) {
+    if (!draft[index]) return;
+    pilotIndex = index;
+    const entry = draft[index],
+      model = UnitModels[entry.unitId + "__" + entry.kitId],
+      list = byId("formationPilotList");
+    byId("formationPilotTitle").textContent =
+      "驾驶员配属 · " + (entry.customName || model.name);
+    list.replaceChildren();
+    const command = PilotSystem.commandUnit(model);
+    const available = PilotSystem.catalog.named.filter((profile) =>
+      profile.faction === model.faction && (!command || profile.commander));
+    for (const profile of [null, ...available]) {
+      const id = profile?.id || null,
+        selected = (entry.pilotId || null) === id,
+        occupied = id && draft.some((other, i) => i !== index && other.pilotId === id),
+        card = element("div", "formation-pilot-card"),
+        details = element("div"),
+        choose = element("button", "", selected ? "已配属" : occupied ? "已配属其他单位" : "配属");
+      card.dataset.selected = String(selected);
+      const portrait = profile ? element("img") : element("span", "formation-pilot-default", "默认");
+      if (profile) {
+        portrait.src = profile.icon;
+        portrait.alt = "";
+      }
+      const stats = profile?.baseStats || Object.fromEntries(
+        Object.entries((command ? PilotSystem.catalog.commanderRanges : PilotSystem.catalog.defaultRanges)).map(([key, range]) =>
+          [key, range[0] + "–" + range[1]]),
+      );
+      details.append(element("strong", "", profile?.name || PilotSystem.defaultName(model)));
+      for (const keys of [["shooting", "melee", "defense", "speed"],
+        ["accuracy", "reaction", "leadership", "awakening"]])
+        details.append(element("small", "",
+          keys.map((key) => PilotSystem.labels[key] + " " + stats[key]).join(" · ")));
+      if (profile) details.append(element("small", "", "本局属性基于以上数值随机浮动 ±5"));
+      choose.disabled = !!selected || !!occupied;
+      choose.onclick = () => {
+        if (id) entry.pilotId = id;
+        else delete entry.pilotId;
+        render();
+        if (detailIndex === index) renderDetail();
+        closePilot();
+      };
+      card.append(portrait, details, choose);
+      list.append(card);
+    }
+    byId("formationUnitDetail").inert = !byId("formationUnitDetail").hidden;
+    byId("formationMain").inert = true;
+    byId("formationPilotPanel").hidden = false;
+    byId("closeFormationPilot").focus();
+  }
+  byId("formationDetailPilot").onclick = () => openPilot(detailIndex);
+  byId("closeFormationPilot").onclick = closePilot;
+  byId("formationPilotPanel").addEventListener("keydown", (event) => {
+    if (event.key === "Escape") { event.stopPropagation(); closePilot(); }
+  });
   byId("closeFormationDetail").onclick = closeDetail;
   byId("formationUnitDetail").addEventListener("keydown", (event) => {
     if (event.key === "Escape") {

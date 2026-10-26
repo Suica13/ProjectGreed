@@ -14,6 +14,7 @@ const Tactics = (() => {
   const hangarModule = typeof UnitHangars !== "undefined" ? UnitHangars : require("./hangars.js");
   const sensorModule =
     typeof UnitSensors !== "undefined" ? UnitSensors : require("./unit-sensors.js");
+  const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
   const onMap = (u) => !!u && u.hp > 0 && !u.embarked;
   const sensors = sensorModule.create({ modelOf, cells, onMap, minovskyAt });
   const turnTransitionMs = 3600;
@@ -101,6 +102,7 @@ const Tactics = (() => {
     )
       throw Error("编组无效，请检查单位点数上限");
     let cost = 0;
+    const assignedPilots = new Set();
     const clean = entries.map((entry) => {
       const alias = catalog.prefabs.find((p) => p.id === entry?.unitId)?.kitAliases?.[entry?.kitId];
       const id = entry?.unitId + "__" + (alias || entry?.kitId),
@@ -108,7 +110,15 @@ const Tactics = (() => {
       if (!model || model.formOnly) throw Error("编组包含不可用单位或武器套件");
       cost += model.cost;
       const customName = normalizeUnitName(entry.customName);
-      return { unitId: model.prefabId, kitId: model.kitId, ...(customName ? { customName } : {}) };
+      const pilotId = pilots.validate(entry.pilotId, model);
+      if (pilotId && assignedPilots.has(pilotId)) throw Error("同一驾驶员不能配属多台单位");
+      if (pilotId) assignedPilots.add(pilotId);
+      return {
+        unitId: model.prefabId,
+        kitId: model.kitId,
+        ...(customName ? { customName } : {}),
+        ...(pilotId ? { pilotId } : {}),
+      };
     });
     if (formationPoints(clean) > unitLimit)
       throw Error("编组单位点数超出上限");
@@ -639,6 +649,7 @@ const Tactics = (() => {
     };
   }
   const scaledModels = new WeakMap();
+  const pilotModels = new WeakMap();
   function performanceModelOf(unit) {
     const base = models[unit.model],
       factor = unit.performance ?? 1;
@@ -663,6 +674,25 @@ const Tactics = (() => {
     }
     return variants.get(factor);
   }
+  function pilotModelOf(unit, base) {
+    const pilot = pilots.of(unit, base);
+    let variants = pilotModels.get(base);
+    if (!variants) pilotModels.set(base, (variants = new WeakMap()));
+    if (!variants.has(pilot)) {
+      const modifiers = pilots.modifiers(unit, base);
+      variants.set(pilot, {
+        ...base,
+        get name() { return base.name; },
+        get description() { return base.description; },
+        get kitName() { return base.kitName; },
+        move: base.move * modifiers.speed,
+        mobility: base.mobility * modifiers.reaction,
+        accuracy: base.accuracy * modifiers.accuracy,
+        pilotModifiers: modifiers,
+      });
+    }
+    return variants.get(pilot);
+  }
   // Derive damage penalties from current parts; never modify a shared catalog or AI variant.
   function environmentOf(g, unit, x = unit.x, y = unit.y) {
     if ((g?.environment ?? unit.environment) === "space") return "space";
@@ -681,7 +711,7 @@ const Tactics = (() => {
     return (models[unit.model].adaptability?.[environmentOf(g, unit, x, y)] ?? 100) / 100;
   }
   function modelOf(unit, g = null) {
-    const original = performanceModelOf(unit),
+    const original = pilotModelOf(unit, performanceModelOf(unit)),
       base = unit.flying ? { ...original, movementType: "air" } : original,
       penalty = parts.penalties(base.partsBreakable === false ? {} : unit),
       environment = environmentOf(g, unit),
@@ -1093,7 +1123,9 @@ const Tactics = (() => {
         const performance = settings.performances?.[seat] ?? 1;
         if (!armyPercentages.some((percent) => percent / 100 === performance))
           throw Error("性能倍率无效");
-        let m = modelOf({ model, performance, environment: map.environment });
+        const pilot = pilots.roll(entry.pilotId || null, seed, seat, i,
+          models[model]);
+        let m = modelOf({ model, performance, environment: map.environment, pilot });
         units.push({
           id: seat + "-" + (settings.formationIndices?.[seat]?.[i] ?? i),
           ownerSeat: seat,
@@ -1112,6 +1144,7 @@ const Tactics = (() => {
             : {}),
           environment: map.environment || "ground",
           model,
+          pilot,
           ...(entry.customName ? { customName: entry.customName } : {}),
           performance,
           team,
@@ -1417,6 +1450,12 @@ const Tactics = (() => {
     let d = dist(a, b);
     return d >= w.min && d <= w.max;
   }
+  function unitSize(model) {
+    const tags = model?.unitTags || model?.sourceStats?.nativeTags || [];
+    if (tags.includes("LargeUnit")) return "large";
+    if (tags.includes("SmallUnit")) return "small";
+    return "medium";
+  }
   function targetModifier(g, target, weapon) {
     const targetModel = modelOf(target);
     if (
@@ -1529,7 +1568,9 @@ const Tactics = (() => {
   function estimate(g, a, b, w, response = "counter", isCounter = false) {
     w = weaponStats(w, a);
     const bonuses = modelOf(a).attackBonuses,
-      categoryBonus = 1 + bonuses[w.type === "melee" ? "melee" : "shooting"] / 100;
+      categoryBonus =
+        (1 + bonuses[w.type === "melee" ? "melee" : "shooting"] / 100) *
+        (modelOf(a, g).pilotModifiers?.[w.type === "melee" ? "melee" : "shooting"] ?? 1);
     const defender = modelOf(b, g),
       ground = terrain[g.tiles[b.y][b.x]],
       cover =
@@ -1539,7 +1580,7 @@ const Tactics = (() => {
             ? (ground.meleeCover ?? 0)
             : ground.cover,
       mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.1875,
-      sizeModifier = w.antiSize?.[defender.ship ? "large" : "small"] || { damage: 1, accuracy: 1 },
+      sizeModifier = w.antiSize?.[unitSize(defender)] || { damage: 1, accuracy: 1 },
       targetFactor = targetModifier(g, b, w),
       sensorFactor = sensors.detected(g, a.team, b) ? 1 : 0.75,
       baseHit =
@@ -1575,7 +1616,8 @@ const Tactics = (() => {
         ),
       ),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
-      finalDamageMultiplier = response === "defend" ? 0.75 : 1,
+      finalDamageMultiplier = (response === "defend" ? 0.75 : 1) *
+        (defender.pilotModifiers?.defense ?? 1),
       strikes = availableStrikes(a, w, b);
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.
     let components = w.damageComponents;
@@ -2139,6 +2181,9 @@ const Tactics = (() => {
         Support: "补给",
         Recon: "侦察",
         Transport: "搭载",
+        SmallUnit: "小型",
+        MediumUnit: "中型",
+        LargeUnit: "大型",
       })[tag] || tag,
     hangars,
     W,
@@ -2213,6 +2258,7 @@ const Tactics = (() => {
     terrain,
     terrainStyle,
     typeNames,
+    unitSize,
     key,
     dist,
     create,

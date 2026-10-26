@@ -372,6 +372,11 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
       new Set(prefab.hangars.map((h) => h.id)).size !== prefab.hangars.length
     )
       throw Error("Invalid unit transport / hangar configuration: " + ref);
+    const sizeTags = ["SmallUnit", "MediumUnit", "LargeUnit"]
+      .filter((tag) => prefab.unitTags.includes(tag));
+    if (sizeTags.length > 1) throw Error("Conflicting unit size tags: " + ref);
+    if (!sizeTags.length)
+      prefab.unitTags.push(prefab.stats.ship ? "LargeUnit" : "MediumUnit");
     prefab.faction = prefab.tags.find((tag) => ["EFSF", "ZEON"].includes(tag));
     if (prefab.schemaVersion !== 2 || result.prefabs.some((p) => p.id === prefab.id))
       throw Error("Invalid prefab: " + ref);

@@ -1,0 +1,289 @@
+{
+  "defaultRanges": {
+    "shooting": [
+      100,
+      109
+    ],
+    "melee": [
+      100,
+      109
+    ],
+    "defense": [
+      100,
+      109
+    ],
+    "speed": [
+      100,
+      109
+    ],
+    "accuracy": [
+      100,
+      109
+    ],
+    "reaction": [
+      100,
+      109
+    ],
+    "leadership": [
+      55,
+      74
+    ],
+    "awakening": [
+      0,
+      0
+    ]
+  },
+  "commanderRanges": {
+    "shooting": [
+      45,
+      55
+    ],
+    "melee": [
+      45,
+      55
+    ],
+    "defense": [
+      45,
+      55
+    ],
+    "speed": [
+      45,
+      55
+    ],
+    "accuracy": [
+      45,
+      55
+    ],
+    "reaction": [
+      45,
+      55
+    ],
+    "leadership": [
+      100,
+      114
+    ],
+    "awakening": [
+      0,
+      0
+    ]
+  },
+  "namedVariation": 5,
+  "named": [
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_YDR",
+      "name": "哈曼·杨德里",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_YDR.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_YDR.png",
+      "baseStats": {
+        "shooting": 175,
+        "melee": 135,
+        "defense": 135,
+        "speed": 150,
+        "accuracy": 155,
+        "reaction": 155,
+        "leadership": 135,
+        "awakening": 35
+      },
+      "commander": true
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_RVL",
+      "name": "约翰·亚伯拉罕·雷比尔",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_RVL.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_RVL.png",
+      "baseStats": {
+        "shooting": 135,
+        "melee": 135,
+        "defense": 170,
+        "speed": 145,
+        "accuracy": 155,
+        "reaction": 160,
+        "leadership": 195,
+        "awakening": 85
+      },
+      "commander": true
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_SHR",
+      "name": "天田士郎",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SHR.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_SHR.png",
+      "baseStats": {
+        "shooting": 160,
+        "melee": 150,
+        "defense": 170,
+        "speed": 150,
+        "accuracy": 160,
+        "reaction": 175,
+        "leadership": 80,
+        "awakening": 35
+      },
+      "commander": false
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_TAM",
+      "name": "提安姆",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_TAM.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_TAM.png",
+      "baseStats": {
+        "shooting": 135,
+        "melee": 135,
+        "defense": 150,
+        "speed": 145,
+        "accuracy": 135,
+        "reaction": 150,
+        "leadership": 170,
+        "awakening": 35
+      },
+      "commander": true
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_YUU",
+      "name": "加岛勇",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_YUU.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_YUU.png",
+      "baseStats": {
+        "shooting": 160,
+        "melee": 155,
+        "defense": 165,
+        "speed": 175,
+        "accuracy": 165,
+        "reaction": 175,
+        "leadership": 105,
+        "awakening": 50
+      },
+      "commander": true
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_RBR",
+      "name": "兰巴·拉尔",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_RBR.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_RBR.png",
+      "baseStats": {
+        "shooting": 160,
+        "melee": 180,
+        "defense": 190,
+        "speed": 180,
+        "accuracy": 165,
+        "reaction": 160,
+        "leadership": 120,
+        "awakening": 35
+      },
+      "commander": true
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_GRN",
+      "name": "基连·扎比",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GRN.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_GRN.png",
+      "baseStats": {
+        "shooting": 135,
+        "melee": 135,
+        "defense": 170,
+        "speed": 145,
+        "accuracy": 155,
+        "reaction": 160,
+        "leadership": 195,
+        "awakening": 80
+      },
+      "commander": true
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_NRS",
+      "name": "诺利斯·巴卡德",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_NRS.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_NRS.png",
+      "baseStats": {
+        "shooting": 160,
+        "melee": 180,
+        "defense": 170,
+        "speed": 180,
+        "accuracy": 160,
+        "reaction": 190,
+        "leadership": 95,
+        "awakening": 35
+      },
+      "commander": false
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_GRM",
+      "name": "卡尔马·扎比",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GRM.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_GRM.png",
+      "baseStats": {
+        "shooting": 135,
+        "melee": 135,
+        "defense": 135,
+        "speed": 165,
+        "accuracy": 155,
+        "reaction": 160,
+        "leadership": 150,
+        "awakening": 35
+      },
+      "commander": true
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_NMBS",
+      "name": "尼姆巴斯·舒特森",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_NMBS.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_NMBS.png",
+      "baseStats": {
+        "shooting": 150,
+        "melee": 185,
+        "defense": 170,
+        "speed": 180,
+        "accuracy": 175,
+        "reaction": 155,
+        "leadership": 70,
+        "awakening": 55
+      },
+      "commander": false
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_ANS",
+      "name": "爱娜·萨哈林",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_ANS.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_ANS.png",
+      "baseStats": {
+        "shooting": 170,
+        "melee": 140,
+        "defense": 150,
+        "speed": 150,
+        "accuracy": 170,
+        "reaction": 175,
+        "leadership": 80,
+        "awakening": 35
+      },
+      "commander": false
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_GNS",
+      "name": "基尼亚斯·萨哈林",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GNS.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_GNS.png",
+      "baseStats": {
+        "shooting": 170,
+        "melee": 140,
+        "defense": 180,
+        "speed": 160,
+        "accuracy": 170,
+        "reaction": 160,
+        "leadership": 115,
+        "awakening": 35
+      },
+      "commander": true
+    }
+  ]
+}

@@ -262,7 +262,7 @@ const AttackControls = (() => {
         for (const weapon of ordinary(unit)) {
           const info = element("div", "weapon");
           info.innerHTML = htmlWeapon(weapon, unit);
-          catalog.append(info);
+          catalog.append(WeaponInfo.card(weapon, info));
         }
         panel.append(catalog);
         return;
@@ -345,7 +345,7 @@ const AttackControls = (() => {
         GameAudio.play("selectWeaponSound");
         update();
       };
-      list.append(b);
+      list.append(WeaponInfo.card(weapon, b));
     }
     available.append(list);
     const confirm = element("button", "", "确认攻击计划");

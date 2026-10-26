@@ -568,6 +568,11 @@ function renderPanel() {
       <span>当前位置</span>${Rules.columnLabel(u.x)}${u.y + 1} ·
       ${Rules.terrainStyle(game.mapId, game.tiles[u.y][u.x]).name}
     </div>`;
+  const pilot = PilotSystem.of(u),
+    pilotLine = element("div", "", "驾驶员 · " + pilot.name),
+    pilotStats = element("div", "", Object.entries(PilotSystem.labels)
+      .map(([key, label]) => label + " " + pilot.stats[key]).join(" · "));
+  stats.prepend(pilotLine, pilotStats);
   stats.append(element("div", "", `行动点 ${Rules.actionPoints(u)}/${Rules.actionBudget(u)}`));
   overview.append(stats);
   const partStatus = element("div", "rule-box");
@@ -759,7 +764,10 @@ function renderPanel() {
     element(
       "p",
       "helper",
-      (m.unitTags || []).map((tag) => I18n.text(Rules.unitTagName(tag))).join(" · "),
+      [{ small: "小型", medium: "中型", large: "大型" }[Rules.unitSize(m)],
+        ...(m.unitTags || []).filter((tag) =>
+          !["SmallUnit", "MediumUnit", "LargeUnit"].includes(tag))
+          .map((tag) => I18n.text(Rules.unitTagName(tag)))].join(" · "),
     ),
   );
   actions.id = "unitActions";
@@ -829,7 +837,7 @@ function renderPanel() {
         if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
         update();
       };
-      list.append(b);
+      list.append(WeaponInfo.card(w, b));
     }
     if (skills) SkillControls.render(list, u, canCommand);
     container.append(list);
@@ -2110,7 +2118,7 @@ function renderReaction() {
         draft.ids = [...previous.map((w) => w.id), cw.id];
         renderReaction();
       };
-      byId("counterList").append(button);
+      byId("counterList").append(WeaponInfo.card(cw, button));
     }
   }
   let counter =

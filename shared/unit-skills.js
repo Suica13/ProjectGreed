@@ -246,6 +246,7 @@ const UnitSkills = (() => {
         ownerSeat: unit.ownerSeat ?? unit.team,
         environment: unit.environment,
         performance: unit.performance ?? 1,
+        pilot: unit.pilot,
         ...(unit.customName ? { customName: unit.customName } : {}),
         angle: unit.angle,
         skillUses: { ...skillUses },
