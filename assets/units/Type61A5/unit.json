@@ -169,7 +169,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 8594,
+    "hp": 8500,
     "en": 500.0,
     "move": 5,
     "mobility": 80.0,
@@ -539,13 +539,13 @@
         "energy": 0.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 1
     },
     "EF_Type61A5_Cannon": {
       "name": "加农炮",
       "type": "shell",
-      "min": 3,
-      "max": 5,
+      "min": 2,
+      "max": 4,
       "hit": 90.0,
       "en": 16.0,
       "sourceName": "EF_Type61A5_Cannon",
@@ -675,7 +675,7 @@
         "energy": 16.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 2
     }
   },
   "mechanics": [

@@ -516,7 +516,7 @@
     "Common_Melee_A": "../../animations/MS_14A__Common_Melee_A.json"
   },
   "stats": {
-    "hp": 35625,
+    "hp": 35500,
     "en": 750.0,
     "move": 7,
     "mobility": 125,

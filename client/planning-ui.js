@@ -8,31 +8,31 @@ const PlanningUI = (() => {
   function move(event, actor = null) {
     const unit = actor || getUnit(event.unitId);
     if (!unit) return;
-    const start = performance.now();
     GameAudio.moveUnit(unit);
     moves.set(unit.id, {
       id: unit.id,
       from: event.from,
       path: event.path,
-      start,
+      // Start when the first map frame is drawn, after snapshot/UI work.
+      start: null,
       step: byId("quick").checked ? 50 : 120,
     });
-    const preview = moves.get(unit.id);
-    if (unit.pendingMove)
-      setTimeout(
-        () => {
-          if (
-            (!moves.has(unit.id) || moves.get(unit.id) === preview) &&
-            getUnit(unit.id)?.pendingMove
-          )
-            update();
-        },
-        preview.path.length * preview.step + 20,
-      );
   }
   function motion(unit, now) {
     const move = moves.get(unit.id);
-    if (move && now < move.start + move.path.length * move.step) return move;
+    if (!move) return null;
+    if (move.start === null) {
+      move.start = now;
+      if (getUnit(unit.id)?.pendingMove)
+        setTimeout(() => {
+          if (
+            (!moves.has(unit.id) || moves.get(unit.id) === move) &&
+            getUnit(unit.id)?.pendingMove
+          )
+            update();
+        }, move.path.length * move.step + 20);
+    }
+    if (now < move.start + move.path.length * move.step) return move;
     moves.delete(unit.id);
     return null;
   }

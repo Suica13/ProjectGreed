@@ -432,6 +432,7 @@ const Net = (() => {
       n.memberId = s.you.id;
     }
     n.started = s.started;
+    Formation.alignWithRoom(s);
     MusicPlayer.sync();
     Formation.refresh();
     if (previousSeat !== n.seat) {

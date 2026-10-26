@@ -150,7 +150,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 7813,
+    "hp": 7500,
     "en": 450.0,
     "move": 5,
     "mobility": 75.0,
@@ -317,8 +317,8 @@
     "EF_Type61_Cannon": {
       "name": "加农炮",
       "type": "shell",
-      "min": 3,
-      "max": 5,
+      "min": 2,
+      "max": 4,
       "hit": 90.0,
       "en": 16.0,
       "sourceName": "EF_Type61_Cannon",
@@ -448,7 +448,7 @@
         "energy": 16.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 2
     }
   },
   "mechanics": [

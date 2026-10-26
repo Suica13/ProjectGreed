@@ -294,7 +294,7 @@
     "Common_Push_A": "../../animations/Common_Push_A.json"
   },
   "stats": {
-    "hp": 15625,
+    "hp": 15500,
     "en": 750,
     "move": 4,
     "mobility": 75,

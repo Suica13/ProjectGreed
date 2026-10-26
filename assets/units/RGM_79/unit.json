@@ -5,7 +5,7 @@
   "code": "RGM-79",
   "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79.ini",
   "stats": {
-    "hp": 26250,
+    "hp": 26500,
     "en": 750.0,
     "move": 6,
     "mobility": 115,

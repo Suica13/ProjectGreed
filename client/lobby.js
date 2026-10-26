@@ -96,7 +96,6 @@ const Lobby = (() => {
     byId("createRoom").title = "";
   }
   function refreshSelections() {
-    byId("lobbyFaction").value = Formation.group();
     const presets = Formation.presets();
     const select = byId("lobbyFormation");
     select.replaceChildren();
@@ -106,20 +105,14 @@ const Lobby = (() => {
       select.add(option);
     }
     select.value = String(Formation.presetIndex());
-    byId("lobbyFactionHint").textContent = byId("newRoomMode").value === "quick"
-      ? "快速战固定使用 PMC，进入房间后自动切换为 PMC 编组。"
-      : "常规战可选择阵营；进入房间后仍可切换。";
     updateRoomEligibility();
   }
-  byId("lobbyFaction").onchange = (event) => {
-    Formation.setGroup(event.target.value);
-    refreshSelections();
-    render(listedRooms);
-  };
+  window.addEventListener("character-selected", () => {
+    if (!byId("lobby").hidden) queueMicrotask(refreshSelections);
+  });
   byId("lobbyFormation").onchange = (event) => {
     Formation.selectPreset(Number(event.target.value));
   };
-  byId("newRoomMode").onchange = refreshSelections;
 
   function close() {
     stopChecks();

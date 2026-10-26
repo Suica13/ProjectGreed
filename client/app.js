@@ -911,7 +911,6 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
     game.mapId,
     game.environment,
     game.team,
-    game.tiles,
     game.deployment,
     game.units.map((u) => [
       u.id,
@@ -937,6 +936,7 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
   ]);
   if (
     mapRangeCache?.game === game &&
+    mapRangeCache.tiles === game.tiles &&
     mapRangeCache.state === state &&
     mapRangeCache.model === Rules.models[chosen?.model]
   )
@@ -1019,6 +1019,7 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
   }
   return (mapRangeCache = {
     game,
+    tiles: game.tiles,
     state,
     model: Rules.models[chosen?.model],
     moveCells,
@@ -1029,16 +1030,10 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
   });
 }
 // Cache only the viewport-sized terrain image, so large maps do not allocate giant canvases.
-// Tiles are immutable during a battle; replacement snapshots are compared once on arrival.
-const mapTerrainCache = { canvas: null, tiles: null, tilesKey: "", viewKey: "" };
+// Map catalog tiles are immutable in battle; each server snapshot copies the same terrain.
+const mapTerrainCache = { canvas: null, viewKey: "" };
 function drawCachedMapTerrain(target, w, h, dpr, tile, ox, oy, immersive, deploymentArea) {
   const cache = mapTerrainCache;
-  if (cache.tiles !== game.tiles) {
-    const tilesKey = JSON.stringify(game.tiles);
-    if (tilesKey !== cache.tilesKey) cache.viewKey = "";
-    cache.tiles = game.tiles;
-    cache.tilesKey = tilesKey;
-  }
   const deploying = !immersive && phase === "deployment";
   const viewKey = JSON.stringify([
     game.mapId,

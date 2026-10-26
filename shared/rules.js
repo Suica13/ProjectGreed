@@ -1993,6 +1993,23 @@ const Tactics = (() => {
       return { response: expected(defense) < expected(evasion) ? "defend" : "evade" };
     return counter ? { response: "counter", weapon: counter.id } : { response: "evade" };
   }
+  // Count damage already committed by this team before assigning another AI attack.
+  function aiTargetPressure(g, team) {
+    const pressure = new Map();
+    for (const attacker of g.units) {
+      const plan = attacker.plan;
+      if (attacker.team !== team || !onMap(attacker) || !plan) continue;
+      const target = g.units.find((unit) => unit.id === plan.target);
+      if (!target || !onMap(target) || target.team === team) continue;
+      for (const id of plan.weapons || [plan.weapon]) {
+        const weapon = modelOf(attacker).weapons.find((entry) => entry.id === id);
+        if (!weapon || (weapon.special?.type === "snipe" && !plan.charged)) continue;
+        const result = estimate(g, attacker, target, weapon);
+        pressure.set(target.id, (pressure.get(target.id) || 0) + result.damage * result.hit / 100);
+      }
+    }
+    return pressure;
+  }
   function aiChoice(g, u, destinations = null) {
     let cells =
         destinations ??
@@ -2001,7 +2018,8 @@ const Tactics = (() => {
         (e) => e.team !== u.team && onMap(e) && sensors.visible(g, u.team, e),
       ),
       best = null;
-    const weapons = modelOf(u).weapons;
+    const weapons = modelOf(u).weapons,
+      pressure = aiTargetPressure(g, u.team);
     // Visibility is fixed during this decision; do not rescan every allied
     // sensor for each cell × enemy × weapon combination.
     const decisionGame = {
@@ -2041,10 +2059,12 @@ const Tactics = (() => {
             canAttack(decisionGame, virtual, e, w)
           ) {
             let ex = estimate(g, virtual, e, w),
+              remaining = Math.max(0, e.hp - (pressure.get(e.id) || 0)),
+              expected = ex.damage * ex.hit / 100,
               s =
                 2 +
-                (ex.damage * ex.hit) / 100000 +
-                Math.min(1, ex.damage / e.hp) * 0.6 -
+                Math.min(expected, remaining) / 1000 +
+                (remaining > 0 ? Math.min(1, expected / remaining) * 0.6 : 0) -
                 c.cost * 0.025 -
                 (destinations ? near * 0.12 : 0);
             if (s > score) {
@@ -2225,6 +2245,7 @@ const Tactics = (() => {
     turnTransitionMs,
     bestResponse,
     aiChoice,
+    aiTargetPressure,
     aiLaunchChoice,
   };
 })();

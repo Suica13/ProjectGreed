@@ -2,8 +2,13 @@
 import copy
 import math
 
-TANKS = {"Type61", "Type61A5"}
+TANK_HP = {"Type61": 7500, "Type61A5": 8500}
 SQUAD_WEAPON = "Squad_Combined_Weapons"
+
+
+def rounded_hp(value):
+    """Round tactical HP to the nearest 500, keeping a positive minimum."""
+    return max(500, math.floor(value / 500 + 0.5) * 500)
 
 
 def combine_squad_weapons(prefab):
@@ -59,8 +64,7 @@ def apply(prefab):
     stats = prefab["stats"]
     source = prefab.setdefault("sourceStats", {})
     base_hp = source.setdefault("v17BaseHp", stats["hp"])
-    multiplier = 1.25 * (1.25 if prefab["id"] in TANKS else 1)
-    stats["hp"] = math.ceil(base_hp * multiplier)
+    stats["hp"] = TANK_HP.get(prefab["id"], rounded_hp(base_hp * 1.25))
     if prefab["id"].startswith("Army_Squad_"):
         stats["cost"] = 0
         if "costBalance" in prefab:

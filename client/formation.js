@@ -2,7 +2,7 @@
 const Formation = (() => {
   const legacyStorageKey = "slg-formations-v1";
   const formationSaveVersion = 3;
-  let group = "PMC";
+  let group = PlayerProfile.faction();
   let storageKey = legacyStorageKey + "." + group;
   const sessionSaves = new Map();
   function defaultSquads(faction) {
@@ -1512,8 +1512,8 @@ const Formation = (() => {
       if (detailIndex !== null || catalogDetail) renderDetail();
     }
   });
+  PlayerProfile.setFormationGroup(group);
   loadCharacter();
-  PlayerProfile.setFaction(group);
   return {
     current,
     open,

@@ -564,7 +564,7 @@
     "Common_Melee_F": "../../animations/Common_Melee_F.json"
   },
   "stats": {
-    "hp": 43750,
+    "hp": 44000,
     "en": 750.0,
     "move": 6,
     "mobility": 120,

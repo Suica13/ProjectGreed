@@ -197,7 +197,7 @@
     "Common_Push_A": "../../animations/Common_Push_A.json"
   },
   "stats": {
-    "hp": 20625,
+    "hp": 20500,
     "en": 750.0,
     "move": 5,
     "mobility": 75.0,

@@ -814,7 +814,7 @@
       }
       .lobby-selection {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
         gap: 12px;
         padding: 12px;
         margin: 12px 0;
@@ -833,14 +833,6 @@
         width: 100%;
         min-width: 0;
         min-height: 38px;
-      }
-      .lobby-selection small {
-        grid-column: 1 / -1;
-        color: var(--muted);
-      }
-      @media (max-width: 560px) {
-        .lobby-selection { grid-template-columns: minmax(0, 1fr); }
-        .lobby-selection small { grid-column: 1; }
       }
       .menu-profile .player-id-label,
       .menu-faction {
@@ -868,16 +860,12 @@
       #menuFactionSelect[data-faction="EFSF"] { color: #65baff; }
       #menuFactionSelect[data-faction="ZEON"] { color: #ff7277; }
       #menuFactionSelect option,
-      #lobbyFaction option,
       #roomMain select.faction-badge option { background: #0c1b25; }
       #menuFactionSelect option[value="PMC"],
-      #lobbyFaction option[value="PMC"],
       #roomMain select.faction-badge option[value="PMC"] { color: #f4f6fa; }
       #menuFactionSelect option[value="EFSF"],
-      #lobbyFaction option[value="EFSF"],
       #roomMain select.faction-badge option[value="EFSF"] { color: #65baff; }
       #menuFactionSelect option[value="ZEON"],
-      #lobbyFaction option[value="ZEON"],
       #roomMain select.faction-badge option[value="ZEON"] { color: #ff7277; }
       .menu-tech-progress {
         display: grid;
@@ -2334,17 +2322,9 @@
           </div>
           <p data-ui-node="node-152" id="roomListStatus" role="status">连接成功后显示房间。</p>
           <div class="lobby-selection">
-            <label for="lobbyFaction">我的阵营
-              <select id="lobbyFaction" data-i18n-ignore>
-                <option value="PMC">PMC</option>
-                <option value="EFSF">地球联邦军[0079]</option>
-                <option value="ZEON">吉翁公国军[0079]</option>
-              </select>
-            </label>
             <label for="lobbyFormation">出战编组预设
               <select id="lobbyFormation" data-i18n-ignore></select>
             </label>
-            <small id="lobbyFactionHint">常规战可选择阵营；快速战固定使用 PMC。</small>
           </div>
           <div data-ui-node="node-158" class="room-list-scroll">
             <table data-ui-node="node-159" class="room-list" aria-label="房间列表">

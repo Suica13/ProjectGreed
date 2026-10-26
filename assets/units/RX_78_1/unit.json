@@ -570,7 +570,7 @@
     "Common_Melee_F": "../../animations/RX_78_1__Common_Melee_F.json"
   },
   "stats": {
-    "hp": 43750,
+    "hp": 44000,
     "en": 900.0,
     "move": 7,
     "mobility": 134,

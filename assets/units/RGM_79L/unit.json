@@ -469,7 +469,7 @@
   "name": "轻装吉姆",
   "description": "拥有极高机动性的强袭型MS",
   "stats": {
-    "hp": 21250,
+    "hp": 21500,
     "en": 650.0,
     "move": 8,
     "mobility": 140,

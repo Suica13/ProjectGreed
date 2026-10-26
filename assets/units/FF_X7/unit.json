@@ -78,7 +78,7 @@
     "AircraftIdle": "../../animations/AircraftIdle.json"
   },
   "stats": {
-    "hp": 10625,
+    "hp": 10500,
     "en": 450.0,
     "move": 10,
     "mobility": 140,

@@ -593,7 +593,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 43750,
+    "hp": 44000,
     "en": 1500.0,
     "move": 5,
     "mobility": 110.0,

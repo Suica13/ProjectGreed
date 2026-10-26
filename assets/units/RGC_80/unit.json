@@ -446,7 +446,7 @@
   "name": "吉姆加农",
   "description": "擅长中距离支援的炮击型MS",
   "stats": {
-    "hp": 23125,
+    "hp": 23000,
     "en": 900.0,
     "move": 5,
     "mobility": 105,

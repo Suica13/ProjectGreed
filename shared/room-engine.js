@@ -977,12 +977,16 @@ function createRoomEngine({
             ["EFSF", "ZEON"].includes(G.modelOf(from).faction)) {
           const owner = room.seats[G.ownerOf(from)];
           if (owner && !owner.bot) {
+            const defeatedOwner = room.seats[G.ownerOf(to)];
+            const aiStrength = room.settings.mode !== "quick" && defeatedOwner?.bot
+              ? G.aiPerformance[G.armySettings(defeatedOwner).difficulty] : 1;
             const rate = (owner.characterFaction === "PMC" ? 0.5 : 1) *
-              (room.settings.mode === "quick" ? 0.25 : 1);
-            room.techAwards.push({
+              (room.settings.mode === "quick" ? 0.25 : 1) * aiStrength;
+            const points = defeatedModel.cost > 0
+              ? Math.max(1, Math.floor(defeatedModel.cost * rate)) : 0;
+            if (points) room.techAwards.push({
               id: randomId(), matchId: room.matchId, memberId: owner.id,
-              faction: G.modelOf(from).faction, targetId: e.to,
-              points: Math.max(1, Math.floor(defeatedModel.cost * rate)),
+              faction: G.modelOf(from).faction, targetId: e.to, points,
             });
           }
         }
@@ -1615,6 +1619,7 @@ function createRoomEngine({
       return { player, action: "rotate", fields: { unitId: u.id, direction: choice.rotation } };
     if (choice && !u.moved && (choice.x !== u.x || choice.y !== u.y))
       return { player, action: "move", fields: { unitId: u.id, x: choice.x, y: choice.y } };
+    const pressure = G.aiTargetPressure(room.game, u.team);
     let best = null;
     for (const target of room.game.units.filter((t) => G.onMap(t) && t.team !== u.team))
       for (const weapon of G.modelOf(u).weapons)
@@ -1625,11 +1630,16 @@ function createRoomEngine({
             continue;
           }
           const estimate = G.estimate(room.game, u, target, weapon);
-          const score = estimate.hit * estimate.damage;
-          if (!best || score > best.score) best = { target, weapon, score };
+          const remaining = Math.max(0, target.hp - (pressure.get(target.id) || 0));
+          const expected = estimate.hit * estimate.damage / 100;
+          const score = Math.min(expected, remaining) +
+            (remaining > 0 && expected >= remaining ? remaining * 0.1 : 0);
+          if (!best || score > best.score) best = { target, weapon, score, remaining };
         }
     if (!best) return { player, action: "wait", fields: { unitId: u.id } };
     const weapons = [best.weapon];
+    let plannedDamage = G.estimate(room.game, u, best.target, best.weapon);
+    plannedDamage = plannedDamage.damage * plannedDamage.hit / 100;
     if (best.weapon.slot !== "skill") {
       const candidates = G.modelOf(u).weapons.filter(
         (w) => w.slot !== "skill" && G.canAttack(room.game, u, best.target, w),
@@ -1640,6 +1650,9 @@ function createRoomEngine({
         return y.damage * y.hit - x.damage * x.hit;
       });
       while (weapons.length < 32) {
+        // A small margin covers misses without spending the entire queue on an
+        // enemy that allied plans already expect to destroy.
+        if (plannedDamage >= best.remaining * 1.25) break;
         const next = candidates.find((w) => {
           try {
             G.attackQueue(room.game, u, best.target, [...weapons, w]);
@@ -1650,6 +1663,8 @@ function createRoomEngine({
         });
         if (!next) break;
         weapons.push(next);
+        const estimate = G.estimate(room.game, u, best.target, next);
+        plannedDamage += estimate.damage * estimate.hit / 100;
       }
     }
 

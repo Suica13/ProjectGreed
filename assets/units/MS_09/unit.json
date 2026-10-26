@@ -478,7 +478,7 @@
     "Common_Melee_A": "../../animations/MS_09__Common_Melee_A.json"
   },
   "stats": {
-    "hp": 31250,
+    "hp": 31500,
     "en": 750.0,
     "move": 8,
     "mobility": 100,

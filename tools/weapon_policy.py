@@ -188,6 +188,18 @@ def configure_nuke(weapon):
             step["damageMultiplier"] = 1
 
 
+def configure_type61_tactical_weapons(prefab):
+    """Turn-based range and AP overrides for the two Type 61 tanks."""
+    cannon_ids = {
+        "Type61": "EF_Type61_Cannon",
+        "Type61A5": "EF_Type61A5_Cannon",
+    }
+    cannon_id = cannon_ids.get(prefab["id"])
+    if cannon_id:
+        prefab["weapons"][cannon_id].update(min=2, max=4, actionCost=2)
+    if prefab["id"] == "Type61A5":
+        prefab["weapons"]["EF_Type61A5_MG"]["actionCost"] = 1
+
 def configure(prefab, native):
     from native_combat import restore
     type61_spg_mortar(prefab)
@@ -289,5 +301,6 @@ def configure(prefab, native):
     prefab["stats"].setdefault("actionPoints", 5)
     for key, weapon in prefab["weapons"].items():
         weapon["actionCost"] = action_cost(prefab, key, weapon)
+    configure_type61_tactical_weapons(prefab)
     from v17_balance import apply as apply_v17_balance
     return apply_v17_balance(prefab)
