@@ -6,7 +6,7 @@ const test = require("node:test"),
   os = require("node:os");
 const { discoverUnits, nextCatalog } = require("../tools/reload-units.cjs"),
   { loadCatalog } = require("../tools/load-catalog.cjs");
-function i18n(languages, saved) {
+function i18n(languages, saved, body = { nodeType: 0 }) {
   const values = new Map(saved ? [["projectgreed.language", saved]] : []);
   const context = {
     navigator: { languages },
@@ -14,7 +14,7 @@ function i18n(languages, saved) {
       getItem: (key) => values.get(key),
       setItem: (key, value) => values.set(key, value),
     },
-    document: { body: { nodeType: 0 }, documentElement: {}, querySelectorAll: () => [] },
+    document: { body, documentElement: {}, querySelectorAll: () => [] },
     window: { dispatchEvent() {} },
     CustomEvent: class {},
     Node: { TEXT_NODE: 3, ELEMENT_NODE: 1 },
@@ -130,7 +130,7 @@ test("native introductions keep only the first content line and missing Japanese
     MS_06F2: "扎古II的后期改修型,加强了装甲与推进器",
     MS_09R: "大魔的宇宙战式样,性能差强人意",
   };
-  for (const prefab of catalog.prefabs.filter(p => Object.hasOwn(expected,p.id))) {
+  for (const prefab of catalog.prefabs.filter((p) => Object.hasOwn(expected, p.id))) {
     assert.equal(prefab.description, expected[prefab.id]);
     assert.equal(prefab.localization.zh.description, prefab.description);
     assert.ok(prefab.localization.en.description.length > 0);
@@ -140,4 +140,60 @@ test("native introductions keep only the first content line and missing Japanese
     for (const model of Object.values(catalog.models).filter((m) => m.prefabId === prefab.id))
       assert.equal(model.description, prefab.description);
   }
+});
+
+test("room, skill and return messages are localized in both languages", () => {
+  for (const language of ["en", "ja"]) {
+    const api = i18n([language]);
+    for (const text of [
+      "选择出生点",
+      "AI行动阶段",
+      "冷却中",
+      "请选择高亮的合法技能目标。",
+      "30秒后所有人返回房间",
+    ])
+      assert.notEqual(api.text(text), text, language + ": " + text);
+    assert.match(api.text("30秒后所有人返回房间"), /30/);
+  }
+});
+test("binding the catalog invalidates earlier untranslated cache entries", () => {
+  const api = i18n(["en"]);
+  assert.equal(api.text("测试新机体"), "测试新机体");
+  api.bindCatalog({
+    prefabs: [
+      {
+        name: "测试新机体",
+        localization: { en: { name: "Test unit" } },
+        weaponKits: [],
+        weapons: {},
+      },
+    ],
+    models: {},
+  });
+  assert.equal(api.text("测试新机体"), "Test unit");
+});
+
+test("form hints translate while player-entered values remain untouched", () => {
+  const attrs = { placeholder: "选择出生点", title: "技能" };
+  const input = {
+    nodeType: 1,
+    tagName: "INPUT",
+    value: "玩家输入的名字",
+    childNodes: [],
+    closest: () => null,
+    hasAttribute: (name) => Object.hasOwn(attrs, name),
+    getAttribute: (name) => attrs[name],
+    setAttribute: (name, value) => {
+      attrs[name] = value;
+    },
+  };
+  const api = i18n(["en"], undefined, input);
+  api.refresh();
+  assert.equal(attrs.placeholder, "Choose spawn point");
+  assert.equal(attrs.title, "Skill");
+  assert.equal(input.value, "玩家输入的名字");
+  api.setLanguage("ja");
+  assert.equal(attrs.placeholder, "出撃地点を選択");
+  api.setLanguage("zh");
+  assert.equal(attrs.placeholder, "选择出生点");
 });

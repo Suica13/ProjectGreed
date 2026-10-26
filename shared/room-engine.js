@@ -124,6 +124,7 @@ function createRoomEngine({
     }
     return view;
   };
+  const combatVisibility = new WeakMap();
   function state(room, ack, recipient) {
     const team =
       recipient?.seat === null || recipient?.seat === undefined ? null : G.seatTeam(recipient.seat);
@@ -205,7 +206,17 @@ function createRoomEngine({
           weapons: choice.counterIds || [choice.counterId],
         })),
       // 整批应战完成后一次广播本批全部结果，重连直接使用最终状态。
-      combats,
+      combats: combats.map((battle) => ({
+        ...battle,
+        visibleActorIds: battle.actors
+          .filter(
+            (actor) =>
+              team === null ||
+              actor.team === team ||
+              (combatVisibility.get(battle)?.[team] || intel.visibleIds).includes(actor.id),
+          )
+          .map((actor) => actor.id),
+      })),
       connected: connected(room),
       started: room.started,
       hostId: room.hostId,
@@ -429,6 +440,7 @@ function createRoomEngine({
       ]),
     );
     const battles = planner.resolve(room);
+    for (const battle of battles) combatVisibility.set(battle, visibleBeforeCombat);
     for (const battle of battles)
       for (const e of battle.events) {
         for (const evacuation of e.evacuations || [])
@@ -567,6 +579,9 @@ function createRoomEngine({
   const playerBudget = (room, player) => G.armyBudget(room.settings, player);
   const playerUnitLimit = (room, player) => G.armyUnitLimit(room.settings, player);
   const playerRestrictions = (room, player) => G.armyRestrictions(room.settings, player);
+  // Preview generation is deterministic and independent of the room roster.
+  // Cache by all effective inputs, never by mutable player/room identity.
+  const previewArmies = new Map();
   function randomArmy(room, player, seed = randomSeed()) {
     if (player.formationPreset)
       return G.validateFormation(
@@ -574,12 +589,20 @@ function createRoomEngine({
         Infinity,
         playerUnitLimit(room, player),
       );
-    return G.randomFormation(
+    const args = [
       seed,
       playerBudget(room, player),
       playerRestrictions(room, player),
       playerUnitLimit(room, player),
-    );
+    ];
+    const key = JSON.stringify(args);
+    if (seed === 7319 && previewArmies.has(key)) return structuredClone(previewArmies.get(key));
+    const army = G.randomFormation(...args);
+    if (seed === 7319) {
+      if (previewArmies.size >= 128) previewArmies.clear();
+      previewArmies.set(key, structuredClone(army));
+    }
+    return army;
   }
   function checkAIArmy(room, player) {
     if (

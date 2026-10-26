@@ -1,6 +1,7 @@
 /* 大地图交战演出：使用地图坐标和已裁定逐发结果，不修改权威战局。 */
 const MapCombat = (() => {
   const restingPoses = new Map();
+  const visibleActors = new Set();
   const displayed = new Map(),
     unitStartDelays = new Map();
   let frame = null,
@@ -12,6 +13,7 @@ const MapCombat = (() => {
   const clone = (value) => JSON.parse(JSON.stringify(value));
   function reset() {
     displayed.clear();
+    visibleActors.clear();
     restingPoses.clear();
     unitStartDelays.clear();
     frame = null;
@@ -23,9 +25,11 @@ const MapCombat = (() => {
     byId("mapCombatControls").hidden = true;
   }
   function seed(battles) {
-    for (const battle of battles)
+    for (const battle of battles) {
+      for (const id of battle.visibleActorIds || []) visibleActors.add(id);
       for (const actor of battle.actors)
         if (!displayed.has(actor.id)) displayed.set(actor.id, clone(actor));
+    }
   }
   function begin(view, random = Math.random) {
     frame = null;
@@ -103,11 +107,16 @@ const MapCombat = (() => {
     });
     const [source, target] = actors;
     // Use the actual visible dodge position across weapon queues and counter delays.
-    for (const [actor, field] of [[source, "sourceDodgeSlot"], [target, "targetDodgeSlot"]]) {
+    for (const [actor, field] of [
+      [source, "sourceDodgeSlot"],
+      [target, "targetDodgeSlot"],
+    ]) {
       const previous = previousPoses.get(actor.unit.id);
       if (previous)
-        event[field] = Math.max(-1, Math.min(1,
-          (previous.y - actor.y) / (ART.presentation.dodgeDistance * actor.scale)));
+        event[field] = Math.max(
+          -1,
+          Math.min(1, (previous.y - actor.y) / (ART.presentation.dodgeDistance * actor.scale)),
+        );
     }
     const aim = (Math.atan2(target.x - source.x, -(target.y - source.y)) * 180) / Math.PI;
     source.angle = Rules.modelOf(source.unit).ship ? source.unit.angle : aim;
@@ -123,8 +132,15 @@ const MapCombat = (() => {
   }
   function commit(view, parallel = false) {
     for (const [id, pose] of framePoses())
-      restingPoses.set(id, { x: pose.x, y: pose.y, angle: pose.angle,
-        clip: null, time: 0, moving: false, hidden: pose.hidden });
+      restingPoses.set(id, {
+        x: pose.x,
+        y: pose.y,
+        angle: pose.angle,
+        clip: null,
+        time: 0,
+        moving: false,
+        hidden: pose.hidden,
+      });
     const event = view.events[view.index],
       target = displayed.get(event.to),
       source = displayed.get(event.from);
@@ -395,7 +411,12 @@ const MapCombat = (() => {
         )
           for (const exit of item.event.evacuations || []) visibleExits.add(exit.unitId);
     }
-    return game.units
+    // Actors were authorized when combat happened. The final fog snapshot can
+    // omit them after a scout dies; keep them only for this playback's lifetime.
+    const roster = new Map(game.units.map((unit) => [unit.id, unit]));
+    for (const [id, unit] of displayed)
+      if (!roster.has(id) && visibleActors.has(id) && !unit.visualOnly) roster.set(id, unit);
+    return [...roster.values()]
       .filter((u) => !u.embarked && (!pendingExits.has(u.id) || visibleExits.has(u.id)))
       .map((unit) => {
         const visual = displayed.get(unit.id) || unit;

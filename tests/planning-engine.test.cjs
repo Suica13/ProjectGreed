@@ -801,3 +801,18 @@ test("recon skills are authoritative, deduplicated and synchronize only allied c
   assert.equal(act(1,"sync").game.visionAreas.length,0);
   assert.equal(a.en,en-130);
 });
+
+test("playback visibility survives lethal resolution without revealing the other team's intel", (t) => {
+  const { room, act, frames, clients } = fixture(t);
+  const [a, b] = room.game.units;
+  b.hp = 1;
+  act(0, "attack", { unitId: a.id, targetId: b.id, weaponId: "EF_90mmMG" });
+  act(0, "end_turn");
+  act(1, "respond", { response: "defend" });
+  assert.ok(b.hp <= 0, "fixture must remove the target from final sensor visibility");
+  const state = frames.get(clients[0]);
+  assert.equal(state.phase, "playback");
+  assert.ok(!state.game.units.some((unit) => unit.id === b.id));
+  assert.ok(state.combats[0].visibleActorIds.includes(b.id));
+  assert.equal(state.combats[0].visibleBy, undefined);
+});

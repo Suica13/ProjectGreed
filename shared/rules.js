@@ -1080,6 +1080,20 @@ const Tactics = (() => {
   function reachable(g, u, starts = null) {
     if (!onMap(u)) return new Map();
     const moveLimit = modelOf(u).move;
+    // A search does not mutate the board. Evaluate each destination's expensive
+    // collision/terrain/ZOC checks once, even when reached from several edges.
+    const stepCosts = new Map();
+    function stepCost(x, y) {
+      const id = key(x, y);
+      if (!stepCosts.has(id))
+        stepCosts.set(
+          id,
+          fits(g, u, x, y, u.angle, true)
+            ? Math.max(...cells(u, x, y).map((c) => movementCost(g, u, c.x, c.y)))
+            : Infinity,
+        );
+      return stepCosts.get(id);
+    }
     const initial = starts || [{ x: u.x, y: u.y, cost: 0, path: [] }];
     let best = new Map(initial.filter((p) => p.cost <= moveLimit).map((p) => [key(p.x, p.y), p])),
       queue = [...best.values()];
@@ -1096,8 +1110,7 @@ const Tactics = (() => {
         let x = n.x + dx,
           y = n.y + dy;
         if (x < 0 || x >= mapWidth(g) || y < 0 || y >= mapHeight(g)) continue;
-        if (!fits(g, u, x, y, u.angle, true)) continue;
-        let cost = n.cost + Math.max(...cells(u, x, y).map((c) => movementCost(g, u, c.x, c.y)));
+        let cost = n.cost + stepCost(x, y);
         if (cost > moveLimit) continue;
         let k = key(x, y);
         if (best.has(k) && best.get(k).cost <= cost) continue;
@@ -1831,6 +1844,13 @@ const Tactics = (() => {
         (e) => e.team !== u.team && onMap(e) && sensors.visible(g, u.team, e),
       ),
       best = null;
+    const weapons = modelOf(u).weapons;
+    // Visibility is fixed during this decision; do not rescan every allied
+    // sensor for each cell × enemy × weapon combination.
+    const decisionGame = {
+      ...g,
+      intel: { ...g.intel, team: u.team, visibleIds: enemies.map((e) => e.id) },
+    };
     if (!destinations && models[u.model]?.ship && !u.moved)
       for (const direction of [-1, 1])
         if (canRotate(g, u, direction)) {
@@ -1856,11 +1876,12 @@ const Tactics = (() => {
         target = null,
         weapon = null;
       for (const e of enemies)
-        for (const w of modelOf(u).weapons)
+        for (const w of weapons)
           if (
+            inRange(virtual, e, w) &&
             (!destinations || w.slot !== "skill") &&
             actionCost(w) <= actionPoints(u) + (u.plan?.actionCost ?? 0) &&
-            canAttack(g, virtual, e, w)
+            canAttack(decisionGame, virtual, e, w)
           ) {
             let ex = estimate(g, virtual, e, w),
               s =

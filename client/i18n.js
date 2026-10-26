@@ -105,6 +105,7 @@ const I18n = (() => {
       for (const skill of model.skills || []) bind(skill);
     }
     rebuildFragments();
+    cache.clear();
   }
   function rebuildFragments() {
     fragmentRegex = new RegExp(
@@ -118,11 +119,11 @@ const I18n = (() => {
   }
   const ignored = (element) =>
     element?.closest(
-      'script,style,textarea,input,[contenteditable="true"],[data-i18n-ignore],[data-developer-only]',
+      'script,style,[contenteditable="true"],[data-i18n-ignore],[data-developer-only]',
     );
   function translateNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
-      if (ignored(node.parentElement)) return;
+      if (ignored(node.parentElement) || node.parentElement?.closest("input,textarea")) return;
       let source = textSources.get(node);
       if (!source || node.nodeValue !== source.rendered) source = { original: node.nodeValue };
       source.rendered = text(source.original);
@@ -142,6 +143,8 @@ const I18n = (() => {
       attributeSources.set(node, entries);
       if (node.getAttribute(key) !== source.rendered) node.setAttribute(key, source.rendered);
     }
+    // Translate form hints, never player-entered values or textarea contents.
+    if (["INPUT", "TEXTAREA"].includes(node.tagName)) return;
     for (const child of node.childNodes) translateNode(child);
   }
   let observer;
