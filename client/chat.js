@@ -62,6 +62,7 @@ const Chat = (() => {
     }
   }
   function refreshStatus() {
+    refreshExports();
     refreshChannels();
     const writable = connected() && ChatChannels.canSend(seat(), selectedChannel);
     for (const view of views) {
@@ -115,16 +116,60 @@ const Chat = (() => {
       for (const name of byId(view.lines).querySelectorAll("[data-member-id]"))
         name.className = playerNameClass(name.dataset.memberId, snapshot.hostId, snapshot.you?.id);
   }
-  // Export only the server-provided perspective. Full history arrives after returning to the room.
-  let battleLog = [];
+  let battleLog = [],
+    logExport = null,
+    exportChoice = null;
+  const exportSelectors = ["battleLogPerspective", "roomLogPerspective"];
+  const perspectiveLabel = (value) =>
+    value === "global" ? I18n.text("上帝视角") : I18n.text("队伍") + (Number(value.slice(5)) + 1);
+  function refreshExports() {
+    const options = logExport?.options || [];
+    for (const id of ["showLog", "roomShowLog"])
+      byId(id).textContent = logExport ? "LOG · " + perspectiveLabel(logExport.perspective) : "LOG";
+    for (const id of exportSelectors) {
+      const select = byId(id);
+      if (!select) continue;
+      if (
+        Array.from(select.options)
+          .map((option) => option.value)
+          .join("|") !== options.join("|")
+      ) {
+        select.replaceChildren();
+        for (const value of options) select.add(new Option(perspectiveLabel(value), value));
+      }
+      select.value = exportChoice || "";
+      select.hidden = options.length < 2;
+      select.disabled = !!Net.awaiting;
+    }
+    for (const id of ["downloadBattleLog", "roomDownloadBattleLog"]) {
+      byId(id).disabled = Net.active
+        ? !options.includes(exportChoice) || !!Net.awaiting
+        : !battleLog.length;
+      byId(id).title =
+        Net.active && !options.length
+          ? "全局战报在对局结束或全员返回房间时开放下载。"
+          : "下载战斗LOG";
+    }
+  }
   function downloadLog() {
-    if (!battleLog.length) return;
-    const contents = "\uFEFF" + battleLog.slice().reverse().join("\r\n") + "\r\n";
+    if (Net.active) {
+      if (!logExport?.options.includes(exportChoice) || Net.awaiting) return;
+      Net.request("download_log", { perspective: exportChoice });
+      return;
+    }
+    if (battleLog.length) saveLog(battleLog, "global");
+  }
+  function saveLog(entries, perspective) {
+    const contents = "\uFEFF" + entries.slice().reverse().join("\r\n") + "\r\n";
     const url = URL.createObjectURL(new Blob([contents], { type: "text/plain;charset=utf-8" }));
     const link = document.createElement("a");
     link.href = url;
     link.download =
-      "ProjectGreed-battle-log-" + new Date().toISOString().replace(/[:.]/g, "-") + ".txt";
+      "ProjectGreed-battle-log-" +
+      (perspective === "global" ? "global" : "team-" + (Number(perspective.slice(5)) + 1)) +
+      "-" +
+      new Date().toISOString().replace(/[:.]/g, "-") +
+      ".txt";
     link.hidden = true;
     document.body.append(link);
     link.click();
@@ -137,8 +182,7 @@ const Chat = (() => {
   }
   function setLog(entries, names = game.units.map((unit) => unit.customName).filter(Boolean)) {
     battleLog = entries.slice();
-    for (const id of ["downloadBattleLog", "roomDownloadBattleLog"])
-      byId(id).disabled = !battleLog.length;
+    refreshExports();
     for (const id of ["log", "roomCombatLog"]) {
       const list = byId(id),
         scrollTop = list.scrollTop;
@@ -155,8 +199,27 @@ const Chat = (() => {
       list.scrollTop = scrollTop;
     }
   }
-  let matchId = null;
+  for (const id of exportSelectors) {
+    if (byId(id))
+      byId(id).onchange = () => {
+        exportChoice = byId(id).value;
+        refreshExports();
+      };
+  }
+  let matchId = null,
+    exportMatchId = null;
   function setSnapshot(snapshot) {
+    const next = snapshot.logExport || { options: [], perspective: "global", unlocked: false };
+    if (
+      snapshot.matchId !== exportMatchId ||
+      next.perspective !== logExport?.perspective ||
+      !next.options.includes(exportChoice)
+    )
+      exportChoice = next.options.includes(next.perspective)
+        ? next.perspective
+        : next.options[0] || null;
+    exportMatchId = snapshot.matchId;
+    logExport = next;
     if (snapshot.started && snapshot.matchId !== matchId) {
       matchId = snapshot.matchId;
       selectTab(Net.local ? "log" : "chat");
@@ -195,6 +258,7 @@ const Chat = (() => {
     refreshStatus();
   }
   function reset() {
+    logExport = exportChoice = exportMatchId = null;
     clearTimeout(timer);
     setLog([]);
     selectRoomTab("chat");
@@ -270,12 +334,16 @@ const Chat = (() => {
     for (const view of views)
       for (const option of byId(view.channel).options)
         option.textContent = ChatChannels.label(option.value);
+    for (const id of exportSelectors)
+      if (byId(id))
+        for (const option of byId(id).options) option.textContent = perspectiveLabel(option.value);
     refreshStatus();
   });
   render();
   return {
     setSnapshot,
     setLog,
+    saveLog,
     selectRoomTab,
     receive,
     reject,

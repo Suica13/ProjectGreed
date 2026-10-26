@@ -31,7 +31,9 @@ const PlanningUI = (() => {
       canvas.dataset.counterCandidateCount =
         0;
     if (battleView?.mapBattle || Net.snapshot?.phase === "playback") return;
-    const viewerTeam = Net.active && !Net.isSpectator() ? Net.team() : null;
+    const viewerTeam = Net.active
+      ? (Net.snapshot?.viewTeam ?? (Net.isSpectator() ? null : Net.team()))
+      : null;
     const responding = Net.active ? Net.snapshot?.phase === "reaction" : phase === "reaction";
     const focusTarget = responding ? pending?.target : null;
     function draw(unit, target, counter = false, candidate = false) {

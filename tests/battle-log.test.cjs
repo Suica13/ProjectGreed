@@ -17,6 +17,7 @@ function chatFixture() {
       clientHeight: 0,
       replaceChildren(...children) {
         this.children = children;
+        this.options = [];
       },
       setAttribute() {},
       add(option) {
@@ -41,7 +42,8 @@ function chatFixture() {
     WebSocket: { OPEN: 1 },
     game: { units: [] },
     byId,
-    ChatChannels: { label: () => "全部" },
+    ChatChannels: require("../shared/chat-channels.js"),
+    I18n: { text: (text) => text },
     Option: function (text, value) {
       return { text, value };
     },
@@ -63,7 +65,7 @@ function chatFixture() {
     clearTimeout() {},
   });
   vm.runInContext(fs.readFileSync("client/chat.js", "utf8") + "\nglobalThis.chat=Chat;", context);
-  return { chat: context.chat, byId, downloads, blobs };
+  return { chat: context.chat, byId, downloads, blobs, context };
 }
 
 test("game and room download the entire chronological UTF-8 log while displaying only recent rows", async () => {
@@ -126,4 +128,48 @@ test("offline combat logs destroyed body parts and ship modules without duplicat
   assert.equal(lines[0].split("头部").length, 2);
   context.logEvent({ from: "a", to: "b", weapon: "test", hit: false, after: 100 });
   assert.ok(!lines[1].includes("部位破坏"));
+});
+
+test("network download controls follow authorized perspectives and never export stale cached global history", () => {
+  const { chat, byId, blobs, context } = chatFixture();
+  const requests = [];
+  Object.assign(context.Net, {
+    active: true,
+    memberId: "viewer",
+    socket: { readyState: 1 },
+    request: (action, fields) => requests.push({ action, ...fields }),
+  });
+  const snapshot = (perspective, options, unlocked = false) => ({
+    started: true,
+    matchId: "match",
+    you: { id: "viewer", seat: null },
+    game: { units: [] },
+    chat: [],
+    log: [perspective + "-entry"],
+    logExport: { perspective, options, unlocked },
+  });
+  const show = (...args) => {
+    const s = snapshot(...args);
+    context.Net.snapshot = s;
+    chat.setSnapshot(s);
+  };
+  show("global", []);
+  assert.equal(byId("downloadBattleLog").disabled, true);
+  byId("downloadBattleLog").onclick();
+  assert.equal(requests.length, 0);
+  show("team:0", ["team:0"]);
+  byId("downloadBattleLog").onclick();
+  assert.deepEqual(requests[0], { action: "download_log", perspective: "team:0" });
+  assert.equal(blobs.length, 0, "wait for an authorized server response before saving");
+  show("team:0", ["global", "team:0", "team:1"], true);
+  byId("roomLogPerspective").value = "team:1";
+  byId("roomLogPerspective").onchange();
+  assert.equal(byId("battleLogPerspective").value, "team:1");
+  byId("roomDownloadBattleLog").onclick();
+  assert.equal(requests[1].perspective, "team:1");
+  show("team:0", ["team:0"]);
+  assert.equal(byId("roomLogPerspective").value, "team:0");
+  show("global", []);
+  byId("roomDownloadBattleLog").onclick();
+  assert.equal(requests.length, 2);
 });

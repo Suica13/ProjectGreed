@@ -191,6 +191,10 @@ const BattleHUD = (() => {
       (spectators ? " · " + I18n.text("观战玩家") + ": " + spectators : "");
     byId("hudPlayerCount").title = byId("hudPlayerCount").textContent;
   }
+  byId("spectatorView").onchange = () => {
+    const value = byId("spectatorView").value;
+    Net.request("spectate", { team: value === "global" ? null : Number(value) });
+  };
   function refresh() {
     const active = pageView === "game",
       unit = getUnit(selected),
@@ -215,7 +219,29 @@ const BattleHUD = (() => {
     const actionActive =
       active && !!unit && ["idle", "deployment"].includes(phase) && pickingAction();
     scene.dataset.actionStage = actionActive ? mode : "none";
-    byId("hudActionBand").hidden = !actionActive;
+    const spectating = active && Net.active && Net.seat === null && Net.started;
+    byId("hudActionBand").hidden = !actionActive && !spectating;
+    byId("hudCancelAction").hidden = spectating;
+    byId("spectatorViewControl").hidden = !spectating;
+    if (spectating) {
+      const select = byId("spectatorView"),
+        values = ["global", ...(Net.snapshot?.viewTeams || []).map(String)];
+      if (
+        Array.from(select.options)
+          .map((option) => option.value)
+          .join("|") !== values.join("|")
+      ) {
+        select.replaceChildren();
+        for (const value of values) select.add(new Option("", value));
+      }
+      for (const option of select.options)
+        option.textContent =
+          option.value === "global"
+            ? I18n.text("上帝视角")
+            : I18n.text("队伍") + (Number(option.value) + 1);
+      select.value = Net.snapshot?.viewTeam === null ? "global" : String(Net.snapshot?.viewTeam);
+      select.disabled = !!Net.awaiting || Net.socket?.readyState !== WebSocket.OPEN;
+    }
     const attackPlanner = byId("hudAttackPlanner"),
       editor = byId("attackEditor");
     attackPlanner.replaceChildren();

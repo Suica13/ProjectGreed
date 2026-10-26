@@ -109,13 +109,31 @@ function createRoomEngine({
       broadcast(room);
     }
   }
+  const logTeamIds = (room) =>
+    room.logTeamIds ||
+    [...new Set(room.seats.map((_, seat) => G.seatTeam(seat)))].sort((a, b) => a - b);
+  const viewTeam = (member) =>
+    member?.seat === null
+      ? (member.viewTeam ?? null)
+      : member?.seat === undefined
+        ? null
+        : G.seatTeam(member.seat);
+  const logPerspective = (team) => (team === null ? "global" : "team:" + team);
+  const logsUnlocked = (room) =>
+    !!room.matchId && (!!room.logsUnlocked || room.phase === "finished" || !!room.returnCountdown);
+  function exportPerspectives(room, member) {
+    if (!room.matchId) return [];
+    if (logsUnlocked(room)) return ["global", ...logTeamIds(room).map(logPerspective)];
+    const team = viewTeam(member);
+    return team === null ? [] : [logPerspective(team)];
+  }
   // 公开快照不包含随机 seed；席位 token 不放入广播。
   const safeGame = (game, recipient, intel) => {
     let { seed, partSeed, ...view } = game;
-    if (recipient?.seat !== null && recipient?.seat !== undefined)
+    if (intel)
       view.units = game.units
-        .filter((u) => u.team === G.seatTeam(recipient.seat) || intel.visibleIds.includes(u.id))
-        .map((u) => (u.team === G.seatTeam(recipient.seat) ? u : { ...u, origin: null }));
+        .filter((u) => u.team === intel.team || intel.visibleIds.includes(u.id))
+        .map((u) => (u.team === intel.team ? u : { ...u, origin: null }));
     if (intel) {
       view.visionAreas = (game.visionAreas || []).filter((area) => area.team === intel.team);
       view.intel = intel;
@@ -126,8 +144,7 @@ function createRoomEngine({
   };
   const combatVisibility = new WeakMap();
   function state(room, ack, recipient) {
-    const team =
-      recipient?.seat === null || recipient?.seat === undefined ? null : G.seatTeam(recipient.seat);
+    const team = viewTeam(recipient);
     const intel = team === null ? null : G.sensors.view(room.game, team);
     const known = (id) =>
       team === null ||
@@ -248,7 +265,14 @@ function createRoomEngine({
           armySettings: G.armySettings(member),
         })),
       you: recipient ? { id: recipient.id, seat: recipient.seat } : undefined,
-      log: team === null || !room.started ? room.log : room.teamLogs?.[team] || [],
+      viewTeam: team,
+      viewTeams: logTeamIds(room),
+      logExport: {
+        unlocked: logsUnlocked(room),
+        perspective: logPerspective(team),
+        options: exportPerspectives(room, recipient),
+      },
+      log: team === null || !room.matchId ? room.log : room.teamLogs?.[team] || [],
       logNames: !room.started
         ? room.logNames || []
         : [
@@ -335,6 +359,7 @@ function createRoomEngine({
     returnTimers.delete(room);
     clearTimeout(resultTimers.get(room));
     resultTimers.delete(room);
+    room.logsUnlocked = true;
     room.game = G.create(false, randomSeed());
     room.started = false;
     room.phase = "waiting";
@@ -704,6 +729,10 @@ function createRoomEngine({
     // 上一局日志保留到新一局正式进入最终编组。
     room.log = [];
     room.teamLogs = {};
+    room.logTeamIds = [...new Set(room.seats.map((_, seat) => G.seatTeam(seat)))].sort(
+      (a, b) => a - b,
+    );
+    room.logsUnlocked = false;
     room.logNames = [];
     log(room, "进入最终编组，确认队友配置后准备出击。");
   }
@@ -1116,7 +1145,7 @@ function createRoomEngine({
     room.log.unshift(text);
     room.teamLogs ||= {};
     const involved = units.filter(Boolean);
-    for (const team of new Set(room.game.units.map((u) => u.team))) {
+    for (const team of logTeamIds(room)) {
       if (teams && !teams.includes(team)) continue;
       const history = (room.teamLogs[team] ||= []);
       const seen = (u) =>
@@ -1175,6 +1204,24 @@ function createRoomEngine({
     let id = msg.id;
     if (typeof id !== "string" || id.length < 4 || id.length > 100) throw Error("请求编号无效");
     const cache = member.requests;
+    // Recheck every download, including retried IDs after a seat or match change.
+    if (msg.action === "download_log") {
+      if (msg.matchId !== room.matchId || !room.matchId) throw Error("战报所属对局已更新。");
+      if (!exportPerspectives(room, member).includes(msg.perspective))
+        throw Error("对局中只能下载当前队伍视角的战报。");
+      const entries =
+        msg.perspective === "global"
+          ? room.log
+          : room.teamLogs?.[Number(msg.perspective.slice(5))] || [];
+      send(ws, {
+        type: "battle_log",
+        ack: id,
+        matchId: room.matchId,
+        perspective: msg.perspective,
+        log: entries.slice(),
+      });
+      return;
+    }
     if (cache.has(id)) {
       const cached = cache.get(id);
       if (cached?.type === "chat") {
@@ -1184,7 +1231,7 @@ function createRoomEngine({
       } else send(ws, state(room, id, member));
       return;
     }
-    if (room.returnCountdown && !["sync", "chat", "return_room"].includes(msg.action))
+    if (room.returnCountdown && !["sync", "chat", "return_room", "spectate"].includes(msg.action))
       throw Error("正在返回房间，请稍候。");
     if (msg.action === "playback_ready") {
       const playback = room.playback;
@@ -1207,6 +1254,25 @@ function createRoomEngine({
       cache.set(id, true);
       room.revision++;
       broadcast(room, id);
+      return;
+    }
+    if (msg.action === "spectate") {
+      if (member.seat !== null) throw Error("只有观战玩家可以切换视角。");
+      if (
+        msg.matchId !== room.matchId ||
+        !Number.isSafeInteger(msg.revision) ||
+        msg.revision > room.revision
+      )
+        throw Error("对局已更新，请重新同步。");
+      if (
+        msg.team !== null &&
+        (!Number.isInteger(msg.team) || !logTeamIds(room).includes(msg.team))
+      )
+        throw Error("观战队伍无效。");
+      member.viewTeam = msg.team;
+      cache.set(id, true);
+      if (cache.size > 512) cache.delete(cache.keys().next().value);
+      send(ws, state(room, id, member));
       return;
     }
     if (msg.action === "sync") {

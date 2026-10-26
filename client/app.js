@@ -312,9 +312,7 @@ function update() {
 // 左侧只按当前视角显示我军；观战者可查看两队，每名所有者单独成组。
 function renderRoster(busy) {
   const viewerTeam = Net.active
-    ? Net.seat === null
-      ? null
-      : Rules.seatTeam(Net.seat)
+    ? (Net.snapshot?.viewTeam ?? (Net.seat === null ? null : Rules.seatTeam(Net.seat)))
     : game.ai
       ? 0
       : null;

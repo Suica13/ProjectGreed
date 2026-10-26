@@ -1350,3 +1350,23 @@
 .hangar-help p { margin: 6px 0; }
 .hangar-unit { flex-wrap: wrap; }
 .hangar-unit-info { flex-basis: 200px; }
+
+#gameScene #spectatorViewControl {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border: 1px solid #4e778c;
+  background: #14232d;
+  color: #c4e3ee;
+  white-space: nowrap;
+}
+#spectatorView,
+#battleLogPerspective,
+#roomLogPerspective {
+  max-width: 150px;
+  padding: 5px 8px;
+  color: #d5e7ef;
+  background: #14232d;
+  border: 1px solid #4e778c;
+}

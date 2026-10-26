@@ -113,7 +113,11 @@ const Net = (() => {
   }
   // 所有游戏动作从这里发送，自动附带唯一请求 ID 和当前版本号。
   function request(action, fields = {}) {
-    if (n.snapshot?.returnCountdown && !["sync", "return_room"].includes(action)) return;
+    if (
+      n.snapshot?.returnCountdown &&
+      !["sync", "return_room", "download_log", "spectate"].includes(action)
+    )
+      return;
     if (!n.active || n.socket?.readyState !== WebSocket.OPEN) {
       note("尚未连接服务端");
       return;
@@ -196,6 +200,7 @@ const Net = (() => {
     n.memberId = null;
     n.started = false;
     n.spectatorBattleSeen = null;
+    n.appliedViewTeam = undefined;
     status("未连接");
   }
   // 两种传输都将裁定后的消息交给同一套快照恢复逻辑。
@@ -223,6 +228,11 @@ const Net = (() => {
       if (n.snapshot && !(n.snapshot.chat || []).some((old) => old.id === msg.message.id))
         n.snapshot.chat = [...(n.snapshot.chat || []), msg.message].slice(-100);
       Chat.receive(msg.message, msg.ack);
+    } else if (msg.type === "battle_log") {
+      if (msg.ack !== n.awaiting?.id) return;
+      n.awaiting = null;
+      if (msg.matchId === n.snapshot?.matchId) Chat.saveLog(msg.log, msg.perspective);
+      update();
     } else if (msg.type === "state") {
       if (n.memberId === null || msg.revision < n.revision) return;
       // 队友的广播不是自己的确认，弱网时尤其不能提前放开下一个请求。
@@ -384,6 +394,17 @@ const Net = (() => {
   }
   // 服务端快照是联机状态来源，按阶段恢复地图、应战或战斗画面。
   function applySnapshot(s) {
+    const changedView = n.appliedViewTeam !== undefined && n.appliedViewTeam !== s.viewTeam;
+    n.appliedViewTeam = s.viewTeam;
+    if (changedView) {
+      CombatPlayback.reset();
+      PlanningUI.reset();
+      MapEffects.reset();
+      WeaponAudio.stop();
+      battleView = moving = selected = weaponId = null;
+      mode = "select";
+      if (s.lastEvent) n.seen.add(s.lastEvent.id);
+    }
     GameAudio.receive(s, s.you ? s.you.seat : n.seat, n.applied);
     CombatPlayback.receive(s, n.applied);
     const wasStarted = n.started;

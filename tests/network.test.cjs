@@ -101,7 +101,7 @@ class Client {
     });
     const result = await this.wait(
       (m) =>
-        ((m.type === "state" || m.type === "chat") && m.ack === (override.id || id)) ||
+        ((m.type === "state" || m.type === "chat" || m.type === "battle_log") && m.ack === (override.id || id)) ||
         (m.type === "error" && m.id === (override.id || id)),
       from,
     );
@@ -696,7 +696,8 @@ test("finished games get a 30-second server deadline; only the host can return e
   assert.deepEqual(returned.log.slice(1), previousLog.slice(0, 79));
   const spectatorRoom = await watch.latest((s) => !s.started);
   assert.deepEqual(spectatorRoom.log, returned.log);
-  assert.deepEqual((await red.act("sync")).log, returned.log);
+  assert.deepEqual((await red.act("sync")).log, room.teamLogs[1]);
+  assert.deepEqual((await red.act("download_log", { perspective: "global" })).log, returned.log);
   const revision = room.revision;
   await blue.act("return_room", { matchId }, { id });
   assert.equal(room.revision, revision);
@@ -726,9 +727,11 @@ test("server countdown automatically returns all members without any client retu
   assert.equal(blue.state.phase, "waiting");
   assert.equal(red.state.phase, "waiting");
   assert.equal(blue.state.returnAt, null);
-  assert.ok(finished.log.every((line) => blue.state.log.includes(line)));
-  assert.deepEqual(red.state.log, app.rooms.get("AUTOBACK").log);
-  assert.deepEqual(blue.state.log, app.rooms.get("AUTOBACK").log);
+  assert.ok(finished.log.every((line) => red.state.log.includes(line)));
+  assert.deepEqual(red.state.log, app.rooms.get("AUTOBACK").teamLogs[1]);
+  assert.deepEqual(blue.state.log, app.rooms.get("AUTOBACK").teamLogs[0]);
+  assert.deepEqual((await blue.act("download_log", { perspective: "global" })).log,
+    app.rooms.get("AUTOBACK").log);
 });
 
 test("a later unit movement commits earlier moves and rejects undo through the authoritative protocol", async (t) => {
@@ -3358,4 +3361,38 @@ test("mortar accepts an empty cell over the network and rejects ordinary ground-
     "state",
   );
   assert.deepEqual(a.plan.targetCell, { x: 16, y: 10 });
+});
+
+test("spectator perspective and permissioned log downloads work over WebSocket and survive reconnect", async (t) => {
+  const { client, app } = await setup(t);
+  const blue = await client(),
+    red = await client(),
+    watcher = await client();
+  await blue.hello("create", "LOGVIEWS");
+  await red.hello("join", "LOGVIEWS");
+  await readyMatch(blue, red, app);
+  await watcher.hello("join", "LOGVIEWS");
+  const room = app.rooms.get("LOGVIEWS");
+  room.teamLogs[0].unshift("blue-only");
+  room.teamLogs[1].unshift("red-only");
+  room.log.unshift("global-only");
+  assert.equal((await blue.act("download_log", { perspective: "global" })).type, "error");
+  const state = await watcher.act("spectate", { team: 1 });
+  assert.equal(state.viewTeam, 1);
+  assert.equal(state.game.intel.team, 1);
+  assert.equal(state.log[0], "red-only");
+  assert.equal((await watcher.act("download_log", { perspective: "team:1" })).log[0], "red-only");
+  const token = watcher.joined.token;
+  watcher.close();
+  const resumed = await client();
+  await resumed.hello("resume", "LOGVIEWS", token);
+  assert.equal(resumed.state.viewTeam, 1);
+  assert.equal((await resumed.act("download_log", { perspective: "team:0" })).type, "error");
+  await blue.act("return_room");
+  const full = await resumed.act("download_log", { perspective: "global" });
+  assert.equal(full.type, "battle_log");
+  assert.ok(full.log.includes("global-only"));
+  assert.ok(
+    (await resumed.act("download_log", { perspective: "team:0" })).log.includes("blue-only"),
+  );
 });

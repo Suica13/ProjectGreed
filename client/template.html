@@ -1804,6 +1804,7 @@
                 聊天
               </button>
               <button id="showLog" role="tab" aria-selected="false" aria-controls="log">LOG</button>
+              <select id="battleLogPerspective" aria-label="战报下载视角" hidden></select>
               <button id="downloadBattleLog" type="button" aria-label="下载战斗LOG" disabled>
                 下载战斗LOG
               </button>
@@ -1893,6 +1894,10 @@
         </aside>
         <div id="hudActionBand" class="hud-action-band" hidden role="group" aria-label="当前操作">
           <button id="hudCancelAction" type="button">取消</button>
+          <label id="spectatorViewControl" hidden
+            >观战视角
+            <select id="spectatorView" aria-label="观战视角"></select>
+          </label>
         </div>
         <div
           id="hudUnitCommands"
@@ -2309,6 +2314,7 @@
               >
                 LOG
               </button>
+              <select id="roomLogPerspective" aria-label="战报下载视角" hidden></select>
               <button id="roomDownloadBattleLog" type="button" disabled>下载战斗LOG</button>
             </div>
             <div
@@ -2357,7 +2363,6 @@
           </div>
           <button id="shareUnitsToAllies" hidden>共享单位给友军</button>
         </div>
-
       </div>
       <div id="roomDetailPanel" class="formation-detail-overlay" hidden>
         <div

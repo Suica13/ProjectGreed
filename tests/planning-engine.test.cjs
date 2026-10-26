@@ -743,8 +743,11 @@ test("fog logs hide unseen actions and rosters, report the last visible movement
   await new Promise(r=>setTimeout(r,30));
   blue=act(0,"sync");
   assert.equal(blue.started,false);
-  assert.deepEqual(blue.log,room.log,"room view and download receive the complete authoritative log");
-  assert(blue.log.some(x=>x.includes("SecretEnemy") && x.includes("O11")));
+  assert.deepEqual(blue.log,room.teamLogs[0],"returning keeps the selected team history intact");
+  assert.deepEqual(blue.logExport.options,["global","team:0","team:1"]);
+  const download=act(0,"download_log",{perspective:"global"});
+  assert.deepEqual(download.log,room.log);
+  assert(download.log.some(x=>x.includes("SecretEnemy") && x.includes("O11")));
 });
 
 test("entering vision strips the invisible portion of enemy movement", t => {
@@ -815,4 +818,93 @@ test("playback visibility survives lethal resolution without revealing the other
   assert.ok(!state.game.units.some((unit) => unit.id === b.id));
   assert.ok(state.combats[0].visibleActorIds.includes(b.id));
   assert.equal(state.combats[0].visibleBy, undefined);
+});
+
+test("log downloads enforce team access, unlock immediately on host return, and retain all histories in the lobby", async (t) => {
+  const { room, act } = fixture(t, 2, 1, { roomReturnMs: 10 });
+  room.log.unshift("global-only");
+  room.teamLogs[0].unshift("blue-only");
+  room.teamLogs[1].unshift("red-only");
+  const revision = room.revision;
+  assert.deepEqual(act(0, "sync").logExport.options, ["team:0"]);
+  assert.deepEqual(act(0, "download_log", { perspective: "team:0" }).log, room.teamLogs[0]);
+  for (const perspective of ["global", "team:1", "team:99", "team:0junk"])
+    assert.throws(() => act(0, "download_log", { perspective }));
+  assert.equal(room.revision, revision, "downloads do not change the battle revision");
+  assert.throws(() => act(1, "return_room"));
+  assert.equal(act(0, "sync").logExport.unlocked, false);
+  const returning = act(0, "return_room");
+  assert.equal(returning.logExport.unlocked, true);
+  assert.deepEqual(act(1, "download_log", { perspective: "team:0" }).log, room.teamLogs[0]);
+  assert.deepEqual(act(0, "download_log", { perspective: "global" }).log, room.log);
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(room.started, false);
+  assert.deepEqual(act(0, "download_log", { perspective: "team:1" }).log, room.teamLogs[1]);
+  const previousMatch = room.matchId;
+  room.matchId = "next-match";
+  room.logsUnlocked = false;
+  room.started = true;
+  assert.throws(() => act(0, "download_log", { perspective: "global", matchId: previousMatch }));
+  assert.throws(() => act(0, "download_log", { perspective: "global" }));
+});
+
+test("spectators switch map fog and LOG together without gaining unit control or changing player views", (t) => {
+  const { engine, room, act, frames, clients } = fixture(t);
+  const [a, b] = room.game.units;
+  room.game.tiles = Array.from({ length: 40 }, () => Array(50).fill("plain"));
+  Object.assign(a, { x: 2, y: 10 });
+  Object.assign(b, { x: 35, y: 10 });
+  room.teamLogs[0].unshift("blue-only");
+  room.teamLogs[1].unshift("red-only");
+  const spectator = { readyState: 1 };
+  engine.join(spectator, { mode: "join", room: room.code });
+  let serial = 0;
+  const command = (action, fields = {}) => {
+    engine.action(spectator, {
+      id: "view-request-" + ++serial,
+      revision: room.revision,
+      matchId: room.matchId,
+      action,
+      ...fields,
+    });
+    return frames.get(spectator);
+  };
+  assert.equal(frames.get(spectator).viewTeam, null);
+  assert.deepEqual(
+    frames.get(spectator).game.units.map((u) => u.id),
+    [a.id, b.id],
+  );
+  assert.throws(() => command("download_log", { perspective: "global" }));
+  const revision = room.revision;
+  let view = command("spectate", { team: 0 });
+  assert.equal(view.viewTeam, 0);
+  assert.equal(view.game.intel.team, 0);
+  assert.deepEqual(
+    view.game.units.map((u) => u.id),
+    [a.id],
+  );
+  assert.deepEqual(view.log, room.teamLogs[0]);
+  assert.deepEqual(command("download_log", { perspective: "team:0" }).log, room.teamLogs[0]);
+  assert.throws(() => command("download_log", { perspective: "team:1" }));
+  view = command("spectate", { team: 1 });
+  assert.deepEqual(
+    view.game.units.map((u) => u.id),
+    [b.id],
+  );
+  assert.deepEqual(view.log, room.teamLogs[1]);
+  assert.equal(view.you.seat, null);
+  assert.throws(() => command("wait", { unitId: b.id }));
+  assert.throws(() => act(0, "spectate", { team: 1 }));
+  assert.throws(() => command("spectate", { team: 99 }));
+  assert.throws(() => command("spectate", { team: "0" }));
+  assert.equal(room.revision, revision);
+  engine.broadcast(room);
+  assert.equal(frames.get(spectator).viewTeam, 1, "preference survives later broadcasts");
+  assert.equal(frames.get(clients[0]).viewTeam, 0);
+  view = command("spectate", { team: null });
+  assert.equal(view.game.intel, undefined);
+  assert.deepEqual(view.log, room.log);
+  room.phase = "finished";
+  assert.deepEqual(command("download_log", { perspective: "global" }).log, room.log);
+  assert.deepEqual(command("download_log", { perspective: "team:1" }).log, room.teamLogs[1]);
 });

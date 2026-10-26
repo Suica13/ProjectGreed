@@ -869,5 +869,13 @@
   "返回": "Back",
   "战术地图": "Tactical map",
   "单位指令": "Unit orders",
-  "编组单位": "Formation units"
+  "编组单位": "Formation units",
+  "上帝视角": "Omniscient",
+  "观战视角": "Spectator perspective",
+  "战报下载视角": "Battle log perspective",
+  "全局战报在对局结束或全员返回房间时开放下载。": "Global logs can be downloaded after the match ends or the host returns everyone to the room.",
+  "战报所属对局已更新。": "This battle log belongs to a different match.",
+  "对局中只能下载当前队伍视角的战报。": "During a match, only the current team perspective log can be downloaded.",
+  "只有观战玩家可以切换视角。": "Only spectators can change perspective.",
+  "观战队伍无效。": "Invalid spectator team."
 }
