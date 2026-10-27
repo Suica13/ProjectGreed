@@ -39,8 +39,16 @@ function validateLocalization(localization, id) {
         throw Error("Invalid localized text: " + id + "/" + language + "/" + field);
   }
 }
-function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides = {} } = {}) {
+function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides = {}, wipOverride = null } = {}) {
   const catalog = catalogOverride || read(path.join(root, "unit-catalog.json"));
+  const wipPolicy = wipOverride || read(path.join(root, "unit-wip.json"));
+  if (wipPolicy.schemaVersion !== 1 || !Array.isArray(wipPolicy.units) ||
+      new Set(wipPolicy.units).size !== wipPolicy.units.length ||
+      wipPolicy.units.some(id => typeof id !== "string" || !/^[A-Za-z0-9_-]+\*?$/.test(id)))
+    throw Error("Invalid WIP unit list");
+  const isWip = id => wipPolicy.units.some(pattern =>
+    pattern.endsWith("*") ? id.startsWith(pattern.slice(0, -1)) : id === pattern);
+
   if (catalog.schemaVersion !== 1 || !Array.isArray(catalog.units) || !catalog.units.length)
     throw Error("Invalid unit catalog");
   if (
@@ -329,6 +337,8 @@ function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides
       base = path.dirname(source),
       prefab = unitOverrides[ref] ? structuredClone(unitOverrides[ref]) : read(source);
     if (prefab.enabled === false) continue;
+    prefab.wip = isWip(prefab.id);
+    prefab.disabled = prefab.wip;
     validateLocalization(prefab.localization, ref);
     if (
       !Number.isInteger(prefab.stats.actionPoints) ||
@@ -837,6 +847,8 @@ function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides
       });
       result.models[id] = {
         ...prefab.stats,
+        wip: prefab.wip,
+        disabled: prefab.disabled,
         formOnly: prefab.formOnly === true,
         faction: prefab.faction,
         tags: prefab.tags,
@@ -922,6 +934,9 @@ function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides
     )
       throw Error("Invalid large death sequence");
   }
+  for (const pattern of wipPolicy.units)
+    if (!result.prefabs.some(prefab => pattern.endsWith("*") ? prefab.id.startsWith(pattern.slice(0, -1)) : prefab.id === pattern))
+      throw Error("Unknown WIP unit or series: " + pattern);
   if (!result.prefabs.length) throw Error("No enabled units in catalog");
   return result;
 }

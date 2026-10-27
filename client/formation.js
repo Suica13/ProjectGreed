@@ -1031,7 +1031,7 @@ const Formation = (() => {
       if (plan.disabled.includes(i)) {
         row.classList.add(
           "unit-disabled",
-          ["not_allowed", "not_developed"].includes(plan.reasons[i])
+          ["not_allowed", "not_developed", "wip"].includes(plan.reasons[i])
             ? "not-allowed"
             : "overcost",
         );
@@ -1040,7 +1040,9 @@ const Formation = (() => {
           element(
             "span",
             "overcost-label",
-            plan.reasons[i] === "faction_mismatch"
+            plan.reasons[i] === "wip"
+              ? "WIP"
+              : plan.reasons[i] === "faction_mismatch"
               ? "阵营不匹配"
               : plan.reasons[i] === "not_developed"
                 ? "尚未开发"
@@ -1437,6 +1439,8 @@ const Formation = (() => {
     for (const prefab of prefabs) {
       const card = element("button", "catalog-unit");
       card.dataset.unitId = prefab.id;
+      card.disabled = !!prefab.wip;
+      if (prefab.wip) card.title = "WIP";
       card.setAttribute("role", "option");
       card.setAttribute("aria-selected", String(byId("formationPrefab").value === prefab.id));
       const image = element("img");
@@ -1487,11 +1491,11 @@ const Formation = (() => {
       row.append(card, details);
       const restriction = PlayerProfile.restriction(prefab);
       if (restriction) {
-        row.classList.add("unit-disabled", "faction-mismatch");
+        row.classList.add("unit-disabled", restriction === "wip" ? "unit-wip" : "faction-mismatch");
         row.append(
           element("span", "disabled-panel"),
           element("span", "overcost-label",
-            restriction === "faction_mismatch" ? "阵营不匹配" : "尚未开发"),
+            restriction === "wip" ? "WIP" : restriction === "faction_mismatch" ? "阵营不匹配" : "尚未开发"),
         );
       }
       list.append(row);

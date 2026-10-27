@@ -549,7 +549,7 @@ const RoomPanel = (() => {
           "final-unit-icon" +
             (player.disabled.includes(index)
               ? " unit-disabled " +
-                (["not_allowed", "not_developed"].includes(player.reasons?.[index])
+                (["not_allowed", "not_developed", "wip"].includes(player.reasons?.[index])
                   ? "not-allowed"
                   : "overcost")
               : ""),
@@ -573,7 +573,9 @@ const RoomPanel = (() => {
             element(
               "span",
               "overcost-label",
-              player.reasons?.[index] === "faction_mismatch"
+              player.reasons?.[index] === "wip"
+                ? "WIP"
+                : player.reasons?.[index] === "faction_mismatch"
                 ? "阵营不匹配"
                 : player.reasons?.[index] === "not_developed"
                   ? "尚未开发"

@@ -1,8 +1,8 @@
 {
   "name": "projectgreed",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "private": true,
-  "description": "ProjectGreed V24 turn-based tactical game",
+  "description": "ProjectGreed V25 turn-based tactical game",
   "engines": {
     "node": ">=22"
   },

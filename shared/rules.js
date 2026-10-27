@@ -247,6 +247,7 @@ const Tactics = (() => {
     };
   }
   function restrictionReason(model, restrictions = {}) {
+    if (model.wip) return "wip";
     if (
       ["EFSF", "ZEON"].includes(restrictions.characterFaction) &&
       model.faction !== restrictions.characterFaction
@@ -288,7 +289,7 @@ const Tactics = (() => {
     clean.forEach((entry, index) => {
       const reason = restrictionReason(models[entry.unitId + "__" + entry.kitId], restrictions);
       if (reason) reasons[index] = reason;
-      if (entry.customPilot && restrictions.characterFaction &&
+      if (!reasons[index] && entry.customPilot && restrictions.characterFaction &&
           entry.customPilot.faction !== restrictions.characterFaction) reasons[index] = "faction_mismatch";
     });
     let occupied = 0;

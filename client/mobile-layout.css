@@ -535,3 +535,5 @@
 @media (max-width: 500px) {
   #formationMain .formation-footer .formation-group-banner select { width: 210px; }
 }
+
+.catalog-unit-row.unit-wip > .overcost-label { font-size: 22px; letter-spacing: 0.15em; color: #e5e9ec; }
