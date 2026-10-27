@@ -418,9 +418,9 @@ test("version three training is fully refunded under the new budget, including a
   assert.equal(migrated.points,75); assert.deepEqual(migrated.stats,P.baseStats()); assert.deepEqual(migrated.record,old.record);
   assert.deepEqual(P.custom(migrated),migrated);
 });
-test("ordinary and commander defaults drop ten points with awakening floored at zero", () => {
+test("ordinary defaults stay unchanged and commanders use 90/100/50 with ten percent variation", () => {
   const defaults={shooting:[84,104],melee:[84,104],defense:[84,104],speed:[84,104],accuracy:[84,104],reaction:[84,104],leadership:[48,60],awakening:[0,0]};
-  const commanders={shooting:[35,45],melee:[35,45],defense:[35,45],speed:[35,45],accuracy:[35,45],reaction:[35,45],leadership:[86,108],awakening:[0,0]};
+  const commanders={shooting:[81,99],melee:[81,99],defense:[81,99],speed:[81,99],accuracy:[81,99],reaction:[81,99],leadership:[90,110],awakening:[45,55]};
   assert.deepEqual(P.catalog.defaultRanges,defaults); assert.deepEqual(P.catalog.commanderRanges,commanders);
   for(const [model,ranges] of [[{faction:"EFSF",unitTags:[]},defaults],[{faction:"ZEON",unitTags:["CmdUnit"]},commanders]])
     for(let seed=1;seed<=100;seed++) { const pilot=P.roll(null,seed,0,0,model); for(const [key,[lo,hi]] of Object.entries(ranges)) assert.ok(pilot.stats[key]>=lo&&pilot.stats[key]<=hi); }

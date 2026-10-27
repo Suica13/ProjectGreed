@@ -18,6 +18,10 @@ const BattleEconomy = (() => {
       experience: speed,
     };
   }
-  return { price, rates };
+  function enemyStrength(roster, team) {
+    const enemies = Object.values(roster || {}).filter(unit => unit.team !== undefined && unit.team !== team);
+    return enemies.length ? enemies.reduce((sum, unit) => sum + (unit.performance ?? 1), 0) / enemies.length : 1;
+  }
+  return { price, rates, enemyStrength };
 })();
 if (typeof module !== "undefined") module.exports = BattleEconomy;

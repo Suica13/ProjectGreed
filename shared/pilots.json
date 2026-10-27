@@ -35,36 +35,36 @@
   },
   "commanderRanges": {
     "shooting": [
-      35,
-      45
+      81,
+      99
     ],
     "melee": [
-      35,
-      45
+      81,
+      99
     ],
     "defense": [
-      35,
-      45
+      81,
+      99
     ],
     "speed": [
-      35,
-      45
+      81,
+      99
     ],
     "accuracy": [
-      35,
-      45
+      81,
+      99
     ],
     "reaction": [
-      35,
-      45
+      81,
+      99
     ],
     "leadership": [
-      86,
-      108
+      90,
+      110
     ],
     "awakening": [
-      0,
-      0
+      45,
+      55
     ]
   },
   "namedVariation": 5,

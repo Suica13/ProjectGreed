@@ -1140,12 +1140,13 @@ function createRoomEngine({
         if (deduct) losses[record.unitId] = (losses[record.unitId] || 0) + 1;
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
+      const strength = roomBattleEconomy().enemyStrength(room.battleRoster, G.seatTeam(player.seat));
       const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
       // A manually assigned preset's "unlimited" allowance must not inflate the victory bonus.
       const limit = room.settings.costLimit;
       (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId, memberId: player.id,
-        kind: "result", money: won ? Math.floor(limit * 2.5 * rate * bonus.money) : 0,
-        supplies: won ? Math.floor(limit * 5 * rate * bonus.supplies) : 0, losses, lostUnits });
+        kind: "result", money: won ? Math.floor(limit * 2.5 * rate * strength * bonus.money) : 0,
+        supplies: won ? Math.floor(limit * 5 * rate * strength * bonus.supplies) : 0, losses, lostUnits });
     }
   }
   function recordPilotBattle(room, actor, kind, cost, strength = 1) {
@@ -1530,6 +1531,8 @@ function createRoomEngine({
       unitId: G.models[actor.model].prefabId,
       model: actor.model,
       money: roomBattleEconomy().price(actor.model),
+      team: actor.team,
+      performance: actor.performance ?? 1,
     }]));
     room.phase = room.game.deployment.every(Boolean) ? "idle" : "deployment";
     planner.reset(room);

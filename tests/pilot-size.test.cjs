@@ -11,8 +11,8 @@ test("command units roll a default officer and only accept qualified named pilot
   assert.equal(G.unitSize(command), "large");
   const pilot = Pilots.roll(null, 42, 0, 0, command);
   assert.equal(pilot.name, "联邦默认指挥官");
-  assert.ok(pilot.stats.leadership >= 96 && pilot.stats.leadership <= 118);
-  assert.ok(pilot.stats.speed >= 45 && pilot.stats.speed <= 55);
+  assert.ok(pilot.stats.leadership >= 90 && pilot.stats.leadership <= 110);
+  assert.ok(pilot.stats.speed >= 81 && pilot.stats.speed <= 99);
   const officer = Pilots.catalog.named.find((entry) => entry.faction === "EFSF" && entry.commander);
   const ordinary = Pilots.catalog.named.find(
     (entry) => entry.faction === "EFSF" && !entry.commander,
@@ -20,13 +20,14 @@ test("command units roll a default officer and only accept qualified named pilot
   assert.equal(Pilots.validate(officer.id, command), officer.id);
   assert.throws(() => Pilots.validate(ordinary.id, command), /指挥官/);
   const stats = { ...pilot.stats, leadership: 110, speed: 200 };
-  const commandSpeed = Pilots.modifiers({ pilot: { stats } }, command).speed;
+  const commandSpeed = Pilots.modifiers({ pilot: { stats } }, command).move;
   const ordinarySpeed = Pilots.modifiers(
     { pilot: { stats } },
     { ...command, unitTags: ["MS"], sourceStats: { nativeTags: ["MS"] } },
-  ).speed;
-  assert.ok(commandSpeed < ordinarySpeed);
-  assert.equal(commandSpeed, 1.0105);
+  ).move;
+  // V27 separates command auras from personal movement attributes.
+  assert.equal(commandSpeed, ordinarySpeed);
+  assert.equal(commandSpeed, 1.5);
 });
 
 test("small, medium and large tags select the matching damage and hit modifiers", () => {

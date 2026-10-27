@@ -6,6 +6,10 @@ const Economy = (() => {
     typeof PRODUCTION_CATALOG !== "undefined"
       ? PRODUCTION_CATALOG
       : require("./production-catalog.json");
+  let kitModels;
+  function modelsForKits() {
+    return kitModels ||= typeof ART !== "undefined" ? ART.models : require("../tools/load-catalog.cjs").loadCatalog().models;
+  }
   const initial = () => ({
     money: 5000,
     supplies: 10000,
@@ -33,7 +37,7 @@ const Economy = (() => {
     )
       throw Error("套件库存无效");
     for (const [id, count] of Object.entries(value.kits || {})) {
-      if (!Object.hasOwn(catalog.offers, id) || !Number.isSafeInteger(count) || count < 0)
+      if ((!Object.hasOwn(catalog.offers, id) && !kitPrice(id)) || !Number.isSafeInteger(count) || count < 0)
         throw Error("套件数量无效: " + id);
       kits[id] = count;
     }
@@ -195,6 +199,28 @@ const Economy = (() => {
     return baseModel(unitId)?.slice(unitId.length + 2) || null;
   }
   function kitPrice(modelId) {
+    if (!catalog.offers[modelId]) {
+      // Some selectable equipment has no standalone factory order in the MOD.
+      // Price it from the same chassis' nearest COST tier; extrapolate only above
+      // its highest priced tier. Existing imported prices remain authoritative.
+      const models = modelsForKits(), model = models[modelId];
+      const baseId = model && baseModel(model.prefabId), base = models[baseId];
+      if (!base || modelId === baseId) return null;
+      const delta = Math.max(0, model.cost - base.cost);
+      const candidates = Object.entries(catalog.offers)
+        .filter(([id, offer]) => offer.unitId === model.prefabId && id !== baseId && models[id])
+        .map(([id]) => ({ id, delta: Math.max(0, models[id].cost - base.cost) }));
+      candidates.sort((a, b) =>
+        Number(a.delta < delta) - Number(b.delta < delta) ||
+        Math.abs(a.delta - delta) - Math.abs(b.delta - delta) || a.id.localeCompare(b.id));
+      const reference = candidates[0];
+      if (!reference) return null;
+      const price = kitPrice(reference.id);
+      const scale = reference.delta > 0 ? Math.max(1, delta / reference.delta) : 1;
+      return { quantity: price.quantity,
+        money: Math.ceil(price.money / price.quantity * scale) * price.quantity,
+        supplies: Math.ceil(price.supplies / price.quantity * scale) * price.quantity };
+    }
     const offer = catalog.offers[modelId],
       base = offer && catalog.offers[baseModel(offer.unitId)];
     if (!base || modelId === baseModel(offer.unitId)) return null;
@@ -262,7 +288,8 @@ const Economy = (() => {
     return { ok: transact(plan, quantities), reason: "funds", plan };
   }
   function canBuyKit(modelId, faction) {
-    return !!kitPrice(modelId) && available(catalog.offers[modelId], faction, true);
+    const unitId = modelId.split("__")[0];
+    return !!kitPrice(modelId) && available(catalog.offers[modelId] || catalog.offers[baseModel(unitId)], faction, true);
   }
   function buyKit(modelId, faction) {
     const price = kitPrice(modelId);

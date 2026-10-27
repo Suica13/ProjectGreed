@@ -92,6 +92,7 @@ function fixture(
     [target, 4, 4],
   ].forEach(([u, x, y]) => Object.assign(u, { x, y, shield: 0 }));
   target.performance = strength;
+  room.battleRoster[target.id].performance = strength;
   function kill() {
     room.game.seed = 1;
     target.hp = 1;
@@ -135,8 +136,8 @@ for (const faction of ["EFSF", "PMC"])
       assert.equal(view.battleRoster, undefined);
       f.finish();
       const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
-      assert.equal(result.money, Math.floor(900 * 2.5 * rates.currency));
-      assert.equal(result.supplies, Math.floor(900 * 5 * rates.currency));
+      assert.equal(result.money, Math.floor(900 * 2.5 * rates.currency * 1.5));
+      assert.equal(result.supplies, Math.floor(900 * 5 * rates.currency * 1.5));
       assert.deepEqual(result.losses, mode === "quick" ? {} : { Type61: 1 });
       const loser = f.frames.get(f.clients[1]).economyAwards.find((a) => a.kind === "result");
       assert.equal(loser.money, 0);
@@ -270,8 +271,8 @@ for (const faction of ["EFSF", "PMC"])
       );
       f.finish();
       const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
-      assert.equal(result.money, Math.floor(900 * 2.5 * rates.currency * 2));
-      assert.equal(result.supplies, Math.floor(900 * 5 * rates.currency * 4));
+      assert.equal(result.money, Math.floor(900 * 2.5 * rates.currency * 1.5 * 2));
+      assert.equal(result.supplies, Math.floor(900 * 5 * rates.currency * 1.5 * 4));
     });
 test("event expiring between kill and victory does not change earlier awards; saves remain reward-free", (t) => {
   let active = true;
@@ -297,4 +298,20 @@ test("event expiring between kill and victory does not change earlier awards; sa
   assert.deepEqual(view.economyAwards, []);
   assert.deepEqual(view.techAwards, []);
   assert.deepEqual(view.pilotAwards, []);
+});
+
+test('victory uses the per-unit enemy starting strength average, including destroyed units',t=>{
+ const f=fixture(t,{strength:1.5});
+ f.room.battleRoster['destroyed-enemy-1']={team:1,performance:0.5};
+ f.room.battleRoster['destroyed-enemy-2']={team:1,performance:1};
+ // Friendly strength must not enter the average; transformed/spawned actors must not be counted twice.
+ f.room.battleRoster[f.attacker.id].performance=2;
+ f.kill();f.finish();
+ const result=f.frames.get(f.clients[0]).economyAwards.find(a=>a.kind==='result');
+ assert.equal(result.money,900*2.5);
+ assert.equal(result.supplies,900*5);
+ const before=JSON.stringify(result);f.act(0,'sync');
+ assert.equal(JSON.stringify(f.frames.get(f.clients[0]).economyAwards.find(a=>a.kind==='result')),before);
+ assert.equal(R.enemyStrength({},0),1);
+ assert.equal(R.enemyStrength({a:{team:1,performance:0.5},b:{team:1,performance:1}},0),0.75);
 });

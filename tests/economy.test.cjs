@@ -295,3 +295,40 @@ test("owned chassis allow undeveloped kit purchases, but kits alone do not unloc
   assert(E.canBuyKit(kit, "PMC"));
   assert(E.buyKit(kit, "PMC")); // Research allows purchase with no chassis stock.
 });
+
+test("every selectable kit on a producible chassis has a price and persists after purchase",()=>{
+  const {E,D,storage}=funded();
+  let missing=0;
+  for(const [id,model] of Object.entries(models)) {
+    if(!E.baseModel(model.prefabId) || id===E.baseModel(model.prefabId) || model.wip) continue;
+    D.grantUnit(model.faction,model.prefabId);
+    const price=E.kitPrice(id);
+    assert(price,`${id} needs a kit price`);
+    if(catalog.offers[id]) continue;
+    missing++;
+    assert(E.canBuyKit(id,model.faction),id);
+    const before=E.snapshot();
+    assert(E.buyKit(id,model.faction),id);
+    assert.equal(E.kitQuantity(id),price.quantity);
+    assert.equal(E.snapshot().money,before.money-price.money);
+    assert.equal(E.snapshot().supplies,before.supplies-price.supplies);
+    assert.equal(load(Object.fromEntries(storage)).E.kitQuantity(id),price.quantity);
+    assert.equal(E.fitKits([{unitId:model.prefabId,kitId:model.kitId}])[0].kitId,model.kitId);
+  }
+  assert.equal(missing,7);
+  assert.equal(E.kitPrice('RGM_79_G__invalid'),null);
+});
+
+test("derived kit pricing preserves technology, ownership, funds and atomicity checks",()=>{
+ const {E,context}=funded(),id='RX_79_G__cannon';
+ assert(!E.canBuyKit(id,'EFSF'));
+ E.transact({}, {RX_79_G:1});
+ assert(E.canBuyKit(id,'EFSF'));
+ const before=JSON.stringify(E.snapshot());
+ context.localStorage.setItem=()=>{throw Error('quota');};
+ assert.throws(()=>E.buyKit(id,'EFSF'),/quota/);
+ assert.equal(JSON.stringify(E.snapshot()),before);
+ const poor=load({'projectgreed.economy.v1':JSON.stringify({...rich,money:0,supplies:0,inventory:{RX_79_G:1}})}).E;
+ assert(!poor.buyKit(id,'EFSF'));
+ assert.equal(poor.kitQuantity(id),0);
+});

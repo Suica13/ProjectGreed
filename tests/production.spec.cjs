@@ -272,3 +272,28 @@ test("owned but undeveloped chassis enable kit checkout in production and unit p
   await page.locator('[data-detail-unit-id="RX_78_2"]').click();
   await expect(page.locator("#openFormationKitShop")).toBeDisabled();
 });
+
+for(const width of [390,1280]) test(`unit preview can buy and equip all later equipment tiers at ${width}px`,async({page})=>{
+ await page.setViewportSize({width,height:900});
+ await open(page);
+ await page.evaluate(()=>{
+  Economy.transact({},{RGM_79_G_SPACE:1});
+  Economy.creditAward({id:'kit-test-funds',matchId:'kit-test',money:100000,supplies:100000});
+ });
+ await page.locator('#openFormation').click();
+ await page.locator('#openFormationPicker').click();
+ await page.locator('#formationSearch').fill('RGM_79_G_SPACE');
+ await page.locator('[data-detail-unit-id="RGM_79_G_SPACE"]').click();
+ for(const kit of ['kit_2','kit_3','kit_4']) {
+  await page.locator('#openFormationKitShop').click();
+  await expect(page.locator('#formationKitPurchase option')).toHaveCount(4);
+  await page.locator('#formationKitPurchase').selectOption(kit);
+  await expect(page.locator('#buyFormationKit')).toBeEnabled();
+  await page.locator('#buyFormationKit').click();
+  await expect(page.locator('#formationDetailKit')).toHaveValue(kit);
+  expect(await page.evaluate(k=>Economy.kitQuantity('RGM_79_G_SPACE__'+k),kit)).toBeGreaterThan(0);
+ }
+ await page.reload();await page.waitForFunction(()=>assetsReady);
+ for(const kit of ['kit_2','kit_3','kit_4'])
+  expect(await page.evaluate(k=>Economy.kitQuantity('RGM_79_G_SPACE__'+k),kit)).toBeGreaterThan(0);
+});
