@@ -65,6 +65,9 @@ def apply(prefab):
     source = prefab.setdefault("sourceStats", {})
     base_hp = source.setdefault("v17BaseHp", stats["hp"])
     stats["hp"] = TANK_HP.get(prefab["id"], rounded_hp(base_hp * 1.25))
+    from unit_ship_balance import apply_hull, apply_beams
+    apply_hull(prefab, stats["hp"])
+    apply_beams(prefab)
     if prefab["id"].startswith("Army_Squad_"):
         stats["cost"] = 0
         if "costBalance" in prefab:

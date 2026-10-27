@@ -1,8 +1,8 @@
 {
   "name": "projectgreed",
-  "version": "0.26.0",
+  "version": "0.27.0",
   "private": true,
-  "description": "ProjectGreed V26 turn-based tactical game",
+  "description": "ProjectGreed V27 turn-based tactical game",
   "engines": {
     "node": ">=22"
   },
@@ -15,7 +15,8 @@
     "test:ui": "playwright test",
     "format": "prettier --write client/*.js client/*.html client/*.css shared/*.js tools/*.cjs server.js build.cjs playwright.config.cjs tests/*.cjs",
     "format:check": "prettier --check client/*.js client/*.html client/*.css shared/*.js tools/*.cjs server.js build.cjs playwright.config.cjs tests/*.cjs",
-    "units:reload": "node tools/reload-units.cjs"
+    "units:reload": "node tools/reload-units.cjs",
+    "activities": "node tools/open-server-activities.cjs"
   },
   "dependencies": {
     "ws": "8.22.0"

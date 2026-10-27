@@ -141,7 +141,7 @@ const UnitHangars = {
         }
       return result.sort((a, b) => a.distance - b.distance || a.y - b.y || a.x - b.x);
     }
-    function launch(g, u, x, y) {
+    function prepareLaunch(g, u, x, y) {
       const destination =
         Number.isInteger(x) && Number.isInteger(y)
           ? launchCells(g, u).find((c) => c.x === x && c.y === y)
@@ -163,6 +163,18 @@ const UnitHangars = {
           x: from.x + ((first.x - from.x) * (i + 1)) / segments,
           y: from.y + ((first.y - from.y) * (i + 1)) / segments,
         })).concat(route.slice(1));
+      return { carrierId, from, path };
+    }
+    function previewLaunch(g, u, x, y, seat = u.ownerSeat ?? u.team) {
+      if (g.units.some(actor => actor.pendingMove?.seat === seat) || u.pendingMove) throw Error("请先确认或取消移动");
+      const plan = prepareLaunch(g, u, x, y);
+      const previous = plan.path.at(-2) || plan.from;
+      const angle = Math.atan2(x - previous.x, -(y - previous.y)) * 180 / Math.PI;
+      u.pendingMove = { x, y, angle, seat, launch: true, ...plan };
+      return { type: "move_preview", unitId:u.id, ...plan, x, y };
+    }
+    function launch(g, u, x, y) {
+      const { carrierId, from, path } = prepareLaunch(g, u, x, y);
       delete u.embarked;
       Object.assign(u, { x, y, origin: null });
       if (!deploying(g)) {
@@ -322,6 +334,7 @@ const UnitHangars = {
       embark,
       launchCells,
       launch,
+      previewLaunch,
       evacuate,
       readyToLaunch,
       shouldLaunch,

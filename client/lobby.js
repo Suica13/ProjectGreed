@@ -246,7 +246,7 @@ const Lobby = (() => {
     currentURL = url;
     timeout = setTimeout(() => fail("连接超时，请检查 IP 和端口。"), 8000);
     current.onopen = () => {
-      if (socket === current) requestRooms();
+      if (socket === current) { ServerActivities.attach(current); requestRooms(); }
     };
     current.onmessage = (event) => {
       if (socket !== current) return;
@@ -257,6 +257,7 @@ const Lobby = (() => {
         fail("服务器返回的数据无效。");
         return;
       }
+      if (ServerActivities.receive(message,current)) return;
       if (message.type === "error") {
         fail(message.message || "服务器拒绝了连接。");
         return;

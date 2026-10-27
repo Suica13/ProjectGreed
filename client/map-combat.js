@@ -436,7 +436,7 @@ const MapCombat = (() => {
     for (const [id, unit] of displayed)
       if (!roster.has(id) && visibleActors.has(id) && !unit.visualOnly) roster.set(id, unit);
     return [...roster.values()]
-      .filter((u) => !u.embarked && (!pendingExits.has(u.id) || visibleExits.has(u.id)))
+      .filter((u) => (!u.embarked || u.pendingMove?.launch) && (!pendingExits.has(u.id) || visibleExits.has(u.id)))
       .map((unit) => {
         const visual = displayed.get(unit.id) || unit;
         const effect = pose.get(unit.id);

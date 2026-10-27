@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ProjectGreed 服务器活动管理</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      body {
+        margin: 0;
+        background: #10212b;
+        color: #e1edf3;
+        font: 14px system-ui;
+      }
+      header {
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border-bottom: 1px solid #426071;
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: inherit;
+        border: 1px solid #577485;
+        border-radius: 5px;
+        background: #203b4a;
+        padding: 8px;
+      }
+      button {
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      main {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        max-width: 1250px;
+        margin: auto;
+        min-height: 90vh;
+      }
+      nav {
+        padding: 18px;
+        border-right: 1px solid #426071;
+      }
+      nav button {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin: 8px 0;
+      }
+      nav small {
+        display: block;
+        margin-top: 6px;
+        color: #b8d5df;
+      }
+      article {
+        padding: 24px;
+      }
+      label {
+        display: block;
+        margin: 14px 0 6px;
+      }
+      input[type="text"],
+      textarea {
+        width: 100%;
+      }
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      section {
+        border: 1px solid #426071;
+        padding: 14px;
+        margin: 18px 0;
+        border-radius: 6px;
+      }
+      .line {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .line > label {
+        flex: 1;
+        min-width: 160px;
+      }
+      .line input {
+        width: 100%;
+      }
+      .reward-unit {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 100px auto;
+        gap: 8px;
+        margin: 8px 0;
+      }
+      .reward-unit input {
+        width: 100%;
+      }
+      .reward-unlock {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        margin: 8px 0;
+      }
+      .reward-unlock select {
+        min-width: 0;
+        width: 100%;
+      }
+      #status {
+        white-space: pre-wrap;
+        color: #c7e6ad;
+      }
+      #publish {
+        background: #345c3d;
+        padding: 12px 24px;
+      }
+      .muted {
+        color: #a9c4ce;
+      }
+      #detail {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      @media (max-width: 700px) {
+        main {
+          grid-template-columns: 1fr;
+        }
+        nav {
+          border-right: 0;
+          border-bottom: 1px solid #426071;
+        }
+        article {
+          padding: 14px;
+        }
+        .reward-unit {
+          grid-template-columns: minmax(0, 1fr) 70px auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>服务器活动管理</h1>
+      <button id="refresh">刷新</button><span id="clock"></span>
+    </header>
+    <form id="serverConnection" hidden style="max-width: 720px; margin: 24px auto; padding: 20px">
+      <h2>连接活动管理服务器</h2>
+      <label for="adminServerAddress">服务器地址</label>
+      <input id="adminServerAddress" type="text" value="http://127.0.0.1:1313" required />
+      <p class="muted">
+        请先启动服务器。若修改了 cfg.json
+        的端口，请在这里使用相同端口。连接后将打开服务器提供的活动管理页面。
+      </p>
+      <button type="submit">连接服务器</button>
+      <p id="connectionStatus" role="status"></p>
+    </form>
+    <main>
+      <nav>
+        <button id="newActivity">新建活动</button>
+        <p id="players"></p>
+        <div id="activities"></div>
+      </nav>
+      <article>
+        <section id="selected" hidden>
+          <h2 id="selectedTitle"></h2>
+          <form id="editCopyForm">
+            <label for="editTitle">邮件件名</label
+            ><input id="editTitle" type="text" maxlength="120" required /><label for="editBody"
+              >邮件正文</label
+            ><textarea id="editBody" maxlength="12000"></textarea>
+            <div class="line">
+              <label>开始时间（本机时区）<input id="editStartsAt" type="datetime-local" /></label
+              ><label>结束时间（本机时区）<input id="editEndsAt" type="datetime-local" /></label>
+            </div>
+            <label id="editLoginDaysLabel" hidden
+              >累计登录天数<input
+                id="editLoginDays"
+                type="number"
+                min="1"
+                max="10000"
+                step="1"
+                value="7"
+            /></label>
+            <section id="editBonusFields" hidden>
+              <h3>服务器房间收益倍率</h3>
+              <p class="muted">
+                活动期间自动生效，无需领取。与身份、快速战、敌人强度系数相乘；多个活动同项取最高倍率。存档对局依然没有收益。
+              </p>
+              <div class="line">
+                <label
+                  >驾驶员经验倍率<input
+                    id="editMultiplierexperience"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="0.1"
+                    value="1" /></label
+                ><label
+                  >资金倍率<input
+                    id="editMultipliermoney"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="0.1"
+                    value="1" /></label
+                ><label
+                  >物资倍率<input
+                    id="editMultipliersupplies"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="0.1"
+                    value="1" /></label
+                ><label
+                  >科技点倍率<input
+                    id="editMultipliertechnology"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="0.1"
+                    value="1"
+                /></label>
+              </div>
+            </section>
+            <button id="saveCopy" type="submit">保存文案和时期</button>
+          </form>
+          <p class="muted">
+            保存会同步更新已投递邮件的文案，奖励和领取记录保持原状。时期留空为不限期；登录日以服务器时间早上6点为界，周一早上6点刷新每周奖励。
+          </p>
+          <p id="detail"></p>
+          <button id="toggle">暂停活动</button>
+        </section>
+        <div id="newActivityPanel">
+          <h2>新建奖励活动</h2>
+          <p class="muted">
+            发布后保留独立活动编号及发放记录；同一存档按活动类型及登录周期接收，累计登录活动达标后领取一次。下次登录模式在连接时投递邮件，玩家点击“接收”后入账。
+          </p>
+          <form id="form">
+            <label for="title">邮件件名</label
+            ><input id="title" type="text" maxlength="120" required /><label for="body"
+              >邮件正文</label
+            ><textarea id="body" maxlength="12000"></textarea>
+            <label for="mode">活动类型／发放范围</label
+            ><select id="mode">
+              <option value="battle_bonus">服务器房间限时收益倍率</option>
+              <option value="daily_login">每日登录奖励（每天早上6点刷新）</option>
+              <option value="weekly_login">每周登录奖励（周一早上6点刷新）</option>
+              <option value="cumulative_login">累计登录奖励（累计登录N天领取一次）</option>
+              <option value="next_login" selected>
+                下次连接：所有尚未领取本活动的玩家（含今后新玩家）
+              </option>
+              <option value="all_known">立即向所有已登记玩家投递（含离线玩家）</option>
+              <option value="online_now">立即向当前所有在线玩家投递</option>
+              <option value="online_window">指定系统时间段：向期间在线玩家投递</option>
+            </select>
+            <p class="muted">
+              时期留空为不限期。每天按服务器时间早上6点划分，同一天只记录一次，累计登录不要求连续。
+            </p>
+            <label id="loginDaysLabel" hidden
+              >累计登录天数<input
+                id="loginDays"
+                type="number"
+                min="1"
+                max="10000"
+                step="1"
+                value="7"
+            /></label>
+            <div id="window" class="line">
+              <label>开始时间（本机时区）<input id="startsAt" type="datetime-local" /></label
+              ><label>结束时间（本机时区）<input id="endsAt" type="datetime-local" /></label>
+            </div>
+            <section id="bonusFields" hidden>
+              <h3>服务器房间收益倍率</h3>
+              <p class="muted">
+                活动期间自动生效，无需领取。与身份、快速战、敌人强度系数相乘；多个活动同项取最高倍率。存档对局依然没有收益。
+              </p>
+              <div class="line">
+                <label
+                  >驾驶员经验倍率<input
+                    id="multiplierexperience"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="0.1"
+                    value="1" /></label
+                ><label
+                  >资金倍率<input
+                    id="multipliermoney"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="0.1"
+                    value="1" /></label
+                ><label
+                  >物资倍率<input
+                    id="multipliersupplies"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="0.1"
+                    value="1" /></label
+                ><label
+                  >科技点倍率<input
+                    id="multipliertechnology"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="0.1"
+                    value="1"
+                /></label>
+              </div>
+            </section>
+            <div id="rewardFields">
+              <section>
+                <h3>货币奖励</h3>
+                <div class="line">
+                  <label
+                    >资金<input
+                      id="money"
+                      type="number"
+                      min="0"
+                      max="1000000000"
+                      step="1"
+                      value="0"
+                      required /></label
+                  ><label
+                    >物资<input
+                      id="supplies"
+                      type="number"
+                      min="0"
+                      max="1000000000"
+                      step="1"
+                      value="0"
+                      required
+                  /></label>
+                </div>
+              </section>
+              <section>
+                <h3>单位库存</h3>
+                <div id="inventory"></div>
+                <button id="addUnit" type="button">添加单位</button>
+              </section>
+              <section>
+                <h3>立即开发单位</h3>
+                <p class="muted">逐条添加需要立即开发的单位，不消耗科技点或货币。</p>
+                <div id="unlocks"></div>
+                <button id="addUnlock" type="button">添加开发单位</button
+                ><button id="clearUnlocks" type="button">清空开发奖励</button>
+              </section>
+            </div>
+            <button id="publish" type="submit">发布新活动并开始发放</button>
+          </form>
+        </div>
+        <p id="status" role="status"></p>
+      </article>
+    </main>
+    <script>
+      let snapshot = null,
+        selectedId = null;
+      const byId = (id) => document.getElementById(id);
+      let unlockUnits = [];
+      async function api(route = "", value) {
+        const response = await fetch("/api/activities/admin" + route, {
+          method: value ? "POST" : "GET",
+          headers: value ? { "Content-Type": "application/json" } : {},
+          body: value ? JSON.stringify(value) : undefined,
+        });
+        const data = await response.json();
+        if (!response.ok) throw Error(data.error || "请求失败");
+        return data;
+      }
+      const modes = {
+        battle_bonus: "服务器房间限时收益倍率",
+        daily_login: "每日登录奖励",
+        weekly_login: "每周登录奖励",
+        cumulative_login: "累计登录奖励",
+        next_login: "下次连接",
+        all_known: "所有已登记玩家",
+        online_now: "当前在线玩家",
+        online_window: "指定时间段在线玩家",
+      };
+      function unitName(id) {
+        return snapshot.units.find((unit) => unit.id === id)?.name || id;
+      }
+      function render() {
+        byId("clock").textContent = "服务器时间：" + new Date(snapshot.serverTime).toLocaleString();
+        byId("players").textContent =
+          "已登记 " +
+          snapshot.players.length +
+          " 人 · 在线 " +
+          snapshot.players.filter((player) => player.online).length +
+          " 人";
+        byId("activities").replaceChildren();
+        for (const activity of [...snapshot.activities].reverse()) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = activity.title;
+          const stats = document.createElement("small");
+          stats.textContent =
+            (activity.enabled ? "启用" : "暂停") +
+            " · " +
+            modes[activity.mode] +
+            " · 已投递 " +
+            activity.delivered +
+            " / 已接受 " +
+            activity.accepted;
+          button.append(stats);
+          button.onclick = () => {
+            selectedId = activity.id;
+            showDetail();
+          };
+          byId("activities").append(button);
+        }
+        renderUnlocks();
+        showDetail();
+      }
+      function localDate(value) {
+        if (value == null) return "";
+        const date = new Date(value);
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+        return date.toISOString().slice(0, 16);
+      }
+      function period(startsId, endsId) {
+        const start = byId(startsId).value,
+          end = byId(endsId).value;
+        if (!!start !== !!end) throw Error("请同时填写开始和结束时间，或同时留空");
+        return {
+          startsAt: start ? new Date(start).toISOString() : null,
+          endsAt: end ? new Date(end).toISOString() : null,
+        };
+      }
+      const multiplierLabels = {
+        experience: "驾驶员经验",
+        money: "资金",
+        supplies: "物资",
+        technology: "科技点",
+      };
+      function readMultipliers(prefix) {
+        return Object.fromEntries(
+          Object.keys(multiplierLabels).map((key) => [key, Number(byId(prefix + key).value)]),
+        );
+      }
+      function multiplierText(value) {
+        return Object.entries(multiplierLabels)
+          .map(([key, label]) => label + " ×" + (value[key] ?? 1))
+          .join(" · ");
+      }
+      function showDetail() {
+        const activity = snapshot.activities.find((activity) => activity.id === selectedId);
+        byId("selected").hidden = !activity;
+        byId("newActivityPanel").hidden = !!activity;
+        if (!activity) return;
+        byId("selectedTitle").textContent = activity.title;
+        byId("editTitle").value = activity.title;
+        byId("editBody").value = activity.text;
+        byId("editStartsAt").value = localDate(activity.startsAt);
+        byId("editEndsAt").value = localDate(activity.endsAt);
+        byId("editStartsAt").required = byId("editEndsAt").required = [
+          "online_window",
+          "battle_bonus",
+        ].includes(activity.mode);
+        byId("editLoginDaysLabel").hidden = activity.mode !== "cumulative_login";
+        byId("editLoginDays").value = activity.loginDays || 7;
+        byId("editBonusFields").hidden = activity.mode !== "battle_bonus";
+        for (const key of Object.keys(multiplierLabels))
+          byId("editMultiplier" + key).value = activity.multipliers?.[key] ?? 1;
+        const rewards = activity.rewards;
+        byId("detail").textContent =
+          "活动编号：" +
+          activity.id +
+          "\n方式：" +
+          modes[activity.mode] +
+          (activity.multipliers ? "\n" + multiplierText(activity.multipliers) : "") +
+          (activity.startsAt != null
+            ? "\n时间：" +
+              new Date(activity.startsAt).toLocaleString() +
+              " — " +
+              new Date(activity.endsAt).toLocaleString()
+            : "") +
+          "\n资金：" +
+          rewards.money +
+          " · 物资：" +
+          rewards.supplies +
+          Object.entries(rewards.inventory)
+            .map(([id, count]) => "\n" + unitName(id) + " ×" + count)
+            .join("") +
+          rewards.unlockUnits.map((id) => "\n立即开发：" + unitName(id)).join("");
+        byId("toggle").textContent = activity.enabled ? "暂停后续投递" : "恢复后续投递";
+      }
+      async function refresh() {
+        try {
+          snapshot = await api();
+          render();
+        } catch (error) {
+          byId("status").textContent = error.message;
+        }
+      }
+      function addUnit() {
+        if (!snapshot) return;
+        const row = document.createElement("div");
+        row.className = "reward-unit";
+        const select = document.createElement("select");
+        select.setAttribute("aria-label", "奖励单位");
+        for (const unit of snapshot.units)
+          select.add(new Option(unit.name + " [" + unit.faction + "]", unit.id));
+        const count = document.createElement("input");
+        Object.assign(count, {
+          type: "number",
+          min: "1",
+          max: "1000000",
+          step: "1",
+          value: "1",
+          required: true,
+        });
+        count.setAttribute("aria-label", "奖励数量");
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.textContent = "删除";
+        remove.onclick = () => row.remove();
+        row.append(select, count, remove);
+        byId("inventory").append(row);
+      }
+      function renderUnlocks() {
+        const list = byId("unlocks");
+        list.replaceChildren();
+        const choices = (snapshot?.units || []).filter((unit) => unit.developable);
+        unlockUnits.forEach((id, index) => {
+          const row = document.createElement("div");
+          row.className = "reward-unlock";
+          const select = document.createElement("select");
+          select.setAttribute("aria-label", "立即开发单位");
+          for (const unit of choices) {
+            const option = new Option(
+              unit.name + " [" + unit.faction + "]",
+              unit.id,
+              false,
+              unit.id === id,
+            );
+            option.disabled = unit.id !== id && unlockUnits.includes(unit.id);
+            select.add(option);
+          }
+          select.onchange = () => {
+            unlockUnits[index] = select.value;
+            renderUnlocks();
+          };
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.textContent = "删除";
+          remove.setAttribute("aria-label", "删除开发单位 " + id);
+          remove.onclick = () => {
+            unlockUnits.splice(index, 1);
+            renderUnlocks();
+          };
+          row.append(select, remove);
+          list.append(row);
+        });
+        byId("addUnlock").disabled = unlockUnits.length >= choices.length;
+      }
+      byId("addUnlock").onclick = () => {
+        const unit = snapshot?.units.find(
+          (unit) => unit.developable && !unlockUnits.includes(unit.id),
+        );
+        if (unit) {
+          unlockUnits.push(unit.id);
+          renderUnlocks();
+        }
+      };
+      byId("addUnit").onclick = addUnit;
+      byId("clearUnlocks").onclick = () => {
+        unlockUnits = [];
+        renderUnlocks();
+      };
+      byId("mode").onchange = () => {
+        const scheduled = ["online_window", "battle_bonus"].includes(byId("mode").value);
+        byId("window").hidden = false;
+        const bonus = byId("mode").value === "battle_bonus";
+        byId("bonusFields").hidden = !bonus;
+        byId("rewardFields").hidden = bonus;
+        byId("loginDaysLabel").hidden = byId("mode").value !== "cumulative_login";
+        byId("startsAt").required = byId("endsAt").required = scheduled;
+      };
+      byId("newActivity").onclick = () => {
+        byId("form").reset();
+        byId("inventory").replaceChildren();
+        unlockUnits = [];
+        renderUnlocks();
+        byId("mode").onchange();
+        selectedId = null;
+        showDetail();
+        byId("title").focus();
+      };
+      byId("refresh").onclick = refresh;
+      byId("toggle").onclick = async () => {
+        const activity = snapshot.activities.find((activity) => activity.id === selectedId);
+        try {
+          snapshot = await api("/toggle", { id: activity.id, enabled: !activity.enabled });
+          render();
+        } catch (error) {
+          byId("status").textContent = error.message;
+        }
+      };
+      byId("editCopyForm").onsubmit = async (event) => {
+        event.preventDefault();
+        byId("saveCopy").disabled = true;
+        try {
+          snapshot = await api("/edit", {
+            id: selectedId,
+            title: byId("editTitle").value,
+            text: byId("editBody").value,
+            ...period("editStartsAt", "editEndsAt"),
+            loginDays: Number(byId("editLoginDays").value),
+            ...(snapshot.activities.find((activity) => activity.id === selectedId).mode ===
+            "battle_bonus"
+              ? { multipliers: readMultipliers("editMultiplier") }
+              : {}),
+          });
+          render();
+          byId("status").textContent = "文案和时期已保存，文案已同步到已投递邮件。";
+        } catch (error) {
+          byId("status").textContent = error.message;
+        } finally {
+          byId("saveCopy").disabled = false;
+        }
+      };
+      byId("form").onsubmit = async (event) => {
+        event.preventDefault();
+        const inventory = {};
+        for (const row of byId("inventory").children) {
+          const id = row.querySelector("select").value;
+          inventory[id] = (inventory[id] || 0) + Number(row.querySelector("input").value);
+        }
+        const value = {
+          title: byId("title").value,
+          text: byId("body").value,
+          mode: byId("mode").value,
+          rewards: {
+            money: Number(byId("money").value),
+            supplies: Number(byId("supplies").value),
+            inventory,
+            unlockUnits: [...unlockUnits],
+          },
+        };
+        byId("publish").disabled = true;
+        try {
+          Object.assign(value, period("startsAt", "endsAt"));
+          value.loginDays = Number(byId("loginDays").value);
+          if (value.mode === "battle_bonus") value.multipliers = readMultipliers("multiplier");
+          snapshot = await api("/publish", value);
+          selectedId = snapshot.activities.at(-1).id;
+          render();
+          byId("status").textContent =
+            "活动已发布。已投递 " + snapshot.activities.at(-1).delivered + " 封邮件。";
+        } catch (error) {
+          byId("status").textContent = error.message;
+        } finally {
+          byId("publish").disabled = false;
+        }
+      };
+      if (location.protocol === "file:") {
+        // Local files have an opaque origin. Navigate to the server-hosted GUI
+        // so admin requests retain their normal same-origin protection.
+        byId("serverConnection").hidden = false;
+        document.querySelector("main").hidden = true;
+        byId("refresh").disabled = true;
+        try {
+          byId("adminServerAddress").value =
+            new URLSearchParams(location.search).get("server") ||
+            localStorage.getItem("projectgreed.adminServer") ||
+            "http://127.0.0.1:1313";
+        } catch {}
+        byId("serverConnection").onsubmit = (event) => {
+          event.preventDefault();
+          try {
+            const input = byId("adminServerAddress").value.trim();
+            const address = new URL(input.includes("://") ? input : "http://" + input);
+            if (
+              !["http:", "https:"].includes(address.protocol) ||
+              !["localhost", "127.0.0.1", "[::1]"].includes(address.hostname) ||
+              address.username ||
+              address.password
+            )
+              throw Error("请输入本机服务器地址，例如 http://127.0.0.1:1313");
+            try {
+              localStorage.setItem("projectgreed.adminServer", address.origin);
+            } catch {}
+            location.assign(new URL("/admin/activities.html", address.origin).href);
+          } catch (error) {
+            byId("connectionStatus").textContent = error.message;
+          }
+        };
+      } else refresh();
+    </script>
+  </body>
+</html>

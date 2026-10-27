@@ -921,6 +921,7 @@ const RoomPanel = (() => {
       ![0, 1].every((team) => participants.some((player) => Rules.seatTeam(player.seat) === team));
     byId("roomMainMenu").textContent =
       snapshot.started && snapshot.phase !== "assembly" ? "返回战斗" : "主菜单";
+    byId("roomProduction").hidden = snapshot.started && snapshot.phase !== "assembly";
     renderFinalAssembly(snapshot, busy);
     renderDetail(snapshot);
   }

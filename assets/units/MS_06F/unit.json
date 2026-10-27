@@ -490,7 +490,6 @@
       "rubble": 75
     },
     "accuracy": 105,
-    "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
       "sight": 7,

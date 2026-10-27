@@ -231,7 +231,6 @@
       "hpPercent": 10,
       "enCost": 10
     },
-    "commandAuras": [],
     "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {

@@ -44,20 +44,83 @@ const ProductionUI = (() => {
   const techBalance = element("div", "resource-balance");
   techBalance.id = "developmentResources";
   byId("developmentMain").querySelector("header").append(techBalance);
+  const formationBalance = element("div", "resource-balance");
+  formationBalance.id = "formationResources";
+  byId("formationMain").querySelector(".formation-heading h2").after(formationBalance);
+  const roomBalance = element("div", "resource-balance");
+  roomBalance.id = "roomResources";
+  byId("roomChatPanel").append(roomBalance);
+  const seatBalance = element("div", "resource-balance");
+  seatBalance.id = "roomSeatResources";
+  byId("roomSeatsPage").append(seatBalance);
+  const roomProduction = element("button", "", "生产");
+  roomProduction.id = "roomProduction";
+  roomProduction.type = "button";
+  byId("roomFormation").after(roomProduction);
+  roomProduction.onclick = () => {
+    if (Net.started && Net.snapshot?.phase !== "assembly") return;
+    openUnit(null, { returnView: "room", onReturn: () => RoomPanel.render(Net.snapshot) });
+    byId("closeProduction").textContent = "返回房间";
+  };
   function refreshBalances() {
-    for (const target of [menuBalance, techBalance, byId("productionResources")])
+    for (const target of [
+      menuBalance,
+      techBalance,
+      formationBalance,
+      roomBalance,
+      seatBalance,
+      byId("productionResources"),
+    ])
       resources(target, Economy.snapshot());
   }
   function receiveAwards(snapshot) {
     if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
     for (const award of snapshot.economyAwards || []) {
       try {
-        Economy.creditAward(award);
+        if (Economy.creditAward(award)) RewardNotifications.add("currency", award);
       } catch (error) {
         note("战斗结算保存失败：" + Economy.errorMessage(error));
         break;
       }
     }
+  }
+  function renderSale(unitId) {
+    let panel = byId("formationInventorySale");
+    if (!panel) {
+      panel = element("div", "inventory-sale");
+      panel.id = "formationInventorySale";
+      byId("formationDetailPilot").parentElement.after(panel);
+    }
+    const price = Economy.sellPrice(unitId),
+      count = Economy.quantity(unitId);
+    panel.replaceChildren();
+    const caption = element("span", "", "持有 " + count + " 台");
+    const refund = element("span", "resource-balance");
+    if (price) resources(refund, price);
+    const sell = element("button", "", "出售 1 台");
+    sell.id = "sellPreviewUnit";
+    const inBattle = () => Net.started && Net.snapshot?.phase !== "assembly";
+    sell.disabled = !count || !price || inBattle();
+    sell.onclick = async () => {
+      if (
+        !(await GameDialog.confirm("出售1台库存单位，返还50%资金和物资，是否继续？", {
+          title: "出售库存单位",
+          confirmText: "出售",
+        }))
+      )
+        return;
+      if (inBattle()) return;
+      try {
+        if (Economy.sellUnit(unitId)) {
+          renderSale(unitId);
+          Formation.refresh();
+          note("库存单位已出售");
+        }
+      } catch (error) {
+        note(Economy.errorMessage(error));
+      }
+    };
+    panel.append(caption, refund, sell);
   }
   function allows(prefab) {
     const faction = PlayerProfile.faction();
@@ -154,7 +217,7 @@ const ProductionUI = (() => {
         info.append(card);
       }
     } else {
-      for (const skill of model.skills || []) {
+      for (const skill of [...SkillControls.commandAbilities(model), ...(model.skills || [])]) {
         const card = element("article", "formation-weapon-detail");
         card.append(
           element("strong", "", skill.name),
@@ -226,10 +289,10 @@ const ProductionUI = (() => {
       : kitId === baseKit
         ? "单位自带此套件，无需购买"
         : "暂无原厂套件价格";
-    const kitReason = !allows(prefab)
-      ? reason
-      : !price
-        ? byId("productionKitQuantity").textContent
+    const kitReason = !price
+      ? byId("productionKitQuantity").textContent
+      : !Economy.canBuyKit(id, PlayerProfile.faction())
+        ? reason
         : !Economy.affordable(price)
           ? "资金或物资不足"
           : "";
@@ -240,7 +303,9 @@ const ProductionUI = (() => {
     refreshBalances();
     const list = byId("productionList"),
       scroll = list.scrollTop;
-    const prefabs = UnitCatalog.select(byId("productionSearch").value, filters, allows);
+    const prefabs = UnitCatalog.select(byId("productionSearch").value, filters, allows).sort(
+      UnitCatalog.compareFactionCost(),
+    );
     if (!prefabs.some((p) => p.id === selectedId)) {
       selectedId = prefabs[0]?.id || null;
       kitId = null;
@@ -420,10 +485,11 @@ const ProductionUI = (() => {
     onReturn = options.onReturn || null;
     filters.faction = filters.era = filters.type = "";
     setupFilters();
-    byId("productionSearch").value = unitId;
-    byId("closeProduction").textContent = returnView === "formation" ? "返回编组" : "返回主菜单";
+    byId("productionSearch").value = unitId || "";
+    byId("closeProduction").textContent =
+      returnView === "formation" ? "返回编组" : returnView === "room" ? "返回房间" : "返回主菜单";
     setPageView("production");
     render();
   }
-  return { render, resources, openUnit, receiveAwards };
+  return { render, resources, openUnit, receiveAwards, renderSale };
 })();

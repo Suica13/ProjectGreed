@@ -216,6 +216,7 @@ const Net = (() => {
   }
   // 两种传输都将裁定后的消息交给同一套快照恢复逻辑。
   function receive(msg, socket, { url = n.serverURL, room = n.room, mode = "create" } = {}) {
+    if (ServerActivities.receive(msg,socket)) return;
     if (n.socket !== socket) return;
     if (msg.type === "pong") {
       if (pingStarted !== null) {
@@ -367,6 +368,7 @@ const Net = (() => {
       }, 20000);
     socket.onopen = () => {
       if (n.socket !== socket) return;
+      ServerActivities.attach(socket);
       socket.send(
         JSON.stringify({
           type: "hello",

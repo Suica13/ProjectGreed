@@ -9,6 +9,11 @@ def correct_effects(prefab, native):
     helicopter = any("heli" in tag.lower() for tag in prefab.get("sourceStats", {}).get("nativeTags", []))
     if helicopter:
         prefab["presentation"]["thrusters"] = False
+        hull_order = max((layer.get("order", 0) for layer in prefab["layers"] if not layer.get("rotationSpeed")), default=5)
+        for layer in prefab["layers"]:
+            if layer.get("rotationSpeed"):
+                layer["order"] = max(layer.get("order", 0), hull_order + 1)
+        prefab["layers"].sort(key=lambda layer: layer.get("order", 0))
     thrusters = prefab["presentation"].get("thrusters", True)
     if not thrusters:
         prefab["layers"] = [layer for layer in prefab["layers"]

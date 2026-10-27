@@ -190,7 +190,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 69000,
+    "hp": 59000,
     "en": 3000.0,
     "move": 7,
     "mobility": 50.0,
@@ -361,7 +361,6 @@
         }
       }
     ],
-    "commandAuras": [],
     "supplyAura": {
       "range": 2,
       "hpPercent": 5,
@@ -476,7 +475,9 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 55000.0
+    "v17BaseHp": 55000.0,
+    "shipHullBeforeReduction": 69000.0,
+    "shipBalanceMultiplier": 0.85
   },
   "presentation": {
     "shield": false,
@@ -523,9 +524,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 5000.0,
+      "damagePerShot": 4500,
       "damageComponents": {
-        "beam": 5000.0
+        "beam": 4500
       },
       "hitsPerShot": 1,
       "attack": {
@@ -536,7 +537,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "MusaiClass_Turret_BeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -544,7 +546,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "MusaiClass_Turret_BeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -552,7 +555,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "MusaiClass_Turret_BeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -560,7 +564,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "MusaiClass_Turret_BeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -568,7 +573,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "MusaiClass_Turret_BeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -576,7 +582,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "MusaiClass_Turret_BeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -710,7 +717,14 @@
         "energy": 180.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 5000.0,
+        "damageComponents": {
+          "beam": 5000.0
+        }
+      },
+      "shipDamageMultiplier": 0.85
     },
     "MusaiClass_Turret_AMS": {
       "name": "MusaiClass Turret AMS",
@@ -1193,7 +1207,7 @@
       "radius": 9,
       "enCost": 450,
       "actionCost": 2,
-      "durationRounds": 2,
+      "durationRounds": 4,
       "cooldownTurns": 3,
       "maxUses": 99,
       "consumeAction": false,

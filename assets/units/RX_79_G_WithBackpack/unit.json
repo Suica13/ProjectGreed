@@ -619,7 +619,8 @@
     "commandAuras": [
       {
         "type": "cmdDef",
-        "radiusCells": 2
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
       }
     ],
     "actionPoints": 5,
@@ -2164,8 +2165,8 @@
     {
       "id": "CmdDef",
       "source": "Template/Unit/Skill/CmdDef.gw",
-      "status": "review",
-      "name": "防御指挥"
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
     }
   ],
   "weaponKits": [

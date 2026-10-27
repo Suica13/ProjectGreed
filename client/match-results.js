@@ -55,6 +55,21 @@ const MatchResults = (() => {
       totals.losses +
       " 台";
     rewards.hidden = !Net.active || Net.snapshot?.replay;
+    let icons = byId("victoryUnitIcons");
+    if (!icons) { icons = element("div"); icons.id = "victoryUnitIcons"; rewards.after(icons); }
+    icons.replaceChildren();
+    for (const [label, records] of [["损失单位", awards.flatMap(a => a.lostUnits || [])], ["击毁单位", awards.filter(a => a.kind === "kill")]]) {
+      icons.append(element("h4", "", label));
+      const list = element("div", "result-unit-icons");
+      for (const record of records) {
+        if (!UnitModels[record.model]) continue;
+        const img = element("img"); img.src = unitIcon(record.model); img.alt = UnitModels[record.model].name; img.title = img.alt;
+        list.append(img);
+      }
+      if (!list.children.length) list.append(element("span", "muted", "无"));
+      icons.append(list);
+    }
+    icons.hidden = rewards.hidden;
     const snapshot = Net.snapshot,
       next = Net.active ? snapshot?.matchId : "offline-" + session;
     if (next !== key || !timer) {

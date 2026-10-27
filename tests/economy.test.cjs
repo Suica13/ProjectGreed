@@ -246,3 +246,52 @@ test("new profiles contain starter units while existing inventories are preserve
   const existing = load({ "projectgreed.economy.v1": JSON.stringify({ ...rich, inventory: { Type61: 1 } }) }).E;
   assert.deepEqual(JSON.parse(JSON.stringify(existing.snapshot().inventory)), { Type61: 1 });
 });
+
+test("selling a chassis refunds half of each cheapest per-unit price atomically",()=>{
+ const {E,context}=load();const offer=catalog.offers[E.baseModel("Type61")];
+ const before=E.snapshot();const price=E.sellPrice("Type61");
+ assert.equal(price.money,Math.floor(offer.money/offer.quantity/2));
+ assert.equal(price.supplies,Math.floor(offer.supplies/offer.quantity/2));
+ assert(E.sellUnit("Type61"));assert.equal(E.quantity("Type61"),23);
+ assert.equal(E.snapshot().money,before.money+price.money);
+ assert.equal(E.snapshot().supplies,before.supplies+price.supplies);
+ const persisted=JSON.stringify(E.snapshot());
+ context.localStorage.setItem=()=>{throw Error("storage full")};
+ assert.throws(()=>E.sellUnit("Type61"));assert.equal(JSON.stringify(E.snapshot()),persisted);
+ assert(!E.sellUnit("unknown"));
+});
+
+test("activity units, currency, development and receipt persist together or roll back together",()=>{
+ const {E,D,context,storage}=load();const before=E.snapshot();
+ const award={id:"server-mail:test:welcome",matchId:"server-test",money:5000,supplies:10000,inventory:{RGM_79_G:3,MS_09:3},unlockUnits:["RGM_79_G"]};
+ assert(D.receiveActivity(award));assert.equal(E.snapshot().money,before.money+5000);assert.equal(E.quantity("RGM_79_G"),3);assert(D.allows("EFSF","RGM_79_G"));
+ assert.equal(D.receiveActivity(award),false);assert.equal(E.quantity("RGM_79_G"),3);
+ const restored=load(Object.fromEntries(storage));assert.equal(restored.D.receiveActivity(award),false);
+ const persisted=JSON.stringify(E.snapshot()),research=JSON.stringify(D.exportProgress()),original=context.localStorage.setItem;
+ context.localStorage.setItem=(key,value)=>{if(key==="projectgreed.developmentProgress.v1")throw Error("quota");original(key,value);};
+ assert.throws(()=>D.receiveActivity({...award,id:"server-mail:test:second",unlockUnits:["MS_09"]}));assert.equal(JSON.stringify(E.snapshot()),persisted);assert.equal(JSON.stringify(D.exportProgress()),research);
+});
+
+
+test("owned chassis allow undeveloped kit purchases, but kits alone do not unlock purchases", () => {
+  const { E, D } = funded();
+  const id = "RX_78_2", kit = Object.keys(catalog.offers).find((model) => catalog.offers[model].unitId === id && E.kitPrice(model));
+  assert(kit);
+  assert(!D.allows("PMC", id));
+  assert(!E.canBuyKit(kit, "PMC"));
+  const before = JSON.stringify(E.snapshot());
+  assert(!E.buyKit(kit, "PMC"));
+  assert.equal(JSON.stringify(E.snapshot()), before);
+  E.transact({}, { [id]: 1 });
+  assert(E.canBuyKit(kit, "PMC"));
+  assert(E.buyKit(kit, "PMC"));
+  assert.equal(E.quantity(id), 1);
+  assert(!E.produce(id, "PMC")); // Ownership does not unlock chassis production.
+  assert(!D.allows("PMC", id));
+  assert(E.sellUnit(id));
+  assert(!E.canBuyKit(kit, "PMC"));
+  assert(!E.buyKit(kit, "PMC"));
+  D.grantUnit("EFSF", id);
+  assert(E.canBuyKit(kit, "PMC"));
+  assert(E.buyKit(kit, "PMC")); // Research allows purchase with no chassis stock.
+});

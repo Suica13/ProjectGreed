@@ -181,7 +181,6 @@
         "arc": 180
       }
     ],
-    "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
       "sight": 7,

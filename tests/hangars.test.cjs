@@ -398,3 +398,21 @@ test("AI launch keeps recovery and contact requirements", () => {
   g.units.find((e) => e.team !== u.team).x = G.mapWidth(g) - 1;
   assert.equal(G.aiLaunchChoice(g, u), null);
 });
+
+for (const deployment of [true,false]) test(`launch preview is inert until confirmation, cancel restores cargo (${deployment})`,()=>{
+ const {g,carrier,u,h}=fixture(true);
+ G.hangars.embark(g,u,carrier,h.id);
+ if(!deployment){g.deployment=null;u.acted=false;u.actionPoints=5;delete u.lastBoardRound;}
+ const destination=G.hangars.launchCells(g,u)[0];assert(destination);
+ const before=JSON.stringify(u),carrierBefore=JSON.stringify(carrier);
+ G.hangars.previewLaunch(g,u,destination.x,destination.y);
+ assert(u.embarked);assert.equal(G.onMap(u),false);
+ const staged={...u};delete staged.pendingMove;assert.equal(JSON.stringify(staged),before);
+ assert.equal(JSON.stringify(carrier),carrierBefore);
+ G.cancelMove(g,u);assert.equal(JSON.stringify(u),before);
+ G.hangars.previewLaunch(g,u,destination.x,destination.y);
+ const path=G.confirmMove(g,u);assert(path.length);assert(!u.embarked);assert(G.onMap(u));
+ assert.equal(u.x,destination.x);assert.equal(u.y,destination.y);
+ if(!deployment){assert.equal(u.actionPoints,4);assert.equal(carrier.lastCargoLaunchRound,g.round);}
+ assert.throws(()=>G.confirmMove(g,u));
+});

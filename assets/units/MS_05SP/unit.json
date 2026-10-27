@@ -509,7 +509,8 @@
     "commandAuras": [
       {
         "type": "cmdCom",
-        "radiusCells": 2
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
     "actionPoints": 5,
@@ -1503,8 +1504,8 @@
     {
       "id": "CmdCom",
       "source": "Template/Unit/Skill/CmdCom.gw",
-      "status": "review",
-      "name": "通信指挥"
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
     }
   ],
   "weaponKits": [

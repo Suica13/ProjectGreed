@@ -587,7 +587,8 @@
     "commandAuras": [
       {
         "type": "cmdDef",
-        "radiusCells": 2
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
       }
     ],
     "actionPoints": 5,

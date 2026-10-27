@@ -14,14 +14,11 @@ const KitShop = (() => {
     byId("buyFormationKit").textContent = price
       ? "购买 " + price.quantity + " 套" + (context.equip ? "并装备" : "")
       : "暂无价格";
-    const prefab = Rules.catalog.prefabs.find((p) => p.id === context.unitId);
     const faction = context.faction;
     byId("buyFormationKit").disabled =
       !price ||
       !Economy.affordable(price) ||
-      prefab.wip ||
-      (faction !== "PMC" && faction !== prefab.faction) ||
-      !Development.allows(faction, prefab.id);
+      !Economy.canBuyKit(id, faction);
     byId("formationKitStock").textContent =
       (price ? "每批 " + price.quantity + " 套 · " : "") +
       "已持有 " +

@@ -132,7 +132,7 @@ test("personal save download and file import preserve pilots, formations and spe
   expect(unchanged).toBe(true);
   expect(errors).toEqual([]);
 });
-test("technology credits immediately but shows a combined toast only after turn end, including final turn", async ({
+test("technology credits and combines immediate toasts including final turn", async ({
   page,
 }) => {
   await open(page);
@@ -183,10 +183,10 @@ test("technology credits immediately but shows a combined toast only after turn 
       count: byId("techRewardStack").childElementCount,
     };
   });
-  expect(result.during).toEqual({ balance: 50, count: 0 });
-  expect(result.ended).toContain("50点");
-  expect(result.final).toContain("75点");
-  expect(result.count).toBe(2);
+  expect(result.during).toEqual({ balance: 50, count: 1 });
+  expect(result.ended).toContain("50");
+  expect(result.final).toContain("75");
+  expect(result.count).toBe(1);
 });
 test("map XP and level-up labels are deduplicated and follow an embarked pilot's carrier", async ({
   page,
@@ -212,7 +212,8 @@ test("map XP and level-up labels are deduplicated and follow an embarked pilot's
       },
     );
     PilotRewards.draw(ctx, { id: "carrier" }, 100, 200, performance.now());
-    if (calls.length) throw Error("XP displayed before playback finished");
+    if (calls.length !== 2) throw Error("XP must display immediately during playback");
+    calls.length = 0;
     PilotRewards.receive({ ...snapshot, phase: "idle" });
     PilotRewards.receive({ ...snapshot, phase: "idle" });
     PilotRewards.draw(ctx, { id: "passenger" }, 100, 200, performance.now());

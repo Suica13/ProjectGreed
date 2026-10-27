@@ -7,7 +7,28 @@ def _skills(prefab):
     }
 
 
+def apply_command_auras(prefab, native=None):
+    """Keep native aura ownership; tactical range/power are the user-defined policy."""
+    names = {"CmdAtk": ("cmdAtk", "攻击指挥"), "CmdDef": ("cmdDef", "防御指挥"), "CmdCom": ("cmdCom", "通信指挥")}
+    declared = _skills(prefab)
+    auras = []
+    for ident, (kind, name) in names.items():
+        present = ("hiddenAction_Check_" + ident in native) if native is not None else ident in declared
+        if not present:
+            continue
+        auras.append({"type": kind, "name": name, "source": "Template/Unit/Skill/" + ident + ".gw"})
+        for mechanic in prefab.get("mechanics", []):
+            if mechanic.get("id") == ident:
+                mechanic.update(status="adapted", name=name + "：范围与效果随驾驶员领导力变化")
+    if auras:
+        prefab.setdefault("stats", {})["commandAuras"] = auras
+    else:
+        prefab.setdefault("stats", {}).pop("commandAuras", None)
+    return auras
+
+
 def correct(prefab, native=None):
+    apply_command_auras(prefab, native)
     skills = _skills(prefab)
     sensors = prefab.setdefault("stats", {}).setdefault("sensors", {})
     sensors["stealth"] = "Stealth" in skills

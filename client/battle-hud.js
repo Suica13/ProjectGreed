@@ -268,8 +268,8 @@ const BattleHUD = (() => {
     if (confirmingMove) byId("hudCancelAction").setAttribute("aria-keyshortcuts", "W");
     else byId("hudCancelAction").removeAttribute("aria-keyshortcuts");
     confirmMove.hidden = !actionActive || !confirmingMove;
-    confirmMove.disabled = !!movingPreview || isBusy();
-    byId("hudCancelAction").disabled = confirmingMove && (!!movingPreview || isBusy());
+    confirmMove.disabled = !!movingPreview || isBusy(true);
+    byId("hudCancelAction").disabled = confirmingMove && (!!movingPreview || isBusy(true));
     byId("hudActionBand").hidden = !actionActive && !spectating;
     byId("hudCancelAction").hidden = spectating;
     byId("spectatorViewControl").hidden = !spectating;
@@ -347,6 +347,7 @@ const BattleHUD = (() => {
             : !canCommand;
       row.prepend(infoButton);
       infoButton.hidden = false;
+      if (pendingMove) for (const button of row.querySelectorAll("button")) button.disabled = true;
       row.hidden = false;
       commands.append(row);
     } else if (actions) actions.hidden = true;

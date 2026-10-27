@@ -35,6 +35,10 @@ test("native Minovsky dispensers create centered grid fields with EN, AP, cooldo
   G.end(game);
   assert.equal(G.activeMinovskyFields(game).length, 1);
   G.end(game);
+  assert.equal(G.activeMinovskyFields(game).length, 1);
+  G.end(game);
+  assert.equal(G.activeMinovskyFields(game).length, 1);
+  G.end(game);
   assert.equal(G.activeMinovskyFields(game).length, 0);
 });
 

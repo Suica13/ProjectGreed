@@ -41,10 +41,34 @@ const Formation = (() => {
       localStorage.setItem(pilotStorageKey + "migrated", group);
     }
   } catch {}
-  let pilotStore = pilotStores[group];
-  function savePilots(faction = group) {
+  const sharedPilotKey = "projectgreed.custom-pilots.v3.shared";
+  let pilotStore;
+  try {
+    pilotStore = JSON.parse(localStorage.getItem(sharedPilotKey));
+  } catch {}
+  if (!Array.isArray(pilotStore?.pilots) || !Array.isArray(pilotStore?.awards)) {
+    const pilots = new Map();
+    for (const store of Object.values(pilotStores))
+      for (const pilot of store.pilots) {
+        const previous = pilots.get(pilot.id);
+        if (
+          !previous ||
+          pilot.level > previous.level ||
+          (pilot.level === previous.level && pilot.experience > previous.experience)
+        )
+          pilots.set(pilot.id, pilot);
+      }
+    pilotStore = {
+      pilots: [...pilots.values()],
+      awards: [...new Set(Object.values(pilotStores).flatMap((store) => store.awards))],
+    };
+  } else {
+    pilotStore.pilots = pilotStore.pilots.map((pilot) => PilotSystem.custom(pilot));
+  }
+  savePilots();
+  function savePilots() {
     try {
-      localStorage.setItem(pilotStorageKey + faction, JSON.stringify(pilotStores[faction]));
+      localStorage.setItem(sharedPilotKey, JSON.stringify(pilotStore));
     } catch {
       note("浏览器无法保存驾驶员，本次会话仍可使用。");
     }
@@ -57,16 +81,14 @@ const Formation = (() => {
       if (copy.customPilot) {
         const saved = pilotStore.pilots.find((p) => p.id === copy.customPilot.id);
         if (saved) copy.customPilot = structuredClone(saved);
-        else if (copy.customPilot.faction !== group) delete copy.customPilot;
+        else delete copy.customPilot;
       }
       return copy;
     });
   }
   function receivePilotAwards(snapshot) {
     if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
-    for (const faction of ["PMC", "EFSF", "ZEON"])
-      if (PilotSystem.creditAwards(pilotStores[faction], snapshot.pilotAwards || []))
-        savePilots(faction);
+    if (PilotSystem.creditAwards(pilotStore, snapshot.pilotAwards || [])) savePilots();
     draft = hydratePilots(draft);
   }
   function defaultSquads(faction) {
@@ -264,7 +286,6 @@ const Formation = (() => {
     if (!["PMC", "EFSF", "ZEON"].includes(next) || group === next) return;
     finishPilotEditor();
     group = next;
-    pilotStore = pilotStores[group];
     PlayerProfile.setFormationGroup(group);
     if (!Net.active) PlayerProfile.setFaction(next);
     loadCharacter();
@@ -677,6 +698,17 @@ const Formation = (() => {
       container.append(cell);
     }
   }
+  function pilotButtonText(button, prefix, entry, model) {
+    const name = entry.customPilot?.name || PilotSystem.defaultName(model);
+    button.classList.add("formation-pilot-button");
+    const label = element("span", "pilot-button-prefix", prefix + " · ");
+    const viewport = element("span", "pilot-name-viewport");
+    const text = element("span", "pilot-name-scroll", name);
+    if (entry.customPilot) text.setAttribute("data-i18n-ignore", "");
+    viewport.append(text);
+    button.replaceChildren(label, viewport);
+    button.title = prefix + " · " + name;
+  }
   function renderDetail() {
     const originalEntry = detailIndex === null ? catalogDetail : draft[detailIndex];
     if (!originalEntry) return closeDetail();
@@ -724,11 +756,11 @@ const Formation = (() => {
     byId("formationDetailTitle").textContent = model.code + " " + (entry.customName || model.name);
     byId("formationDetailTitle").toggleAttribute("data-i18n-ignore", !!entry.customName);
     byId("formationDetailTags").replaceChildren(unitTags(model));
+    ProductionUI.renderSale(originalEntry.unitId);
     byId("formationDetailNameEditor").hidden = detailIndex === null || !!previewModel;
     const pilotButton = byId("formationDetailPilot");
     pilotButton.hidden = detailIndex === null || !!previewModel;
-    pilotButton.textContent =
-      "配属驾驶员 · " + (originalEntry.customPilot?.name || PilotSystem.defaultName(model));
+    pilotButtonText(pilotButton, "配属驾驶员", originalEntry, model);
     renderPreview(entry.unitId + "__" + entry.kitId);
     renderPreloads(model);
     renderCarrierChoice(entry, model);
@@ -759,8 +791,7 @@ const Formation = (() => {
     kits.disabled = !!previewModel;
     byId("openFormationKitShop").disabled =
       !!previewModel ||
-      !PlayerProfile.allows(prefab) ||
-      !prefab.weaponKits.some((kit) => Economy.kitPrice(prefab.id + "__" + kit.id));
+      !prefab.weaponKits.some((kit) => Economy.canBuyKit(prefab.id + "__" + kit.id, group));
     if (previewModel) byId("formationKitShop").close();
     detailMetrics(byId("formationDetailStats"), [
       ["HP", model.hp.toLocaleString()],
@@ -905,7 +936,18 @@ const Formation = (() => {
       );
       mechanics.append(card);
     }
-    for (const skill of model.skills || []) {
+    for (const skill of [
+      ...SkillControls.commandAbilities(
+        model,
+        originalEntry.customPilot
+          ? {
+              model: entry.unitId + "__" + entry.kitId,
+              pilot: originalEntry.customPilot,
+            }
+          : null,
+      ),
+      ...(model.skills || []),
+    ]) {
       const card = element("div", "formation-weapon-detail");
       card.append(
         element("strong", "", skill.name),
@@ -934,6 +976,8 @@ const Formation = (() => {
       mechanics.append(card);
     }
     for (const mechanic of model.mechanics || []) {
+      if (["CmdAtk", "CmdDef", "CmdCom"].includes(mechanic.id) && model.commandAuras?.length)
+        continue;
       const card = element("div", "formation-weapon-detail");
       card.append(
         element("strong", "", mechanic.name),
@@ -1222,6 +1266,7 @@ const Formation = (() => {
         "formation-pilot-button",
         "驾驶员 · " + (entry.customPilot?.name || PilotSystem.defaultName(model)),
       );
+      pilotButtonText(pilot, "驾驶员", entry, model);
       pilot.setAttribute("aria-haspopup", "dialog");
       pilot.onclick = () => openPilot(i);
       actions.append(details, pilot, remove);
@@ -1585,11 +1630,16 @@ const Formation = (() => {
     else renderCatalog();
   };
   byId("formationSearch").oninput = () => renderCatalog();
+  byId("formationStock").onchange = () => renderCatalog();
   function renderCatalog() {
     const query = byId("formationSearch").value.trim().toLocaleLowerCase();
-    const prefabs = UnitCatalog.select(query, catalogFilters, PlayerProfile.allows).filter(
-      pickerCompatible,
-    );
+    const prefabs = UnitCatalog.select(query, catalogFilters, PlayerProfile.allows)
+      .filter(
+        (prefab) =>
+          pickerCompatible(prefab) &&
+          (byId("formationStock").value === "all" || Economy.quantity(prefab.id) > 0),
+      )
+      .sort(UnitCatalog.compareFactionCost(group));
     if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
       byId("formationPrefab").value = prefabs[0]?.id || "";
     const list = byId("formationCatalog");
@@ -2161,6 +2211,8 @@ const Formation = (() => {
   };
   function renderPilotStats() {
     byId("customPilotAvatar").src = PilotSystem.portrait(pilotEdit);
+    resetTraining.textContent = "重置属性点 · 资金 " + 1000 * pilotEdit.level;
+    resetTraining.disabled = pilotIsNew || !Economy.affordable({ money: 1000 * pilotEdit.level });
     byId("customPilotProgress").textContent =
       `Lv.${pilotEdit.level}${pilotEdit.level === PilotSystem.growthRules.maxLevel ? " MAX" : ""} · COST +${PilotSystem.cost(pilotEdit)} · EXP ${pilotEdit.experience}/${pilotEdit.level === PilotSystem.growthRules.maxLevel ? "MAX" : PilotSystem.experienceRequired(pilotEdit.level)} · 强化点 ${pilotEdit.points}`;
     byId("customPilotRecord").textContent = pilotRecordText(pilotEdit);
@@ -2187,6 +2239,16 @@ const Formation = (() => {
         pilotEdit.points--;
         renderPilotStats();
       };
+      const plusFive = element("button", "pilot-plus-five", "+5");
+      plusFive.type = "button";
+      plusFive.setAttribute("aria-label", "强化" + label + " +5");
+      plusFive.disabled =
+        pilotEdit.points < 5 || pilotEdit.stats[key] + 5 > PilotSystem.statCap(pilotEdit.level);
+      plusFive.onclick = () => {
+        pilotEdit.stats[key] += 5;
+        pilotEdit.points -= 5;
+        renderPilotStats();
+      };
       row.append(
         element(
           "span",
@@ -2194,10 +2256,42 @@ const Formation = (() => {
           `${label} ${pilotEdit.stats[key]} / ${PilotSystem.statCap(pilotEdit.level)}`,
         ),
         plus,
+        plusFive,
       );
       stats.append(row);
     }
   }
+  const resetTraining = element("button", "", "重置属性点");
+  resetTraining.id = "resetPilotTraining";
+  resetTraining.type = "button";
+  byId("pilotTrainingTitle").parentElement.append(resetTraining);
+  resetTraining.onclick = async () => {
+    if (!pilotEdit || pilotIsNew) return;
+    const id = pilotEdit.id,
+      faction = group,
+      cost = 1000 * pilotEdit.level;
+    if (
+      !(await GameDialog.confirm("花费 " + cost + " 资金重置属性点，是否继续？", {
+        title: "重置驾驶员属性",
+        confirmText: "重置",
+      }))
+    )
+      return;
+    if (!pilotEdit || pilotEdit.id !== id || group !== faction) return;
+    const clean = PilotSystem.refundTraining(pilotEdit);
+    const next = { ...pilotStore, pilots: pilotStore.pilots.map((p) => (p.id === id ? clean : p)) };
+    try {
+      if (!Economy.transact({ money: cost }, {}, [[sharedPilotKey, JSON.stringify(next)]]))
+        return note("资金不足");
+      pilotStore = next;
+      pilotEdit = clean;
+      pilotOriginal = JSON.stringify(clean);
+      commitPilot(clean);
+      renderPilotStats();
+    } catch (error) {
+      note(Economy.errorMessage(error));
+    }
+  };
   function finishPilotEditor() {
     if (!pilotEdit) return;
     pilotEdit = null;
@@ -2279,8 +2373,17 @@ const Formation = (() => {
     checkInventory,
     current,
     receivePilotAwards,
-    exportPilotStores: () => structuredClone(pilotStores),
-    hasPilotAward: (id) => Object.values(pilotStores).some((store) => store.awards.includes(id)),
+    exportPilotStores: () =>
+      Object.fromEntries(
+        ["PMC", "EFSF", "ZEON"].map((faction) => [
+          faction,
+          {
+            pilots: structuredClone(pilotStore.pilots.filter((pilot) => pilot.faction === faction)),
+            awards: [...pilotStore.awards],
+          },
+        ]),
+      ),
+    hasPilotAward: (id) => pilotStore.awards.includes(id),
     open,
     group: () => group,
     setGroup,
@@ -2358,8 +2461,8 @@ const Deployment = (() => {
     byId("deploymentStatus").textContent =
       seat === null
         ? "观战：等待两队部署。"
-        : `${teamName(Rules.seatTeam(seat))}出生区部署 · 选中己方单位，再点击高亮空格调整位置。`;
-    byId("confirmDeployment").disabled = !canEdit();
+        : `${teamName(Rules.seatTeam(seat))}全队共享部署区 · 选中己方单位，再点击高亮空格调整位置。`;
+    byId("confirmDeployment").disabled = !canEdit() || !!pendingMovement();
     byId("confirmDeployment").textContent =
       seat !== null && game.deployment[seat] ? "已确认，等待对方" : "确认部署 (B)";
   }
@@ -2386,6 +2489,7 @@ const Deployment = (() => {
     }
   }
   byId("confirmDeployment").onclick = () => {
+    if (pendingMovement()) return;
     if (!canEdit()) return;
     if (Net.active) return Net.request("confirm_deployment");
     if (game.ai) game.deployment[1] = true;

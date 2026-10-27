@@ -80,6 +80,19 @@ const Development = (() => {
     unitCache.clear();
     return true;
   }
+  function receiveActivity(award) {
+    const next = exportProgress();
+    for (const id of award.unlockUnits || []) {
+      const faction = ["EFSF","ZEON"].find(group=>nodes(group).some(node=>node.unlocks.includes(id)));
+      if (!faction) throw Error("活动开发奖励无效："+id);
+      if (!next.researched.units[faction].includes(id)) next.researched.units[faction].push(id);
+    }
+    if (!economy.creditActivity(award,[[progressKey,JSON.stringify(next)]])) return false;
+    progress = next;
+    unitCache.clear();
+    if (typeof window !== "undefined") window.dispatchEvent(new Event("development-changed"));
+    return true;
+  }
   function researchSnapshot() {
     return normalizeResearch(progress.researched);
   }
@@ -165,6 +178,7 @@ const Development = (() => {
     researchSnapshot,
     normalizeResearch,
     grantUnit,
+    receiveActivity,
   };
 })();
 if (typeof module !== "undefined") module.exports = Development;

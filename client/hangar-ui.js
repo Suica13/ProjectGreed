@@ -4,7 +4,7 @@ const HangarUI = (() => {
   dialog.id = "hangarDialog";
   dialog.setAttribute("aria-label", "格纳库");
   document.body.append(dialog);
-  let statusUnit = null;
+  let statusUnit = null, confirmingLaunch = false;
   let inspected = null,
     launching = null,
     boarding = null,
@@ -35,7 +35,7 @@ const HangarUI = (() => {
       const u = getUnit(fields.unitId);
       if (action === "embark")
         Rules.hangars.embark(game, u, getUnit(fields.carrierId), fields.hangarId);
-      else PlanningUI.move(Rules.hangars.launch(game, u, fields.x, fields.y));
+      else PlanningUI.move(Rules.hangars.previewLaunch(game, u, fields.x, fields.y));
       addLog(`${logUnit(u)} ${action === "embark" ? "搭载" : "出击"}。`);
       update();
     } catch (error) {
@@ -240,10 +240,29 @@ const HangarUI = (() => {
   }
   function cancel() {
     launching = boarding = boardingCarrier = reopenCarrier = null;
+    confirmingLaunch = false;
     launchLocations = [];
     if (["hangar-launch", "hangar-board"].includes(mode)) mode = "select";
   }
   function refresh() {
+    const passenger = launching && getUnit(launching);
+    if (passenger?.pendingMove?.launch) {
+      confirmingLaunch = true;
+      selected = passenger.id; mode = "move-confirm"; weaponId = null;
+      if (dialog.open) dialog.close();
+      return;
+    }
+    if (confirmingLaunch) {
+      const carrier = getUnit(reopenCarrier);
+      cancel();
+      if (carrier?.hp > 0) {
+        selected = carrier.id; mode = "select"; weaponId = null;
+        const cargo = Rules.hangars.cargo(game, carrier);
+        if (cargo.length) open(carrier);
+        queueMicrotask(update);
+      }
+      return;
+    }
     if (launching && (!getUnit(launching)?.embarked || !["idle", "deployment"].includes(phase))) {
       const carrier = getUnit(reopenCarrier);
       const hasCargo = carrier?.hp > 0 &&
@@ -294,6 +313,7 @@ const HangarUI = (() => {
       return true;
     }
     reopenCarrier = getUnit(launching)?.embarked?.carrierId || null;
+    selected = launching;
     request("launch", { unitId: launching, x: cell.x, y: cell.y });
     return true;
   }

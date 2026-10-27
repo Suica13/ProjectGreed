@@ -67,3 +67,12 @@ test("small, medium and large tags select the matching damage and hit modifiers"
     model.unitTags.splice(0, model.unitTags.length, ...originalTags);
   }
 });
+
+test("helicopter rotor decals draw after the hull",()=>{
+ for(const id of ["EF_Heli","ZN_Heli"]){
+  const prefab=require("../assets/units/"+id+"/unit.json");
+  const hull=prefab.layers.findIndex(layer=>layer.name==="Body");
+  assert(hull>=0);
+  for(let index=0;index<prefab.layers.length;index++)if(prefab.layers[index].rotationSpeed)assert(index>hull,id);
+ }
+});

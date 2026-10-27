@@ -290,7 +290,6 @@
         }
       }
     ],
-    "commandAuras": [],
     "supplyAura": {
       "range": 2,
       "hpPercent": 5,

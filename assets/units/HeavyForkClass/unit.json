@@ -759,7 +759,8 @@
     "commandAuras": [
       {
         "type": "cmdCom",
-        "radiusCells": 2
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
     "accuracyMultiplier": 1.1,
@@ -3195,8 +3196,8 @@
     {
       "id": "CmdCom",
       "source": "Template/Unit/Skill/CmdCom.gw",
-      "status": "review",
-      "name": "通信指挥"
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
     },
     {
       "id": "special_Common_MinovskyParticle_M",
@@ -3241,7 +3242,7 @@
       "radius": 9,
       "enCost": 450,
       "actionCost": 2,
-      "durationRounds": 2,
+      "durationRounds": 4,
       "cooldownTurns": 3,
       "maxUses": 99,
       "consumeAction": false,

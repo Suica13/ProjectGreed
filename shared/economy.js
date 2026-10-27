@@ -164,6 +164,30 @@ const Economy = (() => {
     next.claimed = { ...next.claimed, [award.id]: award.matchId };
     return commit(next);
   }
+  function creditActivity(award, extraWrites = []) {
+    if (!award?.id || !award.matchId || Object.hasOwn(state.claimed || {},award.id)) return false;
+    if (![award.money,award.supplies].every(value=>Number.isSafeInteger(value)&&value>=0)) throw Error("活动货币奖励无效");
+    const next = snapshot();
+    next.money += award.money; next.supplies += award.supplies;
+    for (const [id,count] of Object.entries(award.inventory || {})) {
+      if (!Object.hasOwn(catalog.baseModels,id) || !Number.isSafeInteger(count) || count < 1) throw Error("活动单位奖励无效");
+      next.inventory[id] = (next.inventory[id] || 0) + count;
+    }
+    next.claimed = {...next.claimed,[award.id]:award.matchId};
+    return commit(next,extraWrites);
+  }
+  function sellPrice(unitId) {
+    const offer = catalog.offers[baseModel(unitId)];
+    return offer ? { money: Math.floor(offer.money / offer.quantity / 2), supplies: Math.floor(offer.supplies / offer.quantity / 2) } : null;
+  }
+  function sellUnit(unitId) {
+    const price = sellPrice(unitId);
+    if (!price || !(state.inventory[unitId] > 0)) return false;
+    const next = snapshot();
+    next.inventory[unitId]--;
+    next.money += price.money; next.supplies += price.supplies;
+    return commit(next);
+  }
   function baseModel(unitId) {
     return catalog.baseModels[unitId] || null;
   }
@@ -186,11 +210,12 @@ const Economy = (() => {
         ) * base.quantity;
     return price;
   }
-  function available(offer, faction) {
+  function available(offer, faction, allowOwned = false) {
+    const owned = allowOwned && offer && (state.inventory[offer.unitId] || 0) > 0;
     if (
       !offer ||
       !["PMC", "EFSF", "ZEON"].includes(faction) ||
-      (faction !== "PMC" && offer.faction !== faction)
+      (!owned && faction !== "PMC" && offer.faction !== faction)
     )
       return false;
     const development =
@@ -200,7 +225,7 @@ const Economy = (() => {
         ? ART.models
         : require("../tools/load-catalog.cjs").loadCatalog().models;
     const model = models[baseModel(offer.unitId)];
-    return !!model && !model.wip && development.allows(faction, offer.unitId);
+    return !!model && !model.wip && (owned || development.allows(faction, offer.unitId));
   }
   function produce(unitId, faction) {
     const offer = catalog.offers[baseModel(unitId)];
@@ -236,9 +261,12 @@ const Economy = (() => {
     const quantities = Object.fromEntries(plan.items.map((item) => [item.unitId, item.quantity]));
     return { ok: transact(plan, quantities), reason: "funds", plan };
   }
+  function canBuyKit(modelId, faction) {
+    return !!kitPrice(modelId) && available(catalog.offers[modelId], faction, true);
+  }
   function buyKit(modelId, faction) {
     const price = kitPrice(modelId);
-    if (!price || !available(catalog.offers[modelId], faction)) return false;
+    if (!canBuyKit(modelId, faction)) return false;
     return transact(price, {}, [], { [modelId]: price.quantity });
   }
   // Presets are alternatives. Only entries in the current formation reserve equipment;
@@ -273,8 +301,12 @@ const Economy = (() => {
     transact,
     produce,
     buyKit,
+    canBuyKit,
     productionPlan,
     creditAward,
+    creditActivity,
+    sellPrice,
+    sellUnit,
     produceMissing,
     baseModel,
     baseKit,

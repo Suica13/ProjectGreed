@@ -117,7 +117,6 @@ const PilotSystem = (() => {
     } else {
       p.record.losses++;
       p.record.lostCost += unitCost;
-      p.experience = Math.max(0, p.experience - experienceRequired(p.level) * 0.25);
     }
     return custom(p);
   }
@@ -200,22 +199,14 @@ const PilotSystem = (() => {
   }
   function modifiers(unit, model) {
     const stats = of(unit, model).stats;
-    const command = commandUnit(model);
-    const offense = command ? stats.leadership : stats.shooting;
-    const melee = command ? stats.leadership : stats.melee;
-    const defense = command ? stats.leadership : stats.defense;
-    const accuracy = command ? stats.leadership : stats.accuracy;
-    const reaction = command ? stats.leadership : stats.reaction;
-    const graduated = (value) =>
-      (Math.min(value, 175) - 100) * 0.25 + Math.max(0, value - 175) * 0.125;
     const awakening = stats.awakening >= 100 ? 1.15 : 1;
     return {
-      shooting: factor(offense, 0.5) * awakening,
-      melee: factor(melee, 0.5) * awakening,
-      defense: Math.min(1.5, Math.max(0.5, 1 - (defense - 100) * 0.002)),
-      speed: factor(command ? stats.leadership : stats.speed, 0.105),
-      accuracy: factor(100 + graduated(accuracy), 1),
-      reaction: factor(100 + graduated(reaction), 1),
+      shooting: factor(stats.shooting, 0.5) * awakening,
+      melee: factor(stats.melee, 0.5) * awakening,
+      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.005),
+      move: factor(stats.speed, 0.5),
+      accuracy: factor(stats.accuracy, 0.5),
+      reaction: factor(stats.reaction, 0.5) * factor(stats.speed, 0.1),
     };
   }
   return { catalog, labels, profile, commandUnit, defaultName,

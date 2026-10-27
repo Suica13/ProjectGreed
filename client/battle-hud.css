@@ -908,15 +908,14 @@
   font-weight: 700;
   text-align: center;
   box-shadow: 0 5px 20px #0009;
-  animation: tech-reward-show 3.2s ease both;
+  animation: tech-reward-show 180ms ease both;
   transition: transform 180ms ease;
 }
 #gameScene .tech-reward-toast:nth-last-child(2) { transform: translateY(-4px) scale(0.92); }
 #gameScene .tech-reward-toast:nth-last-child(3) { transform: translateY(-8px) scale(0.84); }
 @keyframes tech-reward-show {
   0% { opacity: 0; translate: 0 10px; }
-  12%, 76% { opacity: 1; translate: 0 0; }
-  100% { opacity: 0; translate: 0 -10px; }
+  100% { opacity: 1; translate: 0 0; }
 }
 #gameScene #hudCancelAction,
 #gameScene #hudConfirmMove {

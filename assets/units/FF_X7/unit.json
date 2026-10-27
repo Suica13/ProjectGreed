@@ -100,7 +100,6 @@
     },
     "movementType": "air",
     "partsBreakable": false,
-    "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
       "sight": 9,

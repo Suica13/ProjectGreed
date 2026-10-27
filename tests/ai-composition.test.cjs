@@ -3,7 +3,7 @@ const test = require("node:test"),
 const G = require("../shared/rules.js");
 const modelOf = (entry) => G.models[entry.unitId + "__" + entry.kitId];
 const commander = (model) =>
-  !model.ship && model.commandAuras?.some((aura) => ["cmdCom", "cmdDef"].includes(aura.type));
+  !model.ship && model.commandAuras?.some((aura) => ["cmdAtk", "cmdCom", "cmdDef"].includes(aura.type));
 const seedOf = (n) => Math.imul(n, 0x9e3779b9) >>> 0;
 test("AI mixes starter platforms, respects budget and counts command auras across weapon kits", () => {
   for (const faction of ["EFSF", "ZEON"])

@@ -240,7 +240,6 @@
         }
       }
     ],
-    "commandAuras": [],
     "sensors": {
       "sight": 8,
       "radar": 12.5,

@@ -579,7 +579,13 @@
       "rubble": 75
     },
     "ship": false,
-    "commandAuras": [],
+    "commandAuras": [
+      {
+        "type": "cmdAtk",
+        "name": "攻击指挥",
+        "source": "Template/Unit/Skill/CmdAtk.gw"
+      }
+    ],
     "actionPoints": 5,
     "sensors": {
       "sight": 8,
@@ -2003,8 +2009,8 @@
     {
       "id": "CmdAtk",
       "source": "Template/Unit/Skill/CmdAtk.gw",
-      "status": "review",
-      "name": "攻击指挥"
+      "status": "adapted",
+      "name": "攻击指挥：范围与效果随驾驶员领导力变化"
     }
   ],
   "weaponKits": [

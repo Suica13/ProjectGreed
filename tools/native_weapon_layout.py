@@ -177,10 +177,11 @@ def kit_names(p):
  return p
 
 def correct(p,row,data):
+ from native_passives import apply_command_auras
+ apply_command_auras(p,data)
  from v05_balance import apply_balance
  if p.get('nativeLayoutRevision')==1:return kit_names(apply_balance(visibility_and_deferred(p,data),data))
  oldkits=copy.deepcopy(p['weaponKits']);tank_turrets(p,data)
- p['stats']['commandAuras']=[{'type':kind,'radiusCells':2} for kind in ['cmdCom','cmdDef'] if 'decal_'+kind+'_Range' in data]
  # World-space command/range overlays must never become hull-sized sprite decals.
  p['layers']=[l for l in p['layers'] if '/Ring/' not in section(data,'decal_'+l['name']).get('image','') ] if all('decal_'+l['name'] in data for l in p['layers']) else [l for l in p['layers'] if not any(x in l['name'] for x in ['cmdCom_Range','cmdDef_Range','SupplyRange','ReEntry_Range'])]
  hidden=[];main={}

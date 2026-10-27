@@ -2260,7 +2260,6 @@
       "hpPercent": 10,
       "enCost": 10
     },
-    "commandAuras": [],
     "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
@@ -2410,7 +2409,7 @@
       "radius": 9,
       "enCost": 450,
       "actionCost": 2,
-      "durationRounds": 2,
+      "durationRounds": 4,
       "cooldownTurns": 3,
       "maxUses": 99,
       "consumeAction": false,

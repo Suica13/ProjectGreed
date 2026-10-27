@@ -21,7 +21,7 @@ def correct(prefab, native):
             "radius": radius,
             "enCost": en_cost,
             "actionCost": 2,
-            "durationRounds": 2,
+            "durationRounds": 4,  # Two complete cycles; game.round advances on each side handoff.
             "cooldownTurns": 3,
             "maxUses": 99,
             "consumeAction": False,

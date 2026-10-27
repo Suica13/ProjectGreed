@@ -22,6 +22,7 @@ function createServer({
   aiBattleMs = 10000,
   hostReconnectMs = 60000,
   reconnectGraceMs = 60000,
+  activitiesPath = port === 0 ? null : path.join(__dirname, "server-data", "activities.json"),
 } = {}) {
   const rooms = new Map(),
     publicDir = path.join(__dirname, "public");
@@ -50,6 +51,10 @@ function createServer({
     } catch {
       res.writeHead(400);
       res.end();
+      return;
+    }
+    if (["/admin/activities", "/admin/activities.html"].includes(pathname) || pathname.startsWith("/api/activities/admin")) {
+      void activities.httpHandler(req,res).catch(error => { if (!res.headersSent) res.writeHead(500); res.end("Activity storage failure"); });
       return;
     }
     if (pathname.startsWith("/api/developer/")) {
@@ -118,9 +123,13 @@ function createServer({
   const send = (ws, data) => {
     if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify(data));
   };
+  const activities = require("./tools/server-activities.cjs").createActivityService({rules,send,storePath:activitiesPath});
+  const activityTimer = setInterval(() => { try { activities.tick(); } catch (error) { console.error("Activity scheduler:",error.message); } },1000);
+  activityTimer.unref();
   let lastRoomList = "";
   const engine = createRoomEngine({
     rules,
+    getRewardMultipliers: () => activities.rewardMultipliers(),
     createPasswordVerifier: (password) => {
       const salt = crypto.randomBytes(16),
         digest = crypto.scryptSync(password, salt, 32);
@@ -185,7 +194,10 @@ function createServer({
             : 16384;
         if (data.length > payloadLimit) throw Error("消息过大。");
         if (!msg || typeof msg !== "object" || Array.isArray(msg)) throw Error("消息格式无效");
-        if (msg.type === "ping") send(ws, { type: "pong" });
+        if (typeof msg.type === "string" && msg.type.startsWith("activity_")) {
+          if (msg.type === "activity_hello" && msg.version !== project.version) throw Error("活动客户端版本不匹配");
+          activities.receive(ws,msg);
+        } else if (msg.type === "ping") send(ws, { type: "pong" });
         else if (msg.type === "list_rooms") {
           ws.lobby = true;
           send(ws, { type: "rooms", rooms: roomList() });
@@ -205,18 +217,19 @@ function createServer({
           }
           if (!["PMC", "EFSF", "ZEON"].includes(msg.characterFaction))
             throw Error("请使用最新客户端并选择角色阵营后加入房间。");
+          if (msg.identity) activities.identify(ws,msg.identity,msg.name);
           join(ws, msg);
         } else if (msg.type === "action") action(ws, msg);
         else throw Error("未知消息类型");
       } catch (err) {
         send(ws, {
-          type: "error",
+          type: typeof msg?.type === "string" && msg.type.startsWith("activity_") ? "activity_error" : "error",
           id: typeof msg?.id === "string" ? msg.id : undefined,
           message: err.message,
         });
       }
     });
-    ws.on("close", () => engine.disconnect(ws));
+    ws.on("close", () => { activities.disconnect(ws); engine.disconnect(ws); });
   });
   const heartbeat = setInterval(() => {
     for (const ws of wss.clients) {
@@ -246,12 +259,13 @@ function createServer({
   }
   async function close() {
     clearInterval(heartbeat);
+    clearInterval(activityTimer);
     engine.close();
     for (const ws of wss.clients) ws.terminate();
     await new Promise((resolve) => wss.close(resolve));
     await new Promise((resolve) => server.close(resolve));
   }
-  return { listen, close, server, rooms };
+  return { listen, close, server, rooms, activities };
 }
 function loadConfig({
   configPath = path.join(__dirname, "cfg.json"),

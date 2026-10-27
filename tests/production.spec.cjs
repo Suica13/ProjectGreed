@@ -6,7 +6,10 @@ async function open(page) {
   await page.addInitScript(() => {
     if (localStorage.getItem("production-test-seeded")) return;
     localStorage.setItem("production-test-seeded", "yes");
-    localStorage.setItem("projectgreed.economy.v1", JSON.stringify({money:5000,supplies:10000,inventory:{},kits:{}}));
+    localStorage.setItem(
+      "projectgreed.economy.v1",
+      JSON.stringify({ money: 5000, supplies: 10000, inventory: {}, kits: {} }),
+    );
     localStorage.setItem("projectgreed.combatFaction", "PMC");
     localStorage.setItem(
       "slg-formations-v1.PMC",
@@ -222,4 +225,50 @@ test("technology shows both resource costs and rejects research when only techno
   );
   await expect(page.locator("#developmentDetails > button")).toBeDisabled();
   await expect(page.locator("#developmentDetails")).toContainText("资金或物资不足");
+});
+
+test("owned but undeveloped chassis enable kit checkout in production and unit previews", async ({
+  page,
+}) => {
+  await open(page);
+  const kit = await page.evaluate(() => {
+    const id = "RX_78_2";
+    if (Development.allows("PMC", id)) throw Error("fixture must remain undeveloped");
+    return Object.keys(Economy.catalog.offers)
+      .find((model) => Economy.catalog.offers[model].unitId === id && Economy.kitPrice(model))
+      .slice(id.length + 2);
+  });
+  await page.locator("#openProduction").click();
+  await page.locator("#productionSearch").fill("RX_78_2");
+  await page.locator('#productionList [data-unit-id="RX_78_2"]').click();
+  await page.locator("#productionKit").selectOption(kit);
+  await expect(page.locator("#buyProductionKit")).toBeDisabled();
+  await page.evaluate(() => {
+    Economy.transact({}, { RX_78_2: 1 });
+  });
+  // Changing selection refreshes the current preview after the externally awarded chassis.
+  await page.locator("#productionKit").selectOption(kit);
+  await expect(page.locator("#buyProductionKit")).toBeEnabled();
+  await expect(page.locator("#produceUnit")).toBeDisabled();
+  await page.locator("#buyProductionKit").click();
+  expect(await page.evaluate((kit) => Economy.kitQuantity("RX_78_2__" + kit), kit)).toBeGreaterThan(
+    0,
+  );
+  await page.locator("#closeProduction").click();
+  await page.locator("#openFormation").click();
+  await page.locator("#openFormationPicker").click();
+  await page.locator("#formationSearch").fill("RX_78_2");
+  await page.locator('[data-detail-unit-id="RX_78_2"]').click();
+  await expect(page.locator("#openFormationKitShop")).toBeEnabled();
+  await page.locator("#openFormationKitShop").click();
+  await page.locator("#formationKitPurchase").selectOption(kit);
+  await expect(page.locator("#buyFormationKit")).toBeEnabled();
+  await page.locator("#buyFormationKit").click();
+  await page.evaluate(() => {
+    Economy.sellUnit("RX_78_2");
+  });
+  await page.locator("#closeFormationDetail").click();
+  await page.locator("#formationStock").selectOption("all");
+  await page.locator('[data-detail-unit-id="RX_78_2"]').click();
+  await expect(page.locator("#openFormationKitShop")).toBeDisabled();
 });

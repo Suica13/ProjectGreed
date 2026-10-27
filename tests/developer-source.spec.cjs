@@ -12,6 +12,7 @@ test.beforeAll(async () => {
     "client",
     "shared",
     "tools",
+    "admin",
     "build.cjs",
     "server.js",
     "project.json",
@@ -178,7 +179,8 @@ test("unit and technology edits save real JSON; reload rebuilds both clients and
     await page.locator('#developerTreeFields [aria-label="名称"]').fill("编辑测试科技");
     await page.locator('#developerTreeFields [aria-label="说明"]').fill("测试持久保存");
     await page.locator('#developerTreeFields [aria-label="科技点"]').fill("123");
-    await page.locator('#developerTreeFields [aria-label="解锁单位"]').selectOption(["Type61"]);
+    await page.locator("#developerAddUnlock").click();
+    await page.locator('#developerTreeFields [aria-label="解锁单位"]').selectOption("Type61");
     await page
       .locator('[aria-label="上传科技图标"]')
       .setInputFiles(path.join(testRoot, tree.EFSF[0].icon));

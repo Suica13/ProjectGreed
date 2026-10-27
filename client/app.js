@@ -87,9 +87,9 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
   formatDistance = (n) =>
     Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " " + I18n.text("格"),
   isAI = () => !Net.active && game.ai && game.team === 1,
-  isBusy = () =>
+  isBusy = (allowDeployment = false) =>
     !!window.ReplayPlayer?.active ||
-    phase !== "idle" ||
+    (phase !== "idle" && !(allowDeployment && phase === "deployment")) ||
     !!Net.awaiting ||
     !!Net.snapshot?.returnCountdown ||
     (!Net.active && MapEffects.pending()) ||
@@ -265,7 +265,7 @@ function htmlWeapon(w, u, target = null, response = "counter", isCounter = false
 function update() {
   const pendingMove = pendingMovement();
   if (!pendingMove && mode === "move-confirm") mode = "select";
-  if (pendingMove && phase === "idle") {
+  if (pendingMove && ["idle", "deployment"].includes(phase)) {
     selected = pendingMove.id;
     mode = "move-confirm";
     weaponId = null;
@@ -609,7 +609,11 @@ function renderPanel() {
     );
     pilotStats.append(cell);
   }
-  stats.prepend(pilotLine, pilotStats);
+  if (pilot.custom) {
+    const xp = element("div", "unit-pilot-experience", `Lv.${pilot.level} · EXP ${pilot.experience}/${pilot.level >= PilotSystem.growthRules.maxLevel ? "MAX" : PilotSystem.experienceRequired(pilot.level)}`);
+    xp.dataset.pilotExperience = "";
+    stats.prepend(pilotLine, xp, pilotStats);
+  } else stats.prepend(pilotLine, pilotStats);
   stats.append(element("div", "", `行动点 ${Rules.actionPoints(u)}/${Rules.actionBudget(u)}`));
   overview.append(stats);
   const partStatus = element("div", "rule-box");
@@ -707,6 +711,15 @@ function renderPanel() {
       ),
     );
   overview.append(attacks);
+  for (const ability of SkillControls.commandAbilities(m,u)) {
+    const card = element("section","rule-box");
+    card.append(element("strong","",ability.name),element("p","helper",ability.description));
+    overview.append(card);
+  }
+  const command = Rules.commandEffects(game,u);
+  const commandLabels = {attack:"攻击指挥",defense:"防御指挥",communication:"通信指挥"};
+  for (const [kind,value] of Object.entries(command))
+    if (value) overview.append(element("p","helper",I18n.text(commandLabels[kind])+" +"+Number((value*100).toFixed(2))+"%"));
   let actions = element("div", "actions");
   for (const [label, fn, disabled] of [
     [
@@ -1405,7 +1418,7 @@ function drawMap(now) {
     if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden) continue;
     const motion = PlanningUI.motion(u, now) || (moving?.id === u.id ? moving : null);
     const visualUnit = u.pendingMove
-      ? { ...u, x: u.pendingMove.x, y: u.pendingMove.y, angle: u.pendingMove.angle }
+      ? { ...u, ...(u.pendingMove.launch ? {embarked:undefined} : {}), x: u.pendingMove.x, y: u.pendingMove.y, angle: u.pendingMove.angle }
       : u;
     const unitCenter = Rules.center(visualUnit),
       unitSize = Rules.dimensions(u);
@@ -1937,7 +1950,7 @@ function pendingMovement() {
 }
 function finishMovement(confirm) {
   const unit = pendingMovement();
-  if (!unit || isBusy() || PlanningUI.motion(unit, performance.now())) return;
+  if (!unit || isBusy(true) || PlanningUI.motion(unit, performance.now())) return;
   if (Net.active) return Net.request(confirm ? "confirm_move" : "cancel_move", { unitId: unit.id });
   if (confirm) {
     Rules.confirmMove(game, unit);

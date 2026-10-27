@@ -85,7 +85,7 @@ test("room kill awards are authoritative, private to the owner, and logged with 
   t.after(() => engine.close());
   const clients = [{ readyState: 1 }, { readyState: 1 }];
   clients.forEach((ws, i) =>
-    engine.join(ws, { mode: i ? "join" : "create", room: "PILOT", characterFaction: "PMC" }),
+    engine.join(ws, { mode: i ? "join" : "create", room: "PILOT", characterFaction: "PMC", inventory: { Type61: 10 } }),
   );
   const room = engine.rooms.get("PILOT");
   function act(i, action, fields = {}) {
@@ -133,7 +133,7 @@ test("room kill awards are authoritative, private to the owner, and logged with 
   assert.equal(losses.length, 1);
   assert.equal(losses[0].kind, "loss");
   assert.equal(losses[0].pilotId, victim.id);
-  assert.equal(b.pilot.experience, 350);
+  assert.equal(b.pilot.experience, 600);
   assert.equal(b.pilot.record.losses, 1);
   assert.equal(b.pilot.record.lostCost, G.models[b.model].cost);
   assert.equal(a.pilot.record.kills, 1);
@@ -142,17 +142,17 @@ test("room kill awards are authoritative, private to the owner, and logged with 
   assert.equal(a.pilot.experience, G.models[b.model].cost);
 });
 
-test("loss deducts one quarter of the level threshold, preserves levels and never goes negative", () => {
+test("loss preserves all experience, level and training points", () => {
   let p = P.custom({ ...fresh(), level: 3, experience: 3000 });
   p = P.battleResult(p, "loss", 500);
-  assert.equal(p.experience, 2000);
+  assert.equal(p.experience, 3000);
   assert.equal(p.level, 3);
   assert.equal(p.points, 90);
   assert.deepEqual(p.record, { kills: 0, losses: 1, destroyedCost: 0, lostCost: 500 });
   p = P.battleResult(p, "loss", 250);
   p = P.battleResult(p, "loss", 250);
   p = P.battleResult(p, "loss", 250);
-  assert.equal(p.experience, 0);
+  assert.equal(p.experience, 3000);
   assert.equal(p.record.losses, 4);
   assert.equal(p.record.lostCost, 1250);
   assert.throws(() => P.custom({ ...p, record: { kills: -1 } }), /战绩/);
@@ -192,14 +192,14 @@ test("match saves preserve pilot progression and records, rejecting invalid impo
   assert.throws(() => R.validateSave(G, save), /属性/);
 });
 
-test("faction ownership and uploaded portrait validation", () => {
+test("pilots are shared across factions and uploaded portraits remain validated", () => {
   const p = P.createCustom("custom-faction-pilot", "Pilot", P.catalog.named[0].id, "ZEON");
   assert.equal(p.faction, "ZEON");
   assert.equal(
     G.planFormation([{ unitId: "Type61", kitId: "standard", customPilot: p }], Infinity, {
       characterFaction: "EFSF",
     }).reasons[0],
-    "faction_mismatch",
+    undefined,
   );
   assert.throws(() => P.custom({ ...p, uploadedPortrait: "data:image/svg+xml;base64,AAA" }));
   assert.throws(() =>
@@ -424,4 +424,16 @@ test("ordinary and commander defaults drop ten points with awakening floored at 
   assert.deepEqual(P.catalog.defaultRanges,defaults); assert.deepEqual(P.catalog.commanderRanges,commanders);
   for(const [model,ranges] of [[{faction:"EFSF",unitTags:[]},defaults],[{faction:"ZEON",unitTags:["CmdUnit"]},commanders]])
     for(let seed=1;seed<=100;seed++) { const pilot=P.roll(null,seed,0,0,model); for(const [key,[lo,hi]] of Object.entries(ranges)) assert.ok(pilot.stats[key]>=lo&&pilot.stats[key]<=hi); }
+});
+
+test("every ten mobility points adds five percent movement and less evasion than reaction",()=>{
+ const model=G.models.Type61__standard;
+ const pilot=P.custom({...fresh(),level:10,stats:{...P.baseStats(),speed:100,reaction:100}});
+ const unit={model:"Type61__standard",pilot};
+ const neutral=G.modelOf(unit);
+ const fast=G.modelOf({...unit,pilot:{...pilot,stats:{...pilot.stats,speed:125}}});
+ assert.equal(fast.move/neutral.move,1.125);
+ const speed=P.modifiers({...unit,pilot:{...pilot,stats:{...pilot.stats,speed:125}}},model);
+ const reaction=P.modifiers({...unit,pilot:{...pilot,stats:{...pilot.stats,reaction:125}}},model);
+ assert(speed.reaction>1);assert(reaction.reaction>speed.reaction);
 });

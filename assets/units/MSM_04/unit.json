@@ -307,7 +307,6 @@
     "stealth": {
       "waterOnly": true
     },
-    "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
       "sight": 9,

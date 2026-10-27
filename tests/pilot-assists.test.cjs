@@ -160,3 +160,14 @@ test("authoritative level-up metadata and technology credits exist before the pl
   assert.equal(snapshot.techAwards[0].round, f.room.game.round);
   assert.equal(snapshot.techAwards[0].team, f.room.game.team);
 });
+
+test("player damage combines ordinary pilots across units",t=>{
+ const f=fixture(t),target=f.room.game.units[4];target.hp=100000;
+ for(const actor of f.room.game.units.slice(0,4)){
+  actor.pilot.custom=false;
+  f.act(0,"attack",{unitId:actor.id,targetId:target.id,weaponId:"EF_Type61_Cannon"});
+ }
+ f.resolve();
+ const total=100000-target.hp;assert(total>G.modelOf(target).hp*.25);
+ assert.equal(f.room.playerDamage[target.id][f.room.seats[0].id].damage,total);
+});

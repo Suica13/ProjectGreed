@@ -3,11 +3,22 @@ const test = require("node:test"),
 const G = require("../shared/rules.js"),
   R = require("../shared/battle-economy.js");
 const { createRoomEngine } = require("../shared/room-engine.js");
-function fixture(t, { mode = "regular", faction = "PMC", saved = false, strength = 1 } = {}) {
+function fixture(
+  t,
+  {
+    mode = "regular",
+    faction = "PMC",
+    saved = false,
+    strength = 1,
+    assist = false,
+    getRewardMultipliers,
+  } = {},
+) {
   let seq = 0;
   const frames = new Map();
   const engine = createRoomEngine({
     rules: G,
+    getRewardMultipliers,
     randomId: () => `id-${++seq}`,
     randomToken: () => `token-${++seq}`,
     randomSeed: () => 1,
@@ -28,6 +39,7 @@ function fixture(t, { mode = "regular", faction = "PMC", saved = false, strength
       },
     },
   ];
+  if (assist) clients.push({ readyState: 1 });
   clients.forEach((ws, i) =>
     engine.join(ws, {
       mode: i ? "join" : "create",
@@ -51,10 +63,12 @@ function fixture(t, { mode = "regular", faction = "PMC", saved = false, strength
   act(0, "configure_room", {
     ...G.defaultRoomSettings(),
     battleMode: mode,
+    ...(assist ? { mapId: "crossroads_2v2" } : {}),
     costLimit: 900,
     unitCostLimit: 99999,
     fogMode: "disabled",
   });
+  if (assist) act(2, "switch_seat", { seat: 2 });
   const tank = { unitId: "Type61", kitId: "standard" };
   const formations = [
     [
@@ -63,11 +77,12 @@ function fixture(t, { mode = "regular", faction = "PMC", saved = false, strength
     ],
     [tank],
   ];
+  if (assist) formations.push([tank]);
   clients.forEach((_, i) => act(i, "set_ready", { ready: true, formation: formations[i] }));
   act(0, "start_game", { formation: formations[0] });
   clients.forEach((_, i) => act(i, "confirm_formation"));
   clients.forEach((_, i) => act(i, "confirm_deployment"));
-  assert.equal(room.game.units.length, 3);
+  assert.equal(room.game.units.length, assist ? 4 : 3);
   room.startedFromSave = saved;
   room.game.tiles.forEach((r) => r.fill("plain"));
   const [attacker, ally, target] = room.game.units;
@@ -82,6 +97,7 @@ function fixture(t, { mode = "regular", faction = "PMC", saved = false, strength
     target.hp = 1;
     act(0, "attack", { unitId: attacker.id, targetId: target.id, weaponId: "EF_Type61_Cannon" });
     act(0, "end_turn");
+    if (assist) act(2, "end_turn");
     for (let i = 0; i < 8 && room.phase === "reaction"; i++)
       act(1, "respond", { response: "evade" });
     assert.equal(target.hp, 0);
@@ -108,7 +124,7 @@ for (const faction of ["EFSF", "PMC"])
       );
       assert.equal(
         view.economyAwards[0].money,
-        Math.floor(R.price("Type61__standard") * 1.5 * rates.currency * 1.5),
+        Math.floor(R.price("Type61__standard") * 2 * rates.currency * 1.5),
       );
       assert.equal(
         view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
@@ -119,8 +135,8 @@ for (const faction of ["EFSF", "PMC"])
       assert.equal(view.battleRoster, undefined);
       f.finish();
       const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
-      assert.equal(result.money, Math.floor(900 * 1.5 * rates.currency));
-      assert.equal(result.supplies, Math.floor(900 * 3 * rates.currency));
+      assert.equal(result.money, Math.floor(900 * 2.5 * rates.currency));
+      assert.equal(result.supplies, Math.floor(900 * 5 * rates.currency));
       assert.deepEqual(result.losses, mode === "quick" ? {} : { Type61: 1 });
       const loser = f.frames.get(f.clients[1]).economyAwards.find((a) => a.kind === "result");
       assert.equal(loser.money, 0);
@@ -180,4 +196,105 @@ test("identity and quick-mode multiplier contract", () => {
   assert.deepEqual(R.rates("PMC", "regular"), { currency: 1, technology: 0.5, experience: 1 });
   assert.deepEqual(R.rates("EFSF", "quick"), { currency: 0.05, technology: 0.1, experience: 0.1 });
   assert.deepEqual(R.rates("PMC", "quick"), { currency: 0.1, technology: 0.05, experience: 0.1 });
+});
+
+for (const faction of ["PMC", "EFSF"])
+  for (const mode of ["regular", "quick"])
+    for (const below of [false, true])
+      test(`player assist threshold/private settlement ${faction} ${mode} below=${below}`, (t) => {
+        const f = fixture(t, { faction, mode, assist: true, strength: 1.5 });
+        f.room.seats[2].characterFaction = faction;
+        const assistant = f.room.seats[2];
+        f.room.playerDamage = {
+          [f.target.id]: {
+            [assistant.id]: {
+              seat: 2,
+              damage: G.modelOf(f.target).hp * 0.25 - (below ? 1 : 0),
+              factions: { EFSF: 2000 },
+            },
+            [f.room.seats[0].id]: {
+              seat: 0,
+              damage: G.modelOf(f.target).hp,
+              factions: { EFSF: 8000 },
+            },
+          },
+        };
+        f.kill();
+        const view = f.frames.get(f.clients[2]);
+        assert.equal(view.economyAwards.length, below ? 0 : 1);
+        assert.equal(view.techAwards.length, below ? 0 : 1);
+        if (!below) {
+          const rates = R.rates(faction, mode);
+          assert.equal(
+            view.economyAwards[0].money,
+            Math.floor(R.price(f.target.model) * rates.currency * 1.5),
+          );
+          assert.equal(view.economyAwards[0].kind, "assist");
+          assert.equal(
+            view.techAwards[0].points,
+            Math.floor(G.modelOf(f.target).cost * 0.5 * rates.technology * 1.5),
+          );
+        }
+        const killer = f.frames.get(f.clients[0]);
+        assert.equal(killer.economyAwards.filter((a) => a.kind === "kill").length, 1);
+        assert.equal(killer.economyAwards.filter((a) => a.kind === "assist").length, 0);
+        assert.equal(f.room.playerDamage[f.target.id], undefined);
+      });
+
+for (const faction of ["EFSF", "PMC"])
+  for (const mode of faction === "EFSF" ? ["regular"] : ["regular", "quick"])
+    test(`server event multiplies ${faction} ${mode} authoritative kill and victory awards`, (t) => {
+      let enabled = true;
+      const bonus = { experience: 3, money: 2, supplies: 4, technology: 5 };
+      const f = fixture(t, {
+        faction,
+        mode,
+        strength: 1.5,
+        getRewardMultipliers: () =>
+          enabled ? bonus : { experience: 1, money: 1, supplies: 1, technology: 1 },
+      });
+      const rates = R.rates(faction, mode);
+      f.kill();
+      const view = f.frames.get(f.clients[0]);
+      assert.equal(
+        view.techAwards[0].points,
+        Math.floor(G.modelOf(f.target).cost * rates.technology * 1.5 * 5),
+      );
+      assert.equal(
+        view.economyAwards[0].money,
+        Math.floor(R.price(f.target.model) * 2 * rates.currency * 1.5 * 2),
+      );
+      assert.equal(
+        view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
+        Math.floor(G.modelOf(f.target).cost * rates.experience * 1.5 * 3),
+      );
+      f.finish();
+      const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
+      assert.equal(result.money, Math.floor(900 * 2.5 * rates.currency * 2));
+      assert.equal(result.supplies, Math.floor(900 * 5 * rates.currency * 4));
+    });
+test("event expiring between kill and victory does not change earlier awards; saves remain reward-free", (t) => {
+  let active = true;
+  const getRewardMultipliers = () => ({
+    experience: active ? 2 : 1,
+    money: active ? 2 : 1,
+    supplies: active ? 2 : 1,
+    technology: active ? 2 : 1,
+  });
+  const f = fixture(t, { getRewardMultipliers });
+  f.kill();
+  const money = f.frames.get(f.clients[0]).economyAwards[0].money;
+  active = false;
+  f.finish();
+  const awards = f.frames.get(f.clients[0]).economyAwards;
+  assert.equal(awards[0].money, money);
+  assert.equal(awards.find((a) => a.kind === "result").money, 900 * 2.5);
+  active = true;
+  const saved = fixture(t, { saved: true, getRewardMultipliers });
+  saved.kill();
+  saved.finish();
+  const view = saved.frames.get(saved.clients[0]);
+  assert.deepEqual(view.economyAwards, []);
+  assert.deepEqual(view.techAwards, []);
+  assert.deepEqual(view.pilotAwards, []);
 });

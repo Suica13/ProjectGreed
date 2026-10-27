@@ -213,5 +213,7 @@ def restore(prefab, native):
         raise ValueError("Missing native EN: "+prefab["id"])
     for weapon in prefab["weapons"].values():
         native_weapon(prefab,weapon,native)
+    from unit_ship_balance import apply_beams
+    apply_beams(prefab, native_restored=True)
     prefab["nativeCombatRevision"]=1
     return prefab

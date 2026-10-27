@@ -342,25 +342,56 @@
         .filter(Boolean);
     });
     requires.disabled = remove.disabled;
-    const unlockLabel = make("label", "解锁单位（按 Ctrl 多选）");
-    const unlocks = make("select");
-    unlocks.multiple = true;
-    unlocks.setAttribute("aria-label", "解锁单位");
+    const unlockSection = make("section");
+    unlockSection.className = "source-unlocks";
+    unlockSection.append(make("h4", "解锁单位"));
+    const unlockRows = make("div");
     const choices = new Map(
       Rules.catalog.prefabs.map((unit) => [unit.id, unit.code + " " + unit.name]),
     );
     for (const id of node.unlocks) if (!choices.has(id)) choices.set(id, id + "（尚未接入）");
-    for (const [id, name] of choices) {
-      const option = make("option", name);
-      option.value = id;
-      option.selected = node.unlocks.includes(id);
-      unlocks.append(option);
+    const addUnlock = button(
+      "添加解锁单位",
+      () => {
+        const id = [...choices.keys()].find((id) => !node.unlocks.includes(id));
+        if (id) {
+          node.unlocks.push(id);
+          renderUnlocks();
+        }
+      },
+      "developerAddUnlock",
+    );
+    function renderUnlocks() {
+      unlockRows.replaceChildren();
+      node.unlocks.forEach((id, index) => {
+        const row = make("div");
+        row.className = "source-unlock-row";
+        const select = make("select");
+        select.setAttribute("aria-label", "解锁单位");
+        for (const [value, name] of choices) {
+          const option = make("option", name);
+          option.value = value;
+          option.selected = value === id;
+          option.disabled = value !== id && node.unlocks.includes(value);
+          select.append(option);
+        }
+        select.onchange = () => {
+          node.unlocks[index] = select.value;
+          renderUnlocks();
+        };
+        const remove = button("删除", () => {
+          node.unlocks.splice(index, 1);
+          renderUnlocks();
+        });
+        remove.setAttribute("aria-label", "删除解锁单位 " + id);
+        row.append(select, remove);
+        unlockRows.append(row);
+      });
+      addUnlock.disabled = node.unlocks.length >= choices.size;
     }
-    unlocks.onchange = () => {
-      node.unlocks = Array.from(unlocks.selectedOptions, (option) => option.value);
-    };
-    unlockLabel.append(unlocks);
-    treePanel.append(unlockLabel);
+    unlockSection.append(unlockRows, addUnlock);
+    treePanel.append(unlockSection);
+    renderUnlocks();
     const uploadLabel = make("label", "上传 PNG 图标（500KB以内）");
     const upload = make("input");
     upload.type = "file";

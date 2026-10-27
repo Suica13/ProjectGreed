@@ -26,5 +26,16 @@ const UnitCatalog = (() => {
           a.id.localeCompare(b.id, "en"),
       );
   }
-  return { select };
+  // Both catalogs prioritize the active faction, then ascending COST.
+  function compareFactionCost(faction = PlayerProfile.faction()) {
+    const minimumCost = (prefab) =>
+      Math.min(...prefab.weaponKits.map((kit) => prefab.stats.cost + kit.cost));
+    return (a, b) =>
+      Number(b.faction === faction) - Number(a.faction === faction) ||
+      a.faction.localeCompare(b.faction, "en") ||
+      minimumCost(a) - minimumCost(b) ||
+      a.name.localeCompare(b.name, I18n.language, { numeric: true, sensitivity: "base" }) ||
+      a.id.localeCompare(b.id, "en");
+  }
+  return { select, compareFactionCost };
 })();

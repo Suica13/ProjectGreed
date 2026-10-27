@@ -21,7 +21,7 @@ const PlayerProfile = (() => {
   }
 
   function updateProgress() {
-    const factions = ["EFSF", "ZEON"];
+    const factions = character === "PMC" ? ["EFSF", "ZEON"] : [character];
     const unlocked = factions.reduce((sum, faction) => sum + Development.unlockedTech(faction).length, 0);
     const total = factions.reduce((sum, faction) => sum + Development.nodes(faction).length, 0);
     const bar = byId("menuTechProgressBar");
@@ -50,12 +50,16 @@ const PlayerProfile = (() => {
   input.addEventListener("change", name);
   updateProgress();
   showFaction();
+  window.addEventListener("development-changed", updateProgress);
+  window.addEventListener("page-changing", updateProgress);
+  window.addEventListener("language-change", updateProgress);
 
   function setFaction(faction) {
     if (!["PMC", "EFSF", "ZEON"].includes(faction) || faction === character) return;
     character = faction;
     try { localStorage.setItem(factionKey, faction); } catch {}
     showFaction();
+    updateProgress();
     window.dispatchEvent(new CustomEvent("character-selected", {
       detail: { character: faction, initial: false },
     }));

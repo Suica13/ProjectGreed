@@ -1070,12 +1070,14 @@
     ],
     "commandAuras": [
       {
-        "type": "cmdCom",
-        "radiusCells": 2
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
       },
       {
-        "type": "cmdDef",
-        "radiusCells": 2
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
     "supplyAura": {
@@ -3849,14 +3851,14 @@
     {
       "id": "CmdCom",
       "source": "Template/Unit/Skill/CmdCom.gw",
-      "status": "review",
-      "name": "通信指挥"
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
     },
     {
       "id": "CmdDef",
       "source": "Template/Unit/Skill/CmdDef.gw",
-      "status": "review",
-      "name": "防御指挥"
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
     },
     {
       "id": "CustomUnit_NewUnit",
@@ -3905,7 +3907,7 @@
       "radius": 9,
       "enCost": 450,
       "actionCost": 2,
-      "durationRounds": 2,
+      "durationRounds": 4,
       "cooldownTurns": 3,
       "maxUses": 99,
       "consumeAction": false,

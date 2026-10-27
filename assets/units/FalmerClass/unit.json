@@ -189,7 +189,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 81500,
+    "hp": 69500,
     "en": 2500.0,
     "move": 7,
     "mobility": 55.0,
@@ -363,7 +363,8 @@
     "commandAuras": [
       {
         "type": "cmdCom",
-        "radiusCells": 2
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
     "supplyAura": {
@@ -480,7 +481,9 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 65000.0
+    "v17BaseHp": 65000.0,
+    "shipHullBeforeReduction": 81500.0,
+    "shipBalanceMultiplier": 0.85
   },
   "presentation": {
     "shield": false,
@@ -527,9 +530,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 4250.0,
+      "damagePerShot": 4000,
       "damageComponents": {
-        "beam": 4250.0
+        "beam": 4000
       },
       "hitsPerShot": 1,
       "attack": {
@@ -540,7 +543,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "FalmerClass_Turret_BeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -548,7 +552,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "FalmerClass_Turret_BeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -556,7 +561,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "FalmerClass_Turret_BeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -564,7 +570,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "FalmerClass_Turret_BeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -572,7 +579,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "FalmerClass_Turret_BeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -580,7 +588,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "FalmerClass_Turret_BeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -714,7 +723,14 @@
         "energy": 180.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 4250.0,
+        "damageComponents": {
+          "beam": 4250.0
+        }
+      },
+      "shipDamageMultiplier": 0.85
     },
     "FalmerClass_Turret_AMS": {
       "name": "FalmerClass Turret AMS",
@@ -1155,8 +1171,8 @@
     {
       "id": "CmdCom",
       "source": "Template/Unit/Skill/CmdCom.gw",
-      "status": "review",
-      "name": "通信指挥"
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
     },
     {
       "id": "special_Common_MinovskyParticle_M",
@@ -1191,7 +1207,7 @@
       "radius": 9,
       "enCost": 450,
       "actionCost": 2,
-      "durationRounds": 2,
+      "durationRounds": 4,
       "cooldownTurns": 3,
       "maxUses": 99,
       "consumeAction": false,

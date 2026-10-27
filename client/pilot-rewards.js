@@ -16,10 +16,8 @@ const PilotRewards = (() => {
       seen.add(award.id);
       if (award.experiencePoints > 0 || award.leveledUp) pending.push(award);
     }
-    if (snapshot.phase !== "playback") {
-      const now = performance.now();
-      for (const award of pending.splice(0)) active.push({ ...award, start: now });
-    }
+    const now = performance.now();
+    for (const award of pending.splice(0)) active.push({ ...award, start: now });
   }
   function draw(ctx, unit, x, y, now) {
     for (let i = active.length - 1; i >= 0; i--)

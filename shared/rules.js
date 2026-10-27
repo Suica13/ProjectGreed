@@ -309,8 +309,6 @@ const Tactics = (() => {
     clean.forEach((entry, index) => {
       const reason = restrictionReason(models[entry.unitId + "__" + entry.kitId], restrictions);
       if (reason) reasons[index] = reason;
-      if (!reasons[index] && entry.customPilot && restrictions.characterFaction &&
-          entry.customPilot.faction !== restrictions.characterFaction) reasons[index] = "faction_mismatch";
     });
     if (restrictions.inventory !== undefined) {
       const inventory = normalizeInventory(restrictions.inventory);
@@ -466,7 +464,7 @@ const Tactics = (() => {
     const adaptation = (model) => model.adaptability?.[environment] ?? 100;
     const infantry = (model) => model.unitTags?.includes("Infantry");
     const commander = (model) => !model.ship &&
-      model.commandAuras?.some(aura => ["cmdCom", "cmdDef"].includes(aura.type));
+      model.commandAuras?.some(aura => ["cmdAtk", "cmdCom", "cmdDef"].includes(aura.type));
     const copies = (id) => entries.filter(entry => entry.unitId === id).length;
     const choices = Object.values(models).filter(
         (model) =>
@@ -540,18 +538,20 @@ const Tactics = (() => {
         ]);
         if (!placementCache.has(shape)) {
           const map = getMap(restrictions.mapId);
-          const area = map.deploymentAreas?.[restrictions.deploymentSeat ?? 0];
+          const seat = restrictions.deploymentSeat ?? 0;
+          const areas = (map.deploymentAreas || []).filter((area,index)=>seatTeam(index)===seatTeam(seat));
+          const sharedAreaSize = areas.reduce((sum,area)=>sum+area.width*area.height,0);
           const size = (entry) => {
             const f = models[entry.unitId + "__" + entry.kitId].footprint;
             return f ? f.width * f.height : 1;
           };
           const candidate = { unitId: model.prefabId, kitId: model.kitId };
           if (
-            area &&
+            sharedAreaSize &&
             entries.reduce((total, entry) => total + size(entry), 0) +
               size(candidate) +
               (slots - 1) >
-              area.width * area.height
+              sharedAreaSize
           ) {
             placementCache.set(shape, false);
             return false;
@@ -743,7 +743,7 @@ const Tactics = (() => {
         get name() { return base.name; },
         get description() { return base.description; },
         get kitName() { return base.kitName; },
-        move: base.move * modifiers.speed,
+        move: Math.max(1, base.move * modifiers.move),
         mobility: base.mobility * modifiers.reaction,
         accuracy: base.accuracy * modifiers.accuracy,
         pilotModifiers: modifiers,
@@ -821,36 +821,26 @@ const Tactics = (() => {
     };
   }
   function deploymentCells(g, seat, unit = null) {
-    const map = getMap(g.mapId),
-      spawn = map.spawns[seat],
-      cells = [];
-    if (!spawn) return cells;
-    const area = map.deploymentAreas?.[seat];
-    if (area) {
-      for (let y = area.y; y < Math.min(mapHeight(g), area.y + area.height); y++)
-        for (let x = area.x; x < Math.min(mapWidth(g), area.x + area.width); x++)
-          if (Number.isFinite(unit ? terrainCost(g, unit, x, y) : terrain[g.tiles[y][x]].cost))
-            cells.push({ x, y });
-      return cells.sort((a, b) => dist(a, spawn) - dist(b, spawn) || a.y - b.y || a.x - b.x);
+    const map = getMap(g.mapId), spawn = map.spawns[seat], available = new Map();
+    if (!spawn) return [];
+    // Each teammate keeps control of their units, while all friendly spawn zones are legal.
+    for (let other = 0; other < map.spawns.length; other++) {
+      if (seatTeam(other) !== seatTeam(seat)) continue;
+      const origin = map.spawns[other], area = map.deploymentAreas?.[other], radius = map.deploymentRadius;
+      const minX = area ? area.x : Math.max(0, origin.x - radius);
+      const minY = area ? area.y : Math.max(0, origin.y - radius);
+      const maxX = area ? area.x + area.width - 1 : origin.x + radius;
+      const maxY = area ? area.y + area.height - 1 : origin.y + radius;
+      for (let y = minY; y <= Math.min(mapHeight(g)-1,maxY); y++)
+        for (let x = minX; x <= Math.min(mapWidth(g)-1,maxX); x++)
+          if ((area || dist({x,y},origin) <= radius) &&
+              Number.isFinite(unit ? terrainCost(g,unit,x,y) : terrain[g.tiles[y][x]].cost))
+            available.set(key(x,y),{x,y});
     }
-    const radius = map.deploymentRadius;
-    for (
-      let y = Math.max(0, spawn.y - radius);
-      y <= Math.min(mapHeight(g) - 1, spawn.y + radius);
-      y++
-    )
-      for (
-        let x = Math.max(0, spawn.x - radius);
-        x <= Math.min(mapWidth(g) - 1, spawn.x + radius);
-        x++
-      )
-        if (
-          dist({ x, y }, spawn) <= radius &&
-          Number.isFinite(unit ? terrainCost(g, unit, x, y) : terrain[g.tiles[y][x]].cost)
-        )
-          cells.push({ x, y });
-    return cells.sort((a, b) => dist(a, spawn) - dist(b, spawn) || a.y - b.y || a.x - b.x);
+    // Preserve the initial placement near the owner's spawn; manual deployment shares the union.
+    return [...available.values()].sort((a,b)=>dist(a,spawn)-dist(b,spawn)||a.y-b.y||a.x-b.x);
   }
+
   function deploy(g, team, id, x, y) {
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再调整");
     const u = g.units.find((u) => u.id === id && ownerOf(u) === team);
@@ -943,6 +933,26 @@ const Tactics = (() => {
     minovskyAt,
   });
   // Grid anchors remain integers; a ship's explicit heading determines its whole rectangle.
+  function commandAura(provider) {
+    const model = modelOf(provider);
+    const leadership = pilots.of(provider, model).stats.leadership;
+    const steps = Math.trunc((leadership - 100) / 25);
+    return { radius: Math.max(1, 3 + steps), effect: Math.max(0, 0.1 + steps * 0.02), kinds: model.commandAuras || [] };
+  }
+  function commandEffects(g, target) {
+    const effects = {attack:0, defense:0, communication:0};
+    if (!onMap(target)) return effects;
+    for (const provider of g.units) {
+      if (!onMap(provider) || provider.team !== target.team || !modelOf(provider).commandAuras?.length) continue;
+      const aura = commandAura(provider);
+      if (dist(provider, target) > aura.radius) continue;
+      for (const kind of aura.kinds) {
+        const key = {cmdAtk:"attack", cmdDef:"defense", cmdCom:"communication"}[kind.type];
+        if (key) effects[key] = Math.max(effects[key], aura.effect);
+      }
+    }
+    return effects;
+  }
   function inSupplyRange(provider, target) {
     const aura = modelOf(provider).supplyAura;
     return !!aura && dist(provider, target) <= aura.range;
@@ -1406,7 +1416,7 @@ const Tactics = (() => {
     if (!pending) throw Error("没有待确认的移动");
     delete u.pendingMove;
     try {
-      const path = move(g, u, pending.x, pending.y);
+      const path = pending.launch ? hangars.launch(g, u, pending.x, pending.y).path : move(g, u, pending.x, pending.y);
       u.origin = null;
       return path;
     } catch (error) {
@@ -1630,10 +1640,9 @@ const Tactics = (() => {
   // 返回预估命中率和命中后的伤害，不修改对局。
   function estimate(g, a, b, w, response = "counter", isCounter = false) {
     w = weaponStats(w, a);
-    const bonuses = modelOf(a).attackBonuses,
-      categoryBonus =
-        (1 + bonuses[w.type === "melee" ? "melee" : "shooting"] / 100) *
-        (modelOf(a, g).pilotModifiers?.[w.type === "melee" ? "melee" : "shooting"] ?? 1);
+    const attacker = modelOf(a, g), bonuses = attacker.attackBonuses,
+      attackCommand = commandEffects(g, a), defenseCommand = commandEffects(g, b),
+      categoryBonus = 1 + bonuses[w.type === "melee" ? "melee" : "shooting"] / 100;
     const defender = modelOf(b, g),
       ground = terrain[g.tiles[b.y][b.x]],
       cover =
@@ -1642,7 +1651,7 @@ const Tactics = (() => {
           : w.type === "melee"
             ? (ground.meleeCover ?? 0)
             : ground.cover,
-      mobilityPenalty = (defender.mobility * (response === "evade" ? 1.25 : 1) - 100) * 0.1875,
+      mobilityPenalty = ((defender.mobility / (defender.pilotModifiers?.reaction ?? 1)) * (response === "evade" ? 1.25 : 1) - 100) * 0.1875,
       sizeModifier = w.antiSize?.[unitSize(defender)] || { damage: 1, accuracy: 1 },
       targetFactor = targetModifier(g, b, w),
       sensorFactor = sensors.detected(g, a.team, b) ? 1 : 0.75,
@@ -1654,7 +1663,7 @@ const Tactics = (() => {
             (w.attack.strikes.length === 1 && w.attack.strikes[0].accuracy !== undefined
               ? (w.attack.strikes[0].accuracy * w.hit) / (w.sourceHit || w.hit || 1)
               : w.hit) *
-              (modelOf(a, g).accuracy / 100) *
+              (attacker.accuracy / (attacker.pilotModifiers?.accuracy ?? 1) / 100) *
               sizeModifier.accuracy *
               targetFactor -
               cover -
@@ -1664,10 +1673,12 @@ const Tactics = (() => {
       // 最终回避加成在机动性、地形与反击惩罚计算后生效。
       rawHit = Math.min(
         100,
-        Math.max(0, baseHit - (response === "evade" ? 15 : 0)) * (w.hitScale || 1) * sensorFactor,
+        Math.max(0, baseHit - (response === "evade" ? 15 : 0)) * (w.hitScale || 1) *
+          (attacker.pilotModifiers?.accuracy ?? 1) * (1 + attackCommand.communication),
       ),
+      pilotEvasionHit = 100 - (100 - rawHit) * (defender.pilotModifiers?.reaction ?? 1) * (1 + defenseCommand.communication),
       particleDefense = minovskyAt(g, b),
-      particleEvasionHit = particleDefense ? 100 - (100 - rawHit) * 1.25 : rawHit,
+      particleEvasionHit = particleDefense ? 100 - (100 - pilotEvasionHit) * 1.25 : pilotEvasionHit,
       hit = Math.max(
         0,
         Math.min(
@@ -1675,12 +1686,13 @@ const Tactics = (() => {
           particleEvasionHit *
             (particleDefense && (w.category === "missile" || w.special?.type === "mortar")
               ? 0.75
-              : 1),
+              : 1) * sensorFactor,
         ),
       ),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier = (response === "defend" ? 0.75 : 1) *
-        (defender.pilotModifiers?.defense ?? 1),
+        (defender.pilotModifiers?.defense ?? 1) * (1 - defenseCommand.defense) *
+        (attacker.pilotModifiers?.[w.type === "melee" ? "melee" : "shooting"] ?? 1) * (1 + attackCommand.attack),
       strikes = availableStrikes(a, w, b);
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.
     let components = w.damageComponents;
@@ -2310,6 +2322,8 @@ const Tactics = (() => {
     modelOf,
     weaponStats,
     inSupplyRange,
+    commandAura,
+    commandEffects,
     supplyCells,
     dimensions,
     cells,

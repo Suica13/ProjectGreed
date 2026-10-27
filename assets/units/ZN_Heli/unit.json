@@ -90,24 +90,6 @@
   },
   "layers": [
     {
-      "name": "Top_1",
-      "bone": "LeftArm",
-      "texture": "ZN_Heli_Top_1.png",
-      "order": 4,
-      "scale": 0.5,
-      "rotationSpeed": 300.0,
-      "visibleWhen": {}
-    },
-    {
-      "name": "Top_2",
-      "bone": "RightArm",
-      "texture": "ZN_Heli_Top_1.png",
-      "order": 4,
-      "scale": 0.5,
-      "rotationSpeed": -300.0,
-      "visibleWhen": {}
-    },
-    {
       "name": "Body",
       "texture": "ZN_Heli_Body_1.png",
       "bone": "Body",
@@ -117,6 +99,24 @@
         "x": 0.0,
         "y": 0.0
       },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Top_1",
+      "bone": "LeftArm",
+      "texture": "ZN_Heli_Top_1.png",
+      "order": 6.0,
+      "scale": 0.5,
+      "rotationSpeed": 300.0,
+      "visibleWhen": {}
+    },
+    {
+      "name": "Top_2",
+      "bone": "RightArm",
+      "texture": "ZN_Heli_Top_1.png",
+      "order": 6.0,
+      "scale": 0.5,
+      "rotationSpeed": -300.0,
       "visibleWhen": {}
     }
   ],
@@ -152,7 +152,6 @@
       "rubble": 75
     },
     "ship": false,
-    "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
       "sight": 8,

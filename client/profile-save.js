@@ -9,6 +9,7 @@ const ProfileSave = (() => {
     const result = {
       format: value.format,
       schemaVersion: 1,
+      identity: value.identity ? ProfileIdentity.validate(value.identity) : ProfileIdentity.snapshot(),
       pilots: {},
       formations: {},
       development: Development.validateProgress(value.development),
@@ -94,6 +95,9 @@ const ProfileSave = (() => {
       );
       writes.set(formationKey + faction + "-active", save ? String(save.index) : null);
     }
+    // Rebuild the shared roster from imported faction archives on the next load.
+    writes.set("projectgreed.custom-pilots.v3.shared", null);
+    writes.set(ProfileIdentity.key, JSON.stringify(clean.identity));
     writes.set(Economy.key, JSON.stringify(clean.economy));
     writes.set(pilotKey + "migrated", "imported");
     writes.set("projectgreed.developmentProgress.v1", JSON.stringify(clean.development));
@@ -196,6 +200,7 @@ const ProfileSave = (() => {
       importData({
         format: "ProjectGreed-profile",
         schemaVersion: 1,
+        identity: ProfileIdentity.create(),
         pilots,
         formations,
         development: { points: { EFSF: 0, ZEON: 0 }, claimed: {} },

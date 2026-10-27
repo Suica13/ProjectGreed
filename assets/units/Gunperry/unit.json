@@ -194,7 +194,6 @@
       "rubble": 75
     },
     "ship": false,
-    "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
       "sight": 9,
@@ -561,7 +560,7 @@
       "radius": 7,
       "enCost": 300,
       "actionCost": 2,
-      "durationRounds": 2,
+      "durationRounds": 4,
       "cooldownTurns": 3,
       "maxUses": 99,
       "consumeAction": false,
