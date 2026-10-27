@@ -24,8 +24,44 @@ const Development = (() => {
     return tree[faction] || [];
   }
   function unlockedTech(faction) {
-    return starterTech[faction] || [];
+    return normalizeResearch(progress.researched)[faction] || [];
   }
+  function normalizeResearch(value = {}) {
+    const result = { units: {} };
+    for (const faction of ["EFSF", "ZEON"]) {
+      const requested = new Set(Array.isArray(value?.[faction]) ? value[faction] : []);
+      const active = new Set(starterTech[faction]);
+      for (let pass = 0; pass < nodes(faction).length; pass++)
+        for (const node of nodes(faction))
+          if (requested.has(node.id) && node.requires.every(id => active.has(id))) active.add(node.id);
+      result[faction] = [...active];
+      const knownUnits = new Set(nodes(faction).flatMap(node => node.unlocks));
+      result.units[faction] = [...new Set(Array.isArray(value?.units?.[faction]) ? value.units[faction] : [])].filter(id => knownUnits.has(id));
+    }
+    return result;
+  }
+  function research(faction, id) {
+    const node = nodes(faction).find(node => node.id === id);
+    const active = new Set(unlockedTech(faction));
+    if (!node || active.has(id) || !node.requires.every(id => active.has(id)) || pointBalance(faction) < node.points) return false;
+    const next = {...progress, points: {...progress.points, [faction]: pointBalance(faction) - node.points}, researched: {...normalizeResearch(progress.researched), [faction]: [...active, id]}};
+    if (typeof localStorage !== "undefined") localStorage.setItem(progressKey, JSON.stringify(next));
+    progress = next;
+    unitCache.clear();
+    return true;
+  }
+  // Rewards/scripts may grant a specific unit; there is deliberately no individual research UI.
+  function grantUnit(faction, unitId) {
+    const researched = normalizeResearch(progress.researched);
+    if (!researched.units[faction] || !nodes(faction).some(node => node.unlocks.includes(unitId)) || researched.units[faction].includes(unitId)) return false;
+    researched.units[faction].push(unitId);
+    const next = {...progress, researched};
+    if (typeof localStorage !== "undefined") localStorage.setItem(progressKey, JSON.stringify(next));
+    progress = next;
+    unitCache.clear();
+    return true;
+  }
+  function researchSnapshot() { return normalizeResearch(progress.researched); }
   function unlockedUnits(faction) {
     if (!unitCache.has(faction)) {
       const active = new Set(unlockedTech(faction));
@@ -34,11 +70,17 @@ const Development = (() => {
           .filter((node) => active.has(node.id))
           .flatMap((node) => node.unlocks),
       );
+      for (const id of normalizeResearch(progress.researched).units[faction] || []) ids.add(id);
       unitCache.set(faction, ids);
     }
     return unitCache.get(faction);
   }
-  function allows(faction, prefabId) {
+  function allows(faction, prefabId, researched) {
+    if (researched !== undefined) {
+      const active = normalizeResearch(researched);
+      return (faction === "PMC" ? ["EFSF", "ZEON"] : [faction]).some(side =>
+        active.units[side]?.includes(prefabId) || nodes(side).some(node => active[side]?.includes(node.id) && node.unlocks.includes(prefabId)));
+    }
     if (faction === "PMC")
       return ["EFSF", "ZEON"].some((side) => unlockedUnits(side).has(prefabId));
     return unlockedUnits(faction).has(prefabId);
@@ -56,7 +98,7 @@ const Development = (() => {
     try { localStorage.setItem(progressKey, JSON.stringify(progress)); } catch {}
     return true;
   }
-  return { nodes, unlockedTech, unlockedUnits, allows, pointBalance, creditAward };
+  return { nodes, unlockedTech, unlockedUnits, allows, pointBalance, creditAward, research, researchSnapshot, normalizeResearch, grantUnit };
 })();
 if (typeof module !== "undefined") module.exports = Development;
 

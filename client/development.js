@@ -85,7 +85,7 @@ const DevelopmentUI = (() => {
         (node.requires.map((id) => names.get(id) || id).join("、") || "无")),
       element("p", researched ? "success-text" : "muted",
         researched ? "已开发" : !available ? "前置科技未完成" :
-          points < node.points ? "阵营科技点不足" : "等待开发功能开放"),
+          points < node.points ? "阵营科技点不足" : "可以开发"),
       element("h4", "", "解锁单位"),
     );
     const units = element("div", "development-units");
@@ -93,8 +93,16 @@ const DevelopmentUI = (() => {
     details.append(units);
     const action = element("button", researched ? "" : "primary", researched ? "已开发" : "开发");
     action.type = "button";
-    action.disabled = true;
-    action.title = researched ? "初始科技" : "开发操作尚未开放";
+    action.disabled = researched || !available || points < node.points;
+    action.title = researched ? "已开发" : "消耗 " + node.points + " 科技点";
+    action.onclick = () => {
+      try {
+        if (Development.research(faction, node.id)) {
+          window.dispatchEvent(new Event("development-changed"));
+          render();
+        }
+      } catch { note("科技进度保存失败，请检查浏览器存储空间"); }
+    };
     details.append(action);
   }
 

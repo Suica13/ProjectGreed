@@ -3625,3 +3625,19 @@ test('uploaded pilot portraits larger than 16 KiB synchronize to another client'
   assert.equal(pilots.length,2);
   assert(pilots.every(u => u.pilot.uploadedPortrait === portrait && u.pilot.faction === 'PMC'));
 });
+
+test('researched technology sent with a formation unlocks its units on the server',async t=>{
+ const {client,app}=await setup(t),host=await client(),guest=await client();
+ await host.hello('create','RESEARCH');await guest.hello('join','RESEARCH');
+ await host.latest(s=>s.members.length===2);
+ const D=require('../shared/development.js');
+ const node=D.nodes('EFSF').find(n=>n.points>0 && n.requires.every(id=>D.unlockedTech('EFSF').includes(id)));
+ const prefab=G.catalog.prefabs.find(p=>node.unlocks.includes(p.id) && !D.allows('PMC',p.id));
+ const formation=[{unitId:prefab.id,kitId:prefab.weaponKits[0].id}];
+ const researched={EFSF:[node.id]};
+ const result=await host.act('set_ready',{ready:true,formation,researched});
+ assert.equal(result.type,'state',JSON.stringify(result));
+ const room=app.rooms.get('RESEARCH'),member=room.seats[host.joined.seat];
+ assert.notEqual(G.planFormation(formation,Infinity,G.armyRestrictions(room.settings,member)).reasons[0],'not_developed');
+ assert.equal(G.planFormation(formation,Infinity,G.armyRestrictions(room.settings,{...member,researched:{}})).reasons[0],'not_developed');
+});

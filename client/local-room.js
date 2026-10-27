@@ -51,6 +51,7 @@ const LocalRoom = (() => {
       room: "OFFLINE",
       name: PlayerProfile.name(),
       characterFaction: PlayerProfile.faction(),
+      researched: Development.researchSnapshot(),
       roomMode: byId("offlineRoomMode").value,
     });
     engine.action(socket, {

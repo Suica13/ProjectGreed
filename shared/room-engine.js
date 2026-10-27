@@ -2,6 +2,7 @@
  * transport 只收发消息；HP、命中、部署、AI 和回合均在这里决定。
  */
 "use strict";
+const RoomDevelopment = typeof Development !== "undefined" ? Development : require("./development.js");
 function createRoomEngine({
   rules: G,
   chatChannels = typeof ChatChannels === "undefined" ? require("./chat-channels.js") : ChatChannels,
@@ -1881,6 +1882,8 @@ function createRoomEngine({
     if (!member || member.ws !== ws) throw Error("请先加入房间");
     let id = msg.id;
     if (typeof id !== "string" || id.length < 4 || id.length > 100) throw Error("请求编号无效");
+    if (!room.started && msg.researched !== undefined)
+      member.researched = RoomDevelopment.normalizeResearch(msg.researched);
     const cache = member.requests;
     if (typeof msg.action !== "string") throw Error("无效的操作。");
     if (recordAction(room, member, msg)) return;
@@ -2778,6 +2781,7 @@ function createRoomEngine({
         id: randomId(),
         name: displayName || "玩家" + room.nextPlayerNumber++,
         characterFaction,
+        researched: RoomDevelopment.normalizeResearch(msg.researched),
         seat,
         ready: false,
         finalReady: false,

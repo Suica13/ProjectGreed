@@ -92,3 +92,19 @@ test('unit overview integers and pilot grid; portraits in battlefield hangars',a
   await expect(icon).toHaveCount(1);
   expect(await icon.evaluate(async img=>{await img.decode();return img.naturalWidth;})).toBe(64);
 });
+
+test('research button unlocks technology, deducts points and persists after reload',async({page})=>{
+ await open(page,{width:390,height:844});
+ const target=await page.evaluate(()=>{
+  Development.creditAward({id:'ui-research',matchId:'ui-match',faction:'EFSF',points:10000});
+  return Development.nodes('EFSF').find(n=>n.points>0 && n.requires.every(id=>Development.unlockedTech('EFSF').includes(id)));
+ });
+ await page.locator('#openDevelopment').click();
+ await page.locator(`[data-tech-id="${target.id}"]`).click();
+ const button=page.locator('#developmentDetails').getByRole('button',{name:'开发',exact:true});
+ await expect(button).toBeEnabled();await button.click();
+ await expect(page.locator('#developmentPoints')).toHaveText(String(10000-target.points));
+ await expect(page.locator(`[data-tech-id="${target.id}"]`)).toHaveAttribute('data-state','unlocked');
+ await page.reload();await page.waitForFunction(()=>assetsReady);
+ expect(await page.evaluate(id=>Development.unlockedTech('EFSF').includes(id),target.id)).toBe(true);
+});

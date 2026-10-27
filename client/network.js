@@ -139,6 +139,7 @@ const Net = (() => {
     n.socket.send(
       JSON.stringify({
         type: "action",
+        researched: Development.researchSnapshot(),
         action,
         id,
         revision: n.revision,
@@ -367,6 +368,7 @@ const Net = (() => {
           type: "hello",
           version: PROJECT.version,
           characterFaction: PlayerProfile.faction(),
+      researched: Development.researchSnapshot(),
           roomMode: mode === "create" ? byId("newRoomMode").value : undefined,
           mode,
           room,

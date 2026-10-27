@@ -254,7 +254,7 @@ const Tactics = (() => {
       return "faction_mismatch";
     if (
       ["PMC", "EFSF", "ZEON"].includes(restrictions.characterFaction) &&
-      !development.allows(restrictions.characterFaction, model.prefabId)
+      !development.allows(restrictions.characterFaction, model.prefabId, restrictions.researched)
     )
       return "not_developed";
     if (restrictions.environment && (model.adaptability?.[restrictions.environment] ?? 100) <= 0)
@@ -405,6 +405,7 @@ const Tactics = (() => {
     const rules = formationRestrictions(settings, player?.seat ?? null);
     rules.characterFaction = ["PMC", "EFSF", "ZEON"].includes(player?.characterFaction)
       ? player.characterFaction : null;
+    rules.researched = player?.researched;
     const config = armySettings(player);
     rules.unitCostLimit =
       config.unitCostLimit ??
