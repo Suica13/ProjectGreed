@@ -353,6 +353,8 @@ const Net = (() => {
     status(auto ? "正在恢复连接…" : "正在连接 " + url);
     update();
     let socket = new WebSocket(url);
+    const stateDecoder = StateWire.createDecoder();
+    let wireResyncPending = false;
     n.socket = socket;
     clearTimeout(connectionTimer);
     // TCP/WebSocket 已连通但未收到房间快照，也必须允许玩家再次尝试。
@@ -373,6 +375,7 @@ const Net = (() => {
         JSON.stringify({
           type: "hello",
           version: PROJECT.version,
+          stateDelta: 1,
           characterFaction: PlayerProfile.faction(),
           researched: Development.researchSnapshot(),
           inventory: Economy.snapshot().inventory,
@@ -389,8 +392,13 @@ const Net = (() => {
     socket.onmessage = (e) => {
       let msg;
       try {
-        msg = JSON.parse(e.data);
+        msg = stateDecoder.decode(JSON.parse(e.data));
+        if (msg.type === "state") wireResyncPending = false;
       } catch {
+        if (!wireResyncPending && socket.readyState === WebSocket.OPEN) {
+          wireResyncPending = true;
+          socket.send(JSON.stringify({type:"action",action:"sync",id:"wire-sync-"+Date.now()}));
+        }
         return;
       }
       receive(msg, socket, { url, room, mode });

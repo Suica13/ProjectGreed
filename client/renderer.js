@@ -109,7 +109,8 @@ const SpriteRenderer = (() => {
     const airborne = flying || ART.models[model].movementType === "air";
     variables.sustainedThrust = thrusters && (environment === "space" || airborne);
     // Aircraft need their native engine flames as well as the smaller reversing jets.
-    variables.thrustActive = (moving && variables.boosting) ||
+    variables.thrustActive =
+      (moving && variables.boosting) ||
       ((ART.models[model].ship || airborne) && variables.sustainedThrust);
     return models[model].decals.filter((layer) => visible(layer, variables, clip, at));
   }
@@ -257,7 +258,8 @@ const SpriteRenderer = (() => {
     if (environment === "space" || !(flying || ART.models[model].movementType === "air")) return 0;
     let phase = 0;
     for (const character of model) phase = (phase * 31 + character.charCodeAt(0)) >>> 0;
-    const t = now / 1000, seed = (phase % 628) / 100;
+    const t = now / 1000,
+      seed = (phase % 628) / 100;
     return Math.sin(t * 2.1 + seed) * 1.1 + Math.sin(t * 3.7 + seed * 1.3) * 0.3;
   }
   function draw(
@@ -293,7 +295,8 @@ const SpriteRenderer = (() => {
     const sampled = turretPose(model, pose(model, clip, time, loop), angle, aimAngle, active);
     ctx.save();
     const flightClock = globalThis.ReplayPlayer?.active
-      ? globalThis.ReplayPlayer.time * 1000 : performance.now();
+      ? globalThis.ReplayPlayer.time * 1000
+      : performance.now();
     ctx.translate(x, y + flightOffset(model, flightClock, flying, environment) * scale);
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
@@ -424,24 +427,34 @@ const SpriteRenderer = (() => {
     return presentation.movement === "walk" ? presentation.walk : presentation.move;
   }
   async function load(onProgress = () => {}) {
-    const entries = Object.entries(ART.assets);
-    let loaded = 0;
-    onProgress(loaded, entries.length);
-    await Promise.all(
-      entries.map(
-        ([key, source]) =>
-          new Promise((resolve, reject) => {
-            const image = new Image();
-            image.onload = () => {
-              images[key] = image;
-              onProgress(++loaded, entries.length);
-              resolve();
-            };
-            image.onerror = () => reject(Error("素材加载失败：" + key));
-            image.src = source;
-          }),
-      ),
-    );
+    const groups = new Map();
+    for (const [key, source] of Object.entries(ART.assets)) {
+      if (!groups.has(source)) groups.set(source, []);
+      groups.get(source).push(key);
+    }
+    const entries = [...groups],
+      total = Object.keys(ART.assets).length;
+    let loaded = 0,
+      cursor = 0;
+    onProgress(0, total);
+    // Reuse decoded images and bound concurrent decoding, especially on phones.
+    async function worker() {
+      while (cursor < entries.length) {
+        const [source, keys] = entries[cursor++];
+        await new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => {
+            for (const key of keys) images[key] = image;
+            loaded += keys.length;
+            onProgress(loaded, total);
+            resolve();
+          };
+          image.onerror = () => reject(Error("Asset loading failed: " + keys[0]));
+          image.src = source;
+        });
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(8, entries.length) }, () => worker()));
   }
   return {
     draw,

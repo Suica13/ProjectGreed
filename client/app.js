@@ -1264,6 +1264,7 @@ function mapMinovskyCells() {
 
 // 地图画布：先画地形与范围，再画单位、血条和名称。now 是毫秒时间。
 function drawMap(now) {
+  const battleSettings = BattleScene.settings();
   let c = byId("map"),
     box = c.getBoundingClientRect(),
     dpr = window.devicePixelRatio || 1;
@@ -1572,7 +1573,7 @@ function drawMap(now) {
         pos.y + (combatPose ? 0 : tile * (0.035 + environmentPose.offset)),
         (tile / 64) *
           1.2 *
-          (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
+          (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
           Rules.modelOf(u).presentation.mapScale,
         angle,
         anim,
@@ -1599,7 +1600,7 @@ function drawMap(now) {
         pos.y + (combatPose ? 0 : tile * (0.035 + environmentPose.offset)),
         (tile / 64) *
           1.2 *
-          (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
+          (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
           Rules.modelOf(u).presentation.mapScale,
         now / 1000,
       );
@@ -1609,7 +1610,7 @@ function drawMap(now) {
     let hpw =
         tile *
         0.72 *
-        BattleScene.settings().mapBarScale *
+        battleSettings.mapBarScale *
         (Rules.modelOf(u).ship ? unitSize.width : 1),
       barx = pos.x - hpw / 2,
       bary = pos.y + tile * (Rules.modelOf(u).ship ? unitSize.height / 2 - 0.12 : 0.36);
@@ -1642,7 +1643,7 @@ function drawMap(now) {
     }
     if (MapCamera.zoom >= 3) {
       ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
-      const nameSize = Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize;
+      const nameSize = Math.max(7, tile * 0.14) * battleSettings.mapLabelSize;
       ctx.font = `${nameSize}px system-ui`;
       ctx.textAlign = "center";
       ctx.save();
@@ -1678,7 +1679,7 @@ function drawMap(now) {
       ctx,
       u,
       pos.x,
-      bary + 16 + Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize,
+      bary + 16 + Math.max(7, tile * 0.14) * battleSettings.mapLabelSize,
       now,
     );
     if (
@@ -1722,7 +1723,7 @@ function drawMap(now) {
     const scale =
       (tile / 64) *
       1.2 *
-      (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
+      (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
       Rules.modelOf(actor).presentation.mapScale;
     SpriteRenderer.draw(
       ctx,

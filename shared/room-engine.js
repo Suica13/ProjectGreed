@@ -29,7 +29,7 @@ function createRoomEngine({
 }) {
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
-  function captureRecord(room) {
+  function captureRecord(room, intelCache) {
     const chatOnly = ["move_preview", "move_cancel"].includes(room.lastEvent?.type);
     if (chatOnly && room.recordChat === room.chat.at(-1)?.id) return;
     if (
@@ -82,7 +82,7 @@ function createRoomEngine({
       const snapshot =
         chatFrame && room.recordPrevious[perspective]
           ? Records.clone(room.recordPrevious[perspective])
-          : Records.publicView(state(room, undefined, { seat: null, viewTeam: team }));
+          : Records.publicView(state(room, undefined, { seat: null, viewTeam: team }, intelCache));
       snapshot.chat = room.chat.filter((message) =>
         chatChannels.canRead(team, message.channel || "all"),
       );
@@ -571,14 +571,13 @@ function createRoomEngine({
     };
   }
   const combatVisibility = new WeakMap();
-  function state(room, ack, recipient) {
+  function state(room, ack, recipient, intelCache) {
     const team = viewTeam(recipient);
-    const intel = team === null ? null : G.sensors.view(room.game, team);
-    const known = (id) =>
-      team === null ||
-      room.game.units.some(
-        (u) => u.id === id && (u.team === team || intel.visibleIds.includes(id)),
-      );
+    if (team !== null && intelCache && !intelCache.has(team)) intelCache.set(team, G.sensors.view(room.game, team));
+    const intel = team === null ? null : intelCache?.get(team) || G.sensors.view(room.game, team);
+    const visibleIds = new Set(intel?.visibleIds || []);
+    const knownIds = new Set(room.game.units.filter(u => u.team === team || visibleIds.has(u.id)).map(u => u.id));
+    const known = id => team === null || knownIds.has(id);
     const relevant = (event) =>
       team === null ||
       [event.attacker, event.target].some((id) =>
@@ -829,10 +828,11 @@ function createRoomEngine({
       scheduleResultReturn(room);
     }
     settleBattleEconomy(room);
-    captureRecord(room);
+    const intelCache = new Map();
+    captureRecord(room, intelCache);
     advanceReplay(room);
     room.updated = Date.now();
-    for (const member of members(room)) send(member.ws, state(room, ack, member));
+    for (const member of members(room)) send(member.ws, state(room, ack, member, intelCache));
     broadcastRooms();
     scheduleAutoEnd(room);
     scheduleAI(room);

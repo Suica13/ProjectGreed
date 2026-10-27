@@ -16,7 +16,11 @@
     "format": "prettier --write client/*.js client/*.html client/*.css shared/*.js tools/*.cjs server.js build.cjs playwright.config.cjs tests/*.cjs",
     "format:check": "prettier --check client/*.js client/*.html client/*.css shared/*.js tools/*.cjs server.js build.cjs playwright.config.cjs tests/*.cjs",
     "units:reload": "node tools/reload-units.cjs",
-    "activities": "node tools/open-server-activities.cjs"
+    "activities": "node tools/open-server-activities.cjs",
+    "perf:client": "node tools/performance-benchmark.cjs",
+    "perf:wire": "node tools/performance-wire-benchmark.cjs",
+    "test:performance": "node --test tests/performance-core.test.cjs tests/state-wire-network.test.cjs tests/playback-visibility.test.cjs tests/fog-modes.test.cjs tests/combat-playback.test.cjs tests/match-records.test.cjs tests/ui-layout.test.cjs",
+    "test:performance:ui": "playwright test tests/performance-network.spec.cjs tests/startup-loading.spec.cjs tests/developer-unlock-list.spec.cjs tests/network-weak.spec.cjs tests/production-sort.spec.cjs"
   },
   "dependencies": {
     "ws": "8.22.0"

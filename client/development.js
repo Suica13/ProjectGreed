@@ -14,8 +14,6 @@ const DevelopmentUI = (() => {
     for (const award of snapshot.techAwards || [])
       if (Development.creditAward(award)) RewardNotifications.add("technology", award);
   }
-  function defeated() {}
-  function finishPlayback() {}
   function unitRow(unitId) {
     const prefab = Rules.catalog.prefabs.find((unit) => unit.id === unitId);
     const row = element(prefab ? "button" : "div", "development-unit");
@@ -185,5 +183,5 @@ const DevelopmentUI = (() => {
   });
   window.addEventListener("character-selected", render);
   window.addEventListener("language-change", render);
-  return { render, receiveAwards, defeated, finishPlayback };
+  return { render, receiveAwards };
 })();

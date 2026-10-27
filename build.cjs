@@ -3,6 +3,7 @@ const fs = require("node:fs"),
   path = require("node:path"),
   root = __dirname;
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+const zlib = require("node:zlib");
 const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 // HTML 解析器会把字符串里的 </script> 也当作脚本结束符。
 const inlineScript = (source) => source.replace(/<\/script/gi, "<\\/script");
@@ -64,6 +65,7 @@ html = html.replace(
 for (const [key, file] of [
   ["DATA", null],
   ["I18N", "client/i18n.js"],
+  ["ASSET_POOL", "shared/asset-pool.js"],
   ["DIALOG", "client/dialog.js"],
   ["FORMATION", "client/formation.js"],
   ["UNIT_CATALOG", "client/unit-catalog.js"],
@@ -115,6 +117,7 @@ for (const [key, file] of [
   ["MAP_COMBAT", "client/map-combat.js"],
   ["COMBAT_PLAYBACK", "client/combat-playback.js"],
   ["NETWORK", "client/network.js"],
+  ["STATE_WIRE", "shared/state-wire.js"],
   ["LOCAL_ROOM", "client/local-room.js"],
   ["LOBBY", "client/lobby.js"],
   ["ROOM", "client/room.js"],
@@ -122,7 +125,9 @@ for (const [key, file] of [
   html = html.replace("__" + key + "__", () =>
     key === "DATA"
       ? JSON.stringify(
-          require("./tools/load-catalog.cjs").loadCatalog({ embedMusic: true }),
+          require("./shared/asset-pool.js").pack(
+            require("./tools/load-catalog.cjs").loadCatalog({ embedMusic: true }),
+          ),
         ).replace(/</g, "\\u003c")
       : inlineScript(read(file)),
   );
@@ -147,8 +152,15 @@ fs.mkdirSync(path.join(root, "public"), { recursive: true });
 for (const [name, content] of [
   ["client.html", release],
   ["developer.html", developer],
-])
-  fs.writeFileSync(path.join(root, "public", name), content);
+]) {
+  const target = path.join(root, "public", name);
+  fs.writeFileSync(target, content);
+  fs.writeFileSync(target + ".gz", zlib.gzipSync(content, { level: 6 }));
+  fs.writeFileSync(
+    target + ".br",
+    zlib.brotliCompressSync(content, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 4 } }),
+  );
+}
 fs.rmSync(path.join(root, "public/index.html"), { force: true });
 console.log(
   "Built release:",

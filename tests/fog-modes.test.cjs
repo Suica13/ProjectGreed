@@ -81,7 +81,7 @@ test("room fog defaults to full, validates values and synchronizes into match se
     },
   });
   t.after(() => engine.close());
-  engine.join(ws, { mode: "create", room: "FOGMODE", name: "Host" });
+  engine.join(ws, { mode: "create", room: "FOGMODE", name: "Host", characterFaction: "PMC" });
   const room = engine.rooms.get("FOGMODE");
   engine.action(ws, {
     type: "action",

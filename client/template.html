@@ -5212,7 +5212,9 @@
       const PILOT_DATA = __PILOT_DATA__;
       const CLIENT_CONFIG = __CLIENT_CONFIG__;
       const UI_LOCALES = __UI_LOCALES__;
-      const ART = JSON.parse(document.getElementById("art").textContent);
+      __ASSET_POOL__;
+      const ART = AssetPool.unpack(JSON.parse(document.getElementById("art").textContent));
+      document.getElementById("art").remove();
       __I18N__;
       __DIALOG__;
       I18n.bindCatalog(ART);
@@ -5250,6 +5252,7 @@
       __PLANNING_UI__;
       __MAP_COMBAT__;
       __COMBAT_PLAYBACK__;
+      __STATE_WIRE__;
       __NETWORK__;
       __LOCAL_ROOM__;
       __CHAT__;

@@ -11,3 +11,6 @@ build/ProjectGreed_V02.html
 /public/developer.html
 
 /server-data/
+
+/public/*.gz
+/public/*.br
