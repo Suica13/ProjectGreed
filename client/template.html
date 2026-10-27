@@ -2915,9 +2915,17 @@
     <section id="formationScreen" class="menu-screen" hidden data-ui-node="node-199">
       <div id="formationMain" class="modal formation-dialog" data-ui-node="node-206">
         <div class="formation-heading">
-          <h2 data-ui-node="node-207">单位编组</h2>
+          <h2 data-ui-node="node-207">编成</h2>
+          <nav class="formation-mode-tabs" aria-label="编成页面">
+            <button id="formationUnitsTab" type="button" aria-pressed="true">单位</button>
+            <button id="formationPilotsTab" type="button" aria-pressed="false">驾驶员</button>
+          </nav>
           <p id="formationBudget" data-ui-node="node-213"></p>
         </div>
+        <section id="formationPilotRoster" hidden>
+          <header class="formation-pilot-heading"><h3>驾驶员列表</h3><button id="createCustomPilot" type="button" aria-label="创建驾驶员">＋</button></header>
+          <div id="customPilotList"></div>
+        </section>
         <label class="formation-group-banner" for="formationGroup">
           <strong>编组阵营</strong>
           <select id="formationGroup" aria-label="编组阵营">
@@ -3123,13 +3131,25 @@
           </div>
         </div>
       </div>
+      <div id="customPilotPanel" class="formation-detail-overlay" hidden>
+        <div class="modal custom-pilot-dialog" role="dialog" aria-modal="true" aria-labelledby="customPilotTitle">
+          <header class="formation-pilot-heading"><h2 id="customPilotTitle">驾驶员管理</h2><button id="finishCustomPilot" type="button">完成</button></header>
+          <label>驾驶员名称 <input id="customPilotName" maxlength="24" /></label>
+          <p id="customPilotProgress"></p>
+          <p id="customPilotRecord"></p>
+          <p class="muted">被击坠时扣除当前等级升级所需经验的25%，最低为0，不降级。</p>
+          <h3>头像</h3><div id="customPilotPortraits"></div>
+          <h3>属性强化</h3><div id="customPilotStats"></div>
+          <p class="muted">每次升级获得10点强化点。每点强化使属性增加1，上限160。完成或离开时确认生效。</p>
+        </div>
+      </div>
       <div id="formationPilotPanel" class="formation-detail-overlay" hidden>
         <div class="modal formation-pilot-dialog" role="dialog" aria-modal="true" aria-labelledby="formationPilotTitle">
           <header class="formation-pilot-heading">
             <div><span class="eyebrow">PILOT ASSIGNMENT</span><h2 id="formationPilotTitle">驾驶员配属</h2></div>
             <button id="closeFormationPilot" type="button">关闭</button>
           </header>
-          <p class="muted">驾驶员属性在每局开始时随机生成；未配属时自动生成默认驾驶员；指挥单位默认配属指挥官，只有指挥官能驾驶。</p>
+          <p class="muted">未配属时自动使用对应阵营的默认驾驶员，属性浮动±10%；自建驾驶员使用固定属性，每级增加25编队COST。同一驾驶员不能重复配属。</p>
           <div id="formationPilotList" class="formation-pilot-list"></div>
         </div>
       </div>

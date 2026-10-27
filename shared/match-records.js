@@ -298,6 +298,7 @@ const MatchRecords = (() => {
       throw Error("存档对局状态无效。");
     const ids = new Set();
     for (const u of g.units) {
+      if (u.pilot?.custom) u.pilot = G.pilots.custom(u.pilot);
       if (
         typeof u.id !== "string" ||
         ids.has(u.id) ||

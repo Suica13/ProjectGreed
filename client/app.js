@@ -29,6 +29,7 @@ let pageView = "menu";
 let animationFrameId = null;
 // 页面生命周期：Menu 和房间准备只显示界面，不启动战斗 Canvas 绘制。
 function setPageView(view) {
+  if (view !== pageView) window.dispatchEvent(new Event("page-changing"));
   if (view !== "game") TurnFlow.reset();
   if (view !== "game" && pageView === "game" && battleView) {
     if (battleView.mapBattle) MapCombat.suspend(battleView);
@@ -107,7 +108,7 @@ async function copyQqGroup() {
 byId("copyQqGroup").onclick = copyQqGroup;
 function logUnit(unit) {
   const model = Rules.modelOf(unit);
-  return `[${teamName(unit.team)}][${UnitIdentity.owner(unit).name}]${Rules.unitName(unit)}(${model.code} ${model.name})`;
+  return `[${teamName(unit.team)}][${UnitIdentity.owner(unit).name}]${Rules.pilotUnitName(unit)}(${model.code} ${model.name})`;
 }
 function addLog(text) {
   log.unshift(text);
@@ -133,7 +134,7 @@ function escapeHtml(value) {
   );
 }
 // Keep player-written unit names literal while surrounding UI text is translated.
-function setNamedText(el, text, names = game.units.map((unit) => unit.customName).filter(Boolean)) {
+function setNamedText(el, text, names = game.units.flatMap((unit) => [unit.customName, unit.pilot?.custom ? unit.pilot.name : null]).filter(Boolean)) {
   el.replaceChildren();
   let rest = String(text);
   const unique = [...new Set(names)].sort((a, b) => b.length - a.length);
@@ -1593,7 +1594,25 @@ function drawMap(now) {
       const nameSize = Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize;
       ctx.font = `${nameSize}px system-ui`;
       ctx.textAlign = "center";
-      ctx.fillText(unitName(u), pos.x, bary + 12 + nameSize / 2);
+      const label = u.pilot?.custom ? u.pilot.name : unitName(u);
+      const labelY = bary + 12 + nameSize / 2;
+      if (u.pilot?.custom) {
+        const width = ctx.measureText(label).width, iconSize = nameSize * 1.1;
+        const left = pos.x - (width + iconSize + 3) / 2;
+        ctx.save();
+        ctx.translate(left, labelY - nameSize);
+        ctx.scale(iconSize / 16, iconSize / 16);
+        // Pilot helmet: dome, visor and chin guard; no platform emoji dependency.
+        ctx.beginPath();
+        ctx.moveTo(2, 14); ctx.lineTo(1, 7);
+        ctx.quadraticCurveTo(1, 0, 8, 0);
+        ctx.quadraticCurveTo(15, 0, 15, 7);
+        ctx.lineTo(14, 14); ctx.lineTo(10, 16); ctx.lineTo(6, 16); ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#152430"; ctx.fillRect(3, 6, 10, 4);
+        ctx.restore();
+        ctx.fillText(label, pos.x + (iconSize + 3) / 2, labelY);
+      } else ctx.fillText(label, pos.x, labelY);
     }
     if (
       attackTargets.has(u.id) ||

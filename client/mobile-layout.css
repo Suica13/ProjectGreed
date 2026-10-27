@@ -34,6 +34,87 @@
     overflow: auto;
     padding-bottom: 52px;
   }
+  /* Keep the balance visible; let the page grow instead of shrinking unit rows. */
+  #developmentScreen #developmentMain {
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    scroll-padding-top: 140px;
+  }
+  #developmentScreen .development-heading {
+    position: sticky;
+    top: -10px;
+    z-index: 2;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "title back" "faction faction" "balance balance";
+    gap: 6px 10px;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    background: #152430;
+    border-bottom: 1px solid var(--dev-accent);
+  }
+  #developmentScreen .development-heading-title { grid-area: title; min-width: 0; }
+  #developmentScreen .development-heading-title .eyebrow { display: none; }
+  #developmentScreen .development-heading h2 { font-size: 20px; }
+  #developmentScreen #closeDevelopment { grid-area: back; max-width: 100%; white-space: normal; }
+  #developmentScreen .development-faction-picker { grid-area: faction; }
+  #developmentScreen .development-faction-picker select { width: 0; max-width: 100%; }
+  #developmentScreen .development-balance {
+    grid-area: balance;
+    display: flex;
+    justify-self: stretch;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+    padding: 6px 10px;
+    white-space: normal;
+  }
+  #developmentScreen .development-balance strong {
+    flex: none;
+    margin-left: 0;
+    font-size: 18px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  #developmentScreen .development-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: clamp(176px, 26dvh, 240px) auto;
+    height: auto;
+    gap: 12px;
+  }
+  #developmentScreen .development-tree-scroll { padding: 10px; }
+  #developmentScreen .development-details { overflow: visible; padding: 12px; }
+  #developmentScreen .development-details p { margin: 6px 0; }
+  #developmentScreen .development-details h4 { margin: 8px 0 0; }
+  #developmentScreen .development-units {
+    /* Four complete 48px rows plus three 5px gaps, independent of screen height. */
+    flex: none;
+    height: 207px;
+    min-height: 207px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+  #developmentScreen .development-units .development-unit {
+    flex: 0 0 48px;
+    height: 48px;
+    min-height: 48px;
+    padding: 4px 8px;
+  }
+  #developmentScreen .development-unit > :is(img, .development-unit-placeholder) { flex: none; }
+  #developmentScreen .development-unit > span:last-child:not(.development-unit-placeholder) {
+    min-width: 0;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 18px;
+  }
+  html:has(#developmentScreen:not([hidden])) :is(#openClientSettings, #musicPlayer, #openMatchRecords) {
+    display: none;
+  }
   #start .menu-contact {
     right: 12px;
     bottom: 62px;
@@ -326,6 +407,11 @@
   }
 }
 @media (max-height: 600px) and (orientation: landscape) {
+  #developmentScreen .development-heading {
+    grid-template-areas: "title back" "faction balance";
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  #developmentScreen #developmentMain { scroll-padding-top: 100px; }
   #roomMain .team-slots {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -355,4 +441,29 @@
   #formationUnitPicker #formationCatalog {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* Shared formation pilot pages; the existing unit workspace stays intact. */
+.formation-mode-tabs { display: flex; gap: 6px; flex: none; }
+.formation-mode-tabs [aria-pressed="true"], #customPilotPortraits [aria-pressed="true"] { border-color: #80caff; background: #254b64; }
+#formationMain[data-page="pilots"] > :is(.formation-group-banner, .formation-toolbar, .formation-workspace),
+#formationMain[data-page="pilots"] #openFormationShare,
+#formationMain[data-page="pilots"] #formationBudget { display: none; }
+#formationPilotRoster { flex: 1; min-height: 0; overflow: auto; }
+#customPilotList { display: grid; gap: 8px; }
+.custom-pilot-card { display: flex; align-items: center; gap: 12px; text-align: left; min-height: 76px; }
+.custom-pilot-card img, #customPilotPortraits img { width: 56px; height: 56px; object-fit: contain; }
+.custom-pilot-card small { display: block; margin-top: 6px; }
+#customPilotPanel { z-index: 1150; }
+.custom-pilot-dialog { width: min(620px, 96vw); display: flex; flex-direction: column; gap: 12px; }
+#customPilotPortraits { display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 6px; max-height: 170px; overflow: auto; flex: none; }
+#customPilotPortraits button { padding: 4px; }
+#customPilotStats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; }
+.custom-pilot-stat { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.custom-pilot-stat button { min-width: 36px; min-height: 36px; }
+@media (max-width: 700px), (max-height: 600px) and (orientation: landscape) {
+  #formationMain .formation-heading { flex-wrap: wrap; gap: 6px; }
+  #formationMain .formation-mode-tabs { margin-left: auto; }
+  #customPilotPanel .custom-pilot-dialog { max-height: 96dvh; padding: 12px; }
+  #customPilotPanel .formation-pilot-heading { position: sticky; top: -12px; background: #152430; z-index: 1; padding: 8px 0; }
 }

@@ -645,6 +645,7 @@ function createRoomEngine({
       replay: replaySnapshot(room, recipient),
       combatIntel: room.phase === "playback" && team !== null
         ? room.playbackIntel?.[team] || null : null,
+      pilotAwards: recipient ? (room.pilotAwards || []).filter(a => a.memberId === recipient.id).map(({ memberId, ...a }) => a) : [],
       techAwards: recipient ? (room.techAwards || [])
         .filter((award) => award.memberId === recipient.id)
         .map(({ memberId, ...award }) => award) : [],
@@ -847,6 +848,7 @@ function createRoomEngine({
     room.resumeSave = null;
     room.startedFromSave = false;
     room.techAwards = [];
+    room.pilotAwards = [];
     room.game = G.create(false, randomSeed());
     room.started = false;
     room.phase = "waiting";
@@ -973,6 +975,17 @@ function createRoomEngine({
           to = unit(room, e.to);
         const defeatedModel = G.models[battle.actors.find((actor) => actor.id === e.to)?.model] ||
           G.modelOf(to);
+        if (e.before > 0 && e.after <= 0) {
+          if (from.team !== to.team) recordPilotBattle(room, from, "kill", defeatedModel.cost);
+          recordPilotBattle(room, to, "loss", defeatedModel.cost);
+        }
+        for (const evacuation of e.evacuations || []) {
+          if (evacuation.escaped) continue;
+          const passenger = unit(room, evacuation.unitId);
+          const cost = G.modelOf(passenger).cost;
+          if (from.team !== passenger.team) recordPilotBattle(room, from, "kill", cost);
+          recordPilotBattle(room, passenger, "loss", cost);
+        }
         if (e.before > 0 && e.after <= 0 && !room.startedFromSave &&
             ["EFSF", "ZEON"].includes(G.modelOf(from).faction)) {
           const owner = room.seats[G.ownerOf(from)];
@@ -1051,10 +1064,22 @@ function createRoomEngine({
       automatic,
     };
   }
+  function recordPilotBattle(room, actor, kind, cost) {
+    if (!actor?.pilot?.custom) return;
+    const owner = room.seats[G.ownerOf(actor)];
+    const points = Math.max(0, Math.floor(cost));
+    actor.pilot = G.pilots.battleResult(actor.pilot, kind, points);
+    if (owner && !owner.bot)
+      (room.pilotAwards ||= []).push({ id: randomId(), memberId: owner.id,
+        pilotId: actor.pilot.id, kind, points });
+  }
   function advanceTurn(room, automatic = false) {
     delete room.openingSnipe;
     const fromTeam = room.game.team;
+    const living = new Map(room.game.units.filter(u => u.hp > 0).map(u => [u.id, G.modelOf(u).cost]));
     G.end(room.game);
+    for (const actor of room.game.units)
+      if (actor.hp <= 0 && living.has(actor.id)) recordPilotBattle(room, actor, "loss", living.get(actor.id));
     for (const effect of room.game.turnEffects || [])
       if (effect.type === "evacuation")
         log(
@@ -1159,9 +1184,10 @@ function createRoomEngine({
         unitId: model.prefabId,
         kitId: model.kitId,
         ...(unit.customName ? { customName: unit.customName } : {}),
+        ...(unit.pilot?.custom ? { customPilot: G.pilots.custom(unit.pilot) } : {}),
       };
     });
-    const cost = units.reduce((sum, unit) => sum + G.models[unit.model].cost, 0);
+    const cost = units.reduce((sum, unit) => sum + G.models[unit.model].cost + G.pilots.cost(unit.pilot?.custom ? unit.pilot : null), 0);
     const restrictions = G.armyRestrictions(room.settings, room.seats[seat]);
     const reasons = {};
     units.forEach((unit, index) => {
@@ -1327,6 +1353,7 @@ function createRoomEngine({
     room.turnSave = room.resumeSave ? Records.clone(room.resumeSave) : null;
     room.startedFromSave = !!room.resumeSave;
     room.techAwards = [];
+    room.pilotAwards = [];
     room.saveTurn = null;
     room.started = true;
     room.phase = "assembly";
@@ -1766,9 +1793,11 @@ function createRoomEngine({
   function unitLabel(room, unit) {
     if (unit.customName && !room.logNames?.includes(unit.customName))
       (room.logNames ||= []).push(unit.customName);
+    if (unit.pilot?.custom && !room.logNames?.includes(unit.pilot.name))
+      (room.logNames ||= []).push(unit.pilot.name);
     const player = room.seats[G.ownerOf(unit)];
     const model = G.modelOf(unit);
-    return `[${unit.team ? "红方" : "蓝方"}][${player?.name || "空席位"}]${G.unitName(unit)}(${model.code} ${model.name})`;
+    return `[${unit.team ? "红方" : "蓝方"}][${player?.name || "空席位"}]${G.pilotUnitName(unit)}(${model.code} ${model.name})`;
   }
   // Record the information available when an event happens, never retroactively reveal it.
   function log(

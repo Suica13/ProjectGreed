@@ -1,4 +1,4 @@
-﻿/* Pilot profiles are attachments, never battlefield units. Rolls are deterministic
+/* Pilot profiles are attachments, never battlefield units. Rolls are deterministic
  * from the private match seed and are stored in the authoritative unit state. */
 "use strict";
 const PilotSystem = (() => {
@@ -11,12 +11,87 @@ const PilotSystem = (() => {
   function profile(id) {
     return id ? byId.get(id) || null : null;
   }
+  const experienceRequired = (level) => 1000 * 2 ** (level - 1);
+  function custom(value) {
+    if (!value || typeof value !== "object" || !/^custom-[a-zA-Z0-9-]{1,80}$/.test(value.id || ""))
+      throw Error("自建驾驶员无效");
+    const level = value.level;
+    if (!Number.isInteger(level) || level < 1 || level > 1000) throw Error("驾驶员等级无效");
+    const name = typeof value.name === "string" ? value.name.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 24) : "";
+    if (!name) throw Error("请输入驾驶员名称");
+    const stats = {};
+    let spent = 0;
+    for (const key of Object.keys(labels)) {
+      const base = key === "awakening" ? 50 : 100;
+      const n = value.stats?.[key];
+      if (!Number.isInteger(n) || n < base || n > 160) throw Error("驾驶员属性无效");
+      stats[key] = n;
+      spent += n - base;
+    }
+    if (spent > (level - 1) * 10) throw Error("驾驶员强化点不足");
+    const experience = value.experience ?? 0;
+    if (!Number.isSafeInteger(experience) || experience < 0 || experience >= experienceRequired(level))
+      throw Error("驾驶员经验无效");
+    const record = {};
+    for (const key of ["kills", "losses", "destroyedCost", "lostCost"]) {
+      const n = value.record?.[key] ?? 0;
+      if (!Number.isSafeInteger(n) || n < 0) throw Error("驾驶员战绩无效");
+      record[key] = n;
+    }
+    const portraitId = byId.has(value.portraitId) ? value.portraitId : catalog.named[0]?.id;
+    return { id: value.id, name, portraitId, level, experience, stats, record, points: (level - 1) * 10 - spent, custom: true };
+  }
+  function createCustom(id, name, portraitId) {
+    return custom({ id, name, portraitId, level: 1, experience: 0,
+      stats: Object.fromEntries(Object.keys(labels).map(key => [key, key === "awakening" ? 50 : 100])) });
+  }
+  function gainExperience(value, amount) {
+    const p = custom(value);
+    if (!Number.isSafeInteger(amount) || amount < 0) throw Error("驾驶员经验奖励无效");
+    p.experience += amount;
+    if (p.experience >= experienceRequired(p.level) && p.level < 1000) {
+      p.level++;
+      p.experience = 0;
+    }
+    return custom(p);
+  }
+  function battleResult(value, kind, unitCost) {
+    if (!["kill", "loss"].includes(kind) || !Number.isSafeInteger(unitCost) || unitCost < 0)
+      throw Error("驾驶员战绩结算无效");
+    let p = custom(value);
+    if (kind === "kill") {
+      p.record.kills++;
+      p.record.destroyedCost += unitCost;
+      p = gainExperience(p, unitCost);
+    } else {
+      p.record.losses++;
+      p.record.lostCost += unitCost;
+      p.experience = Math.max(0, p.experience - experienceRequired(p.level) * 0.25);
+    }
+    return custom(p);
+  }
+  function creditAwards(store, awards) {
+    const received = new Set(store.awards);
+    let changed = false;
+    for (const award of awards) {
+      if (received.has(award.id)) continue;
+      const i = store.pilots.findIndex(p => p.id === award.pilotId);
+      if (i < 0) continue;
+      store.pilots[i] = battleResult(store.pilots[i], award.kind, award.points);
+      received.add(award.id);
+      changed = true;
+    }
+    if (changed) store.awards = [...received];
+    return changed;
+  }
+  const portrait = (value) => profile(value?.portraitId)?.icon || catalog.named[0]?.icon;
+  const cost = (value) => value ? custom(value).level * 25 : 0;
   function commandUnit(model) {
     return !!(model?.unitTags?.includes("CmdUnit") ||
       model?.sourceStats?.nativeTags?.includes("CmdUnit"));
   }
   function defaultName(model) {
-    return commandUnit(model) ? "默认指挥官" : "默认驾驶员";
+    return (model?.faction === "EFSF" ? "联邦" : model?.faction === "ZEON" ? "吉翁" : "") + (commandUnit(model) ? "默认指挥官" : "默认驾驶员");
   }
   function validate(id, model) {
     if (id === undefined || id === null || id === "") return null;
@@ -93,6 +168,6 @@ const PilotSystem = (() => {
     };
   }
   return { catalog, labels, profile, commandUnit, defaultName,
-    validate, hash, roll, of, modifiers };
+    validate, hash, roll, of, modifiers, custom, createCustom, gainExperience, experienceRequired, cost, portrait, battleResult, creditAwards };
 })();
 if (typeof module !== "undefined") module.exports = PilotSystem;

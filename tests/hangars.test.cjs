@@ -182,13 +182,16 @@ test("a lethal combat event evacuates cargo before winner evaluation and records
 
 test("launch uses passenger movement, terrain costs and blocked paths rather than a one-cell radius", () => {
   const { g, carrier, u, h } = fixture();
+  // Transport behavior is tested independently of randomized pilot mobility.
+  for (const unit of g.units)
+    unit.pilot = { ...unit.pilot, stats: Object.fromEntries(Object.keys(G.pilots.labels).map(key => [key, 100])) };
   G.hangars.embark(g, u, carrier, h.id);
   G.end(g);
   G.end(g);
   const hull = G.cells(carrier),
     left = Math.min(...hull.map((p) => p.x)),
     y = hull[0].y;
-  const range = G.modelOf(u).move;
+  const range = Math.floor(G.modelOf(u, g).move);
   assert(range > 1);
   const far = { x: left - range, y };
   assert(G.hangars.launchCells(g, u).some((p) => p.x === far.x && p.y === far.y));
@@ -270,6 +273,9 @@ test("cargo maintenance restores capped resources and two distinct seeded parts 
 
 test("AI retreats to compatible hangars and waits for 75 percent resources and repairs", () => {
   const { g, carrier, u, h } = fixture();
+  // Transport behavior is tested independently of randomized pilot mobility.
+  for (const unit of g.units)
+    unit.pilot = { ...unit.pilot, stats: Object.fromEntries(Object.keys(G.pilots.labels).map(key => [key, 100])) };
   const m = G.modelOf(u);
   u.hp = Math.floor(m.hp * 0.2);
   u.en = 0;
@@ -292,15 +298,13 @@ test("AI retreats to compatible hangars and waits for 75 percent resources and r
   }
   assert(boarded);
   assert(!G.hangars.readyToLaunch(u));
-  G.end(g);
-  G.end(g);
-  assert(!G.hangars.readyToLaunch(u));
-  G.end(g);
-  G.end(g);
-  assert(!G.hangars.readyToLaunch(u));
-  G.end(g);
-  G.end(g);
+  for (let rounds = 0; rounds < 8 && !G.hangars.readyToLaunch(u); rounds++) {
+    G.end(g);
+    G.end(g);
+  }
   assert(G.hangars.readyToLaunch(u));
+  assert(u.hp >= G.modelOf(u).hp * 0.75);
+  assert(u.en >= G.modelOf(u).en * 0.75);
   u.brokenParts = { leftArm: true };
   assert(!G.hangars.readyToLaunch(u));
 });

@@ -10,8 +10,8 @@ test("command units roll a default officer and only accept qualified named pilot
   assert.ok(command);
   assert.equal(G.unitSize(command), "large");
   const pilot = Pilots.roll(null, 42, 0, 0, command);
-  assert.equal(pilot.name, "默认指挥官");
-  assert.ok(pilot.stats.leadership >= 100 && pilot.stats.leadership <= 114);
+  assert.equal(pilot.name, "联邦默认指挥官");
+  assert.ok(pilot.stats.leadership >= 96 && pilot.stats.leadership <= 118);
   assert.ok(pilot.stats.speed >= 45 && pilot.stats.speed <= 55);
   const officer = Pilots.catalog.named.find((entry) => entry.faction === "EFSF" && entry.commander);
   const ordinary = Pilots.catalog.named.find(

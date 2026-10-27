@@ -108,16 +108,17 @@ const Tactics = (() => {
       const id = entry?.unitId + "__" + (alias || entry?.kitId),
         model = models[id];
       if (!model || model.formOnly) throw Error("编组包含不可用单位或武器套件");
-      cost += model.cost;
+      const customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null;
+      cost += model.cost + pilots.cost(customPilot);
       const customName = normalizeUnitName(entry.customName);
-      const pilotId = pilots.validate(entry.pilotId, model);
+      const pilotId = customPilot?.id || pilots.validate(entry.pilotId, model);
       if (pilotId && assignedPilots.has(pilotId)) throw Error("同一驾驶员不能配属多台单位");
       if (pilotId) assignedPilots.add(pilotId);
       return {
         unitId: model.prefabId,
         kitId: model.kitId,
         ...(customName ? { customName } : {}),
-        ...(pilotId ? { pilotId } : {}),
+        ...(customPilot ? { customPilot } : pilotId ? { pilotId } : {}),
       };
     });
     if (formationPoints(clean) > unitLimit)
@@ -281,7 +282,7 @@ const Tactics = (() => {
     unitLimit = catalog.formation.maxUnits,
   ) {
     const clean = validateFormation(entries, Infinity, catalog.formation.maxUnits);
-    const costs = clean.map((entry) => models[entry.unitId + "__" + entry.kitId].cost);
+    const costs = clean.map((entry) => models[entry.unitId + "__" + entry.kitId].cost + pilots.cost(entry.customPilot));
     const totalCost = costs.reduce((sum, value) => sum + value, 0);
     const reasons = {};
     clean.forEach((entry, index) => {
@@ -386,7 +387,7 @@ const Tactics = (() => {
       return Math.max(
         maxCostLimit,
         player.formationPreset.units.reduce(
-          (sum, e) => sum + models[e.unitId + "__" + e.kitId].cost,
+          (sum, e) => sum + models[e.unitId + "__" + e.kitId].cost + pilots.cost(e.customPilot),
           0,
         ),
       );
@@ -1123,7 +1124,7 @@ const Tactics = (() => {
         const performance = settings.performances?.[seat] ?? 1;
         if (!armyPercentages.some((percent) => percent / 100 === performance))
           throw Error("性能倍率无效");
-        const pilot = pilots.roll(entry.pilotId || null, seed, seat, i,
+        const pilot = entry.customPilot ? pilots.custom(entry.customPilot) : pilots.roll(entry.pilotId || null, seed, seat, i,
           models[model]);
         let m = modelOf({ model, performance, environment: map.environment, pilot });
         units.push({
@@ -2216,6 +2217,8 @@ const Tactics = (() => {
     validateFormation,
     formationWeight,
     formationPoints,
+    pilots,
+    pilotUnitName: (unit) => (unit.pilot?.custom ? unit.pilot.name + "驾驶的" : "") + unitName(unit),
     normalizeUnitName,
     generateUnitName,
     unitName,

@@ -426,6 +426,7 @@ const Net = (() => {
     const wasStarted = n.started;
     Chat.setSnapshot(s);
     DevelopmentUI.receiveAwards(s);
+    Formation.receivePilotAwards(s);
     const previousSeat = n.seat;
     if (s.you) {
       n.seat = s.you.seat;
