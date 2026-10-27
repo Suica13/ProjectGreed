@@ -10,6 +10,13 @@
 4. AP 独立计算，`action_cost` 的现行优先级：狙击 4；其他技能 5；指定头部火神炮 1；战舰导弹 2、战舰其他武器 3；短程副武器或指定手臂/胸/腿/内置武器 2；普通加农炮、迫击炮、机枪和炸弹 3；其余 2。之后仍可有特例：61 式与 61A5 主炮均为 2–4 格、2 AP，61A5 机枪为 1 AP。以最后写入的 `weapons[id].min/max/actionCost` 为准。
 5. `projectile.speed` 是演出速度，不可换算为格子射程。射程、AP、伤害、命中、EN 和发数分别追踪来源。改平衡值时同时改生成政策与受影响 JSON，避免刷新后复原。
 
+## 单位 EN 上限：统一减少50%
+
+- 所有单位及衍生形态的最终 `stats.en = 原生 enMax × 0.5`。这是用户指定的战术政策，不是原 MOD 数值。已有单位以本次修改前的 EN 为基值统一减半。
+- `tools/unit_energy.py` 统一实现该政策，`tools/native_combat.py::restore` 与共用属性入口 `tools/native_mobility.py::correct` 在导入和政策刷新时调用。原始基值保存在 `sourceStats.enBeforeReduction`，倍率保存在 `sourceStats.enCapacityMultiplier`；重复刷新按原始基值计算，不能再次对已减半值乘0.5。
+- 用户指定例外：扎古II C型 `MS_06C` 的最终 EN 固定为350，保证350 EN核弹可用。例外记录在 `tools/unit_energy.py::EN_CAPACITY_OVERRIDES` 与 `sourceStats.enCapacityOverride`，优先于通用50%规则。
+- 武器 EN 消耗不随单位容量减半，继续按原生发射链计算。原生审计将单位 EN 上限与消耗分别核对。若武器消耗超过调整后的容量，应报告并遵循用户指定的容量例外，不擅自改写武器消耗。
+
 ## 移动力：基础格数、加成和地图可达性
 
 - 新导入普通单位的基础格数见 `tools/import-additional-units.py`：`max(3, min(9, round(5 × 原生 boostMoveSpeed ÷ 1.4)))`。原版常规 BoostSpeed 对应 `boostMoveSpeed`，导入后存为 `sourceStats.boostSpeed`；它是评估移动力的基准，不以 `baseMoveSpeed`、反应值或动画速度替代。`onDodgeBoostSpeed` 是闪避加速，`extraBoostSpeed` 属于条件加速，不应混入常态基础值；形态或技能加速应另行评估。Python `round` 的中点行为及 3–9 夹限属于现行公式。
@@ -30,3 +37,5 @@
 - `shared/unit-sensors.js` 在战斗中另外处理头部损坏、米诺夫斯基效果、隐蔽/反侦测、跨空地层和舰船 `revealOnDetection`。雷达接触、已探测和实际可见不同；普通直接攻击要求目标可见。不要通过改武器射程或移动力修补视野问题。
 
 核对时记录每项原生值、导入基础值、最终值及覆盖原因；先查用户指定特例。批量刷新可能改写全部单位，需限定范围并审阅差异。
+
+- RFF_06 扎尼的发布 COST 固定为 75；`tools/v05_balance.py` 同步保留此例外。

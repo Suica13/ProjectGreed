@@ -447,7 +447,7 @@
   "description": "擅长中距离支援的炮击型MS",
   "stats": {
     "hp": 23000,
-    "en": 900.0,
+    "en": 450.0,
     "move": 5,
     "mobility": 105,
     "cost": 350,
@@ -533,6 +533,8 @@
     ]
   },
   "sourceStats": {
+    "enBeforeReduction": 900.0,
+    "enCapacityMultiplier": 0.5,
     "hp": 18500,
     "walkSpeed": 0.65,
     "boostSpeed": 1.25,

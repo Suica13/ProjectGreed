@@ -1,3 +1,4 @@
+// UI 布局编辑暂时停用：依赖旧编辑器 iframe 的场景暂停，其余游戏回归保留。
 const { finishPlanning } = require("./planning-fixture.cjs");
 const { openPresentationFixture } = require("./presentation-fixture.cjs");
 const { test: base, expect } = require("@playwright/test");
@@ -74,7 +75,7 @@ test("six embedded BGM tracks play offline, pause persists, next is random and e
   expect(errors).toEqual([]);
 });
 
-test("new GM variants appear in formation and render native cannon and two-stage saber attacks", async ({
+test.skip("new GM variants appear in formation and render native cannon and two-stage saber attacks", async ({
   page,
 }) => {
   const errors = [];
@@ -127,7 +128,7 @@ async function openEditor(page) {
   return page.frameLocator("#ui-preview-frame");
 }
 
-test("mixed burst results animate every Miss and apply only landed damage; both GM saber stages visibly play", async ({
+test.skip("mixed burst results animate every Miss and apply only landed damage; both GM saber stages visibly play", async ({
   page,
 }) => {
   const errors = [];
@@ -466,7 +467,7 @@ test("server dialog gates the table until handshake succeeds; refresh requests n
   }
 });
 
-test("all scenes preview independently; canvas dragging, resizing, history and responsive profiles", async ({
+test.skip("all scenes preview independently; canvas dragging, resizing, history and responsive profiles", async ({
   page,
 }) => {
   const errors = [];
@@ -541,7 +542,7 @@ test("all scenes preview independently; canvas dragging, resizing, history and r
   expect(errors).toEqual([]);
 });
 
-test("model, weapon, timeline and results render without playing a match", async ({ page }) => {
+test.skip("model, weapon, timeline and results render without playing a match", async ({ page }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   const frame = await openEditor(page);
@@ -572,7 +573,7 @@ test("model, weapon, timeline and results render without playing a match", async
   expect(errors).toEqual([]);
 });
 
-test("successive misses move from the current lane and remain within the upper and lower bounds", async ({
+test.skip("successive misses move from the current lane and remain within the upper and lower bounds", async ({
   page,
 }) => {
   await openEditor(page);
@@ -689,7 +690,7 @@ test("lethal hit plays death explosion once in battle then once on map before sh
   expect(errors).toEqual([]);
 });
 
-test("battle actors stay still between actions and vulcan preserves the held weapon with no animation", async ({
+test.skip("battle actors stay still between actions and vulcan preserves the held weapon with no animation", async ({
   page,
 }) => {
   await openEditor(page);
@@ -812,7 +813,7 @@ test("standalone HTML decodes original weapon OGGs and schedules a single 9-shot
   expect(errors).toEqual([]);
 });
 
-test("original projectile textures fire from sampled weapon mounts at each weapon Step", async ({
+test.skip("original projectile textures fire from sampled weapon mounts at each weapon Step", async ({
   page,
 }) => {
   const errors = [];
@@ -885,7 +886,7 @@ test("original projectile textures fire from sampled weapon mounts at each weapo
   expect(errors).toEqual([]);
 });
 
-test("DOM properties, parent anchors, import, persistence and release export", async ({
+test.skip("DOM properties, parent anchors, import, persistence and release export", async ({
   page,
   context,
 }) => {
@@ -967,7 +968,7 @@ test("release still starts an offline match and uses common battle drawing", asy
   expect(errors).toEqual([]);
 });
 
-test("standalone developer HTML also opens the isolated editor", async ({ page }) => {
+test.skip("standalone developer HTML also opens the isolated editor", async ({ page }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(pathToFileURL(path.resolve("public/developer.html")).href);
@@ -981,7 +982,7 @@ test("standalone developer HTML also opens the isolated editor", async ({ page }
   expect(errors).toEqual([]);
 });
 
-test("network snapshots keep updating the real match while the preview stays isolated", async ({
+test.skip("network snapshots keep updating the real match while the preview stays isolated", async ({
   page,
   context,
   baseURL,

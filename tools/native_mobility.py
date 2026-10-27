@@ -2,6 +2,8 @@
 from mod_source import stat
 
 def correct(prefab, native):
+    from unit_energy import apply_capacity_policy
+    apply_capacity_policy(prefab, stat(native, "enMax"))
     raw = {name: stat(native, source + "Adaptability", 0)
            for name, source in [("ground","ground"),("space","space"),("water","water"),("air","sky"),("mountain","cliff")]}
     raw["atmosphere"] = 0

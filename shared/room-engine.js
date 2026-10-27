@@ -2,7 +2,10 @@
  * transport 只收发消息；HP、命中、部署、AI 和回合均在这里决定。
  */
 "use strict";
-const RoomDevelopment = typeof Development !== "undefined" ? Development : require("./development.js");
+// Resolve the cached module at use time: the developer reload replaces this cache.
+function roomDevelopment() {
+  return typeof Development !== "undefined" ? Development : require("./development.js");
+}
 function createRoomEngine({
   rules: G,
   chatChannels = typeof ChatChannels === "undefined" ? require("./chat-channels.js") : ChatChannels,
@@ -850,6 +853,7 @@ function createRoomEngine({
     room.startedFromSave = false;
     room.techAwards = [];
     room.pilotAwards = [];
+    room.pilotDamage = {};
     room.game = G.create(false, randomSeed());
     room.started = false;
     room.phase = "waiting";
@@ -958,6 +962,17 @@ function createRoomEngine({
     );
     const battles = planner.resolve(room);
     for (const battle of battles) combatVisibility.set(battle, visibleBeforeCombat);
+    // Hull damage is accumulated by pilot, independently of who lands the final hit.
+    room.pilotDamage ||= {};
+    for (const battle of battles) for (const e of battle.events) {
+      if (e.empty || !(e.before > e.after)) continue;
+      const source = unit(room, e.from), target = unit(room, e.to);
+      if (!source?.pilot?.custom || !target || source.team === target.team) continue;
+      const entries = room.pilotDamage[target.id] ||= {};
+      const key = G.ownerOf(source) + ":" + source.pilot.id;
+      const entry = entries[key] ||= { seat: G.ownerOf(source), pilotId: source.pilot.id, damage: 0 };
+      entry.damage += Math.min(e.before, e.before - Math.max(0, e.after));
+    }
     for (const battle of battles)
       for (const e of battle.events) {
         for (const evacuation of e.evacuations || [])
@@ -979,6 +994,7 @@ function createRoomEngine({
         if (e.before > 0 && e.after <= 0) {
           if (from.team !== to.team) recordPilotBattle(room, from, "kill", defeatedModel.cost);
           recordPilotBattle(room, to, "loss", defeatedModel.cost);
+          settlePilotAssists(room, to, from);
         }
         for (const evacuation of e.evacuations || []) {
           if (evacuation.escaped) continue;
@@ -986,6 +1002,7 @@ function createRoomEngine({
           const cost = G.modelOf(passenger).cost;
           if (from.team !== passenger.team) recordPilotBattle(room, from, "kill", cost);
           recordPilotBattle(room, passenger, "loss", cost);
+          settlePilotAssists(room, passenger, from);
         }
         if (e.before > 0 && e.after <= 0 && !room.startedFromSave &&
             ["EFSF", "ZEON"].includes(G.modelOf(from).faction)) {
@@ -1001,6 +1018,7 @@ function createRoomEngine({
             if (points) room.techAwards.push({
               id: randomId(), matchId: room.matchId, memberId: owner.id,
               faction: G.modelOf(from).faction, targetId: e.to, points,
+              round: room.game.round, team: room.game.team,
             });
           }
         }
@@ -1069,10 +1087,27 @@ function createRoomEngine({
     if (!actor?.pilot?.custom) return;
     const owner = room.seats[G.ownerOf(actor)];
     const points = Math.max(0, Math.floor(cost));
-    actor.pilot = G.pilots.battleResult(actor.pilot, kind, points);
+    const beforeLevel = actor.pilot.level;
+    const rate = (kind === "assist" ? 0.25 : 1) * (room.settings.mode === "quick" ? 0.25 : 1);
+    const experiencePoints = room.startedFromSave || kind === "loss" || beforeLevel >= G.pilots.growthRules.maxLevel
+      ? 0 : Math.floor(points * rate);
+    actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints);
     if (owner && !owner.bot)
       (room.pilotAwards ||= []).push({ id: randomId(), memberId: owner.id,
-        pilotId: actor.pilot.id, faction: actor.pilot.faction, kind, points });
+        pilotId: actor.pilot.id, faction: actor.pilot.faction, kind, points, experiencePoints,
+        unitId: actor.id, carrierId: actor.embarked?.carrierId, leveledUp: actor.pilot.level > beforeLevel });
+  }
+  function settlePilotAssists(room, target, killer = null) {
+    const entries = room.pilotDamage?.[target.id];
+    if (!entries) return;
+    delete room.pilotDamage[target.id];
+    for (const entry of Object.values(entries)) {
+      if (entry.damage < G.modelOf(target).hp * 0.25) continue;
+      if (killer?.pilot?.id === entry.pilotId && G.ownerOf(killer) === entry.seat) continue;
+      const survivor = room.game.units.find(actor => actor.hp > 0 &&
+        G.ownerOf(actor) === entry.seat && actor.pilot?.id === entry.pilotId);
+      if (survivor) recordPilotBattle(room, survivor, "assist", G.modelOf(target).cost);
+    }
   }
   function advanceTurn(room, automatic = false) {
     delete room.openingSnipe;
@@ -1080,7 +1115,10 @@ function createRoomEngine({
     const living = new Map(room.game.units.filter(u => u.hp > 0).map(u => [u.id, G.modelOf(u).cost]));
     G.end(room.game);
     for (const actor of room.game.units)
-      if (actor.hp <= 0 && living.has(actor.id)) recordPilotBattle(room, actor, "loss", living.get(actor.id));
+      if (actor.hp <= 0 && living.has(actor.id)) {
+        recordPilotBattle(room, actor, "loss", living.get(actor.id));
+        settlePilotAssists(room, actor);
+      }
     for (const effect of room.game.turnEffects || [])
       if (effect.type === "evacuation")
         log(
@@ -1355,6 +1393,7 @@ function createRoomEngine({
     room.startedFromSave = !!room.resumeSave;
     room.techAwards = [];
     room.pilotAwards = [];
+    room.pilotDamage = {};
     room.saveTurn = null;
     room.started = true;
     room.phase = "assembly";
@@ -1883,7 +1922,7 @@ function createRoomEngine({
     let id = msg.id;
     if (typeof id !== "string" || id.length < 4 || id.length > 100) throw Error("请求编号无效");
     if (!room.started && msg.researched !== undefined)
-      member.researched = RoomDevelopment.normalizeResearch(msg.researched);
+      member.researched = roomDevelopment().normalizeResearch(msg.researched);
     const cache = member.requests;
     if (typeof msg.action !== "string") throw Error("无效的操作。");
     if (recordAction(room, member, msg)) return;
@@ -2781,7 +2820,7 @@ function createRoomEngine({
         id: randomId(),
         name: displayName || "玩家" + room.nextPlayerNumber++,
         characterFaction,
-        researched: RoomDevelopment.normalizeResearch(msg.researched),
+        researched: roomDevelopment().normalizeResearch(msg.researched),
         seat,
         ready: false,
         finalReady: false,

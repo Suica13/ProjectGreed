@@ -678,6 +678,7 @@ const Formation = (() => {
       : originalEntry;
     const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId);
     const model = UnitModels[entry.unitId + "__" + entry.kitId];
+    window.dispatchEvent(new CustomEvent("unit-preview", { detail: { id: entry.unitId } }));
     byId("formationDetailTitle").textContent = model.code + " " + (entry.customName || model.name);
     byId("formationDetailTitle").toggleAttribute("data-i18n-ignore", !!entry.customName);
     byId("formationDetailTags").replaceChildren(unitTags(model));
@@ -1649,19 +1650,40 @@ const Formation = (() => {
   }
   function renderPilotRoster() {
     const list = byId("customPilotList");
+    const scrollTop = list.scrollTop;
     list.replaceChildren();
-    if (!pilotStore.pilots.length) list.append(element("p", "muted", "点击＋创建驾驶员。未配属时使用单位所属阵营的默认驾驶员。"));
-    for (const p of pilotStore.pilots) {
-      const card = element("button", "custom-pilot-card");
+    byId("formationPilotBudget").textContent = `驾驶员 ${pilotStore.pilots.length} 名 · COST +${pilotStore.pilots.reduce((sum, p) => sum + PilotSystem.cost(p), 0)}`;
+    if (!pilotStore.pilots.length) list.append(element("p", "muted", "点击下方“新增驾驶员”创建。未配属时使用单位所属阵营的默认驾驶员。"));
+    const search = byId("pilotRosterSearch").value.trim().toLocaleLowerCase();
+    const visible = pilotStore.pilots.filter(p => p.name.toLocaleLowerCase().includes(search));
+    if (pilotStore.pilots.length && !visible.length) list.append(element("p", "muted", "没有符合条件的驾驶员。"));
+    for (const p of visible) {
+      const card = element("div", "formation-row custom-pilot-card");
       const img = element("img"); img.src = PilotSystem.portrait(p); img.alt = "";
       const text = element("span", "", `${p.name} · Lv.${p.level} · COST +${PilotSystem.cost(p)}`);
       text.append(element("small", "", `EXP ${p.experience}/${PilotSystem.experienceRequired(p.level)} · 强化点 ${p.points}`));
       text.append(element("small", "", pilotRecordText(p)));
-      card.append(img, text);
-      card.onclick = () => editPilot(p);
+      img.className = "formation-icon";
+      text.className = "custom-pilot-summary";
+      const actions = element("div", "formation-row-actions");
+      const details = element("button", "formation-detail-button", "详情");
+      details.type = "button";
+      details.setAttribute("aria-label", "管理驾驶员 " + p.name);
+      details.onclick = () => editPilot(p);
+      const remove = element("button", "danger", "删除");
+      remove.type = "button";
+      remove.setAttribute("aria-label", "删除驾驶员 " + p.name);
+      remove.onclick = () => {
+        if (confirm(`删除驾驶员“${p.name}”？本地编组中的配属也会清除。`)) deletePilot(p.id);
+      };
+      actions.append(details, remove);
+      card.append(img, text, actions);
+      card.onclick = (event) => { if (!event.target.closest("button")) editPilot(p); };
       list.append(card);
     }
+    list.scrollTop = scrollTop;
   }
+  byId("pilotRosterSearch").oninput = renderPilotRoster;
   function showFormationTab(tab) {
     finishPilotEditor();
     const pilots = tab === "pilots";
@@ -1669,7 +1691,30 @@ const Formation = (() => {
     byId("formationUnitsTab").setAttribute("aria-pressed", String(!pilots));
     byId("formationPilotsTab").setAttribute("aria-pressed", String(pilots));
     pilotPage.hidden = !pilots;
+    byId("formationUnitsWorkspace").hidden = pilots;
+    byId("formationPilotToolbar").hidden = !pilots;
+    byId("formationPilotBudget").hidden = !pilots;
+    byId("saveFormation").hidden = pilots;
+    byId("cancelFormation").textContent = pilots ? "关闭" : "取消";
     if (pilots) renderPilotRoster();
+  }
+  function deletePilot(id) {
+    function detach(entries) {
+      return entries.map(entry => {
+        if (entry.customPilot?.id !== id) return entry;
+        const copy = { ...entry };
+        delete copy.customPilot;
+        return copy;
+      });
+    }
+    pilotStore.pilots = pilotStore.pilots.filter(p => p.id !== id);
+    draft = detach(draft);
+    squads = squads.map(squad => ({ ...squad, units: detach(squad.units) }));
+    savePilots();
+    persist();
+    render();
+    renderPilotRoster();
+    byId("createCustomPilot").focus();
   }
   function commitPilot(profile) {
     const clean = PilotSystem.custom(profile);
@@ -1687,7 +1732,7 @@ const Formation = (() => {
     pilotEdit = structuredClone(p || PilotSystem.createCustom(
       "custom-" + (globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + "-" + Math.random().toString(36).slice(2)),
       "驾驶员[" + String.fromCharCode(65 + Math.floor(Math.random() * 26)) + String(Math.floor(Math.random() * 100)).padStart(2, "0") + "]",
-      PilotSystem.catalog.named[0]?.id, group));
+      PilotSystem.defaultPortrait(group)?.id, group));
     pilotOriginal = JSON.stringify(pilotEdit);
     byId("customPilotName").value = pilotEdit.name;
     byId("customPilotName").disabled = true;
@@ -1709,9 +1754,10 @@ const Formation = (() => {
   }
   function openPortraitPicker() {
     const portraits = byId("customPilotPortraits"); portraits.replaceChildren();
-    for (const [i, portrait] of PilotSystem.catalog.named.entries()) {
+    for (const [i, portrait] of PilotSystem.catalog.portraits.entries()) {
       const button = element("button"); button.type = "button";
-      button.setAttribute("aria-label", "驾驶员头像 " + (i + 1));
+      button.setAttribute("aria-label", portrait.name);
+      button.title = portrait.name;
       button.setAttribute("aria-pressed", String(!pilotEdit.uploadedPortrait && portrait.id === pilotEdit.portraitId));
       const img = element("img"); img.src = portrait.icon; img.alt = ""; button.append(img);
       button.onclick = () => { savePilotIdentity({ portraitId: portrait.id, uploadedPortrait: null }); closePortraitPicker(); };
@@ -1750,17 +1796,23 @@ const Formation = (() => {
   };
   function renderPilotStats() {
     byId("customPilotAvatar").src = PilotSystem.portrait(pilotEdit);
-    byId("customPilotProgress").textContent = `Lv.${pilotEdit.level} · COST +${PilotSystem.cost(pilotEdit)} · EXP ${pilotEdit.experience}/${PilotSystem.experienceRequired(pilotEdit.level)} · 强化点 ${pilotEdit.points}`;
+    byId("customPilotProgress").textContent = `Lv.${pilotEdit.level}${pilotEdit.level === PilotSystem.growthRules.maxLevel ? " MAX" : ""} · COST +${PilotSystem.cost(pilotEdit)} · EXP ${pilotEdit.experience}/${pilotEdit.level === PilotSystem.growthRules.maxLevel ? "MAX" : PilotSystem.experienceRequired(pilotEdit.level)} · 强化点 ${pilotEdit.points}`;
     byId("customPilotRecord").textContent = pilotRecordText(pilotEdit);
     const original = JSON.parse(pilotOriginal);
-    byId("pilotTrainingActions").hidden = !(pilotEdit.points || pilotEdit.points !== original.points);
+    const pendingPoints = original.points - pilotEdit.points;
+    byId("pilotTrainingActions").hidden = false;
+    byId("confirmPilotTraining").disabled = pendingPoints === 0;
+    byId("cancelPilotTraining").disabled = pendingPoints === 0;
+    byId("pilotTrainingStatus").textContent = pendingPoints > 0
+      ? `待确认强化：已分配${pendingPoints}点。确认强化后应用，取消强化可撤销本次分配。`
+      : "点击属性右侧“＋”分配强化点，再确认强化。";
     const stats = byId("customPilotStats"); stats.replaceChildren();
     for (const [key, label] of Object.entries(PilotSystem.labels)) {
       const row = element("div", "custom-pilot-stat"), plus = element("button", "", "+");
       plus.type = "button"; plus.setAttribute("aria-label", "强化" + label);
-      plus.disabled = !pilotEdit.points || pilotEdit.stats[key] >= 160;
+      plus.disabled = !pilotEdit.points || pilotEdit.stats[key] >= PilotSystem.growthRules.statCap;
       plus.onclick = () => { pilotEdit.stats[key]++; pilotEdit.points--; renderPilotStats(); };
-      row.append(element("span", "", `${label} ${pilotEdit.stats[key]} / 160`), plus); stats.append(row);
+      row.append(element("span", "", `${label} ${pilotEdit.stats[key]} / ${PilotSystem.growthRules.statCap}`), plus); stats.append(row);
     }
   }
   function finishPilotEditor() {
@@ -1810,6 +1862,8 @@ const Formation = (() => {
   return {
     current,
     receivePilotAwards,
+    exportPilotStores: () => structuredClone(pilotStores),
+    hasPilotAward: (id) => Object.values(pilotStores).some(store => store.awards.includes(id)),
     open,
     group: () => group,
     setGroup,

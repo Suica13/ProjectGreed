@@ -486,7 +486,7 @@
   },
   "stats": {
     "hp": 19000,
-    "en": 600.0,
+    "en": 300.0,
     "move": 5,
     "mobility": 120.0,
     "cost": 150,
@@ -574,6 +574,8 @@
     "requiredParts": []
   },
   "sourceStats": {
+    "enBeforeReduction": 600.0,
+    "enCapacityMultiplier": 0.5,
     "hp": 15000.0,
     "walkSpeed": 0.65,
     "boostSpeed": 1.2,

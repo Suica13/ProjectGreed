@@ -9,6 +9,7 @@ def apply_balance(p,data):
  level=stat(data,'unitLevel',0)
  if level<=0:raise ValueError('Missing native unitLevel: '+p['id'])
  p['stats']['cost']=max(COST_STEP,math.floor(level*LEVEL_TO_COST/COST_STEP+.5)*COST_STEP)
+ if p['id']=='RFF_06':p['stats']['cost']=75
  if p['id']=='MS_07B3':p['stats']['cost']=375
  if p['id']=='MS_06C':p['stats']['cost']=1000
  if p['id']=='RX_78NT_1':p['stats']['cost']=1250

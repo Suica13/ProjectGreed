@@ -1,5 +1,7 @@
 ﻿"""Import Page_00 named pilot profiles and icons; MOD files are read-only."""
 
+import argparse
+import hashlib
 import json
 import re
 import shutil
@@ -22,7 +24,41 @@ STATS = {
 }
 
 
+def import_common_portraits():
+    """Import the generic portrait icons, not ACE icons or tiny battlefield sprites."""
+    DEST.mkdir(parents=True, exist_ok=True)
+    portraits = []
+    groups = [("Common", "普通驾驶员", 3), ("Ground", "地面驾驶员", 2),
+              ("GroundArmy", "陆军驾驶员", 1), ("Officer", "军官", 2)]
+    for faction, faction_name in [("EFSF", "联邦"), ("ZEON", "吉翁")]:
+        for group, title, count in groups:
+            for number in range(1, count + 1):
+                ident = f"Pilot_{faction}_0079_{group}_{number}"
+                reference = f"Resource/Image/Units/Icon/{ident}.png"
+                source = ROOT / reference
+                image = source.read_bytes()
+                if not image.startswith(bytes.fromhex("89504e470d0a1a0a")):
+                    raise ValueError("Invalid ordinary pilot portrait: " + str(source))
+                shutil.copyfile(source, DEST / (ident + ".png"))
+                portraits.append({"id": ident, "name": f"{faction_name}{title} {number}",
+                    "faction": faction, "source": reference,
+                    "sourceSha256": hashlib.sha256(image).hexdigest(),
+                    "icon": "assets/pilots/" + ident + ".png"})
+    return portraits
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--portraits-only", action="store_true", help="Update only ordinary portrait candidates.")
+    options = parser.parse_args()
+    portraits = import_common_portraits()
+    if options.portraits_only:
+        target = PROJECT / "shared/pilots.json"
+        data = json.loads(target.read_text(encoding="utf-8"))
+        data["portraits"] = portraits
+        target.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"Imported {len(portraits)} ordinary portrait candidates")
+        return
     DEST.mkdir(parents=True, exist_ok=True)
     pilots = []
     for row in json.loads(MANIFEST.read_text(encoding="utf-8")):
@@ -71,6 +107,7 @@ def main():
         },
         "namedVariation": 5,
         "named": pilots,
+        "portraits": portraits,
     }
     (PROJECT / "shared/pilots.json").write_text(
         json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"

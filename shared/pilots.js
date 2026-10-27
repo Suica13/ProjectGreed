@@ -4,9 +4,13 @@
 const PilotSystem = (() => {
   const catalog = typeof PILOT_DATA !== "undefined" ? PILOT_DATA : require("./pilots.json");
   const byId = new Map(catalog.named.map((pilot) => [pilot.id, pilot]));
+  const portraitsById = new Map(catalog.portraits.map((portrait) => [portrait.id, portrait]));
+  function defaultPortrait(faction = "PMC") {
+    return catalog.portraits.find((portrait) => portrait.faction === faction) || catalog.portraits[0];
+  }
   const labels = {
     shooting: "射击", melee: "格斗", defense: "防御", speed: "机动",
-    accuracy: "命中", reaction: "反应", leadership: "领导", awakening: "觉醒",
+    accuracy: "命中", reaction: "反应", leadership: "指挥", awakening: "觉醒",
   };
   function profile(id) {
     return id ? byId.get(id) || null : null;
@@ -19,27 +23,52 @@ const PilotSystem = (() => {
       throw Error("驾驶员头像无效或过大");
     return value;
   }
+  const growthRules = Object.freeze({ version: 3, initialPoints: 50, pointsPerLevel: 20, maxLevel: 10, statCap: 160 });
   const experienceRequired = (level) => 1000 * 2 ** (level - 1);
+  const trainingVersion = growthRules.version;
+  const trainingBudget = (level) => growthRules.initialPoints + (level - 1) * growthRules.pointsPerLevel;
+  function baseStats() {
+    return { shooting: 90, melee: 90, defense: 90, speed: 90,
+      accuracy: 90, reaction: 90, leadership: 70, awakening: 50 };
+  }
+  function previousBase(key, value) {
+    // Retain each released baseline when adding a new growth version.
+    if (value.trainingVersion === 3) return key === "awakening" ? 50 : key === "leadership" ? 70 : 90;
+    if (value.trainingVersion === 2) return key === "awakening" ? 60 : key === "leadership" ? 80 : 100;
+    if (value.role === undefined) return key === "awakening" ? 50 : 100;
+    if (key === "awakening") return 60;
+    if (key === "leadership") return value.role === "commander" ? 120 : 80;
+    return value.role === "commander" ? 80 : 110;
+  }
   function custom(value) {
     if (!value || typeof value !== "object" || !/^custom-[a-zA-Z0-9-]{1,80}$/.test(value.id || ""))
       throw Error("自建驾驶员无效");
-    const level = value.level;
-    if (!Number.isInteger(level) || level < 1 || level > 1000) throw Error("驾驶员等级无效");
+    if (!Number.isInteger(value.level) || value.level < 1 || value.level > 1000) throw Error("驾驶员等级无效");
+    const level = Math.min(value.level, growthRules.maxLevel);
     const name = typeof value.name === "string" ? value.name.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 24) : "";
     if (!name) throw Error("请输入驾驶员名称");
+    const bases = baseStats();
+    const oldVersion = value.trainingVersion ?? 1;
+    if (!Number.isInteger(oldVersion) || oldVersion < 1 || oldVersion > trainingVersion) throw Error("驾驶员数据版本无效");
+    if (oldVersion === trainingVersion && value.level > growthRules.maxLevel) throw Error("驾驶员等级无效");
+    const reset = oldVersion < trainingVersion;
     const stats = {};
     let spent = 0;
     for (const key of Object.keys(labels)) {
-      const base = key === "awakening" ? 50 : 100;
-      const n = value.stats?.[key];
-      if (!Number.isInteger(n) || n < base || n > 160) throw Error("驾驶员属性无效");
-      stats[key] = n;
-      spent += n - base;
+      const minimum = reset ? previousBase(key, value) : bases[key];
+      const amount = value.stats?.[key];
+      if (!Number.isInteger(amount) || amount < minimum || amount > growthRules.statCap) throw Error("驾驶员属性无效");
+      stats[key] = reset ? bases[key] : amount;
+      spent += amount - minimum;
     }
-    if (spent > (level - 1) * 10) throw Error("驾驶员强化点不足");
-    const experience = value.experience ?? 0;
-    if (!Number.isSafeInteger(experience) || experience < 0 || experience >= experienceRequired(level))
+    const previousBudget = oldVersion === 3 ? 50 + (value.level - 1) * 20
+      : (oldVersion === 2 ? 30 : 0) + (value.level - 1) * 10;
+    if (spent > (reset ? previousBudget : trainingBudget(level))) throw Error("驾驶员强化点不足");
+    const rawExperience = value.experience ?? 0;
+    if (!Number.isSafeInteger(rawExperience) || rawExperience < 0 || rawExperience >= experienceRequired(value.level))
       throw Error("驾驶员经验无效");
+    const experience = level === growthRules.maxLevel ? 0 : rawExperience;
+    if (reset) spent = 0; // A growth-rule revision refunds every allocated point under the current budget.
     const record = {};
     for (const key of ["kills", "losses", "destroyedCost", "lostCost"]) {
       const n = value.record?.[key] ?? 0;
@@ -49,31 +78,38 @@ const PilotSystem = (() => {
     const faction = value.faction ?? "PMC";
     if (!["PMC", "EFSF", "ZEON"].includes(faction)) throw Error("驾驶员阵营无效");
     const uploadedPortrait = portraitData(value.uploadedPortrait);
-    const portraitId = byId.has(value.portraitId) ? value.portraitId : catalog.named[0]?.id;
-    return { id: value.id, name, faction, portraitId, ...(uploadedPortrait ? { uploadedPortrait } : {}), level, experience, stats, record, points: (level - 1) * 10 - spent, custom: true };
+    const portraitId = portraitsById.has(value.portraitId) ? value.portraitId : defaultPortrait(faction)?.id;
+    return { id: value.id, name, trainingVersion, faction, portraitId, ...(uploadedPortrait ? { uploadedPortrait } : {}), level, experience, stats, record, points: trainingBudget(level) - spent, custom: true };
   }
   function createCustom(id, name, portraitId, faction = "PMC") {
-    return custom({ id, name, portraitId, faction, level: 1, experience: 0,
-      stats: Object.fromEntries(Object.keys(labels).map(key => [key, key === "awakening" ? 50 : 100])) });
+    return custom({ id, name, trainingVersion, portraitId, faction, level: 1, experience: 0, stats: baseStats() });
   }
   function gainExperience(value, amount) {
     const p = custom(value);
     if (!Number.isSafeInteger(amount) || amount < 0) throw Error("驾驶员经验奖励无效");
+    if (p.level >= growthRules.maxLevel) return p;
     p.experience += amount;
-    if (p.experience >= experienceRequired(p.level) && p.level < 1000) {
+    if (p.experience >= experienceRequired(p.level) && p.level < growthRules.maxLevel) {
       p.level++;
       p.experience = 0;
     }
     return custom(p);
   }
-  function battleResult(value, kind, unitCost) {
-    if (!["kill", "loss"].includes(kind) || !Number.isSafeInteger(unitCost) || unitCost < 0)
+  function refundTraining(value) {
+    const pilot = custom(value);
+    return custom({ ...pilot, stats: baseStats() });
+  }
+  function battleResult(value, kind, unitCost, experiencePoints = unitCost) {
+    if (!["kill", "loss", "assist"].includes(kind) || !Number.isSafeInteger(unitCost) || unitCost < 0)
       throw Error("驾驶员战绩结算无效");
+    if (!Number.isSafeInteger(experiencePoints) || experiencePoints < 0) throw Error("驾驶员经验奖励无效");
     let p = custom(value);
     if (kind === "kill") {
       p.record.kills++;
       p.record.destroyedCost += unitCost;
-      p = gainExperience(p, unitCost);
+      p = gainExperience(p, experiencePoints);
+    } else if (kind === "assist") {
+      p = gainExperience(p, experiencePoints);
     } else {
       p.record.losses++;
       p.record.lostCost += unitCost;
@@ -88,14 +124,14 @@ const PilotSystem = (() => {
       if (received.has(award.id)) continue;
       const i = store.pilots.findIndex(p => p.id === award.pilotId && (!award.faction || p.faction === award.faction));
       if (i < 0) continue;
-      store.pilots[i] = battleResult(store.pilots[i], award.kind, award.points);
+      store.pilots[i] = battleResult(store.pilots[i], award.kind, award.points, award.experiencePoints ?? award.points);
       received.add(award.id);
       changed = true;
     }
     if (changed) store.awards = [...received];
     return changed;
   }
-  const portrait = (value) => value?.uploadedPortrait || profile(value?.portraitId)?.icon || catalog.named[0]?.icon;
+  const portrait = (value) => value?.uploadedPortrait || portraitsById.get(value?.portraitId)?.icon || defaultPortrait(value?.faction)?.icon;
   const cost = (value) => value ? custom(value).level * 25 : 0;
   function commandUnit(model) {
     return !!(model?.unitTags?.includes("CmdUnit") ||
@@ -179,6 +215,6 @@ const PilotSystem = (() => {
     };
   }
   return { catalog, labels, profile, commandUnit, defaultName,
-    validate, hash, roll, of, modifiers, custom, createCustom, gainExperience, experienceRequired, cost, portrait, battleResult, creditAwards, maxPortraitLength, portraitData };
+    validate, hash, roll, of, modifiers, baseStats, custom, createCustom, gainExperience, experienceRequired, cost, portrait, battleResult, creditAwards, maxPortraitLength, portraitData, defaultPortrait, growthRules, trainingBudget, refundTraining };
 })();
 if (typeof module !== "undefined") module.exports = PilotSystem;

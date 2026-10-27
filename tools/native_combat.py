@@ -206,7 +206,8 @@ def native_weapon(prefab, weapon, unit_data):
 
 def restore(prefab, native):
     prefab["stats"]["hp"]=float(native["core"]["maxHp"])
-    prefab["stats"]["en"]=stat(native,"enMax")
+    from unit_energy import apply_capacity_policy
+    apply_capacity_policy(prefab, stat(native,"enMax"))
     prefab["shield"]["hp"]=float(native["core"].get("maxShield",0))
     if prefab["stats"]["en"]<=0:
         raise ValueError("Missing native EN: "+prefab["id"])

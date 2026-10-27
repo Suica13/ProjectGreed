@@ -39,7 +39,7 @@ function validateLocalization(localization, id) {
         throw Error("Invalid localized text: " + id + "/" + language + "/" + field);
   }
 }
-function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
+function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides = {} } = {}) {
   const catalog = catalogOverride || read(path.join(root, "unit-catalog.json"));
   if (catalog.schemaVersion !== 1 || !Array.isArray(catalog.units) || !catalog.units.length)
     throw Error("Invalid unit catalog");
@@ -327,7 +327,7 @@ function loadCatalog({ embedMusic = false, catalogOverride = null } = {}) {
   for (const ref of catalog.units) {
     const source = file(root, ref),
       base = path.dirname(source),
-      prefab = read(source);
+      prefab = unitOverrides[ref] ? structuredClone(unitOverrides[ref]) : read(source);
     if (prefab.enabled === false) continue;
     validateLocalization(prefab.localization, ref);
     if (

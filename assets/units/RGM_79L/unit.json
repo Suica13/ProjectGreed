@@ -470,7 +470,7 @@
   "description": "拥有极高机动性的强袭型MS",
   "stats": {
     "hp": 21500,
-    "en": 650.0,
+    "en": 325.0,
     "move": 8,
     "mobility": 140,
     "cost": 350,
@@ -556,6 +556,8 @@
     ]
   },
   "sourceStats": {
+    "enBeforeReduction": 650.0,
+    "enCapacityMultiplier": 0.5,
     "hp": 17000,
     "walkSpeed": 0.75,
     "boostSpeed": 1.65,

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from mod_source import ASSETS, ROOT, load, stat
 from native_combat import native_weapon
+from unit_energy import capacity_for
 from weapon_policy import federation_space_turret_damage
 
 
@@ -13,7 +14,7 @@ def main():
     for file in (ASSETS / "units").glob("*/unit.json"):
         unit = json.loads(file.read_text(encoding="utf-8"))
         native = load(ROOT / unit["source"].split("/", 1)[1])
-        expected = (float(native["core"]["maxHp"]), stat(native, "enMax"), float(native["core"].get("maxShield", 0)))
+        expected = (float(native["core"]["maxHp"]), capacity_for(unit["id"], stat(native, "enMax")), float(native["core"].get("maxShield", 0)))
         actual = (unit["stats"]["hp"], unit["stats"]["en"], unit["shield"]["hp"])
         assert actual == expected, (unit["id"], actual, expected)
         units += 1

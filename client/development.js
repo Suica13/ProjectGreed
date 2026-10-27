@@ -11,45 +11,31 @@ const DevelopmentUI = (() => {
 
   const pendingAwards = new Map();
   let awardMatch = null;
-  function showAward(award) {
-    if (!Development.creditAward(award)) return;
-    if (byId("gameScene").hidden) return;
-    GameAudio.play("killInfoSound");
-    const stack = byId("techRewardStack");
-    const toast = element("div", "tech-reward-toast",
-      "获得" + award.points + "点" +
-      (award.faction === "EFSF" ? "[地球联邦军][0079]" : "[吉翁公国军][0079]") +
-      "科技点");
-    stack.append(toast);
-    while (stack.childElementCount > 3) stack.firstElementChild.remove();
-    setTimeout(() => toast.remove(), 3200);
-  }
   function receiveAwards(snapshot) {
-    if (awardMatch !== snapshot.matchId) {
-      pendingAwards.clear();
-      awardMatch = snapshot.matchId;
-    }
-    const playing = snapshot.phase === "playback" &&
-      snapshot.playback?.members?.includes(snapshot.you?.id) &&
-      !snapshot.playback.ready.includes(snapshot.you?.id) &&
-      snapshot.combats?.length;
+    if (awardMatch !== snapshot.matchId) { pendingAwards.clear(); awardMatch = snapshot.matchId; }
     for (const award of snapshot.techAwards || []) {
-      if (pendingAwards.has(award.id)) continue;
-      if (playing && award.targetId) pendingAwards.set(award.id, award);
-      else showAward(award);
+      // Balance is credited immediately; only the notification waits for turn end.
+      if (Development.creditAward(award)) pendingAwards.set(award.id, award);
+    }
+    if (snapshot.phase === "playback") return;
+    const ready = [...pendingAwards.values()].filter(award => snapshot.phase === "finished" ||
+      award.round !== snapshot.game?.round || award.team !== snapshot.game?.team);
+    const totals = new Map();
+    for (const award of ready) {
+      pendingAwards.delete(award.id);
+      totals.set(award.faction, (totals.get(award.faction) || 0) + award.points);
+    }
+    for (const [faction, points] of totals) {
+      if (byId("gameScene").hidden) continue;
+      GameAudio.play("killInfoSound");
+      const toast = element("div", "tech-reward-toast", "获得" + points + "点" +
+        (faction === "EFSF" ? "地球联邦军" : "吉翁公国军") + "科技点");
+      byId("techRewardStack").append(toast);
+      setTimeout(() => toast.remove(), 3200);
     }
   }
-  function defeated(targetId) {
-    for (const [id, award] of pendingAwards)
-      if (award.targetId === targetId) {
-        pendingAwards.delete(id);
-        showAward(award);
-      }
-  }
-  function finishPlayback() {
-    for (const award of pendingAwards.values()) showAward(award);
-    pendingAwards.clear();
-  }
+  function defeated() {}
+  function finishPlayback() {}
   function unitRow(unitId) {
     const prefab = Rules.catalog.prefabs.find((unit) => unit.id === unitId);
     const row = element(prefab ? "button" : "div", "development-unit");

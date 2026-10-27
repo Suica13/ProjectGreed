@@ -14,7 +14,7 @@ html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sen
 const project = JSON.parse(read("project.json"));
 const developmentTree = JSON.parse(read("shared/development-tree.json"));
 const pilotData = JSON.parse(read("shared/pilots.json"));
-for (const pilot of pilotData.named) {
+for (const pilot of [...pilotData.named, ...pilotData.portraits]) {
   if (!/^assets\/pilots\/[\w-]+\.png$/.test(pilot.icon))
     throw Error("Invalid pilot icon: " + pilot.id);
   pilot.icon = "data:image/png;base64," +
@@ -65,6 +65,8 @@ for (const [key, file] of [
   ["I18N", "client/i18n.js"],
   ["FORMATION", "client/formation.js"],
   ["WEAPON_INFO", "client/weapon-info.js"],
+  ["PILOT_REWARDS", "client/pilot-rewards.js"],
+  ["PROFILE_SAVE", "client/profile-save.js"],
   ["DEVELOPMENT_UI", "client/development.js"],
   ["UNIT_PARTS", "shared/unit-parts.js"],
   ["UNIT_SKILLS", "shared/unit-skills.js"],
@@ -129,15 +131,15 @@ const developer = release
   .replace(
     "</body>",
     () =>
-      `<style id="ui-editor-css" data-developer-only>${read("client/ui-editor.css")}</style><template id="ui-editor-template" data-developer-only>${read("client/ui-editor-panel.html")}</template><script type="application/json" id="ui-release-template" data-developer-only>${json(release)}</script><script type="application/json" id="ui-preview-source" data-developer-only>${json(read("client/ui-preview.js"))}</script><script id="ui-layout-editor" data-developer-only>${inlineScript(read("client/ui-editor.js"))}</script></body>`,
+      `<style data-developer-only>${read("client/source-editor.css")}</style><script id="source-editor" data-developer-only>${inlineScript(read("client/source-editor.js"))}</script></body>`,
   );
 fs.mkdirSync(path.join(root, "public"), { recursive: true });
 for (const [name, content] of [
-  ["index.html", release],
   ["client.html", release],
   ["developer.html", developer],
 ])
   fs.writeFileSync(path.join(root, "public", name), content);
+fs.rmSync(path.join(root, "public/index.html"), { force: true });
 console.log(
   "Built release:",
   Buffer.byteLength(release),

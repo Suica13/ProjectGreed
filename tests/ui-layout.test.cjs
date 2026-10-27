@@ -68,11 +68,10 @@ test("release contains layout and gameplay but excludes developer tools", () => 
     release,
     /ui-editor-panel|ui-dev-launch|slg-ui-layout-dev-v1|ui-release-template|ui-preview-source|ui-editor-template|ui-editor-css/,
   );
-  assert.match(dev, /ui-editor-panel/);
-  const encoded = dev.match(
-    /<script type="application\/json" id="ui-release-template" data-developer-only>([\s\S]*?)<\/script>/,
-  )[1];
-  assert.equal(JSON.parse(encoded), release);
+  assert.match(dev, /id="source-editor"/);
+  assert.doesNotMatch(dev, /ui-editor-panel|ui-dev-launch|ui-release-template/);
+  assert.doesNotMatch(release, /id="source-editor"|developerUnitEdit|developerTreeEdit/);
+  assert.equal(fs.existsSync(path.join(root, "public/index.html")), false);
 });
 
 test("canvas settings validate separately from CSS and preserve version 1 layouts", () => {
@@ -146,7 +145,7 @@ test("server serves distinct developer and release pages", async () => {
     const dev = await fetch(base + "/developer.html"),
       release = await fetch(base + "/");
     assert.equal(dev.status, 200);
-    assert.match(await dev.text(), /ui-editor-panel/);
+    assert.match(await dev.text(), /id="source-editor"/);
     assert.doesNotMatch(await release.text(), /ui-editor-panel/);
   } finally {
     await app.close();

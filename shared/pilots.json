@@ -285,5 +285,135 @@
       },
       "commander": true
     }
+  ],
+  "portraits": [
+    {
+      "id": "Pilot_EFSF_0079_Common_1",
+      "name": "联邦普通驾驶员 1",
+      "faction": "EFSF",
+      "source": "Resource/Image/Units/Icon/Pilot_EFSF_0079_Common_1.png",
+      "sourceSha256": "44d9ba03187133e1c768d3d2ac0c53b62616d65731692c98ba41f47010687d75",
+      "icon": "assets/pilots/Pilot_EFSF_0079_Common_1.png"
+    },
+    {
+      "id": "Pilot_EFSF_0079_Common_2",
+      "name": "联邦普通驾驶员 2",
+      "faction": "EFSF",
+      "source": "Resource/Image/Units/Icon/Pilot_EFSF_0079_Common_2.png",
+      "sourceSha256": "51e2a69239ac2ee5c13ccde1502089a7870593a11b798d82954ff67dab880083",
+      "icon": "assets/pilots/Pilot_EFSF_0079_Common_2.png"
+    },
+    {
+      "id": "Pilot_EFSF_0079_Common_3",
+      "name": "联邦普通驾驶员 3",
+      "faction": "EFSF",
+      "source": "Resource/Image/Units/Icon/Pilot_EFSF_0079_Common_3.png",
+      "sourceSha256": "006795e1e86e2f95d686ee467e6e2b798e770020f4c6d5a9f9cafccf0faec396",
+      "icon": "assets/pilots/Pilot_EFSF_0079_Common_3.png"
+    },
+    {
+      "id": "Pilot_EFSF_0079_Ground_1",
+      "name": "联邦地面驾驶员 1",
+      "faction": "EFSF",
+      "source": "Resource/Image/Units/Icon/Pilot_EFSF_0079_Ground_1.png",
+      "sourceSha256": "5e5bb412ec159161cadc0150ba1f958ed0eb704ac57155f6374167ef0e65988f",
+      "icon": "assets/pilots/Pilot_EFSF_0079_Ground_1.png"
+    },
+    {
+      "id": "Pilot_EFSF_0079_Ground_2",
+      "name": "联邦地面驾驶员 2",
+      "faction": "EFSF",
+      "source": "Resource/Image/Units/Icon/Pilot_EFSF_0079_Ground_2.png",
+      "sourceSha256": "1ad787fdb4ce92d29969022df0f234d9d5369c28af851f89a3ec6cdb6de1827e",
+      "icon": "assets/pilots/Pilot_EFSF_0079_Ground_2.png"
+    },
+    {
+      "id": "Pilot_EFSF_0079_GroundArmy_1",
+      "name": "联邦陆军驾驶员 1",
+      "faction": "EFSF",
+      "source": "Resource/Image/Units/Icon/Pilot_EFSF_0079_GroundArmy_1.png",
+      "sourceSha256": "5b2eaf1d133e3351372d1d1750b29048af849dba05c834e917b6746a367fd945",
+      "icon": "assets/pilots/Pilot_EFSF_0079_GroundArmy_1.png"
+    },
+    {
+      "id": "Pilot_EFSF_0079_Officer_1",
+      "name": "联邦军官 1",
+      "faction": "EFSF",
+      "source": "Resource/Image/Units/Icon/Pilot_EFSF_0079_Officer_1.png",
+      "sourceSha256": "24ae21088ef2cda9ea65abe5274da8e6fdf70b55032b0f52f262c2e017ad2665",
+      "icon": "assets/pilots/Pilot_EFSF_0079_Officer_1.png"
+    },
+    {
+      "id": "Pilot_EFSF_0079_Officer_2",
+      "name": "联邦军官 2",
+      "faction": "EFSF",
+      "source": "Resource/Image/Units/Icon/Pilot_EFSF_0079_Officer_2.png",
+      "sourceSha256": "aafef6f68d76fcc6ec563cb4061f2158230d9642d0a9083d9bb5f489058c05a2",
+      "icon": "assets/pilots/Pilot_EFSF_0079_Officer_2.png"
+    },
+    {
+      "id": "Pilot_ZEON_0079_Common_1",
+      "name": "吉翁普通驾驶员 1",
+      "faction": "ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_ZEON_0079_Common_1.png",
+      "sourceSha256": "e49cc3d945b44c8afb08c0b4136c14dfbb9668cea194c2975383e88d4ad73d9a",
+      "icon": "assets/pilots/Pilot_ZEON_0079_Common_1.png"
+    },
+    {
+      "id": "Pilot_ZEON_0079_Common_2",
+      "name": "吉翁普通驾驶员 2",
+      "faction": "ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_ZEON_0079_Common_2.png",
+      "sourceSha256": "5a3152fb72d7740d6e2eafca53db4462a8cf4fb1b4d1d23806bea30d59077fb1",
+      "icon": "assets/pilots/Pilot_ZEON_0079_Common_2.png"
+    },
+    {
+      "id": "Pilot_ZEON_0079_Common_3",
+      "name": "吉翁普通驾驶员 3",
+      "faction": "ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_ZEON_0079_Common_3.png",
+      "sourceSha256": "61c0fcb9f09eea317df09307e782bf2978659131ab6a4e49be9fb6d0c033c703",
+      "icon": "assets/pilots/Pilot_ZEON_0079_Common_3.png"
+    },
+    {
+      "id": "Pilot_ZEON_0079_Ground_1",
+      "name": "吉翁地面驾驶员 1",
+      "faction": "ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_ZEON_0079_Ground_1.png",
+      "sourceSha256": "f6edebbc47efe5633fa23c35f35c89cd01552f1b84b8a2656e05a7782484f707",
+      "icon": "assets/pilots/Pilot_ZEON_0079_Ground_1.png"
+    },
+    {
+      "id": "Pilot_ZEON_0079_Ground_2",
+      "name": "吉翁地面驾驶员 2",
+      "faction": "ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_ZEON_0079_Ground_2.png",
+      "sourceSha256": "ebe5d004f41230281b5dbf9de465a38e184894949b8d2f66ad5c974d64806e50",
+      "icon": "assets/pilots/Pilot_ZEON_0079_Ground_2.png"
+    },
+    {
+      "id": "Pilot_ZEON_0079_GroundArmy_1",
+      "name": "吉翁陆军驾驶员 1",
+      "faction": "ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_ZEON_0079_GroundArmy_1.png",
+      "sourceSha256": "f61982f609faa85e611bb777f4bf7c7f3b62a9082e618cef4a84cd426cfc5853",
+      "icon": "assets/pilots/Pilot_ZEON_0079_GroundArmy_1.png"
+    },
+    {
+      "id": "Pilot_ZEON_0079_Officer_1",
+      "name": "吉翁军官 1",
+      "faction": "ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_ZEON_0079_Officer_1.png",
+      "sourceSha256": "e1e94532379bdf626f658cb951689973a151d6b9b7f5ba5d7b5052b5d224523f",
+      "icon": "assets/pilots/Pilot_ZEON_0079_Officer_1.png"
+    },
+    {
+      "id": "Pilot_ZEON_0079_Officer_2",
+      "name": "吉翁军官 2",
+      "faction": "ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_ZEON_0079_Officer_2.png",
+      "sourceSha256": "67bd59532f18aa21de72302d99805a005ff78c810aad295f9cd0d66b83bbcf7a",
+      "icon": "assets/pilots/Pilot_ZEON_0079_Officer_2.png"
+    }
   ]
 }

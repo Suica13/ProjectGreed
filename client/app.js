@@ -1635,6 +1635,7 @@ function drawMap(now) {
       } else ctx.fillText(label, pos.x, labelY);
       ctx.restore();
     }
+    PilotRewards.draw(ctx, u, pos.x, bary + 16 + Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize, now);
     if (
       attackTargets.has(u.id) ||
       (mode === "target" && weapon && chosen && Rules.canAttack(game, chosen, u, weapon)) ||

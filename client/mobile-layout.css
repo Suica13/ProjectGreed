@@ -444,14 +444,26 @@
 }
 
 /* Shared formation pilot pages; the existing unit workspace stays intact. */
-.formation-mode-tabs { display: flex; gap: 6px; flex: none; }
+.formation-mode-tabs { display: flex; width: 100%; gap: 8px; flex: none; }
+.formation-mode-tabs button { flex: 1; min-width: 0; min-height: 44px; }
 .formation-mode-tabs [aria-pressed="true"], #customPilotPortraits [aria-pressed="true"] { border-color: #80caff; background: #254b64; }
-#formationMain[data-page="pilots"] > :is(.formation-toolbar, .formation-workspace),
+#formationMain[data-page="pilots"] > .formation-toolbar:not(#formationPilotToolbar),
 #formationMain[data-page="pilots"] #openFormationShare,
 #formationMain[data-page="pilots"] #formationBudget { display: none; }
-#formationPilotRoster { flex: 1; min-height: 0; overflow: auto; }
-#customPilotList { display: grid; gap: 8px; }
-.custom-pilot-card { display: flex; align-items: center; gap: 12px; text-align: left; min-height: 76px; }
+#formationMain .formation-workspace[hidden], #formationMain .formation-toolbar[hidden],
+#formationMain #formationPilotBudget[hidden], #formationMain #saveFormation[hidden] { display: none; }
+#formationPilotToolbar { grid-template-columns: minmax(0, 1fr); }
+#customPilotList {
+  flex: 1; min-width: 0; min-height: 0; overflow-y: scroll; padding: 0 12px;
+  scrollbar-gutter: stable; overscroll-behavior: contain;
+  border: 1px solid #3c596a; border-radius: 6px; background: #0d2028;
+}
+#createCustomPilot { width: 100%; flex: none; }
+.custom-pilot-card { text-align: left; cursor: pointer; }
+.custom-pilot-summary { min-width: 0; overflow-wrap: anywhere; }
+#customPilotList::-webkit-scrollbar { width: 16px; }
+#customPilotList::-webkit-scrollbar-track { background: #152c37; }
+#customPilotList::-webkit-scrollbar-thumb { background: #5d91a7; border: 3px solid #152c37; border-radius: 8px; }
 .custom-pilot-card img, #customPilotPortraits img { width: 56px; height: 56px; object-fit: contain; }
 .custom-pilot-card small { display: block; margin-top: 6px; }
 #customPilotPanel { z-index: 1150; }
@@ -463,7 +475,9 @@
 .custom-pilot-stat button { min-width: 36px; min-height: 36px; }
 @media (max-width: 700px), (max-height: 600px) and (orientation: landscape) {
   #formationMain .formation-heading { flex-wrap: wrap; gap: 6px; }
-  #formationMain .formation-mode-tabs { margin-left: auto; }
+  #formationScreen #customPilotList { padding: 0 6px; }
+  #formationScreen #formationPilotToolbar { grid-template-columns: minmax(0, 1fr); }
+  #formationMain .formation-mode-tabs { margin: 0; }
   #customPilotPanel .custom-pilot-dialog { max-height: 96dvh; padding: 12px; }
   #customPilotPanel .formation-pilot-heading { position: sticky; top: -12px; background: #152430; z-index: 1; padding: 8px 0; }
 }
@@ -477,7 +491,10 @@
 #customPilotPortraitPicker { flex: none; padding: 10px; border: 1px solid #49616e; border-radius: 6px; }
 .pilot-upload { display: block; margin-top: 10px; }
 .pilot-upload input { max-width: 100%; }
-#pilotTrainingActions { position: sticky; bottom: -12px; display: flex; gap: 8px; padding: 12px 0; background: #152430; flex: none; z-index: 2; }
+.pilot-training { flex: none; padding: 12px; border: 1px solid #49616e; border-radius: 6px; background: #10252e; }
+.pilot-training h3 { margin: 0; }
+#pilotTrainingStatus { margin: 8px 0 12px; font-size: 12px; }
+#pilotTrainingActions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #49616e; }
 #pilotTrainingActions[hidden] { display: none; }
 #pilotTrainingActions button { flex: 1; }
 #gameScene .stats .unit-pilot-heading, #gameScene .stats .unit-pilot-stats { grid-column: 1 / -1; }

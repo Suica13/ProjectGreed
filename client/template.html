@@ -2904,7 +2904,7 @@
               <option value="ZEON">吉翁公国军[0079]</option>
             </select>
           </label>
-          <div class="development-balance">阵营科技点 <strong id="developmentPoints">0</strong></div>
+          <div class="development-balance">可用科技点 <strong id="developmentPoints">0</strong></div>
           <button id="closeDevelopment" type="button">返回主菜单</button>
         </header>
         <div class="development-workspace">
@@ -2919,16 +2919,13 @@
       <div id="formationMain" class="modal formation-dialog" data-ui-node="node-206">
         <div class="formation-heading">
           <h2 data-ui-node="node-207">编成</h2>
-          <nav class="formation-mode-tabs" aria-label="编成页面">
-            <button id="formationUnitsTab" type="button" aria-pressed="true">单位</button>
-            <button id="formationPilotsTab" type="button" aria-pressed="false">驾驶员</button>
-          </nav>
           <p id="formationBudget" data-ui-node="node-213"></p>
+          <p id="formationPilotBudget" hidden></p>
         </div>
-        <section id="formationPilotRoster" hidden>
-          <header class="formation-pilot-heading"><h3>驾驶员列表</h3><button id="createCustomPilot" type="button" aria-label="创建驾驶员">＋</button></header>
-          <div id="customPilotList"></div>
-        </section>
+        <nav class="formation-mode-tabs" aria-label="编成页面">
+          <button id="formationUnitsTab" type="button" aria-pressed="true">单位</button>
+          <button id="formationPilotsTab" type="button" aria-pressed="false">驾驶员</button>
+        </nav>
         <label class="formation-group-banner" for="formationGroup">
           <strong>编组阵营</strong>
           <select id="formationGroup" aria-label="编组阵营">
@@ -2948,7 +2945,10 @@
           <button id="deleteFormation" class="danger">删除编组</button>
           <button id="newFormation" data-ui-node="node-210">新建编组</button>
         </div>
-        <div class="formation-workspace">
+        <div id="formationPilotToolbar" class="formation-toolbar" hidden>
+          <label for="pilotRosterSearch"><span>搜索驾驶员</span><input id="pilotRosterSearch" type="search" placeholder="按名称搜索驾驶员" /></label>
+        </div>
+        <div id="formationUnitsWorkspace" class="formation-workspace">
           <section class="formation-squad">
             <h3>出战编组</h3>
             <div
@@ -2959,6 +2959,13 @@
               aria-label="出战单位滚动列表"
             ></div>
             <button id="openFormationPicker" type="button">添加单位</button>
+          </section>
+        </div>
+        <div id="formationPilotRoster" class="formation-workspace" hidden>
+          <section class="formation-squad">
+            <h3>驾驶员列表</h3>
+            <div id="customPilotList" tabindex="0" role="region" aria-label="驾驶员滚动列表"></div>
+            <button id="createCustomPilot" type="button">新增驾驶员</button>
           </section>
         </div>
         <div class="net-buttons" data-ui-node="node-219">
@@ -3148,8 +3155,12 @@
           </div>
           <p id="customPilotProgress"></p>
           <p id="customPilotRecord"></p>
-          <h3>属性强化</h3><div id="customPilotStats"></div>
-          <footer id="pilotTrainingActions" hidden><button id="confirmPilotTraining" type="button" class="primary">确认</button><button id="cancelPilotTraining" type="button">取消</button></footer>
+          <section class="pilot-training" aria-labelledby="pilotTrainingTitle">
+            <h3 id="pilotTrainingTitle">属性强化</h3>
+            <p id="pilotTrainingStatus" class="muted" role="status"></p>
+            <div id="customPilotStats"></div>
+            <div id="pilotTrainingActions"><button id="confirmPilotTraining" type="button" class="primary">确认强化</button><button id="cancelPilotTraining" type="button">取消强化</button></div>
+          </section>
           <button id="createPilotConfirm" type="button" class="primary" hidden>创建驾驶员</button>
         </div>
       </div>
@@ -5007,6 +5018,8 @@
       __ROOM__;
       __FORMATION__;
       __DEVELOPMENT_UI__;
+      __PILOT_REWARDS__;
+      __PROFILE_SAVE__;
       __BATTLE_PROMPTS__;
       __HANGAR_UI__;
       __BATTLE_HUD__;

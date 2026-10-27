@@ -98,7 +98,21 @@ const Development = (() => {
     try { localStorage.setItem(progressKey, JSON.stringify(progress)); } catch {}
     return true;
   }
-  return { nodes, unlockedTech, unlockedUnits, allows, pointBalance, creditAward, research, researchSnapshot, normalizeResearch, grantUnit };
+  function validateProgress(value) {
+    if (!value || typeof value !== "object" || !value.points || !value.claimed) throw Error("科技进度无效");
+    const points = {}, claimed = {};
+    for (const faction of ["EFSF", "ZEON"]) {
+      if (!Number.isSafeInteger(value.points[faction]) || value.points[faction] < 0) throw Error("科技点余额无效");
+      points[faction] = value.points[faction];
+    }
+    for (const [id, match] of Object.entries(value.claimed)) {
+      if (typeof match !== "string" || id.length > 200 || match.length > 200) throw Error("科技奖励记录无效");
+      Object.defineProperty(claimed, id, { value: match, enumerable: true });
+    }
+    return { points, claimed, researched: normalizeResearch(value.researched) };
+  }
+  function exportProgress() { return validateProgress(progress); }
+  return { exportProgress, validateProgress, nodes, unlockedTech, unlockedUnits, allows, pointBalance, creditAward, research, researchSnapshot, normalizeResearch, grantUnit };
 })();
 if (typeof module !== "undefined") module.exports = Development;
 

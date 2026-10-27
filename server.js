@@ -1,5 +1,5 @@
 /* 联机服务端：HTTP 提供网页，WebSocket 管理房间并裁定动作。
- * 房间保存在内存中。UI 编辑不经过这里，也不改变规则权限。
+ * 房间保存在内存中。开发者源文件编辑仅允许本机访问。
  */
 "use strict";
 const http = require("node:http"),
@@ -25,6 +25,17 @@ function createServer({
 } = {}) {
   const rooms = new Map(),
     publicDir = path.join(__dirname, "public");
+  // The proxy keeps this server's engine on the current catalog after a developer rebuild.
+  let currentRules = G;
+  const rules = new Proxy({}, { get: (_, key) => currentRules[key] });
+  const developerAPI = require("./tools/developer-api.cjs").createDeveloperAPI({
+    rooms,
+    onReload: () => {
+      for (const name of ["./shared/rules.js", "./shared/development.js", "./shared/development-tree.json"])
+        delete require.cache[require.resolve(name)];
+      currentRules = require("./shared/rules.js");
+    },
+  });
   const server = http.createServer((req, res) => {
     let pathname;
     try {
@@ -32,6 +43,10 @@ function createServer({
     } catch {
       res.writeHead(400);
       res.end();
+      return;
+    }
+    if (pathname.startsWith("/api/developer/")) {
+      void developerAPI(req, res, new URL(req.url, "http://localhost"));
       return;
     }
     if (req.method !== "GET" && req.method !== "HEAD") {
@@ -54,7 +69,7 @@ function createServer({
     }
     const file =
       pathname === "/" || pathname === "/index.html"
-        ? path.join(publicDir, "index.html")
+        ? path.join(publicDir, "client.html")
         : pathname === "/client.html"
           ? path.join(publicDir, "client.html")
           : pathname === "/developer.html"
@@ -98,7 +113,7 @@ function createServer({
   };
   let lastRoomList = "";
   const engine = createRoomEngine({
-    rules: G,
+    rules,
     rooms,
     send,
     resultReturnMs,
@@ -160,6 +175,7 @@ function createServer({
           send(ws, { type: "rooms", rooms: roomList() });
         } else if (msg.type === "leave") leaveRoom(ws);
         else if (msg.type === "hello") {
+          if (developerAPI.busy()) throw Error("正在重载，请稍后连接");
           // Check before creating a room or consuming a reconnect token. Older
           // clients without this field must not enter a newer server either.
           if (msg.version !== project.version) {

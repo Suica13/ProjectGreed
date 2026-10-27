@@ -423,10 +423,10 @@
   },
   "stats": {
     "hp": 17000,
-    "en": 750.0,
+    "en": 375.0,
     "move": 4,
     "mobility": 85.0,
-    "cost": 100,
+    "cost": 75,
     "counterLimit": 1,
     "accuracy": 85.0,
     "partStructuralStrength": 120.0,
@@ -511,6 +511,8 @@
     "requiredParts": []
   },
   "sourceStats": {
+    "enBeforeReduction": 750.0,
+    "enCapacityMultiplier": 0.5,
     "hp": 13500.0,
     "walkSpeed": 0.45,
     "boostSpeed": 0.9,
@@ -1286,7 +1288,7 @@
   "costBalance": {
     "nativeLevel": 400.0,
     "levelMultiplier": 0.25,
-    "published": 100
+    "published": 75
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],

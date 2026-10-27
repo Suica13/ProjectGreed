@@ -1,97 +1,133 @@
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const P = require('../shared/pilots.js');
-const G = require('../shared/rules.js');
-const fresh = () => P.createCustom('custom-test-1', '驾驶员[X29]', P.catalog.named[1].id);
-const entry = p => ({unitId: 'RGM_79', kitId: 'machine_gun', customPilot: p});
-test('custom pilot creation, leveling, overflow reset and strengthening budget', () => {
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const P = require("../shared/pilots.js");
+const G = require("../shared/rules.js");
+const fresh = () => P.createCustom("custom-test-1", "驾驶员[X29]", P.catalog.portraits[1].id);
+const entry = (p) => ({ unitId: "RGM_79", kitId: "machine_gun", customPilot: p });
+test("custom pilot creation, leveling, overflow reset and strengthening budget", () => {
   let p = fresh();
-  assert.equal(p.level, 1); assert.equal(p.points, 0); assert.equal(P.cost(p), 25);
-  assert.equal(p.stats.awakening, 50); assert.equal(p.stats.shooting, 100);
-  p = P.gainExperience(p, 999); assert.equal(p.experience, 999);
+  assert.equal(p.level, 1);
+  assert.equal(p.points, 50);
+  assert.equal(P.cost(p), 25);
+  assert.equal(p.stats.awakening, 50);
+  assert.equal(p.stats.shooting, 90);
+  p = P.gainExperience(p, 999);
+  assert.equal(p.experience, 999);
   p = P.gainExperience(p, 4000);
-  assert.equal(p.level, 2); assert.equal(p.experience, 0); assert.equal(p.points, 10);
-  assert.equal(P.experienceRequired(p.level), 2000); assert.equal(P.cost(p), 50);
-  p.stats.shooting += 10;
+  assert.equal(p.level, 2);
+  assert.equal(p.experience, 0);
+  assert.equal(p.points, 70);
+  assert.equal(P.experienceRequired(p.level), 2000);
+  assert.equal(P.cost(p), 50);
+  p.stats.shooting += 70;
   assert.equal(P.custom(p).points, 0);
   p.stats.defense++;
   assert.throws(() => P.custom(p), /强化点/);
-  p = fresh(); p.level = 20; p.stats.shooting = 161;
+  p = fresh();
+  p.level = 10;
+  p.stats.shooting = 161;
   assert.throws(() => P.custom(p), /属性/);
 });
-test('custom attachment survives authoritative validation and deployment with fixed stats', () => {
+test("custom attachment survives authoritative validation and deployment with fixed stats", () => {
   const p = fresh();
-  const e = entry(p), base = G.models['RGM_79__machine_gun'].cost;
+  const e = entry(p),
+    base = G.models["RGM_79__machine_gun"].cost;
   assert.deepEqual(G.validateFormation([e], base + 25)[0].customPilot, p);
   assert.throws(() => G.validateFormation([e], base + 24), /COST/);
   assert.throws(() => G.validateFormation([e, e], Infinity), /同一驾驶员/);
   const plan = G.planFormation([e], base + 24);
-  assert.equal(plan.totalCost, base + 25); assert.equal(plan.deployCost, 0);
-  const g = G.create(false, 42, [[e], [{unitId:'RGM_79',kitId:'machine_gun'}]]);
+  assert.equal(plan.totalCost, base + 25);
+  assert.equal(plan.deployCost, 0);
+  const g = G.create(false, 42, [[e], [{ unitId: "RGM_79", kitId: "machine_gun" }]]);
   assert.deepEqual(g.units[0].pilot, p);
-  assert.equal(P.portrait(g.units[0].pilot), P.catalog.named[1].icon);
-  assert.equal(JSON.stringify(e).includes('data:image'), false);
+  assert.equal(P.portrait(g.units[0].pilot), P.catalog.portraits[1].icon);
+  assert.equal(JSON.stringify(e).includes("data:image"), false);
 });
-test('default pilots retain faction and seeded variation, custom values reject malformed progression', () => {
-  for (const faction of ['EFSF', 'ZEON']) {
-    const model = Object.values(G.models).find(m => m.faction === faction && !P.commandUnit(m));
-    for (let seed=0;seed<50;seed++) {
+test("default pilots retain faction and seeded variation, custom values reject malformed progression", () => {
+  for (const faction of ["EFSF", "ZEON"]) {
+    const model = Object.values(G.models).find((m) => m.faction === faction && !P.commandUnit(m));
+    for (let seed = 0; seed < 50; seed++) {
       const p = P.roll(null, seed, 0, 0, model);
-      assert.match(p.name, faction === 'EFSF' ? /联邦/ : /吉翁/);
+      assert.match(p.name, faction === "EFSF" ? /联邦/ : /吉翁/);
       for (const [key, [lo, hi]] of Object.entries(P.catalog.defaultRanges))
         assert.ok(p.stats[key] >= lo && p.stats[key] <= hi);
     }
   }
-  for (const patch of [{level:0}, {level:1.5}, {experience:1000}, {experience:-1}, {name:''}])
-    assert.throws(() => P.custom({...fresh(), ...patch}));
+  for (const patch of [
+    { level: 0 },
+    { level: 1.5 },
+    { experience: 1000 },
+    { experience: -1 },
+    { name: "" },
+  ])
+    assert.throws(() => P.custom({ ...fresh(), ...patch }));
 });
 
-test('battle logs identify custom pilots while default pilots retain unit identity', () => {
-  const u = { model: 'RGM_79__machine_gun', customName: '吉姆[X29]', pilot: fresh() };
-  assert.equal(G.pilotUnitName(u), '驾驶员[X29]驾驶的吉姆[X29]');
+test("battle logs identify custom pilots while default pilots retain unit identity", () => {
+  const u = { model: "RGM_79__machine_gun", customName: "吉姆[X29]", pilot: fresh() };
+  assert.equal(G.pilotUnitName(u), "驾驶员[X29]驾驶的吉姆[X29]");
   delete u.pilot;
-  assert.equal(G.pilotUnitName(u), '吉姆[X29]');
+  assert.equal(G.pilotUnitName(u), "吉姆[X29]");
 });
 
-test('room kill awards are authoritative, private to the owner, and logged with the pilot name', t => {
-  const {createRoomEngine} = require('../shared/room-engine.js');
-  let seq=0;
+test("room kill awards are authoritative, private to the owner, and logged with the pilot name", (t) => {
+  const { createRoomEngine } = require("../shared/room-engine.js");
+  let seq = 0;
   const frames = new Map();
-  const engine = createRoomEngine({rules:G, randomId:()=>`id-${++seq}`, randomSeed:()=>1,
-    randomToken:()=>`token-${++seq}`, send:(ws,msg)=>frames.set(ws,msg)});
-  t.after(()=>engine.close());
-  const clients=[{readyState:1},{readyState:1}];
-  clients.forEach((ws,i)=>engine.join(ws,{mode:i?'join':'create',room:'PILOT',characterFaction:'PMC'}));
-  const room=engine.rooms.get('PILOT');
-  function act(i,action,fields={}) {
-    const request = {id:`req-${++seq}`,revision:room.revision,round:room.game.round,
-      matchId:room.matchId,reactionId:frames.get(clients[i])?.pending?.id,action,...fields};
+  const engine = createRoomEngine({
+    rules: G,
+    randomId: () => `id-${++seq}`,
+    randomSeed: () => 1,
+    randomToken: () => `token-${++seq}`,
+    send: (ws, msg) => frames.set(ws, msg),
+  });
+  t.after(() => engine.close());
+  const clients = [{ readyState: 1 }, { readyState: 1 }];
+  clients.forEach((ws, i) =>
+    engine.join(ws, { mode: i ? "join" : "create", room: "PILOT", characterFaction: "PMC" }),
+  );
+  const room = engine.rooms.get("PILOT");
+  function act(i, action, fields = {}) {
+    const request = {
+      id: `req-${++seq}`,
+      revision: room.revision,
+      round: room.game.round,
+      matchId: room.matchId,
+      reactionId: frames.get(clients[i])?.pending?.id,
+      action,
+      ...fields,
+    };
     engine.action(clients[i], request);
     return request;
   }
-  act(0, "configure_room", {...G.defaultRoomSettings(), costLimit:99999, unitCostLimit:99999, fogMode:"disabled"});
-  const tank = {unitId:'Type61',kitId:'standard'};
-  const victim = P.custom({...fresh(), id:"custom-victim", experience:600});
-  const formations=[[{...tank,customPilot:fresh()}],[{...tank,customPilot:victim}]];
-  clients.forEach((_,i)=>act(i,'set_ready',{ready:true,formation:formations[i]}));
-  act(0,'start_game',{formation:formations[0]});
-  clients.forEach((_,i)=>act(i,'confirm_formation'));
-  clients.forEach((_,i)=>act(i,'confirm_deployment'));
-  const [a,b]=room.game.units;
-  Object.assign(a,{x:2,y:4,hp:100000,shield:0});
-  Object.assign(b,{x:4,y:4,hp:1,shield:0});
-  room.game.tiles.forEach(row=>row.fill('plain'));
+  act(0, "configure_room", {
+    ...G.defaultRoomSettings(),
+    costLimit: 99999,
+    unitCostLimit: 99999,
+    fogMode: "disabled",
+  });
+  const tank = { unitId: "Type61", kitId: "standard" };
+  const victim = P.custom({ ...fresh(), id: "custom-victim", experience: 600 });
+  const formations = [[{ ...tank, customPilot: fresh() }], [{ ...tank, customPilot: victim }]];
+  clients.forEach((_, i) => act(i, "set_ready", { ready: true, formation: formations[i] }));
+  act(0, "start_game", { formation: formations[0] });
+  clients.forEach((_, i) => act(i, "confirm_formation"));
+  clients.forEach((_, i) => act(i, "confirm_deployment"));
+  const [a, b] = room.game.units;
+  Object.assign(a, { x: 2, y: 4, hp: 100000, shield: 0 });
+  Object.assign(b, { x: 4, y: 4, hp: 1, shield: 0 });
+  room.game.tiles.forEach((row) => row.fill("plain"));
   // Force the deterministic hit roll, not a client-supplied damage result.
-  room.game.seed=1;
-  act(0,'attack',{unitId:a.id,targetId:b.id,weaponId:'EF_Type61_Cannon'});
-  act(0,'end_turn');
-  const response = act(1,'respond',{response:'defend'});
+  room.game.seed = 1;
+  act(0, "attack", { unitId: a.id, targetId: b.id, weaponId: "EF_Type61_Cannon" });
+  act(0, "end_turn");
+  const response = act(1, "respond", { response: "defend" });
   engine.action(clients[1], response);
-  assert.equal(b.hp,0);
-  const awards=frames.get(clients[0]).pilotAwards;
-  assert.equal(awards.length,1);
-  assert.equal(awards[0].points,G.models[b.model].cost);
-  assert.equal(awards[0].pilotId,a.pilot.id);
+  assert.equal(b.hp, 0);
+  const awards = frames.get(clients[0]).pilotAwards;
+  assert.equal(awards.length, 1);
+  assert.equal(awards[0].points, G.models[b.model].cost);
+  assert.equal(awards[0].pilotId, a.pilot.id);
   const losses = frames.get(clients[1]).pilotAwards;
   assert.equal(losses.length, 1);
   assert.equal(losses[0].kind, "loss");
@@ -101,56 +137,257 @@ test('room kill awards are authoritative, private to the owner, and logged with 
   assert.equal(b.pilot.record.lostCost, G.models[b.model].cost);
   assert.equal(a.pilot.record.kills, 1);
   assert.equal(a.pilot.record.destroyedCost, G.models[b.model].cost);
-  assert(room.log.some(line=>line.includes('驾驶员[X29]驾驶的')));
-  assert.equal(a.pilot.experience,G.models[b.model].cost);
+  assert(room.log.some((line) => line.includes("驾驶员[X29]驾驶的")));
+  assert.equal(a.pilot.experience, G.models[b.model].cost);
 });
 
-test('loss deducts one quarter of the level threshold, preserves levels and never goes negative', () => {
-  let p=P.custom({...fresh(),level:3,experience:3000});
-  p=P.battleResult(p,'loss',500);
-  assert.equal(p.experience,2000); assert.equal(p.level,3); assert.equal(p.points,20);
-  assert.deepEqual(p.record,{kills:0,losses:1,destroyedCost:0,lostCost:500});
-  p=P.battleResult(p,'loss',250);
-  p=P.battleResult(p,'loss',250);
-  p=P.battleResult(p,'loss',250);
-  assert.equal(p.experience,0); assert.equal(p.record.losses,4); assert.equal(p.record.lostCost,1250);
-  assert.throws(()=>P.custom({...p,record:{kills:-1}}),/战绩/);
+test("loss deducts one quarter of the level threshold, preserves levels and never goes negative", () => {
+  let p = P.custom({ ...fresh(), level: 3, experience: 3000 });
+  p = P.battleResult(p, "loss", 500);
+  assert.equal(p.experience, 2000);
+  assert.equal(p.level, 3);
+  assert.equal(p.points, 90);
+  assert.deepEqual(p.record, { kills: 0, losses: 1, destroyedCost: 0, lostCost: 500 });
+  p = P.battleResult(p, "loss", 250);
+  p = P.battleResult(p, "loss", 250);
+  p = P.battleResult(p, "loss", 250);
+  assert.equal(p.experience, 0);
+  assert.equal(p.record.losses, 4);
+  assert.equal(p.record.lostCost, 1250);
+  assert.throws(() => P.custom({ ...p, record: { kills: -1 } }), /战绩/);
 });
 
-test('persisted award receipts deduplicate kills and losses across repeated snapshots and reloads', () => {
-  let store={pilots:[P.custom({...fresh(),experience:900})],awards:[]};
-  const kill={id:'event-1',pilotId:fresh().id,kind:'kill',points:100};
-  const loss={id:'event-2',pilotId:fresh().id,kind:'loss',points:50};
-  assert(P.creditAwards(store,[kill,loss,kill]));
-  assert.equal(store.pilots[0].level,2);
-  assert.equal(store.pilots[0].experience,0);
-  assert.deepEqual(store.pilots[0].record,{kills:1,losses:1,destroyedCost:100,lostCost:50});
-  store=JSON.parse(JSON.stringify(store));
-  assert.equal(P.creditAwards(store,[kill,loss]),false);
-  assert.equal(store.pilots[0].record.losses,1);
+test("persisted award receipts deduplicate kills and losses across repeated snapshots and reloads", () => {
+  let store = { pilots: [P.custom({ ...fresh(), experience: 900 })], awards: [] };
+  const kill = { id: "event-1", pilotId: fresh().id, kind: "kill", points: 100 };
+  const loss = { id: "event-2", pilotId: fresh().id, kind: "loss", points: 50 };
+  assert(P.creditAwards(store, [kill, loss, kill]));
+  assert.equal(store.pilots[0].level, 2);
+  assert.equal(store.pilots[0].experience, 0);
+  assert.deepEqual(store.pilots[0].record, {
+    kills: 1,
+    losses: 1,
+    destroyedCost: 100,
+    lostCost: 50,
+  });
+  store = JSON.parse(JSON.stringify(store));
+  assert.equal(P.creditAwards(store, [kill, loss]), false);
+  assert.equal(store.pilots[0].record.losses, 1);
 });
 
-test('match saves preserve pilot progression and records, rejecting invalid imported stats', () => {
-  const R=require('../shared/match-records.js');
-  const tank={unitId:'Type61',kitId:'standard'};
-  const p=P.battleResult(P.custom({...fresh(),level:2,experience:800}),'loss',50);
-  const game=G.create(false,5,[[{...tank,customPilot:p}],[tank]]);
-  const room={game,settings:{...G.defaultRoomSettings(),mapId:game.mapId},seats:[{},{}]};
-  const save=R.createSave(G,room);
-  assert.deepEqual(R.validateSave(G,save).game.units[0].pilot,p);
-  save.game.units[0].pilot.stats.shooting=161;
-  assert.throws(()=>R.validateSave(G,save),/属性/);
+test("match saves preserve pilot progression and records, rejecting invalid imported stats", () => {
+  const R = require("../shared/match-records.js");
+  const tank = { unitId: "Type61", kitId: "standard" };
+  const p = P.battleResult(P.custom({ ...fresh(), level: 2, experience: 800 }), "loss", 50);
+  const game = G.create(false, 5, [[{ ...tank, customPilot: p }], [tank]]);
+  const room = {
+    game,
+    settings: { ...G.defaultRoomSettings(), mapId: game.mapId },
+    seats: [{}, {}],
+  };
+  const save = R.createSave(G, room);
+  assert.deepEqual(R.validateSave(G, save).game.units[0].pilot, p);
+  save.game.units[0].pilot.stats.shooting = 161;
+  assert.throws(() => R.validateSave(G, save), /属性/);
 });
 
-test('faction ownership and uploaded portrait validation', () => {
-  const p=P.createCustom('custom-faction-pilot','Pilot',P.catalog.named[0].id,'ZEON');
-  assert.equal(p.faction,'ZEON');
-  assert.equal(G.planFormation([{unitId:'Type61',kitId:'standard',customPilot:p}],Infinity,{characterFaction:'EFSF'}).reasons[0],'faction_mismatch');
-  assert.throws(()=>P.custom({...p,uploadedPortrait:'data:image/svg+xml;base64,AAA'}));
-  assert.throws(()=>P.custom({...p,uploadedPortrait:'data:image/jpeg;base64,/9j/'+ 'A'.repeat(P.maxPortraitLength)}));
-  const store={pilots:[p],awards:[]};
-  P.creditAwards(store,[{id:'other-faction',pilotId:p.id,faction:'EFSF',kind:'kill',points:100}]);
-  assert.equal(store.pilots[0].experience,0);
-  P.creditAwards(store,[{id:'own-faction',pilotId:p.id,faction:'ZEON',kind:'kill',points:100}]);
-  assert.equal(store.pilots[0].experience,100);
+test("faction ownership and uploaded portrait validation", () => {
+  const p = P.createCustom("custom-faction-pilot", "Pilot", P.catalog.named[0].id, "ZEON");
+  assert.equal(p.faction, "ZEON");
+  assert.equal(
+    G.planFormation([{ unitId: "Type61", kitId: "standard", customPilot: p }], Infinity, {
+      characterFaction: "EFSF",
+    }).reasons[0],
+    "faction_mismatch",
+  );
+  assert.throws(() => P.custom({ ...p, uploadedPortrait: "data:image/svg+xml;base64,AAA" }));
+  assert.throws(() =>
+    P.custom({
+      ...p,
+      uploadedPortrait: "data:image/jpeg;base64,/9j/" + "A".repeat(P.maxPortraitLength),
+    }),
+  );
+  const store = { pilots: [p], awards: [] };
+  P.creditAwards(store, [
+    { id: "other-faction", pilotId: p.id, faction: "EFSF", kind: "kill", points: 100 },
+  ]);
+  assert.equal(store.pilots[0].experience, 0);
+  P.creditAwards(store, [
+    { id: "own-faction", pilotId: p.id, faction: "ZEON", kind: "kill", points: 100 },
+  ]);
+  assert.equal(store.pilots[0].experience, 100);
+});
+
+test("new growth rules refund all training when migrating former roles", () => {
+  const freshPilot = fresh();
+  assert.equal(freshPilot.stats.shooting, 90);
+  assert.equal(freshPilot.stats.leadership, 70);
+  assert.equal(freshPilot.stats.awakening, 50);
+  assert.equal(freshPilot.points, 50);
+  assert.equal(Object.hasOwn(freshPilot, "role"), false);
+  freshPilot.stats.shooting += 50;
+  assert.equal(P.custom(freshPilot).points, 0);
+  freshPilot.stats.awakening++;
+  assert.throws(() => P.custom(freshPilot), /强化点/);
+  for (const role of [undefined, "pilot", "commander"]) {
+    const stats = Object.fromEntries(
+      Object.keys(P.labels).map((key) => [
+        key,
+        role === undefined
+          ? key === "awakening"
+            ? 50
+            : 100
+          : key === "awakening"
+            ? 60
+            : key === "leadership"
+              ? role === "commander"
+                ? 120
+                : 80
+              : role === "commander"
+                ? 80
+                : 110,
+      ]),
+    );
+    stats.shooting += 5;
+    const old = { ...fresh(), trainingVersion: undefined, role, level: 3, experience: 100, stats };
+    const migrated = P.custom(old);
+    assert.equal(migrated.stats.shooting, 90);
+    assert.equal(migrated.stats.leadership, 70);
+    assert.equal(migrated.stats.awakening, 50);
+    assert.equal(migrated.points, 90);
+    assert.equal(migrated.experience, 100);
+    assert.equal(Object.hasOwn(migrated, "role"), false);
+    assert.deepEqual(P.custom(migrated), migrated);
+  }
+});
+
+test("custom pilots drive command units without requiring a role type", () => {
+  const model = Object.values(G.models).find((model) => P.commandUnit(model) && !model.formOnly);
+  const unit = { unitId: model.prefabId, kitId: model.kitId, customPilot: fresh() };
+  assert.deepEqual(G.validateFormation([unit], Infinity)[0].customPilot, fresh());
+});
+
+for (const mode of ["regular", "quick"])
+  for (const fromSave of [false, true]) {
+    test(`${mode} ${fromSave ? "save-started" : "new"} matches apply authoritative pilot EXP rates to both state and persistent awards`, (t) => {
+      const { createRoomEngine } = require("../shared/room-engine.js");
+      const R = require("../shared/match-records.js");
+      let sequence = 0;
+      const frames = new Map();
+      const engine = createRoomEngine({
+        rules: G,
+        randomId: () => `id-${++sequence}`,
+        randomSeed: () => 1,
+        randomToken: () => `token-${++sequence}`,
+        send: (ws, msg) => frames.set(ws, msg),
+      });
+      t.after(() => engine.close());
+      const clients = [{ readyState: 1 }, { readyState: 1 }];
+      clients.forEach((ws, i) =>
+        engine.join(ws, { mode: i ? "join" : "create", room: "EXP", characterFaction: "PMC" }),
+      );
+      const room = engine.rooms.get("EXP");
+      function act(index, action, fields = {}) {
+        const request = {
+          id: `req-${++sequence}`,
+          revision: room.revision,
+          round: room.game.round,
+          matchId: room.matchId,
+          reactionId: frames.get(clients[index])?.pending?.id,
+          action,
+          ...fields,
+        };
+        engine.action(clients[index], request);
+        return request;
+      }
+      act(0, "configure_room", {
+        ...G.defaultRoomSettings(),
+        battleMode: mode,
+        costLimit: 99999,
+        unitCostLimit: 99999,
+        fogMode: "disabled",
+      });
+      const pilot = P.custom({ ...fresh(), experience: 200 });
+      const tank = { unitId: "Type61", kitId: "standard" };
+      const formations = [[{ ...tank, customPilot: pilot }], [tank]];
+      if (fromSave) {
+        const game = G.create(false, 1, formations, false, room.settings);
+        room.loadedSave = R.validateSave(
+          G,
+          R.createSave(G, { game, settings: room.settings, seats: room.seats }),
+        );
+        act(0, "save_load");
+        assert.ok(room.resumeSave);
+      }
+      clients.forEach((_, i) => act(i, "set_ready", { ready: true, formation: formations[i] }));
+      act(0, "start_game", { formation: formations[0] });
+      clients.forEach((_, i) => act(i, "confirm_formation"));
+      if (!fromSave) clients.forEach((_, i) => act(i, "confirm_deployment"));
+      assert.equal(room.startedFromSave, fromSave);
+      assert.equal(room.settings.mode, mode);
+      const [attacker, target] = room.game.units;
+      Object.assign(attacker, { x: 2, y: 4, hp: 100000, shield: 0 });
+      Object.assign(target, { x: 4, y: 4, hp: 1, shield: 0 });
+      room.game.tiles.forEach((row) => row.fill("plain"));
+      room.game.seed = 1;
+      act(0, "attack", { unitId: attacker.id, targetId: target.id, weaponId: "EF_Type61_Cannon" });
+      act(0, "end_turn");
+      const response = act(1, "respond", { response: "defend" });
+      engine.action(clients[1], response);
+      assert.equal(target.hp, 0);
+      const cost = G.models[target.model].cost;
+      const expected = fromSave ? 0 : mode === "quick" ? Math.floor(cost * 0.25) : cost;
+      assert.equal(attacker.pilot.experience, 200 + expected);
+      assert.equal(attacker.pilot.record.destroyedCost, cost);
+      const awards = frames.get(clients[0]).pilotAwards;
+      assert.equal(awards.length, 1);
+      assert.equal(awards[0].points, cost);
+      assert.equal(awards[0].experiencePoints, expected);
+      const store = { pilots: [pilot], awards: [] };
+      assert.equal(P.creditAwards(store, awards), true);
+      assert.deepEqual(store.pilots[0], attacker.pilot);
+      assert.equal(P.creditAwards(store, awards), false);
+      assert.equal(store.pilots[0].experience, 200 + expected);
+    });
+  }
+
+test("custom portrait candidates contain only copied ordinary MOD icons and migrate legacy ACE references", () => {
+  const fs = require("node:fs");
+  const crypto = require("node:crypto");
+  const ids = new Set(P.catalog.portraits.map((portrait) => portrait.id));
+  assert.equal(ids.size, 16);
+  for (const candidate of P.catalog.portraits) {
+    assert.match(candidate.id, /^Pilot_(EFSF|ZEON)_0079_(Common|Ground|GroundArmy|Officer)_\d+$/);
+    assert.equal(
+      P.catalog.named.some((pilot) => pilot.id === candidate.id),
+      false,
+    );
+    const bytes = fs.readFileSync(require("node:path").resolve(candidate.icon));
+    assert.equal(crypto.createHash("sha256").update(bytes).digest("hex"), candidate.sourceSha256);
+  }
+  for (const faction of ["PMC", "EFSF", "ZEON"]) {
+    const before = P.custom({ ...fresh(), faction, level: 2, experience: 200 });
+    const legacy = { ...before, portraitId: P.catalog.named[0].id };
+    const migrated = P.custom(legacy);
+    assert.equal(migrated.portraitId, P.defaultPortrait(faction).id);
+    assert.deepEqual(migrated.stats, before.stats);
+    assert.equal(migrated.experience, 200);
+    assert.equal(P.portrait(legacy), P.defaultPortrait(faction).icon);
+  }
+  const upload = "data:image/jpeg;base64,/9j/AA==";
+  const own = P.custom({ ...fresh(), portraitId: P.catalog.named[0].id, uploadedPortrait: upload });
+  assert.equal(P.portrait(own), upload);
+});
+
+test("growth caps at level ten and exposes a complete training refund", () => {
+  let pilot = P.custom({ ...fresh(), level: 9, experience: P.experienceRequired(9) - 1 });
+  pilot.stats.shooting += 20;
+  pilot = P.gainExperience(pilot, 10000);
+  assert.equal(pilot.level, 10); assert.equal(pilot.points, 210); assert.equal(pilot.experience, 0);
+  assert.deepEqual(P.gainExperience(pilot, 99999999), pilot);
+  const reset = P.refundTraining(pilot);
+  assert.deepEqual(reset.stats, P.baseStats()); assert.equal(reset.points, 230);
+  assert.deepEqual(reset.record, pilot.record);
+  const old = { ...fresh(), trainingVersion: 2, level: 3, stats: { shooting: 120, melee: 100, defense: 100, speed: 100, accuracy: 100, reaction: 100, leadership: 80, awakening: 60 } };
+  assert.equal(P.custom(old).points, 90); assert.deepEqual(P.custom(old).stats, P.baseStats());
 });

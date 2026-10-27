@@ -428,6 +428,7 @@ const Net = (() => {
     const wasStarted = n.started;
     Chat.setSnapshot(s);
     DevelopmentUI.receiveAwards(s);
+    PilotRewards.receive(s);
     Formation.receivePilotAwards(s);
     const previousSeat = n.seat;
     if (s.you) {

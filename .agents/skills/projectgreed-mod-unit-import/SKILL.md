@@ -18,6 +18,8 @@ description: 移植、修复或核对 ProjectGreed 的 Rusted Warfare Battle Uni
 
 ## 换算检查
 
+- 单位 EN 上限统一为原生 `enMax × 0.5`，包括所有衍生形态；用 `tools/unit_energy.py` 记录减半前基值并避免重复减半。用户指定例外 `MS_06C` 最终 EN 为350，优先于通用倍率。武器 EN 消耗继续按原生发射链计算。
+
 - 武器：原 GW 发射链决定载荷、发数、伤害分量和实际扣能；格子射程与 AP 看 `tools/weapon_policy.py` 最终覆盖。分别核对 `min/max/actionCost`、伤害、命中和 EN，不能只按 `limitingRange`、武器名或旧 JSON 推断。
 - 移动：以原版 BoostSpeed 对应的常规推进字段 `boostMoveSpeed` 为基础评估移动格数，再加普通单位或战舰的战术加成；不要混用闪避加速 `onDodgeBoostSpeed` 或临时 `extraBoostSpeed`。旧单位可能有显式平衡基值。核对 `sourceStats.boostSpeed`、`sourceStats.tacticalMoveBeforeBonus`、`stats.move`，并区分地图地形与适应性造成的实际可达距离。
 - 视野：沿用独立换算：原生雾视距 ÷2，原生雷达及反侦测距离 ÷28.8。读继承及初始化动作后的最终原生值；雷达探测不等于可见或可攻击。不得把普通雷达约为视距 1.25 倍的结果当成所有单位的统一公式。
