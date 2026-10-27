@@ -223,7 +223,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 9.6,
+      "sight": 10,
       "radar": 15.277777777777779,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -1672,7 +1672,7 @@
   "weaponKits": [
     {
       "id": "main_0",
-      "name": "航空炸弹套件",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "Common_DoubleMS_FFB_7Bst",

@@ -668,7 +668,7 @@
     "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.0,
+      "sight": 8,
       "radar": 16.666666666666668,
       "antiDetection": -6.944444444444445,
       "revealOnDetection": true,
@@ -2453,7 +2453,7 @@
   "weaponKits": [
     {
       "id": "standard",
-      "name": "标准武装",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "GawClass_Turret_BeamCannon",

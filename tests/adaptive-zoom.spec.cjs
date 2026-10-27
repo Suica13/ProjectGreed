@@ -59,7 +59,7 @@ for (const size of [
       expect(r.tile).toBeGreaterThanOrEqual(160);
       expect(r.tile).toBeLessThan(160 + r.base * 0.5 + 0.001);
       expect(r.zoom).toBe(r.max);
-      expect(r.cell).toEqual({ x: r.x, y: r.y });
+      expect(r.cell).toMatchObject({ x: r.x, y: r.y });
     }
     expect(results[2].max).toBeGreaterThan(results[0].max);
     expect(results[2].max).toBeGreaterThan(5);
@@ -72,7 +72,8 @@ for (const size of [
     await page.mouse.click(pos.x, pos.y);
     expect(await page.evaluate(() => selected)).toBe("0-0");
     await page.locator("#mapZoomReset").click();
-    await expect(page.locator("#mapZoomLabel")).toHaveText("100%");
+    const fit = await page.evaluate(() => Math.round(100 / (ART.presentation.mapCellScale || 1)) + "%");
+    await expect(page.locator("#mapZoomLabel")).toHaveText(fit);
     expect(errors).toEqual([]);
   });
 }

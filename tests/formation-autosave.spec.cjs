@@ -14,6 +14,15 @@ for (const width of [1280, 390, 360])
       ({ pilot }) => {
         if (localStorage.getItem("autosave-test-seeded")) return;
         localStorage.setItem("autosave-test-seeded", "yes");
+        localStorage.setItem(
+          "projectgreed.economy.v1",
+          JSON.stringify({
+            money: 5000,
+            supplies: 10000,
+            inventory: {},
+            kits: { MS_06F__bazooka: 3 },
+          }),
+        );
         localStorage.setItem("projectgreed.combatFaction", "PMC");
         localStorage.setItem("projectgreed.custom-pilots.v2.migrated", "PMC");
         localStorage.setItem(
@@ -56,7 +65,11 @@ for (const width of [1280, 390, 360])
     expect(back.width).toBeCloseTo(125, 0);
     expect(back.height).toBeLessThan(50);
     expect(group.height).toBeCloseTo(38, 0);
-    expect(Number.parseFloat(await page.locator("#saveFormation").evaluate(el => getComputedStyle(el).fontSize))).toBeLessThanOrEqual(14);
+    expect(
+      Number.parseFloat(
+        await page.locator("#saveFormation").evaluate((el) => getComputedStyle(el).fontSize),
+      ),
+    ).toBeLessThanOrEqual(14);
     const share = await page.locator("#openFormationShare").boundingBox();
     expect(share.width).toBeGreaterThanOrEqual(94);
     expect(share.height).toBeLessThan(50);

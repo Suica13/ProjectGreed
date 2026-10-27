@@ -6,6 +6,9 @@
 function roomDevelopment() {
   return typeof Development !== "undefined" ? Development : require("./development.js");
 }
+function roomBattleEconomy() {
+  return typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js");
+}
 function createRoomEngine({
   rules: G,
   createPasswordVerifier = password => candidate => candidate === password,
@@ -651,6 +654,8 @@ function createRoomEngine({
       replay: replaySnapshot(room, recipient),
       combatIntel: room.phase === "playback" && team !== null
         ? room.playbackIntel?.[team] || null : null,
+      startedFromSave: !!room.startedFromSave,
+      economyAwards: recipient ? (room.economyAwards || []).filter(a => a.memberId === recipient.id).map(({ memberId, ...award }) => award) : [],
       pilotAwards: recipient ? (room.pilotAwards || []).filter(a => a.memberId === recipient.id).map(({ memberId, ...a }) => a) : [],
       techAwards: recipient ? (room.techAwards || [])
         .filter((award) => award.memberId === recipient.id)
@@ -751,6 +756,7 @@ function createRoomEngine({
           shareUnits: !!member.shareUnits,
           aiSettings: member.bot ? member.aiSettings : undefined,
           formationPreset: member.formationPreset || null,
+          ...(member.id === recipient?.id ? {inventory: member.inventory || {}} : {}),
           armySettings: G.armySettings(member),
         })),
       you: recipient ? { id: recipient.id, seat: recipient.seat } : undefined,
@@ -821,6 +827,7 @@ function createRoomEngine({
       completePlayback(room);
       scheduleResultReturn(room);
     }
+    settleBattleEconomy(room);
     captureRecord(room);
     advanceReplay(room);
     room.updated = Date.now();
@@ -854,6 +861,11 @@ function createRoomEngine({
     room.resumeSave = null;
     room.startedFromSave = false;
     room.techAwards = [];
+    room.economyAwards = [];
+    room.battleRoster = {};
+    room.economyDefeats = new Set();
+    room.lossExemptMembers = new Set();
+    room.economySettled = false;
     room.pilotAwards = [];
     room.pilotDamage = {};
     room.game = G.create(false, randomSeed());
@@ -994,35 +1006,19 @@ function createRoomEngine({
         const defeatedModel = G.models[battle.actors.find((actor) => actor.id === e.to)?.model] ||
           G.modelOf(to);
         if (e.before > 0 && e.after <= 0) {
-          if (from.team !== to.team) recordPilotBattle(room, from, "kill", defeatedModel.cost);
+          if (from.team !== to.team) recordPilotBattle(room, from, "kill", defeatedModel.cost, rewardStrength(to));
           recordPilotBattle(room, to, "loss", defeatedModel.cost);
+          awardDefeat(room, from, to, defeatedModel);
           settlePilotAssists(room, to, from);
         }
         for (const evacuation of e.evacuations || []) {
           if (evacuation.escaped) continue;
           const passenger = unit(room, evacuation.unitId);
           const cost = G.modelOf(passenger).cost;
-          if (from.team !== passenger.team) recordPilotBattle(room, from, "kill", cost);
+          if (from.team !== passenger.team) recordPilotBattle(room, from, "kill", cost, rewardStrength(passenger));
           recordPilotBattle(room, passenger, "loss", cost);
+          awardDefeat(room, from, passenger, G.modelOf(passenger));
           settlePilotAssists(room, passenger, from);
-        }
-        if (e.before > 0 && e.after <= 0 && !room.startedFromSave &&
-            ["EFSF", "ZEON"].includes(G.modelOf(from).faction)) {
-          const owner = room.seats[G.ownerOf(from)];
-          if (owner && !owner.bot) {
-            const defeatedOwner = room.seats[G.ownerOf(to)];
-            const aiStrength = room.settings.mode !== "quick" && defeatedOwner?.bot
-              ? G.aiPerformance[G.armySettings(defeatedOwner).difficulty] : 1;
-            const rate = (owner.characterFaction === "PMC" ? 0.5 : 1) *
-              (room.settings.mode === "quick" ? 0.25 : 1) * aiStrength;
-            const points = defeatedModel.cost > 0
-              ? Math.max(1, Math.floor(defeatedModel.cost * rate)) : 0;
-            if (points) room.techAwards.push({
-              id: randomId(), matchId: room.matchId, memberId: owner.id,
-              faction: G.modelOf(from).faction, targetId: e.to, points,
-              round: room.game.round, team: room.game.team,
-            });
-          }
         }
         const weapon = G.modelOf(from).weapons.find((weapon) => weapon.id === e.weapon);
         log(
@@ -1085,12 +1081,52 @@ function createRoomEngine({
       automatic,
     };
   }
-  function recordPilotBattle(room, actor, kind, cost) {
-    if (!actor?.pilot?.custom) return;
+  function rewardStrength(target) { return target?.performance ?? 1; }
+  function awardDefeat(room, from, to, defeatedModel) {
+    if (room.startedFromSave || from.team === to.team) return;
+    room.economyDefeats ||= new Set();
+    if (room.economyDefeats.has(to.id)) return;
+    room.economyDefeats.add(to.id);
+    const owner = room.seats[G.ownerOf(from)];
+    if (!owner || owner.bot) return;
+    const rates = roomBattleEconomy().rates(owner.characterFaction, room.settings.mode);
+    const strength = rewardStrength(to);
+    const points = Math.max(0, Math.floor(defeatedModel.cost * rates.technology * strength));
+    if (points && ["EFSF", "ZEON"].includes(G.modelOf(from).faction))
+      room.techAwards.push({ id: randomId(), matchId: room.matchId, memberId: owner.id,
+        faction: G.modelOf(from).faction, targetId: to.id, points, round: room.game.round, team: room.game.team });
+    const price = room.battleRoster?.[to.id]?.money ?? roomBattleEconomy().price(to.model);
+    const money = Math.max(0, Math.floor(price * 1.5 * rates.currency * strength));
+    if (money) (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId,
+      memberId: owner.id, kind: "kill", targetId: to.id, money, supplies: 0 });
+  }
+  function settleBattleEconomy(room) {
+    if (!room.started || room.phase !== "finished" || room.game.winner === null ||
+        room.startedFromSave || room.replay || room.returnCountdown || room.economySettled) return;
+    room.economySettled = true;
+    for (const player of room.seats) {
+      if (!player || player.bot) continue;
+      const losses = {};
+      if (room.settings.mode !== "quick" && onlineMember(player) && !room.lossExemptMembers?.has(player.id))
+        for (const [id, record] of Object.entries(room.battleRoster || {})) {
+          if (record.memberId !== player.id || room.game.units.some(actor => actor.id === id && actor.hp > 0)) continue;
+          losses[record.unitId] = (losses[record.unitId] || 0) + 1;
+        }
+      const won = G.seatTeam(player.seat) === room.game.winner;
+      const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
+      // A manually assigned preset's "unlimited" allowance must not inflate the victory bonus.
+      const limit = Math.floor(room.settings.costLimit * G.armySettings(player).fill / 100);
+      (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId, memberId: player.id,
+        kind: "result", money: won ? Math.floor(limit * 1.5 * rate) : 0,
+        supplies: won ? Math.floor(limit * 3 * rate) : 0, losses });
+    }
+  }
+  function recordPilotBattle(room, actor, kind, cost, strength = 1) {
+    if (room.startedFromSave || !actor?.pilot?.custom) return;
     const owner = room.seats[G.ownerOf(actor)];
     const points = Math.max(0, Math.floor(cost));
     const beforeLevel = actor.pilot.level;
-    const rate = (kind === "assist" ? 0.25 : 1) * (room.settings.mode === "quick" ? 0.25 : 1);
+    const rate = (kind === "assist" ? 0.25 : 1) * roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience * strength;
     const experiencePoints = room.startedFromSave || kind === "loss" || beforeLevel >= G.pilots.growthRules.maxLevel
       ? 0 : Math.floor(points * rate);
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints);
@@ -1108,7 +1144,7 @@ function createRoomEngine({
       if (killer?.pilot?.id === entry.pilotId && G.ownerOf(killer) === entry.seat) continue;
       const survivor = room.game.units.find(actor => actor.hp > 0 &&
         G.ownerOf(actor) === entry.seat && actor.pilot?.id === entry.pilotId);
-      if (survivor) recordPilotBattle(room, survivor, "assist", G.modelOf(target).cost);
+      if (survivor) recordPilotBattle(room, survivor, "assist", G.modelOf(target).cost, rewardStrength(target));
     }
   }
   function advanceTurn(room, automatic = false) {
@@ -1180,6 +1216,9 @@ function createRoomEngine({
   const playerBudget = (room, player) => G.armyBudget(room.settings, player);
   const playerUnitLimit = (room, player) => G.armyUnitLimit(room.settings, player);
   const playerRestrictions = (room, player) => G.armyRestrictions(room.settings, player);
+  // Preparing may acknowledge shortages. Actual deployment always uses formationPlan's stock filter.
+  const readinessPlan = (room, player, formation) => G.planFormation(
+    formation, playerBudget(room, player), {...playerRestrictions(room, player), inventory: undefined}, playerUnitLimit(room, player));
   // Preview generation is deterministic and independent of the room roster.
   // Cache by all effective inputs, never by mutable player/room identity.
   const previewArmies = new Map();
@@ -1382,7 +1421,7 @@ function createRoomEngine({
           !G.planFormation(
             army,
             playerBudget(room, room.seats[seat]),
-            playerRestrictions(room, room.seats[seat]),
+            {...playerRestrictions(room, room.seats[seat]), inventory: undefined},
             playerUnitLimit(room, room.seats[seat]),
           ).deployable.length
         )
@@ -1394,6 +1433,11 @@ function createRoomEngine({
     room.turnSave = room.resumeSave ? Records.clone(room.resumeSave) : null;
     room.startedFromSave = !!room.resumeSave;
     room.techAwards = [];
+    room.economyAwards = [];
+    room.battleRoster = {};
+    room.economyDefeats = new Set();
+    room.lossExemptMembers = new Set();
+    room.economySettled = false;
     room.pilotAwards = [];
     room.pilotDamage = {};
     room.saveTurn = null;
@@ -1427,7 +1471,8 @@ function createRoomEngine({
       resumeSavedGame(room);
       return;
     }
-    if (plans.some((plan) => plan && !plan.deployable.length)) return;
+    if (plans.some((plan, seat) => plan && !plan.deployable.length &&
+      !readinessPlan(room, room.seats[seat], plan.entries).deployable.length)) return;
     if (
       ![0, 1].every((team) =>
         room.seats.some((player, seat) => player && G.seatTeam(seat) === team),
@@ -1438,7 +1483,7 @@ function createRoomEngine({
     room.game = G.create(
       false,
       room.game.seed,
-      plans.map((plan) => plan?.deployable ?? null),
+      plans.map((plan) => plan?.deployable.length ? plan.deployable : null),
       true,
       {
         ...room.settings,
@@ -1451,7 +1496,12 @@ function createRoomEngine({
         formationIndices: plans.map((plan) => plan?.indices ?? []),
       },
     );
-    room.phase = "deployment";
+    room.battleRoster = Object.fromEntries(room.game.units.map(actor => [actor.id, {
+      memberId: room.seats[G.ownerOf(actor)]?.id,
+      unitId: G.models[actor.model].prefabId,
+      money: roomBattleEconomy().price(actor.model),
+    }]));
+    room.phase = room.game.deployment.every(Boolean) ? "idle" : "deployment";
     planner.reset(room);
     room.turnDone = Array(room.seats.length).fill(false);
     for (const player of room.seats)
@@ -1994,6 +2044,7 @@ function createRoomEngine({
         (!Number.isInteger(msg.team) || !logTeamIds(room).includes(msg.team))
       )
         throw Error("观战队伍无效。");
+      if (room.started) (room.lossExemptMembers ||= new Set()).add(member.id);
       member.viewTeam = msg.team;
       cache.set(id, true);
       if (cache.size > 512) cache.delete(cache.keys().next().value);
@@ -2087,6 +2138,11 @@ function createRoomEngine({
         send(ws, state(room, undefined, member));
         return;
       }
+      const previousInventory = member.inventory;
+      try {
+      if ((!room.started || room.phase === "assembly") && msg.inventory !== undefined &&
+          ["set_ready","start_game","update_formation","confirm_formation"].includes(msg.action))
+        member.inventory = G.normalizeInventory(msg.inventory);
       if (msg.action === "rename_unit") {
         if (
           !room.started ||
@@ -2183,8 +2239,9 @@ function createRoomEngine({
           playerRestrictions(room, member),
           playerUnitLimit(room, member),
         );
-        if (msg.action === "confirm_formation" && !plan.deployable.length)
-          throw Error("至少需要一台可出击单位");
+        if (msg.action === "confirm_formation" && !plan.deployable.length &&
+            !readinessPlan(room, member, formation).deployable.length)
+          throw Error("至少需要一台符合编组规则的单位");
         member.formation = formation;
         // 保存编组保留自己和队友的准备/确认状态。
         if (msg.action === "confirm_formation") member.finalReady = true;
@@ -2457,7 +2514,7 @@ function createRoomEngine({
               !G.planFormation(
                 formation,
                 playerBudget(room, member),
-                playerRestrictions(room, member),
+                {...playerRestrictions(room, member), inventory: undefined},
                 playerUnitLimit(room, member),
               ).deployable.length
             )
@@ -2477,6 +2534,7 @@ function createRoomEngine({
       if (cache.size > 512) cache.delete(cache.keys().next().value);
       broadcast(room, id);
       return;
+      } catch (error) { member.inventory = previousInventory; throw error; }
     }
     if (seat === null) throw Error("观战玩家不能操作战局");
     if (!room.started || !connected(room).every(Boolean)) throw Error("对手已断线，等待重连后继续");
@@ -2821,6 +2879,7 @@ function createRoomEngine({
       member = members(room).find((player) => player.token === msg.token);
       if (!member) throw Error("重连凭据无效，请重新加入房间");
 
+      if (room.started) (room.lossExemptMembers ||= new Set()).add(member.id);
       seat = member.seat;
       applyForcedFaction(room, member);
     } else {
@@ -2830,6 +2889,7 @@ function createRoomEngine({
         name: displayName || "玩家" + room.nextPlayerNumber++,
         characterFaction,
         researched: roomDevelopment().normalizeResearch(msg.researched),
+        inventory: G.normalizeInventory(msg.inventory),
         seat,
         ready: false,
         finalReady: false,
@@ -2881,6 +2941,7 @@ function createRoomEngine({
     let room = rooms.get(ws.room);
     const member = room?.members.get(ws.memberId);
     if (member?.ws === ws) {
+      if (room.started && room.phase !== "finished") (room.lossExemptMembers ||= new Set()).add(member.id);
       member.ws = null;
       clearReconnect(member);
       member.disconnectedUntil = Date.now() + reconnectGraceMs;

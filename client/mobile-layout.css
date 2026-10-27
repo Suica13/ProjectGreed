@@ -126,10 +126,14 @@
     flex-wrap: wrap;
   }
   #start .menu-profile-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 8px;
   }
+  #start #menuResources { gap: 6px; font-size: 11px; }
+  #start #menuResources svg { width: 14px; height: 14px; }
   #start .start-layout {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
   }
   #serverConnect {
     padding: 6px;

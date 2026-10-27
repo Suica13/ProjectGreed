@@ -310,7 +310,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.8,
+      "sight": 9,
       "radar": 11.0,
       "antiDetection": 3.4722222222222223,
       "revealOnDetection": false,
@@ -1335,7 +1335,7 @@
   "weaponKits": [
     {
       "id": "standard",
-      "name": "标准武装",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "ZN_MSM_04_BG",

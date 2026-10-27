@@ -31,7 +31,14 @@ function createServer({
   const developerAPI = require("./tools/developer-api.cjs").createDeveloperAPI({
     rooms,
     onReload: () => {
-      for (const name of ["./shared/rules.js", "./shared/development.js", "./shared/development-tree.json"])
+      for (const name of [
+        "./shared/rules.js",
+        "./shared/development.js",
+        "./shared/development-tree.json",
+        "./shared/economy.js",
+        "./shared/battle-economy.js",
+        "./shared/production-catalog.json",
+      ])
         delete require.cache[require.resolve(name)];
       currentRules = require("./shared/rules.js");
     },
@@ -114,9 +121,10 @@ function createServer({
   let lastRoomList = "";
   const engine = createRoomEngine({
     rules,
-    createPasswordVerifier: password => {
-      const salt = crypto.randomBytes(16), digest = crypto.scryptSync(password, salt, 32);
-      return candidate => crypto.timingSafeEqual(digest, crypto.scryptSync(candidate, salt, 32));
+    createPasswordVerifier: (password) => {
+      const salt = crypto.randomBytes(16),
+        digest = crypto.scryptSync(password, salt, 32);
+      return (candidate) => crypto.timingSafeEqual(digest, crypto.scryptSync(candidate, salt, 32));
     },
     rooms,
     send,
@@ -167,10 +175,14 @@ function createServer({
         }
         if (++ws.rateCount > 60) throw Error("操作过于频繁");
         msg = JSON.parse(data.toString());
-        const formationAction = msg?.type === "action" &&
+        const formationAction =
+          msg?.type === "action" &&
           ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action);
-        const payloadLimit = formationAction ? 4 * 1024 * 1024 :
-          msg?.action === "record_upload_chunk" ? 128 * 1024 : 16384;
+        const payloadLimit = formationAction
+          ? 4 * 1024 * 1024
+          : msg?.action === "record_upload_chunk"
+            ? 128 * 1024
+            : 16384;
         if (data.length > payloadLimit) throw Error("消息过大。");
         if (!msg || typeof msg !== "object" || Array.isArray(msg)) throw Error("消息格式无效");
         if (msg.type === "ping") send(ws, { type: "pong" });

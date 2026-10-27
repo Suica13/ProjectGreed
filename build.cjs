@@ -17,8 +17,8 @@ const pilotData = JSON.parse(read("shared/pilots.json"));
 for (const pilot of [...pilotData.named, ...pilotData.portraits]) {
   if (!/^assets\/pilots\/[\w-]+\.png$/.test(pilot.icon))
     throw Error("Invalid pilot icon: " + pilot.id);
-  pilot.icon = "data:image/png;base64," +
-    fs.readFileSync(path.join(root, pilot.icon)).toString("base64");
+  pilot.icon =
+    "data:image/png;base64," + fs.readFileSync(path.join(root, pilot.icon)).toString("base64");
 }
 for (const nodes of Object.values(developmentTree))
   for (const node of nodes) {
@@ -51,6 +51,7 @@ html = html
   .replaceAll("__PROJECT_VERSION__", project.version)
   .replace("__PROJECT_META__", json(project))
   .replace("__DEVELOPMENT_TREE__", json(developmentTree))
+  .replace("__PRODUCTION_CATALOG__", json(JSON.parse(read("shared/production-catalog.json"))))
   .replace("__PILOT_DATA__", json(pilotData))
   .replace("__CLIENT_CONFIG__", json(clientConfig));
 html = html.replace(
@@ -63,11 +64,17 @@ html = html.replace(
 for (const [key, file] of [
   ["DATA", null],
   ["I18N", "client/i18n.js"],
+  ["DIALOG", "client/dialog.js"],
   ["FORMATION", "client/formation.js"],
+  ["UNIT_CATALOG", "client/unit-catalog.js"],
   ["WEAPON_INFO", "client/weapon-info.js"],
   ["PILOT_REWARDS", "client/pilot-rewards.js"],
   ["PROFILE_SAVE", "client/profile-save.js"],
   ["DEVELOPMENT_UI", "client/development.js"],
+  ["PRODUCTION_UI", "client/production.js"],
+  ["KIT_SHOP", "client/kit-shop.js"],
+  ["ECONOMY", "shared/economy.js"],
+  ["BATTLE_ECONOMY", "shared/battle-economy.js"],
   ["UNIT_PARTS", "shared/unit-parts.js"],
   ["UNIT_SKILLS", "shared/unit-skills.js"],
   ["UNIT_HANGARS", "shared/hangars.js"],

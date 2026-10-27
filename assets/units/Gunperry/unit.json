@@ -197,7 +197,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.8,
+      "sight": 9,
       "radar": 13.88888888888889,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -538,7 +538,7 @@
   "weaponKits": [
     {
       "id": "standard",
-      "name": "标准武装",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "Common_DoubleMS_Gunperry"

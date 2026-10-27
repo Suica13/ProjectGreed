@@ -610,7 +610,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 9.6,
+      "sight": 10,
       "radar": 12.0,
       "antiDetection": 0.0,
       "revealOnDetection": false,

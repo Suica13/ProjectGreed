@@ -286,7 +286,7 @@ for (const mode of ["regular", "quick"])
       t.after(() => engine.close());
       const clients = [{ readyState: 1 }, { readyState: 1 }];
       clients.forEach((ws, i) =>
-        engine.join(ws, { mode: i ? "join" : "create", room: "EXP", characterFaction: "PMC" }),
+        engine.join(ws, { mode: i ? "join" : "create", room: "EXP", characterFaction: "PMC", inventory: { Type61: 10 } }),
       );
       const room = engine.rooms.get("EXP");
       function act(index, action, fields = {}) {
@@ -338,10 +338,16 @@ for (const mode of ["regular", "quick"])
       engine.action(clients[1], response);
       assert.equal(target.hp, 0);
       const cost = G.models[target.model].cost;
-      const expected = fromSave ? 0 : mode === "quick" ? Math.floor(cost * 0.25) : cost;
+      const expected = fromSave ? 0 : mode === "quick" ? Math.floor(cost * 0.1) : cost;
       assert.equal(attacker.pilot.experience, 200 + expected);
-      assert.equal(attacker.pilot.record.destroyedCost, cost);
+      assert.equal(attacker.pilot.record.destroyedCost, fromSave ? 0 : cost);
       const awards = frames.get(clients[0]).pilotAwards;
+      if (fromSave) {
+        assert.deepEqual(awards, []);
+        assert.deepEqual(frames.get(clients[0]).techAwards, []);
+        assert.deepEqual(frames.get(clients[0]).economyAwards, []);
+        return;
+      }
       assert.equal(awards.length, 1);
       assert.equal(awards[0].points, cost);
       assert.equal(awards[0].experiencePoints, expected);

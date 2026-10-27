@@ -75,6 +75,8 @@
     burst: "连发数",
     description: "说明",
     points: "科技点",
+    money: "资金",
+    supplies: "物资",
     icon: "图标路径",
     row: "分支",
     column: "层数",
@@ -105,6 +107,7 @@
       input.disabled = value === null;
     }
     input.setAttribute("aria-label", labels[key] || key);
+    input.dataset.sourceField = key;
     input.oninput = () =>
       change(
         typeof value === "boolean"
@@ -278,6 +281,8 @@
             name: "新科技",
             description: "",
             points: 0,
+            money: 0,
+            supplies: 0,
             icon: nodes[0].icon,
             row: "mid",
             column: Math.max(...nodes.map((item) => item.column)) + 1,
@@ -313,7 +318,7 @@
       select.selectedOptions[0].value = value;
     });
     idField.disabled = remove.disabled;
-    for (const key of ["name", "description", "points", "column", "icon"])
+    for (const key of ["name", "description", "points", "money", "supplies", "column", "icon"])
       field(treePanel, key, node[key], (value) => {
         node[key] = value;
       });
@@ -377,7 +382,7 @@
           reader.readAsDataURL(upload.files[0]);
         });
         node.icon = (await api("icon", { png })).icon;
-        treePanel.querySelector('[aria-label="图标路径"]').value = node.icon;
+        treePanel.querySelector('[data-source-field="icon"]').value = node.icon;
         preview.src = png;
         treeStatus.textContent = "图标已导入，请保存科技树。";
       } catch (error) {

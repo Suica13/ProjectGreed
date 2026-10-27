@@ -19,7 +19,10 @@ test("formation preloads count normal cost and unit limits and reject invalid or
     ...gm,
     preload: { carrierIndex: 0, hangarId: h.id },
   }));
-  assert.throws(() => G.validateFormation([carrier, ...capacity], Infinity, 6), /容量/);
+  assert.throws(
+    () => G.validateFormation([carrier, ...capacity], Infinity, G.catalog.formation.maxUnits),
+    /容量/,
+  );
   for (const preload of [
     { carrierIndex: 1, hangarId: h.id },
     { carrierIndex: 99, hangarId: h.id },

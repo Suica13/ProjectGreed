@@ -621,7 +621,7 @@
     ],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.4,
+      "sight": 8,
       "radar": 10.5,
       "antiDetection": 0.0,
       "revealOnDetection": false,

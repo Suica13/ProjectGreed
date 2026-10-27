@@ -283,7 +283,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.0,
+      "sight": 8,
       "radar": 10.0,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -893,7 +893,7 @@
   "weaponKits": [
     {
       "id": "kit_0",
-      "name": "加农炮套件",
+      "name": "标准套件",
       "cost": 100,
       "weapons": [
         "ZN_YMT_05_MainCannon_AP",

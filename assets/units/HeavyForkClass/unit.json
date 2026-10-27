@@ -765,7 +765,7 @@
     "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
-      "sight": 9.6,
+      "sight": 10,
       "radar": 13.88888888888889,
       "antiDetection": -6.944444444444445,
       "revealOnDetection": true,
@@ -3214,7 +3214,7 @@
   "weaponKits": [
     {
       "id": "standard",
-      "name": "标准武装",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "HeavyForkClass_Turret_Cannon",

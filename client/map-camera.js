@@ -12,6 +12,9 @@ const MapCamera = (() => {
     centerY = Rules.mapHeight(game) / 2,
     drag = null,
     suppressClick = false;
+  const touches = new Map();
+  let pinch = null,
+    pinchConsumed = false;
   // Larger maps need more magnification to reach the same readable cell size.
   const readableCellPixels = 160;
   function baseTile(width, height) {
@@ -58,8 +61,7 @@ const MapCamera = (() => {
     let nextZoom = Math.max(minimumZoom, Math.min(maximumZoom(), value));
     // Keep a distinct full-map stop before entering the one-step thumbnail view.
     // The same stops apply to buttons, wheel input and programmatic zoom changes.
-    if (zoom < fitZoom - zoomEpsilon && nextZoom > zoom)
-      nextZoom = Math.max(fitZoom, nextZoom);
+    if (zoom < fitZoom - zoomEpsilon && nextZoom > zoom) nextZoom = Math.max(fitZoom, nextZoom);
     else if (nextZoom < fitZoom) {
       nextZoom = zoom > fitZoom + zoomEpsilon ? fitZoom : minimumZoom;
     }
@@ -86,6 +88,9 @@ const MapCamera = (() => {
     centerX = Rules.mapWidth(game) / 2;
     centerY = Rules.mapHeight(game) / 2;
     drag = null;
+    pinch = null;
+    touches.clear();
+    pinchConsumed = false;
     suppressClick = false;
     refresh();
   }
@@ -106,8 +111,42 @@ const MapCamera = (() => {
     },
     { passive: false },
   );
+  function touchPair() {
+    const [a, b] = [...touches.values()];
+    const box = canvas.getBoundingClientRect();
+    return {
+      distance: Math.hypot(a.x - b.x, a.y - b.y),
+      x: (a.x + b.x) / 2 - box.left,
+      y: (a.y + b.y) / 2 - box.top,
+    };
+  }
   canvas.addEventListener("pointerdown", (event) => {
-    if (zoom * cellScale <= 1 || event.button !== 0 || window.GamePreview?.active) return;
+    if (pageView !== "game" || window.GamePreview?.active || event.button !== 0) return;
+    if (event.pointerType === "touch") {
+      if (!touches.size) {
+        suppressClick = false;
+        pinchConsumed = false;
+      }
+      touches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      canvas.setPointerCapture(event.pointerId);
+      if (touches.size >= 2) {
+        event.preventDefault();
+        const pair = touchPair(),
+          box = canvas.getBoundingClientRect(),
+          old = geometry(box.width, box.height);
+        pinch = {
+          distance: Math.max(1, pair.distance),
+          zoom,
+          cellX: (pair.x - old.ox) / old.tile,
+          cellY: (pair.y - old.oy) / old.tile,
+        };
+        drag = null;
+        pinchConsumed = suppressClick = true;
+        hover = null;
+        return;
+      }
+    }
+    if (zoom * cellScale <= 1) return;
     suppressClick = false;
     drag = {
       id: event.pointerId,
@@ -121,6 +160,21 @@ const MapCamera = (() => {
     canvas.setPointerCapture(event.pointerId);
   });
   canvas.addEventListener("pointermove", (event) => {
+    if (touches.has(event.pointerId)) {
+      touches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (pinch && touches.size >= 2) {
+        event.preventDefault();
+        const pair = touchPair(),
+          box = canvas.getBoundingClientRect();
+        setZoom((pinch.zoom * pair.distance) / pinch.distance, pair.x, pair.y);
+        const tile = baseTile(box.width, box.height) * zoom;
+        centerX = pinch.cellX - (pair.x - box.width / 2) / tile;
+        centerY = pinch.cellY - (pair.y - box.height / 2) / tile;
+        refresh();
+        return;
+      }
+      if (pinchConsumed) return;
+    }
     if (!drag || drag.id !== event.pointerId) return;
     const dx = event.clientX - drag.x,
       dy = event.clientY - drag.y;
@@ -133,9 +187,16 @@ const MapCamera = (() => {
     hover = null;
   });
   function release(event) {
-    if (drag?.id !== event.pointerId) return;
-    suppressClick = drag.moved;
-    drag = null;
+    const touch = touches.delete(event.pointerId);
+    if (touch && pinchConsumed) {
+      event.preventDefault();
+      suppressClick = true;
+      if (touches.size < 2) pinch = null;
+      drag = null;
+    } else if (drag?.id === event.pointerId) {
+      suppressClick = drag.moved;
+      drag = null;
+    } else if (!touch) return;
     if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
     refresh();
   }

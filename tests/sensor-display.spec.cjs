@@ -13,7 +13,7 @@ for (const width of [1280, 390])
       I18n.setLanguage("zh");
       Formation.previewUnit("MS_06S");
     });
-    await expect(page.locator("#formationDetailStats")).toContainText("视野距离 7.6 格");
+    await expect(page.locator("#formationDetailStats")).toContainText("视野距离 8 格");
     await expect(page.locator("#formationDetailStats")).toContainText("侦察距离 9.5 格");
     await page.locator("#closeFormationDetail").click();
     const values = await page.evaluate(() => {

@@ -5,7 +5,7 @@ const PilotRewards = (() => {
     pending = [],
     active = [];
   function receive(snapshot) {
-    if (snapshot.replay || snapshot.phase === "replay") return;
+    if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
     if (match !== snapshot.matchId) {
       match = snapshot.matchId;
       seen.clear();
@@ -38,7 +38,7 @@ const PilotRewards = (() => {
       ctx.strokeStyle = "#10212a";
       const labels = [];
       if (award.experiencePoints > 0)
-        labels.push(["+" + award.experiencePoints + "经验值", "#9cffa8"]);
+        labels.push([I18n.text("+" + award.experiencePoints + "经验值"), "#9cffa8"]);
       if (award.leveledUp) labels.push(["LEVEL UP", "#ffdc6e"]);
       labels.forEach(([text, color], j) => {
         ctx.fillStyle = color;

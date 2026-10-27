@@ -1,10 +1,9 @@
 ﻿/* 0079 第一页开发目录：客户端展示与服务端编组裁定共用同一份节点数据。 */
 "use strict";
 const Development = (() => {
+  const economy = typeof Economy !== "undefined" ? Economy : require("./economy.js");
   const tree =
-    typeof DEVELOPMENT_TREE !== "undefined"
-      ? DEVELOPMENT_TREE
-      : require("./development-tree.json");
+    typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
   const starterTech = {
     // 原 MOD 的起始科技；61式和飞鳐都由联邦基础科技解锁。
     EFSF: ["Tech_EFSF_0079_BaseTech"],
@@ -33,19 +32,33 @@ const Development = (() => {
       const active = new Set(starterTech[faction]);
       for (let pass = 0; pass < nodes(faction).length; pass++)
         for (const node of nodes(faction))
-          if (requested.has(node.id) && node.requires.every(id => active.has(id))) active.add(node.id);
+          if (requested.has(node.id) && node.requires.every((id) => active.has(id)))
+            active.add(node.id);
       result[faction] = [...active];
-      const knownUnits = new Set(nodes(faction).flatMap(node => node.unlocks));
-      result.units[faction] = [...new Set(Array.isArray(value?.units?.[faction]) ? value.units[faction] : [])].filter(id => knownUnits.has(id));
+      const knownUnits = new Set(nodes(faction).flatMap((node) => node.unlocks));
+      result.units[faction] = [
+        ...new Set(Array.isArray(value?.units?.[faction]) ? value.units[faction] : []),
+      ].filter((id) => knownUnits.has(id));
     }
     return result;
   }
   function research(faction, id) {
-    const node = nodes(faction).find(node => node.id === id);
+    const node = nodes(faction).find((node) => node.id === id);
     const active = new Set(unlockedTech(faction));
-    if (!node || active.has(id) || !node.requires.every(id => active.has(id)) || pointBalance(faction) < node.points) return false;
-    const next = {...progress, points: {...progress.points, [faction]: pointBalance(faction) - node.points}, researched: {...normalizeResearch(progress.researched), [faction]: [...active, id]}};
-    if (typeof localStorage !== "undefined") localStorage.setItem(progressKey, JSON.stringify(next));
+    if (
+      !node ||
+      active.has(id) ||
+      !node.requires.every((id) => active.has(id)) ||
+      pointBalance(faction) < node.points ||
+      !economy.affordable(node)
+    )
+      return false;
+    const next = {
+      ...progress,
+      points: { ...progress.points, [faction]: pointBalance(faction) - node.points },
+      researched: { ...normalizeResearch(progress.researched), [faction]: [...active, id] },
+    };
+    if (!economy.transact(node, {}, [[progressKey, JSON.stringify(next)]])) return false;
     progress = next;
     unitCache.clear();
     return true;
@@ -53,15 +66,23 @@ const Development = (() => {
   // Rewards/scripts may grant a specific unit; there is deliberately no individual research UI.
   function grantUnit(faction, unitId) {
     const researched = normalizeResearch(progress.researched);
-    if (!researched.units[faction] || !nodes(faction).some(node => node.unlocks.includes(unitId)) || researched.units[faction].includes(unitId)) return false;
+    if (
+      !researched.units[faction] ||
+      !nodes(faction).some((node) => node.unlocks.includes(unitId)) ||
+      researched.units[faction].includes(unitId)
+    )
+      return false;
     researched.units[faction].push(unitId);
-    const next = {...progress, researched};
-    if (typeof localStorage !== "undefined") localStorage.setItem(progressKey, JSON.stringify(next));
+    const next = { ...progress, researched };
+    if (typeof localStorage !== "undefined")
+      localStorage.setItem(progressKey, JSON.stringify(next));
     progress = next;
     unitCache.clear();
     return true;
   }
-  function researchSnapshot() { return normalizeResearch(progress.researched); }
+  function researchSnapshot() {
+    return normalizeResearch(progress.researched);
+  }
   function unlockedUnits(faction) {
     if (!unitCache.has(faction)) {
       const active = new Set(unlockedTech(faction));
@@ -78,8 +99,13 @@ const Development = (() => {
   function allows(faction, prefabId, researched) {
     if (researched !== undefined) {
       const active = normalizeResearch(researched);
-      return (faction === "PMC" ? ["EFSF", "ZEON"] : [faction]).some(side =>
-        active.units[side]?.includes(prefabId) || nodes(side).some(node => active[side]?.includes(node.id) && node.unlocks.includes(prefabId)));
+      return (faction === "PMC" ? ["EFSF", "ZEON"] : [faction]).some(
+        (side) =>
+          active.units[side]?.includes(prefabId) ||
+          nodes(side).some(
+            (node) => active[side]?.includes(node.id) && node.unlocks.includes(prefabId),
+          ),
+      );
     }
     if (faction === "PMC")
       return ["EFSF", "ZEON"].some((side) => unlockedUnits(side).has(prefabId));
@@ -89,30 +115,56 @@ const Development = (() => {
     return Number(progress.points[faction]) || 0;
   }
   function creditAward(award) {
-    if (!award || typeof award.id !== "string" || !award.matchId ||
-        !["EFSF", "ZEON"].includes(award.faction) ||
-        !Number.isInteger(award.points) || award.points < 1 || progress.claimed[award.id])
+    if (
+      !award ||
+      typeof award.id !== "string" ||
+      !award.matchId ||
+      !["EFSF", "ZEON"].includes(award.faction) ||
+      !Number.isInteger(award.points) ||
+      award.points < 1 ||
+      progress.claimed[award.id]
+    )
       return false;
     progress.points[award.faction] = pointBalance(award.faction) + award.points;
     progress.claimed[award.id] = award.matchId;
-    try { localStorage.setItem(progressKey, JSON.stringify(progress)); } catch {}
+    try {
+      localStorage.setItem(progressKey, JSON.stringify(progress));
+    } catch {}
     return true;
   }
   function validateProgress(value) {
-    if (!value || typeof value !== "object" || !value.points || !value.claimed) throw Error("科技进度无效");
-    const points = {}, claimed = {};
+    if (!value || typeof value !== "object" || !value.points || !value.claimed)
+      throw Error("科技进度无效");
+    const points = {},
+      claimed = {};
     for (const faction of ["EFSF", "ZEON"]) {
-      if (!Number.isSafeInteger(value.points[faction]) || value.points[faction] < 0) throw Error("科技点余额无效");
+      if (!Number.isSafeInteger(value.points[faction]) || value.points[faction] < 0)
+        throw Error("科技点余额无效");
       points[faction] = value.points[faction];
     }
     for (const [id, match] of Object.entries(value.claimed)) {
-      if (typeof match !== "string" || id.length > 200 || match.length > 200) throw Error("科技奖励记录无效");
+      if (typeof match !== "string" || id.length > 200 || match.length > 200)
+        throw Error("科技奖励记录无效");
       Object.defineProperty(claimed, id, { value: match, enumerable: true });
     }
     return { points, claimed, researched: normalizeResearch(value.researched) };
   }
-  function exportProgress() { return validateProgress(progress); }
-  return { exportProgress, validateProgress, nodes, unlockedTech, unlockedUnits, allows, pointBalance, creditAward, research, researchSnapshot, normalizeResearch, grantUnit };
+  function exportProgress() {
+    return validateProgress(progress);
+  }
+  return {
+    exportProgress,
+    validateProgress,
+    nodes,
+    unlockedTech,
+    unlockedUnits,
+    allows,
+    pointBalance,
+    creditAward,
+    research,
+    researchSnapshot,
+    normalizeResearch,
+    grantUnit,
+  };
 })();
 if (typeof module !== "undefined") module.exports = Development;
-

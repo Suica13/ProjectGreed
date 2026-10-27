@@ -98,8 +98,9 @@ const Net = (() => {
   const key = (url, room) => "slg-seat:" + url + ":" + room;
   const lastKey = () => "slg-last";
   const legacyToken = (url, room) =>
-    ["PMC", "EFSF", "ZEON"].map((faction) =>
-      storage.get("slg-seat:" + faction + ":" + url + ":" + room)).find(Boolean);
+    ["PMC", "EFSF", "ZEON"]
+      .map((faction) => storage.get("slg-seat:" + faction + ":" + url + ":" + room))
+      .find(Boolean);
   const canControl = (unit) =>
     !window.ReplayPlayer?.active &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
@@ -140,6 +141,7 @@ const Net = (() => {
       JSON.stringify({
         type: "action",
         researched: Development.researchSnapshot(),
+        inventory: Economy.snapshot().inventory,
         action,
         id,
         revision: n.revision,
@@ -319,7 +321,8 @@ const Net = (() => {
     Lobby.close();
     const token =
       (n.serverURL === url && n.room === room ? n.token : null) ||
-      storage.get(key(url, room)) || legacyToken(url, room);
+      storage.get(key(url, room)) ||
+      legacyToken(url, room);
     if (mode === "resume" && !token) {
       status("本页面没有该房间的重连凭据，请创建或加入房间");
       return;
@@ -369,7 +372,8 @@ const Net = (() => {
           type: "hello",
           version: PROJECT.version,
           characterFaction: PlayerProfile.faction(),
-      researched: Development.researchSnapshot(),
+          researched: Development.researchSnapshot(),
+          inventory: Economy.snapshot().inventory,
           roomMode: mode === "create" ? byId("newRoomMode").value : undefined,
           mode,
           room,
@@ -431,6 +435,7 @@ const Net = (() => {
     const wasStarted = n.started;
     Chat.setSnapshot(s);
     DevelopmentUI.receiveAwards(s);
+    ProductionUI.receiveAwards(s);
     PilotRewards.receive(s);
     Formation.receivePilotAwards(s);
     const previousSeat = n.seat;
@@ -469,7 +474,7 @@ const Net = (() => {
     if (s.phase === "assembly") {
       phase = "assembly";
       battleView = null;
-      if (pageView !== "formation") setPageView("room");
+      if (!["formation", "production"].includes(pageView)) setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
       update();
@@ -490,7 +495,7 @@ const Net = (() => {
       }
       phase = "waiting";
       battleView = null;
-      if (wasStarted || pageView !== "formation") setPageView("room");
+      if (wasStarted || !["formation", "production"].includes(pageView)) setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
       update();
@@ -565,7 +570,9 @@ const Net = (() => {
       status(
         (n.local
           ? "离线" + (s.settings?.mode === "quick" ? "快速战" : "常规战")
-          : "房间 " + n.room) + " · " + roleName(),
+          : "房间 " + n.room) +
+          " · " +
+          roleName(),
       );
     const effectEvent = s.effectEvent;
     if (effectEvent && !n.seen.has("effect:" + effectEvent.id)) {
@@ -663,8 +670,11 @@ const Net = (() => {
   let last;
   try {
     last = JSON.parse(
-      storage.get(lastKey()) || storage.get("slg-last:PMC") ||
-      storage.get("slg-last:EFSF") || storage.get("slg-last:ZEON") || "null"
+      storage.get(lastKey()) ||
+        storage.get("slg-last:PMC") ||
+        storage.get("slg-last:EFSF") ||
+        storage.get("slg-last:ZEON") ||
+        "null",
     );
   } catch {}
   // 预设地址只保存在配置和连接状态里，不回填到自定义输入框。
@@ -684,14 +694,17 @@ const Net = (() => {
     restoredCharacter = true;
     try {
       last = JSON.parse(
-        storage.get(lastKey()) || storage.get("slg-last:PMC") ||
-        storage.get("slg-last:EFSF") || storage.get("slg-last:ZEON") || "null"
+        storage.get(lastKey()) ||
+          storage.get("slg-last:PMC") ||
+          storage.get("slg-last:EFSF") ||
+          storage.get("slg-last:ZEON") ||
+          "null",
       );
     } catch {
       last = null;
     }
-    if (!last || !(storage.get(key(last.url, last.room)) ||
-        legacyToken(last.url, last.room))) return;
+    if (!last || !(storage.get(key(last.url, last.room)) || legacyToken(last.url, last.room)))
+      return;
     n.serverURL = last.url;
     n.room = last.room;
     connect("resume", true);

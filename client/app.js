@@ -43,6 +43,7 @@ function setPageView(view) {
   byId("roomPreparation").hidden = view !== "room";
   byId("formationScreen").hidden = view !== "formation";
   byId("developmentScreen").hidden = view !== "development";
+  byId("productionScreen").hidden = view !== "production";
   byId("roomSettings").hidden = !Net.active;
   if (view !== "game")
     for (const id of ["reaction", "battle", "victory", "help"]) byId(id).hidden = true;
@@ -68,10 +69,12 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
     return (model, pilot = null) => {
       const base = ART.assets[SpriteRenderer.models[model].icon];
       if (!pilot?.custom) return base;
-      const portrait = PilotSystem.portrait(pilot), key = model + "|" + portrait;
+      const portrait = PilotSystem.portrait(pilot),
+        key = model + "|" + portrait;
       if (!cache.has(key)) {
         if (cache.size >= 256) cache.delete(cache.keys().next().value);
-        const xml = value => value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+        const xml = (value) =>
+          value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><image href="${xml(base)}" width="64" height="64"/><rect x="39" y="39" width="25" height="25" rx="3" fill="#152430" stroke="#c7e2f2"/><image href="${xml(portrait)}" x="41" y="41" width="22" height="22" preserveAspectRatio="xMidYMid slice"/></svg>`;
         cache.set(key, "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg));
       }
@@ -81,7 +84,8 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
   unitName = (u) => (ClientSettings.trueUnitNames() ? Rules.modelOf(u).name : Rules.unitName(u)),
   displaysCustomUnitName = (u) => !ClientSettings.trueUnitNames() && !!u.customName,
   formatNumber = (n) => Math.round(Number(n)).toLocaleString("en-US"),
-  formatDistance = (n) => Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " " + I18n.text("格"),
+  formatDistance = (n) =>
+    Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " " + I18n.text("格"),
   isAI = () => !Net.active && game.ai && game.team === 1,
   isBusy = () =>
     !!window.ReplayPlayer?.active ||
@@ -149,7 +153,13 @@ function escapeHtml(value) {
   );
 }
 // Keep player-written unit names literal while surrounding UI text is translated.
-function setNamedText(el, text, names = game.units.flatMap((unit) => [unit.customName, unit.pilot?.custom ? unit.pilot.name : null]).filter(Boolean)) {
+function setNamedText(
+  el,
+  text,
+  names = game.units
+    .flatMap((unit) => [unit.customName, unit.pilot?.custom ? unit.pilot.name : null])
+    .filter(Boolean),
+) {
   el.replaceChildren();
   let rest = String(text);
   const unique = [...new Set(names)].sort((a, b) => b.length - a.length);
@@ -294,7 +304,8 @@ function update() {
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线" : "联机") +
       (Net.snapshot?.settings?.mode === "quick" ? "快速战" : "常规战") +
-      " · " + Net.roleName()
+      " · " +
+      Net.roleName()
     : "常规战";
   renderRoster(busy);
   let hint = busy
@@ -592,7 +603,10 @@ function renderPanel() {
     pilotStats = element("div", "unit-pilot-stats");
   for (const [key, label] of Object.entries(PilotSystem.labels)) {
     const cell = element("div");
-    cell.append(element("span", "", label), element("strong", "", String(Math.round(pilot.stats[key]))));
+    cell.append(
+      element("span", "", label),
+      element("strong", "", String(Math.round(pilot.stats[key]))),
+    );
     pilotStats.append(cell);
   }
   stats.prepend(pilotLine, pilotStats);
@@ -787,10 +801,12 @@ function renderPanel() {
     element(
       "p",
       "helper",
-      [{ small: "小型", medium: "中型", large: "大型" }[Rules.unitSize(m)],
-        ...(m.unitTags || []).filter((tag) =>
-          !["SmallUnit", "MediumUnit", "LargeUnit"].includes(tag))
-          .map((tag) => I18n.text(Rules.unitTagName(tag)))].join(" · "),
+      [
+        { small: "小型", medium: "中型", large: "大型" }[Rules.unitSize(m)],
+        ...(m.unitTags || [])
+          .filter((tag) => !["SmallUnit", "MediumUnit", "LargeUnit"].includes(tag))
+          .map((tag) => I18n.text(Rules.unitTagName(tag))),
+      ].join(" · "),
     ),
   );
   actions.id = "unitActions";
@@ -1371,8 +1387,8 @@ function drawMap(now) {
     ctx.fillText(Rules.columnLabel(x), ox + (x + 0.5) * tile, oy - 9);
   for (let y = 0; !immersive && y < Rules.mapHeight(game); y++)
     ctx.fillText(String(y + 1), ox - 9, oy + (y + 0.5) * tile);
-  const intel = Net.snapshot?.phase === "playback"
-    ? Net.snapshot.combatIntel || game.intel : game.intel;
+  const intel =
+    Net.snapshot?.phase === "playback" ? Net.snapshot.combatIntel || game.intel : game.intel;
   EnvironmentVisuals.fog(ctx, intel, ox, oy, tile);
   // The clip remains available for individual effects opting out of fog visibility.
   const visibilityClip = EnvironmentVisuals.visibilityClip(intel, ox, oy, tile);
@@ -1621,25 +1637,37 @@ function drawMap(now) {
       const label = u.pilot?.custom ? u.pilot.name : unitName(u);
       const labelY = bary + 12 + nameSize / 2;
       if (u.pilot?.custom) {
-        const width = ctx.measureText(label).width, iconSize = nameSize * 1.1;
+        const width = ctx.measureText(label).width,
+          iconSize = nameSize * 1.1;
         const left = pos.x - (width + iconSize + 3) / 2;
         ctx.save();
         ctx.translate(left, labelY - iconSize / 2);
         ctx.scale(iconSize / 16, iconSize / 16);
         // Pilot helmet: dome, visor and chin guard; no platform emoji dependency.
         ctx.beginPath();
-        ctx.moveTo(2, 14); ctx.lineTo(1, 7);
+        ctx.moveTo(2, 14);
+        ctx.lineTo(1, 7);
         ctx.quadraticCurveTo(1, 0, 8, 0);
         ctx.quadraticCurveTo(15, 0, 15, 7);
-        ctx.lineTo(14, 14); ctx.lineTo(10, 16); ctx.lineTo(6, 16); ctx.closePath();
+        ctx.lineTo(14, 14);
+        ctx.lineTo(10, 16);
+        ctx.lineTo(6, 16);
+        ctx.closePath();
         ctx.fill();
-        ctx.fillStyle = "#152430"; ctx.fillRect(3, 6, 10, 4);
+        ctx.fillStyle = "#152430";
+        ctx.fillRect(3, 6, 10, 4);
         ctx.restore();
         ctx.fillText(label, pos.x + (iconSize + 3) / 2, labelY);
       } else ctx.fillText(label, pos.x, labelY);
       ctx.restore();
     }
-    PilotRewards.draw(ctx, u, pos.x, bary + 16 + Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize, now);
+    PilotRewards.draw(
+      ctx,
+      u,
+      pos.x,
+      bary + 16 + Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize,
+      now,
+    );
     if (
       attackTargets.has(u.id) ||
       (mode === "target" && weapon && chosen && Rules.canAttack(game, chosen, u, weapon)) ||
@@ -2421,7 +2449,10 @@ function drawBattle(now) {
         <small
           >HP ${formatNumber(hp)} / ${formatNumber(Rules.modelOf(unit).hp)} ? EN ${unit.en}</small
         >
-        <small>视野距离 ${formatDistance(Rules.sensors.ranges(unit, game).sight)} · 侦察距离 ${formatDistance(Rules.sensors.ranges(unit, game).radar)}</small>
+        <small
+          >视野距离 ${formatDistance(Rules.sensors.ranges(unit, game).sight)} · 侦察距离
+          ${formatDistance(Rules.sensors.ranges(unit, game).radar)}</small
+        >
       </div>`;
     })
     .join("");

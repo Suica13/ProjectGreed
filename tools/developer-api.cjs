@@ -62,6 +62,9 @@ function createSourceStore({
           typeof node.description !== "string" ||
           !Number.isSafeInteger(node.points) ||
           node.points < 0 ||
+          ["money", "supplies"].some(
+            (key) => !Number.isSafeInteger(node[key] ?? 0) || (node[key] ?? 0) < 0,
+          ) ||
           !["top", "mid", "bot"].includes(node.row) ||
           !Number.isInteger(node.column) ||
           node.column < 1 ||

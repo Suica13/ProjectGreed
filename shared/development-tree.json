@@ -47,7 +47,17 @@
         "Turret_Radar_A",
         "Wall_T1_A",
         "Wall_T1_B"
-      ]
+      ],
+      "money": 0,
+      "supplies": 0,
+      "sourceCosts": {
+        "money": 0,
+        "supplies": 0,
+        "points": 0,
+        "researchSeconds": 0,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_BaseTech_Awake"
+      }
     },
     {
       "id": "Tech_EFSF_0079_AntiMSPlan",
@@ -75,7 +85,17 @@
         "Pilot_EFSF_0079_N_ACE_YDR",
         "M_Type_Submarine",
         "MiniTrayClass"
-      ]
+      ],
+      "money": 6000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 3000,
+        "supplies": 1000,
+        "points": 1200,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_AntiMSPlan_Awake"
+      }
     },
     {
       "id": "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan",
@@ -102,7 +122,17 @@
         "Pilot_EFSF_0079_N_ACE_SHR",
         "BigTrayClass",
         "MagellanClass"
-      ]
+      ],
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 3600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan_Awake"
+      }
     },
     {
       "id": "Tech_EFSF_0079_OperationVDataRecoveryProject",
@@ -126,7 +156,17 @@
         "Gunperry",
         "PegasusClass",
         "MagellanClass_Green"
-      ]
+      ],
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 6000,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_OperationVDataRecoveryProject_Awake"
+      }
     },
     {
       "id": "Tech_EFSF_0079_GMDevelopmentPlan",
@@ -146,7 +186,17 @@
         "Pilot_EFSF_0079_N_ACE_TAM",
         "Turret_MS_A",
         "Turret_BM_A"
-      ]
+      ],
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 8400,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_GMDevelopmentPlan_Awake"
+      }
     },
     {
       "id": "Tech_EFSF_0079_BlueDestinyProject",
@@ -164,7 +214,17 @@
         "RX_80PR",
         "HeavyForkClass",
         "Pilot_EFSF_0079_N_ACE_YUU"
-      ]
+      ],
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 4800,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_BlueDestinyProject_Awake"
+      }
     },
     {
       "id": "Tech_EFSF_0079_PaleRiderProject",
@@ -182,7 +242,17 @@
         "RX_80PR_2",
         "RX_79_BD_2",
         "RGM_79DO"
-      ]
+      ],
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 9600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_PaleRiderProject_Awake"
+      }
     },
     {
       "id": "Tech_EFSF_0079_HeavyGuncannonPlan",
@@ -201,7 +271,17 @@
         "RX_78XX",
         "RTX_440",
         "RMV_1"
-      ]
+      ],
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 7200,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_HeavyGuncannonPlan_Awake"
+      }
     }
   ],
   "ZEON": [
@@ -251,7 +331,17 @@
         "Turret_Radar_A",
         "Wall_T1_A",
         "Wall_T1_B"
-      ]
+      ],
+      "money": 0,
+      "supplies": 0,
+      "sourceCosts": {
+        "money": 0,
+        "supplies": 0,
+        "points": 0,
+        "researchSeconds": 0,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_BaseTech_Awake"
+      }
     },
     {
       "id": "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan",
@@ -278,7 +368,17 @@
         "Pilot_ZEON_0079_N_ACE_RBR",
         "M_Type_Submarine_ZEON",
         "FalmerClass"
-      ]
+      ],
+      "money": 6000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 3000,
+        "supplies": 1000,
+        "points": 1200,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan_Awake"
+      }
     },
     {
       "id": "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan",
@@ -304,7 +404,17 @@
         "Pilot_ZEON_0079_N_ACE_NRS",
         "DabudeClass",
         "ChivvayClass"
-      ]
+      ],
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 3600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_GroundTypeMSDevelopmentPlan_Awake"
+      }
     },
     {
       "id": "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan",
@@ -327,7 +437,17 @@
         "GallopClass",
         "ZanzibarClass",
         "GwazineClass"
-      ]
+      ],
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 6000,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan_Awake"
+      }
     },
     {
       "id": "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan",
@@ -349,7 +469,17 @@
         "FatUncleKai",
         "Turret_MS_A",
         "Turret_BM_A_Yellow"
-      ]
+      ],
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 8400,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan_Awake"
+      }
     },
     {
       "id": "Tech_ZEON_0079_603TestTeam",
@@ -368,7 +498,17 @@
         "MP_02A",
         "YMT_05",
         "JotunheimClass"
-      ]
+      ],
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 4800,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_603TestTeam_Awake"
+      }
     },
     {
       "id": "Tech_ZEON_0079_PezunProject",
@@ -386,7 +526,17 @@
         "MS_11",
         "MS_11S",
         "MS_12"
-      ]
+      ],
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 9600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_PezunProject_Awake"
+      }
     },
     {
       "id": "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan",
@@ -404,7 +554,17 @@
         "MS_07H",
         "MS_08TX_Kai",
         "Pilot_ZEON_0079_N_ACE_NMBS"
-      ]
+      ],
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 4800,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan_Awake"
+      }
     },
     {
       "id": "Tech_ZEON_0079_ApsarasDevelopmentPlan",
@@ -422,7 +582,17 @@
         "MS_07H8",
         "Pilot_ZEON_0079_N_ACE_ANS",
         "Pilot_ZEON_0079_N_ACE_GNS"
-      ]
+      ],
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 9600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_ApsarasDevelopmentPlan_Awake"
+      }
     }
   ]
 }

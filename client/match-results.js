@@ -31,6 +31,30 @@ const MatchResults = (() => {
   }
   function show() {
     if (window.GamePreview?.active) return;
+    let rewards = byId("victoryEconomy");
+    if (!rewards) {
+      rewards = element("p", "resource-balance");
+      rewards.id = "victoryEconomy";
+      byId("victoryCountdown").before(rewards);
+    }
+    const awards = Net.snapshot?.economyAwards || [];
+    const totals = awards.reduce(
+      (sum, a) => ({
+        money: sum.money + a.money,
+        supplies: sum.supplies + a.supplies,
+        losses: sum.losses + Object.values(a.losses || {}).reduce((n, v) => n + v, 0),
+      }),
+      { money: 0, supplies: 0, losses: 0 },
+    );
+    rewards.textContent =
+      "本局收益：资金 " +
+      totals.money +
+      " · 物资 " +
+      totals.supplies +
+      " · 损毁扣除 " +
+      totals.losses +
+      " 台";
+    rewards.hidden = !Net.active || Net.snapshot?.replay;
     const snapshot = Net.snapshot,
       next = Net.active ? snapshot?.matchId : "offline-" + session;
     if (next !== key || !timer) {

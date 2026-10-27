@@ -1,15 +1,70 @@
 {
   "volume": 0.25,
   "tracks": [
-    { "name": "SDGO 大厅", "file": "SDGO_Lobby_Remix.ogg", "scene": "menu" },
-    { "name": "0079_01", "file": "0079_01_Remix.ogg", "scene": "battle" },
-    { "name": "0080_01", "file": "0080_01_Remix.ogg", "scene": "battle" },
-    { "name": "0081_01", "file": "0081_01_Remix.ogg", "scene": "battle" },
-    { "name": "IGLOO", "file": "IGLOO_01_Remix.ogg", "scene": "battle" },
-    { "name": "BD_01", "file": "BD_01_Remix_ByFinlee.ogg", "scene": "battle" },
-    { "name": "BD_02", "file": "BD_02_Remix_ByFinlee.ogg", "scene": "battle" },
-    { "name": "CD_01", "file": "CD_01_Remix.ogg", "scene": "battle" },
-    { "name": "GRNYB 联邦", "file": "GRNYB_EFSF_Remix.ogg", "scene": "battle", "faction": "EFSF" },
-    { "name": "GRNYB 吉翁", "file": "GRNYB_ZEON_Remix.ogg", "scene": "battle", "faction": "ZEON" }
+    {
+      "name": "SDGO 大厅",
+      "file": "SDGO_Lobby_Remix.ogg",
+      "scene": "menu",
+      "faction": "PMC"
+    },
+    {
+      "name": "GRNYB 联邦 PLAN",
+      "file": "GRNYB_EFSF_PLAN_Remix.mp3",
+      "scene": "menu",
+      "faction": "EFSF"
+    },
+    {
+      "name": "GRNYB 吉翁 PLAN",
+      "file": "GRNYB_ZEON_PLAN_Remix.mp3",
+      "scene": "menu",
+      "faction": "ZEON"
+    },
+    {
+      "name": "0079_01",
+      "file": "0079_01_Remix.ogg",
+      "scene": "battle"
+    },
+    {
+      "name": "0080_01",
+      "file": "0080_01_Remix.ogg",
+      "scene": "battle"
+    },
+    {
+      "name": "0081_01",
+      "file": "0081_01_Remix.ogg",
+      "scene": "battle"
+    },
+    {
+      "name": "IGLOO",
+      "file": "IGLOO_01_Remix.ogg",
+      "scene": "battle"
+    },
+    {
+      "name": "BD_01",
+      "file": "BD_01_Remix_ByFinlee.ogg",
+      "scene": "battle"
+    },
+    {
+      "name": "BD_02",
+      "file": "BD_02_Remix_ByFinlee.ogg",
+      "scene": "battle"
+    },
+    {
+      "name": "CD_01",
+      "file": "CD_01_Remix.ogg",
+      "scene": "battle"
+    },
+    {
+      "name": "GRNYB 联邦 Battle",
+      "file": "GRNYB_EFSF_Remix.ogg",
+      "scene": "battle",
+      "faction": "EFSF"
+    },
+    {
+      "name": "GRNYB 吉翁 Battle",
+      "file": "GRNYB_ZEON_Remix.ogg",
+      "scene": "battle",
+      "faction": "ZEON"
+    }
   ]
 }

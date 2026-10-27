@@ -338,11 +338,11 @@ test("deleting a pilot clears all saved assignments and survives reload", async 
   await page.locator("#openFormation").click();
   await page.locator("#formationPilotsTab").click();
   const remove = page.getByRole("button", { name: "删除驾驶员 待删除驾驶员", exact: true });
-  page.once("dialog", (dialog) => dialog.dismiss());
   await remove.click();
+  await page.locator("#gameDialog").getByRole("button", { name: "取消", exact: true }).click();
   await expect(page.locator(".custom-pilot-card")).toHaveCount(1);
-  page.once("dialog", (dialog) => dialog.accept());
   await remove.click();
+  await page.locator("#gameDialog").getByRole("button", { name: "删除", exact: true }).click();
   await expect(page.locator(".custom-pilot-card")).toHaveCount(0);
   const stored = await page.evaluate(() => ({
     pilots: JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v2.EFSF")).pilots,

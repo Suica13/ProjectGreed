@@ -12,6 +12,7 @@ const ProfileSave = (() => {
       pilots: {},
       formations: {},
       development: Development.validateProgress(value.development),
+      economy: Economy.validate(value.economy),
     };
     for (const faction of factions) {
       const store = value.pilots?.[faction];
@@ -51,7 +52,10 @@ const ProfileSave = (() => {
             throw Error("编组名称无效");
           return {
             name: squad.name,
-            units: Rules.validateFormation(squad.units, Infinity, Rules.catalog.formation.maxUnits),
+            units:
+              Array.isArray(squad.units) && !squad.units.length
+                ? []
+                : Rules.validateFormation(squad.units, Infinity, Rules.catalog.formation.maxUnits),
           };
         }),
       };
@@ -73,6 +77,7 @@ const ProfileSave = (() => {
         pilots: Formation.exportPilotStores(),
         formations,
         development: Development.exportProgress(),
+        economy: Economy.snapshot(),
       }),
       createdAt: new Date().toISOString(),
     };
@@ -89,6 +94,7 @@ const ProfileSave = (() => {
       );
       writes.set(formationKey + faction + "-active", save ? String(save.index) : null);
     }
+    writes.set(Economy.key, JSON.stringify(clean.economy));
     writes.set(pilotKey + "migrated", "imported");
     writes.set("projectgreed.developmentProgress.v1", JSON.stringify(clean.development));
     const previous = new Map([...writes.keys()].map((key) => [key, localStorage.getItem(key)]));
@@ -122,7 +128,8 @@ const ProfileSave = (() => {
   input.id = "profileSaveFile";
   status.className = "settings-help muted";
   status.setAttribute("role", "status");
-  status.textContent = "个人进度：驾驶员、编组和科技进度。导入将覆盖个人进度并刷新页面。";
+  status.textContent =
+    "个人进度：驾驶员、编组、科技、资金、物资和单位库存。导入将覆盖个人进度并刷新页面。";
   exportButton.onclick = () => {
     try {
       const url = URL.createObjectURL(
@@ -159,12 +166,26 @@ const ProfileSave = (() => {
       input.value = "";
     }
   };
-  newButton.onclick = () => {
+  newButton.onclick = async () => {
     if (!canImport()) {
       status.textContent = "请先退出当前战局，再新建存档";
       return;
     }
-    if (!confirm(I18n.text("新建存档将重置驾驶员、编组和科技进度，是否继续？"))) return;
+    if (
+      !(await GameDialog.confirm(
+        "新建存档将重置驾驶员、编组、科技、资金、物资和单位库存，是否继续？",
+        {
+          title: "新建存档",
+          confirmText: "新建存档",
+          danger: true,
+        },
+      ))
+    )
+      return;
+    if (!canImport()) {
+      status.textContent = "请先退出当前战局，再新建存档";
+      return;
+    }
     try {
       const pilots = {},
         formations = {};
@@ -179,6 +200,7 @@ const ProfileSave = (() => {
         formations,
         development: { points: { EFSF: 0, ZEON: 0 }, claimed: {} },
       });
+      PlayerProfile.setFaction("EFSF");
       location.reload();
     } catch (error) {
       status.textContent = "新建失败：" + error.message;

@@ -16,7 +16,7 @@ function fixture(t, mode = "regular") {
   t.after(() => engine.close());
   const clients = [{ readyState: 1 }, { readyState: 1 }];
   clients.forEach((ws, i) =>
-    engine.join(ws, { mode: i ? "join" : "create", room: "ASSIST", characterFaction: "PMC" }),
+    engine.join(ws, { mode: i ? "join" : "create", room: "ASSIST", characterFaction: "PMC", inventory: { Type61: 10 } }),
   );
   const room = engine.rooms.get("ASSIST");
   function act(i, action, fields = {}) {
@@ -121,10 +121,15 @@ for (const scenario of [
       assert.equal(assist, undefined);
       return;
     }
+    if (scenario.startsWith("saved")) {
+      assert.equal(assist, undefined);
+      assert.equal(awards.length, 0);
+      return;
+    }
     assert.ok(assist);
     const xp = scenario.startsWith("saved")
       ? 0
-      : Math.floor(G.modelOf(target).cost * 0.25 * (scenario === "quick" ? 0.25 : 1));
+      : Math.floor(G.modelOf(target).cost * 0.25 * (scenario === "quick" ? 0.1 : 1));
     assert.equal(assist.experiencePoints, xp);
     assert.equal(contributor.pilot.experience, xp);
     if (scenario === "embarked") assert.equal(assist.carrierId, contributor.embarked.carrierId);

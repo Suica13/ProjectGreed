@@ -146,7 +146,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.0,
+      "sight": 8,
       "radar": 12.5,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -659,7 +659,7 @@
   "weaponKits": [
     {
       "id": "standard",
-      "name": "标准武装",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "Common_DoubleMS_EF_Heli",

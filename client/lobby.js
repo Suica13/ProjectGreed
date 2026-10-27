@@ -313,6 +313,10 @@ const Lobby = (() => {
   };
   byId("cancelServer").onclick = close;
   byId("refreshRooms").onclick = refresh;
+  byId("disconnectLobby").onclick = () => {
+    openMenu();
+    byId("openSkirmish").focus();
+  };
   return {
     open,
     close,

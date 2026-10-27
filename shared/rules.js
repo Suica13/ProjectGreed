@@ -246,6 +246,26 @@ const Tactics = (() => {
       ])],
     };
   }
+  function normalizeInventory(value = {}) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("单位库存无效");
+    const result = {};
+    for (const [id, count] of Object.entries(value)) {
+      if (!catalog.prefabs.some(p => p.id === id) || !Number.isSafeInteger(count) || count < 0)
+        throw Error("单位库存无效：" + id);
+      result[id] = count;
+    }
+    return result;
+  }
+  function inventoryPlan(entries, inventory) {
+    const used = {}, required = {}, missing = [];
+    entries.forEach((entry, index) => {
+      const id = entry.unitId;
+      required[id] = (required[id] || 0) + 1;
+      used[id] = (used[id] || 0) + 1;
+      if (used[id] > (inventory[id] || 0)) missing.push(index);
+    });
+    return {missing, required};
+  }
   function restrictionReason(model, restrictions = {}) {
     if (model.wip) return "wip";
     if (
@@ -292,6 +312,13 @@ const Tactics = (() => {
       if (!reasons[index] && entry.customPilot && restrictions.characterFaction &&
           entry.customPilot.faction !== restrictions.characterFaction) reasons[index] = "faction_mismatch";
     });
+    if (restrictions.inventory !== undefined) {
+      const inventory = normalizeInventory(restrictions.inventory);
+      // Disabled units do not reserve stock ahead of units that can actually deploy.
+      const candidates = clean.flatMap((entry,index) => reasons[index] ? [] : [{entry,index}]);
+      for (const i of inventoryPlan(candidates.map(c=>c.entry), inventory).missing)
+        reasons[candidates[i].index] = "inventory";
+    }
     let occupied = 0;
     clean.forEach((entry, index) => {
       if (reasons[index]) return;
@@ -407,6 +434,7 @@ const Tactics = (() => {
     rules.characterFaction = ["PMC", "EFSF", "ZEON"].includes(player?.characterFaction)
       ? player.characterFaction : null;
     rules.researched = player?.researched;
+    if (player && !player.bot) rules.inventory = normalizeInventory(player.inventory);
     const config = armySettings(player);
     rules.unitCostLimit =
       config.unitCostLimit ??
@@ -1131,6 +1159,7 @@ const Tactics = (() => {
       formationRestrictions({ ...settings, mapId: map.id }, seat);
     const tiles = map.tiles.map((row) => row.slice());
     let units = [];
+    const sourceIndices = [];
     for (let seat = 0; seat < formations.length; seat++) {
       // null 明确表示空出生点，不生成单位，也无需确认部署。
       if (formations[seat] === null) continue;
@@ -1139,6 +1168,10 @@ const Tactics = (() => {
         settings.seatCostLimits?.[seat] ?? costLimit,
         settings.seatUnitLimits?.[seat] ?? unitLimit,
       );
+      const inventory = rulesForSeat(seat).inventory;
+      const stockPlan = inventory === undefined ? null : planFormation(formations[seat], Infinity, {inventory}, catalog.formation.maxUnits);
+      sourceIndices[seat] = (stockPlan?.indices || formations[seat].map((_,i)=>i)).map(i => settings.formationIndices?.[seat]?.[i] ?? i);
+      if (stockPlan) formations[seat] = stockPlan.deployable;
       const placements = deploymentPlacements(
         { tiles, units, mapId: map.id, environment: map.environment },
         formations[seat],
@@ -1157,7 +1190,7 @@ const Tactics = (() => {
           models[model]);
         let m = modelOf({ model, performance, environment: map.environment, pilot });
         units.push({
-          id: seat + "-" + (settings.formationIndices?.[seat]?.[i] ?? i),
+          id: seat + "-" + (sourceIndices[seat]?.[i] ?? i),
           ownerSeat: seat,
           ...(entry.preload
             ? {
@@ -1165,7 +1198,7 @@ const Tactics = (() => {
                   carrierId:
                     seat +
                     "-" +
-                    (settings.formationIndices?.[seat]?.[entry.preload.carrierIndex] ??
+                    (sourceIndices[seat]?.[entry.preload.carrierIndex] ??
                       entry.preload.carrierIndex),
                   hangarId: entry.preload.hangarId,
                   boardRound: null,
@@ -2235,6 +2268,8 @@ const Tactics = (() => {
     defaultRoomSettings,
     formationRestrictions,
     restrictionReason,
+    normalizeInventory,
+    inventoryPlan,
     factions,
     eras,
     unitTags,

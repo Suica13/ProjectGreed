@@ -12,14 +12,22 @@ const DevelopmentUI = (() => {
   const pendingAwards = new Map();
   let awardMatch = null;
   function receiveAwards(snapshot) {
-    if (awardMatch !== snapshot.matchId) { pendingAwards.clear(); awardMatch = snapshot.matchId; }
+    if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
+    if (awardMatch !== snapshot.matchId) {
+      pendingAwards.clear();
+      awardMatch = snapshot.matchId;
+    }
     for (const award of snapshot.techAwards || []) {
       // Balance is credited immediately; only the notification waits for turn end.
       if (Development.creditAward(award)) pendingAwards.set(award.id, award);
     }
     if (snapshot.phase === "playback") return;
-    const ready = [...pendingAwards.values()].filter(award => snapshot.phase === "finished" ||
-      award.round !== snapshot.game?.round || award.team !== snapshot.game?.team);
+    const ready = [...pendingAwards.values()].filter(
+      (award) =>
+        snapshot.phase === "finished" ||
+        award.round !== snapshot.game?.round ||
+        award.team !== snapshot.game?.team,
+    );
     const totals = new Map();
     for (const award of ready) {
       pendingAwards.delete(award.id);
@@ -28,8 +36,11 @@ const DevelopmentUI = (() => {
     for (const [faction, points] of totals) {
       if (byId("gameScene").hidden) continue;
       GameAudio.play("killInfoSound");
-      const toast = element("div", "tech-reward-toast", "获得" + points + "点" +
-        (faction === "EFSF" ? "地球联邦军" : "吉翁公国军") + "科技点");
+      const toast = element(
+        "div",
+        "tech-reward-toast",
+        "获得" + points + "点" + (faction === "EFSF" ? "地球联邦军" : "吉翁公国军") + "科技点",
+      );
       byId("techRewardStack").append(toast);
       setTimeout(() => toast.remove(), 3200);
     }
@@ -63,15 +74,29 @@ const DevelopmentUI = (() => {
     const available = node.requires.every((id) => unlocked.has(id));
     const researched = unlocked.has(node.id);
     const points = Development.pointBalance(faction);
+    const canPay = Economy.affordable(node);
     details.replaceChildren(
       element("h3", "", node.name),
       element("p", "muted", node.description),
       element("p", "", "所需阵营科技点：" + node.points),
-      element("p", "", "前置科技：" +
-        (node.requires.map((id) => names.get(id) || id).join("、") || "无")),
-      element("p", researched ? "success-text" : "muted",
-        researched ? "已开发" : !available ? "前置科技未完成" :
-          points < node.points ? "阵营科技点不足" : "可以开发"),
+      element(
+        "p",
+        "",
+        "前置科技：" + (node.requires.map((id) => names.get(id) || id).join("、") || "无"),
+      ),
+      element(
+        "p",
+        researched ? "success-text" : "muted",
+        researched
+          ? "已开发"
+          : !available
+            ? "前置科技未完成"
+            : points < node.points
+              ? "阵营科技点不足"
+              : !canPay
+                ? "资金或物资不足"
+                : "可以开发",
+      ),
       element("h4", "", "解锁单位"),
     );
     const units = element("div", "development-units");
@@ -79,7 +104,7 @@ const DevelopmentUI = (() => {
     details.append(units);
     const action = element("button", researched ? "" : "primary", researched ? "已开发" : "开发");
     action.type = "button";
-    action.disabled = researched || !available || points < node.points;
+    action.disabled = researched || !available || points < node.points || !canPay;
     action.title = researched ? "已开发" : "消耗 " + node.points + " 科技点";
     action.onclick = () => {
       try {
@@ -87,8 +112,13 @@ const DevelopmentUI = (() => {
           window.dispatchEvent(new Event("development-changed"));
           render();
         }
-      } catch { note("科技进度保存失败，请检查浏览器存储空间"); }
+      } catch {
+        note("科技进度保存失败，请检查浏览器存储空间");
+      }
     };
+    const price = element("div", "resource-balance");
+    ProductionUI.resources(price, node);
+    details.insertBefore(price, units);
     details.append(action);
   }
 
@@ -153,8 +183,8 @@ const DevelopmentUI = (() => {
           const middle = (y1 + y2) / 2;
           const path = document.createElementNS(svgNamespace, "path");
           path.setAttribute("d", `M ${x1} ${y1} V ${middle} H ${x2} V ${y2}`);
-          path.dataset.state = unlocked.has(requiredId) && unlocked.has(node.id) ?
-            "unlocked" : "locked";
+          path.dataset.state =
+            unlocked.has(requiredId) && unlocked.has(node.id) ? "unlocked" : "locked";
           lines.append(path);
         }
     };
@@ -169,8 +199,7 @@ const DevelopmentUI = (() => {
   window.addEventListener("resize", () => drawConnections());
   byId("developmentFactionSelect").onchange = render;
   byId("openDevelopment").onclick = () => {
-    byId("developmentFactionSelect").value =
-      PlayerProfile.faction() === "ZEON" ? "ZEON" : "EFSF";
+    byId("developmentFactionSelect").value = PlayerProfile.faction() === "ZEON" ? "ZEON" : "EFSF";
     setPageView("development");
     render();
     byId("closeDevelopment").focus();

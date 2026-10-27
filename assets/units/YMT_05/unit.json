@@ -371,7 +371,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.8,
+      "sight": 9,
       "radar": 11.0,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -1708,7 +1708,7 @@
   "weaponKits": [
     {
       "id": "kit_3",
-      "name": "105mm机枪套件",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "ZN_105mmMG_L",

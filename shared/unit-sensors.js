@@ -18,7 +18,7 @@ const UnitSensors = {
       const head = unit.brokenParts?.head ? 0.75 : 1;
       return {
         ...base,
-        sight: base.sight * head,
+        sight: Math.round(base.sight * head),
         radar: base.radar * head,
         antiDetection: (base.antiDetection || 0) + (game && minovskyAt(game, unit) ? 5 : 0),
         stealth: !!base.stealth || (water && !!base.stealthAqua),

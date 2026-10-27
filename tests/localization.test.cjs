@@ -197,3 +197,17 @@ test("form hints translate while player-entered values remain untouched", () => 
   api.setLanguage("zh");
   assert.equal(attrs.placeholder, "选择出生点");
 });
+
+
+test("new UI terminology, precise patterns and canonical kit names localize in both languages", () => {
+  for (const language of ["en", "ja"]) {
+    const api = i18n([language]);
+    for (const message of ["生产单位", "尚未开发", "一键生产", "确认强化", "导出存档", "资金", "物资", "本局收益：资金 400 · 物资 300 · 损毁扣除 2 台"])
+      assert.notEqual(api.text(message), message);
+    const catalog = loadCatalog();
+    api.bindCatalog(catalog);
+    assert.equal(catalog.models.Type61__standard.kitName, language === "en" ? "Standard kit" : "標準装備");
+    assert.equal(catalog.models.RX_80PR_2__kit_0.kitName, language === "en" ? "Composite launcher kit" : "複合ランチャー装備");
+  }
+  assert.equal(i18n(["en"]).text("编组单位点数: 7 / 72"), "Formation points: 7 / 72");
+});

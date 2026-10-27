@@ -33,9 +33,18 @@
 ## 视野：保留既有独立换算
 
 - `tools/native_sensors.py` 先读继承后的 `hiddenAction_Start_SetStats`，再用 `hiddenAction_InitializeStats` 覆盖同名内存值；不能抓文本里的第一个宏。原值保存于 `sourceStats.sensors`。缺省原生雾视距 20、雷达探测距离 360、反侦测距离 0；表达式需解析后再换算。
-- `stats.sensors.sight = 原生 baseFogOfWarSightRange × 0.4`；`radar = 原生 baseDetectRange ÷ 36`；`antiDetection = 原生 baseAntiDetectRange ÷ 28.8`。普通原生雷达若是雾视距的 18 倍，转换后才恰为项目视距的 1.25 倍。侦察单位、舰船及负反侦测值保留原生比例，不能统一改为 `sight × 1.25`。例如原生视距 18、雷达 324 → 视距 7.2、雷达 9。
+- `stats.sensors.sight = round(原生 baseFogOfWarSightRange × 0.4)`（四舍五入为整数）；`radar = 原生 baseDetectRange ÷ 36`；`antiDetection = 原生 baseAntiDetectRange ÷ 28.8`。普通原生雷达若是雾视距的 18 倍，转换后为取整前项目视距的 1.25 倍。侦察单位、舰船及负反侦测值保留原生比例，不能统一改为 `sight × 1.25`。例如原生视距 18、雷达 324 → 视距 7、雷达 9；头部损坏后的实际视野也取整。
 - `shared/unit-sensors.js` 在战斗中另外处理头部损坏、米诺夫斯基效果、隐蔽/反侦测、跨空地层和舰船 `revealOnDetection`。雷达接触、已探测和实际可见不同；普通直接攻击要求目标可见。不要通过改武器射程或移动力修补视野问题。
 
 核对时记录每项原生值、导入基础值、最终值及覆盖原因；先查用户指定特例。批量刷新可能改写全部单位，需限定范围并审阅差异。
 
 - RFF_06 扎尼的发布 COST 固定为 75；`tools/v05_balance.py` 同步保留此例外。
+
+## 生产与科技资源
+
+- `tools/import-production.py` 只读原工厂 `action_Produce_*` 与实际排队／触发链，不能用 `AutoProduce` 的 AI 价格、单位 COST 或工厂建筑造价代替生产价。`EquipmentIndex` 对应当前武器组，输出写入 `shared/production-catalog.json`；批次数量由实际 `produceUnits` 相加，常见3台或1台，原版运输车2台批次保留。原MOD混合武器小队在当前生产系统中统一为所选生产套件；`output` 保存统一后的产出，`source.outputs` 继续完整备份原始混编。
+- 素体选同一单位资金、物资都最低的方案；当前来源不存在两种价格互相冲突的情况。若未来出现冲突，导入器应报错供人工确认，不能悄悄变更折算权重。
+- 套件独立库存，购买数量等于素体批次台数。每套的两种资源价格分别为 `max(0, ceil(套件原厂批价/套件产量 - 素体原厂批价/素体产量))`，再乘本批套件数计费。素体自带的套件无需另购；未找到原厂价格的套件仍可预览，不能凭空定价或免费获得。
+- 科技节点的资金、物资为原 MOD `TechList_*` 对应 Awake 动作的2倍，科技点继续使用节点自身配置。`sourceCosts` 备份原价、原科技点及研发秒数；生产 `source` 备份工厂路径、动作、生产秒数、队列延迟与实际产出。本阶段不运行时间等待。
+
+- 套件命名由 `tools/native_weapon_layout.py:kit_names` 维护：只有一个武器组的单位统一叫“标准套件”；苍白骑兵及其 HADES 形态的 `kit_0` 叫“复合发射器套件”。保留套件 ID 和存档别名。

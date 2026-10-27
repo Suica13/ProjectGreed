@@ -178,7 +178,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 7.2,
+      "sight": 7,
       "radar": 12.5,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -1855,7 +1855,7 @@
   "weaponKits": [
     {
       "id": "main_0",
-      "name": "航空炸弹套件",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "Common_DoubleVulcan_DonEscargot",

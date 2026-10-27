@@ -1,4 +1,4 @@
-/* 菜单使用 SDGO；战斗音乐按当前玩家阵营筛选，曲终顺序循环，“下一首”随机切换。 */
+/* 菜单与战斗均按当前身份选择音乐，曲终顺序循环，“下一首”随机切换。 */
 const MusicPlayer = (() => {
   const audio = new Audio();
   const playlist = ART.music.tracks;
@@ -6,7 +6,14 @@ const MusicPlayer = (() => {
   const next = document.getElementById("musicNext");
   const title = document.getElementById("musicTitle");
   const status = document.getElementById("musicStatus");
-  let available = playlist.filter((track) => track.scene === "menu");
+  let menuFaction = "EFSF";
+  try {
+    const saved = localStorage.getItem("projectgreed.combatFaction");
+    if (["PMC", "EFSF", "ZEON"].includes(saved)) menuFaction = saved;
+  } catch {}
+  let available = playlist.filter(
+    (track) => track.scene === "menu" && (!track.faction || track.faction === menuFaction),
+  );
   let index = playlist.indexOf(available[0]);
   let wantsPlayback = true;
   let started = false;

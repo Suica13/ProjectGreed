@@ -15,10 +15,15 @@ const BattleHUD = (() => {
   terrainInfo.id = "hudTerrainInfo";
   terrainInfo.append(byId("mapEnvironment"), byId("hoverInfo"));
   byId("mapWrap").append(terrainInfo, byId("hudActionBand"));
-  // 小屏中让回合操作与缩放共享一个纵向容器，避免独立定位互相遮挡。
+  // Phase information and zoom share one flowing column, including translated text.
+  const phaseControls = element("div", "hud-phase-controls");
+  phaseControls.append(
+    scene.querySelector(".phase-row"),
+    scene.querySelector(".map-camera-controls"),
+  );
   const topControls = element("div", "hud-top-controls");
-  byId("mapWrap").append(scene.querySelector(".phase-row"), topControls);
-  topControls.append(byId("hudTurnActions"), scene.querySelector(".map-camera-controls"));
+  topControls.append(byId("hudTurnActions"));
+  byId("mapWrap").append(phaseControls, topControls);
   const confirmMove = element("button", "primary", "确认移动");
   confirmMove.id = "hudConfirmMove";
   confirmMove.hidden = true;

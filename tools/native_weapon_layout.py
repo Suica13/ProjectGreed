@@ -166,9 +166,19 @@ def visibility_and_deferred(p,data):
  p['deferredWeapons']=deferred
  return p
 
+def kit_names(p):
+ for kit in p['weaponKits']:
+  name = '标准套件' if len(p['weaponKits']) == 1 else None
+  if p['id'] in ('RX_80PR_2', 'RX_80PR_2_HADES') and kit['id'] == 'kit_0':
+   name = '复合发射器套件'
+  if name:
+   kit['name'] = name
+   if 'zh' in kit.get('localization', {}):kit['localization']['zh']['name'] = name
+ return p
+
 def correct(p,row,data):
  from v05_balance import apply_balance
- if p.get('nativeLayoutRevision')==1:return apply_balance(visibility_and_deferred(p,data),data)
+ if p.get('nativeLayoutRevision')==1:return kit_names(apply_balance(visibility_and_deferred(p,data),data))
  oldkits=copy.deepcopy(p['weaponKits']);tank_turrets(p,data)
  p['stats']['commandAuras']=[{'type':kind,'radiusCells':2} for kind in ['cmdCom','cmdDef'] if 'decal_'+kind+'_Range' in data]
  # World-space command/range overlays must never become hull-sized sprite decals.
@@ -212,7 +222,7 @@ def correct(p,row,data):
    aliases[old['id']]=best['id']
   if aliases:p['kitAliases']=aliases
  p['nativeLayoutRevision']=1
- return apply_balance(visibility_and_deferred(p,data),data)
+ return kit_names(apply_balance(visibility_and_deferred(p,data),data))
 
 def main():
  rows=json.loads(Path(__file__).with_name('0079-page-one-manifest.json').read_text(encoding='utf-8'));catalog=json.loads((ASSETS/'unit-catalog.json').read_text(encoding='utf-8'));byid={r['id']:r for r in rows}

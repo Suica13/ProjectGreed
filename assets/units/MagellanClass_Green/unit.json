@@ -1014,7 +1014,7 @@
     "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.8,
+      "sight": 9,
       "radar": 15.277777777777779,
       "antiDetection": -8.680555555555555,
       "revealOnDetection": true,
@@ -3181,7 +3181,7 @@
   "weaponKits": [
     {
       "id": "standard",
-      "name": "标准武装",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "MagellanClass_Turret_BeamCannon",

@@ -229,7 +229,7 @@
     "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.0,
+      "sight": 8,
       "radar": 15.277777777777779,
       "antiDetection": -6.944444444444445,
       "revealOnDetection": true,
@@ -838,7 +838,7 @@
   "weaponKits": [
     {
       "id": "standard",
-      "name": "标准武装",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "U_Type_Submarine_Turret_AMS",

@@ -2264,7 +2264,7 @@
     "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.0,
+      "sight": 8,
       "radar": 13.88888888888889,
       "antiDetection": -6.944444444444445,
       "revealOnDetection": true,
@@ -2372,7 +2372,7 @@
   "weaponKits": [
     {
       "id": "standard",
-      "name": "标准舰装",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "SalamisClass_Turret_BeamCannon",
@@ -2383,7 +2383,7 @@
       ],
       "localization": {
         "zh": {
-          "name": "标准舰装"
+          "name": "标准套件"
         },
         "en": {
           "name": "Standard Armament"

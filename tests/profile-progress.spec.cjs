@@ -15,8 +15,18 @@ test("personal save download and file import preserve pilots, formations and spe
 }) => {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
+  await page.addInitScript(() => {
+    if (!localStorage.getItem("projectgreed.economy.v1"))
+      localStorage.setItem(
+        "projectgreed.economy.v1",
+        JSON.stringify({ money: 1000000, supplies: 1000000, inventory: {}, kits: {} }),
+      );
+  });
   await open(page);
   const original = await page.evaluate(() => {
+    Development.grantUnit("ZEON", "MS_06F");
+    Economy.produce("Type61", "EFSF");
+    Economy.buyKit("MS_06F__bazooka", "PMC");
     const pilot = PilotSystem.createCustom("custom-profile-1", "备份驾驶员", undefined, "EFSF");
     pilot.stats.shooting += 10;
     const node = Development.nodes("EFSF").find(
@@ -57,12 +67,14 @@ test("personal save download and file import preserve pilots, formations and spe
   const data = JSON.parse(downloaded);
   expect(data.pilots.EFSF).toEqual(original.pilots.EFSF);
   expect(data.development).toEqual(original.development);
+  expect(data.economy).toEqual(original.economy);
   await page.evaluate(() => {
     for (const key of Object.keys(localStorage))
       if (
         key.startsWith("projectgreed.custom-pilots.v2.") ||
         key.startsWith("slg-formations-v1.") ||
-        key === "projectgreed.developmentProgress.v1"
+        key === "projectgreed.developmentProgress.v1" ||
+        key === "projectgreed.economy.v1"
       )
         localStorage.removeItem(key);
   });
@@ -82,6 +94,7 @@ test("personal save download and file import preserve pilots, formations and spe
   expect(await page.evaluate(() => ProfileSave.exportData().development)).toEqual(
     original.development,
   );
+  expect(await page.evaluate(() => ProfileSave.exportData().economy)).toEqual(original.economy);
   expect(await page.evaluate(() => ProfileSave.exportData().pilots.EFSF)).toEqual(
     original.pilots.EFSF,
   );
@@ -238,6 +251,12 @@ for (const width of [1280, 360])
           ],
         };
       }
+      data.economy = {
+        money: 123,
+        supplies: 456,
+        inventory: { Type61: 6 },
+        kits: { MS_06F__bazooka: 3 },
+      };
       data.development.points = { EFSF: 1234, ZEON: 5678 };
       data.development.claimed = { old: "old-match" };
       data.development.researched = {
@@ -269,8 +288,11 @@ for (const width of [1280, 360])
     expect(geometry.newLeft).toBeGreaterThan(geometry.left);
     expect(geometry.right).toBeLessThan(width);
     expect(Math.max(...geometry.tops) - Math.min(...geometry.tops)).toBeLessThan(1);
-    page.once("dialog", (dialog) => dialog.dismiss());
     await page.locator("#newProfileSave").click();
+    await page
+      .locator("#gameDialog .game-dialog-actions button")
+      .getByText("取消", { exact: true })
+      .click();
     expect(
       await page.evaluate(
         () => JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v2.PMC")).pilots.length,
@@ -286,9 +308,12 @@ for (const width of [1280, 360])
     await page.evaluate(() => {
       Net.active = false;
     });
-    page.once("dialog", (dialog) => dialog.accept());
     const refreshed = page.waitForEvent("load");
     await page.locator("#newProfileSave").click();
+    await page
+      .locator("#gameDialog .game-dialog-actions button")
+      .getByText("新建存档", { exact: true })
+      .click();
     await refreshed;
     await page.waitForFunction(() => assetsReady);
     const data = await page.evaluate(() => ProfileSave.exportData());
@@ -298,6 +323,12 @@ for (const width of [1280, 360])
     }
     expect(data.development.points).toEqual({ EFSF: 0, ZEON: 0 });
     expect(data.development.claimed).toEqual({});
+    expect(data.economy).toEqual({
+      money: 5000,
+      supplies: 10000,
+      inventory: { Type61: 24, FF_B2: 12, Medea: 3, MS_06F: 4, MS_06S: 2, FatUncle: 3 },
+      kits: {},
+    });
     expect(data.development.researched.EFSF).toEqual(["Tech_EFSF_0079_BaseTech"]);
     expect(data.development.researched.ZEON).toEqual(["Tech_ZEON_0079_BaseTech"]);
     expect(await page.evaluate(() => localStorage.getItem("unrelated-setting"))).toBe("keep-me");

@@ -39,15 +39,25 @@ function validateLocalization(localization, id) {
         throw Error("Invalid localized text: " + id + "/" + language + "/" + field);
   }
 }
-function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides = {}, wipOverride = null } = {}) {
+function loadCatalog({
+  embedMusic = false,
+  catalogOverride = null,
+  unitOverrides = {},
+  wipOverride = null,
+} = {}) {
   const catalog = catalogOverride || read(path.join(root, "unit-catalog.json"));
   const wipPolicy = wipOverride || read(path.join(root, "unit-wip.json"));
-  if (wipPolicy.schemaVersion !== 1 || !Array.isArray(wipPolicy.units) ||
-      new Set(wipPolicy.units).size !== wipPolicy.units.length ||
-      wipPolicy.units.some(id => typeof id !== "string" || !/^[A-Za-z0-9_-]+\*?$/.test(id)))
+  if (
+    wipPolicy.schemaVersion !== 1 ||
+    !Array.isArray(wipPolicy.units) ||
+    new Set(wipPolicy.units).size !== wipPolicy.units.length ||
+    wipPolicy.units.some((id) => typeof id !== "string" || !/^[A-Za-z0-9_-]+\*?$/.test(id))
+  )
     throw Error("Invalid WIP unit list");
-  const isWip = id => wipPolicy.units.some(pattern =>
-    pattern.endsWith("*") ? id.startsWith(pattern.slice(0, -1)) : id === pattern);
+  const isWip = (id) =>
+    wipPolicy.units.some((pattern) =>
+      pattern.endsWith("*") ? id.startsWith(pattern.slice(0, -1)) : id === pattern,
+    );
 
   if (catalog.schemaVersion !== 1 || !Array.isArray(catalog.units) || !catalog.units.length)
     throw Error("Invalid unit catalog");
@@ -264,7 +274,13 @@ function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides
     return {
       ...track,
       ...(embedMusic
-        ? { source: "data:audio/ogg;base64," + fs.readFileSync(source).toString("base64") }
+        ? {
+            source:
+              "data:" +
+              (path.extname(source).toLowerCase() === ".mp3" ? "audio/mpeg" : "audio/ogg") +
+              ";base64," +
+              fs.readFileSync(source).toString("base64"),
+          }
         : {}),
     };
   });
@@ -382,11 +398,11 @@ function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides
       new Set(prefab.hangars.map((h) => h.id)).size !== prefab.hangars.length
     )
       throw Error("Invalid unit transport / hangar configuration: " + ref);
-    const sizeTags = ["SmallUnit", "MediumUnit", "LargeUnit"]
-      .filter((tag) => prefab.unitTags.includes(tag));
+    const sizeTags = ["SmallUnit", "MediumUnit", "LargeUnit"].filter((tag) =>
+      prefab.unitTags.includes(tag),
+    );
     if (sizeTags.length > 1) throw Error("Conflicting unit size tags: " + ref);
-    if (!sizeTags.length)
-      prefab.unitTags.push(prefab.stats.ship ? "LargeUnit" : "MediumUnit");
+    if (!sizeTags.length) prefab.unitTags.push(prefab.stats.ship ? "LargeUnit" : "MediumUnit");
     prefab.faction = prefab.tags.find((tag) => ["EFSF", "ZEON"].includes(tag));
     if (prefab.schemaVersion !== 2 || result.prefabs.some((p) => p.id === prefab.id))
       throw Error("Invalid prefab: " + ref);
@@ -395,9 +411,11 @@ function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides
     if (!/^[A-Za-z0-9_]+$/.test(prefab.id) || !prefab.weaponKits?.length)
       throw Error("Invalid unit ID or kits: " + ref);
     for (const key of ["hp", "en", "move", "cost"])
-      if (!Number.isFinite(prefab.stats[key]) ||
-          (prefab.stats[key] <= 0 &&
-            !(key === "cost" && prefab.id.startsWith("Army_Squad_") && prefab.stats.cost === 0)))
+      if (
+        !Number.isFinite(prefab.stats[key]) ||
+        (prefab.stats[key] <= 0 &&
+          !(key === "cost" && prefab.id.startsWith("Army_Squad_") && prefab.stats.cost === 0))
+      )
         throw Error("Invalid stat " + key + ": " + ref);
     if (
       prefab.stats.movementType !== undefined &&
@@ -935,7 +953,11 @@ function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides
       throw Error("Invalid large death sequence");
   }
   for (const pattern of wipPolicy.units)
-    if (!result.prefabs.some(prefab => pattern.endsWith("*") ? prefab.id.startsWith(pattern.slice(0, -1)) : prefab.id === pattern))
+    if (
+      !result.prefabs.some((prefab) =>
+        pattern.endsWith("*") ? prefab.id.startsWith(pattern.slice(0, -1)) : prefab.id === pattern,
+      )
+    )
       throw Error("Unknown WIP unit or series: " + pattern);
   if (!result.prefabs.length) throw Error("No enabled units in catalog");
   return result;

@@ -526,7 +526,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.0,
+      "sight": 8,
       "radar": 10.0,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -1957,7 +1957,7 @@
   "weaponKits": [
     {
       "id": "kit_0",
-      "name": "光束步枪套件",
+      "name": "复合发射器套件",
       "cost": 100,
       "weapons": [
         "EF_RX_80_PR_2_FrameLauncher_MG",

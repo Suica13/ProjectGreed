@@ -87,7 +87,6 @@ const PlayerProfile = (() => {
       if (!["EFSF", "PMC", "ZEON"].includes(faction)) return null;
       const label = displayFaction(faction);
       const badge = element("span", "faction-badge faction-" + faction.toLowerCase(), label);
-      badge.setAttribute("data-i18n-ignore", "");
       return badge;
     },
   };

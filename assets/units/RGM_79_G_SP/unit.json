@@ -513,7 +513,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.0,
+      "sight": 8,
       "radar": 10.0,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -1497,7 +1497,7 @@
   "weaponKits": [
     {
       "id": "kit_2",
-      "name": "100mm机枪套件",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "EF_100mmMG",

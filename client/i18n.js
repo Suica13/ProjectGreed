@@ -20,6 +20,7 @@ const I18n = (() => {
   const escape = (value) => value.replace(/[.$*+?^{}()|[\]\\]/g, "\\$&");
   const patterns = Object.keys(UI_LOCALES.en)
     .filter((key) => key.includes("{"))
+    .sort((a, b) => b.replace(/\{\w+\}/g, "").length - a.replace(/\{\w+\}/g, "").length)
     .map((key) => {
       const names = [];
       const source = key
@@ -73,6 +74,7 @@ const I18n = (() => {
   function bind(record, field = "name", localization = record.localization) {
     const original = record[field],
       key = field === "kitName" ? "name" : field;
+    if (["标准套件", "复合发射器套件"].includes(original)) localization = undefined;
     if (typeof original === "string" && localization) {
       for (const locale of ["en", "ja"])
         if (localization[locale]?.[key]) UI_LOCALES[locale][original] = localization[locale][key];
@@ -81,7 +83,7 @@ const I18n = (() => {
       enumerable: true,
       configurable: true,
       get() {
-        return localization?.[language]?.[key] ?? localization?.en?.[key] ?? original;
+        return localization?.[language]?.[key] ?? localization?.en?.[key] ?? text(original);
       },
     });
   }
@@ -118,9 +120,7 @@ const I18n = (() => {
     );
   }
   const ignored = (element) =>
-    element?.closest(
-      'script,style,[contenteditable="true"],[data-i18n-ignore],[data-developer-only]',
-    );
+    element?.closest('script,style,[contenteditable="true"],[data-i18n-ignore]');
   function translateNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       if (ignored(node.parentElement) || node.parentElement?.closest("input,textarea")) return;

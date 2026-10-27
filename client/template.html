@@ -801,6 +801,8 @@
         padding: 14px;
         min-width: 0;
       }
+      #lobby .lobby-actions { display:flex; align-items:center; width:100%; }
+      #disconnectLobby { margin-left:auto; }
       .menu-profile {
         display: grid;
         gap: 12px;
@@ -808,7 +810,7 @@
       }
       .menu-profile-row {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
         align-items: end;
         gap: 12px;
       }
@@ -1415,6 +1417,42 @@
         font-size: 12px;
         background: #180e13dd;
       }
+      .catalog-unit-portrait { display:grid; justify-items:center; gap:5px; align-self:center; }
+      .unit-undeveloped { display:inline-flex; align-items:center; gap:4px; color:#ff7474; font-size:11px; white-space:nowrap; }
+      .unit-warning-icon { font-family:Arial,sans-serif; font-size:14px; }
+      .formation-stock-line { display:flex; align-items:center; flex-wrap:wrap; gap:4px 10px; }
+      .formation-row > .formation-stock-line { grid-column:1/-1; }
+      .formation-row:has(> .formation-stock-line) { row-gap:4px; }
+      @keyframes inventory-attention { 50% { border-color:#f5db75; box-shadow:0 0 12px #f5db7580; color:#ffea9c; } }
+      #produceMissingFormation.inventory-attention { animation:inventory-attention 1.2s ease-in-out infinite; }
+      @media(prefers-reduced-motion:reduce) { #produceMissingFormation.inventory-attention { animation:none; border-color:#f5db75; } }
+      .game-dialog { width:min(520px,calc(100vw - 32px)); max-height:85dvh; box-sizing:border-box; overflow:auto; border:1px solid #7896aa; border-radius:10px; padding:24px; color:#e0edf5; background:#101e29; box-shadow:0 20px 80px #000a; }
+      .game-dialog::backdrop { background:#050d16ba; backdrop-filter:blur(3px); }
+      .game-dialog-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+      .game-dialog-heading h3 { margin:0; font-size:18px; }
+      .game-dialog-close { flex:none; padding:2px 8px; min-height:32px; font-size:22px; }
+      .game-dialog-message { line-height:1.7; white-space:pre-wrap; overflow-wrap:anywhere; margin:16px 0; }
+      .game-dialog-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:10px; margin-top:20px; }
+      .game-dialog-actions button { min-height:38px; }
+      .game-dialog-list { line-height:1.8; padding-left:20px; overflow-wrap:anywhere; }
+      .game-dialog-input { display:grid; gap:8px; }
+      .game-dialog-input input { width:100%; box-sizing:border-box; }
+      @media(max-width:600px) { .game-dialog { padding:18px; } .game-dialog-actions button { flex:1 1 auto; padding:8px 12px; } }
+      .inventory-shortage-prompt { position:absolute; grid-column:1 / 3; grid-row:1 / 2; left:0; right:0; width:max-content; max-width:100%; margin-inline:auto; top:50%; transform:translateY(-50%); z-index:4; display:flex; flex-direction:column; align-items:center; gap:8px; padding:8px 14px; background:#101e29e8; border-radius:6px; white-space:nowrap; }
+      .inventory-shortage > .disabled-panel { grid-column:1 / 3; grid-row:1 / 2; }
+      .inventory-shortage .formation-row-actions { position:relative; z-index:3; }
+      .inventory-shortage-prompt > span { color:#efaaa1; font-size:13px; }
+      .inventory-shortage .produce-shortage-unit { min-width:72px; border-color:#d8df89; color:#e5f7a1; }
+      #produceMissingFormation { flex:none; }
+      @media(max-width:700px) {
+        #formationMain > .formation-footer:has(#produceMissingFormation:not([hidden])) { flex-wrap:nowrap; gap:6px; }
+        #formationMain > .formation-footer:has(#produceMissingFormation:not([hidden])) #openFormationShare { width:50px; padding:3px; font-size:12px; white-space:normal; }
+        #formationMain > .formation-footer:has(#produceMissingFormation:not([hidden])) #saveFormation { width:clamp(90px,calc(100vw - 265px),125px); }
+        #formationMain > .formation-footer #produceMissingFormation { width:70px; padding:4px; font-size:12px; }
+        #formationMain > .formation-footer:has(#produceMissingFormation:not([hidden])) .formation-group-banner { flex:1; min-width:60px; }
+        #formationMain > .formation-footer:has(#produceMissingFormation:not([hidden])) .formation-group-banner select { width:100%; min-width:0; padding-inline:4px; }
+      }
+      .formation-inventory-count { display:block; color:#abcbdc; }
       .formation-row.unit-disabled {
         border-color: #c96760;
       }
@@ -2268,14 +2306,7 @@
               aria-label="玩家ID"
               placeholder="输入用于房间和聊天的玩家ID"
             /></label>
-            <div class="menu-faction">
-              <label for="menuFactionSelect">当前阵营</label>
-              <select id="menuFactionSelect" aria-label="当前阵营" data-i18n-ignore>
-                <option value="PMC">PMC</option>
-                <option value="EFSF">地球联邦军[0079]</option>
-                <option value="ZEON">吉翁公国军[0079]</option>
-              </select>
-            </div>
+
           </div>
           <div id="menuTechProgress" class="menu-tech-progress">
             <div class="menu-tech-progress-heading">
@@ -2286,9 +2317,20 @@
           </div>
         </div>
         <div data-ui-node="node-138" class="start-layout">
+          <div class="menu-battle-row">
+            <button data-ui-node="node-140" id="openSkirmish" class="primary" disabled>开始战斗</button>
+            <div class="menu-faction">
+              <label for="menuFactionSelect">当前阵营</label>
+              <select id="menuFactionSelect" aria-label="当前阵营">
+                <option value="PMC">PMC</option>
+                <option value="EFSF">地球联邦军[0079]</option>
+                <option value="ZEON">吉翁公国军[0079]</option>
+              </select>
+            </div>
+          </div>
           <button id="openDevelopment" type="button">开发</button>
+          <button id="openProduction" type="button">生产</button>
           <button data-ui-node="node-198" id="openFormation">编成</button>
-          <button data-ui-node="node-140" id="openSkirmish" class="primary" disabled>战斗</button>
           <button id="openReplayFile" type="button">回放</button>
         </div>
         <div
@@ -2334,8 +2376,9 @@
               <tbody data-ui-node="node-153" id="roomList"></tbody>
             </table>
           </div>
-          <div data-ui-node="node-129" class="net-buttons">
+          <div data-ui-node="node-129" class="net-buttons lobby-actions">
             <button data-ui-node="node-130" id="createRoom">创建房间</button>
+            <button id="disconnectLobby" type="button">断开连接</button>
           </div>
           <p data-ui-node="node-134" id="networkStatus" role="status">
             选择列表中的房间加入，或创建新房间。
@@ -2874,6 +2917,151 @@
         }
       }
     </style>
+    <style>
+      .formation-kit-select { display:flex; gap:6px; }
+      .formation-kit-select select { min-width:0; flex:1; width:0; }
+      #openFormationKitShop { flex:none; width:40px; padding:4px; }
+      #formationKitShop { width:min(460px,calc(100vw - 32px)); max-height:85dvh; overflow:auto; border:1px solid #7896aa; border-radius:10px; padding:24px; background:#101e29; color:#e0edf5; box-shadow:0 20px 80px #000a; }
+      #formationKitShop::backdrop { background:#050d16ba; backdrop-filter:blur(3px); }
+      #formationKitShop h3 { margin:0 0 16px; }
+      #formationKitShop label { display:grid; gap:8px; margin-top:20px; }
+      #formationKitShop select { width:100%; }
+      #formationKitWallet { padding-bottom:12px; border-bottom:1px solid #405968; }
+      #formationKitShopStatus { min-height:1.5em; }
+      #kitPurchasePreview { display:block; width:100%; height:150px; background:radial-gradient(ellipse,#294355,#10202b); margin-top:12px; }
+      #kitPurchaseWeapons { font-size:12px; line-height:1.5; }
+      #formationKitShop .resource-balance { gap:10px; margin-top:10px; }
+      .resource-balance { display:flex; align-items:center; flex-wrap:wrap; gap:20px; font-variant-numeric:tabular-nums; }
+      .resource-balance span { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+      .resource-balance svg { width:20px; height:20px; flex:none; }
+      .resource-money { color:#f2cb65; }
+      .resource-supplies { color:#83d49a; }
+      #menuResources { display:flex; flex-wrap:nowrap; justify-content:flex-start; gap:18px; margin:0; min-height:38px; font-size:13px; }
+      #menuResources > span { min-width:0; gap:4px; }
+      #menuResources svg { width:16px; height:16px; }
+      .menu-battle-row { grid-column:1/-1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; gap:10px; }
+      .menu-battle-row .menu-faction { align-content:center; }
+      .menu-battle-row .menu-faction > label { display:none; }
+      #productionScreen { padding:12px; }
+      .production-dialog { width:min(1440px,96vw); max-width:none; height:min(940px,96dvh); max-height:none; padding:12px 18px 16px; display:flex; flex-direction:column; gap:10px; }
+      .production-heading { display:flex; flex:none; align-items:center; flex-wrap:wrap; height:auto; min-height:42px; padding:0 40px 8px 0; gap:10px 16px; }
+      .production-heading h2 { margin:0; margin-right:auto; }
+      .production-heading .resource-balance { gap:14px; font-size:13px; }
+      .production-heading .resource-balance svg { width:16px; height:16px; }
+      #closeProduction { min-height:32px; padding:5px 10px; }
+      .production-workspace { display:grid; grid-template-columns:minmax(300px,1fr) minmax(320px,1fr); gap:16px; min-height:0; flex:1; }
+      .production-browser { display:flex; flex-direction:column; gap:10px; min-height:0; }
+      .production-filters { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+      .production-filters label { display:grid; gap:4px; }
+      .production-filters select,.production-browser input { width:100%; min-width:0; }
+      .production-list { display:flex; flex-direction:column; gap:6px; overflow:auto; min-height:0; }
+      .production-unit { display:flex; text-align:left; align-items:center; gap:12px; width:100%; flex:none; position:relative; }
+      .production-unit img { width:58px; height:58px; object-fit:contain; image-rendering:pixelated; }
+      .production-unit > span { display:grid; gap:5px; }
+      .production-unit[aria-selected="true"] { border-color:#85d7ff; background:#234356; }
+      .production-unit[data-locked="true"] > img,
+      .production-unit[data-locked="true"] .production-unit-info > :not(.production-owned) { opacity:.55; }
+      .production-details { display:flex; flex-direction:column; min-height:0; gap:8px; overflow:hidden; padding:10px; border:1px solid #405968; background:#101e29; }
+      .production-details h3 { margin:0; flex:none; }
+      #developmentResources { grid-column:1/-1; }
+      .production-kit-field { display:flex; align-items:center; gap:10px; flex:none; }
+      .production-kit-field label { flex:none; }
+      .production-kit-field select { flex:1; min-width:0; }
+      .production-preview-toolbar { display:grid; grid-template-columns:minmax(0,1fr) 76px; align-items:stretch; gap:10px; flex:none; }
+      #productionPreview { display:block; width:100%; height:clamp(108px,16dvh,150px); object-fit:contain; background:radial-gradient(ellipse,#294355,#10202b); }
+      .production-tabs { display:flex; flex-direction:column; justify-content:center; gap:6px; }
+      .production-tabs button { flex:1; min-height:30px; padding:5px 8px; }
+      .production-tabs button[aria-selected="true"] { border-color:#85d7ff; background:#234356; }
+      #productionInfo { flex:1 1 240px; min-height:120px; overflow:auto; padding-right:6px; border-top:1px solid #304654; padding-top:8px; }
+      .production-order { flex:none; display:flex; flex-direction:column; gap:4px; border-top:1px solid #405968; padding-top:8px; margin-top:auto; }
+      .production-purchases { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+      .production-purchase { display:flex; flex-direction:column; gap:4px; min-width:0; font-size:11px; }
+      .production-purchase > .muted { min-height:1.3em; font-size:12px; }
+      .production-purchase > button { width:100%; margin-top:auto; min-height:32px; padding:5px 6px; font-size:12px; }
+      .production-purchase .resource-balance { flex-wrap:nowrap; gap:8px; font-size:11px; }
+      .production-purchase .resource-balance span { gap:3px; }
+      .production-purchase .resource-balance svg { width:12px; height:12px; }
+      #productionQuantity,#productionKitQuantity { min-height:26px; line-height:1.25; }
+      .production-purchase + .production-purchase { border-left:1px solid #405968; padding-left:10px; }
+      #productionStatus { margin:0; min-height:15px; font-size:11px; line-height:1.3; }
+      .production-unit-price { display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px; }
+      .production-unit-price > .resource-balance { display:contents; }
+      .production-owned { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+      .production-batch-count { color:#fff; font-weight:600; font-variant-numeric:tabular-nums; }
+      .production-unit .resource-balance { font-size:12px; gap:14px; }
+      .production-unit .resource-balance span { display:inline-flex; }
+      .production-unit .resource-balance svg { width:14px; height:14px; }
+      .production-unit .production-unit-info { display:flex; flex:1; min-width:0; flex-direction:column; gap:6px; }
+      @media(min-width:761px) and (max-height:740px) {
+        #productionPreview { height:104px; }
+        #productionInfo { min-height:100px; }
+      }
+      @media(max-width:760px) {
+        .production-dialog { height:auto; min-height:94dvh; padding:10px; margin-bottom:68px; }
+        .production-heading { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 10px; padding-right:44px; }
+        .production-heading .resource-balance { grid-column:1/-1; grid-row:2; }
+        #closeProduction { grid-column:2; grid-row:1; }
+        .production-workspace { display:flex; flex-direction:column; }
+        .production-list { max-height:38dvh; }
+        .production-details { height:min(760px,92dvh); min-height:580px; flex:none; }
+        .production-preview-toolbar { grid-template-columns:minmax(0,1fr) 64px; gap:8px; }
+        #productionPreview { height:120px; }
+        .production-tabs button { font-size:12px; }
+        .production-filters { gap:5px; }
+        .production-purchases { gap:8px; }
+        .production-purchase + .production-purchase { padding-left:8px; }
+      }
+    </style>
+    <section id="productionScreen" class="menu-screen" hidden aria-labelledby="productionTitle">
+      <div class="modal production-dialog">
+        <header class="production-heading">
+          <h2 id="productionTitle">生产</h2>
+          <div id="productionResources" class="resource-balance" aria-label="账户资源"></div>
+          <button id="closeProduction" type="button">返回主菜单</button>
+        </header>
+        <div id="productionWorkspace" class="production-workspace">
+          <div class="production-browser">
+            <input id="productionSearch" type="search" placeholder="搜索单位" aria-label="搜索单位" />
+            <div class="production-filters">
+              <label>阵营<select id="productionFaction"></select></label>
+              <label>年代<select id="productionEra"></select></label>
+              <label>类型／环境<select id="productionType"></select></label>
+            </div>
+            <div id="productionList" class="production-list" role="listbox" aria-label="生产单位"></div>
+          </div>
+          <aside class="production-details">
+            <h3 id="productionUnitName"></h3>
+            <div class="production-kit-field"><label for="productionKit">武器组</label><select id="productionKit"></select></div>
+            <div class="production-preview-toolbar">
+              <canvas id="productionPreview" width="640" height="300" role="img" aria-label="单位预览"></canvas>
+              <div class="production-tabs" role="tablist" aria-orientation="vertical" aria-label="单位信息">
+                <button id="productionStatsTab" type="button" role="tab" aria-controls="productionInfo">属性</button>
+                <button id="productionWeaponsTab" type="button" role="tab" aria-controls="productionInfo">武装</button>
+                <button id="productionAbilitiesTab" type="button" role="tab" aria-controls="productionInfo">能力</button>
+              </div>
+            </div>
+            <div id="productionInfo" role="tabpanel" tabindex="0"></div>
+            <div class="production-order">
+              <div class="production-purchases">
+                <div class="production-purchase">
+                  <span id="productionBaseKitName" class="muted">生产单位</span>
+                  <div id="productionPrice" class="resource-balance"></div>
+                  <div id="productionQuantity"></div>
+                  <button id="produceUnit" type="button" class="primary">生产单位</button>
+                </div>
+                <div class="production-purchase">
+                  <span class="muted">购买武器套件</span>
+                  <div id="productionKitPrice" class="resource-balance"></div>
+                  <div id="productionKitQuantity"></div>
+                  <button id="buyProductionKit" type="button">购买武器套件</button>
+                </div>
+              </div>
+              <p id="productionStatus" role="status" aria-live="polite"></p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
     <section id="developmentScreen" class="menu-screen" hidden aria-labelledby="developmentTitle">
       <div id="developmentMain" class="modal development-dialog">
         <header class="development-heading">
@@ -2882,7 +3070,7 @@
             <h2 id="developmentTitle">开发</h2>
           </div>
           <label class="development-faction-picker" for="developmentFactionSelect">阵营
-            <select id="developmentFactionSelect" data-i18n-ignore>
+            <select id="developmentFactionSelect">
               <option value="EFSF">地球联邦军[0079]</option>
               <option value="ZEON">吉翁公国军[0079]</option>
             </select>
@@ -2945,6 +3133,7 @@
         <div class="net-buttons formation-footer" data-ui-node="node-219">
           <button id="openFormationShare" type="button">分享编组</button>
           <button id="saveFormation" class="primary" data-ui-node="node-220">返回</button>
+          <button id="produceMissingFormation" type="button" hidden>一键生产</button>
         <label class="formation-group-banner" for="formationGroup">
           <strong>编组阵营</strong>
           <select id="formationGroup" aria-label="编组阵营">
@@ -3074,7 +3263,19 @@
                   ><button id="resetFormationUnitName" type="button">重置名称</button>
                 </div>
               </label>
-              <label>武器套件<select id="formationDetailKit" aria-label="武器套件"></select></label>
+              <label>武器套件<span class="formation-kit-select"><select id="formationDetailKit" aria-label="武器套件"></select><button id="openFormationKitShop" type="button" aria-label="购买武器套件" title="购买武器套件">＋</button></span></label>
+              <dialog id="formationKitShop" aria-labelledby="formationKitShopTitle">
+                <h3 id="formationKitShopTitle">购买武器套件</h3>
+                <div id="formationKitWallet" class="resource-balance"></div>
+                <label>购买套件<select id="formationKitPurchase" aria-label="购买套件"></select></label>
+                <canvas id="kitPurchasePreview" width="480" height="200" role="img" aria-label="套件预览"></canvas>
+                <p id="kitPurchaseWeapons" class="muted"></p>
+                <div id="formationKitPrice" class="resource-balance"></div>
+                <p id="formationKitStock"></p>
+                <button id="buyFormationKit" type="button">购买并装备 1 套</button>
+                <button id="closeFormationKitShop" type="button">关闭</button>
+                <p id="formationKitShopStatus" role="status"></p>
+              </dialog>
               <label id="formationDetailCarrierField"
                 ><span>搭载至</span
                 ><select id="formationDetailCarrier" aria-label="搭载至"></select
@@ -4994,17 +5195,20 @@
     <script>
       const PROJECT = __PROJECT_META__;
       const DEVELOPMENT_TREE = __DEVELOPMENT_TREE__;
+      const PRODUCTION_CATALOG = __PRODUCTION_CATALOG__;
       const PILOT_DATA = __PILOT_DATA__;
       const CLIENT_CONFIG = __CLIENT_CONFIG__;
       const UI_LOCALES = __UI_LOCALES__;
       const ART = JSON.parse(document.getElementById("art").textContent);
       __I18N__;
+      __DIALOG__;
       I18n.bindCatalog(ART);
       __WEAPON_SEQUENCE__;
       __UNIT_PARTS__;
       __UNIT_SKILLS__;
       __UNIT_HANGARS__;
       __PILOTS__;
+      __ECONOMY__;
       __DEVELOPMENT__;
       __UNIT_SENSORS__;
       __CORE__;
@@ -5027,6 +5231,7 @@
       __CHAT_CHANNELS__;
       __ATTACK_PLANS__;
       __MATCH_RECORDS__;
+      __BATTLE_ECONOMY__;
       __ROOM_ENGINE__;
       __PLANNING_UI__;
       __MAP_COMBAT__;
@@ -5037,8 +5242,11 @@
       __MATCH_RESULTS__;
       __LOBBY__;
       __ROOM__;
+      __UNIT_CATALOG__;
       __FORMATION__;
       __DEVELOPMENT_UI__;
+      __PRODUCTION_UI__;
+      __KIT_SHOP__;
       __PILOT_REWARDS__;
       __PROFILE_SAVE__;
       __BATTLE_PROMPTS__;

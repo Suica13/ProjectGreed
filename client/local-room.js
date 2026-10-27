@@ -52,6 +52,7 @@ const LocalRoom = (() => {
       name: PlayerProfile.name(),
       characterFaction: PlayerProfile.faction(),
       researched: Development.researchSnapshot(),
+      inventory: Economy.snapshot().inventory,
       roomMode: byId("offlineRoomMode").value,
     });
     engine.action(socket, {

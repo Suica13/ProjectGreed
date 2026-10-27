@@ -506,7 +506,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.0,
+      "sight": 8,
       "radar": 13.88888888888889,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -2398,7 +2398,7 @@
   "weaponKits": [
     {
       "id": "standard",
-      "name": "标准武装",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "EF_GroundTypeBeamRifle_Blue",

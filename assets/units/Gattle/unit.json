@@ -178,7 +178,7 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 9.2,
+      "sight": 9,
       "radar": 12.5,
       "antiDetection": 0.0,
       "revealOnDetection": false,
@@ -1144,7 +1144,7 @@
   "weaponKits": [
     {
       "id": "main_0",
-      "name": "Common DoubleMS Gattle套件",
+      "name": "标准套件",
       "cost": 0,
       "weapons": [
         "Common_DoubleMS_Gattle",

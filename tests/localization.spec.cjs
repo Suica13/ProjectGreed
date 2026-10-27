@@ -12,10 +12,10 @@ test("browser environment selects Japanese or English and unsupported locales fa
   browser,
 }) => {
   for (const [locale, expected, label] of [
-    ["ja-JP", "ja", "サーバーに接続"],
-    ["en-US", "en", "Connect to server"],
-    ["fr-FR", "en", "Connect to server"],
-    ["zh-TW", "zh-CN", "连接服务器"],
+    ["ja-JP", "ja", "オンライン · サーバー接続"],
+    ["en-US", "en", "Online · Connect to server"],
+    ["fr-FR", "en", "Online · Connect to server"],
+    ["zh-TW", "zh-CN", "联机 · 连接服务器"],
   ]) {
     const context = await browser.newContext({ locale });
     try {
@@ -41,9 +41,9 @@ test("manual language selection persists offline and covers formation, deploymen
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(url);
     await chooseLanguage(page, "ja");
-    await expect(page.locator("#openSkirmish")).toHaveText("スカーミッシュ");
+    await expect(page.locator("#openSkirmish")).toHaveText("戦闘開始");
     await page.reload();
-    await expect(page.locator("#openRooms")).toHaveText("サーバーに接続");
+    await expect(page.locator("#openRooms")).toHaveText("オンライン · サーバー接続");
     await page.locator("#openClientSettings").click();
     await expect(page.locator("#settingsLanguage")).toHaveValue("ja");
     await page.locator("#closeClientSettings").click();
@@ -60,11 +60,11 @@ test("manual language selection persists offline and covers formation, deploymen
     await page.locator("#openFormationPicker").click();
     await expect(page.locator('[data-unit-id="RGM_79"]')).toContainText("GM");
     await page.locator("#closeFormationPicker").click();
-    await expect(page.locator("#saveFormation")).toHaveText("Save and use");
+    await expect(page.locator("#saveFormation")).toHaveText("Back");
     await page.screenshot({ path: ".openai/formation-en.png" });
     await page.locator("#saveFormation").click();
     await openPresentationFixture(page, false);
-    await expect(page.locator("#confirmDeployment")).toHaveText("Confirm deployment");
+    await expect(page.locator("#confirmDeployment")).toHaveText("Confirm deployment (B)");
     await page.locator("#confirmDeployment").click();
     await page.locator("#confirmDeployment").click();
     await page.evaluate(() => endTurn());
@@ -76,8 +76,8 @@ test("manual language selection persists offline and covers formation, deploymen
     await expect(page.locator("#turnCutin")).toBeHidden();
     await page.evaluate(() => openMenu());
     await chooseLanguage(page, "zh");
-    await expect(page.locator("#openSkirmish")).toHaveText("遭遇战");
-    await expect(page.locator("#openFormation")).toHaveText("编组");
+    await expect(page.locator("#openSkirmish")).toHaveText("开始战斗");
+    await expect(page.locator("#openFormation")).toHaveText("编成");
     expect(errors).toEqual([]);
   } finally {
     await context.close();
@@ -94,7 +94,7 @@ test("storage denial still permits language selection in the current session", a
   });
   await page.goto(url);
   await chooseLanguage(page, "en");
-  await expect(page.locator("#openFormation")).toHaveText("Squad");
+  await expect(page.locator("#openFormation")).toHaveText("Formation");
   await chooseLanguage(page, "ja");
   await expect(page.locator("#openFormation")).toHaveText("編成");
 });
