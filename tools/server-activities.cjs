@@ -217,7 +217,40 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
   }
   function mailbox(ws) {
     const player = state.players[ws.activityProfileId];
-    if (player) send(ws, { type: "activity_mailbox", serverId: state.serverId, mail: player.mail });
+    if (!player) return;
+    // Activity definitions are persistent listings, independent of this cycle's reward mail.
+    const activities = state.activities
+      .filter((activity) => loginModes.has(activity.mode) || activity.mode === "battle_bonus")
+      .map((activity) => ({
+        id: activity.id,
+        mode: activity.mode,
+        title: activity.title,
+        text: activity.text,
+        enabled: activity.enabled,
+        startsAt: activity.startsAt ?? null,
+        endsAt: activity.endsAt ?? null,
+        rewards: activity.rewards,
+        ...(activity.multipliers ? { multipliers: activity.multipliers } : {}),
+        status: !activity.enabled
+          ? "paused"
+          : activity.startsAt != null && now() < activity.startsAt
+            ? "upcoming"
+            : activity.endsAt != null && now() >= activity.endsAt
+              ? "ended"
+              : "active",
+        occurrence: ["daily_login", "weekly_login"].includes(activity.mode)
+          ? loginDate(now(), activity.mode === "weekly_login")
+          : null,
+        ...(activity.mode === "cumulative_login"
+          ? {
+              loginDays: activity.loginDays,
+              loggedDays: Object.values(player.loginDays?.[activity.id] || {}).filter((time) =>
+                inPeriod(activity, time),
+              ).length,
+            }
+          : {}),
+      }));
+    send(ws, { type: "activity_mailbox", serverId: state.serverId, mail: player.mail, activities });
   }
   function broadcast() {
     for (const clients of online.values()) for (const ws of clients) mailbox(ws);

@@ -3,6 +3,7 @@ const ServerActivities = (() => {
   let socket = null,
     serverId = null,
     mail = [],
+    activities = [],
     selected = null;
   const pending = new Set();
   const dialog = element("dialog", "server-activities-dialog");
@@ -33,15 +34,45 @@ const ServerActivities = (() => {
     socket.send(JSON.stringify(message));
   }
   function claim(item) {
-    if (!item || item.confirmedAt !== null || pending.has(item.id)) return;
-    pending.add(item.id);
+    const receipt = item && mail.find((receipt) => receipt.id === (item.claimId || item.id));
+    if (!receipt || receipt.confirmedAt !== null || pending.has(receipt.id)) return;
+    pending.add(receipt.id);
     try {
-      request({ type: "activity_claim", mailId: item.id });
+      request({ type: "activity_claim", mailId: receipt.id });
     } catch (error) {
-      pending.delete(item.id);
+      pending.delete(receipt.id);
       status.textContent = error.message;
     }
     render();
+  }
+  function rows() {
+    const represented = new Set();
+    const listings = activities.map((activity) => {
+      const receipt = mail.find(
+        (item) =>
+          item.activityId === activity.id && (item.occurrence ?? null) === activity.occurrence,
+      );
+      if (receipt) represented.add(receipt.id);
+      return {
+        ...activity,
+        id: "activity:" + activity.id,
+        activityId: activity.id,
+        persistent: true,
+        claimId: receipt?.id || null,
+        confirmedAt: receipt?.confirmedAt ?? null,
+        claimedAt: receipt?.claimedAt ?? null,
+      };
+    });
+    // Past-cycle mail, including unclaimed rewards, remains accessible as history.
+    return [...mail.filter((item) => !represented.has(item.id)), ...listings];
+  }
+  function stateLabel(item) {
+    if (item.persistent && item.status !== "active")
+      return I18n.text({ paused: "已暂停", upcoming: "未开始", ended: "已结束" }[item.status]);
+    if (item.persistent && item.mode === "battle_bonus") return I18n.text("自动生效");
+    if (item.confirmedAt !== null) return I18n.text("已接受");
+    if (item.persistent && !item.claimId) return I18n.text("暂不可领取");
+    return "";
   }
   function unitLabel(id) {
     const prefab = Rules.catalog.prefabs.find((unit) => unit.id === id);
@@ -50,10 +81,16 @@ const ServerActivities = (() => {
   function render() {
     list.replaceChildren();
     detail.replaceChildren();
-    const unread = mail.filter((item) => item.confirmedAt === null).length;
+    const entries = rows();
+    const bonusIds = new Set(
+      activities.filter((item) => item.mode === "battle_bonus").map((item) => item.id),
+    );
+    const unread = mail.filter(
+      (item) => item.confirmedAt === null && !bonusIds.has(item.activityId),
+    ).length;
     byId("openServerActivities").textContent =
       I18n.text("服务器活动") + (unread ? " (" + unread + ")" : "");
-    for (const item of mail) {
+    for (const item of entries) {
       const button = element(
         "button",
         "",
@@ -61,7 +98,7 @@ const ServerActivities = (() => {
       );
       button.type = "button";
       button.setAttribute("aria-pressed", String(item.id === selected));
-      if (item.confirmedAt !== null) button.append(element("small", "", I18n.text("已接受")));
+      if (stateLabel(item)) button.append(element("small", "", stateLabel(item)));
       button.onclick = () => {
         selected = item.id;
         status.textContent = "";
@@ -69,16 +106,45 @@ const ServerActivities = (() => {
       };
       list.append(button);
     }
-    const item = mail.find((item) => item.id === selected);
-    accept.disabled = !item || item.confirmedAt !== null || pending.has(item.id);
+    const item = entries.find((item) => item.id === selected);
+    const receiptId = item?.claimId || item?.id;
+    const automatic = item?.persistent && item.mode === "battle_bonus";
+    accept.disabled =
+      !item ||
+      automatic ||
+      (item.persistent && !item.claimId) ||
+      item.confirmedAt !== null ||
+      pending.has(receiptId);
     accept.textContent = I18n.text(
-      item?.confirmedAt != null ? "已接受" : pending.has(item?.id) ? "正在接收…" : "接收",
+      automatic
+        ? stateLabel(item) || "自动生效"
+        : item?.confirmedAt != null
+          ? "已接受"
+          : pending.has(receiptId)
+            ? "正在接收…"
+            : item?.persistent && !item.claimId
+              ? stateLabel(item) || "暂不可领取"
+              : "接收",
     );
     if (!item) {
       detail.append(element("p", "muted", I18n.text("暂无服务器活动")));
       return;
     }
     detail.append(element("h3", "", item.title), element("p", "server-activity-body", item.text));
+    if (item.persistent && item.mode === "cumulative_login")
+      detail.append(
+        element(
+          "p",
+          "muted",
+          I18n.text("累计登录") +
+            " " +
+            item.loggedDays +
+            " / " +
+            item.loginDays +
+            " " +
+            I18n.text("天"),
+        ),
+      );
     if (item.multipliers) {
       detail.append(element("h4", "", I18n.text("服务器房间收益倍率")));
       for (const [key, label] of [
@@ -127,6 +193,7 @@ const ServerActivities = (() => {
     socket = connection;
     serverId = null;
     mail = [];
+    activities = [];
     selected = null;
     pending.clear();
     status.textContent = "";
@@ -150,8 +217,17 @@ const ServerActivities = (() => {
     if (message.type === "activity_mailbox") {
       serverId = message.serverId;
       mail = message.mail;
-      if (!mail.some((item) => item.id === selected))
-        selected = mail.find((item) => item.confirmedAt === null)?.id || mail[0]?.id || null;
+      activities = message.activities || [];
+      const entries = rows();
+      if (!entries.some((item) => item.id === selected))
+        selected =
+          entries.find(
+            (item) =>
+              item.confirmedAt === null &&
+              (!item.persistent || (item.claimId && item.mode !== "battle_bonus")),
+          )?.id ||
+          entries[0]?.id ||
+          null;
       byId("openServerActivities").disabled = false;
       render();
       // A disconnect between local persistence and acknowledgement must not lose a claim.
@@ -191,7 +267,7 @@ const ServerActivities = (() => {
       status.textContent = error.message;
     }
   };
-  accept.onclick = () => claim(mail.find((item) => item.id === selected));
+  accept.onclick = () => claim(rows().find((item) => item.id === selected));
   window.addEventListener("language-change", render);
   window.addEventListener("page-changing", () => {
     if (dialog.open) dialog.close();

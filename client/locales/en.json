@@ -1498,5 +1498,11 @@
   "阵营排序": "Faction",
   "服务器房间收益倍率": "Server room reward multipliers",
   "驾驶员经验": "Pilot XP",
-  "活动期间自动生效，无需领取；不影响单机和存档对局。": "Automatically active during the event; no claim required. Offline and save-loaded matches are unaffected."
+  "活动期间自动生效，无需领取；不影响单机和存档对局。": "Automatically active during the event; no claim required. Offline and save-loaded matches are unaffected.",
+  "自动生效": "Automatically active",
+  "暂不可领取": "Not claimable yet",
+  "未开始": "Not started",
+  "已暂停": "Paused",
+  "累计登录": "Login days",
+  "天": "days"
 }

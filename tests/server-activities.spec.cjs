@@ -265,3 +265,69 @@ test("opening the admin HTML file connects through the configured local server",
     await app.close();
   }
 });
+
+for (const width of [1280, 390])
+  test(`persistent daily weekly and multiplier listings remain after claim, reload and server restart at ${width}px`, async ({
+    page,
+  }) => {
+    const fs = require("node:fs"),
+      os = require("node:os"),
+      path = require("node:path");
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "greed-persistent-activity-")),
+      store = path.join(dir, "activities.json");
+    let app = createServer({ host: "127.0.0.1", port: 0, activitiesPath: store }),
+      address = await app.listen();
+    const port = address.port,
+      base = `http://127.0.0.1:${port}`;
+    await page.setViewportSize({ width, height: 900 });
+    async function open() {
+      await page.goto(base);
+      await page.waitForFunction(() => assetsReady);
+      await page.evaluate(() => I18n.setLanguage("zh"));
+      await page.evaluate((base) => Lobby.reconnect(base), base);
+      await expect(page.locator("#openServerActivities")).toBeEnabled();
+      await page.locator("#openServerActivities").click();
+    }
+    try {
+      // No current reward mail can exist for this future activity; its listing must still exist.
+      const future = app.activities.publish({
+        mode: "battle_bonus",
+        title: "future multiplier",
+        text: "persistent announcement",
+        startsAt: new Date(Date.now() + 86400000).toISOString(),
+        endsAt: new Date(Date.now() + 3 * 86400000).toISOString(),
+        multipliers: { experience: 2, money: 2, supplies: 2, technology: 2 },
+      });
+      await open();
+      const list = page.locator(".server-activities-list");
+      for (const title of ["每日登录奖励", "每周登录奖励", "future multiplier"])
+        await expect(list.getByRole("button").filter({ hasText: title })).toBeVisible();
+      await list.getByRole("button").filter({ hasText: "每日登录奖励" }).click();
+      await page.locator("#acceptServerActivity").click();
+      await expect(page.locator("#acceptServerActivity")).toHaveText("已接受");
+      const money = await page.evaluate(() => Economy.snapshot().money);
+      await open();
+      await list.getByRole("button").filter({ hasText: "每日登录奖励" }).click();
+      await expect(page.locator("#acceptServerActivity")).toHaveText("已接受");
+      expect(await page.evaluate(() => Economy.snapshot().money)).toBe(money);
+      await app.close();
+      app = createServer({ host: "127.0.0.1", port, activitiesPath: store });
+      await app.listen();
+      await open();
+      await list.getByRole("button").filter({ hasText: "每日登录奖励" }).click();
+      await expect(page.locator("#acceptServerActivity")).toBeDisabled();
+      await list.getByRole("button").filter({ hasText: "future multiplier" }).click();
+      await expect(page.locator(".server-activities-detail")).toContainText(
+        "persistent announcement",
+      );
+      await expect(page.locator("#acceptServerActivity")).toHaveText("未开始");
+      app.activities.toggle(future.id, false);
+      await expect(list.getByRole("button").filter({ hasText: "future multiplier" })).toContainText(
+        "已暂停",
+      );
+    } finally {
+      await page.close();
+      await app.close();
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });

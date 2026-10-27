@@ -384,3 +384,49 @@ test("default limited battle bonus, separate multipliers, overlap, edits and ser
     f.service.updateCopy(event.id, event.title, event.text, { multipliers: { money: -1 } }),
   );
 });
+
+test("persistent activity listings survive no-mail periods, claims, reconnects and restart", (t) => {
+  const f = fixture(t),
+    ws = {},
+    profile = identity();
+  f.time(localTime(26));
+  f.service.identify(ws, profile);
+  const listing = () => f.frames.get(ws).at(-1).activities;
+  const bonus = listing().find((a) => a.mode === "battle_bonus");
+  assert(bonus);
+  assert.equal(bonus.status, "upcoming");
+  assert(
+    !f.frames
+      .get(ws)
+      .at(-1)
+      .mail.some((m) => m.activityId === bonus.id),
+  );
+  const daily = f.frames
+    .get(ws)
+    .at(-1)
+    .mail.find((m) => m.activityId === "default-daily-login");
+  f.service.receive(ws, { type: "activity_claim", mailId: daily.id });
+  f.service.receive(ws, { type: "activity_ack", mailId: daily.id });
+  f.service.disconnect(ws);
+  f.restart();
+  f.service.identify(ws, profile);
+  assert(listing().some((a) => a.id === "default-daily-login"));
+  assert.equal(
+    f.frames
+      .get(ws)
+      .at(-1)
+      .mail.find((m) => m.id === daily.id).confirmedAt,
+    localTime(26),
+  );
+  f.time(new Date(2026, 10, 3, 6).getTime());
+  f.service.identify(ws, profile);
+  assert.equal(listing().find((a) => a.id === bonus.id).status, "ended");
+  f.service.toggle("default-weekly-login", false);
+  assert.equal(listing().find((a) => a.id === "default-weekly-login").status, "paused");
+  assert(listing().every((a) => a.secretHash === undefined));
+  const old = f.frames
+    .get(ws)
+    .at(-1)
+    .mail.find((m) => m.id === daily.id);
+  assert.equal(old.confirmedAt, localTime(26));
+});
