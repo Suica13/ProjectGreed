@@ -2705,6 +2705,9 @@
         --dev-node: #512432;
       }
       .development-heading {
+        height: auto;
+        min-height: 0;
+        padding: 8px 0;
         display: grid;
         grid-template-columns: auto minmax(230px, 1fr) auto auto;
         align-items: center;
@@ -3133,14 +3136,21 @@
       </div>
       <div id="customPilotPanel" class="formation-detail-overlay" hidden>
         <div class="modal custom-pilot-dialog" role="dialog" aria-modal="true" aria-labelledby="customPilotTitle">
-          <header class="formation-pilot-heading"><h2 id="customPilotTitle">驾驶员管理</h2><button id="finishCustomPilot" type="button">完成</button></header>
-          <label>驾驶员名称 <input id="customPilotName" maxlength="24" /></label>
+          <header class="formation-pilot-heading"><h2 id="customPilotTitle">驾驶员管理</h2><button id="finishCustomPilot" type="button">关闭</button></header>
+          <div class="pilot-identity-row">
+            <button id="changeCustomPilotPortrait" type="button" aria-label="切换驾驶员头像"><img id="customPilotAvatar" alt="驾驶员头像" /></button>
+            <div class="pilot-name-controls"><label>驾驶员名称 <input id="customPilotName" maxlength="24" disabled /></label><button id="renameCustomPilot" type="button">修改名称</button></div>
+          </div>
+          <div id="customPilotPortraitPicker" hidden>
+            <header class="formation-pilot-heading"><h3>选择头像</h3><button id="closePilotPortraitPicker" type="button">返回</button></header>
+            <div id="customPilotPortraits"></div>
+            <label class="pilot-upload">上传头像 <input id="uploadPilotPortrait" type="file" accept="image/png,image/jpeg,image/webp" /></label>
+          </div>
           <p id="customPilotProgress"></p>
           <p id="customPilotRecord"></p>
-          <p class="muted">被击坠时扣除当前等级升级所需经验的25%，最低为0，不降级。</p>
-          <h3>头像</h3><div id="customPilotPortraits"></div>
           <h3>属性强化</h3><div id="customPilotStats"></div>
-          <p class="muted">每次升级获得10点强化点。每点强化使属性增加1，上限160。完成或离开时确认生效。</p>
+          <footer id="pilotTrainingActions" hidden><button id="confirmPilotTraining" type="button" class="primary">确认</button><button id="cancelPilotTraining" type="button">取消</button></footer>
+          <button id="createPilotConfirm" type="button" class="primary" hidden>创建驾驶员</button>
         </div>
       </div>
       <div id="formationPilotPanel" class="formation-detail-overlay" hidden>
@@ -3578,7 +3588,7 @@
         gap: 12px;
         overflow: hidden;
       }
-      .formation-pilot-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      .formation-pilot-heading { height: auto; min-height: 40px; padding: 0; flex: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
       .formation-pilot-list { overflow-y: auto; display: grid; gap: 8px; min-height: 0; }
       .formation-pilot-card {
         display: grid;

@@ -63,10 +63,24 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
     game.units.find((u) => u.id === id) || Net.snapshot?.combatActors?.find((u) => u.id === id),
   battleUnit = (id) => battleView?.actors?.find((unit) => unit.id === id) || getUnit(id),
   getWeapon = (u, id) => Rules.modelOf(u).weapons.find((w) => w.id === id),
-  unitIcon = (model) => ART.assets[SpriteRenderer.models[model].icon],
+  unitIcon = (() => {
+    const cache = new Map();
+    return (model, pilot = null) => {
+      const base = ART.assets[SpriteRenderer.models[model].icon];
+      if (!pilot?.custom) return base;
+      const portrait = PilotSystem.portrait(pilot), key = model + "|" + portrait;
+      if (!cache.has(key)) {
+        if (cache.size >= 256) cache.delete(cache.keys().next().value);
+        const xml = value => value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><image href="${xml(base)}" width="64" height="64"/><rect x="39" y="39" width="25" height="25" rx="3" fill="#152430" stroke="#c7e2f2"/><image href="${xml(portrait)}" x="41" y="41" width="22" height="22" preserveAspectRatio="xMidYMid slice"/></svg>`;
+        cache.set(key, "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg));
+      }
+      return cache.get(key);
+    };
+  })(),
   unitName = (u) => (ClientSettings.trueUnitNames() ? Rules.modelOf(u).name : Rules.unitName(u)),
   displaysCustomUnitName = (u) => !ClientSettings.trueUnitNames() && !!u.customName,
-  formatNumber = (n) => Number(n).toLocaleString("en-US"),
+  formatNumber = (n) => Math.round(Number(n)).toLocaleString("en-US"),
   isAI = () => !Net.active && game.ai && game.team === 1,
   isBusy = () =>
     !!window.ReplayPlayer?.active ||
@@ -369,7 +383,7 @@ function renderRoster(busy) {
           "roster-unit" + (selected === unit.id ? " selected" : "") + (unit.hp <= 0 ? " dead" : ""),
         );
       const image = element("img");
-      image.src = unitIcon(unit.model);
+      image.src = unitIcon(unit.model, unit.pilot);
       image.alt = "";
       const info = element("span", "roster-unit-info");
       const name = element("strong", "roster-unit-name", unitName(unit));
@@ -463,7 +477,7 @@ function renderPanel() {
       (!Net.active || Net.canAct());
   panel.replaceChildren();
   let head = element("div", "unit-card-head");
-  head.innerHTML = /* HTML */ `<img src="${unitIcon(u.model)}" alt="" />
+  head.innerHTML = /* HTML */ `<img src="${unitIcon(u.model, u.pilot)}" alt="" />
     <div>
       <strong class="${u.team ? "red" : "blue"}">${escapeHtml(unitName(u))}</strong
       ><small>${m.code} · ${m.kitName} · ${teamName(u.team)}</small>
@@ -555,12 +569,12 @@ function renderPanel() {
   overview.dataset.hudPane = "overview";
   panel.append(overview);
   let stats = element("div", "stats");
-  stats.innerHTML = /* HTML */ `<div><span>移动力</span>${m.move} 格</div>
-    <div><span>反应系数</span>${m.mobility}</div>
-    <div><span>命中系数</span>${m.accuracy}%</div>
+  stats.innerHTML = /* HTML */ `<div><span>移动力</span>${Math.round(m.move)} 格</div>
+    <div><span>反应系数</span>${Math.round(m.mobility)}</div>
+    <div><span>命中系数</span>${Math.round(m.accuracy)}%</div>
     <div><span>地面适应性</span>${m.adaptability.ground}%</div>
     <div><span>宇宙适应性</span>${m.adaptability.space}%</div>
-    <div><span>零件强度</span>${m.partStructuralStrength}</div>
+    <div><span>零件强度</span>${Math.round(m.partStructuralStrength)}</div>
     <div>
       <span>盾牌</span
       >${m.shield.hp > 0 ? formatNumber(u.shield ?? 0) + " / " + formatNumber(m.shield.hp) : "无独立盾牌"}
@@ -570,9 +584,13 @@ function renderPanel() {
       ${Rules.terrainStyle(game.mapId, game.tiles[u.y][u.x]).name}
     </div>`;
   const pilot = PilotSystem.of(u),
-    pilotLine = element("div", "", "驾驶员 · " + pilot.name),
-    pilotStats = element("div", "", Object.entries(PilotSystem.labels)
-      .map(([key, label]) => label + " " + pilot.stats[key]).join(" · "));
+    pilotLine = element("div", "unit-pilot-heading", "驾驶员 · " + pilot.name),
+    pilotStats = element("div", "unit-pilot-stats");
+  for (const [key, label] of Object.entries(PilotSystem.labels)) {
+    const cell = element("div");
+    cell.append(element("span", "", label), element("strong", "", String(Math.round(pilot.stats[key]))));
+    pilotStats.append(cell);
+  }
   stats.prepend(pilotLine, pilotStats);
   stats.append(element("div", "", `行动点 ${Rules.actionPoints(u)}/${Rules.actionBudget(u)}`));
   overview.append(stats);
@@ -1594,13 +1612,15 @@ function drawMap(now) {
       const nameSize = Math.max(7, tile * 0.14) * BattleScene.settings().mapLabelSize;
       ctx.font = `${nameSize}px system-ui`;
       ctx.textAlign = "center";
+      ctx.save();
+      ctx.textBaseline = "middle";
       const label = u.pilot?.custom ? u.pilot.name : unitName(u);
       const labelY = bary + 12 + nameSize / 2;
       if (u.pilot?.custom) {
         const width = ctx.measureText(label).width, iconSize = nameSize * 1.1;
         const left = pos.x - (width + iconSize + 3) / 2;
         ctx.save();
-        ctx.translate(left, labelY - nameSize);
+        ctx.translate(left, labelY - iconSize / 2);
         ctx.scale(iconSize / 16, iconSize / 16);
         // Pilot helmet: dome, visor and chin guard; no platform emoji dependency.
         ctx.beginPath();
@@ -1613,6 +1633,7 @@ function drawMap(now) {
         ctx.restore();
         ctx.fillText(label, pos.x + (iconSize + 3) / 2, labelY);
       } else ctx.fillText(label, pos.x, labelY);
+      ctx.restore();
     }
     if (
       attackTargets.has(u.id) ||
@@ -2016,7 +2037,7 @@ function renderReaction() {
   function fighter(unit, weapon) {
     const card = element("div", "fighter");
     const image = element("img");
-    image.src = unitIcon(unit.model);
+    image.src = unitIcon(unit.model, unit.pilot);
     image.alt = "";
     const identity = UnitIdentity.owner(unit);
     const owner = element("small", "response-owner", identity.name + " · " + identity.team);

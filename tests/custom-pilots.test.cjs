@@ -141,3 +141,16 @@ test('match saves preserve pilot progression and records, rejecting invalid impo
   save.game.units[0].pilot.stats.shooting=161;
   assert.throws(()=>R.validateSave(G,save),/属性/);
 });
+
+test('faction ownership and uploaded portrait validation', () => {
+  const p=P.createCustom('custom-faction-pilot','Pilot',P.catalog.named[0].id,'ZEON');
+  assert.equal(p.faction,'ZEON');
+  assert.equal(G.planFormation([{unitId:'Type61',kitId:'standard',customPilot:p}],Infinity,{characterFaction:'EFSF'}).reasons[0],'faction_mismatch');
+  assert.throws(()=>P.custom({...p,uploadedPortrait:'data:image/svg+xml;base64,AAA'}));
+  assert.throws(()=>P.custom({...p,uploadedPortrait:'data:image/jpeg;base64,/9j/'+ 'A'.repeat(P.maxPortraitLength)}));
+  const store={pilots:[p],awards:[]};
+  P.creditAwards(store,[{id:'other-faction',pilotId:p.id,faction:'EFSF',kind:'kill',points:100}]);
+  assert.equal(store.pilots[0].experience,0);
+  P.creditAwards(store,[{id:'own-faction',pilotId:p.id,faction:'ZEON',kind:'kill',points:100}]);
+  assert.equal(store.pilots[0].experience,100);
+});

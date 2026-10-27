@@ -563,7 +563,7 @@ const RoomPanel = (() => {
           (entry.customName || model.name) + " · " + model.kitName + " · COST " + model.cost;
         if (entry.customName) icon.setAttribute("data-i18n-ignore", "");
         const image = element("img");
-        image.src = unitIcon(id);
+        image.src = unitIcon(id, entry.customPilot);
         image.alt = entry.customName || model.name;
         icon.append(image);
         if (player.disabled.includes(index))

@@ -288,6 +288,8 @@ const Tactics = (() => {
     clean.forEach((entry, index) => {
       const reason = restrictionReason(models[entry.unitId + "__" + entry.kitId], restrictions);
       if (reason) reasons[index] = reason;
+      if (entry.customPilot && restrictions.characterFaction &&
+          entry.customPilot.faction !== restrictions.characterFaction) reasons[index] = "faction_mismatch";
     });
     let occupied = 0;
     clean.forEach((entry, index) => {

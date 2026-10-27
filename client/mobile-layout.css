@@ -38,12 +38,12 @@
   #developmentScreen #developmentMain {
     overflow-y: auto;
     overflow-x: hidden;
-    overscroll-behavior-y: contain;
-    scroll-padding-top: 140px;
+    overscroll-behavior-y: auto;
+    scroll-padding-top: 0;
   }
   #developmentScreen .development-heading {
-    position: sticky;
-    top: -10px;
+    position: relative;
+    top: auto;
     z-index: 2;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: "title back" "faction faction" "balance balance";
@@ -79,7 +79,7 @@
   }
   #developmentScreen .development-workspace {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: clamp(176px, 26dvh, 240px) auto;
+    grid-template-rows: clamp(240px, 42dvh, 420px) auto;
     height: auto;
     gap: 12px;
   }
@@ -94,7 +94,7 @@
     min-height: 207px;
     overflow-x: hidden;
     overflow-y: auto;
-    overscroll-behavior-y: contain;
+    overscroll-behavior-y: auto;
   }
   #developmentScreen .development-units .development-unit {
     flex: 0 0 48px;
@@ -411,7 +411,7 @@
     grid-template-areas: "title back" "faction balance";
     grid-template-columns: minmax(0, 1fr) auto;
   }
-  #developmentScreen #developmentMain { scroll-padding-top: 100px; }
+  #developmentScreen #developmentMain { scroll-padding-top: 0; }
   #roomMain .team-slots {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -446,7 +446,7 @@
 /* Shared formation pilot pages; the existing unit workspace stays intact. */
 .formation-mode-tabs { display: flex; gap: 6px; flex: none; }
 .formation-mode-tabs [aria-pressed="true"], #customPilotPortraits [aria-pressed="true"] { border-color: #80caff; background: #254b64; }
-#formationMain[data-page="pilots"] > :is(.formation-group-banner, .formation-toolbar, .formation-workspace),
+#formationMain[data-page="pilots"] > :is(.formation-toolbar, .formation-workspace),
 #formationMain[data-page="pilots"] #openFormationShare,
 #formationMain[data-page="pilots"] #formationBudget { display: none; }
 #formationPilotRoster { flex: 1; min-height: 0; overflow: auto; }
@@ -466,4 +466,26 @@
   #formationMain .formation-mode-tabs { margin-left: auto; }
   #customPilotPanel .custom-pilot-dialog { max-height: 96dvh; padding: 12px; }
   #customPilotPanel .formation-pilot-heading { position: sticky; top: -12px; background: #152430; z-index: 1; padding: 8px 0; }
+}
+
+/* The screen owns page scrolling; tree and unit list retain their own scrollbars. */
+#developmentScreen .development-tree-scroll { position: relative; isolation: isolate; }
+.pilot-identity-row { display: flex; gap: 12px; align-items: center; }
+#customPilotAvatar { width: 72px; height: 72px; object-fit: cover; }
+.pilot-name-controls { min-width: 0; flex: 1; display: flex; flex-wrap: wrap; gap: 8px; }
+.pilot-name-controls input { width: 100%; min-width: 0; }
+#customPilotPortraitPicker { flex: none; padding: 10px; border: 1px solid #49616e; border-radius: 6px; }
+.pilot-upload { display: block; margin-top: 10px; }
+.pilot-upload input { max-width: 100%; }
+#pilotTrainingActions { position: sticky; bottom: -12px; display: flex; gap: 8px; padding: 12px 0; background: #152430; flex: none; z-index: 2; }
+#pilotTrainingActions[hidden] { display: none; }
+#pilotTrainingActions button { flex: 1; }
+#gameScene .stats .unit-pilot-heading, #gameScene .stats .unit-pilot-stats { grid-column: 1 / -1; }
+#gameScene .stats .unit-pilot-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; padding: 10px; }
+.unit-pilot-stats > div { display: flex; justify-content: space-between; gap: 8px; }
+#gameScene .unit-pilot-stats span { display: inline; font-size: 12px; }
+@media (max-width: 700px), (max-height: 600px) and (orientation: landscape) {
+  #developmentScreen { overflow-y: auto; align-items: flex-start; }
+  #developmentScreen #developmentMain { height: auto; min-height: 100%; max-height: none; overflow: visible; }
+  #formationMain[data-page="pilots"] .formation-group-banner { display: flex; }
 }

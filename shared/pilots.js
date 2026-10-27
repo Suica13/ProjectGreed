@@ -11,6 +11,14 @@ const PilotSystem = (() => {
   function profile(id) {
     return id ? byId.get(id) || null : null;
   }
+  const maxPortraitLength = 16384;
+  function portraitData(value) {
+    if (!value) return null;
+    if (typeof value !== "string" || value.length > maxPortraitLength ||
+        !/^data:image\/jpeg;base64,\/9j\/[A-Za-z0-9+/]*={0,2}$/.test(value))
+      throw Error("驾驶员头像无效或过大");
+    return value;
+  }
   const experienceRequired = (level) => 1000 * 2 ** (level - 1);
   function custom(value) {
     if (!value || typeof value !== "object" || !/^custom-[a-zA-Z0-9-]{1,80}$/.test(value.id || ""))
@@ -38,11 +46,14 @@ const PilotSystem = (() => {
       if (!Number.isSafeInteger(n) || n < 0) throw Error("驾驶员战绩无效");
       record[key] = n;
     }
+    const faction = value.faction ?? "PMC";
+    if (!["PMC", "EFSF", "ZEON"].includes(faction)) throw Error("驾驶员阵营无效");
+    const uploadedPortrait = portraitData(value.uploadedPortrait);
     const portraitId = byId.has(value.portraitId) ? value.portraitId : catalog.named[0]?.id;
-    return { id: value.id, name, portraitId, level, experience, stats, record, points: (level - 1) * 10 - spent, custom: true };
+    return { id: value.id, name, faction, portraitId, ...(uploadedPortrait ? { uploadedPortrait } : {}), level, experience, stats, record, points: (level - 1) * 10 - spent, custom: true };
   }
-  function createCustom(id, name, portraitId) {
-    return custom({ id, name, portraitId, level: 1, experience: 0,
+  function createCustom(id, name, portraitId, faction = "PMC") {
+    return custom({ id, name, portraitId, faction, level: 1, experience: 0,
       stats: Object.fromEntries(Object.keys(labels).map(key => [key, key === "awakening" ? 50 : 100])) });
   }
   function gainExperience(value, amount) {
@@ -75,7 +86,7 @@ const PilotSystem = (() => {
     let changed = false;
     for (const award of awards) {
       if (received.has(award.id)) continue;
-      const i = store.pilots.findIndex(p => p.id === award.pilotId);
+      const i = store.pilots.findIndex(p => p.id === award.pilotId && (!award.faction || p.faction === award.faction));
       if (i < 0) continue;
       store.pilots[i] = battleResult(store.pilots[i], award.kind, award.points);
       received.add(award.id);
@@ -84,7 +95,7 @@ const PilotSystem = (() => {
     if (changed) store.awards = [...received];
     return changed;
   }
-  const portrait = (value) => profile(value?.portraitId)?.icon || catalog.named[0]?.icon;
+  const portrait = (value) => value?.uploadedPortrait || profile(value?.portraitId)?.icon || catalog.named[0]?.icon;
   const cost = (value) => value ? custom(value).level * 25 : 0;
   function commandUnit(model) {
     return !!(model?.unitTags?.includes("CmdUnit") ||
@@ -168,6 +179,6 @@ const PilotSystem = (() => {
     };
   }
   return { catalog, labels, profile, commandUnit, defaultName,
-    validate, hash, roll, of, modifiers, custom, createCustom, gainExperience, experienceRequired, cost, portrait, battleResult, creditAwards };
+    validate, hash, roll, of, modifiers, custom, createCustom, gainExperience, experienceRequired, cost, portrait, battleResult, creditAwards, maxPortraitLength, portraitData };
 })();
 if (typeof module !== "undefined") module.exports = PilotSystem;

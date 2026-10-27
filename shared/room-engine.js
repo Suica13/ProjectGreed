@@ -1071,7 +1071,7 @@ function createRoomEngine({
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points);
     if (owner && !owner.bot)
       (room.pilotAwards ||= []).push({ id: randomId(), memberId: owner.id,
-        pilotId: actor.pilot.id, kind, points });
+        pilotId: actor.pilot.id, faction: actor.pilot.faction, kind, points });
   }
   function advanceTurn(room, automatic = false) {
     delete room.openingSnipe;

@@ -3598,3 +3598,30 @@ test("movement preview preserves intel, survives reconnect, cancels atomically a
   assert.equal(room.revision, finalRevision);
   assert.equal((await resumed.act("cancel_move", { unitId: own.id })).type, "error");
 });
+
+test('uploaded pilot portraits larger than 16 KiB synchronize to another client', async t => {
+  const {client} = await setup(t), host = await client(), guest = await client(), watcher = await client();
+  await host.hello('create', 'PORTRAITS');
+  await guest.hello('join', 'PORTRAITS');
+  await watcher.hello('join', 'PORTRAITS');
+  await host.latest(s => s.members.length === 3);
+  const P = require('../shared/pilots.js');
+  const portrait = 'data:image/jpeg;base64,/9j/' + 'A'.repeat(12000);
+  const formation = [0,1].map(i => ({unitId:'Type61',kitId:'standard',customPilot:
+    P.custom({...P.createCustom('custom-portrait-'+i,'Pilot '+i,P.catalog.named[0].id,'PMC'),uploadedPortrait:portrait})}));
+  assert(JSON.stringify(formation).length > 16384);
+  let state = await host.act('set_ready',{ready:true,formation});
+  assert.equal(state.type,'state',JSON.stringify(state));
+  await guest.latest(s => s.revision === state.revision);
+  state = await guest.act('set_ready',{ready:true,formation:[{unitId:'Type61',kitId:'standard'}]});
+  assert.equal(state.type,'state');
+  await startRoom(host);
+  await watcher.latest(s => s.phase === 'assembly');
+  const entries = watcher.state.assembly.players.find(p => p.seat === host.joined.seat).entries;
+  assert.equal(entries[0].customPilot.uploadedPortrait,portrait);
+  await confirmAssembly(host,guest);
+  await watcher.latest(s => s.phase === 'deployment');
+  const pilots = watcher.state.game.units.filter(u => u.pilot?.custom);
+  assert.equal(pilots.length,2);
+  assert(pilots.every(u => u.pilot.uploadedPortrait === portrait && u.pilot.faction === 'PMC'));
+});

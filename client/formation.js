@@ -5,16 +5,33 @@ const Formation = (() => {
   let group = PlayerProfile.faction();
   let storageKey = legacyStorageKey + "." + group;
   const sessionSaves = new Map();
-  const pilotStorageKey = "projectgreed.custom-pilots.v1";
-  let pilotStore = { pilots: [], awards: [] };
+  const pilotStorageKey = "projectgreed.custom-pilots.v2.";
+  const pilotStores = {};
+  for (const faction of ["PMC", "EFSF", "ZEON"]) {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(pilotStorageKey + faction)); } catch {}
+    pilotStores[faction] = { pilots: (Array.isArray(saved?.pilots) ? saved.pilots : []).flatMap(p => {
+      try { return [PilotSystem.custom({ ...p, faction })]; } catch { return []; }
+    }), awards: Array.isArray(saved?.awards) ? saved.awards : [] };
+  }
+  // Claim the old shared roster once; keep the original data as a migration backup.
   try {
-    const saved = JSON.parse(localStorage.getItem(pilotStorageKey));
-    if (saved) pilotStore = { pilots: (saved.pilots || []).flatMap(p => {
-      try { return [PilotSystem.custom(p)]; } catch { return []; }
-    }), awards: Array.isArray(saved.awards) ? saved.awards : [] };
+    if (!localStorage.getItem(pilotStorageKey + "migrated")) {
+      const old = JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v1"));
+      if (Array.isArray(old?.pilots)) {
+        const target = pilotStores[group];
+        for (const p of old.pilots) {
+          try { if (!target.pilots.some(x => x.id === p.id)) target.pilots.push(PilotSystem.custom({ ...p, faction: group })); } catch {}
+        }
+        target.awards = [...new Set([...target.awards, ...(old.awards || [])])];
+        localStorage.setItem(pilotStorageKey + group, JSON.stringify(target));
+      }
+      localStorage.setItem(pilotStorageKey + "migrated", group);
+    }
   } catch {}
-  function savePilots() {
-    try { localStorage.setItem(pilotStorageKey, JSON.stringify(pilotStore)); }
+  let pilotStore = pilotStores[group];
+  function savePilots(faction = group) {
+    try { localStorage.setItem(pilotStorageKey + faction, JSON.stringify(pilotStores[faction])); }
     catch { note("浏览器无法保存驾驶员，本次会话仍可使用。"); }
   }
   function hydratePilots(entries) {
@@ -25,16 +42,16 @@ const Formation = (() => {
       if (copy.customPilot) {
         const saved = pilotStore.pilots.find(p => p.id === copy.customPilot.id);
         if (saved) copy.customPilot = structuredClone(saved);
+        else if (copy.customPilot.faction !== group) delete copy.customPilot;
       }
       return copy;
     });
   }
   function receivePilotAwards(snapshot) {
     if (snapshot.replay || snapshot.phase === "replay") return;
-    if (PilotSystem.creditAwards(pilotStore, snapshot.pilotAwards || [])) {
-      savePilots();
-      draft = hydratePilots(draft);
-    }
+    for (const faction of ["PMC", "EFSF", "ZEON"])
+      if (PilotSystem.creditAwards(pilotStores[faction], snapshot.pilotAwards || [])) savePilots(faction);
+    draft = hydratePilots(draft);
   }
   function defaultSquads(faction) {
     const carrier = (unitId) => ({ unitId, kitId: "standard" });
@@ -206,13 +223,16 @@ const Formation = (() => {
   }
   function setGroup(next) {
     if (!["PMC", "EFSF", "ZEON"].includes(next) || group === next) return;
+    finishPilotEditor();
     group = next;
+    pilotStore = pilotStores[group];
     PlayerProfile.setFormationGroup(group);
     if (!Net.active) PlayerProfile.setFaction(next);
     loadCharacter();
     if (pageView === "formation") {
       byId("formationName").value = squads[index].name;
       render();
+      renderPilotRoster();
     }
   }
   const sharePrefix = "PGF1.";
@@ -231,7 +251,7 @@ const Formation = (() => {
   }
   function decodeShare(code) {
     code = code.trim();
-    if (!code.startsWith(sharePrefix) || code.length > 100000) throw Error("编组分享代码无效。");
+    if (!code.startsWith(sharePrefix) || code.length > 4 * 1024 * 1024) throw Error("编组分享代码无效。");
     let encoded = code.slice(sharePrefix.length).replace(/-/g, "+").replace(/_/g, "/");
     encoded += "=".repeat((4 - (encoded.length % 4)) % 4);
     let payload;
@@ -492,7 +512,7 @@ const Formation = (() => {
           image = element("img"),
           m = UnitModels[entry.unitId + "__" + entry.kitId],
           remove = element("button", "", "移除");
-        image.src = unitIcon(entry.unitId + "__" + entry.kitId);
+        image.src = unitIcon(entry.unitId + "__" + entry.kitId, entry.customPilot);
         image.alt = "";
         const label = element("span"),
           name = element("strong", "", entry.customName || m.name);
@@ -988,7 +1008,7 @@ const Formation = (() => {
       details.onclick = show;
       const icon = element("span", "formation-icon"),
         image = element("img");
-      image.src = unitIcon(entry.unitId + "__" + entry.kitId);
+      image.src = unitIcon(entry.unitId + "__" + entry.kitId, entry.customPilot);
       image.width = 56;
       image.alt = entry.customName || model.name;
       icon.append(image);
@@ -1651,42 +1671,93 @@ const Formation = (() => {
     pilotPage.hidden = !pilots;
     if (pilots) renderPilotRoster();
   }
+  function commitPilot(profile) {
+    const clean = PilotSystem.custom(profile);
+    const i = pilotStore.pilots.findIndex(p => p.id === clean.id);
+    if (i < 0) pilotStore.pilots.push(clean); else pilotStore.pilots[i] = clean;
+    savePilots();
+    draft = hydratePilots(draft);
+    squads = squads.map(s => ({ ...s, units: hydratePilots(s.units) }));
+    persist(); render(); renderPilotRoster();
+    return clean;
+  }
   function editPilot(p = null) {
     pilotFocus = document.activeElement;
     pilotIsNew = !p;
     pilotEdit = structuredClone(p || PilotSystem.createCustom(
       "custom-" + (globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + "-" + Math.random().toString(36).slice(2)),
       "驾驶员[" + String.fromCharCode(65 + Math.floor(Math.random() * 26)) + String(Math.floor(Math.random() * 100)).padStart(2, "0") + "]",
-      PilotSystem.catalog.named[0]?.id));
+      PilotSystem.catalog.named[0]?.id, group));
     pilotOriginal = JSON.stringify(pilotEdit);
     byId("customPilotName").value = pilotEdit.name;
-    const portraits = byId("customPilotPortraits");
-    portraits.replaceChildren();
-    for (const [i, portrait] of PilotSystem.catalog.named.entries()) {
-      const button = element("button"); button.type = "button";
-      button.setAttribute("aria-label", "驾驶员头像 " + (i + 1));
-      button.setAttribute("aria-pressed", String(portrait.id === pilotEdit.portraitId));
-      const img = element("img"); img.src = portrait.icon; img.alt = "";
-      button.append(img);
-      button.onclick = () => {
-        pilotEdit.portraitId = portrait.id;
-        for (const child of portraits.children) child.setAttribute("aria-pressed", String(child === button));
-      };
-      portraits.append(button);
-    }
+    byId("customPilotName").disabled = true;
+    byId("renameCustomPilot").textContent = "修改名称";
+    byId("customPilotPortraitPicker").hidden = true;
+    byId("createPilotConfirm").hidden = !pilotIsNew;
     renderPilotStats();
     pilotEditor.hidden = false;
     byId("formationMain").inert = true;
-    byId("customPilotName").focus();
+    byId("changeCustomPilotPortrait").focus();
   }
+  function savePilotIdentity(fields) {
+    Object.assign(pilotEdit, fields);
+    const original = { ...JSON.parse(pilotOriginal), ...fields };
+    // Identity edits never commit pending training points.
+    if (!pilotIsNew) commitPilot(original);
+    pilotOriginal = JSON.stringify(original);
+    renderPilotStats();
+  }
+  function openPortraitPicker() {
+    const portraits = byId("customPilotPortraits"); portraits.replaceChildren();
+    for (const [i, portrait] of PilotSystem.catalog.named.entries()) {
+      const button = element("button"); button.type = "button";
+      button.setAttribute("aria-label", "驾驶员头像 " + (i + 1));
+      button.setAttribute("aria-pressed", String(!pilotEdit.uploadedPortrait && portrait.id === pilotEdit.portraitId));
+      const img = element("img"); img.src = portrait.icon; img.alt = ""; button.append(img);
+      button.onclick = () => { savePilotIdentity({ portraitId: portrait.id, uploadedPortrait: null }); closePortraitPicker(); };
+      portraits.append(button);
+    }
+    byId("customPilotPortraitPicker").hidden = false;
+    byId("closePilotPortraitPicker").focus();
+  }
+  function closePortraitPicker() {
+    byId("customPilotPortraitPicker").hidden = true;
+    byId("changeCustomPilotPortrait").focus();
+  }
+  byId("uploadPilotPortrait").onchange = async event => {
+    const file = event.target.files?.[0]; event.target.value = "";
+    const editing = pilotEdit;
+    if (!file || !editing) return;
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type) || file.size > 10 * 1024 * 1024)
+      return note("请选择10MB以内的PNG、JPEG或WebP图片。");
+    const url = URL.createObjectURL(file);
+    try {
+      const img = new Image(); img.src = url; await img.decode();
+      const canvas = document.createElement("canvas"); canvas.width = canvas.height = 128;
+      const ctx = canvas.getContext("2d"), side = Math.min(img.naturalWidth, img.naturalHeight);
+      ctx.fillStyle = "#152430"; ctx.fillRect(0, 0, 128, 128);
+      ctx.drawImage(img, (img.naturalWidth-side)/2, (img.naturalHeight-side)/2, side, side, 0, 0, 128, 128);
+      let data;
+      for (const quality of [0.85, 0.65, 0.4, 0.2]) {
+        data = canvas.toDataURL("image/jpeg", quality);
+        if (data.length <= PilotSystem.maxPortraitLength) break;
+      }
+      PilotSystem.portraitData(data);
+      if (pilotEdit !== editing) return;
+      savePilotIdentity({ uploadedPortrait: data }); closePortraitPicker();
+    } catch { note("无法读取此头像，请换一张图片。"); }
+    finally { URL.revokeObjectURL(url); }
+  };
   function renderPilotStats() {
+    byId("customPilotAvatar").src = PilotSystem.portrait(pilotEdit);
     byId("customPilotProgress").textContent = `Lv.${pilotEdit.level} · COST +${PilotSystem.cost(pilotEdit)} · EXP ${pilotEdit.experience}/${PilotSystem.experienceRequired(pilotEdit.level)} · 强化点 ${pilotEdit.points}`;
     byId("customPilotRecord").textContent = pilotRecordText(pilotEdit);
+    const original = JSON.parse(pilotOriginal);
+    byId("pilotTrainingActions").hidden = !(pilotEdit.points || pilotEdit.points !== original.points);
     const stats = byId("customPilotStats"); stats.replaceChildren();
     for (const [key, label] of Object.entries(PilotSystem.labels)) {
-      const row = element("div", "custom-pilot-stat");
-      const plus = element("button", "", "+"); plus.type = "button";
-      plus.setAttribute("aria-label", "强化" + label);
+      const row = element("div", "custom-pilot-stat"), plus = element("button", "", "+");
+      plus.type = "button"; plus.setAttribute("aria-label", "强化" + label);
       plus.disabled = !pilotEdit.points || pilotEdit.stats[key] >= 160;
       plus.onclick = () => { pilotEdit.stats[key]++; pilotEdit.points--; renderPilotStats(); };
       row.append(element("span", "", `${label} ${pilotEdit.stats[key]} / 160`), plus); stats.append(row);
@@ -1694,43 +1765,46 @@ const Formation = (() => {
   }
   function finishPilotEditor() {
     if (!pilotEdit) return;
-    pilotEdit.name = byId("customPilotName").value.trim().slice(0, 24) || JSON.parse(pilotOriginal).name;
-    if ((pilotIsNew || JSON.stringify(pilotEdit) !== pilotOriginal) &&
-        window.confirm(pilotIsNew ? "是否确认创建此驾驶员？" : "是否确认修改并应用强化？取消将返还本次分配的强化点。")) {
-      const clean = PilotSystem.custom(pilotEdit);
-      const i = pilotStore.pilots.findIndex(p => p.id === clean.id);
-      if (i < 0) pilotStore.pilots.push(clean); else pilotStore.pilots[i] = clean;
-      savePilots();
-      draft = hydratePilots(draft);
-      squads = squads.map(s => ({ ...s, units: hydratePilots(s.units) }));
-      persist();
-      render();
-    }
     pilotEdit = null;
     pilotEditor.hidden = true;
+    byId("customPilotPortraitPicker").hidden = true;
     byId("formationMain").inert = false;
-    renderPilotRoster();
-    pilotFocus?.focus();
+    renderPilotRoster(); pilotFocus?.focus();
   }
+  byId("renameCustomPilot").onclick = () => {
+    const input = byId("customPilotName"), button = byId("renameCustomPilot");
+    if (input.disabled) { input.disabled = false; button.textContent = "保存名称"; input.focus(); input.select(); return; }
+    try {
+      const clean = PilotSystem.custom({ ...pilotEdit, name: input.value });
+      savePilotIdentity({ name: clean.name }); input.value = clean.name; input.disabled = true; button.textContent = "修改名称";
+    } catch (error) { note(error.message); }
+  };
+  byId("confirmPilotTraining").onclick = () => {
+    if (!pilotEdit) return;
+    if (!pilotIsNew) commitPilot(pilotEdit);
+    pilotOriginal = JSON.stringify(pilotEdit); renderPilotStats();
+  };
+  byId("cancelPilotTraining").onclick = () => { pilotEdit = structuredClone(JSON.parse(pilotOriginal)); renderPilotStats(); };
+  byId("createPilotConfirm").onclick = () => { commitPilot(pilotEdit); finishPilotEditor(); };
+  byId("changeCustomPilotPortrait").onclick = openPortraitPicker;
+  byId("closePilotPortraitPicker").onclick = closePortraitPicker;
   byId("formationUnitsTab").onclick = () => showFormationTab("units");
   byId("formationPilotsTab").onclick = () => showFormationTab("pilots");
   byId("createCustomPilot").onclick = () => editPilot();
   byId("finishCustomPilot").onclick = finishPilotEditor;
   pilotEditor.addEventListener("keydown", event => {
-    if (event.key === "Escape") { event.stopPropagation(); finishPilotEditor(); }
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      if (!byId("customPilotPortraitPicker").hidden) closePortraitPicker(); else finishPilotEditor();
+    }
     if (event.key === "Tab") {
-      const focusable = [...pilotEditor.querySelectorAll("button:not([disabled]), input")];
+      const focusable = [...pilotEditor.querySelectorAll("button:not([disabled]), input:not([disabled])")].filter(e => e.getClientRects().length);
       const first = focusable[0], last = focusable.at(-1);
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     }
   });
   window.addEventListener("page-changing", finishPilotEditor);
-  window.addEventListener("beforeunload", event => {
-    if (pilotEdit && (pilotIsNew || JSON.stringify(pilotEdit) !== pilotOriginal || byId("customPilotName").value !== pilotEdit.name)) {
-      event.preventDefault(); event.returnValue = "";
-    }
-  });
   PlayerProfile.setFormationGroup(group);
   loadCharacter();
   return {

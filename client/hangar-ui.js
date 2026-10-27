@@ -50,7 +50,7 @@ const HangarUI = (() => {
   function row(u) {
     const box = element("div", "hangar-unit");
     const icon = element("img");
-    icon.src = unitIcon(u.model);
+    icon.src = unitIcon(u.model, u.pilot);
     icon.alt = "";
     const info = element("div", "hangar-unit-info");
     const name = element("strong", "", unitName(u));
