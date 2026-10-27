@@ -66,6 +66,8 @@ function withPool(run) {
       kitId: "test",
       cost,
       ship: false,
+      unitTags: [],
+      commandAuras: [],
       adaptability: { ground, space: ground },
     };
   }

@@ -106,10 +106,11 @@ const SpriteRenderer = (() => {
     variables.brokenParts = brokenParts;
     const thrusters = ART.models[model].presentation.thrusters !== false;
     variables.boosting = thrusters && models[model].presentation.movement === "boost";
-    variables.sustainedThrust =
-      thrusters && (environment === "space" || flying || ART.models[model].movementType === "air");
-    variables.thrustActive =
-      (moving && variables.boosting) || (ART.models[model].ship && variables.sustainedThrust);
+    const airborne = flying || ART.models[model].movementType === "air";
+    variables.sustainedThrust = thrusters && (environment === "space" || airborne);
+    // Aircraft need their native engine flames as well as the smaller reversing jets.
+    variables.thrustActive = (moving && variables.boosting) ||
+      ((ART.models[model].ship || airborne) && variables.sustainedThrust);
     return models[model].decals.filter((layer) => visible(layer, variables, clip, at));
   }
   function turretPose(model, sampled, angle, aimAngle = angle, firingModules = []) {
@@ -251,6 +252,14 @@ const SpriteRenderer = (() => {
     outlineCache.set(key, canvas);
     return canvas;
   }
+  // A small visual-only height variation in source pixels. Shadows and map cells stay fixed.
+  function flightOffset(model, now, flying = false, environment = "ground") {
+    if (environment === "space" || !(flying || ART.models[model].movementType === "air")) return 0;
+    let phase = 0;
+    for (const character of model) phase = (phase * 31 + character.charCodeAt(0)) >>> 0;
+    const t = now / 1000, seed = (phase % 628) / 100;
+    return Math.sin(t * 2.1 + seed) * 1.1 + Math.sin(t * 3.7 + seed * 1.3) * 0.3;
+  }
   function draw(
     ctx,
     model,
@@ -283,7 +292,9 @@ const SpriteRenderer = (() => {
       : [];
     const sampled = turretPose(model, pose(model, clip, time, loop), angle, aimAngle, active);
     ctx.save();
-    ctx.translate(x, y);
+    const flightClock = globalThis.ReplayPlayer?.active
+      ? globalThis.ReplayPlayer.time * 1000 : performance.now();
+    ctx.translate(x, y + flightOffset(model, flightClock, flying, environment) * scale);
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
     const outlines = [];
@@ -444,5 +455,6 @@ const SpriteRenderer = (() => {
     muzzle,
     visibleLayers,
     movement,
+    flightOffset,
   };
 })();

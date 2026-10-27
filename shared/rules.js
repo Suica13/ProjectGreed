@@ -214,9 +214,9 @@ const Tactics = (() => {
       mode: "regular",
       fogMode: "full",
       mapId: catalog.defaultMap,
-      costLimit: 1800,
+      costLimit: 900,
       unitLimit: 12,
-      unitCostLimit: 300,
+      unitCostLimit: 250,
       shareAlliedUnits: false,
       ...validateTagRestrictions(),
       teamRestrictions: [validateTagRestrictions(), validateTagRestrictions()],
@@ -432,13 +432,19 @@ const Tactics = (() => {
       Array.isArray(restrictions)
     )
       throw Error("AI 编组设置无效");
-    const environment = restrictions.environment ?? "ground";
+    const environment = restrictions.environment ??
+      (restrictions.mapId ? getMap(restrictions.mapId).environment : "ground");
     const adaptation = (model) => model.adaptability?.[environment] ?? 100;
+    const infantry = (model) => model.unitTags?.includes("Infantry");
+    const commander = (model) => !model.ship &&
+      model.commandAuras?.some(aura => ["cmdCom", "cmdDef"].includes(aura.type));
+    const copies = (id) => entries.filter(entry => entry.unitId === id).length;
     const choices = Object.values(models).filter(
         (model) =>
           !model.formOnly &&
           !restrictionReason(model, { ...restrictions, environment }) &&
           adaptation(model) > 0 &&
+          !(environment === "space" && infantry(model) && adaptation(model) < 100) &&
           (model.weapons.length > 0 ||
             model.supplyAura ||
             model.skills?.some((s) => ["repair", "recon"].includes(s.type))),
@@ -456,6 +462,14 @@ const Tactics = (() => {
         .filter((model) => adaptation(model) >= preferredAdaptation)
         .map((model) => model.cost),
     );
+    // Each three non-ship units unlock one independent 50% command-slot roll.
+    // A separate seeded stream keeps the decision stable across previews and reconnects.
+    const commandAllowances = [0];
+    let commandSeed = (seed ^ 0x6d2b79f5) >>> 0;
+    for (let group = 1; group <= Math.floor(unitLimit / 3); group++) {
+      commandSeed = (Math.imul(commandSeed, 1664525) + 1013904223) >>> 0;
+      commandAllowances[group] = commandAllowances[group - 1] + (commandSeed < 0x80000000 ? 1 : 0);
+    }
     const shipInterval = 6 + ((seed >>> 0) % 3);
     const desiredShips = count >= 6 ? Math.max(1, Math.floor(count / shipInterval)) : 0;
     let remaining = maxCost;
@@ -480,7 +494,13 @@ const Tactics = (() => {
           reserveMinimum = Math.max(reserveMinimum, flexibleMinimum);
       }
       const placementCache = new Map();
+      const commanderCount = entries.filter(entry => commander(models[entry.unitId + "__" + entry.kitId])).length;
+      const nonShipCount = entries.filter(entry => !models[entry.unitId + "__" + entry.kitId].ship).length;
+      const commandAllowance = commandAllowances[Math.floor((nonShipCount + 1) / 3)] || 0;
+      const infantryCount = entries.filter(entry => infantry(models[entry.unitId + "__" + entry.kitId])).length;
       const legal = choices.filter((model) => {
+        if (commander(model) && commanderCount >= commandAllowance) return false;
+        if (infantry(model) && infantryCount >= Math.max(1, Math.ceil(unitLimit / 6))) return false;
         if (formationWeight(model) > remainingPoints) return false;
         if (model.cost > remaining - reserveMinimum * (slots - 1)) return false;
         if (!restrictions.mapId) return true;
@@ -532,6 +552,11 @@ const Tactics = (() => {
         const carriers = preferred.filter((model) => model.ship && model.hangars?.length);
         if (carriers.length) preferred = carriers;
       }
+      const leaders = preferred.filter(commander);
+      if (leaders.length && commanderCount < commandAllowance) preferred = leaders;
+      // Prefer new platforms before repeatedly buying the closest price tier.
+      const fewestCopies = Math.min(...preferred.map(model => copies(model.prefabId)));
+      preferred = preferred.filter(model => copies(model.prefabId) === fewestCopies);
       // 按剩余名额分摊预算，避免高预算时仍随机抽满廉价单位。
       // 舰船配额、适应性和可部署性已在上方筛选，价格选择不绕过这些约束。
       const budgetPerSlot = remaining / slots;
@@ -558,7 +583,7 @@ const Tactics = (() => {
       // 先抽机体再抽套件，避免套件更多的廉价机体获得额外抽取权重。
       const prefabIds = [...new Set(affordableTier.map((model) => model.prefabId))];
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-      const prefabId = prefabIds[seed % prefabIds.length];
+      const prefabId = prefabIds[Math.floor((seed / 4294967296) * prefabIds.length)];
       const kits = affordableTier.filter((model) => model.prefabId === prefabId);
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
       const model = kits[seed % kits.length];

@@ -91,8 +91,9 @@ test("host COST inputs sync to another client, reset readiness and preserve inva
     guest = await context.newPage();
   try {
     await connect(page, address.port, "Host");
-    await page.locator("#roomCode").fill("LIVESET");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("LIVESET");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await connect(guest, address.port, "Guest");
     await guest.locator(".room-card").filter({ hasText: "LIVESET" }).getByRole("button").click();
     await guest.locator("#toggleReady").click();

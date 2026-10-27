@@ -81,8 +81,9 @@ test("network handoff waits for the paused viewer to return and finish map playb
       await client.locator("#connectServer").click();
       await expect(client.locator("#lobby")).toBeVisible();
     }
-    await page.locator("#roomCode").fill("AUTOFADE");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("AUTOFADE");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await expect(other.locator(".room-card").filter({ hasText: "AUTOFADE" })).toBeVisible();
     await other
       .locator(".room-card")

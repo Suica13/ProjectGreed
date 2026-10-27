@@ -124,8 +124,9 @@ test("online allies review only their team, edits retain confirmation and reload
   }
   try {
     await connect(page, "Host");
-    await page.locator("#roomCode").fill("FINALS");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("FINALS");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await page.locator("#roomMapSelect").selectOption("crossroads_2v2");
     await waitForRoomSettings(page);
     await page.locator("#addAI1").click();

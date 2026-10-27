@@ -31,8 +31,9 @@ test("lineup buttons, three-column observers and shared room/game channel permis
   for (const p of [page, red, observer]) p.on("pageerror", (e) => errors.push(e.message));
   try {
     await lobby(page, address.port, "GoldHost");
-    await page.locator("#roomCode").fill("LINEUP");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("LINEUP");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     for (const [p, name] of [
       [red, "BlueRed"],
       [observer, "Watcher"],

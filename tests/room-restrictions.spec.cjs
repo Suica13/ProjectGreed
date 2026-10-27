@@ -58,14 +58,14 @@ test("unlimited saved formations, era tags, default room caps and full-row panel
   expect(Math.abs(layers.height)).toBeLessThan(2);
   expect(layers.label).toBeGreaterThan(layers.panel);
   expect(layers.background).toBe("rgba(0, 0, 0, 0.62)");
-  await page.locator("#cancelFormation").click();
+  await page.locator("#saveFormation").click();
   await page.locator("#roomCostLimit").fill("700");
   await waitForRoomSettings(page);
   await page.locator("#roomFormation").click();
   await expect(page.locator(".formation-row.unit-disabled")).toHaveCount(4);
   await expect(page.locator(".formation-row").first()).not.toHaveClass(/unit-disabled/);
   await page.screenshot({ path: ".openai/tail-overcost-roster.png" });
-  await page.locator("#cancelFormation").click();
+  await page.locator("#saveFormation").click();
   await page.locator("#roomCostLimit").fill("5000");
   await page.locator("#roomBan-bannedFactions").selectOption("ZEON");
   await waitForRoomSettings(page);
@@ -74,7 +74,7 @@ test("unlimited saved formations, era tags, default room caps and full-row panel
   await expect(page.locator(".formation-row.not-allowed .overcost-label").first()).toHaveText(
     "不被允许的单位",
   );
-  await page.locator("#cancelFormation").click();
+  await page.locator("#saveFormation").click();
   const team = page.locator(".team-slot").first();
   await team.locator("summary").click();
   await page.locator("#teamBan-0-bannedFactions").selectOption("EFSF");
@@ -111,8 +111,9 @@ test("room join controls sit in team headers, AI settings stay in a dialog and h
   }
   try {
     await connect(page, "Host");
-    await page.locator("#roomCode").fill("NEWTOOLS");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("NEWTOOLS");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await page.locator("#roomMapSelect").selectOption("crossroads_2v2");
     await waitForRoomSettings(page);
     await page.locator("#addAI3").click();
@@ -151,7 +152,7 @@ test("room join controls sit in team headers, AI settings stay in a dialog and h
     await page.locator("#applyPlayerSeat").click();
     await expect.poll(() => guest.evaluate(() => Net.seat)).toBeNull();
     await page.locator("#closeRoomDetail").click();
-    await guest.locator("#cancelFormation").click();
+    await guest.locator("#saveFormation").click();
     await expect(page.locator("#spectatorSlots")).toContainText("Guest");
     await page.locator('#spectatorSlots [id="managePlayer-' + target + '"]').click();
     await page.locator("#kickPlayer").click();

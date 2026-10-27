@@ -22,8 +22,9 @@ test("switching apps and freezing background rendering preserves the connection 
     await page.locator("#openRooms").click();
     await page.locator("#serverAddress").fill("127.0.0.1:" + address.port);
     await page.locator("#connectServer").click();
-    await page.locator("#roomCode").fill("BACKGROUND");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("BACKGROUND");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await expect(page.locator("#roomPreparation")).toBeVisible();
     const room = app.rooms.get("BACKGROUND"),
       id = room.hostId,

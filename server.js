@@ -114,6 +114,10 @@ function createServer({
   let lastRoomList = "";
   const engine = createRoomEngine({
     rules,
+    createPasswordVerifier: password => {
+      const salt = crypto.randomBytes(16), digest = crypto.scryptSync(password, salt, 32);
+      return candidate => crypto.timingSafeEqual(digest, crypto.scryptSync(candidate, salt, 32));
+    },
     rooms,
     send,
     resultReturnMs,

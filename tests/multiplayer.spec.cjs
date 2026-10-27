@@ -17,8 +17,9 @@ async function joined(page, room) {
 }
 async function createRoom(pages, address, id, cost) {
   await connect(pages[0], address, "Host");
-  await pages[0].locator("#roomCode").fill("BROWSER");
   await pages[0].locator("#createRoom").click();
+  await pages[0].locator("#roomCode").fill("BROWSER");
+  await pages[0].locator('#roomCreateForm button[type="submit"]').click();
   await joined(pages[0]);
   await pages[0].locator("#roomMapSelect").selectOption(id);
   await pages[0].locator("#roomCostLimit").fill(String(cost));

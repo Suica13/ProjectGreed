@@ -24,8 +24,9 @@ test("allied planning arrows, concurrent map moves, parallel owner responses and
   for (const p of pages) p.on("pageerror", (e) => errors.push(e.message));
   try {
     await connect(page, address.port, "Host");
-    await page.locator("#roomCode").fill("PLANNED");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("PLANNED");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await page.locator("#roomMapSelect").selectOption("crossroads_2v2");
     for (let i = 1; i < 4; i++) {
       await connect(pages[i], address.port, "Player" + i);

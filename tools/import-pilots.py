@@ -94,16 +94,16 @@ def main():
         })
     data = {
         "defaultRanges": {
-            "shooting": [94, 114], "melee": [94, 114],
-            "defense": [94, 114], "speed": [94, 114],
-            "accuracy": [94, 114], "reaction": [94, 114],
-            "leadership": [58, 70], "awakening": [0, 0],
+            "shooting": [84, 104], "melee": [84, 104],
+            "defense": [84, 104], "speed": [84, 104],
+            "accuracy": [84, 104], "reaction": [84, 104],
+            "leadership": [48, 60], "awakening": [0, 0],
         },
         "commanderRanges": {
-            "shooting": [45, 55], "melee": [45, 55],
-            "defense": [45, 55], "speed": [45, 55],
-            "accuracy": [45, 55], "reaction": [45, 55],
-            "leadership": [96, 118], "awakening": [0, 0],
+            "shooting": [35, 45], "melee": [35, 45],
+            "defense": [35, 45], "speed": [35, 45],
+            "accuracy": [35, 45], "reaction": [35, 45],
+            "leadership": [86, 108], "awakening": [0, 0],
         },
         "namedVariation": 5,
         "named": pilots,

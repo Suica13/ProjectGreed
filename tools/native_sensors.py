@@ -1,8 +1,9 @@
-"""Project conversion: sight = native sight / 2; standard radar = project sight * 1.25."""
+"""Project conversion: sight = native sight * 0.4; standard radar = project sight * 1.25."""
 import re
 
 # Native standard radar is native sight * 18. Preserve scout and anti-detection ratios.
-RADAR_WORLD_UNITS_PER_TILE = 28.8
+RADAR_WORLD_UNITS_PER_TILE = 36
+ANTI_DETECTION_WORLD_UNITS_PER_TILE = 28.8
 from mod_source import section
 
 def correct(prefab, native):
@@ -21,7 +22,7 @@ def correct(prefab, native):
         return float(eval(expr, {"__builtins__": {}}, {}))
     raw = {"sight": value("baseFogOfWarSightRange", 20), "radar": value("baseDetectRange", 360), "antiDetection": value("baseAntiDetectRange")}
     prefab.setdefault("sourceStats", {})["sensors"] = raw
-    prefab["stats"]["sensors"] = {**prefab["stats"].get("sensors", {}), "sight": raw["sight"] / 2, "radar": raw["radar"] / RADAR_WORLD_UNITS_PER_TILE, "antiDetection": raw["antiDetection"] / RADAR_WORLD_UNITS_PER_TILE, "revealOnDetection": bool(prefab["stats"].get("ship"))}
+    prefab["stats"]["sensors"] = {**prefab["stats"].get("sensors", {}), "sight": raw["sight"] * 2 / 5, "radar": raw["radar"] / RADAR_WORLD_UNITS_PER_TILE, "antiDetection": raw["antiDetection"] / ANTI_DETECTION_WORLD_UNITS_PER_TILE, "revealOnDetection": bool(prefab["stats"].get("ship"))}
     return prefab
 
 if __name__ == "__main__":

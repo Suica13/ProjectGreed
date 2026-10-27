@@ -82,8 +82,9 @@ test("silent sockets time out; closing the dialog cancels probes and preserves c
     await page.locator("#connectServer").click();
     await expect(page.locator("#lobby")).toBeVisible();
     await expect.poll(() => active).toBe(0);
-    await page.locator("#roomCode").fill("CUSTOM");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("CUSTOM");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await expect(page.locator("#roomPreparation")).toBeVisible();
     expect(app.rooms.get("CUSTOM").members.size).toBe(1);
   } finally {

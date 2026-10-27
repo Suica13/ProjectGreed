@@ -53,8 +53,9 @@ test("host has only Start; ready guests wait for the host and only map changes r
   }
   try {
     await connect(page);
-    await page.locator("#roomCode").fill("HOSTSTART");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("HOSTSTART");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await connect(guest);
     await guest.locator(".room-card").filter({ hasText: "HOSTSTART" }).getByRole("button").click();
     await expect(page.locator("#toggleReady")).toBeHidden();

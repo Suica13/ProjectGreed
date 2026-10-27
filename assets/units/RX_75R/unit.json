@@ -328,9 +328,9 @@
     "commandAuras": [],
     "actionPoints": 5,
     "sensors": {
-      "sight": 8.5,
-      "radar": 10.625,
-      "antiDetection": 0,
+      "sight": 6.8,
+      "radar": 8.5,
+      "antiDetection": 0.0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -425,9 +425,9 @@
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 17,
-      "radar": 306,
-      "antiDetection": 0
+      "sight": 17.0,
+      "radar": 306.0,
+      "antiDetection": 0.0
     },
     "v17BaseHp": 12500
   },

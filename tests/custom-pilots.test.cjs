@@ -7,7 +7,7 @@ const entry = (p) => ({ unitId: "RGM_79", kitId: "machine_gun", customPilot: p }
 test("custom pilot creation, leveling, overflow reset and strengthening budget", () => {
   let p = fresh();
   assert.equal(p.level, 1);
-  assert.equal(p.points, 50);
+  assert.equal(p.points, 60);
   assert.equal(P.cost(p), 25);
   assert.equal(p.stats.awakening, 50);
   assert.equal(p.stats.shooting, 90);
@@ -16,16 +16,17 @@ test("custom pilot creation, leveling, overflow reset and strengthening budget",
   p = P.gainExperience(p, 4000);
   assert.equal(p.level, 2);
   assert.equal(p.experience, 0);
-  assert.equal(p.points, 70);
+  assert.equal(p.points, 75);
   assert.equal(P.experienceRequired(p.level), 2000);
   assert.equal(P.cost(p), 50);
-  p.stats.shooting += 70;
+  p.stats.shooting += 40;
+  p.stats.defense += 35;
   assert.equal(P.custom(p).points, 0);
-  p.stats.defense++;
+  p.stats.accuracy++;
   assert.throws(() => P.custom(p), /强化点/);
   p = fresh();
   p.level = 10;
-  p.stats.shooting = 161;
+  p.stats.shooting = 181;
   assert.throws(() => P.custom(p), /属性/);
 });
 test("custom attachment survives authoritative validation and deployment with fixed stats", () => {
@@ -223,9 +224,10 @@ test("new growth rules refund all training when migrating former roles", () => {
   assert.equal(freshPilot.stats.shooting, 90);
   assert.equal(freshPilot.stats.leadership, 70);
   assert.equal(freshPilot.stats.awakening, 50);
-  assert.equal(freshPilot.points, 50);
+  assert.equal(freshPilot.points, 60);
   assert.equal(Object.hasOwn(freshPilot, "role"), false);
-  freshPilot.stats.shooting += 50;
+  freshPilot.stats.shooting += 35;
+  freshPilot.stats.melee += 25;
   assert.equal(P.custom(freshPilot).points, 0);
   freshPilot.stats.awakening++;
   assert.throws(() => P.custom(freshPilot), /强化点/);
@@ -383,11 +385,37 @@ test("growth caps at level ten and exposes a complete training refund", () => {
   let pilot = P.custom({ ...fresh(), level: 9, experience: P.experienceRequired(9) - 1 });
   pilot.stats.shooting += 20;
   pilot = P.gainExperience(pilot, 10000);
-  assert.equal(pilot.level, 10); assert.equal(pilot.points, 210); assert.equal(pilot.experience, 0);
+  assert.equal(pilot.level, 10); assert.equal(pilot.points, 175); assert.equal(pilot.experience, 0);
   assert.deepEqual(P.gainExperience(pilot, 99999999), pilot);
   const reset = P.refundTraining(pilot);
-  assert.deepEqual(reset.stats, P.baseStats()); assert.equal(reset.points, 230);
+  assert.deepEqual(reset.stats, P.baseStats()); assert.equal(reset.points, 195);
   assert.deepEqual(reset.record, pilot.record);
   const old = { ...fresh(), trainingVersion: 2, level: 3, stats: { shooting: 120, melee: 100, defense: 100, speed: 100, accuracy: 100, reaction: 100, leadership: 80, awakening: 60 } };
   assert.equal(P.custom(old).points, 90); assert.deepEqual(P.custom(old).stats, P.baseStats());
+});
+
+test("training caps rise by level from 125 to 180 and the server rejects excess even with spare points", () => {
+  const caps = [125,135,145,155,165,175,180,180,180,180];
+  for (let level=1; level<=10; level++) {
+    assert.equal(P.statCap(level),caps[level-1]);
+    const pilot = P.custom({...fresh(),level,stats:{...P.baseStats(),shooting:caps[level-1]}});
+    assert.equal(pilot.points,60+(level-1)*15-(caps[level-1]-90));
+    assert.throws(()=>P.custom({...pilot,stats:{...pilot.stats,shooting:caps[level-1]+1}}),/属性/);
+  }
+  const next=P.gainExperience({...fresh(),stats:{...P.baseStats(),shooting:125}},1000);
+  assert.equal(next.level,2); assert.equal(next.points,40); assert.equal(P.statCap(next.level),135);
+});
+test("version three training is fully refunded under the new budget, including attributes above the new level cap", () => {
+  const old={...fresh(),trainingVersion:3,level:2,experience:123,stats:{...P.baseStats(),shooting:160},record:{kills:4,losses:2,destroyedCost:600,lostCost:100}};
+  const migrated=P.custom(old);
+  assert.equal(migrated.trainingVersion,4); assert.equal(migrated.level,2); assert.equal(migrated.experience,123);
+  assert.equal(migrated.points,75); assert.deepEqual(migrated.stats,P.baseStats()); assert.deepEqual(migrated.record,old.record);
+  assert.deepEqual(P.custom(migrated),migrated);
+});
+test("ordinary and commander defaults drop ten points with awakening floored at zero", () => {
+  const defaults={shooting:[84,104],melee:[84,104],defense:[84,104],speed:[84,104],accuracy:[84,104],reaction:[84,104],leadership:[48,60],awakening:[0,0]};
+  const commanders={shooting:[35,45],melee:[35,45],defense:[35,45],speed:[35,45],accuracy:[35,45],reaction:[35,45],leadership:[86,108],awakening:[0,0]};
+  assert.deepEqual(P.catalog.defaultRanges,defaults); assert.deepEqual(P.catalog.commanderRanges,commanders);
+  for(const [model,ranges] of [[{faction:"EFSF",unitTags:[]},defaults],[{faction:"ZEON",unitTags:["CmdUnit"]},commanders]])
+    for(let seed=1;seed<=100;seed++) { const pilot=P.roll(null,seed,0,0,model); for(const [key,[lo,hi]] of Object.entries(ranges)) assert.ok(pilot.stats[key]>=lo&&pilot.stats[key]<=hi); }
 });

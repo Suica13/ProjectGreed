@@ -2321,11 +2321,6 @@
             <button data-ui-node="node-157" id="refreshRooms">刷新服务器列表</button>
           </div>
           <p data-ui-node="node-152" id="roomListStatus" role="status">连接成功后显示房间。</p>
-          <div class="lobby-selection">
-            <label for="lobbyFormation">出战编组预设
-              <select id="lobbyFormation" data-i18n-ignore></select>
-            </label>
-          </div>
           <div data-ui-node="node-158" class="room-list-scroll">
             <table data-ui-node="node-159" class="room-list" aria-label="房间列表">
               <thead data-ui-node="node-160">
@@ -2339,26 +2334,13 @@
               <tbody data-ui-node="node-153" id="roomList"></tbody>
             </table>
           </div>
-          <label data-ui-node="node-127"
-            >新房间名称<input
-              data-ui-node="node-128"
-              id="roomCode"
-              value="ROOM1"
-              maxlength="20"
-              autocomplete="off"
-          /></label>
-          <label>新房间模式<select id="newRoomMode">
-            <option value="regular">常规战</option><option value="quick">快速战</option>
-          </select></label>
           <div data-ui-node="node-129" class="net-buttons">
             <button data-ui-node="node-130" id="createRoom">创建房间</button>
           </div>
           <p data-ui-node="node-134" id="networkStatus" role="status">
             选择列表中的房间加入，或创建新房间。
           </p>
-          <p data-ui-node="node-135" class="muted" style="font-size: 11px">
-            两队准备后开始；游戏中可加入观战，断网或刷新页面后自动恢复席位。
-          </p>
+
         </div>
 
         <div class="menu-contact">
@@ -2517,6 +2499,7 @@
                       /></label>
                       <label
                         >规则预设<select id="roomFormationPreset" aria-label="编组限制预设">
+                          <option value="900,250,12">900/250/12</option>
                           <option value="1800,300,12">1800/300/12</option>
                           <option value="2400,400,12">2400/400/12</option>
                           <option value="3600,600,12">3600/600/12</option>
@@ -2926,14 +2909,7 @@
           <button id="formationUnitsTab" type="button" aria-pressed="true">单位</button>
           <button id="formationPilotsTab" type="button" aria-pressed="false">驾驶员</button>
         </nav>
-        <label class="formation-group-banner" for="formationGroup">
-          <strong>编组阵营</strong>
-          <select id="formationGroup" aria-label="编组阵营">
-            <option value="PMC">PMC</option>
-            <option value="EFSF">地球联邦军[0079]</option>
-            <option value="ZEON">吉翁公国军[0079]</option>
-          </select>
-        </label>
+
         <div class="formation-toolbar" data-ui-node="node-208">
           <label for="formationSelect" class="formation-picker"
             ><span>已保存编组</span
@@ -2950,7 +2926,6 @@
         </div>
         <div id="formationUnitsWorkspace" class="formation-workspace">
           <section class="formation-squad">
-            <h3>出战编组</h3>
             <div
               id="formationUnits"
               data-ui-node="node-214"
@@ -2963,15 +2938,21 @@
         </div>
         <div id="formationPilotRoster" class="formation-workspace" hidden>
           <section class="formation-squad">
-            <h3>驾驶员列表</h3>
             <div id="customPilotList" tabindex="0" role="region" aria-label="驾驶员滚动列表"></div>
             <button id="createCustomPilot" type="button">新增驾驶员</button>
           </section>
         </div>
-        <div class="net-buttons" data-ui-node="node-219">
+        <div class="net-buttons formation-footer" data-ui-node="node-219">
           <button id="openFormationShare" type="button">分享编组</button>
-          <button id="saveFormation" class="primary" data-ui-node="node-220">保存并选用</button
-          ><button id="cancelFormation" data-ui-node="node-221">取消</button>
+          <button id="saveFormation" class="primary" data-ui-node="node-220">返回</button>
+        <label class="formation-group-banner" for="formationGroup">
+          <strong>编组阵营</strong>
+          <select id="formationGroup" aria-label="编组阵营">
+            <option value="PMC">PMC</option>
+            <option value="EFSF">地球联邦军[0079]</option>
+            <option value="ZEON">吉翁公国军[0079]</option>
+          </select>
+        </label>
         </div>
       </div>
       <div id="formationSharePanel" class="formation-detail-overlay" hidden>
@@ -4869,6 +4850,41 @@
         touch-action: none;
       }
     </style>
+    <dialog id="roomCreateDialog" aria-labelledby="roomCreateTitle">
+      <form id="roomCreateForm">
+        <h2 id="roomCreateTitle">创建房间</h2>
+          <label data-ui-node="node-127"
+            >新房间名称<input
+              data-ui-node="node-128"
+              id="roomCode"
+              required
+              value="ROOM1"
+              maxlength="20"
+              autocomplete="off"
+          /></label>
+          <label>新房间模式<select id="newRoomMode">
+            <option value="regular">常规战</option><option value="quick">快速战</option>
+          </select></label>
+        <label class="settings-toggle">密码锁<input id="newRoomLocked" type="checkbox" /></label>
+        <label id="newRoomPasswordLabel" hidden>房间密码<input id="newRoomPassword" type="password" maxlength="64" autocomplete="new-password" /></label>
+        <div class="net-buttons"><button type="submit" class="primary">创建</button><button id="cancelRoomCreate" type="button">取消</button></div>
+      </form>
+    </dialog>
+    <dialog id="joinLockedRoomDialog" aria-labelledby="joinLockedRoomTitle">
+      <form id="joinLockedRoomForm">
+        <h2 id="joinLockedRoomTitle">加入密码房间</h2><p id="joinLockedRoomName"></p>
+        <label>房间密码<input id="joinRoomPassword" type="password" maxlength="64" required autocomplete="off" /></label>
+        <div class="net-buttons"><button type="submit" class="primary">加入</button><button id="cancelLockedRoomJoin" type="button">取消</button></div>
+      </form>
+    </dialog>
+    <style>
+      #roomCreateDialog, #joinLockedRoomDialog { width: min(420px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; }
+      #roomCreateForm, #joinLockedRoomForm { display: grid; gap: 14px; }
+      #roomCreateForm label, #joinLockedRoomForm label { display: grid; gap: 6px; }
+      #roomCreateForm .settings-toggle { display: flex; justify-content: space-between; align-items: center; }
+      #roomCreateForm input, #roomCreateForm select, #joinLockedRoomForm input { width: 100%; box-sizing: border-box; }
+      #roomCreateForm input[type="checkbox"] { width: auto; }
+    </style>
     <button id="openClientSettings" type="button" aria-haspopup="dialog">设置</button>
     <dialog id="clientSettingsDialog" aria-labelledby="clientSettingsTitle">
       <div class="settings-heading">
@@ -4960,6 +4976,11 @@
         margin: -4px 0 8px;
         font-size: 12px;
       }
+      #clientSettingsDialog .profile-save-controls { display: grid; gap: 10px; }
+      #clientSettingsDialog .profile-save-actions { display: flex; align-items: center; gap: 8px; }
+      #clientSettingsDialog .profile-save-actions button { min-width: 0; white-space: nowrap; }
+      #clientSettingsDialog .profile-save-controls .settings-help { margin: 0; line-height: 1.5; }
+      #newProfileSave { margin-left: auto; }
       #clientSettingsDialog input {
         accent-color: #65cfff;
       }

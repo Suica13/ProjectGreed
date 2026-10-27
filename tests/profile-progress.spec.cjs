@@ -210,3 +210,95 @@ test("map XP and level-up labels are deduplicated and follow an embarked pilot's
   expect(labels[0].x).toBe(100);
   expect(labels[0].y).toBeGreaterThan(195);
 });
+
+for (const width of [1280, 360])
+  test(`personal save controls have spacing and new-save resets only progress at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await open(page);
+    await page.evaluate(() => {
+      const data = ProfileSave.exportData();
+      for (const faction of ["PMC", "EFSF", "ZEON"]) {
+        const pilot = PilotSystem.createCustom(
+          "custom-reset-" + faction,
+          "旧驾驶员",
+          undefined,
+          faction,
+        );
+        data.pilots[faction] = { pilots: [pilot], awards: ["old-award"] };
+        data.formations[faction] = {
+          version: 3,
+          index: 0,
+          squads: [
+            {
+              name: "旧编组",
+              units: [{ unitId: "Type61", kitId: "standard", customPilot: pilot }],
+            },
+          ],
+        };
+      }
+      data.development.points = { EFSF: 1234, ZEON: 5678 };
+      data.development.claimed = { old: "old-match" };
+      data.development.researched = {
+        EFSF: Development.nodes("EFSF").map((node) => node.id),
+        ZEON: Development.nodes("ZEON").map((node) => node.id),
+      };
+      ProfileSave.importData(data);
+      localStorage.setItem("unrelated-setting", "keep-me");
+    });
+    await page.reload();
+    await page.waitForFunction(() => assetsReady);
+    await page.locator("#openClientSettings").click();
+    const geometry = await page.evaluate(() => {
+      const buttons = ["exportProfileSave", "importProfileSave", "newProfileSave"].map((id) =>
+        byId(id).getBoundingClientRect(),
+      );
+      const help = document
+        .querySelector(".profile-save-controls .settings-help")
+        .getBoundingClientRect();
+      return {
+        tops: buttons.map((b) => b.top),
+        right: buttons[2].right,
+        left: buttons[1].right,
+        newLeft: buttons[2].left,
+        gap: help.top - Math.max(...buttons.map((b) => b.bottom)),
+      };
+    });
+    expect(geometry.gap).toBeGreaterThanOrEqual(9);
+    expect(geometry.newLeft).toBeGreaterThan(geometry.left);
+    expect(geometry.right).toBeLessThan(width);
+    expect(Math.max(...geometry.tops) - Math.min(...geometry.tops)).toBeLessThan(1);
+    page.once("dialog", (dialog) => dialog.dismiss());
+    await page.locator("#newProfileSave").click();
+    expect(
+      await page.evaluate(
+        () => JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v2.PMC")).pilots.length,
+      ),
+    ).toBe(1);
+    await page.evaluate(() => {
+      Net.active = true;
+    });
+    await page.locator("#newProfileSave").click();
+    await expect(page.locator(".profile-save-controls .settings-help")).toContainText(
+      "请先退出当前战局",
+    );
+    await page.evaluate(() => {
+      Net.active = false;
+    });
+    page.once("dialog", (dialog) => dialog.accept());
+    const refreshed = page.waitForEvent("load");
+    await page.locator("#newProfileSave").click();
+    await refreshed;
+    await page.waitForFunction(() => assetsReady);
+    const data = await page.evaluate(() => ProfileSave.exportData());
+    for (const faction of ["PMC", "EFSF", "ZEON"]) {
+      expect(data.pilots[faction]).toEqual({ pilots: [], awards: [] });
+      expect(JSON.stringify(data.formations[faction])).not.toContain("旧编组");
+    }
+    expect(data.development.points).toEqual({ EFSF: 0, ZEON: 0 });
+    expect(data.development.claimed).toEqual({});
+    expect(data.development.researched.EFSF).toEqual(["Tech_EFSF_0079_BaseTech"]);
+    expect(data.development.researched.ZEON).toEqual(["Tech_ZEON_0079_BaseTech"]);
+    expect(await page.evaluate(() => localStorage.getItem("unrelated-setting"))).toBe("keep-me");
+  });

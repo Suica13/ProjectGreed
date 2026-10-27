@@ -515,8 +515,8 @@ function loadCatalog({ embedMusic = false, catalogOverride = null, unitOverrides
       }
     }
     prefab.stats.sensors ??= {
-      sight: 10,
-      radar: 12.5,
+      sight: 8,
+      radar: 10,
       antiDetection: 0,
       revealOnDetection: !!prefab.stats.ship,
     };

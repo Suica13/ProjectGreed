@@ -8,6 +8,7 @@ function roomDevelopment() {
 }
 function createRoomEngine({
   rules: G,
+  createPasswordVerifier = password => candidate => candidate === password,
   chatChannels = typeof ChatChannels === "undefined" ? require("./chat-channels.js") : ChatChannels,
   rooms = new Map(),
   send,
@@ -402,6 +403,7 @@ function createRoomEngine({
         const online = connected(room);
         return {
           code: room.code,
+          locked: !!room.passwordMatches,
           players: room.seats.filter((player) => player?.bot || onlineMember(player)).length,
           capacity: room.seats.length,
           mapId: room.settings.mapId,
@@ -2766,8 +2768,12 @@ function createRoomEngine({
     if (msg.mode === "create") {
       if (room) throw Error("房间已存在，请使用加入房间或换一个房间码");
       if (rooms.size >= 64) throw Error("房间数量已满");
+      if (msg.locked !== undefined && typeof msg.locked !== "boolean") throw Error("房间锁设置无效");
+      if (msg.locked && (typeof msg.password !== "string" || !msg.password.trim() || msg.password.length > 64))
+        throw Error("房间密码需为1到64个字符");
       room = {
         code,
+        passwordMatches: msg.locked ? createPasswordVerifier(msg.password) : null,
         game: G.create(false, randomSeed()),
         phase: "waiting",
         revision: 0,
@@ -2798,6 +2804,9 @@ function createRoomEngine({
       seat = 0;
     } else {
       if (!room) throw Error("房间不存在，请确认IP和房间码；服务端重启后需重新创建");
+      if (msg.mode === "join" && room.passwordMatches &&
+          (typeof msg.password !== "string" || msg.password.length > 64 || !room.passwordMatches(msg.password)))
+        throw Error("房间密码错误");
       seat =
         room.started && room.phase !== "assembly"
           ? null

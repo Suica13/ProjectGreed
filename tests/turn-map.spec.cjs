@@ -180,8 +180,9 @@ test("both network teams see one cutin per authoritative turn and repeated snaps
       await client.locator("#connectServer").click();
       await expect(client.locator("#lobby")).toBeVisible();
     }
-    await page.locator("#roomCode").fill("CUTIN");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("CUTIN");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await other
       .locator(".room-card")
       .filter({ hasText: "CUTIN" })

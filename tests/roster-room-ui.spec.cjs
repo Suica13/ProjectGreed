@@ -22,8 +22,9 @@ test("friendly owner roster hides enemies, shows names, HP/EN/status and focuses
   for (const p of [page, watch]) p.on("pageerror", (e) => errors.push(e.message));
   try {
     await lobby(page, address.port, "Player01");
-    await page.locator("#roomCode").fill("ROSTER");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("ROSTER");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await page.locator("#roomMapSelect").selectOption("crossroads_2v2");
     await waitForRoomSettings(page);
     for (const seat of [1, 2, 3]) await page.locator("#addAI" + seat).click();

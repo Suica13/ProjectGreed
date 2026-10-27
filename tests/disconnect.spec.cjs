@@ -21,8 +21,9 @@ test("disconnect modal retries on click, survives failed retries and restores ro
   }
   try {
     await connect(page);
-    await page.locator("#roomCode").fill("RETRYROOM");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("RETRYROOM");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await connect(guest);
     await guest.locator(".room-card").filter({ hasText: "RETRYROOM" }).getByRole("button").click();
     await guest.locator("#toggleReady").click();

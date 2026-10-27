@@ -925,5 +925,14 @@
   "注意，这是野望计划的测试版本，": "This is a test version of Project Greed.",
   "测试版本不代表最终品质，祝你好运！": "It does not represent final quality. Good luck!",
   "启用": "Enabled",
-  "点击更换地图": "Click to change map"
+  "点击更换地图": "Click to change map",
+  "视野距离": "Sight range",
+  "侦察距离": "Detection range",
+  "格": "tiles",
+  "密码房间": "Password-protected room",
+  "密码锁": "Password lock",
+  "房间密码": "Room password",
+  "加入密码房间": "Join password-protected room",
+  "新建存档": "New save",
+  "新建存档将重置驾驶员、编组和科技进度，是否继续？": "A new save resets pilots, formations and technology progress. Continue?"
 }

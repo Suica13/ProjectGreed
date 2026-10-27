@@ -102,16 +102,20 @@ const ProfileSave = (() => {
     }
   }
   const panel = document.createElement("div"),
+    actions = document.createElement("div"),
     status = document.createElement("p");
   panel.className = "profile-save-controls";
   const exportButton = document.createElement("button"),
     importButton = document.createElement("button"),
+    newButton = document.createElement("button"),
     input = document.createElement("input");
   exportButton.id = "exportProfileSave";
   exportButton.textContent = "导出存档";
   importButton.id = "importProfileSave";
   importButton.textContent = "导入存档";
-  exportButton.type = importButton.type = "button";
+  newButton.id = "newProfileSave";
+  newButton.textContent = "新建存档";
+  exportButton.type = importButton.type = newButton.type = "button";
   input.type = "file";
   input.accept = ".json,application/json";
   input.hidden = true;
@@ -155,7 +159,34 @@ const ProfileSave = (() => {
       input.value = "";
     }
   };
-  panel.append(exportButton, importButton, input, status);
+  newButton.onclick = () => {
+    if (!canImport()) {
+      status.textContent = "请先退出当前战局，再新建存档";
+      return;
+    }
+    if (!confirm(I18n.text("新建存档将重置驾驶员、编组和科技进度，是否继续？"))) return;
+    try {
+      const pilots = {},
+        formations = {};
+      for (const faction of factions) {
+        pilots[faction] = { pilots: [], awards: [] };
+        formations[faction] = null;
+      }
+      importData({
+        format: "ProjectGreed-profile",
+        schemaVersion: 1,
+        pilots,
+        formations,
+        development: { points: { EFSF: 0, ZEON: 0 }, claimed: {} },
+      });
+      location.reload();
+    } catch (error) {
+      status.textContent = "新建失败：" + error.message;
+    }
+  };
+  actions.className = "profile-save-actions";
+  actions.append(exportButton, importButton, newButton);
+  panel.append(actions, input, status);
   document.getElementById("clientSettingsDialog").append(panel);
   return { validate, exportData, importData };
 })();

@@ -14,8 +14,9 @@ test("host adds and removes AI, prepares and deploys without a second human clie
     await page.locator("#serverAddress").fill("127.0.0.1:" + address.port);
     await page.locator("#connectServer").click();
     await expect(page.locator("#lobby")).toBeVisible();
-    await page.locator("#roomCode").fill("BROWSERAI");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("BROWSERAI");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await expect(page.locator("#addAI1")).toBeVisible();
     await expect(page.locator("#addAI0")).toHaveCount(0);
     await page.locator("#addAI1").click();

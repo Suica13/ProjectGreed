@@ -170,8 +170,9 @@ test("red-side player's own ring is green, allies blue, enemies red, and non-act
     await page.locator("#serverAddress").fill("127.0.0.1:" + address.port);
     await page.locator("#connectServer").click();
     await expect(page.locator("#lobby")).toBeVisible();
-    await page.locator("#roomCode").fill("RINGS");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("RINGS");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await expect(page.locator("#roomPreparation")).toBeVisible();
     await page.locator("#roomMapSelect").selectOption("crossroads_2v2");
     await waitForRoomSettings(page);

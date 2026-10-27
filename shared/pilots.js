@@ -23,17 +23,18 @@ const PilotSystem = (() => {
       throw Error("驾驶员头像无效或过大");
     return value;
   }
-  const growthRules = Object.freeze({ version: 3, initialPoints: 50, pointsPerLevel: 20, maxLevel: 10, statCap: 160 });
+  const growthRules = Object.freeze({ version: 4, initialPoints: 60, pointsPerLevel: 15, maxLevel: 10, initialStatCap: 125, statCapPerLevel: 10, statCap: 180 });
   const experienceRequired = (level) => 1000 * 2 ** (level - 1);
   const trainingVersion = growthRules.version;
   const trainingBudget = (level) => growthRules.initialPoints + (level - 1) * growthRules.pointsPerLevel;
+  const statCap = level => Math.min(growthRules.statCap, growthRules.initialStatCap + (level - 1) * growthRules.statCapPerLevel);
   function baseStats() {
     return { shooting: 90, melee: 90, defense: 90, speed: 90,
       accuracy: 90, reaction: 90, leadership: 70, awakening: 50 };
   }
   function previousBase(key, value) {
     // Retain each released baseline when adding a new growth version.
-    if (value.trainingVersion === 3) return key === "awakening" ? 50 : key === "leadership" ? 70 : 90;
+    if (value.trainingVersion === 3 || value.trainingVersion === 4) return key === "awakening" ? 50 : key === "leadership" ? 70 : 90;
     if (value.trainingVersion === 2) return key === "awakening" ? 60 : key === "leadership" ? 80 : 100;
     if (value.role === undefined) return key === "awakening" ? 50 : 100;
     if (key === "awakening") return 60;
@@ -52,16 +53,19 @@ const PilotSystem = (() => {
     if (!Number.isInteger(oldVersion) || oldVersion < 1 || oldVersion > trainingVersion) throw Error("驾驶员数据版本无效");
     if (oldVersion === trainingVersion && value.level > growthRules.maxLevel) throw Error("驾驶员等级无效");
     const reset = oldVersion < trainingVersion;
+    const previousCap = oldVersion >= 4 ? Math.min(180, 125 + (value.level - 1) * 10) : 160;
+    const maximum = reset ? previousCap : statCap(level);
     const stats = {};
     let spent = 0;
     for (const key of Object.keys(labels)) {
       const minimum = reset ? previousBase(key, value) : bases[key];
       const amount = value.stats?.[key];
-      if (!Number.isInteger(amount) || amount < minimum || amount > growthRules.statCap) throw Error("驾驶员属性无效");
+      if (!Number.isInteger(amount) || amount < minimum || amount > maximum) throw Error("驾驶员属性无效");
       stats[key] = reset ? bases[key] : amount;
       spent += amount - minimum;
     }
-    const previousBudget = oldVersion === 3 ? 50 + (value.level - 1) * 20
+    const previousBudget = oldVersion === 4 ? 60 + (value.level - 1) * 15
+      : oldVersion === 3 ? 50 + (value.level - 1) * 20
       : (oldVersion === 2 ? 30 : 0) + (value.level - 1) * 10;
     if (spent > (reset ? previousBudget : trainingBudget(level))) throw Error("驾驶员强化点不足");
     const rawExperience = value.experience ?? 0;
@@ -215,6 +219,6 @@ const PilotSystem = (() => {
     };
   }
   return { catalog, labels, profile, commandUnit, defaultName,
-    validate, hash, roll, of, modifiers, baseStats, custom, createCustom, gainExperience, experienceRequired, cost, portrait, battleResult, creditAwards, maxPortraitLength, portraitData, defaultPortrait, growthRules, trainingBudget, refundTraining };
+    validate, hash, roll, of, modifiers, baseStats, custom, createCustom, gainExperience, experienceRequired, cost, portrait, battleResult, creditAwards, maxPortraitLength, portraitData, defaultPortrait, growthRules, trainingBudget, statCap, refundTraining };
 })();
 if (typeof module !== "undefined") module.exports = PilotSystem;

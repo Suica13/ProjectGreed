@@ -33,7 +33,7 @@
 ## 视野：保留既有独立换算
 
 - `tools/native_sensors.py` 先读继承后的 `hiddenAction_Start_SetStats`，再用 `hiddenAction_InitializeStats` 覆盖同名内存值；不能抓文本里的第一个宏。原值保存于 `sourceStats.sensors`。缺省原生雾视距 20、雷达探测距离 360、反侦测距离 0；表达式需解析后再换算。
-- `stats.sensors.sight = 原生 baseFogOfWarSightRange ÷ 2`；`radar = 原生 baseDetectRange ÷ 28.8`；`antiDetection = 原生 baseAntiDetectRange ÷ 28.8`。普通原生雷达若是雾视距的 18 倍，转换后才恰为项目视距的 1.25 倍。侦察单位、舰船及负反侦测值保留原生比例，不能统一改为 `sight × 1.25`。例如原生视距 18、雷达 324 → 视距 9、雷达 11.25。
+- `stats.sensors.sight = 原生 baseFogOfWarSightRange × 0.4`；`radar = 原生 baseDetectRange ÷ 36`；`antiDetection = 原生 baseAntiDetectRange ÷ 28.8`。普通原生雷达若是雾视距的 18 倍，转换后才恰为项目视距的 1.25 倍。侦察单位、舰船及负反侦测值保留原生比例，不能统一改为 `sight × 1.25`。例如原生视距 18、雷达 324 → 视距 7.2、雷达 9。
 - `shared/unit-sensors.js` 在战斗中另外处理头部损坏、米诺夫斯基效果、隐蔽/反侦测、跨空地层和舰船 `revealOnDetection`。雷达接触、已探测和实际可见不同；普通直接攻击要求目标可见。不要通过改武器射程或移动力修补视野问题。
 
 核对时记录每项原生值、导入基础值、最终值及覆盖原因；先查用户指定特例。批量刷新可能改写全部单位，需限定范围并审阅差异。

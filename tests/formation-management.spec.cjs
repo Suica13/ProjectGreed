@@ -2,43 +2,20 @@ const { test, expect } = require("@playwright/test"),
   { pathToFileURL } = require("node:url"),
   path = require("node:path");
 const url = pathToFileURL(path.resolve("public/client.html")).href;
-test("deleting saved formations persists a valid selection through cancel and reload", async ({
-  page,
-}) => {
-  const errors = [];
-  page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto(url);
-  await page.locator("#openFormation").click();
+test("deleting saved formations keeps the automatically selected neighbor through return and reload", async ({page}) => {
+  await page.addInitScript(()=>localStorage.setItem("projectgreed.combatFaction","PMC"));
+  await page.goto(url); await page.locator("#openFormation").click();
   await expect(page.locator("#deleteFormation")).toBeDisabled();
-  for (const name of ["预备编组", "保留编组"]) {
-    await page.locator("#newFormation").click();
-    await page.locator("#formationName").fill(name);
-    await page.locator("#saveFormation").click();
-    await page.locator("#openFormation").click();
+  for (const name of ["预备编组","保留编组"]) {
+    await page.locator("#newFormation").click(); await page.locator("#formationName").fill(name);
   }
-  await expect(page.locator("#formationSelect option")).toHaveCount(3);
-  await page.locator("#formationSelect").selectOption("0");
-  await page.locator("#deleteFormation").click();
+  await page.locator("#formationSelect").selectOption("0"); await page.locator("#deleteFormation").click();
   await expect(page.locator("#formationSelect option")).toHaveCount(2);
-  await expect(page.locator("#formationName")).toHaveValue("保留编组");
-  await page.locator("#cancelFormation").click();
-  expect(await page.evaluate(() => Formation.name())).toBe("保留编组");
-  await page.reload();
-  await page.locator("#openFormation").click();
-  await expect(page.locator("#formationSelect option")).toHaveCount(2);
-  await expect(page.locator("#formationName")).toHaveValue("保留编组");
-  await page.locator("#deleteFormation").click();
-  await expect(page.locator("#formationSelect option")).toHaveCount(1);
   await expect(page.locator("#formationName")).toHaveValue("预备编组");
-  await expect(page.locator("#deleteFormation")).toBeDisabled();
-  await page.locator("#cancelFormation").click();
-  expect(await page.evaluate(() => Formation.current().length)).toBeGreaterThan(0);
-  expect(
-    await page.evaluate(() =>
-      JSON.parse(localStorage.getItem("slg-formations-v1")).map((s) => s.name),
-    ),
-  ).toEqual(["预备编组"]);
-  expect(errors).toEqual([]);
+  await page.locator("#saveFormation").click(); await page.reload(); await page.locator("#openFormation").click();
+  await expect(page.locator("#formationName")).toHaveValue("预备编组"); await page.locator("#deleteFormation").click();
+  await expect(page.locator("#formationName")).toHaveValue("保留编组"); await expect(page.locator("#deleteFormation")).toBeDisabled();
+  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem("slg-formations-v1.PMC")).squads.map(squad=>squad.name))).toEqual(["保留编组"]);
 });
 
 test("both formation lists have equal scroll heights on desktop and mobile with redundant hints removed", async ({

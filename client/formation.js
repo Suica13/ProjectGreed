@@ -86,7 +86,6 @@ const Formation = (() => {
   let index = 0,
     returnView = "menu",
     draft = [],
-    previousIndex = 0,
     nameEdit = null,
     previewModel = null,
     previewRoot = null,
@@ -214,7 +213,6 @@ const Formation = (() => {
     }
     if (!squads.length) squads = defaultSquads(group);
     index = Number.isInteger(active) && active >= 0 && active < squads.length ? active : 0;
-    previousIndex = index;
     draft = structuredClone(current());
     persist();
     byId("formationGroup").value = group;
@@ -711,6 +709,8 @@ const Formation = (() => {
       ["HP", model.hp.toLocaleString()],
       ["EN", model.en],
       ["COST", model.cost],
+      ["视野距离", formatDistance(model.sensors.sight)],
+      ["侦察距离", formatDistance(model.sensors.radar)],
       ["反应系数", model.mobility],
       ["命中系数", model.accuracy + "%"],
       ["行动点", model.actionPoints ?? 5],
@@ -929,7 +929,20 @@ const Formation = (() => {
     if (types.children.length) tags.append(types);
     return tags;
   }
+  function saveDraft() {
+    if (pageView !== "formation") return;
+    const units = Rules.validateFormation(draft, Infinity, Rules.catalog.formation.maxUnits);
+    const name = byId("formationName").value.trim().slice(0, 32) || "未命名编组";
+    const changed = squads[index].name !== name || JSON.stringify(squads[index].units) !== JSON.stringify(units);
+    if (!changed) return;
+    const renamed = squads[index].name !== name;
+    squads[index] = { name, units };
+    persist();
+    if (renamed) refreshSelect();
+  }
+  byId("formationName").oninput = saveDraft;
   function render() {
+    saveDraft();
     byId("formationGroup").disabled = Net.active && Net.snapshot?.settings?.mode === "quick";
     const unitCostLimit = restrictions().unitCostLimit;
     const unitCostRule = element(
@@ -1074,6 +1087,8 @@ const Formation = (() => {
         label.append(annotation);
       }
       const remove = element("button", "", "移除");
+      remove.disabled = draft.length <= 1;
+      if (remove.disabled) remove.title = "编组至少需要一台单位";
       remove.onclick = (event) => {
         event.stopPropagation();
         closeDetail();
@@ -1281,7 +1296,6 @@ const Formation = (() => {
     pickerReturnIndex = null;
     byId("formationUnitPicker").hidden = true;
     closeDetail();
-    previousIndex = index;
     returnView = pageView === "room" ? "room" : "menu";
     const activePlan =
       Net.snapshot?.phase === "assembly"
@@ -1312,6 +1326,7 @@ const Formation = (() => {
   byId("formationSelect").onchange = (e) => {
     closeDetail();
     index = Number(e.target.value);
+    persist();
     byId("formationName").value = squads[index].name;
     draft = structuredClone(current());
     render();
@@ -1323,6 +1338,7 @@ const Formation = (() => {
       units: structuredClone(defaultSquads(group)[0].units),
     });
     index = squads.length - 1;
+    persist();
     byId("formationName").value = squads[index].name;
     draft = structuredClone(current());
     refreshSelect();
@@ -1333,10 +1349,7 @@ const Formation = (() => {
     closeDetail();
     const removed = index;
     squads.splice(removed, 1);
-    if (previousIndex > removed) previousIndex--;
-    else if (previousIndex === removed) previousIndex = Math.min(removed, squads.length - 1);
-    // 删除立即保存；回到仍有效的出战编组，取消编辑时也不会引用已删除项。
-    index = previousIndex;
+    index = Math.min(removed, squads.length - 1);
     draft = structuredClone(current());
     byId("formationName").value = squads[index].name;
     persist();
@@ -1582,7 +1595,6 @@ const Formation = (() => {
       imported.name = uniqueSquadName(imported.name);
       squads.push(imported);
       index = squads.length - 1;
-      previousIndex = index;
       draft = structuredClone(imported.units);
       byId("formationName").value = imported.name;
       persist();
@@ -1598,30 +1610,12 @@ const Formation = (() => {
   };
   byId("saveFormation").onclick = () => {
     finishPilotEditor();
-    try {
-      const units = Rules.validateFormation(draft, Infinity, Rules.catalog.formation.maxUnits);
-      squads[index] = {
-        name: byId("formationName").value.trim().slice(0, 32) || "未命名编组",
-        units,
-      };
-      persist();
-      if (
-        Net.active &&
-        Net.seat !== null &&
-        points(units) <= unitLimit() &&
-        (!Net.snapshot.started || Net.snapshot.phase === "assembly")
-      )
-        Net.request("update_formation", { formation: units });
-      closeDetail();
-      setPageView(returnView);
-      update();
-      note("编组已保存并选用。");
-    } catch {
-      note("请保留至少一台单位，并检查数量与 COST 上限。");
-    }
-  };
-  byId("cancelFormation").onclick = () => {
-    index = previousIndex;
+    saveDraft();
+    const units = current();
+    if (Net.active && Net.seat !== null && points(units) <= unitLimit() &&
+        (!Net.snapshot.started || Net.snapshot.phase === "assembly"))
+      Net.request("update_formation", { formation: units });
+    closeDetail();
     setPageView(returnView);
     update();
   };
@@ -1694,8 +1688,7 @@ const Formation = (() => {
     byId("formationUnitsWorkspace").hidden = pilots;
     byId("formationPilotToolbar").hidden = !pilots;
     byId("formationPilotBudget").hidden = !pilots;
-    byId("saveFormation").hidden = pilots;
-    byId("cancelFormation").textContent = pilots ? "关闭" : "取消";
+    byId("saveFormation").hidden = false;
     if (pilots) renderPilotRoster();
   }
   function deletePilot(id) {
@@ -1810,9 +1803,9 @@ const Formation = (() => {
     for (const [key, label] of Object.entries(PilotSystem.labels)) {
       const row = element("div", "custom-pilot-stat"), plus = element("button", "", "+");
       plus.type = "button"; plus.setAttribute("aria-label", "强化" + label);
-      plus.disabled = !pilotEdit.points || pilotEdit.stats[key] >= PilotSystem.growthRules.statCap;
+      plus.disabled = !pilotEdit.points || pilotEdit.stats[key] >= PilotSystem.statCap(pilotEdit.level);
       plus.onclick = () => { pilotEdit.stats[key]++; pilotEdit.points--; renderPilotStats(); };
-      row.append(element("span", "", `${label} ${pilotEdit.stats[key]} / ${PilotSystem.growthRules.statCap}`), plus); stats.append(row);
+      row.append(element("span", "", `${label} ${pilotEdit.stats[key]} / ${PilotSystem.statCap(pilotEdit.level)}`), plus); stats.append(row);
     }
   }
   function finishPilotEditor() {

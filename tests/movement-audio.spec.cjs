@@ -112,8 +112,9 @@ test("two real clients hear game start, own turn, attack lock and target warning
     guest = await context.newPage();
   try {
     await connect(page, address.port, "Host");
-    await page.locator("#roomCode").fill("SOUNDS");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("SOUNDS");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await connect(guest, address.port, "Guest");
     await guest.locator(".room-card").filter({ hasText: "SOUNDS" }).getByRole("button").click();
     await guest.locator("#roomChatInput").fill("message from guest");

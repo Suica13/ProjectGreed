@@ -22,7 +22,7 @@ description: 移植、修复或核对 ProjectGreed 的 Rusted Warfare Battle Uni
 
 - 武器：原 GW 发射链决定载荷、发数、伤害分量和实际扣能；格子射程与 AP 看 `tools/weapon_policy.py` 最终覆盖。分别核对 `min/max/actionCost`、伤害、命中和 EN，不能只按 `limitingRange`、武器名或旧 JSON 推断。
 - 移动：以原版 BoostSpeed 对应的常规推进字段 `boostMoveSpeed` 为基础评估移动格数，再加普通单位或战舰的战术加成；不要混用闪避加速 `onDodgeBoostSpeed` 或临时 `extraBoostSpeed`。旧单位可能有显式平衡基值。核对 `sourceStats.boostSpeed`、`sourceStats.tacticalMoveBeforeBonus`、`stats.move`，并区分地图地形与适应性造成的实际可达距离。
-- 视野：沿用独立换算：原生雾视距 ÷2，原生雷达及反侦测距离 ÷28.8。读继承及初始化动作后的最终原生值；雷达探测不等于可见或可攻击。不得把普通雷达约为视距 1.25 倍的结果当成所有单位的统一公式。
+- 视野：沿用独立换算：原生雾视距 ×0.4，原生雷达距离 ÷36，反侦测距离仍 ÷28.8。读继承及初始化动作后的最终原生值；雷达探测不等于可见或可攻击。不得把普通雷达约为视距 1.25 倍的结果当成所有单位的统一公式。
 - 有用户指定的战术数值时，以用户要求为准；在生成政策中记录例外及理由。详细公式、覆盖顺序和现行特例见 [conversion-rules.md](references/conversion-rules.md)。
 
 ## 验收

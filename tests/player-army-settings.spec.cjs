@@ -125,7 +125,7 @@ test("team small-tag dropdown updates restrictions, summary and formation overla
   assert((await page.locator("#teamBanSummary0").textContent()).includes(label));
   await page.locator("#roomFormation").click();
   assert((await page.locator(".formation-row.not-allowed").count()) > 0);
-  await page.locator("#cancelFormation").click();
+  await page.locator("#saveFormation").click();
   await page.locator("#teamBan-0-bannedTypes").selectOption("NONE");
   assert.deepEqual(
     await page.evaluate(() => Net.snapshot.settings.teamRestrictions[0].bannedTypes),

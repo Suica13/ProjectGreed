@@ -23,8 +23,9 @@ test("room creator remains host after refresh and can still configure map, COST 
   for (const p of [page, guest]) p.on("pageerror", (e) => errors.push(e.message));
   try {
     await lobby(page, address.port, "Creator");
-    await page.locator("#roomCode").fill("HOSTORDER");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("HOSTORDER");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await expect(page.locator("#roomPreparation")).toBeVisible();
     const creator = await page.evaluate(() => Net.memberId);
     await expect(page.locator("#roomMapSelect")).toBeEnabled();

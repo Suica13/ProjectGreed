@@ -96,7 +96,7 @@ test('unit overview integers and pilot grid; portraits in battlefield hangars',a
   },{formation});
   await expect(page.locator('#unitPanel .unit-pilot-stats > div')).toHaveCount(8);
   await expect(page.locator('#unitPanel img[src^="data:image/svg+xml"]')).toHaveCount(1);
-  expect(await page.locator('#unitPanel .stats').innerText()).not.toMatch(/\d+\.\d+/);
+  expect(await page.locator('#unitPanel .stats > div:not([data-sensor-range])').allInnerTexts().then(values=>values.join(' '))).not.toMatch(/\d+\.\d+/);
   await page.evaluate(()=>HangarUI.open(game.units[0]));
   await expect(page.locator('#hangarDialog')).toBeVisible();
   const icon=page.locator('#hangarDialog img[src^="data:image/svg+xml"]');

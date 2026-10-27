@@ -70,8 +70,9 @@ test("two clients receive custom names in battle, action logs and reconnect snap
     }
     await rename(host);
     await connect(host);
-    await host.locator("#roomCode").fill("UNITNAMES");
     await host.locator("#createRoom").click();
+    await host.locator("#roomCode").fill("UNITNAMES");
+    await host.locator('#roomCreateForm button[type="submit"]').click();
     await expect(host.locator("#roomPreparation")).toBeVisible();
     await connect(guest);
     await guest.locator(".room-card").filter({ hasText: "UNITNAMES" }).getByRole("button").click();

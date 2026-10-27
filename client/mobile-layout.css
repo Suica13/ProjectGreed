@@ -506,3 +506,32 @@
   #developmentScreen #developmentMain { height: auto; min-height: 100%; max-height: none; overflow: visible; }
   #formationMain[data-page="pilots"] .formation-group-banner { display: flex; }
 }
+
+/* Keep navigation and faction selection on one row, freeing height for both rosters. */
+#formationMain > .formation-footer { display: flex; align-items: center; flex-wrap: nowrap; gap: 8px; }
+#formationMain > .formation-footer > button { flex: none; white-space: nowrap; }
+#formationMain .formation-footer .formation-group-banner {
+  display: flex; margin-left: auto; min-width: 0; padding: 0; border: 0;
+  background: none; gap: 8px; font-size: 13px;
+}
+#formationMain .formation-footer .formation-group-banner strong { white-space: nowrap; }
+#formationMain .formation-footer .formation-group-banner select { width: clamp(100px, 18vw, 210px); max-width: 100%; height: 38px; font-size: 13px; }
+@media (max-width: 500px) {
+  #formationMain .formation-footer .formation-group-banner strong { display: none; }
+  #formationMain .formation-footer .formation-group-banner select { width: 140px; }
+  #formationMain > .formation-footer > button { padding-left: 10px; padding-right: 10px; }
+}
+
+/* Widen footer controls without changing their typography or height. */
+#formationMain > .formation-footer #saveFormation { width: 125px; }
+#formationMain > .formation-footer #openFormationShare { width: 95px; }
+#formationMain .formation-footer .formation-group-banner { flex: 0 1 auto; }
+#formationMain .formation-footer .formation-group-banner select {
+  width: clamp(150px, 27vw, 315px); flex: 1 1 auto;
+}
+@media (max-width: 700px), (max-height: 600px) and (orientation: landscape) {
+  #formationMain > .formation-footer #openFormationShare { width: 97.5px; }
+}
+@media (max-width: 500px) {
+  #formationMain .formation-footer .formation-group-banner select { width: 210px; }
+}

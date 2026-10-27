@@ -36,7 +36,7 @@ async function open(page, developer = true) {
   await page.evaluate(() => I18n.setLanguage("zh"));
 }
 for (const width of [1280, 390]) {
-  test(`pilot formation shares the unit layout and creates a pilot with 50 training points at ${width}px`, async ({
+  test(`pilot formation shares the unit layout and creates a pilot with 60 training points at ${width}px`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 844 });
@@ -48,7 +48,7 @@ for (const width of [1280, 390]) {
     const heading = await page.locator(".formation-heading").boundingBox();
     const unitTab = await page.locator("#formationUnitsTab").boundingBox();
     const pilotTab = await page.locator("#formationPilotsTab").boundingBox();
-    expect(Math.abs(tabs.width - banner.width)).toBeLessThanOrEqual(2);
+    expect(tabs.width).toBeGreaterThan(banner.width);
     expect(tabs.y).toBeGreaterThanOrEqual(heading.y + heading.height);
     expect(Math.abs(unitTab.width - pilotTab.width)).toBeLessThanOrEqual(1);
     const unitList = await page.locator("#formationUnits").boundingBox();
@@ -62,14 +62,14 @@ for (const width of [1280, 390]) {
     expect(Math.abs(pilotList.x - unitList.x)).toBeLessThanOrEqual(2);
     expect(Math.abs(pilotList.width - unitList.width)).toBeLessThanOrEqual(2);
     expect(Math.abs(pilotAdd.y - unitAdd.y)).toBeLessThanOrEqual(4);
-    expect(group.y + group.height).toBeLessThan(pilotList.y);
+    expect(group.y).toBeGreaterThanOrEqual(pilotList.y + pilotList.height);
     await expect(page.locator("#createCustomPilot")).toBeInViewport();
     await page.locator("#createCustomPilot").click();
     await expect(page.locator("#customPilotRole")).toHaveCount(0);
     await expect(page.locator("#customPilotStats")).toContainText("指挥 70");
     await expect(page.locator("#customPilotStats")).toContainText("射击 90");
     await expect(page.locator("#customPilotStats")).toContainText("觉醒 50");
-    await expect(page.locator("#customPilotProgress")).toContainText("强化点 50");
+    await expect(page.locator("#customPilotProgress")).toContainText("强化点 60");
     await expect(page.locator("#formationPilotToolbar small")).toHaveCount(0);
     await expect(page.locator("#confirmPilotTraining")).toHaveText("确认强化");
     await expect(page.locator("#cancelPilotTraining")).toHaveText("取消强化");
@@ -94,14 +94,14 @@ for (const width of [1280, 390]) {
       () => JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v2.EFSF")).pilots,
     );
     expect(pilots[0].stats.shooting).toBe(91);
-    expect(pilots[0].points).toBe(49);
+    expect(pilots[0].points).toBe(59);
     expect(pilots[0].role).toBeUndefined();
     await page.locator("#pilotRosterSearch").fill("不存在的驾驶员");
     await expect(page.locator(".custom-pilot-card")).toHaveCount(0);
     await page.locator("#pilotRosterSearch").fill("");
     await page.locator(".custom-pilot-card .formation-detail-button").click();
     await expect(page.locator("#customPilotStats")).toContainText("射击 91");
-    await expect(page.locator("#customPilotProgress")).toContainText("强化点 49");
+    await expect(page.locator("#customPilotProgress")).toContainText("强化点 59");
     await page.locator("#finishCustomPilot").click();
     await page.locator("#formationUnitsTab").click();
     await expect(page.locator("#formationUnitsWorkspace")).toBeVisible();

@@ -6,8 +6,8 @@ const UnitSensors = {
       ["full", "visible", "disabled"].includes(game?.fogMode) ? game.fogMode : "full";
     function ranges(unit, game = null) {
       const base = (unit.sensorArea ? unit.sensors : modelOf(unit).sensors) || {
-        sight: 10,
-        radar: 12.5,
+        sight: 8,
+        radar: 10,
         antiDetection: 0,
       };
       const water =

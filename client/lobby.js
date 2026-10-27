@@ -96,25 +96,45 @@ const Lobby = (() => {
     byId("createRoom").title = "";
   }
   function refreshSelections() {
-    const presets = Formation.presets();
-    const select = byId("lobbyFormation");
-    select.replaceChildren();
-    for (let index = 0; index < presets.length; index++) {
-      const option = new Option(presets[index].name, String(index));
-      option.setAttribute("data-i18n-ignore", "");
-      select.add(option);
-    }
-    select.value = String(Formation.presetIndex());
     updateRoomEligibility();
   }
   window.addEventListener("character-selected", () => {
     if (!byId("lobby").hidden) queueMicrotask(refreshSelections);
   });
-  byId("lobbyFormation").onchange = (event) => {
-    Formation.selectPreset(Number(event.target.value));
-  };
 
+  byId("createRoom").onclick = () => {
+    byId("roomCreateDialog").showModal();
+    byId("roomCode").focus();
+  };
+  byId("newRoomLocked").onchange = () => {
+    const locked = byId("newRoomLocked").checked;
+    byId("newRoomPasswordLabel").hidden = !locked;
+    byId("newRoomPassword").required = locked;
+    if (!locked) byId("newRoomPassword").value = "";
+  };
+  byId("cancelRoomCreate").onclick = () => byId("roomCreateDialog").close();
+  byId("roomCreateForm").onsubmit = (event) => {
+    event.preventDefault();
+    const credentials = {
+      locked: byId("newRoomLocked").checked,
+      password: byId("newRoomPassword").value,
+    };
+    byId("roomCreateDialog").close();
+    Net.connect("create", false, null, credentials);
+    byId("newRoomPassword").value = "";
+  };
+  byId("cancelLockedRoomJoin").onclick = () => byId("joinLockedRoomDialog").close();
+  byId("joinLockedRoomForm").onsubmit = (event) => {
+    event.preventDefault();
+    const code = byId("joinLockedRoomName").textContent,
+      password = byId("joinRoomPassword").value;
+    byId("joinLockedRoomDialog").close();
+    Net.connect("join", false, code, { password });
+    byId("joinRoomPassword").value = "";
+  };
   function close() {
+    byId("roomCreateDialog").close();
+    byId("joinLockedRoomDialog").close();
     stopChecks();
     stopConnection();
     byId("lobby").hidden = true;
@@ -141,13 +161,21 @@ const Lobby = (() => {
     listedRooms = rooms;
     const list = byId("roomList");
     list.replaceChildren();
-    byId("roomListStatus").textContent = rooms.length
-      ? `${rooms.length} 个房间`
-      : "暂无房间，可以创建一个。";
+    byId("roomListStatus").textContent = rooms.length ? `${rooms.length} 个房间` : "";
     for (const room of rooms) {
       const row = element("tr", "room-card");
-      const roomName = element("th", "", room.code + " · " + (room.mode === "quick" ? "快速战" : "常规战"));
+      const roomName = element(
+        "th",
+        "",
+        room.code + " · " + (room.mode === "quick" ? "快速战" : "常规战"),
+      );
       roomName.scope = "row";
+      if (room.locked) {
+        const icon = element("span", "room-lock-icon", "🔒");
+        icon.setAttribute("role", "img");
+        icon.setAttribute("aria-label", "密码房间");
+        roomName.prepend(icon, " ");
+      }
       const label =
         {
           waiting: "等待玩家",
@@ -163,13 +191,15 @@ const Lobby = (() => {
         `${room.players}/${room.capacity}${room.spectators ? " · " + room.spectators + "观战" : ""}`,
       );
       const action = element("td", "room-action");
-      const button = element(
-        "button",
-        "",
-        room.joinable ? "加入" : "不可加入",
-      );
+      const button = element("button", "", room.joinable ? "加入" : "不可加入");
       button.disabled = !room.joinable || !assetsReady;
-      button.onclick = () => Net.connect("join", false, room.code);
+      button.onclick = () => {
+        if (!room.locked) return Net.connect("join", false, room.code);
+        byId("joinLockedRoomName").textContent = room.code;
+        byId("joinRoomPassword").value = "";
+        byId("joinLockedRoomDialog").showModal();
+        byId("joinRoomPassword").focus();
+      };
       action.append(button);
       row.append(roomName, state, count, action);
       list.append(row);
@@ -283,5 +313,15 @@ const Lobby = (() => {
   };
   byId("cancelServer").onclick = close;
   byId("refreshRooms").onclick = refresh;
-  return { open, close, render, refresh, endpoint: () => (ready ? currentURL : null) };
+  return {
+    open,
+    close,
+    render,
+    refresh,
+    reconnect: (url) => {
+      open();
+      connect(url);
+    },
+    endpoint: () => (ready ? currentURL : null),
+  };
 })();

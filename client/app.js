@@ -81,6 +81,7 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
   unitName = (u) => (ClientSettings.trueUnitNames() ? Rules.modelOf(u).name : Rules.unitName(u)),
   displaysCustomUnitName = (u) => !ClientSettings.trueUnitNames() && !!u.customName,
   formatNumber = (n) => Math.round(Number(n)).toLocaleString("en-US"),
+  formatDistance = (n) => Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " " + I18n.text("格"),
   isAI = () => !Net.active && game.ai && game.team === 1,
   isBusy = () =>
     !!window.ReplayPlayer?.active ||
@@ -568,8 +569,11 @@ function renderPanel() {
   const overview = element("section", "hud-tab-pane");
   overview.dataset.hudPane = "overview";
   panel.append(overview);
+  const sensorRanges = Rules.sensors.ranges(u, game);
   let stats = element("div", "stats");
   stats.innerHTML = /* HTML */ `<div><span>移动力</span>${Math.round(m.move)} 格</div>
+    <div data-sensor-range="sight"><span>视野距离</span>${formatDistance(sensorRanges.sight)}</div>
+    <div data-sensor-range="radar"><span>侦察距离</span>${formatDistance(sensorRanges.radar)}</div>
     <div><span>反应系数</span>${Math.round(m.mobility)}</div>
     <div><span>命中系数</span>${Math.round(m.accuracy)}%</div>
     <div><span>地面适应性</span>${m.adaptability.ground}%</div>
@@ -2417,6 +2421,7 @@ function drawBattle(now) {
         <small
           >HP ${formatNumber(hp)} / ${formatNumber(Rules.modelOf(unit).hp)} ? EN ${unit.en}</small
         >
+        <small>视野距离 ${formatDistance(Rules.sensors.ranges(unit, game).sight)} · 侦察距离 ${formatDistance(Rules.sensors.ranges(unit, game).radar)}</small>
       </div>`;
     })
     .join("");

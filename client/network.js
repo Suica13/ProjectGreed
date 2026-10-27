@@ -273,6 +273,7 @@ const Net = (() => {
         phase = "start";
         setPageView("menu");
         status(msg.message);
+        if (mode !== "resume") Lobby.reconnect(url);
       }
       update();
     } else if (msg.type === "room_closed") {
@@ -297,7 +298,7 @@ const Net = (() => {
     moving = null;
     status("离线常规战");
   }
-  function connect(mode = "join", auto = false, roomCode = null) {
+  function connect(mode = "join", auto = false, roomCode = null, credentials = {}) {
     if (!PlayerProfile.selected()) return note("请先选择角色阵营。");
     if (window.isLayoutPreview) return;
     if (!assetsReady) {
@@ -372,6 +373,8 @@ const Net = (() => {
           roomMode: mode === "create" ? byId("newRoomMode").value : undefined,
           mode,
           room,
+          locked: mode === "create" ? !!credentials.locked : undefined,
+          password: mode === "resume" ? undefined : credentials.password,
           token: mode === "resume" ? token : undefined,
           name: PlayerProfile.name(),
         }),
@@ -648,7 +651,7 @@ const Net = (() => {
   });
   window.addEventListener("focus", () => keepAlive(true));
   document.addEventListener("resume", () => keepAlive(true));
-  byId("createRoom").onclick = () => connect("create");
+
   function isSpectator() {
     return window.ReplayPlayer?.active || (n.active && n.seat === null);
   }

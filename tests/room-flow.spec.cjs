@@ -128,8 +128,9 @@ test("player IDs persist and repeated room leave/connect cycles keep the endpoin
       await page.locator("#serverAddress").fill("127.0.0.1:" + address.port);
       await page.locator("#connectServer").click();
       await expect(page.locator("#lobby")).toBeVisible();
-      await page.locator("#roomCode").fill("RETRY" + i);
       await page.locator("#createRoom").click();
+      await page.locator("#roomCode").fill("RETRY" + i);
+      await page.locator('#roomCreateForm button[type="submit"]').click();
       await expect(page.locator("#roomPreparation")).toBeVisible();
       await expect(page.locator("#teamSlots")).toContainText("Alice");
       expect(await page.evaluate(() => typeof Net.endpoint)).toBe("function");
@@ -160,8 +161,9 @@ test("room chat survives view changes; finished clients reconnect and the host r
   try {
     for (const client of pages) client.on("pageerror", (error) => errors.push(error.message));
     await connect(page, address, "Alice");
-    await page.locator("#roomCode").fill("FLOW");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("FLOW");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await connect(red, address, "Bob");
     await join(red, "FLOW");
     await connect(watch, address, "Watcher");
@@ -233,8 +235,9 @@ test("the server countdown returns every client without a return request", async
     red = await context.newPage();
   try {
     await connect(page, address, "Alice");
-    await page.locator("#roomCode").fill("AUTO");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("AUTO");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await connect(red, address, "Bob");
     await join(red, "AUTO");
     await startMatch(page, red);
@@ -267,8 +270,9 @@ test("the host seat panel returns every player and spectator to the same room du
     pages = [page, guest, spectator];
   try {
     await connect(page, address, "Host");
-    await page.locator("#roomCode").fill("BACKROOM");
     await page.locator("#createRoom").click();
+    await page.locator("#roomCode").fill("BACKROOM");
+    await page.locator('#roomCreateForm button[type="submit"]').click();
     await expect(page.locator("#returnAllToRoom")).toBeHidden();
     await connect(guest, address, "Guest");
     await join(guest, "BACKROOM");

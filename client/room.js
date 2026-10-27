@@ -7,6 +7,7 @@ const RoomPanel = (() => {
     queuedNumericSettings = {};
   const numericDrafts = { costLimit: null, unitCostLimit: null, unitLimit: null };
   const formationPresets = new Set([
+    "900,250,12",
     "1800,300,12",
     "2400,400,12",
     "3600,600,12",

@@ -46,7 +46,7 @@ test("six embedded BGM tracks play offline, pause persists, next is random and e
   expect(await page.evaluate(() => MusicPlayer.audio.paused)).toBe(true);
   await page.locator("#openFormation").click();
   expect(await page.evaluate(() => MusicPlayer.audio.paused)).toBe(true);
-  await page.locator("#cancelFormation").click();
+  await page.locator("#saveFormation").click();
   await page.locator("#musicNext").click();
   const index = await page.evaluate(() => MusicPlayer.index);
   expect(index).not.toBe(0);
@@ -89,7 +89,7 @@ test.skip("new GM variants appear in formation and render native cannon and two-
   await page.locator('[data-unit-id="RGM_79L"]').click();
   await page.locator("#addFormationUnit").click();
   await expect(page.locator(".formation-row").last()).toContainText("移动 7 格");
-  await page.locator("#cancelFormation").click();
+  await page.locator("#saveFormation").click();
   await openEditor(page);
   await preview(page, () => {
     GamePreview.configure({
@@ -273,7 +273,7 @@ async function readyGame(first, second) {
   await first.evaluate(() => Net.request("sync"));
   await expect(second.locator("#formationScreen")).toBeVisible();
   await expect(second.locator("#formationName")).toHaveValue("等待时编辑");
-  await second.locator("#cancelFormation").click();
+  await second.locator("#saveFormation").click();
   await expect(second.locator("#teamSlots")).toContainText("房主");
   for (const p of [first, second])
     if (await p.evaluate(() => Net.snapshot.you.id !== Net.snapshot.hostId))
@@ -992,8 +992,9 @@ test.skip("network snapshots keep updating the real match while the preview stay
   await page.goto("/developer.html");
   await expect(page.locator("#loading")).toContainText("已就绪");
   await connectLobby(page, baseURL);
-  await page.locator("#roomCode").fill("EDITOR");
   await page.locator("#createRoom").click();
+  await page.locator("#roomCode").fill("EDITOR");
+  await page.locator('#roomCreateForm button[type="submit"]').click();
   await expect.poll(() => page.evaluate(() => phase)).toBe("waiting");
   const guest = await context.newPage();
   await guest.goto("/");
@@ -1109,8 +1110,9 @@ test("room list updates live; selecting a room joins it, refresh resumes automat
   await connectLobby(guest, baseURL);
   await expect(guest.locator(".room-card").filter({ hasText: "LISTTEST" })).toHaveCount(0);
   await connectLobby(host, baseURL);
-  await host.locator("#roomCode").fill("LISTTEST");
   await host.locator("#createRoom").click();
+  await host.locator("#roomCode").fill("LISTTEST");
+  await host.locator('#roomCreateForm button[type="submit"]').click();
   const row = guest.locator(".room-card").filter({ hasText: "LISTTEST" });
   await expect(row).toContainText("1/2");
   await row.getByRole("button", { name: "加入", exact: true }).click();
@@ -1194,8 +1196,9 @@ test("three players prepare, swap spectator/team roles and watch battles without
     client.on("pageerror", (error) => errors.push(error.message));
   await first.goto("/");
   await connectLobby(first, baseURL);
-  await first.locator("#roomCode").fill("SEATS");
   await first.locator("#createRoom").click();
+  await first.locator("#roomCode").fill("SEATS");
+  await first.locator('#roomCreateForm button[type="submit"]').click();
   await expect(first.locator("#roomPreparation")).toBeVisible();
   await expect(first.locator("#gameScene")).toBeHidden();
   for (const client of [second, third]) {
