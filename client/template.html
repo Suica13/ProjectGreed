@@ -802,7 +802,7 @@
         min-width: 0;
       }
       #lobby .lobby-actions { display:flex; align-items:center; width:100%; }
-      #disconnectLobby { margin-left:auto; }
+      #createRoom { margin-left:auto; }
       .menu-profile {
         display: grid;
         gap: 12px;
@@ -2288,9 +2288,10 @@
       class="menu-screen"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="startTitle"
+      aria-labelledby="mainLobbyTitle"
     >
       <div data-ui-node="node-120" class="modal">
+        <header class="shell-page-heading"><h2 id="mainLobbyTitle" class="shell-page-title">大厅</h2></header>
         <div data-ui-node="node-121" class="brand start-brand">
           <span class="logo" aria-hidden="true">P</span>
           <div>
@@ -2298,9 +2299,6 @@
             <h1 data-ui-node="node-122" id="startTitle">__PROJECT_NAME__</h1>
           </div>
         </div>
-        <p data-ui-node="node-123" class="muted">
-          配置单位武器套件，编组出击，在己方出生区部署后开始战斗。
-        </p>
         <div id="releaseWarning" class="release-warning" role="note" aria-label="版本警告">
           <div class="release-warning-icon" aria-hidden="true">⚠</div>
           <div class="release-warning-text">
@@ -2331,7 +2329,7 @@
           <div class="menu-battle-row">
             <button data-ui-node="node-140" id="openSkirmish" class="primary" disabled>开始战斗</button>
             <div class="menu-faction">
-              <label for="menuFactionSelect">当前阵营</label>
+              <label for="menuFactionSelect">当前阵营:</label>
               <select id="menuFactionSelect" aria-label="当前阵营">
                 <option value="PMC">PMC</option>
                 <option value="EFSF">地球联邦军[0079]</option>
@@ -2371,7 +2369,10 @@
               <h3 data-ui-node="node-151">房间列表</h3>
               <span data-ui-node="node-156" id="connectedServer" class="muted"></span>
             </div>
-            <button data-ui-node="node-157" id="refreshRooms">刷新服务器列表</button>
+            <div class="lobby-header-actions">
+              <button id="openServerActivities" type="button" disabled>服务器活动</button>
+              <button data-ui-node="node-157" id="refreshRooms">刷新服务器列表</button>
+            </div>
           </div>
           <p data-ui-node="node-152" id="roomListStatus" role="status">连接成功后显示房间。</p>
           <div data-ui-node="node-158" class="room-list-scroll">
@@ -2387,10 +2388,9 @@
               <tbody data-ui-node="node-153" id="roomList"></tbody>
             </table>
           </div>
-          <button id="openServerActivities" type="button" disabled>服务器活动</button>
           <div data-ui-node="node-129" class="net-buttons lobby-actions">
-            <button data-ui-node="node-130" id="createRoom">创建房间</button>
             <button id="disconnectLobby" type="button">断开连接</button>
+            <button data-ui-node="node-130" id="createRoom">创建房间</button>
           </div>
           <p data-ui-node="node-134" id="networkStatus" role="status">
             选择列表中的房间加入，或创建新房间。
@@ -2471,8 +2471,8 @@
         data-mobile-tab="seats"
         class="modal room-preparation"
       >
-        <div data-ui-node="node-177" class="lobby-heading">
-          <h2 data-ui-node="node-178" id="roomTitle">房间准备</h2>
+        <div data-ui-node="node-177" class="lobby-heading shell-page-heading">
+          <h2 data-ui-node="node-178" id="roomTitle" class="shell-page-title">房间准备</h2>
           <button data-ui-node="node-179" id="roomMainMenu">主菜单</button>
         </div>
         <p data-ui-node="node-180" id="roomStatus" role="status"></p>
@@ -3026,8 +3026,8 @@
     </style>
     <section id="productionScreen" class="menu-screen" hidden aria-labelledby="productionTitle">
       <div class="modal production-dialog">
-        <header class="production-heading">
-          <h2 id="productionTitle">生产</h2>
+        <header class="production-heading shell-page-heading">
+          <h2 id="productionTitle" class="shell-page-title">生产</h2>
           <div id="productionResources" class="resource-balance" aria-label="账户资源"></div>
           <button id="closeProduction" type="button">返回主菜单</button>
         </header>
@@ -3076,23 +3076,27 @@
     </section>
     <section id="developmentScreen" class="menu-screen" hidden aria-labelledby="developmentTitle">
       <div id="developmentMain" class="modal development-dialog">
-        <header class="development-heading">
+        <header class="development-heading shell-page-heading">
           <div class="development-heading-title">
-            <span class="eyebrow">0079 / PAGE 01</span>
-            <h2 id="developmentTitle">开发</h2>
+            <h2 id="developmentTitle" class="shell-page-title">开发</h2>
           </div>
-          <label class="development-faction-picker" for="developmentFactionSelect">阵营
-            <select id="developmentFactionSelect">
-              <option value="EFSF">地球联邦军[0079]</option>
-              <option value="ZEON">吉翁公国军[0079]</option>
-            </select>
-          </label>
-          <div class="development-balance">可用科技点 <strong id="developmentPoints">0</strong></div>
+          <div class="development-toolbar">
+            <label class="development-faction-picker" for="developmentFactionSelect">
+              <select id="developmentFactionSelect" aria-label="阵营">
+                <option value="EFSF">地球联邦军[0079]</option>
+                <option value="ZEON">吉翁公国军[0079]</option>
+              </select>
+            </label>
+            <div class="development-balance">可用科技点 <strong id="developmentPoints">0</strong></div>
+          </div>
           <button id="closeDevelopment" type="button">返回主菜单</button>
         </header>
+
         <div class="development-workspace">
           <div class="development-tree-scroll">
-            <div id="developmentTree" class="development-tree" aria-label="0079 第一页科技树"></div>
+            <div class="development-tree-stage">
+              <div id="developmentTree" class="development-tree" aria-label="0079 第一页科技树"></div>
+            </div>
           </div>
           <aside id="developmentDetails" class="development-details" aria-live="polite"></aside>
         </div>
@@ -3100,10 +3104,20 @@
     </section>
     <section id="formationScreen" class="menu-screen" hidden data-ui-node="node-199">
       <div id="formationMain" class="modal formation-dialog" data-ui-node="node-206">
-        <div class="formation-heading">
-          <h2 data-ui-node="node-207">编成</h2>
-          <p id="formationBudget" data-ui-node="node-213"></p>
+        <div class="formation-heading shell-page-heading">
+          <h2 data-ui-node="node-207" id="formationPageTitle" class="shell-page-title">编组</h2>
           <p id="formationPilotBudget" hidden></p>
+          <div id="formationHeadingActions" class="formation-heading-actions">
+            <p id="formationBudget" data-ui-node="node-213"></p>
+        <label class="formation-group-banner" for="formationGroup">
+          <strong>编组阵营</strong>
+          <select id="formationGroup" aria-label="编组阵营">
+            <option value="PMC">PMC</option>
+            <option value="EFSF">地球联邦军[0079]</option>
+            <option value="ZEON">吉翁公国军[0079]</option>
+          </select>
+        </label>
+          </div>
         </div>
         <nav class="formation-mode-tabs" aria-label="编成页面">
           <button id="formationUnitsTab" type="button" aria-pressed="true">单位</button>
@@ -3120,6 +3134,7 @@
           /></label>
           <button id="deleteFormation" class="danger">删除编组</button>
           <button id="newFormation" data-ui-node="node-210">新建编组</button>
+          <button id="openFormationShare" type="button">分享编组</button>
         </div>
         <div id="formationPilotToolbar" class="formation-toolbar" hidden>
           <label for="pilotRosterSearch"><span>搜索驾驶员</span><input id="pilotRosterSearch" type="search" placeholder="按名称搜索驾驶员" /></label>
@@ -3133,7 +3148,10 @@
               role="region"
               aria-label="出战单位滚动列表"
             ></div>
-            <button id="openFormationPicker" type="button">添加单位</button>
+            <div class="formation-unit-actions">
+              <button id="openFormationPicker" type="button">添加单位</button>
+              <button id="produceMissingFormation" type="button" hidden>一键生产</button>
+                </div>
           </section>
         </div>
         <div id="formationPilotRoster" class="formation-workspace" hidden>
@@ -3143,17 +3161,7 @@
           </section>
         </div>
         <div class="net-buttons formation-footer" data-ui-node="node-219">
-          <button id="openFormationShare" type="button">分享编组</button>
           <button id="saveFormation" class="primary" data-ui-node="node-220">返回</button>
-          <button id="produceMissingFormation" type="button" hidden>一键生产</button>
-        <label class="formation-group-banner" for="formationGroup">
-          <strong>编组阵营</strong>
-          <select id="formationGroup" aria-label="编组阵营">
-            <option value="PMC">PMC</option>
-            <option value="EFSF">地球联邦军[0079]</option>
-            <option value="ZEON">吉翁公国军[0079]</option>
-          </select>
-        </label>
         </div>
       </div>
       <div id="formationSharePanel" class="formation-detail-overlay" hidden>
@@ -5072,7 +5080,7 @@
               data-ui-node="node-128"
               id="roomCode"
               required
-              value="ROOM1"
+              value=""
               maxlength="20"
               autocomplete="off"
           /></label>
@@ -5205,6 +5213,38 @@
     <script id="art" type="application/json">
       __DATA__
     </script>
+    <style>__MENU_SHELL_CSS__</style>
+    <style id="blue-theme">__BLUE_THEME_CSS__</style>
+    <header id="menuShell" aria-label="主导航">
+      <div class="shell-top">
+        <div class="shell-brand"><strong>PROJECT GREED</strong><small>TACTICAL OPERATIONS / __PROJECT_VERSION__</small></div>
+        <nav class="shell-primary" aria-label="主分页">
+          <button id="shellLobby" type="button" data-shell-section="lobby" aria-pressed="true"><span>大厅</span><small data-i18n-ignore>LOBBY</small></button>
+          <button id="shellHangar" type="button" data-shell-section="hangar" aria-pressed="false"><span>机库</span><small data-i18n-ignore>HANGAR</small></button>
+          <button id="shellMissions" type="button" data-shell-section="missions" aria-pressed="false" disabled><span>任务</span><small data-i18n-ignore>MISSIONS</small></button>
+          <button id="shellRecords" type="button" data-shell-section="records" aria-pressed="false"><span>回放</span><small data-i18n-ignore>RECORDS</small></button>
+        </nav>
+        <div id="shellIdentity"></div>
+        <div id="shellProfile"></div>
+        <button id="shellSettings" type="button" aria-haspopup="dialog">设置</button>
+      </div>
+    </header>
+    <aside id="shellSidebar" aria-label="子分页导航">
+      <nav id="shellSubnav" aria-label="子分页"></nav>
+      <div id="shellRoomControls" class="shell-room-controls" hidden>
+        <button id="shellRoomStatus" type="button" hidden disabled></button>
+        <button id="shellLeaveRoom" type="button" hidden>离开房间</button>
+      </div>
+    </aside>
+    <section id="shellRecordsScreen" class="menu-screen" hidden aria-labelledby="shellRecordsTitle">
+      <div class="modal shell-records-content">
+        <header class="shell-page-heading"><h2 id="shellRecordsTitle" class="shell-page-title">回放</h2></header>
+        <div class="shell-record-actions">
+          <button id="shellOpenReplay" type="button">打开回放文件</button>
+          <button id="shellOpenRecords" type="button">对局记录</button>
+        </div>
+      </div>
+    </section>
     <script>
       const PROJECT = __PROJECT_META__;
       const DEVELOPMENT_TREE = __DEVELOPMENT_TREE__;
@@ -5272,6 +5312,7 @@
       __HANGAR_UI__;
       __BATTLE_HUD__;
       __REPLAY_PLAYER__;
+      __MENU_SHELL__;
       I18n.start();
     </script>
   </body>

@@ -247,11 +247,11 @@ test("new profiles contain starter units while existing inventories are preserve
   assert.deepEqual(JSON.parse(JSON.stringify(existing.snapshot().inventory)), { Type61: 1 });
 });
 
-test("selling a chassis refunds half of each cheapest per-unit price atomically",()=>{
+test("selling a chassis refunds half rounded down to multiples of 50 atomically",()=>{
  const {E,context}=load();const offer=catalog.offers[E.baseModel("Type61")];
  const before=E.snapshot();const price=E.sellPrice("Type61");
- assert.equal(price.money,Math.floor(offer.money/offer.quantity/2));
- assert.equal(price.supplies,Math.floor(offer.supplies/offer.quantity/2));
+ assert.equal(price.money,Math.floor(offer.money/offer.quantity/100)*50);
+ assert.equal(price.supplies,Math.floor(offer.supplies/offer.quantity/100)*50);
  assert(E.sellUnit("Type61"));assert.equal(E.quantity("Type61"),23);
  assert.equal(E.snapshot().money,before.money+price.money);
  assert.equal(E.snapshot().supplies,before.supplies+price.supplies);
@@ -331,4 +331,19 @@ test("derived kit pricing preserves technology, ownership, funds and atomicity c
  const poor=load({'projectgreed.economy.v1':JSON.stringify({...rich,money:0,supplies:0,inventory:{RX_79_G:1}})}).E;
  assert(!poor.buyKit(id,'EFSF'));
  assert.equal(poor.kitQuantity(id),0);
+});
+
+test("bulk production ignores stocked locked units but rejects any locked shortage atomically", () => {
+  const { E } = load({ "projectgreed.economy.v1": JSON.stringify({ ...rich, inventory: { RX_78_2: 1 } }) });
+  const entries = [{ unitId: "RX_78_2", kitId: "standard" }, { unitId: "Type61", kitId: "standard" }];
+  const plan = E.productionPlan(entries), before = E.snapshot();
+  assert.deepEqual(Array.from(plan.items, item => item.unitId), ["Type61"]);
+  assert(E.produceMissing(entries, "PMC").ok);
+  assert.equal(E.quantity("RX_78_2"), 1);
+  assert.equal(E.snapshot().money, before.money - plan.money);
+  assert.equal(E.snapshot().supplies, before.supplies - plan.supplies);
+  const after = JSON.stringify(E.snapshot());
+  const blocked = E.produceMissing([...entries, entries[0]], "PMC");
+  assert.equal(blocked.reason, "unavailable");
+  assert.equal(JSON.stringify(E.snapshot()), after);
 });

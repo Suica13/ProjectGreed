@@ -1,0 +1,1417 @@
+/* The shell is restricted to pre-battle screens. Battle HUD/styles remain unchanged. */
+#menuShell {
+  display: block;
+  height: auto;
+  padding: 0;
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 22;
+  background: linear-gradient(110deg, #091927f5, #102e46f5);
+  border-bottom: 1px solid #3b96be;
+  box-shadow: 0 5px 24px #0007;
+}
+.shell-top {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-height: 78px;
+  padding: 10px 24px;
+  max-width: 1720px;
+  margin: auto;
+}
+.shell-brand {
+  display: grid;
+  flex: none;
+  border-left: 3px solid #50ccff;
+  padding-left: 12px;
+}
+.shell-brand strong {
+  font-size: 20px;
+  letter-spacing: 2px;
+  font-style: italic;
+  color: #b2e6ff;
+}
+.shell-brand small {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #7997ad;
+  margin-top: 3px;
+}
+.shell-primary {
+  display: flex;
+  gap: 5px;
+  align-self: stretch;
+  align-items: center;
+}
+.shell-primary button {
+  display: grid;
+  gap: 3px;
+  min-width: 83px;
+  padding: 10px 15px;
+  background: #102c42;
+  border-color: #33566c;
+  border-radius: 3px;
+}
+.shell-primary button span {
+  font-size: 15px;
+  font-weight: 600;
+}
+.shell-primary button small {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #8baaba;
+}
+.shell-primary button[aria-pressed="true"] {
+  background: linear-gradient(150deg, #14618d, #123249);
+  border-color: #59d5ff;
+  box-shadow:
+    inset 0 -2px #59d5ff,
+    0 0 12px #26b6ff2b;
+}
+#shellProfile {
+  margin-left: auto;
+}
+#shellProfile .menu-profile-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+#shellProfile .player-id-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: #89aabd;
+}
+#shellProfile #playerId {
+  width: 152px;
+  min-height: 27px;
+  padding: 3px 7px;
+  font-size: 12px;
+  background: #0b1e2e;
+}
+#shellProfile #menuResources {
+  min-height: 0;
+  font-size: 12px;
+  gap: 12px;
+}
+#shellProfile #menuResources .resource-icon {
+  width: 15px;
+  height: 15px;
+}
+#shellSettings {
+  flex: none;
+}
+.shell-secondary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 24px;
+  background: #06131fc2;
+  border-top: 1px solid #274657;
+  min-height: 49px;
+}
+#shellSubnav {
+  display: flex;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+}
+.shell-subtab {
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  padding: 7px 16px;
+  color: #9fb9c9;
+  white-space: nowrap;
+}
+.shell-subtab[aria-pressed="true"] {
+  background: #193f56;
+  color: #b4eaff;
+  box-shadow: inset 3px 0 #52caff;
+}
+#shellRoomStatus {
+  border: 0;
+  background: transparent;
+  font-size: 11px;
+  color: #7993a3;
+  padding: 5px;
+}
+#shellRoomStatus.connected {
+  color: #81dcae;
+}
+#shellLeaveRoom {
+  font-size: 11px;
+  padding: 5px 8px;
+}
+#shellIdentity .menu-faction {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+#shellIdentity label {
+  font-size: 10px;
+  color: #89aabd;
+  white-space: nowrap;
+}
+#shellIdentity select {
+  min-height: 30px;
+  max-width: 175px;
+  font-size: 11px;
+  padding: 4px;
+}
+body.menu-shell-active {
+  --shell-height: 132px;
+  background: #081624;
+}
+body.menu-shell-active
+  > .menu-screen:is(
+    #start,
+    #roomPreparation,
+    #formationScreen,
+    #productionScreen,
+    #developmentScreen,
+    #shellRecordsScreen
+  ) {
+  min-height: calc(100dvh - var(--shell-height));
+  height: calc(100dvh - var(--shell-height));
+  margin-top: var(--shell-height);
+  padding: 18px 24px;
+  align-items: stretch;
+  background: radial-gradient(ellipse at 75% 0, #16364c, #081624 75%);
+  overflow: auto;
+}
+body.menu-shell-active > .menu-screen > .modal {
+  width: 100%;
+  max-width: 1500px;
+  max-height: none;
+  margin: 0 auto;
+  border-color: #31556c;
+  border-radius: 6px;
+  background: #0c2031ed;
+}
+body.menu-shell-active #formationScreen .formation-dialog {
+  height: 100%;
+  max-height: none;
+  width: 100%;
+  max-width: 1500px;
+}
+body.menu-shell-active #roomPreparation {
+  min-height: 0;
+}
+body.menu-shell-active #roomMain {
+  height: 100%;
+  max-height: none;
+}
+body.menu-shell-active #productionScreen .production-dialog {
+  height: 100%;
+  max-height: none;
+}
+body.menu-shell-active #productionWorkspace {
+  flex: 1;
+  min-height: 0;
+}
+body.menu-shell-active #developmentMain {
+  width: 100%;
+  max-height: none;
+}
+body.menu-shell-active .development-workspace {
+  height: calc(100dvh - var(--shell-height) - 145px);
+  min-height: 250px;
+}
+body.menu-shell-active #start > .modal {
+  max-width: 1250px;
+  padding: 28px;
+  padding-bottom: 55px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+body.menu-shell-active #start .start-brand {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #31556c;
+}
+body.menu-shell-active #start .start-brand h1 {
+  font-size: clamp(26px, 4vw, 46px);
+  letter-spacing: 3px;
+}
+body.menu-shell-active #start .start-layout {
+  display: flex;
+  padding: 20px;
+  border: 1px solid #2c566e;
+  background: linear-gradient(100deg, #163c57, #0a1b2a);
+  border-radius: 5px;
+}
+body.menu-shell-active #start .menu-battle-row {
+  width: 100%;
+}
+body.menu-shell-active #openSkirmish {
+  min-height: 60px;
+  max-width: 300px;
+  font-size: 18px;
+}
+body.menu-shell-active #start .menu-profile {
+  padding: 0;
+}
+body.menu-shell-active #start .menu-tech-progress {
+  max-width: 500px;
+}
+body.menu-shell-active #start .menu-contact {
+  position: static;
+  margin-top: auto;
+}
+/* Existing action handlers remain the entry points; shell buttons route to them. */
+body.menu-shell-active #start .start-layout > button,
+body.menu-shell-active #closeDevelopment,
+body.menu-shell-active #closeProduction,
+body.menu-shell-active #formationMain > .formation-mode-tabs {
+  display: none;
+}
+body.menu-shell-active #openClientSettings {
+  visibility: hidden;
+}
+.shell-records-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 18px;
+  padding: 36px;
+}
+.shell-records-content h2 {
+  font-size: 30px;
+  margin: 0;
+  color: #b2e6ff;
+}
+.shell-record-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.shell-record-actions button {
+  min-width: 180px;
+  padding: 18px;
+}
+@media (max-width: 1100px) {
+  .shell-top {
+    gap: 12px;
+    padding: 8px 14px;
+  }
+  .shell-brand strong {
+    font-size: 15px;
+  }
+  .shell-brand small {
+    letter-spacing: 1px;
+  }
+  .shell-primary button {
+    min-width: 65px;
+    padding: 9px 10px;
+  }
+  .shell-secondary {
+    padding-inline: 14px;
+  }
+  #shellIdentity label {
+    display: none;
+  }
+}
+@media (max-width: 720px) {
+  body.menu-shell-active {
+    --shell-height: 176px;
+  }
+  .shell-top {
+    min-height: 108px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 7px;
+  }
+  .shell-brand {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    padding-left: 7px;
+  }
+  .shell-brand strong {
+    font-size: 12px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .shell-brand small {
+    font-size: 7px;
+    letter-spacing: 0;
+  }
+  #shellProfile {
+    margin: 0;
+    grid-column: 2;
+    grid-row: 1;
+  }
+  #shellProfile .player-id-label > span {
+    display: none;
+  }
+  #shellProfile #playerId {
+    width: 115px;
+  }
+  #shellProfile #menuResources {
+    font-size: 10px;
+    gap: 6px;
+  }
+  #shellSettings {
+    padding: 7px;
+    font-size: 12px;
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .shell-primary {
+    grid-column: 1/-1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .shell-primary button {
+    min-width: 0;
+    padding: 7px 4px;
+  }
+  .shell-primary button span {
+    font-size: 13px;
+  }
+  .shell-primary button small {
+    font-size: 8px;
+  }
+  .shell-secondary {
+    padding: 5px 10px;
+    gap: 6px;
+    min-height: 52px;
+    flex-wrap: wrap;
+  }
+  #shellSubnav {
+    flex-basis: 100%;
+  }
+  .shell-subtab {
+    flex: 1;
+    font-size: 12px;
+    padding: 6px 4px;
+  }
+  #shellIdentity {
+    margin-left: auto;
+  }
+  #shellIdentity select {
+    min-height: 22px;
+    max-width: 130px;
+    padding: 1px 4px;
+  }
+  #shellRoomStatus {
+    font-size: 10px;
+    padding: 0;
+  }
+  #shellLeaveRoom {
+    padding: 1px 4px;
+    font-size: 10px;
+  }
+  body.menu-shell-active
+    > .menu-screen:is(
+      #start,
+      #roomPreparation,
+      #formationScreen,
+      #productionScreen,
+      #developmentScreen,
+      #shellRecordsScreen
+    ) {
+    padding: 8px;
+  }
+  body.menu-shell-active > .menu-screen > .modal {
+    padding: 12px;
+  }
+  body.menu-shell-active #start > .modal {
+    padding: 16px;
+    gap: 12px;
+  }
+  body.menu-shell-active #start .start-layout {
+    padding: 12px;
+  }
+  body.menu-shell-active #formationScreen .formation-dialog {
+    gap: 7px;
+  }
+  body.menu-shell-active .development-workspace {
+    height: auto;
+    min-height: 0;
+  }
+  .shell-records-content {
+    padding: 20px;
+  }
+  body.menu-shell-active #productionScreen .production-dialog {
+    overflow: auto;
+  }
+  body.menu-shell-active #productionWorkspace {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+  }
+  body.menu-shell-active .production-browser {
+    flex: none;
+    min-height: 300px;
+  }
+  body.menu-shell-active .production-list {
+    max-height: 230px;
+    flex: none;
+  }
+  body.menu-shell-active .production-details {
+    flex: none;
+    min-height: 580px;
+    overflow: visible;
+  }
+  body.menu-shell-active #productionInfo {
+    flex: none;
+    max-height: 240px;
+  }
+}
+@media (max-height: 520px) and (min-width: 721px) {
+  body.menu-shell-active {
+    --shell-height: 104px;
+  }
+  .shell-top {
+    min-height: 58px;
+    padding-block: 5px;
+  }
+  .shell-primary button {
+    padding: 5px 12px;
+  }
+  .shell-secondary {
+    min-height: 42px;
+    padding-block: 4px;
+  }
+  body.menu-shell-active
+    > .menu-screen:is(
+      #start,
+      #roomPreparation,
+      #formationScreen,
+      #productionScreen,
+      #developmentScreen,
+      #shellRecordsScreen
+    ) {
+    padding: 8px 14px;
+  }
+}
+
+/* Main sections stay above; each section's pages form a persistent left rail. */
+body.menu-shell-active {
+  --shell-sidebar-width: 180px;
+}
+#shellSidebar {
+  position: fixed;
+  top: var(--shell-height);
+  left: 0;
+  bottom: 0;
+  width: var(--shell-sidebar-width);
+  z-index: 21;
+  overflow-y: auto;
+  padding: 20px 12px;
+  background: linear-gradient(100deg, #0a1c2c, #102c40);
+  border-right: 1px solid #31556c;
+}
+#shellSidebar #shellSubnav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#shellSidebar .shell-subtab {
+  flex: none;
+  min-height: 46px;
+  width: 100%;
+  text-align: left;
+  padding: 12px;
+  white-space: normal;
+  border: 1px solid #2d4f64;
+  background: #102b40;
+}
+#shellSidebar .shell-subtab[aria-pressed="true"] {
+  border-color: #59caff;
+  background: linear-gradient(90deg, #18577b, #123349);
+}
+body.menu-shell-active
+  > .menu-screen:is(
+    #start,
+    #roomPreparation,
+    #formationScreen,
+    #productionScreen,
+    #developmentScreen,
+    #shellRecordsScreen
+  ) {
+  margin-left: var(--shell-sidebar-width);
+  width: calc(100% - var(--shell-sidebar-width));
+}
+.shell-secondary {
+  justify-content: flex-end;
+}
+.has-unclaimed {
+  animation: server-reward-pulse 1.4s ease-in-out infinite;
+}
+@keyframes server-reward-pulse {
+  0%,
+  100% {
+    border-color: #4f7994;
+    box-shadow: inset 0 0 0 1px #4f799440;
+  }
+  50% {
+    border-color: #ffc765;
+    box-shadow:
+      inset 0 0 16px #db982e38,
+      0 0 9px #db982e60;
+    color: #ffe1a5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .has-unclaimed {
+    animation: none;
+    outline: 2px solid #ffc765;
+  }
+}
+@media (max-width: 1100px) {
+  body.menu-shell-active {
+    --shell-sidebar-width: 140px;
+  }
+  #shellSidebar {
+    padding: 14px 8px;
+  }
+  body.menu-shell-active .production-workspace {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+@media (max-width: 720px) {
+  body.menu-shell-active {
+    --shell-sidebar-width: 86px;
+  }
+  #shellSidebar {
+    padding: 10px 5px;
+  }
+  #shellSidebar .shell-subtab {
+    font-size: 11px;
+    min-height: 44px;
+    padding: 8px 5px;
+  }
+  .shell-secondary {
+    flex-wrap: nowrap;
+    min-height: 35px;
+    padding-block: 5px;
+  }
+  #shellIdentity {
+    margin-left: 0;
+  }
+  body.menu-shell-active #start > .modal {
+    padding: 12px;
+  }
+  body.menu-shell-active #start .start-brand h1 {
+    font-size: 22px;
+    letter-spacing: 0;
+  }
+  body.menu-shell-active #formationMain > .formation-footer {
+    flex-wrap: wrap;
+  }
+  body.menu-shell-active #formationMain .formation-footer .formation-group-banner {
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  body.menu-shell-active #formationScreen .formation-row {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+  body.menu-shell-active #formationScreen .formation-row > .formation-row-actions {
+    grid-column: 1/-1;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  body.menu-shell-active #formationScreen .formation-row-actions button {
+    min-width: 0;
+    font-size: 11px;
+    padding: 6px 3px;
+  }
+  body.menu-shell-active #formationScreen .pilot-button-prefix {
+    font-size: 9px;
+  }
+}
+
+/* Account controls read left-to-right: currency, player ID, settings. */
+#shellProfile .menu-profile-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+#shellProfile .player-id-label > span {
+  display: none;
+}
+#shellProfile #menuResources {
+  flex: none;
+  white-space: nowrap;
+}
+@media (max-width: 1100px) {
+  #shellProfile .menu-profile-row {
+    gap: 8px;
+  }
+  #shellProfile #playerId {
+    width: 110px;
+  }
+  #shellProfile #menuResources {
+    font-size: 11px;
+    gap: 8px;
+  }
+}
+@media (min-width: 721px) and (max-width: 1000px) {
+  .shell-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px 12px;
+  }
+  .shell-brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  #shellProfile {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  #shellSettings {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .shell-primary {
+    grid-column: 1/-1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 720px) {
+  .shell-top {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 7px;
+  }
+  .shell-brand {
+    grid-column: 1/-1;
+    grid-row: 1;
+  }
+  #shellProfile {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: end;
+  }
+  #shellSettings {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .shell-primary {
+    grid-column: 1/-1;
+    grid-row: 3;
+  }
+  #shellProfile #playerId {
+    width: 100px;
+  }
+  #shellProfile #menuResources {
+    font-size: 10px;
+    gap: 7px;
+  }
+}
+
+/* Pages occupy the remaining viewport; long content scrolls inside its panel. */
+body.menu-shell-active {
+  overflow: hidden;
+}
+body.menu-shell-active
+  > .menu-screen:is(
+    #start,
+    #roomPreparation,
+    #formationScreen,
+    #productionScreen,
+    #developmentScreen,
+    #shellRecordsScreen
+  ) {
+  position: fixed;
+  inset: var(--shell-height) 0 0 var(--shell-sidebar-width);
+  width: auto;
+  height: auto;
+  min-height: 0;
+  max-height: calc(100dvh - var(--shell-height));
+  margin: 0;
+  overflow: hidden;
+}
+body.menu-shell-active > .menu-screen > .modal {
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
+}
+body.menu-shell-active #formationScreen #formationMain,
+body.menu-shell-active #roomPreparation #roomMain {
+  overflow: hidden;
+}
+body.menu-shell-active #developmentScreen #developmentMain {
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
+}
+body.menu-shell-active #start.server-connected .start-layout {
+  display: none;
+}
+body.menu-shell-active #start.server-connected > .modal > .start-brand,
+body.menu-shell-active #start.server-connected > .modal > .muted,
+body.menu-shell-active #start.server-connected .menu-profile {
+  display: none;
+}
+body.menu-shell-active #start.server-connected > .modal {
+  overflow: hidden;
+  padding: 18px;
+  gap: 12px;
+}
+body.menu-shell-active #start.server-connected #lobby:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  gap: 10px;
+}
+body.menu-shell-active #lobby .room-list-scroll {
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: none;
+  overflow: auto;
+  margin: 0;
+}
+body.menu-shell-active #lobby > :not(.room-list-scroll),
+body.menu-shell-active #start.server-connected > .modal > :not(#lobby) {
+  flex-shrink: 0;
+}
+body.menu-shell-active #lobby > p {
+  margin: 0;
+}
+@media (max-width: 720px) {
+  body.menu-shell-active #start.server-connected > .modal {
+    padding: 10px;
+    gap: 8px;
+  }
+}
+
+/* Short windows keep controls reachable without expanding the document. */
+body.menu-shell-active #start.server-connected #lobby:not([hidden]) {
+  overflow: auto;
+}
+body.menu-shell-active #lobby .room-list-scroll {
+  min-height: 100px;
+}
+
+/* One page-heading system, independent of each page's controls and balances. */
+body.menu-shell-active
+  :is(
+    #productionResources,
+    #developmentResources,
+    #formationResources,
+    #roomResources,
+    #roomSeatResources
+  ) {
+  display: none;
+}
+body.menu-shell-active
+  > .menu-screen:is(
+    #start,
+    #roomPreparation,
+    #formationScreen,
+    #productionScreen,
+    #developmentScreen,
+    #shellRecordsScreen
+  )
+  > .modal {
+  padding: 18px;
+  gap: 12px;
+}
+body.menu-shell-active
+  :is(
+    #start,
+    #roomPreparation,
+    #formationScreen,
+    #productionScreen,
+    #developmentScreen,
+    #shellRecordsScreen
+  )
+  .shell-page-heading {
+  display: flex;
+  flex: none;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  padding: 0 0 10px;
+  margin: 0;
+  gap: 12px;
+  border-bottom: 1px solid #31556c;
+}
+body.menu-shell-active
+  :is(
+    #start,
+    #roomPreparation,
+    #formationScreen,
+    #productionScreen,
+    #developmentScreen,
+    #shellRecordsScreen
+  )
+  .shell-page-heading
+  .shell-page-title {
+  flex: none;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: 0;
+  margin: 0;
+  padding: 0;
+  color: #b2e6ff;
+}
+body.menu-shell-active .development-heading-title {
+  display: flex;
+  align-items: center;
+}
+body.menu-shell-active .development-heading-title .eyebrow,
+body.menu-shell-active #start > .modal > .start-brand {
+  display: none;
+}
+body.menu-shell-active .development-toolbar {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+body.menu-shell-active .development-toolbar .development-faction-picker {
+  flex: 1;
+  min-width: 150px;
+}
+body.menu-shell-active .development-toolbar .development-balance {
+  flex: none;
+}
+body.menu-shell-active .shell-records-content {
+  justify-content: flex-start;
+}
+body.menu-shell-active #formationBudget,
+body.menu-shell-active #formationPilotBudget {
+  min-width: 0;
+  margin-left: auto;
+  text-align: right;
+  font-size: 11px;
+  line-height: 16px;
+  max-height: 34px;
+  overflow: auto;
+}
+body.menu-shell-active #start.server-connected .lobby-heading h3 {
+  display: none;
+}
+@media (max-width: 720px) {
+  body.menu-shell-active
+    > .menu-screen:is(
+      #start,
+      #roomPreparation,
+      #formationScreen,
+      #productionScreen,
+      #developmentScreen,
+      #shellRecordsScreen
+    )
+    > .modal {
+    padding: 12px;
+  }
+  body.menu-shell-active
+    :is(
+      #start,
+      #roomPreparation,
+      #formationScreen,
+      #productionScreen,
+      #developmentScreen,
+      #shellRecordsScreen
+    )
+    .shell-page-heading {
+    height: 48px;
+    min-height: 48px;
+    max-height: 48px;
+  }
+  body.menu-shell-active
+    :is(
+      #start,
+      #roomPreparation,
+      #formationScreen,
+      #productionScreen,
+      #developmentScreen,
+      #shellRecordsScreen
+    )
+    .shell-page-heading
+    .shell-page-title {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+body.menu-shell-active #formationScreen #formationMain,
+body.menu-shell-active #developmentScreen #developmentMain {
+  padding: 18px;
+  gap: 12px;
+}
+@media (max-width: 720px) {
+  body.menu-shell-active #formationScreen #formationMain,
+  body.menu-shell-active #developmentScreen #developmentMain {
+    padding: 12px;
+    gap: 12px;
+  }
+}
+
+/* The research page itself stays fixed; only its tree and details scroll. */
+body.menu-shell-active #developmentScreen #developmentMain {
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+body.menu-shell-active #developmentScreen .development-workspace {
+  flex:1 1 0;
+  min-height:0;
+  height:auto;
+  overflow:hidden;
+  grid-template-rows:minmax(0,1fr);
+}
+body.menu-shell-active #developmentScreen :is(.development-tree-scroll,.development-details) {
+  min-height:0;
+  overflow:auto;
+}
+@media(max-width:900px) {
+  body.menu-shell-active #developmentScreen .development-workspace {
+    grid-template-rows:repeat(2,minmax(0,1fr));
+  }
+}
+
+/* The account row contains faction, currency, player ID, then settings. */
+#shellProfile #shellIdentity { flex:none; margin:0; }
+#shellProfile #shellIdentity .menu-faction { gap:6px; }
+#shellProfile #shellIdentity .menu-faction > label { display:none; }
+#shellProfile #shellIdentity select { width:160px; max-width:160px; }
+#shellSidebar { display:flex; flex-direction:column; }
+#shellSidebar #shellSubnav { flex:none; }
+.shell-room-controls { margin-top:auto; padding-top:18px; display:grid; gap:8px; }
+#shellSidebar #shellRoomStatus { width:100%; white-space:normal; text-align:left; }
+body.menu-shell-active #developmentScreen .development-toolbar .development-faction-picker {
+  flex:0 0 180px;
+  width:180px;
+  min-width:180px;
+  max-width:180px;
+}
+body.menu-shell-active #developmentScreen #developmentFactionSelect {
+  flex:none;
+  width:180px;
+  min-width:180px;
+  max-width:180px;
+}
+body.menu-shell-active #developmentScreen .development-toolbar .development-balance { flex:0 0 auto; white-space:nowrap; }
+@media(max-width:1100px) {
+  #shellProfile #shellIdentity select { width:120px; max-width:120px; }
+}
+@media(max-width:720px) {
+  #shellProfile .menu-profile-row { gap:5px; }
+  #shellProfile #shellIdentity select { width:92px; max-width:92px; font-size:10px; }
+  #shellProfile #menuResources { flex-direction:column; align-items:flex-start; gap:1px; }
+  #shellProfile #playerId { width:72px; }
+}
+@media(max-width:360px) {
+  #shellProfile #shellIdentity select { width:80px; max-width:80px; }
+  #shellProfile #playerId { width:56px; }
+}
+
+/* Scale all three technology branches to the viewport; scrolling is vertical only. */
+body.menu-shell-active #developmentScreen .development-tree-scroll {
+  overflow-x:hidden;
+  overflow-y:auto;
+  scrollbar-gutter:stable;
+}
+body.menu-shell-active #developmentScreen .development-tree-stage {
+  position:relative;
+  width:100%;
+  min-width:0;
+}
+body.menu-shell-active #developmentScreen #developmentTree {
+  position:absolute;
+  left:0;
+  top:0;
+  min-width:560px;
+  max-width:none;
+  transform-origin:top left;
+}
+body.menu-shell-active #developmentScreen .development-details {
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+
+/* Main navigation replaces the formation return action. */
+body.menu-shell-active #formationMain #saveFormation { display:none; }
+body.menu-shell-active #formationMain[data-page="pilots"] .formation-footer .formation-group-banner { display:none; }
+
+/* Let the server list body use the space between its heading and full-width actions. */
+body.menu-shell-active #start.server-connected > .modal > :is(#releaseWarning,.menu-contact) { display:none; }
+body.menu-shell-active #start.server-connected #lobby {
+  margin:0;
+  padding:12px;
+  flex:1 1 0;
+  gap:10px;
+}
+body.menu-shell-active #lobby .lobby-heading { flex-wrap:wrap; }
+body.menu-shell-active #lobby .lobby-header-actions {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-left:auto;
+}
+body.menu-shell-active #lobby .lobby-header-actions #openServerActivities {
+  flex:none;
+  width:auto;
+  margin:0;
+}
+body.menu-shell-active #lobby .room-list-scroll { flex:1 1 0; max-height:none; }
+body.menu-shell-active #lobby .lobby-actions {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  width:100%;
+  gap:10px;
+}
+body.menu-shell-active #lobby .lobby-actions :is(#disconnectLobby,#createRoom) {
+  width:100%;
+  margin:0;
+  min-height:48px;
+}
+body.menu-shell-active #lobby .room-list thead th {
+  position:sticky;
+  top:0;
+  z-index:1;
+  background:#102c40;
+}
+@media(max-width:720px) {
+  body.menu-shell-active #start.server-connected #lobby { padding:8px; gap:8px; }
+  body.menu-shell-active #lobby .lobby-header-actions button { padding:6px; font-size:12px; }
+  body.menu-shell-active #lobby .lobby-actions :is(#disconnectLobby,#createRoom) { min-height:44px; }
+}
+
+/* Formation sharing and faction selection belong to the heading's right edge. */
+body.menu-shell-active #formationMain .formation-heading-actions {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-left:auto;
+  min-width:0;
+}
+body.menu-shell-active #formationMain .formation-heading-actions .formation-group-banner {
+  display:flex;
+  flex:none;
+  align-items:center;
+  gap:8px;
+  padding:0;
+  margin:0;
+  border:0;
+  background:none;
+}
+body.menu-shell-active #formationMain .formation-heading-actions .formation-group-banner strong { white-space:nowrap; font-size:12px; }
+body.menu-shell-active #formationMain .formation-heading-actions #formationGroup {
+  width:clamp(130px,15vw,210px);
+  height:34px;
+  min-height:34px;
+  font-size:12px;
+}
+body.menu-shell-active #formationMain .formation-heading-actions #openFormationShare { flex:none; width:auto; min-height:34px; padding:6px 12px; white-space:nowrap; }
+body.menu-shell-active #formationMain .formation-budget-row { flex:none; display:flex; justify-content:flex-end; min-height:0; }
+body.menu-shell-active #formationMain[data-page="pilots"] #formationHeadingActions,
+body.menu-shell-active #formationMain > .formation-footer:not(:has(#produceMissingFormation:not([hidden]))) { display:none; }
+@media(max-width:720px) {
+  body.menu-shell-active #formationMain .formation-heading-actions { gap:6px; }
+  body.menu-shell-active #formationMain .formation-heading-actions .formation-group-banner strong { display:none; }
+  body.menu-shell-active #formationMain .formation-heading-actions #formationGroup { width:110px; font-size:11px; padding:4px; }
+  body.menu-shell-active #formationMain .formation-heading-actions #openFormationShare { padding:5px; font-size:11px; }
+}
+
+/* Research controls align to the heading without changing size with their text. */
+body.menu-shell-active #developmentScreen .development-heading .development-toolbar {
+  flex:none;
+  flex-wrap:nowrap;
+  margin-left:auto;
+  gap:10px;
+}
+body.menu-shell-active #developmentScreen .development-heading .development-balance {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex:0 0 170px;
+  width:170px;
+  gap:6px;
+  min-height:34px;
+  padding:5px 8px;
+}
+/* Both lobby controls use fixed widths; they never squeeze each other. */
+#menuFactionProgress { display:flex; align-items:center; flex-wrap:nowrap; flex:none; width:max-content; gap:16px; }
+#menuFactionProgress #shellIdentity { flex:0 0 180px; width:180px; margin:0; }
+#menuFactionProgress #shellIdentity .menu-faction { display:block; }
+#menuFactionProgress #shellIdentity label { display:none; }
+#menuFactionProgress #menuFactionSelect { width:180px; min-width:180px; max-width:180px; min-height:36px; }
+#menuFactionProgress #menuTechProgress { flex:0 0 360px; width:360px; min-width:360px; max-width:360px; margin:0; }
+@media(max-width:1100px) {
+  #menuFactionProgress { gap:12px; }
+  #menuFactionProgress #shellIdentity { flex-basis:160px; width:160px; }
+  #menuFactionProgress #menuFactionSelect { width:160px; min-width:160px; max-width:160px; }
+  #menuFactionProgress #menuTechProgress { flex-basis:280px; width:280px; min-width:280px; max-width:280px; }
+}
+@media(max-width:720px) {
+  body.menu-shell-active #developmentScreen .development-heading .development-toolbar { gap:6px; }
+  body.menu-shell-active #developmentScreen .development-heading .development-faction-picker { flex:0 0 90px; width:90px; min-width:90px; max-width:90px; }
+  body.menu-shell-active #developmentScreen .development-heading #developmentFactionSelect { width:90px; min-width:90px; max-width:90px; font-size:11px; padding:4px; }
+  body.menu-shell-active #developmentScreen .development-heading .development-balance { flex-basis:106px; width:106px; font-size:9px; padding:4px 6px; gap:4px; }
+  body.menu-shell-active #developmentScreen .development-heading .development-balance strong { font-size:12px; margin:0; }
+  #menuFactionProgress { gap:8px; }
+  #menuFactionProgress #shellIdentity { flex-basis:104px; width:104px; }
+  #menuFactionProgress #menuFactionSelect { width:104px; min-width:104px; max-width:104px; font-size:11px; }
+  #menuFactionProgress #menuTechProgress { flex-basis:132px; width:132px; min-width:132px; max-width:132px; }
+  #menuFactionProgress .menu-tech-progress-heading { font-size:9px; gap:4px; }
+}
+@media(max-width:360px) {
+  #menuFactionProgress { gap:6px; }
+  #menuFactionProgress #shellIdentity { flex-basis:80px; width:80px; }
+  #menuFactionProgress #menuFactionSelect { width:80px; min-width:80px; max-width:80px; }
+  #menuFactionProgress #menuTechProgress { flex-basis:96px; width:96px; min-width:96px; max-width:96px; }
+  #menuFactionProgress .menu-tech-progress-heading { flex-wrap:wrap; }
+}
+
+/* Heading statistics stay in one line; editing actions share the toolbar. */
+body.menu-shell-active #formationMain .formation-heading-actions { flex:1; }
+body.menu-shell-active #formationMain #formationBudget {
+  display:block;
+  flex:1;
+  min-width:0;
+  max-width:none;
+  max-height:none;
+  margin:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  text-align:right;
+  line-height:20px;
+}
+body.menu-shell-active #formationMain #formationBudget span { display:inline; white-space:nowrap; }
+body.menu-shell-active #formationMain #formationBudget #formationUnitCostLimit {
+  padding:0;
+  border:0;
+  background:none;
+  font:inherit;
+}
+body.menu-shell-active #formationMain #formationPilotBudget {
+  flex:none;
+  margin:0 0 0 auto;
+  max-height:none;
+  white-space:nowrap;
+  font-size:12px;
+}
+body.menu-shell-active #formationMain > .formation-toolbar:not(#formationPilotToolbar) {
+  grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) auto auto auto;
+  gap:8px;
+}
+body.menu-shell-active #formationMain .formation-toolbar #openFormationShare { width:auto; min-width:0; padding:8px 10px; white-space:nowrap; }
+/* Reserve an explicit last grid column for Settings at every window width. */
+#shellProfile { min-width:0; max-width:100%; overflow:hidden; }
+#shellProfile .menu-profile-row { min-width:0; }
+#shellSettings { position:static; justify-self:end; min-width:44px; }
+@media(min-width:1001px) {
+  .shell-top { display:grid; grid-template-columns:minmax(130px,180px) minmax(0,1fr) auto auto; width:100%; max-width:none; gap:14px; }
+  .shell-brand { grid-column:1; grid-row:1; min-width:0; }
+  .shell-primary { grid-column:2; grid-row:1; }
+  #shellProfile { grid-column:3; grid-row:1; margin:0; justify-self:end; }
+  #shellSettings { grid-column:4; grid-row:1; }
+}
+@media(min-width:721px) and (max-width:1000px) {
+  .shell-top { grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto; }
+  #shellProfile { min-width:0; max-width:100%; justify-self:end; }
+}
+@media(max-width:720px) {
+  body.menu-shell-active #formationMain > .formation-toolbar:not(#formationPilotToolbar) { grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px; }
+  body.menu-shell-active #formationMain > .formation-toolbar:not(#formationPilotToolbar) > label { grid-column:span 3; }
+  body.menu-shell-active #formationMain > .formation-toolbar:not(#formationPilotToolbar) > button { grid-column:span 2; padding:6px 3px; font-size:11px; }
+  body.menu-shell-active #formationMain #formationPilotBudget { font-size:11px; }
+}
+
+/* Creation panels stay within the viewport even while an open window is resized. */
+#skirmishSetup {
+  inset:0;
+  width:100%;
+  height:100dvh;
+  min-width:0;
+  padding:12px;
+  overflow:auto;
+  z-index:1200;
+}
+#skirmishSetup > .skirmish-dialog {
+  flex:0 1 560px;
+  width:100%;
+  min-width:0;
+  max-width:560px;
+  max-height:100%;
+  margin:auto;
+  padding:20px;
+  overflow:auto;
+  overflow-wrap:anywhere;
+}
+#skirmishSetup .skirmish-dialog label { display:grid; gap:6px; min-width:0; }
+#skirmishSetup .skirmish-dialog select { width:100%; min-width:0; }
+#roomCreateDialog {
+  position:fixed;
+  inset:0;
+  width:min(420px,calc(100vw - 24px));
+  min-width:0;
+  max-width:calc(100vw - 24px);
+  max-height:calc(100dvh - 24px);
+  margin:auto;
+  padding:20px;
+  overflow:auto;
+  overflow-wrap:anywhere;
+}
+#roomCreateForm { grid-template-columns:minmax(0,1fr); min-width:0; width:100%; }
+#roomCreateForm label { min-width:0; }
+#roomCreateForm :is(input,select) { min-width:0; max-width:100%; }
+#roomCreateForm .net-buttons { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+#roomCreateForm .net-buttons button { min-width:0; white-space:normal; }
+@media(max-width:600px) {
+  #skirmishSetup > .skirmish-dialog, #roomCreateDialog { padding:16px; }
+  #skirmishSetup .skirmish-dialog .net-buttons { display:grid; grid-template-columns:minmax(0,1fr); }
+  #skirmishSetup .skirmish-dialog .net-buttons button { width:100%; min-width:0; min-height:40px; white-space:normal; }
+}
+
+/* Keep the faction label beside its fixed-size selector. */
+#menuFactionProgress #shellIdentity { flex-basis:252px; width:252px; }
+#menuFactionProgress #shellIdentity .menu-faction { display:flex; align-items:center; gap:8px; }
+#menuFactionProgress #shellIdentity label { display:block; flex:0 0 64px; width:64px; font-size:12px; white-space:nowrap; }
+#roomMain #teamSlots > .team-slot[data-team="0"] { border:1px solid #4b9bd6; background:linear-gradient(130deg,#123451,#102230); box-shadow:inset 3px 0 #62baff; }
+#roomMain #teamSlots > .team-slot[data-team="1"] { border:1px solid #d16c75; background:linear-gradient(130deg,#44212c,#241c26); box-shadow:inset 3px 0 #f18791; }
+#roomMain #teamSlots > .team-slot[data-team="0"] .team-heading h3 { color:#81caff; }
+#roomMain #teamSlots > .team-slot[data-team="1"] .team-heading h3 { color:#ff9ca5; }
+@media(max-width:1100px) {
+  #menuFactionProgress #shellIdentity { flex-basis:212px; width:212px; }
+  #menuFactionProgress #shellIdentity label { flex-basis:64px; width:64px; font-size:11px; }
+  #menuFactionProgress #menuFactionSelect { width:140px; min-width:140px; max-width:140px; }
+  #menuFactionProgress #menuTechProgress { flex-basis:260px; width:260px; min-width:260px; max-width:260px; }
+}
+@media(max-width:720px) {
+  #menuFactionProgress #shellIdentity { flex-basis:158px; width:158px; }
+  #menuFactionProgress #shellIdentity .menu-faction { gap:6px; }
+  #menuFactionProgress #shellIdentity label { flex-basis:52px; width:52px; font-size:10px; }
+  #menuFactionProgress #menuFactionSelect { width:100px; min-width:100px; max-width:100px; }
+  #menuFactionProgress #menuTechProgress { flex-basis:96px; width:96px; min-width:96px; max-width:96px; }
+  #menuFactionProgress .menu-tech-progress-heading { flex-wrap:wrap; }
+}
+@media(max-width:360px) {
+  #menuFactionProgress #shellIdentity { flex-basis:106px; width:106px; }
+  #menuFactionProgress #shellIdentity .menu-faction { gap:4px; }
+  #menuFactionProgress #shellIdentity label { flex-basis:42px; width:42px; font-size:9px; }
+  #menuFactionProgress #menuFactionSelect { width:60px; min-width:60px; max-width:60px; }
+  #menuFactionProgress #menuTechProgress { flex-basis:80px; width:80px; min-width:80px; max-width:80px; }
+}
+
+/* The server connection overlay uses the full viewport, not the lobby content width. */
+#serverConnect {
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100dvh;
+  min-width:0;
+  padding:12px;
+  overflow:auto;
+  z-index:1200;
+}
+#serverConnect #serverForm {
+  flex:0 1 480px;
+  width:100%;
+  min-width:0;
+  max-width:480px;
+  max-height:100%;
+  margin:auto;
+  padding:20px;
+  overflow:auto;
+  overflow-wrap:anywhere;
+}
+#serverForm :is(.preset-servers,.server-label,.net-buttons) { min-width:0; max-width:100%; }
+#serverForm input { width:100%; min-width:0; max-width:100%; box-sizing:border-box; }
+#serverForm .preset-server { min-width:0; max-width:100%; flex-wrap:wrap; text-align:left; }
+#serverForm .preset-server > * { min-width:0; }
+#serverForm .net-buttons { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+#serverForm .net-buttons button { width:100%; min-width:0; white-space:normal; }
+@media(max-width:600px) {
+  #serverConnect #serverForm { padding:16px; }
+  #serverForm .net-buttons { grid-template-columns:minmax(0,1fr); }
+  #serverForm .net-buttons button { min-height:40px; }
+}
+
+/* Main tabs divide the space left after brand, account and Settings. */
+#menuShell .shell-primary {
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  min-width:0; width:100%; align-items:center; justify-self:stretch;
+}
+#menuShell .shell-primary > button {
+  min-width:0; width:100%; margin:0;
+  justify-items:center; align-content:center;
+}
+/* Room controls remain readable and easy to click in the narrow sidebar. */
+#shellSidebar .shell-room-controls { flex:none; gap:10px; padding-top:16px; }
+#shellSidebar :is(#shellRoomStatus,#shellLeaveRoom) {
+  display:block; width:100%; min-height:46px; padding:10px 8px;
+  font-size:14px; line-height:1.5; border:1px solid #718197;
+  border-radius:3px; white-space:normal; overflow-wrap:anywhere;
+}
+#shellSidebar #shellRoomStatus { text-align:left; color:#e2edf6; }
+#shellSidebar #shellLeaveRoom { text-align:center; }
+@media(max-width:720px) {
+  #shellSidebar :is(#shellRoomStatus,#shellLeaveRoom) { min-height:44px; padding:9px 5px; font-size:12px; }
+}
+
+/* Phones place section tabs directly below the main navigation instead of a left rail. */
+@media(max-width:720px) {
+  body.menu-shell-active { --shell-sidebar-width:0px; }
+  #shellSidebar {
+    top:var(--shell-height); bottom:auto; left:0; right:0;
+    width:100%; max-height:calc(100dvh - var(--shell-height));
+    box-sizing:border-box; padding:6px 8px; gap:6px;
+    border-right:0; border-bottom:1px solid #596b80;
+    overflow-x:hidden; overflow-y:auto;
+  }
+  #shellSidebar #shellSubnav {
+    display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr);
+    flex:none; width:100%; gap:5px;
+  }
+  #shellSidebar .shell-subtab {
+    width:100%; min-width:0; min-height:38px; margin:0; padding:7px 3px;
+    font-size:12px; line-height:1.4; text-align:center;
+  }
+  #shellSidebar .shell-subtab[aria-pressed="true"] { box-shadow:inset 0 -2px #7acbff; }
+  #shellSidebar .shell-room-controls {
+    display:grid; grid-template-columns:minmax(0,1fr) auto;
+    width:100%; margin:0; padding:0; gap:6px;
+  }
+  #shellSidebar #shellRoomStatus { min-width:0; }
+  #shellSidebar #shellLeaveRoom { width:auto; padding-inline:12px; }
+  body.menu-shell-active > .menu-screen:is(#start,#roomPreparation,#formationScreen,#productionScreen,#developmentScreen,#shellRecordsScreen) {
+    inset:calc(var(--shell-height) + var(--shell-subnav-height,50px)) 0 0;
+    margin:0; width:auto;
+    max-height:calc(100dvh - var(--shell-height) - var(--shell-subnav-height,50px));
+  }
+}
+
+/* Both room columns share one bounded height; the input row is the chat's final row. */
+#roomMain .room-columns { flex:1 1 0; min-height:0; align-items:stretch; }
+#roomMain .room-controls { min-height:0; }
+#roomMain #roomChatPanel { min-height:0; margin-bottom:0; padding-bottom:0; }
+#roomMain #roomChatContent { flex:1 1 0; min-height:0; }
+#roomMain #roomChatLines { flex:1 1 0; height:auto; min-height:0; max-height:none; overflow-y:auto; }
+#roomMain #roomChatForm { flex:none; margin:6px 0 0; align-items:stretch; }
+#roomMain #roomChatForm > * { margin-top:0; margin-bottom:0; }
+#roomMain #roomChatStatus { order:-1; flex:none; min-height:0; margin:0 0 6px; }
+#roomMain #roomChatStatus:empty { display:none; }
+
+/* Override the earlier phone rule that made Add a non-flexing full-width button. */
+#formationScreen .formation-unit-actions :is(#openFormationPicker,#produceMissingFormation) {
+  flex:1 1 0; width:0; min-width:0;
+}

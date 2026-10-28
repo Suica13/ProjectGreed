@@ -19,7 +19,7 @@ for (const width of [1280, 390])
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await page.waitForFunction(() => assetsReady);
     await page.evaluate(() => I18n.setLanguage("zh"));
-    await page.locator("#openFormation").click();
+    await page.locator("#shellHangar").click();
     await page.locator("#openFormationPicker").click();
     await expect(page.locator("#formationStock")).toHaveValue("owned");
     const cards = page.locator("#formationCatalog .catalog-unit");

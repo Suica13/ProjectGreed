@@ -636,6 +636,7 @@ const Formation = (() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.setAttribute("aria-label", model.code + " " + model.name);
     if (!assetsReady) return;
+    const previewAngle = 90;
     const held = model.weapons[0]?.id,
       points = [];
     for (const layer of SpriteRenderer.visibleLayers(
@@ -653,7 +654,7 @@ const Formation = (() => {
     )) {
       const image = SpriteRenderer.images[layer.asset];
       if (!image) continue;
-      const t = SpriteRenderer.layerTransform(modelId, layer, 0, {}),
+      const t = SpriteRenderer.layerTransform(modelId, layer, previewAngle, {}),
         w = (layer.frameWidth || Math.floor(image.width / (layer.frames || 1))) / 2,
         h = (layer.frameHeight || image.height) / 2;
       for (const x of [-w, w])
@@ -678,7 +679,7 @@ const Formation = (() => {
       canvas.width / 2 - ((left + right) / 2) * scale,
       canvas.height / 2 - ((top + bottom) / 2) * scale,
       scale,
-      0,
+      previewAngle,
       null,
       0,
       held,
@@ -686,7 +687,7 @@ const Formation = (() => {
       true,
       false,
       {},
-      0,
+      previewAngle,
       false,
       true,
       "ground",
@@ -1000,6 +1001,8 @@ const Formation = (() => {
       byId("formationDetailMovement").append(element("p", "helper", "空军：可跨越山岩和水域"));
     byId("formationDetailSkillsBlock").hidden = !abilities.children.length;
     byId("formationDetailMechanicsBlock").hidden = !mechanics.children.length;
+    // Portal above fixed page containers so the preview is never clipped by a page.
+    document.body.append(byId("formationUnitDetail"));
     byId("formationUnitDetail").hidden = false;
     byId("formationMain").inert = true;
   }
@@ -1095,6 +1098,7 @@ const Formation = (() => {
       document.createTextNode(" · "),
       unitCostRule,
     );
+    byId("formationBudget").title = byId("formationBudget").textContent;
     byId("formationBudget").classList.toggle("danger-text", points(draft) > unitLimit());
     byId("addFormationUnit").disabled =
       points(draft) + pickerWeight() > unitLimit() ||
@@ -1167,6 +1171,8 @@ const Formation = (() => {
       image.width = 56;
       image.alt = entry.customName || model.name;
       icon.append(image);
+      const portrait = element("span", "formation-unit-portrait");
+      portrait.append(icon);
       if (plan.reasons[i] === "faction_mismatch") row.classList.add("faction-mismatch");
       if (plan.disabled.includes(i) && plan.reasons[i] !== "not_developed") {
         row.classList.add(
@@ -1199,17 +1205,17 @@ const Formation = (() => {
       const label = element("span", "formation-unit-name");
       const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId),
         kit = prefab.weaponKits.find((k) => k.id === entry.kitId);
-      const description = element("small", "muted formation-row-description", model.description);
-      description.title = model.description;
+      const metadata = element("span", "unit-line-meta");
+      metadata.append(unitTags(model));
+      label.title = model.description || "";
       label.append(
-        unitTags(model),
         element(
           "strong",
           "",
           `${entry.preload ? "" : i + 1 + ". "}${model.code} ${entry.customName || model.name}`,
         ),
+        metadata,
         unitSummaryTags(model.adaptability, kit.name, model.cost),
-        description,
       );
       if (entry.customName) label.querySelector("strong").setAttribute("data-i18n-ignore", "");
       if (entry.preload) {
@@ -1252,7 +1258,7 @@ const Formation = (() => {
             " 台",
         ),
       );
-      if (!Development.allows(group, entry.unitId)) stockLine.append(undevelopedWarning());
+      if (!Development.allows(group, entry.unitId)) portrait.append(undevelopedWarning());
       if (plan.reasons[i] === "inventory") {
         row.classList.add("inventory-shortage");
         const produce = element("button", "produce-shortage-unit", "生产");
@@ -1272,7 +1278,7 @@ const Formation = (() => {
       pilot.setAttribute("aria-haspopup", "dialog");
       pilot.onclick = () => openPilot(i);
       actions.append(details, pilot, remove);
-      row.append(icon, label, actions, stockLine);
+      row.append(portrait, label, actions, stockLine);
       list.append(row);
     });
     list.scrollTop = scrollTop;
@@ -1292,6 +1298,7 @@ const Formation = (() => {
   }
   function openPilot(index) {
     if (!draft[index]) return;
+    document.body.append(byId("formationPilotPanel"));
     pilotIndex = index;
     const entry = draft[index],
       model = UnitModels[entry.unitId + "__" + entry.kitId],
@@ -1517,7 +1524,7 @@ const Formation = (() => {
     pickerReturnIndex = null;
     byId("formationUnitPicker").hidden = true;
     closeDetail();
-    returnView = pageView === "room" ? "room" : "menu";
+    returnView = Net.active ? "room" : "menu";
     const activePlan =
       Net.snapshot?.phase === "assembly"
         ? Net.snapshot.assembly?.players.find((player) => player.memberId === Net.memberId)
@@ -1688,10 +1695,10 @@ const Formation = (() => {
             " 台",
         ),
       );
-      if (!Development.allows(group, prefab.id)) stockLine.append(undevelopedWarning());
       info.append(stockLine);
       const portrait = element("span", "catalog-unit-portrait");
       portrait.append(image);
+      if (!Development.allows(group, prefab.id)) portrait.append(undevelopedWarning());
       card.append(portrait, info);
       card.onclick = () => {
         GameAudio.selectUnit(prefab);
@@ -1867,14 +1874,14 @@ const Formation = (() => {
       if (choice !== null) choices[choice]?.[2]?.();
     });
   }
-  function replenish(entries, faction = group) {
-    const undeveloped = [
-      ...new Set(
-        entries
-          .filter((entry) => !Development.allows(faction, entry.unitId))
-          .map((entry) => entry.unitId),
-      ),
-    ];
+  async function replenish(entries, faction = group) {
+    const plan = Economy.productionPlan(entries);
+    if (!plan.items.length) return true;
+    // Only shortage-plan items participate in production checks or the purchase.
+    // Stocked units never reach development validation, regardless of their unlock state.
+    const undeveloped = plan.items
+      .filter((item) => !Development.allows(faction, item.unitId))
+      .map((item) => item.unitId);
     if (undeveloped.length) {
       const originalGroup = group,
         originalIndex = index,
@@ -1906,6 +1913,36 @@ const Formation = (() => {
           ],
         ],
       );
+      return false;
+    }
+    const unavailable = plan.items.filter((item) => {
+      const offer = Economy.catalog.offers[Economy.baseModel(item.unitId)];
+      const prefab = Rules.catalog.prefabs.find((unit) => unit.id === item.unitId);
+      return !offer || !prefab || prefab.wip || (faction !== "PMC" && offer.faction !== faction);
+    });
+    if (unavailable.length) {
+      showInventoryDialog("无法生产", "以下单位无法生产，已中止本次生产：",
+        unavailable.map((item) => item.unitId), [["确认", "acknowledgeUnavailableUnits"]]);
+      return false;
+    }
+    const originalEntries = JSON.stringify(entries), originalGroup = group, originalIndex = index;
+    const confirmed = await GameDialog.confirm("是否一键生产补齐库存不足的单位？", {
+      title: "一键生产",
+      items: [
+        ...plan.items.map((item) => {
+          const unit = Rules.catalog.prefabs.find((prefab) => prefab.id === item.unitId);
+          return unit.code + " " + I18n.text(unit.name) + " × " + item.quantity;
+        }),
+        I18n.text("资金") + "：" + formatNumber(plan.money),
+        I18n.text("物资") + "：" + formatNumber(plan.supplies),
+      ],
+      confirmText: "确认生产",
+    });
+    if (!confirmed) return false;
+    // A confirmation authorizes exactly the displayed units and price, never a changed plan.
+    if (group !== originalGroup || index !== originalIndex || JSON.stringify(entries) !== originalEntries ||
+        JSON.stringify(Economy.productionPlan(entries)) !== JSON.stringify(plan)) {
+      note("编组或库存已变化，请重新确认生产。");
       return false;
     }
     try {
@@ -1955,8 +1992,15 @@ const Formation = (() => {
       },
     });
   }
-  byId("produceMissingFormation").onclick = () => {
-    if (replenish(draft)) render();
+  byId("produceMissingFormation").onclick = async () => {
+    const button = byId("produceMissingFormation");
+    if (button.disabled) return;
+    button.disabled = true;
+    try {
+      if (await replenish(draft)) render();
+    } finally {
+      button.disabled = false;
+    }
   };
   byId("saveFormation").onclick = () => {
     finishPilotEditor();

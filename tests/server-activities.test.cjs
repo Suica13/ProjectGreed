@@ -431,27 +431,121 @@ test("persistent activity listings survive no-mail periods, claims, reconnects a
   assert.equal(old.confirmedAt, localTime(26));
 });
 
-test("deletion cancels unclaimed mail and bonuses, preserves in-flight receipts and never reinstalls defaults", t => {
-  const f = fixture(t), a = identity(), b = identity(), wa = {}, wb = {};
-  f.service.identify(wa, a); f.service.identify(wb, b);
-  const mail = f.frames.get(wa).at(-1).mail.find(m => m.activityId === "first-server-visit");
-  f.service.receive(wa, {type:"activity_claim",mailId:mail.id});
+test("deletion cancels unclaimed mail and bonuses, preserves in-flight receipts and never reinstalls defaults", (t) => {
+  const f = fixture(t),
+    a = identity(),
+    b = identity(),
+    wa = {},
+    wb = {};
+  f.service.identify(wa, a);
+  f.service.identify(wb, b);
+  const mail = f.frames
+    .get(wa)
+    .at(-1)
+    .mail.find((m) => m.activityId === "first-server-visit");
+  f.service.receive(wa, { type: "activity_claim", mailId: mail.id });
   const award = f.frames.get(wa).at(-1).award;
-  const otherMail = f.frames.get(wb).at(-1).mail.find(m => m.activityId === "first-server-visit");
+  const otherMail = f.frames
+    .get(wb)
+    .at(-1)
+    .mail.find((m) => m.activityId === "first-server-visit");
   f.service.remove("first-server-visit");
-  assert(!f.frames.get(wb).at(-1).mail.some(m => m.id === otherMail.id));
-  assert.throws(() => f.service.receive(wb,{type:"activity_claim",mailId:otherMail.id}), /不存在/);
-  f.service.receive(wa, {type:"activity_claim",mailId:mail.id});
-  assert.deepEqual(f.frames.get(wa).at(-1).award,award);
-  f.service.receive(wa, {type:"activity_ack",mailId:mail.id});
+  assert(
+    !f.frames
+      .get(wb)
+      .at(-1)
+      .mail.some((m) => m.id === otherMail.id),
+  );
+  assert.throws(
+    () => f.service.receive(wb, { type: "activity_claim", mailId: otherMail.id }),
+    /不存在/,
+  );
+  f.service.receive(wa, { type: "activity_claim", mailId: mail.id });
+  assert.deepEqual(f.frames.get(wa).at(-1).award, award);
+  f.service.receive(wa, { type: "activity_ack", mailId: mail.id });
   f.service.remove("default-daily-login");
-  f.time(new Date(2026,9,29,12).getTime());
-  assert.equal(f.service.rewardMultipliers().money,2);
+  f.time(new Date(2026, 9, 29, 12).getTime());
+  assert.equal(f.service.rewardMultipliers().money, 2);
   f.service.remove("default-super-coal-20261028");
-  assert.equal(f.service.rewardMultipliers().money,1);
-  assert.throws(()=>f.service.remove("missing"),/不存在/);
+  assert.equal(f.service.rewardMultipliers().money, 1);
+  assert.throws(() => f.service.remove("missing"), /不存在/);
   f.restart();
-  assert(!f.service.adminSnapshot().activities.some(x => ["first-server-visit","default-daily-login","default-super-coal-20261028"].includes(x.id)));
-  const reconnected = {}; f.service.identify(reconnected,a);
-  assert.equal(f.frames.get(reconnected).at(-1).mail.find(m=>m.id===mail.id).confirmedAt,1000);
+  assert(
+    !f.service
+      .adminSnapshot()
+      .activities.some((x) =>
+        ["first-server-visit", "default-daily-login", "default-super-coal-20261028"].includes(x.id),
+      ),
+  );
+  const reconnected = {};
+  f.service.identify(reconnected, a);
+  assert.equal(
+    f.frames
+      .get(reconnected)
+      .at(-1)
+      .mail.find((m) => m.id === mail.id).confirmedAt,
+    1000,
+  );
+});
+
+test("accepted reward deletion persists per player, retains receipts and permits only future login cycles", (t) => {
+  const f = fixture(t),
+    a = identity(),
+    b = identity(),
+    wa = {},
+    wb = {};
+  f.time(new Date(2026, 9, 28, 12).getTime());
+  f.service.identify(wa, a);
+  f.service.identify(wb, b);
+  const current = () => f.frames.get(wa).at(-1);
+  const welcome = current().mail.find((m) => m.activityId === "first-server-visit");
+  assert.throws(
+    () => f.service.receive(wa, { type: "activity_delete", mailId: welcome.id }),
+    /已接受/,
+  );
+  assert.throws(
+    () => f.service.receive(wb, { type: "activity_delete", mailId: welcome.id }),
+    /不属于/,
+  );
+  for (const id of ["first-server-visit", "default-daily-login"]) {
+    const item = current().mail.find((m) => m.activityId === id);
+    f.service.receive(wa, { type: "activity_claim", mailId: item.id });
+    f.service.receive(wa, { type: "activity_ack", mailId: item.id });
+    f.service.receive(wa, { type: "activity_delete", mailId: item.id });
+    assert(!current().mail.some((m) => m.id === item.id));
+    f.service.receive(wa, { type: "activity_delete", mailId: item.id });
+    f.service.receive(wa, { type: "activity_claim", mailId: item.id });
+    assert.equal(current().type, "activity_mailbox");
+  }
+  assert.equal(
+    current().activities.find((a) => a.id === "default-daily-login").confirmedAt,
+    new Date(2026, 9, 28, 12).getTime(),
+  );
+  assert(
+    f.frames
+      .get(wb)
+      .at(-1)
+      .mail.some((m) => m.activityId === "first-server-visit"),
+  );
+  assert.equal(
+    f.service.adminSnapshot().activities.find((a) => a.id === "first-server-visit").accepted,
+    1,
+  );
+  f.restart();
+  const again = {};
+  f.service.identify(again, a);
+  assert(
+    !f.frames
+      .get(again)
+      .at(-1)
+      .mail.some((m) => m.activityId === "first-server-visit"),
+  );
+  f.time(new Date(2026, 9, 29, 6).getTime());
+  f.service.tick();
+  assert(
+    f.frames
+      .get(again)
+      .at(-1)
+      .mail.some((m) => m.activityId === "default-daily-login" && m.confirmedAt === null),
+  );
 });

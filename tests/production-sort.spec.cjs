@@ -7,7 +7,8 @@ for (const width of [1280, 390])
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await page.waitForFunction(() => assetsReady);
     await page.evaluate(() => I18n.setLanguage("zh"));
-    await page.locator("#openProduction").click();
+    await page.locator("#shellHangar").click();
+    await page.locator("#shellProduction").click();
     await expect(page.locator("#productionSort")).toHaveCount(0);
     const filters = await page.locator(".production-filters").boundingBox();
     const search = await page.locator("#productionSearch").boundingBox();
@@ -56,14 +57,15 @@ test("production and formation use the same automatic developed/COST order for e
   const sorted = rows => [...rows].sort((a,b) => Number(b.developed) - Number(a.developed) || a.cost - b.cost);
   for (const faction of ["ZEON", "EFSF", "PMC"]) {
     await page.locator("#menuFactionSelect").selectOption(faction);
-    await page.locator("#openProduction").click();
+    await page.locator("#shellHangar").click();
+    await page.locator("#shellProduction").click();
     await expect(page.locator("#productionFaction")).toHaveValue(faction === "PMC" ? "" : faction);
     await expect(page.locator("#productionSort")).toHaveCount(0);
     const production = await values("#productionList .production-unit");
     expect(production.length).toBeGreaterThan(1);
     expect(production).toEqual(sorted(production));
-    await page.locator("#closeProduction").click();
-    await page.locator("#openFormation").click();
+    await page.locator("#shellLobby").click();
+    await page.locator("#shellHangar").click();
     await page.locator("#openFormationPicker").click();
     await page.locator("#formationStock").selectOption("all");
     await expect(page.locator("#formationFaction")).toHaveValue(faction === "PMC" ? "" : faction);
@@ -72,6 +74,6 @@ test("production and formation use the same automatic developed/COST order for e
     expect(formation.length).toBeGreaterThan(1);
     expect(formation).toEqual(sorted(formation));
     await page.locator("#closeFormationPicker").click();
-    await page.locator("#saveFormation").click();
+    await page.locator("#shellLobby").click();
   }
 });

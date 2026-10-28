@@ -3641,3 +3641,27 @@ test('researched technology sent with a formation unlocks its units on the serve
  assert.notEqual(G.planFormation(formation,Infinity,G.armyRestrictions(room.settings,member)).reasons[0],'not_developed');
  assert.equal(G.planFormation(formation,Infinity,G.armyRestrictions(room.settings,{...member,researched:{}})).reasons[0],'not_developed');
 });
+
+
+test("host changes AI faction without bypassing ownership or forced team faction", async (t) => {
+  const { app, client } = await setup(t), host = await client(), guest = await client();
+  await host.hello("create", "AIFACTIONS");
+  await host.act("configure_room", { mapId: "crossroads_2v2", costLimit: 900 });
+  await host.act("add_ai", { seat: 1 });
+  await guest.hello("join", "AIFACTIONS");
+  await host.latest(s => s.members.length === 3);
+  const room = app.rooms.get("AIFACTIONS"), bot = room.seats[1];
+  const change = { seat: 1, config: {}, characterFaction: "EFSF" };
+  assert.equal((await guest.act("configure_ai", change)).type, "error");
+  assert.equal(bot.characterFaction, "ZEON");
+  await host.act("sync");
+  assert.equal((await host.act("configure_ai", change)).type, "state");
+  assert.equal(bot.characterFaction, "EFSF");
+  assert.equal((await host.act("configure_ai", { ...change, characterFaction: "unknown" })).type, "error");
+  assert.equal(bot.characterFaction, "EFSF");
+  const forced = await host.act("configure_room", { mapId: "crossroads_2v2", costLimit: 900, teamFactions: [null, "ZEON"] });
+  assert.equal(forced.type, "state", JSON.stringify(forced));
+  assert.equal(bot.characterFaction, "ZEON");
+  assert.equal((await host.act("configure_ai", change)).type, "error");
+  assert.equal(bot.characterFaction, "ZEON");
+});

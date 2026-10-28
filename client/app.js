@@ -45,6 +45,7 @@ function setPageView(view) {
   byId("developmentScreen").hidden = view !== "development";
   byId("productionScreen").hidden = view !== "production";
   byId("roomSettings").hidden = !Net.active;
+  window.MenuShell?.refresh();
   if (view !== "game")
     for (const id of ["reaction", "battle", "victory", "help"]) byId(id).hidden = true;
   window.HangarUI?.refresh();

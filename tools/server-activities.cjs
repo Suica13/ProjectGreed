@@ -75,12 +75,19 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       rewards: { money: 5000, supplies: 10000, inventory: {}, unlockUnits: [] },
     },
   ];
-  if (defaults.some((item) => !state.activities.some((activity) => activity.id === item.id) &&
-    !(state.deletedActivityIds || []).includes(item.id))) {
+  if (
+    defaults.some(
+      (item) =>
+        !state.activities.some((activity) => activity.id === item.id) &&
+        !(state.deletedActivityIds || []).includes(item.id),
+    )
+  ) {
     const next = structuredClone(state);
     for (const item of defaults)
-      if (!next.activities.some((activity) => activity.id === item.id) &&
-        !(next.deletedActivityIds || []).includes(item.id))
+      if (
+        !next.activities.some((activity) => activity.id === item.id) &&
+        !(next.deletedActivityIds || []).includes(item.id)
+      )
         next.activities.push({ ...item, enabled: true, createdAt: now() });
     save(next);
   }
@@ -228,10 +235,20 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
         mode: activity.mode,
         title: activity.title,
         text: activity.text,
+        createdAt: activity.createdAt,
         enabled: activity.enabled,
         startsAt: activity.startsAt ?? null,
         endsAt: activity.endsAt ?? null,
         rewards: activity.rewards,
+        confirmedAt:
+          player.mail.find(
+            (item) =>
+              item.activityId === activity.id &&
+              (item.occurrence ?? null) ===
+                (loginModes.has(activity.mode) && activity.mode !== "cumulative_login"
+                  ? loginDate(now(), activity.mode === "weekly_login")
+                  : null),
+          )?.confirmedAt ?? null,
         ...(activity.multipliers ? { multipliers: activity.multipliers } : {}),
         status: !activity.enabled
           ? "paused"
@@ -252,7 +269,13 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
             }
           : {}),
       }));
-    send(ws, { type: "activity_mailbox", serverId: state.serverId, mail: player.mail, activities });
+    send(ws, {
+      type: "activity_mailbox",
+      capabilities: { deleteAcceptedRewards: true },
+      serverId: state.serverId,
+      mail: player.mail.filter((item) => item.deletedAt == null),
+      activities,
+    });
   }
   function broadcast() {
     for (const clients of online.values()) for (const ws of clients) mailbox(ws);
@@ -359,7 +382,15 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
     }
     const mail = player.mail.find((item) => item.id === msg.mailId);
     if (!mail) throw Error("邮件不存在或不属于此玩家");
-    if (msg.type === "activity_claim") {
+    if (msg.type === "activity_delete") {
+      if (mail.confirmedAt === null) throw Error("只能删除已接受的奖励");
+      edit((next) => {
+        next.players[ws.activityProfileId].mail.find((item) => item.id === mail.id).deletedAt =
+          now();
+      });
+      // Retain the receipt as a server-side tombstone so login/retries cannot re-award it.
+      for (const connection of online.get(ws.activityProfileId) || []) mailbox(connection);
+    } else if (msg.type === "activity_claim") {
       if (mail.confirmedAt !== null) {
         mailbox(ws);
         return true;
@@ -532,8 +563,10 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       next.deletedActivityIds = [...new Set([...(next.deletedActivityIds || []), id])];
       for (const player of Object.values(next.players)) {
         // Keep receipts already in flight for retry/ack and accepted reward history.
-        player.mail = player.mail.filter((mail) => mail.activityId !== id ||
-          (activity.mode !== "battle_bonus" && mail.claimedAt !== null));
+        player.mail = player.mail.filter(
+          (mail) =>
+            mail.activityId !== id || (activity.mode !== "battle_bonus" && mail.claimedAt !== null),
+        );
         if (player.loginDays) delete player.loginDays[id];
       }
     });

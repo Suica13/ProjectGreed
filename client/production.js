@@ -85,43 +85,75 @@ const ProductionUI = (() => {
       }
     }
   }
+  // Both production entry points use the same chassis purchase and error handling.
+  function produceChassis(unitId) {
+    if (Net.started && Net.snapshot?.phase !== "assembly") return "当前无法生产";
+    const offer = Economy.catalog.offers[Economy.baseModel(unitId)];
+    try {
+      return Economy.produce(unitId, PlayerProfile.faction())
+        ? "生产完成：+" + offer.quantity + " 台" : "当前无法生产";
+    } catch (error) {
+      return "生产失败：" + Economy.errorMessage(error);
+    }
+  }
   function renderSale(unitId) {
     let panel = byId("formationInventorySale");
     if (!panel) {
       panel = element("div", "inventory-sale");
       panel.id = "formationInventorySale";
-      byId("formationDetailPilot").parentElement.after(panel);
+      byId("formationUnitDetail").querySelector(".unit-detail-summary").after(panel);
     }
     const price = Economy.sellPrice(unitId),
-      count = Economy.quantity(unitId);
+      count = Economy.quantity(unitId),
+      offer = Economy.catalog.offers[Economy.baseModel(unitId)],
+      prefab = Rules.catalog.prefabs.find((item) => item.id === unitId);
     panel.replaceChildren();
-    const caption = element("span", "", "持有 " + count + " 台");
-    const refund = element("span", "resource-balance");
-    if (price) resources(refund, price);
+    const caption = element("span", "inventory-owned", "持有 " + count + " 台");
+    const productionPrice = element("span", "inventory-production-price");
+    productionPrice.append(element("small", "muted", "生产价格"));
+    const balance = element("span", "resource-balance");
+    if (offer) {
+      resources(balance, offer, { compact: true });
+      productionPrice.append(balance, element("small", "muted", "每批 " + offer.quantity + " 台"));
+    } else productionPrice.append(element("small", "muted", "暂无原厂价格"));
+    const actions = element("span", "inventory-actions");
+    const produce = element("button", "primary", "生产单位");
+    produce.id = "producePreviewUnit";
+    const inBattle = () => Net.started && Net.snapshot?.phase !== "assembly";
+    produce.disabled = !offer || !prefab || !allows(prefab) || !Economy.affordable(offer) || inBattle();
+    produce.onclick = () => {
+      note(produceChassis(unitId));
+      Formation.refresh();
+      renderSale(unitId);
+      if (pageView === "production") render();
+    };
     const sell = element("button", "", "出售 1 台");
     sell.id = "sellPreviewUnit";
-    const inBattle = () => Net.started && Net.snapshot?.phase !== "assembly";
     sell.disabled = !count || !price || inBattle();
     sell.onclick = async () => {
-      if (
-        !(await GameDialog.confirm("出售1台库存单位，返还50%资金和物资，是否继续？", {
-          title: "出售库存单位",
-          confirmText: "出售",
-        }))
-      )
-        return;
       if (inBattle()) return;
+      const refund = Economy.sellPrice(unitId);
+      if (!refund || !Economy.quantity(unitId)) return;
+      const confirmed = await GameDialog.confirm("出售 1 台", {
+        title: "出售库存单位",
+        items: [I18n.text("资金") + " +" + formatNumber(refund.money),
+          I18n.text("物资") + " +" + formatNumber(refund.supplies)],
+        confirmText: "确认",
+      });
+      if (!confirmed || inBattle()) return;
       try {
         if (Economy.sellUnit(unitId)) {
-          renderSale(unitId);
           Formation.refresh();
+          renderSale(unitId);
+          if (pageView === "production") render();
           note("库存单位已出售");
         }
       } catch (error) {
         note(Economy.errorMessage(error));
       }
     };
-    panel.append(caption, refund, sell);
+    actions.append(produce, sell);
+    panel.append(caption, productionPrice, actions);
   }
   function allows(prefab) {
     const faction = PlayerProfile.faction();
@@ -140,6 +172,12 @@ const ProductionUI = (() => {
     }
     container.append(dl);
   }
+  function metricSection(container, title, rows) {
+    const section = element("section", "production-stat-section");
+    section.append(element("h4", "production-stat-title", title));
+    metrics(section, rows);
+    container.append(section);
+  }
   function renderInfo(model) {
     const info = byId("productionInfo");
     info.replaceChildren();
@@ -153,54 +191,57 @@ const ProductionUI = (() => {
       "production" + tab[0].toUpperCase() + tab.slice(1) + "Tab",
     );
     if (tab === "stats") {
-      metrics(info, [
+      metricSection(info, "基础性能", [
         ["HP", formatNumber(model.hp)],
-        ["EN", model.en],
+        ["EN", formatNumber(model.en)],
         ["COST", model.cost],
         ["移动", model.move],
         ["行动点", model.actionPoints ?? 5],
+        ["盾牌HP", formatNumber(model.shield.hp)],
+        ["零件强度", model.partStructuralStrength],
+      ]);
+      metricSection(info, "索敌与命中", [
         ["视野距离", formatDistance(model.sensors.sight)],
         ["侦察距离", formatDistance(model.sensors.radar)],
-        ["反应系数", model.mobility],
         ["命中系数", model.accuracy + "%"],
-        ["零件强度", model.partStructuralStrength],
-        ["盾牌HP", model.shield.hp],
+        ["反应系数", model.mobility],
       ]);
       const environments = {
-        ground: "地面",
-        mountain: "山地",
-        space: "宇宙",
-        water: "水中",
-        atmosphere: "大气层",
-        air: "空中",
-        forest: "树林",
-        snow: "雪地",
-        desert: "沙漠",
-        rubble: "废墟",
+        ground: "地面", mountain: "山地", space: "宇宙", water: "水中",
+        atmosphere: "大气层", air: "空中", forest: "树林", snow: "雪地",
+        desert: "沙漠", rubble: "废墟",
       };
-      metrics(
-        info,
-        Object.entries(environments).map(([key, label]) => [
-          label + "适应性",
-          (model.adaptability[key] ?? 0) + "%",
-        ]),
-      );
+      metricSection(info, "地形适应性", Object.entries(environments).map(([key, label]) => [
+        label, (model.adaptability[key] ?? 0) + "%",
+      ]));
       const defenseNames = {
-        melee: "格斗",
-        shooting: "射击",
-        beam: "光束",
-        shell: "实弹",
-        dp: "DP",
-        sp: "SP",
+        melee: "格斗", shooting: "射击", beam: "光束", shell: "实弹", dp: "DP", sp: "SP",
       };
-      metrics(
-        info,
-        Object.entries(model.defenses).map(([kind, v]) => [
-          (defenseNames[kind] || kind) + "防护",
-          v.percent + "% / " + v.flat,
-        ]),
-      );
-      info.append(element("p", "muted", model.description));
+      const defense = element("section", "production-stat-section");
+      defense.append(element("h4", "production-stat-title", "防护能力"));
+      const table = element("table", "production-defense-table");
+      const head = element("thead"), headings = element("tr");
+      for (const label of ["类型", "比例减伤", "固定减伤"])
+        headings.append(element("th", "", label));
+      head.append(headings);
+      const body = element("tbody");
+      for (const [kind, value] of Object.entries(model.defenses)) {
+        const row = element("tr");
+        const name = element("th", "", defenseNames[kind] || kind);
+        name.scope = "row";
+        row.append(name, element("td", "", value.percent + "%"),
+          element("td", "", formatNumber(value.flat)));
+        body.append(row);
+      }
+      table.append(head, body);
+      defense.append(table);
+      info.append(defense);
+      if (model.description) {
+        const description = element("section", "production-stat-section");
+        description.append(element("h4", "production-stat-title", "单位说明"),
+          element("p", "muted", model.description));
+        info.append(description);
+      }
     } else if (tab === "weapons") {
       for (const weapon of model.weapons) {
         const card = element("article", "formation-weapon-detail");
@@ -333,11 +374,12 @@ const ProductionUI = (() => {
         UnitModels[baseModel]?.cost ?? prefab.stats.cost,
       );
       const cost = summary.querySelector(".cost");
-      text.append(
-        element("strong", "", prefab.code + " " + prefab.name),
-        Formation.unitTags(prefab),
-        summary,
-      );
+      const heading = element("span", "unit-line-heading"),
+        metadata = element("span", "unit-line-meta");
+      const name = element("strong", "unit-line-title", prefab.code + " " + prefab.name);
+      name.title = prefab.code + " " + prefab.name;
+      heading.append(name);
+      metadata.append(Formation.unitTags(prefab), summary);
       const price = element("span", "production-unit-price"),
         balance = element("span", "resource-balance");
       if (offer) resources(balance, offer);
@@ -346,10 +388,14 @@ const ProductionUI = (() => {
       const owned = element("small", "muted production-owned");
       owned.append(element("span", "", "已持有 " + count + " 台"));
       if (offer) owned.append(element("span", "production-batch-count", "+" + offer.quantity));
+      const portrait = element("span", "production-unit-portrait");
+      portrait.append(image);
       if (prefab.wip || !allows(prefab))
-        owned.append(element("span", "", prefab.wip ? "WIP" : "未解锁"));
-      text.append(price, owned);
-      card.append(image, text);
+        portrait.append(element("small", "unit-portrait-status", prefab.wip ? "WIP" : "未解锁"));
+      const footer = element("span", "production-unit-footer");
+      footer.append(price, owned);
+      text.append(heading, metadata, footer);
+      card.append(portrait, text);
       card.onclick = () => {
         selectedId = prefab.id;
         kitId = null;
@@ -399,7 +445,7 @@ const ProductionUI = (() => {
     };
   }
   byId("openProduction").onclick = () => {
-    returnView = "menu";
+    returnView = Net.active ? "room" : "menu";
     onReturn = null;
     byId("closeProduction").textContent = "返回主菜单";
     filters.faction = Rules.factions.includes(PlayerProfile.faction()) ? PlayerProfile.faction() : "";
@@ -442,17 +488,7 @@ const ProductionUI = (() => {
     }
     byId("productionStatus").textContent = message;
   }
-  byId("produceUnit").onclick = () => {
-    const offer = Economy.catalog.offers[Economy.baseModel(selectedId)];
-    let success;
-    try {
-      success = Economy.produce(selectedId, PlayerProfile.faction());
-    } catch (error) {
-      byId("productionStatus").textContent = "生产失败：" + Economy.errorMessage(error);
-      return;
-    }
-    finishPurchase(success ? "生产完成：+" + offer.quantity + " 台" : "当前无法生产");
-  };
+  byId("produceUnit").onclick = () => finishPurchase(produceChassis(selectedId));
   byId("buyProductionKit").onclick = () => {
     const id = selectedId + "__" + kitId,
       price = Economy.kitPrice(id);

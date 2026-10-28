@@ -51,7 +51,8 @@ const RoomPanel = (() => {
   function factionControl(member, self, snapshot) {
     const badge = PlayerProfile.badge(member, snapshot.settings.mode);
     if (!badge) return element("span", "faction-badge", "—");
-    if (member.id !== self.id || snapshot.started) return badge;
+    const editingAI = member.bot && self.id === snapshot.hostId;
+    if ((!editingAI && member.id !== self.id) || snapshot.started) return badge;
     const forced =
       member.seat === null ? null : snapshot.settings.teamFactions?.[Rules.seatTeam(member.seat)];
     const select = element("select", badge.className);
@@ -64,9 +65,11 @@ const RoomPanel = (() => {
         ? "快速战固定使用 PMC 阵营"
         : forced
           ? "本队已设置强制阵营"
-          : "选择自己的阵营";
-    select.setAttribute("aria-label", "选择自己的阵营");
-    select.onchange = () => Net.request("set_faction", { faction: select.value });
+          : editingAI ? "选择 AI 阵营" : "选择自己的阵营";
+    select.setAttribute("aria-label", editingAI ? "选择 AI 阵营" : "选择自己的阵营");
+    select.onchange = () => editingAI
+      ? Net.request("configure_ai", { seat: member.seat, characterFaction: select.value, config: {} })
+      : Net.request("set_faction", { faction: select.value });
     return select;
   }
   function drawMap(map) {
@@ -77,7 +80,7 @@ const RoomPanel = (() => {
     const cell = Math.min((canvas.width - 30) / map.width, (canvas.height - 24) / map.height);
     const ox = (canvas.width - map.width * cell) / 2,
       oy = (canvas.height - map.height * cell) / 2;
-    ctx.fillStyle = "#0b1921";
+    ctx.fillStyle = "#16191e";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     for (let y = 0; y < map.height; y++)
       for (let x = 0; x < map.width; x++) {
@@ -766,6 +769,7 @@ const RoomPanel = (() => {
     teams.replaceChildren();
     for (let team = 0; team < 2; team++) {
       const column = element("section", "team-slot");
+      column.dataset.team = String(team);
       const teamHeading = element("div", "team-heading");
       const forced = snapshot.settings.teamFactions?.[team];
       const summary = element(

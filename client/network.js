@@ -196,6 +196,7 @@ const Net = (() => {
       if (n.serverURL && n.room) storage.remove(key(n.serverURL, n.room));
       storage.remove(lastKey());
     }
+    if (n.socket) ServerActivities.detach(n.socket);
     n.socket?.close();
     n.socket = null;
     n.active = false;
@@ -455,6 +456,7 @@ const Net = (() => {
       n.memberId = s.you.id;
     }
     n.started = s.started;
+    window.MenuShell?.refresh();
     Formation.alignWithRoom(s);
     MusicPlayer.sync();
     Formation.refresh();
@@ -485,7 +487,8 @@ const Net = (() => {
     if (s.phase === "assembly") {
       phase = "assembly";
       battleView = null;
-      if (!["formation", "production"].includes(pageView)) setPageView("room");
+      if (!n.applied || !["menu", "formation", "production", "development", "records"].includes(pageView))
+        setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
       update();
@@ -506,7 +509,9 @@ const Net = (() => {
       }
       phase = "waiting";
       battleView = null;
-      if (wasStarted || !["formation", "production"].includes(pageView)) setPageView("room");
+      if (wasStarted || !n.applied ||
+        !["menu", "formation", "production", "development", "records"].includes(pageView))
+        setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
       update();

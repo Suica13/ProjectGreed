@@ -20,6 +20,7 @@ for (const width of [1280, 390])
       await expect(page.locator("#openServerActivities")).toBeEnabled();
       await page.locator("#openServerActivities").click();
       await expect(page.locator("#serverActivitiesDialog")).toContainText("首次加入服务器奖励");
+      await page.locator("#serverActivitiesDialog .server-activities-list button").filter({ hasText: "首次加入服务器奖励" }).click();
       await expect(page.locator("#serverActivitiesDialog")).toContainText("陆战型吉姆");
       await expect(page.locator("#serverActivitiesDialog")).toContainText("大魔");
       await page.locator("#acceptServerActivity").click();
@@ -148,6 +149,7 @@ test("failed local persistence retries the same server mail after reconnect with
     await page.evaluate((base) => Lobby.reconnect(base), base);
     await expect(page.locator("#openServerActivities")).toBeEnabled();
     await page.locator("#openServerActivities").click();
+    await page.locator("#serverActivitiesDialog .server-activities-list button").filter({ hasText: "首次加入服务器奖励" }).click();
     await page.evaluate(() => {
       const original = Storage.prototype.setItem;
       let failed = false;
@@ -168,6 +170,7 @@ test("failed local persistence retries the same server mail after reconnect with
     await page.evaluate((base) => Lobby.reconnect(base), base);
     await expect.poll(() => page.evaluate(() => Economy.snapshot().money)).toBe(10000);
     await page.locator("#openServerActivities").click();
+    await page.locator("#serverActivitiesDialog .server-activities-list button").filter({ hasText: "首次加入服务器奖励" }).click();
     await expect(page.locator("#acceptServerActivity")).toHaveText("已接受");
     expect(await page.evaluate(() => Economy.quantity("RGM_79_G"))).toBe(3);
     expect(app.activities.adminSnapshot().activities[0].accepted).toBe(1);
@@ -332,24 +335,107 @@ for (const width of [1280, 390])
     }
   });
 
-test("admin can cancel or confirm deletion and deleted defaults stay gone after reload", async ({page,request}) => {
-  const app=createServer({host:"127.0.0.1",port:0}), address=await app.listen(), base=`http://127.0.0.1:${address.port}`;
+test("admin can cancel or confirm deletion and deleted defaults stay gone after reload", async ({
+  page,
+  request,
+}) => {
+  const app = createServer({ host: "127.0.0.1", port: 0 }),
+    address = await app.listen(),
+    base = `http://127.0.0.1:${address.port}`;
   try {
-    await page.goto(base+"/admin/activities.html");
-    const activity=page.locator("#activities button").filter({hasText:"超级煤球真理部"});
+    await page.goto(base + "/admin/activities.html");
+    const activity = page.locator("#activities button").filter({ hasText: "超级煤球真理部" });
     await activity.click();
     await page.locator("#deleteActivity").click();
     await expect(page.locator("#deleteActivityDialog")).toBeVisible();
     await page.locator("#cancelDelete").click();
     await expect(activity).toHaveCount(1);
-    const id=app.activities.adminSnapshot().activities.find(a=>a.title==="超级煤球真理部").id;
-    expect((await request.post(base+"/api/activities/admin/delete",{headers:{Origin:"https://evil.example"},data:{id}})).status()).toBe(403);
+    const id = app.activities
+      .adminSnapshot()
+      .activities.find((a) => a.title === "超级煤球真理部").id;
+    expect(
+      (
+        await request.post(base + "/api/activities/admin/delete", {
+          headers: { Origin: "https://evil.example" },
+          data: { id },
+        })
+      ).status(),
+    ).toBe(403);
     await page.locator("#deleteActivity").click();
     await page.locator("#confirmDelete").click();
     await expect(page.locator("#status")).toContainText("活动已删除");
     await expect(activity).toHaveCount(0);
     await page.reload();
     await expect(page.locator("#activities button")).toHaveCount(3);
-    expect(app.activities.adminSnapshot().activities.some(a=>a.id===id)).toBe(false);
-  } finally { await app.close(); }
+    expect(app.activities.adminSnapshot().activities.some((a) => a.id === id)).toBe(false);
+  } finally {
+    await app.close();
+  }
 });
+
+for (const width of [1280, 390])
+  test(`mail deletion, flashing rail and connected lobby controls at ${width}px`, async ({
+    page,
+  }) => {
+    const app = createServer({ host: "127.0.0.1", port: 0 }),
+      address = await app.listen(),
+      base = `http://127.0.0.1:${address.port}`;
+    try {
+      await page.setViewportSize({ width, height: 960 });
+      await page.goto(base);
+      await page.waitForFunction(() => assetsReady);
+      await page.evaluate(() => I18n.setLanguage("zh"));
+      await expect(page.locator("#openSkirmish")).toBeEnabled();
+      await page.evaluate((base) => Lobby.reconnect(base), base);
+      await expect(page.locator("#lobby")).toBeVisible();
+      await expect(page.locator("#openSkirmish")).toBeDisabled();
+      const left = await page.locator("#disconnectLobby").boundingBox(),
+        right = await page.locator("#createRoom").boundingBox();
+      expect(left.x).toBeLessThan(right.x);
+      await expect(page.locator("#shellActivities")).toHaveClass(/has-unclaimed/);
+      await page.locator("#shellActivities").click();
+      for (const title of ["首次加入服务器奖励", "每日登录奖励", "每周登录奖励"]) {
+        await page.locator(".server-activities-list button").filter({ hasText: title }).click();
+        await expect(page.locator("#deleteServerActivityReward")).toBeHidden();
+        await page.locator("#acceptServerActivity").click();
+        await expect(page.locator("#acceptServerActivity")).toHaveText("已接受");
+      }
+      await expect(page.locator("#shellActivities")).not.toHaveClass(/has-unclaimed/);
+      const wallet = await page.evaluate(() => Economy.snapshot());
+      await page
+        .locator(".server-activities-list button")
+        .filter({ hasText: "首次加入服务器奖励" })
+        .click();
+      await page.locator("#deleteServerActivityReward").click();
+      await page.locator("#gameDialog").getByRole("button", { name: "确认", exact: true }).click();
+      await expect(
+        page.locator(".server-activities-list button").filter({ hasText: "首次加入服务器奖励" }),
+      ).toHaveCount(0);
+      expect(await page.evaluate(() => Economy.snapshot())).toEqual(wallet);
+      await page.keyboard.press("Escape");
+      await page.reload();
+      await page.waitForFunction(() => assetsReady);
+      await page.evaluate((base) => Lobby.reconnect(base), base);
+      await expect(page.locator("#lobby")).toBeVisible();
+      await expect(page.locator("#shellActivities")).not.toHaveClass(/has-unclaimed/);
+      await page.locator("#shellActivities").click();
+      await expect(
+        page.locator(".server-activities-list button").filter({ hasText: "首次加入服务器奖励" }),
+      ).toHaveCount(0);
+      await page
+        .locator(".server-activities-list button")
+        .filter({ hasText: "每日登录奖励" })
+        .click();
+      await page.locator("#deleteServerActivityReward").click();
+      await page.locator("#gameDialog").getByRole("button", { name: "确认", exact: true }).click();
+      await expect(page.locator("#deleteServerActivityReward")).toBeHidden();
+      await expect(page.locator("#acceptServerActivity")).toHaveText("已接受");
+      expect(await page.evaluate(() => Economy.snapshot())).toEqual(wallet);
+      await page.keyboard.press("Escape");
+      await page.locator("#disconnectLobby").click();
+      await expect(page.locator("#openSkirmish")).toBeEnabled();
+      await expect(page.locator("#shellActivities")).not.toHaveClass(/has-unclaimed/);
+    } finally {
+      await app.close();
+    }
+  });

@@ -5,7 +5,9 @@ const ServerActivities = (() => {
     mail = [],
     activities = [],
     selected = null;
-  const pending = new Set();
+  let supportsDeletion = false, dismissed = new Set();
+  const pending = new Set(),
+    deleting = new Set();
   const dialog = element("dialog", "server-activities-dialog");
   dialog.id = "serverActivitiesDialog";
   dialog.setAttribute("aria-labelledby", "serverActivitiesTitle");
@@ -27,7 +29,13 @@ const ServerActivities = (() => {
   status.setAttribute("role", "status");
   accept.id = "acceptServerActivity";
   accept.type = "button";
-  dialog.append(heading, layout, status, accept);
+  const remove = element("button", "danger", "删除奖励记录"),
+    actions = element("div", "net-buttons");
+  remove.id = "deleteServerActivityReward";
+  remove.type = "button";
+  remove.hidden = true;
+  actions.append(accept, remove);
+  dialog.append(heading, layout, status, actions);
   document.body.append(dialog);
   function request(message) {
     if (socket?.readyState !== WebSocket.OPEN) throw Error("服务器连接已中断，请重新连接。");
@@ -45,6 +53,27 @@ const ServerActivities = (() => {
     }
     render();
   }
+  function dismissalKey() {
+    return "projectgreed.serverMailDismissed.v1." + serverId + "." + ProfileIdentity.snapshot().id;
+  }
+  function loadDismissed() {
+    try {
+      const value = JSON.parse(localStorage.getItem(dismissalKey()) || "[]");
+      dismissed = new Set(Array.isArray(value) ? value.filter(id => typeof id === "string") : []);
+    } catch { dismissed = new Set(); }
+  }
+  function dismissLegacy(ids) {
+    // Older servers retain confirmed receipts, which already prevent duplicate rewards.
+    const next = new Set(dismissed);
+    for (const id of ids) {
+      const receipt = mail.find(item => item.id === id);
+      if (receipt?.confirmedAt != null) next.add(id);
+    }
+    localStorage.setItem(dismissalKey(), JSON.stringify([...next]));
+    dismissed = next;
+    if (!rows().some(item => item.id === selected)) selected = rows()[0]?.id || null;
+    status.textContent = I18n.text("奖励记录已删除");
+  }
   function rows() {
     const represented = new Set();
     const listings = activities.map((activity) => {
@@ -58,13 +87,17 @@ const ServerActivities = (() => {
         id: "activity:" + activity.id,
         activityId: activity.id,
         persistent: true,
-        claimId: receipt?.id || null,
-        confirmedAt: receipt?.confirmedAt ?? null,
+        claimId: receipt && !dismissed.has(receipt.id) ? receipt.id : null,
+        createdAt: receipt?.createdAt ?? activity.createdAt ?? 0,
+        confirmedAt: receipt?.confirmedAt ?? activity.confirmedAt ?? null,
         claimedAt: receipt?.claimedAt ?? null,
       };
     });
     // Past-cycle mail, including unclaimed rewards, remains accessible as history.
-    return [...mail.filter((item) => !represented.has(item.id)), ...listings];
+    return [...mail.filter(item => !represented.has(item.id) && !dismissed.has(item.id)), ...listings]
+      .map((item, index) => ({ item, index }))
+      .sort((a, b) => (b.item.createdAt ?? 0) - (a.item.createdAt ?? 0) || b.index - a.index)
+      .map(entry => entry.item);
   }
   function stateLabel(item) {
     if (item.persistent && item.status !== "active")
@@ -90,6 +123,10 @@ const ServerActivities = (() => {
     ).length;
     byId("openServerActivities").textContent =
       I18n.text("服务器活动") + (unread ? " (" + unread + ")" : "");
+    const source = byId("openServerActivities");
+    source.dataset.unread = String(unread);
+    source.classList.toggle("has-unclaimed", unread > 0);
+    window.dispatchEvent(new Event("server-activities-changed"));
     for (const item of entries) {
       const button = element(
         "button",
@@ -109,6 +146,9 @@ const ServerActivities = (() => {
     const item = entries.find((item) => item.id === selected);
     const receiptId = item?.claimId || item?.id;
     const automatic = item?.persistent && item.mode === "battle_bonus";
+    const receipt = mail.find((entry) => entry.id === receiptId);
+    remove.hidden = !receipt || receipt.confirmedAt === null;
+    remove.disabled = deleting.has(receiptId);
     accept.disabled =
       !item ||
       automatic ||
@@ -195,7 +235,10 @@ const ServerActivities = (() => {
     mail = [];
     activities = [];
     selected = null;
+    supportsDeletion = false;
+    dismissed = new Set();
     pending.clear();
+    deleting.clear();
     status.textContent = "";
     byId("openServerActivities").disabled = true;
     render();
@@ -211,13 +254,35 @@ const ServerActivities = (() => {
       note(error.message);
     }
   }
+  function detach(connection) {
+    if (connection !== socket) return;
+    socket = null;
+    serverId = null;
+    mail = [];
+    activities = [];
+    selected = null;
+    supportsDeletion = false;
+    dismissed = new Set();
+    pending.clear();
+    deleting.clear();
+    byId("openServerActivities").disabled = true;
+    if (dialog.open) dialog.close();
+    render();
+  }
   function receive(message, connection) {
     if (!message.type?.startsWith("activity_")) return false;
     if (connection !== socket) return true;
     if (message.type === "activity_mailbox") {
       serverId = message.serverId;
+      supportsDeletion = message.capabilities?.deleteAcceptedRewards === true;
+      loadDismissed();
       mail = message.mail;
       activities = message.activities || [];
+      for (const id of deleting)
+        if (!mail.some((item) => item.id === id)) {
+          deleting.delete(id);
+          status.textContent = I18n.text("奖励记录已删除");
+        }
       const entries = rows();
       if (!entries.some((item) => item.id === selected))
         selected =
@@ -251,7 +316,15 @@ const ServerActivities = (() => {
       pending.delete(message.mailId);
       render();
     } else if (message.type === "activity_error") {
+      if (message.message === "未知活动操作" && deleting.size) {
+        try { dismissLegacy(deleting); }
+        catch (error) { status.textContent = Economy.errorMessage(error); }
+        deleting.clear();
+        render();
+        return true;
+      }
       pending.clear();
+      deleting.clear();
       status.textContent = message.message;
       render();
     }
@@ -268,9 +341,35 @@ const ServerActivities = (() => {
     }
   };
   accept.onclick = () => claim(rows().find((item) => item.id === selected));
+  remove.onclick = async () => {
+    const item = rows().find((entry) => entry.id === selected);
+    const id = item?.claimId || item?.id;
+    const receipt = mail.find((entry) => entry.id === id);
+    if (!receipt || receipt.confirmedAt === null || deleting.has(id)) return;
+    if (
+      !(await GameDialog.confirm("删除这条已接受的奖励记录？已获得的奖励不受影响。", {
+        danger: true,
+      }))
+    )
+      return;
+    if (!supportsDeletion) {
+      try { dismissLegacy([id]); }
+      catch (error) { status.textContent = Economy.errorMessage(error); }
+      render();
+      return;
+    }
+    deleting.add(id);
+    try {
+      request({ type: "activity_delete", mailId: id });
+    } catch (error) {
+      deleting.delete(id);
+      status.textContent = error.message;
+    }
+    render();
+  };
   window.addEventListener("language-change", render);
   window.addEventListener("page-changing", () => {
     if (dialog.open) dialog.close();
   });
-  return { attach, receive };
+  return { attach, detach, receive };
 })();

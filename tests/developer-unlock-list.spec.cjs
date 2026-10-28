@@ -20,7 +20,8 @@ for (const width of [1280, 390])
       await page.goto(`http://127.0.0.1:${address.port}/developer.html`);
       await page.waitForFunction(() => assetsReady);
       await page.evaluate(() => I18n.setLanguage("zh"));
-      await page.locator("#openDevelopment").click();
+      await page.locator("#shellHangar").click();
+      await page.locator("#shellDevelopment").click();
       await page.locator("#developerTreeEdit").click();
       await expect(page.locator("#developerTreeFields")).toBeVisible();
       const selector = page.locator(".source-unlock-row select"),

@@ -182,7 +182,7 @@ const Economy = (() => {
   }
   function sellPrice(unitId) {
     const offer = catalog.offers[baseModel(unitId)];
-    return offer ? { money: Math.floor(offer.money / offer.quantity / 2), supplies: Math.floor(offer.supplies / offer.quantity / 2) } : null;
+    return offer ? { money: Math.floor(offer.money / offer.quantity / 100) * 50, supplies: Math.floor(offer.supplies / offer.quantity / 100) * 50 } : null;
   }
   function sellUnit(unitId) {
     const price = sellPrice(unitId);

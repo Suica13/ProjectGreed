@@ -63,6 +63,7 @@ html = html.replace(
   }),
 );
 for (const [key, file] of [
+  ["MENU_SHELL", "client/menu-shell.js"],
   ["DATA", null],
   ["I18N", "client/i18n.js"],
   ["ASSET_POOL", "shared/asset-pool.js"],
@@ -137,6 +138,9 @@ html = html.replace(
   () =>
     `<script type="application/json" id="ui-layout-data">${json(layout)}</script><script id="ui-layout-runtime">${inlineScript(read("client/ui-layout.js"))}</script></body>`,
 );
+html = html
+  .replace("__MENU_SHELL_CSS__", () => read("client/menu-shell.css"))
+  .replace("__BLUE_THEME_CSS__", () => read("client/blue-theme.css"));
 const release = html;
 const developer = release
   .replace(

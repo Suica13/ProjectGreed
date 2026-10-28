@@ -3,11 +3,32 @@
 const DevelopmentUI = (() => {
   const screen = byId("developmentScreen");
   const graph = byId("developmentTree");
+  const treeStage = graph.parentElement;
+  const treeScroll = graph.closest(".development-tree-scroll");
   const details = byId("developmentDetails");
+  const identity = element("div", "development-faction-identity");
+  treeScroll.insertBefore(identity, treeStage);
   const branchColumns = { top: 1, mid: 2, bot: 3 };
   const svgNamespace = "http://www.w3.org/2000/svg";
   let selectedId = null;
   let drawConnections = () => {};
+
+  function fitTree() {
+    const style = getComputedStyle(treeScroll);
+    const available = treeScroll.clientWidth - parseFloat(style.paddingLeft) -
+      parseFloat(style.paddingRight);
+    if (available <= 0) return;
+    // Keep three readable design columns, then scale the entire graph, including text.
+    const width = Math.max(560, available);
+    const scale = Math.min(1, available / width);
+    const graphWidth = width + "px";
+    const transform = "scale(" + scale + ")";
+    if (graph.style.width !== graphWidth) graph.style.width = graphWidth;
+    if (graph.style.transform !== transform) graph.style.transform = transform;
+    const height = Math.ceil(graph.offsetHeight * scale) + "px";
+    if (treeStage.style.height !== height) treeStage.style.height = height;
+    drawConnections();
+  }
 
   function receiveAwards(snapshot) {
     RewardNotifications.sync(snapshot);
@@ -54,7 +75,7 @@ const DevelopmentUI = (() => {
       ),
       element(
         "p",
-        researched ? "success-text" : "muted",
+        "development-research-status muted",
         researched
           ? "已开发"
           : !available
@@ -67,6 +88,7 @@ const DevelopmentUI = (() => {
       ),
       element("h4", "", "解锁单位"),
     );
+    if (researched) details.querySelector(".development-research-status")?.remove();
     const units = element("div", "development-units");
     for (const id of node.unlocks) units.append(unitRow(id));
     details.append(units);
@@ -86,8 +108,9 @@ const DevelopmentUI = (() => {
     };
     const price = element("div", "resource-balance");
     ProductionUI.resources(price, node);
-    details.insertBefore(price, units);
-    details.append(action);
+    price.classList.add("development-research-price");
+    details.insertBefore(price, details.querySelector("h4"));
+    details.insertBefore(action, price);
   }
 
   function render() {
@@ -96,6 +119,13 @@ const DevelopmentUI = (() => {
     byId("developmentMain").dataset.faction = faction;
     const nodes = Development.nodes(faction);
     const unlocked = new Set(Development.unlockedTech(faction));
+    const badge = element("strong", "development-faction-code", faction);
+    badge.setAttribute("data-i18n-ignore", "");
+    identity.replaceChildren(
+      badge,
+      element("span", "development-faction-name", byId("developmentFactionSelect").selectedOptions[0]?.textContent || faction),
+      element("span", "development-faction-progress", "已开发" + " · " + nodes.filter((node) => unlocked.has(node.id)).length + " / " + nodes.length),
+    );
     byId("developmentPoints").textContent = String(Development.pointBalance(faction));
     if (!nodes.some((node) => node.id === selectedId)) selectedId = nodes[0]?.id || null;
     graph.replaceChildren();
@@ -120,11 +150,12 @@ const DevelopmentUI = (() => {
       icon.src = node.icon;
       icon.alt = "";
       main.append(icon, element("strong", "", node.name));
-      card.append(
-        main,
+      const footer = element("span", "development-node-footer");
+      footer.append(
         element("span", "development-cost", node.points + " 科技点"),
-        element("small", "", unlocked.has(node.id) ? "已开发" : "未开发"),
+        element("small", "development-node-state", unlocked.has(node.id) ? "已开发" : "未开发"),
       );
+      card.append(main, footer);
       card.onclick = () => {
         selectedId = node.id;
         for (const button of cards.values())
@@ -137,6 +168,7 @@ const DevelopmentUI = (() => {
     drawConnections = () => {
       if (!graph.clientWidth || !graph.clientHeight) return;
       const origin = graph.getBoundingClientRect();
+      const scale = origin.width / graph.offsetWidth || 1;
       lines.setAttribute("viewBox", `0 0 ${graph.clientWidth} ${graph.clientHeight}`);
       lines.replaceChildren();
       for (const node of nodes)
@@ -144,10 +176,10 @@ const DevelopmentUI = (() => {
           const from = cards.get(requiredId)?.getBoundingClientRect();
           const to = cards.get(node.id)?.getBoundingClientRect();
           if (!from || !to) continue;
-          const x1 = from.left + from.width / 2 - origin.left;
-          const y1 = from.bottom - origin.top;
-          const x2 = to.left + to.width / 2 - origin.left;
-          const y2 = to.top - origin.top;
+          const x1 = (from.left + from.width / 2 - origin.left) / scale;
+          const y1 = (from.bottom - origin.top) / scale;
+          const x2 = (to.left + to.width / 2 - origin.left) / scale;
+          const y2 = (to.top - origin.top) / scale;
           const middle = (y1 + y2) / 2;
           const path = document.createElementNS(svgNamespace, "path");
           path.setAttribute("d", `M ${x1} ${y1} V ${middle} H ${x2} V ${y2}`);
@@ -156,15 +188,18 @@ const DevelopmentUI = (() => {
           lines.append(path);
         }
     };
-    requestAnimationFrame(drawConnections);
+    requestAnimationFrame(fitTree);
     const selected = nodes.find((node) => node.id === selectedId);
     if (selected) showDetails(selected, faction);
     else details.replaceChildren();
   }
 
-  if (typeof ResizeObserver !== "undefined")
-    new ResizeObserver(() => drawConnections()).observe(graph);
-  window.addEventListener("resize", () => drawConnections());
+  if (typeof ResizeObserver !== "undefined") {
+    const observer = new ResizeObserver(fitTree);
+    observer.observe(graph);
+    observer.observe(treeScroll);
+  }
+  window.addEventListener("resize", fitTree);
   byId("developmentFactionSelect").onchange = render;
   byId("openDevelopment").onclick = () => {
     byId("developmentFactionSelect").value = PlayerProfile.faction() === "ZEON" ? "ZEON" : "EFSF";
@@ -173,8 +208,8 @@ const DevelopmentUI = (() => {
     byId("closeDevelopment").focus();
   };
   byId("closeDevelopment").onclick = () => {
-    setPageView("menu");
-    byId("openDevelopment").focus();
+    setPageView(window.MenuShell?.returnView() || "menu");
+    byId(Net.active ? "shellLobby" : "shellHangar").focus();
   };
   screen.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {

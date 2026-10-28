@@ -88,7 +88,9 @@ const Lobby = (() => {
     socket = null;
     currentURL = null;
     ready = false;
+    if (previous) ServerActivities.detach(previous);
     previous?.close();
+    window.dispatchEvent(new Event("lobby-connection-changed"));
   }
 
   function updateRoomEligibility() {
@@ -103,6 +105,9 @@ const Lobby = (() => {
   });
 
   byId("createRoom").onclick = () => {
+    // Reserve three characters for the suffix within the existing room-name limit.
+    const playerName = PlayerProfile.name().replace(/[^\p{Script=Han}A-Za-z0-9_-]/gu, "_");
+    byId("roomCode").value = Array.from(playerName).slice(0, 17).join("") + "的房间";
     byId("roomCreateDialog").showModal();
     byId("roomCode").focus();
   };
@@ -265,6 +270,7 @@ const Lobby = (() => {
       if (message.type !== "rooms" || !Array.isArray(message.rooms)) return;
       clearTimeout(timeout);
       ready = true;
+      window.dispatchEvent(new Event("lobby-connection-changed"));
       byId("serverConnect").hidden = true;
       byId("lobby").hidden = false;
       byId("start").classList.add("server-connected");
