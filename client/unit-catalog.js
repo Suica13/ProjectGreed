@@ -26,22 +26,15 @@ const UnitCatalog = (() => {
           a.id.localeCompare(b.id, "en"),
       );
   }
-  // Both catalogs prioritize the active faction, then ascending COST.
-  function compareFactionCost(faction = PlayerProfile.faction()) {
+  // Developed units first, then ascending minimum kit COST in both catalogs.
+  function compareDevelopedCost(faction = PlayerProfile.faction()) {
     const minimumCost = (prefab) =>
       Math.min(...prefab.weaponKits.map((kit) => prefab.stats.cost + kit.cost));
     return (a, b) =>
-      Number(b.faction === faction) - Number(a.faction === faction) ||
-      a.faction.localeCompare(b.faction, "en") ||
+      Number(Development.allows(faction, b.id)) - Number(Development.allows(faction, a.id)) ||
       minimumCost(a) - minimumCost(b) ||
       a.name.localeCompare(b.name, I18n.language, { numeric: true, sensitivity: "base" }) ||
       a.id.localeCompare(b.id, "en");
   }
-  function compareOrder(order, faction = PlayerProfile.faction()) {
-    const cost = compareFactionCost(faction);
-    return order === "developed" ? (a,b) =>
-      Number(Development.allows(faction,b.id)) - Number(Development.allows(faction,a.id)) ||
-      Math.min(...a.weaponKits.map(k=>a.stats.cost+k.cost)) - Math.min(...b.weaponKits.map(k=>b.stats.cost+k.cost)) || cost(a,b) : cost;
-  }
-  return { select, compareFactionCost, compareOrder };
+  return { select, compareDevelopedCost };
 })();

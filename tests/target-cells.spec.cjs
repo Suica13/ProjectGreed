@@ -24,7 +24,7 @@ test('attack cell selection changes weapon availability and marks core without m
 test('production developed ordering groups unlocked units then ascending COST',async({page})=>{
  await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await page.waitForFunction(()=>assetsReady);
  await page.evaluate(()=>I18n.setLanguage('zh'));await page.locator('#openProduction').click();
- await page.locator('#productionSort').selectOption('developed');
+ await expect(page.locator('#productionSort')).toHaveCount(0);
  const rows=await page.locator('#productionList .production-unit').evaluateAll(nodes=>nodes.map(n=>{
  const p=Rules.catalog.prefabs.find(p=>p.id===n.dataset.unitId);
  return {developed:Development.allows(PlayerProfile.faction(),p.id),cost:Math.min(...p.weaponKits.map(k=>p.stats.cost+k.cost))};

@@ -155,11 +155,17 @@ for (const [name, content] of [
 ]) {
   const target = path.join(root, "public", name);
   fs.writeFileSync(target, content);
-  fs.writeFileSync(target + ".gz", zlib.gzipSync(content, { level: 6 }));
-  fs.writeFileSync(
-    target + ".br",
-    zlib.brotliCompressSync(content, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 4 } }),
-  );
+  if (process.argv.includes("--compressed")) {
+    fs.writeFileSync(target + ".gz", zlib.gzipSync(content, { level: 6 }));
+    fs.writeFileSync(
+      target + ".br",
+      zlib.brotliCompressSync(content, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 4 } }),
+    );
+  } else {
+    // Remove previous generated copies so the default output contains only HTML.
+    fs.rmSync(target + ".gz", { force: true });
+    fs.rmSync(target + ".br", { force: true });
+  }
 }
 fs.rmSync(path.join(root, "public/index.html"), { force: true });
 console.log(

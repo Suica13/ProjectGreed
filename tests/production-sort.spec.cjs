@@ -18,13 +18,13 @@ for (const width of [1280, 390])
       nodes.map((node) => {
         const p = Rules.catalog.prefabs.find((p) => p.id === node.dataset.unitId);
         return {
-          faction: p.faction,
+          developed: Development.allows(PlayerProfile.faction(), p.id),
           cost: Math.min(...p.weaponKits.map((k) => p.stats.cost + k.cost)),
         };
       }),
     );
     expect(values).toEqual(
-      [...values].sort((a, b) => a.faction.localeCompare(b.faction, "en") || a.cost - b.cost),
+      [...values].sort((a, b) => Number(b.developed) - Number(a.developed) || a.cost - b.cost),
     );
     await page.locator("#productionFaction").selectOption("ZEON");
     expect(
@@ -45,33 +45,30 @@ for (const width of [1280, 390])
     await expect(page.locator("#productionSort")).toHaveCount(0);
   });
 
-test("default faction sorting prioritizes the active faction in production and formation", async ({
-  page,
-}) => {
+test("production and formation use the same automatic developed/COST order for every identity", async ({ page }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.waitForFunction(() => assetsReady);
+  const values = (selector) => page.locator(selector).evaluateAll(nodes => nodes.map(node => {
+    const p = Rules.catalog.prefabs.find(p => p.id === node.dataset.unitId);
+    return { developed: Development.allows(PlayerProfile.faction(), p.id),
+      cost: Math.min(...p.weaponKits.map(k => p.stats.cost + k.cost)) };
+  }));
+  const sorted = rows => [...rows].sort((a,b) => Number(b.developed) - Number(a.developed) || a.cost - b.cost);
   for (const faction of ["ZEON", "EFSF", "PMC"]) {
     await page.locator("#menuFactionSelect").selectOption(faction);
     await page.locator("#openProduction").click();
     await expect(page.locator("#productionSort")).toHaveCount(0);
-    const firstFaction = async (selector) =>
-      page
-        .locator(selector)
-        .first()
-        .evaluate(
-          (card) => Rules.catalog.prefabs.find((p) => p.id === card.dataset.unitId).faction,
-        );
-    expect(await firstFaction("#productionList .production-unit")).toBe(
-      faction === "PMC" ? "EFSF" : faction,
-    );
+    const production = await values("#productionList .production-unit");
+    expect(production.length).toBeGreaterThan(1);
+    expect(production).toEqual(sorted(production));
     await page.locator("#closeProduction").click();
     await page.locator("#openFormation").click();
     await page.locator("#openFormationPicker").click();
     await page.locator("#formationStock").selectOption("all");
     await expect(page.locator("#formationSort")).toHaveCount(0);
-    expect(await firstFaction("#formationCatalog .catalog-unit")).toBe(
-      faction === "PMC" ? "EFSF" : faction,
-    );
+    const formation = await values("#formationCatalog .catalog-unit");
+    expect(formation.length).toBeGreaterThan(1);
+    expect(formation).toEqual(sorted(formation));
     await page.locator("#closeFormationPicker").click();
     await page.locator("#saveFormation").click();
   }

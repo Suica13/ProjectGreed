@@ -1631,7 +1631,6 @@ const Formation = (() => {
   };
   byId("formationSearch").oninput = () => renderCatalog();
   byId("formationStock").onchange = () => renderCatalog();
-  byId("formationSort").onchange = () => renderCatalog();
   function renderCatalog() {
     const query = byId("formationSearch").value.trim().toLocaleLowerCase();
     const prefabs = UnitCatalog.select(query, catalogFilters, PlayerProfile.allows)
@@ -1640,7 +1639,7 @@ const Formation = (() => {
           pickerCompatible(prefab) &&
           (byId("formationStock").value === "all" || Economy.quantity(prefab.id) > 0),
       )
-      .sort(UnitCatalog.compareOrder(byId("formationSort").value, group));
+      .sort(UnitCatalog.compareDevelopedCost(group));
     if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
       byId("formationPrefab").value = prefabs[0]?.id || "";
     const list = byId("formationCatalog");

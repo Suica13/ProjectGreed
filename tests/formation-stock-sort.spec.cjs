@@ -24,22 +24,21 @@ for (const width of [1280, 390])
     await expect(page.locator("#formationStock")).toHaveValue("owned");
     const cards = page.locator("#formationCatalog .catalog-unit");
     await expect(cards).toHaveCount(3);
-    await expect(page.locator("#formationSort")).toHaveCount(1);
+    await expect(page.locator("#formationSort")).toHaveCount(0);
     const values = await cards.evaluateAll((nodes) =>
       nodes.map((node) => {
         const p = Rules.catalog.prefabs.find((p) => p.id === node.dataset.unitId);
         return {
-          faction: p.faction,
+          developed: Development.allows("PMC", p.id),
           cost: Math.min(...p.weaponKits.map((k) => p.stats.cost + k.cost)),
         };
       }),
     );
     expect(values).toEqual(
-      [...values].sort((a, b) => a.faction.localeCompare(b.faction, "en") || a.cost - b.cost),
+      [...values].sort((a, b) => Number(b.developed) - Number(a.developed) || a.cost - b.cost),
     );
     await page.locator("#formationStock").selectOption("all");
     expect(await cards.count()).toBeGreaterThan(3);
-    await page.locator("#formationSort").selectOption("developed");
     const sorted = await cards.evaluateAll(nodes => nodes.map(node => {
       const p=Rules.catalog.prefabs.find(p=>p.id===node.dataset.unitId);
       return {developed:Development.allows("PMC",p.id),cost:Math.min(...p.weaponKits.map(k=>p.stats.cost+k.cost))};
@@ -55,7 +54,7 @@ for (const width of [1280, 390])
         return { y: r.y, right: r.right };
       }),
     );
-    expect(filters).toHaveLength(5);
+    expect(filters).toHaveLength(4);
     expect(
       Math.max(...filters.map((r) => r.y)) - Math.min(...filters.map((r) => r.y)),
     ).toBeLessThan(1);
