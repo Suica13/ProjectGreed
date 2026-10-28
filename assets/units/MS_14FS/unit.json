@@ -430,8 +430,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "EF_BeamSaber_BF_Yellow",
@@ -2136,10 +2135,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -2217,7 +2214,20 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14F/MS_14FS.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      }
     },
     "EF_BeamSaber_BF_Yellow_B": {
       "name": "光束军刀",
@@ -2401,7 +2411,8 @@
         "Common_Push_A",
         "ZN_Panzerfaust",
         "Common_ArmMG",
-        "EF_BeamSaber_BF_Yellow_B"
+        "EF_BeamSaber_BF_Yellow_B",
+        "EF_BeamSaber_F_Yellow"
       ]
     },
     {
@@ -2413,7 +2424,8 @@
         "Common_Push_A",
         "ZN_Panzerfaust",
         "Common_ArmMG",
-        "EF_BeamSaber_BF_Yellow_B"
+        "EF_BeamSaber_BF_Yellow_B",
+        "EF_BeamSaber_F_Yellow"
       ]
     },
     {
@@ -2425,7 +2437,8 @@
         "Common_Push_A",
         "ZN_Panzerfaust",
         "Common_ArmMG",
-        "EF_BeamSaber_BF_Yellow_B"
+        "EF_BeamSaber_BF_Yellow_B",
+        "EF_BeamSaber_F_Yellow"
       ]
     }
   ],

@@ -2375,10 +2375,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -2455,7 +2453,21 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "requiresShield": true
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2714,7 +2726,8 @@
         "Common_ArmBR_Pink",
         "EF_RX_80PR_LegMS",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Cqb_B_L"
       ]
     },
     {
@@ -2727,7 +2740,8 @@
         "Common_ArmBR_Pink",
         "EF_RX_80PR_LegMS",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Cqb_B_L"
       ]
     },
     {
@@ -2740,7 +2754,8 @@
         "Common_ArmBR_Pink",
         "EF_RX_80PR_LegMS",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Cqb_B_L"
       ]
     }
   ],
@@ -2769,7 +2784,7 @@
       "consumeAction": false,
       "enPercent": 25,
       "duration": 3,
-      "hpDrainPercent": 10,
+      "hpDrainPercent": 25,
       "enDrainPercent": 5,
       "formUnitId": "RX_80PR_HADES",
       "formKits": {

@@ -12,7 +12,7 @@ description: 移植、修复或核对 ProjectGreed 的 Rusted Warfare Battle Uni
 1. 明确单位 ID、来源与目标范围。用 `tools/mod_source.py` 读取原 INI/GW 及 `copyFrom` 继承；沿实际 `alsoTriggerAction`、排队动作、炮口和附件追踪，不按文件名或第一段宏猜测最终结果。原 MOD 仅作为读取源。
 2. 选一个相同平台的现有预制体对照。入口、数据位置和刷新边界见 [pipeline.md](references/pipeline.md)；武器射程/AP、移动力与视野的换算及例外见 [conversion-rules.md](references/conversion-rules.md)。批量导入器会覆盖多个单位；单单位任务应调用其构造函数或限定目标，避免无关再导入。
 3. 输出普通 JSON 和本地素材。保持来源 ID、中文显示名分离，骨骼用部件名；保留 `source`、`sourceStats`、`nativeTiming`。不用 `memory.*` 或 `self.resource` 作为运行时表达式。不明确的武器名记录到 `武器命名待确认.md`。
-4. 区分主武器套件、固定/通用副武器、驾驶员解锁、可换装副武器。隐藏后两者并保留来源/原因；不要把每个源武器都变成一个套件。旧套件通过 `kitAliases` 迁移。
+4. 区分主武器套件、固定/通用副武器、驾驶员解锁、可换装副武器。驾驶员属性门槛由 `native_pilot_weapons.py` 转为 `pilotRequirements`，使用实际驾驶员属性校验；未实现的驾驶员条件和可换装副武器仍隐藏并保留来源/原因；不要把每个源武器都变成一个套件。旧套件通过 `kitAliases` 迁移。
 5. 左右同类武器、模块炮塔和形态转换按 [mechanics.md](references/mechanics.md) 处理。尚未实现的机制写 `mechanics.status=review`，不要只加按钮或以特效冒充功能完成。
 6. 对每项数值并列核对原生值、导入基础值、政策覆盖值和最终运行值。修改负责生成数据的政策/导入代码，再刷新受影响 JSON；仅改生成结果会在下次刷新时丢失。按当次用户允许的范围核对与验证；改源码后 `npm run build` 更新网页。
 

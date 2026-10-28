@@ -88,6 +88,70 @@ const UnitSkills = (() => {
           throw Error("Invalid overdrive skill: " + label);
         continue;
       }
+      if (skill?.type === "irradiation") {
+        if (
+          !skill.id ||
+          !skill.name ||
+          skill.actionCost !== 5 ||
+          skill.enCostPercent !== 50 ||
+          !Number.isFinite(skill.range) ||
+          skill.range < 1 ||
+          skill.range > 100 ||
+          skill.minRange !== 1 ||
+          skill.cooldownTurns !== 3 ||
+          skill.baseHit !== 60 ||
+          !skill.damageComponents ||
+          Object.values(skill.damageComponents).some((n) => !Number.isFinite(n) || n < 0) ||
+          !["Pink", "Blue", "Yellow"].includes(skill.visualColor) ||
+          !Number.isFinite(skill.chargeSeconds) ||
+          skill.chargeSeconds < 0 ||
+          !Number.isFinite(skill.fireSeconds) ||
+          skill.fireSeconds <= 0 ||
+          !Array.isArray(skill.requiredParts)
+        )
+          throw Error("Invalid irradiation skill: " + label);
+        continue;
+      }
+      if (skill?.type === "smoke") {
+        if (
+          skill.id !== "SmokeGrenade" ||
+          skill.radius !== 2 ||
+          skill.actionCost !== 2 ||
+          skill.enCost !== 100 ||
+          skill.cooldownTurns !== 3 ||
+          skill.durationRounds !== 2
+        )
+          throw Error("Invalid smoke skill: " + label);
+        continue;
+      }
+      if (skill?.type === "emp") {
+        if (
+          skill.id !== "EMP" ||
+          skill.actionCost !== 2 ||
+          skill.radius !== 3 ||
+          skill.cooldownTurns !== 2 ||
+          !Number.isFinite(skill.enCost) ||
+          skill.enCost < 0
+        )
+          throw Error("Invalid EMP skill: " + label);
+        continue;
+      }
+      if (skill?.type === "beam_diffusion") {
+        if (
+          !/^[A-Za-z0-9_]+$/.test(skill.id) ||
+          !skill.name ||
+          skill.actionCost !== 4 ||
+          skill.enCostPercent !== 50 ||
+          skill.radius !== 4 ||
+          skill.durationRounds !== 4 ||
+          !Number.isFinite(skill.range) ||
+          skill.range < 1 ||
+          skill.range > 100 ||
+          skill.consumeAction !== false
+        )
+          throw Error("Invalid beam diffusion skill: " + label);
+        continue;
+      }
       if (skill?.type === "recon") {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
@@ -99,7 +163,10 @@ const UnitSkills = (() => {
               !Number.isInteger(skill.durationRounds) ||
               skill.durationRounds < 1)) ||
           (skill.reconMode === "camera" &&
-            ![skill.areaSight, skill.areaRadar].every((v) => Number.isFinite(v) && v > 0)) ||
+            (![skill.areaSight, skill.areaRadar].every((v) => Number.isFinite(v) && v > 0) ||
+              !Number.isFinite(skill.minRange) ||
+              skill.minRange < 0 ||
+              skill.minRange > skill.range)) ||
           !Number.isFinite(skill.range) ||
           skill.range < 1 ||
           skill.range > 100 ||
@@ -137,9 +204,16 @@ const UnitSkills = (() => {
         continue;
       }
       if (skill?.type === "resupply") {
-        if (!/^[A-Za-z0-9_]+$/.test(skill.id) || !skill.name ||
-            skill.range !== 1 || skill.actionCost !== 2 || skill.cooldownTurns !== 1 ||
-            skill.enCostPercent !== 25 || skill.enRecoveryPercent !== 50 || skill.consumeAction !== false)
+        if (
+          !/^[A-Za-z0-9_]+$/.test(skill.id) ||
+          !skill.name ||
+          skill.range !== 1 ||
+          skill.actionCost !== 2 ||
+          skill.cooldownTurns !== 1 ||
+          skill.enCostPercent !== 25 ||
+          skill.enRecoveryPercent !== 50 ||
+          skill.consumeAction !== false
+        )
           throw Error("Invalid EN resupply skill: " + label);
         continue;
       }
@@ -196,18 +270,33 @@ const UnitSkills = (() => {
     }
   }
   function create(G) {
-    const { models, modelOf, fits, dist, mapWidth, mapHeight, dimensions, center, parts, sensors, cells: unitCells } =
-      G;
+    const {
+      models,
+      modelOf,
+      fits,
+      dist,
+      mapWidth,
+      mapHeight,
+      dimensions,
+      center,
+      parts,
+      sensors,
+      cells: unitCells,
+    } = G;
     const of = (unit) => models[unit.model]?.skills || [];
     const usageKey = (unit, skill) => models[unit.model].prefabId + "/" + skill.id;
     function canUse(game, unit, skillId) {
       const skill = of(unit).find((s) => s.id === skillId);
       return (
         !!skill &&
+        (!["smoke", "emp"].includes(skill.type) || unit.en >= skill.enCost) &&
         (unit.skillReadyRound?.[skill.id] ?? 0) <= game.round &&
         (!skill.actionCost ||
           (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost) &&
-        (skill.type !== "resupply" || unit.en >= modelOf(unit).en * skill.enCostPercent / 100) &&
+        (!["resupply", "beam_diffusion", "irradiation"].includes(skill.type) ||
+          unit.en >= (modelOf(unit).en * skill.enCostPercent) / 100) &&
+        (!skill.requiresSfsMS || G.hasSfsMS(game, unit)) &&
+        !parts.unavailable(unit, skill).length &&
         (skill.type !== "transform" || !Object.values(unit.brokenParts || {}).some(Boolean)) &&
         (skill.type !== "flight" ||
           ((unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost &&
@@ -224,7 +313,7 @@ const UnitSkills = (() => {
             !unit.brokenParts?.head &&
             unit.en >= (modelOf(unit).en * skill.enPercent) / 100 &&
             !!models[skill.formUnitId + "__" + skill.formKits[models[unit.model].kitId]])) &&
-        (!["repair", "recon", "minovsky"].includes(skill.type) || unit.en >= skill.enCost) &&
+        (!["repair", "recon", "minovsky", "emp"].includes(skill.type) || unit.en >= skill.enCost) &&
         game.units.includes(unit) &&
         !(
           ["escape", "transform", "armor_purge", "overdrive"].includes(skill.type) &&
@@ -255,6 +344,11 @@ const UnitSkills = (() => {
         environment: unit.environment,
         performance: unit.performance ?? 1,
         pilot: unit.pilot,
+        ...(config.inheritResources && unit.burning ? { burning: { ...unit.burning } } : {}),
+        ...(config.inheritResources && unit.apPenaltyNextTurn
+          ? { apPenaltyNextTurn: unit.apPenaltyNextTurn }
+          : {}),
+
         ...(unit.customName ? { customName: unit.customName } : {}),
         angle: unit.angle,
         skillUses: { ...skillUses },
@@ -270,6 +364,18 @@ const UnitSkills = (() => {
         ...(unit.counterTargetId ? { counterTargetId: unit.counterTargetId } : {}),
       };
       const nextModel = modelOf(next);
+      if (nextModel.iField)
+        next.iFieldHp =
+          config.inheritResources && oldModel.iField
+            ? Math.max(
+                nextModel.iField.minimumRatio * nextModel.iField.capacity,
+                Math.min(
+                  nextModel.iField.capacity,
+                  ((unit.iFieldHp ?? oldModel.iField.capacity) / oldModel.iField.capacity) *
+                    nextModel.iField.capacity,
+                ),
+              )
+            : nextModel.iField.capacity;
       const recover = (current, before, after, percent) =>
         Math.max(
           0,
@@ -349,10 +455,17 @@ const UnitSkills = (() => {
     function targets(game, unit, skillId) {
       if (!canUse(game, unit, skillId)) return [];
       const skill = of(unit).find((s) => s.id === skillId);
-      if (["overdrive", "overboost", "fullboost", "flight", "minovsky"].includes(skill.type))
+      if (
+        ["overdrive", "overboost", "fullboost", "flight", "minovsky", "emp", "smoke"].includes(
+          skill.type,
+        )
+      )
         return [{ x: unit.x, y: unit.y }];
-      if (skill.type === "recon") {
-        if (skill.reconMode === "camera") {
+      if (["beam_diffusion", "irradiation", "recon"].includes(skill.type)) {
+        if (
+          ["beam_diffusion", "irradiation"].includes(skill.type) ||
+          skill.reconMode === "camera"
+        ) {
           const result = [];
           for (
             let y = Math.max(0, Math.ceil(unit.y - skill.range));
@@ -364,7 +477,10 @@ const UnitSkills = (() => {
               x < Math.min(mapWidth(game), unit.x + skill.range + 1);
               x++
             )
-              if (sensors.distance(unit, { x, y, groundTarget: true }) <= skill.range)
+              if (
+                sensors.distance(unit, { x, y, groundTarget: true }) <= skill.range &&
+                sensors.distance(unit, { x, y, groundTarget: true }) >= (skill.minRange ?? 0)
+              )
                 result.push({ x, y });
           return result;
         }
@@ -373,9 +489,17 @@ const UnitSkills = (() => {
           : [];
       }
       if (skill.type === "resupply")
-        return game.units.filter(other => other !== unit && other.hp > 0 && !other.embarked &&
-          other.team === unit.team && dist(unit, other) === 1 && other.en < modelOf(other).en)
-          .flatMap(other => unitCells(other).map(cell => ({ x: cell.x, y: cell.y })));
+        return game.units
+          .filter(
+            (other) =>
+              other !== unit &&
+              other.hp > 0 &&
+              !other.embarked &&
+              other.team === unit.team &&
+              dist(unit, other) === 1 &&
+              other.en < modelOf(other).en,
+          )
+          .flatMap((other) => unitCells(other).map((cell) => ({ x: cell.x, y: cell.y })));
       if (skill.type === "repair")
         return game.units
           .filter(
@@ -436,20 +560,110 @@ const UnitSkills = (() => {
       )
         throw Error("技能不可用，或目标不在合法范围内");
       const skill = of(unit).find((s) => s.id === skillId);
+      if (skill.type === "irradiation") {
+        const event = G.irradiate(game, unit, skill, x, y);
+        unit.en -= (modelOf(unit).en * skill.enCostPercent) / 100;
+        unit.actionPoints =
+          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
+        unit.acted = unit.actionPoints <= 0;
+        unit.origin = null;
+        unit.skillReadyRound = {
+          ...unit.skillReadyRound,
+          [skill.id]: game.round + skill.cooldownTurns * 2,
+        };
+        return event;
+      }
+      if (skill.type === "smoke") {
+        const location = center(unit);
+        (game.smokeFields ||= []).push({
+          ...location,
+          radius: skill.radius,
+          expiresRound: game.round + skill.durationRounds,
+        });
+        unit.en -= skill.enCost;
+        unit.actionPoints =
+          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
+        unit.acted = unit.actionPoints <= 0;
+        unit.origin = null;
+        unit.skillReadyRound = {
+          ...unit.skillReadyRound,
+          [skill.id]: game.round + skill.cooldownTurns * 2,
+        };
+        return {
+          type: "skill",
+          skillId,
+          unitId: unit.id,
+          resultId: unit.id,
+          from: location,
+          to: location,
+          sound: skill.sound,
+          effect: skill.effect,
+          smoke: true,
+        };
+      }
+      if (skill.type === "emp") {
+        const affected = game.units.filter(
+          (target) =>
+            target.team !== unit.team &&
+            target.hp > 0 &&
+            (!target.embarked || target.embarked.exposed) &&
+            sensors.distance(unit, target) <= skill.radius,
+        );
+        for (const target of affected) target.apPenaltyNextTurn = 1;
+        unit.en -= skill.enCost;
+        unit.actionPoints =
+          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
+        unit.origin = null;
+        unit.skillReadyRound = {
+          ...unit.skillReadyRound,
+          [skill.id]: game.round + skill.cooldownTurns * 2,
+        };
+        return {
+          type: "skill",
+          skillId,
+          unitId: unit.id,
+          resultId: unit.id,
+          from: center(unit),
+          to: center(unit),
+          effect: skill.effect,
+          sound: skill.sound,
+          radius: skill.radius,
+          emp: true,
+        };
+      }
       if (skill.type === "resupply") {
-        const target = game.units.find(other => other.hp > 0 && !other.embarked &&
-          other.team === unit.team && unitCells(other).some(cell => cell.x === x && cell.y === y));
+        const target = game.units.find(
+          (other) =>
+            other.hp > 0 &&
+            !other.embarked &&
+            other.team === unit.team &&
+            unitCells(other).some((cell) => cell.x === x && cell.y === y),
+        );
         const before = { hp: target.hp, en: target.en, shield: target.shield };
-        target.en = Math.min(modelOf(target).en, target.en + modelOf(target).en * skill.enRecoveryPercent / 100);
-        unit.en -= modelOf(unit).en * skill.enCostPercent / 100;
-        unit.actionPoints = (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
+        target.en = Math.min(
+          modelOf(target).en,
+          target.en + (modelOf(target).en * skill.enRecoveryPercent) / 100,
+        );
+        unit.en -= (modelOf(unit).en * skill.enCostPercent) / 100;
+        unit.actionPoints =
+          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         if (unit.actionPoints <= 0) unit.acted = true;
         unit.skillReadyRound = { ...unit.skillReadyRound, [skill.id]: game.round + 2 };
         unit.origin = null;
         target.origin = null;
-        return { type: "skill", skillId, unitId: unit.id, resultId: unit.id, targetId: target.id,
-          before, after: { hp: target.hp, en: target.en, shield: target.shield },
-          from: { x, y }, to: { x, y }, effect: skill.effect, sound: skill.sound };
+        return {
+          type: "skill",
+          skillId,
+          unitId: unit.id,
+          resultId: unit.id,
+          targetId: target.id,
+          before,
+          after: { hp: target.hp, en: target.en, shield: target.shield },
+          from: { x, y },
+          to: { x, y },
+          effect: skill.effect,
+          sound: skill.sound,
+        };
       }
       if (skill.type === "flight") {
         unit.flying = !unit.flying;
@@ -551,6 +765,34 @@ const UnitSkills = (() => {
           to: { x, y },
           effect: skill.effect,
           sound: skill.sound,
+        };
+      }
+      if (skill.type === "beam_diffusion") {
+        game.beamDiffusionFields = (game.beamDiffusionFields || []).filter(
+          (field) => field.expiresRound > game.round,
+        );
+        game.beamDiffusionFields.push({
+          x,
+          y,
+          radius: skill.radius,
+          expiresRound: game.round + skill.durationRounds,
+        });
+        unit.en -= (modelOf(unit).en * skill.enCostPercent) / 100;
+        unit.actionPoints =
+          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
+        unit.origin = null;
+        return {
+          type: "skill",
+          skillId,
+          unitId: unit.id,
+          resultId: unit.id,
+          from: { x: unit.x, y: unit.y },
+          to: { x, y },
+          targetEffect: true,
+          effect: skill.effect,
+          sound: skill.sound,
+          radius: skill.radius,
+          expiresRound: game.round + skill.durationRounds,
         };
       }
       if (skill.type === "minovsky") {

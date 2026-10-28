@@ -309,7 +309,11 @@
         "x": 0.0,
         "y": 0.0
       },
-      "visibleWhen": {}
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ]
+      }
     },
     {
       "name": "RX_77_4_Cannon",
@@ -321,7 +325,11 @@
         "x": 0.0,
         "y": 0.0
       },
-      "visibleWhen": {}
+      "visibleWhen": {
+        "kit": [
+          "kit_4"
+        ]
+      }
     },
     {
       "name": "Head",

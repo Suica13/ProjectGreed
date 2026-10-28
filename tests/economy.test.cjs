@@ -347,3 +347,41 @@ test("bulk production ignores stocked locked units but rejects any locked shorta
   assert.equal(blocked.reason, "unavailable");
   assert.equal(JSON.stringify(E.snapshot()), after);
 });
+
+
+test("native refits charge exact single-hull fees, preserve kit stock, and require research", () => {
+  const {E,D,storage} = load({"projectgreed.economy.v1":JSON.stringify({...rich,inventory:{RX_78_2:2},kits:{RX_78_2__kit_1:2}})});
+  const option=E.refitOptions("RX_78_2").find(r=>r.unitId === "RX_78_3");
+  assert.ok(option); assert.equal(option.money,750); assert.equal(option.supplies,750);
+  let before=JSON.stringify(E.snapshot());
+  assert.equal(E.refitUnit("RX_78_2",option.id,"EFSF"),false);
+  assert.equal(JSON.stringify(E.snapshot()),before);
+  D.grantUnit("EFSF","RX_78_3");
+  assert.equal(E.refitReason("RX_78_2",option.id,"EFSF"),"");
+  assert.equal(E.refitUnit("RX_78_2",option.id,"EFSF"),true);
+  assert.equal(E.quantity("RX_78_2"),1);assert.equal(E.quantity("RX_78_3"),1);
+  assert.equal(E.snapshot().money,rich.money-750);assert.equal(E.snapshot().supplies,rich.supplies-750);
+  assert.equal(E.kitQuantity("RX_78_2__kit_1"),2);
+  assert.equal(E.kitQuantity(E.baseModel("RX_78_3")),0);
+  const reloaded=load(Object.fromEntries(storage)).E;
+  assert.equal(reloaded.quantity("RX_78_3"),1);
+  before=JSON.stringify(E.snapshot());
+  assert.equal(E.refitUnit("RX_78_2",option.id,"ZEON"),false);
+  assert.equal(E.refitUnit("RX_78_2","forged-free-route","PMC"),false);
+  assert.equal(JSON.stringify(E.snapshot()),before);
+});
+test("refits reject missing source stock, insufficient currency and failed persistence atomically", () => {
+  for(const money of [0,100000]) {
+    const {E,D,context}=load({"projectgreed.economy.v1":JSON.stringify({money,supplies:100000,inventory:{Type61:1},kits:{}})});
+    const option=E.refitOptions("Type61")[0];D.grantUnit("EFSF",option.unitId);
+    const before=JSON.stringify(E.snapshot());
+    if(money===0) assert.equal(E.refitUnit("Type61",option.id,"EFSF"),false);
+    else {
+      context.localStorage.setItem=()=>{throw Error("disk full");};
+      assert.throws(()=>E.refitUnit("Type61",option.id,"EFSF"),/disk full/);
+    }
+    assert.equal(JSON.stringify(E.snapshot()),before);
+  }
+  const {E,D}=funded();const option=E.refitOptions("Type61")[0];D.grantUnit("EFSF",option.unitId);
+  assert.equal(E.refitUnit("Type61",option.id,"EFSF"),false);
+});

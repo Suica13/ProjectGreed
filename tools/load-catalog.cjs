@@ -356,9 +356,12 @@ function loadCatalog({
     prefab.wip = isWip(prefab.id);
     prefab.disabled = prefab.wip;
     validateLocalization(prefab.localization, ref);
-    if (prefab.availableFactions !== undefined &&
-        (!Array.isArray(prefab.availableFactions) || !prefab.availableFactions.length ||
-         prefab.availableFactions.some((value) => !["EFSF", "ZEON"].includes(value))))
+    if (
+      prefab.availableFactions !== undefined &&
+      (!Array.isArray(prefab.availableFactions) ||
+        !prefab.availableFactions.length ||
+        prefab.availableFactions.some((value) => !["EFSF", "ZEON"].includes(value)))
+    )
       throw Error("Invalid available factions: " + prefab.id);
     if (
       !Number.isInteger(prefab.stats.actionPoints) ||
@@ -392,8 +395,12 @@ function loadCatalog({
           typeof h.id !== "string" ||
           !h.id.trim() ||
           (h.kind !== undefined && h.kind !== "sfs") ||
-          (h.kind === "sfs" && (h.capacity !== 1 || !h.offset ||
-            [h.offset.x,h.offset.y,h.offset.height].some(value => !Number.isFinite(value) || Math.abs(value) > 500))) ||
+          (h.kind === "sfs" &&
+            (h.capacity !== 1 ||
+              !h.offset ||
+              [h.offset.x, h.offset.y, h.offset.height].some(
+                (value) => !Number.isFinite(value) || Math.abs(value) > 500,
+              ))) ||
           !Number.isInteger(h.capacity) ||
           h.capacity < 1 ||
           !stringTags(h.allowedTags) ||
@@ -438,6 +445,27 @@ function loadCatalog({
         prefab.stats.autoRepair.enCost > prefab.stats.en)
     )
       throw Error("Invalid auto-repair: " + prefab.id);
+    if (
+      prefab.stats.pilotExperienceMultiplier !== undefined &&
+      (!Number.isFinite(prefab.stats.pilotExperienceMultiplier) ||
+        prefab.stats.pilotExperienceMultiplier <= 0)
+    )
+      throw Error("Invalid pilot experience multiplier: " + prefab.id);
+    if (
+      prefab.refits !== undefined &&
+      (!Array.isArray(prefab.refits) ||
+        prefab.refits.some(
+          (r) =>
+            !r ||
+            typeof r.id !== "string" ||
+            !/^[A-Za-z0-9_]+$/.test(r.unitId) ||
+            ![r.money, r.supplies].every((n) => Number.isSafeInteger(n) && n >= 0) ||
+            typeof r.blocked !== "boolean" ||
+            !Array.isArray(r.unlockUnits) ||
+            r.unlockUnits.some((id) => typeof id !== "string"),
+        ))
+    )
+      throw Error("Invalid native refits: " + prefab.id);
     if (prefab.stats.stealth && typeof prefab.stats.stealth.waterOnly !== "boolean")
       throw Error("Invalid concealment: " + prefab.id);
     if (
@@ -561,6 +589,19 @@ function loadCatalog({
         (field !== "antiDetection" && prefab.stats.sensors[field] < 0)
       )
         throw Error("Invalid sensor status: " + prefab.id + "/" + field);
+    if (prefab.stats.iField) {
+      const f = prefab.stats.iField;
+      if (
+        !Number.isFinite(f.capacity) ||
+        f.capacity <= 0 ||
+        ![f.reduction, f.piercingReduction].every((n) => Number.isFinite(n) && n >= 0 && n <= 1) ||
+        !Number.isFinite(f.recoveryPercent) ||
+        f.recoveryPercent < 0 ||
+        f.recoveryPercent > 100 ||
+        f.minimumRatio !== -0.25
+      )
+        throw Error("Invalid I-field configuration: " + ref);
+    }
     prefab.stats.accuracy ??= 100;
     if (
       !Number.isFinite(prefab.stats.accuracy) ||
@@ -654,6 +695,36 @@ function loadCatalog({
           if (raw?.availability?.hidden)
             throw Error("Hidden native weapon cannot enter a kit: " + prefab.id + "/" + key);
           validateLocalization(raw?.localization, prefab.id + "/" + key);
+          if (
+            raw.pilotRequirements !== undefined &&
+            (!Array.isArray(raw.pilotRequirements) ||
+              !raw.pilotRequirements.length ||
+              raw.pilotRequirements.some(
+                (r) =>
+                  !r ||
+                  ![
+                    "shooting",
+                    "melee",
+                    "defense",
+                    "speed",
+                    "accuracy",
+                    "reaction",
+                    "leadership",
+                    "awakening",
+                  ].includes(r.stat) ||
+                  ![">", ">=", "<", "<=", "==", "!="].includes(r.operator) ||
+                  !Number.isFinite(r.value),
+              ))
+          )
+            throw Error("Invalid pilot weapon requirement: " + prefab.id + "/" + key);
+          if (raw.onHitAPLoss !== undefined && raw.onHitAPLoss !== 1)
+            throw Error("Invalid on-hit AP loss: " + prefab.id + "/" + key);
+          if (raw.burn !== undefined && (raw.burn.durationTurns !== 3 || raw.burn.hpPercent !== 5))
+            throw Error("Invalid burn status: " + prefab.id + "/" + key);
+          if (raw.requiresSfsMS !== undefined && typeof raw.requiresSfsMS !== "boolean")
+            throw Error("Invalid SFS weapon requirement: " + prefab.id + "/" + key);
+          if (raw.requiresShield !== undefined && typeof raw.requiresShield !== "boolean")
+            throw Error("Invalid weapon shield requirement: " + prefab.id + "/" + key);
           if (!Number.isInteger(raw?.actionCost) || raw.actionCost < 1 || raw.actionCost > 99)
             throw Error("Invalid weapon action cost: " + prefab.id + "/" + key);
           validateParts(raw?.requiredParts, prefab.id + "/" + key);
@@ -898,8 +969,14 @@ function loadCatalog({
         description: prefab.description,
         sourceStats: prefab.sourceStats,
         mechanics: prefab.mechanics || [],
+        refits: prefab.refits || [],
         hiddenWeapons: Object.entries(prefab.weapons)
-          .filter(([, w]) => w.availability?.hidden && !w.availability.mergedInto)
+          .filter(
+            ([, w]) =>
+              w.availability?.hidden &&
+              !w.availability.mergedInto &&
+              !w.availability.convertedSkill,
+          )
           .map(([id, w]) => ({ id, name: w.name, ...w.availability }))
           .concat(prefab.deferredWeapons || []),
       };

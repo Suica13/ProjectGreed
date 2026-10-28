@@ -7,7 +7,12 @@ const byId = (id) => document.getElementById(id),
   Rules = Tactics,
   UnitModels = Rules.models;
 // selected 是单位 ID；phase 是流程阶段；mode 区分选中单位与选择目标。
-const menuGame = () => Rules.create(false, 7319, Rules.getMap().spawns.map(() => null));
+const menuGame = () =>
+  Rules.create(
+    false,
+    7319,
+    Rules.getMap().spawns.map(() => null),
+  );
 let game = menuGame(),
   selected = null,
   weaponId = null,
@@ -84,23 +89,53 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
           cache.set(key, placeholder);
           const face = new Image();
           const portraitReady = new Promise((resolve, reject) => {
-            face.onload = resolve; face.onerror = reject; face.src = portrait;
+            face.onload = resolve;
+            face.onerror = reject;
+            face.src = portrait;
           });
-          Promise.all([SpriteRenderer.ensureAssets([SpriteRenderer.models[model].icon]), portraitReady]).then(() => {
-            if (cache.get(key) !== placeholder) return;
-            const canvas = document.createElement("canvas"); canvas.width = canvas.height = 64;
-            const ctx = canvas.getContext("2d"), image = SpriteRenderer.images[SpriteRenderer.models[model].icon];
-            const scale = Math.min(64 / image.naturalWidth, 64 / image.naturalHeight);
-            ctx.drawImage(image, (64-image.naturalWidth*scale)/2, (64-image.naturalHeight*scale)/2, image.naturalWidth*scale, image.naturalHeight*scale);
-            ctx.fillStyle = "#152430"; ctx.strokeStyle = "#c7e2f2";
-            ctx.fillRect(39,39,25,25); ctx.strokeRect(39.5,39.5,24,24);
-            const crop = Math.min(face.naturalWidth,face.naturalHeight);
-            ctx.drawImage(face,(face.naturalWidth-crop)/2,(face.naturalHeight-crop)/2,crop,crop,41,41,22,22);
-            const result = canvas.toDataURL("image/png"); cache.set(key,result);
-            const absolute = new URL(placeholder,location.href).href;
-            for (const element of document.querySelectorAll("img"))
-              if (element.src === absolute) element.src = result;
-          }).catch(() => { /* Keep the base unit icon when a custom portrait is invalid. */ });
+          Promise.all([
+            SpriteRenderer.ensureAssets([SpriteRenderer.models[model].icon]),
+            portraitReady,
+          ])
+            .then(() => {
+              if (cache.get(key) !== placeholder) return;
+              const canvas = document.createElement("canvas");
+              canvas.width = canvas.height = 64;
+              const ctx = canvas.getContext("2d"),
+                image = SpriteRenderer.images[SpriteRenderer.models[model].icon];
+              const scale = Math.min(64 / image.naturalWidth, 64 / image.naturalHeight);
+              ctx.drawImage(
+                image,
+                (64 - image.naturalWidth * scale) / 2,
+                (64 - image.naturalHeight * scale) / 2,
+                image.naturalWidth * scale,
+                image.naturalHeight * scale,
+              );
+              ctx.fillStyle = "#152430";
+              ctx.strokeStyle = "#c7e2f2";
+              ctx.fillRect(39, 39, 25, 25);
+              ctx.strokeRect(39.5, 39.5, 24, 24);
+              const crop = Math.min(face.naturalWidth, face.naturalHeight);
+              ctx.drawImage(
+                face,
+                (face.naturalWidth - crop) / 2,
+                (face.naturalHeight - crop) / 2,
+                crop,
+                crop,
+                41,
+                41,
+                22,
+                22,
+              );
+              const result = canvas.toDataURL("image/png");
+              cache.set(key, result);
+              const absolute = new URL(placeholder, location.href).href;
+              for (const element of document.querySelectorAll("img"))
+                if (element.src === absolute) element.src = result;
+            })
+            .catch(() => {
+              /* Keep the base unit icon when a custom portrait is invalid. */
+            });
           return placeholder;
         }
         const xml = (value) =>
@@ -253,7 +288,7 @@ function attackForecastText(forecast) {
   );
 }
 function htmlWeapon(w, u, target = null, response = "counter", isCounter = false) {
-  return WeaponInfo.summary(w, {unit:u, target, response, isCounter}).outerHTML;
+  return WeaponInfo.summary(w, { unit: u, target, response, isCounter }).outerHTML;
 }
 // Rebuilt panel contents retain their local view state without affecting game state.
 function capturePanelView(root) {
@@ -261,34 +296,47 @@ function capturePanelView(root) {
   const entries = [];
   function visit(node, path) {
     if (node === root || node.scrollTop || node.scrollLeft || node.tagName === "DETAILS")
-      entries.push({ id:node.id, path, top:node.scrollTop, left:node.scrollLeft,
-        open:node.tagName === "DETAILS" ? node.open : undefined });
-    [...node.children].forEach((child,index) => visit(child,[...path,index]));
+      entries.push({
+        id: node.id,
+        path,
+        top: node.scrollTop,
+        left: node.scrollLeft,
+        open: node.tagName === "DETAILS" ? node.open : undefined,
+      });
+    [...node.children].forEach((child, index) => visit(child, [...path, index]));
   }
-  visit(root,[]);
+  visit(root, []);
   return { root, entries };
 }
 function restorePanelView(state) {
   if (!state) return;
-  const resolve = entry => entry.id ? document.getElementById(entry.id) :
-    entry.path.reduce((parent,index) => parent?.children[index],state.root);
+  const resolve = (entry) =>
+    entry.id
+      ? document.getElementById(entry.id)
+      : entry.path.reduce((parent, index) => parent?.children[index], state.root);
   for (const entry of state.entries) {
     const node = resolve(entry);
     if (node?.tagName === "DETAILS" && entry.open !== undefined) node.open = entry.open;
   }
   for (const entry of state.entries) {
     const node = resolve(entry);
-    if (node) { node.scrollTop = entry.top; node.scrollLeft = entry.left; }
+    if (node) {
+      node.scrollTop = entry.top;
+      node.scrollLeft = entry.left;
+    }
   }
 }
 let renderedPanelSelection = null;
 // 刷新顶栏、单位列表、提示和右侧指令，不推进回合。
 function update() {
   const key = session + ":" + selected;
-  const views = renderedPanelSelection === key
-    ? ["hudUnitPanel","unitPanel","hudAttackPlanner"].map(id => capturePanelView(byId(id))) : [];
-  try { updateContents(); }
-  finally {
+  const views =
+    renderedPanelSelection === key
+      ? ["hudUnitPanel", "unitPanel", "hudAttackPlanner"].map((id) => capturePanelView(byId(id)))
+      : [];
+  try {
+    updateContents();
+  } finally {
     if (key === session + ":" + selected) views.forEach(restorePanelView);
     renderedPanelSelection = session + ":" + selected;
   }
@@ -642,7 +690,11 @@ function renderPanel() {
     pilotStats.append(cell);
   }
   if (pilot.custom) {
-    const xp = element("div", "unit-pilot-experience", `Lv.${pilot.level} · EXP ${pilot.experience}/${pilot.level >= PilotSystem.growthRules.maxLevel ? "MAX" : PilotSystem.experienceRequired(pilot.level)}`);
+    const xp = element(
+      "div",
+      "unit-pilot-experience",
+      `Lv.${pilot.level} · EXP ${pilot.experience}/${pilot.level >= PilotSystem.growthRules.maxLevel ? "MAX" : PilotSystem.experienceRequired(pilot.level)}`,
+    );
     xp.dataset.pilotExperience = "";
     stats.prepend(pilotLine, xp, pilotStats);
   } else stats.prepend(pilotLine, pilotStats);
@@ -702,6 +754,18 @@ function renderPanel() {
     effects.push(I18n.text("背包损毁：移动力-25%（向下取整，至少1格）"));
   if (penalty.resistancePenalty)
     effects.push(I18n.text("四肢损毁：抗性降低") + " " + penalty.resistancePenalty + "%");
+  if (u.apPenaltyNextTurn) effects.push(I18n.text("电击：下回合AP减少1点"));
+  if (u.burning) effects.push(I18n.text("燃烧中"));
+  if (m.iField)
+    partStatus.append(
+      element(
+        "p",
+        "helper",
+        `${I18n.text("I立场")} ${Math.round(Math.max(0, Rules.iFieldHP(u))).toLocaleString()} / ${m.iField.capacity.toLocaleString()}${Rules.iFieldHP(u) <= 0 ? " · " + I18n.text("恢复中") : ""}`,
+      ),
+    );
+  if (Rules.smokeAt(game, u))
+    partStatus.append(element("p", "helper", I18n.text("烟雾掩护：受到远程攻击时命中率×75%")));
   if (effects.length) partStatus.append(element("p", "red", effects.join(" · ")));
   overview.append(partStatus);
   const protection = element("details", "rule-box");
@@ -743,15 +807,25 @@ function renderPanel() {
       ),
     );
   overview.append(attacks);
-  for (const ability of SkillControls.commandAbilities(m,u)) {
-    const card = element("section","rule-box");
-    card.append(element("strong","",ability.name),element("p","helper",ability.description));
+  for (const ability of [
+    ...SkillControls.commandAbilities(m, u),
+    ...SkillControls.defensiveAbilities(m),
+  ]) {
+    const card = element("section", "rule-box");
+    card.append(element("strong", "", ability.name), element("p", "helper", ability.description));
     overview.append(card);
   }
-  const command = Rules.commandEffects(game,u);
-  const commandLabels = {attack:"攻击指挥",defense:"防御指挥",communication:"通信指挥"};
-  for (const [kind,value] of Object.entries(command))
-    if (value) overview.append(element("p","helper",I18n.text(commandLabels[kind])+" +"+Number((value*100).toFixed(2))+"%"));
+  const command = Rules.commandEffects(game, u);
+  const commandLabels = { attack: "攻击指挥", defense: "防御指挥", communication: "通信指挥" };
+  for (const [kind, value] of Object.entries(command))
+    if (value)
+      overview.append(
+        element(
+          "p",
+          "helper",
+          I18n.text(commandLabels[kind]) + " +" + Number((value * 100).toFixed(2)) + "%",
+        ),
+      );
   let actions = element("div", "actions");
   for (const [label, fn, disabled] of [
     [
@@ -921,7 +995,7 @@ function renderPanel() {
         if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
         update();
       };
-      list.append(WeaponInfo.card(w, b, {unit:u}));
+      list.append(WeaponInfo.card(w, b, { unit: u }));
     }
     if (skills) SkillControls.render(list, u, canCommand);
     container.append(list);
@@ -1033,9 +1107,11 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
     mapRangeCache.model === Rules.models[chosen?.model]
   )
     return mapRangeCache;
-  const moveCells = canMove ? (chosen.embarked?.exposed
-    ? new Map(Rules.hangars.launchCells(game,chosen).map(p => [Rules.key(p.x,p.y),p]))
-    : Rules.reachable(game, chosen)) : new Map();
+  const moveCells = canMove
+    ? chosen.embarked?.exposed
+      ? new Map(Rules.hangars.launchCells(game, chosen).map((p) => [Rules.key(p.x, p.y), p]))
+      : Rules.reachable(game, chosen)
+    : new Map();
   const displayCell = (c) => {
     const size = chosen ? Rules.dimensions(chosen) : { width: 1, height: 1 };
     return Rules.key(
@@ -1355,6 +1431,26 @@ function drawMap(now) {
     lastX = Math.min(Rules.mapWidth(game), Math.ceil((w - ox) / tile)),
     lastY = Math.min(Rules.mapHeight(game), Math.ceil((h - oy) / tile));
   drawCachedMapTerrain(ctx, w, h, dpr, tile, ox, oy, immersive, deploymentArea);
+  for (const field of game.beamDiffusionFields || []) {
+    if (field.expiresRound <= game.round) continue;
+    ctx.save();
+    ctx.fillStyle = "rgba(108,197,220,.12)";
+    ctx.strokeStyle = "#89dded99";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(
+      ox + (field.x + 0.5) * tile,
+      oy + (field.y + 0.5) * tile,
+      field.radius * tile,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fill();
+    ctx.setLineDash([5, 5]);
+    ctx.stroke();
+    ctx.restore();
+  }
+
   const hasCellOverlays =
     minovskyCells.size ||
     (!immersive &&
@@ -1457,11 +1553,19 @@ function drawMap(now) {
   SpriteEffects.setFogClip(visibilityClip, ctx);
   const mapUnitPoses = [];
   drawVisibleEffects(() => MapCombat.drawUnderlay(ctx, mapGeo));
-  for (const u of MapCombat.units().sort((a,b) => Number(!!a.embarked?.exposed)-Number(!!b.embarked?.exposed))) {
+  for (const u of IrradiationFX.units(MapCombat.units(), now).sort(
+    (a, b) => Number(!!a.embarked?.exposed) - Number(!!b.embarked?.exposed),
+  )) {
     if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden) continue;
     const motion = PlanningUI.motion(u, now) || (moving?.id === u.id ? moving : null);
     const visualUnit = u.pendingMove
-      ? { ...u, ...(u.pendingMove.launch ? {embarked:undefined} : {}), x: u.pendingMove.x, y: u.pendingMove.y, angle: u.pendingMove.angle }
+      ? {
+          ...u,
+          ...(u.pendingMove.launch ? { embarked: undefined } : {}),
+          x: u.pendingMove.x,
+          y: u.pendingMove.y,
+          angle: u.pendingMove.angle,
+        }
       : u;
     const unitCenter = Rules.center(visualUnit),
       unitSize = Rules.dimensions(u);
@@ -1504,15 +1608,21 @@ function drawMap(now) {
       t = skillPose.time;
     }
     if (u.embarked?.exposed && !u.pendingMove?.launch) {
-      const parent = mapUnitPoses.find(p => p.u.id === u.embarked.carrierId);
+      const parent = mapUnitPoses.find((p) => p.u.id === u.embarked.carrierId);
       const carrier = getUnit(u.embarked.carrierId);
-      const slot = carrier && Rules.hangars.of(carrier).find(h => h.id === u.embarked.hangarId);
+      const slot = carrier && Rules.hangars.of(carrier).find((h) => h.id === u.embarked.hangarId);
       if (parent && slot) {
-        const rad = parent.angle * Math.PI / 180;
-        const scale = tile / 64 * 1.2 * (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) * Rules.modelOf(carrier).presentation.mapScale;
-        const {x,y,height} = slot.offset;
-        pos = {x:parent.pos.x+(x*Math.cos(rad)+y*Math.sin(rad))*scale,
-          y:parent.pos.y+(x*Math.sin(rad)-y*Math.cos(rad)-height)*scale};
+        const rad = (parent.angle * Math.PI) / 180;
+        const scale =
+          (tile / 64) *
+          1.2 *
+          (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
+          Rules.modelOf(carrier).presentation.mapScale;
+        const { x, y, height } = slot.offset;
+        pos = {
+          x: parent.pos.x + (x * Math.cos(rad) + y * Math.sin(rad)) * scale,
+          y: parent.pos.y + (x * Math.sin(rad) - y * Math.cos(rad) - height) * scale,
+        };
         groundCell = parent.groundCell;
       }
     }
@@ -1538,6 +1648,16 @@ function drawMap(now) {
   byId("map").dataset.unitThumbnails = String(unitThumbnails);
   if (!immersive && !unitThumbnails)
     for (const { u, pos } of mapUnitPoses) UnitIdentity.drawRing(ctx, u, pos, tile);
+  const airbornePose = (pose) =>
+    !!pose.u.flying ||
+    Rules.modelOf(pose.u).movementType === "air" ||
+    (pose.u.embarked?.exposed &&
+      (() => {
+        const carrier = getUnit(pose.u.embarked.carrierId);
+        return carrier && (carrier.flying || Rules.modelOf(carrier).movementType === "air");
+      })());
+  mapUnitPoses.sort((a, b) => Number(!!airbornePose(a)) - Number(!!airbornePose(b)));
+  let smokeDrawn = false;
   for (const {
     u,
     pos,
@@ -1550,6 +1670,10 @@ function drawMap(now) {
     skillPose,
     groundCell,
   } of mapUnitPoses) {
+    if (!smokeDrawn && airbornePose({ u })) {
+      EnvironmentVisuals.smoke(ctx, game, mapPosition, tile);
+      smokeDrawn = true;
+    }
     ctx.save();
     const environmentPose = EnvironmentVisuals.pose(u, groundCell);
     if (ClientSettings.unitShadows() && game.environment !== "space") {
@@ -1647,7 +1771,34 @@ function drawMap(now) {
         combatPose?.weaponDisplayIndex ?? skillPose?.weaponDisplayIndex ?? null,
         combatPose?.flying ?? !!u.flying,
         turretStatus,
+        false,
+        !!(u.overBoost || u.fullBoost || u.overdrive || u.boostSkillActive),
       );
+      const fieldImpact = Math.min(
+        MapCombat.fieldImpact(u.id),
+        IrradiationFX.fieldImpact(u.id, now),
+      );
+      if (Rules.modelOf(u).iField && fieldImpact < ART.effects.I_Field_2.duration)
+        SpriteEffects.draw(
+          ctx,
+          "I_Field_2",
+          pos.x,
+          pos.y,
+          (tile / 64) * 1.2 * Rules.modelOf(u).presentation.mapScale,
+          fieldImpact,
+        );
+      if (u.burning && u.hp > 0) {
+        const effect = ART.effects.Burned_Hit_1;
+        if (effect)
+          SpriteEffects.draw(
+            ctx,
+            "Burned_Hit_1",
+            pos.x,
+            pos.y,
+            tile / 64,
+            (now / 1000) % effect.duration,
+          );
+      }
       SpriteEffects.lowHp(
         ctx,
         u,
@@ -1663,10 +1814,7 @@ function drawMap(now) {
     ctx.restore();
     if (immersive) continue;
     let hpw =
-        tile *
-        0.72 *
-        battleSettings.mapBarScale *
-        (Rules.modelOf(u).ship ? unitSize.width : 1),
+        tile * 0.72 * battleSettings.mapBarScale * (Rules.modelOf(u).ship ? unitSize.width : 1),
       barx = pos.x - hpw / 2,
       bary = pos.y + tile * (Rules.modelOf(u).ship ? unitSize.height / 2 - 0.12 : 0.36);
     ctx.fillStyle = "#07141c";
@@ -1803,6 +1951,7 @@ function drawMap(now) {
       actor.flying,
       null,
       true,
+      !!actor.boostSkillActive,
     );
     if (actor.lowHp)
       SpriteEffects.lowHp(
@@ -1829,8 +1978,10 @@ function drawMap(now) {
     }
     ctx.restore();
   }
+  if (!smokeDrawn) EnvironmentVisuals.smoke(ctx, game, mapPosition, tile);
   if (!immersive) PlanningUI.sniperLocks(ctx, now);
   drawVisibleEffects(() => SkillEffects.draw(ctx, now, mapPosition, tile));
+  IrradiationFX.draw(ctx, now, mapPosition, tile); // Native beam/charge sprites remain visible through fog.
   drawVisibleEffects(() => MapEffects.draw(ctx, now, mapPosition, tile));
   if (!immersive && hover) {
     let p = mapPosition(hover.x, hover.y);
@@ -1888,7 +2039,10 @@ byId("map").onclick = async (e) => {
   if (phase === "reaction") {
     const cell = cellAt(e),
       target = cell && Rules.at(game, cell.x, cell.y);
-    if (target) { window.SFSUI?.inspect(target); selectCounterTarget(target.id); }
+    if (target) {
+      window.SFSUI?.inspect(target);
+      selectCounterTarget(target.id);
+    }
     return;
   }
   if (isBusy() || isAI()) return;
@@ -1906,12 +2060,24 @@ byId("map").onclick = async (e) => {
   if (SkillControls.click(cell, u)) return;
   window.SFSUI?.inspect(target);
   // Friendly carrier cells are movement endpoints before they are selections.
-  if (target && u && target !== u && target.team === u.team && mode === "move" &&
-      !u.embarked && Rules.reachable(game,u).get(Rules.key(cell.x,cell.y))?.boarding) {
-    try { await performMove(u,cell.x,cell.y); } catch(error) { note(error.message); }
+  if (
+    target &&
+    u &&
+    target !== u &&
+    target.team === u.team &&
+    mode === "move" &&
+    !u.embarked &&
+    Rules.reachable(game, u).get(Rules.key(cell.x, cell.y))?.boarding
+  ) {
+    try {
+      await performMove(u, cell.x, cell.y);
+    } catch (error) {
+      note(error.message);
+    }
     return;
   }
-  if (target && u && target.team !== u.team) target = {...target, aimCell: {x:cell.x,y:cell.y}};
+  if (target && u && target.team !== u.team)
+    target = { ...target, aimCell: { x: cell.x, y: cell.y } };
   if (mode === "target" && u && weaponId) {
     let w = getWeapon(u, weaponId);
     if (["mortar", "nuke"].includes(w?.special?.type))
@@ -2055,7 +2221,13 @@ function beginAttack(a, b, w, weapons = [w]) {
   GameAudio.play("lockonSound");
   Rules.faceTarget(a, b);
   Rules.faceTarget(b, a);
-  pending = { aimCell: b.aimCell, attacker: a.id, target: b.id, weapon: w.id, weapons: weapons.map((w) => w.id) };
+  pending = {
+    aimCell: b.aimCell,
+    attacker: a.id,
+    target: b.id,
+    weapon: w.id,
+    weapons: weapons.map((w) => w.id),
+  };
   phase = "reaction";
   let legal = Rules.modelOf(b).weapons.filter((c) => Rules.canCounter(game, b, a, c));
   response = legal.length ? "counter" : "defend";
@@ -2088,30 +2260,43 @@ function counterDraft(unit) {
     counterDraftState = { key, session, ids: counterId ? [counterId] : [] };
   const draft = counterDraftState;
   if (!draft.entries) {
-    const targets = pending.counterTargets || [{attacker:pending.attacker}];
-    const targetId = targets.some(entry => entry.attacker === counterTargetId) ? counterTargetId : pending.attacker;
-    draft.entries = draft.ids.map(weaponId => ({weaponId,targetId}));
+    const targets = pending.counterTargets || [{ attacker: pending.attacker }];
+    const targetId = targets.some((entry) => entry.attacker === counterTargetId)
+      ? counterTargetId
+      : pending.attacker;
+    draft.entries = draft.ids.map((weaponId) => ({ weaponId, targetId }));
   }
   return draft;
 }
 function counterWeapons(unit) {
-  return counterDraft(unit).entries.filter(entry => entry.targetId === counterTargetId)
-    .map(entry => getWeapon(unit,entry.weaponId));
+  return counterDraft(unit)
+    .entries.filter((entry) => entry.targetId === counterTargetId)
+    .map((entry) => getWeapon(unit, entry.weaponId));
 }
 function counterOrders(unit) {
-  return counterDraft(unit).entries.map(entry => ({targetId:entry.targetId,weaponIds:[entry.weaponId]}));
+  return counterDraft(unit).entries.map((entry) => ({
+    targetId: entry.targetId,
+    weaponIds: [entry.weaponId],
+  }));
 }
-function renderCounterSummary(panel,unit) {
+function renderCounterSummary(panel, unit) {
   panel.replaceChildren();
   const entries = unit && counterDraft(unit).entries;
   if (!entries?.length) return false;
-  panel.append(element("div","section-title","反击武器序列"));
-  entries.forEach((entry,index) => {
-    const row = element("div","attack-plan-line"), target = getUnit(entry.targetId);
-    row.append(element("span","weapon-plan-index",String(index+1)),
-      element("span","attack-plan-weapon",getWeapon(unit,entry.weaponId)?.name || entry.weaponId),
-      element("span","attack-plan-arrow","→"),
-      element("span","attack-plan-target",target ? unitName(target) : I18n.text("目标已不可见")));
+  panel.append(element("div", "section-title", "反击武器序列"));
+  entries.forEach((entry, index) => {
+    const row = element("div", "attack-plan-line"),
+      target = getUnit(entry.targetId);
+    row.append(
+      element("span", "weapon-plan-index", String(index + 1)),
+      element(
+        "span",
+        "attack-plan-weapon",
+        getWeapon(unit, entry.weaponId)?.name || entry.weaponId,
+      ),
+      element("span", "attack-plan-arrow", "→"),
+      element("span", "attack-plan-target", target ? unitName(target) : I18n.text("目标已不可见")),
+    );
     panel.append(row);
   });
   return true;
@@ -2234,7 +2419,7 @@ function renderReaction() {
   byId("responseCounter").disabled = !targets.some((entry) => available(entry).length);
   const draft = counterDraft(b),
     queue = counterWeapons(b),
-    allQueue = draft.entries.map(entry => getWeapon(b,entry.weaponId));
+    allQueue = draft.entries.map((entry) => getWeapon(b, entry.weaponId));
   const spentAP = allQueue.reduce((sum, w) => sum + Rules.actionCost(w), 0),
     spentEN = allQueue.reduce((sum, w) => sum + Rules.weaponStats(w, b).en, 0);
   byId("counterActionPoints").textContent =
@@ -2247,13 +2432,15 @@ function renderReaction() {
       element("div", "section-title", "反击武器序列"),
       element("p", "helper", "点击武器追加反击，可重复加入。"),
     );
-    draft.entries.forEach((entry,index) => {
+    draft.entries.forEach((entry, index) => {
       const row = element("div", "attack-plan-line");
       const enemy = getUnit(entry.targetId);
-      row.append(element("span", "weapon-plan-index", String(index+1)),
-        element("span", "attack-plan-weapon", getWeapon(b,entry.weaponId)?.name || entry.weaponId),
+      row.append(
+        element("span", "weapon-plan-index", String(index + 1)),
+        element("span", "attack-plan-weapon", getWeapon(b, entry.weaponId)?.name || entry.weaponId),
         element("span", "attack-plan-arrow", "→"),
-        element("span", "attack-plan-target", enemy ? unitName(enemy) : I18n.text("目标已不可见")));
+        element("span", "attack-plan-target", enemy ? unitName(enemy) : I18n.text("目标已不可见")),
+      );
       planned.append(row);
     });
     const clear = element("button", "", "清空计划");
@@ -2266,13 +2453,22 @@ function renderReaction() {
     };
     const change = element("button", "", "更换目标");
     change.id = "changeCounterTarget";
-    change.disabled = !!Net.awaiting || !legalTargets.some(entry => {
-      const enemy = getUnit(entry.attacker);
-      return available(entry).some(weapon => {
-        try { Rules.counterPlan(game,b,[...counterOrders(b),{targetId:enemy.id,weaponIds:[weapon.id]}]); return true; }
-        catch { return false; }
+    change.disabled =
+      !!Net.awaiting ||
+      !legalTargets.some((entry) => {
+        const enemy = getUnit(entry.attacker);
+        return available(entry).some((weapon) => {
+          try {
+            Rules.counterPlan(game, b, [
+              ...counterOrders(b),
+              { targetId: enemy.id, weaponIds: [weapon.id] },
+            ]);
+            return true;
+          } catch {
+            return false;
+          }
+        });
       });
-    });
     change.onclick = () => {
       draft.pickingTarget = true;
       update();
@@ -2291,7 +2487,10 @@ function renderReaction() {
       button.disabled = !!Net.awaiting || !candidate;
       if (!button.disabled) {
         try {
-          Rules.counterPlan(game,b,[...counterOrders(b),{targetId:enemy.id,weaponIds:[cw.id]}]);
+          Rules.counterPlan(game, b, [
+            ...counterOrders(b),
+            { targetId: enemy.id, weaponIds: [cw.id] },
+          ]);
         } catch {
           button.disabled = true;
         }
@@ -2301,17 +2500,32 @@ function renderReaction() {
         GameAudio.play("selectWeaponSound");
         counterId = cw.id;
         counterTargetId = candidate.attacker;
-        draft.entries.push({weaponId:cw.id,targetId:candidate.attacker});
-        draft.ids = counterWeapons(b).map(weapon => weapon.id);
+        draft.entries.push({ weaponId: cw.id, targetId: candidate.attacker });
+        draft.ids = counterWeapons(b).map((weapon) => weapon.id);
         renderReaction();
       };
-      byId("counterList").append(WeaponInfo.card(cw, button, {unit:b, target:enemy || selectedEnemy, response:"counter", isCounter:true}));
+      byId("counterList").append(
+        WeaponInfo.card(cw, button, {
+          unit: b,
+          target: enemy || selectedEnemy,
+          response: "counter",
+          isCounter: true,
+        }),
+      );
     }
   }
-  const forecasts = response === "counter" ? draft.entries.map(entry =>
-    attackForecast(b,getUnit(entry.targetId),getWeapon(b,entry.weaponId),"counter",true)) : [];
-  const counter = forecasts.length ? {damage:forecasts.reduce((sum,item) => sum+item.damage,0),
-    hit:forecasts.reduce((sum,item) => sum+item.hit,0)/forecasts.length} : null;
+  const forecasts =
+    response === "counter"
+      ? draft.entries.map((entry) =>
+          attackForecast(b, getUnit(entry.targetId), getWeapon(b, entry.weaponId), "counter", true),
+        )
+      : [];
+  const counter = forecasts.length
+    ? {
+        damage: forecasts.reduce((sum, item) => sum + item.damage, 0),
+        hit: forecasts.reduce((sum, item) => sum + item.hit, 0) / forecasts.length,
+      }
+    : null;
   byId("incomingEstimate").replaceChildren(
     element("span", "", "来袭单位"),
     document.createTextNode(" " + targets.length),
@@ -2321,7 +2535,7 @@ function renderReaction() {
   let validQueue = true;
   if (response === "counter") {
     try {
-      Rules.counterPlan(game,b,counterOrders(b));
+      Rules.counterPlan(game, b, counterOrders(b));
     } catch {
       validQueue = false;
     }
@@ -2353,9 +2567,10 @@ function legalCounterTargets() {
 function selectCounterTarget(id) {
   if (Net.awaiting || !legalCounterTargets().some((entry) => entry.attacker === id)) return false;
   if (Net.active && !Net.canControl(getUnit(pending.target))) return false;
-  const defender = getUnit(pending.target), draft = counterDraft(defender);
+  const defender = getUnit(pending.target),
+    draft = counterDraft(defender);
   counterTargetId = id;
-  draft.ids = counterWeapons(defender).map(weapon => weapon.id);
+  draft.ids = counterWeapons(defender).map((weapon) => weapon.id);
   counterId = draft.ids.at(-1) || null;
   draft.pickingTarget = false;
   GameAudio.play("lockonSound");
@@ -2392,7 +2607,7 @@ function commitAttack() {
       planner.plan(
         room,
         a,
-        {...b, aimCell:pending.aimCell},
+        { ...b, aimCell: pending.aimCell },
         pending.weapons.map((id) => getWeapon(a, id)),
         Rules.ownerOf(a),
       );

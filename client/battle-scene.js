@@ -193,6 +193,10 @@ const BattleScene = (() => {
         unit.environment ?? "ground",
         attacking ? event.weapon : null,
         attacking ? animation.weaponDisplayIndex : null,
+        !!unit.flying,
+        null,
+        false,
+        !!(unit.overBoost || unit.fullBoost || unit.overdrive || unit.boostSkillActive),
       );
       const visibleHp =
         !completed && unit.id === event.to

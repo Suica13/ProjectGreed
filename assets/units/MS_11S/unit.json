@@ -357,8 +357,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "ZN_HeatHawk_ACT_A_Fast",
@@ -1279,10 +1278,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1360,7 +1357,20 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 2
+      "displayIndex": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_11S/MS_11S.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      }
     },
     "ZN_HeatHawk_ACT_A_Fast": {
       "name": "热能斧",
@@ -1533,7 +1543,8 @@
       "weapons": [
         "ZN_ACT_Zaku_MG",
         "Common_Push_A",
-        "ZN_HeatHawk_ACT_A_Fast"
+        "ZN_HeatHawk_ACT_A_Fast",
+        "EF_BeamSaber_F_Yellow"
       ]
     },
     {
@@ -1543,7 +1554,8 @@
       "weapons": [
         "ZN_ACT_Zaku_BR",
         "Common_Push_A",
-        "ZN_HeatHawk_ACT_A_Fast"
+        "ZN_HeatHawk_ACT_A_Fast",
+        "EF_BeamSaber_F_Yellow"
       ]
     }
   ],

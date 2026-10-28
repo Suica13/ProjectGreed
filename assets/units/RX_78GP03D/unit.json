@@ -739,7 +739,16 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "iField": {
+      "capacity": 250000.0,
+      "reduction": 0.95,
+      "piercingReduction": 0.5,
+      "recoveryPercent": 10,
+      "nativeRecoverySpeed": 500.0,
+      "minimumRatio": -0.25,
+      "effect": "I_Field_2"
+    }
   },
   "attackBonuses": {
     "melee": 75.0,
@@ -1766,14 +1775,14 @@
     {
       "id": "ExitUnit_NewUnit",
       "source": "Template/Unit/Skill/ExitUnit_NewUnit.gw",
-      "status": "review",
-      "name": "脱出并生成新机体"
+      "status": "adapted",
+      "name": "脱出：原生形态转换，资源与部位规则使用显式配置"
     },
     {
       "id": "I_Field",
       "source": "Template/Unit/Skill/I_Field.gw",
-      "status": "review",
-      "name": "I力场"
+      "status": "adapted",
+      "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
     },
     {
       "id": "special_Common_DemolitionChain_Back_Space_GP_03D",
@@ -1803,7 +1812,49 @@
     "levelMultiplier": 0.25,
     "published": 2250
   },
-  "skills": [],
+  "skills": [
+    {
+      "id": "ExitUnit",
+      "type": "escape",
+      "name": "脱出",
+      "localization": {
+        "zh": {
+          "name": "脱出"
+        },
+        "en": {
+          "name": "Eject"
+        },
+        "ja": {
+          "name": "脱出"
+        }
+      },
+      "range": 1,
+      "minRange": 1,
+      "maxUses": 1,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_ExitUnit",
+      "source": {
+        "mode": "remove"
+      },
+      "spawn": {
+        "unitId": "RX_78GP03S",
+        "kitId": "standard",
+        "kitMap": {
+          "standard": "standard"
+        },
+        "inheritResources": false,
+        "hpRecoveryPercent": 100,
+        "enRecoveryPercent": 100,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": true
+      }
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "MA"

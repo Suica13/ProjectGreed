@@ -1517,8 +1517,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     }
   ],
   "weaponKits": [
@@ -1565,5 +1565,67 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RX_81ST",
+      "unitId": "RX_81ST",
+      "money": 500,
+      "supplies": 500,
+      "unlockUnits": [
+        "RX_81ST"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81/RX_81.ini",
+        "action": "action_CustomUnit_RX_81ST",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_RX_81LA",
+      "unitId": "RX_81LA",
+      "money": 500,
+      "supplies": 500,
+      "unlockUnits": [
+        "RX_81LA"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81/RX_81.ini",
+        "action": "action_CustomUnit_RX_81LA",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_RX_81AS",
+      "unitId": "RX_81AS",
+      "money": 750,
+      "supplies": 750,
+      "unlockUnits": [
+        "RX_81AS"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81/RX_81.ini",
+        "action": "action_CustomUnit_RX_81AS",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_RX_81FC",
+      "unitId": "RX_81FC",
+      "money": 1000,
+      "supplies": 1000,
+      "unlockUnits": [
+        "RX_81FC"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81/RX_81.ini",
+        "action": "action_CustomUnit_RX_81FC",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

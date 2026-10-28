@@ -108,7 +108,7 @@ test("empty mortar cells create bounded visual records without adding game units
   assert.equal(a.en, G.modelOf(a).en - w.en);
   assert.ok(battles.filter((b) => b.events[0].empty).every((b) => b.actors[1].visualOnly));
 });
-test("sniper charging waits for next own phase, restores native skill damage and doubles computed hit", () => {
+test("sniper charging waits for next own phase, uses reduced skill damage and doubles computed hit", () => {
   const { game, a, b, room, planner } = fixture("RGM_79_G_SP", 1);
   Object.assign(b, { x: 14, y: 10 });
   const m = G.modelOf(a),
@@ -211,6 +211,7 @@ test("sniper weapons use four AP and charged range is 150 percent of ordinary ra
 
 test("sniper planning enforces the new range edges and spends four AP for either mode", () => {
   const { game, a, b, planner, room } = fixture("RGM_79_G_SP", 1);
+  game.fogMode = "disabled"; // This fixture checks weapon range, independently of sensor reach.
   const weapons = G.modelOf(a).weapons,
     ordinary = weapons.find((w) => w.category === "sniper" && !w.special),
     charged = weapons.find((w) => w.special?.type === "snipe");

@@ -1577,5 +1577,37 @@
       "status": "implemented",
       "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效"
     }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_09F",
+      "unitId": "MS_09F",
+      "money": 250,
+      "supplies": 250,
+      "unlockUnits": [
+        "MS_09F"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09/MS_09.ini",
+        "action": "action_CustomUnit_MS_09F",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_MS_09R",
+      "unitId": "MS_09R",
+      "money": 250,
+      "supplies": 250,
+      "unlockUnits": [
+        "MS_09R"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09/MS_09.ini",
+        "action": "action_CustomUnit_MS_09R",
+        "seconds": 20.0
+      }
+    }
   ]
 }

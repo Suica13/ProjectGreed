@@ -389,8 +389,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "EF_BeamSaber_Double_AALDF_L",
@@ -409,7 +408,6 @@
       "requiredParts": [
         "leftArm"
       ],
-      "hidden": true,
       "visibleWhen": {
         "weaponDisplayIndex": 11
       }
@@ -2097,7 +2095,14 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "converted_skill"
+        ],
+        "convertedSkill": "Irradiation"
+      }
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -3137,9 +3142,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -3168,10 +3171,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -3256,7 +3257,24 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_4/RX_78_4_Bst.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -3508,6 +3526,11 @@
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "review",
       "name": "换装／改修"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "光束照射：方向射线、蓄力、逐机命中与长度自适应贴图"
     }
   ],
   "weaponKits": [
@@ -3517,11 +3540,11 @@
       "cost": 100,
       "weapons": [
         "EF_HyperBeamRifle",
-        "EF_RX_78_4_HighMegaLauncher",
         "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_AALDF"
       ]
     },
     {
@@ -3530,11 +3553,11 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazooka",
-        "EF_RX_78_4_HighMegaLauncher",
         "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_AALDF"
       ]
     }
   ],
@@ -3558,6 +3581,63 @@
       "moveBonus": 2,
       "mobilityMultiplier": 1.1,
       "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    },
+    {
+      "id": "Irradiation",
+      "type": "irradiation",
+      "name": "光束照射",
+      "range": 10,
+      "minRange": 1,
+      "actionCost": 5,
+      "enCostPercent": 50,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": true,
+      "baseHit": 60,
+      "damageComponents": {
+        "beam": 49945.42694091797,
+        "beamAP": 24972.713470458984
+      },
+      "nativeTotalDamage": 1498362.808227539,
+      "nativeRepeatMultiplier": 3.6996612548828125,
+      "sourceWeapon": "EF_RX_78_4_HighMegaLauncher",
+      "requiredParts": [
+        "rightArm"
+      ],
+      "requiresSfsMS": false,
+      "chargeSeconds": 2.1,
+      "fireSeconds": 2,
+      "visualColor": "Pink",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "EF_RX_78_4_HighMegaLauncher",
+            "point": {
+              "x": -1.1764705882352937,
+              "y": -9.411764705882353
+            }
+          }
+        ]
+      },
+      "weaponDisplayIndex": 2,
+      "clip": "Common_Shoot_Two_Handed_A",
+      "effect": "Irradiation_Charge_Pink",
+      "sound": {
+        "file": "../../sounds/BeamCharge_4.ogg",
+        "volume": 0.7
+      },
+      "localization": {
+        "zh": {
+          "name": "光束照射"
+        },
+        "en": {
+          "name": "Irradiation Beam"
+        },
+        "ja": {
+          "name": "照射ビーム"
+        }
+      },
+      "description": "选择方向照射10格；消耗5 AP与50%最大EN，冷却3个己方回合。基础命中60%，对沿途每台单位（含友军）判定一次，基础伤害为原MOD完整伤害的1/20。"
     }
   ],
   "kitAliases": {

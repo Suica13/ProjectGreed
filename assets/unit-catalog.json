@@ -264,7 +264,8 @@
     "units/MSM_07E/unit.json",
     "units/YMS_18/unit.json",
     "units/EMS_10F/unit.json",
-    "units/RX_80PR_SpaceType_HADES/unit.json"
+    "units/RX_80PR_SpaceType_HADES/unit.json",
+    "units/MSN_02_Head/unit.json"
   ],
   "effects": "effects/effects.json",
   "presentation": "presentation.json",

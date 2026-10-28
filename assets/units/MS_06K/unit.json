@@ -1630,5 +1630,22 @@
     ]
   },
   "hangars": [],
-  "mechanics": []
+  "mechanics": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_06JK",
+      "unitId": "MS_06JK",
+      "money": 450,
+      "supplies": 450,
+      "unlockUnits": [
+        "MS_06JK"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06K/MS_06K.ini",
+        "action": "action_CustomUnit_MS_06JK",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

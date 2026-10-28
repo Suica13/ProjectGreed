@@ -450,7 +450,9 @@
       "requiredParts": [
         "leftArm"
       ],
-      "visibleWhen": {}
+      "visibleWhen": {
+        "shieldVisible": false
+      }
     },
     {
       "name": "EF_HypeBazooka",

@@ -78,7 +78,9 @@ for (const [key, file] of [
   ["SERVER_ACTIVITIES", "client/server-activities.js"],
   ["DEVELOPMENT_UI", "client/development.js"],
   ["PRODUCTION_UI", "client/production.js"],
+  ["IRRADIATION_FX", "client/irradiation-fx.js"],
   ["KIT_SHOP", "client/kit-shop.js"],
+  ["REFIT_SHOP", "client/refit-shop.js"],
   ["ECONOMY", "shared/economy.js"],
   ["BATTLE_ECONOMY", "shared/battle-economy.js"],
   ["UNIT_PARTS", "shared/unit-parts.js"],
@@ -143,6 +145,24 @@ html = html.replace(
 html = html
   .replace("__MENU_SHELL_CSS__", () => read("client/menu-shell.css"))
   .replace("__BLUE_THEME_CSS__", () => read("client/blue-theme.css"));
+// Explicit local-only profile grant. Normal builds never embed personal grants.
+const grantFlag = process.argv.indexOf("--local-profile-grant");
+if (grantFlag >= 0) {
+  const grant = JSON.parse(
+    fs.readFileSync(path.resolve(root, process.argv[grantFlag + 1]), "utf8"),
+  );
+  if (typeof grant.playerName !== "string" || !grant.playerName || !grant.award?.id)
+    throw Error("Invalid local profile grant");
+  const script = `(() => {
+    const grant = ${json(grant)};
+    if (localStorage.getItem("projectgreed.playerId") !== grant.playerName) return;
+    if (Economy.creditActivity(grant.award)) console.info("Local profile inventory grant saved.");
+  })();`;
+  html = html.replace(
+    "</body>",
+    () => `<script id="local-profile-grant">${inlineScript(script)}</script></body>`,
+  );
+}
 const release = html;
 const developer = release
   .replace(

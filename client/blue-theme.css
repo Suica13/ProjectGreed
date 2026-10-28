@@ -811,3 +811,23 @@ body > #formationPilotPanel { z-index:1300; }
   background: #252c36f2;
   color: #eef3f9;
 }
+
+.weapon-pilot-requirement { grid-column: 1 / -1; color: #9edbff; font-size: 11px; }
+
+.formation-kit-tools { display:flex; flex-direction:column; align-items:stretch; flex:none; gap:5px; }
+#openFormationRefits { white-space:nowrap; padding:6px 9px; }
+.formation-kit-tools #openFormationKitShop { width:100%; }
+.refit-dialog { width:min(620px,calc(100vw - 24px)); max-height:90dvh; box-sizing:border-box; padding:20px; background:#1b222e; color:#f3f5f8; border:1px solid #718197; border-radius:4px; overflow:hidden; }
+.refit-dialog[open] { display:flex; flex-direction:column; gap:14px; }
+.refit-dialog::backdrop { background:#050912b8; }
+.refit-dialog h3,.refit-dialog p { margin:0; }
+.refit-list { overflow-y:auto; min-height:80px; max-height:52dvh; display:grid; gap:8px; }
+.refit-option { display:flex; align-items:center; gap:10px; padding:10px; border:1px solid #657389; border-radius:3px; cursor:pointer; }
+.refit-option[aria-selected="true"] { border-color:#6fcaff; background:#25384c; }
+.refit-option img { width:56px; height:56px; object-fit:contain; background:#363c43; border:1px solid #83919f; flex:none; }
+.refit-option-info { min-width:0; flex:1; display:grid; gap:5px; }
+.refit-footer { display:flex; gap:10px; }
+.refit-footer button { flex:1; }
+.refit-dialog button { min-height:36px; }
+.refit-viewer { overflow-y:auto; }
+.refit-viewer canvas { max-width:100%; flex:none; background:#303a46; }

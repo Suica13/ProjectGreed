@@ -235,7 +235,16 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "iField": {
+      "capacity": 250000.0,
+      "reduction": 0.95,
+      "piercingReduction": 0.5,
+      "recoveryPercent": 10,
+      "nativeRecoverySpeed": 500.0,
+      "minimumRatio": -0.25,
+      "effect": "I_Field_2"
+    }
   },
   "attackBonuses": {
     "melee": 65.0,
@@ -1183,7 +1192,14 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "converted_skill"
+        ],
+        "convertedSkill": "Irradiation"
+      }
     },
     "ZN_MA_08_AA_BeamCannon": {
       "name": "光束炮",
@@ -7028,8 +7044,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "CustomUnit_PilotCustomUnit",
@@ -7040,8 +7056,8 @@
     {
       "id": "I_Field",
       "source": "Template/Unit/Skill/I_Field.gw",
-      "status": "review",
-      "name": "I力场"
+      "status": "adapted",
+      "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
     },
     {
       "id": "energy_capacity_ZN_MA_08_AA_BeamCannon",
@@ -7126,6 +7142,11 @@
       "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
       "status": "review",
       "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "光束照射：方向射线、蓄力、逐机命中与长度自适应贴图"
     }
   ],
   "weaponKits": [
@@ -7134,7 +7155,6 @@
       "name": "标准套件",
       "cost": 0,
       "weapons": [
-        "ZN_MA_08_MegaBeamCannon",
         "ZN_MA_08_BeamCannon",
         "ZN_MA_08_Shock_A",
         "Common_DoubleVulcan_MA_08"
@@ -7149,7 +7169,63 @@
     "levelMultiplier": 0.25,
     "published": 1500
   },
-  "skills": [],
+  "skills": [
+    {
+      "id": "Irradiation",
+      "type": "irradiation",
+      "name": "光束照射",
+      "range": 10,
+      "minRange": 1,
+      "actionCost": 5,
+      "enCostPercent": 50,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": true,
+      "baseHit": 60,
+      "damageComponents": {
+        "beam": 53275.1220703125,
+        "beamAP": 26637.56103515625
+      },
+      "nativeTotalDamage": 1598253.662109375,
+      "nativeRepeatMultiplier": 3.6996612548828125,
+      "sourceWeapon": "ZN_MA_08_MegaBeamCannon",
+      "requiredParts": [],
+      "requiresSfsMS": false,
+      "chargeSeconds": 2.6,
+      "fireSeconds": 2,
+      "visualColor": "Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 0.0,
+              "y": 30.0
+            }
+          }
+        ]
+      },
+      "weaponDisplayIndex": 0,
+      "clip": null,
+      "effect": "Irradiation_Charge_Yellow",
+      "sound": {
+        "file": "../../sounds/BeamCharge_4.ogg",
+        "volume": 0.7
+      },
+      "localization": {
+        "zh": {
+          "name": "光束照射"
+        },
+        "en": {
+          "name": "Irradiation Beam"
+        },
+        "ja": {
+          "name": "照射ビーム"
+        }
+      },
+      "description": "选择方向照射10格；消耗5 AP与50%最大EN，冷却3个己方回合。基础命中60%，对沿途每台单位（含友军）判定一次，基础伤害为原MOD完整伤害的1/20。"
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "MA"
@@ -7161,5 +7237,22 @@
     ]
   },
   "hangars": [],
-  "pairedWeapons": []
+  "pairedWeapons": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_PilotCustomUnit_MA_08_DZL",
+      "unitId": "MA_08_DZL",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "MA_08"
+      ],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MA_08/MA_08.ini",
+        "action": "action_CustomUnit_PilotCustomUnit_MA_08_DZL",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

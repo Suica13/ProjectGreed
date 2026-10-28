@@ -1908,8 +1908,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     }
   ],
   "weaponKits": [
@@ -1984,5 +1984,22 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RGM_79_G",
+      "unitId": "RGM_79_G",
+      "money": 200,
+      "supplies": 200,
+      "unlockUnits": [
+        "RGM_79_G"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G_SPACE/RGM_79_G_SPACE.ini",
+        "action": "action_CustomUnit_RGM_79_G",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

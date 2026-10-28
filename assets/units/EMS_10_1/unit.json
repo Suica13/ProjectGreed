@@ -290,7 +290,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "sustainedThrust": true
+        "sustainedThrust": true,
+        "boostSkillActive": false
       },
       "scaleX": 1.0,
       "independentClock": true
@@ -312,7 +313,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "thrustActive": true
+        "thrustActive": true,
+        "boostSkillActive": false
       },
       "independentClock": true
     },
@@ -333,7 +335,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "thrustActive": true
+        "thrustActive": true,
+        "boostSkillActive": true
       },
       "independentClock": true
     },
@@ -355,7 +358,8 @@
       "frame": 0,
       "visibleWhen": {
         "moving": true,
-        "boosting": true
+        "boosting": true,
+        "boostSkillActive": true
       }
     },
     {
@@ -1496,9 +1500,9 @@
       "hitBonus": 0,
       "slot": "skill",
       "clip": "Common_Shoot_Two_Handed_A_Stand",
-      "damagePerShot": 20000.0,
+      "damagePerShot": 10000.0,
       "damageComponents": {
-        "shell": 20000.0
+        "shell": 10000.0
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1582,7 +1586,7 @@
         "delayOwnTurns": 1,
         "baseWeapon": "ZN_135mmAntiShipSniper"
       },
-      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害与EN沿用原MOD技能。",
+      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害为原MOD技能的一半，EN不变。",
       "nativePayload": {
         "ShellDamage": 20000.0,
         "DpDamage": 500.0,
@@ -1644,7 +1648,13 @@
         ]
       },
       "actionCost": 4,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "sniperDamageBeforeHalving": {
+        "damagePerShot": 20000.0,
+        "damageComponents": {
+          "shell": 20000.0
+        }
+      }
     },
     "ZN_Panzerfaust_Orange": {
       "name": "ZN Panzerfaust Orange",

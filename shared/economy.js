@@ -253,6 +253,35 @@ const Economy = (() => {
     const model = models[baseModel(offer.unitId)];
     return !!model && !model.wip && (owned || development.allows(faction, offer.unitId));
   }
+  function refitOptions(unitId) {
+    return modelsForKits()[baseModel(unitId)]?.refits || [];
+  }
+  function refitReason(unitId, optionId, faction) {
+    const option = refitOptions(unitId).find(r => r.id === optionId);
+    if (!option) return "无效的改装项目";
+    const target = modelsForKits()[baseModel(option.unitId)];
+    if (!target || target.wip || target.formOnly) return "目标机体尚未开放";
+    if (option.blocked) return "原MOD专属改装条件尚不满足";
+    const development = typeof Development !== "undefined" ? Development : require("./development.js");
+    if (!["PMC","EFSF","ZEON"].includes(faction) ||
+        (faction !== "PMC" && !(target.availableFactions || [target.faction]).includes(faction)))
+      return "与当前阵营不匹配";
+    if (option.unlockUnits.some(id => !development.allows(faction,id))) return "目标机体尚未开发";
+    if (quantity(unitId) < 1) return "原机体库存不足";
+    return "";
+  }
+  function quantity(unitId) { return state.inventory[unitId] || 0; }
+  function refitUnit(unitId, optionId, faction) {
+    if (refitReason(unitId,optionId,faction)) return false;
+    const option = refitOptions(unitId).find(r => r.id === optionId);
+    if (!affordable(option)) return false;
+    const next = snapshot();
+    next.money -= option.money; next.supplies -= option.supplies;
+    next.inventory[unitId]--;
+    next.inventory[option.unitId] = (next.inventory[option.unitId] || 0) + 1;
+    // Extra weapon kits remain separately owned; converted hulls use their base kit.
+    return commit(next);
+  }
   function produce(unitId, faction) {
     const offer = catalog.offers[baseModel(unitId)];
     if (!available(offer, faction)) return false;
@@ -327,6 +356,9 @@ const Economy = (() => {
     affordable,
     transact,
     produce,
+    refitOptions,
+    refitReason,
+    refitUnit,
     buyKit,
     canBuyKit,
     productionPlan,

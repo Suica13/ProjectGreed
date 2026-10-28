@@ -12,15 +12,30 @@ const SkillControls = (() => {
     );
   }
   function commandAbilities(model, unit = null) {
-    const aura = unit ? Rules.commandAura(unit) : {radius:3,effect:0.1};
+    const aura = unit ? Rules.commandAura(unit) : { radius: 3, effect: 0.1 };
     const percent = Number((aura.effect * 100).toFixed(2));
-    const labels = {cmdAtk:"攻击指挥",cmdDef:"防御指挥",cmdCom:"通信指挥"};
+    const labels = { cmdAtk: "攻击指挥", cmdDef: "防御指挥", cmdCom: "通信指挥" };
     const effects = {
-      cmdAtk:`友军射击与格斗最终伤害 +${percent}%`,
-      cmdDef:`友军最终伤害减免 ${percent}%`,
-      cmdCom:`友军最终命中率与回避率 +${percent}%`,
+      cmdAtk: `友军射击与格斗最终伤害 +${percent}%`,
+      cmdDef: `友军最终伤害减免 ${percent}%`,
+      cmdCom: `友军最终命中率与回避率 +${percent}%`,
     };
-    return (model.commandAuras || []).map(kind=>({name:labels[kind.type],description:`范围 ${aura.radius} 格 · ${effects[kind.type]}。同类取最强；领导力每满25点提高1格与2%效果，100点时为3格与10%。`}));
+    return (model.commandAuras || []).map((kind) => ({
+      name: labels[kind.type],
+      description: `范围 ${aura.radius} 格 · ${effects[kind.type]}。同类取最强；领导力每满25点提高1格与2%效果，100点时为3格与10%。`,
+    }));
+  }
+  function defensiveAbilities(model) {
+    const field = model.iField;
+    if (!field) return [];
+    return [
+      {
+        name: I18n.text("I立场"),
+        description: I18n.text(
+          `独立耐久 ${field.capacity.toLocaleString()}；吸收普通远程光束${Math.round(field.reduction * 100)}%、贯穿光束${Math.round(field.piercingReduction * 100)}%，不影响实弹和格斗。耐久耗尽后失效，可过载至最大耐久的25%；每个己方回合恢复${field.recoveryPercent}%。`,
+        ),
+      },
+    ];
   }
   function description(skill) {
     if (skill.description) return skill.description;
@@ -33,12 +48,15 @@ const SkillControls = (() => {
 
     if (skill.type === "recon")
       return skill.reconMode === "camera"
-        ? `选择${Number(skill.range.toFixed(2))}格内的位置，提供${skill.areaSight}格视野与${Number(skill.areaRadar.toFixed(2))}格侦测，持续至下次己方回合。消耗${skill.enCost} EN、${skill.actionCost} AP；下次己方回合可再次使用。`
+        ? `选择${skill.minRange ?? 0}～${Number(skill.range.toFixed(2))}格的位置，提供${skill.areaSight}格视野与${Number(skill.areaRadar.toFixed(2))}格侦测，持续至下次己方回合。消耗${skill.enCost} EN、${skill.actionCost} AP；下次己方回合可再次使用。`
         : `扫描${Number(skill.range.toFixed(2))}格内${skill.waterOnly ? "水域中的" : ""}敌军，标记持续至下次己方回合；消除己方未侦测命中惩罚，不直接揭露普通单位。消耗${skill.enCost} EN${skill.actionCost ? "、" + skill.actionCost + " AP" : "和本次行动"}。${skill.reconMode ? "下次己方回合可再次使用。" : ""}`;
+    if (skill.type === "beam_diffusion") return I18n.text(skill.description);
     if (skill.type === "minovsky")
       return `以自身为中心散布半径 ${skill.radius} 格的米诺夫斯基粒子，持续两个完整回合周期。区域内所有防守单位的回避率乘以 1.25，反侦测距离 +5 格；来袭导弹与迫击炮命中率再乘以 0.75。消耗 ${skill.enCost} EN、${skill.actionCost} AP，冷却 ${skill.cooldownTurns} 个自身回合。`;
     if (skill.type === "resupply")
-      return I18n.text("消耗自身25%最大EN与2 AP，为一台相邻友军恢复50%最大EN，每个己方回合限用一次。");
+      return I18n.text(
+        "消耗自身25%最大EN与2 AP，为一台相邻友军恢复50%最大EN，每个己方回合限用一次。",
+      );
     if (skill.type === "repair")
       return `范围 ${skill.range} · 友军HP +${skill.hpRecoveryPercent}% · EN +${skill.enRecoveryPercent}% · 盾牌 +${skill.shieldRecoveryPercent}% · 消耗EN ${skill.enCost}和本次行动；不修复破损部位。`;
     if (["transform", "armor_purge"].includes(skill.type))
@@ -89,6 +107,8 @@ const SkillControls = (() => {
             "armor_purge",
             "flight",
             "minovsky",
+            "emp",
+            "smoke",
           ].includes(skill.type) ||
           (skill.type === "recon" && skill.reconMode !== "camera")
         )
@@ -116,7 +136,8 @@ const SkillControls = (() => {
       weaponId = null;
       mode = "select";
     }
-    SkillEffects.start(event);
+    if (event.irradiation) IrradiationFX.start(event);
+    else SkillEffects.start(event);
   }
   function click(cell, unit) {
     const skillId = activeId();
@@ -143,5 +164,5 @@ const SkillControls = (() => {
     }
     return true;
   }
-  return { render, cells, click, applied, description, commandAbilities };
+  return { render, cells, click, applied, description, commandAbilities, defensiveAbilities };
 })();

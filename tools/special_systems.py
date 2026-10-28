@@ -37,7 +37,7 @@ def refresh_systems(catalog, unit_ids=None, publish=True):
    formMap[kit['id']]=chosen['id']
   from native_movement_effects import import_system_effect
   import_system_effect(system,data,effects)
-  skill={'effect':'System_'+system+'_1','id':system,'type':'overdrive','name':system+'系统','range':0,'maxUses':99,'consumeAction':False,'enPercent':25,'duration':3,'hpDrainPercent':10,'enDrainPercent':5,'formUnitId':target,'formKits':formMap}
+  skill={'effect':'System_'+system+'_1','id':system,'type':'overdrive','name':system+'系统','range':0,'maxUses':99,'consumeAction':False,'enPercent':25,'duration':3,'hpDrainPercent':25,'enDrainPercent':5,'formUnitId':target,'formKits':formMap}
   sound=data.get('action_'+system,{}).get('playSoundAtUnit','').split(':')
   if len(sound)>=2 and sound[0]=='ROOT':
    native=resolve('ROOT:'+sound[1]);dest=ASSETS/'sounds'/native.name;dest.write_bytes(native.read_bytes());skill['sound']={'file':'../../sounds/'+native.name,'volume':.5}

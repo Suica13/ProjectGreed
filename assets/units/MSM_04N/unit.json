@@ -772,7 +772,8 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "onHitAPLoss": 1
     },
     "Common_Cqb_F_MSM_04N": {
       "name": "近身格斗",
@@ -917,7 +918,8 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "onHitAPLoss": 1
     },
     "Common_Cqb_G_MSM_04N": {
       "name": "近身格斗",
@@ -1062,7 +1064,8 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "onHitAPLoss": 1
     },
     "Common_DoubleVulcan_MS_MSM_04N": {
       "name": "火神炮",
@@ -1394,9 +1397,9 @@
       "type": "recon",
       "name": "摄像枪",
       "reconMode": "camera",
-      "range": 41.666666666666664,
+      "range": 15,
       "enCost": 30,
-      "actionCost": 1,
+      "actionCost": 3,
       "maxUses": 99,
       "consumeAction": false,
       "waterOnly": false,
@@ -1418,8 +1421,10 @@
           "name": "カメラガン"
         }
       },
-      "areaSight": 7.5,
-      "areaRadar": 7.5
+      "minRange": 10,
+      "areaSight": 3,
+      "areaRadar": 3,
+      "description": "射程10～15格，消耗3 AP与30 EN；揭露目标半径3格视野并探测敌人，持续至下次己方回合。"
     }
   ],
   "nativeLayoutRevision": 1,

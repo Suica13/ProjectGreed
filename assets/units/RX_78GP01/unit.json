@@ -1802,14 +1802,14 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "ExitUnit_NewUnit",
       "source": "Template/Unit/Skill/ExitUnit_NewUnit.gw",
-      "status": "review",
-      "name": "脱出并生成新机体"
+      "status": "adapted",
+      "name": "脱出：原生形态转换，资源与部位规则使用显式配置"
     }
   ],
   "weaponKits": [
@@ -1839,7 +1839,50 @@
     }
   ],
   "description": "GP计划中的试作一号机,计划担当二号机的护卫",
-  "skills": [],
+  "skills": [
+    {
+      "id": "ExitUnit",
+      "type": "escape",
+      "name": "脱出",
+      "localization": {
+        "zh": {
+          "name": "脱出"
+        },
+        "en": {
+          "name": "Eject"
+        },
+        "ja": {
+          "name": "脱出"
+        }
+      },
+      "range": 1,
+      "minRange": 1,
+      "maxUses": 1,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_ExitUnit",
+      "source": {
+        "mode": "remove"
+      },
+      "spawn": {
+        "unitId": "FF_X_II",
+        "kitId": "standard",
+        "kitMap": {
+          "kit_1": "standard",
+          "kit_0": "standard"
+        },
+        "inheritResources": false,
+        "hpRecoveryPercent": 100,
+        "enRecoveryPercent": 100,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": true
+      }
+    }
+  ],
   "kitAliases": {
     "kit_2": "kit_1"
   },
@@ -1861,5 +1904,22 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RX_78GP01_FB",
+      "unitId": "RX_78GP01_FB",
+      "money": 250,
+      "supplies": 500,
+      "unlockUnits": [
+        "RX_78GP01_FB"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78GP01/RX_78GP01.ini",
+        "action": "action_CustomUnit_RX_78GP01_FB",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

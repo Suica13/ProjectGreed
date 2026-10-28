@@ -8,7 +8,7 @@ test("native lock stays white through the charge and turns red only for a valid 
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await expect(page.locator("#openSkirmish")).toBeEnabled();
-  const result = await page.evaluate(() => {
+  const result = await page.evaluate(async () => {
     Net.leave();
     game = Rules.create(
       false,
@@ -25,6 +25,7 @@ test("native lock stays white through the charge and turns red only for a valid 
       false,
       { costLimit: 99999, unitCostLimit: 10000 },
     );
+    await SpriteRenderer.ensureAssets([...SpriteRenderer.battleKeys(game), ART.effects.SniperLock.asset]);
     game.tiles.forEach((r) => r.fill("plain"));
     const [a, b] = game.units;
     Object.assign(a, { x: 10, y: 10 });

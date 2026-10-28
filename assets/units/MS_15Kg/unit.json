@@ -1483,10 +1483,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1565,7 +1563,20 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_15Kg/MS_15Kg.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      }
     }
   },
   "mechanics": [
@@ -1584,7 +1595,8 @@
         "ZN_MS_15B_ShieldRocket",
         "Common_Push_A",
         "ZN_MS_15Kg_ShieldBeamGun",
-        "ZN_MS_15B_BeamLance_BF_B"
+        "ZN_MS_15B_BeamLance_BF_B",
+        "ZN_MS_15B_BeamLance_B2"
       ]
     }
   ],

@@ -1842,5 +1842,22 @@
     ]
   },
   "hangars": [],
-  "mechanics": []
+  "mechanics": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_06F",
+      "unitId": "MS_06F",
+      "money": 150,
+      "supplies": 150,
+      "unlockUnits": [
+        "MS_06F"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06J/MS_06J.ini",
+        "action": "action_CustomUnit_MS_06F",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

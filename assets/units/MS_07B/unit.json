@@ -1120,7 +1120,8 @@
           "retract": 0.35
         }
       },
-      "rangeRole": "tether_melee"
+      "rangeRole": "tether_melee",
+      "onHitAPLoss": 1
     },
     "ZN_HeatSword_A": {
       "name": "近身格斗",

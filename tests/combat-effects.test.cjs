@@ -11,6 +11,12 @@ function runtime() {
   const context = {
     ART,
     WeaponSequence,
+    IrradiationFX: {
+      reset() {},
+      pose() {
+        return null;
+      },
+    },
     UnitModels: ART.models,
     getUnit: () => unit,
     pageView: "game",
@@ -215,7 +221,11 @@ test("map death effects queue after battle and deduplicate each battle/unit, inc
   r.map.draw({}, 500, () => ({ x: 100, y: 100 }), 64);
   assert.equal(r.sounds.length, 1);
   assert.ok(r.frames.includes(ART.presentation.deathElectricEffect));
-  assert.ok(r.frames.every((id) => [ART.presentation.deathElectricEffect, "Explosion_Ground_1"].includes(id)));
+  assert.ok(
+    r.frames.every((id) =>
+      [ART.presentation.deathElectricEffect, "Explosion_Ground_1"].includes(id),
+    ),
+  );
   r.map.draw({}, 2000, () => ({ x: 100, y: 100 }), 64);
   assert.equal(r.sounds.length, 2);
   r.map.draw({}, 4000, () => ({ x: 100, y: 100 }), 64);
@@ -616,10 +626,14 @@ test("slow missed volleys finish within two seconds of the last shot without sho
 });
 
 test("death electricity loops continuously until the first explosion frame", () => {
-  const r = runtime(), calls = [];
+  const r = runtime(),
+    calls = [];
   const effect = ART.effects[ART.presentation.deathElectricEffect];
   const wait = ART.presentation.deathDelay;
-  r.sprites.draw = (...args) => { calls.push(args); return true; };
+  r.sprites.draw = (...args) => {
+    calls.push(args);
+    return true;
+  };
   assert.equal(r.sprites.deathElectric({}, 10, 20, 1, -0.01, wait), false);
   for (const time of [0, effect.duration, effect.duration * 2, wait - 0.0001]) {
     assert.ok(time < wait);
@@ -635,10 +649,17 @@ test("death electricity loops continuously until the first explosion frame", () 
 });
 
 test("queued map deaths keep electricity active throughout the wait and stop at explosion onset", () => {
-  const r = runtime(), calls = [];
+  const r = runtime(),
+    calls = [];
   vm.runInContext("SpriteRenderer.draw=()=>{}", r.context);
-  r.sprites.draw = (...args) => { calls.push(args); return true; };
-  r.map.capture({ networkId: "loop-until-explosion", events: [{ hit: true, before: 1, after: 0, to: "1-0" }] });
+  r.sprites.draw = (...args) => {
+    calls.push(args);
+    return true;
+  };
+  r.map.capture({
+    networkId: "loop-until-explosion",
+    events: [{ hit: true, before: 1, after: 0, to: "1-0" }],
+  });
   const waitMs = ART.presentation.deathDelay * 1000;
   for (const time of [0, 500, 1000, waitMs - 0.01]) {
     const before = calls.length;

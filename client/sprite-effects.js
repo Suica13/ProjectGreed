@@ -112,6 +112,7 @@ const SkillEffects = (() => {
     GameAudio.playSound(event.sound);
   }
   function reset() {
+    IrradiationFX.reset();
     active.length = 0;
   }
   function draw(ctx, now, position, tile) {
@@ -119,17 +120,47 @@ const SkillEffects = (() => {
       const item = active[i],
         time = (now - item.start) / 1000;
       if (
-        time >= Math.max(ART.effects[item.effect].duration, item.reconMode === "camera" ? 0.75 : 0)
+        time >=
+        Math.max(
+          ART.effects[item.effect].duration + (item.targetEffect ? 0.5 : 0),
+          item.reconMode === "camera" ? 0.75 : 0,
+        )
       ) {
         active.splice(i, 1);
         continue;
       }
-      const location = item.reconMode === "camera" ? item.to : item.from;
+      if (item.targetEffect && time < 0.5) {
+        const from = position(item.from.x, item.from.y),
+          to = position(item.to.x, item.to.y),
+          t = time / 0.5;
+        ctx.save();
+        ctx.strokeStyle = "#dffbff";
+        ctx.lineWidth = Math.max(2, tile * 0.07);
+        ctx.beginPath();
+        ctx.moveTo(
+          from.x + (to.x - from.x) * Math.max(0, t - 0.1),
+          from.y + (to.y - from.y) * Math.max(0, t - 0.1),
+        );
+        ctx.lineTo(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t);
+        ctx.stroke();
+        ctx.restore();
+        continue;
+      }
+      const location = item.reconMode === "camera" || item.targetEffect ? item.to : item.from;
       const point = position(location.x, location.y);
-      SpriteEffects.draw(ctx, item.effect, point.x, point.y, tile / 64, time);
+      SpriteEffects.draw(
+        ctx,
+        item.effect,
+        point.x,
+        point.y,
+        tile / 64,
+        time - (item.targetEffect ? 0.5 : 0),
+      );
     }
   }
   function pose(unit, now) {
+    const irradiation = IrradiationFX.pose(unit, now);
+    if (irradiation) return irradiation;
     const item = active.find(
       (event) =>
         event.unitId === unit.id && event.reconMode === "camera" && now - event.start < 750,
@@ -405,5 +436,29 @@ const EnvironmentVisuals = (() => {
     ctx.drawImage(smoothFogCanvas, ox, oy, fogWidth * tile, fogHeight * tile);
     ctx.restore();
   }
-  return { pose, observe, drawWater, fog, visibilityClip };
+  let smokeStamp = null;
+  function smoke(ctx, game, position, tile) {
+    const fields = (game.smokeFields || []).filter((field) => field.expiresRound > game.round);
+    if (!fields.length) return;
+    if (!smokeStamp) {
+      smokeStamp = document.createElement("canvas");
+      smokeStamp.width = smokeStamp.height = 192;
+      const c = smokeStamp.getContext("2d"),
+        gradient = c.createRadialGradient(96, 96, 40, 96, 96, 96);
+      gradient.addColorStop(0, "rgba(246,249,252,.84)");
+      gradient.addColorStop(0.65, "rgba(238,244,250,.76)");
+      gradient.addColorStop(1, "rgba(236,242,248,0)");
+      c.fillStyle = gradient;
+      c.fillRect(0, 0, 192, 192);
+    }
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    for (const field of fields) {
+      const point = position(field.x, field.y),
+        radius = (field.radius + 0.5) * tile;
+      ctx.drawImage(smokeStamp, point.x - radius, point.y - radius, radius * 2, radius * 2);
+    }
+    ctx.restore();
+  }
+  return { pose, observe, drawWater, fog, visibilityClip, smoke };
 })();

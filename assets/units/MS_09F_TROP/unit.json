@@ -1678,8 +1678,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     }
   ],
   "weaponKits": [
@@ -1733,5 +1733,22 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_09F_TROP_0083",
+      "unitId": "MS_09F_TROP_0083",
+      "money": 600,
+      "supplies": 600,
+      "unlockUnits": [
+        "MS_09F_TROP_0083"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09F_TROP/MS_09F_TROP.ini",
+        "action": "action_CustomUnit_MS_09F_TROP_0083",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

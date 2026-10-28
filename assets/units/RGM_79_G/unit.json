@@ -2080,5 +2080,37 @@
     ]
   },
   "hangars": [],
-  "mechanics": []
+  "mechanics": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RGM_79_G_WithBackpack",
+      "unitId": "RGM_79_G_WithBackpack",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "RGM_79_G_WithBackpack"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G.ini",
+        "action": "action_CustomUnit_RGM_79_G_WithBackpack",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_RGM_79_G_SPACE",
+      "unitId": "RGM_79_G_SPACE",
+      "money": 200,
+      "supplies": 200,
+      "unlockUnits": [
+        "RGM_79_G_SPACE"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G.ini",
+        "action": "action_CustomUnit_RGM_79_G_SPACE",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

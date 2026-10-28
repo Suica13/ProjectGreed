@@ -92,7 +92,23 @@ test("record buttons, perspective downloads and replay controls follow room and 
     ["global", "global-only"],
   ])
     await checkDownload(value, marker);
-  await page.getByRole("button", { name: "回放本局", exact: true }).click();
+  const replayDownload = page.waitForEvent("download");
+  await page.getByRole("button", { name: "保存回放", exact: true }).click();
+  const replayFile = await replayDownload;
+  const replayStream = await replayFile.createReadStream();
+  const replayChunks = [];
+  for await (const chunk of replayStream) replayChunks.push(chunk);
+  await page.getByRole("button", { name: "关闭", exact: true }).click();
+  await page.locator("#shellRecords").click();
+  const chooser = page.waitForEvent("filechooser");
+  await page.locator("#shellOpenReplay").click();
+  await (
+    await chooser
+  ).setFiles({
+    name: "release.replay.greed",
+    mimeType: "application/json",
+    buffer: Buffer.concat(replayChunks),
+  });
   await expect(page.locator("#replayControls")).toBeVisible();
   await expect(page.getByRole("button", { name: "从此回合继续", exact: true })).toHaveCount(0);
   for (const size of ["collapsed", "normal", "expanded"]) {

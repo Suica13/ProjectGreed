@@ -1,6 +1,6 @@
 # 武器发射流程与CD统计
 
-共1384条单位—武器配置，按ID、来源、流程、发数、消耗等去重后702组；包含隐藏武器与强化形态，hidden字段可筛选。不是只统计武器名称。
+共1386条单位—武器配置，按ID、来源、流程、发数、消耗等去重后703组；包含隐藏武器与强化形态，hidden字段可筛选。不是只统计武器名称。
 
 - 流程时间包含原MOD准备、射击、收招，不包含本项目弹道飞行、命中、死亡动画或每单位0～1秒随机延迟。
 - CD单独记录：普通动作在开火开始设置CD；自动炮塔通常在弹仓耗尽后进入CD。参考循环取普通动作max(流程,CD)、自动炮塔流程+CD，未计移位、瞄准、驾驶员或特定条件加成。
@@ -21,15 +21,15 @@
 | --- | ---: |
 | 慢循环（5～10秒） | 232 |
 | 长冷却（>10秒） | 169 |
-| 快循环（≤2秒） | 243 |
-| 中循环（2～5秒） | 740 |
+| 快循环（≤2秒） | 244 |
+| 中循环（2～5秒） | 741 |
 
 ## 按流程时间分类
 
 | 分类 | 单位—武器条目数 |
 | --- | ---: |
-| 极短流程（≤0.5秒） | 194 |
-| 短流程（0.5～2秒） | 992 |
+| 极短流程（≤0.5秒） | 195 |
+| 短流程（0.5～2秒） | 993 |
 | 长流程（>5秒） | 39 |
 | 中流程（2～5秒） | 159 |
 
@@ -108,6 +108,7 @@
 | ZN_MS_14_BR | 0.25/0.25 | 0.25/0.5 | 2.0 | 1 | 40.0 | MS_14A, MS_14B, MS_14C, MS_14F, MS_14FS, MS_14S |
 | ZN_MS_17_BR | 0.25/0.25 | 0.25/0.5 | 2.0 | 1 | 40.0 | MS_17 |
 | ZN_MSM_10_HighBeamRifle | 0.85/1.95 | 1.5/3.45 | 90.0 | 22 | 150.0 | MSM_10 |
+| ZN_MSN_02_Head_BR | 0.25/0.25 | 0.25/0.5 | 2.0 | 1 | 35.0 | MSN_02_Head |
 | EF_BeamRifleAuqa | 0.25/0.25 | 0.25/0.5 | 2.0 | 1 | 25.0 | RAG_79_G1 |
 | EF_RMS_179_BR | 0.25/0.25 | 0.25/0.5 | 2.0 | 1 | 40.0 | RGC_83, RGM_79N |
 | EF_GMRifle | 0.3/0.9 | 0.3/1.2 | 2.0 | 7 | 35.0 | RGC_83, RGM_79N |
@@ -445,7 +446,7 @@
 | Common_Push_A | 0.45/0.45 | 1.0/1.45 | 3.0 | 1 | 0 | EMS_10, EMS_10_1, MAM_07, MS_05, MS_05SP, MS_06C, MS_06D, MS_06E, MS_06F, MS_06F2, MS_06F2_Commander, MS_06F_MineLayer, MS_06F_Sniper, MS_06FZ, MS_06FZ_Commander, MS_06G, MS_06J, MS_06JK, MS_06K, MS_06M, MS_06R_1, MS_06R_1A, MS_06R_2, MS_06S, MS_06V, MS_07A, MS_07B, MS_07B3, MS_07H, MS_07H8, MS_09, MS_09_K_1, MS_09D, MS_09R, MS_10, MS_11, MS_11S, MS_12, MS_21C, MSM_03, MSM_04, MSM_04G, MSM_04N, MSM_07, MSM_07S, MSM_08, MSM_10, RAG_79, RFF_06, RGC_80, RGC_80S, RGM_79, RGM_79_Commander, RGM_79_E, RGM_79_G, RGM_79_G_SP, RGM_79_G_SPACE, RGM_79_G_WithBackpack, RGM_79C, RGM_79C_Space, RGM_79HC, RGM_79L, RGM_79SC, RGM_79V, RMV_1, RX_75R |
 | ZN_HeatHawk_F | 0.3/0.3 | 1.4/1.7 | 3.0 | 1 | 0 | EMS_10, EMS_10_1, MS_06F2_Commander, MS_06F_Sniper, MS_06R_2 |
 | Common_Cqb_A_L | 0.6/0.6 | 1.4/2.0 | 3.0 | 1 | 0 | EMS_10_1 |
-| Common_Push_A | 0.45/0.45 | 1.0/1.45 | 3.0 | 1 | 0 | EMS_10F, FA_78_1, FA_78_1_NA, FA_78_2, FA_78_3, FA_78_G, MS_08TX, MS_08TX_Kai, MS_08TX_Kai_EXAM, MS_09_K_2, MS_09F, MS_09F_TROP, MS_09F_TROP_0083, MS_09G, MS_09R2, MS_09S, MS_14A, MS_14B, MS_14C, MS_14F, MS_14FS, MS_14JG, MS_14S, MS_15A, MS_15B, MS_15C, MS_15F, MS_15FS, MS_15Kg, MS_17, MS_18E, MSM_03C, MSM_07E, MSN_02, RAG_79_G1, RGC_83, RGM_79_D, RGM_79D, RGM_79DO, RGM_79FD, RGM_79FP, RGM_79G, RGM_79G_Space, RGM_79GL, RGM_79LV, RGM_79N, RGM_79S, RGM_79SP2, RTX_440, RX_75, RX_77_2, RX_77_3, RX_77_3D, RX_77_4, RX_77D, RX_78_1, RX_78_2, RX_78_3, RX_78_4_Bst, RX_78_5_Bst, RX_78_6, RX_78_7, RX_78GP01, RX_78GP01_FB, RX_78GP02A, RX_78GP03S, RX_78NT_1, RX_78NT_1_FA, RX_78SP, RX_78XX, RX_79_BD_1, RX_79_BD_1_EXAM, RX_79_BD_2, RX_79_BD_2_EXAM, RX_79_G, RX_79_G_WithBackpack, RX_80PR, RX_80PR_2, RX_80PR_2_HADES, RX_80PR_GroundType, RX_80PR_GroundType_HADES, RX_80PR_HADES, RX_80PR_SpaceType, RX_80PR_SpaceType_HADES, RX_81, RX_81AS, RX_81FC, RX_81LA, RX_81ST, YMS_09J, YMS_15, YMS_15E, YMS_16M, YMS_18, YMT_05, YMT_05_ModeB |
+| Common_Push_A | 0.45/0.45 | 1.0/1.45 | 3.0 | 1 | 0 | EMS_10F, FA_78_1, FA_78_1_NA, FA_78_2, FA_78_3, FA_78_G, MS_08TX, MS_08TX_Kai, MS_08TX_Kai_EXAM, MS_09_K_2, MS_09F, MS_09F_TROP, MS_09F_TROP_0083, MS_09G, MS_09R2, MS_09S, MS_14A, MS_14B, MS_14C, MS_14F, MS_14FS, MS_14JG, MS_14S, MS_15A, MS_15B, MS_15C, MS_15F, MS_15FS, MS_15Kg, MS_17, MS_18E, MSM_03C, MSM_07E, MSN_02, MSN_02_Head, RAG_79_G1, RGC_83, RGM_79_D, RGM_79D, RGM_79DO, RGM_79FD, RGM_79FP, RGM_79G, RGM_79G_Space, RGM_79GL, RGM_79LV, RGM_79N, RGM_79S, RGM_79SP2, RTX_440, RX_75, RX_77_2, RX_77_3, RX_77_3D, RX_77_4, RX_77D, RX_78_1, RX_78_2, RX_78_3, RX_78_4_Bst, RX_78_5_Bst, RX_78_6, RX_78_7, RX_78GP01, RX_78GP01_FB, RX_78GP02A, RX_78GP03S, RX_78NT_1, RX_78NT_1_FA, RX_78SP, RX_78XX, RX_79_BD_1, RX_79_BD_1_EXAM, RX_79_BD_2, RX_79_BD_2_EXAM, RX_79_G, RX_79_G_WithBackpack, RX_80PR, RX_80PR_2, RX_80PR_2_HADES, RX_80PR_GroundType, RX_80PR_GroundType_HADES, RX_80PR_HADES, RX_80PR_SpaceType, RX_80PR_SpaceType_HADES, RX_81, RX_81AS, RX_81FC, RX_81LA, RX_81ST, YMS_09J, YMS_15, YMS_15E, YMS_16M, YMS_18, YMT_05, YMT_05_ModeB |
 | ZN_HeatHawk_F | 0.3/0.3 | 1.4/1.7 | 3.0 | 1 | 0 | EMS_10F, MS_06FZ_Commander |
 | EF_BeamSaber_A | 0.6/0.6 | 1.4/2.0 | 3.0 | 1 | 0 | FA_78_1, RGM_79_D, RGM_79C, RGM_79C_Space, RGM_79D, RX_79_G, RX_79_G_WithBackpack |
 | EF_BeamSaber_AF_Fast_A | 0.51/1.27 | 1.4/2.67 | 3.0 | 2 | 0 | FA_78_1_NA, FA_78_3, RX_78_2, RX_78_3, RX_78_4_Bst, RX_78_5_Bst, RX_78_7, RX_79_BD_1_EXAM, RX_80PR, RX_80PR_2_HADES, RX_80PR_GroundType, RX_80PR_HADES, RX_80PR_SpaceType, RX_81 |

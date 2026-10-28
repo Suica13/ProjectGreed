@@ -1409,5 +1409,52 @@
     ]
   },
   "hangars": [],
-  "mechanics": []
+  "mechanics": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_06S",
+      "unitId": "MS_06S",
+      "money": 250,
+      "supplies": 250,
+      "unlockUnits": [
+        "MS_06S"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06F.ini",
+        "action": "action_CustomUnit_MS_06S",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_MS_06J",
+      "unitId": "MS_06J",
+      "money": 225,
+      "supplies": 225,
+      "unlockUnits": [
+        "MS_06J"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06F.ini",
+        "action": "action_CustomUnit_MS_06J",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_MS_06R_1",
+      "unitId": "MS_06R_1",
+      "money": 225,
+      "supplies": 225,
+      "unlockUnits": [
+        "MS_06R_1"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06F.ini",
+        "action": "action_CustomUnit_MS_06R_1",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

@@ -1153,8 +1153,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     }
   ],
   "weaponKits": [
@@ -1176,9 +1176,9 @@
       "type": "recon",
       "name": "摄像枪",
       "reconMode": "camera",
-      "range": 52.08333333333333,
+      "range": 15,
       "enCost": 30,
-      "actionCost": 1,
+      "actionCost": 3,
       "maxUses": 99,
       "consumeAction": false,
       "waterOnly": false,
@@ -1200,8 +1200,10 @@
           "name": "カメラガン"
         }
       },
-      "areaSight": 7.5,
-      "areaRadar": 9.375,
+      "minRange": 10,
+      "areaSight": 3,
+      "areaRadar": 3,
+      "description": "射程10～15格，消耗3 AP与30 EN；揭露目标半径3格视野并探测敌人，持续至下次己方回合。",
       "weaponDisplayIndex": 2
     },
     {
@@ -1209,7 +1211,7 @@
       "type": "recon",
       "name": "索敌",
       "reconMode": "scan",
-      "range": 31.25,
+      "range": 25.0,
       "enCost": 100,
       "actionCost": 1,
       "maxUses": 99,
@@ -1257,5 +1259,22 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_06E3",
+      "unitId": "MS_06E3",
+      "money": 250,
+      "supplies": 250,
+      "unlockUnits": [
+        "MS_06E3"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06E/MS_06E.ini",
+        "action": "action_CustomUnit_MS_06E3",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

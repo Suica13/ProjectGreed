@@ -323,8 +323,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "Body",
@@ -1806,10 +1805,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1887,7 +1884,20 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 11
+      "displayIndex": 11,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79DO/RGM_79DO.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      }
     }
   },
   "mechanics": [
@@ -1912,7 +1922,8 @@
         "EF_RGM_79DO_BR",
         "Common_Push_A",
         "EF_90mmMG",
-        "EF_BeamSaber_AF_A"
+        "EF_BeamSaber_AF_A",
+        "Common_ArmBeamSaber_F"
       ]
     },
     {
@@ -1923,7 +1934,8 @@
         "EF_HypeBazooka",
         "Common_Push_A",
         "EF_90mmMG",
-        "EF_BeamSaber_AF_A"
+        "EF_BeamSaber_AF_A",
+        "Common_ArmBeamSaber_F"
       ]
     }
   ],

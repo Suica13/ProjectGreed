@@ -1977,8 +1977,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "CustomUnit_PilotCustomUnit",
@@ -2074,6 +2074,23 @@
       ],
       "fireMode": "independent",
       "name": "腕部机枪"
+    }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_PilotCustomUnit_MS_14JG_MsgCustom",
+      "unitId": "MS_14JG_MsgCustom",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "MS_14JG"
+      ],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14JG/MS_14JG.ini",
+        "action": "action_CustomUnit_PilotCustomUnit_MS_14JG_MsgCustom",
+        "seconds": 20.0
+      }
     }
   ]
 }

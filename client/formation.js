@@ -301,7 +301,12 @@ const Formation = (() => {
       payload = JSON.stringify({
         version: 1,
         name: name.trim().slice(0, 32) || "未命名编组",
-        units: clean.map(({unitId, kitId, customName, preload}) => ({unitId, kitId, customName, preload})),
+        units: clean.map(({ unitId, kitId, customName, preload }) => ({
+          unitId,
+          kitId,
+          customName,
+          preload,
+        })),
       }),
       bytes = new TextEncoder().encode(payload);
     let binary = "";
@@ -331,7 +336,12 @@ const Formation = (() => {
     )
       throw Error("编组分享代码无效。");
     const units = Rules.validateFormation(
-        payload.units.map(({unitId, kitId, customName, preload}) => ({unitId, kitId, customName, preload})),
+        payload.units.map(({ unitId, kitId, customName, preload }) => ({
+          unitId,
+          kitId,
+          customName,
+          preload,
+        })),
         Infinity,
         Rules.catalog.formation.maxUnits,
       ),
@@ -372,6 +382,7 @@ const Formation = (() => {
   }
   function closeDetail() {
     byId("formationKitShop").close();
+    if (typeof RefitShop !== "undefined") RefitShop.close();
     nameEdit = null;
     previewModel = null;
     previewRoot = null;
@@ -436,14 +447,21 @@ const Formation = (() => {
     if (!h || prefab.hangars?.length) return false;
     const used = draft
       .filter((e) => preloadMatches(e, pickerContext.carrierIndex, h.id))
-      .reduce((n, e) => n + (h.kind === "sfs" ? 1 : UnitModels[e.unitId + "__" + e.kitId].transport.slotCost || 1), 0);
+      .reduce(
+        (n, e) =>
+          n +
+          (h.kind === "sfs" ? 1 : UnitModels[e.unitId + "__" + e.kitId].transport.slotCost || 1),
+        0,
+      );
     return (
       used + (h.kind === "sfs" ? 1 : prefab.transport.slotCost) <= h.capacity &&
       h.allowedTags.some((t) => prefab.transport.loadTags.includes(t))
     );
   }
   function openPicker(context = null) {
-    catalogFilters.faction = Rules.factions.includes(PlayerProfile.faction()) ? PlayerProfile.faction() : "";
+    catalogFilters.faction = Rules.factions.includes(PlayerProfile.faction())
+      ? PlayerProfile.faction()
+      : "";
     byId("formationFaction").value = catalogFilters.faction;
     pickerContext = context;
     pickerReturnIndex = context?.carrierIndex ?? null;
@@ -451,6 +469,8 @@ const Formation = (() => {
     catalogDetail = null;
     detailFromPicker = false;
     byId("formationUnitDetail").hidden = true;
+    // Escape the fixed page's stacking context so the picker covers shell navigation.
+    document.body.append(byId("formationUnitPicker"));
     byId("formationUnitPicker").hidden = false;
     byId("formationMain").inert = true;
     byId("formationPickerTitle").textContent = context ? "预先搭载" : "添加单位";
@@ -475,7 +495,9 @@ const Formation = (() => {
     const carrier = draft[carrierIndex],
       m = carrier && UnitModels[carrier.unitId + "__" + carrier.kitId],
       number = m?.hangars.findIndex((h) => h.id === hangarId);
-    return m?.hangars[number]?.kind === "sfs" ? "SFS" : I18n.text("格纳库") + (number >= 0 ? number + 1 : "?");
+    return m?.hangars[number]?.kind === "sfs"
+      ? "SFS"
+      : I18n.text("格纳库") + (number >= 0 ? number + 1 : "?");
   }
   function renderCarrierChoice(entry, model) {
     const field = byId("formationDetailCarrierField"),
@@ -492,12 +514,18 @@ const Formation = (() => {
             .map((e, i) => ({ e, i }))
             .filter(({ e }) => preloadMatches(e, carrierIndex, h.id)),
           used = cargo.reduce(
-            (n, { e }) => n + (h.kind === "sfs" ? 1 : UnitModels[e.unitId + "__" + e.kitId].transport.slotCost),
+            (n, { e }) =>
+              n + (h.kind === "sfs" ? 1 : UnitModels[e.unitId + "__" + e.kitId].transport.slotCost),
             0,
           ),
           others = cargo
             .filter(({ i }) => i !== detailIndex)
-            .reduce((n, { e }) => n + (h.kind === "sfs" ? 1 : UnitModels[e.unitId + "__" + e.kitId].transport.slotCost), 0);
+            .reduce(
+              (n, { e }) =>
+                n +
+                (h.kind === "sfs" ? 1 : UnitModels[e.unitId + "__" + e.kitId].transport.slotCost),
+              0,
+            );
         if (
           !h.allowedTags.some((tag) => model.transport.loadTags.includes(tag)) ||
           others + (h.kind === "sfs" ? 1 : model.transport.slotCost) > h.capacity
@@ -536,7 +564,11 @@ const Formation = (() => {
                 .map((entry, i) => ({ entry, i }))
                 .filter(({ entry }) => preloadMatches(entry, detailIndex, h.id)),
         used = passengers.reduce(
-          (n, { entry }) => n + (h.kind === "sfs" ? 1 : UnitModels[entry.unitId + "__" + entry.kitId].transport.slotCost),
+          (n, { entry }) =>
+            n +
+            (h.kind === "sfs"
+              ? 1
+              : UnitModels[entry.unitId + "__" + entry.kitId].transport.slotCost),
           0,
         ),
         heading = element("div", "formation-preload-heading"),
@@ -638,9 +670,11 @@ const Formation = (() => {
     if (!assetsReady) return;
     canvas.dataset.previewModel = modelId;
     if (!SpriteRenderer.modelsReady([modelId])) {
-      SpriteRenderer.ensureModels([modelId]).then(() => {
-        if (canvas.dataset.previewModel === modelId) renderPreview(modelId, canvas);
-      }).catch(error => note(error.message));
+      SpriteRenderer.ensureModels([modelId])
+        .then(() => {
+          if (canvas.dataset.previewModel === modelId) renderPreview(modelId, canvas);
+        })
+        .catch((error) => note(error.message));
       return;
     }
     const previewAngle = 90;
@@ -803,6 +837,9 @@ const Formation = (() => {
       !!previewModel ||
       !prefab.weaponKits.some((kit) => Economy.canBuyKit(prefab.id + "__" + kit.id, group));
     if (previewModel) byId("formationKitShop").close();
+    byId("openFormationRefits").hidden =
+      !!previewModel || !Economy.refitOptions(entry.unitId).length;
+
     detailMetrics(byId("formationDetailStats"), [
       ["HP", model.hp.toLocaleString()],
       ["EN", model.en],
@@ -910,6 +947,7 @@ const Formation = (() => {
             }
           : null,
       ),
+      ...SkillControls.defensiveAbilities(model),
       ...(model.skills || []),
     ]) {
       const card = element("div", "formation-weapon-detail");
@@ -930,7 +968,8 @@ const Formation = (() => {
             .map(
               (reason) =>
                 ({
-                  pilot_skill: "驾驶员技能解锁：保留原条件，暂不开放",
+                  pilot_skill: "驾驶员条件待核对",
+                  source_missing: "原 MOD 缺少对应攻击流程",
                   secondary_loadout: "可换装副武器：保留配置，暂不开放",
                 })[reason] || reason,
             )
@@ -1400,6 +1439,21 @@ const Formation = (() => {
     if (detailIndex !== null) render();
     renderDetail();
   };
+  byId("openFormationRefits").onclick = () => {
+    const entry = detailIndex === null ? catalogDetail : draft[detailIndex];
+    if (!entry) return;
+    RefitShop.open(entry.unitId, group, (targetId) => {
+      entry.unitId = targetId;
+      entry.kitId = Economy.baseKit(targetId);
+      delete entry.preload;
+      if (detailIndex !== null) {
+        for (const other of draft)
+          if (other.preload?.carrierIndex === detailIndex) delete other.preload;
+        render();
+      }
+      renderDetail();
+    });
+  };
   byId("openFormationKitShop").onclick = () => {
     const entry = detailIndex === null ? catalogDetail : draft[detailIndex];
     if (!entry) return;
@@ -1550,6 +1604,12 @@ const Formation = (() => {
   };
   byId("openFormationPicker").onclick = () => openPicker();
   byId("closeFormationPicker").onclick = closePicker;
+  window.addEventListener("page-changing", () => {
+    byId("formationUnitPicker").hidden = true;
+    pickerContext = pickerReturnIndex = null;
+    detailFromPicker = false;
+    byId("formationMain").inert = false;
+  });
   byId("formationUnitPicker").addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       event.stopPropagation();
@@ -1879,14 +1939,25 @@ const Formation = (() => {
     const unavailable = plan.items.filter((item) => {
       const offer = Economy.catalog.offers[Economy.baseModel(item.unitId)];
       const prefab = Rules.catalog.prefabs.find((unit) => unit.id === item.unitId);
-      return !offer || !prefab || prefab.wip || (faction !== "PMC" && !(offer.availableFactions || [offer.faction]).includes(faction));
+      return (
+        !offer ||
+        !prefab ||
+        prefab.wip ||
+        (faction !== "PMC" && !(offer.availableFactions || [offer.faction]).includes(faction))
+      );
     });
     if (unavailable.length) {
-      showInventoryDialog("无法生产", "以下单位无法生产，已中止本次生产：",
-        unavailable.map((item) => item.unitId), [["确认", "acknowledgeUnavailableUnits"]]);
+      showInventoryDialog(
+        "无法生产",
+        "以下单位无法生产，已中止本次生产：",
+        unavailable.map((item) => item.unitId),
+        [["确认", "acknowledgeUnavailableUnits"]],
+      );
       return false;
     }
-    const originalEntries = JSON.stringify(entries), originalGroup = group, originalIndex = index;
+    const originalEntries = JSON.stringify(entries),
+      originalGroup = group,
+      originalIndex = index;
     const confirmed = await GameDialog.confirm("是否一键生产补齐库存不足的单位？", {
       title: "一键生产",
       items: [
@@ -1901,8 +1972,12 @@ const Formation = (() => {
     });
     if (!confirmed) return false;
     // A confirmation authorizes exactly the displayed units and price, never a changed plan.
-    if (group !== originalGroup || index !== originalIndex || JSON.stringify(entries) !== originalEntries ||
-        JSON.stringify(Economy.productionPlan(entries)) !== JSON.stringify(plan)) {
+    if (
+      group !== originalGroup ||
+      index !== originalIndex ||
+      JSON.stringify(entries) !== originalEntries ||
+      JSON.stringify(Economy.productionPlan(entries)) !== JSON.stringify(plan)
+    ) {
       note("编组或库存已变化，请重新确认生产。");
       return false;
     }
@@ -2000,8 +2075,16 @@ const Formation = (() => {
   function renderPilotRecord(container, pilot) {
     const record = pilot.record;
     const rows = [
-      [["击坠单位数", Math.max(0, record.kills - record.shipKills)], ["击坠战舰数", record.shipKills], ["参战次数", record.battles]],
-      [["总击坠COST", record.destroyedCost], ["被击坠COST", record.lostCost], ["被击坠数", record.losses]],
+      [
+        ["击坠单位数", Math.max(0, record.kills - record.shipKills)],
+        ["击坠战舰数", record.shipKills],
+        ["参战次数", record.battles],
+      ],
+      [
+        ["总击坠COST", record.destroyedCost],
+        ["被击坠COST", record.lostCost],
+        ["被击坠数", record.losses],
+      ],
     ];
     container.replaceChildren();
     for (const values of rows) {
@@ -2371,11 +2454,23 @@ const Formation = (() => {
     ["射击", "每点增加0.5个百分点的射击伤害倍率；100点为100%，200点为150%。"],
     ["格斗", "每点增加0.5个百分点的格斗伤害倍率；100点为100%，200点为150%。"],
     ["防御", "每点降低0.5个百分点的承受伤害倍率；100点为100%，200点为50%。"],
-    ["机动", "每点增加0.5个百分点的移动范围倍率，并增加0.1个百分点的最终回避倍率；100点为基准。移动范围允许小数。"],
+    [
+      "机动",
+      "每点增加0.5个百分点的移动范围倍率，并增加0.1个百分点的最终回避倍率；100点为基准。移动范围允许小数。",
+    ],
     ["命中", "每点增加0.5个百分点的最终命中倍率；100点为100%，200点为150%。最终命中率最高100%。"],
-    ["反应", "每点增加0.5个百分点的最终回避倍率；100点为100%，200点为150%。这是相对回避率加成，不是固定增加回避概率。"],
-    ["指挥", "100点时指挥光环范围为3格、效果为10%；每高25点，范围增加1格、效果增加2个百分点；每低25点相应减少。仅影响机体已有的指挥光环。"],
-    ["觉醒", "达到100点时，射击与格斗伤害额外乘以115%；低于100点没有额外加成，超过100点不再继续提高此效果。"],
+    [
+      "反应",
+      "每点增加0.5个百分点的最终回避倍率；100点为100%，200点为150%。这是相对回避率加成，不是固定增加回避概率。",
+    ],
+    [
+      "指挥",
+      "100点时指挥光环范围为3格、效果为10%；每高25点，范围增加1格、效果增加2个百分点；每低25点相应减少。仅影响机体已有的指挥光环。",
+    ],
+    [
+      "觉醒",
+      "达到100点时，射击与格斗伤害额外乘以115%；低于100点没有额外加成，超过100点不再继续提高此效果。",
+    ],
   ];
   byId("openPilotAttributeHelp").onclick = () => {
     const heading = element("header", "pilot-help-heading");

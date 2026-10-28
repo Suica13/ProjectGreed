@@ -114,21 +114,26 @@ const WeaponInfo = (() => {
   function summary(source, options = {}) {
     const { unit, target, response = "counter", isCounter = false } = options;
     const weapon = unit ? Rules.weaponStats(source, unit) : source;
-    const strikes = unit ? Rules.availableStrikes(unit, weapon, target) : weapon.attack?.strikes || [];
-    const groups = new Map(), attributes = new Set();
+    const strikes = unit
+      ? Rules.availableStrikes(unit, weapon, target)
+      : weapon.attack?.strikes || [];
+    const groups = new Map(),
+      attributes = new Set();
     let total = 0;
     for (const strike of strikes) {
       const components = strike.damageComponents || weapon.damageComponents;
-      const damage = (components ? Object.values(components).reduce((sum,value) => sum + value,0) :
-        weapon.damagePerShot || 0) * (strike.damageMultiplier ?? 1);
+      const damage =
+        (components
+          ? Object.values(components).reduce((sum, value) => sum + value, 0)
+          : weapon.damagePerShot || 0) * (strike.damageMultiplier ?? 1);
       const key = Number(damage.toFixed(6));
       groups.set(key, (groups.get(key) || 0) + 1);
       total += damage;
-      for (const [channel,value] of Object.entries(components || {}))
+      for (const [channel, value] of Object.entries(components || {}))
         if (value > 0) attributes.add(componentLabels[channel] || channel);
     }
     if (!attributes.size) attributes.add(Rules.typeNames[weapon.type] || weapon.type);
-    const number = value => value.toLocaleString(undefined, {maximumFractionDigits:2});
+    const number = (value) => value.toLocaleString(undefined, { maximumFractionDigits: 2 });
     const root = node("div", "weapon-summary");
     const heading = node("div", "weapon-summary-heading");
     heading.append(node("strong", "weapon-name", weapon.name));
@@ -138,68 +143,172 @@ const WeaponInfo = (() => {
     const damageLine = node("div", "weapon-damage-line");
     damageLine.append(node("span", "weapon-stat-label", "基础伤害"));
     const formula = node("div", "weapon-damage-formula");
-    for (const [damage,count] of groups) {
+    for (const [damage, count] of groups) {
       if (formula.childElementCount) formula.append(node("span", "weapon-math-symbol", "+"));
       const term = node("span", "weapon-damage-term");
-      term.append(node("b", "", number(damage)), node("span", "weapon-math-symbol", "×"),
-        node("span", "weapon-hit-count", String(count)));
+      term.append(
+        node("b", "", number(damage)),
+        node("span", "weapon-math-symbol", "×"),
+        node("span", "weapon-hit-count", String(count)),
+      );
       formula.append(term);
     }
     if (!groups.size) formula.append(node("span", "", "0 × 0"));
-    formula.append(node("span", "weapon-math-symbol", "="), node("strong", "weapon-total-damage", number(total)));
+    formula.append(
+      node("span", "weapon-math-symbol", "="),
+      node("strong", "weapon-total-damage", number(total)),
+    );
     damageLine.append(formula);
-    const forecast = unit && target ? attackForecast(unit,target,weapon,response,isCounter) : null;
+    const forecast =
+      unit && target ? attackForecast(unit, target, weapon, response, isCounter) : null;
     const accuracy = node("div", "weapon-accuracy");
-    accuracy.append(node("span", "weapon-stat-label", "命中"), node("strong", "", number(forecast?.hit ?? weapon.hit) + "%"));
+    accuracy.append(
+      node("span", "weapon-stat-label", "命中"),
+      node("strong", "", number(forecast?.hit ?? weapon.hit) + "%"),
+    );
     if (forecast) {
       accuracy.classList.add("attack-forecast");
       accuracy.dataset.damage = forecast.damage;
       accuracy.dataset.hit = forecast.hit;
     }
     root.append(heading, damageLine, accuracy);
+    for (const requirement of weapon.pilotRequirements || []) {
+      const label = I18n.text(PilotSystem.labels[requirement.stat] || requirement.stat);
+      const current = unit ? PilotSystem.of(unit).stats[requirement.stat] : null;
+      const hint =
+        I18n.text("驾驶员要求") +
+        " · " +
+        label +
+        " " +
+        requirement.operator +
+        " " +
+        requirement.value +
+        (current === null ? "" : " · " + I18n.text("当前") + " " + current);
+      root.append(
+        node(
+          "div",
+          unit && !Rules.pilotWeaponAllowed(unit, weapon)
+            ? "weapon-unavailable"
+            : "weapon-pilot-requirement",
+          hint,
+        ),
+      );
+    }
+    if (weapon.onHitAPLoss)
+      root.append(
+        node("div", "weapon-pilot-requirement", I18n.text("命中后使目标下回合AP减少1点，不叠加")),
+      );
+    if (weapon.burn)
+      root.append(
+        node(
+          "div",
+          "weapon-pilot-requirement",
+          I18n.text("命中附加燃烧，持续3回合；重复命中刷新时长"),
+        ),
+      );
+    if (weapon.requiresSfsMS)
+      root.append(node("div", "weapon-pilot-requirement", I18n.text("需要搭载至少1台MS才能开火")));
+    if (weapon.requiresShield)
+      root.append(
+        node(
+          "div",
+          unit && !(unit.shield > 0) ? "weapon-unavailable" : "weapon-pilot-requirement",
+          I18n.text("需要有效护盾"),
+        ),
+      );
+
     if (unit) {
-      const broken = Rules.brokenWeaponParts(unit,weapon);
+      const broken = Rules.brokenWeaponParts(unit, weapon);
       if (broken.length) root.append(node("div", "weapon-unavailable", "部位损坏，无法使用"));
-      else if (Rules.weaponCooldown(unit,weapon)) root.append(node("div", "weapon-unavailable", "冷却中"));
+      else if (Rules.weaponCooldown(unit, weapon))
+        root.append(node("div", "weapon-unavailable", "冷却中"));
     }
     return root;
   }
   function inspector(source, options = {}) {
     const { unit, target, response = "counter", isCounter = false } = options;
-    const weapon = unit ? Rules.weaponStats(source,unit) : source;
+    const weapon = unit ? Rules.weaponStats(source, unit) : source;
     const details = node("details", "weapon-inspector");
     details.append(node("summary", "", "详细"));
     const body = node("div", "weapon-inspector-body");
     const stats = node("dl", "weapon-detail-stats");
-    const rows = [["射程", weapon.min + "–" + weapon.max], ["AP", Rules.actionCost(weapon)], ["EN", amount(weapon.en)]];
+    const rows = [
+      ["射程", weapon.min + "–" + weapon.max],
+      ["AP", Rules.actionCost(weapon)],
+      ["EN", amount(weapon.en)],
+    ];
     if (unit) rows.push(["剩余 EN", amount(unit.en)]);
-    if (Number.isInteger(weapon.maxUses)) rows.push([unit ? "剩余次数" : "使用次数", unit ?
-      Math.max(0,weapon.maxUses - (unit.weaponUses?.[weapon.id] || 0)) + "/" + weapon.maxUses : weapon.maxUses]);
-    if (["mortar","snipe"].includes(weapon.special?.type)) rows.push(["冷却", "1 " + I18n.text("回合")]);
+    if (Number.isInteger(weapon.maxUses))
+      rows.push([
+        unit ? "剩余次数" : "使用次数",
+        unit
+          ? Math.max(0, weapon.maxUses - (unit.weaponUses?.[weapon.id] || 0)) + "/" + weapon.maxUses
+          : weapon.maxUses,
+      ]);
+    if (["mortar", "snipe"].includes(weapon.special?.type))
+      rows.push(["冷却", "1 " + I18n.text("回合")]);
     if (weapon.nativePayload?.DpDamage) rows.push(["DP", amount(weapon.nativePayload.DpDamage)]);
-    for (const [label,value] of rows) stats.append(node("dt", "", label), node("dd", "", String(value)));
+    for (const [label, value] of rows)
+      stats.append(node("dt", "", label), node("dd", "", String(value)));
     body.append(stats);
-    if (unit && target) body.append(node("p", "weapon-target-forecast", attackForecastText(attackForecast(unit,target,weapon,response,isCounter))));
-    body.append(node("p", "weapon-detail-note", "基础伤害未计入目标防护与战斗加成；次数包含多段命中。"));
+    if (unit && target)
+      body.append(
+        node(
+          "p",
+          "weapon-target-forecast",
+          attackForecastText(attackForecast(unit, target, weapon, response, isCounter)),
+        ),
+      );
+    body.append(
+      node("p", "weapon-detail-note", "基础伤害未计入目标防护与战斗加成；次数包含多段命中。"),
+    );
     if (weapon.description) body.append(node("p", "", weapon.description));
-    const all = (weapon.requiredParts || []).map(part => I18n.text(partLabels[part] || part)).join(" / ");
-    const any = (weapon.anyParts || []).map(part => I18n.text(partLabels[part] || part)).join(" / ");
-    if (all || any) body.append(node("p", "", I18n.text("安装部位：") + (all || any) +
-      (any ? " · " + I18n.text("任一部位完好即可") : "")));
-    if (weapon.partBreakModifier !== undefined) body.append(node("p", "", I18n.text("部位破坏系数") + " " + weapon.partBreakModifier));
+    const all = (weapon.requiredParts || [])
+      .map((part) => I18n.text(partLabels[part] || part))
+      .join(" / ");
+    const any = (weapon.anyParts || [])
+      .map((part) => I18n.text(partLabels[part] || part))
+      .join(" / ");
+    if (all || any)
+      body.append(
+        node(
+          "p",
+          "",
+          I18n.text("安装部位：") +
+            (all || any) +
+            (any ? " · " + I18n.text("任一部位完好即可") : ""),
+        ),
+      );
+    if (weapon.partBreakModifier !== undefined)
+      body.append(node("p", "", I18n.text("部位破坏系数") + " " + weapon.partBreakModifier));
     body.append(node("strong", "", "目标倍率（100% 为无修正）"), effects(weapon, true));
     const duration = amount(weapon.attack?.duration ?? 0);
     const timeline = node("details", "weapon-timeline");
-    timeline.append(node("summary", "", I18n.text("攻击流程") + " · " + duration + "s"), flow(weapon));
+    timeline.append(
+      node("summary", "", I18n.text("攻击流程") + " · " + duration + "s"),
+      flow(weapon),
+    );
     body.append(timeline);
-    if (weapon.nativeTiming) body.append(node("small", "", I18n.text("原 MOD 演出：") +
-      amount(weapon.nativeTiming.duration) + "s · " + I18n.text("原CD") + " " + amount(weapon.nativeTiming.cooldown) + "s"));
+    if (weapon.nativeTiming)
+      body.append(
+        node(
+          "small",
+          "",
+          I18n.text("原 MOD 演出：") +
+            amount(weapon.nativeTiming.duration) +
+            "s · " +
+            I18n.text("原CD") +
+            " " +
+            amount(weapon.nativeTiming.cooldown) +
+            "s",
+        ),
+      );
     details.append(body);
     return details;
   }
   function card(weapon, content = null, options = {}) {
     const wrapper = node("article", "weapon-card");
-    wrapper.append(content || summary(weapon,options), inspector(weapon,options));
+    wrapper.append(content || summary(weapon, options), inspector(weapon, options));
     return wrapper;
   }
   return { effects, summary, inspector, card };

@@ -1919,5 +1919,22 @@
     ]
   },
   "hangars": [],
-  "mechanics": []
+  "mechanics": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_06F2_Commander",
+      "unitId": "MS_06F2_Commander",
+      "money": 350,
+      "supplies": 350,
+      "unlockUnits": [
+        "MS_06F2_Commander"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F2/MS_06F2.ini",
+        "action": "action_CustomUnit_MS_06F2_Commander",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

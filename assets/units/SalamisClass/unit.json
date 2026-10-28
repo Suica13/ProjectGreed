@@ -2779,5 +2779,22 @@
       "status": "adapted",
       "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
     }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_NewUnit_SalamisClassLateType",
+      "unitId": "SalamisClassLateType",
+      "money": 500,
+      "supplies": 1000,
+      "unlockUnits": [
+        "SalamisClassLateType"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/SalamisClass/SalamisClass.ini",
+        "action": "action_CustomUnit_NewUnit_SalamisClassLateType",
+        "seconds": 30.0
+      }
+    }
   ]
 }

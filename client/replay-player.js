@@ -407,6 +407,13 @@ window.ReplayPlayer = (() => {
       });
     }
     if (view.phase === "playback") {
+      if (view.playback?.skillEffect) {
+        combatDone = false;
+        phase = "battle";
+        IrradiationFX.start({ ...view.playback.skillEffect, id: view.playback.id }, () => {
+          combatDone = true;
+        });
+      }
       const battles = [...(view.combats || []), ...(view.effectCombats || [])];
       if (battles.length) {
         const actors = [
@@ -438,7 +445,10 @@ window.ReplayPlayer = (() => {
     update();
   }
   function tick(now) {
-    if (BattleAssets.loading) { lastNow = now; return clock; }
+    if (BattleAssets.loading) {
+      lastNow = now;
+      return clock;
+    }
     const step = Math.min(250, Math.max(0, now - lastNow));
     lastNow = now;
     if (playing) {

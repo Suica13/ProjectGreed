@@ -1220,5 +1220,239 @@
     "attached": true,
     "sounds": [],
     "source": "MOD native turret shoot_flame: Beam_Fire_1_Blue_S"
+  },
+  "Irradiation_Start_Pink": {
+    "texture": "textures/Irradiation_Start_Pink.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_Mid_Pink": {
+    "texture": "textures/Irradiation_Mid_Pink.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_End_Pink": {
+    "texture": "textures/Irradiation_End_Pink.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_Charge_Pink": {
+    "texture": "textures/Irradiation_Charge_Pink.png",
+    "frames": 12,
+    "startFrame": 0,
+    "endFrame": 11,
+    "fps": 12,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_Start_Blue": {
+    "texture": "textures/Irradiation_Start_Blue.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_Mid_Blue": {
+    "texture": "textures/Irradiation_Mid_Blue.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_End_Blue": {
+    "texture": "textures/Irradiation_End_Blue.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_Charge_Blue": {
+    "texture": "textures/Irradiation_Charge_Blue.png",
+    "frames": 12,
+    "startFrame": 0,
+    "endFrame": 11,
+    "fps": 12,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_Start_Yellow": {
+    "texture": "textures/Irradiation_Start_Yellow.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_Mid_Yellow": {
+    "texture": "textures/Irradiation_Mid_Yellow.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_End_Yellow": {
+    "texture": "textures/Irradiation_End_Yellow.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "Irradiation_Charge_Yellow": {
+    "texture": "textures/Irradiation_Charge_Yellow.png",
+    "frames": 12,
+    "startFrame": 0,
+    "endFrame": 11,
+    "fps": 12,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha"
+  },
+  "I_Field_2": {
+    "texture": "textures/I_Field_2.png",
+    "frames": 1,
+    "startFrame": 0,
+    "endFrame": 0,
+    "fps": 1.2,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 0.8,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "MOD native Resource/Image/Fx/Unit/I_Field_2.gw"
   }
 }

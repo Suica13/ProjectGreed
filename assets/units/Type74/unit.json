@@ -572,8 +572,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     }
   ],
   "weaponKits": [
@@ -620,6 +620,23 @@
       "emergencyRange": 3,
       "source": "Units/CommonUnit/Hangar/Hangar_X1_Human_UseEN.ini",
       "sourceUnit": "Hangar_X1_Human_UseEN"
+    }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_Type74Kai",
+      "unitId": "Type74Kai",
+      "money": 50,
+      "supplies": 50,
+      "unlockUnits": [
+        "Type74Kai"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/Type74/Type74.ini",
+        "action": "action_CustomUnit_Type74Kai",
+        "seconds": 20.0
+      }
     }
   ]
 }

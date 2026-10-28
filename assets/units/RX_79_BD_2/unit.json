@@ -2168,8 +2168,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "CustomUnit_PilotCustomUnit",
@@ -2219,7 +2219,7 @@
       "consumeAction": false,
       "enPercent": 25,
       "duration": 3,
-      "hpDrainPercent": 10,
+      "hpDrainPercent": 25,
       "enDrainPercent": 5,
       "formUnitId": "RX_79_BD_2_EXAM",
       "formKits": {
@@ -2289,6 +2289,38 @@
           "limb": null
         }
       ]
+    }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_PilotCustomUnit_RX_79_BD_2_NMBS",
+      "unitId": "RX_79_BD_2_NMBS",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "RX_79_BD_2"
+      ],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_BD_2/RX_79_BD_2.ini",
+        "action": "action_CustomUnit_PilotCustomUnit_RX_79_BD_2_NMBS",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_PilotCustomUnit_RX_79_BD_3",
+      "unitId": "RX_79_BD_3",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "RX_79_BD_2"
+      ],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_BD_2/RX_79_BD_2.ini",
+        "action": "action_CustomUnit_PilotCustomUnit_RX_79_BD_3",
+        "seconds": 20.0
+      }
     }
   ]
 }

@@ -30,9 +30,10 @@ for (const width of [1280, 390])
     await page.locator("#productionFaction").selectOption("ZEON");
     expect(
       await cards.evaluateAll((cards) =>
-        cards.every(
-          (card) =>
-            Rules.catalog.prefabs.find((p) => p.id === card.dataset.unitId).faction === "ZEON",
+        cards.every((card) =>
+          ((p) => (p.availableFactions || [p.faction]).includes("ZEON"))(
+            Rules.catalog.prefabs.find((p) => p.id === card.dataset.unitId),
+          ),
         ),
       ),
     ).toBe(true);
@@ -46,15 +47,23 @@ for (const width of [1280, 390])
     await expect(page.locator("#productionSort")).toHaveCount(0);
   });
 
-test("production and formation use the same automatic developed/COST order for every identity", async ({ page }) => {
+test("production and formation use the same automatic developed/COST order for every identity", async ({
+  page,
+}) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.waitForFunction(() => assetsReady);
-  const values = (selector) => page.locator(selector).evaluateAll(nodes => nodes.map(node => {
-    const p = Rules.catalog.prefabs.find(p => p.id === node.dataset.unitId);
-    return { developed: Development.allows(PlayerProfile.faction(), p.id),
-      cost: Math.min(...p.weaponKits.map(k => p.stats.cost + k.cost)) };
-  }));
-  const sorted = rows => [...rows].sort((a,b) => Number(b.developed) - Number(a.developed) || a.cost - b.cost);
+  const values = (selector) =>
+    page.locator(selector).evaluateAll((nodes) =>
+      nodes.map((node) => {
+        const p = Rules.catalog.prefabs.find((p) => p.id === node.dataset.unitId);
+        return {
+          developed: Development.allows(PlayerProfile.faction(), p.id),
+          cost: Math.min(...p.weaponKits.map((k) => p.stats.cost + k.cost)),
+        };
+      }),
+    );
+  const sorted = (rows) =>
+    [...rows].sort((a, b) => Number(b.developed) - Number(a.developed) || a.cost - b.cost);
   for (const faction of ["ZEON", "EFSF", "PMC"]) {
     await page.locator("#menuFactionSelect").selectOption(faction);
     await page.locator("#shellHangar").click();

@@ -22,11 +22,19 @@ def main():
             rebuilt = native_weapon(unit, copy.deepcopy(weapon), native)
             rebuilt.pop("tacticalDamageMultiplier", None)
             federation_space_turret_damage({"id": unit["id"], "weapons": {key: rebuilt}})
+            # Compare the preserved pre-policy payload for the explicit 50% charged-snipe rule.
+            audited = copy.deepcopy(weapon)
+            if weapon.get("special", {}).get("type") == "snipe":
+                audited.update(audited["sniperDamageBeforeHalving"])
+                for step in audited["attack"]["steps"]:
+                    baseline = step.pop("sniperDamageBeforeHalving", None)
+                    if baseline is not None:
+                        step["damageComponents"] = baseline
             for field in fields:
                 if field == "attack":
                     # Native source owns event count, order and delay. Muzzle indices are a
                     # ProjectGreed layout adaptation after L/R and fake-turret merging.
-                    actual_attack = copy.deepcopy(weapon[field])
+                    actual_attack = copy.deepcopy(audited[field])
                     rebuilt_attack = copy.deepcopy(rebuilt[field])
                     for attack in [actual_attack, rebuilt_attack]:
                         for step in attack.get("steps", []):
@@ -39,7 +47,7 @@ def main():
                         if step.get("shots", 0) > 0
                     ), (unit["id"], key, "muzzleIndex")
                 else:
-                    assert weapon[field] == rebuilt[field], (unit["id"], key, field)
+                    assert audited[field] == rebuilt[field], (unit["id"], key, field)
             weapons += 1
     print(f"Native source audit passed: {units} prefabs, {weapons} weapon configurations.")
 

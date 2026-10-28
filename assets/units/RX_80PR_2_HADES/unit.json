@@ -27,7 +27,9 @@
       "Boost_1_Red.png": "textures/Boost_1_Red.png",
       "BoostReversing_1_Red.png": "textures/BoostReversing_1_Red.png",
       "System_Red_Bot_1.png": "textures/System_Red_Bot_1.png",
-      "System_Red_Top_1.png": "textures/System_Red_Top_1.png"
+      "System_Red_Top_1.png": "textures/System_Red_Top_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "Boost_1.png": "textures/Boost_1.png"
     },
     "icon": "RX_80PR_2_HADES.png"
   },
@@ -153,7 +155,9 @@
       "frame": 0,
       "frameFps": 10,
       "independentClock": true,
-      "visibleWhen": {}
+      "visibleWhen": {
+        "boostSkillActive": true
+      }
     },
     {
       "name": "LeftLeg",
@@ -285,7 +289,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "sustainedThrust": true
+        "sustainedThrust": true,
+        "boostSkillActive": true
       },
       "scaleX": 1.0,
       "independentClock": true
@@ -307,7 +312,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "thrustActive": true
+        "thrustActive": true,
+        "boostSkillActive": true
       },
       "independentClock": true
     },
@@ -535,7 +541,54 @@
       "frame": 0,
       "frameFps": 10,
       "independentClock": true,
-      "visibleWhen": {}
+      "visibleWhen": {
+        "boostSkillActive": true
+      }
+    },
+    {
+      "name": "BoostReversing_NormalBlue",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true,
+        "boostSkillActive": false
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost_NormalBlue",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true,
+        "boostSkillActive": false
+      },
+      "independentClock": true
     }
   ],
   "animations": {

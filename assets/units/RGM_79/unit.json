@@ -1824,5 +1824,67 @@
     ]
   },
   "hangars": [],
-  "mechanics": []
+  "mechanics": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RGM_79_Commander",
+      "unitId": "RGM_79_Commander",
+      "money": 350,
+      "supplies": 350,
+      "unlockUnits": [
+        "RGM_79_Commander"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79.ini",
+        "action": "action_CustomUnit_RGM_79_Commander",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_RGM_79L",
+      "unitId": "RGM_79L",
+      "money": 500,
+      "supplies": 500,
+      "unlockUnits": [
+        "RGM_79L"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79.ini",
+        "action": "action_CustomUnit_RGM_79L",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_RGC_80",
+      "unitId": "RGC_80",
+      "money": 750,
+      "supplies": 750,
+      "unlockUnits": [
+        "RGC_80"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79.ini",
+        "action": "action_CustomUnit_RGC_80",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_RGM_79_D",
+      "unitId": "RGM_79_D",
+      "money": 750,
+      "supplies": 750,
+      "unlockUnits": [
+        "RGM_79_D"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79.ini",
+        "action": "action_CustomUnit_RGM_79_D",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

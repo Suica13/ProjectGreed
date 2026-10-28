@@ -6,7 +6,7 @@ AlbionClass,阿鲁比昂,AlbionClass_Turret_MegaBeamCannon_R,舰载光束炮,can
 AlbionClass,阿鲁比昂,AlbionClass_Turret_AMS,AlbionClass Turret AMS,missile,长冷却（>10秒）,长流程（>5秒）,0.0,7.0,0.0,7.0,12.0,19.0,弹仓耗尽后,16,16,1750.0,28000.0,90.0,192.0,perShot,12.0,12.0,False,Units/BattleUnits/AlbionClass/AlbionClass_Turret_MS.ini
 AlbionClass,阿鲁比昂,AlbionClass_Turret_AA,AlbionClass Turret AA,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.0,0.9,0.0,0.9,2.0,2.9,弹仓耗尽后,120,120,400.0,24000.0,112.5,60.0,perShot,0.5,0.5,False,Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini
 AlbionClass,阿鲁比昂,AlbionClass_Turret_AA_2,舰载光束炮,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.0,0.75,0.0,0.75,2.0,2.75,弹仓耗尽后,12,12,1250.0,7500.0,81.0,60.0,perShot,5.0,5.0,False,Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA_2.ini
-AMX_002,路维·捷露,ZN_AMX_002_MegaBeamCannon,光束炮,cannon,长冷却（>10秒）,长流程（>5秒）,2.1,7.4,3.0,10.4,180.0,180.0,技能/开火开始时,108,108,6000.0,648000.0,100.0,150.0,perVolley,0,150.0,False,Units/BattleUnits/Weapon/Beam/ZN_AMX_002_MegaBeamCannon.gw
+AMX_002,路维·捷露,ZN_AMX_002_MegaBeamCannon,光束炮,cannon,长冷却（>10秒）,长流程（>5秒）,2.1,7.4,3.0,10.4,180.0,180.0,技能/开火开始时,108,108,6000.0,648000.0,100.0,150.0,perVolley,0,150.0,True,Units/BattleUnits/Weapon/Beam/ZN_AMX_002_MegaBeamCannon.gw
 AMX_002,路维·捷露,ZN_AMX_002_AntiShipMS,ZN AMX 002 AntiShipMS,other,长冷却（>10秒）,短流程（0.5～2秒）,0.1,0.4,0.3,0.7,180.0,180.0,技能/开火开始时,4,4,6000.0,24000.0,100.0,0,perVolley,0,150.0,False,Units/BattleUnits/Weapon/Shell/ZN_AMX_002_AntiShipMS.gw
 AMX_002,路维·捷露,ZN_AMX_002_AntiShipMS_L,ZN AMX 002 AntiShipMS L,other,长冷却（>10秒）,短流程（0.5～2秒）,0.1,0.4,0.3,0.7,180.0,180.0,技能/开火开始时,4,4,6000.0,24000.0,100.0,0,perVolley,0,150.0,True,Units/BattleUnits/Weapon/Shell/ZN_AMX_002_AntiShipMS.gw
 AMX_002,路维·捷露,ZN_AMX_002_BeamCannon,光束炮,cannon,慢循环（5～10秒）,短流程（0.5～2秒）,0.45,0.45,0.45,0.9,7.0,7.0,技能/开火开始时,1,1,32000.0,32000.0,75.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Beam/ZN_AMX_002_BeamCannon.gw
@@ -14,7 +14,7 @@ AMX_002,路维·捷露,ZN_AMX_002_MS,导弹发射器,missile,长冷却（>10秒�
 AMX_002,路维·捷露,ZN_AMX_002_MS_L,导弹发射器,missile,长冷却（>10秒）,短流程（0.5～2秒）,0.25,1.325,0.25,1.575,15.0,15.0,技能/开火开始时,24,24,2000.0,48000.0,85.0,100.0,perVolley,0,100.0,True,Units/BattleUnits/Weapon/Shell/ZN_AMX_002_MS.gw
 AMX_002,路维·捷露,EF_BeamSaber_Double_L_A_Fixed_AMX_002,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,2,2,12000.0,24000.0,100.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_L_A_Fixed_AMX_002.gw
 AntiZakuTank,反扎古坦克,EF_AntiZakuTank_MG,机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.0,1.1,0.0,1.1,2.0,3.1,弹仓耗尽后,12,12,100.0,1200.0,125.0,6.0,perShot,0.5,0.5,False,Units/BattleUnits/Weapon/Shell/EF_AntiZakuTank_MG.gw
-ApsarasII,阿普萨拉斯II,ZN_ApsarasII_MegaBeamCannon,光束炮,cannon,长冷却（>10秒）,长流程（>5秒）,2.6,7.3,3.0,10.3,240.0,240.0,技能/开火开始时,96,96,3000.0,288000.0,100.0,400.0,perVolley,0,400.0,False,Units/BattleUnits/Weapon/Beam/ZN_ApsarasII_MegaBeamCannon.gw
+ApsarasII,阿普萨拉斯II,ZN_ApsarasII_MegaBeamCannon,光束炮,cannon,长冷却（>10秒）,长流程（>5秒）,2.6,7.3,3.0,10.3,240.0,240.0,技能/开火开始时,96,96,3000.0,288000.0,100.0,400.0,perVolley,0,400.0,True,Units/BattleUnits/Weapon/Beam/ZN_ApsarasII_MegaBeamCannon.gw
 ApsarasII,阿普萨拉斯II,ZN_ApsarasII_ChestBeam,光束炮,other,中循环（2～5秒）,短流程（0.5～2秒）,0.25,0.25,0.5,0.75,5.0,5.0,技能/开火开始时,1,9,3000.0,27000.0,85.0,50.0,perVolley,0,50.0,False,Units/BattleUnits/Weapon/Beam/ZN_ApsarasII_ChestBeam.gw
 ApsarasII,阿普萨拉斯II,Common_Push_L_A,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,7500.0,7500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_L_A.gw
 Army_Squad_EFSF_0079_N_G_A,步兵班[EFSF][0079],Squad_Combined_Weapons,步兵班联合武装,other,快循环（≤2秒）,短流程（0.5～2秒）,0.0,0.6,0.0,0.6,2.0,2.6,弹仓耗尽后,3,3,8.0,1212.0,90.0,11.4,perShot,0.1,0.1,False,Units/BattleUnits/Army_Squad/Member/EFSF_0079/Army_Squad_EFSF_0079_O_G_Member_P.ini
@@ -32,7 +32,7 @@ BurkeClass,伯克级驱逐舰,BurkeClass_Turret_AMS,BurkeClass Turret AMS,missil
 BurkeClass,伯克级驱逐舰,BurkeClass_Turret_MS,舰载导弹发射器,missile,慢循环（5～10秒）,中流程（2～5秒）,0.0,3.75,0.0,3.75,7.0,10.75,弹仓耗尽后,6,6,1500.0,9000.0,90.0,72.0,perShot,12.0,12.0,False,Units/BattleUnits/BurkeClass/BurkeClass_Turret_MS.ini
 BurkeClass,伯克级驱逐舰,BurkeClass_Turret_CN,BurkeClass Turret CN,cannon,中循环（2～5秒）,极短流程（≤0.5秒）,0.0,0.0,0.0,0,3.0,3.0,弹仓耗尽后,1,1,4500.0,4500.0,67.5,40.0,perShot,40.0,40.0,False,Units/BattleUnits/BurkeClass/BurkeClass_Turret_CN.ini
 BurkeClass,伯克级驱逐舰,BurkeClass_Turret_MG,舰载机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.0,1.35,0.0,1.35,1.0,2.35,弹仓耗尽后,20,20,250.0,5000.0,90.0,10.0,perShot,0.5,0.5,False,Units/BattleUnits/BurkeClass/BurkeClass_Turret_MG.ini
-Burstliner,爆裂炮,EF_Burstliner_BeamCannon,光束炮,cannon,长冷却（>10秒）,长流程（>5秒）,2.1,7.4,3.0,10.4,180.0,180.0,技能/开火开始时,108,108,3000.0,324000.0,100.0,150.0,perVolley,0,150.0,False,Units/BattleUnits/Weapon/Beam/EF_Burstliner_BeamCannon.gw
+Burstliner,爆裂炮,EF_Burstliner_BeamCannon,光束炮,cannon,长冷却（>10秒）,长流程（>5秒）,2.1,7.4,3.0,10.4,180.0,180.0,技能/开火开始时,108,108,3000.0,324000.0,100.0,150.0,perVolley,0,150.0,True,Units/BattleUnits/Weapon/Beam/EF_Burstliner_BeamCannon.gw
 ChivvayClass,契贝级,ChivvayClass_Turret_BeamCannon,舰载光束炮,cannon,中循环（2～5秒）,极短流程（≤0.5秒）,0.0,0.0,0.0,0,4.0,4.0,弹仓耗尽后,6,6,5500.0,33000.0,67.5,360.0,perShot,60.0,60.0,False,Units/BattleUnits/ChivvayClass/ChivvayClass_Turret_BeamCannon.ini
 ChivvayClass,契贝级,ChivvayClass_Turret_AMS,ChivvayClass Turret AMS,missile,长冷却（>10秒）,短流程（0.5～2秒）,0.0,1.0,0.0,1.0,12.0,13.0,弹仓耗尽后,8,8,1000.0,8000.0,76.5,320.0,perShot,40.0,40.0,False,Units/BattleUnits/ChivvayClass/ChivvayClass_Turret_AMS.ini
 ChivvayClass,契贝级,ChivvayClass_Turret_MS,舰载导弹发射器,missile,长冷却（>10秒）,中流程（2～5秒）,0.0,2.25,0.0,2.25,12.0,14.25,弹仓耗尽后,12,12,900.0,10800.0,90.0,144.0,perShot,12.0,12.0,False,Units/BattleUnits/ChivvayClass/ChivvayClass_Turret_MS.ini
@@ -80,7 +80,7 @@ EMS_10_1,兹达[指挥官机],Common_Push_A,冲撞,melee,中循环（2～5秒）
 EMS_10_1,兹达[指挥官机],ZN_120mmMG,120mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.175,0.3,1.475,2.0,2.0,技能/开火开始时,8,8,725.0,5800.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw
 EMS_10_1,兹达[指挥官机],ZN_270mmBazooka,270mm火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.5,4.5,技能/开火开始时,1,1,8500.0,8500.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw
 EMS_10_1,兹达[指挥官机],ZN_135mmAntiShipSniper,狙击步枪,sniper,慢循环（5～10秒）,短流程（0.5～2秒）,0.35,0.35,1.0,1.35,7.5,7.5,技能/开火开始时,1,1,9000.0,9000.0,150.0,45.0,perVolley,0,45.0,False,Units/BattleUnits/Weapon/Shell/ZN_135mmAntiShipSniper.gw
-EMS_10_1,兹达[指挥官机],ZN_135mmAntiShipSniper_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,20000.0,20000.0,150.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Shell/ZN_135mmAntiShipSniper_Sniper.gw
+EMS_10_1,兹达[指挥官机],ZN_135mmAntiShipSniper_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,10000.0,10000.0,150.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Shell/ZN_135mmAntiShipSniper_Sniper.gw
 EMS_10_1,兹达[指挥官机],ZN_Panzerfaust_Orange,ZN Panzerfaust Orange,bazooka,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,12.0,12.0,技能/开火开始时,1,1,6500.0,6500.0,75.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust_Orange.gw
 EMS_10_1,兹达[指挥官机],ZN_HeatHawk_F,热能斧,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,4500.0,4500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_F.gw
 EMS_10_1,兹达[指挥官机],Common_Cqb_A_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,4000.0,4000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L.gw
@@ -88,7 +88,7 @@ EMS_10F,兹达F,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0
 EMS_10F,兹达F,ZN_120mmMG,120mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.175,0.3,1.475,2.0,2.0,技能/开火开始时,8,8,725.0,5800.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw
 EMS_10F,兹达F,ZN_360mmBazooka,360mm火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,12500.0,12500.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw
 EMS_10F,兹达F,ZN_135mmAntiShipSniper,狙击步枪,sniper,慢循环（5～10秒）,短流程（0.5～2秒）,0.35,0.35,1.0,1.35,7.5,7.5,技能/开火开始时,1,1,12000.0,12000.0,150.0,45.0,perVolley,0,45.0,False,Units/BattleUnits/Weapon/Shell/ZN_135mmAntiShipSniper.gw
-EMS_10F,兹达F,ZN_135mmAntiShipSniper_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,30000.0,30000.0,150.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Shell/ZN_135mmAntiShipSniper_Sniper.gw
+EMS_10F,兹达F,ZN_135mmAntiShipSniper_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,15000.0,15000.0,150.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Shell/ZN_135mmAntiShipSniper_Sniper.gw
 EMS_10F,兹达F,ZN_Panzerfaust,铁拳火箭弹,bazooka,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,12.0,12.0,技能/开火开始时,1,1,6750.0,6750.0,75.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust.gw
 EMS_10F,兹达F,ZN_HeatHawk_F,热能斧,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,6000.0,6000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_F.gw
 FA_78_1,全装甲高达,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
@@ -118,7 +118,7 @@ FA_78_3,全装甲高达七号机,EF_FA_78_3_MS_L,导弹发射器,missile,长冷�
 FA_78_3,全装甲高达七号机,Common_ArmBR_Pink,光束炮,beam_rifle,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,3.0,3.0,技能/开火开始时,3,3,3250.0,9750.0,90.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink.gw
 FA_78_3,全装甲高达七号机,Common_ArmGL_L,Common ArmGL L,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,4.0,4.0,技能/开火开始时,2,2,3500.0,7000.0,85.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/Common_ArmGL_L.gw
 FA_78_3,全装甲高达七号机,EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast.gw
-FA_78_3,全装甲高达七号机,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+FA_78_3,全装甲高达七号机,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 FA_78_3,全装甲高达七号机,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 FA_78_G,全装甲高达陆战型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 FA_78_G,全装甲高达陆战型,Common_Cannon,肩部加农炮,cannon,慢循环（5～10秒）,短流程（0.5～2秒）,0.6,0.6,1.25,1.85,9.0,9.0,技能/开火开始时,1,1,10000.0,10000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/Common_Cannon.gw
@@ -225,7 +225,7 @@ MA_06,瓦尔·瓦罗,ZN_MA_06_MS_L,导弹发射器,missile,慢循环（5～10秒
 MA_06,瓦尔·瓦罗,ZN_MA_06_BR,光束步枪,beam_rifle,慢循环（5～10秒）,极短流程（≤0.5秒）,0.0,0.1,0.1,0.2,6.0,6.0,技能/开火开始时,2,2,4000.0,8000.0,90.0,50.0,perVolley,0,50.0,False,Units/BattleUnits/Weapon/Beam/ZN_MA_06_BR.gw
 MA_06,瓦尔·瓦罗,ZN_MA_06_BR_R,光束炮,beam_rifle,慢循环（5～10秒）,极短流程（≤0.5秒）,0.0,0.1,0.1,0.2,6.0,6.0,技能/开火开始时,2,2,4000.0,8000.0,90.0,50.0,perVolley,0,50.0,True,Units/BattleUnits/Weapon/Beam/ZN_MA_06_BR.gw
 MA_06,瓦尔·瓦罗,Common_Cqb_Double_L_A_Fixed_MA_06,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.4,0.4,1.2,1.6,3.0,3.0,技能/开火开始时,1,1,10000.0,10000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_L_A_Fixed_MA_06.gw
-MA_08,大扎姆,ZN_MA_08_MegaBeamCannon,光束炮,cannon,长冷却（>10秒）,长流程（>5秒）,2.6,7.3,3.0,10.3,240.0,240.0,技能/开火开始时,96,96,4500.0,432000.0,100.0,400.0,perVolley,0,400.0,False,Units/BattleUnits/Weapon/Beam/ZN_MA_08_MegaBeamCannon.gw
+MA_08,大扎姆,ZN_MA_08_MegaBeamCannon,光束炮,cannon,长冷却（>10秒）,长流程（>5秒）,2.6,7.3,3.0,10.3,240.0,240.0,技能/开火开始时,96,96,4500.0,432000.0,100.0,400.0,perVolley,0,400.0,True,Units/BattleUnits/Weapon/Beam/ZN_MA_08_MegaBeamCannon.gw
 MA_08,大扎姆,ZN_MA_08_AA_BeamCannon,光束炮,cannon,长冷却（>10秒）,极短流程（≤0.5秒）,0.0,0.0,0.0,0,180.0,180.0,弹仓耗尽后,14,14,2500.0,35000.0,100.0,2520.0,perShot,180.0,180.0,True,Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw
 MA_08,大扎姆,ZN_MA_08_AA_BeamCannon_L,光束炮,cannon,长冷却（>10秒）,极短流程（≤0.5秒）,0.0,0.0,0.0,0,180.0,180.0,弹仓耗尽后,14,14,2500.0,35000.0,100.0,2520.0,perShot,180.0,180.0,True,Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw
 MA_08,大扎姆,ZN_MA_08_AA_BeamCannon_R2,光束炮,cannon,长冷却（>10秒）,极短流程（≤0.5秒）,0.0,0.0,0.0,0,180.0,180.0,弹仓耗尽后,14,14,2500.0,35000.0,100.0,2520.0,perShot,180.0,180.0,True,Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw
@@ -287,7 +287,7 @@ MS_05,旧扎古,ZN_270mmBazookaEarly,270mm火箭筒,bazooka,中循环（2～5秒
 MS_05,旧扎古,ZN_HeatHawk_A,热能斧,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,4500.0,4500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw
 MS_05SP,扎古狙击型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 MS_05SP,扎古狙击型,ZN_LongRangeBeamSniperRifle,光束狙击枪,sniper,慢循环（5～10秒）,短流程（0.5～2秒）,0.35,0.35,1.0,1.35,7.5,7.5,技能/开火开始时,1,1,10000.0,10000.0,150.0,50.0,perVolley,0,50.0,False,Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle.gw
-MS_05SP,扎古狙击型,ZN_LongRangeBeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,35000.0,35000.0,125.0,100.0,perVolley,0,100.0,False,Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle_Sniper.gw
+MS_05SP,扎古狙击型,ZN_LongRangeBeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,17500.0,17500.0,125.0,100.0,perVolley,0,100.0,False,Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle_Sniper.gw
 MS_05SP,扎古狙击型,ZN_105mmMG,105mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,0.825,0.3,1.125,1.5,1.5,技能/开火开始时,8,8,375.0,3000.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/ZN_105mmMG.gw
 MS_05SP,扎古狙击型,ZN_HeatHawk_A,热能斧,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,4500.0,4500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw
 MS_06C,扎古II C型,ZN_MS_06C_Bombing_Nuke,核弹轰炸,nuke,长冷却（>10秒）,中流程（2～5秒）,3.0,3.0,1.5,4.5,10000.0,10000.0,技能/开火开始时,1,1,30000,30000,75.0,350.0,perVolley,0,350.0,False,Units/BattleUnits/Weapon/Shell/ZN_MS_06C_Bombing_Nuke.gw
@@ -326,7 +326,7 @@ MS_06F_MineLayer,扎古II[布雷者],ZN_270mmBazooka,270mm火箭筒,bazooka,中�
 MS_06F_MineLayer,扎古II[布雷者],ZN_HeatHawk_A,热能斧,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,4500.0,4500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw
 MS_06F_Sniper,扎古II狙击型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 MS_06F_Sniper,扎古II狙击型,ZN_LongRangeBeamSniperRifle,光束狙击枪,sniper,慢循环（5～10秒）,短流程（0.5～2秒）,0.35,0.35,1.0,1.35,7.5,7.5,技能/开火开始时,1,1,10000.0,10000.0,150.0,50.0,perVolley,0,50.0,False,Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle.gw
-MS_06F_Sniper,扎古II狙击型,ZN_LongRangeBeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,35000.0,35000.0,125.0,100.0,perVolley,0,100.0,False,Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle_Sniper.gw
+MS_06F_Sniper,扎古II狙击型,ZN_LongRangeBeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,17500.0,17500.0,125.0,100.0,perVolley,0,100.0,False,Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle_Sniper.gw
 MS_06F_Sniper,扎古II狙击型,ZN_Shotgun,ZN Shotgun,other,中循环（2～5秒）,短流程（0.5～2秒）,0.25,0.25,0.5,0.75,3.0,3.0,技能/开火开始时,1,8,1200.0,9600.0,95.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw
 MS_06F_Sniper,扎古II狙击型,ZN_HeatHawk_F,热能斧,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,4500.0,4500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_F.gw
 MS_06FZ,扎古II改,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
@@ -417,7 +417,7 @@ MS_08TX,伊芙利特,ZN_Shotgun,ZN Shotgun,other,中循环（2～5秒）,短流�
 MS_08TX,伊芙利特,ZN_MMP80MG,MMP-80机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.1,0.3,1.4,2.0,2.0,技能/开火开始时,9,9,725.0,6525.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/ZN_MMP80MG.gw
 MS_08TX,伊芙利特,ZN_360mmBazooka,360mm火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,9000.0,9000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw
 MS_08TX,伊芙利特,ZN_HeatSword_AF_A,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,1.5,1.4,2.9,3.5,3.5,技能/开火开始时,2,2,5000.0,10000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_AF.gw
-MS_08TX,伊芙利特,ZN_HeatSword_BF_B,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,3.5,3.5,技能/开火开始时,2,2,5000.0,10000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_BF.gw
+MS_08TX,伊芙利特,ZN_HeatSword_BF_B,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,3.5,3.5,技能/开火开始时,2,2,5000.0,10000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_BF.gw
 MS_08TX,伊芙利特,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,150.0,2400.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 MS_08TX_Kai,伊芙利特改,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 MS_08TX_Kai,伊芙利特改,ZN_Shotgun,ZN Shotgun,other,中循环（2～5秒）,短流程（0.5～2秒）,0.25,0.25,0.5,0.75,3.0,3.0,技能/开火开始时,1,8,1200.0,9600.0,95.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw
@@ -517,7 +517,7 @@ MS_11,机动扎古,ZN_HeatHawk_ACT_A_Fast,热能斧,melee,中循环（2～5秒�
 MS_11S,机动扎古[指挥官式样],Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 MS_11S,机动扎古[指挥官式样],ZN_ACT_Zaku_MG,机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,0.925,0.3,1.225,2.0,2.0,技能/开火开始时,8,8,675.0,5400.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/ZN_ACT_Zaku_MG.gw
 MS_11S,机动扎古[指挥官式样],ZN_ACT_Zaku_BR,光束步枪,beam_rifle,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,1.5,1.5,技能/开火开始时,1,1,4750.0,4750.0,90.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Beam/ZN_ACT_Zaku_BR.gw
-MS_11S,机动扎古[指挥官式样],EF_BeamSaber_F_Yellow,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Yellow.gw
+MS_11S,机动扎古[指挥官式样],EF_BeamSaber_F_Yellow,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Yellow.gw
 MS_11S,机动扎古[指挥官式样],ZN_HeatHawk_ACT_A_Fast,热能斧,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.51,0.51,1.4,1.91,3.0,3.0,技能/开火开始时,1,1,4500.0,4500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_ACT_A_Fast.gw
 MS_12,吉刚,Common_Mortar,迫击炮轰炸,mortar,长冷却（>10秒）,长流程（>5秒）,2.25,4.75,2.0,6.75,120.0,120.0,技能/开火开始时,3,3,5000.0,15000.0,65.0,150.0,perVolley,0,150.0,False,Units/BattleUnits/Weapon/Shell/Common_Mortar.gw
 MS_12,吉刚,ZN_MS_12_Cannon,加农炮,cannon,慢循环（5～10秒）,极短流程（≤0.5秒）,0.0,0.0,0.0,0,6.0,6.0,弹仓耗尽后,1,1,4500.0,4500.0,75.0,35.0,perShot,35.0,35.0,False,Units/BattleUnits/Weapon/Shell/ZN_MS_12_Cannon.gw
@@ -555,7 +555,7 @@ MS_14FS,勇士海军陆战队型[指挥官型],Common_ArmMG_L,机枪,machine_gun
 MS_14FS,勇士海军陆战队型[指挥官型],ZN_MS_14FS_BMG,机枪,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.25,0.95,0.25,1.2,3.5,3.5,技能/开火开始时,8,8,1750.0,14000.0,95.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Beam/ZN_MS_14FS_BMG.gw
 MS_14FS,勇士海军陆战队型[指挥官型],ZN_MS_14_BR,格鲁古古光束步枪,beam_rifle,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,2.0,2.0,技能/开火开始时,1,1,7500.0,7500.0,90.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR.gw
 MS_14FS,勇士海军陆战队型[指挥官型],ZN_360mmBazookaKai,360mm火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,13500.0,13500.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/ZN_360mmBazookaKai.gw
-MS_14FS,勇士海军陆战队型[指挥官型],EF_BeamSaber_F_Yellow,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Yellow.gw
+MS_14FS,勇士海军陆战队型[指挥官型],EF_BeamSaber_F_Yellow,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Yellow.gw
 MS_14FS,勇士海军陆战队型[指挥官型],EF_BeamSaber_BF_Yellow_B,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,3.5,3.5,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF_Yellow.gw
 MS_14JG,勇士J型,ZN_MS_14JG_BMG_Sniper_Aim,光束狙击枪,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,45.0,45.0,技能/开火开始时,1,1,22500.0,22500.0,125.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Beam/ZN_MS_14JG_BMG_Sniper.gw
 MS_14JG,勇士J型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
@@ -604,7 +604,7 @@ MS_15Kg,强人克里格,ZN_MS_15B_ShieldRocket,导弹发射器,missile,慢循环
 MS_15Kg,强人克里格,ZN_MS_15B_ShieldRocket_L,导弹发射器,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.525,0.3,0.825,6.0,6.0,技能/开火开始时,4,4,2000.0,8000.0,85.0,45.0,perVolley,0,45.0,True,Units/BattleUnits/Weapon/Shell/ZN_MS_15B_ShieldRocket.gw
 MS_15Kg,强人克里格,ZN_MS_15Kg_ShieldBeamGun,导弹发射器,beam_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.25,0.5,0.5,1.0,2.0,2.0,技能/开火开始时,2,2,4750.0,9500.0,85.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Beam/ZN_MS_15Kg_ShieldBeamGun.gw
 MS_15Kg,强人克里格,ZN_MS_15B_BeamLance_BF_B,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,4.0,4.0,技能/开火开始时,2,2,6500.0,14000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_MS_15B_BeamLance_BF.gw
-MS_15Kg,强人克里格,ZN_MS_15B_BeamLance_B2,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.35,0.7,1.5,2.2,3.5,3.5,技能/开火开始时,2,2,7500.0,15000.0,100.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/ZN_MS_15B_BeamLance_B2.gw
+MS_15Kg,强人克里格,ZN_MS_15B_BeamLance_B2,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.35,0.7,1.5,2.2,3.5,3.5,技能/开火开始时,2,2,7500.0,15000.0,100.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_MS_15B_BeamLance_B2.gw
 MS_17,加里波第α,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 MS_17,加里波第α,ZN_MS_17_BR,光束步枪,beam_rifle,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,2.0,2.0,技能/开火开始时,1,1,8500.0,8500.0,90.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Beam/ZN_MS_17_BR.gw
 MS_17,加里波第α,ZN_360mmBazooka,360mm火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,12500.0,12500.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw
@@ -688,6 +688,8 @@ MSN_02,吉翁号,ZN_MSN_02_BG_L_3,导弹发射器,missile,快循环（≤2秒）
 MSN_02,吉翁号,ZN_MSN_02_BG_L_4,导弹发射器,missile,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.33,0.0,0.33,2.0,2.0,技能/开火开始时,5,5,2000.0,10000.0,85.0,40.0,perVolley,0,40.0,True,Units/BattleUnits/Weapon/Beam/ZN_MSN_02_BG_L.gw
 MSN_02,吉翁号,ZN_MSN_02_BG_L_5,导弹发射器,missile,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.33,0.0,0.33,2.0,2.0,技能/开火开始时,5,5,2000.0,10000.0,85.0,40.0,perVolley,0,40.0,True,Units/BattleUnits/Weapon/Beam/ZN_MSN_02_BG_L.gw
 MSN_02,吉翁号,Common_Cqb_A,格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw
+MSN_02_Head,吉翁号[头部],ZN_MSN_02_Head_BR,光束步枪,beam_rifle,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,2.0,2.0,技能/开火开始时,1,1,8000.0,8000.0,90.0,35.0,perVolley,0,35.0,False,Units/BattleUnits/Weapon/Beam/ZN_MSN_02_Head_BR.gw
+MSN_02_Head,吉翁号[头部],Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 MTank,马哲兰坦克,Common_DoubleVulcan_MTank,火神炮,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.0,1.1,0.0,1.1,2.0,3.1,弹仓耗尽后,12,12,150.0,1800.0,125.0,6.0,perShot,0.5,0.5,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MTank.gw
 MTank,马哲兰坦克,ZN_MTank_Cannon,加农炮,cannon,慢循环（5～10秒）,极短流程（≤0.5秒）,0.0,0.0,0.0,0,6.0,6.0,弹仓耗尽后,1,1,3500.0,3500.0,75.0,35.0,perShot,35.0,35.0,False,Units/BattleUnits/Weapon/Shell/ZN_MTank_Cannon.gw
 MTank_Chassis,马哲兰底盘,Common_DoubleVulcan_MTank,火神炮,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.0,1.1,0.0,1.1,2.0,3.1,弹仓耗尽后,12,12,150.0,1800.0,125.0,6.0,perShot,0.5,0.5,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MTank.gw
@@ -715,7 +717,7 @@ PegasusClass,飞马级,PegasusClass_Turret_AA,PegasusClass Turret AA,machine_gun
 PublicClass,共和国级,Common_DoubleMS_PublicClass,Common DoubleMS PublicClass,missile,中循环（2～5秒）,短流程（0.5～2秒）,0.0,0.6,0.3,0.9,3.0,3.0,技能/开火开始时,7,7,600.0,4200.0,85.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleMS_PublicClass.gw
 PublicClass,共和国级,Common_DoubleMS_PublicClass_L,Common DoubleMS PublicClass L,missile,中循环（2～5秒）,短流程（0.5～2秒）,0.0,0.6,0.3,0.9,3.0,3.0,技能/开火开始时,7,7,600.0,4200.0,85.0,20.0,perVolley,0,20.0,True,Units/BattleUnits/Weapon/Shell/Common_DoubleMS_PublicClass.gw
 PublicClass,共和国级,EF_PublicClass_AntiShipMS,EF PublicClass AntiShipMS,other,长冷却（>10秒）,极短流程（≤0.5秒）,0.0,0.2,0.3,0.5,180.0,180.0,技能/开火开始时,2,2,8000.0,16000.0,85.0,0,perVolley,0,150.0,False,Units/BattleUnits/Weapon/Shell/EF_PublicClass_AntiShipMS.gw
-PublicClass,共和国级,EF_PublicClass_BeamDiffusionMS,EF PublicClass BeamDiffusionMS,other,长冷却（>10秒）,极短流程（≤0.5秒）,0.0,0.2,0.3,0.5,180.0,180.0,技能/开火开始时,2,2,1500.0,3000.0,85.0,0,perVolley,0,150.0,False,Units/BattleUnits/Weapon/Shell/EF_PublicClass_BeamDiffusionMS.gw
+PublicClass,共和国级,EF_PublicClass_BeamDiffusionMS,EF PublicClass BeamDiffusionMS,other,长冷却（>10秒）,极短流程（≤0.5秒）,0.0,0.2,0.3,0.5,180.0,180.0,技能/开火开始时,2,2,1500.0,3000.0,85.0,0,perVolley,0,150.0,True,Units/BattleUnits/Weapon/Shell/EF_PublicClass_BeamDiffusionMS.gw
 RAG_79,水中型吉姆,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RAG_79,水中型吉姆,EF_HarpoonGun,EF HarpoonGun,other,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.45,0.3,0.75,5.0,5.0,技能/开火开始时,2,2,4500.0,9000.0,100.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/EF_HarpoonGun.gw
 RAG_79,水中型吉姆,EF_AquaMissileLauncher,导弹发射器,missile,中循环（2～5秒）,短流程（0.5～2秒）,0.3,1.2,0.3,1.5,4.5,4.5,技能/开火开始时,4,4,1250.0,7250.0,90.0,90.0,perVolley,0,90.0,False,Units/BattleUnits/Weapon/Shell/EF_AquaMissileLauncher.gw
@@ -776,14 +778,14 @@ RGM_79_Commander,吉姆[指挥官机],EF_BeamGun,光束炮,beam_gun,快循环（
 RGM_79_Commander,吉姆[指挥官机],EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,8500.0,8500.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
 RGM_79_Commander,吉姆[指挥官机],EF_90mmMG,90mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.1,0.3,1.4,2.0,2.0,技能/开火开始时,9,9,725.0,6525.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw
 RGM_79_Commander,吉姆[指挥官机],EF_BeamSaber_A,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw
-RGM_79_Commander,吉姆[指挥官机],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,5000.0,20000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RGM_79_Commander,吉姆[指挥官机],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,5000.0,20000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RGM_79_Commander,吉姆[指挥官机],Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,150.0,2400.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RGM_79_D,沙漠型吉姆,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RGM_79_D,沙漠型吉姆,EF_Railgun_79_D_MS,导弹发射器,missile,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.675,0.3,0.975,5.0,5.0,技能/开火开始时,4,4,2000.0,8000.0,100.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/EF_Railgun_79_D_MS.gw
 RGM_79_D,沙漠型吉姆,EF_Railgun_79_D_RG,EF Railgun 79 D RG,other,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.3,0.3,0.6,9.0,9.0,技能/开火开始时,1,1,10000.0,10000.0,85.0,45.0,perVolley,0,45.0,False,Units/BattleUnits/Weapon/Shell/EF_Railgun_79_D_RG.gw
 RGM_79_D,沙漠型吉姆,EF_BeamSprayGunFD,光束炮,beam_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.25,0.25,0.5,0.75,2.0,2.0,技能/开火开始时,1,6,1500.0,9000.0,95.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Beam/EF_BeamSprayGunFD.gw
 RGM_79_D,沙漠型吉姆,EF_BeamSaber_A,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw
-RGM_79_D,沙漠型吉姆,Common_Cqb_A_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L.gw
+RGM_79_D,沙漠型吉姆,Common_Cqb_A_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L.gw
 RGM_79_E,吉姆初期型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RGM_79_E,吉姆初期型,EF_90mmMG,90mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.1,0.3,1.4,2.0,2.0,技能/开火开始时,9,9,725.0,6525.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw
 RGM_79_E,吉姆初期型,EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,8500.0,8500.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
@@ -798,7 +800,7 @@ RGM_79_G,陆战型吉姆,EF_BeamSaber_A,光束军刀,melee,中循环（2～5秒�
 RGM_79_G,陆战型吉姆,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RGM_79_G_SP,吉姆狙击型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RGM_79_G_SP,吉姆狙击型,EF_LongRangeBeamSniperRifle,光束狙击枪,sniper,慢循环（5～10秒）,短流程（0.5～2秒）,0.35,0.35,1.0,1.35,7.5,7.5,技能/开火开始时,1,1,10000.0,10000.0,150.0,45.0,perVolley,0,45.0,False,Units/BattleUnits/Weapon/Beam/EF_LongRangeBeamSniperRifle.gw
-RGM_79_G_SP,吉姆狙击型,EF_LongRangeBeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,35000.0,35000.0,125.0,100.0,perVolley,0,100.0,False,Units/BattleUnits/Weapon/Beam/EF_LongRangeBeamSniperRifle_Sniper.gw
+RGM_79_G_SP,吉姆狙击型,EF_LongRangeBeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,60.0,60.0,技能/开火开始时,1,1,17500.0,17500.0,125.0,100.0,perVolley,0,100.0,False,Units/BattleUnits/Weapon/Beam/EF_LongRangeBeamSniperRifle_Sniper.gw
 RGM_79_G_SP,吉姆狙击型,EF_100mmMG,100mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.175,0.3,1.475,2.0,2.0,技能/开火开始时,8,8,900.0,7200.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw
 RGM_79_G_SP,吉姆狙击型,EF_BeamSaber_A,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw
 RGM_79_G_SPACE,先行量产型吉姆(宇宙式样),Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
@@ -840,7 +842,7 @@ RGM_79DO,吉姆优越型,EF_RGM_79DO_BR_R,光束炮,beam_rifle,中循环（2～5
 RGM_79DO,吉姆优越型,EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,10000.0,10000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
 RGM_79DO,吉姆优越型,EF_90mmMG,90mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.1,0.3,1.4,2.0,2.0,技能/开火开始时,9,9,900.0,8100.0,110.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw
 RGM_79DO,吉姆优越型,EF_BeamSaber_AF_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,1.5,1.4,2.9,3.5,3.5,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF.gw
-RGM_79DO,吉姆优越型,Common_ArmBeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.5,3.5,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_F.gw
+RGM_79DO,吉姆优越型,Common_ArmBeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.5,3.5,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_F.gw
 RGM_79FD,装甲强化型吉姆,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RGM_79FD,装甲强化型吉姆,EF_100mmMG,100mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.175,0.3,1.475,2.0,2.0,技能/开火开始时,8,8,1200.0,9600.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw
 RGM_79FD,装甲强化型吉姆,EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,10000.0,10000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
@@ -850,8 +852,8 @@ RGM_79FP,吉姆打击型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短�
 RGM_79FP,吉姆打击型,EF_100mmMG,100mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.175,0.3,1.475,2.0,2.0,技能/开火开始时,8,8,1200.0,9600.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw
 RGM_79FP,吉姆打击型,EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,10000.0,10000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
 RGM_79FP,吉姆打击型,EF_BeamLancer_BF_B,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,3.5,3.5,技能/开火开始时,2,2,8000.0,16000.0,100.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamLancer_BF.gw
-RGM_79FP,吉姆打击型,EF_BeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F.gw
-RGM_79FP,吉姆打击型,Common_Cqb_A_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L.gw
+RGM_79FP,吉姆打击型,EF_BeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F.gw
+RGM_79FP,吉姆打击型,Common_Cqb_A_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L.gw
 RGM_79G,吉姆突击型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RGM_79G,吉姆突击型,EF_BeamGun,光束炮,beam_gun,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,1.25,1.25,技能/开火开始时,1,1,4500.0,4500.0,90.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Beam/EF_BeamGun.gw
 RGM_79G,吉姆突击型,EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,10000.0,10000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
@@ -906,15 +908,15 @@ RGM_79S,吉姆 斯巴达,Common_Grenade_B,Common Grenade B,other,长冷却（>10
 RGM_79S,吉姆 斯巴达,EF_HeatDagger_E,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.35,0.7,1.4,2.1,3.5,3.5,技能/开火开始时,2,2,5500.0,11000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_HeatDagger_E.gw
 RGM_79SC,吉姆狙击特装型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,5000.0,5000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RGM_79SC,吉姆狙击特装型,EF_R4_BeamSniperRifle,光束狙击枪,sniper,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,1.0,1.35,3.0,3.0,技能/开火开始时,1,1,8000.0,8000.0,125.0,35.0,perVolley,0,35.0,False,Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle.gw
-RGM_79SC,吉姆狙击特装型,EF_R4_BeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,45.0,45.0,技能/开火开始时,1,1,22500.0,22500.0,150.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle_Sniper.gw
+RGM_79SC,吉姆狙击特装型,EF_R4_BeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,45.0,45.0,技能/开火开始时,1,1,11250.0,11250.0,150.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle_Sniper.gw
 RGM_79SC,吉姆狙击特装型,EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,8500.0,8500.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
 RGM_79SC,吉姆狙击特装型,EF_BeamSprayGun,光束喷枪,beam_gun,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,2.0,2.0,技能/开火开始时,1,1,5000.0,5000.0,85.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Beam/EF_BeamSprayGun.gw
 RGM_79SC,吉姆狙击特装型,Common_ArmBeamSaber_B,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.4,0.4,1.0,1.4,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_B.gw
 RGM_79SP2,吉姆狙击型II,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RGM_79SP2,吉姆狙击型II,EF_R4_BeamSniperRifle,光束狙击枪,sniper,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,1.0,1.35,3.0,3.0,技能/开火开始时,1,1,8000.0,8000.0,125.0,35.0,perVolley,0,35.0,False,Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle.gw
-RGM_79SP2,吉姆狙击型II,EF_R4_BeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,45.0,45.0,技能/开火开始时,1,1,22500.0,22500.0,150.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle_Sniper.gw
+RGM_79SP2,吉姆狙击型II,EF_R4_BeamSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,45.0,45.0,技能/开火开始时,1,1,11250.0,11250.0,150.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle_Sniper.gw
 RGM_79SP2,吉姆狙击型II,EF_75mmSniperRifle,狙击步枪,sniper,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,1.0,1.35,4.0,4.0,技能/开火开始时,1,1,12000.0,12000.0,150.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/EF_75mmSniperRifle.gw
-RGM_79SP2,吉姆狙击型II,EF_75mmSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,45.0,45.0,技能/开火开始时,1,1,30000.0,30000.0,150.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_75mmSniperRifle_Sniper.gw
+RGM_79SP2,吉姆狙击型II,EF_75mmSniperRifle_Sniper_Aim,狙击蓄力,sniper,长冷却（>10秒）,极短流程（≤0.5秒）,0.25,0.25,0.0,0.25,45.0,45.0,技能/开火开始时,1,1,15000.0,15000.0,150.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_75mmSniperRifle_Sniper.gw
 RGM_79SP2,吉姆狙击型II,EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,10000.0,10000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
 RGM_79SP2,吉姆狙击型II,EF_90mmMG,90mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.1,0.3,1.4,2.0,2.0,技能/开火开始时,9,9,900.0,8100.0,110.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw
 RGM_79SP2,吉姆狙击型II,Common_Grenade_B,Common Grenade B,other,长冷却（>10秒）,短流程（0.5～2秒）,0.35,0.35,0.35,0.7,12.0,12.0,技能/开火开始时,1,1,4500.0,4500.0,75.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Shell/Common_Grenade_B.gw
@@ -999,7 +1001,7 @@ RX_78_1,试作型高达,EF_HypeBazooka,超级火箭筒,bazooka,中循环（2～5
 RX_78_1,试作型高达,EF_RX_78_1_BR,试作型光束步枪,beam_rifle,中循环（2～5秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,2.5,2.5,技能/开火开始时,1,1,7000.0,7000.0,85.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Beam/EF_RX_78_1_BR.gw
 RX_78_1,试作型高达,EF_100mmMG,100mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.175,0.3,1.475,2.0,2.0,技能/开火开始时,8,8,1200.0,9600.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw
 RX_78_1,试作型高达,EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast_Lv2.gw
-RX_78_1,试作型高达,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF_Lv2.gw
+RX_78_1,试作型高达,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF_Lv2.gw
 RX_78_1,试作型高达,EF_BeamJavelin_BF_B,光束标枪,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,4.0,4.0,技能/开火开始时,2,2,8000.0,16000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamJavelin_BF_Lv2.gw
 RX_78_1,试作型高达,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.9,0.0,1.9,4.0,5.9,弹仓耗尽后,20,20,247.0,4940.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw
 RX_78_1,试作型高达,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
@@ -1008,7 +1010,7 @@ RX_78_2,高达,EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流�
 RX_78_2,高达,EF_RX_78_2_BR,光束步枪,beam_rifle,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,2.0,2.0,技能/开火开始时,1,1,7000.0,7000.0,90.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Beam/EF_RX_78_2_BR.gw
 RX_78_2,高达,EF_SHM,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.5,0.5,0.5,1.0,5.0,5.0,技能/开火开始时,1,1,12000.0,12000.0,85.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_SHM.gw
 RX_78_2,高达,EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast.gw
-RX_78_2,高达,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RX_78_2,高达,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RX_78_2,高达,EF_BeamJavelin_BF_B,光束标枪,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,4.0,4.0,技能/开火开始时,2,2,8000.0,16000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamJavelin_BF.gw
 RX_78_2,高达,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_78_3,G-3高达,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
@@ -1016,17 +1018,17 @@ RX_78_3,G-3高达,EF_HypeBazooka_Double,火箭筒,bazooka,中循环（2～5秒�
 RX_78_3,G-3高达,EF_HypeBazooka_Double_L,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.5,0.45,0.95,5.0,5.0,技能/开火开始时,2,2,8000.0,16000.0,75.0,90.0,perVolley,0,90.0,True,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_Double.gw
 RX_78_3,G-3高达,EF_RX_78_3_BR,光束步枪,beam_rifle,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,1.0,1.0,技能/开火开始时,1,1,6000.0,6000.0,90.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Beam/EF_RX_78_3_BR.gw
 RX_78_3,G-3高达,EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast.gw
-RX_78_3,G-3高达,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RX_78_3,G-3高达,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RX_78_3,G-3高达,EF_BeamJavelin_BF_B,光束标枪,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,4.0,4.0,技能/开火开始时,2,2,8000.0,16000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamJavelin_BF.gw
 RX_78_3,G-3高达,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
-RX_78_4_Bst,高达4号机[Bst],EF_RX_78_4_HighMegaLauncher,光束炮,other,长冷却（>10秒）,长流程（>5秒）,2.1,7.4,3.0,10.4,180.0,180.0,技能/开火开始时,108,108,3750.0,405000.0,100.0,150.0,perVolley,0,150.0,False,Units/BattleUnits/Weapon/Beam/EF_RX_78_4_HighMegaLauncher.gw
+RX_78_4_Bst,高达4号机[Bst],EF_RX_78_4_HighMegaLauncher,光束炮,other,长冷却（>10秒）,长流程（>5秒）,2.1,7.4,3.0,10.4,180.0,180.0,技能/开火开始时,108,108,3750.0,405000.0,100.0,150.0,perVolley,0,150.0,True,Units/BattleUnits/Weapon/Beam/EF_RX_78_4_HighMegaLauncher.gw
 RX_78_4_Bst,高达4号机[Bst],Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_78_4_Bst,高达4号机[Bst],EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,10000.0,10000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
 RX_78_4_Bst,高达4号机[Bst],EF_HyperBeamRifle,光束步枪,beam_rifle,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,2.0,2.0,技能/开火开始时,1,1,9500.0,9500.0,90.0,45.0,perVolley,0,45.0,False,Units/BattleUnits/Weapon/Beam/EF_HyperBeamRifle.gw
 RX_78_4_Bst,高达4号机[Bst],Common_ArmBR_Pink,光束炮,beam_rifle,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,3.0,3.0,技能/开火开始时,3,3,3250.0,9750.0,90.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink.gw
 RX_78_4_Bst,高达4号机[Bst],Common_ArmBR_Pink_L,光束炮,beam_rifle,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,3.0,3.0,技能/开火开始时,3,3,3750.0,11250.0,90.0,25.0,perVolley,0,25.0,True,Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink_L.gw
 RX_78_4_Bst,高达4号机[Bst],EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast.gw
-RX_78_4_Bst,高达4号机[Bst],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RX_78_4_Bst,高达4号机[Bst],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RX_78_4_Bst,高达4号机[Bst],Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_78_5_Bst,高达5号机[Bst],Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_78_5_Bst,高达5号机[Bst],EF_HypeBazooka,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,10000.0,10000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw
@@ -1036,7 +1038,7 @@ RX_78_5_Bst,高达5号机[Bst],EF_Minigun_L,机枪,machine_gun,中循环（2～5
 RX_78_5_Bst,高达5号机[Bst],Common_ArmBR_Pink,光束炮,beam_rifle,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,3.0,3.0,技能/开火开始时,3,3,3250.0,9750.0,90.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink.gw
 RX_78_5_Bst,高达5号机[Bst],Common_ArmBR_Pink_L,光束炮,beam_rifle,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,3.0,3.0,技能/开火开始时,3,3,3750.0,11250.0,90.0,25.0,perVolley,0,25.0,True,Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink_L.gw
 RX_78_5_Bst,高达5号机[Bst],EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast.gw
-RX_78_5_Bst,高达5号机[Bst],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RX_78_5_Bst,高达5号机[Bst],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RX_78_5_Bst,高达5号机[Bst],Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_78_6,高达6号机,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_78_6,高达6号机,EF_RX_78_6_BR,光束步枪,beam_rifle,快循环（≤2秒）,短流程（0.5～2秒）,0.25,0.65,0.25,0.9,2.0,2.0,技能/开火开始时,3,3,4500.0,13500.0,90.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Beam/EF_RX_78_6_BR.gw
@@ -1045,14 +1047,14 @@ RX_78_6,高达6号机,Common_DoubleCannon_NoStop_L,加农炮,cannon,慢循环（
 RX_78_6,高达6号机,Common_ArmGL,Common ArmGL,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,4.0,4.0,技能/开火开始时,2,2,3500.0,7000.0,85.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/Common_ArmGL.gw
 RX_78_6,高达6号机,Common_ArmGL_L,Common ArmGL L,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,4.0,4.0,技能/开火开始时,2,2,3500.0,7000.0,85.0,25.0,perVolley,0,25.0,True,Units/BattleUnits/Weapon/Shell/Common_ArmGL_L.gw
 RX_78_6,高达6号机,EF_BeamSaber_BF_B,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,3.5,3.5,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw
-RX_78_6,高达6号机,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RX_78_6,高达6号机,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RX_78_6,高达6号机,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_78_7,高达7号机,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_78_7,高达7号机,EF_RX_78_7_BR,光束步枪,beam_rifle,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,1.5,1.5,技能/开火开始时,1,1,10000.0,10000.0,90.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Beam/EF_RX_78_7_BR.gw
 RX_78_7,高达7号机,Common_ArmBR_Pink,光束炮,beam_rifle,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,3.0,3.0,技能/开火开始时,3,3,3250.0,9750.0,90.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink.gw
 RX_78_7,高达7号机,Common_ArmGL_L,Common ArmGL L,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.3,0.3,0.6,4.0,4.0,技能/开火开始时,2,2,3500.0,7000.0,85.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/Common_ArmGL_L.gw
 RX_78_7,高达7号机,EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast.gw
-RX_78_7,高达7号机,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RX_78_7,高达7号机,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RX_78_7,高达7号机,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_78GP01,高达试作1号机,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_78GP01,高达试作1号机,EF_HypeBazookaKai,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,3.5,3.5,技能/开火开始时,1,1,11000.0,11000.0,75.0,50.0,perVolley,0,50.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazookaKai.gw
@@ -1092,7 +1094,7 @@ RX_78NT_1,高达NT-1,EF_RX_78NT_1_BR,光束步枪,beam_rifle,快循环（≤2秒
 RX_78NT_1,高达NT-1,Common_ArmMG,机枪,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.5,0.3,0.8,3.0,3.0,技能/开火开始时,9,9,950.0,8550.0,110.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/Common_ArmMG.gw
 RX_78NT_1,高达NT-1,Common_ArmMG_L,机枪,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.1,0.5,0.3,0.8,3.0,3.0,技能/开火开始时,9,9,950.0,8550.0,110.0,20.0,perVolley,0,20.0,True,Units/BattleUnits/Weapon/Shell/Common_ArmMG_L.gw
 RX_78NT_1,高达NT-1,EF_BeamSaber_BF_B,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,3.5,3.5,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw
-RX_78NT_1,高达NT-1,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RX_78NT_1,高达NT-1,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RX_78NT_1,高达NT-1,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_78NT_1_FA,高达NT-1［全装甲］,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_78NT_1_FA,高达NT-1［全装甲］,EF_HypeBazooka_NT_1,火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,2.5,2.5,技能/开火开始时,1,1,15000.0,15000.0,85.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_NT_1.gw
@@ -1113,7 +1115,7 @@ RX_78XX,精灵高达,EF_75mmMG_Double,75mm机枪,machine_gun,中循环（2～5�
 RX_78XX,精灵高达,EF_75mmMG_Double_L,75mm机枪,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.2,0.655,0.2,0.855,3.5,3.5,技能/开火开始时,14,14,750.0,10500.0,100.0,45.0,perVolley,0,45.0,True,Units/BattleUnits/Weapon/Shell/EF_75mmMG_Double.gw
 RX_78XX,精灵高达,Common_Grenade_B,Common Grenade B,other,长冷却（>10秒）,短流程（0.5～2秒）,0.35,0.35,0.35,0.7,12.0,12.0,技能/开火开始时,1,1,4500.0,4500.0,75.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Shell/Common_Grenade_B.gw
 RX_78XX,精灵高达,EF_BeamDagger_Double_AALDF,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.2,1.0,1.0,2.0,3.0,3.0,技能/开火开始时,4,4,6000.0,24000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamDagger_Double_AALDF.gw
-RX_78XX,精灵高达,EF_BeamDagger_Double_AALDE,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.2,1.31,1.0,2.31,3.0,3.0,技能/开火开始时,9,9,3500.0,28500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamDagger_Double_AALDE.gw
+RX_78XX,精灵高达,EF_BeamDagger_Double_AALDE,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.2,1.31,1.0,2.31,3.0,3.0,技能/开火开始时,9,9,3500.0,28500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamDagger_Double_AALDE.gw
 RX_78XX,精灵高达,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_79_BD_1,苍蓝宿命一号机,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_79_BD_1,苍蓝宿命一号机,EF_100mmMG_Blue,100mm机枪,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.3,1.1,0.3,1.4,3.0,3.0,技能/开火开始时,9,9,1500.0,13500.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_100mmMG_Blue.gw
@@ -1132,7 +1134,7 @@ RX_79_BD_1_EXAM,苍蓝宿命一号机 [EXAM],EF_RX_79_BD_ChestMS_Line_R,胸部�
 RX_79_BD_1_EXAM,苍蓝宿命一号机 [EXAM],EF_RX_79_BD_ChestMG,机枪,machine_gun,慢循环（5～10秒）,短流程（0.5～2秒）,0.25,0.9,0.25,1.15,10.0,10.0,技能/开火开始时,14,14,550.0,7700.0,100.0,35.0,perVolley,0,35.0,False,Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMG.gw
 RX_79_BD_1_EXAM,苍蓝宿命一号机 [EXAM],EF_RX_79_BD_ChestMG_L,机枪,machine_gun,慢循环（5～10秒）,短流程（0.5～2秒）,0.25,0.9,0.25,1.15,10.0,10.0,技能/开火开始时,14,14,550.0,7700.0,100.0,35.0,perVolley,0,35.0,True,Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMG.gw
 RX_79_BD_1_EXAM,苍蓝宿命一号机 [EXAM],EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast.gw
-RX_79_BD_1_EXAM,苍蓝宿命一号机 [EXAM],Common_Cqb_B_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.4,0.4,1.0,1.4,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/Common_Cqb_B_L.gw
+RX_79_BD_1_EXAM,苍蓝宿命一号机 [EXAM],Common_Cqb_B_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.4,0.4,1.0,1.4,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_B_L.gw
 RX_79_BD_1_EXAM,苍蓝宿命一号机 [EXAM],Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_79_BD_2,苍蓝宿命二号机,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_79_BD_2,苍蓝宿命二号机,EF_GroundTypeBeamRifle_Blue,光束步枪,beam_rifle,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,2.0,2.0,技能/开火开始时,1,1,6000.0,6000.0,90.0,35.0,perVolley,0,35.0,False,Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle_Blue.gw
@@ -1149,7 +1151,7 @@ RX_79_BD_2_EXAM,苍蓝宿命二号机 [EXAM],EF_RX_79_BD_ChestMS_Line_R,胸部�
 RX_79_BD_2_EXAM,苍蓝宿命二号机 [EXAM],EF_RX_79_BD_ChestMG,机枪,machine_gun,慢循环（5～10秒）,短流程（0.5～2秒）,0.25,0.9,0.25,1.15,10.0,10.0,技能/开火开始时,14,14,550.0,7700.0,100.0,35.0,perVolley,0,35.0,False,Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMG.gw
 RX_79_BD_2_EXAM,苍蓝宿命二号机 [EXAM],EF_RX_79_BD_ChestMG_L,机枪,machine_gun,慢循环（5～10秒）,短流程（0.5～2秒）,0.25,0.9,0.25,1.15,10.0,10.0,技能/开火开始时,14,14,550.0,7700.0,100.0,35.0,perVolley,0,35.0,True,Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMG.gw
 RX_79_BD_2_EXAM,苍蓝宿命二号机 [EXAM],EF_BeamSaber_AF_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,1.5,1.4,2.9,3.5,3.5,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF.gw
-RX_79_BD_2_EXAM,苍蓝宿命二号机 [EXAM],EF_BeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F.gw
+RX_79_BD_2_EXAM,苍蓝宿命二号机 [EXAM],EF_BeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F.gw
 RX_79_BD_2_EXAM,苍蓝宿命二号机 [EXAM],Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_79_G,陆战型高达,EF_GroundTypeBazooka,陆战型火箭筒,bazooka,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.5,4.5,技能/开火开始时,1,1,9000.0,9000.0,75.0,55.0,perVolley,0,55.0,False,Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka_Lv2.gw
 RX_79_G,陆战型高达,EF_100mmMG,100mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.175,0.3,1.475,2.0,2.0,技能/开火开始时,8,8,1200.0,9600.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw
@@ -1176,7 +1178,7 @@ RX_80PR,苍白骑士,Common_ArmBR_Pink_L,光束炮,beam_rifle,中循环（2～5�
 RX_80PR,苍白骑士,EF_RX_80PR_LegMS,EF RX 80PR LegMS,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.5,0.3,0.8,9.0,9.0,技能/开火开始时,6,6,1750.0,10500.0,85.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw
 RX_80PR,苍白骑士,EF_RX_80PR_LegMS_L,EF RX 80PR LegMS L,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.5,0.3,0.8,9.0,9.0,技能/开火开始时,6,6,1750.0,10500.0,85.0,25.0,perVolley,0,25.0,True,Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw
 RX_80PR,苍白骑士,EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast.gw
-RX_80PR,苍白骑士,Common_Cqb_B_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.4,0.4,1.0,1.4,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/Common_Cqb_B_L.gw
+RX_80PR,苍白骑士,Common_Cqb_B_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.4,0.4,1.0,1.4,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_B_L.gw
 RX_80PR,苍白骑士,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_80PR_2,苍白骑兵,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_80PR_2,苍白骑兵,EF_RX_80_PR_2_FrameLauncher_BR,光束步枪,beam_rifle,慢循环（5～10秒）,短流程（0.5～2秒）,0.35,0.35,1.0,1.35,6.0,6.0,技能/开火开始时,1,1,9500.0,9500.0,90.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Beam/EF_RX_80_PR_2_FrameLauncher_BR.gw
@@ -1214,7 +1216,7 @@ RX_80PR_GroundType_HADES,苍白骑士[陆战重装备规格] [HADES],EF_180mmCan
 RX_80PR_GroundType_HADES,苍白骑士[陆战重装备规格] [HADES],EF_RX_80PR_LegMS,EF RX 80PR LegMS,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.5,0.3,0.8,9.0,9.0,技能/开火开始时,6,6,1750.0,10500.0,85.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw
 RX_80PR_GroundType_HADES,苍白骑士[陆战重装备规格] [HADES],EF_RX_80PR_LegMS_L,EF RX 80PR LegMS L,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.5,0.3,0.8,9.0,9.0,技能/开火开始时,6,6,1750.0,10500.0,85.0,25.0,perVolley,0,25.0,True,Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw
 RX_80PR_GroundType_HADES,苍白骑士[陆战重装备规格] [HADES],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
-RX_80PR_GroundType_HADES,苍白骑士[陆战重装备规格] [HADES],EF_BeamSaber_Double_DE,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.52,0.76,1.0,1.76,3.0,3.0,技能/开火开始时,6,6,3100.0,18600.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_DE.gw
+RX_80PR_GroundType_HADES,苍白骑士[陆战重装备规格] [HADES],EF_BeamSaber_Double_DE,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.52,0.76,1.0,1.76,3.0,3.0,技能/开火开始时,6,6,3100.0,18600.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_DE.gw
 RX_80PR_GroundType_HADES,苍白骑士[陆战重装备规格] [HADES],Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_80PR_HADES,苍白骑士 [HADES],Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_80PR_HADES,苍白骑士 [HADES],EF_90mmMG,90mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.1,0.3,1.4,2.0,2.0,技能/开火开始时,9,9,900.0,8100.0,110.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw
@@ -1225,7 +1227,7 @@ RX_80PR_HADES,苍白骑士 [HADES],Common_ArmBR_Pink_L,光束炮,beam_rifle,中�
 RX_80PR_HADES,苍白骑士 [HADES],EF_RX_80PR_LegMS,EF RX 80PR LegMS,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.5,0.3,0.8,9.0,9.0,技能/开火开始时,6,6,1750.0,10500.0,85.0,25.0,perVolley,0,25.0,False,Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw
 RX_80PR_HADES,苍白骑士 [HADES],EF_RX_80PR_LegMS_L,EF RX 80PR LegMS L,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.5,0.3,0.8,9.0,9.0,技能/开火开始时,6,6,1750.0,10500.0,85.0,25.0,perVolley,0,25.0,True,Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw
 RX_80PR_HADES,苍白骑士 [HADES],EF_BeamSaber_AF_Fast_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.51,1.27,1.4,2.67,3.0,3.0,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast.gw
-RX_80PR_HADES,苍白骑士 [HADES],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RX_80PR_HADES,苍白骑士 [HADES],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RX_80PR_HADES,苍白骑士 [HADES],Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_80PR_SpaceType,苍白骑士[宇宙战规格],Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_80PR_SpaceType,苍白骑士[宇宙战规格],EF_90mmMG,90mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,1.1,0.3,1.4,2.0,2.0,技能/开火开始时,9,9,900.0,8100.0,110.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw
@@ -1246,7 +1248,7 @@ RX_80PR_SpaceType_HADES,苍白骑士[宇宙战规格] [HADES],Common_ArmBR_Pink_
 RX_80PR_SpaceType_HADES,苍白骑士[宇宙战规格] [HADES],EF_Minigun,机枪,machine_gun,中循环（2～5秒）,中流程（2～5秒）,0.3,1.75,0.3,2.05,5.0,5.0,技能/开火开始时,30,30,1000.0,30000.0,100.0,60.0,perVolley,0,60.0,False,Units/BattleUnits/Weapon/Shell/EF_Minigun.gw
 RX_80PR_SpaceType_HADES,苍白骑士[宇宙战规格] [HADES],EF_Minigun_L,机枪,machine_gun,中循环（2～5秒）,中流程（2～5秒）,0.3,1.75,0.3,2.05,5.0,5.0,技能/开火开始时,30,30,1000.0,30000.0,100.0,60.0,perVolley,0,60.0,True,Units/BattleUnits/Weapon/Shell/EF_Minigun.gw
 RX_80PR_SpaceType_HADES,苍白骑士[宇宙战规格] [HADES],EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,6500.0,26000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
-RX_80PR_SpaceType_HADES,苍白骑士[宇宙战规格] [HADES],EF_BeamSaber_Double_DE,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.52,0.76,1.0,1.76,3.0,3.0,技能/开火开始时,6,6,3100.0,18600.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_DE.gw
+RX_80PR_SpaceType_HADES,苍白骑士[宇宙战规格] [HADES],EF_BeamSaber_Double_DE,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.52,0.76,1.0,1.76,3.0,3.0,技能/开火开始时,6,6,3100.0,18600.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_DE.gw
 RX_80PR_SpaceType_HADES,苍白骑士[宇宙战规格] [HADES],Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_81,GLine,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_81,GLine,EF_GLine_SBR,光束炮,other,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,1.0,1.0,技能/开火开始时,1,1,8000.0,8000.0,90.0,35.0,perVolley,0,35.0,False,Units/BattleUnits/Weapon/Beam/EF_GLine_SBR.gw
@@ -1261,7 +1263,7 @@ RX_81AS,GLine 突击装甲型,EF_RX_81_MS,导弹发射器,missile,慢循环（5�
 RX_81AS,GLine 突击装甲型,EF_RX_81_MS_L,导弹发射器,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.75,0.3,1.05,6.5,6.5,技能/开火开始时,8,8,2250.0,18000.0,100.0,65.0,perVolley,0,65.0,True,Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw
 RX_81AS,GLine 突击装甲型,EF_RX_81AS_Shotgun,EF RX 81AS Shotgun,other,中循环（2～5秒）,短流程（0.5～2秒）,0.25,0.45,0.25,0.7,3.5,3.5,技能/开火开始时,2,12,900.0,10800.0,95.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Shell/EF_RX_81AS_Shotgun.gw
 RX_81AS,GLine 突击装甲型,EF_HSP_BF_B,近身格斗,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,4.0,4.0,技能/开火开始时,2,2,8000.0,16000.0,100.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_HSP_BF.gw
-RX_81AS,GLine 突击装甲型,EF_BeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F.gw
+RX_81AS,GLine 突击装甲型,EF_BeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F.gw
 RX_81AS,GLine 突击装甲型,Common_Cqb_A_L,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L.gw
 RX_81AS,GLine 突击装甲型,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_81FC,GLine 完全特装型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
@@ -1277,7 +1279,7 @@ RX_81LA,GLine 轻装甲型,EF_RX_81_MS,导弹发射器,missile,慢循环（5～1
 RX_81LA,GLine 轻装甲型,EF_RX_81_MS_L,导弹发射器,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.75,0.3,1.05,6.5,6.5,技能/开火开始时,8,8,2250.0,18000.0,100.0,65.0,perVolley,0,65.0,True,Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw
 RX_81LA,GLine 轻装甲型,EF_GLine_HBR,光束炮,other,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,1.5,1.5,技能/开火开始时,1,1,9500.0,9500.0,90.0,40.0,perVolley,0,40.0,False,Units/BattleUnits/Weapon/Beam/EF_GLine_HBR.gw
 RX_81LA,GLine 轻装甲型,EF_BeamSaber_BF_B,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,1.3,1.4,2.7,3.5,3.5,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw
-RX_81LA,GLine 轻装甲型,EF_BeamSaber_Double_BBLDF,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,2.0,1.0,3.0,3.5,3.5,技能/开火开始时,4,4,5000.0,20000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_BBLDF.gw
+RX_81LA,GLine 轻装甲型,EF_BeamSaber_Double_BBLDF,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.4,2.0,1.0,3.0,3.5,3.5,技能/开火开始时,4,4,5000.0,20000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_BBLDF.gw
 RX_81LA,GLine 轻装甲型,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 RX_81ST,GLine 标准装甲型,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 RX_81ST,GLine 标准装甲型,EF_RX_81_GG,EF RX 81 GG,other,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.85,0.3,1.15,4.0,4.0,技能/开火开始时,12,12,1500.0,18000.0,100.0,35.0,perVolley,0,35.0,False,Units/BattleUnits/Weapon/Shell/EF_RX_81_GG.gw
@@ -1286,7 +1288,7 @@ RX_81ST,GLine 标准装甲型,EF_RX_81_MS,导弹发射器,missile,慢循环（5�
 RX_81ST,GLine 标准装甲型,EF_RX_81_MS_L,导弹发射器,missile,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.75,0.3,1.05,6.5,6.5,技能/开火开始时,8,8,2250.0,18000.0,100.0,65.0,perVolley,0,65.0,True,Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw
 RX_81ST,GLine 标准装甲型,EF_GLine_SBR,光束炮,other,快循环（≤2秒）,极短流程（≤0.5秒）,0.25,0.25,0.25,0.5,1.0,1.0,技能/开火开始时,1,1,8000.0,8000.0,90.0,35.0,perVolley,0,35.0,False,Units/BattleUnits/Weapon/Beam/EF_GLine_SBR.gw
 RX_81ST,GLine 标准装甲型,EF_BeamSaber_AF_A,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,1.5,1.4,2.9,3.5,3.5,技能/开火开始时,2,2,6500.0,13000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF.gw
-RX_81ST,GLine 标准装甲型,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,5000.0,20000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
+RX_81ST,GLine 标准装甲型,EF_BeamSaber_Double_AALDF,双光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.6,2.1,1.0,3.1,3.5,3.5,技能/开火开始时,4,4,5000.0,20000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw
 RX_81ST,GLine 标准装甲型,Common_DoubleVulcan_MS,头部火神炮,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.5,0.0,1.5,4.0,5.5,弹仓耗尽后,16,16,247.0,3952.0,100.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw
 SalamisClass,萨拉米斯级,SalamisClass_Turret_BeamCannon,舰载光束炮,cannon,慢循环（5～10秒）,极短流程（≤0.5秒）,0.0,0.0,0.0,0,7.0,7.0,弹仓耗尽后,6,6,5000.0,30000.0,67.5,240.0,perShot,40.0,40.0,False,Units/BattleUnits/SalamisClass/SalamisClass_Turret_BeamCannon.ini
 SalamisClass,萨拉米斯级,SalamisClass_Turret_MS,舰载导弹,missile,长冷却（>10秒）,长流程（>5秒）,0.0,5.25,0.0,5.25,12.0,17.25,弹仓耗尽后,16,16,1500.0,24000.0,90.0,192.0,perShot,12.0,12.0,False,Units/BattleUnits/SalamisClass/SalamisClass_Turret_MS.ini
@@ -1305,7 +1307,7 @@ SalamisClassLateType,萨拉米斯级后期型,SalamisClassLateType_Turret_AA,Sal
 SalamisClassLateType,萨拉米斯级后期型,SalamisClassLateType_Turret_MG,舰载机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.0,1.8,0.0,1.8,1.0,2.8,弹仓耗尽后,20,20,375.0,7500.0,112.5,10.0,perShot,0.5,0.5,False,Units/BattleUnits/SalamisClassLateType/SalamisClassLateType_Turret_MG.ini
 SamsonGroundTransportTruck,萨姆森运输卡车,ZN_SamsonGroundTransportTruck_AA_L,ZN SamsonGroundTransportTruck AA L,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.9,0.0,1.9,3.0,4.9,弹仓耗尽后,40,40,40.0,1600.0,100.0,20.0,perShot,0.5,0.5,False,Units/BattleUnits/Weapon/Shell/ZN_SamsonGroundTransportTruck_AA.gw
 SamsonGroundTransportTruck,萨姆森运输卡车,ZN_SamsonGroundTransportTruck_AA_R,ZN SamsonGroundTransportTruck AA R,machine_gun,中循环（2～5秒）,短流程（0.5～2秒）,0.0,1.9,0.0,1.9,3.0,4.9,弹仓耗尽后,40,40,40.0,1600.0,100.0,20.0,perShot,0.5,0.5,True,Units/BattleUnits/Weapon/Shell/ZN_SamsonGroundTransportTruck_AA.gw
-Skiure,斯科尔,ZN_Skiure_BeamCannon,光束炮,cannon,长冷却（>10秒）,短流程（0.5～2秒）,0.65,0.65,0.65,1.3,12.0,12.0,技能/开火开始时,1,1,22500.0,22500.0,75.0,100.0,perVolley,0,100.0,False,Units/BattleUnits/Weapon/Beam/ZN_Skiure_BeamCannon
+Skiure,斯科尔,ZN_Skiure_BeamCannon,光束炮,cannon,长冷却（>10秒）,短流程（0.5～2秒）,0.65,0.65,0.65,1.3,12.0,12.0,技能/开火开始时,1,1,22500.0,22500.0,75.0,100.0,perVolley,0,100.0,True,Units/BattleUnits/Weapon/Beam/ZN_Skiure_BeamCannon
 Type61,61式主战坦克,EF_Type61_Cannon,加农炮,cannon,中循环（2～5秒）,极短流程（≤0.5秒）,0.0,0.0,0.0,0,4.0,4.0,弹仓耗尽后,2,2,1500.0,3000.0,90.0,16.0,perShot,8.0,8.0,False,Units/BattleUnits/Weapon/Shell/EF_Type61_Cannon.gw
 Type61_SPG,61式主战坦克[榴弹炮搭载型],Common_Mortar_Type61_SPG,迫击炮,mortar,长冷却（>10秒）,长流程（>5秒）,2.25,4.75,2.0,6.75,120.0,120.0,技能/开火开始时,3,3,3500.0,10500.0,65.0,150.0,perVolley,0,150.0,False,Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw
 Type61A5,61式主战坦克A5型,EF_Type61A5_MG,机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.0,1.1,0.0,1.1,2.0,3.1,弹仓耗尽后,12,12,75.0,900.0,110.0,0.0,perShot,0.0,0.0,False,Units/BattleUnits/Weapon/Shell/EF_Type61A5_MG.gw
@@ -1328,7 +1330,7 @@ YMS_15,强人,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5
 YMS_15,强人,ZN_YMS_15_ShieldMS,ZN YMS 15 ShieldMS,other,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.9,0.3,1.2,6.0,6.0,技能/开火开始时,10,10,1200.0,12000.0,100.0,45.0,perVolley,0,45.0,False,Units/BattleUnits/Weapon/Shell/ZN_YMS_15_ShieldMS.gw
 YMS_15,强人,ZN_YMS_15_ShieldMS_L,ZN YMS 15 ShieldMS L,other,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.9,0.3,1.2,6.0,6.0,技能/开火开始时,10,10,1200.0,12000.0,100.0,45.0,perVolley,0,45.0,True,Units/BattleUnits/Weapon/Shell/ZN_YMS_15_ShieldMS.gw
 YMS_15,强人,ZN_YMS_15_BeamSaber_B3,光束军刀,melee,中循环（2～5秒）,中流程（2～5秒）,0.3,0.9,1.25,2.15,3.5,3.5,技能/开火开始时,3,3,6000.0,18000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_YMS_15_BeamSaber_B3.gw
-YMS_15,强人,ZN_YMS_15_BeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,6000.0,6000.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/ZN_YMS_15_BeamSaber_F.gw
+YMS_15,强人,ZN_YMS_15_BeamSaber_F,光束军刀,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.3,0.3,1.4,1.7,3.0,3.0,技能/开火开始时,1,1,6000.0,6000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/ZN_YMS_15_BeamSaber_F.gw
 YMS_15E,强人艾欧斯,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 YMS_15E,强人艾欧斯,ZN_YMS_15_ShieldMS,ZN YMS 15 ShieldMS,other,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.9,0.3,1.2,6.0,6.0,技能/开火开始时,10,10,1200.0,12000.0,100.0,45.0,perVolley,0,45.0,False,Units/BattleUnits/Weapon/Shell/ZN_YMS_15_ShieldMS.gw
 YMS_15E,强人艾欧斯,ZN_YMS_15_ShieldMS_L,ZN YMS 15 ShieldMS L,other,慢循环（5～10秒）,短流程（0.5～2秒）,0.3,0.9,0.3,1.2,6.0,6.0,技能/开火开始时,10,10,1200.0,12000.0,100.0,45.0,perVolley,0,45.0,True,Units/BattleUnits/Weapon/Shell/ZN_YMS_15_ShieldMS.gw
@@ -1351,7 +1353,7 @@ YMT_05,斗狼,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5
 YMT_05,斗狼,ZN_YMT_05_MainCannon_AP,加农炮,cannon,慢循环（5～10秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,9.0,9.0,技能/开火开始时,1,1,11000.0,11000.0,85.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_AP.gw
 YMT_05,斗狼,ZN_YMT_05_MainCannon_HE,加农炮,cannon,中循环（2～5秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,4.0,4.0,技能/开火开始时,1,1,9000.0,9000.0,75.0,60.0,perVolley,0,60.0,False,Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_HE.gw
 YMT_05,斗狼,ZN_105mmMG_L,105mm机枪,machine_gun,快循环（≤2秒）,短流程（0.5～2秒）,0.3,0.825,0.3,1.125,1.5,1.5,技能/开火开始时,8,8,425.0,3400.0,100.0,20.0,perVolley,0,20.0,False,Units/BattleUnits/Weapon/Shell/ZN_105mmMG_L.gw
-YMT_05,斗狼,Common_Cqb_A,格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,True,Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw
+YMT_05,斗狼,Common_Cqb_A,格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,1,1,5500.0,5500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw
 YMT_05,斗狼,Common_Cqb_Double_A,近身格斗,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.6,0.6,1.4,2.0,3.0,3.0,技能/开火开始时,2,2,5500.0,11000.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A.gw
 YMT_05_ModeB,斗狼［形态B］,Common_Push_A,冲撞,melee,中循环（2～5秒）,短流程（0.5～2秒）,0.45,0.45,1.0,1.45,3.0,3.0,技能/开火开始时,1,1,6500.0,6500.0,125.0,0,perVolley,0,0.0,False,Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw
 YMT_05_ModeB,斗狼［形态B］,ZN_YMT_05_MainCannon_AP,加农炮,cannon,慢循环（5～10秒）,短流程（0.5～2秒）,0.35,0.35,0.3,0.65,9.0,9.0,技能/开火开始时,1,1,11000.0,11000.0,85.0,75.0,perVolley,0,75.0,False,Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_AP.gw

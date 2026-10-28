@@ -3,11 +3,12 @@ const test = require("node:test"),
 const G = require("../shared/rules.js"),
   P = G.pilots;
 const { createRoomEngine } = require("../shared/room-engine.js");
-function fixture(t, mode = "regular") {
+function fixture(t, mode = "regular", experienceBonus = 1) {
   let seq = 0;
   const frames = new Map();
   const engine = createRoomEngine({
     rules: G,
+    getRewardMultipliers: () => ({experience:experienceBonus,money:1,supplies:1,technology:1}),
     randomId: () => `id-${++seq}`,
     randomSeed: () => 1,
     randomToken: () => `token-${++seq}`,
@@ -110,6 +111,7 @@ for (const scenario of [
     if (scenario === "dead") contributor.hp = 0;
     if (scenario === "embarked")
       contributor.embarked = { carrierId: f.room.game.units[2].id, hangarId: "Hangar_1" };
+    const initialAwards = f.room.pilotAwards.length;
     if (scenario.startsWith("saved")) f.room.startedFromSave = true;
     target.hp = 1;
     f.act(0, "attack", { unitId: killer.id, targetId: target.id, weaponId: "EF_Type61_Cannon" });
@@ -123,7 +125,8 @@ for (const scenario of [
     }
     if (scenario.startsWith("saved")) {
       assert.equal(assist, undefined);
-      assert.equal(awards.length, 0);
+      assert.equal(awards.length, initialAwards);
+      assert.ok(awards.every(a => a.experiencePoints === 0));
       return;
     }
     assert.ok(assist);
@@ -170,4 +173,58 @@ test("player damage combines ordinary pilots across units",t=>{
  f.resolve();
  const total=100000-target.hp;assert(total>G.modelOf(target).hp*.25);
  assert.equal(f.room.playerDamage[target.id][f.room.seats[0].id].damage,total);
+});
+
+
+for (const mode of ["regular", "quick"]) for (const saved of [false,true]) for (const bonus of [1,2]) {
+  test(`learning computer boosts kill and embarked assist experience: ${mode}, saved=${saved}, event=${bonus}`, t => {
+    const f = fixture(t,mode,bonus);
+    const [contributor,killer,,,target] = f.room.game.units;
+    const [modelId,model] = Object.entries(G.models).find(([,m])=>m.prefabId === "RX_78_2");
+    for (const actor of [contributor,killer]) Object.assign(actor,{model:modelId,en:model.en,hp:model.hp});
+    contributor.embarked = {carrierId:f.room.game.units[2].id,hangarId:"Hangar_1"};
+    f.room.pilotDamage = {[target.id]:{contributor:{seat:G.ownerOf(contributor),pilotId:contributor.pilot.id,
+      damage:G.modelOf(target).hp * .25}}};
+    const initialAwards = f.room.pilotAwards.length;
+    f.room.startedFromSave = saved;
+    target.hp = 1;
+    // The native rifle hits with this deterministic seed; the assist pilot stays aboard.
+    const weapon = model.weapons.find(w=>w.type !== "melee");
+    f.act(0,"attack",{unitId:killer.id,targetId:target.id,weaponId:weapon.id});
+    f.resolve();
+    assert.equal(target.hp,0);
+    const awards = f.frames.get(f.clients[0]).pilotAwards;
+    if (saved) {
+      assert.equal(awards.length,initialAwards);
+      assert.equal(killer.pilot.experience,0);
+      assert.equal(contributor.pilot.experience,0);
+      return;
+    }
+    const speed = mode === "quick" ? .1 : 1;
+    for (const [actor,kind,share] of [[killer,"kill",1],[contributor,"assist",.25]]) {
+      const award = awards.find(a=>a.pilotId === actor.pilot.id && a.kind === kind);
+      assert.ok(award,JSON.stringify(awards));
+      const expected = Math.floor(G.modelOf(target).cost * share * speed * bonus * 1.1);
+      assert.equal(award.experiencePoints,expected);
+      assert.equal(actor.pilot.experience,expected);
+      const store = {pilots:[P.createCustom(actor.pilot.id,actor.pilot.name)],awards:[]};
+      P.creditAwards(store,awards);
+      assert.equal(store.pilots[0].experience,expected,"saved personal progress must not apply the bonus twice");
+      assert.equal(P.creditAwards(store,awards),false);
+    }
+  });
+}
+
+test("learning computer is attached to all native LPC hulls, including legacy core fighter", () => {
+  const expected = new Set(["RX_78_1","FF_X7","RX_78_2","RX_77_2","RX_75","FF_X7Bst","RX_78NT_1_FA","RX_78_3"]);
+  const actual = new Set();
+  for (const m of Object.values(G.models)) {
+    if (!m.pilotExperienceMultiplier) continue;
+    actual.add(m.prefabId);
+    assert.equal(m.pilotExperienceMultiplier,1.1);
+    const mechanic = m.mechanics.find(m=>m.id === "LPC");
+    assert.equal(mechanic.status,"adapted");
+    assert.equal(mechanic.name,"学习型电脑：驾驶员经验获取×1.1");
+  }
+  assert.deepEqual(actual,expected);
 });

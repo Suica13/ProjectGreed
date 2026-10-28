@@ -30,11 +30,11 @@ test("main native equipment choices retain every common fixed weapon, including 
   assert.ok(rx.weaponKits.some((k) => k.weapons.includes("EF_SHM")));
   for (const k of rx.weaponKits) assert.ok(k.weapons.includes("Common_DoubleVulcan_MS"));
 });
-test("pilot skills and alternate secondary equipment stay documented but cannot enter any playable kit", () => {
+test("pilot stat weapons enter kits while alternate secondary equipment stays hidden", () => {
   const rx = prefab("RX_78_2");
-  assert.ok(rx.weapons.EF_BeamSaber_Double_AALDF.availability.reasons.includes("pilot_skill"));
+  assert.deepEqual(rx.weapons.EF_BeamSaber_Double_AALDF.pilotRequirements, [{stat:"melee",operator:">",value:145}]);
   assert.ok(rx.weapons.EF_BeamJavelin_BF_B.availability.reasons.includes("secondary_loadout"));
-  assert.ok(model("RX_78_2").hiddenWeapons.some((w) => w.reasons.includes("pilot_skill")));
+  assert.ok(model("RX_78_2").weapons.some((w) => w.id === "EF_BeamSaber_Double_AALDF"));
   for (const p of G.catalog.prefabs)
     for (const k of p.weaponKits)
       for (const w of k.weapons) assert.ok(!p.weapons[w].availability?.hidden, p.id + "/" + w);

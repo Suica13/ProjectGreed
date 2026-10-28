@@ -3287,7 +3287,7 @@
                   ><button id="resetFormationUnitName" type="button">重置名称</button>
                 </div>
               </label>
-              <label>武器套件<span class="formation-kit-select"><select id="formationDetailKit" aria-label="武器套件"></select><button id="openFormationKitShop" type="button" aria-label="购买武器套件" title="购买武器套件">＋</button></span></label>
+              <label>武器套件<span class="formation-kit-select"><select id="formationDetailKit" aria-label="武器套件"></select><span class="formation-kit-tools"><button id="openFormationRefits" type="button" hidden>改装单位</button><button id="openFormationKitShop" type="button" aria-label="购买武器套件" title="购买武器套件">＋</button></span></span></label>
               <dialog id="formationKitShop" aria-labelledby="formationKitShopTitle">
                 <h3 id="formationKitShopTitle">购买武器套件</h3>
                 <div id="formationKitWallet" class="resource-balance"></div>
@@ -5295,6 +5295,7 @@
       __ROOM_ENGINE__;
       __PLANNING_UI__;
       __MAP_COMBAT__;
+      __IRRADIATION_FX__;
       __COMBAT_PLAYBACK__;
       __STATE_WIRE__;
       __NETWORK__;
@@ -5310,6 +5311,7 @@
       __DEVELOPMENT_UI__;
       __PRODUCTION_UI__;
       __KIT_SHOP__;
+      __REFIT_SHOP__;
       __PILOT_REWARDS__;
       __PROFILE_SAVE__;
       __BATTLE_PROMPTS__;

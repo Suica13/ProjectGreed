@@ -6,7 +6,8 @@ async function production(page) {
   await page.goto(url);
   await page.waitForFunction(() => assetsReady);
   await page.evaluate(() => I18n.setLanguage("zh"));
-  await page.locator("#openProduction").click();
+  await page.locator("#shellHangar").click();
+  await page.locator("#shellProduction").click();
   await page.locator("#productionSearch").fill("Type61");
   await page.locator('#productionList [data-unit-id="Type61"]').click();
 }

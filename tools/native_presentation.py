@@ -81,6 +81,22 @@ def correct(prefab, native):
             visibility.pop("attacking", None)
             visibility["heldAttacking"] = name.endswith("_Attack")
     correct_shared_weapon_layers(prefab, native)
+    if prefab["id"] == "RGM_79HC":
+        for layer in layers:
+            if layer["name"] == "Shield_Breaked":
+                layer["visibleWhen"] = {"shieldVisible": False}
+            elif layer["name"] == "Shield":
+                layer["visibleWhen"] = {"shieldVisible": True}
+    if prefab["id"] == "RX_77_3":
+        for layer in layers:
+            weapon = {"RX_77_3_Cannon": "Common_DoubleCannon_B2", "RX_77_4_Cannon": "EF_RX_77_4_BeamCannon"}.get(layer["name"])
+            if weapon:
+                layer["visibleWhen"] = {"kit": [kit["id"] for kit in prefab["weaponKits"] if weapon in kit["weapons"]]}
+    if prefab["id"] == "RX_78GP02A":
+        for layer in layers:
+            if layer["name"].startswith(("ShoulderL_Booster_", "ShoulderR_Booster_")):
+                layer["visibleWhen"] = {"moving": layer["name"].endswith("_On")}
+                layer.pop("hidden", None)
     if prefab["id"] in ["RX_75", "RX_75R", "RMV_1", "RTX_440"]:
         body = max((layer.get("order", 0) for layer in layers if layer["name"] == "Body"), default=5)
         for layer in layers:

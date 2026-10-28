@@ -1089,7 +1089,14 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "converted_skill"
+        ],
+        "convertedSkill": "BeamDiffusion"
+      }
     }
   },
   "mechanics": [
@@ -1112,8 +1119,8 @@
     },
     {
       "id": "BeamDiffusionArea",
-      "name": "光束扰乱膜区域效果待适配；保留飞弹直接伤害",
-      "status": "review",
+      "name": "光束扰乱膜：技能释放，穿过半径4格区域的光束弹伤害降低50%，持续2回合",
+      "status": "adapted",
       "source": "Units/BattleUnits/Weapon/Shell/EF_PublicClass_BeamDiffusionMS.gw"
     }
   ],
@@ -1124,8 +1131,7 @@
       "cost": 0,
       "weapons": [
         "Common_DoubleMS_PublicClass",
-        "EF_PublicClass_AntiShipMS",
-        "EF_PublicClass_BeamDiffusionMS"
+        "EF_PublicClass_AntiShipMS"
       ]
     }
   ],
@@ -1137,7 +1143,38 @@
     "levelMultiplier": 0.25,
     "published": 100
   },
-  "skills": [],
+  "skills": [
+    {
+      "id": "BeamDiffusion",
+      "type": "beam_diffusion",
+      "name": "光束扰乱膜",
+      "localization": {
+        "zh": {
+          "name": "光束扰乱膜"
+        },
+        "en": {
+          "name": "Beam Disruption Screen"
+        },
+        "ja": {
+          "name": "ビーム撹乱膜"
+        }
+      },
+      "range": 4,
+      "minRange": 0,
+      "radius": 4,
+      "durationRounds": 4,
+      "actionCost": 4,
+      "enCostPercent": 50,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Explosion_Hit_1",
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.15
+      },
+      "description": "选择目标地格发射，消耗4 AP与50%最大EN；半径4格内持续2回合，穿过区域的光束弹伤害降低50%，同类区域不叠加。"
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "Aircraft"

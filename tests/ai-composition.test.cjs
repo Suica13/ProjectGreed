@@ -3,13 +3,19 @@ const test = require("node:test"),
 const G = require("../shared/rules.js");
 const modelOf = (entry) => G.models[entry.unitId + "__" + entry.kitId];
 const commander = (model) =>
-  !model.ship && model.commandAuras?.some((aura) => ["cmdAtk", "cmdCom", "cmdDef"].includes(aura.type));
+  !model.ship &&
+  model.commandAuras?.some((aura) => ["cmdAtk", "cmdCom", "cmdDef"].includes(aura.type));
 const seedOf = (n) => Math.imul(n, 0x9e3779b9) >>> 0;
-test("AI mixes starter platforms, respects budget and counts command auras across weapon kits", () => {
+test("AI mixes full-tech platforms, respects budget and counts command auras across weapon kits", () => {
   for (const faction of ["EFSF", "ZEON"])
     for (const environment of ["ground", "space"]) {
       for (let n = 1; n <= 30; n++) {
-        const restrictions = { characterFaction: faction, environment, unitCostLimit: 500 };
+        const restrictions = {
+          characterFaction: faction,
+          environment,
+          unitCostLimit: 500,
+          researched: G.armyRestrictions(G.defaultRoomSettings(), { bot: true }).researched,
+        };
         const army = G.randomFormation(seedOf(n), 3000, restrictions, 12);
         assert.deepEqual(army, G.randomFormation(seedOf(n), 3000, restrictions, 12));
         assert.ok(army.length >= 3);

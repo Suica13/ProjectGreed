@@ -389,8 +389,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "EF_BeamSaber_Double_AALDF_L",
@@ -409,7 +408,6 @@
       "requiredParts": [
         "leftArm"
       ],
-      "hidden": true,
       "visibleWhen": {
         "weaponDisplayIndex": 11
       }
@@ -2542,9 +2540,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -2573,10 +2569,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -2661,7 +2655,24 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_5/RX_78_5_Bst.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2926,7 +2937,8 @@
         "EF_Minigun",
         "Common_ArmBR_Pink",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_AALDF"
       ]
     },
     {
@@ -2939,7 +2951,8 @@
         "EF_Minigun",
         "Common_ArmBR_Pink",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_AALDF"
       ]
     }
   ],

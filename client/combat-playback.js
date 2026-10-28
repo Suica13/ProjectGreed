@@ -10,6 +10,7 @@ const CombatPlayback = (() => {
     finished.clear();
     queue.length = 0;
     MapCombat.reset();
+    IrradiationFX.reset();
   }
   function receive(snapshot, live) {
     if (matchId !== snapshot.matchId) {
@@ -24,6 +25,15 @@ const CombatPlayback = (() => {
       return;
     }
     seen.add(batch.id);
+    if (batch.skillEffect) {
+      const expectedMatch = snapshot.matchId;
+      IrradiationFX.start({ ...batch.skillEffect, id: batch.id }, () => {
+        if (matchId !== expectedMatch) return;
+        finished.add(batch.id);
+        if (Net.snapshot?.matchId === expectedMatch) Net.applySnapshot(Net.snapshot);
+      });
+      return;
+    }
     const battles = [...(snapshot.combats || []), ...(snapshot.effectCombats || [])];
     if (battles.length) {
       queue.push({ id: batch.id, battles });
@@ -92,9 +102,18 @@ const CombatPlayback = (() => {
     reset,
     waitingFor(snapshot) {
       const batch = snapshot.playback;
-      return active() || queue.length > 0 || !!(snapshot.phase === "playback" && batch &&
-        !finished.has(batch.id) && !batch.ready.includes(snapshot.you?.id) &&
-        ((snapshot.combats?.length || 0) + (snapshot.effectCombats?.length || 0)));
+      return (
+        active() ||
+        queue.length > 0 ||
+        !!(
+          snapshot.phase === "playback" &&
+          batch &&
+          !finished.has(batch.id) &&
+          !batch.ready.includes(snapshot.you?.id) &&
+          (batch.skillEffect ||
+            (snapshot.combats?.length || 0) + (snapshot.effectCombats?.length || 0))
+        )
+      );
     },
     receive,
     active,

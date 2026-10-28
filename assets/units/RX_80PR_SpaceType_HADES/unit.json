@@ -28,7 +28,8 @@
       "BoostReversing_1_Red.png": "textures/BoostReversing_1_Red.png",
       "Boost_1.png": "textures/Boost_1.png",
       "System_Red_Bot_1.png": "textures/System_Red_Bot_1.png",
-      "System_Red_Top_1.png": "textures/System_Red_Top_1.png"
+      "System_Red_Top_1.png": "textures/System_Red_Top_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
     },
     "icon": "RX_80PR_SpaceType_HADES.png"
   },
@@ -178,7 +179,9 @@
       "frame": 0,
       "frameFps": 10,
       "independentClock": true,
-      "visibleWhen": {}
+      "visibleWhen": {
+        "boostSkillActive": true
+      }
     },
     {
       "name": "LeftLeg",
@@ -310,7 +313,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "sustainedThrust": true
+        "sustainedThrust": true,
+        "boostSkillActive": true
       },
       "scaleX": 1.0,
       "independentClock": true
@@ -332,7 +336,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "thrustActive": true
+        "thrustActive": true,
+        "boostSkillActive": true
       },
       "independentClock": true
     },
@@ -453,8 +458,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "EF_BeamSaber_Double_DE_L",
@@ -473,7 +477,6 @@
       "requiredParts": [
         "leftArm"
       ],
-      "hidden": true,
       "visibleWhen": {
         "weaponDisplayIndex": 11
       }
@@ -637,7 +640,54 @@
       "frame": 0,
       "frameFps": 10,
       "independentClock": true,
-      "visibleWhen": {}
+      "visibleWhen": {
+        "boostSkillActive": true
+      }
+    },
+    {
+      "name": "BoostReversing_NormalBlue",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true,
+        "boostSkillActive": false
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost_NormalBlue",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true,
+        "boostSkillActive": false
+      },
+      "independentClock": true
     }
   ],
   "animations": {
@@ -2908,9 +2958,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -2939,10 +2987,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -3025,7 +3071,24 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_SpaceType_HADES.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -3296,7 +3359,8 @@
         "Common_ArmBR_Pink",
         "EF_Minigun",
         "EF_BeamSaber_Double_AALDF",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_DE"
       ]
     },
     {
@@ -3309,7 +3373,8 @@
         "Common_ArmBR_Pink",
         "EF_Minigun",
         "EF_BeamSaber_Double_AALDF",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_DE"
       ]
     },
     {
@@ -3322,7 +3387,8 @@
         "Common_ArmBR_Pink",
         "EF_Minigun",
         "EF_BeamSaber_Double_AALDF",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_DE"
       ]
     }
   ],

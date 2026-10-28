@@ -2165,7 +2165,11 @@
         "energy": 45.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 3,
+      "burn": {
+        "durationTurns": 3,
+        "hpPercent": 5
+      }
     }
   },
   "mechanics": [

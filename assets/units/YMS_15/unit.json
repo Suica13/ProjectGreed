@@ -1422,10 +1422,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1503,7 +1501,20 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/YMS_15/YMS_15.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      }
     }
   },
   "mechanics": [
@@ -1515,8 +1526,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "CustomUnit_PilotCustomUnit",
@@ -1545,7 +1556,8 @@
       "weapons": [
         "ZN_YMS_15_ShieldMS",
         "Common_Push_A",
-        "ZN_YMS_15_BeamSaber_B3"
+        "ZN_YMS_15_BeamSaber_B3",
+        "ZN_YMS_15_BeamSaber_F"
       ]
     }
   ],
@@ -1597,6 +1609,23 @@
           "limb": null
         }
       ]
+    }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_PilotCustomUnit_YMS_15_MQVCustom",
+      "unitId": "YMS_15_MQVCustom",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "YMS_15"
+      ],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/YMS_15/YMS_15.ini",
+        "action": "action_CustomUnit_PilotCustomUnit_YMS_15_MQVCustom",
+        "seconds": 20.0
+      }
     }
   ]
 }

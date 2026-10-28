@@ -25,7 +25,9 @@
       "BoostReversing_1_Red.png": "textures/BoostReversing_1_Red.png",
       "HoverMove_1.png": "textures/HoverMove_1.png",
       "System_Red_Bot_1.png": "textures/System_Red_Bot_1.png",
-      "System_Red_Top_1.png": "textures/System_Red_Top_1.png"
+      "System_Red_Top_1.png": "textures/System_Red_Top_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "Boost_1.png": "textures/Boost_1.png"
     },
     "icon": "RX_79_BD_1_EXAM.png"
   },
@@ -170,7 +172,9 @@
       "frame": 0,
       "frameFps": 10,
       "independentClock": true,
-      "visibleWhen": {}
+      "visibleWhen": {
+        "boostSkillActive": true
+      }
     },
     {
       "name": "LeftLeg",
@@ -302,7 +306,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "sustainedThrust": true
+        "sustainedThrust": true,
+        "boostSkillActive": true
       },
       "scaleX": 1.0,
       "independentClock": true
@@ -324,7 +329,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "thrustActive": true
+        "thrustActive": true,
+        "boostSkillActive": true
       },
       "independentClock": true
     },
@@ -498,7 +504,54 @@
       "frame": 0,
       "frameFps": 10,
       "independentClock": true,
-      "visibleWhen": {}
+      "visibleWhen": {
+        "boostSkillActive": true
+      }
+    },
+    {
+      "name": "BoostReversing_NormalBlue",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true,
+        "boostSkillActive": false
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost_NormalBlue",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true,
+        "boostSkillActive": false
+      },
+      "independentClock": true
     }
   ],
   "animations": {
@@ -2338,10 +2391,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -2418,7 +2469,21 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_BD_1_EXAM/RX_79_BD_1_EXAM.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "requiresShield": true
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2689,7 +2754,8 @@
         "EF_RX_79_BD_ChestMS_Line",
         "EF_RX_79_BD_ChestMG",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Cqb_B_L"
       ]
     },
     {
@@ -2702,7 +2768,8 @@
         "EF_RX_79_BD_ChestMS_Line",
         "EF_RX_79_BD_ChestMG",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Cqb_B_L"
       ]
     }
   ],

@@ -644,7 +644,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "shellFinalResistance": 25
+    "shellFinalResistance": 25,
+    "pilotExperienceMultiplier": 1.1
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -2296,8 +2297,8 @@
     {
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
-      "status": "not_applicable",
-      "name": "低压弹射：原MOD驾驶员经验成长×1.1（本项目无驾驶员经验系统）"
+      "status": "adapted",
+      "name": "学习型电脑：驾驶员经验获取×1.1"
     }
   ],
   "weaponKits": [

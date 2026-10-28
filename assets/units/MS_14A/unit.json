@@ -1645,5 +1645,22 @@
     ]
   },
   "hangars": [],
-  "mechanics": []
+  "mechanics": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_14S",
+      "unitId": "MS_14S",
+      "money": 600,
+      "supplies": 600,
+      "unlockUnits": [
+        "MS_14S"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14A/MS_14A.ini",
+        "action": "action_CustomUnit_MS_14S",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

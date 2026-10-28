@@ -219,7 +219,7 @@ const Net = (() => {
   }
   // 两种传输都将裁定后的消息交给同一套快照恢复逻辑。
   function receive(msg, socket, { url = n.serverURL, room = n.room, mode = "create" } = {}) {
-    if (ServerActivities.receive(msg,socket)) return;
+    if (ServerActivities.receive(msg, socket)) return;
     if (n.socket !== socket) return;
     if (msg.type === "pong") {
       if (pingStarted !== null) {
@@ -400,7 +400,9 @@ const Net = (() => {
       } catch {
         if (!wireResyncPending && socket.readyState === WebSocket.OPEN) {
           wireResyncPending = true;
-          socket.send(JSON.stringify({type:"action",action:"sync",id:"wire-sync-"+Date.now()}));
+          socket.send(
+            JSON.stringify({ type: "action", action: "sync", id: "wire-sync-" + Date.now() }),
+          );
         }
         return;
       }
@@ -432,7 +434,10 @@ const Net = (() => {
   }
   // 服务端快照是联机状态来源，按阶段恢复地图、应战或战斗画面。
   function applySnapshot(s) {
-    if (BattleAssets.guard(s, () => applySnapshot(s))) { phase = "loading"; return; }
+    if (BattleAssets.guard(s, () => applySnapshot(s))) {
+      phase = "loading";
+      return;
+    }
     const changedView = n.appliedViewTeam !== undefined && n.appliedViewTeam !== s.viewTeam;
     n.appliedViewTeam = s.viewTeam;
     if (changedView) {
@@ -490,7 +495,10 @@ const Net = (() => {
     if (s.phase === "assembly") {
       phase = "assembly";
       battleView = null;
-      if (!n.applied || !["menu", "formation", "production", "development", "records"].includes(pageView))
+      if (
+        !n.applied ||
+        !["menu", "formation", "production", "development", "records"].includes(pageView)
+      )
         setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
@@ -512,8 +520,11 @@ const Net = (() => {
       }
       phase = "waiting";
       battleView = null;
-      if (wasStarted || !n.applied ||
-        !["menu", "formation", "production", "development", "records"].includes(pageView))
+      if (
+        wasStarted ||
+        !n.applied ||
+        !["menu", "formation", "production", "development", "records"].includes(pageView)
+      )
         setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
@@ -602,7 +613,7 @@ const Net = (() => {
             effectEvent,
             s.effectActors?.find((actor) => actor.id === effectEvent.unitId),
           );
-        if (effectEvent.effect) SkillEffects.start(effectEvent);
+        if (effectEvent.effect && !effectEvent.irradiation) SkillEffects.start(effectEvent);
       }
     }
     const event = s.lastEvent;

@@ -1,7 +1,5 @@
 {
   "schemaVersion": 1,
   "description": "WIP单位：填写单位ID，末尾*匹配系列。保留目录预览，禁止编成出战和AI选取。",
-  "units": [
-    "Apsaras*"
-  ]
+  "units": []
 }

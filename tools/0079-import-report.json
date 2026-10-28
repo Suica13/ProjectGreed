@@ -5,7 +5,7 @@
     "name": "步兵班[EFSF][0079]",
     "source": "Units/BattleUnits/Army_Squad/Squad/Army_Squad_EFSF_0079_N_G_A.ini",
     "status": "imported",
-    "weapons": 8,
+    "weapons": 1,
     "skills": [],
     "mechanics": [
       {
@@ -44,8 +44,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -66,14 +66,14 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -253,8 +253,14 @@
     "name": "米迪亚",
     "source": "Units/BattleUnits/Medea/Medea.ini",
     "status": "imported",
-    "weapons": 0,
-    "skills": [],
+    "weapons": 1,
+    "skills": [
+      {
+        "id": "adjacent_en_supply",
+        "name": "EN补给",
+        "type": "resupply"
+      }
+    ],
     "mechanics": [
       {
         "id": "movement",
@@ -270,8 +276,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       },
       {
         "id": "Deploy",
@@ -428,14 +434,14 @@
       {
         "id": "CmdAtk",
         "source": "Template/Unit/Skill/CmdAtk.gw",
-        "status": "review",
-        "name": "攻击指挥"
+        "status": "adapted",
+        "name": "攻击指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "Sonar",
@@ -485,6 +491,11 @@
         "id": "Common_FullBoost",
         "name": "全力推进",
         "type": "fullboost"
+      },
+      {
+        "id": "adjacent_en_supply",
+        "name": "EN补给",
+        "type": "resupply"
       }
     ],
     "mechanics": [
@@ -562,8 +573,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -766,8 +777,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -800,8 +811,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "ChangeStyle",
@@ -857,8 +868,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -913,8 +924,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       },
       {
         "id": "CustomUnit_PilotCustomUnit",
@@ -925,8 +936,8 @@
       {
         "id": "CmdDef",
         "source": "Template/Unit/Skill/CmdDef.gw",
-        "status": "review",
-        "name": "防御指挥"
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -979,8 +990,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -1112,8 +1123,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -1163,20 +1174,20 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CmdDef",
         "source": "Template/Unit/Skill/CmdDef.gw",
-        "status": "review",
-        "name": "防御指挥"
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
-        "status": "review",
-        "name": "改修生成新机体"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -1221,8 +1232,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       },
       {
         "id": "ExitUnit_NewUnit",
@@ -1233,8 +1244,8 @@
       {
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
-        "status": "not_applicable",
-        "name": "低压弹射：原MOD驾驶员经验成长×1.1（本项目无驾驶员经验系统）"
+        "status": "adapted",
+        "name": "学习型电脑：驾驶员经验获取×1.1"
       },
       {
         "id": "FuseUnit_B",
@@ -1279,8 +1290,8 @@
       {
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
-        "status": "not_applicable",
-        "name": "低压弹射：原MOD驾驶员经验成长×1.1（本项目无驾驶员经验系统）"
+        "status": "adapted",
+        "name": "学习型电脑：驾驶员经验获取×1.1"
       }
     ]
   },
@@ -1313,8 +1324,8 @@
       {
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
-        "status": "not_applicable",
-        "name": "低压弹射：原MOD驾驶员经验成长×1.1（本项目无驾驶员经验系统）"
+        "status": "adapted",
+        "name": "学习型电脑：驾驶员经验获取×1.1"
       }
     ]
   },
@@ -1323,7 +1334,7 @@
     "faction": "EFSF",
     "name": "试作型高达",
     "source": "Units/BattleUnits/RX_78_1/RX_78_1.ini",
-    "status": "existing",
+    "status": "imported",
     "weapons": 8,
     "skills": [
       {
@@ -1332,17 +1343,31 @@
         "type": "escape"
       }
     ],
-    "mechanics": []
+    "mechanics": [
+      {
+        "id": "LPC",
+        "source": "Template/Unit/Skill/LPC.gw",
+        "status": "adapted",
+        "name": "学习型电脑：驾驶员经验获取×1.1"
+      }
+    ]
   },
   {
     "id": "FF_X7",
     "faction": "EFSF",
     "name": "核心战斗机",
     "source": "Units/BattleUnits/FF_X7/FF_X7.ini",
-    "status": "existing",
+    "status": "imported",
     "weapons": 2,
     "skills": [],
-    "mechanics": []
+    "mechanics": [
+      {
+        "id": "LPC",
+        "source": "Template/Unit/Skill/LPC.gw",
+        "status": "adapted",
+        "name": "学习型电脑：驾驶员经验获取×1.1"
+      }
+    ]
   },
   {
     "id": "FF_X7Bst",
@@ -1379,8 +1404,8 @@
       {
         "id": "SFS",
         "source": "Template/Unit/Skill/SFS.gw",
-        "status": "review",
-        "name": "辅助飞行平台"
+        "status": "adapted",
+        "name": "SFS：可见MS搭载槽，平台与乘员独立攻击和受击，移动离机"
       },
       {
         "id": "ExitUnit",
@@ -1391,8 +1416,8 @@
       {
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
-        "status": "not_applicable",
-        "name": "低压弹射：原MOD驾驶员经验成长×1.1（本项目无驾驶员经验系统）"
+        "status": "adapted",
+        "name": "学习型电脑：驾驶员经验获取×1.1"
       }
     ]
   },
@@ -1425,8 +1450,8 @@
       {
         "id": "SFS",
         "source": "Template/Unit/Skill/SFS.gw",
-        "status": "review",
-        "name": "辅助飞行平台"
+        "status": "adapted",
+        "name": "SFS：可见MS搭载槽，平台与乘员独立攻击和受击，移动离机"
       }
     ]
   },
@@ -1442,6 +1467,11 @@
         "id": "Common_MinovskyParticle_S",
         "name": "米诺夫斯基粒子散布[S]",
         "type": "minovsky"
+      },
+      {
+        "id": "SmokeGrenade",
+        "name": "烟雾弹",
+        "type": "smoke"
       }
     ],
     "mechanics": [
@@ -1464,9 +1494,9 @@
       },
       {
         "id": "special_Common_SmokingLauncher_NowPos",
-        "name": "special_Common_SmokingLauncher_NowPos",
+        "name": "烟雾弹：半径2格远程命中率×75%，2 AP、100 EN，冷却3回合",
         "source": "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
-        "status": "review"
+        "status": "adapted"
       },
       {
         "id": "special_Common_MinovskyParticle_S",
@@ -1516,14 +1546,14 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CmdDef",
         "source": "Template/Unit/Skill/CmdDef.gw",
-        "status": "review",
-        "name": "防御指挥"
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -1591,20 +1621,20 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CmdDef",
         "source": "Template/Unit/Skill/CmdDef.gw",
-        "status": "review",
-        "name": "防御指挥"
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
-        "status": "review",
-        "name": "改修生成新机体"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -1653,8 +1683,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -1665,7 +1695,13 @@
     "source": "Units/BattleUnits/MedeaKai/MedeaKai.ini",
     "status": "imported",
     "weapons": 0,
-    "skills": [],
+    "skills": [
+      {
+        "id": "adjacent_en_supply",
+        "name": "EN补给",
+        "type": "resupply"
+      }
+    ],
     "mechanics": [
       {
         "id": "movement",
@@ -1709,8 +1745,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -1771,8 +1807,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -1860,8 +1896,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       },
       {
         "id": "CustomUnit_PilotCustomUnit",
@@ -1888,8 +1924,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -1994,7 +2030,13 @@
     "source": "Units/BattleUnits/RMV_1/RMV_1.ini",
     "status": "imported",
     "weapons": 5,
-    "skills": [],
+    "skills": [
+      {
+        "id": "SmokeGrenade",
+        "name": "烟雾弹",
+        "type": "smoke"
+      }
+    ],
     "mechanics": [
       {
         "id": "movement",
@@ -2003,9 +2045,9 @@
       },
       {
         "id": "special_Common_SmokingLauncher_NowPos",
-        "name": "special_Common_SmokingLauncher_NowPos",
+        "name": "烟雾弹：半径2格远程命中率×75%，2 AP、100 EN，冷却3回合",
         "source": "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
-        "status": "review"
+        "status": "adapted"
       }
     ]
   },
@@ -2015,7 +2057,7 @@
     "name": "步兵班[ZEON][0079]",
     "source": "Units/BattleUnits/Army_Squad/Squad/Army_Squad_ZEON_0079_N_G_A.ini",
     "status": "imported",
-    "weapons": 8,
+    "weapons": 1,
     "skills": [],
     "mechanics": [
       {
@@ -2141,8 +2183,14 @@
     "name": "胖叔叔",
     "source": "Units/BattleUnits/FatUncle/FatUncle.ini",
     "status": "imported",
-    "weapons": 0,
-    "skills": [],
+    "weapons": 1,
+    "skills": [
+      {
+        "id": "adjacent_en_supply",
+        "name": "EN补给",
+        "type": "resupply"
+      }
+    ],
     "mechanics": [
       {
         "id": "movement",
@@ -2214,8 +2262,8 @@
       {
         "id": "SFS",
         "source": "Template/Unit/Skill/SFS.gw",
-        "status": "review",
-        "name": "辅助飞行平台"
+        "status": "adapted",
+        "name": "SFS：可见MS搭载槽，平台与乘员独立攻击和受击，移动离机"
       }
     ]
   },
@@ -2252,8 +2300,8 @@
       {
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
-        "status": "review",
-        "name": "改修生成新机体"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -2284,14 +2332,14 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       },
       {
         "id": "CustomUnit_PilotCustomUnit",
@@ -2448,8 +2496,8 @@
       {
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
-        "status": "review",
-        "name": "改修生成新机体"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -2483,6 +2531,11 @@
         "id": "Common_FullBoost",
         "name": "全力推进",
         "type": "fullboost"
+      },
+      {
+        "id": "adjacent_en_supply",
+        "name": "EN补给",
+        "type": "resupply"
       }
     ],
     "mechanics": [
@@ -2597,8 +2650,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -2787,8 +2840,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "ChangeStyle",
@@ -2849,8 +2902,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -2883,8 +2936,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -2932,8 +2985,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -3081,8 +3134,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -3132,20 +3185,20 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CmdDef",
         "source": "Template/Unit/Skill/CmdDef.gw",
-        "status": "review",
-        "name": "防御指挥"
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
-        "status": "review",
-        "name": "改修生成新机体"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -3216,8 +3269,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -3289,8 +3342,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "DogFight_A",
@@ -3341,8 +3394,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -3392,14 +3445,14 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CmdDef",
         "source": "Template/Unit/Skill/CmdDef.gw",
-        "status": "review",
-        "name": "防御指挥"
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -3467,14 +3520,14 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "CmdDef",
         "source": "Template/Unit/Skill/CmdDef.gw",
-        "status": "review",
-        "name": "防御指挥"
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
       },
       {
         "id": "special_Common_MinovskyParticle_M",
@@ -3523,8 +3576,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -3545,8 +3598,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -3583,8 +3636,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -3595,7 +3648,13 @@
     "source": "Units/BattleUnits/FatUncleKai/FatUncleKai.ini",
     "status": "imported",
     "weapons": 0,
-    "skills": [],
+    "skills": [
+      {
+        "id": "adjacent_en_supply",
+        "name": "EN补给",
+        "type": "resupply"
+      }
+    ],
     "mechanics": [
       {
         "id": "movement",
@@ -3700,6 +3759,11 @@
         "id": "Transform",
         "name": "变形",
         "type": "transform"
+      },
+      {
+        "id": "SmokeGrenade",
+        "name": "烟雾弹",
+        "type": "smoke"
       }
     ],
     "mechanics": [
@@ -3716,9 +3780,9 @@
       },
       {
         "id": "special_Common_SmokingLauncher_NowPos",
-        "name": "special_Common_SmokingLauncher_NowPos",
+        "name": "烟雾弹：半径2格远程命中率×75%，2 AP、100 EN，冷却3回合",
         "source": "Units/BattleUnits/Weapon/Sp/Common_SmokingLauncher_NowPos.gw",
-        "status": "review"
+        "status": "adapted"
       }
     ]
   },
@@ -3751,8 +3815,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -3795,8 +3859,8 @@
       {
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
-        "status": "review",
-        "name": "换装／改修"
+        "status": "adapted",
+        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
       }
     ]
   },
@@ -3823,8 +3887,8 @@
       {
         "id": "CmdCom",
         "source": "Template/Unit/Skill/CmdCom.gw",
-        "status": "review",
-        "name": "通信指挥"
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -3861,8 +3925,8 @@
       {
         "id": "CmdAtk",
         "source": "Template/Unit/Skill/CmdAtk.gw",
-        "status": "review",
-        "name": "攻击指挥"
+        "status": "adapted",
+        "name": "攻击指挥：范围与效果随驾驶员领导力变化"
       }
     ]
   },
@@ -3923,7 +3987,18 @@
     "source": "Units/BattleUnits/ApsarasII/ApsarasII.ini",
     "status": "imported",
     "weapons": 3,
-    "skills": [],
+    "skills": [
+      {
+        "id": "Irradiation",
+        "name": "光束照射",
+        "type": "irradiation"
+      },
+      {
+        "id": "EMP",
+        "name": "EMP",
+        "type": "emp"
+      }
+    ],
     "mechanics": [
       {
         "id": "movement",
@@ -3950,9 +4025,14 @@
       },
       {
         "id": "special_Common_EMP_M",
-        "name": "special_Common_EMP_M",
+        "name": "EMP：周围3格敌人下回合AP减少1，2 AP，冷却2回合",
         "source": "Units/BattleUnits/Weapon/Sp/Common_EMP_M.gw",
-        "status": "review"
+        "status": "adapted"
+      },
+      {
+        "id": "Irradiation",
+        "status": "adapted",
+        "name": "光束照射：方向射线、蓄力、逐机命中与长度自适应贴图"
       }
     ]
   },

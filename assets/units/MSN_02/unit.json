@@ -3442,8 +3442,8 @@
     {
       "id": "ExitUnit_NewUnit",
       "source": "Template/Unit/Skill/ExitUnit_NewUnit.gw",
-      "status": "review",
-      "name": "脱出并生成新机体"
+      "status": "adapted",
+      "name": "脱出：原生形态转换，资源与部位规则使用显式配置"
     },
     {
       "id": "remote_weapon_ZN_MSN_02_HandFunnel",
@@ -3466,7 +3466,49 @@
     }
   ],
   "description": "吉翁的象征",
-  "skills": [],
+  "skills": [
+    {
+      "id": "ExitUnit",
+      "type": "escape",
+      "name": "脱出",
+      "localization": {
+        "zh": {
+          "name": "脱出"
+        },
+        "en": {
+          "name": "Eject"
+        },
+        "ja": {
+          "name": "脱出"
+        }
+      },
+      "range": 1,
+      "minRange": 1,
+      "maxUses": 1,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_ExitUnit",
+      "source": {
+        "mode": "remove"
+      },
+      "spawn": {
+        "unitId": "MSN_02_Head",
+        "kitId": "standard",
+        "kitMap": {
+          "standard": "standard"
+        },
+        "inheritResources": false,
+        "hpRecoveryPercent": 100,
+        "enRecoveryPercent": 100,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": true
+      }
+    }
+  ],
   "kitAliases": {
     "kit_0": "standard",
     "kit_1": "standard",

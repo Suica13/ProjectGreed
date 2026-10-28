@@ -420,7 +420,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "pilotExperienceMultiplier": 1.1
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -2543,8 +2544,8 @@
     {
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
-      "status": "not_applicable",
-      "name": "低压弹射：原MOD驾驶员经验成长×1.1（本项目无驾驶员经验系统）"
+      "status": "adapted",
+      "name": "学习型电脑：驾驶员经验获取×1.1"
     }
   ],
   "weaponKits": [

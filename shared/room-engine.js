@@ -11,12 +11,12 @@ function roomBattleEconomy() {
 }
 function createRoomEngine({
   rules: G,
-  createPasswordVerifier = password => candidate => candidate === password,
+  createPasswordVerifier = (password) => (candidate) => candidate === password,
   chatChannels = typeof ChatChannels === "undefined" ? require("./chat-channels.js") : ChatChannels,
   rooms = new Map(),
   send,
   onRooms = () => {},
-  getRewardMultipliers = () => ({experience:1,money:1,supplies:1,technology:1}),
+  getRewardMultipliers = () => ({ experience: 1, money: 1, supplies: 1, technology: 1 }),
   randomId,
   randomSeed,
   randomToken,
@@ -528,16 +528,20 @@ function createRoomEngine({
       hp: actor.hp > 0 ? 1 : 0,
       shield: actor.shield > 0 ? 1 : 0,
       en: 1,
+      boostSkillActive: !!(actor.overBoost || actor.fullBoost || actor.overdrive),
       effectsOnly: true,
     };
   }
   function effectBattle(battle) {
     const scrub = (value, key = "") => {
       if (
-        ["before", "after", "shieldBefore", "shieldAfter"].includes(key) &&
+        ["before", "after", "shieldBefore", "shieldAfter", "iFieldBefore", "iFieldAfter"].includes(
+          key,
+        ) &&
         typeof value === "number"
       )
         return value > 0 ? 1 : 0;
+      if (key === "iFieldDamage") return value > 0 ? 1 : 0;
       if (["damage", "shieldDamage", "damagePerShot", "energySpent"].includes(key)) return 0;
       if (Array.isArray(value)) return value.map((item) => scrub(item));
       if (value && typeof value === "object")
@@ -574,11 +578,14 @@ function createRoomEngine({
   const combatVisibility = new WeakMap();
   function state(room, ack, recipient, intelCache) {
     const team = viewTeam(recipient);
-    if (team !== null && intelCache && !intelCache.has(team)) intelCache.set(team, G.sensors.view(room.game, team));
+    if (team !== null && intelCache && !intelCache.has(team))
+      intelCache.set(team, G.sensors.view(room.game, team));
     const intel = team === null ? null : intelCache?.get(team) || G.sensors.view(room.game, team);
     const visibleIds = new Set(intel?.visibleIds || []);
-    const knownIds = new Set(room.game.units.filter(u => u.team === team || visibleIds.has(u.id)).map(u => u.id));
-    const known = id => team === null || knownIds.has(id);
+    const knownIds = new Set(
+      room.game.units.filter((u) => u.team === team || visibleIds.has(u.id)).map((u) => u.id),
+    );
+    const known = (id) => team === null || knownIds.has(id);
     const relevant = (event) =>
       team === null ||
       [event.attacker, event.target].some((id) =>
@@ -653,14 +660,24 @@ function createRoomEngine({
           ? savedPlan(room, recipient.seat).entries
           : null,
       replay: replaySnapshot(room, recipient),
-      combatIntel: room.phase === "playback" && team !== null
-        ? room.playbackIntel?.[team] || null : null,
+      combatIntel:
+        room.phase === "playback" && team !== null ? room.playbackIntel?.[team] || null : null,
       startedFromSave: !!room.startedFromSave,
-      economyAwards: recipient ? (room.economyAwards || []).filter(a => a.memberId === recipient.id).map(({ memberId, ...award }) => award) : [],
-      pilotAwards: recipient ? (room.pilotAwards || []).filter(a => a.memberId === recipient.id).map(({ memberId, ...a }) => a) : [],
-      techAwards: recipient ? (room.techAwards || [])
-        .filter((award) => award.memberId === recipient.id)
-        .map(({ memberId, ...award }) => award) : [],
+      economyAwards: recipient
+        ? (room.economyAwards || [])
+            .filter((a) => a.memberId === recipient.id)
+            .map(({ memberId, ...award }) => award)
+        : [],
+      pilotAwards: recipient
+        ? (room.pilotAwards || [])
+            .filter((a) => a.memberId === recipient.id)
+            .map(({ memberId, ...a }) => a)
+        : [],
+      techAwards: recipient
+        ? (room.techAwards || [])
+            .filter((award) => award.memberId === recipient.id)
+            .map(({ memberId, ...award }) => award)
+        : [],
       type: "state",
       room: room.code,
       revision: room.revision,
@@ -689,6 +706,8 @@ function createRoomEngine({
                 "sound",
                 "reconMode",
                 "weaponDisplayIndex",
+                "targetEffect",
+                "irradiation",
               ]
                 .filter((key) => room.lastEvent[key] !== undefined)
                 .map((key) => [key, room.lastEvent[key]]),
@@ -700,14 +719,59 @@ function createRoomEngine({
       phase: room.phase,
       pending,
       reactions,
-      playback: room.playback || null,
+      playback: room.playback
+        ? {
+            ...room.playback,
+            ...(room.playback.skillEffect
+              ? {
+                  skillEffect: {
+                    ...room.playback.skillEffect,
+                    elapsedSeconds: Math.max(
+                      0,
+                      (Date.now() - (room.playback.startedAt || Date.now())) / 1000,
+                    ),
+                    actors: (room.irradiationActors || []).filter(
+                      (actor) =>
+                        team === null ||
+                        actor.team === team ||
+                        room.playbackIntel?.[team]?.visibleIds.includes(actor.id),
+                    ),
+                    hits: (room.irradiationHits || []).filter(
+                      (hit) =>
+                        team === null ||
+                        room.irradiationActors?.some(
+                          (actor) =>
+                            actor.id === hit.unitId &&
+                            (actor.team === team ||
+                              room.playbackIntel?.[team]?.visibleIds.includes(actor.id)),
+                        ),
+                    ),
+                  },
+                }
+              : {}),
+          }
+        : null,
       battle: room.battle && relevant(room.battle) ? room.battle : null,
       plans: (room.plans || []).filter((p) => known(p.attacker) && (!p.target || known(p.target))),
-      counterPlans: (room.responses || []).filter(choice => choice.response === "counter")
-        .flatMap(choice => (choice.counterOrders || [{targetId:choice.counterTargetId,
-          weaponIds:choice.counterIds || [choice.counterId]}]).filter(order =>
-          known(choice.intent.target) && known(order.targetId)).map(order => ({
-            attacker:choice.intent.target,target:order.targetId,weapon:order.weaponIds[0],weapons:order.weaponIds }))),
+      counterPlans: (room.responses || [])
+        .filter((choice) => choice.response === "counter")
+        .flatMap((choice) =>
+          (
+            choice.counterOrders || [
+              {
+                targetId: choice.counterTargetId,
+                weaponIds: choice.counterIds || [choice.counterId],
+              },
+            ]
+          )
+            .filter((order) => known(choice.intent.target) && known(order.targetId))
+            .map((order) => ({
+              attacker: choice.intent.target,
+              target: order.targetId,
+              weapon: order.weaponIds[0],
+              weapons: order.weaponIds,
+            })),
+        ),
       // 整批应战完成后一次广播本批全部结果，重连直接使用最终状态。
       combats: combats.map((battle) => ({
         ...battle,
@@ -749,7 +813,7 @@ function createRoomEngine({
           shareUnits: !!member.shareUnits,
           aiSettings: member.bot ? member.aiSettings : undefined,
           formationPreset: member.formationPreset || null,
-          ...(member.id === recipient?.id ? {inventory: member.inventory || {}} : {}),
+          ...(member.id === recipient?.id ? { inventory: member.inventory || {} } : {}),
           armySettings: G.armySettings(member),
         })),
       you: recipient ? { id: recipient.id, seat: recipient.seat } : undefined,
@@ -810,11 +874,108 @@ function createRoomEngine({
     entry.timer.unref?.();
     hostTimers.set(room, entry);
   }
+  // The same authority clock is used by WebSocket rooms and offline local rooms.
+  // Chat, retries and refreshes never reset the one-second damage cadence.
+  const burnTimers = new Map();
+  function scheduleBurning(room) {
+    const active = () =>
+      rooms.get(room.code) === room &&
+      room.started &&
+      !room.replay &&
+      !room.returnCountdown &&
+      room.game.winner === null &&
+      connected(room).every(Boolean) &&
+      ["idle", "reaction", "battle", "playback"].includes(room.phase) &&
+      room.game.units.some(
+        (u) => u.hp > 0 && u.burning && u.burning.expiresRound > room.game.round,
+      );
+    if (!active()) {
+      clearTimeout(burnTimers.get(room)?.timer);
+      burnTimers.delete(room);
+      return;
+    }
+    if (burnTimers.get(room)?.game === room.game) return;
+    const entry = { game: room.game };
+    entry.timer = setTimeout(() => {
+      burnTimers.delete(room);
+      if (!active() || entry.game !== room.game) return;
+      const events = G.tickBurning(room.game);
+      for (const event of events) {
+        if (event.type !== "burn") continue;
+        const target = room.game.units.find((u) => u.id === event.unitId),
+          source = room.game.units.find((u) => u.id === event.sourceId);
+        if (!target) continue;
+        if (source && source.team !== target.team && event.damage > 0) {
+          const owner = room.seats[G.ownerOf(source)],
+            faction = G.modelOf(source).faction;
+          if (owner) {
+            const contributions = ((room.playerDamage ||= {})[target.id] ||= {});
+            const contribution = (contributions[owner.id] ||= {
+              seat: G.ownerOf(source),
+              damage: 0,
+              factions: {},
+            });
+            contribution.damage += event.damage;
+            contribution.factions[faction] = (contribution.factions[faction] || 0) + event.damage;
+          }
+          if (source.pilot?.custom) {
+            const damage = ((room.pilotDamage ||= {})[target.id] ||= {});
+            const contribution = (damage[G.ownerOf(source) + ":" + source.pilot.id] ||= {
+              seat: G.ownerOf(source),
+              pilotId: source.pilot.id,
+              damage: 0,
+            });
+            contribution.damage += event.damage;
+          }
+        }
+        if (event.before > 0 && event.after <= 0) {
+          const model = G.modelOf(target);
+          if (source?.hp > 0 && source.team !== target.team)
+            recordPilotBattle(room, source, "kill", model.cost, !!model.ship);
+          recordPilotBattle(room, target, "loss", model.cost);
+          awardDefeat(room, source, target, model);
+          settlePilotAssists(room, target, source);
+        }
+        log(room, `${unitLabel(room, target)} ${"燃烧伤害"}：${event.damage}`, { units: [target] });
+      }
+      for (const evacuation of events.filter(
+        (event) => event.type === "evacuation" && !event.escaped,
+      )) {
+        const passenger = unit(room, evacuation.unitId),
+          model = G.modelOf(passenger);
+        const burn = events.find(
+          (event) => event.type === "burn" && event.unitId === evacuation.carrierId,
+        );
+        const source = room.game.units.find((actor) => actor.id === burn?.sourceId);
+        if (source?.hp > 0 && source.team !== passenger.team)
+          recordPilotBattle(room, source, "kill", model.cost, !!model.ship);
+        recordPilotBattle(room, passenger, "loss", model.cost);
+        awardDefeat(room, source, passenger, model);
+        settlePilotAssists(room, passenger, source);
+      }
+      if (room.game.winner !== null && room.phase !== "playback") {
+        room.phase = "finished";
+        room.pending = null;
+        room.reactions = [];
+      } else if (room.phase === "reaction") {
+        for (const request of [...(room.reactions || [])])
+          if (!room.game.units.some((u) => u.id === request.target && u.hp > 0))
+            planner.choose(room, request.id, "evade");
+        if (!room.pending && !room.reactions?.length) resolvePlans(room);
+      }
+      room.lastEvent = { id: randomId(), type: "burn_tick", events };
+      room.revision++;
+      broadcast(room);
+    }, 1000);
+    entry.timer.unref?.();
+    burnTimers.set(room, entry);
+  }
   function broadcast(room, ack) {
     if (!retained(room)) {
       destroyRoom(room);
       return;
     }
+    scheduleBurning(room);
     refreshHost(room);
     if (!room.returnCountdown) {
       completePlayback(room);
@@ -964,7 +1125,8 @@ function createRoomEngine({
     }
     const intelBeforeCombat = Object.fromEntries(
       [...new Set(room.game.units.map((u) => u.team))].map((team) => [
-        team, G.sensors.view(room.game, team),
+        team,
+        G.sensors.view(room.game, team),
       ]),
     );
     const visibleBeforeCombat = Object.fromEntries(
@@ -974,25 +1136,35 @@ function createRoomEngine({
     for (const battle of battles) combatVisibility.set(battle, visibleBeforeCombat);
     // Hull damage is accumulated by pilot, independently of who lands the final hit.
     room.pilotDamage ||= {};
-    for (const battle of battles) for (const e of battle.events) {
-      if (e.empty || !(e.before > e.after)) continue;
-      const source = unit(room, e.from), target = unit(room, e.to);
-      if (!source || !target || source.team === target.team) continue;
-      const owner = room.seats[G.ownerOf(source)];
-      if (owner) {
-        const contributions = (room.playerDamage ||= {})[target.id] ||= {};
-        const entry = contributions[owner.id] ||= { seat: G.ownerOf(source), damage: 0, factions: {} };
-        const damage = Math.min(e.before, e.before - Math.max(0, e.after));
-        entry.damage += damage;
-        const faction = G.modelOf(source).faction;
-        entry.factions[faction] = (entry.factions[faction] || 0) + damage;
+    for (const battle of battles)
+      for (const e of battle.events) {
+        if (e.empty || !(e.before > e.after)) continue;
+        const source = unit(room, e.from),
+          target = unit(room, e.to);
+        if (!source || !target || source.team === target.team) continue;
+        const owner = room.seats[G.ownerOf(source)];
+        if (owner) {
+          const contributions = ((room.playerDamage ||= {})[target.id] ||= {});
+          const entry = (contributions[owner.id] ||= {
+            seat: G.ownerOf(source),
+            damage: 0,
+            factions: {},
+          });
+          const damage = Math.min(e.before, e.before - Math.max(0, e.after));
+          entry.damage += damage;
+          const faction = G.modelOf(source).faction;
+          entry.factions[faction] = (entry.factions[faction] || 0) + damage;
+        }
+        if (!source.pilot?.custom) continue;
+        const entries = (room.pilotDamage[target.id] ||= {});
+        const key = G.ownerOf(source) + ":" + source.pilot.id;
+        const entry = (entries[key] ||= {
+          seat: G.ownerOf(source),
+          pilotId: source.pilot.id,
+          damage: 0,
+        });
+        entry.damage += Math.min(e.before, e.before - Math.max(0, e.after));
       }
-      if (!source.pilot?.custom) continue;
-      const entries = room.pilotDamage[target.id] ||= {};
-      const key = G.ownerOf(source) + ":" + source.pilot.id;
-      const entry = entries[key] ||= { seat: G.ownerOf(source), pilotId: source.pilot.id, damage: 0 };
-      entry.damage += Math.min(e.before, e.before - Math.max(0, e.after));
-    }
     for (const battle of battles)
       for (const e of battle.events) {
         for (const evacuation of e.evacuations || [])
@@ -1009,10 +1181,11 @@ function createRoomEngine({
         }
         const from = unit(room, e.from),
           to = unit(room, e.to);
-        const defeatedModel = G.models[battle.actors.find((actor) => actor.id === e.to)?.model] ||
-          G.modelOf(to);
+        const defeatedModel =
+          G.models[battle.actors.find((actor) => actor.id === e.to)?.model] || G.modelOf(to);
         if (e.before > 0 && e.after <= 0) {
-          if (from.team !== to.team) recordPilotBattle(room, from, "kill", defeatedModel.cost, !!defeatedModel.ship);
+          if (from.team !== to.team)
+            recordPilotBattle(room, from, "kill", defeatedModel.cost, !!defeatedModel.ship);
           recordPilotBattle(room, to, "loss", defeatedModel.cost);
           awardDefeat(room, from, to, defeatedModel);
           settlePilotAssists(room, to, from);
@@ -1021,7 +1194,8 @@ function createRoomEngine({
           if (evacuation.escaped) continue;
           const passenger = unit(room, evacuation.unitId);
           const cost = G.modelOf(passenger).cost;
-          if (from.team !== passenger.team) recordPilotBattle(room, from, "kill", cost, !!G.modelOf(passenger).ship);
+          if (from.team !== passenger.team)
+            recordPilotBattle(room, from, "kill", cost, !!G.modelOf(passenger).ship);
           recordPilotBattle(room, passenger, "loss", cost);
           awardDefeat(room, from, passenger, G.modelOf(passenger));
           settlePilotAssists(room, passenger, from);
@@ -1065,6 +1239,8 @@ function createRoomEngine({
     playback.members = playback.members.filter((id) => room.members.has(id));
     if (!playback.members.every((id) => playback.ready.includes(id))) return;
     room.playback = null;
+    room.irradiationActors = null;
+    room.irradiationHits = null;
     room.playbackIntel = null;
     room.phase = room.game.winner === null ? "idle" : "finished";
     const event =
@@ -1094,55 +1270,123 @@ function createRoomEngine({
     room.economyDefeats.add(to.id);
     const killer = from && room.seats[G.ownerOf(from)];
     const price = room.battleRoster?.[to.id]?.money ?? roomBattleEconomy().price(to.model);
-    const supplyPrice = room.battleRoster?.[to.id]?.supplies ?? roomBattleEconomy().price(to.model, "supplies");
+    const supplyPrice =
+      room.battleRoster?.[to.id]?.supplies ?? roomBattleEconomy().price(to.model, "supplies");
     const bonus = getRewardMultipliers();
     function award(owner, faction, assist = false) {
       if (!owner || owner.bot) return;
       const rates = roomBattleEconomy().rates(owner.characterFaction, room.settings.mode);
-      const battleRate = roomBattleEconomy().rewardRatio(room.battleRoster, G.seatTeam(owner.seat), room.settings.mode);
-      const points = Math.max(0, Math.floor(defeatedModel.cost * roomBattleEconomy().killTechnologyRate * rates.technology * battleRate * (assist ? 0.5 : 1) * bonus.technology));
+      const battleRate = roomBattleEconomy().rewardRatio(
+        room.battleRoster,
+        G.seatTeam(owner.seat),
+        room.settings.mode,
+      );
+      const points = Math.max(
+        0,
+        Math.floor(
+          defeatedModel.cost *
+            roomBattleEconomy().killTechnologyRate *
+            rates.technology *
+            battleRate *
+            (assist ? 0.5 : 1) *
+            bonus.technology,
+        ),
+      );
       if (points && ["EFSF", "ZEON"].includes(faction))
-        room.techAwards.push({ id: randomId(), matchId: room.matchId, memberId: owner.id,
-          faction, targetId: to.id, points, kind: assist ? "assist" : "kill", round: room.game.round, team: room.game.team });
-      const money = Math.max(0, Math.floor(price * (assist ? 0.25 : 1) * rates.currency * battleRate * bonus.money));
-      const supplies = Math.max(0, Math.floor(supplyPrice * (assist ? 0.25 : 1) * rates.currency * battleRate * bonus.supplies));
-      (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId,
-        memberId: owner.id, kind: assist ? "assist" : "kill", targetId: to.id,
-        model: to.model, money, supplies });
+        room.techAwards.push({
+          id: randomId(),
+          matchId: room.matchId,
+          memberId: owner.id,
+          faction,
+          targetId: to.id,
+          points,
+          kind: assist ? "assist" : "kill",
+          round: room.game.round,
+          team: room.game.team,
+        });
+      const money = Math.max(
+        0,
+        Math.floor(price * (assist ? 0.25 : 1) * rates.currency * battleRate * bonus.money),
+      );
+      const supplies = Math.max(
+        0,
+        Math.floor(
+          supplyPrice * (assist ? 0.25 : 1) * rates.currency * battleRate * bonus.supplies,
+        ),
+      );
+      (room.economyAwards ||= []).push({
+        id: randomId(),
+        matchId: room.matchId,
+        memberId: owner.id,
+        kind: assist ? "assist" : "kill",
+        targetId: to.id,
+        model: to.model,
+        money,
+        supplies,
+      });
     }
     if (killer) award(killer, G.modelOf(from).faction);
     for (const [memberId, contribution] of Object.entries(room.playerDamage?.[to.id] || {})) {
       if (memberId === killer?.id || contribution.damage < G.modelOf(to).hp * 0.25) continue;
       const owner = room.seats[contribution.seat];
       if (owner?.id !== memberId) continue;
-      const faction = Object.entries(contribution.factions).sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0];
+      const faction = Object.entries(contribution.factions).sort(
+        (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+      )[0]?.[0];
       award(owner, faction, true);
     }
     if (room.playerDamage) delete room.playerDamage[to.id];
   }
   function settleBattleEconomy(room) {
-    if (!room.started || room.phase !== "finished" || room.game.winner === null ||
-        room.startedFromSave || room.replay || room.returnCountdown || room.economySettled) return;
+    if (
+      !room.started ||
+      room.phase !== "finished" ||
+      room.game.winner === null ||
+      room.startedFromSave ||
+      room.replay ||
+      room.returnCountdown ||
+      room.economySettled
+    )
+      return;
     room.economySettled = true;
     const bonus = getRewardMultipliers();
     for (const player of room.seats) {
       if (!player || player.bot) continue;
-      const losses = {}, lostUnits = [];
-      const deduct = room.settings.mode !== "quick" && onlineMember(player) && !room.lossExemptMembers?.has(player.id);
+      const losses = {},
+        lostUnits = [];
+      const deduct =
+        room.settings.mode !== "quick" &&
+        onlineMember(player) &&
+        !room.lossExemptMembers?.has(player.id);
       for (const [id, record] of Object.entries(room.battleRoster || {})) {
-        if (record.memberId !== player.id || room.game.units.some(actor => actor.id === id && actor.hp > 0)) continue;
+        if (
+          record.memberId !== player.id ||
+          room.game.units.some((actor) => actor.id === id && actor.hp > 0)
+        )
+          continue;
         lostUnits.push({ id, unitId: record.unitId, model: record.model });
         if (deduct) losses[record.unitId] = (losses[record.unitId] || 0) + 1;
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
-      const battleRate = roomBattleEconomy().rewardRatio(room.battleRoster, G.seatTeam(player.seat), room.settings.mode);
+      const battleRate = roomBattleEconomy().rewardRatio(
+        room.battleRoster,
+        G.seatTeam(player.seat),
+        room.settings.mode,
+      );
       const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
       // A manually assigned preset's "unlimited" allowance must not inflate the victory bonus.
       const limit = room.settings.costLimit;
       const outcomeRate = won ? 1 : 0.5;
-      (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId, memberId: player.id,
-        kind: "result", money: Math.floor(limit * 2.5 * outcomeRate * rate * battleRate * bonus.money),
-        supplies: Math.floor(limit * 5 * outcomeRate * rate * battleRate * bonus.supplies), losses, lostUnits });
+      (room.economyAwards ||= []).push({
+        id: randomId(),
+        matchId: room.matchId,
+        memberId: player.id,
+        kind: "result",
+        money: Math.floor(limit * 2.5 * outcomeRate * rate * battleRate * bonus.money),
+        supplies: Math.floor(limit * 5 * outcomeRate * rate * battleRate * bonus.supplies),
+        losses,
+        lostUnits,
+      });
     }
   }
   function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
@@ -1150,14 +1394,34 @@ function createRoomEngine({
     const owner = room.seats[G.ownerOf(actor)];
     const points = Math.max(0, Math.floor(cost));
     const beforeLevel = actor.pilot.level;
-    const rate = (kind === "assist" ? 0.25 : 1) * roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience * roomBattleEconomy().rewardRatio(room.battleRoster, actor.team, room.settings.mode) * getRewardMultipliers().experience;
-    const experiencePoints = room.startedFromSave || kind === "loss" || kind === "battle" || beforeLevel >= G.pilots.growthRules.maxLevel
-      ? 0 : Math.floor(points * rate);
+    const rate =
+      (kind === "assist" ? 0.25 : 1) *
+      roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience *
+      roomBattleEconomy().rewardRatio(room.battleRoster, actor.team, room.settings.mode) *
+      getRewardMultipliers().experience *
+      (G.modelOf(actor).pilotExperienceMultiplier ?? 1);
+    const experiencePoints =
+      room.startedFromSave ||
+      kind === "loss" ||
+      kind === "battle" ||
+      beforeLevel >= G.pilots.growthRules.maxLevel
+        ? 0
+        : Math.floor(points * rate);
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints, { shipKill });
     if (owner && !owner.bot)
-      (room.pilotAwards ||= []).push({ id: randomId(), memberId: owner.id,
-        pilotId: actor.pilot.id, faction: actor.pilot.faction, kind, points, experiencePoints, shipKill,
-        unitId: actor.id, carrierId: actor.embarked?.carrierId, leveledUp: actor.pilot.level > beforeLevel });
+      (room.pilotAwards ||= []).push({
+        id: randomId(),
+        memberId: owner.id,
+        pilotId: actor.pilot.id,
+        faction: actor.pilot.faction,
+        kind,
+        points,
+        experiencePoints,
+        shipKill,
+        unitId: actor.id,
+        carrierId: actor.embarked?.carrierId,
+        leveledUp: actor.pilot.level > beforeLevel,
+      });
   }
   function recordPilotParticipation(room) {
     if (room.startedFromSave || room.replay || room.phase !== "idle") return;
@@ -1177,15 +1441,19 @@ function createRoomEngine({
     for (const entry of Object.values(entries)) {
       if (entry.damage < G.modelOf(target).hp * 0.25) continue;
       if (killer?.pilot?.id === entry.pilotId && G.ownerOf(killer) === entry.seat) continue;
-      const survivor = room.game.units.find(actor => actor.hp > 0 &&
-        G.ownerOf(actor) === entry.seat && actor.pilot?.id === entry.pilotId);
+      const survivor = room.game.units.find(
+        (actor) =>
+          actor.hp > 0 && G.ownerOf(actor) === entry.seat && actor.pilot?.id === entry.pilotId,
+      );
       if (survivor) recordPilotBattle(room, survivor, "assist", G.modelOf(target).cost);
     }
   }
   function advanceTurn(room, automatic = false) {
     delete room.openingSnipe;
     const fromTeam = room.game.team;
-    const living = new Map(room.game.units.filter(u => u.hp > 0).map(u => [u.id, G.modelOf(u).cost]));
+    const living = new Map(
+      room.game.units.filter((u) => u.hp > 0).map((u) => [u.id, G.modelOf(u).cost]),
+    );
     G.end(room.game);
     for (const actor of room.game.units)
       if (actor.hp <= 0 && living.has(actor.id)) {
@@ -1253,8 +1521,13 @@ function createRoomEngine({
   const playerUnitLimit = (room, player) => G.armyUnitLimit(room.settings, player);
   const playerRestrictions = (room, player) => G.armyRestrictions(room.settings, player);
   // Preparing may acknowledge shortages. Actual deployment always uses formationPlan's stock filter.
-  const readinessPlan = (room, player, formation) => G.planFormation(
-    formation, playerBudget(room, player), {...playerRestrictions(room, player), inventory: undefined}, playerUnitLimit(room, player));
+  const readinessPlan = (room, player, formation) =>
+    G.planFormation(
+      formation,
+      playerBudget(room, player),
+      { ...playerRestrictions(room, player), inventory: undefined },
+      playerUnitLimit(room, player),
+    );
   // Preview generation is deterministic and independent of the room roster.
   // Cache by all effective inputs, never by mutable player/room identity.
   const previewArmies = new Map();
@@ -1303,7 +1576,11 @@ function createRoomEngine({
         ...(unit.pilot?.custom ? { customPilot: G.pilots.custom(unit.pilot) } : {}),
       };
     });
-    const cost = units.reduce((sum, unit) => sum + G.models[unit.model].cost + G.pilots.cost(unit.pilot?.custom ? unit.pilot : null), 0);
+    const cost = units.reduce(
+      (sum, unit) =>
+        sum + G.models[unit.model].cost + G.pilots.cost(unit.pilot?.custom ? unit.pilot : null),
+      0,
+    );
     const restrictions = G.armyRestrictions(room.settings, room.seats[seat]);
     const reasons = {};
     units.forEach((unit, index) => {
@@ -1457,7 +1734,7 @@ function createRoomEngine({
           !G.planFormation(
             army,
             playerBudget(room, room.seats[seat]),
-            {...playerRestrictions(room, room.seats[seat]), inventory: undefined},
+            { ...playerRestrictions(room, room.seats[seat]), inventory: undefined },
             playerUnitLimit(room, room.seats[seat]),
           ).deployable.length
         )
@@ -1509,8 +1786,15 @@ function createRoomEngine({
       resumeSavedGame(room);
       return;
     }
-    if (plans.some((plan, seat) => plan && !plan.deployable.length &&
-      !readinessPlan(room, room.seats[seat], plan.entries).deployable.length)) return;
+    if (
+      plans.some(
+        (plan, seat) =>
+          plan &&
+          !plan.deployable.length &&
+          !readinessPlan(room, room.seats[seat], plan.entries).deployable.length,
+      )
+    )
+      return;
     if (
       ![0, 1].every((team) =>
         room.seats.some((player, seat) => player && G.seatTeam(seat) === team),
@@ -1521,7 +1805,7 @@ function createRoomEngine({
     room.game = G.create(
       false,
       room.game.seed,
-      plans.map((plan) => plan?.deployable.length ? plan.deployable : null),
+      plans.map((plan) => (plan?.deployable.length ? plan.deployable : null)),
       true,
       {
         ...room.settings,
@@ -1534,16 +1818,21 @@ function createRoomEngine({
         formationIndices: plans.map((plan) => plan?.indices ?? []),
       },
     );
-    room.battleRoster = Object.fromEntries(room.game.units.map(actor => [actor.id, {
-      memberId: room.seats[G.ownerOf(actor)]?.id,
-      bot: !!room.seats[G.ownerOf(actor)]?.bot,
-      unitId: G.models[actor.model].prefabId,
-      model: actor.model,
-      money: roomBattleEconomy().price(actor.model),
-      supplies: roomBattleEconomy().price(actor.model, "supplies"),
-      team: actor.team,
-      performance: actor.performance ?? 1,
-    }]));
+    room.battleRoster = Object.fromEntries(
+      room.game.units.map((actor) => [
+        actor.id,
+        {
+          memberId: room.seats[G.ownerOf(actor)]?.id,
+          bot: !!room.seats[G.ownerOf(actor)]?.bot,
+          unitId: G.models[actor.model].prefabId,
+          model: actor.model,
+          money: roomBattleEconomy().price(actor.model),
+          supplies: roomBattleEconomy().price(actor.model, "supplies"),
+          team: actor.team,
+          performance: actor.performance ?? 1,
+        },
+      ]),
+    );
     room.phase = room.game.deployment.every(Boolean) ? "idle" : "deployment";
     planner.reset(room);
     room.turnDone = Array(room.seats.length).fill(false);
@@ -1693,13 +1982,23 @@ function createRoomEngine({
       const transport = G.hangars.recoveryOrder(room.game, passenger);
       if (transport) return { player: owner, ...transport };
     }
-    const canPlanMore = unit => {
+    const canPlanMore = (unit) => {
       if (!unit.acted) return true;
       if (!unit.plan || G.actionPoints(unit) <= 0) return false;
-      return room.game.units.some(target => target.team !== unit.team && G.onMap(target) &&
-        !G.attackPlanFor(unit, target) && G.modelOf(unit).weapons.some(weapon => {
-          try { G.attackQueue(room.game, unit, target, [weapon]); return true; } catch { return false; }
-        }));
+      return room.game.units.some(
+        (target) =>
+          target.team !== unit.team &&
+          G.onMap(target) &&
+          !G.attackPlanFor(unit, target) &&
+          G.modelOf(unit).weapons.some((weapon) => {
+            try {
+              G.attackQueue(room.game, unit, target, [weapon]);
+              return true;
+            } catch {
+              return false;
+            }
+          }),
+      );
     };
     const player = room.seats.find(
       (p) =>
@@ -1715,13 +2014,45 @@ function createRoomEngine({
       );
       return unfinished ? { player: unfinished, action: "end_turn", fields: {} } : null;
     }
-    const u = room.game.units.find((u) => G.ownerOf(u) === player.seat && G.onMap(u) && canPlanMore(u));
-    for (const skill of G.unitSkills(u).filter(s => s.type === "resupply")) {
+    const u = room.game.units.find(
+      (u) => G.ownerOf(u) === player.seat && G.onMap(u) && canPlanMore(u),
+    );
+    const smoke = G.unitSkills(u).find((skill) => skill.type === "smoke");
+    if (
+      smoke &&
+      G.canUseSkill(room.game, u, smoke.id) &&
+      !G.smokeAt(room.game, u) &&
+      room.game.units.some(
+        (enemy) =>
+          enemy.team !== u.team &&
+          G.onMap(enemy) &&
+          G.sensors.visible(room.game, u.team, enemy) &&
+          G.modelOf(enemy).weapons.some(
+            (weapon) => weapon.type !== "melee" && G.inRange(enemy, u, weapon),
+          ),
+      )
+    )
+      return {
+        player,
+        action: "skill",
+        fields: { unitId: u.id, skillId: smoke.id, x: u.x, y: u.y },
+      };
+    const areaSkill = G.aiAreaSkill(room.game, u);
+    if (areaSkill) return { player, action: "skill", fields: { unitId: u.id, ...areaSkill } };
+    for (const skill of G.unitSkills(u).filter((s) => s.type === "resupply")) {
       const targets = G.skillTargets(room.game, u, skill.id).sort((a, b) => {
-        const left = G.at(room.game, a.x, a.y), right = G.at(room.game, b.x, b.y);
-        return left.en / Math.max(1, G.modelOf(left).en) - right.en / Math.max(1, G.modelOf(right).en);
+        const left = G.at(room.game, a.x, a.y),
+          right = G.at(room.game, b.x, b.y);
+        return (
+          left.en / Math.max(1, G.modelOf(left).en) - right.en / Math.max(1, G.modelOf(right).en)
+        );
       });
-      if (targets.length) return { player, action: "skill", fields: { unitId: u.id, skillId: skill.id, ...targets[0] } };
+      if (targets.length)
+        return {
+          player,
+          action: "skill",
+          fields: { unitId: u.id, skillId: skill.id, ...targets[0] },
+        };
     }
     for (const skill of G.unitSkills(u).filter((s) => s.type === "flight")) {
       if (!u.flying && !u.moved && G.canUseSkill(room.game, u, skill.id))
@@ -1794,14 +2125,31 @@ function createRoomEngine({
     }
     // Do not drive a recovery destination away from a nearby low-energy passenger.
     const hangars = G.modelOf(u).hangars || [];
-    if (!u.plan && hangars.length && room.game.units.some(passenger => {
-      if (!G.onMap(passenger) || passenger.team !== u.team ||
-          G.modelOf(passenger).hangars?.length || !G.hangars.needsRecovery(passenger)) return false;
-      const model = G.modelOf(passenger);
-      return G.dist(u, passenger) <= Math.max(2, model.move * 2) &&
-        hangars.some(hangar => hangar.kind !== "sfs" && hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag)) &&
-          G.hangars.used(room.game, u, hangar.id) + G.hangars.slotCost(passenger,hangar) <= hangar.capacity);
-    })) return { player, action: "wait", fields: { unitId: u.id } };
+    if (
+      !u.plan &&
+      hangars.length &&
+      room.game.units.some((passenger) => {
+        if (
+          !G.onMap(passenger) ||
+          passenger.team !== u.team ||
+          G.modelOf(passenger).hangars?.length ||
+          !G.hangars.needsRecovery(passenger)
+        )
+          return false;
+        const model = G.modelOf(passenger);
+        return (
+          G.dist(u, passenger) <= Math.max(2, model.move * 2) &&
+          hangars.some(
+            (hangar) =>
+              hangar.kind !== "sfs" &&
+              hangar.allowedTags.some((tag) => model.transport?.loadTags.includes(tag)) &&
+              G.hangars.used(room.game, u, hangar.id) + G.hangars.slotCost(passenger, hangar) <=
+                hangar.capacity,
+          )
+        );
+      })
+    )
+      return { player, action: "wait", fields: { unitId: u.id } };
     const choice = u.plan ? null : G.aiChoice(room.game, u);
     if (choice?.rotation)
       return { player, action: "rotate", fields: { unitId: u.id, direction: choice.rotation } };
@@ -1809,7 +2157,9 @@ function createRoomEngine({
       return { player, action: "move", fields: { unitId: u.id, x: choice.x, y: choice.y } };
     const pressure = G.aiTargetPressure(room.game, u.team);
     let best = null;
-    for (const target of room.game.units.filter(t => G.onMap(t) && t.team !== u.team && !G.attackPlanFor(u, t)))
+    for (const target of room.game.units.filter(
+      (t) => G.onMap(t) && t.team !== u.team && !G.attackPlanFor(u, t),
+    ))
       for (const weapon of G.modelOf(u).weapons)
         if (G.canAttack(room.game, u, target, weapon)) {
           try {
@@ -1820,21 +2170,25 @@ function createRoomEngine({
           const estimate = G.estimate(room.game, u, target, weapon);
           const commitment = pressure.get(target.id);
           const remaining = Math.max(0, target.hp - (commitment?.damage || 0));
-          const expected = estimate.hit * estimate.damage / 100;
-          const score = Math.min(expected, remaining) +
+          const expected = (estimate.hit * estimate.damage) / 100;
+          const score =
+            Math.min(expected, remaining) +
             (remaining > 0 && expected >= remaining ? remaining * 0.1 : 0);
           const useful = score > 0;
           const assignedAttackers = commitment?.attackers || 0;
-          if (!best || (useful && !best.useful) ||
+          if (
+            !best ||
+            (useful && !best.useful) ||
             (useful === best.useful &&
               (assignedAttackers < best.assignedAttackers ||
-                (assignedAttackers === best.assignedAttackers && score > best.score))))
+                (assignedAttackers === best.assignedAttackers && score > best.score)))
+          )
             best = { target, weapon, score, remaining, useful, assignedAttackers };
         }
     if (!best) return { player, action: "wait", fields: { unitId: u.id } };
     const weapons = [best.weapon];
     let plannedDamage = G.estimate(room.game, u, best.target, best.weapon);
-    plannedDamage = plannedDamage.damage * plannedDamage.hit / 100;
+    plannedDamage = (plannedDamage.damage * plannedDamage.hit) / 100;
     if (best.weapon.slot !== "skill") {
       const candidates = G.modelOf(u).weapons.filter(
         (w) => w.slot !== "skill" && G.canAttack(room.game, u, best.target, w),
@@ -1859,7 +2213,7 @@ function createRoomEngine({
         if (!next) break;
         weapons.push(next);
         const estimate = G.estimate(room.game, u, best.target, next);
-        plannedDamage += estimate.damage * estimate.hit / 100;
+        plannedDamage += (estimate.damage * estimate.hit) / 100;
       }
     }
 
@@ -2209,401 +2563,431 @@ function createRoomEngine({
       }
       const previousInventory = member.inventory;
       try {
-      if ((!room.started || room.phase === "assembly") && msg.inventory !== undefined &&
-          ["set_ready","start_game","update_formation","confirm_formation"].includes(msg.action))
-        member.inventory = G.normalizeInventory(msg.inventory);
-      if (msg.action === "rename_unit") {
         if (
-          !room.started ||
-          ["assembly", "finished"].includes(room.phase) ||
-          seat === null ||
-          msg.matchId !== room.matchId
+          (!room.started || room.phase === "assembly") &&
+          msg.inventory !== undefined &&
+          ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action)
         )
-          throw Error("当前不能修改单位名称");
-        const target = unit(room, msg.unitId);
-        if (!target || !G.canControlUnit(room.settings, members(room), seat, target))
-          throw Error("不能修改该单位名称");
-        const name = G.normalizeUnitName(msg.name),
-          before = unitLabel(room, target);
-        if ((target.customName || "") !== name) {
-          if (name) target.customName = name;
-          else delete target.customName;
-          log(room, `${before} 更名为 ${G.unitName(target)}。`, { units: [target] });
-          unitLabel(room, target);
-        }
-      } else if (msg.action === "share_units") {
-        if (!room.started || ["assembly", "finished"].includes(room.phase) || seat === null)
-          throw Error("只有出战玩家可以在战斗中共享单位");
-        if (msg.matchId !== room.matchId) throw Error("对局已更新，请重新同步。");
-        if (!member.shareUnits) {
-          member.shareUnits = true;
-          log(room, `${member.name} 已将自己的单位共享给友军。`, { teams: [G.seatTeam(seat)] });
-        }
-      } else if (msg.action === "start_game") {
-        if (member.id !== room.hostId) throw Error("只有房主可以开始游戏");
-        if (room.started) throw Error("游戏已经开始");
-        const players = room.seats.filter(Boolean);
-        if (!players.every((player) => player.bot || onlineMember(player)))
-          throw Error("等待出战玩家重新连接");
-        if (![0, 1].every((team) => players.some((player) => G.seatTeam(player.seat) === team)))
-          throw Error("两支队伍都至少需要一名玩家或 AI");
-        if (players.some((player) => player !== member && !player.ready))
-          throw Error("等待其他出战玩家准备");
-        const oldFormation = member.formation,
-          oldReady = member.ready;
-        try {
-          if (member.seat !== null) {
-            if (!room.resumeSave)
-              member.formation = G.validateFormation(
-                member.formationPreset?.units ?? msg.formation ?? member.formation,
+          member.inventory = G.normalizeInventory(msg.inventory);
+        if (msg.action === "rename_unit") {
+          if (
+            !room.started ||
+            ["assembly", "finished"].includes(room.phase) ||
+            seat === null ||
+            msg.matchId !== room.matchId
+          )
+            throw Error("当前不能修改单位名称");
+          const target = unit(room, msg.unitId);
+          if (!target || !G.canControlUnit(room.settings, members(room), seat, target))
+            throw Error("不能修改该单位名称");
+          const name = G.normalizeUnitName(msg.name),
+            before = unitLabel(room, target);
+          if ((target.customName || "") !== name) {
+            if (name) target.customName = name;
+            else delete target.customName;
+            log(room, `${before} 更名为 ${G.unitName(target)}。`, { units: [target] });
+            unitLabel(room, target);
+          }
+        } else if (msg.action === "share_units") {
+          if (!room.started || ["assembly", "finished"].includes(room.phase) || seat === null)
+            throw Error("只有出战玩家可以在战斗中共享单位");
+          if (msg.matchId !== room.matchId) throw Error("对局已更新，请重新同步。");
+          if (!member.shareUnits) {
+            member.shareUnits = true;
+            log(room, `${member.name} 已将自己的单位共享给友军。`, { teams: [G.seatTeam(seat)] });
+          }
+        } else if (msg.action === "start_game") {
+          if (member.id !== room.hostId) throw Error("只有房主可以开始游戏");
+          if (room.started) throw Error("游戏已经开始");
+          const players = room.seats.filter(Boolean);
+          if (!players.every((player) => player.bot || onlineMember(player)))
+            throw Error("等待出战玩家重新连接");
+          if (![0, 1].every((team) => players.some((player) => G.seatTeam(player.seat) === team)))
+            throw Error("两支队伍都至少需要一名玩家或 AI");
+          if (players.some((player) => player !== member && !player.ready))
+            throw Error("等待其他出战玩家准备");
+          const oldFormation = member.formation,
+            oldReady = member.ready;
+          try {
+            if (member.seat !== null) {
+              if (!room.resumeSave)
+                member.formation = G.validateFormation(
+                  member.formationPreset?.units ?? msg.formation ?? member.formation,
+                  Infinity,
+                  playerUnitLimit(room, member),
+                );
+              member.ready = true;
+            }
+            startGame(room);
+          } catch (error) {
+            member.formation = oldFormation;
+            member.ready = oldReady;
+            throw error;
+          }
+        } else if (msg.action === "update_formation" || msg.action === "confirm_formation") {
+          if (room.resumeSave) {
+            if (msg.action !== "confirm_formation" || room.phase !== "assembly")
+              throw Error("存档编组不可更改。");
+            if (member.seat === null && member.id !== room.hostId)
+              throw Error("观战玩家不能确认编组。");
+            if (member.seat !== null && Object.keys(savedPlan(room, member.seat).reasons).length)
+              throw Error("存档编组不符合当前模式或房间禁用标签规则。");
+            if (member.seat !== null) member.finalReady = true;
+            startDeployment(room);
+            room.revision++;
+            cache.set(id, true);
+            broadcast(room, id);
+            return;
+          }
+          if (room.phase !== "assembly" && (room.started || msg.action !== "update_formation"))
+            throw Error("当前不是最终编组阶段");
+          if (member.seat === null) {
+            if (
+              msg.action !== "confirm_formation" ||
+              member.id !== room.hostId ||
+              !room.seats.filter(Boolean).every((player) => player.bot)
+            )
+              throw Error("观战玩家不能确认编组");
+            startDeployment(room);
+            room.revision++;
+            cache.set(id, true);
+            broadcast(room, id);
+            return;
+          }
+          const formation =
+            member.formationPreset?.units ||
+            (msg.formation === undefined
+              ? member.formation
+              : G.validateFormation(msg.formation, Infinity, playerUnitLimit(room, member)));
+          const plan = G.planFormation(
+            formation,
+            playerBudget(room, member),
+            playerRestrictions(room, member),
+            playerUnitLimit(room, member),
+          );
+          if (
+            msg.action === "confirm_formation" &&
+            !plan.deployable.length &&
+            !readinessPlan(room, member, formation).deployable.length
+          )
+            throw Error("至少需要一台符合编组规则的单位");
+          member.formation = formation;
+          // 保存编组保留自己和队友的准备/确认状态。
+          if (msg.action === "confirm_formation") member.finalReady = true;
+          if (room.phase === "assembly") startDeployment(room);
+        } else if (msg.action === "configure_player") {
+          if (room.settings.mode !== "quick") throw Error("常规战不能调整玩家独立规则。");
+          if (room.hostId !== member.id) throw Error("只有房主可以调整玩家独立规则。");
+          if (room.started) throw Error("对局开始后不能修改玩家独立规则。");
+          const target = room.members.get(msg.memberId);
+          if (!target || target.bot) throw Error("目标玩家无效。");
+          if (
+            !msg.config ||
+            typeof msg.config !== "object" ||
+            Array.isArray(msg.config) ||
+            !Object.keys(msg.config).length ||
+            Object.keys(msg.config).some(
+              (key) => !["fill", "countPercent", "unitCostPercent", "difficulty"].includes(key),
+            )
+          )
+            throw Error("玩家独立规则无效。");
+          target.armySettings = G.validateArmySettings({
+            ...G.armySettings(target),
+            ...msg.config,
+            ...(Object.hasOwn(msg.config, "unitCostPercent") ? { unitCostLimit: null } : {}),
+          });
+          target.ready = false;
+        } else if (msg.action === "set_faction") {
+          if (room.started) throw Error("对局开始后不能切换阵营。");
+          if (room.settings.mode === "quick" && msg.faction !== "PMC")
+            throw Error("快速战固定使用 PMC 阵营。");
+          if (!["PMC", "EFSF", "ZEON"].includes(msg.faction)) throw Error("玩家阵营无效。");
+          const required = forcedFaction(room, member.seat);
+          if (required && required !== msg.faction) throw Error("本队已设置强制阵营。");
+          if (member.characterFaction !== msg.faction) {
+            member.characterFaction = msg.faction;
+            member.formation = null;
+            member.formationPreset = null;
+            member.ready = false;
+          }
+        } else if (msg.action === "configure_ai") {
+          if (room.hostId !== member.id) throw Error("只有房主可以设置 AI。");
+          if (room.started) throw Error("对局开始后不能修改 AI。");
+          const bot = room.seats[msg.seat];
+          if (!Number.isInteger(msg.seat) || !bot?.bot) throw Error("该席位不是 AI。");
+          if (Object.hasOwn(msg, "formationPreset")) throw Error("房主不能修改 AI 编组预设。");
+          const allowed =
+            room.settings.mode === "quick"
+              ? ["fill", "countPercent", "unitCostPercent", "difficulty"]
+              : ["difficulty"];
+          if (
+            !msg.config ||
+            typeof msg.config !== "object" ||
+            Array.isArray(msg.config) ||
+            Object.keys(msg.config).some((key) => !allowed.includes(key))
+          )
+            throw Error(
+              room.settings.mode === "quick" ? "AI 独立规则无效。" : "房主只能调整 AI 单位强度。",
+            );
+          const armySettings = G.validateArmySettings({
+            ...G.armySettings(bot),
+            ...msg.config,
+            ...(Object.hasOwn(msg.config, "unitCostPercent") ? { unitCostLimit: null } : {}),
+          });
+          const characterFaction = msg.characterFaction ?? bot.characterFaction;
+          if (!["PMC", "EFSF", "ZEON"].includes(characterFaction)) throw Error("AI 阵营无效。");
+          if (room.settings.mode === "quick" && characterFaction !== "PMC")
+            throw Error("快速战 AI 固定使用 PMC 阵营。");
+          const required = forcedFaction(room, bot.seat);
+          if (required && required !== characterFaction) throw Error("本队已设置强制阵营。");
+          checkAIArmy(room, {
+            ...bot,
+            armySettings,
+            characterFaction,
+          });
+          bot.armySettings = armySettings;
+          bot.aiSettings = {
+            difficulty: armySettings.difficulty,
+            fill: armySettings.fill,
+            countPercent: armySettings.countPercent,
+          };
+          bot.characterFaction = characterFaction;
+          bot.formation = null;
+        } else if (msg.action === "add_ai" || msg.action === "remove_ai") {
+          if (room.hostId !== member.id) throw Error("只有房主可以添加或移除 AI");
+          if (room.started) throw Error("对局开始后不能添加或移除 AI");
+          const destination = msg.seat;
+          if (!Number.isInteger(destination) || destination < 0 || destination >= room.seats.length)
+            throw Error("无效的席位");
+          if (msg.action === "add_ai") {
+            if (room.seats[destination]) throw Error("只能在空位添加 AI");
+            if (room.members.size >= 32) throw Error("房间人数已满");
+            const botId = randomId();
+            const bot = {
+              id: botId,
+              name: "AI " + (destination + 1),
+              bot: true,
+              characterFaction:
+                forcedFaction(room, destination) ||
+                msg.characterFaction ||
+                (G.seatTeam(destination) === 0 ? "EFSF" : "ZEON"),
+              aiSettings: G.validateAISettings(),
+              seat: destination,
+              ready: true,
+              requests: new Map(),
+              ws: { room: room.code, memberId: botId, seat: destination },
+            };
+            if (!["PMC", "EFSF", "ZEON"].includes(bot.characterFaction))
+              throw Error("AI 阵营角色无效");
+            if (room.resumeSave?.armies[destination])
+              bot.armySettings = Records.clone(room.resumeSave.armies[destination]);
+            checkAIArmy(room, bot);
+            for (const existing of room.seats.filter((player) => player?.bot))
+              checkAIArmy(room, existing);
+            room.members.set(bot.id, bot);
+            room.seats[destination] = bot;
+          } else {
+            const bot = room.seats[destination];
+            if (!bot?.bot) throw Error("该席位不是 AI");
+            room.members.delete(bot.id);
+            room.seats[destination] = null;
+          }
+        } else if (msg.action === "configure_room") {
+          if (room.hostId !== member.id) throw Error("只有房主可以修改房间设置");
+          if (room.started) throw Error("对局开始后不能修改地图和 COST");
+          if (room.resumeSave && msg.mapId !== room.resumeSave.settings.mapId)
+            throw Error("存档地图不可更改。");
+          const map = G.getMap(msg.mapId);
+          if (msg.shareAlliedUnits !== undefined && typeof msg.shareAlliedUnits !== "boolean")
+            throw Error("友军单位共享设置无效");
+          const settings = {
+            mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
+            mapId: map.id,
+            fogMode: G.validateFogMode(msg.fogMode ?? room.settings.fogMode),
+            shareAlliedUnits: msg.shareAlliedUnits ?? room.settings.shareAlliedUnits ?? false,
+            costLimit: G.validateCostLimit(msg.costLimit),
+            unitLimit: G.validateUnitLimit(msg.unitLimit ?? room.settings.unitLimit),
+            unitCostLimit: G.validateUnitCostLimit(
+              msg.unitCostLimit ?? room.settings.unitCostLimit,
+            ),
+            ...G.validateTagRestrictions({
+              bannedFactions: msg.bannedFactions ?? room.settings.bannedFactions,
+              bannedEras: msg.bannedEras ?? room.settings.bannedEras,
+              bannedTypes: msg.bannedTypes ?? room.settings.bannedTypes,
+            }),
+            teamRestrictions:
+              G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "quick"
+                ? G.validateTeamRestrictions(
+                    msg.teamRestrictions ?? room.settings.teamRestrictions ?? [{}, {}],
+                  )
+                : [G.validateTagRestrictions(), G.validateTagRestrictions()],
+            teamFactions:
+              G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "quick"
+                ? [null, null]
+                : G.validateTeamFactions(
+                    msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
+                  ),
+          };
+          if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
+            const mapChanged = settings.mapId !== room.settings.mapId;
+            const modeChanged = settings.mode !== room.settings.mode;
+            const factionsChanged =
+              JSON.stringify(settings.teamFactions) !== JSON.stringify(room.settings.teamFactions);
+            const tagsChanged = [
+              "bannedFactions",
+              "bannedEras",
+              "bannedTypes",
+              "teamRestrictions",
+            ].some((key) => JSON.stringify(settings[key]) !== JSON.stringify(room.settings[key]));
+            room.settings = settings;
+            for (const player of members(room)) {
+              if (player.seat !== null && player.seat >= map.spawns.length) {
+                if (player.bot) {
+                  room.members.delete(player.id);
+                  continue;
+                }
+                player.seat = null;
+                if (player.ws) player.ws.seat = null;
+              }
+            }
+            room.seats = Array(map.spawns.length).fill(null);
+            for (const player of members(room))
+              if (player.seat !== null) room.seats[player.seat] = player;
+            for (const player of members(room)) applyForcedFaction(room, player);
+            if (modeChanged && settings.mode === "regular") {
+              for (const player of members(room)) {
+                const difficulty = player.bot ? G.armySettings(player).difficulty : "medium";
+                player.armySettings = G.validateArmySettings({ difficulty });
+                if (player.bot)
+                  player.aiSettings = {
+                    difficulty,
+                    fill: 100,
+                    countPercent: 100,
+                  };
+              }
+            }
+            room.turnDone = Array(map.spawns.length).fill(false);
+            if (mapChanged || modeChanged || factionsChanged || tagsChanged) resetReady(room);
+          }
+        } else if (msg.action === "kick_player") {
+          if (room.hostId !== member.id) throw Error("只有房主可以踢出玩家");
+          const target = room.members.get(msg.memberId);
+          if (!target || target.id === member.id || target.bot) throw Error("无效的玩家");
+          cancelSeatMoves(room, target.seat);
+          if (target.seat !== null) {
+            room.seats[target.seat] = null;
+            if (room.battle) room.battle.ready[target.seat] = false;
+          }
+          clearReconnect(target);
+          room.members.delete(target.id);
+          presenceMessage(room, target, "被房主移出了房间");
+          if (target.ws) {
+            const targetSocket = target.ws;
+            delete targetSocket.room;
+            delete targetSocket.memberId;
+            delete targetSocket.seat;
+            send(targetSocket, { type: "room_closed", message: "你已被房主移出房间。" });
+            targetSocket.close(1000, "Removed by host");
+          }
+        } else if (
+          msg.action === "switch_seat" ||
+          msg.action === "join_team" ||
+          msg.action === "move_player"
+        ) {
+          let movingMember = member;
+          if (msg.action === "move_player") {
+            if (room.hostId !== member.id) throw Error("只有房主可以调整玩家席位");
+            if (room.started) throw Error("对局开始后不能调整其他玩家席位");
+            movingMember = room.members.get(msg.memberId);
+            if (!movingMember) throw Error("无效的玩家");
+            if (movingMember.bot && msg.seat === null) throw Error("AI不能移入观战席");
+          }
+          let destination = msg.seat;
+          if (msg.action === "join_team") {
+            if (msg.team !== 0 && msg.team !== 1) throw Error("无效的队伍。");
+            destination =
+              movingMember.seat !== null && G.seatTeam(movingMember.seat) === msg.team
+                ? movingMember.seat
+                : room.seats.findIndex((player, seat) => !player && G.seatTeam(seat) === msg.team);
+            if (destination < 0) throw Error("队伍已满，请选择其他队伍或观战席。");
+          }
+          if (
+            destination !== null &&
+            (!Number.isInteger(destination) || destination < 0 || destination >= room.seats.length)
+          )
+            throw Error("无效的席位");
+          if (
+            destination !== null &&
+            room.seats[destination] &&
+            room.seats[destination] !== movingMember
+          )
+            throw Error("这个队伍已有玩家");
+          if (movingMember.seat !== destination) {
+            cancelSeatMoves(room, movingMember.seat);
+            if (movingMember.seat !== null) {
+              room.seats[movingMember.seat] = null;
+              if (room.battle) room.battle.ready[movingMember.seat] = false;
+            }
+            movingMember.seat = destination;
+            movingMember.shareUnits = false;
+            if (movingMember.ws) movingMember.ws.seat = destination;
+            applyForcedFaction(room, movingMember);
+            movingMember.ready = !!movingMember.bot;
+            if (destination !== null) {
+              room.seats[destination] = movingMember;
+              if (room.battle) room.battle.ready[destination] = false;
+            }
+            if (room.phase === "assembly") {
+              if (destination !== null && !movingMember.formation)
+                movingMember.formation = G.randomFormation(
+                  7319,
+                  room.settings.costLimit,
+                  G.formationRestrictions(room.settings, destination),
+                  room.settings.unitLimit,
+                );
+            }
+          }
+        } else {
+          if (room.started) throw Error("游戏已经开始");
+          if (member.seat === null) throw Error("观战玩家无需准备");
+          if (typeof msg.ready !== "boolean") throw Error("准备状态无效");
+          const oldFormation = member.formation,
+            oldReady = member.ready;
+          try {
+            if (msg.ready && !room.resumeSave) {
+              const formation = G.validateFormation(
+                member.formationPreset?.units || msg.formation,
                 Infinity,
                 playerUnitLimit(room, member),
               );
-            member.ready = true;
-          }
-          startGame(room);
-        } catch (error) {
-          member.formation = oldFormation;
-          member.ready = oldReady;
-          throw error;
-        }
-      } else if (msg.action === "update_formation" || msg.action === "confirm_formation") {
-        if (room.resumeSave) {
-          if (msg.action !== "confirm_formation" || room.phase !== "assembly")
-            throw Error("存档编组不可更改。");
-          if (member.seat === null && member.id !== room.hostId)
-            throw Error("观战玩家不能确认编组。");
-          if (member.seat !== null && Object.keys(savedPlan(room, member.seat).reasons).length)
-            throw Error("存档编组不符合当前模式或房间禁用标签规则。");
-          if (member.seat !== null) member.finalReady = true;
-          startDeployment(room);
-          room.revision++;
-          cache.set(id, true);
-          broadcast(room, id);
-          return;
-        }
-        if (room.phase !== "assembly" && (room.started || msg.action !== "update_formation"))
-          throw Error("当前不是最终编组阶段");
-        if (member.seat === null) {
-          if (
-            msg.action !== "confirm_formation" ||
-            member.id !== room.hostId ||
-            !room.seats.filter(Boolean).every((player) => player.bot)
-          )
-            throw Error("观战玩家不能确认编组");
-          startDeployment(room);
-          room.revision++;
-          cache.set(id, true);
-          broadcast(room, id);
-          return;
-        }
-        const formation =
-          member.formationPreset?.units ||
-          (msg.formation === undefined
-            ? member.formation
-            : G.validateFormation(msg.formation, Infinity, playerUnitLimit(room, member)));
-        const plan = G.planFormation(
-          formation,
-          playerBudget(room, member),
-          playerRestrictions(room, member),
-          playerUnitLimit(room, member),
-        );
-        if (msg.action === "confirm_formation" && !plan.deployable.length &&
-            !readinessPlan(room, member, formation).deployable.length)
-          throw Error("至少需要一台符合编组规则的单位");
-        member.formation = formation;
-        // 保存编组保留自己和队友的准备/确认状态。
-        if (msg.action === "confirm_formation") member.finalReady = true;
-        if (room.phase === "assembly") startDeployment(room);
-      } else if (msg.action === "configure_player") {
-        if (room.settings.mode !== "quick")
-          throw Error("常规战不能调整玩家独立规则。");
-        if (room.hostId !== member.id) throw Error("只有房主可以调整玩家独立规则。");
-        if (room.started) throw Error("对局开始后不能修改玩家独立规则。");
-        const target = room.members.get(msg.memberId);
-        if (!target || target.bot) throw Error("目标玩家无效。");
-        if (!msg.config || typeof msg.config !== "object" || Array.isArray(msg.config) ||
-            !Object.keys(msg.config).length ||
-            Object.keys(msg.config).some((key) =>
-              !["fill", "countPercent", "unitCostPercent", "difficulty"].includes(key)))
-          throw Error("玩家独立规则无效。");
-        target.armySettings = G.validateArmySettings({
-          ...G.armySettings(target), ...msg.config,
-          ...(Object.hasOwn(msg.config, "unitCostPercent") ? { unitCostLimit: null } : {}),
-        });
-        target.ready = false;
-      } else if (msg.action === "set_faction") {
-        if (room.started) throw Error("对局开始后不能切换阵营。");
-        if (room.settings.mode === "quick" && msg.faction !== "PMC")
-          throw Error("快速战固定使用 PMC 阵营。");
-        if (!["PMC", "EFSF", "ZEON"].includes(msg.faction))
-          throw Error("玩家阵营无效。");
-        const required = forcedFaction(room, member.seat);
-        if (required && required !== msg.faction)
-          throw Error("本队已设置强制阵营。");
-        if (member.characterFaction !== msg.faction) {
-          member.characterFaction = msg.faction;
-          member.formation = null;
-          member.formationPreset = null;
-          member.ready = false;
-        }
-      } else if (msg.action === "configure_ai") {
-        if (room.hostId !== member.id) throw Error("只有房主可以设置 AI。");
-        if (room.started) throw Error("对局开始后不能修改 AI。");
-        const bot = room.seats[msg.seat];
-        if (!Number.isInteger(msg.seat) || !bot?.bot) throw Error("该席位不是 AI。");
-        if (Object.hasOwn(msg, "formationPreset"))
-          throw Error("房主不能修改 AI 编组预设。");
-        const allowed = room.settings.mode === "quick"
-          ? ["fill", "countPercent", "unitCostPercent", "difficulty"] : ["difficulty"];
-        if (!msg.config || typeof msg.config !== "object" ||
-            Array.isArray(msg.config) ||
-            Object.keys(msg.config).some((key) => !allowed.includes(key)))
-          throw Error(room.settings.mode === "quick"
-            ? "AI 独立规则无效。" : "房主只能调整 AI 单位强度。");
-        const armySettings = G.validateArmySettings({
-          ...G.armySettings(bot), ...msg.config,
-          ...(Object.hasOwn(msg.config, "unitCostPercent") ? { unitCostLimit: null } : {}),
-        });
-        const characterFaction = msg.characterFaction ?? bot.characterFaction;
-        if (!["PMC", "EFSF", "ZEON"].includes(characterFaction))
-          throw Error("AI 阵营无效。");
-        if (room.settings.mode === "quick" && characterFaction !== "PMC")
-          throw Error("快速战 AI 固定使用 PMC 阵营。");
-        const required = forcedFaction(room, bot.seat);
-        if (required && required !== characterFaction)
-          throw Error("本队已设置强制阵营。");
-        checkAIArmy(room, {
-          ...bot, armySettings, characterFaction,
-        });
-        bot.armySettings = armySettings;
-        bot.aiSettings = {
-          difficulty: armySettings.difficulty,
-          fill: armySettings.fill,
-          countPercent: armySettings.countPercent,
-        };
-        bot.characterFaction = characterFaction;
-        bot.formation = null;
-      } else if (msg.action === "add_ai" || msg.action === "remove_ai") {
-        if (room.hostId !== member.id) throw Error("只有房主可以添加或移除 AI");
-        if (room.started) throw Error("对局开始后不能添加或移除 AI");
-        const destination = msg.seat;
-        if (!Number.isInteger(destination) || destination < 0 || destination >= room.seats.length)
-          throw Error("无效的席位");
-        if (msg.action === "add_ai") {
-          if (room.seats[destination]) throw Error("只能在空位添加 AI");
-          if (room.members.size >= 32) throw Error("房间人数已满");
-          const botId = randomId();
-          const bot = {
-            id: botId,
-            name: "AI " + (destination + 1),
-            bot: true,
-            characterFaction:
-              forcedFaction(room, destination) || msg.characterFaction ||
-              (G.seatTeam(destination) === 0 ? "EFSF" : "ZEON"),
-            aiSettings: G.validateAISettings(),
-            seat: destination,
-            ready: true,
-            requests: new Map(),
-            ws: { room: room.code, memberId: botId, seat: destination },
-          };
-          if (!["PMC", "EFSF", "ZEON"].includes(bot.characterFaction))
-            throw Error("AI 阵营角色无效");
-          if (room.resumeSave?.armies[destination])
-            bot.armySettings = Records.clone(room.resumeSave.armies[destination]);
-          checkAIArmy(room, bot);
-          for (const existing of room.seats.filter((player) => player?.bot))
-            checkAIArmy(room, existing);
-          room.members.set(bot.id, bot);
-          room.seats[destination] = bot;
-        } else {
-          const bot = room.seats[destination];
-          if (!bot?.bot) throw Error("该席位不是 AI");
-          room.members.delete(bot.id);
-          room.seats[destination] = null;
-        }
-      } else if (msg.action === "configure_room") {
-        if (room.hostId !== member.id) throw Error("只有房主可以修改房间设置");
-        if (room.started) throw Error("对局开始后不能修改地图和 COST");
-        if (room.resumeSave && msg.mapId !== room.resumeSave.settings.mapId)
-          throw Error("存档地图不可更改。");
-        const map = G.getMap(msg.mapId);
-        if (msg.shareAlliedUnits !== undefined && typeof msg.shareAlliedUnits !== "boolean")
-          throw Error("友军单位共享设置无效");
-        const settings = {
-          mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
-          mapId: map.id,
-          fogMode: G.validateFogMode(msg.fogMode ?? room.settings.fogMode),
-          shareAlliedUnits: msg.shareAlliedUnits ?? room.settings.shareAlliedUnits ?? false,
-          costLimit: G.validateCostLimit(msg.costLimit),
-          unitLimit: G.validateUnitLimit(msg.unitLimit ?? room.settings.unitLimit),
-          unitCostLimit: G.validateUnitCostLimit(msg.unitCostLimit ?? room.settings.unitCostLimit),
-          ...G.validateTagRestrictions({
-            bannedFactions: msg.bannedFactions ?? room.settings.bannedFactions,
-            bannedEras: msg.bannedEras ?? room.settings.bannedEras,
-            bannedTypes: msg.bannedTypes ?? room.settings.bannedTypes,
-          }),
-          teamRestrictions: G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "quick"
-            ? G.validateTeamRestrictions(
-                msg.teamRestrictions ?? room.settings.teamRestrictions ?? [{}, {}],
+              if (
+                !G.planFormation(
+                  formation,
+                  playerBudget(room, member),
+                  { ...playerRestrictions(room, member), inventory: undefined },
+                  playerUnitLimit(room, member),
+                ).deployable.length
               )
-            : [G.validateTagRestrictions(), G.validateTagRestrictions()],
-          teamFactions: G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "quick"
-            ? [null, null]
-            : G.validateTeamFactions(
-                msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
-              ),
-        };
-        if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
-          const mapChanged = settings.mapId !== room.settings.mapId;
-          const modeChanged = settings.mode !== room.settings.mode;
-          const factionsChanged =
-            JSON.stringify(settings.teamFactions) !== JSON.stringify(room.settings.teamFactions);
-          const tagsChanged = ["bannedFactions", "bannedEras", "bannedTypes", "teamRestrictions"]
-            .some((key) => JSON.stringify(settings[key]) !== JSON.stringify(room.settings[key]));
-          room.settings = settings;
-          for (const player of members(room)) {
-            if (player.seat !== null && player.seat >= map.spawns.length) {
-              if (player.bot) {
-                room.members.delete(player.id);
-                continue;
-              }
-              player.seat = null;
-              if (player.ws) player.ws.seat = null;
+                throw Error("至少需要一台符合限制的可出击单位");
+              for (const bot of room.seats.filter((player) => player?.bot)) checkAIArmy(room, bot);
+              member.formation = formation;
             }
-          }
-          room.seats = Array(map.spawns.length).fill(null);
-          for (const player of members(room))
-            if (player.seat !== null) room.seats[player.seat] = player;
-          for (const player of members(room)) applyForcedFaction(room, player);
-          if (modeChanged && settings.mode === "regular") {
-            for (const player of members(room)) {
-              const difficulty = player.bot ? G.armySettings(player).difficulty : "medium";
-              player.armySettings = G.validateArmySettings({ difficulty });
-              if (player.bot) player.aiSettings = {
-                difficulty, fill: 100, countPercent: 100,
-              };
-            }
-          }
-          room.turnDone = Array(map.spawns.length).fill(false);
-          if (mapChanged || modeChanged || factionsChanged || tagsChanged) resetReady(room);
-        }
-      } else if (msg.action === "kick_player") {
-        if (room.hostId !== member.id) throw Error("只有房主可以踢出玩家");
-        const target = room.members.get(msg.memberId);
-        if (!target || target.id === member.id || target.bot) throw Error("无效的玩家");
-        cancelSeatMoves(room, target.seat);
-        if (target.seat !== null) {
-          room.seats[target.seat] = null;
-          if (room.battle) room.battle.ready[target.seat] = false;
-        }
-        clearReconnect(target);
-        room.members.delete(target.id);
-        presenceMessage(room, target, "被房主移出了房间");
-        if (target.ws) {
-          const targetSocket = target.ws;
-          delete targetSocket.room;
-          delete targetSocket.memberId;
-          delete targetSocket.seat;
-          send(targetSocket, { type: "room_closed", message: "你已被房主移出房间。" });
-          targetSocket.close(1000, "Removed by host");
-        }
-      } else if (
-        msg.action === "switch_seat" ||
-        msg.action === "join_team" ||
-        msg.action === "move_player"
-      ) {
-        let movingMember = member;
-        if (msg.action === "move_player") {
-          if (room.hostId !== member.id) throw Error("只有房主可以调整玩家席位");
-          if (room.started) throw Error("对局开始后不能调整其他玩家席位");
-          movingMember = room.members.get(msg.memberId);
-          if (!movingMember) throw Error("无效的玩家");
-          if (movingMember.bot && msg.seat === null) throw Error("AI不能移入观战席");
-        }
-        let destination = msg.seat;
-        if (msg.action === "join_team") {
-          if (msg.team !== 0 && msg.team !== 1) throw Error("无效的队伍。");
-          destination =
-            movingMember.seat !== null && G.seatTeam(movingMember.seat) === msg.team
-              ? movingMember.seat
-              : room.seats.findIndex((player, seat) => !player && G.seatTeam(seat) === msg.team);
-          if (destination < 0) throw Error("队伍已满，请选择其他队伍或观战席。");
-        }
-        if (
-          destination !== null &&
-          (!Number.isInteger(destination) || destination < 0 || destination >= room.seats.length)
-        )
-          throw Error("无效的席位");
-        if (
-          destination !== null &&
-          room.seats[destination] &&
-          room.seats[destination] !== movingMember
-        )
-          throw Error("这个队伍已有玩家");
-        if (movingMember.seat !== destination) {
-          cancelSeatMoves(room, movingMember.seat);
-          if (movingMember.seat !== null) {
-            room.seats[movingMember.seat] = null;
-            if (room.battle) room.battle.ready[movingMember.seat] = false;
-          }
-          movingMember.seat = destination;
-          movingMember.shareUnits = false;
-          if (movingMember.ws) movingMember.ws.seat = destination;
-          applyForcedFaction(room, movingMember);
-          movingMember.ready = !!movingMember.bot;
-          if (destination !== null) {
-            room.seats[destination] = movingMember;
-            if (room.battle) room.battle.ready[destination] = false;
-          }
-          if (room.phase === "assembly") {
-            if (destination !== null && !movingMember.formation)
-              movingMember.formation = G.randomFormation(
-                7319,
-                room.settings.costLimit,
-                G.formationRestrictions(room.settings, destination),
-                room.settings.unitLimit,
-              );
+            member.ready = msg.ready;
+          } catch (error) {
+            member.formation = oldFormation;
+            member.ready = oldReady;
+            throw error;
           }
         }
-      } else {
-        if (room.started) throw Error("游戏已经开始");
-        if (member.seat === null) throw Error("观战玩家无需准备");
-        if (typeof msg.ready !== "boolean") throw Error("准备状态无效");
-        const oldFormation = member.formation,
-          oldReady = member.ready;
-        try {
-          if (msg.ready && !room.resumeSave) {
-            const formation = G.validateFormation(
-              member.formationPreset?.units || msg.formation,
-              Infinity,
-              playerUnitLimit(room, member),
-            );
-            if (
-              !G.planFormation(
-                formation,
-                playerBudget(room, member),
-                {...playerRestrictions(room, member), inventory: undefined},
-                playerUnitLimit(room, member),
-              ).deployable.length
-            )
-              throw Error("至少需要一台符合限制的可出击单位");
-            for (const bot of room.seats.filter((player) => player?.bot)) checkAIArmy(room, bot);
-            member.formation = formation;
-          }
-          member.ready = msg.ready;
-        } catch (error) {
-          member.formation = oldFormation;
-          member.ready = oldReady;
-          throw error;
-        }
+        room.revision++;
+        cache.set(id, true);
+        if (cache.size > 512) cache.delete(cache.keys().next().value);
+        broadcast(room, id);
+        return;
+      } catch (error) {
+        member.inventory = previousInventory;
+        throw error;
       }
-      room.revision++;
-      cache.set(id, true);
-      if (cache.size > 512) cache.delete(cache.keys().next().value);
-      broadcast(room, id);
-      return;
-      } catch (error) { member.inventory = previousInventory; throw error; }
     }
     if (seat === null) throw Error("观战玩家不能操作战局");
     if (!room.started || !connected(room).every(Boolean)) throw Error("对手已断线，等待重连后继续");
@@ -2618,7 +3002,15 @@ function createRoomEngine({
       room.phase === "deployment" &&
       msg.matchId === room.matchId &&
       msg.round === room.game.round &&
-      ["deploy", "rotate", "confirm_deployment", "embark", "launch", "confirm_move", "cancel_move"].includes(msg.action);
+      [
+        "deploy",
+        "rotate",
+        "confirm_deployment",
+        "embark",
+        "launch",
+        "confirm_move",
+        "cancel_move",
+      ].includes(msg.action);
     const concurrentPlan =
       room.phase === "idle" &&
       msg.round === room.game.round &&
@@ -2690,12 +3082,15 @@ function createRoomEngine({
             units: [passenger, carrier],
           });
         } else {
-          event = member.bot ? G.hangars.launch(room.game, passenger, msg.x, msg.y) : G.hangars.previewLaunch(room.game, passenger, msg.x, msg.y, seat);
-          if (member.bot) log(
-            room,
-            `${unitLabel(room, passenger)} 出击至${G.columnLabel(passenger.x)}${passenger.y + 1}。`,
-            { units: [passenger] },
-          );
+          event = member.bot
+            ? G.hangars.launch(room.game, passenger, msg.x, msg.y)
+            : G.hangars.previewLaunch(room.game, passenger, msg.x, msg.y, seat);
+          if (member.bot)
+            log(
+              room,
+              `${unitLabel(room, passenger)} 出击至${G.columnLabel(passenger.x)}${passenger.y + 1}。`,
+              { units: [passenger] },
+            );
         }
         break;
       }
@@ -2739,7 +3134,88 @@ function createRoomEngine({
         const u = ownUnit(room, seat, msg.unitId),
           label = unitLabel(room, u);
         const skill = G.unitSkills(u).find((s) => s.id === msg.skillId);
+        const irradiationActors =
+          skill?.type === "irradiation" ? JSON.parse(JSON.stringify(room.game.units)) : null;
+        const irradiationIntel =
+          skill?.type === "irradiation"
+            ? { 0: G.sensors.view(room.game, 0), 1: G.sensors.view(room.game, 1) }
+            : null;
         event = G.useSkill(room.game, u, msg.skillId, msg.x, msg.y);
+        if (event.irradiation) {
+          for (const hit of event.hits) {
+            const target = room.game.units.find((other) => other.id === hit.unitId);
+            if (!target) continue;
+            if (u.team !== target.team && hit.damage > 0) {
+              const owner = room.seats[G.ownerOf(u)],
+                faction = G.modelOf(u).faction;
+              if (owner) {
+                const contributions = ((room.playerDamage ||= {})[target.id] ||= {});
+                const contribution = (contributions[owner.id] ||= {
+                  seat: G.ownerOf(u),
+                  damage: 0,
+                  factions: {},
+                });
+                contribution.damage += hit.damage;
+                contribution.factions[faction] = (contribution.factions[faction] || 0) + hit.damage;
+              }
+              if (u.pilot?.custom) {
+                const damage = ((room.pilotDamage ||= {})[target.id] ||= {});
+                const contribution = (damage[G.ownerOf(u) + ":" + u.pilot.id] ||= {
+                  seat: G.ownerOf(u),
+                  pilotId: u.pilot.id,
+                  damage: 0,
+                });
+                contribution.damage += hit.damage;
+              }
+            }
+            if (hit.before > 0 && hit.after <= 0) {
+              const defeated = G.modelOf(target);
+              if (u.team !== target.team)
+                recordPilotBattle(room, u, "kill", defeated.cost, !!defeated.ship);
+              recordPilotBattle(room, target, "loss", defeated.cost);
+              awardDefeat(room, u, target, defeated);
+              settlePilotAssists(room, target, u);
+            }
+          }
+          for (const evacuation of event.evacuations || []) {
+            if (
+              evacuation.escaped ||
+              event.hits.some((hit) => hit.unitId === evacuation.unitId && hit.after <= 0)
+            )
+              continue;
+            const passenger = unit(room, evacuation.unitId),
+              model = G.modelOf(passenger);
+            if (u.team !== passenger.team)
+              recordPilotBattle(room, u, "kill", model.cost, !!model.ship);
+            recordPilotBattle(room, passenger, "loss", model.cost);
+            awardDefeat(room, u, passenger, model);
+            settlePilotAssists(room, passenger, u);
+          }
+          const { hits, evacuations, ...visual } = event;
+          const actorIds = new Set([
+            u.id,
+            ...hits.map((hit) => hit.unitId),
+            ...evacuations.map((exit) => exit.unitId),
+          ]);
+          room.irradiationActors = irradiationActors.filter((actor) => actorIds.has(actor.id));
+          room.irradiationHits = hits;
+          room.playbackIntel = irradiationIntel;
+          room.combatBatch = [];
+          room.playback = {
+            id: randomId(),
+            startedAt: Date.now(),
+            matchId: room.matchId,
+            members: members(room)
+              .filter((m) => !m.bot && onlineMember(m))
+              .map((m) => m.id),
+            ready: [],
+            automatic: false,
+            resumeTurn: true,
+            skillEffect: visual,
+          };
+          room.phase = "playback";
+        }
+
         const result = unit(room, event.resultId);
         log(
           room,
@@ -2840,7 +3316,13 @@ function createRoomEngine({
             : [],
           w = weapons[0];
         if (!w || !b) throw Error("武器或目标无效");
-        const plan = planner.plan(room, a, msg.aimCell ? {...b, aimCell: msg.aimCell} : b, weapons, seat);
+        const plan = planner.plan(
+          room,
+          a,
+          msg.aimCell ? { ...b, aimCell: msg.aimCell } : b,
+          weapons,
+          seat,
+        );
         event = { type: "plan_attack", ...plan };
         log(
           room,
@@ -2852,7 +3334,8 @@ function createRoomEngine({
       case "cancel_attack": {
         validateActive(room, seat);
         const attacker = ownUnit(room, seat, msg.unitId);
-        if (msg.targetId !== undefined && typeof msg.targetId !== "string") throw Error("攻击目标无效");
+        if (msg.targetId !== undefined && typeof msg.targetId !== "string")
+          throw Error("攻击目标无效");
         planner.cancel(room, attacker, msg.targetId ?? null);
         event = { type: "cancel_plan", unitId: attacker.id, targetId: msg.targetId };
         log(room, `${unitLabel(room, attacker)} 取消攻击计划。`, { units: [attacker] });
@@ -2865,14 +3348,15 @@ function createRoomEngine({
         const b = unit(room, pending.target);
         if (!canControl(room, seat, b)) throw Error("不能操作该单位的应战");
         if (msg.response === "counter" && msg.counterOrders !== undefined)
-          planner.chooseBatch(room,msg.reactionId,msg.counterOrders);
-        else planner.choose(
-          room,
-          msg.reactionId,
-          msg.response,
-          msg.counterIds ?? msg.counterId,
-          msg.counterTargetId ?? pending.attacker,
-        );
+          planner.chooseBatch(room, msg.reactionId, msg.counterOrders);
+        else
+          planner.choose(
+            room,
+            msg.reactionId,
+            msg.response,
+            msg.counterIds ?? msg.counterId,
+            msg.counterTargetId ?? pending.attacker,
+          );
         const decision =
           msg.response === "counter" ? "反击" : msg.response === "defend" ? "防御" : "回避";
         log(room, `${unitLabel(room, b)} 选择${decision}。`, { units: [b] });
@@ -2910,8 +3394,12 @@ function createRoomEngine({
     if (msg.mode === "create") {
       if (room) throw Error("房间已存在，请使用加入房间或换一个房间码");
       if (rooms.size >= 64) throw Error("房间数量已满");
-      if (msg.locked !== undefined && typeof msg.locked !== "boolean") throw Error("房间锁设置无效");
-      if (msg.locked && (typeof msg.password !== "string" || !msg.password.trim() || msg.password.length > 64))
+      if (msg.locked !== undefined && typeof msg.locked !== "boolean")
+        throw Error("房间锁设置无效");
+      if (
+        msg.locked &&
+        (typeof msg.password !== "string" || !msg.password.trim() || msg.password.length > 64)
+      )
         throw Error("房间密码需为1到64个字符");
       room = {
         code,
@@ -2946,8 +3434,13 @@ function createRoomEngine({
       seat = 0;
     } else {
       if (!room) throw Error("房间不存在，请确认IP和房间码；服务端重启后需重新创建");
-      if (msg.mode === "join" && room.passwordMatches &&
-          (typeof msg.password !== "string" || msg.password.length > 64 || !room.passwordMatches(msg.password)))
+      if (
+        msg.mode === "join" &&
+        room.passwordMatches &&
+        (typeof msg.password !== "string" ||
+          msg.password.length > 64 ||
+          !room.passwordMatches(msg.password))
+      )
         throw Error("房间密码错误");
       seat =
         room.started && room.phase !== "assembly"
@@ -2955,8 +3448,7 @@ function createRoomEngine({
           : room.seats.findIndex((player) => !player);
       if (seat === -1) seat = null;
     }
-    if (msg.mode !== "resume")
-      characterFaction = forcedFaction(room, seat) || characterFaction;
+    if (msg.mode !== "resume") characterFaction = forcedFaction(room, seat) || characterFaction;
     let member;
     if (msg.mode === "resume") {
       if (typeof msg.token !== "string") throw Error("缺少重连凭据");
@@ -3025,7 +3517,8 @@ function createRoomEngine({
     let room = rooms.get(ws.room);
     const member = room?.members.get(ws.memberId);
     if (member?.ws === ws) {
-      if (room.started && room.phase !== "finished") (room.lossExemptMembers ||= new Set()).add(member.id);
+      if (room.started && room.phase !== "finished")
+        (room.lossExemptMembers ||= new Set()).add(member.id);
       member.ws = null;
       clearReconnect(member);
       member.disconnectedUntil = Date.now() + reconnectGraceMs;
@@ -3053,6 +3546,8 @@ function createRoomEngine({
     }
   }
   function close() {
+    for (const entry of burnTimers.values()) clearTimeout(entry.timer);
+    burnTimers.clear();
     for (const member of [...reconnectTimers.keys()]) clearReconnect(member);
     for (const timer of returnTimers.values()) clearTimeout(timer);
     returnTimers.clear();

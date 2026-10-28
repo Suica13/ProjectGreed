@@ -1119,10 +1119,10 @@
       "hitBonus": 0,
       "slot": "skill",
       "clip": "Common_Shoot_Two_Handed_A_Stand",
-      "damagePerShot": 22500.0,
+      "damagePerShot": 11250.0,
       "damageComponents": {
-        "beam": 15000.0,
-        "beamAP": 7500.0
+        "beam": 7500.0,
+        "beamAP": 3750.0
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1263,13 +1263,20 @@
       "category": "sniper",
       "noCounter": true,
       "hitScale": 2,
-      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害与EN沿用原MOD技能。",
+      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害为原MOD技能的一半，EN不变。",
       "special": {
         "type": "snipe",
         "delayOwnTurns": 1,
         "baseWeapon": "EF_R4_BeamSniperRifle"
       },
-      "actionCost": 4
+      "actionCost": 4,
+      "sniperDamageBeforeHalving": {
+        "damagePerShot": 22500.0,
+        "damageComponents": {
+          "beam": 15000.0,
+          "beamAP": 7500.0
+        }
+      }
     },
     "EF_75mmSniperRifle": {
       "name": "狙击步枪",
@@ -1435,9 +1442,9 @@
       "hitBonus": 0,
       "slot": "skill",
       "clip": "Common_Shoot_Two_Handed_A_Stand",
-      "damagePerShot": 30000.0,
+      "damagePerShot": 15000.0,
       "damageComponents": {
-        "shell": 30000.0
+        "shell": 15000.0
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1577,13 +1584,19 @@
       "category": "sniper",
       "noCounter": true,
       "hitScale": 2,
-      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害与EN沿用原MOD技能。",
+      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害为原MOD技能的一半，EN不变。",
       "special": {
         "type": "snipe",
         "delayOwnTurns": 1,
         "baseWeapon": "EF_75mmSniperRifle"
       },
-      "actionCost": 4
+      "actionCost": 4,
+      "sniperDamageBeforeHalving": {
+        "damagePerShot": 30000.0,
+        "damageComponents": {
+          "shell": 30000.0
+        }
+      }
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",

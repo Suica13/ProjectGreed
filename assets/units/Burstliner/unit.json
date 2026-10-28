@@ -1215,7 +1215,15 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "requiresSfsMS": true,
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "converted_skill"
+        ],
+        "convertedSkill": "Irradiation"
+      }
     }
   },
   "mechanics": [
@@ -1235,6 +1243,11 @@
       "source": "Template/Unit/Skill/SFS_CantAttack_Neutral.gw",
       "status": "adapted",
       "name": "SFS：可见MS搭载槽，平台与乘员独立攻击和受击，移动离机"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "光束照射：方向射线、蓄力、逐机命中与长度自适应贴图"
     }
   ],
   "weaponKits": [
@@ -1242,9 +1255,7 @@
       "id": "standard",
       "name": "标准套件",
       "cost": 0,
-      "weapons": [
-        "EF_Burstliner_BeamCannon"
-      ]
+      "weapons": []
     }
   ],
   "description": "联邦军开发的一种炮击用平台",
@@ -1255,7 +1266,63 @@
     "levelMultiplier": 0.25,
     "published": 375
   },
-  "skills": [],
+  "skills": [
+    {
+      "id": "Irradiation",
+      "type": "irradiation",
+      "name": "光束照射",
+      "range": 10,
+      "minRange": 1,
+      "actionCost": 5,
+      "enCostPercent": 50,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": true,
+      "baseHit": 60,
+      "damageComponents": {
+        "beam": 39956.341552734375,
+        "beamAP": 19978.170776367188
+      },
+      "nativeTotalDamage": 1198690.2465820312,
+      "nativeRepeatMultiplier": 3.6996612548828125,
+      "sourceWeapon": "EF_Burstliner_BeamCannon",
+      "requiredParts": [],
+      "requiresSfsMS": true,
+      "chargeSeconds": 2.1,
+      "fireSeconds": 2,
+      "visualColor": "Pink",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 0.0,
+              "y": 70.0
+            }
+          }
+        ]
+      },
+      "weaponDisplayIndex": 0,
+      "clip": null,
+      "effect": "Irradiation_Charge_Pink",
+      "sound": {
+        "file": "../../sounds/BeamCharge_4.ogg",
+        "volume": 0.7
+      },
+      "localization": {
+        "zh": {
+          "name": "光束照射"
+        },
+        "en": {
+          "name": "Irradiation Beam"
+        },
+        "ja": {
+          "name": "照射ビーム"
+        }
+      },
+      "description": "选择方向照射10格；消耗5 AP与50%最大EN，冷却3个己方回合。基础命中60%，对沿途每台单位（含友军）判定一次，基础伤害为原MOD完整伤害的1/20。"
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "Aircraft",

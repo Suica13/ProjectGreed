@@ -682,25 +682,37 @@ body.menu-shell-active
 }
 @media (max-width: 720px) {
   .shell-top {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 7px;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    min-height: 0;
+    padding: 8px;
+    gap: 6px;
   }
   .shell-brand {
-    grid-column: 1/-1;
+    grid-column: 1;
     grid-row: 1;
+    overflow: hidden;
+  }
+  #menuShell .shell-brand strong {
+    font-size: clamp(10px, 2.9vw, 12px);
+    letter-spacing: 0.25px;
+  }
+  .shell-brand small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   #shellProfile {
-    grid-column: 1;
-    grid-row: 2;
+    grid-column: 2;
+    grid-row: 1;
     justify-self: end;
   }
   #shellSettings {
-    grid-column: 2;
-    grid-row: 2;
+    grid-column: 3;
+    grid-row: 1;
   }
   .shell-primary {
     grid-column: 1/-1;
-    grid-row: 3;
+    grid-row: 2;
   }
   #shellProfile #playerId {
     width: 100px;

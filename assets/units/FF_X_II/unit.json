@@ -668,8 +668,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     }
   ],
   "weaponKits": [
@@ -721,6 +721,23 @@
           "limb": null
         }
       ]
+    }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_FF_X_II_FB",
+      "unitId": "FF_X_II_FB",
+      "money": 100,
+      "supplies": 200,
+      "unlockUnits": [
+        "FF_X_II_FB"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/FF_X_II/FF_X_II.ini",
+        "action": "action_CustomUnit_FF_X_II_FB",
+        "seconds": 20.0
+      }
     }
   ]
 }

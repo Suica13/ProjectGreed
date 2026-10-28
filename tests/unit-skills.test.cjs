@@ -53,11 +53,10 @@ test("RX-78-1 keeps native reaction, accuracy, arm-aware melee Steps, kit mounts
   );
   assert.equal(
     m.weapons.some((w) => w.id === "EF_BeamSaber_Double_AALDF"),
-    false,
+    true,
   );
-  const twin = m.hiddenWeapons.find((w) => w.id === "EF_BeamSaber_Double_AALDF");
-  assert.ok(twin.reasons.includes("pilot_skill"));
-  assert.ok(twin.requirements.some((r) => r.greaterThan === 145));
+  const twin = m.weapons.find((w) => w.id === "EF_BeamSaber_Double_AALDF");
+  assert.deepEqual(twin.pilotRequirements, [{stat:"melee",operator:">",value:145}]);
   const core = G.models.FF_X7__standard;
   assert.equal(core.movementType, "air");
   assert.equal(core.partsBreakable, false);

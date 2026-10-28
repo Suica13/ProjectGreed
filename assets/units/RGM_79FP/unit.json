@@ -400,8 +400,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "ShoulderL",
@@ -1460,10 +1459,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1541,7 +1538,20 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79FP/RGM_79FP.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      }
     },
     "Common_Cqb_A_L": {
       "name": "近身格斗",
@@ -1612,10 +1622,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1692,7 +1700,21 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79FP/RGM_79FP.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "requiresShield": true
     }
   },
   "mechanics": [
@@ -1704,8 +1726,8 @@
     {
       "id": "ExitUnit",
       "source": "Template/Unit/Skill/ExitUnit.gw",
-      "status": "review",
-      "name": "脱出"
+      "status": "adapted",
+      "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
     },
     {
       "id": "ExplosiveReactiveArmor_Shell",
@@ -1722,7 +1744,9 @@
       "weapons": [
         "EF_100mmMG",
         "Common_Push_A",
-        "EF_BeamLancer_BF_B"
+        "EF_BeamLancer_BF_B",
+        "EF_BeamSaber_F",
+        "Common_Cqb_A_L"
       ]
     },
     {
@@ -1732,12 +1756,55 @@
       "weapons": [
         "EF_HypeBazooka",
         "Common_Push_A",
-        "EF_BeamLancer_BF_B"
+        "EF_BeamLancer_BF_B",
+        "EF_BeamSaber_F",
+        "Common_Cqb_A_L"
       ]
     }
   ],
   "description": "装备了爆炸反应装甲与光束长枪的吉姆改,擅长格斗战",
-  "skills": [],
+  "skills": [
+    {
+      "id": "ExitUnit",
+      "type": "armor_purge",
+      "name": "爆甲",
+      "localization": {
+        "zh": {
+          "name": "爆甲"
+        },
+        "en": {
+          "name": "Armor Purge"
+        },
+        "ja": {
+          "name": "装甲パージ"
+        }
+      },
+      "range": 0,
+      "minRange": 0,
+      "maxUses": 1,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_ExitUnit",
+      "source": {
+        "mode": "transform",
+        "unitId": "RGM_79C",
+        "kitId": "kit_0",
+        "kitMap": {
+          "kit_0": "kit_0",
+          "kit_1": "kit_0"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 35.0,
+        "enRecoveryPercent": 35.0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      }
+    }
+  ],
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {

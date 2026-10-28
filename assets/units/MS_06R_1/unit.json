@@ -1337,8 +1337,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     }
   ],
   "weaponKits": [
@@ -1383,5 +1383,22 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_06R_1A",
+      "unitId": "MS_06R_1A",
+      "money": 250,
+      "supplies": 250,
+      "unlockUnits": [
+        "MS_06R_1A"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_1/MS_06R_1.ini",
+        "action": "action_CustomUnit_MS_06R_1A",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

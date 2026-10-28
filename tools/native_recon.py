@@ -23,7 +23,8 @@ def correct(prefab, native):
             sound={"file":"../../sounds/" + sound + ".ogg", "volume":0.5},
             localization={"zh":{"name":label},"en":{"name":"Camera Gun" if camera else "Active Scan"},"ja":{"name":"カメラガン" if camera else "索敵"}})
         if camera:
-            skill.update(areaSight=7.5, areaRadar=270 / RADAR_WORLD_UNITS_PER_TILE)
+            skill.update(minRange=10, range=15, areaSight=3, areaRadar=3, actionCost=3,
+                description="射程10～15格，消耗3 AP与30 EN；揭露目标半径3格视野并探测敌人，持续至下次己方回合。")
             source = section(native, "hiddenAction_Common_CameraGun_SetWeaponIndex")
             match = re.search(r"nowWeaponIndex\s*=\s*(\d+)", source.get("setUnitMemory", ""))
             if match: skill["weaponDisplayIndex"] = int(match[1])

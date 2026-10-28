@@ -20,6 +20,13 @@ function runtime() {
       if (!elements.has(id)) elements.set(id, {});
       return elements.get(id);
     },
+    IrradiationFX: {
+      reset() {},
+      start: (event, done) => {
+        (calls.beams ||= []).push(event);
+        calls.beamDone = done;
+      },
+    },
     MapCombat: {
       reset: () => {},
       seed: () => {},
@@ -103,4 +110,22 @@ test("unfinished reconnects replay the active batch; a viewer who already confir
   second.context.Net.snapshot = snapshot(["viewer"]);
   second.playback.receive(second.context.Net.snapshot, false);
   assert.equal(second.playback.queued, 0);
+});
+
+test("irradiation playback waits for the beam and native death effects before acknowledging", () => {
+  const { context, playback, calls } = runtime(),
+    state = snapshot();
+  state.combats = [];
+  state.playback.skillEffect = { irradiation: true };
+  context.Net.snapshot = state;
+  playback.receive(state, true);
+  playback.receive(state, true);
+  assert.equal(calls.beams.length, 1);
+  assert.equal(playback.waitingFor(state), true);
+  playback.show();
+  assert.equal(calls.requests.length, 0);
+  calls.beamDone();
+  assert.equal(playback.waitingFor(state), false);
+  playback.show();
+  assert.equal(calls.requests[0].action, "playback_ready");
 });

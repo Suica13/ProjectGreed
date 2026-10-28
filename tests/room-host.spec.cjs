@@ -29,25 +29,24 @@ test("room creator remains host after refresh and can still configure map, COST 
     await expect(page.locator("#roomPreparation")).toBeVisible();
     const creator = await page.evaluate(() => Net.memberId);
     await expect(page.locator("#roomMapSelect")).toBeEnabled();
-    await expect(page.locator('.spawn-slot[data-seat="0"] .lineup-name > strong')).toHaveClass(
-      /player-host/,
+    await expect(page.locator('.spawn-slot[data-seat="0"] .lineup-ready')).toHaveText(
+      "\u623f\u4e3b",
     );
     await lobby(guest, address.port, "Guest");
     await guest.locator(".room-card").filter({ hasText: "HOSTORDER" }).getByRole("button").click();
     await expect(guest.locator("#roomPreparation")).toBeVisible();
     await expect(guest.locator("#roomMapSelect")).toBeDisabled();
-    await expect(guest.locator('.spawn-slot[data-seat="1"] .lineup-name > strong')).toHaveClass(
-      /player-self/,
-    );
+    await expect(
+      guest.locator('.spawn-slot[data-seat="1"] .lineup-name .player-name'),
+    ).toContainText("Guest");
     await page.reload();
     await expect(page.locator("#roomPreparation")).toBeVisible();
     expect(await page.evaluate(() => Net.memberId)).toBe(creator);
     expect(await page.evaluate(() => Net.snapshot.hostId)).toBe(creator);
     await expect(page.locator("#roomMapSelect")).toBeEnabled();
     await expect(page.locator("#roomCostLimit")).toBeEnabled();
-    await expect(page.locator('.spawn-slot[data-seat="0"] .lineup-name > strong')).toHaveCSS(
-      "color",
-      "rgb(240, 206, 103)",
+    await expect(page.locator('.spawn-slot[data-seat="0"] .lineup-ready')).toHaveText(
+      "\u623f\u4e3b",
     );
     await page.locator("#roomMapSelect").selectOption("crossroads_2v2");
     await page.locator("#roomCostLimit").fill("4200");
@@ -57,18 +56,17 @@ test("room creator remains host after refresh and can still configure map, COST 
       .poll(() => guest.evaluate(() => Net.snapshot.settings.mapId))
       .toBe("crossroads_2v2");
     await page.locator("#addAI2").click();
-    await expect(page.locator("#removeAI2")).toBeVisible();
+    await expect(page.locator("#aiSettings2")).toBeVisible();
     await page.locator("#chooseSeat3").click();
     await expect.poll(() => page.evaluate(() => Net.seat)).toBe(3);
-    await expect(page.locator('.spawn-slot[data-seat="3"] .lineup-name > strong')).toHaveClass(
-      /player-host/,
+    await expect(page.locator('.spawn-slot[data-seat="3"] .lineup-ready')).toHaveText(
+      "\u623f\u4e3b",
     );
     await expect(page.locator("#roomMapSelect")).toBeEnabled();
     await page.evaluate(() => openMenu());
     await expect.poll(() => guest.evaluate(() => Net.snapshot.hostId === Net.memberId)).toBe(true);
-    await expect(guest.locator('.spawn-slot[data-seat="1"] .lineup-name > strong')).toHaveCSS(
-      "color",
-      "rgb(240, 206, 103)",
+    await expect(guest.locator('.spawn-slot[data-seat="1"] .lineup-ready')).toHaveText(
+      "\u623f\u4e3b",
     );
     await expect(guest.locator("#roomMapSelect")).toBeEnabled();
     await expect(guest.locator("#roomCostLimit")).toBeEnabled();
@@ -82,7 +80,7 @@ test("room creator remains host after refresh and can still configure map, COST 
     await app.close();
   }
 });
-test("offline creator remains gold and can edit settings from a different spawn or spectator seat", async ({
+test("offline creator remains host and can edit settings from a different spawn or spectator seat", async ({
   page,
 }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
@@ -91,19 +89,16 @@ test("offline creator remains gold and can edit settings from a different spawn 
   await page.locator("#createOfflineRoom").click();
   await expect(page.locator("#roomMapSelect")).toBeEnabled();
   const id = await page.evaluate(() => Net.memberId);
-  await expect(page.locator('.spawn-slot[data-seat="0"] .lineup-name > strong')).toHaveClass(
-    /player-host/,
-  );
+  await expect(page.locator('.spawn-slot[data-seat="0"] .lineup-ready')).toHaveText("\u623f\u4e3b");
+  await page.locator("#aiSettings1").click();
   await page.locator("#removeAI1").click();
   await expect(page.locator("#chooseSeat1")).toBeEnabled();
   await page.locator("#chooseSeat1").click();
   await expect.poll(() => page.evaluate(() => Net.seat)).toBe(1);
   expect(await page.evaluate(() => Net.snapshot.hostId)).toBe(id);
-  await expect(page.locator('.spawn-slot[data-seat="1"] .lineup-name > strong')).toHaveClass(
-    /player-host/,
-  );
+  await expect(page.locator('.spawn-slot[data-seat="1"] .lineup-ready')).toHaveText("\u623f\u4e3b");
   await page.locator("#becomeSpectator").click();
-  await expect(page.locator("#spectatorSlots .player-host")).toBeVisible();
+  await expect(page.locator("#spectatorSlots .player-name")).toBeVisible();
   await expect(page.locator("#roomMapSelect")).toBeEnabled();
   await expect(page.locator("#roomCostLimit")).toBeEnabled();
 });

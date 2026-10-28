@@ -1099,8 +1099,8 @@
     {
       "id": "CustomUnit_NewUnit",
       "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
-      "status": "review",
-      "name": "改修生成新机体"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     }
   ],
   "weaponKits": [
@@ -1135,5 +1135,67 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MS_06S",
+      "unitId": "MS_06S",
+      "money": 250,
+      "supplies": 250,
+      "unlockUnits": [
+        "MS_06S"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06C.ini",
+        "action": "action_CustomUnit_MS_06S",
+        "seconds": 30.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_MS_06F",
+      "unitId": "MS_06F",
+      "money": 200,
+      "supplies": 200,
+      "unlockUnits": [
+        "MS_06F"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06C.ini",
+        "action": "action_CustomUnit_MS_06F",
+        "seconds": 30.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_MS_06J",
+      "unitId": "MS_06J",
+      "money": 225,
+      "supplies": 225,
+      "unlockUnits": [
+        "MS_06J"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06C.ini",
+        "action": "action_CustomUnit_MS_06J",
+        "seconds": 30.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_MS_06R_1",
+      "unitId": "MS_06R_1",
+      "money": 225,
+      "supplies": 225,
+      "unlockUnits": [
+        "MS_06R_1"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06C.ini",
+        "action": "action_CustomUnit_MS_06R_1",
+        "seconds": 30.0
+      }
+    }
+  ]
 }

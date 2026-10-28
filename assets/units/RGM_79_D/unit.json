@@ -1529,10 +1529,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1609,7 +1607,21 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_D/RGM_79_D.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "requiresShield": true
     }
   },
   "mechanics": [
@@ -1634,7 +1646,8 @@
         "EF_Railgun_79_D_MS",
         "Common_Push_A",
         "EF_BeamSaber_A",
-        "EF_Railgun_79_D_RG"
+        "EF_Railgun_79_D_RG",
+        "Common_Cqb_A_L"
       ]
     },
     {
@@ -1644,7 +1657,8 @@
       "weapons": [
         "EF_BeamSprayGunFD",
         "Common_Push_A",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Cqb_A_L"
       ]
     }
   ],

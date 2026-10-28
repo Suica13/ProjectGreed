@@ -29,6 +29,18 @@ def attach(prefab,native):
         kind="transform";target="YMT_05_ModeB" if ident=="YMT_05" else "YMT_05";recovery=0;repair=False
     elif ident=="FA_78_1_NA":kind="escape";target="FF_X7";recovery=100;repair=True
     elif ident=="MTank":kind="escape";target="MTank_Top";recovery=100;repair=True
+    if not kind and not any(s.get('type') in ('escape', 'armor_purge') for s in prefab.get('skills', [])):
+        import re
+        action = native.get('action_ExitUnit', {})
+        step = native.get('hiddenAction_ExitUnit_Step2', {})
+        spawn = re.fullmatch(r'(\w+)\*1(?:\(.*\))?', action.get('spawnUnits', ''))
+        if spawn and step.get('deleteSelf', '').lower() == 'true':
+            kind, target, recovery, repair = 'escape', spawn[1], 100, True
+        elif step.get('convertTo') and (ASSETS / 'units' / step['convertTo'] / 'unit.json').exists():
+            kind, target, repair = 'armor_purge', step['convertTo'], False
+            message = native.get('hiddenAction_Send_TryTransform_ExitUnit', {}).get('sendMessageWithData', '')
+            match = re.search(r'RecoverHpPer=([0-9.]+)', message)
+            recovery = float(match[1]) * 100 if match else 0
     if not kind:return
     config=result(target,prefab,recovery,repair,kind!="escape")
     if config is None:return

@@ -1771,7 +1771,7 @@
       "consumeAction": false,
       "enPercent": 25,
       "duration": 3,
-      "hpDrainPercent": 10,
+      "hpDrainPercent": 25,
       "enDrainPercent": 5,
       "formUnitId": "MS_08TX_Kai_EXAM",
       "formKits": {

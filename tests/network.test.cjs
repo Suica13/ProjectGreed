@@ -3672,6 +3672,34 @@ test("researched technology sent with a formation unlocks its units on the serve
   );
 });
 
+for (const faction of ["EFSF", "ZEON", "PMC"])
+  test(`AI full technology survives room assembly and deploys a funded ${faction} roster`, async (t) => {
+    const { app, client } = await setup(t, { aiDelayMs: 10000 });
+    const host = await client();
+    await host.hello("create", "AITECH");
+    const configured = await host.act("configure_room", {
+      mapId:"frontier_1v1", costLimit:900, unitCostLimit:250, unitLimit:12,
+      bannedEras:["0083"],
+    });
+    assert.equal(configured.type,"state",JSON.stringify(configured));
+    assert.equal((await host.act("add_ai",{seat:1,characterFaction:faction})).type,"state");
+    const room=app.rooms.get("AITECH");
+    const readiness=await host.act("set_ready",{ready:true,
+      formation:[{unitId:"Type61",kitId:"standard"}],inventory:{Type61:1}});
+    assert.equal(readiness.type,"state",JSON.stringify(readiness));
+    await startRoom(host);
+    await confirmAssembly(host);
+    const bot=room.seats[1],army=bot.formation;
+    const restrictions=G.armyRestrictions(room.settings,bot);
+    const cost=army.reduce((sum,e)=>sum+G.models[e.unitId+"__"+e.kitId].cost,0);
+    assert(cost>=775&&cost<=900,String(cost));
+    assert(G.formationPoints(army)<=12);
+    assert(army.some(e=>!require("../shared/development.js").allows(faction,e.unitId,{})));
+    assert(army.every(e=>!G.restrictionReason(G.models[e.unitId+"__"+e.kitId],restrictions)));
+    assert.equal(room.game.units.filter(u=>G.ownerOf(u)===1).length,army.length);
+    assert.equal(room.phase,"deployment");
+  });
+
 test("host changes AI faction without bypassing ownership or forced team faction", async (t) => {
   const { app, client } = await setup(t),
     host = await client(),
@@ -3828,4 +3856,40 @@ test("V36 multi-target requests are atomic, owner-checked, deduplicated and gate
   await sync(red);
   await red.act("playback_ready", { batchId });
   assert.notEqual(room.phase, "playback");
+});
+
+
+test("native pilot weapon gates reject forged client stats and allow the server pilot threshold", async t => {
+  const {app,client} = await setup(t);
+  const blue = await client(), red = await client();
+  await blue.hello("create", "PILOTGATE");
+  await red.hello("join", "PILOTGATE");
+  const liveRoom = app.rooms.get("PILOTGATE");
+  const sync = c => c.latest(s => s.revision === liveRoom.revision);
+  await blue.act("configure_room", {...G.defaultRoomSettings(),fogMode:"disabled"});
+  for (const c of [blue,red]) {
+    await sync(c);
+    const reply = await c.act("set_ready",{ready:true,
+      formation:[{unitId:"RGM_79",kitId:"machine_gun"}],inventory:{RGM_79:1}});
+    assert.equal(reply.type,"state",JSON.stringify(reply));
+  }
+  await confirmAssembly(blue,red);
+  for (const c of [blue,red]) { await sync(c); await c.act("confirm_deployment"); }
+  await sync(blue);
+  const room = app.rooms.get("PILOTGATE"), u = room.game.units.find(u=>u.id === "0-0"),
+    target = room.game.units.find(u=>u.id === "1-0");
+  const model = Object.values(G.models).find(m=>m.prefabId === "RX_78_2");
+  Object.assign(u,{model:Object.keys(G.models).find(key=>G.models[key] === model),en:10000,shield:10000,x:5,y:5});
+  u.pilot = {...u.pilot,stats:{...u.pilot.stats,melee:145}};
+  Object.assign(target,{x:6,y:5});
+  room.game.tiles[5][5] = room.game.tiles[5][6] = "plain";
+  const weapon = model.weapons.find(w=>w.pilotRequirements);
+  const before = [u.en,target.hp,room.revision,room.game.seed];
+  const rejected = await blue.act("attack",{unitId:u.id,targetId:target.id,weaponId:weapon.id,
+    pilot:{stats:{melee:200}},pilotRequirements:[]});
+  assert.equal(rejected.type,"error");
+  assert.deepEqual([u.en,target.hp,room.revision,room.game.seed],before);
+  u.pilot.stats.melee = 146;
+  assert.equal((await blue.act("attack",{unitId:u.id,targetId:target.id,weaponId:weapon.id})).type,"state");
+  assert.equal(G.attackOrders(u)[0].weapons[0],weapon.id);
 });

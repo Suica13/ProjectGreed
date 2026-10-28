@@ -346,8 +346,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "EF_BeamSaber_Double_AALDF_L",
@@ -366,7 +365,6 @@
       "requiredParts": [
         "leftArm"
       ],
-      "hidden": true,
       "visibleWhen": {
         "weaponDisplayIndex": 11
       }
@@ -1537,9 +1535,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1568,10 +1564,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1656,7 +1650,24 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_7/RX_78_7.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1906,8 +1917,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "CmdAtk",
@@ -1927,7 +1938,8 @@
         "Common_ArmBR_Pink",
         "Common_ArmGL_L",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_AALDF"
       ]
     }
   ],
@@ -1955,5 +1967,22 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_FA_78_3",
+      "unitId": "FA_78_3",
+      "money": 750,
+      "supplies": 1250,
+      "unlockUnits": [
+        "FA_78_3"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_7/RX_78_7.ini",
+        "action": "action_CustomUnit_FA_78_3",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

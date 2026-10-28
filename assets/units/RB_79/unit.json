@@ -661,8 +661,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     }
   ],
   "weaponKits": [
@@ -695,5 +695,22 @@
       "CanLoadInto"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RB_79_LateType",
+      "unitId": "RB_79_LateType",
+      "money": 50,
+      "supplies": 50,
+      "unlockUnits": [
+        "RB_79_LateType"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RB_79/RB_79.ini",
+        "action": "action_CustomUnit_RB_79_LateType",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

@@ -87,9 +87,17 @@ def configure_sniper(prefab):
         # 伤害、耗能、步骤使用原生技能；仅保留回合制蓄力与命中倍率规则。
         weapon.update(
             name="狙击蓄力", slot="skill", changeHeldWeapon=False, noCounter=True, hitScale=2,
-            description="本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害与EN沿用原MOD技能。",
+            description="本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害为原MOD技能的一半，EN不变。",
             special={"type": "snipe", "delayOwnTurns": 1, "baseWeapon": base_id},
         )
+        baseline = weapon.setdefault("sniperDamageBeforeHalving", {
+            field: weapon[field] for field in ("damagePerShot", "damageComponents") if field in weapon})
+        for field, value in baseline.items():
+            weapon[field] = {key: damage * .5 for key, damage in value.items()} if isinstance(value, dict) else value * .5
+        for step in weapon.get("attack", {}).get("steps", []):
+            if "damageComponents" in step:
+                baseline_step = step.setdefault("sniperDamageBeforeHalving", dict(step["damageComponents"]))
+                step["damageComponents"] = {key: damage * .5 for key, damage in baseline_step.items()}
         for kit in prefab["weaponKits"]:
             if base_id in kit["weapons"] and key not in kit["weapons"]:
                 kit["weapons"].append(key)
@@ -206,6 +214,8 @@ def configure_type61_tactical_weapons(prefab):
 def configure(prefab, native):
     from native_combat import restore
     type61_spg_mortar(prefab)
+    for weapon in prefab["weapons"].values():
+        weapon.pop("sniperDamageBeforeHalving", None)
     restore(prefab, native)
     flight_skill(prefab)
     for weapon in prefab["weapons"].values():
@@ -305,6 +315,8 @@ def configure(prefab, native):
     for key, weapon in prefab["weapons"].items():
         weapon["actionCost"] = action_cost(prefab, key, weapon)
     configure_type61_tactical_weapons(prefab)
+    if prefab["id"] == "Burstliner":
+        prefab["weapons"]["EF_Burstliner_BeamCannon"]["requiresSfsMS"] = True
     from v17_balance import apply as apply_v17_balance
     from unit_supply import apply as apply_supply_policy
     from unit_ship_balance import apply_anti_air, apply_accuracy
@@ -313,4 +325,9 @@ def configure(prefab, native):
     apply_accuracy(prefab, native_restored=True)
     from unit_eras import apply as apply_era
     from page_two_adaptations import apply as apply_page_two
-    return apply_page_two(apply_era(prefab))
+    from native_pilot_weapons import apply as apply_pilot_weapons
+    from native_refits import apply as apply_refits
+    from tactical_status import apply as apply_status
+    from native_irradiation import apply as apply_irradiation
+    from native_defensive_skills import apply as apply_defensive
+    return apply_defensive(apply_irradiation(apply_status(apply_refits(apply_pilot_weapons(apply_page_two(apply_era(prefab)), native), native), native), native), native)

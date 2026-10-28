@@ -2176,9 +2176,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -2207,10 +2205,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -2298,7 +2294,24 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78XX/RX_78XX.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2574,7 +2587,8 @@
         "Common_Grenade_B",
         "Common_Push_A",
         "EF_BeamDagger_Double_AALDF",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamDagger_Double_AALDE"
       ]
     },
     {
@@ -2585,7 +2599,8 @@
         "EF_75mmMG_Double",
         "Common_Push_A",
         "EF_BeamDagger_Double_AALDF",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamDagger_Double_AALDE"
       ]
     }
   ],

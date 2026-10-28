@@ -1538,8 +1538,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "CustomUnit_PilotCustomUnit",
@@ -1620,5 +1620,37 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_PilotCustomUnit_MS_06R_2_MsgCustom",
+      "unitId": "MS_06R_2_MsgCustom",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "MS_06R_2"
+      ],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_2/MS_06R_2.ini",
+        "action": "action_CustomUnit_PilotCustomUnit_MS_06R_2_MsgCustom",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_PilotCustomUnit_MS_06R_2_JonCustom",
+      "unitId": "MS_06R_2_JonCustom",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "MS_06R_2"
+      ],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_2/MS_06R_2.ini",
+        "action": "action_CustomUnit_PilotCustomUnit_MS_06R_2_JonCustom",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

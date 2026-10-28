@@ -540,9 +540,9 @@
       "type": "recon",
       "name": "摄像枪",
       "reconMode": "camera",
-      "range": 52.08333333333333,
+      "range": 15,
       "enCost": 30,
-      "actionCost": 1,
+      "actionCost": 3,
       "maxUses": 99,
       "consumeAction": false,
       "waterOnly": false,
@@ -564,8 +564,10 @@
           "name": "カメラガン"
         }
       },
-      "areaSight": 7.5,
-      "areaRadar": 9.375
+      "minRange": 10,
+      "areaSight": 3,
+      "areaRadar": 3,
+      "description": "射程10～15格，消耗3 AP与30 EN；揭露目标半径3格视野并探测敌人，持续至下次己方回合。"
     }
   ],
   "nativeCombatRevision": 1,

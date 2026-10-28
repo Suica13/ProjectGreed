@@ -180,7 +180,7 @@
     "accuracy": 125.0,
     "partStructuralStrength": 125.0,
     "partsBreakable": false,
-    "movementType": "ground",
+    "movementType": "air",
     "adaptability": {
       "ground": 10.0,
       "space": 50,
@@ -204,6 +204,10 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
+    },
+    "footprint": {
+      "width": 3,
+      "height": 3
     }
   },
   "attackBonuses": {
@@ -1150,7 +1154,14 @@
           "hiddenAction_ZN_ApsarasII_MegaBeamCannon_Fire_Step_1_AI"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "converted_skill"
+        ],
+        "convertedSkill": "Irradiation"
+      }
     },
     "ZN_ApsarasII_ChestBeam": {
       "name": "光束炮",
@@ -1460,9 +1471,14 @@
     },
     {
       "id": "special_Common_EMP_M",
-      "name": "special_Common_EMP_M",
+      "name": "EMP：周围3格敌人下回合AP减少1，2 AP，冷却2回合",
       "source": "Units/BattleUnits/Weapon/Sp/Common_EMP_M.gw",
-      "status": "review"
+      "status": "adapted"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "光束照射：方向射线、蓄力、逐机命中与长度自适应贴图"
     }
   ],
   "weaponKits": [
@@ -1471,7 +1487,6 @@
       "name": "标准套件",
       "cost": 0,
       "weapons": [
-        "ZN_ApsarasII_MegaBeamCannon",
         "ZN_ApsarasII_ChestBeam",
         "Common_Push_L_A"
       ]
@@ -1485,10 +1500,85 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "skills": [],
+  "skills": [
+    {
+      "id": "Irradiation",
+      "type": "irradiation",
+      "name": "光束照射",
+      "range": 10,
+      "minRange": 1,
+      "actionCost": 5,
+      "enCostPercent": 50,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": true,
+      "baseHit": 60,
+      "damageComponents": {
+        "beam": 35516.748046875,
+        "beamAP": 17758.3740234375
+      },
+      "nativeTotalDamage": 1065502.44140625,
+      "nativeRepeatMultiplier": 3.6996612548828125,
+      "sourceWeapon": "ZN_ApsarasII_MegaBeamCannon",
+      "requiredParts": [],
+      "requiresSfsMS": false,
+      "chargeSeconds": 2.6,
+      "fireSeconds": 2,
+      "visualColor": "Blue",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 0.0,
+              "y": 30.0
+            }
+          }
+        ]
+      },
+      "weaponDisplayIndex": 0,
+      "clip": null,
+      "effect": "Irradiation_Charge_Blue",
+      "sound": {
+        "file": "../../sounds/BeamCharge_4.ogg",
+        "volume": 0.7
+      },
+      "localization": {
+        "zh": {
+          "name": "光束照射"
+        },
+        "en": {
+          "name": "Irradiation Beam"
+        },
+        "ja": {
+          "name": "照射ビーム"
+        }
+      },
+      "description": "选择方向照射10格；消耗5 AP与50%最大EN，冷却3个己方回合。基础命中60%，对沿途每台单位（含友军）判定一次，基础伤害为原MOD完整伤害的1/20。"
+    },
+    {
+      "id": "EMP",
+      "type": "emp",
+      "name": "EMP",
+      "range": 0,
+      "radius": 3,
+      "actionCost": 2,
+      "enCost": 80,
+      "cooldownTurns": 2,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Beam_Hit_3.ogg",
+        "volume": 0.7
+      },
+      "description": "消耗2 AP与80 EN，周围3格内所有敌人下回合AP减少1点，不叠加，冷却2个己方回合。"
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "MA"
+    "MA",
+    "LargeUnit"
   ],
   "transport": {
     "slotCost": 3,

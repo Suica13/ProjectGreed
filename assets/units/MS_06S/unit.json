@@ -1506,8 +1506,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "CustomUnit_PilotCustomUnit",
@@ -1563,5 +1563,37 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_PilotCustomUnit_MS_06S_CharCustom",
+      "unitId": "MS_06S_CharCustom",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "MS_06S"
+      ],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06S.ini",
+        "action": "action_CustomUnit_PilotCustomUnit_MS_06S_CharCustom",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_PilotCustomUnit_MS_06S_DozleCustom",
+      "unitId": "MS_06S_DozleCustom",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "MS_06S"
+      ],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06S.ini",
+        "action": "action_CustomUnit_PilotCustomUnit_MS_06S_DozleCustom",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

@@ -377,8 +377,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "EF_BeamSaber_Double_AALDF_L",
@@ -602,7 +601,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "pilotExperienceMultiplier": 1.1
   },
   "attackBonuses": {
     "melee": 24.0,
@@ -1594,10 +1594,8 @@
         "rightArm"
       ],
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1689,7 +1687,20 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 2
+      "displayIndex": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_1/RX_78_1.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      }
     },
     "EF_BeamJavelin_BF_B": {
       "name": "光束标枪",
@@ -2304,7 +2315,8 @@
         "EF_BeamSaber_AF_Fast_A",
         "EF_BeamJavelin_BF_B",
         "Common_DoubleVulcan_MS",
-        "Common_Push_A"
+        "Common_Push_A",
+        "EF_BeamSaber_Double_AALDF"
       ],
       "localization": {
         "zh": {
@@ -2327,7 +2339,8 @@
         "EF_BeamSaber_AF_Fast_A",
         "EF_BeamJavelin_BF_B",
         "Common_DoubleVulcan_MS",
-        "Common_Push_A"
+        "Common_Push_A",
+        "EF_BeamSaber_Double_AALDF"
       ],
       "localization": {
         "zh": {
@@ -2350,7 +2363,8 @@
         "EF_BeamSaber_AF_Fast_A",
         "EF_BeamJavelin_BF_B",
         "Common_DoubleVulcan_MS",
-        "Common_Push_A"
+        "Common_Push_A",
+        "EF_BeamSaber_Double_AALDF"
       ],
       "localization": {
         "zh": {
@@ -2408,16 +2422,6 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [
     {
-      "id": "EF_BeamSaber_Double_AALDF",
-      "name": "EF_BeamSaber_Double_AALDF",
-      "hidden": true,
-      "reasons": [
-        "pilot_skill"
-      ],
-      "secondarySlots": [],
-      "sourceTrigger": "hiddenAction_EF_BeamSaber_Double_AALDF_Trigger"
-    },
-    {
       "id": "EF_BeamJavelin_BF",
       "name": "EF_BeamJavelin_BF",
       "hidden": true,
@@ -2450,5 +2454,12 @@
     ]
   },
   "hangars": [],
-  "mechanics": []
+  "mechanics": [
+    {
+      "id": "LPC",
+      "source": "Template/Unit/Skill/LPC.gw",
+      "status": "adapted",
+      "name": "学习型电脑：驾驶员经验获取×1.1"
+    }
+  ]
 }

@@ -15,7 +15,7 @@
 
 - 普通脱出 minRange=range=1，目标为一个合法相邻格；不能原地或斜角。MTank 本体变底盘并独立生成顶部飞机。
 - 原地变形/爆甲保留单位身份、所有者和自定义名字并消费行动。形态不能因 maxHp 改变而免费恢复资源；参考当前转换测试中的继承/恢复契约。
-- EXAM/HADES 保留已有三回合消耗、红色演出和头部损毁强制解除；不以普通转换替换这套状态机。
+- EXAM/HADES 持续三个己方回合，每个己方回合结束扣除25%最大耐久及5%最大EN；保留红色演出和头部损毁强制解除；不以普通转换替换这套状态机。
 
 ## 演出与平台
 
@@ -36,3 +36,11 @@
 - `setWeaponIndex` 需要保留写入时刻和数值：原动作链中的 `nowWeaponIndex` 写入转换为 Step 的 `weaponDisplayIndex`，由 `WeaponSequence.pose` 采样并传给渲染层。图层按原始索引条件判断，不把普通／Step2 图层合并成同一个 heldWeapon 条件，也不沿用固定动画时间窗。原生无索引条件的固定附件不得凭空添加 heldWeapon 限制。
 
 - 直升机（EF_Heli、ZN_Heli 等旋翼机）的 `presentation.thrusters=false`，不得套用飞行单位的常驻后退推进器或移动／回避喷焰。导入器和渲染器同时遵守这一显式开关。
+
+## 学习型电脑（LPC）
+
+原 `Template/Unit/Skill/LPC.gw` 设置 `baseExpSpeed=1.1`，名称为学习型电脑。由 `native_passives.apply_learning_computer` 读取完整继承链（包括缺少 nativeSkills 的旧单位），写入 `stats.pilotExperienceMultiplier`。驾驶员击杀和存活助攻经验按当前机体倍率计算，与现有快速战、强度、服务器活动倍率相乘后统一向下取整；存档对局仍无经验。驾驶员个人存档只接收已计算的奖励，禁止再次乘算。
+
+## 库存改装及原生脱出扩展
+
+`native_refits.py` 保留原生动作的 UnitID、Money、Resource、CustomRule 与来源；普通改装在预览面板消费1台原机体，获得目标素体，额外套件库存不变，科技条件不绕过。专属驾驶员条件与缺失目标不得自动放开。`import-ejection-forms.py` 仅补齐原生单机脱出目标；`native_conversions.py` 把明确 spawnUnits + deleteSelf 或 convertTo 转为已有脱出／爆甲配置，不把诱饵当成新机体。狙击蓄力伤害统一为原生技能的50%，包括步骤独立伤害分量，使用基值记录防止重复减半。

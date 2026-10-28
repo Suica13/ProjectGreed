@@ -120,6 +120,26 @@ def correct_effects(prefab, native):
         if "Boost" in layer["name"] and "Reversing" not in layer["name"] and "FlyHover" not in layer["name"]:
             layer["visibleWhen"] = {"thrustActive":True}
             layer["independentClock"] = True
+    # Red engine variants belong to their activation skill, never to ordinary movement.
+    red = [layer for layer in prefab["layers"] if "red" in layer.get("texture", "").lower() and
+           any(token in layer["name"].lower() for token in ("boost", "system"))]
+    if red:
+        import copy
+        engines = [layer for layer in red if "boost" in layer["name"].lower()]
+        for layer in red:
+            layer.setdefault("visibleWhen", {})["boostSkillActive"] = True
+        for layer in engines:
+            blue = layer["texture"].replace("_Red", "")
+            candidates = [other for other in prefab["layers"] if other not in red and other.get("texture") == blue]
+            if not candidates:
+                image = resolve("ROOT:Resource/Image/Fx/Unit/Image/" + blue)
+                dest = ASSETS / "units" / prefab["id"] / "textures" / blue
+                if not dest.exists():shutil.copyfile(image,dest)
+                prefab["materials"]["textures"][blue] = "textures/" + blue
+                fallback = copy.deepcopy(layer);fallback["name"] += "_NormalBlue";fallback["texture"] = blue
+                prefab["layers"].append(fallback);candidates = [fallback]
+            for fallback in candidates:
+                fallback.setdefault("visibleWhen", {})["boostSkillActive"] = False
     # These native left/right barrels already share one complete firing flow.
     # Keep the definitions for provenance, expose only the combined weapon.
     if prefab["id"] == "RMV_1":

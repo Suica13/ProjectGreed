@@ -81,6 +81,7 @@ const SpriteRenderer = (() => {
     attackWeapon = null,
     weaponDisplayIndex = null,
     flying = false,
+    boostSkillActive = false,
   ) {
     const animation = models[model].animations[clip];
     const at = animation
@@ -91,6 +92,7 @@ const SpriteRenderer = (() => {
     const variables = state(model, heldWeapon);
     variables.shieldVisible = variables.shieldVisible && shieldVisible;
     variables.moving = moving;
+    variables.boostSkillActive = boostSkillActive;
     variables.onLand = onLand;
     variables.attacking = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
     variables.heldAttacking =
@@ -285,6 +287,7 @@ const SpriteRenderer = (() => {
     flying = false,
     turretStatus = null,
     effectsOnly = false,
+    boostSkillActive = false,
   ) {
     const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
     const active = isFiring
@@ -316,6 +319,7 @@ const SpriteRenderer = (() => {
       attackWeapon,
       weaponDisplayIndex,
       flying,
+      boostSkillActive,
     )) {
       const effectLayer =
         layer.effect === true ||

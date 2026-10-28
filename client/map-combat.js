@@ -12,7 +12,8 @@ const MapCombat = (() => {
   const initialHp = new Map(),
     initialShield = new Map(),
     initialEn = new Map(),
-    initialParts = new Map();
+    initialParts = new Map(),
+    initialIField = new Map();
   const clone = (value) => JSON.parse(JSON.stringify(value));
   function reset() {
     displayed.clear();
@@ -28,6 +29,7 @@ const MapCombat = (() => {
     initialShield.clear();
     initialEn.clear();
     initialParts.clear();
+    initialIField.clear();
     byId("mapCombatControls").hidden = true;
   }
   function seed(battles) {
@@ -69,10 +71,15 @@ const MapCombat = (() => {
             lane.view.attackQueue?.length > 1 &&
             entry.lane.view.attackQueue?.attacker === lane.view.attackQueue.attacker,
         );
-        const offensiveDependencies = lane.view.combatStage === "counter"
-          ? earlier.filter(entry => entry.lane !== lane && entry.lane.view.combatStage !== "counter") : [];
+        const offensiveDependencies =
+          lane.view.combatStage === "counter"
+            ? earlier.filter(
+                (entry) => entry.lane !== lane && entry.lane.view.combatStage !== "counter",
+              )
+            : [];
         if (
-          offensiveDependencies.length || queueDependencies.length ||
+          offensiveDependencies.length ||
+          queueDependencies.length ||
           (event.after <= 0 && event.before > 0) ||
           event.brokenParts?.length
         )
@@ -92,6 +99,14 @@ const MapCombat = (() => {
       initialHp.set(id, unit.hp);
       initialShield.set(id, unit.shield);
       initialEn.set(id, unit.en);
+      initialIField.set(
+        id,
+        unit.iFieldHp ??
+          (view.battles || [])
+            .flatMap((b) => b.events)
+            .find((e) => e.to === id && e.iFieldBefore !== undefined)?.iFieldBefore ??
+          0,
+      );
       initialParts.set(id, { ...unit.brokenParts });
     }
     byId("mapQuick").checked = byId("quick").checked;
@@ -384,6 +399,30 @@ const MapCombat = (() => {
           );
     return Math.max(0, value);
   }
+  function fieldHealth(id) {
+    let value = initialIField.get(id);
+    if (value === undefined) return undefined;
+    for (const lane of lanes)
+      for (const item of [...lane.finished, ...(lane.frame ? [lane.frame] : [])])
+        if (item.event.to === id)
+          value -= WeaponEffects.arrived(item.plan, item.time).reduce(
+            (sum, contact) => sum + (contact.iFieldDamage || 0),
+            0,
+          );
+    return value;
+  }
+  function fieldImpact(id) {
+    let age = Infinity;
+    for (const item of lanes.length
+      ? lanes.filter((l) => l.frame && !l.view.completed).map((l) => l.frame)
+      : frame
+        ? [frame]
+        : [])
+      if (item.event.to === id)
+        for (const contact of WeaponEffects.arrived(item.plan, item.time))
+          if (contact.iFieldDamage > 0) age = Math.min(age, item.time - contact.at);
+    return age;
+  }
   function energy(id) {
     let value = initialEn.get(id);
     if (value === undefined) return undefined;
@@ -438,7 +477,11 @@ const MapCombat = (() => {
     for (const [id, unit] of displayed)
       if (!roster.has(id) && visibleActors.has(id) && !unit.visualOnly) roster.set(id, unit);
     return [...roster.values()]
-      .filter((u) => (!u.embarked || u.embarked.exposed || u.pendingMove?.launch) && (!pendingExits.has(u.id) || visibleExits.has(u.id)))
+      .filter(
+        (u) =>
+          (!u.embarked || u.embarked.exposed || u.pendingMove?.launch) &&
+          (!pendingExits.has(u.id) || visibleExits.has(u.id)),
+      )
       .map((unit) => {
         const visual = displayed.get(unit.id) || unit;
         const effect = pose.get(unit.id);
@@ -448,6 +491,7 @@ const MapCombat = (() => {
           hp: (lanes.length ? health(unit.id) : effect?.hp) ?? visual.hp,
           shield: (lanes.length ? health(unit.id, true) : effect?.shield) ?? visual.shield,
           en: (lanes.length ? energy(unit.id) : undefined) ?? visual.en,
+          iFieldHp: (lanes.length ? fieldHealth(unit.id) : undefined) ?? visual.iFieldHp,
           model: effect?.model ?? unit.model,
           mapDying: effect?.keepVisible,
           mapPose: effect,
@@ -608,6 +652,7 @@ const MapCombat = (() => {
     begin,
     update,
     units,
+    fieldImpact,
     draw,
     drawUnderlay: (ctx, geometry) => draw(ctx, geometry, true),
     suspend,

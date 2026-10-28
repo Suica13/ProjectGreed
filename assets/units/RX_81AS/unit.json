@@ -410,8 +410,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "ShoulderL",
@@ -2339,10 +2338,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -2420,7 +2417,20 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 165.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81AS/RX_81AS.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      }
     },
     "Common_Cqb_A_L": {
       "name": "近身格斗",
@@ -2808,8 +2818,8 @@
     {
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
-      "status": "review",
-      "name": "换装／改修"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "ExplosiveReactiveArmor_Shell",
@@ -2829,7 +2839,8 @@
         "Common_Push_A",
         "EF_HSP_BF_B",
         "Common_Cqb_A_L",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_F"
       ]
     },
     {
@@ -2842,7 +2853,8 @@
         "Common_Push_A",
         "EF_HSP_BF_B",
         "Common_Cqb_A_L",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_F"
       ]
     },
     {
@@ -2855,7 +2867,8 @@
         "Common_Push_A",
         "EF_HSP_BF_B",
         "Common_Cqb_A_L",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_F"
       ]
     }
   ],
@@ -2873,7 +2886,7 @@
       "name": "Common_Cqb_B_L",
       "hidden": true,
       "reasons": [
-        "pilot_skill"
+        "source_missing"
       ],
       "secondarySlots": [],
       "sourceTrigger": "hiddenAction_Common_Cqb_B_L_Trigger"
@@ -2942,6 +2955,53 @@
           "limb": null
         }
       ]
+    }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RX_81",
+      "unitId": "RX_81",
+      "money": 0,
+      "supplies": 0,
+      "unlockUnits": [
+        "RX_81"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81AS/RX_81AS.ini",
+        "action": "action_CustomUnit_RX_81",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_RX_81ST",
+      "unitId": "RX_81ST",
+      "money": 250,
+      "supplies": 250,
+      "unlockUnits": [
+        "RX_81ST"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81AS/RX_81AS.ini",
+        "action": "action_CustomUnit_RX_81ST",
+        "seconds": 20.0
+      }
+    },
+    {
+      "id": "action_CustomUnit_RX_81LA",
+      "unitId": "RX_81LA",
+      "money": 250,
+      "supplies": 250,
+      "unlockUnits": [
+        "RX_81LA"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81AS/RX_81AS.ini",
+        "action": "action_CustomUnit_RX_81LA",
+        "seconds": 20.0
+      }
     }
   ]
 }

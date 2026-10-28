@@ -3,18 +3,18 @@ const test = require("node:test"),
   fs = require("node:fs");
 const { loadCatalog } = require("../tools/load-catalog.cjs"),
   G = require("../shared/rules.js");
-test("WIP list keeps Apsaras assets and kits registered but marks all family entries disabled", () => {
+test("Apsaras is released after irradiation and EMP integration", () => {
   const catalog = G.catalog,
     prefabs = catalog.prefabs.filter((p) => p.id.startsWith("Apsaras"));
   assert.ok(prefabs.length > 0);
   for (const prefab of prefabs) {
-    assert.equal(prefab.wip, true);
-    assert.equal(prefab.disabled, true);
+    assert.equal(prefab.wip, false);
+    assert.equal(prefab.disabled, false);
     for (const kit of prefab.weaponKits) {
       const model = catalog.models[prefab.id + "__" + kit.id];
-      assert.equal(model.wip, true);
-      assert.equal(model.disabled, true);
-      assert.equal(G.restrictionReason(model), "wip");
+      assert.equal(model.wip, false);
+      assert.equal(model.disabled, false);
+      assert.notEqual(G.restrictionReason(model), "wip");
     }
   }
   assert.equal(catalog.prefabs.find((p) => p.id === "MS_06F").wip, false);
@@ -39,7 +39,19 @@ test("removing WIP list entries restores availability, and invalid or unknown ID
   ])
     assert.throws(() => loadCatalog({ wipOverride: { schemaVersion: 1, units } }), /WIP/);
 });
-test("AI and authoritative deployment exclude WIP units, including unrestricted preset rules", () => {
+test("AI and authoritative deployment still exclude explicitly configured WIP units", (t) => {
+  // Exercise the disabled-list contract independently of the now-released Apsaras.
+  const models = Object.values(G.models).filter((m) => m.prefabId === "ApsarasII");
+  for (const model of models) {
+    model.wip = true;
+    model.disabled = true;
+  }
+  t.after(() => {
+    for (const model of models) {
+      model.wip = false;
+      model.disabled = false;
+    }
+  });
   const prefab = G.catalog.prefabs.find((p) => p.id === "ApsarasII"),
     wip = { unitId: prefab.id, kitId: prefab.weaponKits[0].id },
     normal = { unitId: "Type61", kitId: "standard" };

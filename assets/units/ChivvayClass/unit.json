@@ -4835,8 +4835,8 @@
     {
       "id": "CustomUnit_NewUnit",
       "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
-      "status": "review",
-      "name": "改修生成新机体"
+      "status": "adapted",
+      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
     },
     {
       "id": "special_Common_MinovskyParticle_M",
@@ -4952,6 +4952,23 @@
       "emergencyRange": 3,
       "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
       "sourceUnit": "Hangar_X8"
+    }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_NewUnit_ChivvayClassKai",
+      "unitId": "ChivvayClassKai",
+      "money": 750,
+      "supplies": 1500,
+      "unlockUnits": [
+        "ChivvayClassKai"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/ChivvayClass/ChivvayClass.ini",
+        "action": "action_CustomUnit_NewUnit_ChivvayClassKai",
+        "seconds": 30.0
+      }
     }
   ]
 }

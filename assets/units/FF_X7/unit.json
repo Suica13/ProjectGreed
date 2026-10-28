@@ -110,7 +110,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "pilotExperienceMultiplier": 1.1
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -685,5 +686,29 @@
     ]
   },
   "hangars": [],
-  "mechanics": []
+  "mechanics": [
+    {
+      "id": "LPC",
+      "source": "Template/Unit/Skill/LPC.gw",
+      "status": "adapted",
+      "name": "学习型电脑：驾驶员经验获取×1.1"
+    }
+  ],
+  "refits": [
+    {
+      "id": "action_CustomUnit_FF_X7Bst",
+      "unitId": "FF_X7Bst",
+      "money": 200,
+      "supplies": 400,
+      "unlockUnits": [
+        "FF_X7Bst"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/FF_X7/FF_X7.ini",
+        "action": "action_CustomUnit_FF_X7Bst",
+        "seconds": 20.0
+      }
+    }
+  ]
 }

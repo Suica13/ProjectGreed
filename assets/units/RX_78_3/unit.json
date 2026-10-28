@@ -416,8 +416,7 @@
       },
       "requiredParts": [
         "rightArm"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "EF_BeamSaber_Double_AALDF_L",
@@ -436,7 +435,6 @@
       "requiredParts": [
         "leftArm"
       ],
-      "hidden": true,
       "visibleWhen": {
         "weaponDisplayIndex": 2
       }
@@ -649,7 +647,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "pilotExperienceMultiplier": 1.1
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -1695,9 +1694,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1726,10 +1723,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1814,7 +1809,24 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_3/RX_78_3.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      },
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_BeamJavelin_BF_B": {
       "name": "光束标枪",
@@ -2235,14 +2247,14 @@
     {
       "id": "ExitUnit_NewUnit",
       "source": "Template/Unit/Skill/ExitUnit_NewUnit.gw",
-      "status": "review",
-      "name": "脱出并生成新机体"
+      "status": "adapted",
+      "name": "脱出：原生形态转换，资源与部位规则使用显式配置"
     },
     {
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
-      "status": "not_applicable",
-      "name": "低压弹射：原MOD驾驶员经验成长×1.1（本项目无驾驶员经验系统）"
+      "status": "adapted",
+      "name": "学习型电脑：驾驶员经验获取×1.1"
     },
     {
       "id": "special_Common_ReEntry_MS_FromSpace",
@@ -2260,7 +2272,8 @@
         "EF_RX_78_3_BR",
         "Common_Push_A",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_AALDF"
       ]
     },
     {
@@ -2271,12 +2284,56 @@
         "EF_HypeBazooka_Double",
         "Common_Push_A",
         "EF_BeamSaber_AF_Fast_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_Double_AALDF"
       ]
     }
   ],
   "description": "加装了磁气覆膜的高达,反应速度大幅提升",
-  "skills": [],
+  "skills": [
+    {
+      "id": "ExitUnit",
+      "type": "escape",
+      "name": "脱出",
+      "localization": {
+        "zh": {
+          "name": "脱出"
+        },
+        "en": {
+          "name": "Eject"
+        },
+        "ja": {
+          "name": "脱出"
+        }
+      },
+      "range": 1,
+      "minRange": 1,
+      "maxUses": 1,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_ExitUnit",
+      "source": {
+        "mode": "remove"
+      },
+      "spawn": {
+        "unitId": "FF_X7",
+        "kitId": "standard",
+        "kitMap": {
+          "kit_2": "standard",
+          "kit_0": "standard"
+        },
+        "inheritResources": false,
+        "hpRecoveryPercent": 100,
+        "enRecoveryPercent": 100,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": true
+      }
+    }
+  ],
   "kitAliases": {
     "kit_1": "kit_0"
   },

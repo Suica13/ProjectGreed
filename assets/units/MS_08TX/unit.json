@@ -427,7 +427,6 @@
       "requiredParts": [
         "rightArm"
       ],
-      "hidden": true,
       "visibleWhen": {
         "weaponDisplayIndex": 2
       }
@@ -1677,10 +1676,8 @@
         "space": 1.0
       },
       "availability": {
-        "hidden": true,
-        "reasons": [
-          "pilot_skill"
-        ],
+        "hidden": false,
+        "reasons": [],
         "requirements": [
           {
             "stat": "pilotCqbSkillFinal",
@@ -1762,7 +1759,20 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 2
+      "displayIndex": 2,
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">",
+          "value": 145.0
+        }
+      ],
+      "pilotRequirementSource": {
+        "unit": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_08TX/MS_08TX.ini",
+        "stats": [
+          "pilotCqbSkillFinal"
+        ]
+      }
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2023,7 +2033,8 @@
         "ZN_Shotgun",
         "Common_Push_A",
         "ZN_HeatSword_AF_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "ZN_HeatSword_BF_B"
       ]
     },
     {
@@ -2034,7 +2045,8 @@
         "ZN_MMP80MG",
         "Common_Push_A",
         "ZN_HeatSword_AF_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "ZN_HeatSword_BF_B"
       ]
     },
     {
@@ -2045,7 +2057,8 @@
         "ZN_360mmBazooka",
         "Common_Push_A",
         "ZN_HeatSword_AF_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "ZN_HeatSword_BF_B"
       ]
     }
   ],

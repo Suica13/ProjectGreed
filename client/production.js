@@ -91,7 +91,8 @@ const ProductionUI = (() => {
     const offer = Economy.catalog.offers[Economy.baseModel(unitId)];
     try {
       return Economy.produce(unitId, PlayerProfile.faction())
-        ? "生产完成：+" + offer.quantity + " 台" : "当前无法生产";
+        ? "生产完成：+" + offer.quantity + " 台"
+        : "当前无法生产";
     } catch (error) {
       return "生产失败：" + Economy.errorMessage(error);
     }
@@ -120,7 +121,8 @@ const ProductionUI = (() => {
     const produce = element("button", "primary", "生产单位");
     produce.id = "producePreviewUnit";
     const inBattle = () => Net.started && Net.snapshot?.phase !== "assembly";
-    produce.disabled = !offer || !prefab || !allows(prefab) || !Economy.affordable(offer) || inBattle();
+    produce.disabled =
+      !offer || !prefab || !allows(prefab) || !Economy.affordable(offer) || inBattle();
     produce.onclick = () => {
       note(produceChassis(unitId));
       Formation.refresh();
@@ -136,8 +138,10 @@ const ProductionUI = (() => {
       if (!refund || !Economy.quantity(unitId)) return;
       const confirmed = await GameDialog.confirm("出售 1 台", {
         title: "出售库存单位",
-        items: [I18n.text("资金") + " +" + formatNumber(refund.money),
-          I18n.text("物资") + " +" + formatNumber(refund.supplies)],
+        items: [
+          I18n.text("资金") + " +" + formatNumber(refund.money),
+          I18n.text("物资") + " +" + formatNumber(refund.supplies),
+        ],
         confirmText: "确认",
       });
       if (!confirmed || inBattle()) return;
@@ -207,20 +211,38 @@ const ProductionUI = (() => {
         ["反应系数", model.mobility],
       ]);
       const environments = {
-        ground: "地面", mountain: "山地", space: "宇宙", water: "水中",
-        atmosphere: "大气层", air: "空中", forest: "树林", snow: "雪地",
-        desert: "沙漠", rubble: "废墟",
+        ground: "地面",
+        mountain: "山地",
+        space: "宇宙",
+        water: "水中",
+        atmosphere: "大气层",
+        air: "空中",
+        forest: "树林",
+        snow: "雪地",
+        desert: "沙漠",
+        rubble: "废墟",
       };
-      metricSection(info, "地形适应性", Object.entries(environments).map(([key, label]) => [
-        label, (model.adaptability[key] ?? 0) + "%",
-      ]));
+      metricSection(
+        info,
+        "地形适应性",
+        Object.entries(environments).map(([key, label]) => [
+          label,
+          (model.adaptability[key] ?? 0) + "%",
+        ]),
+      );
       const defenseNames = {
-        melee: "格斗", shooting: "射击", beam: "光束", shell: "实弹", dp: "DP", sp: "SP",
+        melee: "格斗",
+        shooting: "射击",
+        beam: "光束",
+        shell: "实弹",
+        dp: "DP",
+        sp: "SP",
       };
       const defense = element("section", "production-stat-section");
       defense.append(element("h4", "production-stat-title", "防护能力"));
       const table = element("table", "production-defense-table");
-      const head = element("thead"), headings = element("tr");
+      const head = element("thead"),
+        headings = element("tr");
       for (const label of ["类型", "比例减伤", "固定减伤"])
         headings.append(element("th", "", label));
       head.append(headings);
@@ -229,8 +251,11 @@ const ProductionUI = (() => {
         const row = element("tr");
         const name = element("th", "", defenseNames[kind] || kind);
         name.scope = "row";
-        row.append(name, element("td", "", value.percent + "%"),
-          element("td", "", formatNumber(value.flat)));
+        row.append(
+          name,
+          element("td", "", value.percent + "%"),
+          element("td", "", formatNumber(value.flat)),
+        );
         body.append(row);
       }
       table.append(head, body);
@@ -238,8 +263,10 @@ const ProductionUI = (() => {
       info.append(defense);
       if (model.description) {
         const description = element("section", "production-stat-section");
-        description.append(element("h4", "production-stat-title", "单位说明"),
-          element("p", "muted", model.description));
+        description.append(
+          element("h4", "production-stat-title", "单位说明"),
+          element("p", "muted", model.description),
+        );
         info.append(description);
       }
     } else if (tab === "weapons") {
@@ -248,7 +275,11 @@ const ProductionUI = (() => {
         info.append(card);
       }
     } else {
-      for (const skill of [...SkillControls.commandAbilities(model), ...(model.skills || [])]) {
+      for (const skill of [
+        ...SkillControls.commandAbilities(model),
+        ...SkillControls.defensiveAbilities(model),
+        ...(model.skills || []),
+      ]) {
         const card = element("article", "formation-weapon-detail");
         card.append(
           element("strong", "", skill.name),
@@ -292,7 +323,8 @@ const ProductionUI = (() => {
     const reason = prefab.wip
       ? "WIP"
       : !allows(prefab)
-        ? PlayerProfile.faction() !== "PMC" && !(prefab.availableFactions || [prefab.faction]).includes(PlayerProfile.faction())
+        ? PlayerProfile.faction() !== "PMC" &&
+          !(prefab.availableFactions || [prefab.faction]).includes(PlayerProfile.faction())
           ? "阵营不匹配"
           : "尚未开发"
         : !offer
@@ -437,7 +469,9 @@ const ProductionUI = (() => {
     returnView = Net.active ? "room" : "menu";
     onReturn = null;
     byId("closeProduction").textContent = "返回主菜单";
-    filters.faction = Rules.factions.includes(PlayerProfile.faction()) ? PlayerProfile.faction() : "";
+    filters.faction = Rules.factions.includes(PlayerProfile.faction())
+      ? PlayerProfile.faction()
+      : "";
     setupFilters();
     setPageView("production");
     render();
@@ -513,8 +547,8 @@ const ProductionUI = (() => {
     onReturn = options.onReturn || null;
     filters.era = filters.type = "";
     // A direct unit link must remain visible even when it belongs to another faction.
-    filters.faction = !unitId && Rules.factions.includes(PlayerProfile.faction())
-      ? PlayerProfile.faction() : "";
+    filters.faction =
+      !unitId && Rules.factions.includes(PlayerProfile.faction()) ? PlayerProfile.faction() : "";
     setupFilters();
     byId("productionSearch").value = unitId || "";
     byId("closeProduction").textContent =

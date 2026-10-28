@@ -265,7 +265,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "sustainedThrust": true
+        "sustainedThrust": true,
+        "boostSkillActive": false
       },
       "scaleX": 1.0,
       "independentClock": true
@@ -287,7 +288,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "thrustActive": true
+        "thrustActive": true,
+        "boostSkillActive": false
       },
       "independentClock": true
     },
@@ -308,7 +310,8 @@
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
-        "thrustActive": true
+        "thrustActive": true,
+        "boostSkillActive": true
       },
       "independentClock": true
     },
@@ -330,7 +333,8 @@
       "frame": 0,
       "visibleWhen": {
         "moving": true,
-        "boosting": true
+        "boosting": true,
+        "boostSkillActive": true
       }
     },
     {

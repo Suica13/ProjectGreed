@@ -148,3 +148,16 @@ test("formation SFS preload counts one slot and creates an exposed passenger at 
   assert.equal(u.y, carrier.y);
   G.confirmDeployment(g, 0);
 });
+
+
+test("Burstliner irradiation requires a living MS in its own SFS slot",()=>{
+  const {g,carrier,u,extra,enemy,h}=fixture("Burstliner");
+  const skill=G.unitSkills(carrier).find(s=>s.type === "irradiation");assert.equal(skill.requiresSfsMS,true);
+  assert.equal(G.canUseSkill(g,carrier,skill.id),false);
+  G.hangars.embark(g,u,carrier,h.id);assert.equal(G.canUseSkill(g,carrier,skill.id),true);
+  u.hp=0;assert.equal(G.canUseSkill(g,carrier,skill.id),false);
+  u.hp=1;u.embarked.hangarId="forged-slot";assert.equal(G.canUseSkill(g,carrier,skill.id),false);
+  u.embarked.hangarId=h.id;u.model=Object.keys(G.models).find(id=>G.models[id].prefabId === "Type61");
+  assert.equal(G.canUseSkill(g,carrier,skill.id),false);
+  u.model=extra.model;u.embarked.carrierId=extra.id;assert.equal(G.canUseSkill(g,carrier,skill.id),false);
+});

@@ -475,7 +475,7 @@
         "y": 0.0
       },
       "visibleWhen": {
-        "thrustActive": true
+        "moving": false
       },
       "requiredParts": [
         "leftArm"
@@ -493,7 +493,7 @@
         "y": 0.0
       },
       "visibleWhen": {
-        "thrustActive": true
+        "moving": true
       },
       "requiredParts": [
         "leftArm"
@@ -511,7 +511,7 @@
         "y": 0.0
       },
       "visibleWhen": {
-        "thrustActive": true
+        "moving": false
       },
       "requiredParts": [
         "rightArm"
@@ -529,7 +529,7 @@
         "y": 0.0
       },
       "visibleWhen": {
-        "thrustActive": true
+        "moving": true
       },
       "requiredParts": [
         "rightArm"

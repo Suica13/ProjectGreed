@@ -27,8 +27,29 @@ def apply_command_auras(prefab, native=None):
     return auras
 
 
+def apply_learning_computer(prefab, native=None):
+    """Read the inherited LPC action, including legacy units without skill tags."""
+    import re
+    declared = "LPC" in _skills(prefab)
+    action = native.get("hiddenAction_LPCTrue", {}) if native is not None else {}
+    match = re.search(r"(?:^|,)\s*baseExpSpeed\s*=\s*([0-9.]+)", action.get("setUnitMemory", ""))
+    present = bool(match) if native is not None else declared
+    if not present:
+        prefab.setdefault("stats", {}).pop("pilotExperienceMultiplier", None)
+        return
+    multiplier = float(match[1]) if match else 1.1
+    prefab.setdefault("stats", {})["pilotExperienceMultiplier"] = multiplier
+    mechanics = prefab.setdefault("mechanics", [])
+    mechanic = next((m for m in mechanics if m.get("id") == "LPC"), None)
+    if mechanic is None:
+        mechanic = {"id": "LPC", "source": "Template/Unit/Skill/LPC.gw"}
+        mechanics.append(mechanic)
+    mechanic.update(status="adapted", name="学习型电脑：驾驶员经验获取×" + f"{multiplier:g}")
+
+
 def correct(prefab, native=None):
     apply_command_auras(prefab, native)
+    apply_learning_computer(prefab, native)
     skills = _skills(prefab)
     sensors = prefab.setdefault("stats", {}).setdefault("sensors", {})
     sensors["stealth"] = "Stealth" in skills
@@ -50,9 +71,7 @@ def correct(prefab, native=None):
 
     for mechanic in mechanics:
         ident = mechanic.get("id", "")
-        if ident == "LPC":
-            mechanic.update(status="not_applicable", name="\u4f4e\u538b\u5f39\u5c04\uff1a\u539fMOD\u9a7e\u9a76\u5458\u7ecf\u9a8c\u6210\u957f\u00d71.1\uff08\u672c\u9879\u76ee\u65e0\u9a7e\u9a76\u5458\u7ecf\u9a8c\u7cfb\u7edf\uff09")
-        elif ident == "Stealth":
+        if ident == "Stealth":
             mechanic.update(status="adapted", name="\u9690\u853d\uff1a\u964d\u4f4e\u654c\u65b9\u96f7\u8fbe\u7684\u6709\u6548\u4fa6\u6d4b\u8ddd\u79bb")
         elif ident == "Stealth_Aqua":
             mechanic.update(status="adapted", name="\u6c34\u4e0b\u9690\u853d\uff1a\u4f4d\u4e8e\u6c34\u4e2d\u65f6\u964d\u4f4e\u654c\u65b9\u96f7\u8fbe\u6709\u6548\u8ddd\u79bb")
