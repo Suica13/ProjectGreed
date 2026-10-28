@@ -262,7 +262,7 @@ const WeaponInfo = (() => {
     body.append(
       node("p", "weapon-detail-note", "基础伤害未计入目标防护与战斗加成；次数包含多段命中。"),
     );
-    if (weapon.description) body.append(node("p", "", weapon.description));
+    if (weapon.description) body.append(node("p", "", I18n.localized(weapon, "description")));
     const all = (weapon.requiredParts || [])
       .map((part) => I18n.text(partLabels[part] || part))
       .join(" / ");

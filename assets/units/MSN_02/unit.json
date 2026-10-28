@@ -3431,6 +3431,257 @@
         }
       },
       "actionCost": 2
+    },
+    "ZN_MSN_02_HandFunnel": {
+      "sourceName": "ZN_MSN_02_HandFunnel",
+      "name": "有线浮游炮",
+      "localization": {
+        "zh": {
+          "name": "有线浮游炮",
+          "description": "2个单元，每单元2发，基础伤害1000/发；消耗3 AP。"
+        },
+        "en": {
+          "name": "Wired Remote Cannons",
+          "description": "2 remote units, 2 shots each, 1000 base damage per shot; costs 3 AP."
+        },
+        "ja": {
+          "name": "有線サイコミュ砲",
+          "description": "2基が各2発射撃。1発の基本ダメージ1000、消費3 AP。"
+        }
+      },
+      "type": "beam",
+      "category": "remote",
+      "slot": "secondary",
+      "min": 1,
+      "max": 4,
+      "hit": 85.0,
+      "en": 100.0,
+      "actionCost": 3,
+      "damagePerShot": 1000,
+      "damageComponents": {
+        "beam": 1000
+      },
+      "hitsPerShot": 1,
+      "clip": null,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "attack": {
+        "startAnimation": null,
+        "steps": [
+          {
+            "delay": 0.7,
+            "shots": 1,
+            "muzzleIndex": 0,
+            "requiredParts": [
+              "leftArm"
+            ]
+          },
+          {
+            "delay": 0.13,
+            "shots": 1,
+            "muzzleIndex": 1,
+            "requiredParts": [
+              "rightArm"
+            ]
+          },
+          {
+            "delay": 1.07,
+            "shots": 1,
+            "muzzleIndex": 0,
+            "requiredParts": [
+              "leftArm"
+            ]
+          },
+          {
+            "delay": 0.13,
+            "shots": 1,
+            "muzzleIndex": 1,
+            "requiredParts": [
+              "rightArm"
+            ]
+          }
+        ]
+      },
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "ArmL",
+            "point": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          {
+            "layer": "ArmR",
+            "point": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 0.65,
+        "speed": 85,
+        "forwardOffset": 0,
+        "rotation": 0,
+        "visibleInFog": false
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "nativePayload": {
+        "BeamDamage": 1750.0,
+        "DpDamage": 75.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 60.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 25.0
+      },
+      "sound": {
+        "file": "../../sounds/BeamGun_3.ogg",
+        "volume": 0.45
+      },
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Funnel/ZN_MSN_02_HandFunnel.gw",
+        "root": "GW_BattleUniverse_DLC_0079"
+      },
+      "remote": {
+        "kind": "wired",
+        "units": [
+          {
+            "texture": "MSN_02_ArmL_1.png",
+            "scale": 1.0,
+            "nativeUnit": "MSN_02_HandFunnel_L",
+            "requiredParts": [
+              "leftArm"
+            ],
+            "hideLayers": [
+              "ArmL"
+            ],
+            "scaleX": 1
+          },
+          {
+            "texture": "MSN_02_ArmR_1.png",
+            "scale": 1.0,
+            "nativeUnit": "MSN_02_HandFunnel_R",
+            "requiredParts": [
+              "rightArm"
+            ],
+            "hideLayers": [
+              "ArmR"
+            ],
+            "scaleX": 1
+          }
+        ],
+        "shotsPerUnit": 2,
+        "moveSeconds": 0.6,
+        "settleSeconds": 0.1,
+        "waitSeconds": 0.5,
+        "staggerSeconds": 0.13,
+        "returnSeconds": 0.65,
+        "awakeningScale": 0.0025
+      },
+      "nativeRemote": {
+        "count": 2,
+        "cooldownSeconds": 18.0,
+        "awakeningMinimum": 75.0,
+        "entry": "ZN_MSN_02_HandFunnel_Trigger",
+        "unitSources": [
+          "MSN_02_HandFunnel_L",
+          "MSN_02_HandFunnel_R"
+        ],
+        "unitPayloads": [
+          {
+            "BeamDamage": 1750.0,
+            "DpDamage": 75.0,
+            "WeaponAccuracy": 85.0,
+            "PartBreakModifier": 1.0,
+            "CockpitBreakModifier": 1.0,
+            "PilotDamageModifier": 1.0,
+            "PilotTrueDamage": 0.0,
+            "AntiSizeLargeDamage": 1.0,
+            "AntiSizeSmallDamage": 0.75,
+            "AntiSizeLargeAccuracy": 1.0,
+            "AntiSizeSmallAccuracy": 0.75,
+            "AntiBuilding": 1.0,
+            "AntiAqua": 0.5,
+            "AntiAir": 0.75,
+            "AntiLand": 1.0,
+            "AntiSpace": 1.0,
+            "HeightChangeSpeed": 2.0,
+            "HeightHitRange": 20.0,
+            "ProjectileSpeed": 60.0,
+            "ProjectileSpread": 1.0,
+            "ProjectileLife": 25.0
+          },
+          {
+            "BeamDamage": 1750.0,
+            "DpDamage": 75.0,
+            "WeaponAccuracy": 85.0,
+            "PartBreakModifier": 1.0,
+            "CockpitBreakModifier": 1.0,
+            "PilotDamageModifier": 1.0,
+            "PilotTrueDamage": 0.0,
+            "AntiSizeLargeDamage": 1.0,
+            "AntiSizeSmallDamage": 0.75,
+            "AntiSizeLargeAccuracy": 1.0,
+            "AntiSizeSmallAccuracy": 0.75,
+            "AntiBuilding": 1.0,
+            "AntiAqua": 0.5,
+            "AntiAir": 0.75,
+            "AntiLand": 1.0,
+            "AntiSpace": 1.0,
+            "HeightChangeSpeed": 2.0,
+            "HeightHitRange": 20.0,
+            "ProjectileSpeed": 60.0,
+            "ProjectileSpread": 1.0,
+            "ProjectileLife": 25.0
+          }
+        ]
+      },
+      "description": "有线浮游炮：2个单元，每单元2发，基础伤害1000/发。消耗3 AP。",
+      "sourceHit": 85.0,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Funnel/ZN_MSN_02_HandFunnel.gw",
+        "entry": "ZN_MSN_02_HandFunnel_Trigger",
+        "cooldown": 18.0,
+        "duration": 2.03,
+        "firstShot": 0.7,
+        "lastShot": 2.03,
+        "firingEvents": 4,
+        "projectiles": 4,
+        "declaredEnergy": 100.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 100.0,
+        "adaptation": "remote_two_shots_per_unit"
+      },
+      "pilotRequirements": [
+        {
+          "stat": "awakening",
+          "operator": ">=",
+          "value": 75.0
+        }
+      ],
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     }
   },
   "mechanics": [
@@ -3447,8 +3698,8 @@
     },
     {
       "id": "remote_weapon_ZN_MSN_02_HandFunnel",
-      "name": "浮游兵器：部署、远程操控与回收待适配",
-      "status": "review",
+      "name": "有线浮游炮：逐发判定、错峰飞行与回收",
+      "status": "adapted",
       "source": "Units/BattleUnits/Weapon/Funnel/ZN_MSN_02_HandFunnel.gw"
     }
   ],
@@ -3461,7 +3712,8 @@
         "ZN_MSN_02_BeamCannon",
         "Common_Push_A",
         "ZN_MSN_02_BG",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "ZN_MSN_02_HandFunnel"
       ]
     }
   ],

@@ -1,6 +1,7 @@
 /* 演出只读取服务端逐发结果，不掷命中、不修改战局 HP。 */
 const WeaponEffects = (() => {
   function animationSpeed(weapon) {
+    if (weapon.remote) return 1;
     return weapon.type === "melee"
       ? ART.presentation.meleeAnimationSpeed
       : ART.presentation.animationSpeed;
@@ -65,6 +66,121 @@ const WeaponEffects = (() => {
       SpriteEffects.draw(ctx, event.effect, x + dx * scale, y + dy * scale, scale, age - event.at);
     }
   }
+  // Deterministic presentation paths: no simulation entities, timers or per-frame RNG.
+  function remotePaths(weapon, source, target, event) {
+    if (!weapon.remote) return [];
+    const config = weapon.remote;
+    let seed = 2166136261;
+    for (const c of `${source.unit.id}:${target.unit.id}:${weapon.id}:${event?.id || event?.sequence || 0}`)
+      seed = Math.imul(seed ^ c.charCodeAt(0), 16777619) >>> 0;
+    const random = () => (seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296;
+    const radius = Math.max(30, Math.min(90, 55 * (target.scale || 1)));
+    return config.units.map((unit, index) => {
+      const launch = index * config.staggerSeconds;
+      const origin = SpriteRenderer.muzzle(source.unit.model, weapon, source, null, 0, index);
+      const points = Array.from({ length: config.shotsPerUnit }, (_, cycle) => {
+        const angle = (index / config.units.length + random() * 0.55 + cycle * 0.3) * Math.PI * 2;
+        const distance = radius * (0.8 + random() * 0.65);
+        return {
+          x: target.x + Math.cos(angle) * distance,
+          y: target.y + Math.sin(angle) * distance,
+        };
+      });
+      const cycle = config.moveSeconds + config.settleSeconds + config.waitSeconds;
+      const shots = points.map(
+        (_, shot) => launch + config.moveSeconds + config.settleSeconds + shot * cycle,
+      );
+      const returnAt = shots.at(-1) + config.waitSeconds;
+      return {
+        index,
+        unit,
+        origin,
+        points,
+        shots,
+        launch,
+        returnAt,
+        end: returnAt + config.returnSeconds,
+      };
+    });
+  }
+  function remoteState(path, config, time) {
+    if (time < path.launch || time > path.end) return null;
+    const lerp = (a, b, t) => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
+    if (time >= path.returnAt) {
+      // Wired control pods retract along their remembered turning points.
+      const route =
+        config.kind === "funnel"
+          ? [path.points.at(-1), path.origin]
+          : [...path.points].reverse().concat(path.origin);
+      const lengths = route
+        .slice(1)
+        .map((point, i) => Math.hypot(point.x - route[i].x, point.y - route[i].y));
+      let remaining =
+        (lengths.reduce((sum, v) => sum + v, 0) * (time - path.returnAt)) / config.returnSeconds;
+      for (let i = 0; i < lengths.length; i++) {
+        if (remaining <= lengths[i] || i === lengths.length - 1)
+          return {
+            ...lerp(route[i], route[i + 1], Math.min(1, remaining / Math.max(0.001, lengths[i]))),
+            trail: [path.origin, ...route.slice(i + 1, -1).reverse()],
+            moving: true,
+            returning: true,
+            angle: Math.atan2(route[i + 1].y - route[i].y, route[i + 1].x - route[i].x),
+          };
+        remaining -= lengths[i];
+      }
+    }
+    let previous = path.origin;
+    const trail = [path.origin];
+    for (let i = 0; i < path.points.length; i++) {
+      const start = i === 0 ? path.launch : path.shots[i - 1] + config.waitSeconds;
+      const point = path.points[i];
+      if (time <= path.shots[i]) {
+        const t = Math.min(1, Math.max(0, (time - start) / config.moveSeconds));
+        return {
+          ...lerp(previous, point, t),
+          trail,
+          moving: t < 1,
+          returning: false,
+          angle: Math.atan2(point.y - previous.y, point.x - previous.x),
+        };
+      }
+      if (time < path.shots[i] + config.waitSeconds)
+        return { ...point, trail, moving: false, returning: false, angle: 0 };
+      trail.push(point);
+      previous = point;
+    }
+    return { ...previous, trail, moving: false, returning: false, angle: 0 };
+  }
+  function drawRemotes(ctx, weapon, plan, time, source, size) {
+    for (const path of plan.remotes || []) {
+      if (!plan.shots.some((shot) => shot.remoteIndex === path.index)) continue;
+      const state = remoteState(path, weapon.remote, time);
+      if (!state) continue;
+      if (weapon.remote.kind !== "funnel") {
+        ctx.save();
+        ctx.strokeStyle = "#b2b7c2";
+        ctx.lineWidth = Math.max(0.7, source.scale * 0.8);
+        ctx.beginPath();
+        ctx.moveTo(state.trail[0].x, state.trail[0].y);
+        for (const point of state.trail.slice(1)) ctx.lineTo(point.x, point.y);
+        ctx.lineTo(state.x, state.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+      const image = SpriteRenderer.images[path.unit.asset];
+      if (!image) continue;
+      const target = plan.shots.find((shot) => shot.remoteIndex === path.index)?.destination;
+      const angle = state.moving ? state.angle : Math.atan2(target.y - state.y, target.x - state.x);
+      const scale = source.scale * path.unit.scale * size;
+      ctx.save();
+      ctx.translate(state.x, state.y);
+      ctx.rotate(angle + Math.PI / 2);
+      ctx.scale(scale * (path.unit.scaleX || 1), scale);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(image, -image.width / 2, -image.height / 2);
+      ctx.restore();
+    }
+  }
   function plan(weapon, source, target, event = null, dodgeSchedule = null) {
     // 每发未命中子弹从发射起最多等待两秒；连射中的后续子弹独立计时。
     const missTimeout = 2,
@@ -80,19 +196,27 @@ const WeaponEffects = (() => {
             : 0,
       sourceY = (event?.sourceDodgeSlot || 0) * ART.presentation.dodgeDistance * source.scale,
       initialSlot = event?.targetDodgeSlot || 0;
+    const remotes = remotePaths(weapon, source, target, event);
     const shots = weapon.attack.shots.map((originalAt, index) => {
       const at = lead + originalAt / speed,
         animation = firingPose(weapon, source, event, originalAt);
-      const origin = weapon.projectile
-        ? SpriteRenderer.muzzle(
-            source.unit.model,
-            weapon,
-            { ...source, ...animation },
-            animation.clip,
-            animation.time,
-            index,
-          )
-        : { x: target.x, y: target.y };
+      const remoteIndex = weapon.remote ? weapon.attack.muzzleIndices[index] : null;
+      const remote = remotes[remoteIndex];
+      const remoteCycle = remote
+        ? weapon.attack.muzzleIndices.slice(0, index).filter((i) => i === remoteIndex).length
+        : 0;
+      const origin = remote
+        ? { ...remote.points[remoteCycle] }
+        : weapon.projectile
+          ? SpriteRenderer.muzzle(
+              source.unit.model,
+              weapon,
+              { ...source, ...animation },
+              animation.clip,
+              animation.time,
+              index,
+            )
+          : { x: target.x, y: target.y };
       // 命中和 Miss 使用相同弹道；由防守方回避动作表现未命中。
       const destination = {
         x: target.x,
@@ -151,7 +275,16 @@ const WeaponEffects = (() => {
                         ART.presentation.projectileSpeed),
                   )
                 : 0;
-      return { index, at, origin, destination, spreadY, flight, impactAt: at + flight };
+      return {
+        index,
+        remoteIndex,
+        at,
+        origin,
+        destination,
+        spreadY,
+        flight,
+        impactAt: at + flight,
+      };
     });
     const steps = weapon.attack.strikes;
     const contacts = steps
@@ -319,6 +452,7 @@ const WeaponEffects = (() => {
       melee,
       bomb,
       shots: activeShots,
+      remotes,
       contacts,
       impacts,
       cues,
@@ -333,7 +467,7 @@ const WeaponEffects = (() => {
       initialSlot,
       sourceY,
       actionSpeed: speed,
-      duration,
+      duration: Math.max(duration, ...remotes.map((path) => path.end)),
     };
   }
   function meleeMotion(plan, source, target, time, travel = 0.18) {
@@ -476,7 +610,7 @@ const WeaponEffects = (() => {
       if (!effect || age < 0 || age >= effect.duration || drawn.has(key)) continue;
       drawn.add(key);
       let origin = shot.origin;
-      if (effect.attached) {
+      if (effect.attached && !weapon.remote) {
         const current =
           pose ||
           firingPose(weapon, source, event, Math.max(0, time - plan.lead) * plan.actionSpeed);
@@ -580,6 +714,7 @@ const WeaponEffects = (() => {
       drawTether(ctx, weapon, plan, time, source, event, size, pose, layer);
       return;
     }
+    if (weapon.remote) drawRemotes(ctx, weapon, plan, time, source, size);
     drawMuzzle(ctx, weapon, plan, time, source, event, pose);
     if (!weapon.projectile) return;
     const image = SpriteRenderer.images[weapon.projectile.asset];
@@ -618,6 +753,8 @@ const WeaponEffects = (() => {
     }
   }
   return {
+    remotePaths,
+    remoteState,
     deathSequence,
     drawDeath,
     plan,

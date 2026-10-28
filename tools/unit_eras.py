@@ -20,7 +20,7 @@ def apply(prefab):
     if row:
         factions=sorted({tech.split("_")[1] for tech in row.get("tech",[])})
         if len(factions)>1: prefab["availableFactions"]=factions
-    mapping=eras(); era=mapping.get(prefab["id"])
+    mapping=eras(); era="0079L" if prefab["id"] in ("MS_06Z","MSN_01") else mapping.get(prefab["id"])
     if not era:
         parents=sorted(mapping,key=len,reverse=True)
         era=next((mapping[parent] for parent in parents if prefab["id"].startswith(parent+"_")),None)

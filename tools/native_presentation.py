@@ -104,7 +104,7 @@ def correct(prefab, native):
                 layer["order"] = max(layer.get("order", 0), body + 0.2)
     # 固定炮口和持枪炮口均按单位覆盖后的原生barrelX/Y重新求挂点。
     for key, weapon in prefab["weapons"].items():
-        if weapon.get("moduleIds"):
+        if weapon.get("moduleIds") or weapon.get("remote"):
             continue
         own = load(ROOT / weapon["source"]["file"])
         source = {name:{**own.get(name,{}),**native.get(name,{})} for name in own.keys() | native.keys()}

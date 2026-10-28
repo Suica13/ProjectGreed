@@ -255,7 +255,9 @@
     "MSM_03C": "MSM_03C__standard",
     "MSM_07E": "MSM_07E__standard",
     "YMS_18": "YMS_18__standard",
-    "EMS_10F": "EMS_10F__kit_1"
+    "EMS_10F": "EMS_10F__kit_1",
+    "MS_06Z": "MS_06Z__standard",
+    "MSN_01": "MSN_01__standard"
   },
   "offers": {
     "RGM_79__beam_spray": {
@@ -13947,6 +13949,62 @@
             "quantity": 1,
             "equipmentIndex": 1,
             "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MS_06Z__standard": {
+      "output": {
+        "unitId": "MS_06Z",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "unitId": "MS_06Z",
+      "faction": "ZEON",
+      "money": 2550,
+      "supplies": 2550,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_06Z.gw",
+        "action": "action_Produce_MS_06Z_StandardSquad",
+        "buildSeconds": 40.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MS_06Z",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:3101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MSN_01__standard": {
+      "output": {
+        "unitId": "MSN_01",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "unitId": "MSN_01",
+      "faction": "ZEON",
+      "money": 2550,
+      "supplies": 2550,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MSN_01.gw",
+        "action": "action_Produce_MSN_01_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MSN_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:3101|EquipmentIndex:0"
           }
         ]
       },

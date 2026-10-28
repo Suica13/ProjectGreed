@@ -884,6 +884,36 @@ function loadCatalog({
             )
               throw Error("Invalid muzzle bone/offset: " + key);
           }
+          if (weapon.remote) {
+            const remote = weapon.remote;
+            if (
+              !["funnel", "wired", "incom"].includes(remote.kind) ||
+              !Array.isArray(remote.units) ||
+              !remote.units.length ||
+              remote.units.length > 16 ||
+              remote.shotsPerUnit !== 2 ||
+              weapon.attack.shots.length !== remote.units.length * remote.shotsPerUnit ||
+              ![
+                "moveSeconds",
+                "settleSeconds",
+                "waitSeconds",
+                "staggerSeconds",
+                "returnSeconds",
+              ].every((name) => Number.isFinite(remote[name]) && remote[name] > 0) ||
+              !Number.isFinite(remote.awakeningScale) ||
+              remote.awakeningScale < 0 ||
+              (remote.kind === "incom" && remote.awakeningScale !== 0)
+            )
+              throw Error("Invalid remote weapon: " + key);
+            weapon.remote = {
+              ...remote,
+              units: remote.units.map((unit) => {
+                if (!textureKeys[unit.texture] || !Number.isFinite(unit.scale) || unit.scale <= 0)
+                  throw Error("Missing remote sprite: " + key);
+                return { ...unit, asset: textureKeys[unit.texture] };
+              }),
+            };
+          }
           return { ...weapon, id: key };
         });
       if (!textureKeys[prefab.materials.icon]) throw Error("Missing unit icon: " + prefab.id);

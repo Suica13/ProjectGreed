@@ -1,6 +1,6 @@
 const test = require("node:test"), assert = require("node:assert/strict");
 const G = require("../shared/rules.js");
-const models = Object.entries(G.models).filter(([,m]) => m.weapons.some(w => w.pilotRequirements)).map(([modelId,m]) => ({...m,modelId}));
+const models = Object.entries(G.models).filter(([,m]) => m.weapons.some(w => w.pilotRequirements?.some(r => r.stat === "melee"))).map(([modelId,m]) => ({...m,modelId}));
 function unit(model, value = 200) {
   return { id: "pilot-test", model: model.modelId, hp: model.hp, en: 100000, shield: 10000,
     x: 10, y: 10, pilot: { stats: { shooting: 100, melee: value, defense: 100,
@@ -8,7 +8,7 @@ function unit(model, value = 200) {
 }
 test("all native pilot weapons enforce strict source thresholds and remain in every compatible kit", () => {
   const unique = new Set();
-  for (const model of models) for (const w of model.weapons.filter(w => w.pilotRequirements)) {
+  for (const model of models) for (const w of model.weapons.filter(w => w.pilotRequirements?.some(r => r.stat === "melee"))) {
     unique.add(model.prefabId + "/" + w.id);
     const threshold = model.prefabId === "RX_81AS" ? 165 : 145;
     assert.deepEqual(w.pilotRequirements, [{ stat: "melee", operator: ">", value: threshold }]);
@@ -22,7 +22,7 @@ test("all native pilot weapons enforce strict source thresholds and remain in ev
   assert.equal(unique.size, 30);
 });
 test("pilot gates cannot bypass shield, energy or broken native arms", () => {
-  for (const model of models) for (const w of model.weapons.filter(w => w.pilotRequirements)) {
+  for (const model of models) for (const w of model.weapons.filter(w => w.pilotRequirements?.some(r => r.stat === "melee"))) {
     const u = unit(model);
     if (w.requiresShield) {
       u.shield = 0;

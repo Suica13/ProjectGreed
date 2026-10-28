@@ -263,6 +263,14 @@ const MapCombat = (() => {
       moving,
       heldWeapon: event.heldWeapon ?? event.weapon,
       attackWeapon: event.weapon,
+      hiddenLayers: (plan.remotes || [])
+        .filter(
+          (path) =>
+            time >= path.launch &&
+            time < path.end &&
+            plan.shots.some((shot) => shot.remoteIndex === path.index),
+        )
+        .flatMap((path) => path.unit.hideLayers || []),
       weaponDisplayIndex: animation.weaponDisplayIndex,
       attacking: time >= plan.lead && time <= plan.lead + weapon.attack.duration / plan.actionSpeed,
     };

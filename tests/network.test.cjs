@@ -4059,3 +4059,43 @@ test("ACE shared attachment survives WebSocket deployment and earns native XP wi
   assert.equal(archive.pilots[0].needsRecruitment, true);
   assert.equal(archive.pilots[0].experience, 45);
 });
+
+
+test("remote salvos enforce awakening, ownership, reservation and request deduplication over WebSocket", async t => {
+  const {app,client}=await setup(t), blue=await client(), red=await client();
+  await blue.hello('create','REMOTES');await red.hello('join','REMOTES');
+  const room=app.rooms.get('REMOTES'),sync=c=>c.latest(s=>s.revision===room.revision);
+  await blue.act('configure_room',{...G.defaultRoomSettings(),fogMode:'disabled'});
+  for(const c of [blue,red]) {
+    await sync(c);
+    assert.equal((await c.act('set_ready',{ready:true,formation:[{unitId:'RGM_79',kitId:'machine_gun'}],inventory:{RGM_79:1}})).type,'state');
+  }
+  await confirmAssembly(blue,red);
+  for(const c of [blue,red]){await sync(c);await c.act('confirm_deployment');}
+  await sync(blue);
+  const u=room.game.units[0],target=room.game.units[1];
+  Object.assign(u,{model:'MAN_08__standard',hp:100000,en:1000,x:5,y:5});
+  u.pilot={...u.pilot,stats:{...u.pilot.stats,awakening:74}};
+  Object.assign(target,{x:8,y:5,hp:100000,shield:0});
+  room.game.tiles.forEach(r=>r.fill('plain'));
+  const weapon=G.modelOf(u).weapons.find(w=>w.remote), intent={unitId:u.id,targetId:target.id,weaponId:weapon.id};
+  const initial=JSON.stringify(room.game),rev=room.revision;
+  assert.equal((await blue.act('attack',{...intent,pilot:{stats:{awakening:200}},damage:999999,remote:{units:[]}})).type,'error');
+  assert.equal(JSON.stringify(room.game),initial);assert.equal(room.revision,rev);
+  await sync(red);assert.equal((await red.act('attack',intent)).type,'error');
+  u.pilot.stats.awakening=75;
+  await sync(blue);
+  assert.equal((await blue.act('attack',intent,{id:'remote-once'})).type,'state');
+  assert.equal(u.actionPoints,2);assert.equal(u.en,1000);assert.equal(room.plans.length,1);
+  const reserved=JSON.stringify(room.game),reservedRev=room.revision;
+  assert.equal((await blue.act('attack',intent,{id:'remote-once',revision:rev})).type,'state');
+  assert.equal(JSON.stringify(room.game),reserved);assert.equal(room.revision,reservedRev);
+  await sync(blue);assert.equal((await blue.act('end_turn')).type,'state');
+  await sync(red);assert.equal(room.phase,'reaction');
+  assert.equal((await red.act('respond',{response:'defend'})).type,'state');
+  assert.equal(u.en,800);assert.equal(room.game.units.length,2);
+  const event=room.combats.flatMap(combat=>combat.events).find(e=>e.weapon===weapon.id);
+  assert.equal(event.strikes.length,10);
+  assert.equal(new Set(event.strikes.map(s=>s.shotIndex)).size,10);
+  assert.ok(target.hp<100000);assert.ok(u.en>=0);
+});

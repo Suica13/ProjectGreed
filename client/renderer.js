@@ -288,6 +288,7 @@ const SpriteRenderer = (() => {
     turretStatus = null,
     effectsOnly = false,
     boostSkillActive = false,
+    hiddenLayers = [],
   ) {
     const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
     const active = isFiring
@@ -321,6 +322,7 @@ const SpriteRenderer = (() => {
       flying,
       boostSkillActive,
     )) {
+      if (hiddenLayers.includes(layer.name)) continue;
       const effectLayer =
         layer.effect === true ||
         layer.visibleWhen?.thrustActive ||
@@ -523,7 +525,10 @@ const SpriteRenderer = (() => {
           ...keysForModels([...ids]),
           ...Object.values(ART.effects).map((effect) => effect.asset),
           ...[...ids].flatMap((id) =>
-            ART.models[id].weapons.map((weapon) => weapon.projectile?.asset),
+            ART.models[id].weapons.flatMap((weapon) => [
+              weapon.projectile?.asset,
+              ...(weapon.remote?.units || []).map((unit) => unit.asset),
+            ]),
           ),
         ].filter(Boolean),
       ),

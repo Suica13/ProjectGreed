@@ -54,6 +54,11 @@ def source_for(weapon):
 
 
 def native_weapon(prefab, weapon, unit_data):
+    if weapon.get('remote'):
+        from native_remote_weapons import compile_launcher
+        from mod_source import MOD
+        root = MOD / prefab['source'].split('/')[0]
+        return compile_launcher(prefab, root / weapon['source']['file'], root, False)[1]
     path = source_for(weapon)
     weapon_data = load(path)
     data = {key:{**weapon_data.get(key,{}),**unit_data.get(key,{})} for key in weapon_data.keys() | unit_data.keys()}
@@ -212,7 +217,8 @@ def restore(prefab, native):
     if prefab["stats"]["en"]<=0:
         raise ValueError("Missing native EN: "+prefab["id"])
     for weapon in prefab["weapons"].values():
-        native_weapon(prefab,weapon,native)
+        if not weapon.get("remote"):
+            native_weapon(prefab,weapon,native)
     from unit_ship_balance import apply_beams
     apply_beams(prefab, native_restored=True)
     prefab["nativeCombatRevision"]=1

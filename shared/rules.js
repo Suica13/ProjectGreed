@@ -2055,6 +2055,14 @@ const Tactics = (() => {
   function estimate(g, a, b, w, response = "counter", isCounter = false) {
     w = weaponStats(w, a);
     const attacker = modelOf(a, g),
+      // Native psychommu remotes inherit an extra awakening modifier; INCOM does not.
+      remoteFactor =
+        w.remote && w.remote.kind !== "incom"
+          ? Math.max(
+              0,
+              1 + (pilots.of(a, models[a.model]).stats.awakening - 100) * w.remote.awakeningScale,
+            )
+          : 1,
       bonuses = attacker.attackBonuses,
       attackCommand = commandEffects(g, a),
       defenseCommand = commandEffects(g, b),
@@ -2096,6 +2104,7 @@ const Tactics = (() => {
         Math.max(0, baseHit - (response === "evade" ? 15 : 0)) *
           (w.hitScale || 1) *
           (attacker.pilotModifiers?.accuracy ?? 1) *
+          remoteFactor *
           (1 + attackCommand.communication),
       ),
       pilotEvasionHit =
@@ -2124,6 +2133,7 @@ const Tactics = (() => {
         (defender.pilotModifiers?.defense ?? 1) *
         (1 - defenseCommand.defense) *
         (attacker.pilotModifiers?.[w.type === "melee" ? "melee" : "shooting"] ?? 1) *
+        remoteFactor *
         (1 + attackCommand.attack),
       strikes = availableStrikes(a, w, b);
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.

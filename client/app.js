@@ -1778,6 +1778,7 @@ function drawMap(now) {
         turretStatus,
         false,
         !!(u.overBoost || u.fullBoost || u.overdrive || u.boostSkillActive),
+        combatPose?.hiddenLayers || [],
       );
       const fieldImpact = Math.min(
         MapCombat.fieldImpact(u.id),
