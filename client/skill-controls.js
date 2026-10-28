@@ -37,6 +37,10 @@ const SkillControls = (() => {
       },
     ];
   }
+  const actionLabel = (skill) =>
+    skill.actionCost
+      ? `${I18n.text("消耗")} ${skill.actionCost} AP`
+      : I18n.text(skill.consumeAction ? "消耗本次行动" : "不消耗行动");
   function description(skill) {
     if (skill.description) return skill.description;
     if (skill.type === "flight")
@@ -60,7 +64,7 @@ const SkillControls = (() => {
     if (skill.type === "repair")
       return `范围 ${skill.range} · 友军HP +${skill.hpRecoveryPercent}% · EN +${skill.enRecoveryPercent}% · 盾牌 +${skill.shieldRecoveryPercent}% · 消耗EN ${skill.enCost}和本次行动；不修复破损部位。`;
     if (["transform", "armor_purge"].includes(skill.type))
-      return `${I18n.text("本体变为")} ${resultName(skill.source)} · ${recovery(skill.source)} · ${I18n.text("消耗本次行动")}`;
+      return `${I18n.text("本体变为")} ${resultName(skill.source)} · ${recovery(skill.source)} · ${actionLabel(skill)}`;
     const source =
       skill.source.mode === "remove"
         ? I18n.text("原机体移除")
@@ -70,7 +74,7 @@ const SkillControls = (() => {
       : I18n.text("不生成独立单位");
     return (
       `${source}；${spawn}；${I18n.text("脱出范围")} ${skill.minRange ?? 0}–${skill.range}；` +
-      I18n.text(skill.consumeAction ? "消耗本次行动" : "不消耗行动")
+      actionLabel(skill)
     );
   }
   function render(list, unit, canCommand) {

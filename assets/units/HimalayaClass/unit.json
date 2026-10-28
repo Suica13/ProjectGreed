@@ -504,7 +504,7 @@
   },
   "weapons": {
     "HimalayaClass_Turret_CN": {
-      "name": "HimalayaClass Turret CN",
+      "name": "加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
@@ -660,7 +660,18 @@
       },
       "actionCost": 3,
       "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "加农炮"
+        },
+        "en": {
+          "name": "Cannon"
+        },
+        "ja": {
+          "name": "カノン砲"
+        }
+      }
     },
     "HimalayaClass_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -934,7 +945,7 @@
       "shipAccuracyMultiplier": 0.9
     },
     "HimalayaClass_Turret_AA": {
-      "name": "HimalayaClass Turret AA",
+      "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -1743,7 +1754,18 @@
         }
       ],
       "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      }
     }
   },
   "mechanics": [

@@ -1782,7 +1782,7 @@
       "range": 0,
       "minRange": 0,
       "maxUses": 1,
-      "consumeAction": true,
+      "consumeAction": false,
       "effect": "Light_75_NotAttached",
       "sound": {
         "file": "../../sounds/Transform_4.ogg",
@@ -1802,7 +1802,8 @@
         "enRecoveryPercent": 35.0,
         "shieldRecoveryPercent": 0,
         "repairAllParts": false
-      }
+      },
+      "actionCost": 1
     }
   ],
   "nativeLayoutRevision": 1,

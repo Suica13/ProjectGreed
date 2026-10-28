@@ -3160,7 +3160,7 @@
         <div id="formationPilotRoster" class="formation-workspace" hidden>
           <section class="formation-squad">
             <div id="customPilotList" tabindex="0" role="region" aria-label="驾驶员滚动列表"></div>
-            <button id="createCustomPilot" type="button">新增驾驶员</button>
+            <div class="pilot-create-actions"><button id="createCustomPilot" type="button">新增驾驶员</button><button id="recruitAcePilot" type="button">招募ACE</button></div>
           </section>
         </div>
         <div class="net-buttons formation-footer" data-ui-node="node-219">
@@ -3360,7 +3360,7 @@
             <label class="pilot-upload">上传头像 <input id="uploadPilotPortrait" type="file" accept="image/png,image/jpeg,image/webp" /></label>
           </div>
           <p id="customPilotProgress"></p>
-          <div id="customPilotRecord" class="pilot-record"></div>
+          <div id="customPilotRecord" class="pilot-record"></div><section id="acePilotDetails" hidden></section>
           <section class="pilot-training" aria-labelledby="pilotTrainingTitle">
             <div class="pilot-training-heading"><h3 id="pilotTrainingTitle">属性强化</h3><button id="openPilotAttributeHelp" type="button" aria-label="驾驶员属性说明">[?]</button></div>
             <p id="pilotTrainingStatus" class="muted" role="status"></p>

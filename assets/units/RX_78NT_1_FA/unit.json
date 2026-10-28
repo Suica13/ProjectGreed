@@ -1240,7 +1240,7 @@
       "displayIndex": 0
     },
     "Common_ArmMG": {
-      "name": "机枪",
+      "name": "腕部机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -1475,10 +1475,21 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腕部机枪"
+        },
+        "en": {
+          "name": "Wrist Machine Gun"
+        },
+        "ja": {
+          "name": "腕部機関銃"
+        }
+      }
     },
     "Common_ArmMG_L": {
-      "name": "机枪",
+      "name": "腕部机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -1720,7 +1731,18 @@
         ],
         "mergedInto": "Common_ArmMG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腕部机枪"
+        },
+        "en": {
+          "name": "Wrist Machine Gun"
+        },
+        "ja": {
+          "name": "腕部機関銃"
+        }
+      }
     },
     "EF_BeamSaber_AF_A": {
       "name": "光束军刀",
@@ -2360,7 +2382,7 @@
       "range": 0,
       "minRange": 0,
       "maxUses": 1,
-      "consumeAction": true,
+      "consumeAction": false,
       "effect": "Light_75_NotAttached",
       "sound": {
         "file": "../../sounds/Transform_4.ogg",
@@ -2380,7 +2402,8 @@
         "enRecoveryPercent": 35,
         "shieldRecoveryPercent": 0,
         "repairAllParts": false
-      }
+      },
+      "actionCost": 1
     }
   ],
   "nativeCombatRevision": 1,

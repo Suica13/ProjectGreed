@@ -415,5 +415,3065 @@
       "sourceSha256": "67bd59532f18aa21de72302d99805a005ff78c810aad295f9cd0d66b83bbcf7a",
       "icon": "assets/pilots/Pilot_ZEON_0079_Officer_2.png"
     }
+  ],
+  "aces": [
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_AMR",
+      "name": "阿姆罗·雷",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_AMR.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_AMR.png",
+      "description": "一年战争诞生的传奇驾驶员,联邦的“白色流星” \n优势 \n=成长力惊人= \n=满级技能溢出= \n=初始觉醒很高= \n劣势 \n=劣势觉得自己是存在的,但他不敢告诉阿姆罗= \n=容易被大姐姐魅惑= \n \n“真正应该打倒的不应该是扎比家的独裁者吗!”",
+      "localization": {
+        "en": {
+          "name": "Amuro Ray",
+          "description": "Legendary pilot born during the One Year War, the Federation's “White Meteor” \nAdvantages \n= Incredible growth potential = \n= Max-level skill overflow = \n= High initial awakening = \nDisadvantages \n= The disadvantage believes it exists, but doesn't dare tell Amuro = \n= Easily charmed by alluring older-sister types = \n \n\"Isn't the real enemy we should defeat the dictator of the Zabi family!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 190.0,
+        "melee": 175.0,
+        "defense": 170.0,
+        "speed": 180.0,
+        "accuracy": 185.0,
+        "reaction": 180.0,
+        "leadership": 85.0,
+        "awakening": 90.0
+      },
+      "comprehension": 108.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 239.34528000000003,
+        "melee": 220.44960000000003,
+        "defense": 214.15104000000002,
+        "speed": 226.74816000000004,
+        "accuracy": 233.04672000000002,
+        "reaction": 226.74816000000004,
+        "leadership": 107.07552000000001,
+        "awakening": 113.37408000000002
+      },
+      "price": {
+        "money": 8000,
+        "supplies": 4000
+      },
+      "sourceOffers": [
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_AMR.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_AMR_Produce_Switch_G"
+        },
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_AMR.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_AMR_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AccuracyUp_Trigger",
+          "name": "命中率上升",
+          "description": "15秒内命中率提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "AccuracyUp",
+              "description": "Accuracy Up 75% in 15sec"
+            }
+          }
+        },
+        {
+          "id": "Pilot_ExpUp_Trigger",
+          "name": "经验值上升",
+          "description": "15秒内经验值获取提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ExpGenUp",
+              "description": "ExpGen Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_GMModularizationPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_BRT",
+      "name": "布莱特·诺亚",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_BRT.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_BRT.png",
+      "description": "一代传奇白色木马的指挥官 \n优势 \n= 指挥能力强 = \n= 懂得操控人心 = \n= 懂得利用地形 = \n劣势 \n= 战斗能力差 = \n= 喜欢给人上压力 = \n \n \"我打你有什么不对!\"",
+      "localization": {
+        "en": {
+          "name": "Bright Noa",
+          "description": "The commander of the legendary white wooden horse \nAdvantages \n= Strong commanding ability = \n= Know how to manipulate people's minds = \n= Know how to utilize the terrain = \nDisadvantages \n= Poor combat capability = \n= Likes to put pressure on others = \n \n“What's wrong with me hitting you!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 130.0,
+        "melee": 135.0,
+        "defense": 145.0,
+        "speed": 145.0,
+        "accuracy": 135.0,
+        "reaction": 165.0,
+        "leadership": 165.0,
+        "awakening": 45.0
+      },
+      "comprehension": 106.5,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 157.03345124999998,
+        "melee": 163.073199375,
+        "defense": 175.15269562499998,
+        "speed": 175.15269562499998,
+        "accuracy": 163.073199375,
+        "reaction": 199.311688125,
+        "leadership": 199.311688125,
+        "awakening": 54.357733124999996
+      },
+      "price": {
+        "money": 10000,
+        "supplies": 5000
+      },
+      "sourceOffers": [
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_BRT.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_BRT_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_BRT.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_BRT_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_GMModularizationPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_CRS",
+      "name": "克里斯蒂娜·麦肯吉",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_CRS.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_CRS.png",
+      "description": "毕业于联邦军官学院的优秀机师,负责对新型MSRX-78NT-1高达NT-1进行测试工作 \n优势 \n=射击能力优秀= \n=防御技巧优秀= \n=红发大姐姐= \n劣势 \n=反应能力一般= \n=机动能力一般= \n \n“这孩子太过灵敏了!”",
+      "localization": {
+        "en": {
+          "name": "Christina Mackenzie",
+          "description": "An excellent pilot who graduated from the Federation Military Academy, tasked with testing the new MS RX-78NT-1 Gundam NT-1 \nAdvantages \n= Excellent shooting ability = \n= Excellent defensive skills = \n= Red-haired big sister = \nDisadvantages \n= Average reaction ability = \n= Average mobility = \n \n“This kid is way too sensitive!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 165.0,
+        "melee": 135.0,
+        "defense": 165.0,
+        "speed": 140.0,
+        "accuracy": 145.0,
+        "reaction": 140.0,
+        "leadership": 65.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 191.008125,
+        "melee": 156.27937500000002,
+        "defense": 191.008125,
+        "speed": 162.06750000000002,
+        "accuracy": 167.85562500000003,
+        "reaction": 162.06750000000002,
+        "leadership": 75.245625,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_CRS.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_CRS_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_CRS.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_CRS_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_DefUp_Trigger",
+          "name": "防御力上升",
+          "description": "15秒内防御力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DefUp",
+              "description": "Def Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_GundamNTCustomPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_FOT",
+      "name": "弗特·罗姆菲洛",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_FOT.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_FOT.png",
+      "description": "地球联邦军第16独立部队的测试机师,负责护送一年战争的停战条约,使其成功签订 \n优势 \n= 反应较为出色 = \n= 整体能力优秀 = \n劣势 \n= 成长能力较慢 = \n \n“我会证明,我的实力的！”",
+      "localization": {
+        "en": {
+          "name": "Fort Romphfillo",
+          "description": "Test Pilot of the 16th Independent Unit of the Earth Federation Forces,Responsible for escorting the armistice treaty of the One Year War \nAdvantages \n= Excellent response = \n= Overall ability is excellent = \nDisadvantages \n= Ability grows relatively slowly  = \n \n“I will prove my strength!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 155.0,
+        "melee": 150.0,
+        "defense": 150.0,
+        "speed": 170.0,
+        "accuracy": 150.0,
+        "reaction": 175.0,
+        "leadership": 75.0,
+        "awakening": 45.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 179.43187500000002,
+        "melee": 173.64375,
+        "defense": 173.64375,
+        "speed": 196.79625000000001,
+        "accuracy": 173.64375,
+        "reaction": 202.58437500000002,
+        "leadership": 86.821875,
+        "awakening": 52.09312500000001
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_FOT.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_FOT_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_FOT.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_FOT_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_ReactionUp_Trigger",
+          "name": "回避力上升",
+          "description": "15秒内反应力提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ReactionUp",
+              "description": "Reaction Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_G4Plan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_HYT",
+      "name": "小林隼人",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_HYT.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_HYT.png",
+      "description": "一代传奇白色基地的钢坦克驾驶员 \n优势 \n= 射击能力出色 = \n= 战斗能力较为全面 = \n劣势 \n= 前期战斗能力不足 = \n \n“不能总是交给凯来处理!”",
+      "localization": {
+        "en": {
+          "name": "Hayato Kobayashi",
+          "description": "The driver of the Guntank from the legendary White Base of a generation. \nAdvantages \n= Excellent shooting ability = \n= Combat capabilities are relatively comprehensive = \nDisadvantages \n= The combat capability is insufficient in the early stage = \n \n“We can't always leave it to Kai to handle!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 155.0,
+        "melee": 140.0,
+        "defense": 155.0,
+        "speed": 145.0,
+        "accuracy": 160.0,
+        "reaction": 155.0,
+        "leadership": 85.0,
+        "awakening": 55.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 179.43187500000002,
+        "melee": 162.06750000000002,
+        "defense": 179.43187500000002,
+        "speed": 167.85562500000003,
+        "accuracy": 185.22000000000003,
+        "reaction": 179.43187500000002,
+        "leadership": 98.39812500000001,
+        "awakening": 63.66937500000001
+      },
+      "price": null,
+      "sourceOffers": [],
+      "skills": [
+        {
+          "id": "Pilot_AccuracyUp_Trigger",
+          "name": "命中率上升",
+          "description": "15秒内命中率提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "AccuracyUp",
+              "description": "Accuracy Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": []
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_JST",
+      "name": "吉斯汀·隆伯德",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_JST.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_JST.png",
+      "description": "地球联邦军第16独立部队骏马号的指挥官,拥有着冷静的判断力和出色的指挥能力 \n优势 \n= 指挥能力优秀 = \n= 属性较为平庸 = \n劣势 \n= 属性较为平庸 = \n \n“签署仪式落幕的话,这场战争也就结束了吧”",
+      "localization": {
+        "en": {
+          "name": "Justine Lombard",
+          "description": "The commander of the Steed, the 16th Independent Unit of the Earth Federation Forces, possesses calm judgment and excellent command capabilities \nAdvantages \n= Excellent command capabilities = \n= The attributes are relatively mediocre = \nDisadvantages \n= The attributes are relatively mediocre  = \n \n“If the signing ceremony comes to an end, this war will probably be over too”"
+        }
+      },
+      "baseStats": {
+        "shooting": 135.0,
+        "melee": 135.0,
+        "defense": 145.0,
+        "speed": 145.0,
+        "accuracy": 130.0,
+        "reaction": 145.0,
+        "leadership": 160.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 156.27937500000002,
+        "melee": 156.27937500000002,
+        "defense": 167.85562500000003,
+        "speed": 167.85562500000003,
+        "accuracy": 150.49125,
+        "reaction": 167.85562500000003,
+        "leadership": 185.22000000000003,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 10000,
+        "supplies": 5000
+      },
+      "sourceOffers": [
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_JST.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_JST_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_JST.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_JST_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_G4Plan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_KOU",
+      "name": "浦木宏",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_KOU.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_KOU.png",
+      "description": "被称为幻之击坠王的男人 \n优势 \n=成长力惊人= \n=综合技巧较好= \n劣势 \n=战绩不作数= \n \n“不要胡萝卜哦..”",
+      "localization": {
+        "en": {
+          "name": "Kou Uraki",
+          "description": "The man known as the Phantom Ace \nAdvantages \n= Astonishing growth potential = \n= Well-rounded overall skills = \nDisadvantages \n= Combat record does not count = \n \n\"No carrots, please...\""
+        }
+      },
+      "baseStats": {
+        "shooting": 170.0,
+        "melee": 160.0,
+        "defense": 160.0,
+        "speed": 165.0,
+        "accuracy": 175.0,
+        "reaction": 175.0,
+        "leadership": 80.0,
+        "awakening": 35.0
+      },
+      "comprehension": 106.5,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 205.35143624999998,
+        "melee": 193.27193999999997,
+        "defense": 193.27193999999997,
+        "speed": 199.311688125,
+        "accuracy": 211.391184375,
+        "reaction": 211.391184375,
+        "leadership": 96.63596999999999,
+        "awakening": 42.278236875
+      },
+      "price": {
+        "money": 6000,
+        "supplies": 3000
+      },
+      "sourceOffers": [
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_KOU.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_KOU_Produce_Switch_G"
+        },
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_KOU.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_KOU_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_ExpUp_Trigger",
+          "name": "经验值上升",
+          "description": "15秒内经验值获取提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ExpGenUp",
+              "description": "ExpGen Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_GPProject"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_KRN",
+      "name": "卡莲·约书亚",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_KRN.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_KRN.png",
+      "description": "第08小队的队员之一,是队内的多面手 \n优势 \n=属性较为平均= \n劣势 \n=属性较为平均= \n \n“你的厄运也到此为止了嘛”",
+      "localization": {
+        "en": {
+          "name": "Karen Joshua",
+          "description": "One of the members of the 08th MS Team, a jack-of-all-trades within the team \nAdvantages \n= Balanced attributes = \nDisadvantages \n= Balanced attributes = \n \n\"Looks like your bad luck ends here.\""
+        }
+      },
+      "baseStats": {
+        "shooting": 155.0,
+        "melee": 155.0,
+        "defense": 145.0,
+        "speed": 150.0,
+        "accuracy": 165.0,
+        "reaction": 155.0,
+        "leadership": 85.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 179.43187500000002,
+        "melee": 179.43187500000002,
+        "defense": 167.85562500000003,
+        "speed": 173.64375,
+        "accuracy": 191.008125,
+        "reaction": 179.43187500000002,
+        "leadership": 98.39812500000001,
+        "awakening": 40.516875000000006
+      },
+      "price": null,
+      "sourceOffers": [],
+      "skills": [
+        {
+          "id": "Pilot_ExpUp_Trigger",
+          "name": "经验值上升",
+          "description": "15秒内经验值获取提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ExpGenUp",
+              "description": "ExpGen Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": []
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_KSD",
+      "name": "凯·西汀",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_KSD.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_KSD.png",
+      "description": "一代传奇白色基地的钢加农驾驶员 \n优势 \n= 射击能力优秀 = \n= 拥有过人的反应力 = \n劣势 \n= 前期战斗能力不足 = \n \n“吉翁的混蛋居然追到这里来了!”",
+      "localization": {
+        "en": {
+          "name": "Kai Shiden",
+          "description": "The pilot of the Guncannon from the legendary White Base \nAdvantages \n= Excellent shooting ability = \n= Possesses exceptional reflexes = \nDisadvantages \n= Lack of combat capability in the early stage = \n \n“Those bastards of Zeon actually chased here!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 150.0,
+        "melee": 145.0,
+        "defense": 155.0,
+        "speed": 150.0,
+        "accuracy": 170.0,
+        "reaction": 165.0,
+        "leadership": 85.0,
+        "awakening": 55.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 173.64375,
+        "melee": 167.85562500000003,
+        "defense": 179.43187500000002,
+        "speed": 173.64375,
+        "accuracy": 196.79625000000001,
+        "reaction": 191.008125,
+        "leadership": 98.39812500000001,
+        "awakening": 63.66937500000001
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_KSD.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_KSD_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_KSD.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_KSD_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "15秒内伤害提高20%",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Damage Up 15% in 25sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_GMModularizationPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_RUT",
+      "name": "鲁斯·克塞尔",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_RUT.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_RUT.png",
+      "description": "地球联邦军第16独立部队的测试机师,是队伍里少有的老练军人,负责支援照顾弗特 \n优势 \n= 射击能力优秀 = \n= 整体能力优秀 = \n劣势 \n= 反应能力略弱= \n \n“如果有机会的话,我愿意赌在它上面！”",
+      "localization": {
+        "en": {
+          "name": "Ruth Kessel",
+          "description": "Test Pilot of the 16th Independent Unit of the Earth Federation Forces, one of the few seasoned soldiers in the team, responsible for looking after Fort \nAdvantages \n= Excellent shooting ability = \n= Overall ability is excellent = \nDisadvantages \n= Reaction ability is slightly weak  = \n \n“If I get the chance, I'm willing to bet on it!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 160.0,
+        "melee": 155.0,
+        "defense": 160.0,
+        "speed": 150.0,
+        "accuracy": 160.0,
+        "reaction": 155.0,
+        "leadership": 75.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 185.22000000000003,
+        "melee": 179.43187500000002,
+        "defense": 185.22000000000003,
+        "speed": 173.64375,
+        "accuracy": 185.22000000000003,
+        "reaction": 179.43187500000002,
+        "leadership": 86.821875,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_RUT.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_RUT_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_RUT.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_RUT_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AccuracyUp_Trigger",
+          "name": "命中率上升",
+          "description": "15秒内命中率提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "AccuracyUp",
+              "description": "Accuracy Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_G4Plan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_RVL",
+      "name": "约翰·亚伯拉罕·雷比尔",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_RVL.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_RVL.png",
+      "description": "宇宙世纪最伟大最璀璨的指挥官 \n优势 \n= 指挥能力极强 = \n= 懂得控制人心 = \n= 学习能力强 = \n劣势 \n= 和蔼的圣诞老爷爷 = \n \n \"吉翁已无可用之兵！\"",
+      "localization": {
+        "en": {
+          "name": "Johann Abraham Revil",
+          "description": "The greatest and most brilliant commander in the Universal Century \nAdvantages \n= Extremely strong command ability = \n= Knows how to manipulate people's minds = \n= Strong learning ability = \nDisadvantages \n= Kind Santa Claus = \n \n“Zeon has no available troops left!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 135.0,
+        "melee": 135.0,
+        "defense": 170.0,
+        "speed": 145.0,
+        "accuracy": 155.0,
+        "reaction": 160.0,
+        "leadership": 195.0,
+        "awakening": 85.0
+      },
+      "comprehension": 106.5,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 163.073199375,
+        "melee": 163.073199375,
+        "defense": 205.35143624999998,
+        "speed": 175.15269562499998,
+        "accuracy": 187.23219187499998,
+        "reaction": 193.27193999999997,
+        "leadership": 235.55017687499998,
+        "awakening": 102.67571812499999
+      },
+      "price": {
+        "money": 10000,
+        "supplies": 5000
+      },
+      "sourceOffers": [
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_RVL.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_RVL_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_RVL.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_RVL_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_SDS",
+      "name": "泰利·山达斯二世",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SDS.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_SDS.png",
+      "description": "第08小队的队员之一,因出击后小队成员经常全部阵亡而被称为“死神” \n优势 \n=射击技巧较高= \n=防御技巧较高= \n劣势 \n=格斗能力一般= \n=机动能力一般= \n \n“不会让你死的,不会让任何一个人死的!”",
+      "localization": {
+        "en": {
+          "name": "Terry Sanders, Junior",
+          "description": "One of the members of the 08th MS Team, nicknamed “The Grim Reaper” because his teammates often all die after sorties \nAdvantages \n= High shooting skills = \n= High defensive skills = \nDisadvantages \n= Average melee combat ability = \n= Average mobility = \n \n\"I won't let you die, I won't let anyone die!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 160.0,
+        "melee": 150.0,
+        "defense": 150.0,
+        "speed": 140.0,
+        "accuracy": 160.0,
+        "reaction": 160.0,
+        "leadership": 75.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 185.22000000000003,
+        "melee": 173.64375,
+        "defense": 173.64375,
+        "speed": 162.06750000000002,
+        "accuracy": 185.22000000000003,
+        "reaction": 185.22000000000003,
+        "leadership": 86.821875,
+        "awakening": 40.516875000000006
+      },
+      "price": null,
+      "sourceOffers": [],
+      "skills": [
+        {
+          "id": "Pilot_ReactionUp_Trigger",
+          "name": "回避力上升",
+          "description": "15秒内反应力提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ReactionUp",
+              "description": "Reaction Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": []
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_SHR",
+      "name": "天田士郎",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SHR.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_SHR.png",
+      "description": "第08小队的队长,擅长小队作战 \n优势 \n=领导较高= \n=防御技巧较高= \n=据说反射神经很好= \n劣势 \n=格斗能力一般= \n=机动能力一般= \n \n“听好了,一定要全员幸存状态的回去!”",
+      "localization": {
+        "en": {
+          "name": "Shiro Amada",
+          "description": "Captain of the 08th MS Team, specializes in squad-based combat \nAdvantages \n= High leadership = \n= High defensive skills = \n= Said to have excellent reflexes = \nDisadvantages \n= Average melee combat ability = \n= Average mobility = \n \n\"Listen up, make sure everyone comes back alive!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 160.0,
+        "melee": 150.0,
+        "defense": 170.0,
+        "speed": 150.0,
+        "accuracy": 160.0,
+        "reaction": 175.0,
+        "leadership": 80.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 185.22000000000003,
+        "melee": 173.64375,
+        "defense": 196.79625000000001,
+        "speed": 173.64375,
+        "accuracy": 185.22000000000003,
+        "reaction": 202.58437500000002,
+        "leadership": 92.61000000000001,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 4000,
+        "supplies": 2000
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SHR.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_SHR_Produce_Switch_G"
+        },
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SHR.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_SHR_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_DefUp_Trigger",
+          "name": "防御力上升",
+          "description": "15秒内防御力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DefUp",
+              "description": "Def Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_SLG",
+      "name": "史列加·罗",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SLG.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_SLG.png",
+      "description": "地球联邦白色基地的替补机师,是个举止轻佻有着轻浮个性的老兵,在基地内是年长的人 \n优势 \n= 防御较为出色 = \n= 整体属性优秀 = \n劣势 \n= 格斗能力一般 = \n \n“虽然可悲,但这就是战争啊”",
+      "localization": {
+        "en": {
+          "name": "Sleggar Law",
+          "description": "A reserve pilot of the Earth Federation's White Base, he is a veteran with a frivolous manner and a flighty personality, and is one of the older members within the base \nAdvantages \n= The defense is relatively outstanding = \n= The overall attributes are excellent. = \nDisadvantages \n= The combat ability is average  = \n \n“Sad as it is, this is war”"
+        }
+      },
+      "baseStats": {
+        "shooting": 170.0,
+        "melee": 130.0,
+        "defense": 170.0,
+        "speed": 160.0,
+        "accuracy": 150.0,
+        "reaction": 150.0,
+        "leadership": 75.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 196.79625000000001,
+        "melee": 150.49125,
+        "defense": 196.79625000000001,
+        "speed": 185.22000000000003,
+        "accuracy": 173.64375,
+        "reaction": 173.64375,
+        "leadership": 86.821875,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 4000,
+        "supplies": 2000
+      },
+      "sourceOffers": [
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SLG.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_SLG_Produce_Switch_G"
+        },
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SLG.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_SLG_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_ReactionUp_Trigger",
+          "name": "回避力上升",
+          "description": "15秒内反应力提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ReactionUp",
+              "description": "Reaction Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_SYA",
+      "name": "雪拉·玛斯",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SYA.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_SYA.png",
+      "description": "地球联邦军白色基地的医护以及通讯员，是吉翁共和国的创立者的女儿，与夏亚是兄妹 \n优势 \n= 反应较为出色 = \n= 整体能力一般 = \n劣势 \n= 整体能力一般 = \n \n“新人类也是旧人类生的，旧的东西不代表不好”",
+      "localization": {
+        "en": {
+          "name": "Sayla Mass",
+          "description": "She is the medical staff and communicator of the White Base of the Earth Federation Forces, the daughter of the founder of the Republic of Zeon, and the sibling of Char. \nAdvantages \n= Has relatively outstanding responsiveness = \n= The overall ability is average = \nDisadvantages \n= The overall ability is average  = \n \n“Newtypes are also born from Oldtypes; old things don’t mean they’re bad.”"
+        }
+      },
+      "baseStats": {
+        "shooting": 140.0,
+        "melee": 120.0,
+        "defense": 145.0,
+        "speed": 150.0,
+        "accuracy": 160.0,
+        "reaction": 170.0,
+        "leadership": 80.0,
+        "awakening": 85.0
+      },
+      "comprehension": 106.5,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 169.1129475,
+        "melee": 144.95395499999998,
+        "defense": 175.15269562499998,
+        "speed": 181.19244375,
+        "accuracy": 193.27193999999997,
+        "reaction": 205.35143624999998,
+        "leadership": 96.63596999999999,
+        "awakening": 102.67571812499999
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SYA.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_SYA_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SYA.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_SYA_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_SpdUp_Trigger",
+          "name": "机动力上升",
+          "description": "15秒内机动力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "SpeedUp",
+              "description": "Spd Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_TAM",
+      "name": "提安姆",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_TAM.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_TAM.png",
+      "description": "地球联邦军第四舰队指挥官 \n优势 \n= 指挥能力优秀 = \n劣势 \n= 战斗能力差 = \n \n“我们也是基于雷比尔取得的情报来进行作战的 ”",
+      "localization": {
+        "en": {
+          "name": "Tianem",
+          "description": "Commander of the 4th Fleet of the Earth Federation Forces \nAdvantages \n= Command capabilities are excellent = \nDisadvantages \n= Combat capabilities are poor = \n \n“We are also conducting operations based on the intelligence obtained by Revil.”"
+        }
+      },
+      "baseStats": {
+        "shooting": 135.0,
+        "melee": 135.0,
+        "defense": 150.0,
+        "speed": 145.0,
+        "accuracy": 135.0,
+        "reaction": 150.0,
+        "leadership": 170.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 156.27937500000002,
+        "melee": 156.27937500000002,
+        "defense": 173.64375,
+        "speed": 167.85562500000003,
+        "accuracy": 156.27937500000002,
+        "reaction": 173.64375,
+        "leadership": 196.79625000000001,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 8000,
+        "supplies": 4000
+      },
+      "sourceOffers": [
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_TAM.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_TAM_Produce_Switch_G"
+        },
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_TAM.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_TAM_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_GMDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_WAK",
+      "name": "华肯",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_WAK.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_WAK.png",
+      "description": "地球联邦军军官,月神二号司令,负责宇宙的防线. \n优势 \n= 指挥能力优秀 = \n劣势 \n= 战斗能力差 = \n \n“连平民都要动员起来,不觉得这是个冷酷的时代吗?”",
+      "localization": {
+        "en": {
+          "name": "Wakkein",
+          "description": "An officer of the Earth Federation Forces and the commander of Luna II, in charge of the space defense line \nAdvantages \n= Command capabilities are excellent = \nDisadvantages \n= Combat capabilities are poor = \n \n“Don't you think it's a cruel era when even civilians have to be mobilized?”"
+        }
+      },
+      "baseStats": {
+        "shooting": 135.0,
+        "melee": 135.0,
+        "defense": 150.0,
+        "speed": 145.0,
+        "accuracy": 135.0,
+        "reaction": 150.0,
+        "leadership": 165.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 156.27937500000002,
+        "melee": 156.27937500000002,
+        "defense": 173.64375,
+        "speed": 167.85562500000003,
+        "accuracy": 156.27937500000002,
+        "reaction": 173.64375,
+        "leadership": 191.008125,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 8000,
+        "supplies": 4000
+      },
+      "sourceOffers": [
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_WAK.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_WAK_Produce_Switch_G"
+        },
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_WAK.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_WAK_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_T2_GundamNTCustomPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_YDR",
+      "name": "哈曼·杨德里",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_YDR.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_YDR.png",
+      "description": "战车小队的指挥官,有着卓越的战车技术 \n优势 \n= 指挥能力较强 = \n= 会布置战术 = \n= 自身能力优秀 = \n劣势 \n= 玩坦克玩的 = \n \n“用死神对付死神吗?”",
+      "localization": {
+        "en": {
+          "name": "Haman Yandry",
+          "description": "Commander of the tank squad, with excellent tank skills. \nAdvantages \n= Strong command ability = \n= Can formulate tactics = \n= Excellent in one's own ability = \nDisadvantages \n= Playing with tanks = \n \n“Fight a god of death with a god of death?”"
+        }
+      },
+      "baseStats": {
+        "shooting": 175.0,
+        "melee": 135.0,
+        "defense": 135.0,
+        "speed": 150.0,
+        "accuracy": 155.0,
+        "reaction": 155.0,
+        "leadership": 135.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 202.58437500000002,
+        "melee": 156.27937500000002,
+        "defense": 156.27937500000002,
+        "speed": 173.64375,
+        "accuracy": 179.43187500000002,
+        "reaction": 179.43187500000002,
+        "leadership": 156.27937500000002,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 3000,
+        "supplies": 1500
+      },
+      "sourceOffers": [
+        {
+          "money": 3000,
+          "supplies": 1500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_YDR.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_YDR_Produce_Switch_G"
+        },
+        {
+          "money": 3000,
+          "supplies": 1500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_YDR.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_YDR_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_SpdUp_Trigger",
+          "name": "机动力上升",
+          "description": "15秒内机动力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "SpeedUp",
+              "description": "Spd Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_AntiMSPlan"
+      ]
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_YUU",
+      "name": "加岛勇",
+      "faction": "EFSF",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_YUU.ini",
+      "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_YUU.png",
+      "description": "联邦军土拨鼠小队的队长,有着“蓝色死神”的称号,被选中之人 \n优势 \n= 综合能力优秀 = \n= 指挥较强 = \n= 受到EXAM系统的伤害减半 = \n劣势 \n= 格斗一般 = \n \n“玛丽昂,抱歉,我要杀了这个家伙！”",
+      "localization": {
+        "en": {
+          "name": "Yuu Kajima",
+          "description": "The captain of the Federation Forces' Marmot Squad, known by the title \"Blue Death,\" and the chosen one. \nAdvantages \n= Overall ability is outstanding = \n= Command capabilities are relatively strong = \n= Damage taken from the EXAM system is halved = \nDisadvantages \n= Close-quarters combat ability is ordinary = \n \n“Marion, I'm sorry, but I have to kill this guy!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 160.0,
+        "melee": 155.0,
+        "defense": 165.0,
+        "speed": 175.0,
+        "accuracy": 165.0,
+        "reaction": 175.0,
+        "leadership": 105.0,
+        "awakening": 50.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 185.22000000000003,
+        "melee": 179.43187500000002,
+        "defense": 191.008125,
+        "speed": 202.58437500000002,
+        "accuracy": 191.008125,
+        "reaction": 202.58437500000002,
+        "leadership": 121.55062500000001,
+        "awakening": 57.88125000000001
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_YUU.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_YUU_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_YUU.gw",
+          "action": "action_Pilot_EFSF_0079_N_ACE_YUU_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_ExpUp_Trigger",
+          "name": "经验值上升",
+          "description": "15秒内经验值获取提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ExpGenUp",
+              "description": "ExpGen Up 75% in 15sec"
+            }
+          }
+        },
+        {
+          "id": "Pilot_ExamPilot_Trigger",
+          "name": "EXAM驾驶员",
+          "description": "几乎不会受到EXAM系统的伤害",
+          "icon": "assets/pilots/ace-skill-EXAM.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "EXAM Pilot",
+              "description": "Does not take damage from EXAM system"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_EFSF_0079_BlueDestinyProject"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_AKHN",
+      "name": "阿卡汉纳",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_AKHN.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_AKHN.png",
+      "description": "吉翁军有着红色鼻子的知名水产机师 \n优势 \n= 擅长水下战斗 = \n= 战斗能力较为一般 = \n劣势 \n= 战斗能力较为一般 = \n \n“进攻联邦总部的机会到了是吧!”",
+      "localization": {
+        "en": {
+          "name": "Akahana",
+          "description": "The well-known aquatic-type pilot of the Zeon Forces with a red nose. \nAdvantages \n= Skilled in underwater combat = \n= Combat ability is relatively average = \nDisadvantages \n= Combat ability is relatively average = \n \n“The opportunity to attack the Federation headquarters has arrived, hasn't it!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 150.0,
+        "melee": 155.0,
+        "defense": 160.0,
+        "speed": 170.0,
+        "accuracy": 155.0,
+        "reaction": 150.0,
+        "leadership": 75.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 173.64375,
+        "melee": 179.43187500000002,
+        "defense": 185.22000000000003,
+        "speed": 196.79625000000001,
+        "accuracy": 179.43187500000002,
+        "reaction": 173.64375,
+        "leadership": 86.821875,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 4000,
+        "supplies": 2000
+      },
+      "sourceOffers": [
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_AKHN.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_AKHN_Produce_Switch_G"
+        },
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_AKHN.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_AKHN_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_SpdUp_Trigger",
+          "name": "机动力上升",
+          "description": "15秒内机动力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "SpeedUp",
+              "description": "Spd Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_ANG",
+      "name": "阿纳贝尔·卡多",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_ANG.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_ANG.png",
+      "description": "被称为所罗门的噩梦的男人 \n=综合技巧较好= \n=格斗能力较高= \n劣势 \n=射击能力一般= \n \n“为了星辰作战的成功,所罗门啊,我又回来了!”",
+      "localization": {
+        "en": {
+          "name": "Anavel Gato",
+          "description": "The man known as the Nightmare of Solomon \n= Well-rounded overall skills = \n= High melee ability = \nDisadvantages \n= Average shooting ability = \n \n\"For the success of Operation Stardust, Solomon... I have returned!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 165.0,
+        "melee": 180.0,
+        "defense": 165.0,
+        "speed": 160.0,
+        "accuracy": 170.0,
+        "reaction": 165.0,
+        "leadership": 100.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 191.008125,
+        "melee": 208.37250000000003,
+        "defense": 191.008125,
+        "speed": 185.22000000000003,
+        "accuracy": 196.79625000000001,
+        "reaction": 191.008125,
+        "leadership": 115.76250000000002,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 6000,
+        "supplies": 3000
+      },
+      "sourceOffers": [
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_ANG.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_ANG_Produce_Switch_G"
+        },
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_ANG.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_ANG_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_DefUp_Trigger",
+          "name": "防御力上升",
+          "description": "15秒内防御力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DefUp",
+              "description": "Def Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_OperationStardust"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_ANS",
+      "name": "爱娜·萨哈林",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_ANS.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_ANS.png",
+      "description": "吉恩军的测试驾驶员,名门萨哈林家的千金,但她并非吉恩军的正规军人。 \n优势 \n=射击能力优秀= \n=反应能力优秀= \n劣势 \n=防御技巧较差= \n \n“他已经失去了攻击能力,请返航吧。”",
+      "localization": {
+        "en": {
+          "name": "Aina Sahalin",
+          "description": "A Zeon test pilot, the daughter of the prestigious Sahalin family, though not a formal member of the Zeon military. \nAdvantages \n=Excellent shooting ability= \n=Excellent reaction ability= \nDisadvantages \n=Poor defensive skills= \n \n“He has already lost the ability to fight, please return to base.”"
+        }
+      },
+      "baseStats": {
+        "shooting": 170.0,
+        "melee": 140.0,
+        "defense": 150.0,
+        "speed": 150.0,
+        "accuracy": 170.0,
+        "reaction": 175.0,
+        "leadership": 80.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 196.79625000000001,
+        "melee": 162.06750000000002,
+        "defense": 173.64375,
+        "speed": 173.64375,
+        "accuracy": 196.79625000000001,
+        "reaction": 202.58437500000002,
+        "leadership": 92.61000000000001,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 4000,
+        "supplies": 2000
+      },
+      "sourceOffers": [
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_ANS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_ANS_Produce_Switch_G"
+        },
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_ANS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_ANS_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_DefUp_Trigger",
+          "name": "防御力上升",
+          "description": "15秒内防御力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DefUp",
+              "description": "Def Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_ApsarasDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_BNI",
+      "name": "巴纳德·瓦兹曼",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_BNI.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_BNI.png",
+      "description": "吉翁招募的青年志愿兵之一,被选入独眼巨人小队作为后补队员 \n优势 \n=格斗技巧优秀= \n=机动能力优秀= \n劣势 \n=射击技巧一般= \n=命中技巧一般= \n=容易被红发大姐姐魅惑= \n \n“巴尼,已经不用再战斗了!”",
+      "localization": {
+        "en": {
+          "name": "Bernard Wiseman",
+          "description": "One of the young volunteer soldiers recruited by Zeon, selected as a reserve member of the Cyclops Team \nAdvantages \n= Excellent melee combat skills = \n= Excellent mobility = \nDisadvantages \n= Average shooting skills = \n= Average accuracy = \n= Easily charmed by red-haired big sisters = \n \n“Bernie, you don't have to fight anymore!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 145.0,
+        "melee": 155.0,
+        "defense": 140.0,
+        "speed": 155.0,
+        "accuracy": 135.0,
+        "reaction": 145.0,
+        "leadership": 75.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 167.85562500000003,
+        "melee": 179.43187500000002,
+        "defense": 162.06750000000002,
+        "speed": 179.43187500000002,
+        "accuracy": 156.27937500000002,
+        "reaction": 167.85562500000003,
+        "leadership": 86.821875,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 4000,
+        "supplies": 2000
+      },
+      "sourceOffers": [
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_BNI.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_BNI_Produce_Switch_G"
+        },
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_BNI.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_BNI_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "15秒内伤害提高20%",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Damage Up 15% in 25sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_UnitedMaintenancePlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_CHA",
+      "name": "夏亚·阿兹纳布尔",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_CHA.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_CHA.png",
+      "description": "一年战争诞生的传奇驾驶员,吉翁的“赤色彗星” \n优势 \n=基础技能较高= \n=满级技能溢出= \n=初始觉醒较高= \n=复归时间只要1.5分钟= \n劣势 \n=没有人可以追上夏亚,特别是逃跑的时候= \n=有恋童恋母倾向= \n \n“拉拉,请指引我吧!”",
+      "localization": {
+        "en": {
+          "name": "Char Aznable",
+          "description": "Legendary pilot born from the One Year War, Zeon's “Red Comet” \nAdvantages \n= High base skills = \n= Max-level skills overflow = \n= High initial Newtype aptitude = \n= 1.5mins To Return When MIA = \nDisadvantages \n= No one can catch up to Char, especially when he's running away = \n= Has lolicon and mother-complex tendencies = \n \n“Lalah, please guide me!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 180.0,
+        "melee": 195.0,
+        "defense": 175.0,
+        "speed": 195.0,
+        "accuracy": 180.0,
+        "reaction": 185.0,
+        "leadership": 100.0,
+        "awakening": 85.0
+      },
+      "comprehension": 106.5,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 217.43093249999998,
+        "melee": 235.55017687499998,
+        "defense": 211.391184375,
+        "speed": 235.55017687499998,
+        "accuracy": 217.43093249999998,
+        "reaction": 223.47068062499997,
+        "leadership": 120.7949625,
+        "awakening": 102.67571812499999
+      },
+      "price": {
+        "money": 8000,
+        "supplies": 4000
+      },
+      "sourceOffers": [
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_CHA.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_CHA_Produce_Switch_G"
+        },
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_CHA.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_CHA_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        },
+        {
+          "id": "Pilot_ReactionUp_Trigger",
+          "name": "回避力上升",
+          "description": "15秒内反应力提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ReactionUp",
+              "description": "Reaction Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_CIA",
+      "name": "西玛·卡拉豪",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_CIA.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_CIA.png",
+      "description": "莉莉·玛莲号的舰长 \n=双方阵营都可招募= \n劣势 \n=有黑历史= \n \n“你到底是哪一边的?”",
+      "localization": {
+        "en": {
+          "name": "Cima Garahau",
+          "description": "Captain of the Lilie Marleen \n= Recruitable by both factions = \nDisadvantages \n= Has a dark past = \n \n\"Whose side are you really on?\""
+        }
+      },
+      "baseStats": {
+        "shooting": 175.0,
+        "melee": 155.0,
+        "defense": 150.0,
+        "speed": 170.0,
+        "accuracy": 175.0,
+        "reaction": 175.0,
+        "leadership": 100.0,
+        "awakening": 25.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 202.58437500000002,
+        "melee": 179.43187500000002,
+        "defense": 173.64375,
+        "speed": 196.79625000000001,
+        "accuracy": 202.58437500000002,
+        "reaction": 202.58437500000002,
+        "leadership": 115.76250000000002,
+        "awakening": 28.940625000000004
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_CIA.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_CIA_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_CIA.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_CIA_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_ReactionUp_Trigger",
+          "name": "回避力上升",
+          "description": "15秒内反应力提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ReactionUp",
+              "description": "Reaction Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": []
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_DZL",
+      "name": "多兹鲁·扎比",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_DZL.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_DZL.png",
+      "description": "吉翁公国公王的第三子,宇宙吉翁军的司令,有传统武人风格的军人 \n= 指挥能力优秀 = \n= 防御能力优秀 = \n= 总属性较出色 = \n劣势 \n= 速度能力一般 = \n \n“吉翁的荣耀,不会败在你这种MS之下的！”",
+      "localization": {
+        "en": {
+          "name": "Dozle Zabi",
+          "description": "The third son of the Sovereign of the Principality of Zeon, the commander of the Space Zeon Forces, and a soldier with the style of a traditional warrior. \n= Has excellent command ability = \n= Has excellent defensive ability  = \n= The overall attributes are quite outstanding = \nDisadvantages \n= Has average speed ability = \n \n“The glory of Zeon will not be defeated by an MS like yours!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 150.0,
+        "melee": 160.0,
+        "defense": 170.0,
+        "speed": 140.0,
+        "accuracy": 155.0,
+        "reaction": 150.0,
+        "leadership": 170.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 173.64375,
+        "melee": 185.22000000000003,
+        "defense": 196.79625000000001,
+        "speed": 162.06750000000002,
+        "accuracy": 179.43187500000002,
+        "reaction": 173.64375,
+        "leadership": 196.79625000000001,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 8000,
+        "supplies": 4000
+      },
+      "sourceOffers": [
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_DZL.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_DZL_Produce_Switch_G"
+        },
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_DZL.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_DZL_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "15秒内伤害提高20%",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Damage Up 15% in 25sec"
+            }
+          }
+        },
+        {
+          "id": "Pilot_DefUp_Trigger",
+          "name": "防御力上升",
+          "description": "15秒内防御力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DefUp",
+              "description": "Def Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_GNS",
+      "name": "基尼亚斯·萨哈林",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GNS.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_GNS.png",
+      "description": "吉翁技术上校,主持开发阿普撒拉斯的工作 \n优势 \n=指挥能力优秀= \n=防御能力优秀= \n=射击能力优秀= \n劣势 \n=格斗技巧较低= \n=机动技巧较低= \n \n“改变战争的一直都是科学家!”",
+      "localization": {
+        "en": {
+          "name": "Ginias Sahalin",
+          "description": "A Zeon technical officer who led the development of the Apsalus \nAdvantages \n= Excellent command ability = \n= Strong defensive capability = \n= Excellent shooting ability = \nDisadvantages \n= Low melee skill = \n= Low mobility skill = \n \n\"It is always scientists who change the course of war!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 170.0,
+        "melee": 140.0,
+        "defense": 180.0,
+        "speed": 160.0,
+        "accuracy": 170.0,
+        "reaction": 160.0,
+        "leadership": 115.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 196.79625000000001,
+        "melee": 162.06750000000002,
+        "defense": 208.37250000000003,
+        "speed": 185.22000000000003,
+        "accuracy": 196.79625000000001,
+        "reaction": 185.22000000000003,
+        "leadership": 133.126875,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 8000,
+        "supplies": 4000
+      },
+      "sourceOffers": [
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GNS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_GNS_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GNS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_GNS_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_ExpUp_Trigger",
+          "name": "经验值上升",
+          "description": "15秒内经验值获取提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "ExpGenUp",
+              "description": "ExpGen Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_ApsarasDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_GRM",
+      "name": "卡尔马·扎比",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GRM.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_GRM.png",
+      "description": "被算计的短命吉翁公子哥 \n优势 \n= 拥有良好的指挥能力 = \n劣势 \n= 容易轻信他人 = \n= 对自己比较自信 = \n \n“别小看我m我也是扎比家的男子汉!”",
+      "localization": {
+        "en": {
+          "name": "Garma Zabi",
+          "description": "The short-lived Zeon dandy who was manipulated \nAdvantages \n= Possesses good command capabilities = \nDisadvantages \n= Tends to easily trust others = \n= Be more confident in oneself = \n \n“Don't look down on me—I'm also a man of the Zabi family!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 135.0,
+        "melee": 135.0,
+        "defense": 135.0,
+        "speed": 165.0,
+        "accuracy": 155.0,
+        "reaction": 160.0,
+        "leadership": 150.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 156.27937500000002,
+        "melee": 156.27937500000002,
+        "defense": 156.27937500000002,
+        "speed": 191.008125,
+        "accuracy": 179.43187500000002,
+        "reaction": 185.22000000000003,
+        "leadership": 173.64375,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 6000,
+        "supplies": 3000
+      },
+      "sourceOffers": [
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GRM.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_GRM_Produce_Switch_G"
+        },
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GRM.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_GRM_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "15秒内伤害提高20%",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Damage Up 15% in 25sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_GRN",
+      "name": "基连·扎比",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GRN.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_GRN.png",
+      "description": "吉翁公国的领导人,希特勒的拙劣模仿者 \n优势 \n= 指挥能力超强 = \n劣势 \n= 战斗能力弱 = \n \n“只有身为优良人种的我们,才能够拯救全人类,zick zeon!”",
+      "localization": {
+        "en": {
+          "name": "Gihren Zabi",
+          "description": "The leader of the Principality of Zeon, a shoddy imitator of Hitle. \n= Command capabilities are extremely strong = \nDisadvantages \n= Combat capabilities are weak = \n \n“Only we, as the superior race, can save all of humanity. Zick Zeon!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 135.0,
+        "melee": 135.0,
+        "defense": 170.0,
+        "speed": 145.0,
+        "accuracy": 155.0,
+        "reaction": 160.0,
+        "leadership": 195.0,
+        "awakening": 80.0
+      },
+      "comprehension": 106.5,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 163.073199375,
+        "melee": 163.073199375,
+        "defense": 205.35143624999998,
+        "speed": 175.15269562499998,
+        "accuracy": 187.23219187499998,
+        "reaction": 193.27193999999997,
+        "leadership": 235.55017687499998,
+        "awakening": 96.63596999999999
+      },
+      "price": {
+        "money": 10000,
+        "supplies": 5000
+      },
+      "sourceOffers": [
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GRN.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_GRN_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GRN.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_GRN_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_HBT",
+      "name": "赫伯特·冯·卡兹本",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_HBT.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_HBT.png",
+      "description": "吉翁公国的军官,被临时调往603部队当做指挥官 \n优势 \n= 能力较为优秀 = \n劣势 \n= 防御较低 = \n \n“这就是总部答应的精英吗?简直在侮辱我的荣耀!”",
+      "localization": {
+        "en": {
+          "name": "Herbert von Kuspen",
+          "description": "An officer of the Principality of Zeon, who was temporarily transferred to the 603rd Unit to serve as its commander \n= Abilities are relatively excellent = \nDisadvantages \n= Defense is relatively low = \n \n“Is this the elite that headquarters promised? They're simply insulting my honor!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 170.0,
+        "melee": 165.0,
+        "defense": 170.0,
+        "speed": 160.0,
+        "accuracy": 160.0,
+        "reaction": 155.0,
+        "leadership": 110.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 196.79625000000001,
+        "melee": 191.008125,
+        "defense": 196.79625000000001,
+        "speed": 185.22000000000003,
+        "accuracy": 185.22000000000003,
+        "reaction": 179.43187500000002,
+        "leadership": 127.33875000000002,
+        "awakening": 40.516875000000006
+      },
+      "price": null,
+      "sourceOffers": [],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": []
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_HRD",
+      "name": "哈迪·修泰拿",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_HRD.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_HRD.png",
+      "description": "吉翁军突击部队“独眼巨人队”的队长,是个身经百战的老练的军人 \n= 整体能力出色 = \n= 搭乘水用MS获得加成 = \n劣势 \n= 防御较低 = \n \n“时间并没有太多,一口气解决吧！”",
+      "localization": {
+        "en": {
+          "name": "Hardy Schwenta",
+          "description": "He is the captain of the \"Cyclops Team\", an assault unit of the Principality of Zeon, and a seasoned soldier with extensive combat experience \n= Overall excellent ability = \n= Gains a bonus when piloting aquatic mobile suits (MS) = \nDisadvantages \n= Has low defense = \n \n“We don’t have much time, let’s wrap this up in one go!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 160.0,
+        "melee": 160.0,
+        "defense": 140.0,
+        "speed": 150.0,
+        "accuracy": 160.0,
+        "reaction": 155.0,
+        "leadership": 130.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 185.22000000000003,
+        "melee": 185.22000000000003,
+        "defense": 162.06750000000002,
+        "speed": 173.64375,
+        "accuracy": 185.22000000000003,
+        "reaction": 179.43187500000002,
+        "leadership": 150.49125,
+        "awakening": 40.516875000000006
+      },
+      "price": null,
+      "sourceOffers": [],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_HygoggDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_JON",
+      "name": "强尼·莱汀",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_JON.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_JON.png",
+      "description": "吉翁军击坠榜第三名,有着“真红闪电”称号的王牌驾驶员 \n= 能力出色 = \n劣势 \n= 防御能力较差 = \n \n“不管是吉翁的名誉,还是宇宙居民的独立,都与我没关系”",
+      "localization": {
+        "en": {
+          "name": "Johnny Ridden",
+          "description": "A member of the Zeon Forces' mercenary unit, who has a strong dislike for Earth's environment. \n= Abilities are excellent = \nDisadvantages \n= Defensive capabilities are relatively poor = \n \n“Neither Zeon's honor nor the independence of space colonists has anything to do with me”"
+        }
+      },
+      "baseStats": {
+        "shooting": 165.0,
+        "melee": 165.0,
+        "defense": 155.0,
+        "speed": 170.0,
+        "accuracy": 170.0,
+        "reaction": 165.0,
+        "leadership": 100.0,
+        "awakening": 25.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 191.008125,
+        "melee": 191.008125,
+        "defense": 179.43187500000002,
+        "speed": 196.79625000000001,
+        "accuracy": 196.79625000000001,
+        "reaction": 191.008125,
+        "leadership": 115.76250000000002,
+        "awakening": 28.940625000000004
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_JON.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_JON_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_JON.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_JON_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_SpdUp_Trigger",
+          "name": "机动力上升",
+          "description": "15秒内机动力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "SpeedUp",
+              "description": "Spd Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_DomPowerfulPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_KCA",
+      "name": "基西莉亚·扎比",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_KCA.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_KCA.png",
+      "description": "吉翁公国公王的长女,吉翁突击机动军的司令,务实主义者,跟军人比更像政治家 \n= 指挥能力优秀 = \n劣势 \n= 总能力较为一般 = \n \n“要是我不活下去,吉翁就完了”",
+      "localization": {
+        "en": {
+          "name": "Kycillia Zabi",
+          "description": "The eldest daughter of the Sovereign of the Principality of Zeon, the commander of the Zeon Assault Mobile Force, and a pragmatist who is more like a politician than a soldier. \n= Has excellent command ability = \nDisadvantages \n= The overall ability is relatively average. = \n \n“If I don't survive, Zeon will be finished.”"
+        }
+      },
+      "baseStats": {
+        "shooting": 140.0,
+        "melee": 125.0,
+        "defense": 140.0,
+        "speed": 155.0,
+        "accuracy": 155.0,
+        "reaction": 140.0,
+        "leadership": 165.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 162.06750000000002,
+        "melee": 144.70312500000003,
+        "defense": 162.06750000000002,
+        "speed": 179.43187500000002,
+        "accuracy": 179.43187500000002,
+        "reaction": 162.06750000000002,
+        "leadership": 191.008125,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 10000,
+        "supplies": 5000
+      },
+      "sourceOffers": [
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_KCA.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_KCA_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_KCA.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_KCA_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_KMSK",
+      "name": "米海尔·卡明斯基",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_KMSK.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_KMSK.png",
+      "description": "吉翁军突击部队“独眼巨人队”的副官,是个身经百战的军人 \n= 整体能力出色 = \n= 搭乘水用MS获得加成 = \n劣势 \n= 防御较低 = \n \n“放马过来吧,我来教你何为战斗的方法！”",
+      "localization": {
+        "en": {
+          "name": "Mikhail Kaminski",
+          "description": "He is the adjutant of the \"Cyclops Team\", an assault unit of the Principality of Zeon, and a battle-hardened soldier \n= Overall excellent ability = \n= Gains a bonus when piloting aquatic mobile suits (MS) = \nDisadvantages \n= Has low defense = \n \n“Bring it on! I'll teach you what real combat is!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 170.0,
+        "melee": 170.0,
+        "defense": 140.0,
+        "speed": 155.0,
+        "accuracy": 150.0,
+        "reaction": 155.0,
+        "leadership": 75.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 196.79625000000001,
+        "melee": 196.79625000000001,
+        "defense": 162.06750000000002,
+        "speed": 179.43187500000002,
+        "accuracy": 173.64375,
+        "reaction": 179.43187500000002,
+        "leadership": 86.821875,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_KMSK.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_KMSK_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_KMSK.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_KMSK_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_SpdUp_Trigger",
+          "name": "机动力上升",
+          "description": "15秒内机动力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "SpeedUp",
+              "description": "Spd Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_UnitedMaintenancePlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_LLS",
+      "name": "拉拉·辛",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_LLS.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_LLS.png",
+      "description": "宇宙世纪最大的神棍女鬼,同时也是夏亚的妈妈 \n优势 \n= 初始觉醒能力极强 = \n= 拥有超乎常人的反应力 = \n劣势 \n= 不擅长近身格斗 = \n= 防御能力低下 = \n \n“我看到时间了”",
+      "localization": {
+        "en": {
+          "name": "Lalah Sune",
+          "description": "The biggest charlatan ghost woman in the Universal Century, and also Char's mother. \nAdvantages \n= Possesses extremely strong initial awakening ability = \n= Possesses reaction abilities beyond that of ordinary people = \nDisadvantages \n= Not good at close combat = \n= Low defensive capability = \n \n“I see the time.”"
+        }
+      },
+      "baseStats": {
+        "shooting": 165.0,
+        "melee": 130.0,
+        "defense": 130.0,
+        "speed": 150.0,
+        "accuracy": 175.0,
+        "reaction": 165.0,
+        "leadership": 75.0,
+        "awakening": 145.0
+      },
+      "comprehension": 106.5,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 199.311688125,
+        "melee": 157.03345124999998,
+        "defense": 157.03345124999998,
+        "speed": 181.19244375,
+        "accuracy": 211.391184375,
+        "reaction": 199.311688125,
+        "leadership": 90.596221875,
+        "awakening": 175.15269562499998
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_LLS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_LLS_Produce_Switch_G"
+        },
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_LLS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_LLS_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AwakeningUp_Trigger",
+          "name": "觉醒值上升",
+          "description": "15秒内觉醒值提高75%",
+          "icon": "assets/pilots/ace-skill-Pilot_AwakeningUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "AwakeningUp",
+              "description": "Awakening Up 75% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_MQV",
+      "name": "马·克贝",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_MQV.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_MQV.png",
+      "description": "吉翁敖德萨攻防战的最高指挥官 \n优势 \n= 拥有优秀的指挥能力 = \n= 懂得洞察人心 = \n劣势 \n= 跑的比较快 = \n= 沉迷收集文物古董 = \n \n“北宋的壶 那可是个好东西啊”",
+      "localization": {
+        "en": {
+          "name": "M'Quve",
+          "description": "The supreme commander of the Zeon Odessa Offensive and Defensive Battle \nAdvantages \n= Possesses excellent command capabilities = \n= Knows how to read people's minds = \nDisadvantages \n= Runs relatively fast = \n= Be obsessed with collecting cultural relics and antiques = \n \n“A pot from the Northern Song Dynasty—now that's a fine thing!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 140.0,
+        "melee": 155.0,
+        "defense": 135.0,
+        "speed": 165.0,
+        "accuracy": 155.0,
+        "reaction": 145.0,
+        "leadership": 160.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 162.06750000000002,
+        "melee": 179.43187500000002,
+        "defense": 156.27937500000002,
+        "speed": 191.008125,
+        "accuracy": 179.43187500000002,
+        "reaction": 167.85562500000003,
+        "leadership": 185.22000000000003,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_MQV.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_MQV_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_MQV.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_MQV_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_DefUp_Trigger",
+          "name": "防御力上升",
+          "description": "15秒内防御力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DefUp",
+              "description": "Def Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_MSG",
+      "name": "松永真",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_MSG.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_MSG.png",
+      "description": "吉翁军击坠榜第五名,有着“白狼”称号的王牌驾驶员 \n= 能力出色 = \n劣势 \n= 机动能力较差 = \n \n“好好将我白狼的战姿,烙印在眼底吧！”",
+      "localization": {
+        "en": {
+          "name": "Shin Matsunaga",
+          "description": "The fifth-ranked ace pilot on the Zeon Forces' downing list, known by the title \"White Wolf\" \n= Abilities are excellent = \nDisadvantages \n= Mobility is relatively poor = \n \n“Burn the sight of my White Wolf’s battle stance deeply into your eyes!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 155.0,
+        "melee": 175.0,
+        "defense": 175.0,
+        "speed": 150.0,
+        "accuracy": 160.0,
+        "reaction": 160.0,
+        "leadership": 85.0,
+        "awakening": 25.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 179.43187500000002,
+        "melee": 202.58437500000002,
+        "defense": 202.58437500000002,
+        "speed": 173.64375,
+        "accuracy": 185.22000000000003,
+        "reaction": 185.22000000000003,
+        "leadership": 98.39812500000001,
+        "awakening": 28.940625000000004
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_MSG.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_MSG_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_MSG.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_MSG_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_DefUp_Trigger",
+          "name": "防御力上升",
+          "description": "15秒内防御力提高35%",
+          "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DefUp",
+              "description": "Def Up 35% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_T2_DomPowerfulPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_NMBS",
+      "name": "尼姆巴斯·舒特森",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_NMBS.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_NMBS.png",
+      "description": "吉翁军的王牌机师,有着“圣骑士”的称号,是被抛弃之人 \n优势 \n= 能力出色 = \n= 受到EXAM系统的伤害减半 = \n劣势 \n= 射击较差 = \n \n“玛丽昂,我是哪里错了呢”",
+      "localization": {
+        "en": {
+          "name": "Nimbus Schutzen",
+          "description": "The ace pilot of the Zeon Forces, known by the title \"Paladin,\" and a discarded soul. \n= Abilities are outstanding = \n= Damage taken from the EXAM system is halved = \nDisadvantages \n= Shooting skills are poor = \n \n“Marion, where did I go wrong?”"
+        }
+      },
+      "baseStats": {
+        "shooting": 150.0,
+        "melee": 185.0,
+        "defense": 170.0,
+        "speed": 180.0,
+        "accuracy": 175.0,
+        "reaction": 155.0,
+        "leadership": 70.0,
+        "awakening": 55.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 173.64375,
+        "melee": 214.160625,
+        "defense": 196.79625000000001,
+        "speed": 208.37250000000003,
+        "accuracy": 202.58437500000002,
+        "reaction": 179.43187500000002,
+        "leadership": 81.03375000000001,
+        "awakening": 63.66937500000001
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_NMBS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_NMBS_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_NMBS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_NMBS_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "15秒内伤害提高20%",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Damage Up 15% in 25sec"
+            }
+          }
+        },
+        {
+          "id": "Pilot_ExamPilot_Trigger",
+          "name": "EXAM驾驶员",
+          "description": "几乎不会受到EXAM系统的伤害",
+          "icon": "assets/pilots/ace-skill-EXAM.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "EXAM Pilot",
+              "description": "Does not take damage from EXAM system"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_NRS",
+      "name": "诺利斯·巴卡德",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_NRS.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_NRS.png",
+      "description": "吉翁贵族萨哈林家族的仆人,忠心于基尼亚斯·萨哈林和艾娜·萨哈林 \n优势 \n=格斗技巧优秀= \n=反应能力优秀= \n=机动能力优秀= \n劣势 \n=射击技巧较低= \n \n“不能引出机体性能的话就这样去死吧!”",
+      "localization": {
+        "en": {
+          "name": "Norris Packard",
+          "description": "Legendary pilot born from the One Year War, Zeon's “Red Comet” \nAdvantages \n= High base skills = \n= Max-level skills overflow = \n= High initial Newtype aptitude = \nDisadvantages \n= No one can catch up to NRSr, especially when he's running away = \n= Has lolicon and mother-complex tendencies = \n \n“Lalah, please guide me!”"
+        }
+      },
+      "baseStats": {
+        "shooting": 160.0,
+        "melee": 180.0,
+        "defense": 170.0,
+        "speed": 180.0,
+        "accuracy": 160.0,
+        "reaction": 190.0,
+        "leadership": 95.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 185.22000000000003,
+        "melee": 208.37250000000003,
+        "defense": 196.79625000000001,
+        "speed": 208.37250000000003,
+        "accuracy": 185.22000000000003,
+        "reaction": 219.94875000000002,
+        "leadership": 109.97437500000001,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_NRS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_NRS_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_NRS.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_NRS_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "15秒内伤害提高20%",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Damage Up 15% in 25sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_RBR",
+      "name": "兰巴·拉尔",
+      "faction": "ZEON",
+      "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_RBR.ini",
+      "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_RBR.png",
+      "description": "吉翁的老练王牌“青之巨星”,曾差点消灭白色基地 \n优势 \n= 战斗能力惊人 = \n= 拥有较强的指挥能力 = \n= 懂得观察人心 = \n劣势 \n= 不适合单独作战 = \n \n“赢了我的是你的机体性能,而不是你的驾驶技术!”",
+      "localization": {
+        "en": {
+          "name": "Ramba Ral",
+          "description": "Zeon's seasoned ace, the \"Great Blue Star,\" once came close to destroying the White Base. \nAdvantages \n= Combat ability is amazing = \n= Possesses strong command capabilities = \n= Knows how to read people's minds = \nDisadvantages \n= Not suitable for solo combat = \n \n“It was your machine's performance that beat me, not your driving skills.”"
+        }
+      },
+      "baseStats": {
+        "shooting": 160.0,
+        "melee": 180.0,
+        "defense": 190.0,
+        "speed": 180.0,
+        "accuracy": 165.0,
+        "reaction": 160.0,
+        "leadership": 120.0,
+        "awakening": 35.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 3,
+      "experienceBase": 7500.0,
+      "experienceMultiplier": 1.5,
+      "maxStats": {
+        "shooting": 185.22000000000003,
+        "melee": 208.37250000000003,
+        "defense": 219.94875000000002,
+        "speed": 208.37250000000003,
+        "accuracy": 191.008125,
+        "reaction": 185.22000000000003,
+        "leadership": 138.91500000000002,
+        "awakening": 40.516875000000006
+      },
+      "price": {
+        "money": 5000,
+        "supplies": 2500
+      },
+      "sourceOffers": [
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_RBR.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_RBR_Produce_Switch_G"
+        },
+        {
+          "money": 5000,
+          "supplies": 2500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_RBR.gw",
+          "action": "action_Pilot_ZEON_0079_N_ACE_RBR_Produce_Switch_S"
+        }
+      ],
+      "skills": [
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "15秒内伤害提高20%",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Damage Up 15% in 25sec"
+            }
+          }
+        },
+        {
+          "id": "Pilot_LeaderShipUp_Trigger",
+          "name": "领导力上升",
+          "description": "15秒内领导力提高100%",
+          "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+          "implemented": false,
+          "localization": {
+            "en": {
+              "name": "LeaderShipUp",
+              "description": "LeaderShip Up 100% in 15sec"
+            }
+          }
+        }
+      ],
+      "unlockTech": [
+        "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
+      ]
+    }
   ]
 }

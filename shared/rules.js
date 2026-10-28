@@ -111,6 +111,8 @@ const Tactics = (() => {
         model = models[id];
       if (!model || model.formOnly) throw Error("编组包含不可用单位或武器套件");
       const customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null;
+      if (customPilot?.needsRecruitment) throw Error("该ACE需要重新招募后才能配属");
+      if (!customPilot && pilots.aceProfile(entry.pilotId)) throw Error("请先招募并配属ACE驾驶员");
       cost += model.cost + pilots.cost(customPilot);
       const customName = normalizeUnitName(entry.customName);
       const pilotId = customPilot?.id || pilots.validate(entry.pilotId, model);

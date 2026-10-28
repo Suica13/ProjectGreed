@@ -443,7 +443,7 @@
   },
   "weapons": {
     "ColumbusClass_Turret_AA": {
-      "name": "ColumbusClass Turret AA",
+      "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -1256,7 +1256,18 @@
         }
       ],
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      }
     }
   },
   "mechanics": [

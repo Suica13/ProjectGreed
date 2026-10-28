@@ -228,3 +228,93 @@ test("learning computer is attached to all native LPC hulls, including legacy co
   }
   assert.deepEqual(actual,expected);
 });
+
+
+for (const scenario of ["regular", "quick", "saved", "max"]) {
+  test(
+    "ACE authoritative XP follows native leveling and existing mode rules: " +
+      scenario,
+    (t) => {
+      const f = fixture(t, scenario === "quick" ? "quick" : "regular");
+      const [actor, , , , target] = f.room.game.units;
+      const profile = P.catalog.aces.find((p) => p.price),
+        original = P.createAce(profile.id);
+      actor.pilot =
+        scenario === "max" ? P.gainExperience(original, 1000000) : original;
+      const before = structuredClone(actor.pilot);
+      if (scenario === "saved") f.room.startedFromSave = true;
+      target.hp = 1;
+      f.act(0, "attack", {
+        unitId: actor.id,
+        targetId: target.id,
+        weaponId: "EF_Type61_Cannon",
+      });
+      f.resolve();
+      assert.equal(target.hp, 0);
+      const award = f.frames
+        .get(f.clients[0])
+        .pilotAwards.find(
+          (a) => a.pilotId === actor.pilot.id && a.kind === "kill",
+        );
+      if (scenario === "saved") {
+        assert.equal(award, undefined);
+        assert.deepEqual(actor.pilot, before);
+        return;
+      }
+      assert(award);
+      assert.equal(
+        award.experiencePoints,
+        scenario === "max"
+          ? 0
+          : Math.floor(
+              G.modelOf(target).cost * (scenario === "quick" ? 0.1 : 1),
+            ),
+      );
+      assert.equal(actor.pilot.level, before.level);
+      assert.equal(actor.pilot.record.kills, 1);
+      assert.deepEqual(actor.pilot.stats, before.stats);
+    },
+  );
+}
+
+for (const mode of ["regular", "quick", "saved"]) {
+  test(
+    "ACE death award preserves progress and follows loss policy: " + mode,
+    (t) => {
+      const f = fixture(t, mode === "quick" ? "quick" : "regular"),
+        [killer, , , , target] = f.room.game.units;
+      const source = P.catalog.aces.find((p) => p.price),
+        before = P.gainExperience(
+          P.createAce(source.id),
+          source.experienceBase + 123,
+        );
+      target.pilot = structuredClone(before);
+      target.hp = 1;
+      if (mode === "saved") f.room.startedFromSave = true;
+      f.act(0, "attack", {
+        unitId: killer.id,
+        targetId: target.id,
+        weaponId: "EF_Type61_Cannon",
+      });
+      f.resolve();
+      assert.equal(target.hp, 0);
+      const award = f.frames
+        .get(f.clients[1])
+        .pilotAwards.find((a) => a.pilotId === before.id && a.kind === "loss");
+      if (mode === "saved") {
+        assert.equal(award, undefined);
+        assert.deepEqual(target.pilot, before);
+        return;
+      }
+      assert(award);
+      assert.equal(award.requiresRecruitment, mode === "regular");
+      assert.equal(target.pilot.needsRecruitment, mode === "regular");
+      const store = { pilots: [before], awards: [] };
+      P.creditAwards(store, [award]);
+      assert.equal(store.pilots[0].needsRecruitment, mode === "regular");
+      assert.equal(store.pilots[0].level, 1);
+      assert.equal(store.pilots[0].experience, 123);
+      assert.equal(store.pilots[0].record.losses, 1);
+    },
+  );
+}

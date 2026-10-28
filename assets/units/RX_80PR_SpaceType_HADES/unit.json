@@ -1579,7 +1579,7 @@
       "actionCost": 3
     },
     "Common_ArmBR_Pink": {
-      "name": "光束炮",
+      "name": "腕部光束枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -1746,10 +1746,21 @@
       },
       "category": "beam_rifle",
       "rangeRole": "short_secondary",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腕部光束枪"
+        },
+        "en": {
+          "name": "Wrist Beam Gun"
+        },
+        "ja": {
+          "name": "腕部ビームガン"
+        }
+      }
     },
     "Common_ArmBR_Pink_L": {
-      "name": "光束炮",
+      "name": "腕部光束枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -1923,7 +1934,18 @@
         ],
         "mergedInto": "Common_ArmBR_Pink"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腕部光束枪"
+        },
+        "en": {
+          "name": "Wrist Beam Gun"
+        },
+        "ja": {
+          "name": "腕部ビームガン"
+        }
+      }
     },
     "EF_Minigun": {
       "name": "机枪",

@@ -2020,7 +2020,7 @@
       "shipAccuracyMultiplier": 0.9
     },
     "AlbionClass_Turret_AMS": {
-      "name": "AlbionClass Turret AMS",
+      "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -2288,10 +2288,21 @@
       "category": "missile",
       "actionCost": 2,
       "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "反MS导弹"
+        },
+        "en": {
+          "name": "Anti-MS Missiles"
+        },
+        "ja": {
+          "name": "対MSミサイル"
+        }
+      }
     },
     "AlbionClass_Turret_AA": {
-      "name": "AlbionClass Turret AA",
+      "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -4492,10 +4503,21 @@
         }
       ],
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      }
     },
     "AlbionClass_Turret_AA_2": {
-      "name": "舰载光束炮",
+      "name": "对空机枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -4828,7 +4850,18 @@
         }
       ],
       "shipHitBeforeReduction": 90.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      }
     }
   },
   "mechanics": [

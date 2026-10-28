@@ -456,16 +456,16 @@
       "displayIndex": 0
     },
     "Common_DoubleMS_FF_X7": {
-      "name": "双联装导弹",
+      "name": "双重导弹发射器",
       "localization": {
         "zh": {
-          "name": "双联装导弹"
+          "name": "双重导弹发射器"
         },
         "en": {
-          "name": "Twin Missiles"
+          "name": "Double Missile Launcher"
         },
         "ja": {
-          "name": "連装ミサイル"
+          "name": "二連装ミサイルランチャー"
         }
       },
       "type": "shell",

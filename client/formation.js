@@ -80,7 +80,7 @@ const Formation = (() => {
       delete copy.pilotId;
       if (copy.customPilot) {
         const saved = pilotStore.pilots.find((p) => p.id === copy.customPilot.id);
-        if (saved) copy.customPilot = structuredClone(saved);
+        if (saved && !saved.needsRecruitment) copy.customPilot = structuredClone(saved);
         else delete copy.customPilot;
       }
       return copy;
@@ -88,7 +88,10 @@ const Formation = (() => {
   }
   function receivePilotAwards(snapshot) {
     if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
-    if (PilotSystem.creditAwards(pilotStore, snapshot.pilotAwards || [])) savePilots();
+    if (PilotSystem.creditAwards(pilotStore, snapshot.pilotAwards || [])) {
+      savePilots();
+      squads = squads.map((s) => ({ ...s, units: hydratePilots(s.units) }));
+    }
     draft = hydratePilots(draft);
   }
   function defaultSquads(faction) {
@@ -952,7 +955,7 @@ const Formation = (() => {
     ]) {
       const card = element("div", "formation-weapon-detail");
       card.append(
-        element("strong", "", skill.name),
+        element("strong", "", I18n.language === "zh" ? skill.name : I18n.localized(skill)),
         element("p", "muted", SkillControls.description(skill)),
       );
       mechanics.append(card);
@@ -1306,7 +1309,7 @@ const Formation = (() => {
     byId("formationPilotTitle").textContent = "驾驶员配属 · " + (entry.customName || model.name);
     list.replaceChildren();
     const command = PilotSystem.commandUnit(model);
-    const available = pilotStore.pilots;
+    const available = pilotStore.pilots.filter((p) => !p.needsRecruitment);
     for (const profile of [null, ...available]) {
       const id = profile?.id || null,
         selected = (entry.customPilot?.id || null) === id,
@@ -1346,7 +1349,7 @@ const Formation = (() => {
           element(
             "small",
             "",
-            `Lv.${profile.level} · COST +${PilotSystem.cost(profile)} · EXP ${profile.experience}/${PilotSystem.experienceRequired(profile.level)}`,
+            `Lv.${profile.level} · COST +${PilotSystem.cost(profile)} · EXP ${profile.experience}/${PilotSystem.experienceRequired(profile.level, profile)}`,
           ),
         );
       choose.disabled = !!selected || !!occupied;
@@ -2072,6 +2075,7 @@ const Formation = (() => {
   let pilotFocus = null;
   const pilotPage = byId("formationPilotRoster");
   const pilotEditor = byId("customPilotPanel");
+  document.body.append(pilotEditor);
   function renderPilotRecord(container, pilot) {
     const record = pilot.record;
     const rows = [
@@ -2097,6 +2101,191 @@ const Formation = (() => {
       container.append(row);
     }
   }
+  function aceCandidates() {
+    return (PilotSystem.catalog.aces || []).filter(
+      (p) =>
+        (group === "PMC" || p.faction === group) &&
+        !pilotStore.pilots.some((owned) => owned.aceId === p.id && !owned.needsRecruitment),
+    );
+  }
+  function renderAceInformation(container, profile) {
+    container.replaceChildren();
+    const growth = element(
+      "p",
+      "",
+      `${I18n.text("悟性")} ${profile.comprehension} · ${I18n.text("最高等级")} ${profile.maxLevel} · 50 COST/Lv.`,
+    );
+    const description = element(
+      "p",
+      "ace-biography",
+      I18n.language === "zh" ? profile.description : I18n.localized(profile, "description"),
+    );
+    description.dataset.i18nIgnore = "";
+    container.append(growth, description, element("h3", "", "ACE技能（占位）"));
+    for (const skill of profile.skills) {
+      const card = element("div", "ace-skill-placeholder");
+      if (skill.icon) {
+        const img = element("img");
+        img.src = skill.icon;
+        img.alt = "";
+        card.append(img);
+      }
+      const content = element("div");
+      content.append(
+        element("strong", "", I18n.language === "zh" ? skill.name : I18n.localized(skill)),
+        element(
+          "p",
+          "",
+          I18n.language === "zh" ? skill.description : I18n.localized(skill, "description"),
+        ),
+        element("small", "muted", "占位：技能机制尚未启用"),
+      );
+      card.append(content);
+      container.append(card);
+    }
+  }
+  const aceRecruit = element("dialog", "ace-recruit-dialog");
+  aceRecruit.id = "aceRecruitDialog";
+  aceRecruit.setAttribute("aria-labelledby", "aceRecruitTitle");
+  const aceHeading = element("header", "formation-pilot-heading"),
+    aceTitle = element("h2", "", "招募ACE");
+  aceTitle.id = "aceRecruitTitle";
+  const closeAce = element("button", "", "关闭");
+  closeAce.type = "button";
+  closeAce.onclick = () => aceRecruit.close();
+  aceHeading.append(aceTitle, closeAce);
+  const aceWorkspace = element("div", "ace-recruit-workspace"),
+    aceList = element("div", "ace-recruit-list"),
+    acePreview = element("section", "ace-recruit-preview");
+  aceList.id = "aceRecruitList";
+  acePreview.id = "aceRecruitPreview";
+  aceWorkspace.append(aceList, acePreview);
+  const aceFooter = element("footer", "ace-recruit-footer"),
+    acePrice = element("p"),
+    buyAce = element("button", "primary", "招募");
+  acePrice.id = "aceRecruitPrice";
+  buyAce.id = "confirmRecruitAce";
+  buyAce.type = "button";
+  aceFooter.append(acePrice, buyAce);
+  aceRecruit.append(aceHeading, aceWorkspace, aceFooter);
+  document.body.append(aceRecruit);
+  let selectedAce = null,
+    previewAceId = null;
+  function aceTechnology(profile) {
+    return Development.nodes(profile.faction).filter((node) => node.unlocks.includes(profile.id));
+  }
+  function canRecruitAce(profile) {
+    return (
+      !!profile?.price &&
+      (group === "PMC" || profile.faction === group) &&
+      Development.allows(group, profile.id)
+    );
+  }
+  function openAceRecruitment(id = null) {
+    const owned = id && pilotStore.pilots.find((p) => p.aceId === id);
+    if (owned && !owned.needsRecruitment) return editPilot(owned);
+    previewAceId = id;
+    selectedAce = id;
+    renderAceRecruitment();
+    aceRecruit.showModal();
+  }
+  function renderAceRecruitment() {
+    const candidates = aceCandidates();
+    if (previewAceId && !candidates.some((p) => p.id === previewAceId)) {
+      const preview = PilotSystem.aceProfile(previewAceId);
+      if (preview) candidates.push(preview);
+    }
+    if (!candidates.some((p) => p.id === selectedAce))
+      selectedAce = candidates.find(canRecruitAce)?.id || candidates[0]?.id;
+    aceList.replaceChildren();
+    for (const profile of candidates) {
+      const button = element("button", "ace-recruit-candidate");
+      button.type = "button";
+      button.dataset.aceId = profile.id;
+      button.setAttribute("aria-pressed", String(selectedAce === profile.id));
+      const img = element("img");
+      img.src = profile.icon;
+      img.alt = "";
+      button.append(img, element("span", "", profile.name));
+      button.onclick = () => {
+        selectedAce = profile.id;
+        renderAceRecruitment();
+      };
+      aceList.append(button);
+    }
+    acePreview.replaceChildren();
+    const profile = PilotSystem.aceProfile(selectedAce);
+    buyAce.disabled = !canRecruitAce(profile) || !Economy.affordable(profile.price);
+    if (!profile) {
+      acePrice.textContent = I18n.text("暂无可招募ACE");
+      return;
+    }
+    const portrait = element("img", "ace-recruit-portrait");
+    portrait.src = profile.icon;
+    portrait.alt = "";
+    acePreview.append(portrait, element("h3", "", profile.name));
+    const attributes = element("div", "ace-native-stats");
+    for (const [key, label] of Object.entries(PilotSystem.labels))
+      attributes.append(
+        element(
+          "span",
+          "",
+          `${I18n.text(label)} ${profile.baseStats[key]} → ${Number(profile.maxStats[key].toFixed(2))}`,
+        ),
+      );
+    acePreview.append(attributes);
+    const owned = pilotStore.pilots.find((p) => p.aceId === profile.id);
+    if (owned?.needsRecruitment)
+      acePreview.append(element("p", "", "重新招募将保留等级、经验和战绩。"));
+    if (!Development.allows(group, profile.id)) {
+      const technologies = aceTechnology(profile);
+      acePreview.append(
+        element(
+          "p",
+          "ace-recruit-locked",
+          technologies.length
+            ? I18n.text("需要开发科技：") + technologies.map((n) => n.name).join(" / ")
+            : I18n.text("尚未配置解锁科技，暂不可招募"),
+        ),
+      );
+    }
+    const information = element("div");
+    renderAceInformation(information, profile);
+    acePreview.append(information);
+    acePrice.textContent = profile.price
+      ? `${I18n.text("资金")} ${profile.price.money.toLocaleString()} · ${I18n.text("物资")} ${profile.price.supplies.toLocaleString()}`
+      : I18n.text("原MOD无招募报价，暂不可招募");
+  }
+  byId("recruitAcePilot").onclick = () => openAceRecruitment();
+  buyAce.onclick = () => {
+    const profile = aceCandidates().find((p) => p.id === selectedAce);
+    if (!canRecruitAce(profile)) return;
+    try {
+      const previous = pilotStore.pilots.find((p) => p.aceId === profile.id);
+      const pilot = PilotSystem.recruitAce(profile.id, previous),
+        next = {
+          ...pilotStore,
+          pilots: previous
+            ? pilotStore.pilots.map((p) => (p.id === pilot.id ? pilot : p))
+            : [...pilotStore.pilots, pilot],
+        };
+      if (!Economy.transact(profile.price, {}, [[sharedPilotKey, JSON.stringify(next)]]))
+        return note("资金或物资不足");
+      pilotStore = next;
+      aceRecruit.close();
+      renderPilotRoster();
+      editPilot(pilot);
+    } catch (error) {
+      note(Economy.errorMessage(error));
+    }
+  };
+  window.addEventListener("development-changed", () => {
+    if (pageView === "formation") renderPilotRoster();
+    if (aceRecruit.open) renderAceRecruitment();
+  });
+  window.addEventListener("economy-changed", () => {
+    if (aceRecruit.open) renderAceRecruitment();
+  });
   function renderPilotRoster() {
     const list = byId("customPilotList");
     const scrollTop = list.scrollTop;
@@ -2121,7 +2310,9 @@ const Formation = (() => {
         element(
           "small",
           "",
-          `EXP ${p.experience}/${PilotSystem.experienceRequired(p.level)} · 强化点 ${p.points}`,
+          p.ace
+            ? `ACE · EXP ${p.experience}/${p.level === PilotSystem.maxLevel(p) ? "MAX" : PilotSystem.experienceRequired(p.level, p)}`
+            : `EXP ${p.experience}/${PilotSystem.experienceRequired(p.level, p)} · 强化点 ${p.points}`,
         ),
       );
       const record = element("span", "pilot-record");
@@ -2147,13 +2338,22 @@ const Formation = (() => {
         )
           deletePilot(p.id);
       };
-      actions.append(details, remove);
+      actions.append(details);
+      if (!p.ace) actions.append(remove);
+      if (p.needsRecruitment) {
+        text.append(element("small", "ace-recruit-locked", "需要重新招募"));
+        const recruit = element("button", "", "重新招募");
+        recruit.type = "button";
+        recruit.onclick = () => openAceRecruitment(p.aceId);
+        actions.append(recruit);
+      }
       card.append(img, text, actions);
       card.onclick = (event) => {
         if (!event.target.closest("button")) editPilot(p);
       };
       list.append(card);
     }
+    byId("recruitAcePilot").disabled = !aceCandidates().some(canRecruitAce);
     list.scrollTop = scrollTop;
   }
   byId("pilotRosterSearch").oninput = renderPilotRoster;
@@ -2223,12 +2423,14 @@ const Formation = (() => {
     byId("customPilotName").value = pilotEdit.name;
     byId("customPilotName").disabled = true;
     byId("renameCustomPilot").textContent = "修改名称";
+    byId("renameCustomPilot").hidden = !!pilotEdit.ace;
+    byId("changeCustomPilotPortrait").disabled = !!pilotEdit.ace;
     byId("customPilotPortraitPicker").hidden = true;
     byId("createPilotConfirm").hidden = !pilotIsNew;
     renderPilotStats();
     pilotEditor.hidden = false;
     byId("formationMain").inert = true;
-    byId("changeCustomPilotPortrait").focus();
+    (pilotEdit.ace ? byId("finishCustomPilot") : byId("changeCustomPilotPortrait")).focus();
   }
   function savePilotIdentity(fields) {
     Object.assign(pilotEdit, fields);
@@ -2239,6 +2441,7 @@ const Formation = (() => {
     renderPilotStats();
   }
   function openPortraitPicker() {
+    if (!pilotEdit || pilotEdit.ace) return;
     const portraits = byId("customPilotPortraits");
     portraits.replaceChildren();
     for (const [i, portrait] of PilotSystem.catalog.portraits.entries()) {
@@ -2268,6 +2471,7 @@ const Formation = (() => {
     byId("changeCustomPilotPortrait").focus();
   }
   byId("uploadPilotPortrait").onchange = async (event) => {
+    if (!pilotEdit || pilotEdit.ace) return;
     const file = event.target.files?.[0];
     event.target.value = "";
     const editing = pilotEdit;
@@ -2316,20 +2520,27 @@ const Formation = (() => {
   };
   function renderPilotStats() {
     byId("customPilotAvatar").src = PilotSystem.portrait(pilotEdit);
+    resetTraining.hidden = !!pilotEdit.ace;
+    byId("pilotTrainingTitle").textContent = pilotEdit.ace ? "驾驶员属性" : "属性强化";
+    byId("acePilotDetails").hidden = !pilotEdit.ace;
+    if (pilotEdit.ace)
+      renderAceInformation(byId("acePilotDetails"), PilotSystem.aceProfile(pilotEdit));
     resetTraining.textContent = "重置属性点 · 资金 " + 1000 * pilotEdit.level;
     resetTraining.disabled = pilotIsNew || !Economy.affordable({ money: 1000 * pilotEdit.level });
     byId("customPilotProgress").textContent =
-      `Lv.${pilotEdit.level}${pilotEdit.level === PilotSystem.growthRules.maxLevel ? " MAX" : ""} · COST +${PilotSystem.cost(pilotEdit)} · EXP ${pilotEdit.experience}/${pilotEdit.level === PilotSystem.growthRules.maxLevel ? "MAX" : PilotSystem.experienceRequired(pilotEdit.level)} · 强化点 ${pilotEdit.points}`;
+      `Lv.${pilotEdit.level}${pilotEdit.level === PilotSystem.maxLevel(pilotEdit) ? " MAX" : ""} · COST +${PilotSystem.cost(pilotEdit)} · EXP ${pilotEdit.experience}/${pilotEdit.level === PilotSystem.maxLevel(pilotEdit) ? "MAX" : PilotSystem.experienceRequired(pilotEdit.level, pilotEdit)}${pilotEdit.ace ? " · ACE · " + I18n.text("悟性") + " " + PilotSystem.aceProfile(pilotEdit).comprehension : " · 强化点 " + pilotEdit.points}`;
     renderPilotRecord(byId("customPilotRecord"), pilotEdit);
     const original = JSON.parse(pilotOriginal);
     const pendingPoints = original.points - pilotEdit.points;
-    byId("pilotTrainingActions").hidden = false;
+    byId("pilotTrainingActions").hidden = !!pilotEdit.ace;
     byId("confirmPilotTraining").disabled = pendingPoints === 0;
     byId("cancelPilotTraining").disabled = pendingPoints === 0;
     byId("pilotTrainingStatus").textContent =
       pendingPoints > 0
         ? `待确认强化：已分配${pendingPoints}点。确认强化后应用，取消强化可撤销本次分配。`
-        : "点击属性右侧“＋”分配强化点，再确认强化。";
+        : pilotEdit.ace
+          ? I18n.text("ACE按悟性自动成长，不能手动加点或重置。")
+          : "点击属性右侧“＋”分配强化点，再确认强化。";
     const stats = byId("customPilotStats");
     stats.replaceChildren();
     for (const [key, label] of Object.entries(PilotSystem.labels)) {
@@ -2354,11 +2565,12 @@ const Formation = (() => {
         pilotEdit.points -= 5;
         renderPilotStats();
       };
+      plus.hidden = plusFive.hidden = !!pilotEdit.ace;
       row.append(
         element(
           "span",
           "",
-          `${label} ${pilotEdit.stats[key]} / ${PilotSystem.statCap(pilotEdit.level)}`,
+          `${label} ${Number(pilotEdit.stats[key].toFixed(2))} / ${pilotEdit.ace ? Number(PilotSystem.aceStatCap(pilotEdit, key).toFixed(2)) : PilotSystem.statCap(pilotEdit.level)}`,
         ),
         plus,
         plusFive,
@@ -2371,7 +2583,7 @@ const Formation = (() => {
   resetTraining.type = "button";
   byId("pilotTrainingTitle").parentElement.append(resetTraining);
   resetTraining.onclick = async () => {
-    if (!pilotEdit || pilotIsNew) return;
+    if (!pilotEdit || pilotIsNew || pilotEdit.ace) return;
     const id = pilotEdit.id,
       faction = group,
       cost = 1000 * pilotEdit.level;
@@ -2407,6 +2619,7 @@ const Formation = (() => {
     pilotFocus?.focus();
   }
   byId("renameCustomPilot").onclick = () => {
+    if (!pilotEdit || pilotEdit.ace) return;
     const input = byId("customPilotName"),
       button = byId("renameCustomPilot");
     if (input.disabled) {
@@ -2542,6 +2755,7 @@ const Formation = (() => {
       PlayerProfile.setFaction(member.characterFaction);
     },
     previewUnit,
+    openAceRecruitment,
     refresh: () => {
       if (pageView === "formation") {
         render();

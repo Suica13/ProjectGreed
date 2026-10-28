@@ -312,7 +312,7 @@
   },
   "weapons": {
     "Common_DoubleMS_DodaiYS": {
-      "name": "Common DoubleMS DodaiYS",
+      "name": "双重导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -526,10 +526,21 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "双重导弹发射器"
+        },
+        "en": {
+          "name": "Double Missile Launcher"
+        },
+        "ja": {
+          "name": "二連装ミサイルランチャー"
+        }
+      }
     },
     "Common_DoubleMS_DodaiYS_L": {
-      "name": "Common DoubleMS DodaiYS L",
+      "name": "双重导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -746,7 +757,18 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "双重导弹发射器"
+        },
+        "en": {
+          "name": "Double Missile Launcher"
+        },
+        "ja": {
+          "name": "二連装ミサイルランチャー"
+        }
+      }
     }
   },
   "mechanics": [

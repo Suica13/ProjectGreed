@@ -113,6 +113,8 @@ def main():
         json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     print(f"Imported {len(pilots)} pilot profiles")
+    from importlib import import_module
+    import_module("import-ace-pilots").main()
 
 
 if __name__ == "__main__":

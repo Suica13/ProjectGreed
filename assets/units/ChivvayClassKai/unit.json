@@ -1422,7 +1422,7 @@
       "shipAccuracyMultiplier": 0.9
     },
     "ChivvayClassKai_Turret_AMS": {
-      "name": "ChivvayClassKai Turret AMS",
+      "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -1652,7 +1652,18 @@
       "category": "missile",
       "actionCost": 2,
       "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "反MS导弹"
+        },
+        "en": {
+          "name": "Anti-MS Missiles"
+        },
+        "ja": {
+          "name": "対MSミサイル"
+        }
+      }
     },
     "ChivvayClassKai_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -2592,7 +2603,7 @@
       "shipAccuracyMultiplier": 0.9
     },
     "ChivvayClassKai_Turret_AA": {
-      "name": "ChivvayClassKai Turret AA",
+      "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -4805,7 +4816,18 @@
         }
       ],
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      }
     }
   },
   "mechanics": [

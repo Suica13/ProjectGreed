@@ -37,6 +37,21 @@ const DevelopmentUI = (() => {
       if (Development.creditAward(award)) RewardNotifications.add("technology", award, snapshot);
   }
   function unitRow(unitId) {
+    const ace = PilotSystem.aceProfile(unitId);
+    if (ace || unitId === "Beacon_ACE_0079") {
+      const row = element("button", "development-unit development-ace");
+      row.type = "button";
+      row.dataset.aceId = ace?.id || "";
+      if (ace) {
+        const icon = element("img");
+        icon.src = ace.icon;
+        icon.alt = "";
+        row.append(icon);
+      } else row.append(element("span", "development-unit-placeholder", "ACE"));
+      row.append(element("span", "", ace ? "ACE · " + ace.name : "ACE招募"));
+      row.onclick = () => Formation.openAceRecruitment(ace?.id || null);
+      return row;
+    }
     const prefab = Rules.catalog.prefabs.find((unit) => unit.id === unitId);
     const row = element(prefab ? "button" : "div", "development-unit");
     if (prefab) {
@@ -86,7 +101,7 @@ const DevelopmentUI = (() => {
                 ? "资金或物资不足"
                 : "可以开发",
       ),
-      element("h4", "", "解锁单位"),
+      element("h4", "", "解锁单位与驾驶员"),
     );
     if (researched) details.querySelector(".development-research-status")?.remove();
     const units = element("div", "development-units");

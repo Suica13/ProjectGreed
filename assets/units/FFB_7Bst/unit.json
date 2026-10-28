@@ -787,7 +787,7 @@
       "displayIndex": 0
     },
     "Common_DoubleMS_FFB_7Bst": {
-      "name": "Common DoubleMS FFB 7Bst",
+      "name": "双重导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -973,10 +973,21 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "双重导弹发射器"
+        },
+        "en": {
+          "name": "Double Missile Launcher"
+        },
+        "ja": {
+          "name": "二連装ミサイルランチャー"
+        }
+      }
     },
     "Common_DoubleMS_FFB_7Bst_L": {
-      "name": "Common DoubleMS FFB 7Bst L",
+      "name": "双重导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -1165,7 +1176,18 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "双重导弹发射器"
+        },
+        "en": {
+          "name": "Double Missile Launcher"
+        },
+        "ja": {
+          "name": "二連装ミサイルランチャー"
+        }
+      }
     },
     "Common_Bomb_FFB_7Bst": {
       "name": "航空炸弹",

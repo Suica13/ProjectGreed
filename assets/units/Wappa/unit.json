@@ -527,7 +527,7 @@
       "actionCost": 3
     },
     "ZN_Wappa_C4": {
-      "name": "ZN Wappa C4",
+      "name": "投掷C4",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -653,7 +653,18 @@
         "energy": 40.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "投掷C4"
+        },
+        "en": {
+          "name": "Throw C4"
+        },
+        "ja": {
+          "name": "C4投擲"
+        }
+      }
     }
   },
   "mechanics": [

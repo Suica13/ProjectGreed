@@ -741,7 +741,7 @@
       "displayIndex": 0
     },
     "Common_DoubleMS_FF_6": {
-      "name": "Common DoubleMS FF 6",
+      "name": "双重导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -914,10 +914,21 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "双重导弹发射器"
+        },
+        "en": {
+          "name": "Double Missile Launcher"
+        },
+        "ja": {
+          "name": "二連装ミサイルランチャー"
+        }
+      }
     },
     "Common_DoubleMS_FF_6_L": {
-      "name": "Common DoubleMS FF 6 L",
+      "name": "双重导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -1093,7 +1104,18 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "双重导弹发射器"
+        },
+        "en": {
+          "name": "Double Missile Launcher"
+        },
+        "ja": {
+          "name": "二連装ミサイルランチャー"
+        }
+      }
     }
   },
   "mechanics": [

@@ -251,6 +251,8 @@ const UnitSkills = (() => {
         skill.maxUses < 1 ||
         skill.maxUses > 99 ||
         typeof skill.consumeAction !== "boolean" ||
+        (skill.actionCost !== undefined &&
+          (!Number.isInteger(skill.actionCost) || skill.actionCost < 0)) ||
         !["remove", "keep", "transform"].includes(skill.source?.mode) ||
         (skill.source.mode === "remove" && !skill.spawn)
       )
@@ -332,8 +334,21 @@ const UnitSkills = (() => {
     }
     // Resource inheritance preserves the old percentage, then adds the configured percentage
     // of the NEW maximum. Zero recovery therefore does not silently refill a transformed unit.
-    function resultUnit(unit, oldModel, config, id, x, y, skillUses, consumeAction) {
+    function resultUnit(
+      unit,
+      oldModel,
+      config,
+      id,
+      x,
+      y,
+      skillUses,
+      consumeAction,
+      actionCost = 0,
+    ) {
       const model = config.unitId + "__" + (config.kitMap?.[oldModel.kitId] ?? config.kitId);
+      const remainingAP = consumeAction
+        ? 0
+        : Math.max(0, (unit.actionPoints ?? oldModel.actionPoints ?? 5) - actionCost);
       const next = {
         id,
         model,
@@ -355,8 +370,8 @@ const UnitSkills = (() => {
         weaponUses: { ...unit.weaponUses },
         brokenParts: config.repairAllParts ? {} : { ...unit.brokenParts },
         moved: consumeAction || unit.moved,
-        acted: consumeAction || unit.acted,
-        actionPoints: consumeAction ? 0 : (unit.actionPoints ?? model.actionPoints ?? 5),
+        acted: consumeAction || unit.acted || remainingAP === 0,
+        actionPoints: remainingAP,
         origin: null,
         plan: null,
         moduleHp: undefined,
@@ -427,6 +442,7 @@ const UnitSkills = (() => {
               unit.y,
               uses,
               skill.consumeAction,
+              skill.actionCost ?? 0,
             );
       if (
         source &&
@@ -526,6 +542,7 @@ const UnitSkills = (() => {
         unit.y,
         plan.uses,
         skill.consumeAction,
+        skill.actionCost ?? 0,
       );
       if (
         probe.hp <= 0 ||
@@ -950,6 +967,7 @@ const UnitSkills = (() => {
           y,
           plan.uses,
           skill.consumeAction,
+          skill.actionCost ?? 0,
         );
       }
       // All checks finish before mutation. Invalid destinations never consume a skill or remove a unit.

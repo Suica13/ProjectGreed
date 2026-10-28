@@ -2606,7 +2606,7 @@
       "shipAccuracyMultiplier": 0.9
     },
     "GrayPhantomClass_Turret_AMS": {
-      "name": "GrayPhantomClass Turret AMS",
+      "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -2874,10 +2874,21 @@
       "category": "missile",
       "actionCost": 2,
       "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "反MS导弹"
+        },
+        "en": {
+          "name": "Anti-MS Missiles"
+        },
+        "ja": {
+          "name": "対MSミサイル"
+        }
+      }
     },
     "GrayPhantomClass_Turret_AA": {
-      "name": "GrayPhantomClass Turret AA",
+      "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -5774,7 +5785,18 @@
         }
       ],
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      }
     }
   },
   "mechanics": [

@@ -2594,7 +2594,7 @@
       },
       "range": 1,
       "maxUses": 1,
-      "consumeAction": true,
+      "consumeAction": false,
       "source": {
         "mode": "remove"
       },
@@ -2612,7 +2612,8 @@
         "volume": 0.6
       },
       "effect": "Light_75_NotAttached",
-      "minRange": 1
+      "minRange": 1,
+      "actionCost": 1
     }
   ],
   "kitAliases": {

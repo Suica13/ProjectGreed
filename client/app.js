@@ -693,9 +693,14 @@ function renderPanel() {
     const xp = element(
       "div",
       "unit-pilot-experience",
-      `Lv.${pilot.level} · EXP ${pilot.experience}/${pilot.level >= PilotSystem.growthRules.maxLevel ? "MAX" : PilotSystem.experienceRequired(pilot.level)}`,
+      `Lv.${pilot.level} · EXP ${pilot.experience}/${pilot.level >= PilotSystem.maxLevel(pilot) ? "MAX" : PilotSystem.experienceRequired(pilot.level, pilot)}`,
     );
     xp.dataset.pilotExperience = "";
+    if (pilot.ace) {
+      const placeholder = element("small", "muted", "ACE技能（占位）");
+      placeholder.append(document.createTextNode(" · " + PilotSystem.aceProfile(pilot).skills.map(s => s.name).join(" / ")));
+      xp.append(placeholder);
+    }
     stats.prepend(pilotLine, xp, pilotStats);
   } else stats.prepend(pilotLine, pilotStats);
   stats.append(element("div", "", `行动点 ${Rules.actionPoints(u)}/${Rules.actionBudget(u)}`));

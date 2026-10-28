@@ -3893,3 +3893,169 @@ test("native pilot weapon gates reject forged client stats and allow the server 
   assert.equal((await blue.act("attack",{unitId:u.id,targetId:target.id,weaponId:weapon.id})).type,"state");
   assert.equal(G.attackOrders(u)[0].weapons[0],weapon.id);
 });
+
+
+test("ejection spends one authoritative AP and rejects zero-AP or enemy requests", async (t) => {
+  const { app, client } = await setup(t),
+    blue = await client(),
+    red = await client();
+  await blue.hello("create", "EJECTAP");
+  await red.hello("join", "EJECTAP");
+  const room = app.rooms.get("EJECTAP"),
+    sync = (c) => c.latest((s) => s.revision === room.revision);
+  await blue.act("configure_room", {
+    ...G.defaultRoomSettings(),
+    fogMode: "disabled",
+  });
+  for (const c of [blue, red]) {
+    await sync(c);
+    assert.equal(
+      (
+        await c.act("set_ready", {
+          ready: true,
+          formation: [{ unitId: "RGM_79", kitId: "machine_gun" }],
+          inventory: { RGM_79: 1 },
+        })
+      ).type,
+      "state",
+    );
+  }
+  await confirmAssembly(blue, red);
+  for (const c of [blue, red]) {
+    await sync(c);
+    await c.act("confirm_deployment");
+  }
+  await sync(blue);
+  const u = room.game.units.find((u) => u.id === "0-0"),
+    model = Object.values(G.models).find((m) => m.prefabId === "RX_78_1");
+  Object.assign(u, {
+    model: Object.keys(G.models).find((id) => G.models[id] === model),
+    x: 5,
+    y: 5,
+    actionPoints: 0,
+  });
+  room.game.tiles[5][5] = room.game.tiles[5][6] = "plain";
+  const fields = {
+    unitId: u.id,
+    skillId: "ExitUnit",
+    x: 6,
+    y: 5,
+    actionPoints: 5,
+    consumeAction: false,
+  };
+  const before = JSON.stringify(room.game),
+    revision = room.revision;
+  assert.equal((await blue.act("skill", fields)).type, "error");
+  assert.equal(JSON.stringify(room.game), before);
+  assert.equal(room.revision, revision);
+  u.actionPoints = 3;
+  await sync(red);
+  assert.equal((await red.act("skill", fields)).type, "error");
+  assert.equal(u.actionPoints, 3);
+  await sync(blue);
+  assert.equal((await blue.act("skill", fields)).type, "state");
+  const craft = room.game.units.find((v) => v.ownerSeat === 0);
+  assert.equal(craft.model, "FF_X7__standard");
+  assert.equal(craft.actionPoints, 2);
+  assert.equal(craft.acted, false);
+  await sync(red);
+  assert.equal(
+    red.state.game.units.find((v) => v.id === craft.id).actionPoints,
+    2,
+  );
+});
+
+
+test("ACE shared attachment survives WebSocket deployment and earns native XP without manual stats", async (t) => {
+  const { app, client } = await setup(t),
+    blue = await client(),
+    red = await client();
+  await blue.hello("create", "ACEONLINE");
+  await red.hello("join", "ACEONLINE");
+  const room = app.rooms.get("ACEONLINE"),
+    sync = (c) => c.latest((s) => s.revision === room.revision),
+    P = G.pilots;
+  const profile = P.catalog.aces.find((p) => p.price),
+    pilot = P.gainExperience(P.createAce(profile.id), profile.experienceBase);
+  await blue.act("configure_room", {
+    ...G.defaultRoomSettings(),
+    fogMode: "disabled",
+  });
+  await sync(blue);
+  const forged = structuredClone(pilot);
+  forged.stats.shooting++;
+  const ready = (p) => ({
+    ready: true,
+    formation: [
+      {
+        unitId: "RGM_79",
+        kitId: "machine_gun",
+        ...(p ? { customPilot: p } : {}),
+      },
+    ],
+    inventory: { RGM_79: 1 },
+  });
+  assert.equal((await blue.act("set_ready", ready(forged))).type, "error");
+  for (const [c, p] of [
+    [blue, pilot],
+    [
+      red,
+      P.gainExperience(P.createAce(profile.id), profile.experienceBase + 45),
+    ],
+  ]) {
+    await sync(c);
+    assert.equal((await c.act("set_ready", ready(p))).type, "state");
+  }
+  await confirmAssembly(blue, red);
+  for (const c of [blue, red]) {
+    await sync(c);
+    await c.act("confirm_deployment");
+  }
+  const [a, b] = room.game.units;
+  assert.equal(a.pilot.ace, true);
+  assert.deepEqual(a.pilot.stats, pilot.stats);
+  Object.assign(a, { x: 4, y: 5 });
+  Object.assign(b, { x: 6, y: 5, hp: 1, shield: 0 });
+  room.game.tiles[5][4] = room.game.tiles[5][6] = "plain";
+  room.game.seed = 1;
+  await sync(blue);
+  const w = G.modelOf(a).weapons.find((w) => G.canAttack(room.game, a, b, w));
+  assert(w);
+  assert.equal(
+    (await blue.act("attack", { unitId: a.id, targetId: b.id, weaponId: w.id }))
+      .type,
+    "state",
+  );
+  await blue.act("end_turn");
+  await sync(red);
+  assert.equal(
+    (await red.act("respond", { response: "defend" })).type,
+    "state",
+  );
+  assert.equal(b.hp, 0);
+  assert.equal(a.pilot.level, 1);
+  const award = room.pilotAwards.find(
+    (a) => a.pilotId === pilot.id && a.kind === "kill",
+  );
+  assert(award?.experiencePoints > 0);
+  assert.equal(a.pilot.experience, award.experiencePoints);
+  await red.latest((s) =>
+    s.pilotAwards.some((a) => a.pilotId === b.pilot.id && a.kind === "loss"),
+  );
+  const loss = red.state.pilotAwards.find(
+    (a) => a.pilotId === b.pilot.id && a.kind === "loss",
+  );
+  assert.equal(loss.requiresRecruitment, true);
+  assert.equal(b.pilot.needsRecruitment, true);
+  assert.equal(b.pilot.level, 1);
+  assert.equal(b.pilot.experience, 45);
+  const archive = {
+    pilots: [
+      P.gainExperience(P.createAce(profile.id), profile.experienceBase + 45),
+    ],
+    awards: [],
+  };
+  P.creditAwards(archive, [loss]);
+  assert.equal(archive.pilots[0].needsRecruitment, true);
+  assert.equal(archive.pilots[0].experience, 45);
+});

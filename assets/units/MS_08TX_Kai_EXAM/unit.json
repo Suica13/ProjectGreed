@@ -1072,7 +1072,7 @@
       "displayIndex": 0
     },
     "Common_ArmGL": {
-      "name": "Common ArmGL",
+      "name": "腕部榴弹发射器",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -1229,10 +1229,21 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腕部榴弹发射器"
+        },
+        "en": {
+          "name": "Wrist Grenade Launcher"
+        },
+        "ja": {
+          "name": "腕部グレネードランチャー"
+        }
+      }
     },
     "ZN_MS_08TX_Kai_LegMS": {
-      "name": "导弹发射器",
+      "name": "腿部导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -1442,10 +1453,21 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腿部导弹发射器"
+        },
+        "en": {
+          "name": "Leg Missile Launcher"
+        },
+        "ja": {
+          "name": "脚部ミサイルランチャー"
+        }
+      }
     },
     "ZN_MS_08TX_Kai_LegMS_L": {
-      "name": "导弹发射器",
+      "name": "腿部导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -1658,7 +1680,18 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腿部导弹发射器"
+        },
+        "en": {
+          "name": "Leg Missile Launcher"
+        },
+        "ja": {
+          "name": "脚部ミサイルランチャー"
+        }
+      }
     },
     "ZN_HeatSword_Double_DBDF": {
       "name": "近身格斗",

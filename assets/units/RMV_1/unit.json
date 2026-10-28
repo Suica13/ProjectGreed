@@ -933,7 +933,7 @@
       "actionCost": 3
     },
     "EF_RMV_1_DoubleMS": {
-      "name": "EF RMV 1 DoubleMS",
+      "name": "双重导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -1111,7 +1111,18 @@
         "energy": 80.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "双重导弹发射器"
+        },
+        "en": {
+          "name": "Double Missile Launcher"
+        },
+        "ja": {
+          "name": "二連装ミサイルランチャー"
+        }
+      }
     },
     "Common_Push_A": {
       "name": "冲撞",

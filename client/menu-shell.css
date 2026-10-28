@@ -1460,3 +1460,27 @@ body.menu-shell-active #formationMain .formation-toolbar #openFormationShare { w
 body.menu-shell-active #developmentScreen #developmentPageSelect:not([hidden]) {
   display:block; width:100%; max-width:280px; min-height:32px; margin:0 0 10px;
 }
+
+/* ACE recruitment shares the roster footprint and uses an independently scrolling dialog. */
+.pilot-create-actions { display:flex; gap:8px; width:100%; flex-shrink:0; }
+#formationPilotRoster .pilot-create-actions > button { flex:1 1 0; min-width:0; width:0; }
+.ace-recruit-dialog { width:min(940px,94vw); max-width:94vw; max-height:90dvh; padding:16px; overflow:hidden; }
+.ace-recruit-dialog[open] { display:flex; flex-direction:column; gap:12px; }
+.ace-recruit-workspace { display:grid; grid-template-columns:minmax(180px,1fr) minmax(0,2fr); gap:16px; min-height:0; overflow:hidden; }
+.ace-recruit-list,.ace-recruit-preview { overflow:auto; min-height:0; max-height:65dvh; }
+.ace-recruit-list { display:flex; flex-direction:column; gap:6px; }
+.ace-recruit-candidate { display:flex; align-items:center; gap:8px; text-align:left; flex-shrink:0; }
+.ace-recruit-candidate img,.ace-skill-placeholder img { width:44px; height:44px; object-fit:contain; flex-shrink:0; background:#303740; border:1px solid #71818c; }
+.ace-recruit-candidate[aria-pressed="true"] { border-color:#70cfff; background:#254361; }
+.ace-recruit-portrait { float:left; width:80px; height:80px; object-fit:contain; margin:0 12px 12px 0; background:#303740; border:1px solid #71818c; }
+.ace-native-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; clear:both; }
+.ace-biography { white-space:pre-line; line-height:1.6; }
+.ace-skill-placeholder { display:flex; gap:10px; padding:10px 0; border-top:1px solid #465569; }
+.ace-skill-placeholder p { margin:6px 0; white-space:pre-line; }
+.ace-recruit-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid #465569; padding-top:10px; flex-shrink:0; }
+@media(max-width:600px) {
+ .ace-recruit-workspace { grid-template-columns:minmax(0,1fr); overflow:auto; }
+ .ace-recruit-list { max-height:20dvh; }
+ .ace-recruit-preview { max-height:none; overflow:visible; }
+ .ace-recruit-footer { flex-wrap:wrap; }
+}

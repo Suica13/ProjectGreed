@@ -1893,7 +1893,7 @@
       "displayIndex": 0
     },
     "Common_Grenade_B": {
-      "name": "Common Grenade B",
+      "name": "手雷",
       "type": "shell",
       "min": 1,
       "max": 4,
@@ -2042,7 +2042,18 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 2
+      "displayIndex": 2,
+      "localization": {
+        "zh": {
+          "name": "手雷"
+        },
+        "en": {
+          "name": "Grenade"
+        },
+        "ja": {
+          "name": "手榴弾"
+        }
+      }
     },
     "Common_Cqb_A": {
       "name": "格斗",

@@ -331,7 +331,7 @@
   },
   "weapons": {
     "Common_DoubleMS_Gunperry": {
-      "name": "Common DoubleMS Gunperry",
+      "name": "双重导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -495,7 +495,18 @@
         "energy": 72.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "双重导弹发射器"
+        },
+        "en": {
+          "name": "Double Missile Launcher"
+        },
+        "ja": {
+          "name": "二連装ミサイルランチャー"
+        }
+      }
     }
   },
   "mechanics": [

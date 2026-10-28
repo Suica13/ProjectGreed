@@ -890,7 +890,7 @@
       "actionCost": 5
     },
     "Common_Grenade_A": {
-      "name": "Common Grenade A",
+      "name": "手雷",
       "type": "shell",
       "min": 1,
       "max": 4,
@@ -1039,7 +1039,18 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 2
+      "displayIndex": 2,
+      "localization": {
+        "zh": {
+          "name": "手雷"
+        },
+        "en": {
+          "name": "Grenade"
+        },
+        "ja": {
+          "name": "手榴弾"
+        }
+      }
     },
     "ZN_Panzerfaust": {
       "name": "铁拳火箭弹",

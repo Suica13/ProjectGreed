@@ -2397,7 +2397,7 @@
       },
       "range": 1,
       "maxUses": 1,
-      "consumeAction": true,
+      "consumeAction": false,
       "source": {
         "mode": "remove"
       },
@@ -2415,7 +2415,8 @@
         "volume": 0.6
       },
       "effect": "Light_75_NotAttached",
-      "minRange": 1
+      "minRange": 1,
+      "actionCost": 1
     }
   ],
   "description": "联邦军试作型白刃战用MS,具备碾压扎古的性能",

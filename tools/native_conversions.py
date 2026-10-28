@@ -48,7 +48,8 @@ def attach(prefab,native):
     skill=dict(id="Transform" if kind=="transform" else "ExitUnit",type=kind,name=name,
         localization={"zh":{"name":name},"en":{"name":{"transform":"Transform","armor_purge":"Armor Purge","escape":"Eject"}[kind]},"ja":{"name":{"transform":"変形","armor_purge":"装甲パージ","escape":"脱出"}[kind]}},
         range=1 if kind=="escape" else 0,minRange=1 if kind=="escape" else 0,
-        maxUses=99 if kind=="transform" else 1,consumeAction=True,
+        maxUses=99 if kind=="transform" else 1,consumeAction=kind=="transform",
+        **({"actionCost":1} if kind!="transform" else {}),
         effect="Light_75_NotAttached",sound={"file":"../../sounds/Transform_4.ogg","volume":.6},
         nativeAction="action_Transform_LandLand_TankB" if ident=="YMT_05" else "action_Transform_LandLand_TankA" if ident=="YMT_05_ModeB" else "action_ExitUnit")
     if kind=="escape":
@@ -62,3 +63,11 @@ def attach(prefab,native):
     for mechanic in prefab.get("mechanics",[]):
         if "ExitUnit" in mechanic["id"] or "Transform_LandLand_Tank" in mechanic["id"]:
             mechanic.update(status="adapted",name=name+"：原生形态转换，资源与部位规则使用显式配置")
+
+
+def apply_action_cost(prefab):
+    """Ejection and armor purge spend one AP and retain the remaining turn."""
+    for skill in prefab.get("skills", []):
+        if skill.get("type") in ("escape", "armor_purge"):
+            skill.update(actionCost=1, consumeAction=False)
+    return prefab

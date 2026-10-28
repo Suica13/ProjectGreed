@@ -349,6 +349,8 @@
     const choices = new Map(
       Rules.catalog.prefabs.map((unit) => [unit.id, unit.code + " " + unit.name]),
     );
+    for (const ace of PilotSystem.catalog.aces || []) choices.set(ace.id, "ACE · " + ace.name);
+    choices.set("Beacon_ACE_0079", "ACE招募");
     for (const id of node.unlocks) if (!choices.has(id)) choices.set(id, id + "（尚未接入）");
     const addUnlock = button(
       "添加解锁单位",

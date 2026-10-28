@@ -4,7 +4,7 @@ const { test, expect } = require("@playwright/test"),
 async function setup(page, id) {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await expect(page.locator("#openSkirmish")).toBeEnabled();
-  await page.evaluate((id) => {
+  await page.evaluate(async (id) => {
     Net.leave();
     const kitId = Object.values(UnitModels).find((m) => m.prefabId === id).kitId;
     game = Rules.create(
@@ -14,6 +14,7 @@ async function setup(page, id) {
       false,
       { costLimit: 99999, unitCostLimit: 10000 },
     );
+    await SpriteRenderer.ensureAssets(SpriteRenderer.battleKeys(game));
     game.tiles.forEach((r) => r.fill("plain"));
     Object.assign(game.units[0], { x: 10, y: 10 });
     Object.assign(game.units[1], { x: 15, y: 10 });
@@ -35,6 +36,7 @@ for (const [id, target] of [
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await setup(page, id);
+    await page.keyboard.press("e");
     const skill = id === "YMT_05" ? "Transform" : "ExitUnit";
     await page.locator(`[data-unit-skill="${skill}"]`).click();
     await expect
@@ -45,6 +47,7 @@ for (const [id, target] of [
       const u = game.units[0];
       return {
         acted: u.acted,
+        ap: u.actionPoints,
         selected: selected === u.id,
         count: game.units.length,
         position: [u.x, u.y],
@@ -54,7 +57,8 @@ for (const [id, target] of [
       };
     });
     expect(result).toEqual({
-      acted: true,
+      acted: id === "YMT_05",
+      ap: id === "YMT_05" ? 0 : 4,
       selected: true,
       count: 2,
       position: [10, 10],
@@ -66,6 +70,7 @@ test("Magella ejection highlights adjacent cells and selects the newly separated
   page,
 }) => {
   await setup(page, "MTank");
+  await page.keyboard.press("e");
   await page.locator('[data-unit-skill="ExitUnit"]').click();
   const cell = await page.evaluate(() => {
     drawMap(performance.now());
@@ -148,9 +153,23 @@ test("EXAM returns to base art exactly when head destruction is presented", asyn
       const shown = MapCombat.units().find((x) => x.id === u.id);
       samples.push({
         model: shown.model,
-        red: SpriteRenderer.visibleLayers(shown.model, null).some((l) =>
-          l.name.startsWith("System_Red_"),
-        ),
+        red: SpriteRenderer.visibleLayers(
+          shown.model,
+          null,
+          true,
+          false,
+          null,
+          0,
+          false,
+          shown.brokenParts || {},
+          null,
+          false,
+          "ground",
+          null,
+          null,
+          false,
+          !!shown.overdrive,
+        ).some((l) => l.name.startsWith("System_Red_")),
       });
     }
     return { base, form, samples };

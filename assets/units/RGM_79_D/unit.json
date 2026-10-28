@@ -1012,7 +1012,7 @@
       "actionCost": 2
     },
     "EF_Railgun_79_D_RG": {
-      "name": "EF Railgun 79 D RG",
+      "name": "电磁炮",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -1163,7 +1163,18 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "电磁炮"
+        },
+        "en": {
+          "name": "Railgun"
+        },
+        "ja": {
+          "name": "レールガン"
+        }
+      }
     },
     "EF_BeamSprayGunFD": {
       "name": "光束炮",

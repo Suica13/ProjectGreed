@@ -1226,7 +1226,7 @@
       "displayIndex": 0
     },
     "ZN_4XMSL": {
-      "name": "ZN 4XMSL",
+      "name": "4X导弹货柜",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -1386,7 +1386,18 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "4X导弹货柜"
+        },
+        "en": {
+          "name": "4X Missile Container"
+        },
+        "ja": {
+          "name": "4連装ミサイルコンテナ"
+        }
+      }
     },
     "ZN_HeatHawk_A": {
       "name": "热能斧",
@@ -1568,7 +1579,7 @@
     },
     {
       "id": "kit_2",
-      "name": "ZN 4XMSL套件",
+      "name": "4X导弹货柜套件",
       "cost": 0,
       "weapons": [
         "ZN_4XMSL",

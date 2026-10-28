@@ -170,7 +170,7 @@ def build(unit_id,effects):
   for step,native_step in zip(twin["attack"]["steps"],native_twin_steps):
    step["requiredParts"]=native_step.get("requiredParts",[])
   p["skills"]=[dict(id="ExitUnit",type="escape",name="脱出",localization=localized("脱出","Eject","脱出"),
-   range=1,minRange=1,maxUses=1,consumeAction=True,
+   range=1,minRange=1,maxUses=1,consumeAction=False,actionCost=1,
    source=dict(mode="remove"),
    spawn=dict(unitId="FF_X7",kitId="standard",inheritResources=False,hpRecoveryPercent=100,enRecoveryPercent=100,shieldRecoveryPercent=0,repairAllParts=True),
    sound=dict(file="../../sounds/Transform_4.ogg",volume=.6),effect="Light_75_NotAttached")]

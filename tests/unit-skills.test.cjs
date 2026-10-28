@@ -96,8 +96,9 @@ test("native ejection removes RX-78-1, creates one fully restored craft at the s
   assert.equal(craft.en, G.modelOf(craft).en);
   assert.deepEqual(craft.brokenParts, {});
   assert.deepEqual([craft.x, craft.y], [5, 5]);
-  assert.equal(craft.acted, true);
-  assert.equal(craft.moved, true);
+  assert.equal(craft.acted, false);
+  assert.equal(craft.moved, false);
+  assert.equal(craft.actionPoints, 4);
   assert.equal(craft.origin, null);
   assert.equal(craft.counterCount, 1, "ejection does not refresh counter availability");
   assert.equal(craft.skillUses["RX_78_1/ExitUnit"], 1);
@@ -221,7 +222,10 @@ test("configuration supports an independent ejected unit while retaining and rep
     assert.deepEqual(unit.brokenParts, {});
     assert.equal(craft.hp, Math.round(G.modelOf(craft).hp * 0.25));
     assert.equal(craft.en, G.modelOf(craft).en * 0.5);
-    assert.ok(unit.acted && craft.acted);
+    assert.equal(unit.acted, false);
+    assert.equal(craft.acted, false);
+    assert.equal(unit.actionPoints, 4);
+    assert.equal(craft.actionPoints, 4);
     assert.deepEqual(G.skillTargets(game, unit, skill.id), []);
   });
 });

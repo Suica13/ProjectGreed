@@ -1504,7 +1504,7 @@
       "range": 1,
       "minRange": 1,
       "maxUses": 1,
-      "consumeAction": true,
+      "consumeAction": false,
       "effect": "Light_75_NotAttached",
       "sound": {
         "file": "../../sounds/Transform_4.ogg",
@@ -1525,7 +1525,8 @@
         "enRecoveryPercent": 100,
         "shieldRecoveryPercent": 0,
         "repairAllParts": true
-      }
+      },
+      "actionCost": 1
     }
   ],
   "nativeCombatRevision": 1,

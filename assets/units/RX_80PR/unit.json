@@ -1374,7 +1374,7 @@
       "displayIndex": 0
     },
     "Common_ArmBR_Pink": {
-      "name": "光束炮",
+      "name": "腕部光束枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -1541,10 +1541,21 @@
         ]
       },
       "rangeRole": "short_secondary",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腕部光束枪"
+        },
+        "en": {
+          "name": "Wrist Beam Gun"
+        },
+        "ja": {
+          "name": "腕部ビームガン"
+        }
+      }
     },
     "Common_ArmBR_Pink_L": {
-      "name": "光束炮",
+      "name": "腕部光束枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -1718,10 +1729,21 @@
         ],
         "mergedInto": "Common_ArmBR_Pink"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腕部光束枪"
+        },
+        "en": {
+          "name": "Wrist Beam Gun"
+        },
+        "ja": {
+          "name": "腕部ビームガン"
+        }
+      }
     },
     "EF_RX_80PR_LegMS": {
-      "name": "EF RX 80PR LegMS",
+      "name": "腿部导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -1931,10 +1953,21 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腿部导弹发射器"
+        },
+        "en": {
+          "name": "Leg Missile Launcher"
+        },
+        "ja": {
+          "name": "脚部ミサイルランチャー"
+        }
+      }
     },
     "EF_RX_80PR_LegMS_L": {
-      "name": "EF RX 80PR LegMS L",
+      "name": "腿部导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -2147,7 +2180,18 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腿部导弹发射器"
+        },
+        "en": {
+          "name": "Leg Missile Launcher"
+        },
+        "ja": {
+          "name": "脚部ミサイルランチャー"
+        }
+      }
     },
     "EF_BeamSaber_AF_Fast_A": {
       "name": "光束军刀",

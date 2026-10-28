@@ -54,7 +54,8 @@ test("Magella separates a ground chassis from a fully restored flying top at the
     assert.equal(x.hp, G.modelOf(x).hp);
     assert.equal(x.en, G.modelOf(x).en);
     assert.equal(x.ownerSeat, 0);
-    assert.equal(x.acted, true);
+    assert.equal(x.acted, false);
+    assert.equal(x.actionPoints, 4);
     assert.equal(x.counterCount, 1);
   }
   assert.equal(G.modelOf(top).movementType, "air");
@@ -84,14 +85,15 @@ test("NT-1 FA and FA-78-1 purge in place, add native 35 percent resources and re
     assert.equal(u.customName, "Custom");
     assert.deepEqual(u.brokenParts, { leftArm: true });
     assert.equal(u.counterCount, 1);
-    assert.equal(u.acted, true);
+    assert.equal(u.acted, false);
+    assert.equal(u.actionPoints, 4);
     assert.equal(g.units.length, count);
   }
 });
-test("FA-78-1's purged body can eject next turn and transformations cannot heal or reset spent actions", () => {
+test("FA-78-1's purged body can eject again with remaining AP and transformations cannot heal or reset spent actions", () => {
   const { g, u } = pair("FA_78_1");
   G.useSkill(g, u, "ExitUnit", 10, 10);
-  assert.equal(G.canUseSkill(g, u, "ExitUnit"), false);
+  assert.equal(G.canUseSkill(g, u, "ExitUnit"), true);
   G.end(g);
   G.end(g);
   const e = G.useSkill(g, u, "ExitUnit", 11, 10),
@@ -208,17 +210,19 @@ test("any broken part immediately cancels flight and reversible forms, never pur
 });
 
 test("EXAM and HADES drain 25 percent maximum HP at the end of their own turn", () => {
-  for (const base of G.catalog.prefabs.filter(p =>
-    p.skills?.some(s => s.type === "overdrive" && ["EXAM","HADES"].includes(s.id)))) {
-    const {g,u}=pair(base.id);
-    const skill=G.unitSkills(u).find(s => s.type === "overdrive");
-    assert.equal(skill.hpDrainPercent,25,base.id);
-    G.useSkill(g,u,skill.id,u.x,u.y);
-    const before=u.hp,maximum=G.modelOf(u).hp;
-    assert.equal(u.overdrive.hpDrainPercent,25,base.id);
+  for (const base of G.catalog.prefabs.filter((p) =>
+    p.skills?.some((s) => s.type === "overdrive" && ["EXAM", "HADES"].includes(s.id)),
+  )) {
+    const { g, u } = pair(base.id);
+    const skill = G.unitSkills(u).find((s) => s.type === "overdrive");
+    assert.equal(skill.hpDrainPercent, 25, base.id);
+    G.useSkill(g, u, skill.id, u.x, u.y);
+    const before = u.hp,
+      maximum = G.modelOf(u).hp;
+    assert.equal(u.overdrive.hpDrainPercent, 25, base.id);
     G.end(g);
-    assert.equal(u.hp,before-Math.round(maximum*0.25),base.id);
-    assert.equal(u.overdrive.remaining,skill.duration-1);
+    assert.equal(u.hp, before - Math.round(maximum * 0.25), base.id);
+    assert.equal(u.overdrive.remaining, skill.duration - 1);
   }
 });
 
@@ -261,36 +265,91 @@ test("EXAM and HADES allow non-head damage and retain the form across hits and u
   }
 });
 
-
 test("new native ejections preserve pilots, restore spawned hulls and remove the parent", () => {
-  const space = Object.values(G.catalog.maps).find(m=>m.environment === "space").id;
-  for (const [source,target,inSpace] of [["RX_78_3","FF_X7",false],["RX_78GP01","FF_X_II",false],
-    ["RX_78GP01_FB","FF_X_II_FB",true],["RX_78GP03D","RX_78GP03S",true],["MSN_02","MSN_02_Head",true]]) {
-    const g=G.create(false,1,[[entry(source)],[entry("RGM_79")]],false,
-      {costLimit:99999,unitCostLimit:99999,...(inSpace?{mapId:space}:{})});
-    const u=g.units[0],enemy=g.units[1];Object.assign(u,{x:10,y:10,hp:1,en:0});Object.assign(enemy,{x:30,y:20});
-    if(!inSpace)g.tiles.forEach(row=>row.fill("plain"));
-    u.pilot=G.pilots.createCustom("custom-ejection-test","Pilot");
-    const pilot=u.pilot,owner=G.ownerOf(u),skill=G.unitSkills(u).find(s=>s.type === "escape");
-    assert.ok(skill,source);
-    const point=G.skillTargets(g,u,skill.id)[0];assert.ok(point,source);
-    const event=G.useSkill(g,u,skill.id,point.x,point.y);
-    const spawned=g.units.find(s=>s.id === event.resultId);
-    assert.ok(spawned,source);assert.equal(G.modelOf(spawned).prefabId,target);
-    assert.equal(spawned.pilot,pilot);assert.equal(G.ownerOf(spawned),owner);
-    assert.equal(spawned.hp,G.modelOf(spawned).hp);assert.equal(spawned.en,G.modelOf(spawned).en);
+  const space = Object.values(G.catalog.maps).find((m) => m.environment === "space").id;
+  for (const [source, target, inSpace] of [
+    ["RX_78_3", "FF_X7", false],
+    ["RX_78GP01", "FF_X_II", false],
+    ["RX_78GP01_FB", "FF_X_II_FB", true],
+    ["RX_78GP03D", "RX_78GP03S", true],
+    ["MSN_02", "MSN_02_Head", true],
+  ]) {
+    const g = G.create(false, 1, [[entry(source)], [entry("RGM_79")]], false, {
+      costLimit: 99999,
+      unitCostLimit: 99999,
+      ...(inSpace ? { mapId: space } : {}),
+    });
+    const u = g.units[0],
+      enemy = g.units[1];
+    Object.assign(u, { x: 10, y: 10, hp: 1, en: 0 });
+    Object.assign(enemy, { x: 30, y: 20 });
+    if (!inSpace) g.tiles.forEach((row) => row.fill("plain"));
+    u.pilot = G.pilots.createCustom("custom-ejection-test", "Pilot");
+    const pilot = u.pilot,
+      owner = G.ownerOf(u),
+      skill = G.unitSkills(u).find((s) => s.type === "escape");
+    assert.ok(skill, source);
+    const point = G.skillTargets(g, u, skill.id)[0];
+    assert.ok(point, source);
+    const event = G.useSkill(g, u, skill.id, point.x, point.y);
+    const spawned = g.units.find((s) => s.id === event.resultId);
+    assert.ok(spawned, source);
+    assert.equal(G.modelOf(spawned).prefabId, target);
+    assert.equal(spawned.pilot, pilot);
+    assert.equal(G.ownerOf(spawned), owner);
+    assert.equal(spawned.hp, G.modelOf(spawned).hp);
+    assert.equal(spawned.en, G.modelOf(spawned).en);
     assert.ok(!g.units.includes(u));
   }
 });
 
+test("new native armor purges preserve their pilot and use the existing in-place recovery contract", () => {
+  for (const [source, target] of [
+    ["RGM_79FP", "RGM_79C"],
+    ["FA_78_3", "RX_78_7"],
+  ]) {
+    const { g, u } = pair(source);
+    u.pilot = G.pilots.createCustom("custom-purge", "Pilot");
+    const pilot = u.pilot;
+    u.hp = G.modelOf(u).hp * 0.2;
+    u.en = G.modelOf(u).en * 0.2;
+    const skill = G.unitSkills(u).find((s) => s.type === "armor_purge");
+    assert.ok(skill, source);
+    G.useSkill(g, u, skill.id, u.x, u.y);
+    assert.equal(G.modelOf(u).prefabId, target);
+    assert.equal(u.pilot, pilot);
+    assert.equal(g.units.length, 2);
+    assert.equal(u.hp, Math.round(G.modelOf(u).hp * 0.55));
+  }
+});
 
-test("new native armor purges preserve their pilot and use the existing in-place recovery contract",()=>{
-  for (const [source,target] of [["RGM_79FP","RGM_79C"],["FA_78_3","RX_78_7"]]) {
-    const {g,u}=pair(source);u.pilot=G.pilots.createCustom("custom-purge","Pilot");
-    const pilot=u.pilot;u.hp=G.modelOf(u).hp*.2;u.en=G.modelOf(u).en*.2;
-    const skill=G.unitSkills(u).find(s=>s.type === "armor_purge");assert.ok(skill,source);
-    G.useSkill(g,u,skill.id,u.x,u.y);
-    assert.equal(G.modelOf(u).prefabId,target);assert.equal(u.pilot,pilot);
-    assert.equal(g.units.length,2);assert.equal(u.hp,Math.round(G.modelOf(u).hp*.55));
+test("purge and ejection cost exactly one AP, reject zero AP atomically and allow further combat", () => {
+  for (const id of ["RX_78NT_1_FA", "RX_78_1"]) {
+    for (const ap of [0, 1, 3]) {
+      const { g, u, enemy } = pair(id),
+        skill = G.unitSkills(u).find((s) => ["escape", "armor_purge"].includes(s.type));
+      u.actionPoints = ap;
+      const [x, y] = skill.type === "escape" ? [11, 10] : [10, 10];
+      if (!ap) {
+        const before = JSON.stringify(g);
+        assert.equal(G.canUseSkill(g, u, skill.id), false);
+        assert.throws(() => G.useSkill(g, u, skill.id, x, y));
+        assert.equal(JSON.stringify(g), before);
+        continue;
+      }
+      const e = G.useSkill(g, u, skill.id, x, y),
+        next = g.units.find((v) => v.id === e.resultId);
+      assert.equal(next.actionPoints, ap - 1);
+      assert.equal(next.acted, ap === 1);
+      assert.equal(next.moved, false);
+      if (ap > 1) {
+        Object.assign(enemy, { x: next.x + 2, y: next.y });
+        assert(
+          G.modelOf(next).weapons.some((w) => G.canAttack(g, next, enemy, w)),
+          id,
+        );
+        assert(G.reachable(g, next).size > 1, id);
+      }
+    }
   }
 });

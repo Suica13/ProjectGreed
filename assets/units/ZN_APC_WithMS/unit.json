@@ -533,7 +533,7 @@
       "actionCost": 3
     },
     "Common_DoubleMS_ZN_APC": {
-      "name": "Common DoubleMS ZN APC",
+      "name": "导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -669,7 +669,18 @@
         "energy": 20.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "导弹发射器"
+        },
+        "en": {
+          "name": "Missile Launcher"
+        },
+        "ja": {
+          "name": "ミサイルランチャー"
+        }
+      }
     }
   },
   "mechanics": [

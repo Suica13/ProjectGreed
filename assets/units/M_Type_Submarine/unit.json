@@ -535,7 +535,7 @@
   },
   "weapons": {
     "M_Type_Submarine_Turret_AMS": {
-      "name": "M Type Submarine Turret AMS",
+      "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -765,7 +765,18 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "反MS导弹"
+        },
+        "en": {
+          "name": "Anti-MS Missiles"
+        },
+        "ja": {
+          "name": "対MSミサイル"
+        }
+      }
     },
     "M_Type_Submarine_Turret_MS": {
       "name": "舰载导弹发射器",

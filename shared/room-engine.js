@@ -1404,10 +1404,15 @@ function createRoomEngine({
       room.startedFromSave ||
       kind === "loss" ||
       kind === "battle" ||
-      beforeLevel >= G.pilots.growthRules.maxLevel
+      beforeLevel >= G.pilots.maxLevel(actor.pilot)
         ? 0
         : Math.floor(points * rate);
-    actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints, { shipKill });
+    const requiresRecruitment =
+      !!actor.pilot.ace && kind === "loss" && room.settings.mode !== "quick";
+    actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints, {
+      shipKill,
+      requiresRecruitment,
+    });
     if (owner && !owner.bot)
       (room.pilotAwards ||= []).push({
         id: randomId(),
@@ -1421,6 +1426,7 @@ function createRoomEngine({
         unitId: actor.id,
         carrierId: actor.embarked?.carrierId,
         leveledUp: actor.pilot.level > beforeLevel,
+        requiresRecruitment,
       });
   }
   function recordPilotParticipation(room) {

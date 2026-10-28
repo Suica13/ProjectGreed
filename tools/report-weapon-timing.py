@@ -71,13 +71,16 @@ def main():
             units=", ".join(dict.fromkeys(item["unitId"] for item in grouped))
             lines.append(f"| {row['weaponId']} | {row['firstShot']}/{row['lastShot']} | {row['recovery']}/{row['duration']} | {row['cooldown']} | {row['projectiles']} | {row['en']} | {units} |")
     (ROOT/"武器时间与CD统计.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
+    from native_weapon_names import label as confirmed_label
     uncertain=defaultdict(list)
     for row in rows:
         name=row["displayName"]
+        if confirmed_label(row["weaponId"], {}, False):
+            continue
         # 有型号/口径的既有人工名称保留；泛称、占位英文和未确认新武器列出请用户命名。
         if name in ["近身格斗","光束炮","舰载光束炮","舰载机枪","舰载火神炮","舰载导弹发射器","机枪","火神炮","导弹发射器","光束狙击枪","狙击步枪","步兵班武器","航空炸弹","加农炮","迫击炮轰炸"] or (name.isascii() and any(c.isalpha() for c in name)):
             uncertain[row["weaponId"]].append(row)
-    naming=["# 武器命名待确认","",f"以下{len(uncertain)}个武器ID的显示名仍是泛称或占位名，先保留现状，等待用户提供命名规则。武器ID不改名；左右位和同类舰炮合并后仍保留来源。","", "| 武器ID | 当前显示名 | 出现单位 |", "| --- | --- | --- |"]
+    naming=["# 武器命名待确认","",f"以下{len(uncertain)}个武器ID的显示名仍是泛称或占位名，先保留现状，等待用户提供命名规则。已确认系列由`tools/native_weapon_names.py`维护。武器ID不改名；左右位和同类舰炮合并后仍保留来源。","", "| 武器ID | 当前显示名 | 出现单位 |", "| --- | --- | --- |"]
     for key,items in sorted(uncertain.items()):
         naming.append("| "+key+" | "+items[0]["displayName"]+" | "+", ".join(dict.fromkeys(item["unitId"] for item in items))+" |")
     naming += ["", "可按武器ID或一组前缀提供命名规则，例如：ArmGL、ArmBR、HandMG、AA、CN、BigGun、MS／AMS／SMS。不会凭ID猜测新的正式显示名。"]

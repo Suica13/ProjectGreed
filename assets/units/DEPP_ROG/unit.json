@@ -311,7 +311,7 @@
   },
   "weapons": {
     "Common_DoubleMS_DEPP_ROG": {
-      "name": "Common DoubleMS DEPP ROG",
+      "name": "双重导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -447,7 +447,18 @@
         "energy": 0.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "双重导弹发射器"
+        },
+        "en": {
+          "name": "Double Missile Launcher"
+        },
+        "ja": {
+          "name": "二連装ミサイルランチャー"
+        }
+      }
     },
     "Common_Bomb_DEPP_ROG": {
       "name": "航空炸弹",

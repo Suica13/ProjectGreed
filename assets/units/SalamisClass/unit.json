@@ -908,16 +908,16 @@
       "shipAccuracyMultiplier": 0.9
     },
     "SalamisClass_Turret_AMS": {
-      "name": "舰首鱼雷",
+      "name": "反MS导弹",
       "localization": {
         "zh": {
-          "name": "舰首鱼雷"
+          "name": "反MS导弹"
         },
         "en": {
-          "name": "Torpedoes"
+          "name": "Anti-MS Missiles"
         },
         "ja": {
-          "name": "艦首魚雷"
+          "name": "対MSミサイル"
         }
       },
       "type": "shell",
@@ -1095,16 +1095,16 @@
       "shipAccuracyMultiplier": 0.9
     },
     "SalamisClass_Turret_AA": {
-      "name": "对空炮",
+      "name": "对空机枪",
       "localization": {
         "zh": {
-          "name": "对空炮"
+          "name": "对空机枪"
         },
         "en": {
-          "name": "Anti-Air Guns"
+          "name": "Anti-Air Machine Gun"
         },
         "ja": {
-          "name": "対空砲"
+          "name": "対空機銃"
         }
       },
       "type": "shell",

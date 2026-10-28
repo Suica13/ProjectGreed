@@ -373,7 +373,7 @@
   },
   "weapons": {
     "BurkeClass_Turret_AMS": {
-      "name": "BurkeClass Turret AMS",
+      "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
@@ -513,7 +513,18 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "反MS导弹"
+        },
+        "en": {
+          "name": "Anti-MS Missiles"
+        },
+        "ja": {
+          "name": "対MSミサイル"
+        }
+      }
     },
     "BurkeClass_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -691,7 +702,7 @@
       "shipAccuracyMultiplier": 0.9
     },
     "BurkeClass_Turret_CN": {
-      "name": "BurkeClass Turret CN",
+      "name": "加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
@@ -822,7 +833,18 @@
       },
       "actionCost": 3,
       "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.9,
+      "localization": {
+        "zh": {
+          "name": "加农炮"
+        },
+        "en": {
+          "name": "Cannon"
+        },
+        "ja": {
+          "name": "カノン砲"
+        }
+      }
     },
     "BurkeClass_Turret_MG": {
       "name": "舰载机枪",

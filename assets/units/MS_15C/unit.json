@@ -1478,7 +1478,7 @@
       "actionCost": 3
     },
     "Common_ArmGL": {
-      "name": "Common ArmGL",
+      "name": "腕部榴弹发射器",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -1635,10 +1635,21 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腕部榴弹发射器"
+        },
+        "en": {
+          "name": "Wrist Grenade Launcher"
+        },
+        "ja": {
+          "name": "腕部グレネードランチャー"
+        }
+      }
     },
     "Common_ArmGL_L": {
-      "name": "Common ArmGL L",
+      "name": "腕部榴弹发射器",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -1802,7 +1813,18 @@
         ],
         "mergedInto": "Common_ArmGL"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "腕部榴弹发射器"
+        },
+        "en": {
+          "name": "Wrist Grenade Launcher"
+        },
+        "ja": {
+          "name": "腕部グレネードランチャー"
+        }
+      }
     },
     "ZN_YMS_15_BeamSaber_B2": {
       "name": "光束军刀",

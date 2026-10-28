@@ -330,4 +330,6 @@ def configure(prefab, native):
     from tactical_status import apply as apply_status
     from native_irradiation import apply as apply_irradiation
     from native_defensive_skills import apply as apply_defensive
-    return apply_defensive(apply_irradiation(apply_status(apply_refits(apply_pilot_weapons(apply_page_two(apply_era(prefab)), native), native), native), native), native)
+    from native_weapon_names import apply as apply_names
+    from native_conversions import apply_action_cost
+    return apply_action_cost(apply_names(apply_defensive(apply_irradiation(apply_status(apply_refits(apply_pilot_weapons(apply_page_two(apply_era(prefab)), native), native), native), native), native)))

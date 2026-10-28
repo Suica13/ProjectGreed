@@ -15,7 +15,7 @@ html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sen
 const project = JSON.parse(read("project.json"));
 const developmentTree = JSON.parse(read("shared/development-tree.json"));
 const pilotData = JSON.parse(read("shared/pilots.json"));
-for (const pilot of [...pilotData.named, ...pilotData.portraits]) {
+for (const pilot of [...pilotData.named, ...pilotData.portraits, ...(pilotData.aces || []), ...(pilotData.aces || []).flatMap(p => p.skills).filter(s => s.icon)]) {
   if (!/^assets\/pilots\/[\w-]+\.png$/.test(pilot.icon))
     throw Error("Invalid pilot icon: " + pilot.id);
   pilot.icon =
