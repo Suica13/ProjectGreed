@@ -19,11 +19,26 @@ const BattleHUD = (() => {
   const phaseControls = element("div", "hud-phase-controls");
   phaseControls.append(
     scene.querySelector(".phase-row"),
-    scene.querySelector(".map-camera-controls"),
+
   );
   const topControls = element("div", "hud-top-controls");
-  topControls.append(byId("hudTurnActions"));
+  topControls.append(scene.querySelector(".map-camera-controls"), byId("hudTurnActions"));
   byId("mapWrap").append(phaseControls, topControls);
+  const attackPlanSummary = element("section", "attack-plan-summary");
+  attackPlanSummary.id = "hudAttackPlanSummary";
+  attackPlanSummary.hidden = true;
+  scene.append(attackPlanSummary);
+  const cancelTargetSwitch = element("button", "primary", "取消更换目标");
+  cancelTargetSwitch.id = "cancelTargetSwitch";
+  cancelTargetSwitch.hidden = true;
+  scene.append(cancelTargetSwitch);
+  cancelTargetSwitch.onclick = () => {
+    if (phase === "reaction" && pending) {
+      counterDraft(getUnit(pending.target)).pickingTarget = false;
+      renderReaction();
+      update();
+    } else AttackControls.resumeTarget();
+  };
   const confirmMove = element("button", "primary", "确认移动");
   confirmMove.id = "hudConfirmMove";
   confirmMove.hidden = true;
@@ -138,6 +153,7 @@ const BattleHUD = (() => {
     update();
   }
   function cancelAction() {
+    if (AttackControls.changing()) return AttackControls.resumeTarget();
     if (pageView !== "game" || !["idle", "deployment"].includes(phase) || !pickingAction()) return;
     if (pendingMovement()) return finishMovement(false);
     window.HangarUI?.cancel();
@@ -256,6 +272,16 @@ const BattleHUD = (() => {
     }
     lastMode = mode;
     lastSelection = selected;
+    const counterPicking = phase === "reaction" && pending &&
+      counterDraft(getUnit(pending.target)).pickingTarget;
+    const pickingTarget = AttackControls.changing() || !!counterPicking;
+    scene.dataset.targetSwitch = String(pickingTarget);
+    scene.dataset.counterTargetSwitch = String(!!counterPicking);
+    attackPlanSummary.hidden = !(active && (
+      (AttackControls.changing() && AttackControls.renderSummary(attackPlanSummary,unit)) ||
+      (counterPicking && renderCounterSummary(attackPlanSummary,getUnit(pending.target)))));
+    cancelTargetSwitch.hidden = !active || !pickingTarget;
+    cancelTargetSwitch.textContent = I18n.text("取消更换目标");
     const actionActive =
       active && !!unit && ["idle", "deployment"].includes(phase) && pickingAction();
     scene.dataset.actionStage = actionActive ? mode : "none";

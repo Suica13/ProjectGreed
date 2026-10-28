@@ -676,3 +676,138 @@ body > #formationPilotPanel { z-index:1300; }
   .pilot-record-cell { font-size:10px; }
   #pilotAttributeHelp { padding:14px; }
 }
+
+/* Committed target queues remain visible while another target is being planned. */
+.committed-attack-plans { display:grid; gap:6px; padding:8px; margin-bottom:8px; background:#202936; border:1px solid #596b80; }
+.committed-attack-plan { display:flex; align-items:center; gap:8px; min-width:0; }
+.committed-attack-plan > span { flex:1; min-width:0; overflow-wrap:anywhere; font-size:11px; line-height:1.5; }
+.committed-attack-plan > button { flex:none; padding:5px 7px; min-height:30px; font-size:11px; }
+
+/* Shared weapon cards: name and attributes, damage equation, accuracy, then details. */
+.weapon-card,
+#formationUnitDetail .weapon-card,
+#gameScene .weapon-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #526174;
+  border-radius: 4px;
+  background: #252c36;
+  color: #eef3f9;
+  box-shadow: none;
+}
+.weapon-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 14px;
+  min-width: 0;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+.weapon-summary-heading {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  min-width: 0;
+}
+.weapon-summary .weapon-name { font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.weapon-attributes { display: flex; flex-wrap: wrap; gap: 4px; }
+.weapon-attribute {
+  border: 1px solid #63809a;
+  border-radius: 3px;
+  background: #303c4a;
+  color: #d3eaff;
+  padding: 1px 6px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.weapon-stat-label { display: block; color: #b3c0ce; font-size: 10px; line-height: 1.5; }
+.weapon-damage-line { min-width: 0; }
+.weapon-damage-formula { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; font-size: 13px; line-height: 1.6; }
+.weapon-damage-term { display: inline-flex; align-items: baseline; gap: 4px; white-space: nowrap; }
+.weapon-math-symbol { color: #9caabd; font-weight: 400; }
+.weapon-total-damage { color: #8bd2ff; font-size: 16px; }
+.weapon-accuracy { align-self: start; text-align: right; white-space: nowrap; color: #eef3f9; }
+.weapon-accuracy strong { font-size: 15px; line-height: 1.6; }
+.weapon-unavailable { grid-column: 1 / -1; color: #ffb6ae; font-size: 11px; }
+.weapon-card > .weapon,
+#gameScene .weapon-card > .weapon,
+#gameScene #hudUnitPanel .hud-attack-available .weapon-card > .weapon {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.weapon-card:has(> button.weapon:not(:disabled)):hover { border-color: #90cfff; background: #2b3542; }
+.weapon-card:has(> .weapon.active) { border-color: #80caff; background: #2a3746; }
+.weapon-card > button.weapon:focus-visible { outline: 2px solid #83ceff; outline-offset: 4px; }
+.weapon-card > button.weapon:disabled { opacity: .55; }
+.weapon-card .weapon-inspector { margin-top: 10px; padding-top: 7px; border-top: 1px solid #465263; }
+.weapon-card .weapon-inspector > summary { color: #bddfff; font-size: 11px; cursor: pointer; }
+.weapon-card .weapon-inspector-body { gap: 10px; color: #d4deea; font-size: 11px; }
+.weapon-card .weapon-inspector-body p { margin: 0; line-height: 1.6; }
+.weapon-detail-stats { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 12px; margin: 0; }
+.weapon-detail-stats dt { color: #acbccd; }
+.weapon-detail-stats dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.weapon-detail-note { color: #abb8c7; }
+.weapon-timeline > summary { cursor: pointer; color: #bfd3e8; }
+.weapon-card .weapon-effect-tags { margin: 0; gap: 4px; }
+.weapon-card .weapon-effect-tag { background: #303846; border-color: #546479; color: #dce7f3; }
+.weapon-plan-entry { display: grid; grid-template-columns: 22px minmax(0, 1fr); align-items: start; gap: 6px; margin: 7px 0; }
+.weapon-plan-index { color: #9dc9ec; font-size: 12px; line-height: 25px; text-align: center; }
+.weapon-plan-entry .weapon-card { padding: 9px; }
+#gameScene #hudUnitPanel .hud-attack-available .weapon-list,
+#gameScene .weapon-list {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: none;
+  grid-auto-columns: auto;
+  gap: 8px;
+  align-items: start;
+  overflow-x: hidden;
+}
+#gameScene #counterList {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  max-height: none;
+  overflow: visible;
+}
+#gameScene #counterQueue { min-width: 0; margin: 0 0 8px; }
+#gameScene #counterQueue > .helper { margin: 4px 0 8px; }
+
+.attack-plan-line {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 6px;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid #455060;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.attack-plan-weapon, .attack-plan-target { min-width: 0; overflow-wrap: anywhere; }
+.attack-plan-target { color: #b8dfff; }
+.attack-plan-arrow { color: #9baabd; }
+#gameScene #hudAttackPlanSummary {
+  position: absolute;
+  z-index: 12;
+  left: 12px;
+  bottom: 70px;
+  width: min(340px, calc(100% - 24px));
+  max-height: 30%;
+  overflow-y: auto;
+  padding: 10px 12px;
+  border: 1px solid #62778f;
+  border-radius: 4px;
+  background: #252c36f2;
+  color: #eef3f9;
+}

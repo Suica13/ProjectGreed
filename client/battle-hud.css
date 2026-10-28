@@ -1833,3 +1833,50 @@ body.replay-active #gameScene .hud-terrain-strip {
 @media(max-width:1100px), (max-height:600px) and (orientation:landscape) {
   #gameScene .hud-phase-controls { top:8px; left:8px; width:calc(50% - 16px); }
 }
+
+/* Camera controls stay immediately to the left of the turn confirmation. */
+#gameScene .hud-top-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  left: auto;
+  z-index: 11;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  max-width: calc(100% - 24px);
+}
+#gameScene .hud-top-controls #hudTurnActions,
+#gameScene .hud-top-controls .map-camera-controls {
+  position: static;
+  transform: none;
+  width: auto;
+  margin: 0;
+  flex-wrap: nowrap;
+}
+#gameScene .hud-top-controls #hudTurnActions button {
+  min-width: 0;
+  padding-inline: 12px;
+}
+#gameScene #cancelTargetSwitch {
+  position: absolute;
+  z-index: 31;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 180px;
+}
+#gameScene[data-target-switch="true"] #hudActionBand,
+#gameScene[data-target-switch="true"] #hudUnitPanel,
+#gameScene[data-target-switch="true"] #hudUnitCommands,
+#gameScene[data-counter-target-switch="true"] #reaction {
+  display: none !important;
+}
+@media (max-width: 720px) {
+  #gameScene .hud-top-controls { top: 6px; right: 6px; gap: 4px; }
+  #gameScene .hud-top-controls .map-camera-controls { gap: 2px; }
+  #gameScene .hud-top-controls .map-camera-controls button { min-width: 26px; padding-inline: 5px; }
+  #gameScene .hud-top-controls #hudTurnActions button { font-size: 11px; padding: 8px; }
+}

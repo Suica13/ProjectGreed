@@ -1415,3 +1415,31 @@ body.menu-shell-active #formationMain .formation-toolbar #openFormationShare { w
 #formationScreen .formation-unit-actions :is(#openFormationPicker,#produceMissingFormation) {
   flex:1 1 0; width:0; min-width:0;
 }
+
+/* The battle seat viewer is a bounded dialog, independent of the pre-battle shell. */
+#roomPreparation #roomMain[data-in-battle="true"] {
+  box-sizing:border-box; width:min(1100px,100%); height:calc(100dvh - 36px);
+  min-height:0; max-height:calc(100dvh - 36px);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+#roomPreparation #roomMain[data-in-battle="true"] > :is(.lobby-heading,#roomStatus,#roomMobileTabs,#roomActions) {
+  flex-shrink:0;
+}
+#roomPreparation #roomMain[data-in-battle="true"] .room-columns {
+  flex:1 1 auto; min-height:0; overflow:hidden; grid-template-rows:minmax(0,1fr);
+}
+#roomPreparation #roomMain[data-in-battle="true"] .room-controls {
+  min-height:0; overflow-y:auto; overflow-x:hidden;
+}
+#roomPreparation #roomMain[data-in-battle="true"] #roomChatPanel {
+  min-height:0; overflow:hidden;
+}
+#roomPreparation #roomMain[data-in-battle="true"] #roomActions {
+  max-height:30dvh; overflow-y:auto; flex-wrap:wrap;
+}
+@media(max-width:700px), (max-height:600px) and (orientation:landscape) {
+  #roomPreparation #roomMain[data-in-battle="true"] {
+    height:100%; max-height:100%; width:100%;
+  }
+  #roomPreparation #roomMain[data-in-battle="true"] #roomActions { padding-top:6px; }
+}

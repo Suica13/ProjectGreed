@@ -1196,7 +1196,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 4
     },
     "ZN_MMP80MG_Kai": {
@@ -1607,7 +1607,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 0
     },
     "ZN_120mmMG_AntiAir": {

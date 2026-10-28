@@ -165,18 +165,22 @@ const UnitHangars = {
         })).concat(route.slice(1));
       return { carrierId, from, path };
     }
+    function launchAngle(path, from, x, y, fallback) {
+      const previous = [...path].reverse().find(point => point.x !== x || point.y !== y) || from;
+      return previous.x === x && previous.y === y ? fallback :
+        Math.atan2(x-previous.x,-(y-previous.y)) * 180 / Math.PI;
+    }
     function previewLaunch(g, u, x, y, seat = u.ownerSeat ?? u.team) {
       if (g.units.some(actor => actor.pendingMove?.seat === seat) || u.pendingMove) throw Error("请先确认或取消移动");
       const plan = prepareLaunch(g, u, x, y);
-      const previous = plan.path.at(-2) || plan.from;
-      const angle = Math.atan2(x - previous.x, -(y - previous.y)) * 180 / Math.PI;
+      const angle = launchAngle(plan.path,plan.from,x,y,u.angle);
       u.pendingMove = { x, y, angle, seat, launch: true, ...plan };
       return { type: "move_preview", unitId:u.id, ...plan, x, y };
     }
     function launch(g, u, x, y) {
       const { carrierId, from, path } = prepareLaunch(g, u, x, y);
       delete u.embarked;
-      Object.assign(u, { x, y, origin: null });
+      Object.assign(u, { x, y, angle:launchAngle(path,from,x,y,u.angle), origin: null });
       if (!deploying(g)) {
         u.moved = true;
         u.lastLaunchRound = g.round;

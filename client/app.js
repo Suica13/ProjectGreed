@@ -224,46 +224,47 @@ function attackForecastText(forecast) {
   );
 }
 function htmlWeapon(w, u, target = null, response = "counter", isCounter = false) {
-  w = Rules.weaponStats(w, u);
-  const liveStrikes = Rules.availableStrikes(u, w),
-    liveShots = new Set(liveStrikes.map((step) => step.shotIndex)).size,
-    damage = liveStrikes.reduce(
-      (sum, step) =>
-        sum +
-        Object.values(step.damageComponents || w.damageComponents).reduce((n, v) => n + v, 0) *
-          (step.damageMultiplier ?? 1),
-      0,
-    );
-  const damageLabel = w.attack.strikes.some((s) => s.damageMultiplier !== 1)
-    ? "分段 " +
-      w.attack.strikes.map((s) => formatNumber(w.damagePerShot * s.damageMultiplier)).join(" + ")
-    : "单发 " +
-      formatNumber(w.damagePerShot) +
-      " × " +
-      (liveShots < w.shotCount ? liveShots + "/" + w.shotCount : w.shotCount) +
-      " 发" +
-      (w.hitsPerShot > 1 ? " × " + w.hitsPerShot + " 段" : "");
-  const broken = Rules.brokenWeaponParts(u, w);
-  const forecast = target ? attackForecast(u, target, w, response, isCounter) : null;
-  const totals = forecast
-    ? `<br /><span class="attack-forecast" data-damage="${forecast.damage}" data-hit="${forecast.hit}">${attackForecastText(forecast)}</span>`
-    : ` = ${formatNumber(damage)}　命中 ${w.hit}%`;
-  return /* HTML */ `<div class="weapon-title">
-      <span class="weapon-name">${w.name}</span
-      ><span class="type ${w.type}">${Rules.typeNames[w.type]}</span>
-    </div>
-    <div class="weapon-meta">
-      射程 ${w.min}–${w.max}　${damageLabel}${totals}<br />EN ${w.en} / 剩余 ${u.en} · AP
-      ${Rules.actionCost(w)}
-      ${Number.isInteger(w.maxUses) ? `<br />${I18n.text("剩余次数")} ${Math.max(0, w.maxUses - (u.weaponUses?.[w.id] || 0))}/${w.maxUses}` : ""}
-      ${["mortar", "snipe"].includes(w.special?.type) ? `<br />CD 1 ${I18n.text("回合")}${Rules.weaponCooldown(u, w) ? ` · <span class="red">${I18n.text("冷却中")}</span>` : ""}` : ""}
-      ${w.nativePayload?.DpDamage ? `<br />DP ${formatNumber(w.nativePayload.DpDamage)}` : ""}
-      ${w.nativeTiming ? `<br />${I18n.text("流程")} ${Number(w.nativeTiming.duration.toFixed(3))}s · ${I18n.text("原CD")} ${Number(w.nativeTiming.cooldown.toFixed(3))}s` : ""}
-      ${broken.length ? `<br /><span class="red">${broken.map((part) => I18n.text(Rules.partNames[part])).join(" / ")} · ${I18n.text("部位损坏，无法使用")}</span>` : ""}
-    </div>`;
+  return WeaponInfo.summary(w, {unit:u, target, response, isCounter}).outerHTML;
 }
+// Rebuilt panel contents retain their local view state without affecting game state.
+function capturePanelView(root) {
+  if (!root) return null;
+  const entries = [];
+  function visit(node, path) {
+    if (node === root || node.scrollTop || node.scrollLeft || node.tagName === "DETAILS")
+      entries.push({ id:node.id, path, top:node.scrollTop, left:node.scrollLeft,
+        open:node.tagName === "DETAILS" ? node.open : undefined });
+    [...node.children].forEach((child,index) => visit(child,[...path,index]));
+  }
+  visit(root,[]);
+  return { root, entries };
+}
+function restorePanelView(state) {
+  if (!state) return;
+  const resolve = entry => entry.id ? document.getElementById(entry.id) :
+    entry.path.reduce((parent,index) => parent?.children[index],state.root);
+  for (const entry of state.entries) {
+    const node = resolve(entry);
+    if (node?.tagName === "DETAILS" && entry.open !== undefined) node.open = entry.open;
+  }
+  for (const entry of state.entries) {
+    const node = resolve(entry);
+    if (node) { node.scrollTop = entry.top; node.scrollLeft = entry.left; }
+  }
+}
+let renderedPanelSelection = null;
 // 刷新顶栏、单位列表、提示和右侧指令，不推进回合。
 function update() {
+  const key = session + ":" + selected;
+  const views = renderedPanelSelection === key
+    ? ["hudUnitPanel","unitPanel","hudAttackPlanner"].map(id => capturePanelView(byId(id))) : [];
+  try { updateContents(); }
+  finally {
+    if (key === session + ":" + selected) views.forEach(restorePanelView);
+    renderedPanelSelection = session + ":" + selected;
+  }
+}
+function updateContents() {
   const pendingMove = pendingMovement();
   if (!pendingMove && mode === "move-confirm") mode = "select";
   if (pendingMove && ["idle", "deployment"].includes(phase)) {
@@ -890,7 +891,7 @@ function renderPanel() {
         if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
         update();
       };
-      list.append(WeaponInfo.card(w, b));
+      list.append(WeaponInfo.card(w, b, {unit:u}));
     }
     if (skills) SkillControls.render(list, u, canCommand);
     container.append(list);
@@ -918,17 +919,17 @@ function renderPanel() {
     }
   }
   let info = u.plan
-    ? "已计划攻击序列：本队结束规划后依次执行，可取消计划重新选择。"
+    ? "已确认的目标计划将在本队结束规划后依次执行；剩余AP可继续用于其他目标，也可修改或移除已有计划。"
     : u.acted
       ? "本单位行动已经结束。"
       : !own
         ? "当前是对手的单位，可查看其射程与资源。"
         : u.moved
           ? "已移动：仍可攻击或待机。攻击后不可再移动。"
-          : "移动可选；原地攻击也会结束本单位行动。";
+          : "移动可选；确认攻击计划后不可再移动，剩余AP可继续规划其他目标。";
   weaponSection.append(element("div", "rule-box", info));
   if (Net.active && u.plan && Net.canControl(u) && phase === "idle") {
-    const cancel = element("button", "", "取消攻击计划");
+    const cancel = element("button", "", "取消全部攻击计划");
     cancel.id = "cancelAttackPlan";
     cancel.disabled = !Net.canAct();
     cancel.onclick = () => Net.request("cancel_attack", { unitId: u.id });
@@ -1772,11 +1773,11 @@ function drawMap(now) {
   EnvironmentVisuals.drawWater(ctx, now, mapPosition, tile);
   if (!immersive) PlanningUI.arrows(ctx);
   // Radar contacts reveal only location, never a selectable enemy or its model/HP.
-  if (!immersive && game.intel) {
+  if (!immersive && intel) {
     ctx.save();
     ctx.strokeStyle = "#ff4545";
     ctx.lineWidth = 2;
-    for (const contact of game.intel.radarContacts) {
+    for (const contact of intel.radarContacts || []) {
       const p = mapPosition(contact.x, contact.y),
         size = Math.max(10, tile * 0.65);
       ctx.strokeRect(p.x - size / 2, p.y - size / 2, size, size);
@@ -1881,7 +1882,7 @@ byId("map").onclick = async (e) => {
     u.team === game.team &&
     (!Net.active || Net.canControl(u)) &&
     (!u.acted || u.plan) &&
-    ["select", "move", "attack-target"].includes(mode) &&
+    ["select", "move", "attack-target", "attack-weapons"].includes(mode) &&
     AttackControls.canTarget(u, target)
   ) {
     AttackControls.choose(u, target);
@@ -2033,10 +2034,35 @@ function counterDraft(unit) {
   const key = pending?.id || pending;
   if (!counterDraftState || counterDraftState.key !== key || counterDraftState.session !== session)
     counterDraftState = { key, session, ids: counterId ? [counterId] : [] };
-  return counterDraftState;
+  const draft = counterDraftState;
+  if (!draft.entries) {
+    const targets = pending.counterTargets || [{attacker:pending.attacker}];
+    const targetId = targets.some(entry => entry.attacker === counterTargetId) ? counterTargetId : pending.attacker;
+    draft.entries = draft.ids.map(weaponId => ({weaponId,targetId}));
+  }
+  return draft;
 }
 function counterWeapons(unit) {
-  return counterDraft(unit).ids.map((id) => getWeapon(unit, id));
+  return counterDraft(unit).entries.filter(entry => entry.targetId === counterTargetId)
+    .map(entry => getWeapon(unit,entry.weaponId));
+}
+function counterOrders(unit) {
+  return counterDraft(unit).entries.map(entry => ({targetId:entry.targetId,weaponIds:[entry.weaponId]}));
+}
+function renderCounterSummary(panel,unit) {
+  panel.replaceChildren();
+  const entries = unit && counterDraft(unit).entries;
+  if (!entries?.length) return false;
+  panel.append(element("div","section-title","反击武器序列"));
+  entries.forEach((entry,index) => {
+    const row = element("div","attack-plan-line"), target = getUnit(entry.targetId);
+    row.append(element("span","weapon-plan-index",String(index+1)),
+      element("span","attack-plan-weapon",getWeapon(unit,entry.weaponId)?.name || entry.weaponId),
+      element("span","attack-plan-arrow","→"),
+      element("span","attack-plan-target",target ? unitName(target) : I18n.text("目标已不可见")));
+    panel.append(row);
+  });
+  return true;
 }
 // 应战弹窗展示预估值，不扣血或消耗资源。
 function renderReaction() {
@@ -2155,9 +2181,10 @@ function renderReaction() {
     byId(id).classList.toggle("active", response === value);
   byId("responseCounter").disabled = !targets.some((entry) => available(entry).length);
   const draft = counterDraft(b),
-    queue = counterWeapons(b);
-  const spentAP = queue.reduce((sum, w) => sum + Rules.actionCost(w), 0),
-    spentEN = queue.reduce((sum, w) => sum + Rules.weaponStats(w, b).en, 0);
+    queue = counterWeapons(b),
+    allQueue = draft.entries.map(entry => getWeapon(b,entry.weaponId));
+  const spentAP = allQueue.reduce((sum, w) => sum + Rules.actionCost(w), 0),
+    spentEN = allQueue.reduce((sum, w) => sum + Rules.weaponStats(w, b).en, 0);
   byId("counterActionPoints").textContent =
     `反击行动点 ${Rules.counterActionBudget(b) - spentAP}/${Rules.counterActionBudget(b)} · EN ${spentEN}/${b.en}`;
   byId("counterList").replaceChildren();
@@ -2168,43 +2195,51 @@ function renderReaction() {
       element("div", "section-title", "反击武器序列"),
       element("p", "helper", "点击武器追加反击，可重复加入。"),
     );
-    queue.forEach((weapon, index) => {
-      const row = element("div", "actions");
-      const details = element("div", "");
-      details.append(
-        element("div", "", `${index + 1}. ${weapon.name} · ${Rules.actionCost(weapon)} AP`),
-        element(
-          "div",
-          "helper",
-          attackForecastText(attackForecast(b, selectedEnemy, weapon, "counter", true)),
-        ),
-      );
-      row.append(details);
+    draft.entries.forEach((entry,index) => {
+      const row = element("div", "attack-plan-line");
+      const enemy = getUnit(entry.targetId);
+      row.append(element("span", "weapon-plan-index", String(index+1)),
+        element("span", "attack-plan-weapon", getWeapon(b,entry.weaponId)?.name || entry.weaponId),
+        element("span", "attack-plan-arrow", "→"),
+        element("span", "attack-plan-target", enemy ? unitName(enemy) : I18n.text("目标已不可见")));
       planned.append(row);
     });
     const clear = element("button", "", "清空计划");
     clear.id = "clearCounterQueue";
-    clear.disabled = !!Net.awaiting || !queue.length;
+    clear.disabled = !!Net.awaiting || !allQueue.length;
     clear.onclick = () => {
+      draft.entries = [];
       draft.ids = [];
       renderReaction();
     };
-    planned.append(clear);
-    if (!queue.length) planned.append(element("p", "helper", "尚未添加武器"));
-    byId("counterList").append(planned);
+    const change = element("button", "", "更换目标");
+    change.id = "changeCounterTarget";
+    change.disabled = !!Net.awaiting || !legalTargets.some(entry => {
+      const enemy = getUnit(entry.attacker);
+      return available(entry).some(weapon => {
+        try { Rules.counterPlan(game,b,[...counterOrders(b),{targetId:enemy.id,weaponIds:[weapon.id]}]); return true; }
+        catch { return false; }
+      });
+    });
+    change.onclick = () => {
+      draft.pickingTarget = true;
+      update();
+    };
+    planned.append(clear, change);
+    if (!allQueue.length) planned.append(element("p", "helper", "尚未添加武器"));
+    byId("counterList").append(planned, element("div", "section-title", "可用武器"));
     for (const cw of Rules.modelOf(b).weapons) {
       let button = element("button", "weapon" + (cw.id === counterId ? " active" : ""));
       const candidate = available(selectedTarget).some((w) => w.id === cw.id)
         ? selectedTarget
         : null;
       const enemy = candidate && getUnit(candidate.attacker);
-      const previous = enemy && queue.filter((w) => Rules.canCounter(game, b, enemy, w));
       button.innerHTML = htmlWeapon(cw, b, enemy || selectedEnemy, "counter", true);
       button.dataset.addCounterWeapon = cw.id;
       button.disabled = !!Net.awaiting || !candidate;
       if (!button.disabled) {
         try {
-          Rules.counterQueue(game, b, enemy, [...previous, cw]);
+          Rules.counterPlan(game,b,[...counterOrders(b),{targetId:enemy.id,weaponIds:[cw.id]}]);
         } catch {
           button.disabled = true;
         }
@@ -2214,16 +2249,17 @@ function renderReaction() {
         GameAudio.play("selectWeaponSound");
         counterId = cw.id;
         counterTargetId = candidate.attacker;
-        draft.ids = [...previous.map((w) => w.id), cw.id];
+        draft.entries.push({weaponId:cw.id,targetId:candidate.attacker});
+        draft.ids = counterWeapons(b).map(weapon => weapon.id);
         renderReaction();
       };
-      byId("counterList").append(WeaponInfo.card(cw, button));
+      byId("counterList").append(WeaponInfo.card(cw, button, {unit:b, target:enemy || selectedEnemy, response:"counter", isCounter:true}));
     }
   }
-  let counter =
-    response === "counter" && queue.length
-      ? attackForecast(b, selectedEnemy, queue, "counter", true)
-      : null;
+  const forecasts = response === "counter" ? draft.entries.map(entry =>
+    attackForecast(b,getUnit(entry.targetId),getWeapon(b,entry.weaponId),"counter",true)) : [];
+  const counter = forecasts.length ? {damage:forecasts.reduce((sum,item) => sum+item.damage,0),
+    hit:forecasts.reduce((sum,item) => sum+item.hit,0)/forecasts.length} : null;
   byId("incomingEstimate").replaceChildren(
     element("span", "", "来袭单位"),
     document.createTextNode(" " + targets.length),
@@ -2233,7 +2269,7 @@ function renderReaction() {
   let validQueue = true;
   if (response === "counter") {
     try {
-      Rules.counterQueue(game, b, selectedEnemy, queue);
+      Rules.counterPlan(game,b,counterOrders(b));
     } catch {
       validQueue = false;
     }
@@ -2265,22 +2301,14 @@ function legalCounterTargets() {
 function selectCounterTarget(id) {
   if (Net.awaiting || !legalCounterTargets().some((entry) => entry.attacker === id)) return false;
   if (Net.active && !Net.canControl(getUnit(pending.target))) return false;
+  const defender = getUnit(pending.target), draft = counterDraft(defender);
   counterTargetId = id;
-  const defender = getUnit(pending.target),
-    draft = counterDraft(defender),
-    enemy = getUnit(id);
-  const entry = legalCounterTargets().find((entry) => entry.attacker === id);
-  try {
-    if (draft.ids.some((weaponId) => entry.options && !entry.options.includes(weaponId)))
-      throw Error("目标不支持当前武器");
-    Rules.counterQueue(game, defender, enemy, counterWeapons(defender));
-  } catch {
-    draft.ids = [];
-    counterId = null;
-  }
-  Rules.faceTarget(defender, enemy);
+  draft.ids = counterWeapons(defender).map(weapon => weapon.id);
+  counterId = draft.ids.at(-1) || null;
+  draft.pickingTarget = false;
   GameAudio.play("lockonSound");
   renderReaction();
+  update();
   return true;
 }
 byId("counterTarget").onchange = () => selectCounterTarget(byId("counterTarget").value);
@@ -2293,6 +2321,7 @@ function commitAttack() {
       counterId,
       counterIds: counterDraft(getUnit(pending.target)).ids,
       counterTargetId,
+      counterOrders: response === "counter" ? counterOrders(getUnit(pending.target)) : undefined,
     });
     return;
   }

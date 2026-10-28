@@ -686,6 +686,7 @@ const RoomPanel = (() => {
     Chat.refreshNames(snapshot);
     renderSettings(snapshot, busy);
     const inBattle = snapshot.started && snapshot.phase !== "assembly";
+    byId("roomMain").dataset.inBattle = String(inBattle);
     byId("roomFormationControls").hidden = inBattle;
     const shareButton = byId("shareUnitsToAllies");
     shareButton.hidden = !inBattle;

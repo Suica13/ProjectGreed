@@ -66,7 +66,14 @@ const HangarUI = (() => {
     box.append(icon, info);
     return box;
   }
+  let renderedView = null;
   function render() {
+    const key = JSON.stringify([session,inspected,statusUnit,boardingCarrier]);
+    const view = renderedView === key ? capturePanelView(dialog) : null;
+    try { renderContents(); }
+    finally { restorePanelView(view); renderedView = key; }
+  }
+  function renderContents() {
     const selectedUnit = getUnit(inspected);
     if (
       !selectedUnit ||
@@ -186,7 +193,7 @@ const HangarUI = (() => {
       for (const weapon of m.weapons) {
         const item = element("div", "weapon");
         item.innerHTML = htmlWeapon(weapon, cargo);
-        weapons.append(item);
+        weapons.append(WeaponInfo.card(weapon,item,{unit:cargo}));
       }
       content.append(weapons);
     } else statusUnit = null;

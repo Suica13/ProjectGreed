@@ -1212,7 +1212,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 0
     },
     "ZN_MS_09_ChestBeam": {
@@ -1506,7 +1506,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 3
     },
     "ZN_HeatSaber_AF_A": {
       "name": "热能军刀",

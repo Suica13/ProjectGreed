@@ -1478,6 +1478,22 @@ const Tactics = (() => {
   function actionCost(w) {
     return w.actionCost ?? 2;
   }
+  function attackOrders(unit) {
+    return unit.plan ? unit.plan.attacks || [unit.plan] : [];
+  }
+  function attackPlanFor(unit, target) {
+    return attackOrders(unit).find(order => order.target === target?.id);
+  }
+  function attackBudget(unit, target) {
+    const others = attackOrders(unit).filter(order => order.target !== target?.id);
+    const weapons = others.flatMap(order => (order.weapons || [order.weapon])
+      .map(id => modelOf(unit).weapons.find(weapon => weapon.id === id)).filter(Boolean));
+    return {
+      ap: actionPoints(unit) + (attackPlanFor(unit, target)?.actionCost || 0),
+      en: unit.en - weapons.reduce((sum, weapon) => sum + weaponStats(weapon, unit).en, 0),
+      weapons,
+    };
+  }
   function attackQueue(g, u, target, weapons) {
     if (!Array.isArray(weapons) || !weapons.length || weapons.length > 32)
       throw Error("请选择有效的武器序列");
@@ -1485,17 +1501,19 @@ const Tactics = (() => {
       throw Error("武器、目标、射程或部位条件不满足");
     if (weapons.some((w) => w.slot === "skill") && weapons.length !== 1)
       throw Error("技能武器须独立使用");
-    for (const weapon of new Set(weapons))
-      if (
-        Number.isInteger(weapon.maxUses) &&
-        (u.weaponUses?.[weapon.id] || 0) + weapons.filter((entry) => entry === weapon).length >
-          weapon.maxUses
-      )
-        throw Error("\u8be5\u6b66\u5668\u7684\u4f7f\u7528\u6b21\u6570\u5df2\u7ecf\u8017\u5c3d");
+    const budget = attackBudget(u, target);
+    const allWeapons = [...budget.weapons, ...weapons];
+    if (allWeapons.length > 32) throw Error("攻击计划最多包含32次武器使用");
+    if (allWeapons.filter(weapon => weapon.special?.type === "snipe").length > 1)
+      throw Error("同一单位只能保留一个狙击蓄力计划");
+    for (const weapon of new Set(allWeapons))
+      if (Number.isInteger(weapon.maxUses) &&
+          (u.weaponUses?.[weapon.id] || 0) + allWeapons.filter(entry => entry.id === weapon.id).length > weapon.maxUses)
+        throw Error("该武器的使用次数已经耗尽");
     const ap = weapons.reduce((n, w) => n + actionCost(w), 0);
     const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
-    if (ap > actionPoints(u) + (u.plan?.actionCost ?? 0)) throw Error("行动点不足");
-    if (en > u.en) throw Error("武器序列总EN不足");
+    if (ap > budget.ap) throw Error("行动点不足");
+    if (en > budget.en) throw Error("武器序列总EN不足");
     return { ap, en };
   }
   function counterQueue(g, u, target, weapons) {
@@ -1510,6 +1528,28 @@ const Tactics = (() => {
     if (ap > counterActionBudget(u)) throw Error("反击行动点不足");
     if (en > u.en) throw Error("反击武器序列总EN不足");
     return { ap, en };
+  }
+  function counterPlan(g, unit, orders) {
+    if (!Array.isArray(orders) || !orders.length || orders.length > 32)
+      throw Error("请选择有效的反击武器序列");
+    const weapons = [];
+    for (const order of orders) {
+      const target = g.units.find(target => target.id === order?.targetId);
+      const ids = order?.weaponIds;
+      if (!target || !Array.isArray(ids) || !ids.length) throw Error("反击目标或武器无效");
+      const queue = ids.map(id => modelOf(unit).weapons.find(weapon => weapon.id === id));
+      counterQueue(g,unit,target,queue);
+      weapons.push(...queue);
+    }
+    if (weapons.length > 32 || weapons.reduce((sum,w) => sum + actionCost(w),0) > counterActionBudget(unit))
+      throw Error("反击行动点不足");
+    if (weapons.reduce((sum,w) => sum + weaponStats(w,unit).en,0) > unit.en)
+      throw Error("反击武器序列总EN不足");
+    if (weapons.some(w => w.slot === "skill") && weapons.length !== 1) throw Error("技能武器须独立使用");
+    for (const weapon of new Set(weapons))
+      if (Number.isInteger(weapon.maxUses) && (unit.weaponUses?.[weapon.id] || 0) +
+        weapons.filter(w => w.id === weapon.id).length > weapon.maxUses) throw Error("该武器的使用次数已经耗尽");
+    return weapons;
   }
   function weaponCooldown(u, w) {
     return u.weaponCooldowns?.[w?.id] || 0;
@@ -1809,12 +1849,13 @@ const Tactics = (() => {
     return g.seed / 4294967296;
   }
   // 真正结算入口：校验 → 扣资源 → 随机命中 → 扣血 → 生成演出事件。
-  function fight(g, a, b, w, response, counterId, allowCounter = true) {
-    if (g.winner !== null || a.team !== g.team || a.acted || !canAttack(g, a, b, w))
+  function fight(g, a, b, w, response, counterId, allowCounter = true, counterOnly = false, counterOrders = null) {
+    if (g.winner !== null || (!counterOnly && (a.team !== g.team || a.acted || !canAttack(g, a, b, w))))
       throw Error("攻击条件已失效");
     if (!["counter", "defend", "evade"].includes(response)) throw Error("未知应战方式");
     const counterIds = Array.isArray(counterId) ? counterId : [counterId];
-    if (response === "counter" && allowCounter)
+    if (counterOnly && counterOrders) counterPlan(g,b,counterOrders);
+    else if (response === "counter" && allowCounter)
       counterQueue(
         g,
         b,
@@ -1830,6 +1871,8 @@ const Tactics = (() => {
       return dodgeSeed < 0x80000000 ? -1 : 1;
     }
     function fire(from, to, weapon, stance, isCounter = false) {
+      dodgeSlots[from.id] ??= 0;
+      dodgeSlots[to.id] ??= 0;
       faceTarget(from, to);
       faceTarget(to, from);
       weapon = weaponStats(weapon, from);
@@ -1938,31 +1981,34 @@ const Tactics = (() => {
         response: stance,
       });
     }
-    fire(a, b, w, response);
+    if (!counterOnly) fire(a, b, w, response);
     if (response === "counter" && allowCounter && b.hp > 0 && a.hp > 0) {
       let remaining = counterActionBudget(b),
         started = false;
-      for (const id of counterIds) {
+      const entries = counterOrders ? counterOrders.flatMap(order => order.weaponIds.map(id =>
+        ({id,target:g.units.find(unit => unit.id === order.targetId)}))) : counterIds.map(id => ({id,target:a}));
+      for (const {id,target:enemy} of entries) {
         const weapon = modelOf(b).weapons.find((w) => w.id === id);
-        if (b.hp <= 0 || a.hp <= 0) break;
+        if (b.hp <= 0) break;
+        if (!enemy || enemy.hp <= 0) continue;
         if (
           !weapon ||
           weapon.noCounter ||
           actionCost(weapon) > remaining ||
-          !canAttack(g, b, a, weapon)
+          !canAttack(g, b, enemy, weapon)
         )
           continue;
         if (!started) {
           b.counterCount = (b.counterCount ?? 0) + 1;
-          b.counterTargetId = a.id;
+          if (!counterOrders || new Set(counterOrders.map(order => order.targetId)).size === 1)
+            b.counterTargetId = enemy.id;
           started = true;
         }
         remaining -= actionCost(weapon);
-        fire(b, a, weapon, "counter", true);
+        fire(b, enemy, weapon, "counter", true);
       }
     }
-    a.acted = true;
-    a.origin = null;
+    if (!counterOnly) { a.acted = true; a.origin = null; }
     const evacuations = hangars.evacuate(g);
     for (const event of events)
       event.evacuations = evacuations.filter(
@@ -1971,6 +2017,10 @@ const Tactics = (() => {
     let alive = [0, 1].map((t) => g.units.some((u) => u.team === t && u.hp > 0));
     if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
     return events;
+  }
+  // Run a validated counter sequence after the offensive phase has fully resolved.
+  function counter(g, defender, attacker, weaponIds, orders = null) {
+    return fight(g, attacker, defender, null, "counter", weaponIds, true, true, orders);
   }
   function wait(g, u) {
     if (!onMap(u) || g.winner !== null || u.team !== g.team || u.acted) throw Error("无法待机");
@@ -2118,11 +2168,23 @@ const Tactics = (() => {
         u.team !== g.team ||
         u.hp <= 0 ||
         (u.embarked && !hangars.launchCells(g, u).length) ||
-        u.acted ||
+        (u.acted && !u.plan) ||
         (ownerSeat !== null && ownerOf(u) !== ownerSeat)
       )
         return false;
       if (u.embarked) return true;
+      if (u.plan) {
+        if (actionPoints(u) <= 0) return false;
+        return enemies.some(target => {
+          const order = attackPlanFor(u, target);
+          const committed = order ? (order.weapons || [order.weapon])
+            .map(id => modelOf(u).weapons.find(weapon => weapon.id === id)).filter(Boolean) : [];
+          return modelOf(u).weapons.some(weapon => {
+            try { attackQueue(g, u, target, [...committed, weapon]); return true; }
+            catch { return false; }
+          });
+        });
+      }
       if (skills.of(u).some((skill) => skills.targets(g, u, skill.id).length)) return true;
       if (!u.moved && (reachable(g, u).size > 1 || canRotate(g, u, 1) || canRotate(g, u, -1)))
         return true;
@@ -2150,24 +2212,25 @@ const Tactics = (() => {
   function aiTargetPressure(g, team) {
     const pressure = new Map();
     for (const attacker of g.units) {
-      const plan = attacker.plan;
-      if (attacker.team !== team || !onMap(attacker) || !plan) continue;
-      const target = g.units.find((unit) => unit.id === plan.target);
-      if (!target || !onMap(target) || target.team === team) continue;
-      const commitment = pressure.get(target.id) || { damage: 0, attackers: 0 };
-      let assigned = false;
-      for (const id of plan.weapons || [plan.weapon]) {
-        const weapon = modelOf(attacker).weapons.find((entry) => entry.id === id);
-        if (!weapon || (weapon.special?.type === "snipe" && !plan.charged)) continue;
-        const result = estimate(g, attacker, target, weapon);
-        const expected = result.damage * result.hit / 100;
-        if (expected <= 0) continue;
-        commitment.damage += expected;
-        assigned = true;
-      }
-      if (assigned) {
-        commitment.attackers++;
-        pressure.set(target.id, commitment);
+      if (attacker.team !== team || !onMap(attacker)) continue;
+      for (const plan of attackOrders(attacker)) {
+        const target = g.units.find(unit => unit.id === plan.target);
+        if (!target || !onMap(target) || target.team === team) continue;
+        const commitment = pressure.get(target.id) || { damage: 0, attackers: 0 };
+        let assigned = false;
+        for (const id of plan.weapons || [plan.weapon]) {
+          const weapon = modelOf(attacker).weapons.find(entry => entry.id === id);
+          if (!weapon || (weapon.special?.type === "snipe" && !plan.charged)) continue;
+          const result = estimate(g, attacker, target, weapon);
+          const expected = result.damage * result.hit / 100;
+          if (expected <= 0) continue;
+          commitment.damage += expected;
+          assigned = true;
+        }
+        if (assigned) {
+          commitment.attackers++;
+          pressure.set(target.id, commitment);
+        }
       }
     }
     return pressure;
@@ -2400,7 +2463,11 @@ const Tactics = (() => {
     actionPoints,
     actionCost,
     attackQueue,
+    attackOrders,
+    attackPlanFor,
+    attackBudget,
     counterQueue,
+    counterPlan,
     moduleCanBear,
     availableStrikes,
     partNames: {
@@ -2420,6 +2487,7 @@ const Tactics = (() => {
     canAttack,
     estimate,
     fight,
+    counter,
     wait,
     end,
     hasActions,

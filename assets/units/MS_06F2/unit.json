@@ -874,7 +874,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "changeHeldWeapon": true,
       "displayIndex": 4
     },
@@ -1284,7 +1284,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "changeHeldWeapon": true,
       "displayIndex": 0
     },

@@ -244,18 +244,7 @@ const ProductionUI = (() => {
       }
     } else if (tab === "weapons") {
       for (const weapon of model.weapons) {
-        const card = element("article", "formation-weapon-detail");
-        card.append(element("strong", "", weapon.name));
-        metrics(card, [
-          ["总威力", formatNumber(weapon.damage)],
-          ["命中", weapon.hit + "%"],
-          ["射程", weapon.min + "–" + weapon.max],
-          ["发射", weapon.shotCount + " 发"],
-          ["EN", weapon.en],
-          ["AP", Rules.actionCost(weapon)],
-          ...(Number.isInteger(weapon.maxUses) ? [["使用次数", weapon.maxUses]] : []),
-        ]);
-        card.append(WeaponInfo.effects(weapon), WeaponInfo.inspector(weapon));
+        const card = WeaponInfo.card(weapon);
         info.append(card);
       }
     } else {

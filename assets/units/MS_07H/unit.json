@@ -1358,7 +1358,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 0
     },
     "Common_Cqb_A": {

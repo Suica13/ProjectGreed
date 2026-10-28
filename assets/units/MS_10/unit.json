@@ -968,7 +968,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 0
     },
     "ZN_BeamBazooka": {
@@ -1125,7 +1125,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 0
     },
     "ZN_MS_10_MS_AMS": {

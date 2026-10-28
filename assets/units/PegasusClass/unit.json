@@ -3522,7 +3522,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 0,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3530,7 +3530,7 @@
             "delay": 0.1
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 1,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3538,7 +3538,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 2,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3546,7 +3546,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 3,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3554,7 +3554,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 4,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3562,7 +3562,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 5,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3570,7 +3570,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 6,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3578,7 +3578,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 7,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3586,7 +3586,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 8,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3594,7 +3594,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 9,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3602,7 +3602,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 10,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3610,7 +3610,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 11,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3618,7 +3618,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 12,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3626,7 +3626,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 13,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3634,7 +3634,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 14,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3642,7 +3642,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 15,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3650,7 +3650,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 0,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3658,7 +3658,7 @@
             "delay": 0.1
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 1,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3666,7 +3666,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 2,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3674,7 +3674,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 3,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3682,7 +3682,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 4,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3690,7 +3690,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 5,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3698,7 +3698,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 6,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3706,7 +3706,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 7,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3714,7 +3714,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 8,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3722,7 +3722,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 9,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3730,7 +3730,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 10,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3738,7 +3738,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 11,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3746,7 +3746,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 12,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3754,7 +3754,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 13,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3762,7 +3762,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 14,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3770,7 +3770,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 15,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3778,7 +3778,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 0,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3786,7 +3786,7 @@
             "delay": 0.1
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 1,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3794,7 +3794,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 2,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3802,7 +3802,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 3,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3810,7 +3810,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 4,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3818,7 +3818,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 5,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3826,7 +3826,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 6,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3834,7 +3834,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 7,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3842,7 +3842,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 8,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3850,7 +3850,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 9,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3858,7 +3858,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 10,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3866,7 +3866,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 11,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3874,7 +3874,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 12,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3882,7 +3882,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 13,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3890,7 +3890,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 14,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3898,7 +3898,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 15,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3906,7 +3906,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 0,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3914,7 +3914,7 @@
             "delay": 0.1
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 1,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3922,7 +3922,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 2,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3930,7 +3930,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 3,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3938,7 +3938,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 4,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3946,7 +3946,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 5,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3954,7 +3954,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 6,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3962,7 +3962,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 7,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3970,7 +3970,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 8,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3978,7 +3978,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 9,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3986,7 +3986,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 10,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -3994,7 +3994,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 11,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4002,7 +4002,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 12,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4010,7 +4010,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 13,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4018,7 +4018,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 14,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4026,7 +4026,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 15,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4034,7 +4034,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 0,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4042,7 +4042,7 @@
             "delay": 0.1
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 1,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4050,7 +4050,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 2,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4058,7 +4058,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 3,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4066,7 +4066,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 4,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4074,7 +4074,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 5,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4082,7 +4082,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 6,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4090,7 +4090,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 7,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4098,7 +4098,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 8,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4106,7 +4106,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 9,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4114,7 +4114,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 10,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4122,7 +4122,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 11,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4130,7 +4130,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 12,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4138,7 +4138,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 13,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4146,7 +4146,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 14,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4154,7 +4154,7 @@
             "delay": 0.0
           },
           {
-            "shots": 1,
+            "shots": 0,
             "muzzleIndex": 15,
             "partBreakModifier": 1.0,
             "requiredParts": [],
@@ -4474,7 +4474,1289 @@
         "actions": []
       },
       "rangeRole": "ship_anti_air",
-      "actionCost": 3
+      "actionCost": 2,
+      "shipAntiAirBeforeReduction": [
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 12,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 13,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 14,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 15,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "PegasusClass_Turret_AA_B_R5",
+          "delay": 0.0
+        }
+      ]
     }
   },
   "mechanics": [

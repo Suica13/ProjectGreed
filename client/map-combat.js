@@ -69,12 +69,15 @@ const MapCombat = (() => {
             lane.view.attackQueue?.length > 1 &&
             entry.lane.view.attackQueue?.attacker === lane.view.attackQueue.attacker,
         );
+        const offensiveDependencies = lane.view.combatStage === "counter"
+          ? earlier.filter(entry => entry.lane !== lane && entry.lane.view.combatStage !== "counter") : [];
         if (
-          queueDependencies.length ||
+          offensiveDependencies.length || queueDependencies.length ||
           (event.after <= 0 && event.before > 0) ||
           event.brokenParts?.length
         )
           lane.dependencies.set(index, [
+            ...offensiveDependencies,
             ...queueDependencies,
             ...earlier.filter(
               (entry) =>

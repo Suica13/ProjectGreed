@@ -54,6 +54,9 @@ def category(weapon_id, weapon):
 
 
 def action_cost(prefab, key, weapon):
+    # User policy: every bazooka costs 3 AP, including secondary variants.
+    if weapon.get("category") == "bazooka":
+        return 3
     if weapon.get("category") == "sniper":
         return 4
     if weapon.get("slot") == "skill":
@@ -304,4 +307,7 @@ def configure(prefab, native):
     configure_type61_tactical_weapons(prefab)
     from v17_balance import apply as apply_v17_balance
     from unit_supply import apply as apply_supply_policy
-    return apply_supply_policy(apply_v17_balance(prefab))
+    from unit_ship_balance import apply_anti_air
+    prefab = apply_supply_policy(apply_v17_balance(prefab))
+    apply_anti_air(prefab)
+    return prefab

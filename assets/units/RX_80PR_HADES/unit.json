@@ -1455,7 +1455,7 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 0
     },
     "Common_ArmBR_Pink": {

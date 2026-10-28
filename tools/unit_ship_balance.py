@@ -28,3 +28,31 @@ def apply_beams(prefab, native_restored=False):
             if "damagePerShot" in baseline:
                 payload["damagePerShot"] = sum(payload["damageComponents"].values()) if "damageComponents" in baseline else math.ceil(baseline["damagePerShot"] * FACTOR / 500) * 500
         weapon["shipDamageMultiplier"] = FACTOR
+
+
+def apply_anti_air(prefab):
+    """Two AP and half the firing events per mount; retain native timing as evidence."""
+    if not prefab["stats"].get("ship"):
+        return
+    for weapon in prefab["weapons"].values():
+        if weapon.get("rangeRole") != "ship_anti_air":
+            continue
+        attack = weapon["attack"]
+        baseline = weapon.setdefault("shipAntiAirBeforeReduction", copy.deepcopy(attack["steps"]))
+        totals = {}
+        for step in baseline:
+            mount = step.get("muzzleIndex", 0)
+            totals[mount] = totals.get(mount, 0) + step.get("shots", 0) * step.get("repeat", 1)
+        remaining = {mount: math.ceil(count / 2) for mount, count in totals.items()}
+        steps = []
+        for source in baseline:
+            for _ in range(source.get("repeat", 1)):
+                step = copy.deepcopy(source)
+                step.pop("repeat", None)
+                mount = step.get("muzzleIndex", 0)
+                if step.get("shots", 0):
+                    step["shots"] = min(step["shots"], remaining[mount])
+                    remaining[mount] -= step["shots"]
+                steps.append(step)
+        attack["steps"] = steps
+        weapon["actionCost"] = 2

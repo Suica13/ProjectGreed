@@ -564,6 +564,7 @@ function createRoomEngine({
       a: battle.a,
       b: battle.b,
       effectsOnly: true,
+      combatStage: battle.combatStage,
       visibleActorIds: [],
       actors: battle.actors.map(effectActor),
       before: Object.fromEntries(battle.actors.map((actor) => [actor.id, actor.hp > 0 ? 1 : 0])),
@@ -702,19 +703,11 @@ function createRoomEngine({
       playback: room.playback || null,
       battle: room.battle && relevant(room.battle) ? room.battle : null,
       plans: (room.plans || []).filter((p) => known(p.attacker) && (!p.target || known(p.target))),
-      counterPlans: (room.responses || [])
-        .filter(
-          (choice) =>
-            choice.response === "counter" &&
-            known(choice.intent.target) &&
-            known(choice.counterTargetId),
-        )
-        .map((choice) => ({
-          attacker: choice.intent.target,
-          target: choice.counterTargetId,
-          weapon: choice.counterId,
-          weapons: choice.counterIds || [choice.counterId],
-        })),
+      counterPlans: (room.responses || []).filter(choice => choice.response === "counter")
+        .flatMap(choice => (choice.counterOrders || [{targetId:choice.counterTargetId,
+          weaponIds:choice.counterIds || [choice.counterId]}]).filter(order =>
+          known(choice.intent.target) && known(order.targetId)).map(order => ({
+            attacker:choice.intent.target,target:order.targetId,weapon:order.weaponIds[0],weapons:order.weaponIds }))),
       // 整批应战完成后一次广播本批全部结果，重连直接使用最终状态。
       combats: combats.map((battle) => ({
         ...battle,
@@ -1106,13 +1099,13 @@ function createRoomEngine({
     function award(owner, faction, assist = false) {
       if (!owner || owner.bot) return;
       const rates = roomBattleEconomy().rates(owner.characterFaction, room.settings.mode);
-      const strength = roomBattleEconomy().strengthRatio(room.battleRoster, G.seatTeam(owner.seat));
-      const points = Math.max(0, Math.floor(defeatedModel.cost * rates.technology * strength * (assist ? 0.5 : 1) * bonus.technology));
+      const battleRate = roomBattleEconomy().rewardRatio(room.battleRoster, G.seatTeam(owner.seat), room.settings.mode);
+      const points = Math.max(0, Math.floor(defeatedModel.cost * roomBattleEconomy().killTechnologyRate * rates.technology * battleRate * (assist ? 0.5 : 1) * bonus.technology));
       if (points && ["EFSF", "ZEON"].includes(faction))
         room.techAwards.push({ id: randomId(), matchId: room.matchId, memberId: owner.id,
           faction, targetId: to.id, points, kind: assist ? "assist" : "kill", round: room.game.round, team: room.game.team });
-      const money = Math.max(0, Math.floor(price * (assist ? 0.25 : 1) * rates.currency * strength * bonus.money));
-      const supplies = Math.max(0, Math.floor(supplyPrice * (assist ? 0.25 : 1) * rates.currency * strength * bonus.supplies));
+      const money = Math.max(0, Math.floor(price * (assist ? 0.25 : 1) * rates.currency * battleRate * bonus.money));
+      const supplies = Math.max(0, Math.floor(supplyPrice * (assist ? 0.25 : 1) * rates.currency * battleRate * bonus.supplies));
       (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId,
         memberId: owner.id, kind: assist ? "assist" : "kill", targetId: to.id,
         model: to.model, money, supplies });
@@ -1142,14 +1135,14 @@ function createRoomEngine({
         if (deduct) losses[record.unitId] = (losses[record.unitId] || 0) + 1;
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
-      const strength = roomBattleEconomy().strengthRatio(room.battleRoster, G.seatTeam(player.seat));
+      const battleRate = roomBattleEconomy().rewardRatio(room.battleRoster, G.seatTeam(player.seat), room.settings.mode);
       const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
       // A manually assigned preset's "unlimited" allowance must not inflate the victory bonus.
       const limit = room.settings.costLimit;
       const outcomeRate = won ? 1 : 0.5;
       (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId, memberId: player.id,
-        kind: "result", money: Math.floor(limit * 2.5 * outcomeRate * rate * strength * bonus.money),
-        supplies: Math.floor(limit * 5 * outcomeRate * rate * strength * bonus.supplies), losses, lostUnits });
+        kind: "result", money: Math.floor(limit * 2.5 * outcomeRate * rate * battleRate * bonus.money),
+        supplies: Math.floor(limit * 5 * outcomeRate * rate * battleRate * bonus.supplies), losses, lostUnits });
     }
   }
   function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
@@ -1157,7 +1150,7 @@ function createRoomEngine({
     const owner = room.seats[G.ownerOf(actor)];
     const points = Math.max(0, Math.floor(cost));
     const beforeLevel = actor.pilot.level;
-    const rate = (kind === "assist" ? 0.25 : 1) * roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience * roomBattleEconomy().strengthRatio(room.battleRoster, actor.team) * getRewardMultipliers().experience;
+    const rate = (kind === "assist" ? 0.25 : 1) * roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience * roomBattleEconomy().rewardRatio(room.battleRoster, actor.team, room.settings.mode) * getRewardMultipliers().experience;
     const experiencePoints = room.startedFromSave || kind === "loss" || kind === "battle" || beforeLevel >= G.pilots.growthRules.maxLevel
       ? 0 : Math.floor(points * rate);
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints, { shipKill });
@@ -1543,6 +1536,7 @@ function createRoomEngine({
     );
     room.battleRoster = Object.fromEntries(room.game.units.map(actor => [actor.id, {
       memberId: room.seats[G.ownerOf(actor)]?.id,
+      bot: !!room.seats[G.ownerOf(actor)]?.bot,
       unitId: G.models[actor.model].prefabId,
       model: actor.model,
       money: roomBattleEconomy().price(actor.model),
@@ -1699,12 +1693,20 @@ function createRoomEngine({
       const transport = G.hangars.recoveryOrder(room.game, passenger);
       if (transport) return { player: owner, ...transport };
     }
+    const canPlanMore = unit => {
+      if (!unit.acted) return true;
+      if (!unit.plan || G.actionPoints(unit) <= 0) return false;
+      return room.game.units.some(target => target.team !== unit.team && G.onMap(target) &&
+        !G.attackPlanFor(unit, target) && G.modelOf(unit).weapons.some(weapon => {
+          try { G.attackQueue(room.game, unit, target, [weapon]); return true; } catch { return false; }
+        }));
+    };
     const player = room.seats.find(
       (p) =>
         p?.bot &&
         G.seatTeam(p.seat) === room.game.team &&
         !room.turnDone[p.seat] &&
-        room.game.units.some((u) => G.ownerOf(u) === p.seat && G.onMap(u) && !u.acted),
+        room.game.units.some((u) => G.ownerOf(u) === p.seat && G.onMap(u) && canPlanMore(u)),
     );
     if (!player) {
       const unfinished = room.seats.find(
@@ -1713,7 +1715,7 @@ function createRoomEngine({
       );
       return unfinished ? { player: unfinished, action: "end_turn", fields: {} } : null;
     }
-    const u = room.game.units.find((u) => G.ownerOf(u) === player.seat && G.onMap(u) && !u.acted);
+    const u = room.game.units.find((u) => G.ownerOf(u) === player.seat && G.onMap(u) && canPlanMore(u));
     for (const skill of G.unitSkills(u).filter(s => s.type === "resupply")) {
       const targets = G.skillTargets(room.game, u, skill.id).sort((a, b) => {
         const left = G.at(room.game, a.x, a.y), right = G.at(room.game, b.x, b.y);
@@ -1792,7 +1794,7 @@ function createRoomEngine({
     }
     // Do not drive a recovery destination away from a nearby low-energy passenger.
     const hangars = G.modelOf(u).hangars || [];
-    if (hangars.length && room.game.units.some(passenger => {
+    if (!u.plan && hangars.length && room.game.units.some(passenger => {
       if (!G.onMap(passenger) || passenger.team !== u.team ||
           G.modelOf(passenger).hangars?.length || !G.hangars.needsRecovery(passenger)) return false;
       const model = G.modelOf(passenger);
@@ -1800,14 +1802,14 @@ function createRoomEngine({
         hangars.some(hangar => hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag)) &&
           G.hangars.used(room.game, u, hangar.id) + (model.transport?.slotCost || 1) <= hangar.capacity);
     })) return { player, action: "wait", fields: { unitId: u.id } };
-    const choice = G.aiChoice(room.game, u);
+    const choice = u.plan ? null : G.aiChoice(room.game, u);
     if (choice?.rotation)
       return { player, action: "rotate", fields: { unitId: u.id, direction: choice.rotation } };
     if (choice && !u.moved && (choice.x !== u.x || choice.y !== u.y))
       return { player, action: "move", fields: { unitId: u.id, x: choice.x, y: choice.y } };
     const pressure = G.aiTargetPressure(room.game, u.team);
     let best = null;
-    for (const target of room.game.units.filter((t) => G.onMap(t) && t.team !== u.team))
+    for (const target of room.game.units.filter(t => G.onMap(t) && t.team !== u.team && !G.attackPlanFor(u, t)))
       for (const weapon of G.modelOf(u).weapons)
         if (G.canAttack(room.game, u, target, weapon)) {
           try {
@@ -2822,6 +2824,12 @@ function createRoomEngine({
       }
       case "attack": {
         validateActive(room, seat);
+        if (msg.orders !== undefined) {
+          const attacker = ownUnit(room, seat, msg.unitId);
+          const plans = planner.planBatch(room, attacker, msg.orders, seat);
+          event = { type: "plan_attack", ...plans.at(-1), plans };
+          break;
+        }
         const a = ownUnit(room, seat, msg.unitId),
           b = msg.targetCell
             ? G.groundTarget(room.game, a, msg.targetCell.x, msg.targetCell.y)
@@ -2844,8 +2852,9 @@ function createRoomEngine({
       case "cancel_attack": {
         validateActive(room, seat);
         const attacker = ownUnit(room, seat, msg.unitId);
-        planner.cancel(room, attacker);
-        event = { type: "cancel_plan", unitId: attacker.id };
+        if (msg.targetId !== undefined && typeof msg.targetId !== "string") throw Error("攻击目标无效");
+        planner.cancel(room, attacker, msg.targetId ?? null);
+        event = { type: "cancel_plan", unitId: attacker.id, targetId: msg.targetId };
         log(room, `${unitLabel(room, attacker)} 取消攻击计划。`, { units: [attacker] });
         break;
       }
@@ -2855,7 +2864,9 @@ function createRoomEngine({
         if (msg.reactionId !== pending.id) throw Error("应战请求已过期，请处理当前交战");
         const b = unit(room, pending.target);
         if (!canControl(room, seat, b)) throw Error("不能操作该单位的应战");
-        planner.choose(
+        if (msg.response === "counter" && msg.counterOrders !== undefined)
+          planner.chooseBatch(room,msg.reactionId,msg.counterOrders);
+        else planner.choose(
           room,
           msg.reactionId,
           msg.response,

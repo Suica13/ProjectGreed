@@ -880,53 +880,7 @@ const Formation = (() => {
     weapons.replaceChildren();
     abilities.replaceChildren();
     mechanics.replaceChildren();
-    for (const [index, weapon] of model.weapons.entries()) {
-      const card = element("article", "formation-weapon-detail"),
-        heading = element("div", "unit-slot-heading");
-      heading.append(
-        element("strong", "", weapon.name),
-        element(
-          "span",
-          "unit-slot-badge",
-          "槽位 " + (index + 1) + " · " + (Rules.typeNames[weapon.type] || weapon.type),
-        ),
-      );
-      card.append(heading);
-      const metrics = element("dl", "unit-detail-metrics");
-      detailMetrics(metrics, [
-        ["总威力", Math.round(weapon.damage).toLocaleString()],
-        [
-          "发射",
-          weapon.shotCount +
-            " 发" +
-            (weapon.hitsPerShot > 1 ? " · 每发 " + weapon.hitsPerShot + " 段" : ""),
-        ],
-        ["命中", weapon.hit + "%"],
-        ["射程", weapon.min + "–" + weapon.max],
-        ["EN", weapon.en],
-        ["AP", Rules.actionCost(weapon)],
-        ...(Number.isInteger(weapon.maxUses) ? [["使用次数", weapon.maxUses]] : []),
-      ]);
-      card.append(metrics, WeaponInfo.effects(weapon), WeaponInfo.inspector(weapon));
-      const all = (weapon.requiredParts || [])
-        .map((part) => I18n.text(Rules.partNames[part]))
-        .join(" / ");
-      const any = (weapon.anyParts || [])
-        .map((part) => I18n.text(Rules.partNames[part]))
-        .join(" / ");
-      card.append(
-        element(
-          "p",
-          "unit-slot-mount",
-          "安装部位：" +
-            (all || any || "躯干") +
-            (any ? " · 任一部位完好即可" : "") +
-            " · 部位破坏系数 " +
-            weapon.partBreakModifier,
-        ),
-      );
-      weapons.append(card);
-    }
+    for (const weapon of model.weapons) weapons.append(WeaponInfo.card(weapon));
     if (model.supplyAura) {
       const card = element("div", "formation-weapon-detail");
       card.append(

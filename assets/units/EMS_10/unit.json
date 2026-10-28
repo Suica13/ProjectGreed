@@ -1233,7 +1233,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 0
     },
     "ZN_Panzerfaust_Orange": {
@@ -1384,7 +1384,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 3
     },
     "ZN_HeatHawk_F": {
       "name": "热能斧",
