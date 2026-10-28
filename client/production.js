@@ -402,6 +402,8 @@ const ProductionUI = (() => {
     returnView = "menu";
     onReturn = null;
     byId("closeProduction").textContent = "返回主菜单";
+    filters.faction = Rules.factions.includes(PlayerProfile.faction()) ? PlayerProfile.faction() : "";
+    setupFilters();
     setPageView("production");
     render();
     byId("productionSearch").focus();
@@ -484,7 +486,10 @@ const ProductionUI = (() => {
     kitId = null;
     returnView = options.returnView || "menu";
     onReturn = options.onReturn || null;
-    filters.faction = filters.era = filters.type = "";
+    filters.era = filters.type = "";
+    // A direct unit link must remain visible even when it belongs to another faction.
+    filters.faction = !unitId && Rules.factions.includes(PlayerProfile.faction())
+      ? PlayerProfile.faction() : "";
     setupFilters();
     byId("productionSearch").value = unitId || "";
     byId("closeProduction").textContent =

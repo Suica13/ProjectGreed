@@ -51,10 +51,14 @@ for (const width of [1280, 390])
     const filters = await page.locator(".formation-catalog-heading select").evaluateAll((nodes) =>
       nodes.map((node) => {
         const r = node.getBoundingClientRect();
-        return { y: r.y, right: r.right };
+        return { y: r.y, x: r.x, width: r.width, right: r.right };
       }),
     );
     expect(filters).toHaveLength(4);
+    const heading = await page.locator(".formation-catalog-heading").boundingBox();
+    expect(Math.abs(filters[0].x - heading.x)).toBeLessThan(1);
+    expect(Math.abs(filters[3].right - heading.x - heading.width)).toBeLessThan(1);
+    expect(Math.max(...filters.map(r => r.width)) - Math.min(...filters.map(r => r.width))).toBeLessThan(1);
     expect(
       Math.max(...filters.map((r) => r.y)) - Math.min(...filters.map((r) => r.y)),
     ).toBeLessThan(1);

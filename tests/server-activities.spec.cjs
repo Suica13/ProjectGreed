@@ -331,3 +331,25 @@ for (const width of [1280, 390])
       fs.rmSync(dir, { recursive: true, force: true });
     }
   });
+
+test("admin can cancel or confirm deletion and deleted defaults stay gone after reload", async ({page,request}) => {
+  const app=createServer({host:"127.0.0.1",port:0}), address=await app.listen(), base=`http://127.0.0.1:${address.port}`;
+  try {
+    await page.goto(base+"/admin/activities.html");
+    const activity=page.locator("#activities button").filter({hasText:"超级煤球真理部"});
+    await activity.click();
+    await page.locator("#deleteActivity").click();
+    await expect(page.locator("#deleteActivityDialog")).toBeVisible();
+    await page.locator("#cancelDelete").click();
+    await expect(activity).toHaveCount(1);
+    const id=app.activities.adminSnapshot().activities.find(a=>a.title==="超级煤球真理部").id;
+    expect((await request.post(base+"/api/activities/admin/delete",{headers:{Origin:"https://evil.example"},data:{id}})).status()).toBe(403);
+    await page.locator("#deleteActivity").click();
+    await page.locator("#confirmDelete").click();
+    await expect(page.locator("#status")).toContainText("活动已删除");
+    await expect(activity).toHaveCount(0);
+    await page.reload();
+    await expect(page.locator("#activities button")).toHaveCount(3);
+    expect(app.activities.adminSnapshot().activities.some(a=>a.id===id)).toBe(false);
+  } finally { await app.close(); }
+});

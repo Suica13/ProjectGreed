@@ -75,10 +75,12 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       rewards: { money: 5000, supplies: 10000, inventory: {}, unlockUnits: [] },
     },
   ];
-  if (defaults.some((item) => !state.activities.some((activity) => activity.id === item.id))) {
+  if (defaults.some((item) => !state.activities.some((activity) => activity.id === item.id) &&
+    !(state.deletedActivityIds || []).includes(item.id))) {
     const next = structuredClone(state);
     for (const item of defaults)
-      if (!next.activities.some((activity) => activity.id === item.id))
+      if (!next.activities.some((activity) => activity.id === item.id) &&
+        !(next.deletedActivityIds || []).includes(item.id))
         next.activities.push({ ...item, enabled: true, createdAt: now() });
     save(next);
   }
@@ -521,6 +523,22 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
     tick();
     broadcast();
   }
+  function remove(id) {
+    edit((next) => {
+      const activity = next.activities.find((item) => item.id === id);
+      if (!activity) throw Error("活动不存在");
+      next.activities = next.activities.filter((item) => item.id !== id);
+      // Remember deleted defaults so upgrading/restarting never reinstalls them.
+      next.deletedActivityIds = [...new Set([...(next.deletedActivityIds || []), id])];
+      for (const player of Object.values(next.players)) {
+        // Keep receipts already in flight for retry/ack and accepted reward history.
+        player.mail = player.mail.filter((mail) => mail.activityId !== id ||
+          (activity.mode !== "battle_bonus" && mail.claimedAt !== null));
+        if (player.loginDays) delete player.loginDays[id];
+      }
+    });
+    broadcast();
+  }
   async function httpHandler(req, res) {
     const remote = req.socket.remoteAddress;
     const local = ["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(remote);
@@ -565,6 +583,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       else if (route === "/api/activities/admin/edit")
         updateCopy(value.id, value.title, value.text, value);
       else if (route === "/api/activities/admin/toggle") toggle(value.id, value.enabled);
+      else if (route === "/api/activities/admin/delete") remove(value.id);
       else {
         res.writeHead(404);
         res.end("{}");
@@ -584,6 +603,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
     publish,
     toggle,
     updateCopy,
+    remove,
     adminSnapshot,
     rewardMultipliers,
     httpHandler,

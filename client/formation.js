@@ -443,6 +443,8 @@ const Formation = (() => {
     );
   }
   function openPicker(context = null) {
+    catalogFilters.faction = Rules.factions.includes(PlayerProfile.faction()) ? PlayerProfile.faction() : "";
+    byId("formationFaction").value = catalogFilters.faction;
     pickerContext = context;
     pickerReturnIndex = context?.carrierIndex ?? null;
     detailIndex = null;

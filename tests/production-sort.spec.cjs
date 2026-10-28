@@ -57,6 +57,7 @@ test("production and formation use the same automatic developed/COST order for e
   for (const faction of ["ZEON", "EFSF", "PMC"]) {
     await page.locator("#menuFactionSelect").selectOption(faction);
     await page.locator("#openProduction").click();
+    await expect(page.locator("#productionFaction")).toHaveValue(faction === "PMC" ? "" : faction);
     await expect(page.locator("#productionSort")).toHaveCount(0);
     const production = await values("#productionList .production-unit");
     expect(production.length).toBeGreaterThan(1);
@@ -65,6 +66,7 @@ test("production and formation use the same automatic developed/COST order for e
     await page.locator("#openFormation").click();
     await page.locator("#openFormationPicker").click();
     await page.locator("#formationStock").selectOption("all");
+    await expect(page.locator("#formationFaction")).toHaveValue(faction === "PMC" ? "" : faction);
     await expect(page.locator("#formationSort")).toHaveCount(0);
     const formation = await values("#formationCatalog .catalog-unit");
     expect(formation.length).toBeGreaterThan(1);

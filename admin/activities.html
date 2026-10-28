@@ -129,6 +129,16 @@
         background: #345c3d;
         padding: 12px 24px;
       }
+      dialog {
+        max-width: min(480px, 90vw);
+        color: #e1edf3;
+        background: #203b4a;
+        border: 1px solid #577485;
+        border-radius: 6px;
+        padding: 24px;
+      }
+      dialog::backdrop { background: #0009; }
+      #deleteActivity, #confirmDelete { background: #773b3b; }
       .muted {
         color: #a9c4ce;
       }
@@ -243,7 +253,10 @@
             保存会同步更新已投递邮件的文案，奖励和领取记录保持原状。时期留空为不限期；登录日以服务器时间早上6点为界，周一早上6点刷新每周奖励。
           </p>
           <p id="detail"></p>
-          <button id="toggle">暂停活动</button>
+          <div class="line">
+            <button id="toggle" type="button">暂停活动</button>
+            <button id="deleteActivity" type="button">删除活动</button>
+          </div>
         </section>
         <div id="newActivityPanel">
           <h2>新建奖励活动</h2>
@@ -369,6 +382,15 @@
         <p id="status" role="status"></p>
       </article>
     </main>
+    <dialog id="deleteActivityDialog" aria-labelledby="deleteActivityTitle">
+      <h2 id="deleteActivityTitle">删除活动</h2>
+      <p id="deleteActivityText"></p>
+      <p>删除后停止发放和倍率效果，并移除尚未接收的邮件。已接收的奖励和领取记录保留，正在领取的奖励可继续完成。</p>
+      <div class="line">
+        <button id="cancelDelete" type="button">取消</button>
+        <button id="confirmDelete" type="button">确认删除</button>
+      </div>
+    </dialog>
     <script>
       let snapshot = null,
         selectedId = null;
@@ -612,6 +634,31 @@
           render();
         } catch (error) {
           byId("status").textContent = error.message;
+        }
+      };
+      let deletingId = null;
+      byId("deleteActivity").onclick = () => {
+        const activity = snapshot.activities.find(item => item.id === selectedId);
+        if (!activity) return;
+        deletingId = activity.id;
+        byId("deleteActivityText").textContent = "确定删除“" + activity.title + "”？";
+        byId("deleteActivityDialog").showModal();
+        byId("cancelDelete").focus();
+      };
+      byId("cancelDelete").onclick = () => byId("deleteActivityDialog").close();
+      byId("confirmDelete").onclick = async () => {
+        byId("confirmDelete").disabled = true;
+        try {
+          snapshot = await api("/delete", { id: deletingId });
+          selectedId = null;
+          byId("deleteActivityDialog").close();
+          render();
+          byId("status").textContent = "活动已删除，已接收的奖励和领取记录已保留。";
+        } catch (error) {
+          byId("status").textContent = error.message;
+          byId("deleteActivityDialog").close();
+        } finally {
+          byId("confirmDelete").disabled = false;
         }
       };
       byId("editCopyForm").onsubmit = async (event) => {
