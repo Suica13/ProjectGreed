@@ -22,6 +22,10 @@ const BattleEconomy = (() => {
     const enemies = Object.values(roster || {}).filter(unit => unit.team !== undefined && unit.team !== team);
     return enemies.length ? enemies.reduce((sum, unit) => sum + (unit.performance ?? 1), 0) / enemies.length : 1;
   }
-  return { price, rates, enemyStrength };
+  function alliedStrength(roster, team) {
+    const allies = Object.values(roster || {}).filter(unit => unit.team === team);
+    return allies.length ? allies.reduce((sum, unit) => sum + (unit.performance ?? 1), 0) / allies.length : 1;
+  }
+  return { price, rates, enemyStrength, alliedStrength };
 })();
 if (typeof module !== "undefined") module.exports = BattleEconomy;

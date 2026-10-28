@@ -308,10 +308,29 @@ test('victory uses the per-unit enemy starting strength average, including destr
  f.room.battleRoster[f.attacker.id].performance=2;
  f.kill();f.finish();
  const result=f.frames.get(f.clients[0]).economyAwards.find(a=>a.kind==='result');
- assert.equal(result.money,900*2.5);
- assert.equal(result.supplies,900*5);
+ assert.equal(result.money,Math.floor(900*2.5/1.5));
+ assert.equal(result.supplies,Math.floor(900*5/1.5));
  const before=JSON.stringify(result);f.act(0,'sync');
  assert.equal(JSON.stringify(f.frames.get(f.clients[0]).economyAwards.find(a=>a.kind==='result')),before);
  assert.equal(R.enemyStrength({},0),1);
  assert.equal(R.enemyStrength({a:{team:1,performance:0.5},b:{team:1,performance:1}},0),0.75);
+});
+
+for (const allied of [0.5,1,1.5,2])
+ test(`allied mean ${allied} adjusts kill currency, technology, pilot XP and victory income`,t=>{
+  const f=fixture(t,{faction:"EFSF",strength:1.5});
+  for(const unit of Object.values(f.room.battleRoster)) if(unit.team===0) unit.performance=allied;
+  f.kill();
+  const view=f.frames.get(f.clients[0]),rates=R.rates("EFSF","regular");
+  assert.equal(view.economyAwards.find(a=>a.kind==='kill').money,Math.floor(R.price(f.target.model)*2*rates.currency*1.5/allied));
+  assert.equal(view.techAwards.find(a=>a.kind==='kill').points,Math.floor(G.modelOf(f.target).cost*rates.technology*1.5/allied));
+  assert.equal(view.pilotAwards.find(a=>a.kind==='kill').experiencePoints,Math.floor(G.modelOf(f.target).cost*rates.experience*1.5/allied));
+  f.finish();
+  const result=f.frames.get(f.clients[0]).economyAwards.find(a=>a.kind==='result');
+  assert.equal(result.money,Math.floor(900*2.5*rates.currency*1.5/allied));
+  assert.equal(result.supplies,Math.floor(900*5*rates.currency*1.5/allied));
+ });
+test('allied average weights starting units equally and ignores enemy entries',()=>{
+ assert.equal(R.alliedStrength({a:{team:0,performance:2},b:{team:0,performance:1},c:{team:0,performance:1},d:{team:1,performance:3}},0),4/3);
+ assert.equal(R.alliedStrength({},0),1);
 });

@@ -10,9 +10,10 @@ const DevelopmentUI = (() => {
   let drawConnections = () => {};
 
   function receiveAwards(snapshot) {
+    RewardNotifications.sync(snapshot);
     if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
     for (const award of snapshot.techAwards || [])
-      if (Development.creditAward(award)) RewardNotifications.add("technology", award);
+      if (Development.creditAward(award)) RewardNotifications.add("technology", award, snapshot);
   }
   function unitRow(unitId) {
     const prefab = Rules.catalog.prefabs.find((unit) => unit.id === unitId);

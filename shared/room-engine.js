@@ -1106,11 +1106,12 @@ function createRoomEngine({
     function award(owner, faction, assist = false) {
       if (!owner || owner.bot) return;
       const rates = roomBattleEconomy().rates(owner.characterFaction, room.settings.mode);
-      const points = Math.max(0, Math.floor(defeatedModel.cost * rates.technology * strength * (assist ? 0.5 : 1) * bonus.technology));
+      const alliedStrength = roomBattleEconomy().alliedStrength(room.battleRoster, G.seatTeam(owner.seat));
+      const points = Math.max(0, Math.floor(defeatedModel.cost * rates.technology * strength / alliedStrength * (assist ? 0.5 : 1) * bonus.technology));
       if (points && ["EFSF", "ZEON"].includes(faction))
         room.techAwards.push({ id: randomId(), matchId: room.matchId, memberId: owner.id,
           faction, targetId: to.id, points, kind: assist ? "assist" : "kill", round: room.game.round, team: room.game.team });
-      const money = Math.max(0, Math.floor(price * (assist ? 1 : 2) * rates.currency * strength * bonus.money));
+      const money = Math.max(0, Math.floor(price * (assist ? 1 : 2) * rates.currency * strength / alliedStrength * bonus.money));
       (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId,
         memberId: owner.id, kind: assist ? "assist" : "kill", targetId: to.id,
         model: to.model, money, supplies: 0 });
@@ -1140,7 +1141,8 @@ function createRoomEngine({
         if (deduct) losses[record.unitId] = (losses[record.unitId] || 0) + 1;
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
-      const strength = roomBattleEconomy().enemyStrength(room.battleRoster, G.seatTeam(player.seat));
+      const strength = roomBattleEconomy().enemyStrength(room.battleRoster, G.seatTeam(player.seat)) /
+        roomBattleEconomy().alliedStrength(room.battleRoster, G.seatTeam(player.seat));
       const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
       // A manually assigned preset's "unlimited" allowance must not inflate the victory bonus.
       const limit = room.settings.costLimit;
@@ -1154,7 +1156,7 @@ function createRoomEngine({
     const owner = room.seats[G.ownerOf(actor)];
     const points = Math.max(0, Math.floor(cost));
     const beforeLevel = actor.pilot.level;
-    const rate = (kind === "assist" ? 0.25 : 1) * roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience * strength * getRewardMultipliers().experience;
+    const rate = (kind === "assist" ? 0.25 : 1) * roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience * strength / roomBattleEconomy().alliedStrength(room.battleRoster, actor.team) * getRewardMultipliers().experience;
     const experiencePoints = room.startedFromSave || kind === "loss" || beforeLevel >= G.pilots.growthRules.maxLevel
       ? 0 : Math.floor(points * rate);
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints);

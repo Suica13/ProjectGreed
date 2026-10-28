@@ -442,6 +442,7 @@ const Net = (() => {
     }
     GameAudio.receive(s, s.you ? s.you.seat : n.seat, n.applied);
     CombatPlayback.receive(s, n.applied);
+    RewardNotifications.sync(s);
     const wasStarted = n.started;
     Chat.setSnapshot(s);
     DevelopmentUI.receiveAwards(s);

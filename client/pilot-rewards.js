@@ -5,6 +5,7 @@ const PilotRewards = (() => {
     pending = [],
     active = [];
   function receive(snapshot) {
+    RewardNotifications.sync(snapshot);
     if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
     if (match !== snapshot.matchId) {
       match = snapshot.matchId;
@@ -16,8 +17,8 @@ const PilotRewards = (() => {
       seen.add(award.id);
       if (award.experiencePoints > 0 || award.leveledUp) pending.push(award);
     }
-    const now = performance.now();
-    for (const award of pending.splice(0)) active.push({ ...award, start: now });
+    for (const award of pending.splice(0))
+      RewardNotifications.defer(() => active.push({ ...award, start: performance.now() }), snapshot);
   }
   function draw(ctx, unit, x, y, now) {
     for (let i = active.length - 1; i >= 0; i--)

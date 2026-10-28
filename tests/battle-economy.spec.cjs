@@ -119,7 +119,7 @@ for (const width of [1280, 360])
     expect(errors).toEqual([]);
   });
 
-test("reward popups are immediate, aggregate separately and extend for three quiet seconds", async ({
+test("resource rewards share one popup and extend for three quiet seconds", async ({
   page,
 }) => {
   await page.goto(url);
@@ -139,6 +139,7 @@ test("reward popups are immediate, aggregate separately and extend for three qui
   });
   await expect(page.locator(".reward-currency")).toContainText("+100");
   await expect(page.locator(".reward-technology")).toContainText("20");
+  await expect(page.locator(".reward-resources")).toHaveCount(1);
   await page.clock.fastForward(2000);
   await page.evaluate(() => {
     ProductionUI.receiveAwards({
@@ -177,4 +178,42 @@ test("unit preview sale updates both resources and inventory", async ({ page }) 
   expect(await page.evaluate(() => Economy.snapshot().supplies)).toBe(
     before.wallet.supplies + before.price.supplies,
   );
+});
+
+test('resource and pilot rewards wait for local batch completion while credits persist immediately',async({page})=>{
+ await page.goto(url);await page.waitForFunction(()=>assetsReady);
+ await page.evaluate(()=>I18n.setLanguage('zh'));
+ await page.clock.install();
+ const before=await page.evaluate(()=>{
+  byId('gameScene').hidden=false;
+  const snapshot={matchId:'delayed-rewards',phase:'playback',you:{id:'viewer'},playback:{id:'delayed-batch',ready:[],members:['viewer']},combats:[{}],
+   economyAwards:[{id:'delayed-money',matchId:'delayed-rewards',money:100,supplies:20}],
+   techAwards:[{id:'delayed-tech',matchId:'delayed-rewards',faction:'EFSF',points:30}],
+   pilotAwards:[{id:'delayed-xp',unitId:'pilot-unit',experiencePoints:62,leveledUp:true}]};
+  window.rewardTestSnapshot=snapshot;
+  const initial=Economy.snapshot().money;
+  ProductionUI.receiveAwards(snapshot);DevelopmentUI.receiveAwards(snapshot);PilotRewards.receive(snapshot);
+  return {delta:Economy.snapshot().money-initial,count:byId('techRewardStack').childElementCount};
+ });
+ expect(before).toEqual({delta:100,count:0});
+ await page.clock.fastForward(10000);
+ await expect(page.locator('.reward-resources')).toHaveCount(0);
+ const labels=await page.evaluate(()=>{
+  // Local completion can happen while the server still waits for other players.
+  const snapshot=window.rewardTestSnapshot;
+  CombatPlayback.receive({...snapshot,combats:[],effectCombats:[]},true);
+  RewardNotifications.sync(snapshot);
+  ProductionUI.receiveAwards(snapshot);DevelopmentUI.receiveAwards(snapshot);PilotRewards.receive(snapshot);
+  const labels=[];
+  const ctx=new Proxy({},{get:(_,key)=>key==='fillText'?text=>labels.push(text):()=>{},set:()=>true});
+  PilotRewards.draw(ctx,{id:'pilot-unit'},100,100,performance.now());
+  return labels;
+ });
+ expect(labels).toEqual(['+62经验值','LEVEL UP']);
+ await expect(page.locator('.reward-resources')).toHaveCount(1);
+ await expect(page.locator('.reward-resources')).toContainText('资金 +100');
+ await expect(page.locator('.reward-resources')).toContainText('物资 +20');
+ await expect(page.locator('.reward-resources')).toContainText('科技点 +30');
+ await page.clock.fastForward(3001);
+ await expect(page.locator('.reward-resources')).toHaveCount(0);
 });

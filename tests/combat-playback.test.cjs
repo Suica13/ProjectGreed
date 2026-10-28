@@ -79,13 +79,16 @@ test("all results start as one parallel batch, repeated snapshots never restart 
   playback.receive(context.Net.snapshot, true);
   playback.receive(context.Net.snapshot, true);
   assert.equal(playback.queued, 1);
+  assert.equal(playback.waitingFor(context.Net.snapshot), true);
   playback.show();
   assert.deepEqual(calls.shows, ["batch"]);
   assert.equal(context.battleView.battles.length, 2);
+  assert.equal(playback.waitingFor(context.Net.snapshot), true);
   playback.show();
   assert.equal(calls.shows.length, 1);
   playback.finish();
   assert.equal(context.battleView, null);
+  assert.equal(playback.waitingFor(context.Net.snapshot), false);
   playback.show();
   assert.equal(calls.requests.length, 1);
   assert.equal(calls.requests[0].action, "playback_ready");

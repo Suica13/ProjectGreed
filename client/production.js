@@ -74,10 +74,11 @@ const ProductionUI = (() => {
       resources(target, Economy.snapshot());
   }
   function receiveAwards(snapshot) {
+    RewardNotifications.sync(snapshot);
     if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
     for (const award of snapshot.economyAwards || []) {
       try {
-        if (Economy.creditAward(award)) RewardNotifications.add("currency", award);
+        if (Economy.creditAward(award)) RewardNotifications.add("currency", award, snapshot);
       } catch (error) {
         note("战斗结算保存失败：" + Economy.errorMessage(error));
         break;

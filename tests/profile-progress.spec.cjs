@@ -132,7 +132,7 @@ test("personal save download and file import preserve pilots, formations and spe
   expect(unchanged).toBe(true);
   expect(errors).toEqual([]);
 });
-test("technology credits and combines immediate toasts including final turn", async ({
+test("technology credits immediately and combines delayed toasts including final turn", async ({
   page,
 }) => {
   await open(page);
@@ -141,6 +141,7 @@ test("technology credits and combines immediate toasts including final turn", as
     const snapshot = {
       matchId: "turn-reward",
       phase: "playback",
+      playback: {id:"turn-batch",ready:[]}, combats:[{}],
       game: { round: 2, team: 0 },
       techAwards: [1, 2].map((i) => ({
         id: "turn-award-" + i,
@@ -183,7 +184,7 @@ test("technology credits and combines immediate toasts including final turn", as
       count: byId("techRewardStack").childElementCount,
     };
   });
-  expect(result.during).toEqual({ balance: 50, count: 1 });
+  expect(result.during).toEqual({ balance: 50, count: 0 });
   expect(result.ended).toContain("50");
   expect(result.final).toContain("75");
   expect(result.count).toBe(1);
@@ -200,7 +201,7 @@ test("map XP and level-up labels are deduplicated and follow an embarked pilot's
       experiencePoints: 62,
       leveledUp: true,
     };
-    const snapshot = { matchId: "map-test", phase: "playback", pilotAwards: [award] };
+    const snapshot = { matchId: "map-test", phase: "playback", playback: {id:"map-batch",ready:[]}, combats:[{}], pilotAwards: [award] };
     PilotRewards.receive(snapshot);
     const calls = [];
     const ctx = new Proxy(
@@ -212,7 +213,7 @@ test("map XP and level-up labels are deduplicated and follow an embarked pilot's
       },
     );
     PilotRewards.draw(ctx, { id: "carrier" }, 100, 200, performance.now());
-    if (calls.length !== 2) throw Error("XP must display immediately during playback");
+    if (calls.length !== 0) throw Error("XP must wait until playback finishes");
     calls.length = 0;
     PilotRewards.receive({ ...snapshot, phase: "idle" });
     PilotRewards.receive({ ...snapshot, phase: "idle" });

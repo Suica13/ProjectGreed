@@ -88,6 +88,12 @@ const CombatPlayback = (() => {
   }
   return {
     reset,
+    waitingFor(snapshot) {
+      const batch = snapshot.playback;
+      return active() || queue.length > 0 || !!(snapshot.phase === "playback" && batch &&
+        !finished.has(batch.id) && !batch.ready.includes(snapshot.you?.id) &&
+        ((snapshot.combats?.length || 0) + (snapshot.effectCombats?.length || 0)));
+    },
     receive,
     active,
     show,
