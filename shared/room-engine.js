@@ -1018,7 +1018,7 @@ function createRoomEngine({
         const defeatedModel = G.models[battle.actors.find((actor) => actor.id === e.to)?.model] ||
           G.modelOf(to);
         if (e.before > 0 && e.after <= 0) {
-          if (from.team !== to.team) recordPilotBattle(room, from, "kill", defeatedModel.cost, rewardStrength(to));
+          if (from.team !== to.team) recordPilotBattle(room, from, "kill", defeatedModel.cost);
           recordPilotBattle(room, to, "loss", defeatedModel.cost);
           awardDefeat(room, from, to, defeatedModel);
           settlePilotAssists(room, to, from);
@@ -1027,7 +1027,7 @@ function createRoomEngine({
           if (evacuation.escaped) continue;
           const passenger = unit(room, evacuation.unitId);
           const cost = G.modelOf(passenger).cost;
-          if (from.team !== passenger.team) recordPilotBattle(room, from, "kill", cost, rewardStrength(passenger));
+          if (from.team !== passenger.team) recordPilotBattle(room, from, "kill", cost);
           recordPilotBattle(room, passenger, "loss", cost);
           awardDefeat(room, from, passenger, G.modelOf(passenger));
           settlePilotAssists(room, passenger, from);
@@ -1093,28 +1093,28 @@ function createRoomEngine({
       automatic,
     };
   }
-  function rewardStrength(target) { return target?.performance ?? 1; }
   function awardDefeat(room, from, to, defeatedModel) {
     if (room.startedFromSave || (from && from.team === to.team)) return;
     room.economyDefeats ||= new Set();
     if (room.economyDefeats.has(to.id)) return;
     room.economyDefeats.add(to.id);
     const killer = from && room.seats[G.ownerOf(from)];
-    const strength = rewardStrength(to);
     const price = room.battleRoster?.[to.id]?.money ?? roomBattleEconomy().price(to.model);
+    const supplyPrice = room.battleRoster?.[to.id]?.supplies ?? roomBattleEconomy().price(to.model, "supplies");
     const bonus = getRewardMultipliers();
     function award(owner, faction, assist = false) {
       if (!owner || owner.bot) return;
       const rates = roomBattleEconomy().rates(owner.characterFaction, room.settings.mode);
-      const alliedStrength = roomBattleEconomy().alliedStrength(room.battleRoster, G.seatTeam(owner.seat));
-      const points = Math.max(0, Math.floor(defeatedModel.cost * rates.technology * strength / alliedStrength * (assist ? 0.5 : 1) * bonus.technology));
+      const strength = roomBattleEconomy().strengthRatio(room.battleRoster, G.seatTeam(owner.seat));
+      const points = Math.max(0, Math.floor(defeatedModel.cost * rates.technology * strength * (assist ? 0.5 : 1) * bonus.technology));
       if (points && ["EFSF", "ZEON"].includes(faction))
         room.techAwards.push({ id: randomId(), matchId: room.matchId, memberId: owner.id,
           faction, targetId: to.id, points, kind: assist ? "assist" : "kill", round: room.game.round, team: room.game.team });
-      const money = Math.max(0, Math.floor(price * (assist ? 1 : 2) * rates.currency * strength / alliedStrength * bonus.money));
+      const money = Math.max(0, Math.floor(price * (assist ? 1 : 2) * rates.currency * strength * bonus.money));
+      const supplies = Math.max(0, Math.floor(supplyPrice * (assist ? 1 : 2) * rates.currency * strength * bonus.supplies));
       (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId,
         memberId: owner.id, kind: assist ? "assist" : "kill", targetId: to.id,
-        model: to.model, money, supplies: 0 });
+        model: to.model, money, supplies });
     }
     if (killer) award(killer, G.modelOf(from).faction);
     for (const [memberId, contribution] of Object.entries(room.playerDamage?.[to.id] || {})) {
@@ -1141,8 +1141,7 @@ function createRoomEngine({
         if (deduct) losses[record.unitId] = (losses[record.unitId] || 0) + 1;
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
-      const strength = roomBattleEconomy().enemyStrength(room.battleRoster, G.seatTeam(player.seat)) /
-        roomBattleEconomy().alliedStrength(room.battleRoster, G.seatTeam(player.seat));
+      const strength = roomBattleEconomy().strengthRatio(room.battleRoster, G.seatTeam(player.seat));
       const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
       // A manually assigned preset's "unlimited" allowance must not inflate the victory bonus.
       const limit = room.settings.costLimit;
@@ -1151,12 +1150,12 @@ function createRoomEngine({
         supplies: won ? Math.floor(limit * 5 * rate * strength * bonus.supplies) : 0, losses, lostUnits });
     }
   }
-  function recordPilotBattle(room, actor, kind, cost, strength = 1) {
+  function recordPilotBattle(room, actor, kind, cost) {
     if (room.startedFromSave || !actor?.pilot?.custom) return;
     const owner = room.seats[G.ownerOf(actor)];
     const points = Math.max(0, Math.floor(cost));
     const beforeLevel = actor.pilot.level;
-    const rate = (kind === "assist" ? 0.25 : 1) * roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience * strength / roomBattleEconomy().alliedStrength(room.battleRoster, actor.team) * getRewardMultipliers().experience;
+    const rate = (kind === "assist" ? 0.25 : 1) * roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience * roomBattleEconomy().strengthRatio(room.battleRoster, actor.team) * getRewardMultipliers().experience;
     const experiencePoints = room.startedFromSave || kind === "loss" || beforeLevel >= G.pilots.growthRules.maxLevel
       ? 0 : Math.floor(points * rate);
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints);
@@ -1174,7 +1173,7 @@ function createRoomEngine({
       if (killer?.pilot?.id === entry.pilotId && G.ownerOf(killer) === entry.seat) continue;
       const survivor = room.game.units.find(actor => actor.hp > 0 &&
         G.ownerOf(actor) === entry.seat && actor.pilot?.id === entry.pilotId);
-      if (survivor) recordPilotBattle(room, survivor, "assist", G.modelOf(target).cost, rewardStrength(target));
+      if (survivor) recordPilotBattle(room, survivor, "assist", G.modelOf(target).cost);
     }
   }
   function advanceTurn(room, automatic = false) {
@@ -1533,6 +1532,7 @@ function createRoomEngine({
       unitId: G.models[actor.model].prefabId,
       model: actor.model,
       money: roomBattleEconomy().price(actor.model),
+      supplies: roomBattleEconomy().price(actor.model, "supplies"),
       team: actor.team,
       performance: actor.performance ?? 1,
     }]));

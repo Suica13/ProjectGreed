@@ -131,6 +131,7 @@ for (const faction of ["EFSF", "PMC"])
         view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
         Math.floor(G.modelOf(f.target).cost * rates.experience * 1.5),
       );
+      assert.equal(view.economyAwards[0].supplies, Math.floor(R.price(f.target.model,"supplies") * 2 * rates.currency * 1.5));
       assert(!view.economyAwards.some((a) => a.kind === "result"));
       assert.deepEqual(f.frames.get(f.clients[1]).economyAwards, []);
       assert.equal(view.battleRoster, undefined);
@@ -230,6 +231,7 @@ for (const faction of ["PMC", "EFSF"])
             view.economyAwards[0].money,
             Math.floor(R.price(f.target.model) * rates.currency * 1.5),
           );
+          assert.equal(view.economyAwards[0].supplies, Math.floor(R.price(f.target.model,"supplies") * rates.currency * 1.5));
           assert.equal(view.economyAwards[0].kind, "assist");
           assert.equal(
             view.techAwards[0].points,
@@ -269,6 +271,7 @@ for (const faction of ["EFSF", "PMC"])
         view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
         Math.floor(G.modelOf(f.target).cost * rates.experience * 1.5 * 3),
       );
+      assert.equal(view.economyAwards[0].supplies, Math.floor(R.price(f.target.model,"supplies") * 2 * rates.currency * 1.5 * 4));
       f.finish();
       const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
       assert.equal(result.money, Math.floor(900 * 2.5 * rates.currency * 1.5 * 2));
@@ -300,29 +303,29 @@ test("event expiring between kill and victory does not change earlier awards; sa
   assert.deepEqual(view.pilotAwards, []);
 });
 
-test('victory uses the per-unit enemy starting strength average, including destroyed units',t=>{
+test('victory uses the starting room participants strength averages, including defeated participants',t=>{
  const f=fixture(t,{strength:1.5});
  f.room.battleRoster['destroyed-enemy-1']={team:1,performance:0.5};
  f.room.battleRoster['destroyed-enemy-2']={team:1,performance:1};
- // Friendly strength must not enter the average; transformed/spawned actors must not be counted twice.
+ // Three enemy participants average 1; one friendly participant has strength 2.
  f.room.battleRoster[f.attacker.id].performance=2;
  f.kill();f.finish();
  const result=f.frames.get(f.clients[0]).economyAwards.find(a=>a.kind==='result');
- assert.equal(result.money,Math.floor(900*2.5/1.5));
- assert.equal(result.supplies,Math.floor(900*5/1.5));
+ assert.equal(result.money,Math.floor(900*2.5/2));
+ assert.equal(result.supplies,Math.floor(900*5/2));
  const before=JSON.stringify(result);f.act(0,'sync');
  assert.equal(JSON.stringify(f.frames.get(f.clients[0]).economyAwards.find(a=>a.kind==='result')),before);
- assert.equal(R.enemyStrength({},0),1);
- assert.equal(R.enemyStrength({a:{team:1,performance:0.5},b:{team:1,performance:1}},0),0.75);
+ assert.equal(R.strengthRatio({},0),1);
 });
 
 for (const allied of [0.5,1,1.5,2])
- test(`allied mean ${allied} adjusts kill currency, technology, pilot XP and victory income`,t=>{
+ test(`allied unit strength ${allied} adjusts kill currency, technology, pilot XP and victory income`,t=>{
   const f=fixture(t,{faction:"EFSF",strength:1.5});
   for(const unit of Object.values(f.room.battleRoster)) if(unit.team===0) unit.performance=allied;
   f.kill();
   const view=f.frames.get(f.clients[0]),rates=R.rates("EFSF","regular");
   assert.equal(view.economyAwards.find(a=>a.kind==='kill').money,Math.floor(R.price(f.target.model)*2*rates.currency*1.5/allied));
+  assert.equal(view.economyAwards.find(a=>a.kind==='kill').supplies,Math.floor(R.price(f.target.model,'supplies')*2*rates.currency*1.5/allied));
   assert.equal(view.techAwards.find(a=>a.kind==='kill').points,Math.floor(G.modelOf(f.target).cost*rates.technology*1.5/allied));
   assert.equal(view.pilotAwards.find(a=>a.kind==='kill').experiencePoints,Math.floor(G.modelOf(f.target).cost*rates.experience*1.5/allied));
   f.finish();
@@ -330,7 +333,27 @@ for (const allied of [0.5,1,1.5,2])
   assert.equal(result.money,Math.floor(900*2.5*rates.currency*1.5/allied));
   assert.equal(result.supplies,Math.floor(900*5*rates.currency*1.5/allied));
  });
-test('allied average weights starting units equally and ignores enemy entries',()=>{
- assert.equal(R.alliedStrength({a:{team:0,performance:2},b:{team:0,performance:1},c:{team:0,performance:1},d:{team:1,performance:3}},0),4/3);
- assert.equal(R.alliedStrength({},0),1);
+test('room participant averages ignore army sizes and give reciprocal team ratios',()=>{
+ const roster={a:{memberId:'own1',team:0,performance:2},b:{memberId:'own1',team:0,performance:2},c:{memberId:'own2',team:0,performance:1},d:{memberId:'enemy',team:1,performance:3}};
+ assert.equal(R.strengthRatio(roster,0),2);
+ assert.equal(R.strengthRatio(roster,1),0.5);
+ assert.equal(R.strengthRatio({...roster,extra:{...roster.a}},0),2);
+ assert.equal(R.strengthRatio({},0),1);
+});
+test('individual target strength no longer stacks on the match strength ratio',t=>{
+ const f=fixture(t,{strength:1});
+ // Both room participants started at 100%; later target changes must not add a multiplier.
+ f.target.performance=2;
+ f.kill();
+ const view=f.frames.get(f.clients[0]);
+ assert.equal(view.economyAwards.find(a=>a.kind==='kill').money,Math.floor(R.price(f.target.model)*2));
+ assert.equal(view.pilotAwards.find(a=>a.kind==='kill').experiencePoints,Math.floor(G.modelOf(f.target).cost));
+});
+
+test('money and supplies prices retain per-unit batch division and fallback independently',()=>{
+ const c=require('../shared/production-catalog.json'),o=c.offers.Type61__standard;
+ assert.equal(R.price('Type61__standard'),o.money/o.quantity);
+ assert.equal(R.price('Type61__standard','supplies'),o.supplies/o.quantity);
+ const base=c.offers[c.baseModels.RGM_79_G];
+ assert.equal(R.price('RGM_79_G__cannon','supplies'),base.supplies/base.quantity);
 });
