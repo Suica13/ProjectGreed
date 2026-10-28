@@ -1,0 +1,2610 @@
+{
+  "schemaVersion": 2,
+  "id": "SalamisClassKai",
+  "code": "SalamisClassKai",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/SalamisClassKai/SalamisClassKai.ini",
+  "materials": {
+    "textures": {
+      "SalamisClassKai.png": "textures/SalamisClassKai.png",
+      "SalamisClassKai_Body_1.png": "textures/SalamisClassKai_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "RooketBooster.png": "textures/RooketBooster.png",
+      "SalamisClassKai_Turret_BeamCannon_1.png": "textures/SalamisClassKai_Turret_BeamCannon_1.png",
+      "SalamisClassKai_Turret_BeamCannon_2.png": "textures/SalamisClassKai_Turret_BeamCannon_2.png",
+      "SalamisClassKai_Turret_MS_1.png": "textures/SalamisClassKai_Turret_MS_1.png",
+      "SalamisClassKai_Turret_AA_1.png": "textures/SalamisClassKai_Turret_AA_1.png",
+      "SalamisClassKai_Turret_MG_1.png": "textures/SalamisClassKai_Turret_MG_1.png"
+    },
+    "icon": "SalamisClassKai.png"
+  },
+  "skeleton": {
+    "Turret_SalamisClassKai_Turret_BeamCannon_M1": {
+      "x": 0.0,
+      "y": 82.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_SalamisClassKai_Turret_BeamCannon_R1": {
+      "x": 18.0,
+      "y": 72.0,
+      "endDirOffset": 25.0
+    },
+    "Turret_SalamisClassKai_Turret_BeamCannon_L1": {
+      "x": -18.0,
+      "y": 72.0,
+      "endDirOffset": -25.0
+    },
+    "Turret_SalamisClassKai_Turret_BeamCannon_R2": {
+      "x": 54.0,
+      "y": -56.0,
+      "endDirOffset": 25.0
+    },
+    "Turret_SalamisClassKai_Turret_BeamCannon_L2": {
+      "x": -54.0,
+      "y": -56.0,
+      "endDirOffset": -25.0
+    },
+    "Turret_SalamisClassKai_Turret_BeamCannon_R3": {
+      "x": 34.0,
+      "y": -93.0,
+      "endDirOffset": 155.0
+    },
+    "Turret_SalamisClassKai_Turret_BeamCannon_L3": {
+      "x": -34.0,
+      "y": -93.0,
+      "endDirOffset": 205.0
+    },
+    "Turret_SalamisClassKai_Turret_MS_L1": {
+      "x": 20.0,
+      "y": 46.0,
+      "endDirOffset": 25.0
+    },
+    "Turret_SalamisClassKai_Turret_MS_R1": {
+      "x": -20.0,
+      "y": 46.0,
+      "endDirOffset": -25.0
+    },
+    "Turret_SalamisClassKai_Turret_AMS_L1": {
+      "x": -15.0,
+      "y": 115.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_SalamisClassKai_Turret_AMS_R1": {
+      "x": 15.0,
+      "y": 115.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_SalamisClassKai_Turret_AA_L1": {
+      "x": -14.0,
+      "y": -66.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_SalamisClassKai_Turret_AA_R1": {
+      "x": 14.0,
+      "y": -66.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_SalamisClassKai_Turret_AA_M": {
+      "x": 0.0,
+      "y": -82.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_SalamisClassKai_Turret_MG_L1": {
+      "x": -11.0,
+      "y": 26.0,
+      "endDirOffset": -45.0
+    },
+    "Turret_SalamisClassKai_Turret_MG_R1": {
+      "x": 11.0,
+      "y": 26.0,
+      "endDirOffset": 45.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": -2.5,
+        "y": -140.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "SalamisClassKai_Turret_BeamCannon_R1",
+      "bone": "Turret_SalamisClassKai_Turret_BeamCannon_R1",
+      "moduleId": "SalamisClassKai_Turret_BeamCannon_R1",
+      "texture": "SalamisClassKai_Turret_BeamCannon_2.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_BeamCannon_L1",
+      "bone": "Turret_SalamisClassKai_Turret_BeamCannon_L1",
+      "moduleId": "SalamisClassKai_Turret_BeamCannon_L1",
+      "texture": "SalamisClassKai_Turret_BeamCannon_2.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_BeamCannon_R2",
+      "bone": "Turret_SalamisClassKai_Turret_BeamCannon_R2",
+      "moduleId": "SalamisClassKai_Turret_BeamCannon_R2",
+      "texture": "SalamisClassKai_Turret_BeamCannon_2.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_BeamCannon_L2",
+      "bone": "Turret_SalamisClassKai_Turret_BeamCannon_L2",
+      "moduleId": "SalamisClassKai_Turret_BeamCannon_L2",
+      "texture": "SalamisClassKai_Turret_BeamCannon_2.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_BeamCannon_R3",
+      "bone": "Turret_SalamisClassKai_Turret_BeamCannon_R3",
+      "moduleId": "SalamisClassKai_Turret_BeamCannon_R3",
+      "texture": "SalamisClassKai_Turret_BeamCannon_2.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_BeamCannon_L3",
+      "bone": "Turret_SalamisClassKai_Turret_BeamCannon_L3",
+      "moduleId": "SalamisClassKai_Turret_BeamCannon_L3",
+      "texture": "SalamisClassKai_Turret_BeamCannon_2.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "SalamisClassKai_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "SalamisClassKai_Turret_BeamCannon_M1",
+      "bone": "Turret_SalamisClassKai_Turret_BeamCannon_M1",
+      "moduleId": "SalamisClassKai_Turret_BeamCannon_M1",
+      "texture": "SalamisClassKai_Turret_BeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_AA_L1",
+      "bone": "Turret_SalamisClassKai_Turret_AA_L1",
+      "moduleId": "SalamisClassKai_Turret_AA_L1",
+      "texture": "SalamisClassKai_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_AA_R1",
+      "bone": "Turret_SalamisClassKai_Turret_AA_R1",
+      "moduleId": "SalamisClassKai_Turret_AA_R1",
+      "texture": "SalamisClassKai_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_AA_M",
+      "bone": "Turret_SalamisClassKai_Turret_AA_M",
+      "moduleId": "SalamisClassKai_Turret_AA_M",
+      "texture": "SalamisClassKai_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_MG_L1",
+      "bone": "Turret_SalamisClassKai_Turret_MG_L1",
+      "moduleId": "SalamisClassKai_Turret_MG_L1",
+      "texture": "SalamisClassKai_Turret_MG_1.png",
+      "order": 5.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_MG_R1",
+      "bone": "Turret_SalamisClassKai_Turret_MG_R1",
+      "moduleId": "SalamisClassKai_Turret_MG_R1",
+      "texture": "SalamisClassKai_Turret_MG_1.png",
+      "order": 5.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_MS_L1",
+      "bone": "Turret_SalamisClassKai_Turret_MS_L1",
+      "moduleId": "SalamisClassKai_Turret_MS_L1",
+      "texture": "SalamisClassKai_Turret_MS_1.png",
+      "order": 5.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": -45.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "SalamisClassKai_Turret_MS_R1",
+      "bone": "Turret_SalamisClassKai_Turret_MS_R1",
+      "moduleId": "SalamisClassKai_Turret_MS_R1",
+      "texture": "SalamisClassKai_Turret_MS_1.png",
+      "order": 5.005,
+      "scale": 1.0,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 45.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 144000,
+    "en": 6000.0,
+    "move": 8,
+    "mobility": 75.0,
+    "cost": 875,
+    "counterLimit": 1,
+    "accuracy": 120.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 0,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "SalamisClassKai_Turret_BeamCannon_M1",
+        "name": "SalamisClassKai_Turret_BeamCannon_M1",
+        "hp": 145000.0,
+        "bone": "Turret_SalamisClassKai_Turret_BeamCannon_M1",
+        "x": 0.0,
+        "y": 82.0,
+        "idleDir": 0.0,
+        "arc": 150.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_SalamisClassKai_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_BeamCannon_R1",
+        "name": "SalamisClassKai_Turret_BeamCannon_R1",
+        "hp": 145000.0,
+        "bone": "Turret_SalamisClassKai_Turret_BeamCannon_R1",
+        "x": 18.0,
+        "y": 72.0,
+        "idleDir": 25.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_SalamisClassKai_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_BeamCannon_L1",
+        "name": "SalamisClassKai_Turret_BeamCannon_L1",
+        "hp": 145000.0,
+        "bone": "Turret_SalamisClassKai_Turret_BeamCannon_L1",
+        "x": -18.0,
+        "y": 72.0,
+        "idleDir": -25.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon_3.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_SalamisClassKai_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_BeamCannon_R2",
+        "name": "SalamisClassKai_Turret_BeamCannon_R2",
+        "hp": 145000.0,
+        "bone": "Turret_SalamisClassKai_Turret_BeamCannon_R2",
+        "x": 54.0,
+        "y": -56.0,
+        "idleDir": 25.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon_3.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_SalamisClassKai_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_BeamCannon_L2",
+        "name": "SalamisClassKai_Turret_BeamCannon_L2",
+        "hp": 145000.0,
+        "bone": "Turret_SalamisClassKai_Turret_BeamCannon_L2",
+        "x": -54.0,
+        "y": -56.0,
+        "idleDir": -25.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_SalamisClassKai_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_BeamCannon_R3",
+        "name": "SalamisClassKai_Turret_BeamCannon_R3",
+        "hp": 145000.0,
+        "bone": "Turret_SalamisClassKai_Turret_BeamCannon_R3",
+        "x": 34.0,
+        "y": -93.0,
+        "idleDir": 155.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon_3.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_SalamisClassKai_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_BeamCannon_L3",
+        "name": "SalamisClassKai_Turret_BeamCannon_L3",
+        "hp": 145000.0,
+        "bone": "Turret_SalamisClassKai_Turret_BeamCannon_L3",
+        "x": -34.0,
+        "y": -93.0,
+        "idleDir": 205.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_SalamisClassKai_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_MS_L1",
+        "name": "SalamisClassKai_Turret_MS_L1",
+        "hp": 10000.0,
+        "bone": "Turret_SalamisClassKai_Turret_MS_L1",
+        "x": 20.0,
+        "y": 46.0,
+        "idleDir": 25.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MS.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_SalamisClassKai_Turret_MS"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_MS_R1",
+        "name": "SalamisClassKai_Turret_MS_R1",
+        "hp": 10000.0,
+        "bone": "Turret_SalamisClassKai_Turret_MS_R1",
+        "x": -20.0,
+        "y": 46.0,
+        "idleDir": -25.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MS_2.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_SalamisClassKai_Turret_MS"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_AMS_L1",
+        "name": "SalamisClassKai_Turret_AMS_L1",
+        "hp": 9000.0,
+        "bone": "Turret_SalamisClassKai_Turret_AMS_L1",
+        "x": -15.0,
+        "y": 115.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AMS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_AMS_R1",
+        "name": "SalamisClassKai_Turret_AMS_R1",
+        "hp": 9000.0,
+        "bone": "Turret_SalamisClassKai_Turret_AMS_R1",
+        "x": 15.0,
+        "y": 115.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AMS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_AA_L1",
+        "name": "SalamisClassKai_Turret_AA_L1",
+        "hp": 5500.0,
+        "bone": "Turret_SalamisClassKai_Turret_AA_L1",
+        "x": -14.0,
+        "y": -66.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_SalamisClassKai_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_AA_R1",
+        "name": "SalamisClassKai_Turret_AA_R1",
+        "hp": 5500.0,
+        "bone": "Turret_SalamisClassKai_Turret_AA_R1",
+        "x": 14.0,
+        "y": -66.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_SalamisClassKai_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_AA_M",
+        "name": "SalamisClassKai_Turret_AA_M",
+        "hp": 5500.0,
+        "bone": "Turret_SalamisClassKai_Turret_AA_M",
+        "x": 0.0,
+        "y": -82.0,
+        "idleDir": -180.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_SalamisClassKai_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_MG_L1",
+        "name": "SalamisClassKai_Turret_MG_L1",
+        "hp": 8000.0,
+        "bone": "Turret_SalamisClassKai_Turret_MG_L1",
+        "x": -11.0,
+        "y": 26.0,
+        "idleDir": -45.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MG.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_SalamisClassKai_Turret_MG"
+          ]
+        }
+      },
+      {
+        "id": "SalamisClassKai_Turret_MG_R1",
+        "name": "SalamisClassKai_Turret_MG_R1",
+        "hp": 8000.0,
+        "bone": "Turret_SalamisClassKai_Turret_MG_R1",
+        "x": 11.0,
+        "y": 26.0,
+        "idleDir": 45.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MG.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_SalamisClassKai_Turret_MG"
+          ]
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 3
+    },
+    "autoRepair": {
+      "hpPercent": 10,
+      "enCost": 10
+    },
+    "sensors": {
+      "sight": 10,
+      "radar": 16.666666666666668,
+      "antiDetection": -6.944444444444445,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 20.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 30.0,
+      "flat": 125.0
+    },
+    "shell": {
+      "percent": 30.0,
+      "flat": 175.0
+    },
+    "melee": {
+      "percent": 25.0,
+      "flat": 175.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 115000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.4,
+    "turnSpeed": 0.5,
+    "reaction": 75.0,
+    "shooting": 120.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "SalamisClassKai",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "EFSF",
+      "0079",
+      "UC",
+      "LargeUnit"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 120.0,
+    "unitLevel": 3500.0,
+    "enBeforeReduction": 12000.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 600.0,
+      "antiDetection": -200.0
+    },
+    "v17BaseHp": 115000.0,
+    "technologyEra": "0083",
+    "importedTechPage": 1
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "萨拉米斯级改",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0083"
+  ],
+  "localization": {
+    "zh": {
+      "name": "萨拉米斯级改",
+      "description": "萨拉米斯的战后改修型,装备了大量武装"
+    },
+    "en": {
+      "name": "Salamis Class Kai",
+      "description": "The upgraded version of Salamis, equipped with heavy armaments."
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "SalamisClassKai_Turret_BeamCannon": {
+      "name": "舰载光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 8,
+      "hit": 67.5,
+      "en": 280.0,
+      "sourceName": "SalamisClassKai_Turret_BeamCannon",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 5000.0,
+      "damageComponents": {
+        "beam": 5000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_BeamCannon_M1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_BeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_BeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_BeamCannon_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_BeamCannon_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_BeamCannon_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_BeamCannon_L3",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon.ini",
+        "barrels": [
+          {
+            "id": "SalamisClassKai_Turret_BeamCannon",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_BeamCannon",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_BeamCannon",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_BeamCannon",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_BeamCannon",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_BeamCannon",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_BeamCannon",
+            "x": 0.0,
+            "y": 6.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2.png",
+        "scale": 1.0,
+        "speed": 50.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Pink",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_SalamisClassKai_Turret_BeamCannon_M1",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_BeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_BeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_BeamCannon_R2",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_BeamCannon_L2",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_BeamCannon_R3",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_BeamCannon_L3",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "SalamisClassKai_Turret_BeamCannon_M1",
+        "SalamisClassKai_Turret_BeamCannon_R1",
+        "SalamisClassKai_Turret_BeamCannon_L1",
+        "SalamisClassKai_Turret_BeamCannon_R2",
+        "SalamisClassKai_Turret_BeamCannon_L2",
+        "SalamisClassKai_Turret_BeamCannon_R3",
+        "SalamisClassKai_Turret_BeamCannon_L3"
+      ],
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink",
+        "Beam_Fire_1_Pink",
+        "Beam_Fire_1_Pink",
+        "Beam_Fire_1_Pink",
+        "Beam_Fire_1_Pink",
+        "Beam_Fire_1_Pink",
+        "Beam_Fire_1_Pink"
+      ],
+      "nativePayload": {
+        "BeamDamage": 5000.0,
+        "DpDamage": 225.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.5,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.5,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 50.0,
+        "ProjectileSpread": 3.0,
+        "ProjectileLife": 50.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.5,
+          "accuracy": 0.5
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon.ini",
+        "barrel": "SalamisClassKai_Turret_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 7.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 7,
+        "projectiles": 7,
+        "declaredEnergy": 40.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 40.0,
+        "energy": 280.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "SalamisClassKai_Turret_MS": {
+      "name": "舰载导弹发射器",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 90.0,
+      "en": 192.0,
+      "sourceName": "SalamisClassKai_Turret_MS",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 1500.0,
+      "damageComponents": {
+        "shell": 1500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_L1",
+            "delay": 0.75
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MS_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MS.ini",
+        "barrels": [
+          {
+            "id": "SalamisClassKai_Turret_MS",
+            "x": 3.0,
+            "y": 0.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_MS",
+            "x": 3.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 35.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_SalamisClassKai_Turret_MS_L1",
+            "offset": {
+              "x": 3.0,
+              "y": 0.0
+            },
+            "alternatingOffsetX": -6.0
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_MS_R1",
+            "offset": {
+              "x": 3.0,
+              "y": 0.0
+            },
+            "alternatingOffsetX": -6.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.2
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "SalamisClassKai_Turret_MS_L1",
+        "SalamisClassKai_Turret_MS_R1"
+      ],
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "nativePayload": {
+        "ShellDamage": 1500.0,
+        "DpDamage": 175.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 35.0,
+        "ProjectileTurnspeed": 1.25,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 40.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MS.ini",
+        "barrel": "SalamisClassKai_Turret_MS",
+        "entry": "automatic_turret",
+        "cooldown": 12.0,
+        "duration": 5.25,
+        "firstShot": 0.0,
+        "lastShot": 5.25,
+        "firingEvents": 16,
+        "projectiles": 16,
+        "declaredEnergy": 12.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 12.0,
+        "energy": 192.0,
+        "actions": []
+      },
+      "category": "missile",
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "SalamisClassKai_Turret_AMS": {
+      "name": "SalamisClassKai Turret AMS",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 76.5,
+      "en": 160.0,
+      "sourceName": "SalamisClassKai_Turret_AMS",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2000.0,
+      "damageComponents": {
+        "shell": 2000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AMS_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AMS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AMS_L1",
+            "delay": 1.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AMS_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AMS.ini",
+        "barrels": [
+          {
+            "id": "SalamisClassKai_Turret_AMS",
+            "x": 0.0,
+            "y": 0.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_AMS",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.65,
+        "speed": 20.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_SalamisClassKai_Turret_AMS_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_AMS_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.2
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "SalamisClassKai_Turret_AMS_L1",
+        "SalamisClassKai_Turret_AMS_R1"
+      ],
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "nativePayload": {
+        "ShellDamage": 2000.0,
+        "DpDamage": 175.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 0.5,
+        "AntiAqua": 1.0,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 20.0,
+        "ProjectileTurnspeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 55.0,
+        "ProjectileLife": 70.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AMS.ini",
+        "barrel": "SalamisClassKai_Turret_AMS",
+        "entry": "automatic_turret",
+        "cooldown": 12.0,
+        "duration": 1.0,
+        "firstShot": 0.0,
+        "lastShot": 1.0,
+        "firingEvents": 4,
+        "projectiles": 4,
+        "declaredEnergy": 40.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 40.0,
+        "energy": 160.0,
+        "actions": []
+      },
+      "category": "missile",
+      "actionCost": 2,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "SalamisClassKai_Turret_AA": {
+      "name": "SalamisClassKai Turret AA",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 112.5,
+      "en": 15.0,
+      "sourceName": "SalamisClassKai_Turret_AA",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 275.0,
+      "damageComponents": {
+        "shell": 200.0,
+        "shellAP": 75.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_AA_M",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AA.ini",
+        "barrels": [
+          {
+            "id": "SalamisClassKai_Turret_AA",
+            "x": 2.0,
+            "y": 6.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_AA",
+            "x": 2.0,
+            "y": 6.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_AA",
+            "x": 2.0,
+            "y": 6.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 95.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_SalamisClassKai_Turret_AA_L1",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_AA_R1",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_AA_M",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "SalamisClassKai_Turret_AA_L1",
+        "SalamisClassKai_Turret_AA_R1",
+        "SalamisClassKai_Turret_AA_M"
+      ],
+      "muzzleEffects": [
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S"
+      ],
+      "nativePayload": {
+        "ShellDamage": 200.0,
+        "ShellAPDamage": 75.0,
+        "DpDamage": 8.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 95.0,
+        "ProjectileSpread": 6.0,
+        "ProjectileLife": 7.5
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AA.ini",
+        "barrel": "SalamisClassKai_Turret_AA",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 1.8,
+        "firstShot": 0.0,
+        "lastShot": 1.8,
+        "firingEvents": 30,
+        "projectiles": 30,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 15.0,
+        "actions": []
+      },
+      "category": "machine_gun",
+      "rangeRole": "ship_anti_air",
+      "actionCost": 2,
+      "shipAntiAirBeforeReduction": [
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.2
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.2
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.2
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.2
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.2
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.2
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.2
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.2
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_L1",
+          "delay": 0.2
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "SalamisClassKai_Turret_AA_M",
+          "delay": 0.0
+        }
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "SalamisClassKai_Turret_MG": {
+      "name": "舰载机枪",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 112.5,
+      "en": 10.0,
+      "sourceName": "SalamisClassKai_Turret_MG",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 450.0,
+      "damageComponents": {
+        "shell": 350.0,
+        "shellAP": 100.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "SalamisClassKai_Turret_MG_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MG.ini",
+        "barrels": [
+          {
+            "id": "SalamisClassKai_Turret_MG",
+            "x": 2.0,
+            "y": 6.0
+          },
+          {
+            "id": "SalamisClassKai_Turret_MG",
+            "x": 2.0,
+            "y": 6.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.5,
+        "speed": 90.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_SalamisClassKai_Turret_MG_L1",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          },
+          {
+            "bone": "Turret_SalamisClassKai_Turret_MG_R1",
+            "offset": {
+              "x": 2.0,
+              "y": 6.0
+            },
+            "alternatingOffsetX": -4.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "SalamisClassKai_Turret_MG_L1",
+        "SalamisClassKai_Turret_MG_R1"
+      ],
+      "muzzleEffects": [
+        "MG_Fire_1_S",
+        "MG_Fire_1_S"
+      ],
+      "nativePayload": {
+        "ShellDamage": 350.0,
+        "ShellAPDamage": 100.0,
+        "DpDamage": 15.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 90.0,
+        "ProjectileSpread": 6.0,
+        "ProjectileLife": 7.5
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MG.ini",
+        "barrel": "SalamisClassKai_Turret_MG",
+        "entry": "automatic_turret",
+        "cooldown": 1.0,
+        "duration": 1.8,
+        "firstShot": 0.0,
+        "lastShot": 1.8,
+        "firingEvents": 20,
+        "projectiles": 20,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 10.0,
+        "actions": []
+      },
+      "category": "machine_gun",
+      "actionCost": 3,
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "AutoRepair",
+      "source": "Template/Unit/Skill/AutoRepair.gw",
+      "status": "adapted",
+      "name": "自动修复：己方行动开始时消耗10 EN恢复10%HP"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "special_Common_ReEntry_NeedBooster",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+      "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "SalamisClassKai_Turret_BeamCannon",
+        "SalamisClassKai_Turret_MS",
+        "SalamisClassKai_Turret_AMS",
+        "SalamisClassKai_Turret_AA",
+        "SalamisClassKai_Turret_MG"
+      ]
+    }
+  ],
+  "description": "萨拉米斯的战后改修型,装备了大量武装",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 3500.0,
+    "levelMultiplier": 0.25,
+    "published": 875
+  },
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 4,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 8,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+      "sourceUnit": "Hangar_X8"
+    }
+  ]
+}

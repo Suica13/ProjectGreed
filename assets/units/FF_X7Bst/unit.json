@@ -189,11 +189,11 @@
     }
   ],
   "animations": {
-    "OnMoving": "../../animations/FF_X7Bst__OnMoving.json",
-    "OnMovingReversing": "../../animations/FF_X7Bst__OnMovingReversing.json",
-    "Common_Dead": "../../animations/FF_X7Bst__Common_Dead.json",
-    "Common_Stun": "../../animations/FF_X7Bst__Common_Stun.json",
-    "Common_Idle": "../../animations/FF_X7Bst__Common_Idle.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
@@ -325,7 +325,8 @@
       "radar": 550.0,
       "antiDetection": 0.0
     },
-    "v17BaseHp": 15500.0
+    "v17BaseHp": 15500.0,
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": false,
@@ -344,7 +345,7 @@
   "faction": "EFSF",
   "tags": [
     "EFSF",
-    "0079"
+    "0079E"
   ],
   "localization": {
     "zh": {
@@ -1533,8 +1534,8 @@
     {
       "id": "SFS",
       "source": "Template/Unit/Skill/SFS.gw",
-      "status": "review",
-      "name": "辅助飞行平台"
+      "status": "adapted",
+      "name": "SFS：可见MS搭载槽，平台与乘员独立攻击和受击，移动离机"
     },
     {
       "id": "ExitUnit",
@@ -1615,7 +1616,8 @@
   ],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "Aircraft"
+    "Aircraft",
+    "Transport"
   ],
   "transport": {
     "slotCost": 2,
@@ -1623,7 +1625,26 @@
       "CanLoadIntoAir"
     ]
   },
-  "hangars": [],
+  "hangars": [
+    {
+      "id": "SFS01",
+      "name": "SFS",
+      "kind": "sfs",
+      "capacity": 1,
+      "allowedTags": [
+        "CanUseSFS"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "offset": {
+        "x": 0.0,
+        "y": -7.5,
+        "height": 1.0
+      },
+      "source": "Template/Unit/Transport_SFS.ini",
+      "sourceUnit": "SFS_X1"
+    }
+  ],
   "pairedWeapons": [
     {
       "id": "Common_DoubleVulcan_FF_X7Bst",

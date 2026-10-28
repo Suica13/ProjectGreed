@@ -1,4 +1,4 @@
-﻿/* 0079 第一页开发目录：客户端展示与服务端编组裁定共用同一份节点数据。 */
+﻿/* 0079 早期／后期与0083开发目录：客户端展示与服务端编组裁定共用同一份节点数据。 */
 "use strict";
 const Development = (() => {
   const economy = typeof Economy !== "undefined" ? Economy : require("./economy.js");

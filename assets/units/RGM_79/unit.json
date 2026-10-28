@@ -1783,7 +1783,8 @@
       "radar": 360.0,
       "antiDetection": 0.0
     },
-    "v17BaseHp": 21000.0
+    "v17BaseHp": 21000.0,
+    "technologyEra": "0079E"
   },
   "description": "联邦军主力泛用型MS",
   "localization": {
@@ -1801,7 +1802,7 @@
   },
   "tags": [
     "EFSF",
-    "0079"
+    "0079E"
   ],
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
@@ -1818,7 +1819,8 @@
   "transport": {
     "slotCost": 2,
     "loadTags": [
-      "CanLoadInto"
+      "CanLoadInto",
+      "CanUseSFS"
     ]
   },
   "hangars": [],

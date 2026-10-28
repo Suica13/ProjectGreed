@@ -1,0 +1,7165 @@
+{
+  "schemaVersion": 2,
+  "id": "MA_08",
+  "code": "MA-08",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MA_08/MA_08.ini",
+  "materials": {
+    "textures": {
+      "MA_08_Body_1.png": "textures/MA_08_Body_1.png",
+      "MA_08_Eye_1.png": "textures/MA_08_Eye_1.png",
+      "MA_08_FootL_1.png": "textures/MA_08_FootL_1.png",
+      "MA_08_LegL_1.png": "textures/MA_08_LegL_1.png",
+      "MA_08_FootR_1.png": "textures/MA_08_FootR_1.png",
+      "MA_08_LegR_1.png": "textures/MA_08_LegR_1.png",
+      "MA_08.png": "textures/MA_08.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MA_08.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "MA_08_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MA_08_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MA_08_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MA_08_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "MA_08_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Eye",
+      "texture": "MA_08_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": -10.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__AMX_002.json",
+    "OnMoving": "../../animations/OnMoving__MA_08.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk__MA_08.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "ZN_MA_08_Shock_A": "../../animations/ZN_MA_08_Shock_A.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 219000,
+    "en": 900.0,
+    "move": 6,
+    "mobility": 75.0,
+    "cost": 1500,
+    "counterLimit": 1,
+    "accuracy": 125.0,
+    "partStructuralStrength": 125.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 75.0,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 75.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "sensors": {
+      "sight": 10,
+      "radar": 12.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 65.0,
+    "shooting": 65.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 20.0,
+      "flat": 500.0
+    },
+    "shell": {
+      "percent": 20.0,
+      "flat": 500.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 400.0
+    },
+    "dp": {
+      "percent": 20.0,
+      "flat": 50.0
+    },
+    "sp": {
+      "percent": 20.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 175000.0,
+    "walkSpeed": 0.75,
+    "boostSpeed": 1.45,
+    "turnSpeed": 0.5,
+    "reaction": 75.0,
+    "shooting": 165.0,
+    "melee": 165.0,
+    "nativeTags": [
+      "MA_08",
+      "Unit",
+      "MA",
+      "ZEON",
+      "0079",
+      "UC",
+      "LargeUnit"
+    ],
+    "nativeSkills": [
+      "CustomUnit",
+      "CustomUnit_PilotCustomUnit",
+      "I_Field"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 125.0,
+    "unitLevel": 6000.0,
+    "enBeforeReduction": 1800.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 75.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 75.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 432.0,
+      "antiDetection": 0.0
+    },
+    "v17BaseHp": 175000.0,
+    "technologyEra": "0079L",
+    "importedTechPage": 1
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMovingWalk",
+    "stagger": "Common_Stagger",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "walk",
+    "moveSoundKey": null
+  },
+  "name": "大扎姆",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079L"
+  ],
+  "localization": {
+    "zh": {
+      "name": "大扎姆",
+      "description": "以宏扬吉翁军的威信而开发的对要塞攻击用巨大MA"
+    },
+    "en": {
+      "name": "Big Zam",
+      "description": "A gigantic MA developed to exalt the Principality of Zeon’s prestige, designed for fortress assaults"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "ZN_MA_08_MegaBeamCannon": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 400.0,
+      "sourceName": "ZN_MA_08_MegaBeamCannon",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 4500.0,
+      "damageComponents": {
+        "beam": 3000.0,
+        "beamAP": 1500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 2.6
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "delay": 3.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_MegaBeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_MegaBeamCannon",
+            "x": 0.0,
+            "y": 30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 125.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 0.0,
+              "y": 30.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_2.ogg",
+        "volume": 0.0
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 3000.0,
+        "BeamAPDamage": 1500.0,
+        "DpDamage": 250.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 0.0,
+        "HeightHitRange": 50.0,
+        "ProjectileExplosionRange": 50.0,
+        "ProjectileSpeed": 125.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 6.0,
+        "ProjectileAttackTimes": 9.0,
+        "ProjectileAttackTimesDamageModifier": 0.75,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 1000.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_MegaBeamCannon.gw",
+        "barrel": "ZN_MA_08_MegaBeamCannon",
+        "entry": "action_ZN_MA_08_MegaBeamCannon_Trigger",
+        "cooldown": 240.0,
+        "duration": 10.29999999999999,
+        "firstShot": 2.6,
+        "lastShot": 7.299999999999989,
+        "firingEvents": 96,
+        "projectiles": 96,
+        "declaredEnergy": 400.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 400.0,
+        "actions": [
+          "action_ZN_MA_08_MegaBeamCannon_Trigger",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SetOnSkillOn_ZN_MA_08_MegaBeamCannon",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_SetWeaponIndex",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_B1_Step_1",
+          "hiddenAction_SetAttackingCantAimOn",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_Fire_Step_ChargeEffect_1",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_Fire_Step_1",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_Fire_Step_BulletEffect_1",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_Fire_Step_2",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetOnSkillOff",
+          "hiddenAction_SetAttackingCantAimOff",
+          "hiddenAction_SetAttackingCantTurnOff",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_BulletEffect_1_StopPlay",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_B1_Step_1_AI",
+          "hiddenAction_SetAttackingCantTurnOn",
+          "hiddenAction_ZN_MA_08_MegaBeamCannon_Fire_Step_1_AI"
+        ]
+      },
+      "category": "cannon",
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "mergedPositions": [
+        "ZN_MA_08_AA_BeamCannon",
+        "ZN_MA_08_AA_BeamCannon_L"
+      ],
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "actionCost": 3,
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      }
+    },
+    "ZN_MA_08_AA_BeamCannon_L": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_L",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_R2": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_R2",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_L2": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_L2",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_R3": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_R3",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_L3": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_L3",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_R4": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_R4",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_L4": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_L4",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_R5": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_R5",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_L5": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_L5",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_R6": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_R6",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_L6": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_L6",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_R7": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_R7",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_AA_BeamCannon_L7": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 100.0,
+      "en": 2520.0,
+      "sourceName": "ZN_MA_08_AA_BeamCannon_L7",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500.0,
+      "damageComponents": {
+        "beam": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 12,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 13,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_AA_BeamCannon",
+            "x": 12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L",
+            "x": -12.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R2",
+            "x": 30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L2",
+            "x": -30.0,
+            "y": 5.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R3",
+            "x": 45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L3",
+            "x": -45.0,
+            "y": 0.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R4",
+            "x": 50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L4",
+            "x": -50.0,
+            "y": -10.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R5",
+            "x": 45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L5",
+            "x": -45.0,
+            "y": -25.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R6",
+            "x": 30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L6",
+            "x": -30.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_R7",
+            "x": 20.0,
+            "y": -30.0
+          },
+          {
+            "id": "ZN_MA_08_AA_BeamCannon_L7",
+            "x": -20.0,
+            "y": -30.0
+          }
+        ],
+        "muzzleNote": "Native weapon has no standalone muzzle flash"
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 135.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Yellow",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -12.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": 5.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": 0.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -50.0,
+              "y": -10.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -45.0,
+              "y": -25.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -30.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 20.0,
+              "y": -30.0
+            }
+          },
+          {
+            "bone": "Body",
+            "offset": {
+              "x": -20.0,
+              "y": -30.0
+            }
+          }
+        ]
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "BeamDamage": 2500.0,
+        "DpDamage": 65.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 135.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 4.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileAttackTimesDamageModifier": 0.5,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 600.0,
+        "SubEquipmentIndex": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
+        "barrel": "ZN_MA_08_AA_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 180.0,
+        "duration": 0,
+        "firstShot": 0.0,
+        "lastShot": 0.0,
+        "firingEvents": 14,
+        "projectiles": 14,
+        "declaredEnergy": 180.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 180.0,
+        "energy": 2520.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "energy_capacity_review"
+        ]
+      },
+      "actionCost": 3
+    },
+    "ZN_MA_08_BeamCannon": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 75.0,
+      "en": 120.0,
+      "sourceName": "ZN_MA_08_BeamCannon",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 32000.0,
+      "damageComponents": {
+        "beam": 24000.0,
+        "beamAP": 8000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.65
+          },
+          {
+            "delay": 0.65
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_BeamCannon",
+            "x": 0.0,
+            "y": 20.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 0.75,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 0.0,
+              "y": 20.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_11.ogg",
+        "volume": 0.6
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "Beam_Charge_3_Yellow"
+      ],
+      "nativePayload": {
+        "BeamDamage": 24000.0,
+        "BeamAPDamage": 8000.0,
+        "DpDamage": 900.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 0.75,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 45.0,
+        "ProjectileLife": 25.0,
+        "ProjectileAttackTimes": 7.0,
+        "ProjectileAttackTimesDamageModifier": 0.75,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 750.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_BeamCannon.gw",
+        "barrel": "ZN_MA_08_BeamCannon",
+        "entry": "hiddenAction_ZN_MA_08_BeamCannon_Fire",
+        "cooldown": 10.0,
+        "duration": 1.3,
+        "firstShot": 0.65,
+        "lastShot": 0.65,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 120.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 120.0,
+        "actions": [
+          "hiddenAction_ZN_MA_08_BeamCannon_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_MA_08_BeamCannon_SetWeaponIndex",
+          "hiddenAction_ZN_MA_08_BeamCannon_B1_Step_1",
+          "hiddenAction_ZN_MA_08_BeamCannon_Fire_Step_1",
+          "hiddenAction_ZN_MA_08_BeamCannon_Fire_Step_2",
+          "hiddenAction_ZN_MA_08_BeamCannon_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "cannon",
+      "actionCost": 3
+    },
+    "ZN_MA_08_Shock_A": {
+      "name": "近身格斗",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 125.0,
+      "en": 0,
+      "sourceName": "ZN_MA_08_Shock_A",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "ZN_MA_08_Shock_A",
+      "damagePerShot": 14000.0,
+      "damageComponents": {
+        "melee": 7000.0,
+        "meleeShell": 7000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "ZN_MA_08_Shock_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.5,
+            "requiredParts": [],
+            "delay": 0.65
+          },
+          {
+            "delay": 2.5
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.5,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/ZN_MA_08_Shock_A.gw",
+        "barrels": [
+          {
+            "id": "ZN_MA_08_Shock_A",
+            "x": 30.0,
+            "y": 55.0
+          }
+        ]
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "CqbDamage": 7000.0,
+        "CqbShellDamage": 7000.0,
+        "DpDamage": 1500.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 0.5,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 9.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/ZN_MA_08_Shock_A.gw",
+        "barrel": "ZN_MA_08_Shock_A",
+        "entry": "hiddenAction_ZN_MA_08_Shock_A_Fire",
+        "cooldown": 5.0,
+        "duration": 3.15,
+        "firstShot": 0.65,
+        "lastShot": 0.65,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_ZN_MA_08_Shock_A_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SetAttackingCantTurnOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_ZN_MA_08_Shock_A_SetWeaponIndex",
+          "hiddenAction_ZN_MA_08_Shock_A_Step_1",
+          "hiddenAction_ZN_MA_08_Shock_A_Fire_Step_1",
+          "hiddenAction_ZN_MA_08_Shock_A_Fire_Step_2",
+          "hiddenAction_ZN_MA_08_Shock_A_Fire_Step_3",
+          "hiddenAction_ZN_MA_08_Shock_A_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetAttackingCantTurnOff"
+        ]
+      },
+      "category": "melee",
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 30.0,
+          "y": 55.0
+        }
+      },
+      "actionCost": 2
+    },
+    "Common_DoubleVulcan_MA_08": {
+      "name": "火神炮",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 100.0,
+      "en": 0.0,
+      "sourceName": "Common_DoubleVulcan_MA_08",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 800.0,
+      "damageComponents": {
+        "shell": 800.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.1
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MA_08.gw",
+        "barrels": [
+          {
+            "id": "Common_DoubleVulcan_MA_08",
+            "x": 8.0,
+            "y": -8.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.5,
+        "speed": 100.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 8.0,
+              "y": -8.0
+            },
+            "alternatingOffsetX": -16.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Vulcan_2.ogg",
+        "volume": 0.25
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ],
+      "nativePayload": {
+        "ShellDamage": 800.0,
+        "DpDamage": 25.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 1.0,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 1.0,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 3.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 100.0,
+        "ProjectileSpread": 3.0,
+        "ProjectileLife": 20.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MA_08.gw",
+        "barrel": "Common_DoubleVulcan_MA_08",
+        "entry": "automatic_turret",
+        "cooldown": 3.0,
+        "duration": 1.5,
+        "firstShot": 0.0,
+        "lastShot": 1.5,
+        "firingEvents": 16,
+        "projectiles": 16,
+        "declaredEnergy": 0.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.0,
+        "energy": 0.0,
+        "actions": []
+      },
+      "category": "machine_gun",
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "CustomUnit",
+      "source": "Template/Unit/Skill/CustomUnit.gw",
+      "status": "review",
+      "name": "换装／改修"
+    },
+    {
+      "id": "CustomUnit_PilotCustomUnit",
+      "source": "Template/Unit/Skill/CustomUnit_PilotCustomUnit.gw",
+      "status": "not_applicable",
+      "name": "驾驶员专属改修"
+    },
+    {
+      "id": "I_Field",
+      "source": "Template/Unit/Skill/I_Field.gw",
+      "status": "review",
+      "name": "I力场"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_L",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_R2",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_L2",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_R3",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_L3",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_R4",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_L4",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_R5",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_L5",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_R6",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_L6",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_R7",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    },
+    {
+      "id": "energy_capacity_ZN_MA_08_AA_BeamCannon_L7",
+      "name": "待适配：光束炮（原生EN消费超过减半后的机体容量）",
+      "status": "review",
+      "source": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "ZN_MA_08_MegaBeamCannon",
+        "ZN_MA_08_BeamCannon",
+        "ZN_MA_08_Shock_A",
+        "Common_DoubleVulcan_MA_08"
+      ]
+    }
+  ],
+  "description": "以宏扬吉翁军的威信而开发的对要塞攻击用巨大MA",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 6000.0,
+    "levelMultiplier": 0.25,
+    "published": 1500
+  },
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MA"
+  ],
+  "transport": {
+    "slotCost": 3,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": []
+}

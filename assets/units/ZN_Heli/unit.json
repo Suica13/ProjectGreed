@@ -121,11 +121,11 @@
     }
   ],
   "animations": {
-    "OnMoving": "../../animations/ZN_Heli__OnMoving.json",
-    "OnMovingReversing": "../../animations/ZN_Heli__OnMovingReversing.json",
-    "Common_Dead": "../../animations/ZN_Heli__Common_Dead.json",
-    "Common_Stun": "../../animations/ZN_Heli__Common_Stun.json",
-    "Common_Idle": "../../animations/ZN_Heli__Common_Idle.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
@@ -251,7 +251,8 @@
       "radar": 450.0,
       "antiDetection": 0.0
     },
-    "v17BaseHp": 3750.0
+    "v17BaseHp": 3750.0,
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": false,
@@ -271,7 +272,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079"
+    "0079E"
   ],
   "localization": {
     "zh": {

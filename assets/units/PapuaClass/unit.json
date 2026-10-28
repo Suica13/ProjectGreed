@@ -405,7 +405,8 @@
       "enRecoveryPercent": 50,
       "actionCost": 2,
       "usesPerOwnTurn": 1
-    }
+    },
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": false,
@@ -425,7 +426,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079"
+    "0079E"
   ],
   "localization": {
     "zh": {

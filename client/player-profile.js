@@ -72,7 +72,7 @@ const PlayerProfile = (() => {
   function restriction(model) {
     if (model?.wip) return "wip";
     const group = formationGroup;
-    if (group !== "PMC" && model?.faction !== group) return "faction_mismatch";
+    if (group !== "PMC" && !(model?.availableFactions || [model?.faction]).includes(group)) return "faction_mismatch";
     return Development.allows(group, model?.prefabId || model?.id)
       ? null : "not_developed";
   }

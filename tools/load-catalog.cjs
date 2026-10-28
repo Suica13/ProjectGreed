@@ -356,6 +356,10 @@ function loadCatalog({
     prefab.wip = isWip(prefab.id);
     prefab.disabled = prefab.wip;
     validateLocalization(prefab.localization, ref);
+    if (prefab.availableFactions !== undefined &&
+        (!Array.isArray(prefab.availableFactions) || !prefab.availableFactions.length ||
+         prefab.availableFactions.some((value) => !["EFSF", "ZEON"].includes(value))))
+      throw Error("Invalid available factions: " + prefab.id);
     if (
       !Number.isInteger(prefab.stats.actionPoints) ||
       prefab.stats.actionPoints < 1 ||
@@ -367,7 +371,7 @@ function loadCatalog({
       prefab.tags.filter((tag) => ["EFSF", "ZEON"].includes(tag)).length !== 1
     )
       throw Error("Unit must have exactly one EFSF or ZEON tag: " + ref);
-    if (!prefab.tags.some((tag) => /^\d{4}$/.test(tag)))
+    if (!prefab.tags.some((tag) => /^\d{4}(?:[EL])?$/.test(tag)))
       throw Error("Unit must have an era tag: " + ref);
     prefab.unitTags ??= [];
     prefab.transport ??= { slotCost: 1, loadTags: [] };
@@ -387,6 +391,9 @@ function loadCatalog({
           !h ||
           typeof h.id !== "string" ||
           !h.id.trim() ||
+          (h.kind !== undefined && h.kind !== "sfs") ||
+          (h.kind === "sfs" && (h.capacity !== 1 || !h.offset ||
+            [h.offset.x,h.offset.y,h.offset.height].some(value => !Number.isFinite(value) || Math.abs(value) > 500))) ||
           !Number.isInteger(h.capacity) ||
           h.capacity < 1 ||
           !stringTags(h.allowedTags) ||
@@ -869,6 +876,7 @@ function loadCatalog({
         disabled: prefab.disabled,
         formOnly: prefab.formOnly === true,
         faction: prefab.faction,
+        availableFactions: prefab.availableFactions,
         tags: prefab.tags,
         unitTags: prefab.unitTags || [],
         transport: prefab.transport || { slotCost: 1, loadTags: [] },

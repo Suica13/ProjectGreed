@@ -18,10 +18,10 @@ def find(pattern, source, context):
         raise ValueError(f"Missing {context}")
     return match.group(1).strip()
 
-def import_faction(root, faction):
+def import_faction(root, faction, page_number=0):
     tree = root / "Units" / "TechTree"
     page = read(tree / "Core" / "Faction" / f"{faction}_0079" /
-                f"TechTree_UI_Page_{faction}_0079_00.ini")
+                f"TechTree_UI_Page_{faction}_0079_{page_number:02d}.ini")
     tech_list = read(tree / "Tech" / "Faction" / f"{faction}_0079" /
                      f"TechList_{faction}_0079.ini")
     marker_dir = tree / "Tech" / "Faction" / f"{faction}_0079" / "Common"
@@ -68,17 +68,29 @@ def import_faction(root, faction):
             "requires": [item for item in requires if "_Start" not in item],
             "unlocks": list(dict.fromkeys(re.findall(r"@define UnitID=(\w+)", info))),
         })
-    ids = {node["id"] for node in nodes}
     for node in nodes:
-        node["requires"] = [item for item in node["requires"] if item in ids]
+        node["page"] = page_number
+        node["era"] = "0079E" if page_number == 0 else "0083" if node["id"].endswith(("_GPProject", "_OperationStardust")) else "0079L"
     return nodes
 
 def main():
     if len(sys.argv) != 2:
         raise SystemExit(__doc__)
     root = Path(sys.argv[1])
-    result = {faction: import_faction(root, faction) for faction in ("EFSF", "ZEON")}
     output = Path(__file__).resolve().parents[1] / "shared" / "development-tree.json"
+    result = json.loads(output.read_text(encoding="utf-8")) if output.exists() else {"EFSF":[],"ZEON":[]}
+    for faction in ("EFSF","ZEON"):
+        existing = {node["id"]:node for node in result[faction]}
+        for page_number in (0,1):
+            for node in import_faction(root,faction,page_number):
+                if node["id"] in existing:
+                    existing[node["id"]].update(page=page_number,era=node["era"])
+                else:
+                    result[faction].append(node)
+                    existing[node["id"]]=node
+        for node in result[faction]:
+            unknown=[ident for ident in node["requires"] if ident not in existing]
+            if unknown: raise ValueError("Missing technology prerequisite: "+str(unknown))
     output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {output}: " + ", ".join(f"{key} {len(value)} nodes" for key, value in result.items()))
 

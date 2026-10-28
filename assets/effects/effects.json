@@ -1132,5 +1132,93 @@
       }
     ],
     "source": "Resource/Image/Fx/Weapon/Shell/Common/Nuke_Hit_1.gw"
+  },
+  "Burned_Hit_1": {
+    "texture": "textures/Burned_Hit_1.png",
+    "frames": 13,
+    "startFrame": 0,
+    "endFrame": 12,
+    "fps": 6.0,
+    "scaleFrom": 1.0,
+    "scaleTo": 1.0,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": -1.0,
+      "y": 10.0
+    },
+    "drift": 0.0,
+    "sounds": [
+      {
+        "file": "../sounds/Explosion_Hit_1.ogg",
+        "volume": 0.35
+      }
+    ],
+    "source": "MOD native Burned_Hit_1"
+  },
+  "Flash_Hit_1_L": {
+    "texture": "textures/Flash_Hit_1.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 12.0,
+    "scaleFrom": 1.5,
+    "scaleTo": 1.5,
+    "alpha": 0.85,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "drift": 0.0,
+    "sounds": [
+      {
+        "file": "../sounds/Beam_Hit_3.ogg",
+        "volume": 0.5
+      }
+    ],
+    "source": "MOD native Flash_Hit_1_L"
+  },
+  "Beam_Hit_1_Blue": {
+    "texture": "textures/Beam_Hit_1_Blue.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 12.0,
+    "scaleFrom": 0.85,
+    "scaleTo": 0.85,
+    "alpha": 0.75,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 10.0
+    },
+    "drift": 45.0,
+    "sounds": [
+      {
+        "file": "../sounds/Beam_Hit_1.ogg",
+        "volume": 0.25
+      }
+    ],
+    "source": "MOD native Beam_Hit_1_Blue"
+  },
+  "Beam_Fire_1_Blue_S": {
+    "texture": "textures/Beam_Fire_1_Blue.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 12.0,
+    "scaleFrom": 0.3,
+    "scaleTo": 0.3,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": 0.0,
+      "y": 25.0
+    },
+    "drift": 0.0,
+    "attached": true,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: Beam_Fire_1_Blue_S"
   }
 }

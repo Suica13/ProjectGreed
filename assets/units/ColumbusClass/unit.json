@@ -407,7 +407,8 @@
       "enRecoveryPercent": 50,
       "actionCost": 2,
       "usesPerOwnTurn": 1
-    }
+    },
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": false,
@@ -427,7 +428,7 @@
   "faction": "EFSF",
   "tags": [
     "EFSF",
-    "0079"
+    "0079E"
   ],
   "localization": {
     "zh": {

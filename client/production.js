@@ -159,7 +159,7 @@ const ProductionUI = (() => {
     const faction = PlayerProfile.faction();
     return (
       !prefab.wip &&
-      (faction === "PMC" || faction === prefab.faction) &&
+      (faction === "PMC" || (prefab.availableFactions || [prefab.faction]).includes(faction)) &&
       Development.allows(faction, prefab.id)
     );
   }
@@ -292,7 +292,7 @@ const ProductionUI = (() => {
     const reason = prefab.wip
       ? "WIP"
       : !allows(prefab)
-        ? PlayerProfile.faction() !== "PMC" && PlayerProfile.faction() !== prefab.faction
+        ? PlayerProfile.faction() !== "PMC" && !(prefab.availableFactions || [prefab.faction]).includes(PlayerProfile.faction())
           ? "阵营不匹配"
           : "尚未开发"
         : !offer

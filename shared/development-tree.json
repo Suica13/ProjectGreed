@@ -57,7 +57,9 @@
         "researchSeconds": 0,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
         "action": "hiddenAction_Tech_EFSF_0079_BaseTech_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_EFSF_0079_AntiMSPlan",
@@ -95,7 +97,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
         "action": "hiddenAction_Tech_EFSF_0079_AntiMSPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan",
@@ -132,7 +136,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
         "action": "hiddenAction_Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_EFSF_0079_OperationVDataRecoveryProject",
@@ -166,7 +172,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
         "action": "hiddenAction_Tech_EFSF_0079_OperationVDataRecoveryProject_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_EFSF_0079_GMDevelopmentPlan",
@@ -196,7 +204,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
         "action": "hiddenAction_Tech_EFSF_0079_GMDevelopmentPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_EFSF_0079_BlueDestinyProject",
@@ -224,7 +234,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
         "action": "hiddenAction_Tech_EFSF_0079_BlueDestinyProject_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_EFSF_0079_PaleRiderProject",
@@ -252,7 +264,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
         "action": "hiddenAction_Tech_EFSF_0079_PaleRiderProject_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_EFSF_0079_HeavyGuncannonPlan",
@@ -281,7 +295,342 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
         "action": "hiddenAction_Tech_EFSF_0079_HeavyGuncannonPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_GMModularizationPlan",
+      "name": "吉姆改装计划",
+      "description": "解锁改装吉姆",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_GMModularizationPlan.png",
+      "row": "mid",
+      "column": 1,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 10800,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_GMModularizationPlan_Awake"
+      },
+      "points": 10800,
+      "requires": [
+        "Tech_EFSF_0079_GMDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RGC_80",
+        "RGC_80S",
+        "RGM_79SC",
+        "RGM_79HC",
+        "RAG_79",
+        "RGM_79V",
+        "RX_78_3",
+        "PublicClass",
+        "Pilot_EFSF_0079_N_ACE_AMR",
+        "Pilot_EFSF_0079_N_ACE_KSD",
+        "Pilot_EFSF_0079_N_ACE_BRT",
+        "SalamisClassLateType",
+        "ColumbusClassKai",
+        "Refinery_Common_T2",
+        "Academy_Common_T2"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_Luna2TechnologyIntegrationPlan",
+      "name": "月神2科技导入计划",
+      "description": "解锁月神2吉姆",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_Luna2TechnologyIntegrationPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 12600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_Luna2TechnologyIntegrationPlan_Awake"
+      },
+      "points": 12600,
+      "requires": [
+        "Tech_EFSF_0079_T2_GMModularizationPlan"
+      ],
+      "unlocks": [
+        "RGM_79G",
+        "RGM_79G_Space",
+        "RGM_79D",
+        "RAG_79_G1",
+        "MagellanClassLateType"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_GundamNTCustomPlan",
+      "name": "NT专用高达开发计划",
+      "description": "解锁高达NT-1",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_GundamNTCustomPlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 14400,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_GundamNTCustomPlan_Awake"
+      },
+      "points": 14400,
+      "requires": [
+        "Tech_EFSF_0079_T2_Luna2TechnologyIntegrationPlan"
+      ],
+      "unlocks": [
+        "RX_78NT_1",
+        "RX_78NT_1_FA",
+        "RGM_79SP2",
+        "RX_77D",
+        "RGM_79LV",
+        "Pilot_EFSF_0079_N_ACE_CRS",
+        "Pilot_EFSF_0079_N_ACE_WAK",
+        "GrayPhantomClass"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan",
+      "name": "吉姆改开发计划",
+      "description": "解锁吉姆改",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_GMKaiDevelopmentPlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 16800,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_GMKaiDevelopmentPlan_Awake"
+      },
+      "points": 16800,
+      "requires": [
+        "Tech_EFSF_0079_T2_GundamNTCustomPlan"
+      ],
+      "unlocks": [
+        "RGM_79C",
+        "RGM_79C_Space",
+        "RB_79_LateType",
+        "RX_77_4",
+        "Pilot_EFSF_0079_N_ACE_SYA",
+        "Pilot_EFSF_0079_N_ACE_SLG"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_GLineDevelopmentPlan",
+      "name": "GLine开发计划",
+      "description": "解锁GLine",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_GLineDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 19200,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_GLineDevelopmentPlan_Awake"
+      },
+      "points": 19200,
+      "requires": [
+        "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RX_81ST",
+        "RX_81LA",
+        "RX_81AS",
+        "RX_81"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_GPProject",
+      "name": "GP计划",
+      "description": "解锁 GP计划单位",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_GPProject.png",
+      "row": "mid",
+      "column": 6,
+      "money": 30000,
+      "supplies": 10000,
+      "sourceCosts": {
+        "money": 15000,
+        "supplies": 5000,
+        "points": 24000,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_GPProject_Awake"
+      },
+      "points": 24000,
+      "requires": [
+        "Tech_EFSF_0079_T2_GLineDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RX_78GP01",
+        "RX_78GP01_FB",
+        "RX_78GP02A",
+        "RX_78GP03S",
+        "RGM_79N",
+        "RGC_83",
+        "RX_81FC",
+        "RX_78GP03D",
+        "Pilot_EFSF_0079_N_ACE_KOU",
+        "AlbionClass",
+        "BirminghamClass",
+        "MagellanClassKai",
+        "SalamisClassKai",
+        "FF_X_II",
+        "FF_X_II_FB"
+      ],
+      "page": 1,
+      "era": "0083"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_G4Plan",
+      "name": "G4计划",
+      "description": "解锁G4计划单位",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_G4Plan.png",
+      "row": "top",
+      "column": 3,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 15600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_G4Plan_Awake"
+      },
+      "points": 15600,
+      "requires": [
+        "Tech_EFSF_0079_PaleRiderProject"
+      ],
+      "unlocks": [
+        "RX_78_4_Bst",
+        "RX_78_5_Bst",
+        "RX_80PR_SpaceType",
+        "RGM_79GL",
+        "Pilot_EFSF_0079_N_ACE_FOT",
+        "Pilot_EFSF_0079_N_ACE_RUT",
+        "Pilot_EFSF_0079_N_ACE_JST"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_GMPowerfulPlan",
+      "name": "GM强化计划",
+      "description": "解锁强化GM",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_GMPowerfulPlan.png",
+      "row": "top",
+      "column": 4,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 18000,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_GMPowerfulPlan_Awake"
+      },
+      "points": 18000,
+      "requires": [
+        "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RGM_79FP",
+        "RGM_79FD",
+        "RGM_79S",
+        "RX_78SP"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_FSWSPlan",
+      "name": "FSWS计划",
+      "description": "解锁FSWS单位",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_FSWSPlan.png",
+      "row": "bot",
+      "column": 2,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 13800,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_FSWSPlan_Awake"
+      },
+      "points": 13800,
+      "requires": [
+        "Tech_EFSF_0079_HeavyGuncannonPlan"
+      ],
+      "unlocks": [
+        "FA_78_1",
+        "RX_78_6",
+        "RX_77_4",
+        "RGM_79_D",
+        "Burstliner"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_EFSF_0079_T2_GundamUnit7Plan",
+      "name": "高达七号机计划",
+      "description": "解锁高达七号机",
+      "icon": "assets/tech-icons/Tech_EFSF_0079_T2_GundamUnit7Plan.png",
+      "row": "bot",
+      "column": 5,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 20400,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/EFSF_0079/TechList_EFSF_0079.ini",
+        "action": "hiddenAction_Tech_EFSF_0079_T2_GundamUnit7Plan_Awake"
+      },
+      "points": 20400,
+      "requires": [
+        "Tech_EFSF_0079_T2_FSWSPlan"
+      ],
+      "unlocks": [
+        "RX_78_7",
+        "FA_78_3",
+        "FA_78_2",
+        "FA_78_G"
+      ],
+      "page": 1,
+      "era": "0079L"
     }
   ],
   "ZEON": [
@@ -341,7 +690,9 @@
         "researchSeconds": 0,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
         "action": "hiddenAction_Tech_ZEON_0079_BaseTech_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan",
@@ -378,7 +729,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
         "action": "hiddenAction_Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan",
@@ -414,7 +767,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
         "action": "hiddenAction_Tech_ZEON_0079_GroundTypeMSDevelopmentPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan",
@@ -447,7 +802,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
         "action": "hiddenAction_Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan",
@@ -479,7 +836,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
         "action": "hiddenAction_Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_ZEON_0079_603TestTeam",
@@ -508,7 +867,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
         "action": "hiddenAction_Tech_ZEON_0079_603TestTeam_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_ZEON_0079_PezunProject",
@@ -536,7 +897,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
         "action": "hiddenAction_Tech_ZEON_0079_PezunProject_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan",
@@ -564,7 +927,9 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
         "action": "hiddenAction_Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
     },
     {
       "id": "Tech_ZEON_0079_ApsarasDevelopmentPlan",
@@ -592,7 +957,342 @@
         "researchSeconds": 30,
         "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
         "action": "hiddenAction_Tech_ZEON_0079_ApsarasDevelopmentPlan_Awake"
-      }
+      },
+      "page": 0,
+      "era": "0079E"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan",
+      "name": "新型水中MS开发计划",
+      "description": "解锁新型水中MS",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan.png",
+      "row": "mid",
+      "column": 1,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 10800,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan_Awake"
+      },
+      "points": 10800,
+      "requires": [
+        "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSM_07",
+        "MSM_07S",
+        "MS_06R_2",
+        "MS_06F_Sniper",
+        "MS_09_K_1",
+        "MA_05",
+        "YMS_09J",
+        "Pilot_ZEON_0079_N_ACE_CHA",
+        "Pilot_ZEON_0079_N_ACE_AKHN",
+        "MusaiClassLateType",
+        "PazockClass",
+        "Refinery_Common_T2",
+        "Academy_Common_T2"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan",
+      "name": "次世代主力MS竞标计划",
+      "description": "解锁次世代主力MS",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 12600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan_Awake"
+      },
+      "points": 12600,
+      "requires": [
+        "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MS_14S",
+        "MS_14A",
+        "MS_15A",
+        "YMS_15",
+        "MAN_03",
+        "Pilot_ZEON_0079_N_ACE_MQV",
+        "Pilot_ZEON_0079_N_ACE_KCA",
+        "ChivvayClassKai"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_UnitedMaintenancePlan",
+      "name": "统合整备计划",
+      "description": "解锁统合整备计划单位",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_UnitedMaintenancePlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 14400,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_UnitedMaintenancePlan_Awake"
+      },
+      "points": 14400,
+      "requires": [
+        "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan"
+      ],
+      "unlocks": [
+        "MS_06FZ",
+        "MS_06FZ_Commander",
+        "MS_09R2",
+        "MS_18E",
+        "Pilot_ZEON_0079_N_ACE_KMSK",
+        "Pilot_ZEON_0079_N_ACE_BNI",
+        "ZanzibarClassKai"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan",
+      "name": "据点防卫用MA开发计划",
+      "description": "解锁据点防卫用MA",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 16800,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan_Awake"
+      },
+      "points": 16800,
+      "requires": [
+        "Tech_ZEON_0079_T2_UnitedMaintenancePlan"
+      ],
+      "unlocks": [
+        "MA_08",
+        "MAN_08",
+        "MS_09F",
+        "Pilot_ZEON_0079_N_ACE_LLS",
+        "Pilot_ZEON_0079_N_ACE_DZL"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_ZeongDevelopmentPlan",
+      "name": "吉翁号开发计划",
+      "description": "解锁吉翁号",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_ZeongDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 19200,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_ZeongDevelopmentPlan_Awake"
+      },
+      "points": 19200,
+      "requires": [
+        "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSN_02",
+        "MS_14B",
+        "MS_14C",
+        "MS_14JG"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_OperationStardust",
+      "name": "星辰作战",
+      "description": "解锁 星辰作战单位",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_OperationStardust.png",
+      "row": "mid",
+      "column": 6,
+      "money": 30000,
+      "supplies": 10000,
+      "sourceCosts": {
+        "money": 15000,
+        "supplies": 5000,
+        "points": 24000,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_OperationStardust_Awake"
+      },
+      "points": 24000,
+      "requires": [
+        "Tech_ZEON_0079_T2_ZeongDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RX_78GP02A",
+        "MS_21C",
+        "MS_09F_TROP_0083",
+        "MS_09S",
+        "MS_14F",
+        "MS_14FS",
+        "MS_15F",
+        "MS_15FS",
+        "YMS_16M",
+        "MA_06",
+        "AMX_002",
+        "Pilot_ZEON_0079_N_ACE_ANG",
+        "GwanzanClass",
+        "ZanzibarClassKai_0083",
+        "MusaiClassLateType_0083"
+      ],
+      "page": 1,
+      "era": "0083"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_DomPowerfulPlan",
+      "name": "大魔强化方案",
+      "description": "解锁强化大魔",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_DomPowerfulPlan.png",
+      "row": "top",
+      "column": 3,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 15600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_DomPowerfulPlan_Awake"
+      },
+      "points": 15600,
+      "requires": [
+        "Tech_ZEON_0079_T2_UnitedMaintenancePlan"
+      ],
+      "unlocks": [
+        "MS_09G",
+        "MS_09F_TROP",
+        "MS_09_K_2",
+        "MS_17",
+        "Skiure",
+        "Pilot_ZEON_0079_N_ACE_JON",
+        "Pilot_ZEON_0079_N_ACE_MSG"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_GyanPowerfulPlan",
+      "name": "强人强化方案",
+      "description": "解锁强化强人",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_GyanPowerfulPlan.png",
+      "row": "top",
+      "column": 5,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 20400,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_GyanPowerfulPlan_Awake"
+      },
+      "points": 20400,
+      "requires": [
+        "Tech_ZEON_0079_T2_DomPowerfulPlan"
+      ],
+      "unlocks": [
+        "YMS_15E",
+        "MS_15Kg",
+        "MS_15B",
+        "MS_15C"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_UnderwaterMADevelopmentPlan",
+      "name": "水中型MA开发计划",
+      "description": "解锁水中型MA",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_UnderwaterMADevelopmentPlan.png",
+      "row": "bot",
+      "column": 2,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 13800,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_UnderwaterMADevelopmentPlan_Awake"
+      },
+      "points": 13800,
+      "requires": [
+        "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan"
+      ],
+      "unlocks": [
+        "MSM_10",
+        "MAM_07",
+        "MSM_04G",
+        "MSM_04N",
+        "MSM_08"
+      ],
+      "page": 1,
+      "era": "0079L"
+    },
+    {
+      "id": "Tech_ZEON_0079_T2_HygoggDevelopmentPlan",
+      "name": "高战蟹开发计划",
+      "description": "解锁高战蟹",
+      "icon": "assets/tech-icons/Tech_ZEON_0079_T2_HygoggDevelopmentPlan.png",
+      "row": "bot",
+      "column": 3,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 15600,
+        "researchSeconds": 30,
+        "file": "GW_BattleUniverse_DLC_0079/Units/TechTree/Tech/Faction/ZEON_0079/TechList_ZEON_0079.ini",
+        "action": "hiddenAction_Tech_ZEON_0079_T2_HygoggDevelopmentPlan_Awake"
+      },
+      "points": 15600,
+      "requires": [
+        "Tech_ZEON_0079_T2_UnderwaterMADevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSM_03C",
+        "MSM_07E",
+        "YMS_18",
+        "EMS_10F",
+        "Pilot_ZEON_0079_N_ACE_HRD"
+      ],
+      "page": 1,
+      "era": "0079L"
     }
   ]
 }

@@ -489,8 +489,9 @@ def main():
             raise ValueError("Already exists, use --overwrite only if intentional: "+str(file))
     effects=read(ASSETS/"effects/effects.json")
     prefabs=[build(unit,effects) for unit in selected]
+    from animation_pool import share
     for prefab in prefabs:
-        write(ASSETS/f"units/{prefab['id']}/unit.json",prefab)
+        write(ASSETS/f"units/{prefab['id']}/unit.json",share(prefab))
         print(prefab["id"],len(prefab["layers"]),"layers",len(prefab["weaponKits"]),"kits",prefab["stats"])
     catalog=read(ASSETS/"unit-catalog.json")
     for prefab in prefabs:

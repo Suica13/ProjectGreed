@@ -482,7 +482,8 @@
     },
     "v17BaseHp": 65000.0,
     "shipHullBeforeReduction": 81500.0,
-    "shipBalanceMultiplier": 0.85
+    "shipBalanceMultiplier": 0.85,
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": false,
@@ -502,7 +503,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079"
+    "0079E"
   ],
   "localization": {
     "zh": {

@@ -599,7 +599,8 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 100000.0
+    "v17BaseHp": 100000.0,
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": false,
@@ -619,7 +620,7 @@
   "faction": "EFSF",
   "tags": [
     "EFSF",
-    "0079"
+    "0079E"
   ],
   "localization": {
     "zh": {

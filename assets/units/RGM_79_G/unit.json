@@ -546,25 +546,25 @@
     }
   ],
   "animations": {
-    "EnterPilot": "../../animations/RGM_79_G__EnterPilot.json",
-    "QuitPilot": "../../animations/RGM_79_G__QuitPilot.json",
-    "NoPilotIdle": "../../animations/RGM_79_G__NoPilotIdle.json",
-    "Common_Idle": "../../animations/RGM_79_G__Common_Idle.json",
-    "Common_Dodge_L": "../../animations/RGM_79_G__Common_Dodge_L.json",
-    "Common_Dodge_R": "../../animations/RGM_79_G__Common_Dodge_R.json",
-    "OnMoving": "../../animations/RGM_79_G__OnMoving.json",
-    "OnMovingReversing": "../../animations/RGM_79_G__OnMovingReversing.json",
-    "OnMovingWalk": "../../animations/RGM_79_G__OnMovingWalk.json",
-    "Guard": "../../animations/RGM_79_G__Guard.json",
-    "Common_Dead": "../../animations/RGM_79_G__Common_Dead.json",
-    "Common_Stun": "../../animations/RGM_79_G__Common_Stun.json",
-    "Common_Daze": "../../animations/RGM_79_G__Common_Daze.json",
-    "Common_Stagger": "../../animations/RGM_79_G__Common_Stagger.json",
-    "Common_Push_A": "../../animations/RGM_79_G__Common_Push_A.json",
-    "Common_Shoot_A": "../../animations/RGM_79_G__Common_Shoot_A.json",
-    "Common_Shoot_A_FA": "../../animations/RGM_79_G__Common_Shoot_A_FA.json",
-    "Common_Shoot_Two_Handed_A": "../../animations/RGM_79_G__Common_Shoot_Two_Handed_A.json",
-    "Common_Melee_A": "../../animations/RGM_79_G__Common_Melee_A.json",
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard.json",
+    "Common_Dead": "../../animations/Common_Dead.json",
+    "Common_Stun": "../../animations/Common_Stun.json",
+    "Common_Daze": "../../animations/Common_Daze.json",
+    "Common_Stagger": "../../animations/Common_Stagger.json",
+    "Common_Push_A": "../../animations/Common_Push_A.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA.json",
+    "Common_Shoot_Two_Handed_A": "../../animations/Common_Shoot_Two_Handed_A__MS_06F.json",
+    "Common_Melee_A": "../../animations/Common_Melee_A.json",
     "Common_Melee_F": "../../animations/Common_Melee_F.json"
   },
   "stats": {
@@ -682,7 +682,8 @@
       "radar": 360.0,
       "antiDetection": 0.0
     },
-    "v17BaseHp": 25000.0
+    "v17BaseHp": 25000.0,
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": true,
@@ -2057,7 +2058,7 @@
   ],
   "tags": [
     "EFSF",
-    "0079"
+    "0079E"
   ],
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
@@ -2074,7 +2075,8 @@
   "transport": {
     "slotCost": 2,
     "loadTags": [
-      "CanLoadInto"
+      "CanLoadInto",
+      "CanUseSFS"
     ]
   },
   "hangars": [],

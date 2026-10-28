@@ -4,10 +4,12 @@ import sys,json,importlib.util,copy
 from mod_source import ROOT,ASSETS,load,resolve
 from v05_balance import apply_balance
 
-def refresh_systems(catalog):
+def refresh_systems(catalog, unit_ids=None, publish=True):
  forms=[]
  for ref in catalog['units']:
-  path=ASSETS/ref;p=json.loads(path.read_text(encoding='utf-8'));source=ROOT/p['source'].split('/',1)[1];data=load(source)
+  path=ASSETS/ref;p=json.loads(path.read_text(encoding='utf-8'))
+  if unit_ids is not None and p['id'] not in unit_ids:continue
+  source=ROOT/p['source'].split('/',1)[1];data=load(source)
   if not p.get('formOnly'):apply_balance(p,data)
   for system in ([] if p.get('formOnly') else ['EXAM','HADES']):
    action=data.get('hiddenAction_'+system+'Start',{});target=action.get('convertTo')
@@ -49,7 +51,8 @@ def refresh_systems(catalog):
   ref=f'units/{target}/unit.json'
   if ref not in catalog['units']:catalog['units'].append(ref)
   print(p['id'],system,target)
- bulk.write(ASSETS/'effects/effects.json',effects);bulk.write(ASSETS/'unit-catalog.json',catalog)
+ bulk.write(ASSETS/'effects/effects.json',effects)
+ if publish:bulk.write(ASSETS/'unit-catalog.json',catalog)
  return catalog
 
 if __name__=="__main__":

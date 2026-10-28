@@ -47,7 +47,7 @@ const HangarUI = (() => {
     dialog.close();
     request("embark", { unitId: u.id, carrierId: carrier.id, hangarId: h.id });
   }
-  function row(u) {
+  function row(u, hangar = null) {
     const box = element("div", "hangar-unit");
     const icon = element("img");
     icon.src = unitIcon(u.model, u.pilot);
@@ -60,7 +60,7 @@ const HangarUI = (() => {
       element(
         "small",
         "muted",
-        `${UnitIdentity.owner(u).name} · ${Rules.modelOf(u).transport.slotCost} ${I18n.text("容量点")} · HP ${formatNumber(u.hp)} / ${formatNumber(Rules.modelOf(u).hp)} · EN ${formatNumber(u.en)} / ${formatNumber(Rules.modelOf(u).en)}`,
+        `${UnitIdentity.owner(u).name} · ${hangar?.kind === "sfs" || u.embarked?.exposed ? 1 : Rules.modelOf(u).transport.slotCost} ${I18n.text("容量点")} · HP ${formatNumber(u.hp)} / ${formatNumber(Rules.modelOf(u).hp)} · EN ${formatNumber(u.en)} / ${formatNumber(Rules.modelOf(u).en)}`,
       ),
     );
     box.append(icon, info);
@@ -117,7 +117,7 @@ const HangarUI = (() => {
           element(
             "h4",
             "",
-            `${I18n.text("格纳库")} ${Rules.hangars.of(carrier).indexOf(h) + 1} · ${Rules.hangars.used(game, carrier, h.id)} / ${h.capacity} ${I18n.text("容量点")}`,
+            `${h.kind === "sfs" ? "SFS" : I18n.text("格纳库") + " " + (Rules.hangars.of(carrier).indexOf(h) + 1)} · ${Rules.hangars.used(game, carrier, h.id)} / ${h.capacity} ${I18n.text("容量点")}`,
           ),
         );
         const compatible = ART.prefabs.filter(
@@ -133,7 +133,7 @@ const HangarUI = (() => {
             ),
           );
         for (const u of Rules.hangars.cargo(game, carrier, h.id)) {
-          const item = row(u);
+          const item = row(u,h);
           item.dataset.cargoId = u.id;
           const inspect = button("查看状态", () => { statusUnit = u.id; render(); });
           inspect.dataset.inspectCargo = u.id;

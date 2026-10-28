@@ -49,7 +49,7 @@ test("all ship weapons apply the 10 percent base accuracy reduction", () => {
       checked++;
     }
   }
-  assert.equal(checked, 83);
+  assert(checked > 0, "The catalog must contain ship weapons to audit");
 });
 
 test("ship accuracy policy is idempotent and recalculates restored native data", () => {

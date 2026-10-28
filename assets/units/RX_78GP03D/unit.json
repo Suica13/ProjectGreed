@@ -1,0 +1,1839 @@
+{
+  "schemaVersion": 2,
+  "id": "RX_78GP03D",
+  "code": "RX-78GP03D",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78GP03D/RX_78GP03D.ini",
+  "materials": {
+    "textures": {
+      "RX_78GP03D_Crotch_1.png": "textures/RX_78GP03D_Crotch_1.png",
+      "RX_78GP03D_Body_1.png": "textures/RX_78GP03D_Body_1.png",
+      "RX_78GP03D_ArmL_1.png": "textures/RX_78GP03D_ArmL_1.png",
+      "RX_78GP03D_ArmR_1.png": "textures/RX_78GP03D_ArmR_1.png",
+      "RX_78GP03D_ShoulderL_1.png": "textures/RX_78GP03D_ShoulderL_1.png",
+      "RX_78GP03D_ShoulderR_1.png": "textures/RX_78GP03D_ShoulderR_1.png",
+      "RX_78GP03D_Head_1.png": "textures/RX_78GP03D_Head_1.png",
+      "RX_78GP03D_Head_1_Close.png": "textures/RX_78GP03D_Head_1_Close.png",
+      "RX_78GP03D_Foot_1.png": "textures/RX_78GP03D_Foot_1.png",
+      "RX_78GP03D_LegL_1.png": "textures/RX_78GP03D_LegL_1.png",
+      "RX_78GP03D_LegR_1.png": "textures/RX_78GP03D_LegR_1.png",
+      "EF_RX_78GP01_BR.png": "textures/EF_RX_78GP01_BR.png",
+      "EF_HypeBazooka_GP03S.png": "textures/EF_HypeBazooka_GP03S.png",
+      "Common_ArmBeamSaber_XL.png": "textures/Common_ArmBeamSaber_XL.png",
+      "RX_78GP03D_Crotch_2.png": "textures/RX_78GP03D_Crotch_2.png",
+      "RX_78GP03D_I_Field_1.png": "textures/RX_78GP03D_I_Field_1.png",
+      "RX_78GP03D_MegaBeamCannon_1.png": "textures/RX_78GP03D_MegaBeamCannon_1.png",
+      "RX_78GP03D_MSC_L_1.png": "textures/RX_78GP03D_MSC_L_1.png",
+      "RX_78GP03D_MSC_L_2_A.png": "textures/RX_78GP03D_MSC_L_2_A.png",
+      "RX_78GP03D_MSC_L_3_A.png": "textures/RX_78GP03D_MSC_L_3_A.png",
+      "RX_78GP03D_MSC_L_2_B.png": "textures/RX_78GP03D_MSC_L_2_B.png",
+      "RX_78GP03D_MSC_L_3_B.png": "textures/RX_78GP03D_MSC_L_3_B.png",
+      "RX_78GP03D_MSC_R_1.png": "textures/RX_78GP03D_MSC_R_1.png",
+      "RX_78GP03D_MSC_R_2_A.png": "textures/RX_78GP03D_MSC_R_2_A.png",
+      "RX_78GP03D_MSC_R_3_A.png": "textures/RX_78GP03D_MSC_R_3_A.png",
+      "RX_78GP03D_MSC_R_2_B.png": "textures/RX_78GP03D_MSC_R_2_B.png",
+      "RX_78GP03D_MSC_R_3_B.png": "textures/RX_78GP03D_MSC_R_3_B.png",
+      "RX_78GP03D_SubArmL_1.png": "textures/RX_78GP03D_SubArmL_1.png",
+      "RX_78GP03D_SubArmL_2.png": "textures/RX_78GP03D_SubArmL_2.png",
+      "RX_78GP03D_SubArmR_1.png": "textures/RX_78GP03D_SubArmR_1.png",
+      "RX_78GP03D_SubArmR_2.png": "textures/RX_78GP03D_SubArmR_2.png",
+      "EF_RX_78_GP_03S_Shield_B.png": "textures/EF_RX_78_GP_03S_Shield_B.png",
+      "RX_78GP03D.png": "textures/RX_78GP03D.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "RX_78GP03D.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "ArmL_Sub_1",
+      "texture": "RX_78GP03D_SubArmL_1.png",
+      "bone": "LeftArm",
+      "order": 1.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": [
+            1,
+            5
+          ]
+        }
+      }
+    },
+    {
+      "name": "ArmL_Sub_2",
+      "texture": "RX_78GP03D_SubArmL_2.png",
+      "bone": "LeftArm",
+      "order": 1.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "ArmR_Sub_1",
+      "texture": "RX_78GP03D_SubArmR_1.png",
+      "bone": "RightArm",
+      "order": 1.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": [
+            1,
+            5
+          ]
+        }
+      }
+    },
+    {
+      "name": "ArmR_Sub_2",
+      "texture": "RX_78GP03D_SubArmR_2.png",
+      "bone": "RightArm",
+      "order": 1.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Pelvis",
+      "order": 1.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -28.0,
+        "y": -77.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 3.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R",
+      "texture": "Boost_1.png",
+      "bone": "Pelvis",
+      "order": 1.0,
+      "scale": 2.0,
+      "offset": {
+        "x": 28.0,
+        "y": -77.0
+      },
+      "scaleX": -0.75,
+      "scaleY": 3.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_2",
+      "texture": "Boost_1.png",
+      "bone": "Pelvis",
+      "order": 1.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -8.0,
+        "y": -82.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 4.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_2_R",
+      "texture": "Boost_1.png",
+      "bone": "Pelvis",
+      "order": 1.0,
+      "scale": 2.0,
+      "offset": {
+        "x": 8.0,
+        "y": -82.0
+      },
+      "scaleX": -0.75,
+      "scaleY": 4.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Common_ArmBeamSaber_XL_F_GP_03D",
+      "texture": "Common_ArmBeamSaber_XL.png",
+      "bone": "LeftArm",
+      "order": 2.0,
+      "scale": 1.5,
+      "scaleX": 1.5,
+      "scaleY": 1.35,
+      "rotation": 0.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": -18.0,
+        "y": 45.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "Crotch_I_Field",
+      "texture": "RX_78GP03D_I_Field_1.png",
+      "bone": "Pelvis",
+      "order": 2.0,
+      "scaleX": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch_MegaBeamCannon",
+      "texture": "RX_78GP03D_MegaBeamCannon_1.png",
+      "bone": "Pelvis",
+      "order": 2.0,
+      "scaleX": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_RX_78GP01_BR_NotUsing",
+      "texture": "EF_RX_78GP01_BR.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 0.8,
+      "rotation": -90.0,
+      "offset": {
+        "x": 2.0,
+        "y": -9.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": {
+          "not": 4
+        }
+      }
+    },
+    {
+      "name": "Crotch",
+      "texture": "RX_78GP03D_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "RX_78GP03D_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": [
+          5,
+          4
+        ]
+      }
+    },
+    {
+      "name": "ArmR",
+      "texture": "RX_78GP03D_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": [
+          5,
+          4
+        ]
+      }
+    },
+    {
+      "name": "Crotch_D",
+      "texture": "RX_78GP03D_Crotch_2.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.5,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "EF_RX_78GP01_BR",
+      "texture": "EF_RX_78GP01_BR.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 11.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 4
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "RX_78GP03D_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RX_78GP03D_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RX_78GP03D_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_HypeBazooka_GP03S_Double",
+      "texture": "EF_HypeBazooka_GP03S.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.8,
+      "rotation": 0.0,
+      "offset": {
+        "x": 1.0,
+        "y": 7.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 5
+      }
+    },
+    {
+      "name": "EF_HypeBazooka_GP03S_Double_L",
+      "texture": "EF_HypeBazooka_GP03S.png",
+      "bone": "LeftArm",
+      "order": 6.5,
+      "scale": 0.8,
+      "rotation": 0.0,
+      "offset": {
+        "x": -1.0,
+        "y": 7.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 5
+      }
+    },
+    {
+      "name": "Shield",
+      "texture": "EF_RX_78_GP_03S_Shield_B.png",
+      "bone": "LeftArm",
+      "order": 6.5,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "rotation": 10.0,
+      "offset": {
+        "x": -6.0,
+        "y": 6.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      }
+    },
+    {
+      "name": "Head",
+      "texture": "RX_78GP03D_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    },
+    {
+      "name": "Head_Close",
+      "texture": "RX_78GP03D_Head_1_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      }
+    },
+    {
+      "name": "MSC_L",
+      "texture": "RX_78GP03D_MSC_L_1.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "MSC_L_2_A",
+      "texture": "RX_78GP03D_MSC_L_2_A.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 2
+        }
+      }
+    },
+    {
+      "name": "MSC_L_3_A",
+      "texture": "RX_78GP03D_MSC_L_3_A.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 5
+        }
+      }
+    },
+    {
+      "name": "MSC_L_2_B",
+      "texture": "RX_78GP03D_MSC_L_2_B.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 2
+      }
+    },
+    {
+      "name": "MSC_L_3_B",
+      "texture": "RX_78GP03D_MSC_L_3_B.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 5
+      }
+    },
+    {
+      "name": "MSC_R",
+      "texture": "RX_78GP03D_MSC_R_1.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "MSC_R_2_A",
+      "texture": "RX_78GP03D_MSC_R_2_A.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 2
+        }
+      }
+    },
+    {
+      "name": "MSC_R_3_A",
+      "texture": "RX_78GP03D_MSC_R_3_A.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": [
+            4,
+            5
+          ]
+        }
+      }
+    },
+    {
+      "name": "MSC_R_2_B",
+      "texture": "RX_78GP03D_MSC_R_2_B.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 2
+      }
+    },
+    {
+      "name": "MSC_R_3_B",
+      "texture": "RX_78GP03D_MSC_R_3_B.png",
+      "bone": "Pelvis",
+      "order": 10.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": [
+          4,
+          5
+        ]
+      }
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__MAM_07.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__AMX_002.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_DoubleShoot_A_L": "../../animations/Common_DoubleShoot_A_L.json",
+    "Common_DoubleShoot_A_R": "../../animations/Common_DoubleShoot_A_R.json",
+    "Common_Melee_F_GP_03D": "../../animations/Common_Melee_F_GP_03D.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 219000,
+    "en": 1050.0,
+    "move": 10,
+    "mobility": 120.0,
+    "cost": 2250,
+    "counterLimit": 1,
+    "accuracy": 145.0,
+    "partStructuralStrength": 135.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100,
+      "water": 25.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "sensors": {
+      "sight": 10,
+      "radar": 16.666666666666668,
+      "antiDetection": -3.4722222222222223,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 75.0,
+    "shooting": 65.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 15.0,
+      "flat": 400.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 400.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 400.0
+    },
+    "dp": {
+      "percent": 20.0,
+      "flat": 40.0
+    },
+    "sp": {
+      "percent": 20.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 175000.0,
+    "walkSpeed": 1.5,
+    "boostSpeed": 2.75,
+    "turnSpeed": 1.0,
+    "reaction": 120.0,
+    "shooting": 165.0,
+    "melee": 175.0,
+    "nativeTags": [
+      "RX_78GP03D",
+      "Unit",
+      "MA",
+      "EFSF",
+      "0083",
+      "UC"
+    ],
+    "nativeSkills": [
+      "DogFight_MA_Fighter",
+      "ExitUnit_NewUnit",
+      "I_Field"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 145.0,
+    "unitLevel": 9000.0,
+    "enBeforeReduction": 2100.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 9,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 25.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 600.0,
+      "antiDetection": -100.0
+    },
+    "v17BaseHp": 175000.0,
+    "technologyEra": "0083",
+    "importedTechPage": 1
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "高达试作3号机[石斛兰]",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0083"
+  ],
+  "localization": {
+    "zh": {
+      "name": "高达试作3号机[石斛兰]",
+      "description": "高达试作三号机装备大型武器货柜系统后的形态"
+    },
+    "en": {
+      "name": "Gundam Unit 3[Dendrobium]",
+      "description": "Form of Gundam Prototype Unit 3 equipped with the large weapon container system"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "EF_RX_78GP03D_BeamCannon": {
+      "name": "光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 5,
+      "hit": 75.0,
+      "en": 100.0,
+      "sourceName": "EF_RX_78GP03D_BeamCannon",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 32000.0,
+      "damageComponents": {
+        "beam": 24000.0,
+        "beamAP": 8000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "delay": 0.35
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP03D_BeamCannon.gw",
+        "barrels": [
+          {
+            "id": "EF_RX_78GP03D_BeamCannon",
+            "x": 38.0,
+            "y": 100.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2_Yellow.png",
+        "scale": 1.0,
+        "speed": 0.75,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Body",
+            "offset": {
+              "x": 38.0,
+              "y": 100.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_11.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "Beam_Charge_3_Yellow"
+      ],
+      "nativePayload": {
+        "BeamDamage": 24000.0,
+        "BeamAPDamage": 8000.0,
+        "DpDamage": 900.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 0.75,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 45.0,
+        "ProjectileLife": 25.0,
+        "ProjectileAttackTimes": 7.0,
+        "ProjectileAttackTimesDamageModifier": 0.75,
+        "EquipmentIndex": 2.0,
+        "EquipmentIndex2": 750.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "displayIndex": 0,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP03D_BeamCannon.gw",
+        "barrel": "EF_RX_78GP03D_BeamCannon",
+        "entry": "hiddenAction_EF_RX_78GP03D_BeamCannon_Fire",
+        "cooldown": 9.0,
+        "duration": 0.7,
+        "firstShot": 0.35,
+        "lastShot": 0.35,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 100.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 100.0,
+        "actions": [
+          "hiddenAction_EF_RX_78GP03D_BeamCannon_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_EF_RX_78GP03D_BeamCannon_SetWeaponIndex",
+          "hiddenAction_EF_RX_78GP03D_BeamCannon_B1_Step_1",
+          "hiddenAction_EF_RX_78GP03D_BeamCannon_Fire_Step_1",
+          "hiddenAction_EF_RX_78GP03D_BeamCannon_Fire_Step_2",
+          "hiddenAction_EF_RX_78GP03D_BeamCannon_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "cannon",
+      "actionCost": 3
+    },
+    "EF_RX_78GP01_BR": {
+      "name": "光束步枪",
+      "type": "beam",
+      "min": 2,
+      "max": 3,
+      "hit": 90.0,
+      "en": 40.0,
+      "sourceName": "EF_RX_78GP01_BR",
+      "sourceHit": 90.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Shoot_A",
+      "damagePerShot": 8000.0,
+      "damageComponents": {
+        "beam": 8000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 4,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.25
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "delay": 0.25
+          },
+          {
+            "delay": 0.25
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP01_BR.gw",
+        "barrels": [
+          {
+            "id": "EF_RX_78GP01_BR",
+            "x": 9.0,
+            "y": 25.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2.png",
+        "scale": 1.0,
+        "speed": 85.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Pink",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "EF_RX_78GP01_BR",
+            "point": {
+              "x": 9.52503066003497e-16,
+              "y": -15.555555555555555
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamRifle_1.ogg",
+        "volume": 0.6
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink"
+      ],
+      "nativePayload": {
+        "BeamDamage": 8000.0,
+        "DpDamage": 300.0,
+        "WeaponAccuracy": 90.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 85.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 30.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "displayIndex": 4,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP01_BR.gw",
+        "barrel": "EF_RX_78GP01_BR",
+        "entry": "hiddenAction_EF_RX_78GP01_BR_Fire",
+        "cooldown": 1.5,
+        "duration": 0.75,
+        "firstShot": 0.25,
+        "lastShot": 0.5,
+        "firingEvents": 2,
+        "projectiles": 2,
+        "declaredEnergy": 40.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 40.0,
+        "actions": [
+          "hiddenAction_EF_RX_78GP01_BR_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_EF_RX_78GP01_BR_SetWeaponIndex",
+          "hiddenAction_EF_RX_78GP01_BR_B2_Step_1",
+          "hiddenAction_EF_RX_78GP01_BR_Fire_Step_1",
+          "hiddenAction_EF_RX_78GP01_BR_Fire_Step_2",
+          "hiddenAction_EF_RX_78GP01_BR_Fire_Step_3",
+          "hiddenAction_EF_RX_78GP01_BR_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "beam_rifle",
+      "actionCost": 2
+    },
+    "EF_HypeBazooka_GP03S_Double": {
+      "name": "火箭筒",
+      "type": "shell",
+      "min": 2,
+      "max": 4,
+      "hit": 75.0,
+      "en": 80.0,
+      "sourceName": "EF_HypeBazooka_GP03S_Double",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_DoubleShoot_A_R",
+      "damagePerShot": 6500.0,
+      "damageComponents": {
+        "shell": 6500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 5,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.35
+          },
+          {
+            "animation": "Common_DoubleShoot_A_R",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.25,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.2
+          },
+          {
+            "animation": "Common_DoubleShoot_A_L",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.2
+          },
+          {
+            "animation": "Common_DoubleShoot_A_R",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.25,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.2
+          },
+          {
+            "animation": "Common_DoubleShoot_A_L",
+            "delay": 0.0
+          },
+          {
+            "delay": 0.5
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_GP03S_Double.gw",
+        "barrels": [
+          {
+            "id": "EF_HypeBazooka_GP03S_Double",
+            "x": 10.0,
+            "y": 17.0
+          },
+          {
+            "id": "EF_HypeBazooka_GP03S_Double_L",
+            "x": -10.0,
+            "y": 17.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Bazooka_1.png",
+        "scale": 1.0,
+        "speed": 60.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "EF_HypeBazooka_GP03S_Double",
+            "point": {
+              "x": 7.654042494670958e-16,
+              "y": -12.5
+            }
+          },
+          {
+            "layer": "EF_HypeBazooka_GP03S_Double_L",
+            "point": {
+              "x": 7.654042494670958e-16,
+              "y": -12.5
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Bazooka_1.ogg",
+        "volume": 0.4
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1",
+        "BZ_Fire_1"
+      ],
+      "mergedPositions": [
+        "EF_HypeBazooka_GP03S_Double",
+        "EF_HypeBazooka_GP03S_Double_L"
+      ],
+      "nativePayload": {
+        "ShellDamage": 6500.0,
+        "DpDamage": 275.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 60.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 30.0,
+        "ProjectileLife": 35.0,
+        "ProjectileBlastRange": 60.0,
+        "ProjectileBlastDamageModifier": 0.2,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "displayIndex": 5,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_GP03S_Double.gw",
+        "barrel": "EF_HypeBazooka_GP03S_Double",
+        "entry": "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire",
+        "cooldown": 10.0,
+        "duration": 1.45,
+        "firstShot": 0.35,
+        "lastShot": 0.95,
+        "firingEvents": 4,
+        "projectiles": 4,
+        "declaredEnergy": 80.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 80.0,
+        "actions": [
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_SetWeaponIndex",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_B4_Step_1",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_1",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_2",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_3",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_4",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "bazooka",
+      "actionCost": 3
+    },
+    "EF_HypeBazooka_GP03S_Double_L": {
+      "name": "火箭筒",
+      "type": "shell",
+      "min": 2,
+      "max": 4,
+      "hit": 75.0,
+      "en": 80.0,
+      "sourceName": "EF_HypeBazooka_GP03S_Double_L",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_DoubleShoot_A_R",
+      "damagePerShot": 6500.0,
+      "damageComponents": {
+        "shell": 6500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 5,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.35
+          },
+          {
+            "animation": "Common_DoubleShoot_A_R",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.25,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.2
+          },
+          {
+            "animation": "Common_DoubleShoot_A_L",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.2
+          },
+          {
+            "animation": "Common_DoubleShoot_A_R",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.25,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.2
+          },
+          {
+            "animation": "Common_DoubleShoot_A_L",
+            "delay": 0.0
+          },
+          {
+            "delay": 0.5
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_GP03S_Double.gw",
+        "barrels": [
+          {
+            "id": "EF_HypeBazooka_GP03S_Double",
+            "x": 10.0,
+            "y": 17.0
+          },
+          {
+            "id": "EF_HypeBazooka_GP03S_Double_L",
+            "x": -10.0,
+            "y": 17.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Bazooka_1.png",
+        "scale": 1.0,
+        "speed": 60.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "EF_HypeBazooka_GP03S_Double",
+            "point": {
+              "x": 7.654042494670958e-16,
+              "y": -12.5
+            }
+          },
+          {
+            "layer": "EF_HypeBazooka_GP03S_Double_L",
+            "point": {
+              "x": 7.654042494670958e-16,
+              "y": -12.5
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Bazooka_1.ogg",
+        "volume": 0.4
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1",
+        "BZ_Fire_1"
+      ],
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "paired_weapon"
+        ],
+        "mergedInto": "EF_HypeBazooka_GP03S_Double"
+      },
+      "nativePayload": {
+        "ShellDamage": 6500.0,
+        "DpDamage": 275.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.5,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 60.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 30.0,
+        "ProjectileLife": 35.0,
+        "ProjectileBlastRange": 60.0,
+        "ProjectileBlastDamageModifier": 0.2,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "displayIndex": 5,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_GP03S_Double.gw",
+        "barrel": "EF_HypeBazooka_GP03S_Double",
+        "entry": "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire",
+        "cooldown": 10.0,
+        "duration": 1.45,
+        "firstShot": 0.35,
+        "lastShot": 0.95,
+        "firingEvents": 4,
+        "projectiles": 4,
+        "declaredEnergy": 80.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 80.0,
+        "actions": [
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_SetWeaponIndex",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_B4_Step_1",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_1",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_2",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_3",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_4",
+          "hiddenAction_EF_HypeBazooka_GP03S_Double_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "bazooka",
+      "actionCost": 3
+    },
+    "Common_ArmBeamSaber_XL_F_GP_03D": {
+      "name": "光束军刀",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 100.0,
+      "en": 0,
+      "sourceName": "Common_ArmBeamSaber_XL_F_GP_03D",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_F_GP_03D",
+      "damagePerShot": 20000.0,
+      "damageComponents": {
+        "melee": 10000.0,
+        "meleeBeam": 10000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 1,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Melee_F_GP_03D",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.5
+          },
+          {
+            "delay": 1.5
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_XL_F_GP_03D.gw",
+        "barrels": [
+          {
+            "id": "Common_ArmBeamSaber_XL_F_GP_03D",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "CqbDamage": 10000.0,
+        "CqbBeamDamage": 10000.0,
+        "DpDamage": 1500.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 1.5,
+        "ProjectileAttackTimes": 9.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "displayIndex": 1,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_XL_F_GP_03D.gw",
+        "barrel": "Common_ArmBeamSaber_XL_F_GP_03D",
+        "entry": "hiddenAction_Common_ArmBeamSaber_XL_F_GP_03D_Fire",
+        "cooldown": 3.5,
+        "duration": 2.0,
+        "firstShot": 0.5,
+        "lastShot": 0.5,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_Common_ArmBeamSaber_XL_F_GP_03D_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_Common_ArmBeamSaber_XL_F_GP_03D_SetWeaponIndex",
+          "hiddenAction_Common_ArmBeamSaber_XL_F_GP_03D_Step_1",
+          "hiddenAction_Common_ArmBeamSaber_XL_F_GP_03D_Fire_Step_1",
+          "hiddenAction_Common_ArmBeamSaber_XL_F_GP_03D_Fire_Step_2",
+          "hiddenAction_Common_ArmBeamSaber_XL_F_GP_03D_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "melee",
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "DogFight_MA_Fighter",
+      "source": "Template/Unit/Skill/DogFight_MA_Fighter.gw",
+      "status": "review",
+      "name": "MA空战机动"
+    },
+    {
+      "id": "ExitUnit_NewUnit",
+      "source": "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+      "status": "review",
+      "name": "脱出并生成新机体"
+    },
+    {
+      "id": "I_Field",
+      "source": "Template/Unit/Skill/I_Field.gw",
+      "status": "review",
+      "name": "I力场"
+    },
+    {
+      "id": "special_Common_DemolitionChain_Back_Space_GP_03D",
+      "name": "爆导索",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_DemolitionChain_Back_Space_GP_03D.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "EF_RX_78GP01_BR",
+        "EF_RX_78GP03D_BeamCannon",
+        "EF_HypeBazooka_GP03S_Double",
+        "Common_ArmBeamSaber_XL_F_GP_03D"
+      ]
+    }
+  ],
+  "description": "高达试作三号机装备大型武器货柜系统后的形态",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 9000.0,
+    "levelMultiplier": 0.25,
+    "published": 2250
+  },
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MA"
+  ],
+  "transport": {
+    "slotCost": 3,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "EF_HypeBazooka_GP03S_Double",
+      "channels": [
+        {
+          "id": "EF_HypeBazooka_GP03S_Double",
+          "weaponId": "EF_HypeBazooka_GP03S_Double",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "EF_HypeBazooka_GP03S_Double_L",
+          "weaponId": "EF_HypeBazooka_GP03S_Double_L",
+          "muzzleIndex": 1,
+          "requiredParts": [],
+          "limb": null
+        }
+      ]
+    }
+  ]
+}

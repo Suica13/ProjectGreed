@@ -12,9 +12,20 @@ const UnitHangars = {
           u.embarked?.carrierId === carrier.id &&
           (!hangarId || u.embarked.hangarId === hangarId),
       );
+    const exposed = u => u?.embarked?.exposed === true;
+    const slotCost = (u, h) => h?.kind === "sfs" ? 1 : (modelOf(u).transport?.slotCost || 1);
+    function sync(g) {
+      for (const passenger of g.units.filter(u => u.hp > 0 && u.embarked)) {
+        const carrier = g.units.find(c => c.id === passenger.embarked.carrierId);
+        const h = carrier && of(carrier).find(h => h.id === passenger.embarked.hangarId);
+        if (h?.kind !== "sfs") continue;
+        passenger.embarked.exposed = true;
+        passenger.x = carrier.x; passenger.y = carrier.y;
+      }
+    }
     const used = (g, carrier, hangarId) =>
       cargo(g, carrier, hangarId).reduce(
-        (sum, u) => sum + (modelOf(u).transport?.slotCost || 1),
+        (sum, u) => sum + slotCost(u, of(carrier).find(h => h.id === u.embarked.hangarId)),
         0,
       );
     const edgeDistance = (carrier, passenger, x = passenger.x, y = passenger.y) => {
@@ -40,7 +51,7 @@ const UnitHangars = {
         !hangar ||
         !transport ||
         !hangar.allowedTags.some((tag) => transport.loadTags.includes(tag)) ||
-        used(g, carrier, hangarId) + transport.slotCost > hangar.capacity
+        used(g, carrier, hangarId) + slotCost(u, hangar) > hangar.capacity
       )
         return false;
       if (deploying(g)) return !g.deployment[ownerOf(u)] && edgeDistance(carrier, u) === 1;
@@ -51,13 +62,17 @@ const UnitHangars = {
         !u.snipeOrder &&
         !u.readySnipe &&
         u.lastLaunchRound !== g.round &&
+        !u.pendingMove &&
         edgeDistance(carrier, u) === 1
       );
     }
     function embark(g, u, carrier, hangarId) {
       if (!canEmbark(g, u, carrier, hangarId))
         throw Error("无法搭载：容量、类型、距离或行动条件不满足");
-      u.embarked = { carrierId: carrier.id, hangarId, boardRound: deploying(g) ? null : g.round };
+      const h = of(carrier).find(h => h.id === hangarId);
+      u.embarked = { carrierId: carrier.id, hangarId, boardRound: deploying(g) ? null : g.round,
+        ...(h.kind === "sfs" ? {exposed:true} : {}) };
+      sync(g);
       u.origin = null;
       if (!deploying(g)) {
         u.acted = true;
@@ -67,7 +82,7 @@ const UnitHangars = {
       return { type: "embark", unitId: u.id, carrierId: carrier.id, hangarId };
     }
     function launchCells(g, u, emergency = false) {
-      if (!u?.embarked || u.hp <= 0 || g.winner !== null) return [];
+      if (!u?.embarked || u.hp <= 0 || g.winner !== null || (!emergency && exposed(u) && u.moved)) return [];
       const carrier = g.units.find((c) => c.id === u.embarked.carrierId);
       if (!carrier || (!emergency && !onMap(carrier))) return [];
       if (
@@ -248,8 +263,9 @@ const UnitHangars = {
               (modelOf(c).move > m.move || ["air", "hover"].includes(modelOf(c).movementType)))) &&
           of(c).some(
             (h) =>
+              (!repair || h.kind !== "sfs") &&
               h.allowedTags.some((tag) => m.transport?.loadTags.includes(tag)) &&
-              used(g, c, h.id) + (m.transport?.slotCost || 1) <= h.capacity,
+              used(g, c, h.id) + slotCost(u, h) <= h.capacity,
           ),
       );
       candidates.sort((a, b) => edgeDistance(a, u) - edgeDistance(b, u));
@@ -340,6 +356,7 @@ const UnitHangars = {
       return events;
     }
     return {
+      exposed, slotCost, sync,
       of,
       cargo,
       used,

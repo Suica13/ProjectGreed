@@ -73,7 +73,7 @@ def main():
             prices={(o['money'],o['supplies'],o['quantity']) for o in candidates}
             if len(prices)!=1:raise ValueError('Conflicting prices: '+model_id+': '+str(prices))
             selected=max(candidates,key=lambda o:o['source']['buildSeconds'])
-            result[model_id]={'output':{'unitId':p['id'],'kitId':kit['id'],'quantity':selected['quantity']},'unitId':p['id'],'faction':next(tag for tag in p['tags'] if tag in ('EFSF','ZEON')),**selected,'sourceAlternatives':[o['source'] for o in candidates if o!=selected]}
+            result[model_id]={'output':{'unitId':p['id'],'kitId':kit['id'],'quantity':selected['quantity']},'unitId':p['id'],'faction':next(tag for tag in p['tags'] if tag in ('EFSF','ZEON')),**({'availableFactions':p['availableFactions']} if p.get('availableFactions') else {}),**selected,'sourceAlternatives':[o['source'] for o in candidates if o!=selected]}
     units={}
     for model_id,offer in result.items():
         unit=offer['unitId'];previous=units.get(unit)

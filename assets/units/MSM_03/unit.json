@@ -325,23 +325,23 @@
     }
   ],
   "animations": {
-    "EnterPilot": "../../animations/MSM_03__EnterPilot.json",
-    "QuitPilot": "../../animations/MSM_03__QuitPilot.json",
-    "NoPilotIdle": "../../animations/MSM_03__NoPilotIdle.json",
-    "Common_Idle": "../../animations/MSM_03__Common_Idle.json",
-    "Common_Dodge_L": "../../animations/MSM_03__Common_Dodge_L.json",
-    "Common_Dodge_R": "../../animations/MSM_03__Common_Dodge_R.json",
-    "OnMoving": "../../animations/MSM_03__OnMoving.json",
-    "OnMovingReversing": "../../animations/MSM_03__OnMovingReversing.json",
-    "OnMovingWalk": "../../animations/MSM_03__OnMovingWalk.json",
-    "Guard": "../../animations/MSM_03__Guard.json",
-    "Common_Dead": "../../animations/MSM_03__Common_Dead.json",
-    "Common_Stun": "../../animations/MSM_03__Common_Stun.json",
-    "Common_Daze": "../../animations/MSM_03__Common_Daze.json",
-    "Common_Stagger": "../../animations/MSM_03__Common_Stagger.json",
-    "Common_Push_A": "../../animations/MSM_03__Common_Push_A.json",
-    "Common_Cannon_Shoot_A": "../../animations/MSM_03__Common_Cannon_Shoot_A.json",
-    "Common_Melee_Double_A": "../../animations/MSM_03__Common_Melee_Double_A.json",
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_Melee_Double_A": "../../animations/Common_Melee_Double_A.json",
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
@@ -476,7 +476,8 @@
       "radar": 360.0,
       "antiDetection": 0.0
     },
-    "v17BaseHp": 24000.0
+    "v17BaseHp": 24000.0,
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": false,
@@ -495,7 +496,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079"
+    "0079E"
   ],
   "localization": {
     "zh": {
@@ -1669,7 +1670,8 @@
   "transport": {
     "slotCost": 2,
     "loadTags": [
-      "CanLoadInto"
+      "CanLoadInto",
+      "CanUseSFS"
     ]
   },
   "hangars": [],

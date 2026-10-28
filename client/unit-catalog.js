@@ -12,7 +12,7 @@ const UnitCatalog = (() => {
               .join(" ")
               .toLocaleLowerCase()
               .includes(query)) &&
-          (!filters.faction || p.faction === filters.faction) &&
+          (!filters.faction || (p.availableFactions || [p.faction]).includes(filters.faction)) &&
           (!filters.era || p.tags.includes(filters.era)) &&
           (!filters.type ||
             (kind === "type" && (p.unitTags || []).includes(value)) ||

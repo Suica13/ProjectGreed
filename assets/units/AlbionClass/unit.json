@@ -1,0 +1,4995 @@
+{
+  "schemaVersion": 2,
+  "id": "AlbionClass",
+  "code": "AlbionClass",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/AlbionClass/AlbionClass.ini",
+  "materials": {
+    "textures": {
+      "AlbionClass.png": "textures/AlbionClass.png",
+      "AlbionClass_Body_1.png": "textures/AlbionClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "AlbionClass_Turret_BeamCannon_1.png": "textures/AlbionClass_Turret_BeamCannon_1.png",
+      "AlbionClass_Turret_MegaBeamCannon_1.png": "textures/AlbionClass_Turret_MegaBeamCannon_1.png",
+      "AlbionClass_Turret_AA_1.png": "textures/AlbionClass_Turret_AA_1.png",
+      "AlbionClass_Turret_AA_2.png": "textures/AlbionClass_Turret_AA_2.png"
+    },
+    "icon": "AlbionClass.png"
+  },
+  "skeleton": {
+    "Turret_AlbionClass_Turret_BeamCannon_L1": {
+      "x": -45.0,
+      "y": 170.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_AlbionClass_Turret_BeamCannon_R1": {
+      "x": 45.0,
+      "y": 170.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_AlbionClass_Turret_MegaBeamCannon_L1": {
+      "x": -120.0,
+      "y": -32.0,
+      "endDirOffset": -8.0
+    },
+    "Turret_AlbionClass_Turret_MegaBeamCannon_R1": {
+      "x": 120.0,
+      "y": -32.0,
+      "endDirOffset": 8.0
+    },
+    "Turret_AlbionClass_Turret_MS_L1": {
+      "x": -10.0,
+      "y": -70.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_AlbionClass_Turret_MS_R1": {
+      "x": 10.0,
+      "y": -70.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_AlbionClass_Turret_AA_L1": {
+      "x": -58.0,
+      "y": -39.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_AlbionClass_Turret_AA_R1": {
+      "x": 58.0,
+      "y": -39.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_AlbionClass_Turret_AA_L2": {
+      "x": -68.0,
+      "y": -39.0,
+      "endDirOffset": -35.0
+    },
+    "Turret_AlbionClass_Turret_AA_R2": {
+      "x": 68.0,
+      "y": -39.0,
+      "endDirOffset": 35.0
+    },
+    "Turret_AlbionClass_Turret_AA_L3": {
+      "x": -78.0,
+      "y": -39.0,
+      "endDirOffset": -55.0
+    },
+    "Turret_AlbionClass_Turret_AA_R3": {
+      "x": 78.0,
+      "y": -39.0,
+      "endDirOffset": 55.0
+    },
+    "Turret_AlbionClass_Turret_AA_L4": {
+      "x": -88.0,
+      "y": -39.0,
+      "endDirOffset": -75.0
+    },
+    "Turret_AlbionClass_Turret_AA_R4": {
+      "x": 88.0,
+      "y": -39.0,
+      "endDirOffset": 75.0
+    },
+    "Turret_AlbionClass_Turret_AA_L5": {
+      "x": -88.0,
+      "y": -125.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_AlbionClass_Turret_AA_R5": {
+      "x": 88.0,
+      "y": -125.0,
+      "endDirOffset": 180.0
+    },
+    "Turret_AlbionClass_Turret_AA_L6": {
+      "x": -20.0,
+      "y": 35.0,
+      "endDirOffset": -25.0
+    },
+    "Turret_AlbionClass_Turret_AA_R6": {
+      "x": 20.0,
+      "y": 35.0,
+      "endDirOffset": 25.0
+    },
+    "Turret_AlbionClass_Turret_AA_2_L1": {
+      "x": -92.0,
+      "y": -84.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_AlbionClass_Turret_AA_2_R1": {
+      "x": 92.0,
+      "y": -84.0,
+      "endDirOffset": 15.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": -55.0,
+        "y": -160.0
+      },
+      "scaleX": -0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": 55.0,
+        "y": -160.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "AlbionClass_Turret_BeamCannon_L1",
+      "bone": "Turret_AlbionClass_Turret_BeamCannon_L1",
+      "moduleId": "AlbionClass_Turret_BeamCannon_L1",
+      "texture": "AlbionClass_Turret_BeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_BeamCannon_R1",
+      "bone": "Turret_AlbionClass_Turret_BeamCannon_R1",
+      "moduleId": "AlbionClass_Turret_BeamCannon_R1",
+      "texture": "AlbionClass_Turret_BeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "AlbionClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "AlbionClass_Turret_MegaBeamCannon_L1",
+      "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+      "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+      "texture": "AlbionClass_Turret_MegaBeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_MegaBeamCannon_R1",
+      "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+      "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+      "texture": "AlbionClass_Turret_MegaBeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.0,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_L1",
+      "bone": "Turret_AlbionClass_Turret_AA_L1",
+      "moduleId": "AlbionClass_Turret_AA_L1",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_R1",
+      "bone": "Turret_AlbionClass_Turret_AA_R1",
+      "moduleId": "AlbionClass_Turret_AA_R1",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_L2",
+      "bone": "Turret_AlbionClass_Turret_AA_L2",
+      "moduleId": "AlbionClass_Turret_AA_L2",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_R2",
+      "bone": "Turret_AlbionClass_Turret_AA_R2",
+      "moduleId": "AlbionClass_Turret_AA_R2",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_L3",
+      "bone": "Turret_AlbionClass_Turret_AA_L3",
+      "moduleId": "AlbionClass_Turret_AA_L3",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_R3",
+      "bone": "Turret_AlbionClass_Turret_AA_R3",
+      "moduleId": "AlbionClass_Turret_AA_R3",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_L4",
+      "bone": "Turret_AlbionClass_Turret_AA_L4",
+      "moduleId": "AlbionClass_Turret_AA_L4",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_R4",
+      "bone": "Turret_AlbionClass_Turret_AA_R4",
+      "moduleId": "AlbionClass_Turret_AA_R4",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_L5",
+      "bone": "Turret_AlbionClass_Turret_AA_L5",
+      "moduleId": "AlbionClass_Turret_AA_L5",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_R5",
+      "bone": "Turret_AlbionClass_Turret_AA_R5",
+      "moduleId": "AlbionClass_Turret_AA_R5",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_L6",
+      "bone": "Turret_AlbionClass_Turret_AA_L6",
+      "moduleId": "AlbionClass_Turret_AA_L6",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_R6",
+      "bone": "Turret_AlbionClass_Turret_AA_R6",
+      "moduleId": "AlbionClass_Turret_AA_R6",
+      "texture": "AlbionClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_2_L1",
+      "bone": "Turret_AlbionClass_Turret_AA_2_L1",
+      "moduleId": "AlbionClass_Turret_AA_2_L1",
+      "texture": "AlbionClass_Turret_AA_2.png",
+      "order": 5.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "AlbionClass_Turret_AA_2_R1",
+      "bone": "Turret_AlbionClass_Turret_AA_2_R1",
+      "moduleId": "AlbionClass_Turret_AA_2_R1",
+      "texture": "AlbionClass_Turret_AA_2.png",
+      "order": 5.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 281500,
+    "en": 15000.0,
+    "move": 8,
+    "mobility": 90.0,
+    "cost": 2250,
+    "counterLimit": 1,
+    "accuracy": 120.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "AlbionClass_Turret_BeamCannon_L1",
+        "name": "AlbionClass_Turret_BeamCannon_L1",
+        "hp": 25000.0,
+        "bone": "Turret_AlbionClass_Turret_BeamCannon_L1",
+        "x": -45.0,
+        "y": 170.0,
+        "idleDir": 0.0,
+        "arc": 150.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_AlbionClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_BeamCannon_R1",
+        "name": "AlbionClass_Turret_BeamCannon_R1",
+        "hp": 25000.0,
+        "bone": "Turret_AlbionClass_Turret_BeamCannon_R1",
+        "x": 45.0,
+        "y": 170.0,
+        "idleDir": 0.0,
+        "arc": 150.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_AlbionClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_MegaBeamCannon_L1",
+        "name": "AlbionClass_Turret_MegaBeamCannon_L1",
+        "hp": 30000.0,
+        "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+        "x": -120.0,
+        "y": -32.0,
+        "idleDir": -8.0,
+        "arc": 15.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_MegaBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_MegaBeamCannon_R1",
+        "name": "AlbionClass_Turret_MegaBeamCannon_R1",
+        "hp": 30000.0,
+        "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+        "x": 120.0,
+        "y": -32.0,
+        "idleDir": 8.0,
+        "arc": 15.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_R.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_MegaBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_MS_L1",
+        "name": "AlbionClass_Turret_MS_L1",
+        "hp": 15000.0,
+        "bone": "Turret_AlbionClass_Turret_MS_L1",
+        "x": -10.0,
+        "y": -70.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_MS_R1",
+        "name": "AlbionClass_Turret_MS_R1",
+        "hp": 15000.0,
+        "bone": "Turret_AlbionClass_Turret_MS_R1",
+        "x": 10.0,
+        "y": -70.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_L1",
+        "name": "AlbionClass_Turret_AA_L1",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_L1",
+        "x": -58.0,
+        "y": -39.0,
+        "idleDir": -15.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_R1",
+        "name": "AlbionClass_Turret_AA_R1",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_R1",
+        "x": 58.0,
+        "y": -39.0,
+        "idleDir": 15.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_L2",
+        "name": "AlbionClass_Turret_AA_L2",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_L2",
+        "x": -68.0,
+        "y": -39.0,
+        "idleDir": -35.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_R2",
+        "name": "AlbionClass_Turret_AA_R2",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_R2",
+        "x": 68.0,
+        "y": -39.0,
+        "idleDir": 35.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_L3",
+        "name": "AlbionClass_Turret_AA_L3",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_L3",
+        "x": -78.0,
+        "y": -39.0,
+        "idleDir": -55.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_R3",
+        "name": "AlbionClass_Turret_AA_R3",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_R3",
+        "x": 78.0,
+        "y": -39.0,
+        "idleDir": 55.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_L4",
+        "name": "AlbionClass_Turret_AA_L4",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_L4",
+        "x": -88.0,
+        "y": -39.0,
+        "idleDir": -75.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_R4",
+        "name": "AlbionClass_Turret_AA_R4",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_R4",
+        "x": 88.0,
+        "y": -39.0,
+        "idleDir": 75.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_L5",
+        "name": "AlbionClass_Turret_AA_L5",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_L5",
+        "x": -88.0,
+        "y": -125.0,
+        "idleDir": -180.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_R5",
+        "name": "AlbionClass_Turret_AA_R5",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_R5",
+        "x": 88.0,
+        "y": -125.0,
+        "idleDir": 180.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_L6",
+        "name": "AlbionClass_Turret_AA_L6",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_L6",
+        "x": -20.0,
+        "y": 35.0,
+        "idleDir": -25.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_R6",
+        "name": "AlbionClass_Turret_AA_R6",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_R6",
+        "x": 20.0,
+        "y": 35.0,
+        "idleDir": 25.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_2_L1",
+        "name": "AlbionClass_Turret_AA_2_L1",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_2_L1",
+        "x": -92.0,
+        "y": -84.0,
+        "idleDir": -15.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA_2"
+          ]
+        }
+      },
+      {
+        "id": "AlbionClass_Turret_AA_2_R1",
+        "name": "AlbionClass_Turret_AA_2_R1",
+        "hp": 10000.0,
+        "bone": "Turret_AlbionClass_Turret_AA_2_R1",
+        "x": 92.0,
+        "y": -84.0,
+        "idleDir": 15.0,
+        "arc": 145.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_AlbionClass_Turret_AA_2"
+          ]
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 3
+    },
+    "commandAuras": [
+      {
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
+      },
+      {
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "sensors": {
+      "sight": 10,
+      "radar": 18.055555555555557,
+      "antiDetection": -8.680555555555555,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 25.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 35.0,
+      "flat": 350.0
+    },
+    "shell": {
+      "percent": 40.0,
+      "flat": 350.0
+    },
+    "melee": {
+      "percent": 30.0,
+      "flat": 350.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 10.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 10.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 225000.0,
+    "walkSpeed": 0.75,
+    "boostSpeed": 1.3,
+    "turnSpeed": 0.5,
+    "reaction": 90.0,
+    "shooting": 125.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "AlbionClass",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "EFSF",
+      "0079",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X16"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "CmdCom",
+      "CmdDef",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 120.0,
+    "unitLevel": 9000.0,
+    "enBeforeReduction": 30000.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 650.0,
+      "antiDetection": -250.0
+    },
+    "v17BaseHp": 225000.0,
+    "technologyEra": "0083",
+    "importedTechPage": 1
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "阿鲁比昂",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0083"
+  ],
+  "localization": {
+    "zh": {
+      "name": "阿鲁比昂",
+      "description": "飞马级的改良型,综合性能有所强化"
+    },
+    "en": {
+      "name": "Albion Class",
+      "description": "An improved model of the Pegasus-class, with enhanced overall performance"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "AlbionClass_Turret_BeamCannon": {
+      "name": "舰载光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 8,
+      "hit": 67.5,
+      "en": 160.0,
+      "sourceName": "AlbionClass_Turret_BeamCannon",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 6000.0,
+      "damageComponents": {
+        "beam": 6000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_BeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_BeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_BeamCannon_L1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_BeamCannon_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_BeamCannon.ini",
+        "barrels": [
+          {
+            "id": "AlbionClass_Turret_BeamCannon",
+            "x": 3.0,
+            "y": 18.0
+          },
+          {
+            "id": "AlbionClass_Turret_BeamCannon",
+            "x": 3.0,
+            "y": 18.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_2.png",
+        "scale": 1.0,
+        "speed": 45.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Pink",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_AlbionClass_Turret_BeamCannon_L1",
+            "offset": {
+              "x": 3.0,
+              "y": 18.0
+            },
+            "alternatingOffsetX": -6.0
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_BeamCannon_R1",
+            "offset": {
+              "x": 3.0,
+              "y": 18.0
+            },
+            "alternatingOffsetX": -6.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "AlbionClass_Turret_BeamCannon_L1",
+        "AlbionClass_Turret_BeamCannon_R1"
+      ],
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink",
+        "Beam_Fire_1_Pink"
+      ],
+      "nativePayload": {
+        "BeamDamage": 6000.0,
+        "DpDamage": 300.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.5,
+        "AntiSizeSmallDamage": 0.5,
+        "AntiSizeLargeAccuracy": 1.5,
+        "AntiSizeSmallAccuracy": 0.5,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 45.0,
+        "ProjectileSpread": 4.0,
+        "ProjectileLife": 50.0,
+        "ProjectileAttackTimes": 2.0,
+        "ProjectileAttackTimesDamageModifier": 0.5
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.5,
+          "accuracy": 0.5
+        },
+        "large": {
+          "damage": 1.5,
+          "accuracy": 1.5
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_BeamCannon.ini",
+        "barrel": "AlbionClass_Turret_BeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 6.0,
+        "duration": 0.2,
+        "firstShot": 0.0,
+        "lastShot": 0.2,
+        "firingEvents": 4,
+        "projectiles": 4,
+        "declaredEnergy": 40.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 40.0,
+        "energy": 160.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "AlbionClass_Turret_MegaBeamCannon": {
+      "name": "舰载光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 8,
+      "hit": 67.5,
+      "en": 480.0,
+      "sourceName": "AlbionClass_Turret_MegaBeamCannon",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 12000.0,
+      "damageComponents": {
+        "beam": 8000.0,
+        "beamAP": 4000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 2.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini",
+        "barrels": [
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_L",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_R",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_L",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_R",
+            "x": 0.0,
+            "y": 27.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_3.png",
+        "scale": 1.0,
+        "speed": 35.0,
+        "forwardOffset": -15.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Exp_1_Pink",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_2.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "AlbionClass_Turret_MegaBeamCannon_L1",
+        "AlbionClass_Turret_MegaBeamCannon_R1"
+      ],
+      "muzzleEffects": [
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink"
+      ],
+      "mergedPositions": [
+        "AlbionClass_Turret_MegaBeamCannon",
+        "AlbionClass_Turret_MegaBeamCannon_L",
+        "AlbionClass_Turret_MegaBeamCannon_R"
+      ],
+      "nativePayload": {
+        "BeamDamage": 8000.0,
+        "BeamAPDamage": 4000.0,
+        "DpDamage": 450.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.5,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.5,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 35.0,
+        "ProjectileSpread": 4.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 55.0,
+        "ProjectileBlastRange": 75.0,
+        "ProjectileBlastDamageModifier": 0.2,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.5,
+          "accuracy": 0.5
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini",
+        "barrel": "AlbionClass_Turret_MegaBeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 8.0,
+        "duration": 2.0,
+        "firstShot": 0.0,
+        "lastShot": 2.0,
+        "firingEvents": 8,
+        "projectiles": 8,
+        "declaredEnergy": 60.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 60.0,
+        "energy": 480.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "AlbionClass_Turret_MegaBeamCannon_L": {
+      "name": "舰载光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 8,
+      "hit": 67.5,
+      "en": 0.0,
+      "sourceName": "AlbionClass_Turret_MegaBeamCannon_L",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 12000.0,
+      "damageComponents": {
+        "beam": 8000.0,
+        "beamAP": 4000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 2.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini",
+        "barrels": [
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_L",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_R",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_L",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_R",
+            "x": 0.0,
+            "y": 27.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_3.png",
+        "scale": 1.0,
+        "speed": 35.0,
+        "forwardOffset": -15.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Exp_1_Pink",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_2.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "AlbionClass_Turret_MegaBeamCannon_L1",
+        "AlbionClass_Turret_MegaBeamCannon_R1"
+      ],
+      "muzzleEffects": [
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink"
+      ],
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "AlbionClass_Turret_MegaBeamCannon"
+      },
+      "nativePayload": {
+        "BeamDamage": 8000.0,
+        "BeamAPDamage": 4000.0,
+        "DpDamage": 450.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.5,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.5,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 35.0,
+        "ProjectileSpread": 4.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 55.0,
+        "ProjectileBlastRange": 75.0,
+        "ProjectileBlastDamageModifier": 0.2,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.5,
+          "accuracy": 0.5
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini",
+        "barrel": "AlbionClass_Turret_MegaBeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 8.0,
+        "duration": 2.0,
+        "firstShot": 0.0,
+        "lastShot": 2.0,
+        "firingEvents": 8,
+        "projectiles": 8,
+        "declaredEnergy": 0.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.0,
+        "energy": 0.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "AlbionClass_Turret_MegaBeamCannon_R": {
+      "name": "舰载光束炮",
+      "type": "beam",
+      "min": 3,
+      "max": 8,
+      "hit": 67.5,
+      "en": 0.0,
+      "sourceName": "AlbionClass_Turret_MegaBeamCannon_R",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 12000.0,
+      "damageComponents": {
+        "beam": 8000.0,
+        "beamAP": 4000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_L1",
+            "delay": 2.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MegaBeamCannon_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini",
+        "barrels": [
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_L",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_R",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_L",
+            "x": 0.0,
+            "y": 27.0
+          },
+          {
+            "id": "AlbionClass_Turret_MegaBeamCannon_R",
+            "x": 0.0,
+            "y": 27.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_3.png",
+        "scale": 1.0,
+        "speed": 35.0,
+        "forwardOffset": -15.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Exp_1_Pink",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MegaBeamCannon_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 27.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamCannon_2.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "AlbionClass_Turret_MegaBeamCannon_L1",
+        "AlbionClass_Turret_MegaBeamCannon_R1"
+      ],
+      "muzzleEffects": [
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink",
+        "Beam_Charge_3_Pink"
+      ],
+      "availability": {
+        "hidden": true,
+        "reasons": [
+          "merged_position"
+        ],
+        "mergedInto": "AlbionClass_Turret_MegaBeamCannon"
+      },
+      "nativePayload": {
+        "BeamDamage": 8000.0,
+        "BeamAPDamage": 4000.0,
+        "DpDamage": 450.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.5,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.5,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 35.0,
+        "ProjectileSpread": 4.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 55.0,
+        "ProjectileBlastRange": 75.0,
+        "ProjectileBlastDamageModifier": 0.2,
+        "ProjectileBlastDpModifier": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.5,
+          "accuracy": 0.5
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini",
+        "barrel": "AlbionClass_Turret_MegaBeamCannon",
+        "entry": "automatic_turret",
+        "cooldown": 8.0,
+        "duration": 2.0,
+        "firstShot": 0.0,
+        "lastShot": 2.0,
+        "firingEvents": 8,
+        "projectiles": 8,
+        "declaredEnergy": 0.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.0,
+        "energy": 0.0,
+        "actions": []
+      },
+      "category": "cannon",
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "AlbionClass_Turret_AMS": {
+      "name": "AlbionClass Turret AMS",
+      "type": "shell",
+      "min": 3,
+      "max": 4,
+      "hit": 90.0,
+      "en": 192.0,
+      "sourceName": "AlbionClass_Turret_AMS",
+      "sourceHit": 100.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 1750.0,
+      "damageComponents": {
+        "shell": 1750.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_L1",
+            "delay": 1.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_L1",
+            "delay": 1.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_L1",
+            "delay": 1.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_L1",
+            "delay": 1.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_L1",
+            "delay": 1.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_L1",
+            "delay": 1.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_L1",
+            "delay": 1.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_MS_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MS.ini",
+        "barrels": [
+          {
+            "id": "AlbionClass_Turret_AMS",
+            "x": 4.0,
+            "y": 0.0
+          },
+          {
+            "id": "AlbionClass_Turret_AMS",
+            "x": 4.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Missile_3.png",
+        "scale": 0.35,
+        "speed": 35.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_AlbionClass_Turret_MS_L1",
+            "offset": {
+              "x": 4.0,
+              "y": 0.0
+            },
+            "alternatingOffsetX": -8.0
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_MS_R1",
+            "offset": {
+              "x": 4.0,
+              "y": 0.0
+            },
+            "alternatingOffsetX": -8.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.2
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "AlbionClass_Turret_MS_L1",
+        "AlbionClass_Turret_MS_R1"
+      ],
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "nativePayload": {
+        "ShellDamage": 1750.0,
+        "DpDamage": 175.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 35.0,
+        "ProjectileTurnspeed": 1.25,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 40.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MS.ini",
+        "barrel": "AlbionClass_Turret_AMS",
+        "entry": "automatic_turret",
+        "cooldown": 12.0,
+        "duration": 7.0,
+        "firstShot": 0.0,
+        "lastShot": 7.0,
+        "firingEvents": 16,
+        "projectiles": 16,
+        "declaredEnergy": 12.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 12.0,
+        "energy": 192.0,
+        "actions": []
+      },
+      "category": "missile",
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "AlbionClass_Turret_AA": {
+      "name": "AlbionClass Turret AA",
+      "type": "shell",
+      "min": 1,
+      "max": 2,
+      "hit": 112.5,
+      "en": 60.0,
+      "sourceName": "AlbionClass_Turret_AA",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 400.0,
+      "damageComponents": {
+        "shell": 300.0,
+        "shellAP": 100.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L1",
+            "delay": 0.1
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R2",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 4,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 5,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R3",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 6,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 7,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R4",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 8,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 9,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R5",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 10,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_L6",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 11,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_R6",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+        "barrels": [
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA",
+            "x": 0.0,
+            "y": 6.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/MG_1.png",
+        "scale": 0.25,
+        "speed": 90.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "MG_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_L1",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_R1",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_L2",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_R2",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_L3",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_R3",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_L4",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_R4",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_L5",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_R5",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_L6",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_R6",
+            "offset": {
+              "x": 0.0,
+              "y": 6.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "water": 1.0,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "AlbionClass_Turret_AA_L1",
+        "AlbionClass_Turret_AA_R1",
+        "AlbionClass_Turret_AA_L2",
+        "AlbionClass_Turret_AA_R2",
+        "AlbionClass_Turret_AA_L3",
+        "AlbionClass_Turret_AA_R3",
+        "AlbionClass_Turret_AA_L4",
+        "AlbionClass_Turret_AA_R4",
+        "AlbionClass_Turret_AA_L5",
+        "AlbionClass_Turret_AA_R5",
+        "AlbionClass_Turret_AA_L6",
+        "AlbionClass_Turret_AA_R6"
+      ],
+      "muzzleEffects": [
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S",
+        "MG_Fire_1_S"
+      ],
+      "nativePayload": {
+        "ShellDamage": 300.0,
+        "ShellAPDamage": 100.0,
+        "DpDamage": 10.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 0.5,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 1.0,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 90.0,
+        "ProjectileSpread": 8.0,
+        "ProjectileLife": 7.5
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini",
+        "barrel": "AlbionClass_Turret_AA",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 0.9,
+        "firstShot": 0.0,
+        "lastShot": 0.9,
+        "firingEvents": 120,
+        "projectiles": 120,
+        "declaredEnergy": 0.5,
+        "energyMode": "perShot",
+        "energyPerEmission": 0.5,
+        "energy": 60.0,
+        "actions": []
+      },
+      "category": "machine_gun",
+      "rangeRole": "ship_anti_air",
+      "actionCost": 2,
+      "shipAntiAirBeforeReduction": [
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L1",
+          "delay": 0.1
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 2,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 3,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R2",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 4,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 5,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R3",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 6,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 7,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R4",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 8,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 9,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R5",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 10,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_L6",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 11,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_R6",
+          "delay": 0.0
+        }
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
+    },
+    "AlbionClass_Turret_AA_2": {
+      "name": "舰载光束炮",
+      "type": "beam",
+      "min": 1,
+      "max": 2,
+      "hit": 81.0,
+      "en": 60.0,
+      "sourceName": "AlbionClass_Turret_AA_2",
+      "sourceHit": 90.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 1250.0,
+      "damageComponents": {
+        "beam": 1250.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_L1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_R1",
+            "delay": 0.0
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_L1",
+            "delay": 0.15
+          },
+          {
+            "shots": 0,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1.0,
+            "requiredParts": [],
+            "moduleId": "AlbionClass_Turret_AA_2_R1",
+            "delay": 0.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 1.0,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA_2.ini",
+        "barrels": [
+          {
+            "id": "AlbionClass_Turret_AA_2",
+            "x": 2.0,
+            "y": -2.0
+          },
+          {
+            "id": "AlbionClass_Turret_AA_2",
+            "x": 2.0,
+            "y": -2.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_1.png",
+        "scale": 1.0,
+        "speed": 80.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_1_S_Pink",
+      "muzzle": {
+        "mounts": [
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_2_L1",
+            "offset": {
+              "x": 2.0,
+              "y": -2.0
+            },
+            "alternatingOffsetX": -4.0
+          },
+          {
+            "bone": "Turret_AlbionClass_Turret_AA_2_R1",
+            "offset": {
+              "x": 2.0,
+              "y": -2.0
+            },
+            "alternatingOffsetX": -4.0
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/BeamGun_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.5,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "moduleIds": [
+        "AlbionClass_Turret_AA_2_L1",
+        "AlbionClass_Turret_AA_2_R1"
+      ],
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S",
+        "Beam_Fire_1_Pink_S"
+      ],
+      "nativePayload": {
+        "BeamDamage": 1250.0,
+        "DpDamage": 75.0,
+        "WeaponAccuracy": 90.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 80.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 30.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA_2.ini",
+        "barrel": "AlbionClass_Turret_AA_2",
+        "entry": "automatic_turret",
+        "cooldown": 2.0,
+        "duration": 0.75,
+        "firstShot": 0.0,
+        "lastShot": 0.75,
+        "firingEvents": 12,
+        "projectiles": 12,
+        "declaredEnergy": 5.0,
+        "energyMode": "perShot",
+        "energyPerEmission": 5.0,
+        "energy": 60.0,
+        "actions": []
+      },
+      "category": "machine_gun",
+      "rangeRole": "ship_anti_air",
+      "actionCost": 2,
+      "shipAntiAirBeforeReduction": [
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_L1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_L1",
+          "delay": 0.15
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_L1",
+          "delay": 0.15
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_L1",
+          "delay": 0.15
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_L1",
+          "delay": 0.15
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_R1",
+          "delay": 0.0
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 0,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_L1",
+          "delay": 0.15
+        },
+        {
+          "shots": 1,
+          "muzzleIndex": 1,
+          "partBreakModifier": 1.0,
+          "requiredParts": [],
+          "moduleId": "AlbionClass_Turret_AA_2_R1",
+          "delay": 0.0
+        }
+      ],
+      "shipHitBeforeReduction": 90.0,
+      "shipAccuracyMultiplier": 0.9
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "CmdDef",
+      "source": "Template/Unit/Skill/CmdDef.gw",
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "special_Common_ReEntry",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_FromSpace",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_Both",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
+      "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "AlbionClass_Turret_BeamCannon",
+        "AlbionClass_Turret_MegaBeamCannon",
+        "AlbionClass_Turret_AMS",
+        "AlbionClass_Turret_AA",
+        "AlbionClass_Turret_AA_2"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 4,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "description": "飞马级的改良型,综合性能有所强化",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 9000.0,
+    "levelMultiplier": 0.25,
+    "published": 2250
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Aircraft",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 8,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+      "sourceUnit": "Hangar_X8"
+    },
+    {
+      "id": "Hangar_2",
+      "name": "格纳库 2",
+      "capacity": 8,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+      "sourceUnit": "Hangar_X8"
+    }
+  ]
+}

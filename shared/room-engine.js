@@ -670,7 +670,7 @@ function createRoomEngine({
         team === null
           ? []
           : room.game.units
-              .filter((actor) => actor.hp > 0 && !actor.embarked && !known(actor.id))
+              .filter((actor) => G.onMap(actor) && !known(actor.id))
               .map((actor) => ({
                 ...effectActor(actor),
                 lowHp: actor.hp < G.modelOf(actor).hp * 0.25,
@@ -1799,8 +1799,8 @@ function createRoomEngine({
           G.modelOf(passenger).hangars?.length || !G.hangars.needsRecovery(passenger)) return false;
       const model = G.modelOf(passenger);
       return G.dist(u, passenger) <= Math.max(2, model.move * 2) &&
-        hangars.some(hangar => hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag)) &&
-          G.hangars.used(room.game, u, hangar.id) + (model.transport?.slotCost || 1) <= hangar.capacity);
+        hangars.some(hangar => hangar.kind !== "sfs" && hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag)) &&
+          G.hangars.used(room.game, u, hangar.id) + G.hangars.slotCost(passenger,hangar) <= hangar.capacity);
     })) return { player, action: "wait", fields: { unitId: u.id } };
     const choice = u.plan ? null : G.aiChoice(room.game, u);
     if (choice?.rotation)
@@ -2023,7 +2023,7 @@ function createRoomEngine({
   const canControl = (room, seat, u) => G.canControlUnit(room.settings, members(room), seat, u);
   function ownUnit(room, seat, id, allowCargo = false, allowPending = false) {
     let u = unit(room, id);
-    if (!u || !canControl(room, seat, u) || u.hp <= 0 || (!allowCargo && u.embarked))
+    if (!u || !canControl(room, seat, u) || u.hp <= 0 || (!allowCargo && u.embarked && !G.onMap(u)))
       throw Error("不能操作该单位");
     if (u.pendingMove && !allowPending) throw Error("请先确认或取消移动");
     return u;

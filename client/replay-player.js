@@ -270,6 +270,7 @@ window.ReplayPlayer = (() => {
     setPageView("game");
   }
   function stop(restore = true) {
+    BattleAssets.cancel();
     session++;
     active = false;
     shared = false;
@@ -352,6 +353,7 @@ window.ReplayPlayer = (() => {
     refresh();
   }
   function present(view) {
+    if (BattleAssets.guard(view, () => present(view))) return;
     resetVisuals();
     clock = performance.now();
     lastNow = clock;
@@ -436,6 +438,7 @@ window.ReplayPlayer = (() => {
     update();
   }
   function tick(now) {
+    if (BattleAssets.loading) { lastNow = now; return clock; }
     const step = Math.min(250, Math.max(0, now - lastNow));
     lastNow = now;
     if (playing) {

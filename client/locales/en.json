@@ -1570,5 +1570,15 @@
   "剩余 EN": "EN remaining",
   "安装部位：": "Mount: ",
   "攻击流程": "Attack sequence",
-  "取消更换目标": "Cancel target change"
+  "取消更换目标": "Cancel target change",
+  "科技树页面": "Technology page",
+  "0079E · 早期": "0079E · Early",
+  "0079L / 0083 · 后期": "0079L / 0083 · Late",
+  "正在加载战斗资源…": "Loading battle resources…",
+  "SFS搭载单位": "SFS passengers",
+  "空槽位": "Empty slot",
+  "搭载确认": "Confirm boarding",
+  "确认搭载": "Confirm boarding",
+  "是否搭载？取消将撤回本次移动。": "Board this transport? Cancel to undo this movement.",
+  "搭载目标或容量已变化，请取消后重新选择": "The transport or capacity has changed. Cancel and select again."
 }

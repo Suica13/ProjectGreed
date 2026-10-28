@@ -4,7 +4,7 @@ const G = require("../shared/rules.js");
 const { loadCatalog } = require("../tools/load-catalog.cjs");
 test("RGM-79 kits contain exactly one primary and both secondary weapons; local assets resolve", () => {
   const catalog = loadCatalog();
-  assert.equal(catalog.prefabs.filter((p) => !p.formOnly).length, 141);
+  assert.equal(catalog.prefabs.filter((p) => !p.formOnly).length, 253);
   assert.equal(catalog.prefabs[0].id, "RGM_79");
   assert.deepEqual(
     Object.values(catalog.models)

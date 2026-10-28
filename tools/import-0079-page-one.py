@@ -111,6 +111,9 @@ def weapon(p,path,effects,attach=None):
   if melee:w.update(hitEffect='Cqb_Hit_1',swingEffects=['Cqb_Fire_1_Pink_R','Cqb_Fire_1_Pink_L'])
   else:
    projectileId=re.match(r'\w+',spawn)[0];candidates=list((MAIN/'Units/BattleUnits/Weapon').rglob(projectileId+'.ini'))+list((ROOT/'Units/BattleUnits/Weapon').rglob(projectileId+'.ini'))
+   if not candidates:
+    # Native spawn IDs need not match filenames (Public-class diffusion missile).
+    candidates=[file for root in (MAIN,ROOT) for file in (root/'Units/BattleUnits/Weapon').rglob('*.ini') if parse(file).get('core',{}).get('name')==projectileId]
    if not candidates:raise ValueError('Missing native projectile '+projectileId)
    bulletRoot=MAIN if candidates[0].is_relative_to(MAIN) else ROOT
    bullet=load(candidates[0],bulletRoot)
@@ -223,7 +226,8 @@ def build(row,effects):
  p['mechanics'].insert(0,{'id':'movement','name':moveType,'status':'implemented'})
  p['sourceStats']['nativeTags']=tags;p['sourceStats']['nativeSkills']=skillnames
  apply_introduction(p,data)
- return finalize(p,row,data)
+ from animation_pool import share
+ return share(finalize(p,row,data))
 
 def main():
  sys.stdout.reconfigure(encoding='utf-8');catalog=read(ASSETS/'unit-catalog.json');effects=read(ASSETS/'effects/effects.json');existing={'RGM_79','RGC_80','RGM_79L','MS_06F','MS_09','RGM_79_G','MS_06J','MS_06K','MS_14A','RX_79_G','MS_06F2','MS_09R','SalamisClass','RX_78_1','FF_X7'};report=[]

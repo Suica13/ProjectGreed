@@ -105,6 +105,7 @@ const Net = (() => {
     !window.ReplayPlayer?.active &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
+    if (BattleAssets.loading) return false;
     if (window.ReplayPlayer?.active) return false;
     return (
       !n.active ||
@@ -175,6 +176,7 @@ const Net = (() => {
     );
   }
   function leave({ notify = true, forget = true } = {}) {
+    BattleAssets.cancel();
     if (window.ReplayPlayer?.active) window.ReplayPlayer.stop(false);
     window.BattlePrompts?.reset();
     closeDisconnect();
@@ -430,6 +432,7 @@ const Net = (() => {
   }
   // 服务端快照是联机状态来源，按阶段恢复地图、应战或战斗画面。
   function applySnapshot(s) {
+    if (BattleAssets.guard(s, () => applySnapshot(s))) { phase = "loading"; return; }
     const changedView = n.appliedViewTeam !== undefined && n.appliedViewTeam !== s.viewTeam;
     n.appliedViewTeam = s.viewTeam;
     if (changedView) {

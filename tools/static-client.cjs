@@ -25,7 +25,7 @@ function encoding(header = "") {
     ((values.get("identity") ?? (values.get("*") === 0 ? 0 : 1)) > 0 ? "identity" : null)
   );
 }
-function createStaticClient() {
+function createStaticClient({ transform = async (value) => value } = {}) {
   const cache = new Map();
   return async function serve(req, res, file) {
     try {
@@ -54,6 +54,10 @@ function createStaticClient() {
           .map((v) => v.trim())
           .some((value) => value === entry.etag || value === "*")
       ) {
+        // Rebuild the media URL registry even when a browser reuses cached HTML
+        // after a server restart.
+        entry.raw ||= fs.readFile(file).then((raw) => transform(raw, file));
+        await entry.raw;
         res.writeHead(304);
         res.end();
         return;
@@ -66,7 +70,10 @@ function createStaticClient() {
       }
       if (selected !== "identity") res.setHeader("Content-Encoding", selected);
       if (req.method === "HEAD") {
-        if (selected === "identity") res.setHeader("Content-Length", stat.size);
+        if (selected === "identity") {
+          entry.raw ||= fs.readFile(file).then((raw) => transform(raw, file));
+          res.setHeader("Content-Length", (await entry.raw).length);
+        }
         res.writeHead(200);
         res.end();
         return;
@@ -84,7 +91,7 @@ function createStaticClient() {
               } catch (error) {
                 if (error.code !== "ENOENT") throw error;
               }
-              entry.raw ||= fs.readFile(file);
+              entry.raw ||= fs.readFile(file).then((raw) => transform(raw, file));
               const raw = await entry.raw;
               return selected === "gzip"
                 ? gzip(raw, { level: 6 })
@@ -93,7 +100,7 @@ function createStaticClient() {
           );
         data = await entry.encoded.get(selected);
       } else {
-        entry.raw ||= fs.readFile(file);
+        entry.raw ||= fs.readFile(file).then((raw) => transform(raw, file));
         data = await entry.raw;
       }
       res.setHeader("Content-Length", data.length);

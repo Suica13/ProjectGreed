@@ -426,39 +426,124 @@ const SpriteRenderer = (() => {
     const presentation = models[model].presentation;
     return presentation.movement === "walk" ? presentation.walk : presentation.move;
   }
-  async function load(onProgress = () => {}) {
-    const groups = new Map();
-    for (const [key, source] of Object.entries(ART.assets)) {
-      if (!groups.has(source)) groups.set(source, []);
-      groups.get(source).push(key);
+  // One bounded queue serves startup, previews and battle preparation.
+  const requests = new Map(),
+    queue = [];
+  let workers = 0;
+  function pump() {
+    while (workers < 8 && queue.length) {
+      const task = queue.shift();
+      workers++;
+      const image = new Image();
+      image.onload = () => {
+        workers--;
+        task.resolve(image);
+        pump();
+      };
+      image.onerror = () => {
+        workers--;
+        requests.delete(task.source);
+        task.reject(Error("Asset loading failed: " + task.key));
+        pump();
+      };
+      image.src = task.source;
     }
-    const entries = [...groups],
-      total = Object.keys(ART.assets).length;
-    let loaded = 0,
-      cursor = 0;
-    onProgress(0, total);
-    // Reuse decoded images and bound concurrent decoding, especially on phones.
-    async function worker() {
-      while (cursor < entries.length) {
-        const [source, keys] = entries[cursor++];
-        await new Promise((resolve, reject) => {
-          const image = new Image();
-          image.onload = () => {
-            for (const key of keys) images[key] = image;
-            loaded += keys.length;
-            onProgress(loaded, total);
-            resolve();
-          };
-          image.onerror = () => reject(Error("Asset loading failed: " + keys[0]));
-          image.src = source;
-        });
-      }
-    }
-    await Promise.all(Array.from({ length: Math.min(8, entries.length) }, () => worker()));
   }
+  function ensureAssets(keys, onProgress = () => {}) {
+    keys = [...new Set(keys)].filter((key) => ART.assets[key]);
+    let completed = 0;
+    onProgress(0, keys.length);
+    return Promise.all(
+      keys.map((key) => {
+        if (images[key]) {
+          onProgress(++completed, keys.length);
+          return images[key];
+        }
+        const source = ART.assets[key];
+        if (!requests.has(source)) {
+          const request = new Promise((resolve, reject) =>
+            queue.push({ source, key, resolve, reject }),
+          );
+          requests.set(source, request);
+          pump();
+        }
+        return requests.get(source).then((image) => {
+          images[key] = image;
+          onProgress(++completed, keys.length);
+          return image;
+        });
+      }),
+    );
+  }
+  const modelKeys = new Map();
+  function keysForModels(ids) {
+    return [
+      ...new Set(
+        ids.flatMap((id) => {
+          if (!modelKeys.has(id)) {
+            const unit = models[id];
+            modelKeys.set(id, unit ? [unit.icon, ...unit.decals.map((layer) => layer.asset)] : []);
+          }
+          return modelKeys.get(id);
+        }),
+      ),
+    ];
+  }
+  const modelsReady = (ids) => keysForModels(ids).every((key) => images[key]);
+  const ensureModels = (ids) => ensureAssets(keysForModels(ids));
+  const readyAssets = (keys) => keys.every((key) => images[key]);
+  function battleKeys(snapshot) {
+    const ids = new Set(),
+      visited = new Set();
+    function visit(value) {
+      if (!value || typeof value !== "object" || visited.has(value)) return;
+      visited.add(value);
+      if (typeof value.model === "string" && models[value.model]) ids.add(value.model);
+      for (const [key, child] of Object.entries(value))
+        if (!["tiles", "log", "chat", "researched"].includes(key)) visit(child);
+    }
+    visit(snapshot);
+    const prefabs = new Set([...ids].map((id) => ART.models[id].prefabId));
+    // Preload explicit conversion/ejection destinations, including every mapped kit.
+    for (const id of prefabs) {
+      const prefab = ART.prefabs.find((prefab) => prefab.id === id);
+      for (const skill of prefab?.skills || [])
+        for (const target of [skill.formUnitId, skill.source?.unitId, skill.spawn?.unitId])
+          if (target) prefabs.add(target);
+    }
+    for (const [id, model] of Object.entries(ART.models))
+      if (prefabs.has(model.prefabId)) ids.add(id);
+    return [
+      ...new Set(
+        [
+          ...keysForModels([...ids]),
+          ...Object.values(ART.effects).map((effect) => effect.asset),
+          ...[...ids].flatMap((id) =>
+            ART.models[id].weapons.map((weapon) => weapon.projectile?.asset),
+          ),
+        ].filter(Boolean),
+      ),
+    ];
+  }
+  function loadMenu(onProgress) {
+    const owned = new Set(Object.keys(Economy.snapshot().inventory).slice(0, 12));
+    let icons = ART.units
+      .filter((unit) => owned.has(ART.models[unit.id].prefabId))
+      .map((unit) => unit.icon);
+    if (!icons.length) icons = ART.units.slice(0, 4).map((unit) => unit.icon);
+    return ensureAssets(icons, onProgress);
+  }
+  const load = (onProgress) => ensureAssets(Object.keys(ART.assets), onProgress);
+
   return {
     draw,
     load,
+    loadMenu,
+    ensureAssets,
+    ensureModels,
+    modelsReady,
+    battleKeys,
+    readyAssets,
     models,
     images,
     sample,

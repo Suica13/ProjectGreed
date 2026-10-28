@@ -34,6 +34,7 @@ const CombatPlayback = (() => {
     return !!battleView?.networkId;
   }
   function show() {
+    if (globalThis.BattleAssets?.loading) return false;
     if (pageView !== "game") return false;
     if (active()) {
       phase = "battle";
@@ -75,6 +76,7 @@ const CombatPlayback = (() => {
     return true;
   }
   function finish() {
+    if (globalThis.BattleAssets?.loading) return;
     if (globalThis.ReplayPlayer?.active) {
       globalThis.ReplayPlayer.combatFinished();
       return;

@@ -22,6 +22,23 @@ async function main() {
       channel: process.env.SLG_BROWSER || (process.platform === "win32" ? "msedge" : "chromium"),
     });
     const address = await app.listen();
+    result.httpDocumentBytes = await new Promise((resolve, reject) => {
+      const request = http.request(
+        {
+          hostname: "127.0.0.1",
+          port: address.port,
+          path: "/",
+          method: "HEAD",
+          headers: { "Accept-Encoding": "identity" },
+        },
+        (response) => {
+          response.resume();
+          response.on("end", () => resolve(Number(response.headers["content-length"])));
+        },
+      );
+      request.on("error", reject);
+      request.end();
+    });
     result.http = [];
     for (let i = 0; i < 3; i++) {
       const at = performance.now();
@@ -66,6 +83,11 @@ async function main() {
       imageObjects: new Set(Object.values(SpriteRenderer.images)).size,
       heapBytes: performance.memory?.usedJSHeapSize,
     }));
+    await page.evaluate(() =>
+      SpriteRenderer.ensureAssets(
+        SpriteRenderer.battleKeys({ game: { units: [{ model: "Type61__standard" }] } }),
+      ),
+    );
     result.draw = await page.evaluate(() => {
       const entry = { unitId: "Type61", kitId: "standard" };
       game = Rules.create(

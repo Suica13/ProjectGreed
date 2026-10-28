@@ -15,7 +15,8 @@ const Tactics = (() => {
   const sensorModule =
     typeof UnitSensors !== "undefined" ? UnitSensors : require("./unit-sensors.js");
   const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
-  const onMap = (u) => !!u && u.hp > 0 && !u.embarked;
+  // SFS passengers remain independent combat actors; enclosed cargo stays hidden.
+  const onMap = (u) => !!u && u.hp > 0 && (!u.embarked || u.embarked.exposed === true);
   const sensors = sensorModule.create({ modelOf, cells, onMap, minovskyAt });
   const turnTransitionMs = 3600;
   const W = catalog.map.width,
@@ -148,7 +149,7 @@ const Tactics = (() => {
       )
         throw Error("该单位不能预先搭载至此格纳库");
       const key = preload.carrierIndex + "/" + preload.hangarId,
-        used = (capacity.get(key) || 0) + (passenger.transport?.slotCost || 1);
+        used = (capacity.get(key) || 0) + (hangar.kind === "sfs" ? 1 : passenger.transport?.slotCost || 1);
       if (used > hangar.capacity) throw Error("预先搭载超出格纳库容量");
       capacity.set(key, used);
       clean[index].preload = { carrierIndex: preload.carrierIndex, hangarId: preload.hangarId };
@@ -159,7 +160,7 @@ const Tactics = (() => {
   const factions = ["EFSF", "ZEON"];
   const eras = [
     ...new Set(
-      catalog.prefabs.flatMap((prefab) => prefab.tags.filter((tag) => /^\d{4}$/.test(tag))),
+      catalog.prefabs.flatMap((prefab) => prefab.tags.filter((tag) => /^\d{4}(?:[EL])?$/.test(tag))),
     ),
   ].sort();
   const unitTags = [...new Set(catalog.prefabs.flatMap((p) => p.unitTags || []))].sort();
@@ -184,7 +185,10 @@ const Tactics = (() => {
       ["bannedEras", eras],
       ["bannedTypes", unitTags],
     ]) {
-      const tags = value[key] ?? [];
+      let tags = value[key] ?? [];
+      // Saved pre-split room rules used 0079 for both early and late units.
+      if (key === "bannedEras" && Array.isArray(tags))
+        tags = tags.flatMap((tag) => tag === "0079" ? eras.filter((era) => era.startsWith("0079")) : [tag]);
       if (!Array.isArray(tags) || tags.some((tag) => !allowed.includes(tag)))
         throw Error("标签限制无效");
       clean[key] = [...new Set(tags)].sort();
@@ -270,7 +274,7 @@ const Tactics = (() => {
     if (model.wip) return "wip";
     if (
       ["EFSF", "ZEON"].includes(restrictions.characterFaction) &&
-      model.faction !== restrictions.characterFaction
+      !(model.availableFactions || [model.faction]).includes(restrictions.characterFaction)
     )
       return "faction_mismatch";
     if (
@@ -289,7 +293,8 @@ const Tactics = (() => {
       return "not_allowed";
     if (
       restrictions.bannedFactions?.includes(model.faction) ||
-      model.tags.some((tag) => restrictions.bannedEras?.includes(tag)) ||
+      model.tags.some((tag) => restrictions.bannedEras?.includes(tag) ||
+        (restrictions.bannedEras?.includes("0079") && /^0079[EL]$/.test(tag))) ||
       (model.unitTags || []).some((tag) => restrictions.bannedTypes?.includes(tag))
     )
       return "not_allowed";
@@ -666,7 +671,7 @@ const Tactics = (() => {
       const compatible = hangars.filter(
         (slot) =>
           slot.carrierIndex !== index &&
-          slot.remaining >= model.transport.slotCost &&
+          slot.remaining >= (slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost) &&
           slot.hangar.allowedTags.some((tag) => model.transport.loadTags.includes(tag)),
       );
       if (!compatible.length) continue;
@@ -675,7 +680,7 @@ const Tactics = (() => {
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
       const slot = compatible[seed % compatible.length];
       entry.preload = { carrierIndex: slot.carrierIndex, hangarId: slot.hangar.id };
-      slot.remaining -= model.transport.slotCost;
+      slot.remaining -= slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost;
     }
     return entries;
   }
@@ -873,7 +878,7 @@ const Tactics = (() => {
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再调整");
     const u = g.units.find((u) => u.id === id && ownerOf(u) === team);
     if (
-      !onMap(u) ||
+      !onMap(u) || !!u.embarked ||
       !Number.isInteger(x) ||
       !Number.isInteger(y) ||
       !deploymentCells(g, team, u).some((c) => c.x === x && c.y === y)
@@ -883,10 +888,11 @@ const Tactics = (() => {
     delete u.rotationPivot;
     u.x = x;
     u.y = y;
+    hangars.sync(g);
   }
   function confirmDeployment(g, team) {
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再次确认");
-    for (const u of g.units.filter((u) => ownerOf(u) === team && onMap(u))) {
+    for (const u of g.units.filter((u) => ownerOf(u) === team && onMap(u) && !u.embarked)) {
       if (!deploymentCells(g, team, u).some((c) => c.x === u.x && c.y === u.y))
         throw Error("单位不在有效部署区域");
       if (!fits(g, u, u.x, u.y, u.angle, false, team)) throw Error("部署位置重叠");
@@ -1056,7 +1062,7 @@ const Tactics = (() => {
         !(g.units || []).some(
           (other) =>
             other.id !== unit.id &&
-            onMap(other) &&
+            onMap(other) && !other.embarked &&
             (occupies(other, c.x, c.y) ||
               (other.pendingMove && occupies({ ...other, ...other.pendingMove }, c.x, c.y))) &&
             (!throughAllies || other.team !== unit.team),
@@ -1134,6 +1140,7 @@ const Tactics = (() => {
     Object.assign(unit, anchorAt(unit, unit.rotationPivot.x, unit.rotationPivot.y, nextAngle));
     unit.angle = (((unit.angle + direction * 90) % 360) + 360) % 360;
     unit.aimAngle = unit.angle;
+    hangars.sync(g);
   }
   // AI预选和真正创建单位共用完整占地检查；大舰优先，避免碎片化空位。
   function deploymentPlacements(world, formation, seat) {
@@ -1271,6 +1278,7 @@ const Tactics = (() => {
         });
       });
     }
+    hangars.sync({units});
     units.sort(
       (a, b) =>
         a.ownerSeat - b.ownerSeat || Number(a.id.split("-")[1]) - Number(b.id.split("-")[1]),
@@ -1293,7 +1301,7 @@ const Tactics = (() => {
     };
   }
   function at(g, x, y) {
-    return g.units.find((u) => onMap(u) && occupies(u, x, y));
+    return g.units.find((u) => onMap(u) && !u.embarked && occupies(u, x, y));
   }
   // 敌军上下左右相邻的格子消耗至少3点；地形更昂贵时仍按地形计算。
   function terrainCost(g, u, x, y) {
@@ -1319,7 +1327,7 @@ const Tactics = (() => {
   }
   // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
   function reachable(g, u, starts = null) {
-    if (!onMap(u)) return new Map();
+    if (!onMap(u) || u.embarked) return new Map();
     const startAdaptation = adaptationOf(g, u);
     const moveLimit = startAdaptation > 0 ? modelOf(u, g).move / startAdaptation : modelOf(u).move;
     // A search does not mutate the board. Evaluate each destination's expensive
@@ -1369,7 +1377,28 @@ const Tactics = (() => {
     for (const [cell, entry] of best) {
       if (!fits(g, u, entry.x, entry.y)) best.delete(cell);
     }
+    // Boarding endpoints use an ordinary reachable hull-edge cell plus one step.
+    // Normal cargo never becomes a collision obstacle or a path starting point.
+    if (!starts && !u.moved && !u.acted && !u.plan) {
+      for (const carrier of g.units.filter(c => c !== u && onMap(c) && !c.embarked && c.team === u.team && hangars.of(c).length)) {
+        for (const point of cells(carrier)) {
+          const route = boardingRoute(g, u, carrier, point.x, point.y, best, moveLimit);
+          if (route) best.set(key(point.x, point.y), route);
+        }
+      }
+    }
     return best;
+  }
+  function boardingRoute(g, u, carrier, x, y, walk, moveLimit) {
+    for (const h of hangars.of(carrier)) {
+      const candidates = [...walk.values()].filter(p => !p.boarding && p.cost + 1 <= moveLimit &&
+        hangars.canEmbark(g, {...u, x:p.x, y:p.y, pendingMove:undefined}, carrier, h.id));
+      candidates.sort((a,b) => a.cost-b.cost || Math.abs(a.x-x)+Math.abs(a.y-y)-Math.abs(b.x-x)-Math.abs(b.y-y));
+      const approach = candidates[0];
+      if (approach) return {x,y,cost:approach.cost+1,path:[...approach.path,{x,y}],
+        boarding:{carrierId:carrier.id,hangarId:h.id,approach:{x:approach.x,y:approach.y}}};
+    }
+    return null;
   }
   // 朝向由裁定状态保存，快照、重连和各客户端使用同一个结果。
   function faceTarget(unit, target) {
@@ -1383,10 +1412,18 @@ const Tactics = (() => {
     }
   }
   function move(g, u, x, y) {
-    if (!onMap(u) || g.winner !== null || u.team !== g.team || u.acted || u.moved)
+    if (!onMap(u) || u.embarked || u.pendingMove || g.winner !== null || u.team !== g.team || u.acted || u.moved)
       throw Error("本单位无法移动");
     let tile = reachable(g, u).get(key(x, y));
     if (!tile || !tile.path.length) throw Error("该位置不可移动");
+    if (tile.boarding) {
+      const {carrierId,hangarId,approach} = tile.boarding;
+      const carrier = g.units.find(c => c.id === carrierId);
+      // The route and capacity were validated before either position changes.
+      Object.assign(u, approach);
+      hangars.embark(g,u,carrier,hangarId);
+      return tile.path;
+    }
     // 只有同一玩家的后续成功移动才会提交先前移动；友军玩家独立撤回。
     for (const other of g.units) {
       if (ownerOf(other) === ownerOf(u)) other.origin = null;
@@ -1405,6 +1442,7 @@ const Tactics = (() => {
     u.y = y;
     delete u.rotationPivot;
     u.moved = true;
+    hangars.sync(g);
     return tile.path;
   }
   function canUndo(g, u) {
@@ -1421,6 +1459,7 @@ const Tactics = (() => {
   }
   // 预览只保留落点与路径，不改变裁定位置，因此不会提前更新视野或索敌。
   function previewMove(g, u, x, y, seat = ownerOf(u)) {
+    if (u?.embarked?.exposed) return hangars.previewLaunch(g,u,x,y,seat).path;
     if (
       !onMap(u) ||
       g.winner !== null ||
@@ -1437,7 +1476,8 @@ const Tactics = (() => {
     const angle = models[u.model]?.ship
       ? u.angle
       : (Math.atan2(x - previous.x, -(y - previous.y)) * 180) / Math.PI;
-    u.pendingMove = { x, y, angle, seat, from: { x: u.x, y: u.y }, path: tile.path };
+    u.pendingMove = { x, y, angle, seat, from: { x: u.x, y: u.y }, path: tile.path,
+      ...(tile.boarding ? {boarding:tile.boarding} : {}) };
     return tile.path;
   }
   function confirmMove(g, u) {
@@ -1445,6 +1485,12 @@ const Tactics = (() => {
     if (!pending) throw Error("没有待确认的移动");
     delete u.pendingMove;
     try {
+      if (pending.boarding) {
+        const route = reachable(g,u).get(key(pending.x,pending.y));
+        if (route?.boarding?.carrierId !== pending.boarding.carrierId ||
+            route.boarding.hangarId !== pending.boarding.hangarId)
+          throw Error("搭载目标或容量已变化，请取消后重新选择");
+      }
       const path = pending.launch ? hangars.launch(g, u, pending.x, pending.y).path : move(g, u, pending.x, pending.y);
       u.origin = null;
       return path;
@@ -1463,6 +1509,7 @@ const Tactics = (() => {
     if (!u.origin.rotationPivot) delete u.rotationPivot;
     u.origin = null;
     u.moved = false;
+    hangars.sync(g);
   }
   function moduleCanBear(unit, moduleId, target) {
     if (!moduleId || !target) return true;
@@ -2118,7 +2165,7 @@ const Tactics = (() => {
       }
       // Hangar maintenance ticks only on the passenger team's incoming turn.
       if (
-        u.embarked &&
+        u.embarked && !u.embarked.exposed &&
         g.units.some((carrier) => carrier.id === u.embarked.carrierId && carrier.hp > 0)
       ) {
         const m = modelOf(u);

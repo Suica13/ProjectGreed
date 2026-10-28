@@ -1,0 +1,726 @@
+{
+  "units": [
+    {
+      "id": "RGC_80",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RGC_80S",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RGM_79SC",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RGM_79HC",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "RAG_79",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "RGM_79V",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "RX_78_3",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "PublicClass",
+      "status": "existing",
+      "weapons": 4
+    },
+    {
+      "id": "SalamisClassLateType",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "ColumbusClassKai",
+      "status": "existing",
+      "weapons": 1
+    },
+    {
+      "id": "RGM_79G",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "RGM_79G_Space",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "RGM_79D",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "RAG_79_G1",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "MagellanClassLateType",
+      "status": "existing",
+      "weapons": 3
+    },
+    {
+      "id": "RX_78NT_1",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "RX_78NT_1_FA",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "RGM_79SP2",
+      "status": "existing",
+      "weapons": 9
+    },
+    {
+      "id": "RX_77D",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "RGM_79LV",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "GrayPhantomClass",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "RGM_79C",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "RGM_79C_Space",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "RB_79_LateType",
+      "status": "existing",
+      "weapons": 2
+    },
+    {
+      "id": "RX_77_4",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "RX_81ST",
+      "status": "existing",
+      "weapons": 9
+    },
+    {
+      "id": "RX_81LA",
+      "status": "existing",
+      "weapons": 9
+    },
+    {
+      "id": "RX_81AS",
+      "status": "existing",
+      "weapons": 11
+    },
+    {
+      "id": "RX_81",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "RX_78GP01",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RX_78GP01_FB",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RX_78GP02A",
+      "status": "existing",
+      "weapons": 9
+    },
+    {
+      "id": "RX_78GP03S",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RGM_79N",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RGC_83",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "RX_81FC",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RX_78GP03D",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "AlbionClass",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "BirminghamClass",
+      "status": "existing",
+      "weapons": 4
+    },
+    {
+      "id": "MagellanClassKai",
+      "status": "existing",
+      "weapons": 3
+    },
+    {
+      "id": "SalamisClassKai",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "FF_X_II",
+      "status": "existing",
+      "weapons": 2
+    },
+    {
+      "id": "FF_X_II_FB",
+      "status": "existing",
+      "weapons": 2
+    },
+    {
+      "id": "RX_78_4_Bst",
+      "status": "existing",
+      "weapons": 9
+    },
+    {
+      "id": "RX_78_5_Bst",
+      "status": "existing",
+      "weapons": 10
+    },
+    {
+      "id": "RX_80PR_SpaceType",
+      "status": "existing",
+      "weapons": 10
+    },
+    {
+      "id": "RGM_79GL",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "RGM_79FP",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RGM_79FD",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "RGM_79S",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "RX_78SP",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "FA_78_1",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "RX_78_6",
+      "status": "existing",
+      "weapons": 9
+    },
+    {
+      "id": "RGM_79_D",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "Burstliner",
+      "status": "existing",
+      "weapons": 1
+    },
+    {
+      "id": "RX_78_7",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "FA_78_3",
+      "status": "existing",
+      "weapons": 10
+    },
+    {
+      "id": "FA_78_2",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "FA_78_G",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "MSM_07",
+      "status": "existing",
+      "weapons": 4
+    },
+    {
+      "id": "MSM_07S",
+      "status": "existing",
+      "weapons": 4
+    },
+    {
+      "id": "MS_06R_2",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MS_06F_Sniper",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MS_09_K_1",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "MA_05",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "YMS_09J",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MusaiClassLateType",
+      "status": "existing",
+      "weapons": 3
+    },
+    {
+      "id": "PazockClass",
+      "status": "existing",
+      "weapons": 1
+    },
+    {
+      "id": "MS_14S",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MS_14A",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MS_15A",
+      "status": "existing",
+      "weapons": 4
+    },
+    {
+      "id": "YMS_15",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MAN_03",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "ChivvayClassKai",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MS_06FZ",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MS_06FZ_Commander",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MS_09R2",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MS_18E",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "ZanzibarClassKai",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "MA_08",
+      "status": "existing",
+      "weapons": 18
+    },
+    {
+      "id": "MAN_08",
+      "status": "existing",
+      "weapons": 3
+    },
+    {
+      "id": "MS_09F",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MSN_02",
+      "status": "existing",
+      "weapons": 14
+    },
+    {
+      "id": "MS_14B",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MS_14C",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "MS_14JG",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "MS_21C",
+      "status": "existing",
+      "weapons": 4
+    },
+    {
+      "id": "MS_09F_TROP_0083",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MS_09S",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MS_14F",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "MS_14FS",
+      "status": "existing",
+      "weapons": 9
+    },
+    {
+      "id": "MS_15F",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MS_15FS",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "YMS_16M",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MA_06",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "AMX_002",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "GwanzanClass",
+      "status": "existing",
+      "weapons": 1
+    },
+    {
+      "id": "ZanzibarClassKai_0083",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MusaiClassLateType_0083",
+      "status": "existing",
+      "weapons": 3
+    },
+    {
+      "id": "MS_09G",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "MS_09F_TROP",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MS_09_K_2",
+      "status": "existing",
+      "weapons": 9
+    },
+    {
+      "id": "MS_17",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "Skiure",
+      "status": "existing",
+      "weapons": 1
+    },
+    {
+      "id": "YMS_15E",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MS_15Kg",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MS_15B",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MS_15C",
+      "status": "existing",
+      "weapons": 8
+    },
+    {
+      "id": "MSM_10",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MAM_07",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MSM_04G",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MSM_04N",
+      "status": "existing",
+      "weapons": 5
+    },
+    {
+      "id": "MSM_08",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "MSM_03C",
+      "status": "existing",
+      "weapons": 7
+    },
+    {
+      "id": "MSM_07E",
+      "status": "existing",
+      "weapons": 4
+    },
+    {
+      "id": "YMS_18",
+      "status": "existing",
+      "weapons": 6
+    },
+    {
+      "id": "EMS_10F",
+      "status": "existing",
+      "weapons": 7
+    }
+  ],
+  "excluded": [
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_AMR",
+      "tech": "Tech_EFSF_0079_T2_GMModularizationPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_KSD",
+      "tech": "Tech_EFSF_0079_T2_GMModularizationPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_BRT",
+      "tech": "Tech_EFSF_0079_T2_GMModularizationPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Refinery_Common_T2",
+      "tech": "Tech_EFSF_0079_T2_GMModularizationPlan",
+      "reason": "非战斗单位或建筑"
+    },
+    {
+      "id": "Academy_Common_T2",
+      "tech": "Tech_EFSF_0079_T2_GMModularizationPlan",
+      "reason": "非战斗单位或建筑"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_CRS",
+      "tech": "Tech_EFSF_0079_T2_GundamNTCustomPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_WAK",
+      "tech": "Tech_EFSF_0079_T2_GundamNTCustomPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_SYA",
+      "tech": "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_SLG",
+      "tech": "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_KOU",
+      "tech": "Tech_EFSF_0079_T2_GPProject",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_FOT",
+      "tech": "Tech_EFSF_0079_T2_G4Plan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_RUT",
+      "tech": "Tech_EFSF_0079_T2_G4Plan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_EFSF_0079_N_ACE_JST",
+      "tech": "Tech_EFSF_0079_T2_G4Plan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_CHA",
+      "tech": "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_AKHN",
+      "tech": "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Refinery_Common_T2",
+      "tech": "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan",
+      "reason": "非战斗单位或建筑"
+    },
+    {
+      "id": "Academy_Common_T2",
+      "tech": "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan",
+      "reason": "非战斗单位或建筑"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_MQV",
+      "tech": "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_KCA",
+      "tech": "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_KMSK",
+      "tech": "Tech_ZEON_0079_T2_UnitedMaintenancePlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_BNI",
+      "tech": "Tech_ZEON_0079_T2_UnitedMaintenancePlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_LLS",
+      "tech": "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_DZL",
+      "tech": "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_ANG",
+      "tech": "Tech_ZEON_0079_T2_OperationStardust",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_JON",
+      "tech": "Tech_ZEON_0079_T2_DomPowerfulPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_MSG",
+      "tech": "Tech_ZEON_0079_T2_DomPowerfulPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    },
+    {
+      "id": "Pilot_ZEON_0079_N_ACE_HRD",
+      "tech": "Tech_ZEON_0079_T2_HygoggDevelopmentPlan",
+      "reason": "建筑或ACE驾驶员，未作为机体导入"
+    }
+  ]
+}

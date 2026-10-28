@@ -38,7 +38,7 @@
 
 核对时记录每项原生值、导入基础值、最终值及覆盖原因；先查用户指定特例。批量刷新可能改写全部单位，需限定范围并审阅差异。
 
-- RFF_06 扎尼的发布 COST 固定为 75；`tools/v05_balance.py` 同步保留此例外。
+- MS 基础 COST 回归原 MOD `unitLevel÷4` 并按25取整（最低25）；当前仅保留用户指定的 `MS_06C=500` 与 `MS_07B3=375` 特例。RFF_06为100，NT-1／FA NT-1为875；格鲁古古 MS_14A为375。套件附加COST另计。`tools/v05_balance.py` 维护生成政策。
 
 ## 生产与科技资源
 
@@ -59,3 +59,10 @@
 - 战舰对空炮（`ship_anti_air`）：2 AP，每个炮口发射次数减半（奇数向上取整），由 `tools/unit_ship_balance.py` 保存基准以避免重复减半。
 
 - 所有战舰（`stats.ship`）的全部武器基础命中率乘以0.9；保留 `sourceHit` 和逐发原始 accuracy，实战通过 `hit/sourceHit` 只应用一次修正。`shipHitBeforeReduction` 保存战术基准，`tools/unit_ship_balance.py::apply_accuracy` 防止重复减益，原生刷新后重新捕获基准。
+
+## V38 SFS 与搭载确认
+
+- `tools/native_hangars.py` 读取 `attachments_addNewUnits:SFS_*` 和对应 attachment 的 x/y/height，生成 `kind: sfs` 的可见槽。FF_X7Bst、FFB_7Bst、DodaiYS、Burstliner、Skiure 每槽搭载一台 MS，不使用 MS 在普通格纳库中的容量点消耗。
+- SFS 乘员保留独立单位 ID、HP/EN、驾驶员、攻击计划和受击身份，位置随平台的已确认移动同步；渲染使用来源槽位偏移并绘制于平台上方。槽位不提供普通格纳库的耐久、EN或部位维修。
+- 移到 SFS 或普通格纳库占地时，服务端由移动路径推导搭载目标与槽位；确认前不改变裁定位置、视野和索敌。取消撤回预览，确认重新校验距离、类型、容量与原目标身份。搭载结束行动，下个己方回合可移动离机，离机沿用格纳库出击及AP规则。
+- 平台损毁复用现行格纳库紧急退出与损失规则；不额外生成乘员，也不将整个 MS 永久改为空军。

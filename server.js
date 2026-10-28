@@ -44,7 +44,10 @@ function createServer({
       currentRules = require("./shared/rules.js");
     },
   });
-  const serveClient = require("./tools/static-client.cjs").createStaticClient();
+  const resources = require("./tools/client-resources.cjs").createClientResources({
+    loadDocument: () => fs.promises.readFile(path.join(publicDir, "client.html")),
+  });
+  const serveClient = require("./tools/static-client.cjs").createStaticClient({ transform: resources.transform });
   const server = http.createServer((req, res) => {
     let pathname;
     try {
@@ -86,6 +89,7 @@ function createServer({
       );
       return;
     }
+    if (resources.serve(req, res, pathname)) return;
     const file =
       pathname === "/" || pathname === "/index.html"
         ? path.join(publicDir, "client.html")

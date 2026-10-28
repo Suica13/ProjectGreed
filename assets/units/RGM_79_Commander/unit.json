@@ -567,26 +567,26 @@
     }
   ],
   "animations": {
-    "EnterPilot": "../../animations/RGM_79_Commander__EnterPilot.json",
-    "QuitPilot": "../../animations/RGM_79_Commander__QuitPilot.json",
-    "NoPilotIdle": "../../animations/RGM_79_Commander__NoPilotIdle.json",
-    "Common_Idle": "../../animations/RGM_79_Commander__Common_Idle.json",
-    "Common_Dodge_L": "../../animations/RGM_79_Commander__Common_Dodge_L.json",
-    "Common_Dodge_R": "../../animations/RGM_79_Commander__Common_Dodge_R.json",
-    "OnMoving": "../../animations/RGM_79_Commander__OnMoving.json",
-    "OnMovingReversing": "../../animations/RGM_79_Commander__OnMovingReversing.json",
-    "OnMovingWalk": "../../animations/RGM_79_Commander__OnMovingWalk.json",
-    "Guard": "../../animations/RGM_79_Commander__Guard.json",
-    "Common_Dead": "../../animations/RGM_79_Commander__Common_Dead.json",
-    "Common_Stun": "../../animations/RGM_79_Commander__Common_Stun.json",
-    "Common_Daze": "../../animations/RGM_79_Commander__Common_Daze.json",
-    "Common_Stagger": "../../animations/RGM_79_Commander__Common_Stagger.json",
-    "Common_Push_A": "../../animations/RGM_79_Commander__Common_Push_A.json",
-    "Common_Shoot_A": "../../animations/RGM_79_Commander__Common_Shoot_A.json",
-    "Common_Shoot_A_FA": "../../animations/RGM_79_Commander__Common_Shoot_A_FA.json",
-    "Common_Melee_A": "../../animations/RGM_79_Commander__Common_Melee_A.json",
-    "Common_Melee_A_L": "../../animations/RGM_79_Commander__Common_Melee_A_L.json",
-    "Common_Melee_Double_F": "../../animations/RGM_79_Commander__Common_Melee_Double_F.json",
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Melee_A": "../../animations/Common_Melee_A__FA_78_1.json",
+    "Common_Melee_A_L": "../../animations/Common_Melee_A_L.json",
+    "Common_Melee_Double_F": "../../animations/Common_Melee_Double_F.json",
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
@@ -725,7 +725,8 @@
       "radar": 378.0,
       "antiDetection": 0.0
     },
-    "v17BaseHp": 23000.0
+    "v17BaseHp": 23000.0,
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": true,
@@ -744,7 +745,7 @@
   "faction": "EFSF",
   "tags": [
     "EFSF",
-    "0079"
+    "0079E"
   ],
   "localization": {
     "zh": {
@@ -2097,7 +2098,8 @@
   "transport": {
     "slotCost": 2,
     "loadTags": [
-      "CanLoadInto"
+      "CanLoadInto",
+      "CanUseSFS"
     ]
   },
   "hangars": []

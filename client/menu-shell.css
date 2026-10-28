@@ -1443,3 +1443,8 @@ body.menu-shell-active #formationMain .formation-toolbar #openFormationShare { w
   }
   #roomPreparation #roomMain[data-in-battle="true"] #roomActions { padding-top:6px; }
 }
+
+/* Page selection stays inside the graph pane so the fixed heading never overlaps it. */
+body.menu-shell-active #developmentScreen #developmentPageSelect:not([hidden]) {
+  display:block; width:100%; max-width:280px; min-height:32px; margin:0 0 10px;
+}

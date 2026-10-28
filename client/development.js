@@ -1,4 +1,4 @@
-/* 0079 第一页科技树：展示原 MOD 图标、前置连线与已接入单位。 */
+/* 0079 早期／后期与0083科技树：展示原 MOD 图标、前置连线与已接入单位。 */
 "use strict";
 const DevelopmentUI = (() => {
   const screen = byId("developmentScreen");
@@ -15,8 +15,8 @@ const DevelopmentUI = (() => {
 
   function fitTree() {
     const style = getComputedStyle(treeScroll);
-    const available = treeScroll.clientWidth - parseFloat(style.paddingLeft) -
-      parseFloat(style.paddingRight);
+    const available =
+      treeScroll.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
     if (available <= 0) return;
     // Keep three readable design columns, then scale the entire graph, including text.
     const width = Math.max(560, available);
@@ -117,14 +117,28 @@ const DevelopmentUI = (() => {
     const faction = byId("developmentFactionSelect").value;
     screen.dataset.faction = faction;
     byId("developmentMain").dataset.faction = faction;
-    const nodes = Development.nodes(faction);
+    const allNodes = Development.nodes(faction);
+    // Temporarily expose Page_00 only; keep later research and saved progress intact.
+    const nodes = allNodes.filter((node) => (node.page || 0) === 0);
     const unlocked = new Set(Development.unlockedTech(faction));
     const badge = element("strong", "development-faction-code", faction);
     badge.setAttribute("data-i18n-ignore", "");
     identity.replaceChildren(
       badge,
-      element("span", "development-faction-name", byId("developmentFactionSelect").selectedOptions[0]?.textContent || faction),
-      element("span", "development-faction-progress", "已开发" + " · " + nodes.filter((node) => unlocked.has(node.id)).length + " / " + nodes.length),
+      element(
+        "span",
+        "development-faction-name",
+        byId("developmentFactionSelect").selectedOptions[0]?.textContent || faction,
+      ),
+      element(
+        "span",
+        "development-faction-progress",
+        "已开发" +
+          " · " +
+          allNodes.filter((node) => unlocked.has(node.id)).length +
+          " / " +
+          allNodes.length,
+      ),
     );
     byId("developmentPoints").textContent = String(Development.pointBalance(faction));
     if (!nodes.some((node) => node.id === selectedId)) selectedId = nodes[0]?.id || null;
@@ -201,6 +215,11 @@ const DevelopmentUI = (() => {
   }
   window.addEventListener("resize", fitTree);
   byId("developmentFactionSelect").onchange = render;
+  byId("developmentPageSelect").onchange = () => {
+    selectedId = null;
+    treeScroll.scrollTop = 0;
+    render();
+  };
   byId("openDevelopment").onclick = () => {
     byId("developmentFactionSelect").value = PlayerProfile.faction() === "ZEON" ? "ZEON" : "EFSF";
     setPageView("development");

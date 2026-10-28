@@ -850,7 +850,8 @@
       "radar": 500.0,
       "antiDetection": -250.0
     },
-    "v17BaseHp": 100000.0
+    "v17BaseHp": 100000.0,
+    "technologyEra": "0079E"
   },
   "presentation": {
     "shield": false,
@@ -870,7 +871,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079"
+    "0079E"
   ],
   "localization": {
     "zh": {

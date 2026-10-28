@@ -241,7 +241,7 @@ const Economy = (() => {
     if (
       !offer ||
       !["PMC", "EFSF", "ZEON"].includes(faction) ||
-      (!owned && faction !== "PMC" && offer.faction !== faction)
+      (!owned && faction !== "PMC" && !(offer.availableFactions || [offer.faction]).includes(faction))
     )
       return false;
     const development =

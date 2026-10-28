@@ -311,4 +311,6 @@ def configure(prefab, native):
     prefab = apply_supply_policy(apply_v17_balance(prefab))
     apply_anti_air(prefab)
     apply_accuracy(prefab, native_restored=True)
-    return prefab
+    from unit_eras import apply as apply_era
+    from page_two_adaptations import apply as apply_page_two
+    return apply_page_two(apply_era(prefab))

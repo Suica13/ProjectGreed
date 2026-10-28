@@ -436,9 +436,9 @@ const Formation = (() => {
     if (!h || prefab.hangars?.length) return false;
     const used = draft
       .filter((e) => preloadMatches(e, pickerContext.carrierIndex, h.id))
-      .reduce((n, e) => n + (UnitModels[e.unitId + "__" + e.kitId].transport.slotCost || 1), 0);
+      .reduce((n, e) => n + (h.kind === "sfs" ? 1 : UnitModels[e.unitId + "__" + e.kitId].transport.slotCost || 1), 0);
     return (
-      used + prefab.transport.slotCost <= h.capacity &&
+      used + (h.kind === "sfs" ? 1 : prefab.transport.slotCost) <= h.capacity &&
       h.allowedTags.some((t) => prefab.transport.loadTags.includes(t))
     );
   }
@@ -475,7 +475,7 @@ const Formation = (() => {
     const carrier = draft[carrierIndex],
       m = carrier && UnitModels[carrier.unitId + "__" + carrier.kitId],
       number = m?.hangars.findIndex((h) => h.id === hangarId);
-    return I18n.text("格纳库") + (number >= 0 ? number + 1 : "?");
+    return m?.hangars[number]?.kind === "sfs" ? "SFS" : I18n.text("格纳库") + (number >= 0 ? number + 1 : "?");
   }
   function renderCarrierChoice(entry, model) {
     const field = byId("formationDetailCarrierField"),
@@ -492,15 +492,15 @@ const Formation = (() => {
             .map((e, i) => ({ e, i }))
             .filter(({ e }) => preloadMatches(e, carrierIndex, h.id)),
           used = cargo.reduce(
-            (n, { e }) => n + UnitModels[e.unitId + "__" + e.kitId].transport.slotCost,
+            (n, { e }) => n + (h.kind === "sfs" ? 1 : UnitModels[e.unitId + "__" + e.kitId].transport.slotCost),
             0,
           ),
           others = cargo
             .filter(({ i }) => i !== detailIndex)
-            .reduce((n, { e }) => n + UnitModels[e.unitId + "__" + e.kitId].transport.slotCost, 0);
+            .reduce((n, { e }) => n + (h.kind === "sfs" ? 1 : UnitModels[e.unitId + "__" + e.kitId].transport.slotCost), 0);
         if (
           !h.allowedTags.some((tag) => model.transport.loadTags.includes(tag)) ||
-          others + model.transport.slotCost > h.capacity
+          others + (h.kind === "sfs" ? 1 : model.transport.slotCost) > h.capacity
         )
           continue;
         const option = new Option(
@@ -536,7 +536,7 @@ const Formation = (() => {
                 .map((entry, i) => ({ entry, i }))
                 .filter(({ entry }) => preloadMatches(entry, detailIndex, h.id)),
         used = passengers.reduce(
-          (n, { entry }) => n + UnitModels[entry.unitId + "__" + entry.kitId].transport.slotCost,
+          (n, { entry }) => n + (h.kind === "sfs" ? 1 : UnitModels[entry.unitId + "__" + entry.kitId].transport.slotCost),
           0,
         ),
         heading = element("div", "formation-preload-heading"),
@@ -636,6 +636,13 @@ const Formation = (() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.setAttribute("aria-label", model.code + " " + model.name);
     if (!assetsReady) return;
+    canvas.dataset.previewModel = modelId;
+    if (!SpriteRenderer.modelsReady([modelId])) {
+      SpriteRenderer.ensureModels([modelId]).then(() => {
+        if (canvas.dataset.previewModel === modelId) renderPreview(modelId, canvas);
+      }).catch(error => note(error.message));
+      return;
+    }
     const previewAngle = 90;
     const held = model.weapons[0]?.id,
       points = [];
@@ -1872,7 +1879,7 @@ const Formation = (() => {
     const unavailable = plan.items.filter((item) => {
       const offer = Economy.catalog.offers[Economy.baseModel(item.unitId)];
       const prefab = Rules.catalog.prefabs.find((unit) => unit.id === item.unitId);
-      return !offer || !prefab || prefab.wip || (faction !== "PMC" && offer.faction !== faction);
+      return !offer || !prefab || prefab.wip || (faction !== "PMC" && !(offer.availableFactions || [offer.faction]).includes(faction));
     });
     if (unavailable.length) {
       showInventoryDialog("无法生产", "以下单位无法生产，已中止本次生产：",

@@ -47,6 +47,7 @@ def correct(prefab, native):
     for values in native.values():
         eligibility.update(t.strip() for t in values.get("temporarilyAddTags", "").split(",") if t.strip() in LOAD_TAGS)
     if kind == "Infantry": eligibility.add("Human")
+    if kind == "MS": eligibility.add("CanUseSFS")
     prefab["unitTags"] = tags
     prefab["transport"] = {"slotCost": int(float(native["core"].get("transportSlotsNeeded", 1))), "loadTags": sorted(eligibility)}
     hangars = []
@@ -64,8 +65,24 @@ def correct(prefab, native):
             "allowedTags": [t.strip() for t in core["transportUnitsRequireTag"].split(",") if t.strip()],
             "launchRange": 1, "emergencyRange": 3,
             "source": path.relative_to(MAIN if path.is_relative_to(MAIN) else ROOT).as_posix(), "sourceUnit": name})
+    # SFS transport attachments are visible, independently targetable MS slots.
+    for key in native:
+        values = section(native, key)
+        spawn = values.get("attachments_addNewUnits", "")
+        if not spawn.startswith("SFS_"): continue
+        attachment = values.get("attachments_onlyOnSlots", "")
+        if not attachment or any(h["id"] == attachment for h in hangars): continue
+        slot = section(native, "attachment_" + attachment)
+        hangars.append({"id": attachment, "name": "SFS", "kind": "sfs",
+            "capacity": 1, "allowedTags": ["CanUseSFS"],
+            "launchRange": 1, "emergencyRange": 3,
+            "offset": {"x": float(slot.get("x", 0)), "y": float(slot.get("y", 0)),
+                       "height": float(slot.get("height", 1))},
+            "source": "Template/Unit/Transport_SFS.ini", "sourceUnit": spawn})
     prefab["hangars"] = hangars
     if hangars and "Transport" not in tags: tags.append("Transport")
     for mechanic in prefab.get("mechanics", []):
+        if mechanic["id"] in ["SFS", "SFS_CantAttack_Neutral"]:
+            mechanic.update(status="adapted", name="SFS：可见MS搭载槽，平台与乘员独立攻击和受击，移动离机")
         if mechanic["id"] == "LaunchAllUnits":
             mechanic.update(status="adapted", name="格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位")
