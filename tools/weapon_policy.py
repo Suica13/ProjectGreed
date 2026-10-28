@@ -211,8 +211,8 @@ def configure(prefab, native):
     if prefab["stats"].get("ship"):
         native_accuracy = stat(native, "baseAccuracyLevel", 100)
         prefab["sourceStats"]["accuracy"] = native_accuracy
-        prefab["stats"]["accuracy"] = round(native_accuracy * 1.1, 6)
-        prefab["stats"]["accuracyMultiplier"] = 1.1
+        prefab["stats"]["accuracy"] = native_accuracy
+        prefab["stats"].pop("accuracyMultiplier", None)
     # Store the pre-bonus distance so refreshes never add the bonus twice.
     baseline = prefab["sourceStats"].setdefault("tacticalMoveBeforeBonus", prefab["stats"]["move"])
     prefab["stats"]["move"] = baseline + (3 if prefab["stats"].get("ship") else 1)

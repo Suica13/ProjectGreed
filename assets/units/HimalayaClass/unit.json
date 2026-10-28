@@ -184,7 +184,7 @@
     "mobility": 75.0,
     "cost": 1000,
     "counterLimit": 1,
-    "accuracy": 115.5,
+    "accuracy": 105.0,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "naval",
@@ -357,7 +357,6 @@
       "hpPercent": 5,
       "enPercent": 10
     },
-    "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
       "sight": 8,

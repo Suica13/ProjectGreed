@@ -406,7 +406,7 @@
     "mobility": 50.0,
     "cost": 1250,
     "counterLimit": 1,
-    "accuracy": 126.5,
+    "accuracy": 115.0,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "hover",
@@ -763,7 +763,6 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
       "sight": 10,

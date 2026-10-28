@@ -372,7 +372,7 @@
     "mobility": 50.0,
     "cost": 1500,
     "counterLimit": 1,
-    "accuracy": 132.0,
+    "accuracy": 120.0,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "ground",
@@ -659,7 +659,6 @@
       "hpPercent": 5,
       "enPercent": 10
     },
-    "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
       "sight": 9,

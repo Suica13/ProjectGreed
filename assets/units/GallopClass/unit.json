@@ -124,7 +124,7 @@
     "mobility": 50.0,
     "cost": 500,
     "counterLimit": 1,
-    "accuracy": 115.5,
+    "accuracy": 105.0,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "hover",
@@ -216,7 +216,6 @@
       "hpPercent": 5,
       "enPercent": 10
     },
-    "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
       "sight": 9,

@@ -1,9 +1,9 @@
 const test = require("node:test"),
   assert = require("node:assert/strict");
 const G = require("../shared/rules.js");
-test("native reaction and non-ship accuracy remain unchanged while ships get their explicit bonus", () => {
+test("native reaction and accuracy match the original MOD including ships", () => {
   const expected = {
-    SalamisClass: [50, 115.5],
+    SalamisClass: [50, 105],
     RX_78_1: [134, 124],
     FF_X7: [140, 115],
     RGM_79: [115, 115],
@@ -24,7 +24,7 @@ test("native reaction and non-ship accuracy remain unchanged while ships get the
     assert.deepEqual([p.stats.mobility, p.stats.accuracy], expected[p.id], p.id);
     assert.deepEqual(
       [p.sourceStats.reaction, p.sourceStats.accuracy],
-      [expected[p.id][0], p.stats.ship ? Math.round(expected[p.id][1] / 1.1) : expected[p.id][1]],
+      [expected[p.id][0], expected[p.id][1]],
     );
     for (const kit of p.weaponKits) {
       const m = G.models[p.id + "__" + kit.id];
@@ -78,9 +78,9 @@ test("accuracy applies once to AI, survives snapshots and does not inherit defen
   assert.equal(G.models.MS_14A__machine_gun.accuracy, 125);
 });
 
-test("all ship accuracy coefficients receive one multiplicative ten percent bonus", () => {
+test("all ship accuracy coefficients match native values without a bonus", () => {
   for (const p of G.catalog.prefabs.filter((p) => p.stats.ship)) {
-    assert.ok(Math.abs(p.stats.accuracy - p.sourceStats.accuracy * 1.1) < 1e-8, p.id);
-    assert.equal(p.stats.accuracyMultiplier, 1.1);
+    assert.ok(Math.abs(p.stats.accuracy - p.sourceStats.accuracy) < 1e-8, p.id);
+    assert.equal(p.stats.accuracyMultiplier, undefined);
   }
 });

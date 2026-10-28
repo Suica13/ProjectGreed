@@ -541,7 +541,7 @@
     "mobility": 50.0,
     "cost": 1000,
     "counterLimit": 1,
-    "accuracy": 121.0,
+    "accuracy": 110.0,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "ground",
@@ -1013,7 +1013,6 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "accuracyMultiplier": 1.1,
     "actionPoints": 5,
     "sensors": {
       "sight": 8,
