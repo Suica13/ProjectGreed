@@ -376,7 +376,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 85.0,
+      "hit": 76.5,
       "en": 80.0,
       "sourceName": "BurkeClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -510,14 +510,16 @@
         "energy": 80.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "BurkeClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 72.0,
       "sourceName": "BurkeClass_Turret_MS",
       "sourceHit": 100.0,
@@ -683,14 +685,16 @@
         "energy": 72.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "BurkeClass_Turret_CN": {
       "name": "BurkeClass Turret CN",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 40.0,
       "sourceName": "BurkeClass_Turret_CN",
       "sourceHit": 75.0,
@@ -815,14 +819,16 @@
         "energy": 40.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "BurkeClass_Turret_MG": {
       "name": "舰载机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 10.0,
       "sourceName": "BurkeClass_Turret_MG",
       "sourceHit": 100.0,
@@ -1114,7 +1120,9 @@
         "energy": 10.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

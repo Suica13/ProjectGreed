@@ -507,7 +507,7 @@
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 160.0,
       "sourceName": "HimalayaClass_Turret_CN",
       "sourceHit": 75.0,
@@ -657,14 +657,16 @@
         "energy": 160.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "HimalayaClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 192.0,
       "sourceName": "HimalayaClass_Turret_MS",
       "sourceHit": 100.0,
@@ -926,14 +928,16 @@
         "energy": 192.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "HimalayaClass_Turret_AA": {
       "name": "HimalayaClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 20.0,
       "sourceName": "HimalayaClass_Turret_AA",
       "sourceHit": 100.0,
@@ -1736,7 +1740,9 @@
           "moduleId": "HimalayaClass_Turret_AA_M4",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

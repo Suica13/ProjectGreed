@@ -1564,7 +1564,6 @@
   "取消全部攻击计划": "Cancel all attack plans",
   "已确认的目标计划将在本队结束规划后依次执行；剩余AP可继续用于其他目标，也可修改或移除已有计划。": "Confirmed target plans execute in order after your team finishes planning. Use remaining AP for other targets, or edit and remove existing plans.",
   "移动可选；确认攻击计划后不可再移动，剩余AP可继续规划其他目标。": "Movement is optional. Once an attack plan is confirmed, movement is locked; remaining AP can plan attacks on other targets.",
-  "??????": "Cancel target change",
   "基础伤害": "Base damage",
   "基础伤害未计入目标防护与战斗加成；次数包含多段命中。": "Base damage excludes target defenses and combat bonuses; count includes multi-hit strikes.",
   "详细": "Details",

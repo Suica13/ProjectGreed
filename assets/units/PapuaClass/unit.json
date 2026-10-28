@@ -444,7 +444,7 @@
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 20.0,
       "sourceName": "PapuaClass_Turret_AA",
       "sourceHit": 125.0,
@@ -1251,7 +1251,9 @@
           "moduleId": "PapuaClass_Turret_AA_R2",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

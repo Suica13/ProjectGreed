@@ -638,7 +638,7 @@
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 0,
       "sourceName": "EF_BigTrayClass_MainCannon",
       "sourceHit": 75.0,
@@ -805,14 +805,16 @@
           "hiddenAction_SetAttackingCantAimOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "EF_BigTrayClass_MainCannon_L": {
       "name": "加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 0,
       "sourceName": "EF_BigTrayClass_MainCannon_L",
       "sourceHit": 75.0,
@@ -982,14 +984,16 @@
           "hiddenAction_SetAttackingCantAimOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "Common_Turret_Mortar_BigTrayClass": {
       "name": "迫击炮轰炸",
       "type": "shell",
       "min": 5,
       "max": 9,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 0,
       "sourceName": "Common_Turret_Mortar_BigTrayClass",
       "sourceHit": 75.0,
@@ -1401,14 +1405,16 @@
           "hiddenAction_Common_Turret_Mortar_BigTrayClass_Fire_Step_Final"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "BigTrayClass_Turret_Cannon": {
       "name": "舰载加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 450.0,
       "sourceName": "BigTrayClass_Turret_Cannon",
       "sourceHit": 75.0,
@@ -1667,14 +1673,16 @@
         "energy": 450.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "BigTrayClass_Turret_AA": {
       "name": "BigTrayClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 30.0,
       "sourceName": "BigTrayClass_Turret_AA",
       "sourceHit": 125.0,
@@ -2831,7 +2839,9 @@
           "moduleId": "BigTrayClass_Turret_AA_R3",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

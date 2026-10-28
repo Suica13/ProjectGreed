@@ -909,7 +909,7 @@
       "type": "shell",
       "min": 5,
       "max": 9,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 0,
       "sourceName": "Common_Turret_Mortar_HeavyForkClass",
       "sourceHit": 75.0,
@@ -1321,14 +1321,16 @@
           "hiddenAction_Common_Turret_Mortar_HeavyForkClass_Fire_Step_Final"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "HeavyForkClass_Turret_Cannon": {
       "name": "舰载加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 450.0,
       "sourceName": "HeavyForkClass_Turret_Cannon",
       "sourceHit": 75.0,
@@ -1587,14 +1589,16 @@
         "energy": 450.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "HeavyForkClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 120.0,
       "sourceName": "HeavyForkClass_Turret_MS",
       "sourceHit": 100.0,
@@ -1808,14 +1812,16 @@
         "energy": 120.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "HeavyForkClass_Turret_AA": {
       "name": "HeavyForkClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 30.0,
       "sourceName": "HeavyForkClass_Turret_AA",
       "sourceHit": 125.0,
@@ -2972,14 +2978,16 @@
           "moduleId": "HeavyForkClass_Turret_AA_R3",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "HeavyForkClass_Turret_MG": {
       "name": "舰载机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 30.0,
       "sourceName": "HeavyForkClass_Turret_MG",
       "sourceHit": 125.0,
@@ -3653,7 +3661,9 @@
         "energy": 30.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

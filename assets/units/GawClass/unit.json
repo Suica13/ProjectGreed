@@ -814,7 +814,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 120.0,
       "sourceName": "GawClass_Turret_BeamCannon",
       "sourceHit": 75.0,
@@ -978,14 +978,16 @@
         "energy": 120.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "GawClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 192.0,
       "sourceName": "GawClass_Turret_MS",
       "sourceHit": 100.0,
@@ -1247,14 +1249,16 @@
         "energy": 192.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "GawClass_Turret_Bomb": {
       "name": "舰载航空炸弹",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 85.0,
+      "hit": 76.5,
       "en": 240.0,
       "sourceName": "GawClass_Turret_Bomb",
       "sourceHit": 85.0,
@@ -1546,14 +1550,16 @@
         "actions": []
       },
       "actionCost": 3,
-      "v17BombMultiplier": 1.25
+      "v17BombMultiplier": 1.25,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "GawClass_Turret_AA": {
       "name": "GawClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 40.0,
       "sourceName": "GawClass_Turret_AA",
       "sourceHit": 125.0,
@@ -3052,7 +3058,9 @@
           "moduleId": "GawClass_Turret_AA_R4",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

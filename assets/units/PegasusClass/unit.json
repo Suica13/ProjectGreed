@@ -1097,7 +1097,7 @@
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 240.0,
       "sourceName": "PegasusClass_Turret_Cannon",
       "sourceHit": 75.0,
@@ -1293,14 +1293,16 @@
         "energy": 240.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "PegasusClass_Turret_Cannon_L": {
       "name": "舰载加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 240.0,
       "sourceName": "PegasusClass_Turret_Cannon_L",
       "sourceHit": 75.0,
@@ -1498,14 +1500,16 @@
         "energy": 240.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "PegasusClass_Turret_Cannon_R": {
       "name": "舰载加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 240.0,
       "sourceName": "PegasusClass_Turret_Cannon_R",
       "sourceHit": 75.0,
@@ -1703,14 +1707,16 @@
         "energy": 240.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "PegasusClass_Turret_MegaBeamCannon": {
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 720.0,
       "sourceName": "PegasusClass_Turret_MegaBeamCannon",
       "sourceHit": 75.0,
@@ -1997,14 +2003,16 @@
         "energy": 720.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "PegasusClass_Turret_MegaBeamCannon_L": {
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 720.0,
       "sourceName": "PegasusClass_Turret_MegaBeamCannon_L",
       "sourceHit": 75.0,
@@ -2293,14 +2301,16 @@
         "energy": 720.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "PegasusClass_Turret_MegaBeamCannon_R": {
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 720.0,
       "sourceName": "PegasusClass_Turret_MegaBeamCannon_R",
       "sourceHit": 75.0,
@@ -2589,14 +2599,16 @@
         "energy": 720.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "PegasusClass_Turret_AMS": {
       "name": "PegasusClass Turret AMS",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 85.0,
+      "hit": 76.5,
       "en": 640.0,
       "sourceName": "PegasusClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -2858,14 +2870,16 @@
         "energy": 640.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "PegasusClass_Turret_AA": {
       "name": "PegasusClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 80.0,
       "sourceName": "PegasusClass_Turret_AA",
       "sourceHit": 125.0,
@@ -5756,7 +5770,9 @@
           "moduleId": "PegasusClass_Turret_AA_B_R5",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

@@ -538,7 +538,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 85.0,
+      "hit": 76.5,
       "en": 320.0,
       "sourceName": "M_Type_Submarine_Turret_AMS",
       "sourceHit": 85.0,
@@ -762,14 +762,16 @@
         "energy": 320.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "M_Type_Submarine_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 96.0,
       "sourceName": "M_Type_Submarine_Turret_MS",
       "sourceHit": 100.0,
@@ -1249,7 +1251,9 @@
         "energy": 96.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

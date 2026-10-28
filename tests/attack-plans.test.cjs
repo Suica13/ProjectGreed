@@ -105,12 +105,13 @@ test("one response covers focused fire and explicitly selects which attacker is 
   const battles = planner.resolve(room);
   assert.deepEqual(
     battles.map((b) => b.a),
-    [a.id, ally.id],
+    [a.id, ally.id, b.id],
   );
   assert.equal(battles[0].events.length, 1);
-  assert.equal(battles[1].events.length, 2);
-  assert.equal(battles[1].events[1].from, b.id);
-  assert.equal(battles[1].events[1].to, ally.id);
+  assert.equal(battles[1].events.length, 1);
+  assert.equal(battles[2].combatStage, "counter");
+  assert.equal(battles[2].events[0].from, b.id);
+  assert.equal(battles[2].events[0].to, ally.id);
   assert.equal(b.counterCount, 1);
 });
 
@@ -192,4 +193,93 @@ test("a defender killed by the primary volley never emits a counter or spends co
   assert.equal(battles.length, 1);
   assert.equal(battles[0].events.length, 1);
   assert.ok(battles[0].events.every((event) => event.from !== b.id));
+});
+
+test("multi-target drafts reserve shared AP atomically and refunds target replacement correctly", () => {
+  const { room, planner, a, b, other } = fixture();
+  other.x = 3;
+  other.y = 3;
+  const weapon = G.modelOf(a).weapons.find(
+    (w) =>
+      G.actionCost(w) === 1 &&
+      G.canAttack(room.game, a, b, w) &&
+      G.canAttack(room.game, a, other, w),
+  );
+  assert(weapon);
+  const initial = structuredClone(a),
+    seed = room.game.seed;
+  assert.throws(() =>
+    planner.planBatch(
+      room,
+      a,
+      [
+        { targetId: b.id, weaponIds: [weapon.id] },
+        { targetId: other.id, weaponIds: Array(6).fill(weapon.id) },
+      ],
+      0,
+    ),
+  );
+  assert.deepEqual(a, initial);
+  assert.equal(room.plans.length, 0);
+  planner.planBatch(
+    room,
+    a,
+    [
+      { targetId: b.id, weaponIds: [weapon.id] },
+      { targetId: other.id, weaponIds: [weapon.id] },
+    ],
+    0,
+  );
+  assert.equal(a.actionPoints, G.actionBudget(a) - 2);
+  assert.equal(G.attackOrders(a).length, 2);
+  assert.equal(a.en, initial.en);
+  assert.equal(room.game.seed, seed);
+  planner.planBatch(room, a, [{ targetId: b.id, weaponIds: [weapon.id, weapon.id] }], 0);
+  assert.equal(a.actionPoints, G.actionBudget(a) - 3);
+  planner.cancel(room, a, other.id);
+  assert.equal(a.actionPoints, G.actionBudget(a) - 2);
+  planner.cancel(room, a);
+  assert.equal(a.actionPoints, G.actionBudget(a));
+});
+
+test("multi-target counters preserve targets and consume one shared reaction after all offense", () => {
+  const { room, planner, a, ally, b, other, weapon } = fixture();
+  ally.x = 3;
+  ally.y = 3;
+  const counter = G.modelOf(b).weapons.find(
+    (w) =>
+      G.actionCost(w) === 1 &&
+      G.canCounter(room.game, b, a, w) &&
+      G.canCounter(room.game, b, ally, w),
+  );
+  assert(counter);
+  planner.plan(room, a, b, weapon, 0);
+  planner.plan(room, ally, b, counter, 0);
+  const [request] = planner.prepare(room),
+    energy = b.en;
+  assert.throws(() =>
+    planner.chooseBatch(room, request.id, [{ targetId: other.id, weaponIds: [counter.id] }]),
+  );
+  assert.equal(room.responses.length, 0);
+  assert.throws(() =>
+    planner.chooseBatch(room, request.id, [
+      { targetId: a.id, weaponIds: Array(5).fill(counter.id) },
+    ]),
+  );
+  const orders = [a.id, ally.id, a.id].map((targetId) => ({ targetId, weaponIds: [counter.id] }));
+  planner.chooseBatch(room, request.id, orders);
+  assert.equal(b.en, energy);
+  assert.throws(() => planner.chooseBatch(room, request.id, orders));
+  const battles = planner.resolve(room),
+    events = battles.flatMap((b) => b.events);
+  assert.deepEqual(
+    events.map((e) => e.from),
+    [a.id, ally.id, b.id, b.id, b.id],
+  );
+  assert.deepEqual(
+    events.slice(2).map((e) => e.to),
+    [a.id, ally.id, a.id],
+  );
+  assert.equal(b.counterCount, 1);
+  assert.equal(b.en, energy - 3 * G.weaponStats(counter, b).en);
 });

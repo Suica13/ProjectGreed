@@ -71,18 +71,18 @@ function createAttackPlanner(rules, randomId) {
   // Validate every target against an isolated copy before reserving any resources.
   function planBatch(room, attacker, orders, seat) {
     if (!Array.isArray(orders) || !orders.length || orders.length > 32)
-      throw Error("??????????");
+      throw Error("请选择有效的武器序列");
     const preview = structuredClone(attacker);
     const staged = { ...room, plans: [...room.plans],
       game: { ...room.game, units: room.game.units.map(unit => unit === attacker ? preview : unit) } };
     const seen = new Set();
     const intents = orders.map(order => {
-      if (!order || seen.has(order.targetId)) throw Error("??????");
+      if (!order || seen.has(order.targetId)) throw Error("攻击目标无效");
       seen.add(order.targetId);
       const target = find(staged, order.targetId);
       const weapons = Array.isArray(order.weaponIds) ? order.weaponIds.map(id =>
         rules.modelOf(preview).weapons.find(weapon => weapon.id === id)) : [];
-      if (!target || !weapons.length || weapons.some(weapon => !weapon)) throw Error("???????");
+      if (!target || !weapons.length || weapons.some(weapon => !weapon)) throw Error("武器或目标无效");
       return plan(staged, preview, { ...target, aimCell: order.aimCell }, weapons, seat);
     });
     room.plans = staged.plans;

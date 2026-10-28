@@ -447,6 +447,21 @@ const Tactics = (() => {
     }
     return rules;
   }
+  // Keep half of the previous ship-preference slots, using a separate seeded stream.
+  // Unlike rounding a halved quota up, this permits zero ships in small formations.
+  function aiShipQuota(count, seed) {
+    const interval = 6 + ((seed >>> 0) % 3);
+    const previousQuota = count >= 6 ? Math.max(1, Math.floor(count / interval)) : 0;
+    let shipSeed = (seed ^ 0x85ebca6b) >>> 0;
+    for (let warmup = 0; warmup < 4; warmup++)
+      shipSeed = (Math.imul(shipSeed,1664525)+1013904223) >>> 0;
+    let quota = 0;
+    for (let slot = 0; slot < previousQuota; slot++) {
+      shipSeed = (Math.imul(shipSeed,1664525)+1013904223) >>> 0;
+      if (shipSeed < 0x80000000) quota++;
+    }
+    return quota;
+  }
   function randomFormation(
     seed = 7319,
     maxCost = catalog.formation.maxCost,
@@ -506,8 +521,7 @@ const Tactics = (() => {
       commandSeed = (Math.imul(commandSeed, 1664525) + 1013904223) >>> 0;
       commandAllowances[group] = commandAllowances[group - 1] + (commandSeed < 0x80000000 ? 1 : 0);
     }
-    const shipInterval = 6 + ((seed >>> 0) % 3);
-    const desiredShips = count >= 6 ? Math.max(1, Math.floor(count / shipInterval)) : 0;
+    const desiredShips = aiShipQuota(count, seed);
     let remaining = maxCost;
     let remainingPoints = unitLimit;
     for (let i = 0; i < count; i++) {
@@ -2415,6 +2429,7 @@ const Tactics = (() => {
     aiCountPercentages,
     armyPercentages,
     aiUnitLimit,
+    aiShipQuota,
     aiPerformance,
     validateAISettings,
     aiBudget,

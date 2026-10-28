@@ -515,7 +515,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 180.0,
       "sourceName": "MusaiClass_Turret_BeamCannon",
       "sourceHit": 75.0,
@@ -723,14 +723,16 @@
           "beam": 5000.0
         }
       },
-      "shipDamageMultiplier": 0.85
+      "shipDamageMultiplier": 0.85,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "MusaiClass_Turret_AMS": {
       "name": "MusaiClass Turret AMS",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 85.0,
+      "hit": 76.5,
       "en": 160.0,
       "sourceName": "MusaiClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -894,14 +896,16 @@
         "energy": 160.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "MusaiClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 144.0,
       "sourceName": "MusaiClass_Turret_MS",
       "sourceHit": 100.0,
@@ -1146,7 +1150,9 @@
         "energy": 144.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

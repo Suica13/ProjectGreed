@@ -523,7 +523,7 @@
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 80.0,
+      "hit": 72.0,
       "en": 300.0,
       "sourceName": "MiniTrayClass_Turret_Cannon",
       "sourceHit": 80.0,
@@ -758,14 +758,16 @@
         "energy": 300.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 80.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "MiniTrayClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 48.0,
       "sourceName": "MiniTrayClass_Turret_MS",
       "sourceHit": 100.0,
@@ -961,7 +963,9 @@
         "energy": 48.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

@@ -307,7 +307,8 @@ def configure(prefab, native):
     configure_type61_tactical_weapons(prefab)
     from v17_balance import apply as apply_v17_balance
     from unit_supply import apply as apply_supply_policy
-    from unit_ship_balance import apply_anti_air
+    from unit_ship_balance import apply_anti_air, apply_accuracy
     prefab = apply_supply_policy(apply_v17_balance(prefab))
     apply_anti_air(prefab)
+    apply_accuracy(prefab, native_restored=True)
     return prefab

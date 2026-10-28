@@ -140,8 +140,8 @@ test("carrier loss unloads cargo once, applies native 25% loss and never stacks 
   assert.equal(u.shield, Math.max(0, shield - Math.round(G.modelOf(u).shield.hp * 0.25)));
   assert.equal(new Set(events.map((e) => e.x + "," + e.y)).size, 3);
   assert.equal(G.hangars.evacuate(g).length, 0);
-  assert(u.acted);
-  assert.equal(u.actionPoints, 0);
+  assert.equal(u.acted, false);
+  assert.equal(u.actionPoints, Math.round(G.actionBudget(u) * 0.75));
 });
 test("blocked emergency exits kill cargo and do not keep the defeated team alive", () => {
   const { g, carrier, u, h } = fixture(true);
@@ -184,7 +184,10 @@ test("launch uses passenger movement, terrain costs and blocked paths rather tha
   const { g, carrier, u, h } = fixture();
   // Transport behavior is tested independently of randomized pilot mobility.
   for (const unit of g.units)
-    unit.pilot = { ...unit.pilot, stats: Object.fromEntries(Object.keys(G.pilots.labels).map(key => [key, 100])) };
+    unit.pilot = {
+      ...unit.pilot,
+      stats: Object.fromEntries(Object.keys(G.pilots.labels).map((key) => [key, 100])),
+    };
   G.hangars.embark(g, u, carrier, h.id);
   G.end(g);
   G.end(g);
@@ -275,7 +278,10 @@ test("AI retreats to compatible hangars and waits for 75 percent resources and r
   const { g, carrier, u, h } = fixture();
   // Transport behavior is tested independently of randomized pilot mobility.
   for (const unit of g.units)
-    unit.pilot = { ...unit.pilot, stats: Object.fromEntries(Object.keys(G.pilots.labels).map(key => [key, 100])) };
+    unit.pilot = {
+      ...unit.pilot,
+      stats: Object.fromEntries(Object.keys(G.pilots.labels).map((key) => [key, 100])),
+    };
   const m = G.modelOf(u);
   u.hp = Math.floor(m.hp * 0.2);
   u.en = 0;
@@ -309,18 +315,29 @@ test("AI retreats to compatible hangars and waits for 75 percent resources and r
   assert(!G.hangars.readyToLaunch(u));
 });
 
-test("AI formation prefers roughly one carrier per six to eight units within restrictions", () => {
-  for (const count of [6, 8, 12, 16])
+test("AI formations keep support below one per three combat units and respect space restrictions", () => {
+  for (const points of [6, 8, 12, 16, 32])
     for (const seed of [1, 2, 3]) {
       const entries = G.randomFormation(
         seed,
         99999,
         { environment: "space", unitCostLimit: 99999 },
-        count,
+        points,
       );
-      const ships = entries.filter((e) => G.models[e.unitId + "__" + e.kitId].ship);
-      assert.equal(ships.length, Math.max(1, Math.floor(count / (6 + (seed % 3)))));
-      assert(ships.every((e) => G.models[e.unitId + "__" + e.kitId].hangars.length));
+      assert.doesNotThrow(() => G.validateFormation(entries, 99999, points));
+      const models = entries.map((e) => G.models[e.unitId + "__" + e.kitId]);
+      const supports = models.filter(
+        (m) =>
+          m.supplyAura ||
+          m.unitTags?.includes("Support") ||
+          m.skills?.some((s) => ["repair", "resupply"].includes(s.type)),
+      );
+      assert(supports.length * 3 <= models.length - supports.length);
+      assert(
+        models.every(
+          (m) => !m.unitTags?.includes("Infantry") || (m.adaptability.space ?? 100) >= 100,
+        ),
+      );
     }
   const banned = G.randomFormation(1, 4500, { bannedTypes: ["Ship"], unitCostLimit: 1500 }, 8);
   assert(banned.every((e) => !G.models[e.unitId + "__" + e.kitId].ship));
@@ -331,10 +348,10 @@ test("AI sometimes preloads existing squad entries with valid capacity and deter
     independent = 0;
   for (let seed = 1; seed <= 24; seed++) {
     const restrictions = { environment: "space", unitCostLimit: 99999 };
-    const entries = G.randomFormation(seed, 99999, restrictions, 8);
-    assert.deepEqual(entries, G.randomFormation(seed, 99999, restrictions, 8));
-    assert.equal(entries.length, 8);
-    assert.doesNotThrow(() => G.validateFormation(entries, 99999, 8));
+    const entries = G.randomFormation(seed, 99999, restrictions, 32);
+    assert.deepEqual(entries, G.randomFormation(seed, 99999, restrictions, 32));
+    assert(entries.length > 0);
+    assert.doesNotThrow(() => G.validateFormation(entries, 99999, 32));
     for (const e of entries) {
       if (e.preload) loaded++;
       else independent++;
@@ -399,20 +416,41 @@ test("AI launch keeps recovery and contact requirements", () => {
   assert.equal(G.aiLaunchChoice(g, u), null);
 });
 
-for (const deployment of [true,false]) test(`launch preview is inert until confirmation, cancel restores cargo (${deployment})`,()=>{
- const {g,carrier,u,h}=fixture(true);
- G.hangars.embark(g,u,carrier,h.id);
- if(!deployment){g.deployment=null;u.acted=false;u.actionPoints=5;delete u.lastBoardRound;}
- const destination=G.hangars.launchCells(g,u)[0];assert(destination);
- const before=JSON.stringify(u),carrierBefore=JSON.stringify(carrier);
- G.hangars.previewLaunch(g,u,destination.x,destination.y);
- assert(u.embarked);assert.equal(G.onMap(u),false);
- const staged={...u};delete staged.pendingMove;assert.equal(JSON.stringify(staged),before);
- assert.equal(JSON.stringify(carrier),carrierBefore);
- G.cancelMove(g,u);assert.equal(JSON.stringify(u),before);
- G.hangars.previewLaunch(g,u,destination.x,destination.y);
- const path=G.confirmMove(g,u);assert(path.length);assert(!u.embarked);assert(G.onMap(u));
- assert.equal(u.x,destination.x);assert.equal(u.y,destination.y);
- if(!deployment){assert.equal(u.actionPoints,4);assert.equal(carrier.lastCargoLaunchRound,g.round);}
- assert.throws(()=>G.confirmMove(g,u));
-});
+for (const deployment of [true, false])
+  test(`launch preview is inert until confirmation, cancel restores cargo (${deployment})`, () => {
+    const { g, carrier, u, h } = fixture(true);
+    G.hangars.embark(g, u, carrier, h.id);
+    if (!deployment) {
+      g.deployment = null;
+      u.acted = false;
+      u.actionPoints = 5;
+      delete u.lastBoardRound;
+    }
+    const destination = G.hangars.launchCells(g, u)[0];
+    assert(destination);
+    const before = JSON.stringify(u),
+      carrierBefore = JSON.stringify(carrier);
+    G.hangars.previewLaunch(g, u, destination.x, destination.y);
+    assert(u.embarked);
+    assert.equal(G.onMap(u), false);
+    const staged = { ...u };
+    delete staged.pendingMove;
+    assert.equal(JSON.stringify(staged), before);
+    assert.equal(JSON.stringify(carrier), carrierBefore);
+    G.cancelMove(g, u);
+    assert.equal(JSON.stringify(u), before);
+    G.hangars.previewLaunch(g, u, destination.x, destination.y);
+    const expectedAngle = u.pendingMove.angle;
+    const path = G.confirmMove(g, u);
+    assert.equal(u.angle, expectedAngle);
+    assert(path.length);
+    assert(!u.embarked);
+    assert(G.onMap(u));
+    assert.equal(u.x, destination.x);
+    assert.equal(u.y, destination.y);
+    if (!deployment) {
+      assert.equal(u.actionPoints, 4);
+      assert.equal(carrier.lastCargoLaunchRound, g.round);
+    }
+    assert.throws(() => G.confirmMove(g, u));
+  });

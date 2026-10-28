@@ -1158,7 +1158,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 560.0,
       "sourceName": "MagellanClass_Turret_BeamCannon",
       "sourceHit": 75.0,
@@ -1480,14 +1480,16 @@
         "actions": []
       },
       "actionCost": 3,
-      "tacticalDamageMultiplier": 1.25
+      "tacticalDamageMultiplier": 1.25,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "MagellanClass_Turret_AMS": {
       "name": "MagellanClass Turret AMS",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 85.0,
+      "hit": 76.5,
       "en": 320.0,
       "sourceName": "MagellanClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -1684,14 +1686,16 @@
         "actions": []
       },
       "actionCost": 2,
-      "tacticalDamageMultiplier": 1.25
+      "tacticalDamageMultiplier": 1.25,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "MagellanClass_Turret_AA": {
       "name": "MagellanClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 70.0,
       "sourceName": "MagellanClass_Turret_AA",
       "sourceHit": 125.0,
@@ -4249,7 +4253,9 @@
           "moduleId": "MagellanClass_Turret_AA_R7",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

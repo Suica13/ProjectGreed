@@ -889,7 +889,7 @@
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 240.0,
       "sourceName": "ZanzibarClass_Turret_Cannon",
       "sourceHit": 75.0,
@@ -1085,14 +1085,16 @@
         "energy": 240.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ZanzibarClass_Turret_Cannon_L": {
       "name": "舰载加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 240.0,
       "sourceName": "ZanzibarClass_Turret_Cannon_L",
       "sourceHit": 75.0,
@@ -1290,14 +1292,16 @@
         "energy": 240.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ZanzibarClass_Turret_Cannon_R": {
       "name": "舰载加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 240.0,
       "sourceName": "ZanzibarClass_Turret_Cannon_R",
       "sourceHit": 75.0,
@@ -1495,14 +1499,16 @@
         "energy": 240.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ZanzibarClass_Turret_MegaBeamCannon": {
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 720.0,
       "sourceName": "ZanzibarClass_Turret_MegaBeamCannon",
       "sourceHit": 75.0,
@@ -1789,14 +1795,16 @@
         "energy": 720.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ZanzibarClass_Turret_MegaBeamCannon_L": {
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 720.0,
       "sourceName": "ZanzibarClass_Turret_MegaBeamCannon_L",
       "sourceHit": 75.0,
@@ -2085,14 +2093,16 @@
         "energy": 720.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ZanzibarClass_Turret_MegaBeamCannon_R": {
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 720.0,
       "sourceName": "ZanzibarClass_Turret_MegaBeamCannon_R",
       "sourceHit": 75.0,
@@ -2381,14 +2391,16 @@
         "energy": 720.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ZanzibarClass_Turret_AMS": {
       "name": "ZanzibarClass Turret AMS",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 85.0,
+      "hit": 76.5,
       "en": 320.0,
       "sourceName": "ZanzibarClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -2584,14 +2596,16 @@
         "energy": 320.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ZanzibarClass_Turret_AA": {
       "name": "ZanzibarClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 55.0,
       "sourceName": "ZanzibarClass_Turret_AA",
       "sourceHit": 125.0,
@@ -4623,7 +4637,9 @@
           "moduleId": "ZanzibarClass_Turret_AA_M",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

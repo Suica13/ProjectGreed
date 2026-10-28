@@ -380,7 +380,7 @@
       "slot": "primary",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 240.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -620,7 +620,9 @@
         "actions": []
       },
       "actionCost": 3,
-      "tacticalDamageMultiplier": 1.25
+      "tacticalDamageMultiplier": 1.25,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "SalamisClass_Turret_MS": {
       "name": "舰载导弹",
@@ -639,7 +641,7 @@
       "slot": "fixed",
       "min": 3,
       "max": 4,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 192.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -901,7 +903,9 @@
         "actions": []
       },
       "actionCost": 2,
-      "tacticalDamageMultiplier": 1.25
+      "tacticalDamageMultiplier": 1.25,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "SalamisClass_Turret_AMS": {
       "name": "舰首鱼雷",
@@ -920,7 +924,7 @@
       "slot": "fixed",
       "min": 3,
       "max": 4,
-      "hit": 85.0,
+      "hit": 76.5,
       "en": 160.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -1086,7 +1090,9 @@
         "actions": []
       },
       "actionCost": 2,
-      "tacticalDamageMultiplier": 1.25
+      "tacticalDamageMultiplier": 1.25,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "SalamisClass_Turret_AA": {
       "name": "对空炮",
@@ -1105,7 +1111,7 @@
       "slot": "fixed",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 20.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -1912,7 +1918,9 @@
           "moduleId": "SalamisClass_Turret_AA_R2",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "SalamisClass_Turret_MG": {
       "name": "舰载机炮",
@@ -1931,7 +1939,7 @@
       "slot": "fixed",
       "min": 2,
       "max": 3,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 10.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -2225,7 +2233,9 @@
         "actions": []
       },
       "actionCost": 3,
-      "tacticalDamageMultiplier": 1.25
+      "tacticalDamageMultiplier": 1.25,
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "stats": {

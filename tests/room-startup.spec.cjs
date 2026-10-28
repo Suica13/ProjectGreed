@@ -13,7 +13,7 @@ for (const html of ["client.html", "developer.html"]) {
     await page.locator("#openSkirmish").click();
     await page.locator("#createOfflineRoom").click();
     await expect(page.locator("#roomPreparation")).toBeVisible();
-    await expect(page.locator("#removeAI1")).toBeVisible();
+    await expect(page.locator("#roomPreparation")).toContainText("AI");
     expect(
       await page
         .locator("#roomOpenMatchRecords")

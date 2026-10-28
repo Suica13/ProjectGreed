@@ -1234,7 +1234,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 360.0,
       "sourceName": "ChivvayClass_Turret_BeamCannon",
       "sourceHit": 75.0,
@@ -1416,14 +1416,16 @@
         "energy": 360.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ChivvayClass_Turret_AMS": {
       "name": "ChivvayClass Turret AMS",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 85.0,
+      "hit": 76.5,
       "en": 320.0,
       "sourceName": "ChivvayClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -1647,14 +1649,16 @@
         "energy": 320.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 85.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ChivvayClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 100.0,
+      "hit": 90.0,
       "en": 144.0,
       "sourceName": "ChivvayClass_Turret_MS",
       "sourceHit": 100.0,
@@ -1899,14 +1903,16 @@
         "energy": 144.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "shipHitBeforeReduction": 100.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ChivvayClass_Turret_MG": {
       "name": "舰载机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 30.0,
       "sourceName": "ChivvayClass_Turret_MG",
       "sourceHit": 125.0,
@@ -2580,14 +2586,16 @@
         "energy": 30.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "ChivvayClass_Turret_AA": {
       "name": "ChivvayClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 60.0,
       "sourceName": "ChivvayClass_Turret_AA",
       "sourceHit": 125.0,
@@ -4794,7 +4802,9 @@
           "moduleId": "ChivvayClass_Turret_AA_R6",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

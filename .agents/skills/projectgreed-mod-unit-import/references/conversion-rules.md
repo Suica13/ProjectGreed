@@ -56,4 +56,6 @@
 - 舰毁紧急退出保留原有25%最大耐久／盾牌损失，并将剩余AP乘以0.75后四舍五入；不恢复已经消费的AP或行动。
 - AI每加入一台补给单位须已有至少三台战斗单位，补给单位不超过编组台数的四分之一，单台补给单位不超过总预算25%。EN低于50%或主武器无足够EN时寻找兼容、有空位的友军格纳库；附近运输舰等待回收。
 
-- ??????`ship_anti_air`???? 2 AP??????????????????????????? EN ?????`tools/unit_ship_balance.py` ???????????????
+- 战舰对空炮（`ship_anti_air`）：2 AP，每个炮口发射次数减半（奇数向上取整），由 `tools/unit_ship_balance.py` 保存基准以避免重复减半。
+
+- 所有战舰（`stats.ship`）的全部武器基础命中率乘以0.9；保留 `sourceHit` 和逐发原始 accuracy，实战通过 `hit/sourceHit` 只应用一次修正。`shipHitBeforeReduction` 保存战术基准，`tools/unit_ship_balance.py::apply_accuracy` 防止重复减益，原生刷新后重新捕获基准。

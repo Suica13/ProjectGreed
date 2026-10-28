@@ -807,7 +807,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 1080.0,
       "sourceName": "GwazineClass_Turret_MegaBeamCannon",
       "sourceHit": 75.0,
@@ -1182,14 +1182,16 @@
         "energy": 1080.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "GwazineClass_Turret_MegaBeamCannon_L": {
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 1080.0,
       "sourceName": "GwazineClass_Turret_MegaBeamCannon_L",
       "sourceHit": 75.0,
@@ -1566,14 +1568,16 @@
         "energy": 1080.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "GwazineClass_Turret_MegaBeamCannon_R": {
       "name": "舰载光束炮",
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 1080.0,
       "sourceName": "GwazineClass_Turret_MegaBeamCannon_R",
       "sourceHit": 75.0,
@@ -1950,14 +1954,16 @@
         "energy": 1080.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "GwazineClass_Turret_AA": {
       "name": "GwazineClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 50.0,
       "sourceName": "GwazineClass_Turret_AA",
       "sourceHit": 125.0,
@@ -3814,7 +3820,9 @@
           "moduleId": "GwazineClass_Turret_AA_R5",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [

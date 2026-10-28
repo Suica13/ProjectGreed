@@ -364,7 +364,7 @@
       "type": "shell",
       "min": 5,
       "max": 9,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 0,
       "sourceName": "Common_Turret_Mortar_DabudeClass",
       "sourceHit": 75.0,
@@ -576,14 +576,16 @@
           "hiddenAction_Common_Turret_Mortar_DabudeClass_Fire_Step_Final"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "GallopClass_Turret_Cannon": {
       "name": "舰载加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 75.0,
+      "hit": 67.5,
       "en": 100.0,
       "sourceName": "GallopClass_Turret_Cannon",
       "sourceHit": 75.0,
@@ -730,14 +732,16 @@
         "energy": 100.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "shipHitBeforeReduction": 75.0,
+      "shipAccuracyMultiplier": 0.9
     },
     "GallopClass_Turret_AA": {
       "name": "GallopClass Turret AA",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 125.0,
+      "hit": 112.5,
       "en": 10.0,
       "sourceName": "GallopClass_Turret_AA",
       "sourceHit": 125.0,
@@ -1194,7 +1198,9 @@
           "moduleId": "GallopClass_Turret_AA_R1",
           "delay": 0.0
         }
-      ]
+      ],
+      "shipHitBeforeReduction": 125.0,
+      "shipAccuracyMultiplier": 0.9
     }
   },
   "mechanics": [
