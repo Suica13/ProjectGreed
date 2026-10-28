@@ -37,5 +37,11 @@ const UnitCatalog = (() => {
       a.name.localeCompare(b.name, I18n.language, { numeric: true, sensitivity: "base" }) ||
       a.id.localeCompare(b.id, "en");
   }
-  return { select, compareFactionCost };
+  function compareOrder(order, faction = PlayerProfile.faction()) {
+    const cost = compareFactionCost(faction);
+    return order === "developed" ? (a,b) =>
+      Number(Development.allows(faction,b.id)) - Number(Development.allows(faction,a.id)) ||
+      Math.min(...a.weaponKits.map(k=>a.stats.cost+k.cost)) - Math.min(...b.weaponKits.map(k=>b.stats.cost+k.cost)) || cost(a,b) : cost;
+  }
+  return { select, compareFactionCost, compareOrder };
 })();

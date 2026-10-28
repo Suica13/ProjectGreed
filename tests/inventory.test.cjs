@@ -31,7 +31,9 @@ test("stock is shared across duplicate kits and the creation boundary omits exce
   assert.throws(() => G.normalizeInventory({ fake: 1 }));
 });
 class Peer {
+  static peers = new Set();
   constructor(url) {
+    Peer.peers.add(this);
     this.ws = new WebSocket(url);
     this.frames = [];
     this.ws.on("message", (raw) => {
@@ -67,6 +69,13 @@ class Peer {
     await this.wait((m) => m.type === "state");
   }
   async action(action, fields = {}, override = {}) {
+    // A different client may receive the broadcast before this peer; wait for the
+    // same revision before issuing the next test action instead of racing snapshots.
+    const revision = Math.max(0, ...[...Peer.peers]
+      .filter(p => p.ws.url === this.ws.url && p.ws.readyState === 1)
+      .map(p => p.state?.revision ?? 0));
+    if ((this.state?.revision ?? 0) < revision)
+      await this.wait(m => m.type === "state" && m.revision >= revision);
     const id = randomUUID();
     this.ws.send(
       JSON.stringify({
@@ -143,9 +152,11 @@ test("a human may force readiness with zero stock but receives no spawned units"
   assert.equal(result.type, "state");
   assert.equal(result.members.find((m) => m.id === a.joined.memberId).ready, true);
   await b.action("set_ready", { ready: true, formation: army(1), inventory: { Type61: 1 } });
+  await a.wait(m => m.type === "state" && m.revision === app.rooms.get("ZERO").revision);
   result = await a.action("start_game", { formation: army(1), inventory: {} });
   assert.equal(result.phase, "assembly");
   await a.action("confirm_formation", { inventory: {} });
+  await b.wait(m => m.type === "state" && m.revision === app.rooms.get("ZERO").revision);
   result = await b.action("confirm_formation", { inventory: { Type61: 1 } });
   assert.equal(result.phase, "deployment");
   const game = app.rooms.get("ZERO").game;

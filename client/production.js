@@ -305,7 +305,7 @@ const ProductionUI = (() => {
     const list = byId("productionList"),
       scroll = list.scrollTop;
     const prefabs = UnitCatalog.select(byId("productionSearch").value, filters, allows).sort(
-      UnitCatalog.compareFactionCost(),
+      UnitCatalog.compareOrder(byId("productionSort").value),
     );
     if (!prefabs.some((p) => p.id === selectedId)) {
       selectedId = prefabs[0]?.id || null;
@@ -414,6 +414,7 @@ const ProductionUI = (() => {
   screen.addEventListener("keydown", (e) => {
     if (e.key === "Escape") byId("closeProduction").click();
   });
+  byId("productionSort").onchange = () => render();
   byId("productionSearch").oninput = () => {
     byId("productionStatus").textContent = "";
     render();

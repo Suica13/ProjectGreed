@@ -15,6 +15,7 @@ test("formation share code copies, validates and saves an imported preset", asyn
   await page.reload();
   await page.evaluate(() => {
     I18n.setLanguage("zh");
+    document.execCommand = () => false;
     Object.defineProperty(navigator, "clipboard", {
       configurable: true,
       value: { writeText: async (value) => (window.__copiedFormation = value) },
@@ -25,10 +26,15 @@ test("formation share code copies, validates and saves an imported preset", asyn
   await page.locator("#openFormationShare").click();
   await expect(page.locator("#formationSharePanel")).toBeVisible();
   await page.locator("#generateFormationShare").click();
-  const code = await page.locator("#formationShareCode").inputValue();
+  let code = await page.locator("#formationShareCode").inputValue();
   assert.match(code, /^PGF1\.[A-Za-z0-9_-]+$/);
   assert.equal(await page.evaluate(() => window.__copiedFormation), code);
   await expect(page.locator("#toast")).toHaveText("分享代码已复制。");
+  const payload=JSON.parse(Buffer.from(code.slice(5),'base64url').toString('utf8'));
+  expect(payload.units.every(u=>!u.customPilot&&!u.pilotId)).toBe(true);
+  payload.units[0].customPilot={id:'foreign',name:'Must not import'};
+  payload.units[0].pilotId='foreign';
+  code='PGF1.'+Buffer.from(JSON.stringify(payload)).toString('base64url');
 
   await page.locator("#closeFormationShare").click();
   await expect(page.locator("#openFormationShare")).toBeFocused();
@@ -38,14 +44,16 @@ test("formation share code copies, validates and saves an imported preset", asyn
   await page.locator("#loadSharedFormation").click();
   await expect(page.locator("#formationSharePanel")).toBeHidden();
   await expect(page.locator("#formationSelect option")).toHaveCount(before + 1);
-  await expect(page.locator("#formationName")).toHaveValue("玩家A编组");
+  await expect(page.locator("#formationName")).toHaveValue("玩家A编组 (2)");
   const saved = await page.evaluate(() => {
-    const squads = JSON.parse(localStorage.getItem("slg-formations-v1"));
-    return { active: localStorage.getItem("slg-formations-v1-active"), last: squads.at(-1) };
+    const key = "slg-formations-v1." + Formation.group();
+    const {squads} = JSON.parse(localStorage.getItem(key));
+    return { active: localStorage.getItem(key + "-active"), last: squads.at(-1) };
   });
   assert.equal(saved.active, String(before));
-  assert.equal(saved.last.name, "玩家A编组");
+  assert.equal(saved.last.name, "玩家A编组 (2)");
   assert(saved.last.units.length > 0);
+  assert(saved.last.units.every(u=>!u.customPilot&&!u.pilotId));
   assert(saved.last.units.some((unit) => unit.preload));
 
   await page.locator("#openFormationShare").click();

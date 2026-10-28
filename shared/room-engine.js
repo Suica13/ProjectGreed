@@ -2798,7 +2798,7 @@ function createRoomEngine({
             : [],
           w = weapons[0];
         if (!w || !b) throw Error("武器或目标无效");
-        const plan = planner.plan(room, a, b, weapons, seat);
+        const plan = planner.plan(room, a, msg.aimCell ? {...b, aimCell: msg.aimCell} : b, weapons, seat);
         event = { type: "plan_attack", ...plan };
         log(
           room,

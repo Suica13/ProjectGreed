@@ -22,10 +22,15 @@ function createAttackPlanner(rules, randomId) {
     )
       throw Error("目标、武器、射程或资源不满足条件");
     const weapons = Array.isArray(weapon) ? weapon : [weapon];
+    const aimCell = target.groundTarget ? undefined : target.aimCell ?? weapons[0]?.aimCell ??
+      rules.cells(target).find(cell => weapons.every(w => rules.inRange(attacker, target, {...w, aimCell:cell})));
+    if (!target.groundTarget && !aimCell) throw Error("没有所有所选武器均可攻击的目标格");
+    if (aimCell) target = {...target, aimCell};
     const budget = rules.attackQueue(room.game, attacker, target, weapons);
     const previousCost = attacker.plan?.actionCost ?? 0;
     weapon = weapons[0];
     const intent = {
+      aimCell,
       attacker: attacker.id,
       target: target.id,
       targetCell: target.groundTarget ? { x: target.x, y: target.y } : undefined,
@@ -42,6 +47,7 @@ function createAttackPlanner(rules, randomId) {
     attacker.plan = {
       target: target.id,
       targetCell: intent.targetCell,
+      aimCell: intent.aimCell,
       weapon: weapon.id,
       weapons: intent.weapons,
       actionCost: budget.ap,
@@ -120,6 +126,7 @@ function createAttackPlanner(rules, randomId) {
       if (weapon.special?.type === "snipe" && !intent.charged) {
         attacker.snipeOrder = {
           target: intent.target,
+          aimCell: intent.aimCell,
           weapon: intent.weapon,
           readyRound: room.game.round + 2,
         };
@@ -134,7 +141,7 @@ function createAttackPlanner(rules, randomId) {
           delete attacker.plan;
           continue;
         }
-        const impact = rules.center(target);
+        const impact = intent.aimCell ?? rules.center(target);
         const victims = room.game.units
           .filter(
             (unit) =>
@@ -157,6 +164,7 @@ function createAttackPlanner(rules, randomId) {
             result.push({
               ...intent,
               target: victim.id,
+              aimCell: victim.id === intent.target ? intent.aimCell : undefined,
               energySpent: index === 0 ? weapon.en : 0,
               freeFollowup: index > 0,
               impactCell: impact,
@@ -177,7 +185,7 @@ function createAttackPlanner(rules, randomId) {
         delete attacker.plan;
         continue;
       }
-      const center = rules.center(target),
+      const center = intent.aimCell ?? rules.center(target),
         cells = [];
       for (let y = -1; y <= 1; y++)
         for (let x = -1; x <= 1; x++)
@@ -195,6 +203,7 @@ function createAttackPlanner(rules, randomId) {
         const expanded = {
           ...intent,
           target: enemy ? occupant.id : null,
+          aimCell: enemy ? cell : undefined,
           shotIndices: [shot],
           energySpent: index === 0 ? weapon.en : 0,
           impactCell: cell,
@@ -215,6 +224,7 @@ function createAttackPlanner(rules, randomId) {
       room.plans.push({
         attacker: unit.id,
         target: order.target,
+        aimCell: order.aimCell,
         weapon: order.weapon,
         seat: rules.ownerOf(unit),
         charged: true,

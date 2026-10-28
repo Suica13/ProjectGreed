@@ -301,7 +301,7 @@ const Formation = (() => {
       payload = JSON.stringify({
         version: 1,
         name: name.trim().slice(0, 32) || "未命名编组",
-        units: clean,
+        units: clean.map(({unitId, kitId, customName, preload}) => ({unitId, kitId, customName, preload})),
       }),
       bytes = new TextEncoder().encode(payload);
     let binary = "";
@@ -331,7 +331,7 @@ const Formation = (() => {
     )
       throw Error("编组分享代码无效。");
     const units = Rules.validateFormation(
-        payload.units,
+        payload.units.map(({unitId, kitId, customName, preload}) => ({unitId, kitId, customName, preload})),
         Infinity,
         Rules.catalog.formation.maxUnits,
       ),
@@ -1631,6 +1631,7 @@ const Formation = (() => {
   };
   byId("formationSearch").oninput = () => renderCatalog();
   byId("formationStock").onchange = () => renderCatalog();
+  byId("formationSort").onchange = () => renderCatalog();
   function renderCatalog() {
     const query = byId("formationSearch").value.trim().toLocaleLowerCase();
     const prefabs = UnitCatalog.select(query, catalogFilters, PlayerProfile.allows)
@@ -1639,7 +1640,7 @@ const Formation = (() => {
           pickerCompatible(prefab) &&
           (byId("formationStock").value === "all" || Economy.quantity(prefab.id) > 0),
       )
-      .sort(UnitCatalog.compareFactionCost(group));
+      .sort(UnitCatalog.compareOrder(byId("formationSort").value, group));
     if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
       byId("formationPrefab").value = prefabs[0]?.id || "";
     const list = byId("formationCatalog");

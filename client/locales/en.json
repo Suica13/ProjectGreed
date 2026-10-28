@@ -1504,5 +1504,8 @@
   "未开始": "Not started",
   "已暂停": "Paused",
   "累计登录": "Login days",
-  "天": "days"
+  "天": "days",
+  "排序": "Sort",
+  "攻击格": "Target cell",
+  "弱点 ×1.5": "Weak point ×1.5"
 }

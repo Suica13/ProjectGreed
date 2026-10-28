@@ -51,7 +51,7 @@ const PlanningUI = (() => {
     function draw(unit, target, counter = false, candidate = false) {
       if (!unit || !target || unit.hp <= 0 || target.hp <= 0) return false;
       const from = mapPosition(Rules.center(unit).x, Rules.center(unit).y),
-        to = mapPosition(Rules.center(target).x, Rules.center(target).y);
+        to = mapPosition((target.aimCell ?? Rules.center(target)).x, (target.aimCell ?? Rules.center(target)).y);
       const angle = Math.atan2(to.y - from.y, to.x - from.x),
         gap = mapGeo.tile * 0.32;
       const offset = candidate ? 10 : counter ? 6 : 0;
@@ -106,7 +106,7 @@ const PlanningUI = (() => {
       const target = order.targetCell
         ? Rules.groundTarget(game, unit, order.targetCell.x, order.targetCell.y)
         : getUnit(order.target);
-      if (draw(unit, target)) count++;
+      if (draw(unit, target && {...target, aimCell:order.aimCell})) count++;
     }
     let candidateCount = 0;
     for (const entry of legalCounterTargets())
@@ -205,7 +205,7 @@ const AttackControls = (() => {
     )
       return null;
     const target = getUnit(current.targetId);
-    return target?.hp > 0 ? target : null;
+    return target?.hp > 0 ? {...target, aimCell: current.aimCell} : null;
   }
   function ordinary(unit) {
     return Rules.modelOf(unit).weapons.filter((w) => w.slot !== "skill");
@@ -233,10 +233,16 @@ const AttackControls = (() => {
     update();
   }
   function choose(unit, target, existing = false) {
+    if (existing && unit.plan?.aimCell) target = {...target, aimCell:unit.plan.aimCell};
+    if (!target.aimCell) {
+      const cell = Rules.cells(target).find(cell => canTarget(unit, {...target, aimCell:cell}));
+      if (cell) target = {...target, aimCell:cell};
+    }
     if (!canTarget(unit, target)) return false;
     current = {
       unitId: unit.id,
       targetId: target.id,
+      aimCell: target.aimCell ?? (existing ? unit.plan.aimCell : undefined),
       weapons: existing ? [...(unit.plan.weapons || [unit.plan.weapon])] : [],
       round: game.round,
       session,
@@ -249,7 +255,8 @@ const AttackControls = (() => {
   }
   function render(panel, unit, canCommand) {
     const plan = draft(unit),
-      target = plan && getUnit(plan.targetId);
+      rawTarget = plan && getUnit(plan.targetId),
+      target = rawTarget && {...rawTarget, aimCell: plan.aimCell};
     if (!target || target.hp <= 0) {
       if (plan) reset();
       if (mode !== "attack-target") {
@@ -348,6 +355,23 @@ const AttackControls = (() => {
       list.append(WeaponInfo.card(weapon, b));
     }
     available.append(list);
+    if (Rules.cells(target).length > 1) {
+      const selector = element("select", "attack-cell-select");
+      selector.setAttribute("aria-label", I18n.text("攻击格"));
+      for (const cell of Rules.cells(target)) {
+        const option = element("option", "", Rules.columnLabel(cell.x) + (cell.y + 1) +
+          (Rules.weakPoint(target, cell) ? " · " + I18n.text("弱点 ×1.5") : ""));
+        option.value = cell.x + "," + cell.y;
+        option.selected = cell.x === plan.aimCell?.x && cell.y === plan.aimCell?.y;
+        option.disabled = !canTarget(unit, {...target, aimCell:cell});
+        selector.append(option);
+      }
+      selector.onchange = () => {
+        const [x,y] = selector.value.split(",").map(Number);
+        plan.aimCell = {x,y}; plan.weapons = []; update();
+      };
+      panel.append(selector);
+    }
     const confirm = element("button", "", "确认攻击计划");
     confirm.id = "confirmAttackQueue";
     confirm.disabled = !canCommand || !queue.length;
@@ -358,6 +382,7 @@ const AttackControls = (() => {
           Net.request("attack", {
             unitId: unit.id,
             targetId: target.id,
+            aimCell: plan.aimCell,
             weaponId: queue[0].id,
             weaponIds: plan.weapons,
           });

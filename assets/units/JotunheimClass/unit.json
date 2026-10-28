@@ -182,7 +182,7 @@
     },
     "ship": true,
     "footprint": {
-      "width": 2,
+      "width": 1,
       "height": 3
     },
     "modules": [

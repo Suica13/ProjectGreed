@@ -1357,6 +1357,14 @@ function drawMap(now) {
         ctx.lineWidth = 1;
         ctx.strokeRect(px + 2, py + 2, tile - 4, tile - 4);
       }
+      if (!immersive && chosen && mode === "attack-weapons") {
+        const aiming = AttackControls.targetFor(chosen);
+        if (aiming?.aimCell?.x === x && aiming.aimCell.y === y) {
+          ctx.strokeStyle = Rules.weakPoint(aiming, aiming.aimCell) ? "#ffd45b" : "#ffffff";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(px + 3, py + 3, tile - 6, tile - 6);
+        }
+      }
       if (!immersive && skillCells.has(Rules.key(x, y))) {
         ctx.fillStyle = "#e4c56c45";
         ctx.fillRect(px + 2, py + 2, tile - 4, tile - 4);
@@ -1849,6 +1857,7 @@ byId("map").onclick = async (e) => {
     return;
   }
   if (SkillControls.click(cell, u)) return;
+  if (target && u && target.team !== u.team) target = {...target, aimCell: {x:cell.x,y:cell.y}};
   if (mode === "target" && u && weaponId) {
     let w = getWeapon(u, weaponId);
     if (["mortar", "nuke"].includes(w?.special?.type))
@@ -1974,6 +1983,7 @@ function beginAttack(a, b, w, weapons = [w]) {
       Net.request("attack", {
         unitId: a.id,
         targetId: b.id,
+        aimCell: b.aimCell,
         targetCell: b.groundTarget ? { x: b.x, y: b.y } : undefined,
         weaponId: w.id,
         weaponIds: weapons.map((w) => w.id),
@@ -1991,7 +2001,7 @@ function beginAttack(a, b, w, weapons = [w]) {
   GameAudio.play("lockonSound");
   Rules.faceTarget(a, b);
   Rules.faceTarget(b, a);
-  pending = { attacker: a.id, target: b.id, weapon: w.id, weapons: weapons.map((w) => w.id) };
+  pending = { aimCell: b.aimCell, attacker: a.id, target: b.id, weapon: w.id, weapons: weapons.map((w) => w.id) };
   phase = "reaction";
   let legal = Rules.modelOf(b).weapons.filter((c) => Rules.canCounter(game, b, a, c));
   response = legal.length ? "counter" : "defend";
@@ -2032,6 +2042,7 @@ function renderReaction() {
   const targets = pending.counterTargets || [
     {
       attacker: pending.attacker,
+      aimCell: pending.aimCell,
       weapon: pending.weapon,
       weapons: pending.weapons,
       options: pending.counterOptions,
@@ -2287,7 +2298,7 @@ function commitAttack() {
   if (phase !== "reaction" || !pending) return;
   let a = getUnit(pending.attacker),
     b = getUnit(pending.target),
-    w = getWeapon(a, pending.weapon),
+    w = Rules.eventWeapon(a, pending),
     before = Object.fromEntries(game.units.map((u) => [u.id, u.hp]));
   let events;
   try {
@@ -2299,7 +2310,7 @@ function commitAttack() {
       planner.plan(
         room,
         a,
-        b,
+        {...b, aimCell:pending.aimCell},
         pending.weapons.map((id) => getWeapon(a, id)),
         Rules.ownerOf(a),
       );

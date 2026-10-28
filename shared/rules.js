@@ -1350,7 +1350,7 @@ const Tactics = (() => {
   // 朝向由裁定状态保存，快照、重连和各客户端使用同一个结果。
   function faceTarget(unit, target) {
     const sourceCenter = center(unit),
-      targetCenter = center(target),
+      targetCenter = target.aimCell ?? center(target),
       dx = targetCenter.x - sourceCenter.x,
       dy = targetCenter.y - sourceCenter.y;
     if (dx || dy) {
@@ -1445,7 +1445,7 @@ const Tactics = (() => {
     const module = models[unit.model]?.modules?.find((m) => m.id === moduleId);
     if (!module) return false;
     const a = center(unit),
-      b = center(target),
+      b = target.aimCell ?? center(target),
       aim = (Math.atan2(b.x - a.x, -(b.y - a.y)) * 180) / Math.PI;
     const delta = ((((aim - (unit.angle ?? 0) - module.idleDir + 180) % 360) + 360) % 360) - 180;
     return Math.abs(delta) <= module.arc;
@@ -1453,7 +1453,7 @@ const Tactics = (() => {
   function availableStrikes(u, w, target = null) {
     if (parts.unavailable(u, w).length) return [];
     return w.attack.strikes.filter(
-      (step) => !parts.unavailable(u, step).length && moduleCanBear(u, step.moduleId, target),
+      (step) => !parts.unavailable(u, step).length && moduleCanBear(u, step.moduleId, w.aimCell ?? target),
     );
   }
   function actionBudget(u) {
@@ -1524,9 +1524,24 @@ const Tactics = (() => {
       (cell) => (cell.x - impact.x) ** 2 + (cell.y - impact.y) ** 2 <= radius ** 2,
     );
   }
+  function attackCells(a, b, w) {
+    return cells(b).filter(cell => {
+      const d = dist(a, cell);
+      return d >= w.min && d <= w.max;
+    });
+  }
   function inRange(a, b, w) {
-    let d = dist(a, b);
-    return d >= w.min && d <= w.max;
+    const cell = w.aimCell ?? b.aimCell;
+    if (cell) return Number.isInteger(cell.x) && Number.isInteger(cell.y) &&
+      occupies(b, cell.x, cell.y) && attackCells(a, b, w).some(p => p.x === cell.x && p.y === cell.y);
+    return attackCells(a, b, w).length > 0;
+  }
+  // The centre grid cell is the ship core. Individual models may opt out.
+  function weakPoint(unit, cell) {
+    const model = models[unit.model];
+    if (!model?.ship || model.weakPoint === false || !cell) return false;
+    const c = center(unit);
+    return cell.x === Math.round(c.x) && cell.y === Math.round(c.y);
   }
   function unitSize(model) {
     const tags = model?.unitTags || model?.sourceStats?.nativeTags || [];
@@ -1585,6 +1600,10 @@ const Tactics = (() => {
   }
   // Scatter records carry only shot indices and energy actually paid; clients rebuild the same visual slice.
   function eventWeapon(unit, event) {
+    const weapon = baseEventWeapon(unit, event);
+    return weapon && event.aimCell ? {...weapon, aimCell: event.aimCell} : weapon;
+  }
+  function baseEventWeapon(unit, event) {
     const weapon = modelOf(unit).weapons.find((w) => w.id === event.weapon);
     // Only server-expanded impact events carry a blast centre; launch requests still check range.
     if (weapon?.special?.type === "nuke" && event.impactCell)
@@ -1695,7 +1714,7 @@ const Tactics = (() => {
         ),
       ),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
-      finalDamageMultiplier = (response === "defend" ? 0.75 : 1) *
+      finalDamageMultiplier = (weakPoint(b, w.aimCell ?? b.aimCell) ? 1.5 : 1) * (response === "defend" ? 0.75 : 1) *
         (defender.pilotModifiers?.defense ?? 1) * (1 - defenseCommand.defense) *
         (attacker.pilotModifiers?.[w.type === "melee" ? "melee" : "shooting"] ?? 1) * (1 + attackCommand.attack),
       strikes = availableStrikes(a, w, b);
@@ -1825,7 +1844,7 @@ const Tactics = (() => {
           executed =
             to.hp > 0 &&
             !parts.unavailable(from, step).length &&
-            moduleCanBear(from, step.moduleId, to),
+            moduleCanBear(from, step.moduleId, weapon.aimCell ?? to),
           hit = executed && random(g) < e.hit / 100,
           blocked = hit && to.shield > 0 && random(g) < e.blockChance,
           shieldDamage = blocked ? e.shieldDamage : 0,
@@ -1877,6 +1896,8 @@ const Tactics = (() => {
         from: from.id,
         to: to.id,
         weapon: weapon.id,
+        aimCell: weapon.aimCell,
+        weakPoint: weakPoint(to, weapon.aimCell),
         model: from.model,
         type: weapon.type,
         clip: weapon.clip,
@@ -2068,7 +2089,7 @@ const Tactics = (() => {
       const target = g.units.find((t) => t.id === order.target),
         weapon = modelOf(u).weapons.find((w) => w.id === order.weapon);
       if (target && weapon && canAttack(g, u, target, weapon)) {
-        u.readySnipe = { target: target.id, weapon: weapon.id };
+        u.readySnipe = { target: target.id, weapon: weapon.id, aimCell: order.aimCell };
         u.plan = { ...u.readySnipe, charged: true };
         u.acted = true;
         u.actionPoints = 0;
@@ -2382,6 +2403,8 @@ const Tactics = (() => {
     brokenWeaponParts: parts.unavailable,
     partBreakChance: parts.chance,
     inRange,
+    attackCells,
+    weakPoint,
     blastContains,
     groundTarget,
     canAttack,
