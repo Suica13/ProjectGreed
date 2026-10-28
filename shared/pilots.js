@@ -23,7 +23,7 @@ const PilotSystem = (() => {
       throw Error("驾驶员头像无效或过大");
     return value;
   }
-  const growthRules = Object.freeze({ version: 4, initialPoints: 60, pointsPerLevel: 15, maxLevel: 10, initialStatCap: 125, statCapPerLevel: 10, statCap: 180 });
+  const growthRules = Object.freeze({ version: 4, initialPoints: 60, pointsPerLevel: 15, maxLevel: 10, initialStatCap: 125, statCapPerLevel: 10, statCap: 200 });
   const experienceRequired = (level) => 1000 * 2 ** (level - 1);
   const trainingVersion = growthRules.version;
   const trainingBudget = (level) => growthRules.initialPoints + (level - 1) * growthRules.pointsPerLevel;
@@ -74,7 +74,7 @@ const PilotSystem = (() => {
     const experience = level === growthRules.maxLevel ? 0 : rawExperience;
     if (reset) spent = 0; // A growth-rule revision refunds every allocated point under the current budget.
     const record = {};
-    for (const key of ["kills", "losses", "destroyedCost", "lostCost"]) {
+    for (const key of ["kills", "shipKills", "battles", "losses", "destroyedCost", "lostCost"]) {
       const n = value.record?.[key] ?? 0;
       if (!Number.isSafeInteger(n) || n < 0) throw Error("驾驶员战绩无效");
       record[key] = n;
@@ -103,15 +103,18 @@ const PilotSystem = (() => {
     const pilot = custom(value);
     return custom({ ...pilot, stats: baseStats() });
   }
-  function battleResult(value, kind, unitCost, experiencePoints = unitCost) {
-    if (!["kill", "loss", "assist"].includes(kind) || !Number.isSafeInteger(unitCost) || unitCost < 0)
+  function battleResult(value, kind, unitCost, experiencePoints = unitCost, details = {}) {
+    if (!["kill", "loss", "assist", "battle"].includes(kind) || !Number.isSafeInteger(unitCost) || unitCost < 0)
       throw Error("驾驶员战绩结算无效");
     if (!Number.isSafeInteger(experiencePoints) || experiencePoints < 0) throw Error("驾驶员经验奖励无效");
     let p = custom(value);
     if (kind === "kill") {
       p.record.kills++;
+      if (details.shipKill === true) p.record.shipKills++;
       p.record.destroyedCost += unitCost;
       p = gainExperience(p, experiencePoints);
+    } else if (kind === "battle") {
+      p.record.battles++;
     } else if (kind === "assist") {
       p = gainExperience(p, experiencePoints);
     } else {
@@ -127,7 +130,7 @@ const PilotSystem = (() => {
       if (received.has(award.id)) continue;
       const i = store.pilots.findIndex(p => p.id === award.pilotId && (!award.faction || p.faction === award.faction));
       if (i < 0) continue;
-      store.pilots[i] = battleResult(store.pilots[i], award.kind, award.points, award.experiencePoints ?? award.points);
+      store.pilots[i] = battleResult(store.pilots[i], award.kind, award.points, award.experiencePoints ?? award.points, { shipKill: award.shipKill === true });
       received.add(award.id);
       changed = true;
     }

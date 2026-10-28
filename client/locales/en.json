@@ -1536,5 +1536,22 @@
   "是否一键生产补齐库存不足的单位？": "Produce all units needed to fill the inventory shortage?",
   "确认生产": "Confirm production",
   "编组或库存已变化，请重新确认生产。": "Formation or inventory has changed. Please confirm production again.",
-  "生产价格": "Production cost"
+  "生产价格": "Production cost",
+  "驾驶员属性说明": "Pilot attribute effects",
+  "击坠单位数": "Units destroyed",
+  "击坠战舰数": "Warships destroyed",
+  "参战次数": "Battles fought",
+  "总击坠COST": "Total destroyed COST",
+  "被击坠COST": "Lost COST",
+  "被击坠数": "Times shot down",
+  "每点增加0.5个百分点的射击伤害倍率；100点为100%，200点为150%。": "Each point adds 0.5 percentage points to ranged damage scaling: 100 points gives 100%, and 200 gives 150%.",
+  "每点增加0.5个百分点的格斗伤害倍率；100点为100%，200点为150%。": "Each point adds 0.5 percentage points to melee damage scaling: 100 points gives 100%, and 200 gives 150%.",
+  "每点降低0.5个百分点的承受伤害倍率；100点为100%，200点为50%。": "Each point reduces incoming damage scaling by 0.5 percentage points: 100 points gives 100%, and 200 gives 50%.",
+  "每点增加0.5个百分点的移动范围倍率，并增加0.1个百分点的最终回避倍率；100点为基准。移动范围允许小数。": "Each point adds 0.5 percentage points to movement scaling and 0.1 to final evasion scaling, relative to a baseline of 100 points. Movement range supports fractions.",
+  "每点增加0.5个百分点的最终命中倍率；100点为100%，200点为150%。最终命中率最高100%。": "Each point adds 0.5 percentage points to final accuracy scaling: 100 points gives 100%, and 200 gives 150%. Final hit chance is capped at 100%.",
+  "每点增加0.5个百分点的最终回避倍率；100点为100%，200点为150%。这是相对回避率加成，不是固定增加回避概率。": "Each point adds 0.5 percentage points to final evasion scaling: 100 points gives 100%, and 200 gives 150%. This scales evasion chance rather than adding a flat chance.",
+  "100点时指挥光环范围为3格、效果为10%；每高25点，范围增加1格、效果增加2个百分点；每低25点相应减少。仅影响机体已有的指挥光环。": "At 100 points, command auras have a 3-cell radius and 10% effect. Every 25 points above 100 adds 1 cell and 2 percentage points of effect; every 25 below reduces them accordingly. Only existing unit command auras are affected.",
+  "达到100点时，射击与格斗伤害额外乘以115%；低于100点没有额外加成，超过100点不再继续提高此效果。": "At 100 points, ranged and melee damage gain an extra 115% multiplier. Below 100 there is no bonus; further points do not increase this effect.",
+  "EN补给": "EN Resupply",
+  "消耗自身25%最大EN与2 AP，为一台相邻友军恢复50%最大EN，每个己方回合限用一次。": "Spend 25% of maximum EN and 2 AP to restore 50% of one adjacent ally's maximum EN. Once per own turn."
 }

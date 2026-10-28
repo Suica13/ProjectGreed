@@ -657,3 +657,22 @@ body > #formationPilotPanel { z-index:1300; }
   #formationInventorySale .inventory-actions { justify-content:flex-end; }
 }
 
+
+/* Pilot help and records use the same compact, high-contrast visual hierarchy. */
+.pilot-record { display:grid; gap:6px; margin:8px 0; min-width:0; }
+.pilot-record-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.pilot-record-cell { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 8px; min-width:0; font-size:11px; color:#c0cbd9; }
+.pilot-record-cell strong { color:#f3f5f8; font-size:12px; font-variant-numeric:tabular-nums; }
+#customPilotRecord { padding:10px; border:1px solid #596b80; background:#252b35; }
+#openPilotAttributeHelp { flex:none; min-width:32px; padding:3px 6px; margin:0; color:#7acbff; }
+#pilotAttributeHelp { width:min(640px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); box-sizing:border-box; overflow-y:auto; padding:18px; background:#1b222e; color:#f3f5f8; border:1px solid #718197; border-radius:4px; }
+#pilotAttributeHelp .pilot-help-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; border-bottom:1px solid #596b80; padding-bottom:10px; }
+#pilotAttributeHelp h3 { margin:0; font-size:18px; }
+#pilotAttributeHelp .pilot-effect-list { margin:14px 0 0; }
+#pilotAttributeHelp dt { color:#7acbff; font-size:13px; font-weight:600; margin:14px 0 4px; }
+#pilotAttributeHelp dd { margin:0; color:#dce4ef; font-size:12px; line-height:1.8; }
+@media(max-width:600px) {
+  .pilot-record-row { gap:6px; }
+  .pilot-record-cell { font-size:10px; }
+  #pilotAttributeHelp { padding:14px; }
+}

@@ -189,7 +189,7 @@
     "en": 7500.0,
     "move": 6,
     "mobility": 50.0,
-    "cost": 500,
+    "cost": 250,
     "counterLimit": 1,
     "accuracy": 100.0,
     "partStructuralStrength": 100.0,
@@ -401,7 +401,13 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 50000.0
+    "v17BaseHp": 50000.0,
+    "supplyTacticalPolicy": {
+      "enCostPercent": 25,
+      "enRecoveryPercent": 50,
+      "actionCost": 2,
+      "usesPerOwnTurn": 1
+    }
   },
   "presentation": {
     "shield": false,
@@ -976,13 +982,39 @@
       "moveBonus": 2,
       "mobilityMultiplier": 1.1,
       "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    },
+    {
+      "id": "adjacent_en_supply",
+      "type": "resupply",
+      "name": "EN补给",
+      "localization": {
+        "en": {
+          "name": "EN Resupply"
+        },
+        "ja": {
+          "name": "EN補給"
+        }
+      },
+      "description": "消耗自身25%最大EN与2 AP，为一台相邻友军恢复50%最大EN，每个己方回合限用一次。",
+      "range": 1,
+      "actionCost": 2,
+      "enCostPercent": 25,
+      "enRecoveryPercent": 50,
+      "cooldownTurns": 1,
+      "consumeAction": false,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      }
     }
   ],
   "description": "地球联邦军舰队主要的补给舰种",
   "costBalance": {
     "nativeLevel": 2000.0,
     "levelMultiplier": 0.25,
-    "published": 500
+    "published": 250,
+    "tacticalOverride": "Supply carrier COST halved from 500 to 250"
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],

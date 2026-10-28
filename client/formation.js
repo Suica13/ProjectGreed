@@ -2036,9 +2036,22 @@ const Formation = (() => {
   let pilotFocus = null;
   const pilotPage = byId("formationPilotRoster");
   const pilotEditor = byId("customPilotPanel");
-  function pilotRecordText(p) {
-    const r = p.record;
-    return `击坠 ${r.kills} · 击坠COST ${r.destroyedCost} · 被击坠 ${r.losses} · 被击坠COST ${r.lostCost}`;
+  function renderPilotRecord(container, pilot) {
+    const record = pilot.record;
+    const rows = [
+      [["击坠单位数", Math.max(0, record.kills - record.shipKills)], ["击坠战舰数", record.shipKills], ["参战次数", record.battles]],
+      [["总击坠COST", record.destroyedCost], ["被击坠COST", record.lostCost], ["被击坠数", record.losses]],
+    ];
+    container.replaceChildren();
+    for (const values of rows) {
+      const row = element("span", "pilot-record-row");
+      for (const [label, value] of values) {
+        const cell = element("span", "pilot-record-cell");
+        cell.append(element("span", "", label), element("strong", "", formatNumber(value)));
+        row.append(cell);
+      }
+      container.append(row);
+    }
   }
   function renderPilotRoster() {
     const list = byId("customPilotList");
@@ -2067,7 +2080,9 @@ const Formation = (() => {
           `EXP ${p.experience}/${PilotSystem.experienceRequired(p.level)} · 强化点 ${p.points}`,
         ),
       );
-      text.append(element("small", "", pilotRecordText(p)));
+      const record = element("span", "pilot-record");
+      renderPilotRecord(record, p);
+      text.append(record);
       img.className = "formation-icon";
       text.className = "custom-pilot-summary";
       const actions = element("div", "formation-row-actions");
@@ -2261,7 +2276,7 @@ const Formation = (() => {
     resetTraining.disabled = pilotIsNew || !Economy.affordable({ money: 1000 * pilotEdit.level });
     byId("customPilotProgress").textContent =
       `Lv.${pilotEdit.level}${pilotEdit.level === PilotSystem.growthRules.maxLevel ? " MAX" : ""} · COST +${PilotSystem.cost(pilotEdit)} · EXP ${pilotEdit.experience}/${pilotEdit.level === PilotSystem.growthRules.maxLevel ? "MAX" : PilotSystem.experienceRequired(pilotEdit.level)} · 强化点 ${pilotEdit.points}`;
-    byId("customPilotRecord").textContent = pilotRecordText(pilotEdit);
+    renderPilotRecord(byId("customPilotRecord"), pilotEdit);
     const original = JSON.parse(pilotOriginal);
     const pendingPoints = original.points - pilotEdit.points;
     byId("pilotTrainingActions").hidden = false;
@@ -2387,6 +2402,37 @@ const Formation = (() => {
   byId("formationPilotsTab").onclick = () => showFormationTab("pilots");
   byId("createCustomPilot").onclick = () => editPilot();
   byId("finishCustomPilot").onclick = finishPilotEditor;
+  const pilotHelp = element("dialog", "pilot-attribute-help");
+  pilotHelp.id = "pilotAttributeHelp";
+  pilotHelp.setAttribute("aria-labelledby", "pilotAttributeHelpTitle");
+  document.body.append(pilotHelp);
+  const pilotEffectDescriptions = [
+    ["射击", "每点增加0.5个百分点的射击伤害倍率；100点为100%，200点为150%。"],
+    ["格斗", "每点增加0.5个百分点的格斗伤害倍率；100点为100%，200点为150%。"],
+    ["防御", "每点降低0.5个百分点的承受伤害倍率；100点为100%，200点为50%。"],
+    ["机动", "每点增加0.5个百分点的移动范围倍率，并增加0.1个百分点的最终回避倍率；100点为基准。移动范围允许小数。"],
+    ["命中", "每点增加0.5个百分点的最终命中倍率；100点为100%，200点为150%。最终命中率最高100%。"],
+    ["反应", "每点增加0.5个百分点的最终回避倍率；100点为100%，200点为150%。这是相对回避率加成，不是固定增加回避概率。"],
+    ["指挥", "100点时指挥光环范围为3格、效果为10%；每高25点，范围增加1格、效果增加2个百分点；每低25点相应减少。仅影响机体已有的指挥光环。"],
+    ["觉醒", "达到100点时，射击与格斗伤害额外乘以115%；低于100点没有额外加成，超过100点不再继续提高此效果。"],
+  ];
+  byId("openPilotAttributeHelp").onclick = () => {
+    const heading = element("header", "pilot-help-heading");
+    const title = element("h3", "", "驾驶员属性说明");
+    title.id = "pilotAttributeHelpTitle";
+    const close = element("button", "", "关闭");
+    close.type = "button";
+    close.onclick = () => pilotHelp.close();
+    heading.append(title, close);
+    const effects = element("dl", "pilot-effect-list");
+    for (const [label, description] of pilotEffectDescriptions)
+      effects.append(element("dt", "", label), element("dd", "", description));
+    pilotHelp.replaceChildren(heading, effects);
+    pilotHelp.showModal();
+  };
+  for (const event of ["keydown", "keyup"])
+    pilotHelp.addEventListener(event, (event) => event.stopPropagation());
+  window.addEventListener("page-changing", () => pilotHelp.close());
   pilotEditor.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       event.stopPropagation();

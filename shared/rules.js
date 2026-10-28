@@ -468,6 +468,8 @@ const Tactics = (() => {
       (restrictions.mapId ? getMap(restrictions.mapId).environment : "ground");
     const adaptation = (model) => model.adaptability?.[environment] ?? 100;
     const infantry = (model) => model.unitTags?.includes("Infantry");
+    const support = (model) => !!model.supplyAura || model.unitTags?.includes("Support") ||
+      model.skills?.some(skill => ["repair", "resupply"].includes(skill.type));
     const commander = (model) => !model.ship &&
       model.commandAuras?.some(aura => ["cmdAtk", "cmdCom", "cmdDef"].includes(aura.type));
     const copies = (id) => entries.filter(entry => entry.unitId === id).length;
@@ -482,15 +484,17 @@ const Tactics = (() => {
             model.skills?.some((s) => ["repair", "recon"].includes(s.type))),
       ),
       entries = [];
-    const minimum = Math.min(...choices.map((model) => model.cost));
-    const minimumWeight = Math.min(...choices.map(formationWeight));
+    const combatChoices = choices.filter(model => !support(model));
+    const coreChoices = combatChoices.length ? combatChoices : choices;
+    const minimum = Math.min(...coreChoices.map((model) => model.cost));
+    const minimumWeight = Math.min(...coreChoices.map(formationWeight));
     const count = Math.min(Math.floor(unitLimit / minimumWeight), Math.floor(maxCost / minimum));
-    const bestAdaptation = Math.max(...choices.map(adaptation));
+    const bestAdaptation = Math.max(...coreChoices.map(adaptation));
     // 达到正常适应性即可进入预算竞争；不能因少数廉价机体的适应性更高，
     // 将所有正常适应性的高级机体永久排除。全员不足100%时仍优先最高适应性。
     const preferredAdaptation = Math.min(100, bestAdaptation);
     const preferredMinimum = Math.min(
-      ...choices
+      ...coreChoices
         .filter((model) => adaptation(model) >= preferredAdaptation)
         .map((model) => model.cost),
     );
@@ -530,7 +534,12 @@ const Tactics = (() => {
       const nonShipCount = entries.filter(entry => !models[entry.unitId + "__" + entry.kitId].ship).length;
       const commandAllowance = commandAllowances[Math.floor((nonShipCount + 1) / 3)] || 0;
       const infantryCount = entries.filter(entry => infantry(models[entry.unitId + "__" + entry.kitId])).length;
+      const supportCount = entries.filter(entry => support(models[entry.unitId + "__" + entry.kitId])).length;
+      const combatCount = entries.length - supportCount;
       const legal = choices.filter((model) => {
+        // Keep at least three combat platforms per supply unit; never spend the army on logistics.
+        if (support(model) && (supportCount >= Math.floor(count / 4) ||
+            combatCount < (supportCount + 1) * 3 || model.cost > maxCost * 0.25)) return false;
         if (commander(model) && commanderCount >= commandAllowance) return false;
         if (infantry(model) && infantryCount >= Math.max(1, Math.ceil(unitLimit / 6))) return false;
         if (formationWeight(model) > remainingPoints) return false;
@@ -925,6 +934,7 @@ const Tactics = (() => {
     return result;
   }
   const skills = skillModule.create({
+    cells,
     sensors,
     models,
     modelOf,

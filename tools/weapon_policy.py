@@ -303,4 +303,5 @@ def configure(prefab, native):
         weapon["actionCost"] = action_cost(prefab, key, weapon)
     configure_type61_tactical_weapons(prefab)
     from v17_balance import apply as apply_v17_balance
-    return apply_v17_balance(prefab)
+    from unit_supply import apply as apply_supply_policy
+    return apply_supply_policy(apply_v17_balance(prefab))

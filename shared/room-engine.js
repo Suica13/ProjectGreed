@@ -868,6 +868,7 @@ function createRoomEngine({
     room.lossExemptMembers = new Set();
     room.economySettled = false;
     room.pilotAwards = [];
+    room.pilotParticipants = new Set();
     room.pilotDamage = {};
     room.playerDamage = {};
     room.game = G.create(false, randomSeed());
@@ -1004,7 +1005,7 @@ function createRoomEngine({
         for (const evacuation of e.evacuations || [])
           log(
             room,
-            `${unitLabel(room, unit(room, evacuation.unitId))} 舰毁紧急退出：${evacuation.escaped ? "成功，损失25%耐久和盾牌" : "未能生还"}。`,
+            `${unitLabel(room, unit(room, evacuation.unitId))} 舰毁紧急退出：${evacuation.escaped ? "成功，损失25%耐久和盾牌、剩余AP减少25%" : "未能生还"}。`,
             { units: [unit(room, evacuation.unitId)] },
           );
         if (e.empty) {
@@ -1018,7 +1019,7 @@ function createRoomEngine({
         const defeatedModel = G.models[battle.actors.find((actor) => actor.id === e.to)?.model] ||
           G.modelOf(to);
         if (e.before > 0 && e.after <= 0) {
-          if (from.team !== to.team) recordPilotBattle(room, from, "kill", defeatedModel.cost);
+          if (from.team !== to.team) recordPilotBattle(room, from, "kill", defeatedModel.cost, !!defeatedModel.ship);
           recordPilotBattle(room, to, "loss", defeatedModel.cost);
           awardDefeat(room, from, to, defeatedModel);
           settlePilotAssists(room, to, from);
@@ -1027,7 +1028,7 @@ function createRoomEngine({
           if (evacuation.escaped) continue;
           const passenger = unit(room, evacuation.unitId);
           const cost = G.modelOf(passenger).cost;
-          if (from.team !== passenger.team) recordPilotBattle(room, from, "kill", cost);
+          if (from.team !== passenger.team) recordPilotBattle(room, from, "kill", cost, !!G.modelOf(passenger).ship);
           recordPilotBattle(room, passenger, "loss", cost);
           awardDefeat(room, from, passenger, G.modelOf(passenger));
           settlePilotAssists(room, passenger, from);
@@ -1151,19 +1152,30 @@ function createRoomEngine({
         supplies: Math.floor(limit * 5 * outcomeRate * rate * strength * bonus.supplies), losses, lostUnits });
     }
   }
-  function recordPilotBattle(room, actor, kind, cost) {
+  function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
     if (room.startedFromSave || !actor?.pilot?.custom) return;
     const owner = room.seats[G.ownerOf(actor)];
     const points = Math.max(0, Math.floor(cost));
     const beforeLevel = actor.pilot.level;
     const rate = (kind === "assist" ? 0.25 : 1) * roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience * roomBattleEconomy().strengthRatio(room.battleRoster, actor.team) * getRewardMultipliers().experience;
-    const experiencePoints = room.startedFromSave || kind === "loss" || beforeLevel >= G.pilots.growthRules.maxLevel
+    const experiencePoints = room.startedFromSave || kind === "loss" || kind === "battle" || beforeLevel >= G.pilots.growthRules.maxLevel
       ? 0 : Math.floor(points * rate);
-    actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints);
+    actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints, { shipKill });
     if (owner && !owner.bot)
       (room.pilotAwards ||= []).push({ id: randomId(), memberId: owner.id,
-        pilotId: actor.pilot.id, faction: actor.pilot.faction, kind, points, experiencePoints,
+        pilotId: actor.pilot.id, faction: actor.pilot.faction, kind, points, experiencePoints, shipKill,
         unitId: actor.id, carrierId: actor.embarked?.carrierId, leveledUp: actor.pilot.level > beforeLevel });
+  }
+  function recordPilotParticipation(room) {
+    if (room.startedFromSave || room.replay || room.phase !== "idle") return;
+    const counted = (room.pilotParticipants ||= new Set());
+    for (const actor of room.game.units) {
+      if (actor.hp <= 0 || !actor.pilot?.custom) continue;
+      const key = G.ownerOf(actor) + ":" + actor.pilot.id;
+      if (counted.has(key)) continue;
+      counted.add(key);
+      recordPilotBattle(room, actor, "battle", 0);
+    }
   }
   function settlePilotAssists(room, target, killer = null) {
     const entries = room.pilotDamage?.[target.id];
@@ -1470,6 +1482,7 @@ function createRoomEngine({
     room.lossExemptMembers = new Set();
     room.economySettled = false;
     room.pilotAwards = [];
+    room.pilotParticipants = new Set();
     room.pilotDamage = {};
     room.playerDamage = {};
     room.saveTurn = null;
@@ -1542,6 +1555,7 @@ function createRoomEngine({
     room.turnDone = Array(room.seats.length).fill(false);
     for (const player of room.seats)
       if (player?.bot && G.confirmDeployment(room.game, player.seat)) room.phase = "idle";
+    recordPilotParticipation(room);
     logDeploymentArmies(room);
     log(room, "最终编组已确认，请在各自出生区部署并确认。");
   }
@@ -1700,6 +1714,13 @@ function createRoomEngine({
       return unfinished ? { player: unfinished, action: "end_turn", fields: {} } : null;
     }
     const u = room.game.units.find((u) => G.ownerOf(u) === player.seat && G.onMap(u) && !u.acted);
+    for (const skill of G.unitSkills(u).filter(s => s.type === "resupply")) {
+      const targets = G.skillTargets(room.game, u, skill.id).sort((a, b) => {
+        const left = G.at(room.game, a.x, a.y), right = G.at(room.game, b.x, b.y);
+        return left.en / Math.max(1, G.modelOf(left).en) - right.en / Math.max(1, G.modelOf(right).en);
+      });
+      if (targets.length) return { player, action: "skill", fields: { unitId: u.id, skillId: skill.id, ...targets[0] } };
+    }
     for (const skill of G.unitSkills(u).filter((s) => s.type === "flight")) {
       if (!u.flying && !u.moved && G.canUseSkill(room.game, u, skill.id))
         return {
@@ -1769,6 +1790,16 @@ function createRoomEngine({
           };
       }
     }
+    // Do not drive a recovery destination away from a nearby low-energy passenger.
+    const hangars = G.modelOf(u).hangars || [];
+    if (hangars.length && room.game.units.some(passenger => {
+      if (!G.onMap(passenger) || passenger.team !== u.team ||
+          G.modelOf(passenger).hangars?.length || !G.hangars.needsRecovery(passenger)) return false;
+      const model = G.modelOf(passenger);
+      return G.dist(u, passenger) <= Math.max(2, model.move * 2) &&
+        hangars.some(hangar => hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag)) &&
+          G.hangars.used(room.game, u, hangar.id) + (model.transport?.slotCost || 1) <= hangar.capacity);
+    })) return { player, action: "wait", fields: { unitId: u.id } };
     const choice = G.aiChoice(room.game, u);
     if (choice?.rotation)
       return { player, action: "rotate", fields: { unitId: u.id, direction: choice.rotation } };
@@ -2679,7 +2710,10 @@ function createRoomEngine({
       }
       case "confirm_deployment": {
         if (room.phase !== "deployment") throw Error("Not deploying");
-        if (G.confirmDeployment(room.game, seat)) room.phase = "idle";
+        if (G.confirmDeployment(room.game, seat)) {
+          room.phase = "idle";
+          recordPilotParticipation(room);
+        }
         break;
       }
       case "rotate": {

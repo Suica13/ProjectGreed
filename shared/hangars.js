@@ -218,12 +218,18 @@ const UnitHangars = {
       const carrier = g.units.find((c) => c.id === u.embarked?.carrierId);
       return !!carrier && readyToLaunch(u) && inContact(g, carrier);
     }
+    function needsRecovery(u) {
+      const m = modelOf(u);
+      const damaged = Object.values(u.brokenParts || {}).some(Boolean);
+      const energyWeapons = m.weapons.filter(weapon => weapon.slot !== "skill" && weapon.en > 0);
+      const outOfAmmo = energyWeapons.length > 0 && energyWeapons.every(weapon => weapon.en > u.en);
+      return u.hp < m.hp * 0.25 || u.en < m.en * 0.5 || outOfAmmo || damaged;
+    }
     function recoveryOrder(g, u) {
       if (!onMap(u) || of(u).length || u.acted || u.plan || u.lastLaunchRound === g.round)
         return null;
       const m = modelOf(u);
-      const damaged = Object.values(u.brokenParts || {}).some(Boolean);
-      const repair = u.hp < m.hp * 0.25 || u.en < m.en * 0.25 || damaged;
+      const repair = needsRecovery(u);
       const enemies = g.units.filter((e) => onMap(e) && e.team !== u.team);
       const distance = Math.min(...enemies.map((e) => edgeDistance(u, e)));
       const longJourney = enemies.length > 0 && distance > m.move * 2 + attackReach(u);
@@ -242,6 +248,7 @@ const UnitHangars = {
               used(g, c, h.id) + (m.transport?.slotCost || 1) <= h.capacity,
           ),
       );
+      candidates.sort((a, b) => edgeDistance(a, u) - edgeDistance(b, u));
       for (const c of candidates)
         for (const h of of(c))
           if (canEmbark(g, u, c, h.id))
@@ -315,10 +322,12 @@ const UnitHangars = {
           u.x = carrier?.x ?? u.x;
           u.y = carrier?.y ?? u.y;
         }
+        const actionPoints = u.hp > 0
+          ? Math.max(0, Math.round((u.actionPoints ?? m.actionPoints ?? 5) * 0.75)) : 0;
         Object.assign(u, {
-          acted: true,
+          acted: u.acted || actionPoints <= 0,
           moved: true,
-          actionPoints: 0,
+          actionPoints,
           origin: null,
           lastLaunchRound: g.round,
         });
@@ -339,6 +348,7 @@ const UnitHangars = {
       readyToLaunch,
       shouldLaunch,
       recoveryOrder,
+      needsRecovery,
     };
   },
 };

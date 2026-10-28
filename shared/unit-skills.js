@@ -136,6 +136,13 @@ const UnitSkills = (() => {
           throw Error("Invalid Minovsky skill: " + label);
         continue;
       }
+      if (skill?.type === "resupply") {
+        if (!/^[A-Za-z0-9_]+$/.test(skill.id) || !skill.name ||
+            skill.range !== 1 || skill.actionCost !== 2 || skill.cooldownTurns !== 1 ||
+            skill.enCostPercent !== 25 || skill.enRecoveryPercent !== 50 || skill.consumeAction !== false)
+          throw Error("Invalid EN resupply skill: " + label);
+        continue;
+      }
       if (skill?.type === "repair") {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
@@ -189,7 +196,7 @@ const UnitSkills = (() => {
     }
   }
   function create(G) {
-    const { models, modelOf, fits, dist, mapWidth, mapHeight, dimensions, center, parts, sensors } =
+    const { models, modelOf, fits, dist, mapWidth, mapHeight, dimensions, center, parts, sensors, cells: unitCells } =
       G;
     const of = (unit) => models[unit.model]?.skills || [];
     const usageKey = (unit, skill) => models[unit.model].prefabId + "/" + skill.id;
@@ -200,6 +207,7 @@ const UnitSkills = (() => {
         (unit.skillReadyRound?.[skill.id] ?? 0) <= game.round &&
         (!skill.actionCost ||
           (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost) &&
+        (skill.type !== "resupply" || unit.en >= modelOf(unit).en * skill.enCostPercent / 100) &&
         (skill.type !== "transform" || !Object.values(unit.brokenParts || {}).some(Boolean)) &&
         (skill.type !== "flight" ||
           ((unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost &&
@@ -364,6 +372,10 @@ const UnitSkills = (() => {
           ? [{ x: unit.x, y: unit.y }]
           : [];
       }
+      if (skill.type === "resupply")
+        return game.units.filter(other => other !== unit && other.hp > 0 && !other.embarked &&
+          other.team === unit.team && dist(unit, other) === 1 && other.en < modelOf(other).en)
+          .flatMap(other => unitCells(other).map(cell => ({ x: cell.x, y: cell.y })));
       if (skill.type === "repair")
         return game.units
           .filter(
@@ -424,6 +436,21 @@ const UnitSkills = (() => {
       )
         throw Error("技能不可用，或目标不在合法范围内");
       const skill = of(unit).find((s) => s.id === skillId);
+      if (skill.type === "resupply") {
+        const target = game.units.find(other => other.hp > 0 && !other.embarked &&
+          other.team === unit.team && unitCells(other).some(cell => cell.x === x && cell.y === y));
+        const before = { hp: target.hp, en: target.en, shield: target.shield };
+        target.en = Math.min(modelOf(target).en, target.en + modelOf(target).en * skill.enRecoveryPercent / 100);
+        unit.en -= modelOf(unit).en * skill.enCostPercent / 100;
+        unit.actionPoints = (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
+        if (unit.actionPoints <= 0) unit.acted = true;
+        unit.skillReadyRound = { ...unit.skillReadyRound, [skill.id]: game.round + 2 };
+        unit.origin = null;
+        target.origin = null;
+        return { type: "skill", skillId, unitId: unit.id, resultId: unit.id, targetId: target.id,
+          before, after: { hp: target.hp, en: target.en, shield: target.shield },
+          from: { x, y }, to: { x, y }, effect: skill.effect, sound: skill.sound };
+      }
       if (skill.type === "flight") {
         unit.flying = !unit.flying;
         unit.actionPoints =
