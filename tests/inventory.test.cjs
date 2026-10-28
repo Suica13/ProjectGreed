@@ -153,3 +153,35 @@ test("a human may force readiness with zero stock but receives no spawned units"
   assert.equal(game.units.filter((u) => u.ownerSeat === 1).length, 1);
   assert.equal(game.deployment[0], true);
 });
+
+const Development = require('../shared/development.js');
+const lockedModel = Object.values(G.models).find(m => !m.wip && m.faction === 'EFSF' &&
+  m.movementType !== 'naval' && (m.adaptability?.ground ?? 100) > 0 &&
+  !Development.allows('PMC', m.prefabId, {}));
+const lockedEntry = {unitId: lockedModel.prefabId, kitId: Object.keys(G.models).find(id => G.models[id] === lockedModel).split('__')[1]};
+test('owned undeveloped units bypass research only, retain quantity, faction, cost and tag restrictions', () => {
+  const settings = {...G.defaultRoomSettings(), costLimit:99999, unitCostLimit:99999};
+  const rules = G.armyRestrictions(settings, {seat:0, characterFaction:'PMC', researched:{}, inventory:{[lockedEntry.unitId]:1}});
+  assert.equal(G.restrictionReason(lockedModel, rules), null);
+  assert.equal(G.planFormation([lockedEntry,lockedEntry],Infinity,rules).reasons[1], 'inventory');
+  assert.equal(G.planFormation([lockedEntry],Infinity,{...rules,inventory:undefined}).deployable.length,1);
+  assert.equal(G.restrictionReason(lockedModel,{...rules,inventory:{}}),'not_developed');
+  assert.equal(G.restrictionReason(lockedModel,{...rules,characterFaction:'ZEON'}),'faction_mismatch');
+  assert.equal(G.restrictionReason(lockedModel,{...rules,unitCostLimit:0}),'cost');
+  assert.equal(G.restrictionReason(lockedModel,{...rules,bannedFactions:['EFSF']}),'not_allowed');
+});
+test('real WebSocket undeveloped inventory survives ready, assembly confirmation and spawning',async t=>{
+ const app=createServer({host:'127.0.0.1',port:0}), address=await app.listen();
+ const a=new Peer(`ws://127.0.0.1:${address.port}/ws`),b=new Peer(`ws://127.0.0.1:${address.port}/ws`);
+ t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close()});
+ const stock={[lockedEntry.unitId]:1},formation=[lockedEntry];
+ await a.join('create','LOCKED',stock);await b.join('join','LOCKED',stock);
+ let r=await a.action('configure_room',{...G.defaultRoomSettings(),costLimit:99999,unitCostLimit:99999});
+ assert.equal(r.type,'state');
+ r=await b.action('set_ready',{ready:true,formation,inventory:stock});assert.equal(r.type,'state');
+ r=await a.action('start_game',{formation,inventory:stock});assert.equal(r.phase,'assembly');
+ assert(r.assembly.players.every(p=>p.deployable.length===1));
+ r=await a.action('confirm_formation',{formation,inventory:stock});assert.equal(r.type,'state');
+ r=await b.action('confirm_formation',{formation,inventory:stock});assert.equal(r.phase,'deployment');
+ assert.equal(app.rooms.get('LOCKED').game.units.filter(u=>G.modelOf(u).prefabId===lockedEntry.unitId).length,2);
+});

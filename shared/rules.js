@@ -275,7 +275,8 @@ const Tactics = (() => {
       return "faction_mismatch";
     if (
       ["PMC", "EFSF", "ZEON"].includes(restrictions.characterFaction) &&
-      !development.allows(restrictions.characterFaction, model.prefabId, restrictions.researched)
+      !development.allows(restrictions.characterFaction, model.prefabId, restrictions.researched) &&
+      !((restrictions.inventory ?? restrictions.ownedInventory)?.[model.prefabId] > 0)
     )
       return "not_developed";
     if (restrictions.environment && (model.adaptability?.[restrictions.environment] ?? 100) <= 0)
@@ -432,7 +433,11 @@ const Tactics = (() => {
     rules.characterFaction = ["PMC", "EFSF", "ZEON"].includes(player?.characterFaction)
       ? player.characterFaction : null;
     rules.researched = player?.researched;
-    if (player && !player.bot) rules.inventory = normalizeInventory(player.inventory);
+    if (player && !player.bot) {
+      rules.inventory = normalizeInventory(player.inventory);
+      // Readiness may skip quantity checks while retaining ownership-based deployment access.
+      rules.ownedInventory = rules.inventory;
+    }
     const config = armySettings(player);
     rules.unitCostLimit =
       config.unitCostLimit ??

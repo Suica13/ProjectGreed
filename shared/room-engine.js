@@ -1110,8 +1110,8 @@ function createRoomEngine({
       if (points && ["EFSF", "ZEON"].includes(faction))
         room.techAwards.push({ id: randomId(), matchId: room.matchId, memberId: owner.id,
           faction, targetId: to.id, points, kind: assist ? "assist" : "kill", round: room.game.round, team: room.game.team });
-      const money = Math.max(0, Math.floor(price * (assist ? 1 : 2) * rates.currency * strength * bonus.money));
-      const supplies = Math.max(0, Math.floor(supplyPrice * (assist ? 1 : 2) * rates.currency * strength * bonus.supplies));
+      const money = Math.max(0, Math.floor(price * (assist ? 0.25 : 1) * rates.currency * strength * bonus.money));
+      const supplies = Math.max(0, Math.floor(supplyPrice * (assist ? 0.25 : 1) * rates.currency * strength * bonus.supplies));
       (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId,
         memberId: owner.id, kind: assist ? "assist" : "kill", targetId: to.id,
         model: to.model, money, supplies });
@@ -1145,9 +1145,10 @@ function createRoomEngine({
       const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
       // A manually assigned preset's "unlimited" allowance must not inflate the victory bonus.
       const limit = room.settings.costLimit;
+      const outcomeRate = won ? 1 : 0.5;
       (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId, memberId: player.id,
-        kind: "result", money: won ? Math.floor(limit * 2.5 * rate * strength * bonus.money) : 0,
-        supplies: won ? Math.floor(limit * 5 * rate * strength * bonus.supplies) : 0, losses, lostUnits });
+        kind: "result", money: Math.floor(limit * 2.5 * outcomeRate * rate * strength * bonus.money),
+        supplies: Math.floor(limit * 5 * outcomeRate * rate * strength * bonus.supplies), losses, lostUnits });
     }
   }
   function recordPilotBattle(room, actor, kind, cost) {

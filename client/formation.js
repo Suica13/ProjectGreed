@@ -157,7 +157,7 @@ const Formation = (() => {
     characterFaction: group,
     inventory: Economy.snapshot().inventory,
   });
-  // Drafts may contain future units; technology is still required to produce or deploy them.
+  // Drafts may contain future units; technology is required to produce them; owned stock can deploy.
   const canAddUnit = (model) =>
     !!model && [null, "not_developed"].includes(PlayerProfile.restriction(model));
   const displayLimit = (value) => (Number.isFinite(value) ? value : I18n.text("无限"));

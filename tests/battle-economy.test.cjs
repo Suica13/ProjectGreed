@@ -125,13 +125,13 @@ for (const faction of ["EFSF", "PMC"])
       );
       assert.equal(
         view.economyAwards[0].money,
-        Math.floor(R.price("Type61__standard") * 2 * rates.currency * 1.5),
+        Math.floor(R.price("Type61__standard") * rates.currency * 1.5),
       );
       assert.equal(
         view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
         Math.floor(G.modelOf(f.target).cost * rates.experience * 1.5),
       );
-      assert.equal(view.economyAwards[0].supplies, Math.floor(R.price(f.target.model,"supplies") * 2 * rates.currency * 1.5));
+      assert.equal(view.economyAwards[0].supplies, Math.floor(R.price(f.target.model,"supplies") * rates.currency * 1.5));
       assert(!view.economyAwards.some((a) => a.kind === "result"));
       assert.deepEqual(f.frames.get(f.clients[1]).economyAwards, []);
       assert.equal(view.battleRoster, undefined);
@@ -141,7 +141,9 @@ for (const faction of ["EFSF", "PMC"])
       assert.equal(result.supplies, Math.floor(900 * 5 * rates.currency * 1.5));
       assert.deepEqual(result.losses, mode === "quick" ? {} : { Type61: 1 });
       const loser = f.frames.get(f.clients[1]).economyAwards.find((a) => a.kind === "result");
-      assert.equal(loser.money, 0);
+      const loserRate = R.rates("PMC", mode).currency;
+      assert.equal(loser.money, Math.floor(900 * 1.25 * loserRate / 1.5));
+      assert.equal(loser.supplies, Math.floor(900 * 2.5 * loserRate / 1.5));
       assert.deepEqual(loser.losses, mode === "quick" ? {} : { Type61: 1 });
       const before = JSON.stringify(f.frames.get(f.clients[0]).economyAwards);
       f.act(0, "sync");
@@ -229,9 +231,9 @@ for (const faction of ["PMC", "EFSF"])
           const rates = R.rates(faction, mode);
           assert.equal(
             view.economyAwards[0].money,
-            Math.floor(R.price(f.target.model) * rates.currency * 1.5),
+            Math.floor(R.price(f.target.model) * 0.25 * rates.currency * 1.5),
           );
-          assert.equal(view.economyAwards[0].supplies, Math.floor(R.price(f.target.model,"supplies") * rates.currency * 1.5));
+          assert.equal(view.economyAwards[0].supplies, Math.floor(R.price(f.target.model,"supplies") * 0.25 * rates.currency * 1.5));
           assert.equal(view.economyAwards[0].kind, "assist");
           assert.equal(
             view.techAwards[0].points,
@@ -265,17 +267,21 @@ for (const faction of ["EFSF", "PMC"])
       );
       assert.equal(
         view.economyAwards[0].money,
-        Math.floor(R.price(f.target.model) * 2 * rates.currency * 1.5 * 2),
+        Math.floor(R.price(f.target.model) * rates.currency * 1.5 * 2),
       );
       assert.equal(
         view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
         Math.floor(G.modelOf(f.target).cost * rates.experience * 1.5 * 3),
       );
-      assert.equal(view.economyAwards[0].supplies, Math.floor(R.price(f.target.model,"supplies") * 2 * rates.currency * 1.5 * 4));
+      assert.equal(view.economyAwards[0].supplies, Math.floor(R.price(f.target.model,"supplies") * rates.currency * 1.5 * 4));
       f.finish();
       const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
       assert.equal(result.money, Math.floor(900 * 2.5 * rates.currency * 1.5 * 2));
       assert.equal(result.supplies, Math.floor(900 * 5 * rates.currency * 1.5 * 4));
+      const loser = f.frames.get(f.clients[1]).economyAwards.find(a => a.kind === "result");
+      const loserRate = R.rates("PMC", mode).currency;
+      assert.equal(loser.money, Math.floor(900 * 1.25 * loserRate / 1.5 * 2));
+      assert.equal(loser.supplies, Math.floor(900 * 2.5 * loserRate / 1.5 * 4));
     });
 test("event expiring between kill and victory does not change earlier awards; saves remain reward-free", (t) => {
   let active = true;
@@ -324,8 +330,8 @@ for (const allied of [0.5,1,1.5,2])
   for(const unit of Object.values(f.room.battleRoster)) if(unit.team===0) unit.performance=allied;
   f.kill();
   const view=f.frames.get(f.clients[0]),rates=R.rates("EFSF","regular");
-  assert.equal(view.economyAwards.find(a=>a.kind==='kill').money,Math.floor(R.price(f.target.model)*2*rates.currency*1.5/allied));
-  assert.equal(view.economyAwards.find(a=>a.kind==='kill').supplies,Math.floor(R.price(f.target.model,'supplies')*2*rates.currency*1.5/allied));
+  assert.equal(view.economyAwards.find(a=>a.kind==='kill').money,Math.floor(R.price(f.target.model)*rates.currency*1.5/allied));
+  assert.equal(view.economyAwards.find(a=>a.kind==='kill').supplies,Math.floor(R.price(f.target.model,'supplies')*rates.currency*1.5/allied));
   assert.equal(view.techAwards.find(a=>a.kind==='kill').points,Math.floor(G.modelOf(f.target).cost*rates.technology*1.5/allied));
   assert.equal(view.pilotAwards.find(a=>a.kind==='kill').experiencePoints,Math.floor(G.modelOf(f.target).cost*rates.experience*1.5/allied));
   f.finish();
@@ -346,7 +352,7 @@ test('individual target strength no longer stacks on the match strength ratio',t
  f.target.performance=2;
  f.kill();
  const view=f.frames.get(f.clients[0]);
- assert.equal(view.economyAwards.find(a=>a.kind==='kill').money,Math.floor(R.price(f.target.model)*2));
+ assert.equal(view.economyAwards.find(a=>a.kind==='kill').money,Math.floor(R.price(f.target.model)));
  assert.equal(view.pilotAwards.find(a=>a.kind==='kill').experiencePoints,Math.floor(G.modelOf(f.target).cost));
 });
 
