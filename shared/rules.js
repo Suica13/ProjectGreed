@@ -2099,21 +2099,22 @@ const Tactics = (() => {
           ),
         ) * (isCounter ? 0.75 : 1),
       // 最终回避加成在机动性、地形与反击惩罚计算后生效。
-      rawHit = Math.min(
-        100,
+      // Compare accuracy and evasion on the same probability. Do not cap the
+      // attacker's result before the defender's multipliers have been applied.
+      rawHit =
         Math.max(0, baseHit - (response === "evade" ? 15 : 0)) *
-          (w.hitScale || 1) *
-          (attacker.pilotModifiers?.accuracy ?? 1) *
-          remoteFactor *
-          (1 + attackCommand.communication),
-      ),
+        (w.hitScale || 1) *
+        (attacker.pilotModifiers?.accuracy ?? 1) *
+        remoteFactor *
+        (1 + attackCommand.communication),
       pilotEvasionHit =
-        100 -
-        (100 - rawHit) *
-          (defender.pilotModifiers?.reaction ?? 1) *
-          (1 + defenseCommand.communication),
+        rawHit / ((defender.pilotModifiers?.reaction ?? 1) * (1 + defenseCommand.communication)),
       particleDefense = minovskyAt(g, b),
-      particleEvasionHit = particleDefense ? 100 - (100 - pilotEvasionHit) * 1.25 : pilotEvasionHit,
+      // Preserve Minovsky's extra miss chance, without turning a negative miss
+      // chance into an accuracy bonus when the uncapped result exceeds 100%.
+      particleEvasionHit = particleDefense
+        ? pilotEvasionHit - Math.max(0, 100 - pilotEvasionHit) * 0.25
+        : pilotEvasionHit,
       hit = Math.max(
         0,
         Math.min(

@@ -71,7 +71,7 @@ test("native smoke equipment uses two AP, 100 EN, fixed radius and three own-tur
 test("smoke protects all sides against ranged fire multiplicatively, without stacking, and never changes melee", () => {
   const { g, a, b } = fixture("RGM_79", "RGM_79"),
     w = weapon(a);
-  w.hitScale = 1;
+  w.hitScale = 0.5; // Keep this smoke-isolation test below the final probability cap.
   const ranged = G.estimate(g, a, b, w).hit,
     melee = G.estimate(g, a, b, weapon(a, "meleeBeam")).hit;
   const field = { x: b.x, y: b.y, radius: 2, expiresRound: g.round + 2 };

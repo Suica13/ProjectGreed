@@ -130,7 +130,7 @@ test("communication applies relative final hit and evasion bonuses", () => {
   const attack = G.estimate(game, a, b, weapon).hit;
   near(attack, base * 1.1);
   provider(game, "communication", 1, 7, 8);
-  near(G.estimate(game, a, b, weapon).hit, 100 - (100 - attack) * 1.1);
+  near(G.estimate(game, a, b, weapon).hit, attack / 1.1);
 });
 test("100 is neutral and every ten pilot points changes the corresponding final quantity by five percent", () => {
   const f = fixture();
@@ -148,7 +148,7 @@ test("100 is neutral and every ten pilot points changes the corresponding final 
   near(G.estimate(f.game, f.a, f.b, f.weapon).hit, base.hit * 1.05);
   f.a.pilot = neutral();
   f.b.pilot = neutral({ reaction: 110 });
-  near(G.estimate(f.game, f.a, f.b, f.weapon).hit, 100 - (100 - base.hit) * 1.05);
+  near(G.estimate(f.game, f.a, f.b, f.weapon).hit, base.hit / 1.05);
   const melee = { ...f.weapon, type: "melee", damageComponents: { meleeShell: 1000 } };
   f.b.pilot = neutral();
   const meleeBase = G.estimate(f.game, f.a, f.b, melee).damage;
