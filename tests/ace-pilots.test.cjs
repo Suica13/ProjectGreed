@@ -10,7 +10,7 @@ test("ACE import preserves native prices, five upgrades, independent maxima and 
   for (const profile of P.catalog.aces) {
     assert.equal(profile.initialLevel, 0);
     assert.equal(profile.maxLevel, 5);
-    assert.equal(profile.costPerLevel, 50);
+    assert.equal(profile.costPerLevel, 25);
     assert(profile.comprehension >= 100);
     assert(profile.skills.length);
     assert(profile.skills.every((s) => s.implemented === true && s.name && s.icon));
@@ -21,7 +21,7 @@ test("ACE import preserves native prices, five upgrades, independent maxima and 
         assert.equal(skill.cooldownTurns, undefined);
       } else {
         assert.equal(skill.durationTurns, 1);
-        assert.equal(skill.cooldownTurns, 6);
+        assert.equal(skill.cooldownTurns, 5);
         assert.equal(skill.cooldownStarts, "effect_end");
         assert.deepEqual(skill.nativeTiming, { durationSeconds: 15, cooldownSeconds: 90 });
       }
@@ -45,14 +45,14 @@ test("ACE import preserves native prices, five upgrades, independent maxima and 
 });
 test("ACE comprehension compounds without manual points, preserves XP overflow and stops at level five", () => {
   let p = P.createAce(source.id);
-  assert.equal(P.cost(p), 100);
+  assert.equal(P.cost(p), 250);
   assert.equal(p.level, 0);
   assert.equal(p.points, 0);
   const need = P.experienceRequired(0, p);
   p = P.gainExperience(p, need + 23);
   assert.equal(p.level, 1);
   assert.equal(p.experience, 23);
-  assert.equal(P.cost(p), 150);
+  assert.equal(P.cost(p), 275);
   assert(
     Math.abs(
       p.stats.melee -
@@ -63,7 +63,7 @@ test("ACE comprehension compounds without manual points, preserves XP overflow a
   p = P.gainExperience(p, 1000000);
   assert.equal(p.level, 5);
   assert.equal(p.experience, 0);
-  assert.equal(P.cost(p), 350);
+  assert.equal(P.cost(p), 375);
   for (const key of Object.keys(P.labels))
     assert(Math.abs(p.stats[key] - source.maxStats[key]) < 1e-9);
   assert(p.stats.melee > 200);
@@ -75,11 +75,11 @@ test("ACE comprehension compounds without manual points, preserves XP overflow a
   assert.throws(() => P.custom({ ...p, level: 6 }));
   assert.throws(() => P.custom({ ...p, id: "custom-clone" }));
 });
-test("ACE deploys with fixed grown stats, costs 100 base plus 50 per level and cannot bypass duplicate or bare-ID checks", () => {
+test("ACE deploys with fixed grown stats, costs 250 base plus 25 per level and cannot bypass duplicate or bare-ID checks", () => {
   const pilot = P.gainExperience(P.createAce(source.id), source.experienceBase);
   const base = G.models.RGM_79__machine_gun.cost;
-  assert.equal(G.validateFormation([entry(pilot)], base + 150)[0].customPilot.level, 1);
-  assert.throws(() => G.validateFormation([entry(pilot)], base + 149));
+  assert.equal(G.validateFormation([entry(pilot)], base + 275)[0].customPilot.level, 1);
+  assert.throws(() => G.validateFormation([entry(pilot)], base + 274));
   assert.throws(() => G.validateFormation([entry(pilot), entry(pilot)], Infinity));
   assert.throws(() =>
     G.validateFormation([{ unitId: "RGM_79", kitId: "machine_gun", pilotId: source.id }], Infinity),
@@ -105,9 +105,9 @@ test("ACE awards share deduplication and records, losses do not remove XP, and c
   assert.equal(p.level, 1);
   assert.equal(p.record.lostCost, 500);
   const custom = P.createCustom("custom-still-normal", "Test", P.catalog.portraits[0].id);
-  assert.equal(custom.level, 1);
-  assert.equal(custom.points, 60);
-  assert.equal(P.cost(custom), 25);
+  assert.equal(custom.level, 0);
+  assert.equal(custom.points, 80);
+  assert.equal(P.cost(custom), 0);
 });
 
 test("destroyed ACE keeps career progress but must be re-recruited before deployment", () => {
@@ -126,7 +126,7 @@ test("destroyed ACE keeps career progress but must be re-recruited before deploy
     supplies: Math.ceil(source.price.supplies / 2),
   });
   assert.equal(restored.record.losses, 1);
-  assert.equal(P.cost(restored), 150);
+  assert.equal(P.cost(restored), 275);
   assert.throws(() => P.recruitAce(source.id, restored));
   const store = { pilots: [before], awards: [] },
     award = {
@@ -155,10 +155,10 @@ test("ACE upgrade XP is twice the equivalent custom upgrade and all five steps p
     let pilot = P.createAce(profile.id);
     for (let level = 0; level < 5; level++) {
       const required = P.experienceRequired(level, pilot);
-      assert.equal(required, 2 * P.experienceRequired(level + 1));
+      assert.equal(required, 2 * P.experienceRequired(level));
       pilot = P.gainExperience(pilot, required);
       assert.equal(pilot.level, level + 1);
-      assert.equal(P.cost(pilot), 100 + (level + 1) * 50);
+      assert.equal(P.cost(pilot), 250 + (level + 1) * 25);
       for (const key of Object.keys(P.labels)) assert(pilot.stats[key] <= profile.maxStats[key]);
     }
     assert.deepEqual(pilot.stats, profile.maxStats);

@@ -3,9 +3,58 @@ const ProfileSave = (() => {
   const factions = ["PMC", "EFSF", "ZEON"];
   const pilotKey = "projectgreed.custom-pilots.v2.",
     formationKey = "slg-formations-v1.";
+  // Archive-only lossless dictionary compression. Runtime receipt lookup stays unchanged.
+  function packClaims(store) {
+    const groups = new Map();
+    for (const [id, match] of Object.entries(store.claimed || {})) {
+      if (!groups.has(match)) groups.set(match, []);
+      groups.get(match).push(id);
+    }
+    const { claimed, ...rest } = store;
+    return { ...rest, claimedPacked: [...groups].map(([match, ids]) => {
+      let prefix = ids[0];
+      for (const id of ids) {
+        let n = 0;
+        while (n < prefix.length && prefix[n] === id[n]) n++;
+        prefix = prefix.slice(0, n);
+      }
+      return [match, prefix, ids.map(id => id.slice(prefix.length))];
+    }) };
+  }
+  function unpackClaims(store) {
+    if (!store || !Array.isArray(store.claimedPacked) || store.claimed !== undefined)
+      throw Error("奖励记录压缩格式无效");
+    const claimed = {};
+    for (const group of store.claimedPacked) {
+      if (!Array.isArray(group) || group.length !== 3) throw Error("奖励记录压缩格式无效");
+      const [match, prefix, suffixes] = group;
+      if (typeof match !== "string" || match.length > 200 ||
+          typeof prefix !== "string" || prefix.length > 200 || !Array.isArray(suffixes))
+        throw Error("奖励记录压缩格式无效");
+      for (const suffix of suffixes) {
+        if (typeof suffix !== "string" || prefix.length + suffix.length > 200)
+          throw Error("奖励记录压缩格式无效");
+        const id = prefix + suffix;
+        if (!id || Object.hasOwn(claimed, id)) throw Error("奖励记录重复或无效");
+        Object.defineProperty(claimed, id, { value: match, enumerable: true });
+      }
+    }
+    const { claimedPacked, ...rest } = store;
+    return { ...rest, claimed };
+  }
+  function encodeData(value = exportData()) {
+    const clean = validate(value);
+    return {
+      ...clean, schemaVersion: 2, createdAt: value.createdAt || new Date().toISOString(),
+      development: packClaims(clean.development), economy: packClaims(clean.economy),
+    };
+  }
   function validate(value) {
-    if (value?.format !== "ProjectGreed-profile" || value.schemaVersion !== 1)
+    if (value?.format !== "ProjectGreed-profile" || ![1, 2].includes(value.schemaVersion))
       throw Error("不支持的个人存档格式");
+    if (value.schemaVersion === 2) value = {
+      ...value, development: unpackClaims(value.development), economy: unpackClaims(value.economy),
+    };
     const result = {
       format: value.format,
       schemaVersion: 1,
@@ -78,7 +127,7 @@ const ProfileSave = (() => {
         pilots: Formation.exportPilotStores(),
         formations,
         development: Development.exportProgress(),
-        economy: Economy.snapshot(),
+        economy: Economy.exportProgress(),
       }),
       createdAt: new Date().toISOString(),
     };
@@ -132,12 +181,13 @@ const ProfileSave = (() => {
   input.id = "profileSaveFile";
   status.className = "settings-help muted";
   status.setAttribute("role", "status");
-  status.textContent =
-    "个人进度：驾驶员、编组、科技、资金、物资和单位库存。导入将覆盖个人进度并刷新页面。";
+  status.textContent = Economy.storageIssue()
+    ? "存档读取失败，原始数据已保留。请导入有效存档或新建存档：" + Economy.storageIssue()
+    : "个人进度：驾驶员、编组、科技、资金、物资和单位库存。导入将覆盖个人进度并刷新页面。";
   exportButton.onclick = () => {
     try {
       const url = URL.createObjectURL(
-        new Blob([JSON.stringify(exportData(), null, 2)], { type: "application/json" }),
+        new Blob([JSON.stringify(encodeData())], { type: "application/json" }),
       );
       const link = document.createElement("a");
       link.href = url;
@@ -215,5 +265,5 @@ const ProfileSave = (() => {
   actions.append(exportButton, importButton, newButton);
   panel.append(actions, input, status);
   document.getElementById("clientSettingsDialog").append(panel);
-  return { validate, exportData, importData };
+  return { validate, exportData, encodeData, importData };
 })();

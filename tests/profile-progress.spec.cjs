@@ -41,6 +41,7 @@ test("personal save download and file import preserve pilots, formations and spe
     });
     Development.research("EFSF", node.id);
     const value = ProfileSave.exportData();
+    value.economy.inventory.MS_14S = 99;
     value.pilots.EFSF.pilots = [PilotSystem.custom(pilot)];
     value.formations.EFSF = {
       version: 3,
@@ -64,7 +65,7 @@ test("personal save download and file import preserve pilots, formations and spe
   const download = await downloadPromise,
     downloaded = await fs.readFile(await download.path(), "utf8");
   expect(downloaded).not.toContain("secret-do-not-export");
-  const data = JSON.parse(downloaded);
+  const data = await page.evaluate(value => ProfileSave.validate(value), JSON.parse(downloaded));
   expect(data.pilots.EFSF).toEqual(original.pilots.EFSF);
   expect(data.development).toEqual(original.development);
   expect(data.economy).toEqual(original.economy);
@@ -335,3 +336,40 @@ for (const width of [1280, 360])
     expect(data.development.researched.ZEON).toEqual(["Tech_ZEON_0079_BaseTech"]);
     expect(await page.evaluate(() => localStorage.getItem("unrelated-setting"))).toBe("keep-me");
   });
+test("damaged wallet keeps menu navigation and import recovery available", async ({page})=>{
+ const damaged=JSON.stringify({money:12345,supplies:6789,inventory:{MS_14S:-1},kits:{}});
+ await page.addInitScript(damaged=>{
+   if(!localStorage.getItem("damaged-seeded")){
+     localStorage.setItem("damaged-seeded","yes");
+     localStorage.setItem("projectgreed.economy.v1",damaged);
+   }
+ },damaged);
+ const errors=[];page.on("pageerror",e=>errors.push(e.message));
+ await open(page);
+ await page.locator("#shellHangar").click();
+ await expect(page.locator("#formationMain")).toBeVisible();
+ await page.locator("#shellProduction").click();
+ await expect(page.locator("#productionScreen")).toBeVisible();
+ await page.locator("#shellLobby").click();
+ await page.locator("#openSkirmish").click();
+ await expect(page.locator("#skirmishSetup")).toBeVisible();
+ await page.locator("#closeSkirmish").click();
+ await page.locator("#shellSettings").click();
+ await page.locator("#exportProfileSave").click();
+ await expect(page.locator("#clientSettingsDialog .profile-save-controls [role=status]")).toContainText("MS_14S");
+ expect(await page.evaluate(()=>localStorage.getItem(Economy.key))).toBe(damaged);
+ expect(await page.evaluate(()=>localStorage.getItem(Economy.key+".recovery-backup"))).toBe(damaged);
+ const valid=await page.evaluate(()=>({
+   format:"ProjectGreed-profile",schemaVersion:1,
+   pilots:Object.fromEntries(["PMC","EFSF","ZEON"].map(f=>[f,{pilots:[],awards:[]}])),
+   formations:{PMC:null,EFSF:null,ZEON:null},
+   development:Development.exportProgress(),
+   economy:{money:12345,supplies:6789,inventory:{MS_14S:99},kits:{}}
+ }));
+ const loaded=page.waitForEvent("load");
+ await page.locator("#profileSaveFile").setInputFiles({name:"repaired.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(valid))});
+ await loaded;
+ await page.waitForFunction(()=>typeof assetsReady!=="undefined"&&assetsReady);
+ expect(await page.evaluate(()=>ProfileSave.exportData().economy)).toEqual(valid.economy);
+ expect(errors).toEqual([]);
+});

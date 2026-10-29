@@ -9,6 +9,8 @@ function load(saved = {}) {
   const storage = new Map(Object.entries(saved));
   const context = vm.createContext({
     PRODUCTION_CATALOG: catalog,
+    PILOT_DATA: require("../shared/pilots.json"),
+    structuredClone,
     DEVELOPMENT_TREE: tree,
     ART: { models },
     module: { exports: {} },

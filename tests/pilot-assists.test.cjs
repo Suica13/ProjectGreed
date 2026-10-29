@@ -156,8 +156,8 @@ test("authoritative level-up metadata and technology credits exist before the pl
   f.resolve();
   const snapshot = f.frames.get(f.clients[0]);
   assert.equal(snapshot.phase, "playback");
-  assert.equal(killer.pilot.level, 2);
-  assert.equal(killer.pilot.points, 75);
+  assert.equal(killer.pilot.level, 1);
+  assert.equal(killer.pilot.points, 120);
   assert.equal(snapshot.pilotAwards.find((a) => a.kind === "kill").leveledUp, true);
   assert.ok(snapshot.techAwards[0].points > 0);
   assert.equal(snapshot.techAwards[0].round, f.room.game.round);

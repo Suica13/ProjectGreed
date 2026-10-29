@@ -1237,8 +1237,7 @@ const Formation = (() => {
         label.append(annotation);
       }
       const remove = element("button", "", "移除");
-      remove.disabled = draft.length <= 1;
-      if (remove.disabled) remove.title = "编组至少需要一台单位";
+
       remove.onclick = (event) => {
         event.stopPropagation();
         closeDetail();
@@ -1534,6 +1533,10 @@ const Formation = (() => {
     return true;
   }
   function open() {
+    if (Net.active && Net.snapshot?.phase === "assembly") {
+      note("确认阶段不可修改编组。");
+      return;
+    }
     if (Net.active && ownPlayer()?.formationPreset) {
       note("房主已指定编组预设，请由房主调整。");
       return;
@@ -1584,7 +1587,7 @@ const Formation = (() => {
     closeDetail();
     squads.push({
       name: `新编组 ${squads.length + 1}`,
-      units: structuredClone(defaultSquads(group)[0].units),
+      units: [],
     });
     index = squads.length - 1;
     persist();
@@ -2026,7 +2029,7 @@ const Formation = (() => {
           Net.active &&
           Net.seat !== null &&
           !Net.awaiting &&
-          (!Net.snapshot.started || Net.snapshot.phase === "assembly")
+          !Net.snapshot.started
         )
           Net.request("update_formation", { formation: current() });
       },
@@ -2050,7 +2053,7 @@ const Formation = (() => {
       Net.active &&
       Net.seat !== null &&
       points(units) <= unitLimit() &&
-      (!Net.snapshot.started || Net.snapshot.phase === "assembly")
+      !Net.snapshot.started
     )
       Net.request("update_formation", { formation: units });
     closeDetail();
@@ -2424,6 +2427,16 @@ const Formation = (() => {
         )
           deletePilot(p.id);
       };
+      if (PilotSystem.canLearnSkill(p)) {
+        const learn = element("button", "pilot-skill-alert", "选择技能");
+        learn.type = "button";
+        learn.setAttribute("aria-label", "选择驾驶员技能 " + p.name);
+        learn.onclick = () => {
+          editPilot(p);
+          openPilotSkillPicker();
+        };
+        actions.append(learn);
+      }
       actions.append(details);
       if (!p.ace) actions.append(remove);
       if (p.needsRecruitment) {
@@ -2616,6 +2629,19 @@ const Formation = (() => {
     byId("customPilotProgress").textContent =
       `Lv.${pilotEdit.level}${pilotEdit.level === PilotSystem.maxLevel(pilotEdit) ? " MAX" : ""} · COST +${PilotSystem.cost(pilotEdit)} · EXP ${pilotEdit.experience}/${pilotEdit.level === PilotSystem.maxLevel(pilotEdit) ? "MAX" : PilotSystem.experienceRequired(pilotEdit.level, pilotEdit)}${pilotEdit.ace ? " · ACE · " + I18n.text("悟性") + " " + PilotSystem.aceProfile(pilotEdit).comprehension : " · 强化点 " + pilotEdit.points}`;
     renderPilotRecord(byId("customPilotRecord"), pilotEdit);
+    learnPilotSkillButton.hidden = !!pilotEdit.ace;
+    learnPilotSkillButton.disabled = pilotEdit.level < PilotSystem.skillUnlockLevel;
+    learnPilotSkillButton.classList.toggle(
+      "pilot-skill-alert",
+      PilotSystem.canLearnSkill(pilotEdit),
+    );
+    learnPilotSkillButton.textContent = I18n.text(
+      pilotEdit.selectedSkillId
+        ? "查看驾驶员技能"
+        : pilotEdit.level >= PilotSystem.skillUnlockLevel
+          ? "选择驾驶员技能"
+          : "6级解锁技能",
+    );
     const original = JSON.parse(pilotOriginal);
     const pendingPoints = original.points - pilotEdit.points;
     byId("pilotTrainingActions").hidden = !!pilotEdit.ace;
@@ -2745,33 +2771,102 @@ const Formation = (() => {
   byId("formationPilotsTab").onclick = () => showFormationTab("pilots");
   byId("createCustomPilot").onclick = () => editPilot();
   byId("finishCustomPilot").onclick = finishPilotEditor;
+  const learnPilotSkillButton = element("button", "pilot-skill-button", "6级解锁技能");
+  learnPilotSkillButton.id = "learnPilotSkill";
+  learnPilotSkillButton.type = "button";
+  byId("customPilotProgress").after(learnPilotSkillButton);
+  const pilotSkillPicker = element("dialog", "pilot-attribute-help pilot-skill-picker");
+  pilotSkillPicker.id = "pilotSkillPicker";
+  pilotSkillPicker.setAttribute("aria-labelledby", "pilotSkillPickerTitle");
+  document.body.append(pilotSkillPicker);
+  function openPilotSkillPicker() {
+    if (!pilotEdit || pilotEdit.ace || pilotEdit.level < PilotSystem.skillUnlockLevel) return;
+    const ownerId = pilotEdit.id;
+    const readOnly = !!pilotEdit.selectedSkillId;
+    let choice = pilotEdit.selectedSkillId || null;
+    const title = element("h3", "", "选择驾驶员技能");
+    title.id = "pilotSkillPickerTitle";
+    const explanation = element(
+      "p",
+      "muted",
+      "选择一个技能；重置属性时会清除技能，可重新选择。",
+    );
+    const grid = element("div", "pilot-skill-choices");
+    const confirm = element("button", "primary", "确认技能");
+    confirm.id = "confirmPilotSkill";
+    confirm.disabled = true;
+    confirm.hidden = readOnly;
+    for (const skill of PilotSystem.skillChoices.filter((s) => !readOnly || s.id === choice)) {
+      const button = element("button", "pilot-skill-choice");
+      button.type = "button";
+      button.dataset.pilotSkillChoice = skill.id;
+      button.setAttribute("aria-pressed", String(skill.id === choice));
+      button.disabled = readOnly;
+      const image = element("img");
+      image.src = skill.icon;
+      image.alt = "";
+      const text = element("span");
+      text.append(
+        element("strong", "", I18n.localized(skill, "name")),
+        element("small", "", SkillControls.description(skill)),
+      );
+      button.append(image, text);
+      button.onclick = () => {
+        choice = skill.id;
+        for (const item of grid.querySelectorAll("[data-pilot-skill-choice]"))
+          item.setAttribute("aria-pressed", String(item.dataset.pilotSkillChoice === choice));
+        confirm.disabled = false;
+      };
+      grid.append(button);
+    }
+    confirm.onclick = () => {
+      if (!pilotEdit || pilotEdit.id !== ownerId) return;
+      try {
+        const learned = PilotSystem.learnSkill(pilotEdit, choice);
+        savePilotIdentity({ selectedSkillId: learned.selectedSkillId });
+        pilotSkillPicker.close();
+      } catch (error) {
+        note(error.message);
+      }
+    };
+    const cancel = element("button", "", readOnly ? "关闭" : "取消");
+    cancel.id = "cancelPilotSkill";
+    cancel.type = confirm.type = "button";
+    cancel.onclick = () => pilotSkillPicker.close();
+    const actions = element("footer", "pilot-skill-picker-actions");
+    actions.append(cancel, confirm);
+    pilotSkillPicker.replaceChildren(title, explanation, grid, actions);
+    if (!pilotSkillPicker.open) pilotSkillPicker.showModal();
+  }
+  learnPilotSkillButton.onclick = openPilotSkillPicker;
+  window.addEventListener("page-changing", () => pilotSkillPicker.close());
   const pilotHelp = element("dialog", "pilot-attribute-help");
   pilotHelp.id = "pilotAttributeHelp";
   pilotHelp.setAttribute("aria-labelledby", "pilotAttributeHelpTitle");
   document.body.append(pilotHelp);
   const pilotEffectDescriptions = [
-    ["射击", "每点增加0.5个百分点的射击伤害倍率；100点为100%，200点为150%。"],
-    ["格斗", "每点增加0.5个百分点的格斗伤害倍率；100点为100%，200点为150%。"],
-    ["防御", "每点降低0.5个百分点的承受伤害倍率；100点为100%，200点为50%。"],
+    ["射击", "每点增加0.25个百分点的射击伤害倍率；100点为100%，200点为125%。"],
+    ["格斗", "每点增加0.25个百分点的格斗伤害倍率；100点为100%，200点为125%。"],
+    ["防御", "每点降低0.25个百分点的承受伤害倍率；100点为100%，200点为75%。"],
     [
       "机动",
-      "每点增加0.5个百分点的移动范围倍率，并增加0.1个百分点的回避倍率；敌方命中率除以该回避倍率。100点为基准，移动范围允许小数。",
+      "每点增加0.25个百分点的移动范围倍率，并增加0.05个百分点的回避倍率；敌方命中率除以该回避倍率。100点为基准，移动范围允许小数。",
     ],
     [
       "命中",
-      "每点增加0.5个百分点的命中倍率；100点为100%，200点为150%。命中率乘我方命中倍率、除以敌方回避倍率，全部修正后限制在0%～100%。",
+      "每点增加0.25个百分点的命中倍率；100点为100%，200点为125%。命中率乘我方命中倍率、除以敌方回避倍率，全部修正后限制在0%～100%。",
     ],
     [
       "反应",
-      "每点增加0.5个百分点的回避倍率；100点为100%，200点为150%。敌方命中率除以该倍率；与我方机动、通讯回避倍率相乘，不再放大未命中概率。",
+      "每点增加0.25个百分点的回避倍率；100点为100%，200点为125%。敌方命中率除以该倍率；与我方机动、通讯回避倍率相乘，不再放大未命中概率。",
     ],
     [
       "指挥",
-      "100点时指挥光环范围为3格、效果为10%；每高25点，范围增加1格、效果增加2个百分点；每低25点相应减少。仅影响机体已有的指挥光环。",
+      "100点时指挥光环范围为3格、效果为10%；每高25点，范围增加1格、效果增加1个百分点；每低25点相应减少。仅影响机体已有的指挥光环。",
     ],
     [
       "觉醒",
-      "达到100点时，射击与格斗伤害额外乘以115%；低于100点没有额外加成，超过100点不再继续提高此效果。",
+      "达到100点时，射击与格斗伤害额外乘以107.5%；低于100点没有额外加成，超过100点不再继续提高此效果。",
     ],
   ];
   byId("openPilotAttributeHelp").onclick = () => {
@@ -2869,7 +2964,7 @@ const Formation = (() => {
     presets: () =>
       squads.map((squad) => ({
         name: squad.name,
-        units: Rules.validateFormation(
+        units: !squad.units.length ? [] : Rules.validateFormation(
           hydratePilots(squad.units),
           Infinity,
           Rules.catalog.formation.maxUnits,

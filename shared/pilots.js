@@ -44,9 +44,10 @@ const PilotSystem = (() => {
     return value;
   }
   const growthRules = Object.freeze({
-    version: 4,
-    initialPoints: 60,
-    pointsPerLevel: 15,
+    version: 6,
+    initialLevel: 0,
+    initialPoints: 80,
+    pointsPerLevel: 40,
     maxLevel: 10,
     initialStatCap: 125,
     statCapPerLevel: 10,
@@ -54,31 +55,28 @@ const PilotSystem = (() => {
   });
   const experienceRequired = (level, value = null) => {
     const ace = aceProfile(value);
-    // ACE starts at level zero: its first upgrade matches custom level 1, at twice the XP.
-    return ace ? 2 * experienceRequired(level + 1) : 1000 * 2 ** (level - 1);
+    // Both start at zero; ACE retains its existing 2000, 4000, ... XP curve.
+    return (ace ? 2 : 1) * 1000 * 2 ** level;
   };
   const trainingVersion = growthRules.version;
-  const trainingBudget = (level) =>
-    growthRules.initialPoints + (level - 1) * growthRules.pointsPerLevel;
+  const trainingBudget = (level) => growthRules.initialPoints + level * growthRules.pointsPerLevel;
   const statCap = (level) =>
-    Math.min(
-      growthRules.statCap,
-      growthRules.initialStatCap + (level - 1) * growthRules.statCapPerLevel,
-    );
+    Math.min(growthRules.statCap, growthRules.initialStatCap + level * growthRules.statCapPerLevel);
   function baseStats() {
     return {
-      shooting: 90,
-      melee: 90,
-      defense: 90,
-      speed: 90,
-      accuracy: 90,
-      reaction: 90,
-      leadership: 70,
-      awakening: 50,
+      shooting: 100,
+      melee: 100,
+      defense: 100,
+      speed: 100,
+      accuracy: 100,
+      reaction: 100,
+      leadership: 80,
+      awakening: 60,
     };
   }
   function previousBase(key, value) {
     // Retain each released baseline when adding a new growth version.
+    if (value.trainingVersion === 5) return baseStats()[key];
     if (value.trainingVersion === 3 || value.trainingVersion === 4)
       return key === "awakening" ? 50 : key === "leadership" ? 70 : 90;
     if (value.trainingVersion === 2)
@@ -198,11 +196,28 @@ const PilotSystem = (() => {
       throw Error("该ACE暂不可招募");
     return custom({ ...pilot, experience: 0, needsRecruitment: false });
   }
+  const skillUnlockLevel = 6;
+  const skillChoices = catalog.customSkills || [];
+  function canLearnSkill(pilot) {
+    return (
+      !!pilot?.custom &&
+      !pilot.ace &&
+      !pilot.aceId &&
+      pilot.level >= skillUnlockLevel &&
+      !pilot.selectedSkillId
+    );
+  }
+  function learnSkill(value, id) {
+    const pilot = custom(value);
+    if (!canLearnSkill(pilot) || !skillChoices.some((skill) => skill.id === id))
+      throw Error("驾驶员技能不可选择");
+    return custom({ ...pilot, selectedSkillId: id });
+  }
   function custom(value) {
     if (value?.aceId || value?.ace) return ace(value);
     if (!value || typeof value !== "object" || !/^custom-[a-zA-Z0-9-]{1,80}$/.test(value.id || ""))
       throw Error("自建驾驶员无效");
-    if (!Number.isInteger(value.level) || value.level < 1 || value.level > 1000)
+    if (!Number.isInteger(value.level) || value.level < 0 || value.level > 1000)
       throw Error("驾驶员等级无效");
     const level = Math.min(value.level, growthRules.maxLevel);
     const name =
@@ -217,10 +232,11 @@ const PilotSystem = (() => {
     const oldVersion = value.trainingVersion ?? 1;
     if (!Number.isInteger(oldVersion) || oldVersion < 1 || oldVersion > trainingVersion)
       throw Error("驾驶员数据版本无效");
+    if (oldVersion < 6 && value.level < 1) throw Error("驾驶员等级无效");
     if (oldVersion === trainingVersion && value.level > growthRules.maxLevel)
       throw Error("驾驶员等级无效");
     const reset = oldVersion < trainingVersion;
-    const previousCap = oldVersion >= 4 ? Math.min(180, 125 + (value.level - 1) * 10) : 160;
+    const previousCap = oldVersion >= 4 ? Math.min(200, 125 + (value.level - 1) * 10) : 160;
     const maximum = reset ? previousCap : statCap(level);
     const stats = {};
     let spent = 0;
@@ -233,20 +249,31 @@ const PilotSystem = (() => {
       spent += amount - minimum;
     }
     const previousBudget =
-      oldVersion === 4
-        ? 60 + (value.level - 1) * 15
-        : oldVersion === 3
-          ? 50 + (value.level - 1) * 20
-          : (oldVersion === 2 ? 30 : 0) + (value.level - 1) * 10;
+      oldVersion === 5
+        ? 60 + (value.level - 1) * 20
+        : oldVersion === 4
+          ? 60 + (value.level - 1) * 15
+          : oldVersion === 3
+            ? 50 + (value.level - 1) * 20
+            : (oldVersion === 2 ? 30 : 0) + (value.level - 1) * 10;
     if (spent > (reset ? previousBudget : trainingBudget(level))) throw Error("驾驶员强化点不足");
     const rawExperience = value.experience ?? 0;
     if (
       !Number.isSafeInteger(rawExperience) ||
       rawExperience < 0 ||
-      rawExperience >= experienceRequired(value.level)
+      rawExperience >= (reset ? 1000 * 2 ** (value.level - 1) : experienceRequired(value.level))
     )
       throw Error("驾驶员经验无效");
     const experience = level === growthRules.maxLevel ? 0 : rawExperience;
+    const selectedSkillId = value.selectedSkillId;
+    if (
+      selectedSkillId != null &&
+      (typeof selectedSkillId !== "string" ||
+        level < skillUnlockLevel ||
+        !skillChoices.some((skill) => skill.id === selectedSkillId))
+    )
+      throw Error("驾驶员技能无效");
+
     if (reset) spent = 0; // A growth-rule revision refunds every allocated point under the current budget.
     const record = {};
     for (const key of ["kills", "shipKills", "battles", "losses", "destroyedCost", "lostCost"]) {
@@ -272,6 +299,7 @@ const PilotSystem = (() => {
       stats,
       record,
       points: trainingBudget(level) - spent,
+      ...(selectedSkillId ? { selectedSkillId } : {}),
       custom: true,
     };
   }
@@ -282,7 +310,7 @@ const PilotSystem = (() => {
       trainingVersion,
       portraitId,
       faction,
-      level: 1,
+      level: growthRules.initialLevel,
       experience: 0,
       stats: baseStats(),
     });
@@ -311,7 +339,7 @@ const PilotSystem = (() => {
   function refundTraining(value) {
     const pilot = custom(value);
     if (pilot.ace) throw Error("ACE不能重置属性点");
-    return custom({ ...pilot, stats: baseStats() });
+    return custom({ ...pilot, stats: baseStats(), selectedSkillId: null });
   }
   function battleResult(value, kind, unitCost, experiencePoints = unitCost, details = {}) {
     if (
@@ -375,7 +403,7 @@ const PilotSystem = (() => {
     return pilot.ace && pilot.needsRecruitment
       ? 0
       : pilot.ace
-        ? (aceProfile(pilot).costBase ?? 100) + pilot.level * (aceProfile(pilot).costPerLevel ?? 50)
+        ? (aceProfile(pilot).costBase ?? 250) + pilot.level * (aceProfile(pilot).costPerLevel ?? 25)
         : pilot.level * 25;
   };
   function commandUnit(model) {
@@ -439,7 +467,12 @@ const PilotSystem = (() => {
   };
   const buffPilotCache = new WeakMap();
   function skillsOf(unit) {
-    return aceProfile(unit?.pilot)?.skills || [];
+    const pilot = unit?.pilot;
+    const aceSkills = aceProfile(pilot)?.skills;
+    if (aceSkills) return aceSkills;
+    if (!pilot?.custom || pilot.level < skillUnlockLevel) return [];
+    const skill = skillChoices.find((item) => item.id === pilot.selectedSkillId);
+    return skill ? [skill] : [];
   }
   function hasPassive(unit, id) {
     return skillsOf(unit).some((s) => s.id === id && s.passive);
@@ -480,19 +513,23 @@ const PilotSystem = (() => {
   }
   function modifiers(unit, model) {
     const stats = of(unit, model).stats;
-    const awakening = stats.awakening >= 100 ? 1.15 : 1;
+    const awakening = stats.awakening >= 100 ? 1.075 : 1;
     return {
-      shooting: factor(stats.shooting, 0.5) * awakening,
-      melee: factor(stats.melee, 0.5) * awakening,
-      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.005),
-      move: factor(stats.speed, 0.5),
-      accuracy: factor(stats.accuracy, 0.5),
-      reaction: factor(stats.reaction, 0.5) * factor(stats.speed, 0.1),
+      shooting: factor(stats.shooting, 0.25) * awakening,
+      melee: factor(stats.melee, 0.25) * awakening,
+      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.0025),
+      move: factor(stats.speed, 0.25),
+      accuracy: factor(stats.accuracy, 0.25),
+      reaction: factor(stats.reaction, 0.25) * factor(stats.speed, 0.05),
     };
   }
   return {
     catalog,
     skillsOf,
+    skillChoices,
+    skillUnlockLevel,
+    canLearnSkill,
+    learnSkill,
     hasPassive,
     experienceMultiplier,
     labels,

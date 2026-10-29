@@ -30,21 +30,21 @@ const active = [
       .map((s) => s.id),
   ),
 ];
-test("all native ACE skills have active runtime definitions and COST starts at 100 then steps by 50", () => {
+test("all native ACE skills have active runtime definitions and COST starts at 250 then steps by 25", () => {
   assert.equal(active.length, 8);
   for (const ace of P.catalog.aces) {
     S.validate(ace.skills, ace.id);
     if (!ace.price) continue;
     let p = P.createAce(ace.id);
-    assert.equal(P.cost(p), 100);
+    assert.equal(P.cost(p), 250);
     p = P.gainExperience(p, 1e9);
-    assert.equal(P.cost(p), 350);
+    assert.equal(P.cost(p), 375);
   }
 });
 for (const id of active)
   test(
     id +
-      " spends 100 EN once, preserves AP and permanent stats, lasts through opponent turn and cools down six turns",
+      " spends 100 EN once, preserves AP and permanent stats, lasts through opponent turn and cools down five turns",
     () => {
       const { g, u, skill } = fixture(id),
         start = g.round,
@@ -80,8 +80,8 @@ for (const id of active)
       assert(!u.pilotBuffs[id]);
       assert.deepEqual(P.of(u).stats, permanent.stats);
       assert.equal(G.modelOf(u).move, before.move);
-      assert.equal(u.skillReadyRound[id], start + 14);
-      while (g.round < start + 14) {
+      assert.equal(u.skillReadyRound[id], start + 12);
+      while (g.round < start + 12) {
         assert(!G.canUseSkill(g, u, id));
         G.end(g);
       }
@@ -119,7 +119,7 @@ test("leadership affects aura and awakening unlocks native weapon gates without 
   assert(G.commandAura(a.u).effect > old.effect);
   const b = fixture("Pilot_AwakeningUp_Trigger"),
     base = b.u.pilot.stats.awakening,
-    gate = { pilotRequirements: [{ stat: "awakening", operator: ">=", value: base * 1.5 }] };
+    gate = { pilotRequirements: [{ stat: "awakening", operator: ">=", value: base * 1.3 }] };
   assert(!G.pilotWeaponAllowed(b.u, gate));
   G.useSkill(b.g, b.u, b.skill.id, b.u.x, b.u.y);
   assert(G.pilotWeaponAllowed(b.u, gate));
@@ -131,7 +131,7 @@ test("pilot buffs and cooldowns follow armor purge and EXAM pilot prevents only 
   G.useSkill(f.g, f.u, "ExitUnit", f.u.x, f.u.y);
   const changed = f.g.units.find((u) => u.id === f.u.id);
   assert(changed.pilotBuffs[f.skill.id]);
-  assert.equal(changed.skillReadyRound[f.skill.id], f.g.round + 14);
+  assert.equal(changed.skillReadyRound[f.skill.id], f.g.round + 12);
   assert(!G.canUseSkill(f.g, changed, f.skill.id));
   for (const unitId of ["RX_79_BD_2", "RX_80PR"]) {
     const f = fixture("Pilot_ExamPilot_Trigger", unitId);

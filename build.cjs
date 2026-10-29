@@ -14,8 +14,16 @@ let html = read("client/template.html").replace(
 html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
 const developmentTree = JSON.parse(read("shared/development-tree.json"));
-const pilotData = require("./tools/display-localization.cjs").createLocalizer().pilotCatalog(JSON.parse(read("shared/pilots.json")));
-for (const pilot of [...pilotData.named, ...pilotData.portraits, ...(pilotData.aces || []), ...(pilotData.aces || []).flatMap(p => p.skills).filter(s => s.icon)]) {
+const pilotData = require("./tools/display-localization.cjs")
+  .createLocalizer()
+  .pilotCatalog(JSON.parse(read("shared/pilots.json")));
+for (const pilot of [
+  ...pilotData.named,
+  ...pilotData.portraits,
+  ...(pilotData.aces || []),
+  ...(pilotData.customSkills || []),
+  ...(pilotData.aces || []).flatMap((p) => p.skills).filter((s) => s.icon),
+]) {
   if (!/^assets\/pilots\/[\w-]+\.png$/.test(pilot.icon))
     throw Error("Invalid pilot icon: " + pilot.id);
   pilot.icon =
@@ -164,21 +172,25 @@ if (grantFlag >= 0) {
   );
 }
 const release = html;
-const developer = release
-  .replace(
-    `<title>${project.name} ${project.version}</title>`,
-    `<title>${project.name} ${project.version} · 开发者版</title>`,
-  )
-  .replace(
-    "</body>",
-    () =>
-      `<style data-developer-only>${read("client/source-editor.css")}</style><script id="source-editor" data-developer-only>${inlineScript(read("client/source-editor.js"))}</script></body>`,
-  );
+const outputs = process.argv.includes("--developer")
+  ? [
+      [
+        "developer.html",
+        release
+          .replace(
+            `<title>${project.name} ${project.version}</title>`,
+            `<title>${project.name} ${project.version} · 开发者版</title>`,
+          )
+          .replace(
+            "</body>",
+            () =>
+              `<style data-developer-only>${read("client/source-editor.css")}</style><script id="source-editor" data-developer-only>${inlineScript(read("client/source-editor.js"))}</script></body>`,
+          ),
+      ],
+    ]
+  : [["client.html", release]];
 fs.mkdirSync(path.join(root, "public"), { recursive: true });
-for (const [name, content] of [
-  ["client.html", release],
-  ["developer.html", developer],
-]) {
+for (const [name, content] of outputs) {
   const target = path.join(root, "public", name);
   fs.writeFileSync(target, content);
   if (process.argv.includes("--compressed")) {
@@ -194,10 +206,5 @@ for (const [name, content] of [
   }
 }
 fs.rmSync(path.join(root, "public/index.html"), { force: true });
-console.log(
-  "Built release:",
-  Buffer.byteLength(release),
-  "bytes; developer:",
-  Buffer.byteLength(developer),
-  "bytes",
-);
+for (const [name, content] of outputs)
+  console.log("Built " + name + ": " + Buffer.byteLength(content) + " bytes");

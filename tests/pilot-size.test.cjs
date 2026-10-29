@@ -27,7 +27,7 @@ test("command units roll a default officer and only accept qualified named pilot
   ).move;
   // V27 separates command auras from personal movement attributes.
   assert.equal(commandSpeed, ordinarySpeed);
-  assert.equal(commandSpeed, 1.5);
+  assert.equal(commandSpeed, 1.25);
 });
 
 test("small, medium and large tags select the matching damage and hit modifiers", () => {

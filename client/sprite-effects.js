@@ -304,7 +304,10 @@ const EnvironmentVisuals = (() => {
   const water = new Map(),
     splashes = [];
   function pose(unit, cell) {
-    const environment = Rules.environmentOf(game, unit, cell.x, cell.y);
+    // Exposed SFS cargo inherits its carrier's altitude, not the terrain below it.
+    const carrier = unit.embarked?.exposed && !unit.pendingMove?.launch
+      ? getUnit(unit.embarked.carrierId) : null;
+    const environment = Rules.environmentOf(game, carrier || unit, cell.x, cell.y);
     return {
       environment,
       offset: environment === "air" ? -0.2 : environment === "water" ? 0.14 : 0,

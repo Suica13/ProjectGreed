@@ -40,6 +40,7 @@ function createLocalizer() {
       record(item, pilots[item.id]);
       for (const skill of item.skills || []) record(skill);
     }
+    for (const skill of value.customSkills || []) record(skill);
     return value;
   }
   return { record, prefab, pilotCatalog };

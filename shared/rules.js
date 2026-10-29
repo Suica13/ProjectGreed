@@ -246,7 +246,7 @@ const Tactics = (() => {
       mapId: catalog.defaultMap,
       costLimit: 1000,
       unitLimit: 12,
-      unitCostLimit: 200,
+      unitCostLimit: 250,
       shareAlliedUnits: false,
       ...validateTagRestrictions(),
       teamRestrictions: [validateTagRestrictions(), validateTagRestrictions()],
@@ -1117,7 +1117,7 @@ const Tactics = (() => {
     const steps = Math.trunc((leadership - 100) / 25);
     return {
       radius: Math.max(1, 3 + steps),
-      effect: Math.max(0, 0.1 + steps * 0.02),
+      effect: Math.max(0, 0.1 + steps * 0.01),
       kinds: model.commandAuras || [],
     };
   }

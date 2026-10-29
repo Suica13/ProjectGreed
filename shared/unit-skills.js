@@ -36,9 +36,9 @@ const UnitSkills = (() => {
           !["pilot_buff", "pilot_passive"].includes(skill.type) ||
           !Number.isFinite(skill.enCost) ||
           skill.enCost < 0 ||
-          (!skill.passive && (skill.durationTurns !== 1 || skill.cooldownTurns !== 6))
+          (!skill.passive && (skill.durationTurns !== 1 || skill.cooldownTurns !== 5))
         )
-          throw Error("Invalid ACE skill: " + label);
+          throw Error("Invalid pilot skill: " + label);
         continue;
       }
       if (skill?.type === "flight") {

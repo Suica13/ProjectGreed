@@ -620,23 +620,23 @@ const Net = (() => {
     if (event && !n.seen.has(event.id)) {
       n.seen.add(event.id);
       if (n.seen.size > 128) n.seen.delete(n.seen.values().next().value);
+      // Global spectators see the same preview as the moving team. Confirmation
+      // commits that path; it must not restart the already shown animation.
+      const sawMovePreview =
+        event.previewTeam !== undefined &&
+        (s.viewTeam === null || event.previewTeam === s.viewTeam);
+
       if (
         ["move", "move_preview", "launch"].includes(event.type) &&
         ["idle", "deployment"].includes(s.phase) &&
         online &&
         n.applied
       ) {
-        if (event.previewTeam === undefined || event.previewTeam !== s.viewTeam)
-          PlanningUI.move(event);
+        if (!sawMovePreview) PlanningUI.move(event);
         // 只结束当前所选单位的移动选点，不打断队友或其他单位的操作。
         if (selected === event.unitId && mode === "move") mode = "select";
       }
-      if (
-        event.type === "move_cancel" ||
-        (event.type === "move" &&
-          event.previewTeam !== undefined &&
-          event.previewTeam === s.viewTeam)
-      )
+      if (event.type === "move_cancel" || (event.type === "move" && sawMovePreview))
         PlanningUI.stop(event.unitId);
       if (event.type === "skill" && s.phase === "idle" && online && n.applied)
         SkillControls.applied(event);

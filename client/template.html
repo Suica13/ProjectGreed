@@ -2485,7 +2485,7 @@
           <div class="room-controls">
             <section id="finalAssemblyPanel" hidden aria-labelledby="finalAssemblyTitle">
               <h3 id="finalAssemblyTitle">最终编组</h3>
-              <p class="muted">可查看队友编组并修改自己的编组。超限或不被允许的单位无法出击。</p>
+              <p class="muted">可查看队友编组，确认阶段不可修改编组。超限或不被允许的单位无法出击。</p>
               <div id="finalSquads"></div>
               <p id="finalAssemblyStatus" role="status"></p>
               <div class="net-buttons">
@@ -2554,7 +2554,7 @@
                       /></label>
                       <label
                         >规则预设<select id="roomFormationPreset" aria-label="编组限制预设">
-                          <option value="1000,200,12">1000/200/12</option>
+                          <option value="1000,250,12">1000/250/12</option>
                           <option value="2000,400,12">2000/400/12</option>
                           <option value="4000,800,12">4000/800/12</option>
                           <option value="6000,1200,12">6000/1200/12</option>
@@ -2673,7 +2673,7 @@
           <button id="shareUnitsToAllies" hidden>共享单位给友军</button>
         </div>
       </div>
-      <div id="roomDetailPanel" class="formation-detail-overlay" hidden>
+      <dialog id="roomDetailPanel" aria-labelledby="roomDetailTitle">
         <div
           class="modal formation-detail-dialog"
           role="dialog"
@@ -2684,7 +2684,7 @@
           <h2 id="roomDetailTitle"></h2>
           <div id="roomDetailContent"></div>
         </div>
-      </div>
+      </dialog>
     </section>
     <div
       data-ui-node="node-191"

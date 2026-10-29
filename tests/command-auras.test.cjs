@@ -80,9 +80,9 @@ test("command radius and power scale in complete 25-point leadership steps", () 
   for (const [leadership, radius, power] of [
     [100, 3, 0.1],
     [124, 3, 0.1],
-    [125, 4, 0.12],
-    [150, 5, 0.14],
-    [75, 2, 0.08],
+    [125, 4, 0.11],
+    [150, 5, 0.12],
+    [75, 2, 0.09],
   ]) {
     source.pilot = neutral({ leadership });
     const aura = G.commandAura(source);
@@ -96,7 +96,7 @@ test("auras include self and allies, take strongest of each type and exclude dea
   near(G.commandEffects(game, a).attack, 0.1);
   near(G.commandEffects(game, source).attack, 0.1);
   const stronger = provider(game, "attack", 0, 5, 9, 125);
-  near(G.commandEffects(game, a).attack, 0.12);
+  near(G.commandEffects(game, a).attack, 0.11);
   stronger.hp = 0;
   near(G.commandEffects(game, a).attack, 0.1);
   source.embarked = { carrierId: a.id };
@@ -132,28 +132,29 @@ test("communication applies relative final hit and evasion bonuses", () => {
   provider(game, "communication", 1, 7, 8);
   near(G.estimate(game, a, b, weapon).hit, attack / 1.1);
 });
-test("100 is neutral and every ten pilot points changes the corresponding final quantity by five percent", () => {
+test("100 is neutral and every ten pilot points changes the corresponding final quantity by two and a half percent", () => {
   const f = fixture();
   const base = G.estimate(f.game, f.a, f.b, f.weapon);
   const move = G.modelOf(f.a).move;
   f.a.pilot = neutral({ speed: 110 });
-  near(G.modelOf(f.a).move, move * 1.05);
+  near(G.modelOf(f.a).move, move * 1.025);
   f.a.pilot = neutral({ shooting: 110 });
-  assert(Math.abs(G.estimate(f.game, f.a, f.b, f.weapon).damage - base.damage * 1.05) <= 1);
+  // Both estimates round each hit to 25; allow their combined quantization error.
+  assert(Math.abs(G.estimate(f.game, f.a, f.b, f.weapon).damage - base.damage * 1.025) <= 12.5 * 2.025);
   f.a.pilot = neutral();
   f.b.pilot = neutral({ defense: 110 });
-  assert(Math.abs(G.estimate(f.game, f.a, f.b, f.weapon).damage - base.damage * 0.95) <= 1);
+  assert(Math.abs(G.estimate(f.game, f.a, f.b, f.weapon).damage - base.damage * 0.975) <= 12.5 * 1.975);
   f.b.pilot = neutral();
   f.a.pilot = neutral({ accuracy: 110 });
-  near(G.estimate(f.game, f.a, f.b, f.weapon).hit, base.hit * 1.05);
+  near(G.estimate(f.game, f.a, f.b, f.weapon).hit, base.hit * 1.025);
   f.a.pilot = neutral();
   f.b.pilot = neutral({ reaction: 110 });
-  near(G.estimate(f.game, f.a, f.b, f.weapon).hit, base.hit / 1.05);
+  near(G.estimate(f.game, f.a, f.b, f.weapon).hit, base.hit / 1.025);
   const melee = { ...f.weapon, type: "melee", damageComponents: { meleeShell: 1000 } };
   f.b.pilot = neutral();
   const meleeBase = G.estimate(f.game, f.a, f.b, melee).damage;
   f.a.pilot = neutral({ melee: 110 });
-  assert(Math.abs(G.estimate(f.game, f.a, f.b, melee).damage - meleeBase * 1.05) <= 1);
+  assert(Math.abs(G.estimate(f.game, f.a, f.b, melee).damage - meleeBase * 1.025) <= 12.5 * 2.025);
 });
 
 test("unmarked targets retain exactly a 25 percent final hit penalty with command effects", () => {

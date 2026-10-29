@@ -507,3 +507,61 @@ test("ACE active skills are authoritative, spend EN once, replicate and persist 
   assert.deepEqual(reconnect.state.game.units.find((a) => a.id === u.id).pilotBuffs, u.pilotBuffs);
   assert.equal(u.en, 400);
 });
+
+test("custom level-six skills are authoritative, spend EN once, replicate and persist through reconnect", async (t) => {
+  const { app, client } = await setup(t),
+    blue = await client(),
+    red = await client();
+  await blue.hello("create", "ACESKILL");
+  await red.hello("join", "ACESKILL");
+  await readyMatch(blue, red);
+  const room = app.rooms.get("ACESKILL"),
+    u = room.game.units.find((u) => u.id === "0-0"),
+    id = "Pilot_SpdUp_Trigger",
+    profile = G.pilots.catalog.aces.find((p) => p.price && p.skills.some((s) => s.id === id));
+  u.pilot = G.pilots.learnSkill(G.pilots.custom({ ...G.pilots.createCustom("custom-network-skill", "Skill Test"), level: 6 }), id);
+  u.en = 500;
+  u.actionPoints = 5;
+  u.acted = false;
+  u.plan = null;
+  await blue.act("sync");
+  await red.latest((s) => s.revision === room.revision);
+  const enemyEn = room.game.units.find((u) => u.id === "1-0").en;
+  assert.equal(
+    (await red.act("skill", { unitId: u.id, skillId: id, x: u.x, y: u.y })).type,
+    "error",
+  );
+  assert.equal(u.en, 500);
+  assert.equal(room.game.units.find((u) => u.id === "1-0").en, enemyEn);
+  const actionId = randomUUID(),
+    revision = room.revision,
+    result = await blue.act(
+      "skill",
+      { unitId: u.id, skillId: id, x: u.x, y: u.y },
+      { id: actionId, revision },
+    );
+  assert.equal(result.type, "state");
+  assert.equal(result.phase, "idle");
+  assert.equal(u.en, 400);
+  assert.equal(u.actionPoints, 5);
+  assert.equal(u.pilotBuffs[id].expiresRound, room.game.round + 2);
+  await red.latest((s) => s.revision === room.revision);
+  assert.deepEqual(red.state.game.units.find((a) => a.id === u.id).pilotBuffs, u.pilotBuffs);
+  await blue.act(
+    "skill",
+    { unitId: u.id, skillId: id, x: u.x, y: u.y },
+    { id: actionId, revision },
+  );
+  assert.equal(u.en, 400);
+  assert.equal(
+    (await blue.act("skill", { unitId: u.id, skillId: id, x: u.x, y: u.y })).type,
+    "error",
+  );
+  const token = blue.joined.token;
+  blue.close();
+  const reconnect = await client();
+  const joined = await reconnect.hello("resume", "ACESKILL", token);
+  assert.equal(joined.type, "joined");
+  assert.deepEqual(reconnect.state.game.units.find((a) => a.id === u.id).pilotBuffs, u.pilotBuffs);
+  assert.equal(u.en, 400);
+});

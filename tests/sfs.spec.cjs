@@ -92,7 +92,7 @@ for (const html of ["client.html", "developer.html"])
       return { calls, carrier: getUnit("0-0").model, passenger: getUnit("0-1").model };
     });
     expect(drawing.calls.findIndex((c) => c.id === drawing.carrier)).toBeLessThan(
-      drawing.calls.findIndex((c) => c.id === drawing.passenger),
+      drawing.calls.findLastIndex((c) => c.id === drawing.passenger),
     );
     const p = await page.evaluate(() => Rules.hangars.launchCells(game, getUnit("0-1"))[0]);
     await page.locator('[data-unit-command="move"]').click();
@@ -137,4 +137,39 @@ test("moving onto a conventional hangar shows the same cancellable boarding dial
   expect(
     await page.evaluate(() => ({ x: getUnit("0-1").x, board: !!getUnit("0-1").embarked })),
   ).toEqual({ x: 9, board: false });
+});
+test("SFS riders inherit altitude and idle facing but keep attack facing",async({page})=>{
+ await fixture(page);
+ const result=await page.evaluate(()=>{
+   const [c,u]=game.units;
+   const h=Rules.hangars.of(c).find(h=>h.kind==="sfs");
+   u.embarked={carrierId:c.id,hangarId:h.id,exposed:true};
+   u.x=c.x;u.y=c.y;c.angle=90;u.angle=180;
+   game.tiles[c.y][c.x]="water";
+   const pose=EnvironmentVisuals.pose(u,{x:c.x,y:c.y});
+   const records=[];
+   const original=SpriteRenderer.draw;
+   SpriteRenderer.draw=function(ctx,id,x,y,scale,angle,...args){
+     if(id===u.model) records.push({angle,alpha:ctx.globalAlpha});
+     return original.call(this,ctx,id,x,y,scale,angle,...args);
+   };
+   drawMap(performance.now());
+   SpriteRenderer.draw=original;
+   const idle=records[0];
+   const originalTarget=AttackControls.facingTarget;
+   AttackControls.facingTarget=()=>game.units[3];
+   const facing=PlanningUI.facing(u,90);
+   const expected={...u};Rules.faceTarget(expected,game.units[3]);
+   AttackControls.facingTarget=originalTarget;
+   u.pendingMove={launch:true,x:c.x,y:c.y,angle:180};
+   const dismount=EnvironmentVisuals.pose(u,{x:c.x,y:c.y});
+   delete u.pendingMove;
+   return {pose,idle,facing,expected:expected.angle,dismount};
+ });
+ expect(result.pose.alpha).toBe(1);
+ expect(result.pose.environment).toBe("air");
+ expect(result.idle.angle).toBe(90);
+ expect(result.idle.alpha).toBe(1);
+ expect(result.facing).toBe(result.expected);
+ expect(result.dismount.environment).toBe("water");
 });

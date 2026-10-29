@@ -54,7 +54,10 @@ const Economy = (() => {
       // Preserve those paid-for chassis and their included extra equipment.
       const legacy = Object.hasOwn(catalog.offers, id) ? catalog.offers[id] : null;
       const unitId = legacy ? legacy.unitId : id;
-      if (!Object.hasOwn(catalog.baseModels, unitId)) throw Error("单位数量无效: " + id);
+      // Ownership includes refit/event-only chassis, not just factory offers.
+      if (!Object.hasOwn(catalog.baseModels, unitId) &&
+          !Object.values(modelsForKits()).some(model => model.prefabId === unitId))
+        throw Error("存档包含当前版本不支持的单位: " + id);
       inventory[unitId] = (inventory[unitId] || 0) + count;
       if (!Number.isSafeInteger(inventory[unitId])) throw Error("单位数量超出上限: " + unitId);
       if (legacy && id !== baseModel(unitId)) {
@@ -96,6 +99,12 @@ const Economy = (() => {
       }
     } catch (error) {
       storageError = error;
+      // Preserve the original before any recovery/new-profile action.
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw !== null && localStorage.getItem(key + ".recovery-backup") === null)
+          localStorage.setItem(key + ".recovery-backup", raw);
+      } catch {}
     }
   }
   function errorMessage(error) {
@@ -106,7 +115,13 @@ const Economy = (() => {
     return error?.message || String(error);
   }
   function snapshot() {
-    return validate(state);
+    // State is normalized on load/commit. UI reads must not rerun migrations
+    // or fail halfway through menu initialization.
+    return structuredClone(state);
+  }
+  function exportProgress() {
+    if (storageError) throw storageError;
+    return snapshot();
   }
   function affordable(cost) {
     return ["money", "supplies"].every(
@@ -134,7 +149,7 @@ const Economy = (() => {
   }
   function commit(next, extraWrites = []) {
     if (storageError) throw storageError;
-    validate(next);
+    next = validate(next);
     if (typeof localStorage !== "undefined") {
       const writes = [[key, JSON.stringify(next)], ...extraWrites];
       const previous = writes.map(([k]) => [k, localStorage.getItem(k)]);
@@ -393,6 +408,8 @@ const Economy = (() => {
     errorMessage,
     validate,
     snapshot,
+    exportProgress,
+    storageIssue: () => storageError ? errorMessage(storageError) : null,
     affordable,
     transact,
     produce,

@@ -22,7 +22,7 @@ const SkillControls = (() => {
     };
     return (model.commandAuras || []).map((kind) => ({
       name: labels[kind.type],
-      description: `范围 ${aura.radius} 格 · ${effects[kind.type]}。同类取最强；领导力每满25点提高1格与2%效果，100点时为3格与10%。`,
+      description: `范围 ${aura.radius} 格 · ${effects[kind.type]}。同类取最强；领导力每满25点提高1格与1%效果，100点时为3格与10%。`,
     }));
   }
   function defensiveAbilities(model) {

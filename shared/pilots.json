@@ -445,8 +445,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -488,7 +488,7 @@
         {
           "id": "Pilot_AccuracyUp_Trigger",
           "name": "命中率上升",
-          "description": "15秒内命中率提高75%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
           "owner": "pilot",
           "range": 0,
@@ -500,7 +500,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "accuracy": 1.75
+            "accuracy": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -515,7 +515,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -524,14 +524,17 @@
           "localization": {
             "en": {
               "name": "AccuracyUp",
-              "description": "Accuracy Up 75% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         },
         {
           "id": "Pilot_ExpUp_Trigger",
           "name": "经验值上升",
-          "description": "15秒内经验值获取提高75%",
+          "description": "驾驶员经验获取×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
           "owner": "pilot",
           "range": 0,
@@ -543,7 +546,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {},
-          "experienceMultiplier": 1.75,
+          "experienceMultiplier": 1.35,
           "nativeEffect": {
             "Pilot_ExpUp_ActiveTime": 15.0,
             "Pilot_ExpUp_CD": 90.0,
@@ -556,7 +559,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -565,7 +568,57 @@
           "localization": {
             "en": {
               "name": "ExpGenUp",
-              "description": "ExpGen Up 75% in 15sec"
+              "description": "Pilot experience gain ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット経験値×1.35。1ターン持続、終了後5ターンのクールダウン。"
+            }
+          }
+        },
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.35,
+            "melee": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 5,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -602,8 +655,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -645,7 +698,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -657,7 +710,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -672,7 +725,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -681,7 +734,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -718,8 +774,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -761,7 +817,7 @@
         {
           "id": "Pilot_DefUp_Trigger",
           "name": "防御力上升",
-          "description": "15秒内防御力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
           "owner": "pilot",
           "range": 0,
@@ -788,7 +844,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -797,7 +853,10 @@
           "localization": {
             "en": {
               "name": "DefUp",
-              "description": "Def Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -834,8 +893,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -877,7 +936,7 @@
         {
           "id": "Pilot_ReactionUp_Trigger",
           "name": "回避力上升",
-          "description": "15秒内反应力提高75%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
           "owner": "pilot",
           "range": 0,
@@ -889,7 +948,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "reaction": 1.75
+            "reaction": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -904,7 +963,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -913,7 +972,10 @@
           "localization": {
             "en": {
               "name": "ReactionUp",
-              "description": "Reaction Up 75% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -950,8 +1012,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -975,7 +1037,7 @@
         {
           "id": "Pilot_AccuracyUp_Trigger",
           "name": "命中率上升",
-          "description": "15秒内命中率提高75%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
           "owner": "pilot",
           "range": 0,
@@ -987,7 +1049,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "accuracy": 1.75
+            "accuracy": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -1002,7 +1064,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -1011,7 +1073,10 @@
           "localization": {
             "en": {
               "name": "AccuracyUp",
-              "description": "Accuracy Up 75% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -1046,8 +1111,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -1089,7 +1154,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -1101,7 +1166,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -1116,7 +1181,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -1125,7 +1190,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -1162,8 +1230,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -1205,7 +1273,7 @@
         {
           "id": "Pilot_ExpUp_Trigger",
           "name": "经验值上升",
-          "description": "15秒内经验值获取提高75%",
+          "description": "驾驶员经验获取×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
           "owner": "pilot",
           "range": 0,
@@ -1217,7 +1285,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {},
-          "experienceMultiplier": 1.75,
+          "experienceMultiplier": 1.35,
           "nativeEffect": {
             "Pilot_ExpUp_ActiveTime": 15.0,
             "Pilot_ExpUp_CD": 90.0,
@@ -1230,7 +1298,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -1239,7 +1307,57 @@
           "localization": {
             "en": {
               "name": "ExpGenUp",
-              "description": "ExpGen Up 75% in 15sec"
+              "description": "Pilot experience gain ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット経験値×1.35。1ターン持続、終了後5ターンのクールダウン。"
+            }
+          }
+        },
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.35,
+            "melee": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 5,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -1276,8 +1394,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -1301,7 +1419,7 @@
         {
           "id": "Pilot_ExpUp_Trigger",
           "name": "经验值上升",
-          "description": "15秒内经验值获取提高75%",
+          "description": "驾驶员经验获取×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
           "owner": "pilot",
           "range": 0,
@@ -1313,7 +1431,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {},
-          "experienceMultiplier": 1.75,
+          "experienceMultiplier": 1.35,
           "nativeEffect": {
             "Pilot_ExpUp_ActiveTime": 15.0,
             "Pilot_ExpUp_CD": 90.0,
@@ -1326,7 +1444,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -1335,7 +1453,57 @@
           "localization": {
             "en": {
               "name": "ExpGenUp",
-              "description": "ExpGen Up 75% in 15sec"
+              "description": "Pilot experience gain ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット経験値×1.35。1ターン持続、終了後5ターンのクールダウン。"
+            }
+          }
+        },
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.35,
+            "melee": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 5,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -1370,8 +1538,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -1413,7 +1581,7 @@
         {
           "id": "Pilot_AtkUp_Trigger",
           "name": "伤害上升",
-          "description": "15秒内伤害提高20%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
           "owner": "pilot",
           "range": 0,
@@ -1425,8 +1593,8 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "shooting": 1.2,
-            "melee": 1.2
+            "shooting": 1.35,
+            "melee": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -1441,7 +1609,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -1450,7 +1618,10 @@
           "localization": {
             "en": {
               "name": "DamageUp",
-              "description": "Damage Up 15% in 25sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -1487,8 +1658,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -1530,7 +1701,7 @@
         {
           "id": "Pilot_AccuracyUp_Trigger",
           "name": "命中率上升",
-          "description": "15秒内命中率提高75%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
           "owner": "pilot",
           "range": 0,
@@ -1542,7 +1713,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "accuracy": 1.75
+            "accuracy": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -1557,7 +1728,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -1566,7 +1737,10 @@
           "localization": {
             "en": {
               "name": "AccuracyUp",
-              "description": "Accuracy Up 75% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -1603,8 +1777,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -1646,7 +1820,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -1658,7 +1832,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -1673,7 +1847,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -1682,7 +1856,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -1719,8 +1896,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -1744,7 +1921,7 @@
         {
           "id": "Pilot_ReactionUp_Trigger",
           "name": "回避力上升",
-          "description": "15秒内反应力提高75%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
           "owner": "pilot",
           "range": 0,
@@ -1756,7 +1933,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "reaction": 1.75
+            "reaction": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -1771,7 +1948,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -1780,7 +1957,10 @@
           "localization": {
             "en": {
               "name": "ReactionUp",
-              "description": "Reaction Up 75% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -1815,8 +1995,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -1858,7 +2038,7 @@
         {
           "id": "Pilot_DefUp_Trigger",
           "name": "防御力上升",
-          "description": "15秒内防御力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
           "owner": "pilot",
           "range": 0,
@@ -1885,7 +2065,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -1894,7 +2074,10 @@
           "localization": {
             "en": {
               "name": "DefUp",
-              "description": "Def Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -1931,8 +2114,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -1974,7 +2157,7 @@
         {
           "id": "Pilot_ReactionUp_Trigger",
           "name": "回避力上升",
-          "description": "15秒内反应力提高75%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
           "owner": "pilot",
           "range": 0,
@@ -1986,7 +2169,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "reaction": 1.75
+            "reaction": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -2001,7 +2184,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -2010,7 +2193,10 @@
           "localization": {
             "en": {
               "name": "ReactionUp",
-              "description": "Reaction Up 75% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -2047,8 +2233,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -2090,7 +2276,7 @@
         {
           "id": "Pilot_SpdUp_Trigger",
           "name": "机动力上升",
-          "description": "15秒内机动力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
           "owner": "pilot",
           "range": 0,
@@ -2117,7 +2303,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -2126,7 +2312,10 @@
           "localization": {
             "en": {
               "name": "SpeedUp",
-              "description": "Spd Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -2163,8 +2352,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -2206,7 +2395,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -2218,7 +2407,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -2233,7 +2422,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -2242,7 +2431,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -2279,8 +2471,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -2322,7 +2514,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -2334,7 +2526,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -2349,7 +2541,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -2358,7 +2550,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -2395,8 +2590,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -2438,7 +2633,7 @@
         {
           "id": "Pilot_SpdUp_Trigger",
           "name": "机动力上升",
-          "description": "15秒内机动力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
           "owner": "pilot",
           "range": 0,
@@ -2465,7 +2660,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -2474,7 +2669,10 @@
           "localization": {
             "en": {
               "name": "SpeedUp",
-              "description": "Spd Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -2511,8 +2709,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -2554,7 +2752,7 @@
         {
           "id": "Pilot_ExpUp_Trigger",
           "name": "经验值上升",
-          "description": "15秒内经验值获取提高75%",
+          "description": "驾驶员经验获取×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
           "owner": "pilot",
           "range": 0,
@@ -2566,7 +2764,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {},
-          "experienceMultiplier": 1.75,
+          "experienceMultiplier": 1.35,
           "nativeEffect": {
             "Pilot_ExpUp_ActiveTime": 15.0,
             "Pilot_ExpUp_CD": 90.0,
@@ -2579,7 +2777,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -2588,7 +2786,10 @@
           "localization": {
             "en": {
               "name": "ExpGenUp",
-              "description": "ExpGen Up 75% in 15sec"
+              "description": "Pilot experience gain ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット経験値×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         },
@@ -2612,6 +2813,53 @@
             "en": {
               "name": "EXAM Pilot",
               "description": "Does not take damage from EXAM system"
+            }
+          }
+        },
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.35,
+            "melee": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 5,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -2648,8 +2896,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -2691,7 +2939,7 @@
         {
           "id": "Pilot_SpdUp_Trigger",
           "name": "机动力上升",
-          "description": "15秒内机动力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
           "owner": "pilot",
           "range": 0,
@@ -2718,7 +2966,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -2727,7 +2975,10 @@
           "localization": {
             "en": {
               "name": "SpeedUp",
-              "description": "Spd Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -2764,8 +3015,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -2807,7 +3058,7 @@
         {
           "id": "Pilot_DefUp_Trigger",
           "name": "防御力上升",
-          "description": "15秒内防御力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
           "owner": "pilot",
           "range": 0,
@@ -2834,7 +3085,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -2843,7 +3094,10 @@
           "localization": {
             "en": {
               "name": "DefUp",
-              "description": "Def Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -2880,8 +3134,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -2923,7 +3177,7 @@
         {
           "id": "Pilot_DefUp_Trigger",
           "name": "防御力上升",
-          "description": "15秒内防御力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
           "owner": "pilot",
           "range": 0,
@@ -2950,7 +3204,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -2959,7 +3213,10 @@
           "localization": {
             "en": {
               "name": "DefUp",
-              "description": "Def Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -2996,8 +3253,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -3039,7 +3296,7 @@
         {
           "id": "Pilot_AtkUp_Trigger",
           "name": "伤害上升",
-          "description": "15秒内伤害提高20%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
           "owner": "pilot",
           "range": 0,
@@ -3051,8 +3308,8 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "shooting": 1.2,
-            "melee": 1.2
+            "shooting": 1.35,
+            "melee": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -3067,7 +3324,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3076,7 +3333,10 @@
           "localization": {
             "en": {
               "name": "DamageUp",
-              "description": "Damage Up 15% in 25sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -3113,8 +3373,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -3156,7 +3416,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -3168,7 +3428,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -3183,7 +3443,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3192,14 +3452,17 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         },
         {
           "id": "Pilot_ReactionUp_Trigger",
           "name": "回避力上升",
-          "description": "15秒内反应力提高75%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
           "owner": "pilot",
           "range": 0,
@@ -3211,7 +3474,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "reaction": 1.75
+            "reaction": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -3226,7 +3489,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3235,7 +3498,10 @@
           "localization": {
             "en": {
               "name": "ReactionUp",
-              "description": "Reaction Up 75% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -3272,8 +3538,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -3315,7 +3581,7 @@
         {
           "id": "Pilot_ReactionUp_Trigger",
           "name": "回避力上升",
-          "description": "15秒内反应力提高75%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
           "owner": "pilot",
           "range": 0,
@@ -3327,7 +3593,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "reaction": 1.75
+            "reaction": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -3342,7 +3608,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3351,7 +3617,10 @@
           "localization": {
             "en": {
               "name": "ReactionUp",
-              "description": "Reaction Up 75% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -3390,8 +3659,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -3433,7 +3702,7 @@
         {
           "id": "Pilot_AtkUp_Trigger",
           "name": "伤害上升",
-          "description": "15秒内伤害提高20%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
           "owner": "pilot",
           "range": 0,
@@ -3445,8 +3714,8 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "shooting": 1.2,
-            "melee": 1.2
+            "shooting": 1.35,
+            "melee": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -3461,7 +3730,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3470,14 +3739,17 @@
           "localization": {
             "en": {
               "name": "DamageUp",
-              "description": "Damage Up 15% in 25sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         },
         {
           "id": "Pilot_DefUp_Trigger",
           "name": "防御力上升",
-          "description": "15秒内防御力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
           "owner": "pilot",
           "range": 0,
@@ -3504,7 +3776,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3513,7 +3785,10 @@
           "localization": {
             "en": {
               "name": "DefUp",
-              "description": "Def Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -3550,8 +3825,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -3593,7 +3868,7 @@
         {
           "id": "Pilot_ExpUp_Trigger",
           "name": "经验值上升",
-          "description": "15秒内经验值获取提高75%",
+          "description": "驾驶员经验获取×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
           "owner": "pilot",
           "range": 0,
@@ -3605,7 +3880,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {},
-          "experienceMultiplier": 1.75,
+          "experienceMultiplier": 1.35,
           "nativeEffect": {
             "Pilot_ExpUp_ActiveTime": 15.0,
             "Pilot_ExpUp_CD": 90.0,
@@ -3618,7 +3893,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3627,7 +3902,57 @@
           "localization": {
             "en": {
               "name": "ExpGenUp",
-              "description": "ExpGen Up 75% in 15sec"
+              "description": "Pilot experience gain ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット経験値×1.35。1ターン持続、終了後5ターンのクールダウン。"
+            }
+          }
+        },
+        {
+          "id": "Pilot_AtkUp_Trigger",
+          "name": "伤害上升",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+          "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.35,
+            "melee": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 5,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
+          "localization": {
+            "en": {
+              "name": "DamageUp",
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -3664,8 +3989,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -3707,7 +4032,7 @@
         {
           "id": "Pilot_AtkUp_Trigger",
           "name": "伤害上升",
-          "description": "15秒内伤害提高20%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
           "owner": "pilot",
           "range": 0,
@@ -3719,8 +4044,8 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "shooting": 1.2,
-            "melee": 1.2
+            "shooting": 1.35,
+            "melee": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -3735,7 +4060,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3744,7 +4069,10 @@
           "localization": {
             "en": {
               "name": "DamageUp",
-              "description": "Damage Up 15% in 25sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -3781,8 +4109,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -3824,7 +4152,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -3836,7 +4164,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -3851,7 +4179,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3860,7 +4188,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -3897,8 +4228,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -3922,7 +4253,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -3934,7 +4265,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -3949,7 +4280,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -3958,7 +4289,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -3993,8 +4327,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -4018,7 +4352,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -4030,7 +4364,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -4045,7 +4379,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -4054,7 +4388,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -4091,8 +4428,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -4134,7 +4471,7 @@
         {
           "id": "Pilot_SpdUp_Trigger",
           "name": "机动力上升",
-          "description": "15秒内机动力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
           "owner": "pilot",
           "range": 0,
@@ -4161,7 +4498,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -4170,7 +4507,10 @@
           "localization": {
             "en": {
               "name": "SpeedUp",
-              "description": "Spd Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -4207,8 +4547,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -4250,7 +4590,7 @@
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -4262,7 +4602,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -4277,7 +4617,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -4286,7 +4626,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -4323,8 +4666,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -4366,7 +4709,7 @@
         {
           "id": "Pilot_SpdUp_Trigger",
           "name": "机动力上升",
-          "description": "15秒内机动力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
           "owner": "pilot",
           "range": 0,
@@ -4393,7 +4736,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -4402,7 +4745,10 @@
           "localization": {
             "en": {
               "name": "SpeedUp",
-              "description": "Spd Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -4439,8 +4785,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -4482,7 +4828,7 @@
         {
           "id": "Pilot_AwakeningUp_Trigger",
           "name": "觉醒值上升",
-          "description": "15秒内觉醒值提高75%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AwakeningUp.png",
           "owner": "pilot",
           "range": 0,
@@ -4494,7 +4840,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "awakening": 1.75
+            "awakening": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -4509,7 +4855,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -4518,7 +4864,10 @@
           "localization": {
             "en": {
               "name": "AwakeningUp",
-              "description": "Awakening Up 75% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -4555,8 +4904,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -4598,7 +4947,7 @@
         {
           "id": "Pilot_DefUp_Trigger",
           "name": "防御力上升",
-          "description": "15秒内防御力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
           "owner": "pilot",
           "range": 0,
@@ -4625,7 +4974,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -4634,7 +4983,10 @@
           "localization": {
             "en": {
               "name": "DefUp",
-              "description": "Def Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -4671,8 +5023,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -4714,7 +5066,7 @@
         {
           "id": "Pilot_DefUp_Trigger",
           "name": "防御力上升",
-          "description": "15秒内防御力提高35%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
           "owner": "pilot",
           "range": 0,
@@ -4741,7 +5093,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -4750,7 +5102,10 @@
           "localization": {
             "en": {
               "name": "DefUp",
-              "description": "Def Up 35% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -4787,8 +5142,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -4830,7 +5185,7 @@
         {
           "id": "Pilot_AtkUp_Trigger",
           "name": "伤害上升",
-          "description": "15秒内伤害提高20%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
           "owner": "pilot",
           "range": 0,
@@ -4842,8 +5197,8 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "shooting": 1.2,
-            "melee": 1.2
+            "shooting": 1.35,
+            "melee": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -4858,7 +5213,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -4867,7 +5222,10 @@
           "localization": {
             "en": {
               "name": "DamageUp",
-              "description": "Damage Up 15% in 25sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         },
@@ -4927,8 +5285,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -4970,7 +5328,7 @@
         {
           "id": "Pilot_AtkUp_Trigger",
           "name": "伤害上升",
-          "description": "15秒内伤害提高20%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
           "owner": "pilot",
           "range": 0,
@@ -4982,8 +5340,8 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "shooting": 1.2,
-            "melee": 1.2
+            "shooting": 1.35,
+            "melee": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -4998,7 +5356,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -5007,7 +5365,10 @@
           "localization": {
             "en": {
               "name": "DamageUp",
-              "description": "Damage Up 15% in 25sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -5044,8 +5405,8 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 100,
-      "costPerLevel": 50,
+      "costBase": 250,
+      "costPerLevel": 25,
       "experienceBase": 2000,
       "experienceMultiplier": 2,
       "nativeGrowth": {
@@ -5087,7 +5448,7 @@
         {
           "id": "Pilot_AtkUp_Trigger",
           "name": "伤害上升",
-          "description": "15秒内伤害提高20%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
           "owner": "pilot",
           "range": 0,
@@ -5099,8 +5460,8 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "shooting": 1.2,
-            "melee": 1.2
+            "shooting": 1.35,
+            "melee": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -5115,7 +5476,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -5124,14 +5485,17 @@
           "localization": {
             "en": {
               "name": "DamageUp",
-              "description": "Damage Up 15% in 25sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         },
         {
           "id": "Pilot_LeaderShipUp_Trigger",
           "name": "领导力上升",
-          "description": "15秒内领导力提高100%",
+          "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
           "owner": "pilot",
           "range": 0,
@@ -5143,7 +5507,7 @@
           "type": "pilot_buff",
           "enCost": 100,
           "statMultipliers": {
-            "leadership": 2.0
+            "leadership": 1.35
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
@@ -5158,7 +5522,7 @@
             "volume": 0.5
           },
           "durationTurns": 1,
-          "cooldownTurns": 6,
+          "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
             "durationSeconds": 15.0,
@@ -5167,7 +5531,10 @@
           "localization": {
             "en": {
               "name": "LeaderShipUp",
-              "description": "LeaderShip Up 100% in 15sec"
+              "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+            },
+            "ja": {
+              "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
             }
           }
         }
@@ -5175,6 +5542,286 @@
       "unlockTech": [
         "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
       ]
+    }
+  ],
+  "customSkills": [
+    {
+      "id": "Pilot_AtkUp_Trigger",
+      "name": "伤害上升",
+      "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+      "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
+      "owner": "pilot",
+      "range": 0,
+      "minRange": 0,
+      "actionCost": 0,
+      "maxUses": 99,
+      "consumeAction": false,
+      "implemented": true,
+      "type": "pilot_buff",
+      "enCost": 100,
+      "statMultipliers": {
+        "shooting": 1.35,
+        "melee": 1.35
+      },
+      "experienceMultiplier": 1,
+      "nativeEffect": {
+        "Pilot_AtkUp_ActiveTime": 15.0,
+        "Pilot_AtkUp_CD": 90.0,
+        "Pilot_AtkUp_AtkUp": 1.2
+      },
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "assets/sounds/Action_8.ogg",
+        "asset": "pilot/activation",
+        "volume": 0.5
+      },
+      "durationTurns": 1,
+      "cooldownTurns": 5,
+      "cooldownStarts": "effect_end",
+      "nativeTiming": {
+        "durationSeconds": 15.0,
+        "cooldownSeconds": 90.0
+      },
+      "localization": {
+        "en": {
+          "name": "DamageUp",
+          "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+        },
+        "ja": {
+          "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
+        }
+      }
+    },
+    {
+      "id": "Pilot_AccuracyUp_Trigger",
+      "name": "命中率上升",
+      "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+      "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
+      "owner": "pilot",
+      "range": 0,
+      "minRange": 0,
+      "actionCost": 0,
+      "maxUses": 99,
+      "consumeAction": false,
+      "implemented": true,
+      "type": "pilot_buff",
+      "enCost": 100,
+      "statMultipliers": {
+        "accuracy": 1.35
+      },
+      "experienceMultiplier": 1,
+      "nativeEffect": {
+        "Pilot_AccuracyUp_ActiveTime": 15.0,
+        "Pilot_AccuracyUp_CD": 90.0,
+        "Pilot_AccuracyUp_AccuracyUp": 1.75
+      },
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "assets/sounds/Action_8.ogg",
+        "asset": "pilot/activation",
+        "volume": 0.5
+      },
+      "durationTurns": 1,
+      "cooldownTurns": 5,
+      "cooldownStarts": "effect_end",
+      "nativeTiming": {
+        "durationSeconds": 15.0,
+        "cooldownSeconds": 90.0
+      },
+      "localization": {
+        "en": {
+          "name": "AccuracyUp",
+          "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+        },
+        "ja": {
+          "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
+        }
+      }
+    },
+    {
+      "id": "Pilot_ReactionUp_Trigger",
+      "name": "回避率上升",
+      "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+      "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
+      "owner": "pilot",
+      "range": 0,
+      "minRange": 0,
+      "actionCost": 0,
+      "maxUses": 99,
+      "consumeAction": false,
+      "implemented": true,
+      "type": "pilot_buff",
+      "enCost": 100,
+      "statMultipliers": {
+        "reaction": 1.35
+      },
+      "experienceMultiplier": 1,
+      "nativeEffect": {
+        "Pilot_ReactionUp_ActiveTime": 15.0,
+        "Pilot_ReactionUp_CD": 90.0,
+        "Pilot_ReactionUp_ReactionUp": 1.75
+      },
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "assets/sounds/Action_8.ogg",
+        "asset": "pilot/activation",
+        "volume": 0.5
+      },
+      "durationTurns": 1,
+      "cooldownTurns": 5,
+      "cooldownStarts": "effect_end",
+      "nativeTiming": {
+        "durationSeconds": 15.0,
+        "cooldownSeconds": 90.0
+      },
+      "localization": {
+        "en": {
+          "name": "Evasion Up",
+          "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+        },
+        "ja": {
+          "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。",
+          "name": "回避率上昇"
+        }
+      }
+    },
+    {
+      "id": "Pilot_DefUp_Trigger",
+      "name": "防御力上升",
+      "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+      "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
+      "owner": "pilot",
+      "range": 0,
+      "minRange": 0,
+      "actionCost": 0,
+      "maxUses": 99,
+      "consumeAction": false,
+      "implemented": true,
+      "type": "pilot_buff",
+      "enCost": 100,
+      "statMultipliers": {
+        "defense": 1.35
+      },
+      "experienceMultiplier": 1,
+      "nativeEffect": {
+        "Pilot_DefUp_ActiveTime": 15.0,
+        "Pilot_DefUp_CD": 90.0,
+        "Pilot_DefUp_DefUp": 1.35
+      },
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "assets/sounds/Action_8.ogg",
+        "asset": "pilot/activation",
+        "volume": 0.5
+      },
+      "durationTurns": 1,
+      "cooldownTurns": 5,
+      "cooldownStarts": "effect_end",
+      "nativeTiming": {
+        "durationSeconds": 15.0,
+        "cooldownSeconds": 90.0
+      },
+      "localization": {
+        "en": {
+          "name": "DefUp",
+          "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+        },
+        "ja": {
+          "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
+        }
+      }
+    },
+    {
+      "id": "Pilot_LeaderShipUp_Trigger",
+      "name": "领导力上升",
+      "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+      "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
+      "owner": "pilot",
+      "range": 0,
+      "minRange": 0,
+      "actionCost": 0,
+      "maxUses": 99,
+      "consumeAction": false,
+      "implemented": true,
+      "type": "pilot_buff",
+      "enCost": 100,
+      "statMultipliers": {
+        "leadership": 1.35
+      },
+      "experienceMultiplier": 1,
+      "nativeEffect": {
+        "Pilot_LeaderShipUp_ActiveTime": 15.0,
+        "Pilot_LeaderShipUp_CD": 90.0,
+        "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+      },
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "assets/sounds/Action_8.ogg",
+        "asset": "pilot/activation",
+        "volume": 0.5
+      },
+      "durationTurns": 1,
+      "cooldownTurns": 5,
+      "cooldownStarts": "effect_end",
+      "nativeTiming": {
+        "durationSeconds": 15.0,
+        "cooldownSeconds": 90.0
+      },
+      "localization": {
+        "en": {
+          "name": "LeaderShipUp",
+          "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+        },
+        "ja": {
+          "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
+        }
+      }
+    },
+    {
+      "id": "Pilot_SpdUp_Trigger",
+      "name": "机动力上升",
+      "description": "驾驶员属性×1.35，持续1回合，冷却5回合。",
+      "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
+      "owner": "pilot",
+      "range": 0,
+      "minRange": 0,
+      "actionCost": 0,
+      "maxUses": 99,
+      "consumeAction": false,
+      "implemented": true,
+      "type": "pilot_buff",
+      "enCost": 100,
+      "statMultipliers": {
+        "speed": 1.35
+      },
+      "experienceMultiplier": 1,
+      "nativeEffect": {
+        "Pilot_SpdUp_ActiveTime": 15.0,
+        "Pilot_SpdUp_CD": 90.0,
+        "Pilot_SpdUp_SpdUp": 1.35
+      },
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "assets/sounds/Action_8.ogg",
+        "asset": "pilot/activation",
+        "volume": 0.5
+      },
+      "durationTurns": 1,
+      "cooldownTurns": 5,
+      "cooldownStarts": "effect_end",
+      "nativeTiming": {
+        "durationSeconds": 15.0,
+        "cooldownSeconds": 90.0
+      },
+      "localization": {
+        "en": {
+          "name": "SpeedUp",
+          "description": "Pilot stats ×1.35 for 1 turn; 5-turn cooldown after expiry."
+        },
+        "ja": {
+          "description": "パイロット能力×1.35。1ターン持続、終了後5ターンのクールダウン。"
+        }
+      }
     }
   ]
 }

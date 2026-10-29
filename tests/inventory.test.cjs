@@ -196,3 +196,26 @@ test('real WebSocket undeveloped inventory survives ready, assembly confirmation
  r=await b.action('confirm_formation',{formation,inventory:stock});assert.equal(r.phase,'deployment');
  assert.equal(app.rooms.get('LOCKED').game.units.filter(u=>G.modelOf(u).prefabId===lockedEntry.unitId).length,2);
 });
+test("empty formations cannot ready and assembly formations are locked", async (t) => {
+  const app = createServer({host:"127.0.0.1",port:0});
+  const address=await app.listen();
+  const a=new Peer("ws://127.0.0.1:"+address.port+"/ws");
+  const b=new Peer("ws://127.0.0.1:"+address.port+"/ws");
+  t.after(async()=>{ a.ws.terminate();b.ws.terminate();await app.close(); });
+  await a.join("create","EMPTYLOCK",{Type61:3});
+  await b.join("join","EMPTYLOCK",{Type61:3});
+  assert.equal(G.defaultRoomSettings().unitCostLimit,250);
+  assert.equal((await b.action("update_formation",{formation:[]})).type,"state");
+  assert.equal((await b.action("set_ready",{ready:true,formation:[]})).type,"error");
+  assert.equal((await a.action("start_game",{formation:[]})).type,"error");
+  assert.equal((await b.action("set_ready",{ready:true,formation:army(1)})).type,"state");
+  assert.equal((await b.action("update_formation",{formation:[]})).type,"state");
+  assert.equal(app.rooms.get("EMPTYLOCK").seats[1].ready,false);
+  await b.action("set_ready",{ready:true,formation:army(1)});
+  assert.equal((await a.action("start_game",{formation:army(1)})).phase,"assembly");
+  assert.equal((await a.action("update_formation",{formation:army(2)})).type,"error");
+  assert.equal((await a.action("confirm_formation",{formation:army(2)})).type,"error");
+  assert.equal((await a.action("confirm_formation",{formation:[]})).type,"error");
+  assert.equal((await a.action("confirm_formation")).type,"state");
+  assert.equal((await b.action("confirm_formation")).phase,"deployment");
+});

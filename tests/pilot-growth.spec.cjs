@@ -4,7 +4,7 @@ const { test, expect } = require("@playwright/test"),
   P = require("../shared/pilots.js");
 for (const width of [1280, 390])
   test(`pilot editor shows level-based caps and enforces them at ${width}px`, async ({ page }) => {
-    const pilots = [1, 2, 7, 10].map((level) =>
+    const pilots = [0, 2, 7, 10].map((level) =>
       P.custom({
         ...P.createCustom("custom-growth-" + level, "成长测试" + level),
         level,
@@ -23,9 +23,9 @@ for (const width of [1280, 390])
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await page.waitForFunction(() => assetsReady);
     await page.evaluate(() => I18n.setLanguage("zh"));
-    await page.locator("#openFormation").click();
-    await page.locator("#formationPilotsTab").click();
-    for (const level of [1, 2, 7, 10]) {
+    await page.locator("#shellHangar").click();
+    await page.locator("#shellSubnav button").filter({ hasText: /^驾驶员$/ }).click();
+    for (const level of [0, 2, 7, 10]) {
       await page.getByRole("button", { name: "管理驾驶员 成长测试" + level, exact: true }).click();
       await expect(page.locator("#customPilotStats")).toContainText(
         "射击 " + (level === 2 ? 125 : P.statCap(level)) + " / " + P.statCap(level),
@@ -70,8 +70,8 @@ for (const width of [1280, 390])
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await page.waitForFunction(() => assetsReady);
     await page.evaluate(() => I18n.setLanguage("zh"));
-    await page.locator("#openFormation").click();
-    await page.locator("#formationPilotsTab").click();
+    await page.locator("#shellHangar").click();
+    await page.locator("#shellSubnav button").filter({ hasText: /^驾驶员$/ }).click();
     for (const faction of ["PMC", "ZEON", "EFSF"]) {
       await page.evaluate((f) => Formation.setGroup(f), faction);
       await expect(page.locator("#customPilotList .custom-pilot-card")).toHaveCount(2);
@@ -87,15 +87,23 @@ for (const width of [1280, 390])
       );
     });
     expect(aligned).toBe(true);
+    await expect(page.locator("#customPilotProgress")).toContainText("Lv.0");
+    await expect(page.locator("#customPilotProgress")).toContainText("强化点 80");
+    await page.locator("#openPilotAttributeHelp").click();
+    await expect(page.locator("#pilotAttributeHelp")).toContainText("0.25个百分点");
+    await expect(page.locator("#pilotAttributeHelp")).toContainText("107.5%");
+    await expect(page.locator("#pilotAttributeHelp")).toContainText("范围增加1格、效果增加1个百分点");
+    await page.locator("#pilotAttributeHelp").getByRole("button", {name:"关闭",exact:true}).click();
+
     await page.getByRole("button", { name: "强化射击 +5", exact: true }).click();
     await page.locator("#confirmPilotTraining").click();
-    await expect(page.locator("#customPilotStats")).toContainText("射击 95 / 125");
+    await expect(page.locator("#customPilotStats")).toContainText("射击 105 / 125");
     await page.locator("#resetPilotTraining").click();
     await page.locator("#gameDialog").getByRole("button", { name: "重置", exact: true }).click();
-    await expect(page.locator("#customPilotStats")).toContainText("射击 90 / 125");
-    expect(await page.evaluate(() => Economy.snapshot().money)).toBe(4000);
+    await expect(page.locator("#customPilotStats")).toContainText("射击 100 / 125");
+    expect(await page.evaluate(() => Economy.snapshot().money)).toBe(5000);
     const saved = await page.evaluate(() => ProfileSave.exportData());
-    expect(saved.pilots.ZEON.pilots[0].points).toBe(60);
+    expect(saved.pilots.ZEON.pilots[0].points).toBe(80);
     await page.evaluate((save) => ProfileSave.importData(save), saved);
     await page.reload();
     await page.waitForFunction(() => assetsReady);

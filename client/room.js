@@ -7,7 +7,7 @@ const RoomPanel = (() => {
     queuedNumericSettings = {};
   const numericDrafts = { costLimit: null, unitCostLimit: null, unitLimit: null };
   const formationPresets = new Set([
-    "1000,200,12",
+    "1000,250,12",
     "2000,400,12",
     "4000,800,12",
     "6000,1200,12",
@@ -294,7 +294,7 @@ const RoomPanel = (() => {
   }
   function closeDetail() {
     detail = null;
-    byId("roomDetailPanel").hidden = true;
+    byId("roomDetailPanel").close();
     byId("roomMain").inert = false;
   }
   function armyControls(player, snapshot, locked) {
@@ -422,7 +422,7 @@ const RoomPanel = (() => {
       }
       content.append(element("h3", "", "房间禁用标签"));
       appendTagDetails(content, snapshot.settings);
-      byId("roomDetailPanel").hidden = false;
+      if (!byId("roomDetailPanel").open) byId("roomDetailPanel").showModal();
       byId("roomMain").inert = true;
       return;
     }
@@ -453,7 +453,7 @@ const RoomPanel = (() => {
       content.append(switchView);
       if (detail.view === "rules") {
         content.append(quickArmyControls(player, snapshot, locked));
-        byId("roomDetailPanel").hidden = false;
+        if (!byId("roomDetailPanel").open) byId("roomDetailPanel").showModal();
         byId("roomMain").inert = true;
         return;
       }
@@ -505,7 +505,7 @@ const RoomPanel = (() => {
       actionSection.append(remove);
       content.append(actionSection);
     }
-    byId("roomDetailPanel").hidden = false;
+    if (!byId("roomDetailPanel").open) byId("roomDetailPanel").showModal();
     byId("roomMain").inert = true;
   }
   function detailButton(player, snapshot) {
@@ -524,6 +524,11 @@ const RoomPanel = (() => {
     return button;
   }
   byId("closeRoomDetail").onclick = closeDetail;
+  byId("roomDetailPanel").addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeDetail();
+  });
+  window.addEventListener("page-changing", closeDetail);
   byId("roomDetailPanel").addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       event.stopPropagation();
@@ -643,7 +648,7 @@ const RoomPanel = (() => {
       squads.append(card);
     }
     const own = snapshot.assembly?.players.find((player) => player.memberId === snapshot.you?.id);
-    byId("editFinalFormation").hidden = !own || !!snapshot.loadedSave;
+    byId("editFinalFormation").hidden = true;
     const allBots =
       snapshot.you?.id === snapshot.hostId &&
       snapshot.members.filter((player) => player.seat !== null).every((player) => player.bot);
@@ -942,7 +947,7 @@ const RoomPanel = (() => {
     // Send a team intent; the authority chooses a currently empty spawn.
     Net.request("join_team", { team });
   }
-  byId("editFinalFormation").onclick = () => Formation.open();
+
   byId("confirmFinalFormation").onclick = () => {
     const snapshot = Net.snapshot;
     const own = snapshot?.assembly?.players.find((p) => p.memberId === snapshot.you?.id);
@@ -969,7 +974,7 @@ const RoomPanel = (() => {
     const units = Formation.current();
     if (snapshot.you?.seat !== null) {
       try {
-        Rules.validateFormation(
+        if (units.length) Rules.validateFormation(
           units,
           Infinity,
           Rules.armyUnitLimit(
@@ -1088,14 +1093,46 @@ const RoomPanel = (() => {
   return { render };
 })();
 
-// Tabs reorganize the existing room controls without cloning their state or handlers.
+// Reuse the live room controls in a top-layer sheet on narrow screens.
 (() => {
-  const room = document.getElementById("roomMain");
+  const room = byId("roomMain");
+  const settings = byId("roomSettingsPage");
+  const anchor = document.createComment("room settings home");
+  settings.before(anchor);
+  const sheet = document.createElement("dialog");
+  sheet.id = "roomSettingsSheet";
+  sheet.setAttribute("aria-labelledby", "roomSettingsSheetTitle");
+  const heading = element("div", "room-sheet-heading");
+  const title = element("h2", "", "房间设置");
+  title.id = "roomSettingsSheetTitle";
+  const close = element("button", "", "关闭");
+  close.type = "button";
+  close.id = "closeRoomSettingsSheet";
+  heading.append(title, close);
+  sheet.append(heading);
+  room.append(sheet);
+  const mobile = matchMedia("(max-width:700px), (max-height:600px) and (orientation:landscape)");
+  function selectTab(name) {
+    room.dataset.mobileTab = name;
+    for (const tab of document.querySelectorAll("[data-room-tab]"))
+      tab.setAttribute("aria-pressed", String(tab.dataset.roomTab === name));
+  }
+  close.onclick = () => sheet.close();
+  sheet.addEventListener("close", () => {
+    anchor.after(settings);
+    selectTab("seats");
+  });
   for (const button of document.querySelectorAll("[data-room-tab]")) {
     button.onclick = () => {
-      room.dataset.mobileTab = button.dataset.roomTab;
-      for (const tab of document.querySelectorAll("[data-room-tab]"))
-        tab.setAttribute("aria-pressed", String(tab === button));
+      const name = button.dataset.roomTab;
+      selectTab(name);
+      if (name === "settings" && mobile.matches) {
+        sheet.append(settings);
+        if (!sheet.open) sheet.showModal();
+        close.focus();
+      }
     };
   }
+  mobile.addEventListener("change", () => { if (sheet.open) sheet.close(); });
+  window.addEventListener("page-changing", () => { if (sheet.open) sheet.close(); });
 })();

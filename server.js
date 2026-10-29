@@ -11,7 +11,10 @@ const { WebSocketServer, WebSocket } = require("ws"),
   project = require("./project.json"),
   { createRoomEngine } = require("./shared/room-engine.js"),
   G = require("./shared/rules.js");
+// Dedicated distributions contain validated rule data, without game webpages or media.
+const serverOnly = fs.existsSync(path.join(__dirname, "shared/server-catalog.json"));
 function createServer({
+  dedicated = serverOnly,
   port = 1313,
   host = "0.0.0.0",
   heartbeatMs = 20000,
@@ -29,27 +32,33 @@ function createServer({
   // The proxy keeps this server's engine on the current catalog after a developer rebuild.
   let currentRules = G;
   const rules = new Proxy({}, { get: (_, key) => currentRules[key] });
-  const developerAPI = require("./tools/developer-api.cjs").createDeveloperAPI({
-    rooms,
-    onReload: () => {
-      for (const name of [
-        "./shared/rules.js",
-        "./shared/development.js",
-        "./shared/development-tree.json",
-        "./shared/economy.js",
-        "./shared/battle-economy.js",
-        "./shared/production-catalog.json",
-      ])
-        delete require.cache[require.resolve(name)];
-      currentRules = require("./shared/rules.js");
-    },
-  });
-  const resources = require("./tools/client-resources.cjs").createClientResources({
-    loadDocument: () => fs.promises.readFile(path.join(publicDir, "client.html")),
-  });
-  const serveClient = require("./tools/static-client.cjs").createStaticClient({
-    transform: resources.transform,
-  });
+  const developerAPI = dedicated
+    ? null
+    : require("./tools/developer-api.cjs").createDeveloperAPI({
+        rooms,
+        onReload: () => {
+          for (const name of [
+            "./shared/rules.js",
+            "./shared/development.js",
+            "./shared/development-tree.json",
+            "./shared/economy.js",
+            "./shared/battle-economy.js",
+            "./shared/production-catalog.json",
+          ])
+            delete require.cache[require.resolve(name)];
+          currentRules = require("./shared/rules.js");
+        },
+      });
+  const resources = dedicated
+    ? null
+    : require("./tools/client-resources.cjs").createClientResources({
+        loadDocument: () => fs.promises.readFile(path.join(publicDir, "client.html")),
+      });
+  const serveClient = dedicated
+    ? null
+    : require("./tools/static-client.cjs").createStaticClient({
+        transform: resources.transform,
+      });
   const server = http.createServer((req, res) => {
     let pathname;
     try {
@@ -69,7 +78,7 @@ function createServer({
       });
       return;
     }
-    if (pathname.startsWith("/api/developer/")) {
+    if (pathname.startsWith("/api/developer/") && !dedicated) {
       void developerAPI(req, res, new URL(req.url, "http://localhost"));
       return;
     }
@@ -88,6 +97,15 @@ function createServer({
           protocol: 1,
           rooms: rooms.size,
         }),
+      );
+      return;
+    }
+    if (dedicated) {
+      res.writeHead(pathname === "/" ? 200 : 404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end(
+        pathname === "/"
+          ? `${project.name} ${project.version} dedicated server. Connect using the matching standalone client.`
+          : "Not found",
       );
       return;
     }
@@ -229,7 +247,7 @@ function createServer({
           send(ws, { type: "rooms", rooms: roomList() });
         } else if (msg.type === "leave") leaveRoom(ws);
         else if (msg.type === "hello") {
-          if (developerAPI.busy()) throw Error("正在重载，请稍后连接");
+          if (developerAPI?.busy()) throw Error("正在重载，请稍后连接");
           // Check before creating a room or consuming a reconnect token. Older
           // clients without this field must not enter a newer server either.
           if (msg.version !== project.version) {
@@ -343,8 +361,13 @@ if (require.main === module) {
     .listen()
     .then(() => {
       console.log(`\n${project.name} ${project.version} 联机服务端已启动\n`);
-      console.log("发布版网页: http://127.0.0.1:" + port);
-      console.log("开发者版: http://127.0.0.1:" + port + "/developer.html");
+      if (serverOnly) {
+        console.log("纯服务端：请使用同版本独立客户端连接此服务器。");
+        console.log("本机活动管理: http://127.0.0.1:" + port + "/admin/activities.html");
+      } else {
+        console.log("发布版网页: http://127.0.0.1:" + port);
+        console.log("开发者版: http://127.0.0.1:" + port + "/developer.html");
+      }
       let networkInterfaces = {};
       try {
         networkInterfaces = os.networkInterfaces();
@@ -354,7 +377,9 @@ if (require.main === module) {
       for (const interfaces of Object.values(networkInterfaces))
         for (const addr of interfaces || [])
           if (addr.family === "IPv4" && !addr.internal)
-            console.log("局域网网页: http://" + addr.address + ":" + port);
+            console.log(
+              (serverOnly ? "局域网连接: " : "局域网网页: http://") + addr.address + ":" + port,
+            );
       console.log(
         "\n修改服务端目录中的 cfg.json 后重启，可更换端口。\n网页中输入同一服务器IP和房间码，分别创建/加入房间。\n关闭窗口或 Ctrl+C 停止服务。\n",
       );

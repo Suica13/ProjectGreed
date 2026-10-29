@@ -63,7 +63,7 @@ for (const [html, width] of [
     await expect(page.locator("#changeCustomPilotPortrait")).toBeDisabled();
     await expect(page.locator("#pilotTrainingActions")).toBeHidden();
     await expect(page.locator("#acePilotDetails")).toContainText("ACE技能");
-    await expect(page.locator("#acePilotDetails")).toContainText("50 COST/Lv.");
+    await expect(page.locator("#acePilotDetails")).toContainText("25 COST/Lv.");
     const after = await page.evaluate(() => Economy.snapshot());
     expect(after.money).toBe(before.money - profile.price.money);
     expect(after.supplies).toBe(before.supplies - profile.price.supplies);
@@ -291,7 +291,7 @@ test("legacy ACE profile import migrates embedded formations and persists five-l
     level: 5,
     version: 2,
     kills: 7,
-    cost: 350,
+    cost: 375,
     embeddedLevel: 5,
   });
 });

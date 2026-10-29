@@ -1642,6 +1642,7 @@ function drawMap(now) {
           y: parent.pos.y + (x * Math.sin(rad) - y * Math.cos(rad) - height) * scale,
         };
         groundCell = parent.groundCell;
+        if (!combatPose && !skillPose) angle = PlanningUI.facing(u, parent.angle);
       }
     }
     EnvironmentVisuals.observe(u, groundCell, now);

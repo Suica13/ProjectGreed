@@ -2635,6 +2635,12 @@ function createRoomEngine({
             broadcast(room, id);
             return;
           }
+          if (room.phase === "assembly" && msg.action === "update_formation")
+            throw Error("确认阶段不可修改编组。");
+          if (room.phase === "assembly" && msg.formation !== undefined &&
+              JSON.stringify(G.validateFormation(msg.formation, Infinity, playerUnitLimit(room, member))) !==
+              JSON.stringify(member.formationPreset?.units || member.formation))
+            throw Error("确认阶段不可修改编组。");
           if (room.phase !== "assembly" && (room.started || msg.action !== "update_formation"))
             throw Error("当前不是最终编组阶段");
           if (member.seat === null) {
@@ -2654,8 +2660,10 @@ function createRoomEngine({
             member.formationPreset?.units ||
             (msg.formation === undefined
               ? member.formation
-              : G.validateFormation(msg.formation, Infinity, playerUnitLimit(room, member)));
-          const plan = G.planFormation(
+              : Array.isArray(msg.formation) && !msg.formation.length && msg.action === "update_formation"
+                ? []
+                : G.validateFormation(msg.formation, Infinity, playerUnitLimit(room, member)));
+          const plan = !formation?.length ? { deployable: [] } : G.planFormation(
             formation,
             playerBudget(room, member),
             playerRestrictions(room, member),
@@ -2668,7 +2676,8 @@ function createRoomEngine({
           )
             throw Error("至少需要一台符合编组规则的单位");
           member.formation = formation;
-          // 保存编组保留自己和队友的准备/确认状态。
+          if (!formation.length) member.ready = false;
+          // 非空编组保存保留准备状态；空编组不能保持准备。
           if (msg.action === "confirm_formation") member.finalReady = true;
           if (room.phase === "assembly") startDeployment(room);
         } else if (msg.action === "configure_player") {
