@@ -1461,6 +1461,21 @@ function drawMap(now) {
     lastX = Math.min(Rules.mapWidth(game), Math.ceil((w - ox) / tile)),
     lastY = Math.min(Rules.mapHeight(game), Math.ceil((h - oy) / tile));
   drawCachedMapTerrain(ctx, w, h, dpr, tile, ox, oy, immersive, deploymentArea);
+  TileMapRenderer.draw(ctx, Rules.getMap(game.mapId), "below", mapGeo, w, h);
+  if (Rules.getMap(game.mapId).tileMap && !immersive) {
+    // Authored art can be opaque, so tactical guides belong above the image layers.
+    ctx.strokeStyle = "#49616b66"; ctx.lineWidth = .7; ctx.beginPath();
+    for (let x = firstX; x <= lastX; x++) { ctx.moveTo(ox + x * tile, oy + firstY * tile); ctx.lineTo(ox + x * tile, oy + lastY * tile); }
+    for (let y = firstY; y <= lastY; y++) { ctx.moveTo(ox + firstX * tile, oy + y * tile); ctx.lineTo(ox + lastX * tile, oy + y * tile); }
+    ctx.stroke();
+    if (phase === "deployment" && Deployment.team() !== null) {
+      ctx.fillStyle = "#5ee4b344";
+      for (const key of deploymentArea) {
+        const [x, y] = key.split(",").map(Number);
+        if (x >= firstX && x < lastX && y >= firstY && y < lastY) ctx.fillRect(ox + x * tile, oy + y * tile, tile, tile);
+      }
+    }
+  }
   for (const field of game.beamDiffusionFields || []) {
     if (field.expiresRound <= game.round) continue;
     ctx.save();
@@ -1583,6 +1598,9 @@ function drawMap(now) {
   SpriteEffects.setFogClip(visibilityClip, ctx);
   const mapUnitPoses = [];
   drawVisibleEffects(() => MapCombat.drawUnderlay(ctx, mapGeo));
+  const authoredMap = Rules.getMap(game.mapId);
+  let aboveLayerDrawn = false;
+  const drawAboveLayer = () => drawVisibleEffects(() => TileMapRenderer.draw(ctx, authoredMap, "above", mapGeo, w, h));
   for (const u of IrradiationFX.units(MapCombat.units(), now).sort(
     (a, b) => Number(!!a.embarked?.exposed) - Number(!!b.embarked?.exposed),
   )) {
@@ -1701,13 +1719,14 @@ function drawMap(now) {
     skillPose,
     groundCell,
   } of mapUnitPoses) {
+    if (authoredMap.tileMap && !aboveLayerDrawn && airbornePose({ u })) { drawAboveLayer(); aboveLayerDrawn = true; }
     if (!smokeDrawn && airbornePose({ u })) {
       EnvironmentVisuals.smoke(ctx, game, mapPosition, tile);
       smokeDrawn = true;
     }
     ctx.save();
     const environmentPose = EnvironmentVisuals.pose(u, groundCell);
-    if (ClientSettings.unitShadows() && game.environment !== "space") {
+    if (ClientSettings.unitShadows() && Rules.cellEnvironment(game, groundCell.x, groundCell.y) !== "space") {
       ctx.fillStyle = "rgba(0,0,0,0.28)";
       ctx.beginPath();
       ctx.ellipse(
@@ -1795,9 +1814,9 @@ function drawMap(now) {
         u.brokenParts,
         combatPose?.aimAngle ?? u.aimAngle ?? angle,
         combatPose?.attacking ?? null,
-        Rules.getMap(game.mapId).environment !== "space" &&
+        Rules.cellEnvironment(game, groundCell.x, groundCell.y) !== "space" &&
           game.tiles[groundCell.y]?.[groundCell.x] !== "water",
-        game.environment,
+        Rules.cellEnvironment(game, groundCell.x, groundCell.y),
         combatPose?.attackWeapon ?? null,
         combatPose?.weaponDisplayIndex ?? skillPose?.weaponDisplayIndex ?? null,
         combatPose?.flying ?? !!u.flying,
@@ -1912,6 +1931,7 @@ function drawMap(now) {
       ctx.strokeRect(pos.x - tile * 0.45, pos.y - tile * 0.45, tile * 0.9, tile * 0.9);
     }
   }
+  if (!aboveLayerDrawn) drawAboveLayer();
   // Hidden actors contribute effects only; never silhouettes, bars or selectable units.
   for (const actor of Net.snapshot?.effectActors || []) {
     const motion = PlanningUI.motion(actor, now);
@@ -1961,7 +1981,7 @@ function drawMap(now) {
       actor.aimAngle,
       false,
       presentation.environment === "ground",
-      game.environment,
+      Rules.cellEnvironment(game, cell.x, cell.y),
       null,
       null,
       actor.flying,
@@ -2012,7 +2032,7 @@ function drawMap(now) {
       y:
         pos.y +
         tile * (0.035 + environment.offset) +
-        SpriteRenderer.flightOffset(u.model, now, !!u.flying, game.environment) * scale,
+        SpriteRenderer.flightOffset(u.model, now, !!u.flying, Rules.cellEnvironment(game, groundCell.x, groundCell.y)) * scale,
       scale,
       angle,
       clip: anim,

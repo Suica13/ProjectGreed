@@ -43,7 +43,8 @@ test("every ejection selects exactly one adjacent cell, rejecting self, diagonal
 });
 test("Magella separates a ground chassis from a fully restored flying top at the selected adjacent cell", () => {
   const { g, u } = pair("MTank"),
-    oldId = u.id;
+    oldId = u.id,
+    beforeAP = G.actionPoints(u);
   u.hp = 1;
   u.en = 0;
   u.customName = "Tank";
@@ -60,7 +61,7 @@ test("Magella separates a ground chassis from a fully restored flying top at the
     assert.equal(x.en, G.modelOf(x).en);
     assert.equal(x.ownerSeat, 0);
     assert.equal(x.acted, false);
-    assert.equal(x.actionPoints, 4);
+    assert.equal(x.actionPoints, beforeAP - 1);
     assert.equal(x.counterCount, 1);
   }
   assert.equal(G.modelOf(top).movementType, "air");
@@ -73,7 +74,8 @@ test("NT-1 FA and FA-78-1 purge in place, add native 35 percent resources and re
   ]) {
     const { g, u } = pair(id),
       old = G.modelOf(u),
-      count = g.units.length;
+      count = g.units.length,
+      beforeAP = G.actionPoints(u);
     u.hp = old.hp * 0.2;
     u.en = old.en * 0.1;
     u.brokenParts = { leftArm: true };
@@ -91,7 +93,7 @@ test("NT-1 FA and FA-78-1 purge in place, add native 35 percent resources and re
     assert.deepEqual(u.brokenParts, { leftArm: true });
     assert.equal(u.counterCount, 1);
     assert.equal(u.acted, false);
-    assert.equal(u.actionPoints, 4);
+    assert.equal(u.actionPoints, beforeAP - 1);
     assert.equal(g.units.length, count);
   }
 });

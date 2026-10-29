@@ -1,0 +1,2555 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ProjectGreed 地图编辑器</title>
+    <style>
+      :root {
+  color-scheme: dark;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  background: #171d26;
+  color: #e3ecf5;
+  font-size: 13px;
+  --border: #3e4d60;
+  --accent: #76c9ff;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button,
+input,
+select,
+textarea {
+  border: 1px solid var(--border);
+  background: #252f3c;
+  border-radius: 3px;
+}
+button {
+  padding: 7px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+button:hover {
+  border-color: var(--accent);
+  background: #303d50;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.primary,
+button.active {
+  border-color: var(--accent);
+  background: #28527a;
+}
+.danger {
+  color: #ff9ca4;
+}
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 6px;
+  min-width: 0;
+}
+input[type="checkbox"] {
+  width: auto;
+  accent-color: var(--accent);
+}
+input[type="range"] {
+  padding: 0;
+}
+textarea {
+  resize: vertical;
+}
+label {
+  display: block;
+  margin: 9px 0;
+  color: #c8d5e4;
+}
+label > input,
+label > select,
+label > textarea {
+  margin-top: 4px;
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: normal;
+}
+.check > input {
+  margin: 0;
+}
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.pair > label {
+  min-width: 0;
+}
+.pair > button {
+  white-space: normal;
+}
+header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #202936;
+  border-bottom: 1px solid var(--border);
+}
+header strong {
+  color: #9ed8ff;
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+header span {
+  margin-left: 14px;
+  color: #a9bbce;
+}
+nav {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+main {
+  display: grid;
+  grid-template-columns: 270px minmax(260px, 1fr) 245px;
+  flex: 1;
+  min-height: 0;
+}
+aside {
+  background: #202733;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px;
+  border-right: 1px solid var(--border);
+}
+aside.right {
+  border-right: 0;
+  border-left: 1px solid var(--border);
+}
+aside.left {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: 8px;
+}
+.sidebar-scroll {
+  overflow: auto;
+  min-height: 0;
+  flex: 1;
+  padding-right: 3px;
+}
+.tabs {
+  display: flex;
+  gap: 5px;
+  padding-bottom: 8px;
+}
+.tabs button {
+  flex: 1;
+}
+h2 {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  margin: 17px 0 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--border);
+}
+h2:first-child {
+  margin-top: 3px;
+}
+.hint {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #9caec2;
+  margin: 8px 0;
+}
+aside button {
+  max-width: 100%;
+}
+aside > button,
+section[data-page] > button {
+  width: 100%;
+  margin: 3px 0;
+}
+.workspace {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #111720;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  padding: 7px;
+  background: #222b37;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.toolbar .check {
+  margin: 0 4px;
+}
+.secondary button {
+  padding: 5px 8px;
+}
+.spacer {
+  flex: 1;
+}
+#zoomValue {
+  min-width: 43px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+#viewport {
+  position: relative;
+  flex: 1;
+  min-height: 120px;
+  min-width: 0;
+  overflow: hidden;
+  background: repeating-conic-gradient(#1b2330 0% 25%, #202a38 0% 50%) 0 0/20px 20px;
+}
+#mapCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  outline: 0;
+}
+#mapCanvas:focus {
+  box-shadow: inset 0 0 0 1px #76c9ff80;
+}
+#coordinates {
+  margin-left: auto;
+  color: #a7bacd;
+}
+.view-options {
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+  border-bottom: 0;
+}
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 12px;
+  border-top: 1px solid var(--border);
+  color: #a6bbd0;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+#status {
+  color: #d3e4f7;
+}
+.palette {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+.palette button {
+  padding: 6px 2px;
+  font-size: 12px;
+  border-top: 12px solid var(--swatch);
+}
+#atlasCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  border: 1px solid #576c84;
+  touch-action: none;
+}
+#atlasCanvas[hidden] {
+  display: none;
+}
+#layerList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 240px;
+  overflow: auto;
+  margin: 9px 0;
+}
+#layerList button {
+  text-align: left;
+  white-space: normal;
+  width: 100%;
+}
+#layerList small {
+  display: block;
+  color: #a1b8ce;
+  margin-top: 3px;
+}
+.variant {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 55px 30px;
+  gap: 5px;
+  align-items: center;
+  margin: 7px 0;
+}
+.variant span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.variant button {
+  padding: 5px;
+}
+.nine-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.nine-grid button {
+  font-size: 11px;
+  overflow: hidden;
+  min-height: 48px;
+  padding: 5px;
+  white-space: normal;
+}
+#validation {
+  padding-left: 20px;
+  color: #e1b786;
+  line-height: 1.7;
+  font-size: 12px;
+}
+dialog {
+  background: #252f3c;
+  color: #e6f1fa;
+  border: 1px solid #7bcaff;
+  border-radius: 5px;
+  max-width: min(520px, 92vw);
+  max-height: 85dvh;
+  overflow: auto;
+  padding: 22px;
+}
+dialog::backdrop {
+  background: #0009;
+}
+#dialogMessage {
+  white-space: pre-line;
+  line-height: 1.8;
+}
+#dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+#dropHint {
+  position: absolute;
+  inset: 20px;
+  display: grid;
+  place-items: center;
+  background: #253f5ee8;
+  border: 2px dashed #9bd7ff;
+  pointer-events: none;
+  font-size: 18px;
+}
+#dropHint[hidden] {
+  display: none;
+}
+[hidden] {
+  display: none !important;
+}
+@media (max-width: 1050px) {
+  main {
+    grid-template-columns: 235px minmax(220px, 1fr) 215px;
+  }
+  aside {
+    padding: 9px;
+  }
+  header {
+    align-items: flex-start;
+  }
+  header span {
+    display: block;
+    margin: 3px 0 0;
+  }
+  header strong {
+    font-size: 15px;
+  }
+}
+@media (max-width: 760px) {
+  body {
+    height: 100dvh;
+  }
+  header {
+    padding: 7px 9px;
+  }
+  header strong {
+    font-size: 12px;
+  }
+  header span {
+    font-size: 11px;
+  }
+  nav {
+    gap: 3px;
+    justify-content: flex-end;
+  }
+  nav button {
+    font-size: 11px;
+    padding: 5px;
+  }
+  main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(140px, 52%) minmax(0, 1fr);
+  }
+  .workspace {
+    grid-column: 1/3;
+    grid-row: 1;
+    overflow: hidden;
+  }
+  #viewport {
+    min-height: 0;
+  }
+  .left {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .right {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .toolbar {
+    padding: 4px;
+    gap: 3px;
+  }
+  .toolbar button {
+    font-size: 11px;
+    padding: 5px;
+  }
+  .toolbar .check {
+    font-size: 11px;
+  }
+  .secondary button {
+    padding: 4px;
+  }
+  footer > span:last-child {
+    display: none;
+  }
+  .hint {
+    font-size: 11px;
+  }
+  aside {
+    font-size: 12px;
+  }
+  .palette {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <header>
+      <div><strong>PROJECT GREED</strong><span>地图编辑器 · V50</span></div>
+      <nav aria-label="文件操作">
+        <button id="newMap">新建</button><button id="importMap">导入地图</button>
+        <button id="exportProject">导出工程</button
+        ><button id="exportGame" class="primary">导出游戏地图</button>
+        <button id="help">使用说明</button>
+      </nav>
+    </header>
+    <main>
+      <aside class="left">
+        <div class="tabs">
+          <button data-tab="map" class="active">地图</button><button data-tab="tiles">图块</button
+          ><button data-tab="rules">规则</button>
+        </div>
+        <div class="sidebar-scroll">
+          <section data-page="map">
+            <h2>地图设置</h2>
+            <label>ID<input id="mapId" value="custom_map" spellcheck="false" /></label>
+            <label>名称<input id="mapName" value="新地图" /></label>
+            <label>说明<textarea id="mapDescription" rows="2"></textarea></label>
+            <div class="pair">
+              <label>列数<input id="mapWidth" type="number" min="12" max="128" /></label
+              ><label>行数<input id="mapHeight" type="number" min="9" max="128" /></label>
+            </div>
+            <button id="resizeMap">应用地图尺寸</button>
+            <div class="pair">
+              <label>Tile宽/px<input id="tileWidth" type="number" min="4" max="512" /></label
+              ><label>Tile高/px<input id="tileHeight" type="number" min="4" max="512" /></label>
+            </div>
+            <label
+              >默认环境<select id="mapEnvironment">
+                <option value="ground">地面</option>
+                <option value="space">宇宙</option>
+              </select></label
+            >
+            <label>默认地形<select id="defaultTerrain"></select></label>
+            <h2>玩家与队伍</h2>
+            <div class="pair">
+              <label>队伍上限<input id="maxTeams" type="number" min="2" max="8" /></label
+              ><label>每队玩家<input id="playersPerTeam" type="number" min="1" max="5" /></label>
+            </div>
+            <p id="playerCount" class="hint"></p>
+            <button id="applyPlayers">重新生成席位与部署区</button>
+            <label class="check"
+              ><input id="modeRegular" type="checkbox" checked />常规战可用</label
+            >
+            <label class="check"><input id="modeQuick" type="checkbox" checked />快速战可用</label>
+            <h2>出生地与部署区</h2>
+            <label>玩家席位<select id="spawnSeat"></select></label>
+            <div class="pair">
+              <label>出生X<input id="spawnX" type="number" min="0" /></label
+              ><label>出生Y<input id="spawnY" type="number" min="0" /></label>
+            </div>
+            <div class="pair">
+              <label>区域X<input id="areaX" type="number" min="0" /></label
+              ><label>区域Y<input id="areaY" type="number" min="0" /></label>
+            </div>
+            <div class="pair">
+              <label>区域宽<input id="areaWidth" type="number" min="1" /></label
+              ><label>区域高<input id="areaHeight" type="number" min="1" /></label>
+            </div>
+            <div class="pair">
+              <button id="placeSpawn">点选出生地</button
+              ><button id="drawDeployment">框选部署区</button>
+            </div>
+            <p class="hint">坐标从0开始。同队部署区在游戏中共享；不同席位的原始区域应互不重叠。</p>
+          </section>
+          <section data-page="tiles" hidden>
+            <h2>图集 / TileMap</h2>
+            <label
+              >图集<select id="tilesetList">
+                <option value="builtin">地形色块</option>
+              </select></label
+            >
+            <div class="pair">
+              <label
+                >切片宽/px<input
+                  id="atlasTileWidth"
+                  type="number"
+                  min="4"
+                  max="512"
+                  value="32" /></label
+              ><label
+                >切片高/px<input id="atlasTileHeight" type="number" min="4" max="512" value="32"
+              /></label>
+            </div>
+            <div class="pair">
+              <label
+                >边距/px<input id="atlasMargin" type="number" min="0" max="512" value="0" /></label
+              ><label
+                >间隔/px<input id="atlasSpacing" type="number" min="0" max="512" value="0"
+              /></label>
+            </div>
+            <button id="addAtlas">导入图集（按上方尺寸切片）</button>
+            <button id="addImage">导入整张图片作为地图图层</button>
+            <p class="hint">
+              图片会嵌入导出的文件。图集点击选Tile，Shift框选可制作多格画笔，Ctrl点击可加入随机规则。
+            </p>
+            <div id="terrainPalette" class="palette"></div>
+            <canvas id="atlasCanvas" hidden aria-label="图集选择器"></canvas>
+            <label>图块精确选择<select id="tileList"></select></label>
+            <h2>所选Tile属性</h2>
+            <label>名称<input id="tileName" /></label>
+            <label
+              >地块属性<select id="tileEnvironment">
+                <option value="ground">地面</option>
+                <option value="space">宇宙</option>
+              </select></label
+            >
+            <label>地形类型<select id="tileTerrain"></select></label>
+            <label class="check"
+              ><input id="tileDecorative" type="checkbox" />仅装饰，不覆盖地形属性</label
+            >
+            <label class="check"
+              ><input id="tileDynamic" type="checkbox" />动态Tile（预留事件标记）</label
+            >
+            <p class="hint">
+              属性作用于当前Tile的所有引用；多格画笔可通过“图块精确选择”逐项调整。动态标记暂不触发事件。
+            </p>
+          </section>
+          <section data-page="rules" hidden>
+            <h2>图块规则</h2>
+            <label
+              >当前绘制规则<select id="paintRule">
+                <option value="">单Tile / 多格画笔</option>
+              </select></label
+            >
+            <div class="pair">
+              <button id="newRandom">新建随机规则</button><button id="newNine">新建九宫格</button>
+            </div>
+            <label>规则名称<input id="ruleName" /></label>
+            <label>随机种子<input id="randomSeed" type="number" step="1" /></label>
+            <div id="ruleEditor"></div>
+            <button id="addVariant">将当前Tile加入随机候选</button>
+            <button id="deleteRule" class="danger">删除当前规则</button>
+            <p class="hint">
+              随机规则按权重确定图块，导出保存已落下的结果。九宫格用矩形工具：边角、边缘、中心分别重复，适合道路、平台和边框。
+            </p>
+            <p class="hint">
+              选择图集中一个Tile，再点“新建九宫格”，会取它右下方的3×3作为初始九宫格；也可在下方逐格重新绑定。
+            </p>
+          </section>
+        </div>
+      </aside>
+      <section class="workspace">
+        <div class="toolbar" role="toolbar" aria-label="绘图工具">
+          <button data-tool="brush" class="active" title="B">画笔</button
+          ><button data-tool="erase" title="E">删除</button>
+          <button data-tool="fill" title="F">油漆桶</button
+          ><button data-tool="rect" title="R">方框</button>
+          <button data-tool="line" title="L">直线</button
+          ><button data-tool="select" title="M">选择</button><button data-tool="pan">平移</button>
+          <label class="check"><input id="outline" type="checkbox" />空心框</label>
+        </div>
+        <div class="toolbar secondary">
+          <button id="undo" title="Ctrl+Z">撤销</button
+          ><button id="redo" title="Ctrl+Shift+Z">重做</button> <button id="copy">复制</button
+          ><button id="cut">剪切</button><button id="paste">粘贴</button
+          ><button id="deleteSelection">删除选区</button> <span class="spacer"></span
+          ><button id="zoomOut">−</button><output id="zoomValue">100%</output
+          ><button id="zoomIn">+</button><button id="fit">适应</button>
+        </div>
+        <div id="viewport">
+          <canvas id="mapCanvas" tabindex="0" aria-label="地图编辑画布"></canvas>
+          <div id="dropHint" hidden>释放以导入工程或图片</div>
+        </div>
+        <div class="toolbar view-options">
+          <label class="check"><input id="showGrid" type="checkbox" checked />网格</label>
+          <label class="check"><input id="showTerrain" type="checkbox" />地形属性</label>
+          <label class="check"><input id="showDeployment" type="checkbox" checked />部署区域</label>
+          <label class="check"><input id="showUnit" type="checkbox" />单位层次示意</label>
+          <span id="coordinates">—</span>
+        </div>
+      </section>
+      <aside class="right">
+        <h2>图层</h2>
+        <p class="hint">列表上方为更高图层；单位上方图层统一绘制在地面单位之后、空中单位之前。</p>
+        <div class="pair">
+          <button id="addLayer">新增图层</button
+          ><button id="deleteLayer" class="danger">删除图层</button>
+        </div>
+        <div id="layerList" role="listbox" aria-label="图层列表"></div>
+        <div class="pair">
+          <button id="layerUp">上移</button><button id="layerDown">下移</button>
+        </div>
+        <h2>图层属性</h2>
+        <label>名称<input id="layerName" /></label>
+        <label
+          >相对地面单位<select id="layerPlacement">
+            <option value="below">地面单位下方</option>
+            <option value="above">地面单位上方</option>
+          </select></label
+        >
+        <label>不透明度<input id="layerOpacity" type="range" min="0" max="1" step="0.05" /></label>
+        <label class="check"><input id="layerVisible" type="checkbox" />可见并参与导出</label>
+        <label class="check"
+          ><input id="layerDecorative" type="checkbox" />仅装饰，不覆盖地形属性</label
+        >
+        <label class="check"><input id="layerDynamic" type="checkbox" />动态图层（事件预留）</label>
+        <div id="imageProperties" hidden>
+          <div class="pair">
+            <label>图片X/格<input id="imageX" type="number" step="0.1" /></label
+            ><label>图片Y/格<input id="imageY" type="number" step="0.1" /></label>
+          </div>
+          <div class="pair">
+            <label>图片宽/格<input id="imageWidth" type="number" min="0.1" step="0.1" /></label
+            ><label>图片高/格<input id="imageHeight" type="number" min="0.1" step="0.1" /></label>
+          </div>
+        </div>
+        <h2>地图检查</h2>
+        <button id="validateMap">检查游戏兼容性</button>
+        <ul id="validation"></ul>
+        <p class="hint">
+          工程保存所有图层、图片和规则。游戏地图同时包含工程及已合成的地形，可直接重新导入继续编辑。
+        </p>
+      </aside>
+    </main>
+    <footer>
+      <span id="status" role="status">准备就绪</span
+      ><span>空格/中键平移 · 滚轮缩放 · Ctrl+Z撤销 · Delete删除选区</span>
+    </footer>
+    <input id="fileInput" type="file" hidden />
+    <dialog id="editorDialog">
+      <h2 id="dialogTitle"></h2>
+      <p id="dialogMessage"></p>
+      <div id="dialogActions"></div>
+    </dialog>
+    <script>
+      /* Portable TileMap document and editing operations, shared by the editor and importer. */
+const MapDocument = (() => {
+  "use strict";
+  const format = "ProjectGreedTileMap";
+  const terrains = {
+    plain: { name: "普通", color: "#52626b" },
+    water: { name: "水", color: "#346c99" },
+    rock: { name: "山", color: "#73747a" },
+    forest: { name: "林", color: "#39704f" },
+    rubble: { name: "废墟", color: "#7c6963" },
+    snow: { name: "雪地", color: "#d7e5ee" },
+    desert: { name: "沙漠", color: "#c5a86d" },
+    highland: { name: "高地（兼容）", color: "#93885e" },
+  };
+  const copy = (value) => JSON.parse(JSON.stringify(value));
+  const integer = (v, min, max) => Number.isInteger(v) && v >= min && v <= max;
+  function layer(doc, name = "图块图层") {
+    return {
+      id: uid("layer"),
+      name,
+      type: "tile",
+      placement: "below",
+      decorative: false,
+      dynamic: false,
+      visible: true,
+      opacity: 1,
+      data: Array(doc.width * doc.height).fill(null),
+    };
+  }
+  function uid(prefix) {
+    return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9);
+  }
+  function setPlayers(doc, teams, playersPerTeam) {
+    if (!integer(teams, 2, 8) || !integer(playersPerTeam, 1, 5))
+      throw Error("队伍需为2–8队，每队1–5名玩家。");
+    doc.maxTeams = teams;
+    doc.playersPerTeam = playersPerTeam;
+    doc.spawns = [];
+    doc.deploymentAreas = [];
+    // Teams occupy disjoint vertical strips; players within a team occupy separate rows.
+    for (let position = 0; position < playersPerTeam; position++) {
+      for (let team = 0; team < teams; team++) {
+        const strip = Math.max(1, Math.floor(doc.width / teams));
+        const width = Math.max(1, Math.min(10, strip));
+        const x = teams === 2 ? (team ? doc.width - width : 0) : team * strip;
+        const y = Math.floor((position * doc.height) / playersPerTeam);
+        const height = Math.floor(((position + 1) * doc.height) / playersPerTeam) - y;
+        doc.deploymentAreas.push({ x, y, width, height });
+        doc.spawns.push({
+          team,
+          position: position + 1,
+          x: x + Math.floor(width / 2),
+          y: y + Math.floor(height / 2),
+        });
+      }
+    }
+  }
+  function create(options = {}) {
+    const doc = {
+      format,
+      version: 1,
+      id: "custom_map",
+      name: "新地图",
+      description: "",
+      width: 48,
+      height: 32,
+      tileWidth: 32,
+      tileHeight: 32,
+      environment: "ground",
+      defaultTerrain: "plain",
+      maxTeams: 2,
+      playersPerTeam: 1,
+      supportedModes: ["regular", "quick"],
+      seed: 1,
+      tilesets: [],
+      tiles: [],
+      layers: [],
+      rules: [],
+      spawns: [],
+      deploymentAreas: [],
+      ...options,
+    };
+    doc.tiles = Object.entries(terrains).map(([terrain, info]) => ({
+      id: "terrain_" + terrain,
+      name: info.name,
+      terrain,
+      environment: doc.environment,
+      color: info.color,
+      decorative: false,
+      dynamic: false,
+    }));
+    doc.layers = [layer(doc, "地形")];
+    setPlayers(doc, doc.maxTeams, doc.playersPerTeam);
+    return doc;
+  }
+  function snapshot(doc) {
+    // Images are immutable strings. Share them across history, instead of cloning base64 repeatedly.
+    return {
+      ...doc,
+      supportedModes: [...doc.supportedModes],
+      tilesets: doc.tilesets.map((t) => ({ ...t })),
+      tiles: doc.tiles.map((t) => ({ ...t })),
+      layers: doc.layers.map((l) => ({
+        ...l,
+        data: l.data?.slice(),
+        image: l.image && { ...l.image },
+      })),
+      spawns: doc.spawns.map((s) => ({ ...s })),
+      deploymentAreas: doc.deploymentAreas.map((a) => ({ ...a })),
+      rules: copy(doc.rules),
+    };
+  }
+  function validate(doc) {
+    if (!doc || doc.format !== format || doc.version !== 1) throw Error("不是受支持的地图工程。");
+    if (
+      !/^[a-z][a-z0-9_]{0,63}$/.test(doc.id) ||
+      doc.id === "constructor" ||
+      typeof doc.name !== "string" ||
+      !doc.name.trim()
+    )
+      throw Error("地图ID需以小写字母开头，仅含小写字母、数字、下划线；名称不能为空。");
+    if (
+      !integer(doc.width, 12, 128) ||
+      !integer(doc.height, 9, 128) ||
+      !integer(doc.tileWidth, 4, 512) ||
+      !integer(doc.tileHeight, 4, 512)
+    )
+      throw Error("地图应为12–128列、9–128行；Tile尺寸应为4–512像素。");
+    if (!["ground", "space"].includes(doc.environment) || !terrains[doc.defaultTerrain])
+      throw Error("地图环境或默认地形无效。");
+    if (!integer(doc.maxTeams, 2, 8) || !integer(doc.playersPerTeam, 1, 5))
+      throw Error("玩家配置无效。");
+    if (
+      !Array.isArray(doc.supportedModes) ||
+      !doc.supportedModes.length ||
+      doc.supportedModes.some((m) => !["regular", "quick"].includes(m))
+    )
+      throw Error("至少启用一种有效对战模式。");
+    if (!Number.isSafeInteger(doc.seed)) throw Error("随机种子必须为整数。");
+    const arrays = [
+      doc.tilesets,
+      doc.tiles,
+      doc.layers,
+      doc.rules,
+      doc.spawns,
+      doc.deploymentAreas,
+    ];
+    if (
+      arrays.some((a) => !Array.isArray(a)) ||
+      doc.layers.length < 1 ||
+      doc.layers.length > 32 ||
+      doc.tiles.length > 16384 ||
+      doc.tilesets.length > 32 ||
+      doc.rules.length > 128
+    )
+      throw Error("地图结构或图层/图块数量无效。");
+    const ids = (list) => {
+      if (
+        list.some((t) => typeof t.id !== "string" || !/^[\w-]{1,100}$/.test(t.id)) ||
+        new Set(list.map((t) => t.id)).size !== list.length
+      )
+        throw Error("图块、规则或图层ID重复/无效。");
+    };
+    [doc.tilesets, doc.tiles, doc.layers, doc.rules].forEach(ids);
+    const image = (value) => {
+      if (
+        typeof value !== "string" ||
+        value.length > 48 * 1024 * 1024 + 64 ||
+        !/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+={0,2}$/.test(value)
+      )
+        throw Error("图片必须嵌入为PNG/JPEG/WebP/GIF，单图不超过36MB。");
+    };
+    const sets = new Map(doc.tilesets.map((t) => [t.id, t]));
+    const tiles = new Set(doc.tiles.map((t) => t.id));
+    for (const set of doc.tilesets) {
+      image(set.image);
+      if (
+        ![set.width, set.height].every((n) => integer(n, 1, 8192)) ||
+        ![set.tileWidth, set.tileHeight].every((n) => integer(n, 4, 512)) ||
+        !integer(set.margin, 0, 512) ||
+        !integer(set.spacing, 0, 512)
+      )
+        throw Error("图集尺寸无效。");
+    }
+    for (const tile of doc.tiles) {
+      if (
+        !terrains[tile.terrain] ||
+        !["ground", "space"].includes(tile.environment) ||
+        !/^#[a-f0-9]{6}$/i.test(tile.color || "")
+      )
+        throw Error("图块属性无效：" + tile.id);
+      if (tile.tilesetId) {
+        const set = sets.get(tile.tilesetId);
+        if (
+          !set ||
+          !integer(tile.x, 0, 8192) ||
+          !integer(tile.y, 0, 8192) ||
+          tile.x + set.tileWidth > set.width ||
+          tile.y + set.tileHeight > set.height
+        )
+          throw Error("图块超出图集：" + tile.id);
+      }
+    }
+    for (const l of doc.layers) {
+      if (
+        !["tile", "image"].includes(l.type) ||
+        !["below", "above"].includes(l.placement) ||
+        !Number.isFinite(l.opacity) ||
+        l.opacity < 0 ||
+        l.opacity > 1 ||
+        typeof l.visible !== "boolean" ||
+        typeof l.decorative !== "boolean"
+      )
+        throw Error("图层属性无效。");
+      if (
+        l.type === "tile" &&
+        (!Array.isArray(l.data) ||
+          l.data.length !== doc.width * doc.height ||
+          l.data.some((id) => id !== null && !tiles.has(id)))
+      )
+        throw Error("图层包含未知Tile或尺寸不符。");
+      if (l.type === "image") {
+        image(l.image?.src);
+        if (
+          ![l.image.x, l.image.y, l.image.width, l.image.height].every(Number.isFinite) ||
+          l.image.width <= 0 ||
+          l.image.height <= 0
+        )
+          throw Error("整图图层的位置或尺寸无效。");
+      }
+    }
+    for (const rule of doc.rules) {
+      if (rule.type === "random") {
+        if (
+          !Array.isArray(rule.variants) ||
+          !rule.variants.length ||
+          rule.variants.length > 256 ||
+          rule.variants.some(
+            (v) => !tiles.has(v.tileId) || !Number.isFinite(v.weight) || v.weight <= 0,
+          )
+        )
+          throw Error("随机规则需包含有效图块及正权重。");
+      } else if (rule.type === "nine") {
+        if (
+          !Array.isArray(rule.tiles) ||
+          rule.tiles.length !== 9 ||
+          rule.tiles.some((id) => !tiles.has(id))
+        )
+          throw Error("九宫格规则必须包含9个有效Tile。");
+      } else throw Error("未知图块规则。");
+    }
+    if (
+      doc.spawns.length !== doc.maxTeams * doc.playersPerTeam ||
+      doc.deploymentAreas.length !== doc.spawns.length
+    )
+      throw Error("出生地与部署区域数量必须匹配玩家人数。");
+    for (const [i, spawn] of doc.spawns.entries()) {
+      const a = doc.deploymentAreas[i];
+      if (
+        spawn.team !== i % doc.maxTeams ||
+        spawn.position !== Math.floor(i / doc.maxTeams) + 1 ||
+        !integer(spawn.x, 0, doc.width - 1) ||
+        !integer(spawn.y, 0, doc.height - 1) ||
+        !a ||
+        !integer(a.x, 0, doc.width - 1) ||
+        !integer(a.y, 0, doc.height - 1) ||
+        !integer(a.width, 1, doc.width - a.x) ||
+        !integer(a.height, 1, doc.height - a.y)
+      )
+        throw Error("出生地或部署区域超出地图。");
+    }
+    return doc;
+  }
+  function resize(doc, width, height) {
+    if (!integer(width, 12, 128) || !integer(height, 9, 128)) throw Error("地图尺寸超出范围。");
+    for (const l of doc.layers) {
+      if (l.type !== "tile") continue;
+      const data = Array(width * height).fill(null);
+      for (let y = 0; y < Math.min(doc.height, height); y++)
+        for (let x = 0; x < Math.min(doc.width, width); x++)
+          data[y * width + x] = l.data[y * doc.width + x];
+      l.data = data;
+    }
+    doc.width = width;
+    doc.height = height;
+    for (const [i, s] of doc.spawns.entries()) {
+      s.x = Math.min(s.x, width - 1);
+      s.y = Math.min(s.y, height - 1);
+      const a = doc.deploymentAreas[i];
+      a.x = Math.min(a.x, width - 1);
+      a.y = Math.min(a.y, height - 1);
+      a.width = Math.min(a.width, width - a.x);
+      a.height = Math.min(a.height, height - a.y);
+    }
+  }
+  function addTileset(doc, set) {
+    const id = set.id || uid("atlas");
+    const value = { id, margin: 0, spacing: 0, ...set };
+    doc.tilesets.push(value);
+    for (
+      let y = value.margin;
+      y + value.tileHeight <= value.height - value.margin;
+      y += value.tileHeight + value.spacing
+    )
+      for (
+        let x = value.margin;
+        x + value.tileWidth <= value.width - value.margin;
+        x += value.tileWidth + value.spacing
+      )
+        doc.tiles.push({
+          id: id + "_" + x + "_" + y,
+          name: value.name + " " + x + "," + y,
+          tilesetId: id,
+          x,
+          y,
+          terrain: doc.defaultTerrain,
+          environment: doc.environment,
+          color: terrains[doc.defaultTerrain].color,
+          decorative: false,
+          dynamic: false,
+        });
+    return id;
+  }
+  function inside(doc, x, y) {
+    return x >= 0 && y >= 0 && x < doc.width && y < doc.height;
+  }
+  function rect(a, b) {
+    return {
+      x: Math.min(a.x, b.x),
+      y: Math.min(a.y, b.y),
+      width: Math.abs(a.x - b.x) + 1,
+      height: Math.abs(a.y - b.y) + 1,
+    };
+  }
+  function random(seed, x, y, salt = 0) {
+    let n =
+      Math.imul(x + 1, 73856093) ^ Math.imul(y + 1, 19349663) ^ seed ^ Math.imul(salt, 83492791);
+    n = Math.imul(n ^ (n >>> 16), 2246822507);
+    n = Math.imul(n ^ (n >>> 13), 3266489909);
+    return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
+  }
+  function ruleTile(doc, rule, tileId, x, y, bounds, salt = 0) {
+    if (!rule) return tileId;
+    if (rule.type === "nine") {
+      const row = y === bounds.y ? 0 : y === bounds.y + bounds.height - 1 ? 2 : 1;
+      const col = x === bounds.x ? 0 : x === bounds.x + bounds.width - 1 ? 2 : 1;
+      return rule.tiles[row * 3 + col];
+    }
+    const sum = rule.variants.reduce((n, v) => n + v.weight, 0);
+    let pick = random(doc.seed, x, y, salt) * sum;
+    return (rule.variants.find((v) => (pick -= v.weight) < 0) || rule.variants.at(-1)).tileId;
+  }
+  function paintRect(doc, l, bounds, tileId, rule = null, outline = false) {
+    for (let y = bounds.y; y < bounds.y + bounds.height; y++)
+      for (let x = bounds.x; x < bounds.x + bounds.width; x++) {
+        if (
+          !inside(doc, x, y) ||
+          (outline &&
+            x !== bounds.x &&
+            y !== bounds.y &&
+            x !== bounds.x + bounds.width - 1 &&
+            y !== bounds.y + bounds.height - 1)
+        )
+          continue;
+        l.data[y * doc.width + x] =
+          tileId === null ? null : ruleTile(doc, rule, tileId, x, y, bounds);
+      }
+  }
+  function line(a, b, visit) {
+    let { x, y } = a;
+    const dx = Math.abs(b.x - x),
+      dy = -Math.abs(b.y - y),
+      sx = x < b.x ? 1 : -1,
+      sy = y < b.y ? 1 : -1;
+    let error = dx + dy;
+    for (;;) {
+      visit(x, y);
+      if (x === b.x && y === b.y) break;
+      const twice = error * 2;
+      if (twice >= dy) {
+        error += dy;
+        x += sx;
+      }
+      if (twice <= dx) {
+        error += dx;
+        y += sy;
+      }
+    }
+  }
+  function fill(doc, l, x, y, tileId, rule = null) {
+    if (!inside(doc, x, y)) return;
+    const original = l.data[y * doc.width + x],
+      seen = new Set(),
+      queue = [[x, y]];
+    const bounds = { x: 0, y: 0, width: doc.width, height: doc.height };
+    for (let i = 0; i < queue.length; i++) {
+      const [cx, cy] = queue[i],
+        index = cy * doc.width + cx;
+      if (!inside(doc, cx, cy) || seen.has(index) || l.data[index] !== original) continue;
+      seen.add(index);
+      l.data[index] = ruleTile(doc, rule, tileId, cx, cy, bounds);
+      queue.push([cx - 1, cy], [cx + 1, cy], [cx, cy - 1], [cx, cy + 1]);
+    }
+  }
+  function selection(doc, l, bounds) {
+    return {
+      width: bounds.width,
+      height: bounds.height,
+      data: Array.from({ length: bounds.width * bounds.height }, (_, i) => {
+        const x = bounds.x + (i % bounds.width),
+          y = bounds.y + Math.floor(i / bounds.width);
+        return inside(doc, x, y) ? l.data[y * doc.width + x] : null;
+      }),
+    };
+  }
+  function paste(doc, l, block, x, y) {
+    block.data.forEach((id, i) => {
+      const cx = x + (i % block.width),
+        cy = y + Math.floor(i / block.width);
+      if (inside(doc, cx, cy)) l.data[cy * doc.width + cx] = id;
+    });
+  }
+  function terrainData(doc) {
+    const tiles = Array.from({ length: doc.height }, () =>
+      Array(doc.width).fill(doc.defaultTerrain),
+    );
+    const cellEnvironments = Array.from({ length: doc.height }, () =>
+      Array(doc.width).fill(doc.environment),
+    );
+    const lookup = new Map(doc.tiles.map((t) => [t.id, t]));
+    for (const l of doc.layers) {
+      if (l.type !== "tile" || l.decorative || !l.visible) continue;
+      l.data.forEach((id, i) => {
+        const tile = lookup.get(id);
+        if (!tile || tile.decorative) return;
+        const y = Math.floor(i / doc.width),
+          x = i % doc.width;
+        tiles[y][x] = tile.terrain;
+        cellEnvironments[y][x] = tile.environment;
+      });
+    }
+    return { tiles, cellEnvironments };
+  }
+  function compile(doc) {
+    validate(doc);
+    const { tiles, cellEnvironments } = terrainData(doc);
+    return {
+      id: doc.id,
+      name: doc.name,
+      description: doc.description,
+      width: doc.width,
+      height: doc.height,
+      environment: doc.environment,
+      maxTeams: doc.maxTeams,
+      playersPerTeam: doc.playersPerTeam,
+      supportedModes: [...doc.supportedModes],
+      deploymentRadius: 4,
+      spawns: copy(doc.spawns),
+      deploymentAreas: copy(doc.deploymentAreas),
+      tiles,
+      cellEnvironments,
+      tileMap: snapshot(doc),
+    };
+  }
+  function gameIssues(doc, maxUnits = 72) {
+    try {
+      validate(doc);
+    } catch (error) {
+      return [error.message];
+    }
+    const problems = [],
+      map = compile(doc);
+    if (doc.maxTeams !== 2)
+      problems.push("当前游戏支持2队；多队配置可保存工程，暂不能注册为对战地图。");
+    for (const [i, area] of doc.deploymentAreas.entries()) {
+      const s = doc.spawns[i];
+      if (s.x < area.x || s.y < area.y || s.x >= area.x + area.width || s.y >= area.y + area.height)
+        problems.push("玩家" + (i + 1) + "的出生地不在自己的部署区内。");
+      let capacity = 0;
+      for (let y = area.y; y < area.y + area.height; y++)
+        for (let x = area.x; x < area.x + area.width; x++)
+          if (!["rock", "water"].includes(map.tiles[y][x])) capacity++;
+      if (capacity < maxUnits)
+        problems.push("玩家" + (i + 1) + "部署区可通行格数不足" + maxUnits + "。");
+      if (
+        doc.deploymentAreas
+          .slice(0, i)
+          .some(
+            (b) =>
+              area.x < b.x + b.width &&
+              b.x < area.x + area.width &&
+              area.y < b.y + b.height &&
+              b.y < area.y + area.height,
+          )
+      )
+        problems.push("玩家" + (i + 1) + "部署区与其他部署区重叠。");
+    }
+    return problems;
+  }
+  function importMap(value) {
+    if (value?.tileMap) return validate(copy(value.tileMap));
+    if (value?.format === format) return validate(copy(value));
+    if (!value?.tiles || !value?.spawns) throw Error("不是地图工程或游戏地图文件。");
+    const doc = create({
+      id: value.id,
+      name: value.name,
+      width: value.width,
+      height: value.height,
+      description: value.description || "",
+      environment: value.environment || "ground",
+      maxTeams: value.maxTeams || 2,
+      playersPerTeam: value.playersPerTeam || 1,
+      supportedModes: value.supportedModes || ["regular", "quick"],
+    });
+    doc.layers[0].data = value.tiles.flat().map((t) => "terrain_" + t);
+    doc.spawns = copy(value.spawns);
+    if (value.deploymentAreas) doc.deploymentAreas = copy(value.deploymentAreas);
+    else
+      doc.deploymentAreas = doc.spawns.map((s) => {
+        const r = value.deploymentRadius || 4;
+        return {
+          x: Math.max(0, s.x - r),
+          y: Math.max(0, s.y - r),
+          width: Math.min(doc.width, s.x + r + 1) - Math.max(0, s.x - r),
+          height: Math.min(doc.height, s.y + r + 1) - Math.max(0, s.y - r),
+        };
+      });
+    return validate(doc);
+  }
+  return {
+    format,
+    terrains,
+    uid,
+    create,
+    snapshot,
+    validate,
+    resize,
+    layer,
+    setPlayers,
+    addTileset,
+    inside,
+    rect,
+    random,
+    ruleTile,
+    paintRect,
+    line,
+    fill,
+    selection,
+    paste,
+    terrainData,
+    compile,
+    gameIssues,
+    importMap,
+  };
+})();
+if (typeof module !== "undefined") module.exports = MapDocument;
+
+/* Canvas TileMap rendering shared by the standalone editor and battle renderer. */
+const TileMapView = (() => {
+  function create({ changed = () => {}, loadImage } = {}) {
+    const images = new Map();
+    let indexes = new WeakMap();
+    function image(src) {
+      if (!images.has(src)) {
+        if (loadImage) images.set(src, loadImage(src));
+        else {
+          const img = new Image();
+          images.set(src, img);
+          img.onload = changed;
+          img.onerror = changed;
+          img.src = src;
+        }
+      }
+      const img = images.get(src);
+      return img && img.complete !== false && (img.naturalWidth || img.width) > 0 ? img : null;
+    }
+    function index(doc) {
+      if (!indexes.has(doc))
+        indexes.set(doc, {
+          tiles: new Map(doc.tiles.map((t) => [t.id, t])),
+          sets: new Map(doc.tilesets.map((s) => [s.id, s])),
+        });
+      return indexes.get(doc);
+    }
+    function drawTile(ctx, doc, id, x, y, width, height) {
+      const lookup = index(doc),
+        tile = lookup.tiles.get(id);
+      if (!tile) return;
+      const set = lookup.sets.get(tile.tilesetId),
+        img = set && image(set.image);
+      if (set) {
+        if (img)
+          ctx.drawImage(img, tile.x, tile.y, set.tileWidth, set.tileHeight, x, y, width, height);
+      } else {
+        ctx.fillStyle = tile.color;
+        ctx.fillRect(x, y, width, height);
+      }
+    }
+    function draw(ctx, doc, placement, view) {
+      const { ox, oy, cellWidth: cw, cellHeight: ch, width, height } = view;
+      const x0 = Math.max(0, Math.floor(-ox / cw)),
+        y0 = Math.max(0, Math.floor(-oy / ch));
+      const x1 = Math.min(doc.width, Math.ceil((width - ox) / cw)),
+        y1 = Math.min(doc.height, Math.ceil((height - oy) / ch));
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(ox, oy, doc.width * cw, doc.height * ch);
+      ctx.clip();
+      ctx.imageSmoothingEnabled = false;
+      for (const layer of doc.layers) {
+        if (!layer.visible || layer.opacity <= 0 || layer.placement !== placement) continue;
+        ctx.globalAlpha = layer.opacity;
+        if (layer.type === "image") {
+          const i = layer.image,
+            img = image(i.src);
+          if (img) ctx.drawImage(img, ox + i.x * cw, oy + i.y * ch, i.width * cw, i.height * ch);
+        } else {
+          for (let y = y0; y < y1; y++)
+            for (let x = x0; x < x1; x++) {
+              const id = layer.data[y * doc.width + x];
+              if (id !== null) drawTile(ctx, doc, id, ox + x * cw, oy + y * ch, cw, ch);
+            }
+        }
+      }
+      ctx.restore();
+    }
+    return {
+      draw,
+      drawTile,
+      image,
+      invalidate: () => {
+        indexes = new WeakMap();
+      },
+    };
+  }
+  return { create };
+})();
+if (typeof module !== "undefined") module.exports = TileMapView;
+
+    </script>
+    <script>
+      /* Standalone map authoring. No server or browser storage is required. */
+const MapEditor = (() => {
+  "use strict";
+  const M = MapDocument,
+    $ = (id) => document.getElementById(id);
+  let doc = M.create(),
+    layerId = doc.layers[0].id,
+    tileId = doc.tiles[0].id;
+  let tool = "brush",
+    ruleId = "",
+    selectedArea = null,
+    stamp = null,
+    clipboard = null;
+  let history = [],
+    future = [],
+    drag = null,
+    hover = null,
+    space = false,
+    dirty = false;
+  let camera = { x: 20, y: 20, zoom: 1 },
+    pendingFrame = false,
+    filePurpose = "map",
+    atlasStart = null,
+    terrainCache = null,
+    paintRevision = 0;
+  const canvas = $("mapCanvas"),
+    viewport = $("viewport"),
+    ctx = canvas.getContext("2d");
+  const layerCaches = new Map();
+  const renderer = TileMapView.create({
+    changed: () => {
+      paintRevision++;
+      drawSoon();
+      drawAtlas();
+    },
+  });
+  const activeLayer = () => doc.layers.find((l) => l.id === layerId);
+  const activeTile = () => doc.tiles.find((t) => t.id === tileId);
+  const activeRule = () => doc.rules.find((r) => r.id === ruleId);
+  const number = (id) => Number($(id).value);
+  function status(text) {
+    $("status").textContent = text;
+  }
+  function node(tag, text, className) {
+    const e = document.createElement(tag);
+    if (text !== undefined) e.textContent = text;
+    if (className) e.className = className;
+    return e;
+  }
+  function message(title, text, confirm = null) {
+    const dialog = $("editorDialog");
+    $("dialogTitle").textContent = title;
+    $("dialogMessage").textContent = text;
+    const actions = $("dialogActions");
+    actions.replaceChildren();
+    const close = node("button", confirm ? "取消" : "确认");
+    close.onclick = () => dialog.close();
+    actions.append(close);
+    if (confirm) {
+      const ok = node("button", "确认", "primary");
+      ok.onclick = () => {
+        dialog.close();
+        run(confirm);
+      };
+      actions.append(ok);
+    }
+    if (!dialog.open) dialog.showModal();
+  }
+  function run(fn) {
+    try {
+      const result = fn();
+      if (result?.catch) result.catch((e) => message("操作失败", e.message));
+    } catch (error) {
+      message("操作失败", error.message);
+    }
+  }
+  function checkpoint() {
+    history.push(M.snapshot(doc));
+    if (history.length > 40) history.shift();
+    future = [];
+    dirty = true;
+  }
+  function changed(text = "已修改地图") {
+    terrainCache = null;
+    paintRevision++;
+    renderer.invalidate();
+    refresh();
+    drawSoon();
+    status(text);
+  }
+  function undo(redo = false) {
+    const from = redo ? future : history,
+      to = redo ? history : future;
+    if (!from.length) return;
+    to.push(M.snapshot(doc));
+    doc = from.pop();
+    if (!doc.layers.some((l) => l.id === layerId)) layerId = doc.layers[0].id;
+    if (!doc.tiles.some((t) => t.id === tileId)) tileId = doc.tiles[0].id;
+    if (!doc.rules.some((r) => r.id === ruleId)) ruleId = "";
+    if (
+      clipboard &&
+      clipboard.data.some((id) => id !== null && !doc.tiles.some((t) => t.id === id))
+    )
+      clipboard = null;
+    selectedArea = stamp = null;
+    dirty = true;
+    changed(redo ? "已重做" : "已撤销");
+  }
+  function chooseTool(next) {
+    tool = next;
+    document
+      .querySelectorAll("[data-tool]")
+      .forEach((b) => b.classList.toggle("active", b.dataset.tool === tool));
+    status(
+      {
+        spawn: "点击地图设置所选玩家的出生地",
+        deployment: "拖动框选所选玩家的部署区域",
+        paste: "点击地图粘贴选区",
+      }[tool] || "当前工具：" + tool,
+    );
+  }
+  function tab(name) {
+    document.querySelectorAll("[data-page]").forEach((e) => (e.hidden = e.dataset.page !== name));
+    document
+      .querySelectorAll("[data-tab]")
+      .forEach((e) => e.classList.toggle("active", e.dataset.tab === name));
+    drawAtlas();
+  }
+  function options(select, list, value) {
+    if (
+      select.options.length !== list.length ||
+      list.some(([id], i) => select.options[i].value !== String(id))
+    )
+      select.replaceChildren(
+        ...list.map(([id, label]) => {
+          const o = node("option", label);
+          o.value = id;
+          return o;
+        }),
+      );
+    else
+      list.forEach(([, label], i) => {
+        if (select.options[i].textContent !== label) select.options[i].textContent = label;
+      });
+    select.value = value;
+  }
+  for (const id of ["defaultTerrain", "tileTerrain"])
+    options(
+      $(id),
+      Object.entries(M.terrains).map(([k, v]) => [k, v.name]),
+      "plain",
+    );
+  function refresh() {
+    for (const [id, value] of Object.entries({
+      mapId: doc.id,
+      mapName: doc.name,
+      mapDescription: doc.description,
+      mapWidth: doc.width,
+      mapHeight: doc.height,
+      tileWidth: doc.tileWidth,
+      tileHeight: doc.tileHeight,
+      mapEnvironment: doc.environment,
+      defaultTerrain: doc.defaultTerrain,
+      maxTeams: doc.maxTeams,
+      playersPerTeam: doc.playersPerTeam,
+      randomSeed: doc.seed,
+    }))
+      $(id).value = value;
+    $("modeRegular").checked = doc.supportedModes.includes("regular");
+    $("modeQuick").checked = doc.supportedModes.includes("quick");
+    $("playerCount").textContent = "共 " + doc.spawns.length + " 名玩家 · " + doc.maxTeams + " 队";
+    const seat = Math.min(Number($("spawnSeat").value) || 0, doc.spawns.length - 1);
+    options(
+      $("spawnSeat"),
+      doc.spawns.map((s, i) => [i, "队伍" + (s.team + 1) + " / 玩家" + s.position]),
+      String(seat),
+    );
+    refreshSpawn();
+    const selectedSet = doc.tilesets.some((s) => s.id === $("tilesetList").value)
+      ? $("tilesetList").value
+      : "builtin";
+    options(
+      $("tilesetList"),
+      [["builtin", "地形色块"], ...doc.tilesets.map((s) => [s.id, s.name])],
+      selectedSet,
+    );
+    const visibleTiles = doc.tiles.filter((t) =>
+      selectedSet === "builtin" ? !t.tilesetId : t.tilesetId === selectedSet,
+    );
+    options(
+      $("tileList"),
+      visibleTiles.map((t) => [t.id, t.name]),
+      tileId,
+    );
+    const tile = activeTile();
+    if (tile) {
+      $("tileName").value = tile.name;
+      $("tileTerrain").value = tile.terrain;
+      $("tileEnvironment").value = tile.environment;
+      $("tileDecorative").checked = !!tile.decorative;
+      $("tileDynamic").checked = !!tile.dynamic;
+    }
+    const palette = $("terrainPalette");
+    palette.replaceChildren();
+    palette.hidden = selectedSet !== "builtin";
+    for (const t of doc.tiles.filter((t) => !t.tilesetId)) {
+      const button = node("button", t.name, t.id === tileId ? "active" : "");
+      button.style.setProperty("--swatch", t.color);
+      button.dataset.tile = t.id;
+      button.onclick = (e) => pickTile(t.id, e.ctrlKey || e.metaKey);
+      palette.append(button);
+    }
+    const list = $("layerList");
+    list.replaceChildren();
+    for (const l of [...doc.layers].reverse()) {
+      const button = node("button", l.name, l.id === layerId ? "active" : "");
+      button.dataset.layer = l.id;
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(l.id === layerId));
+      button.append(
+        node(
+          "small",
+          (l.visible ? "显示" : "隐藏") +
+            " · " +
+            (l.placement === "above" ? "单位上方" : "单位下方") +
+            (l.decorative ? " · 装饰" : ""),
+        ),
+      );
+      button.onclick = () => {
+        layerId = l.id;
+        selectedArea = null;
+        refresh();
+        drawSoon();
+      };
+      list.append(button);
+    }
+    const l = activeLayer();
+    if (l) {
+      $("layerName").value = l.name;
+      $("layerPlacement").value = l.placement;
+      $("layerOpacity").value = l.opacity;
+      $("layerVisible").checked = l.visible;
+      $("layerDecorative").checked = l.decorative;
+      $("layerDynamic").checked = !!l.dynamic;
+      $("imageProperties").hidden = l.type !== "image";
+      if (l.image)
+        for (const key of ["x", "y", "width", "height"])
+          $("image" + key[0].toUpperCase() + key.slice(1)).value = l.image[key];
+    }
+    $("deleteLayer").disabled = doc.layers.length <= 1;
+    $("undo").disabled = !history.length;
+    $("redo").disabled = !future.length;
+    options(
+      $("paintRule"),
+      [["", "单Tile / 多格画笔"], ...doc.rules.map((r) => [r.id, r.name])],
+      ruleId,
+    );
+    refreshRule();
+    drawAtlas();
+  }
+  function refreshSpawn() {
+    const i = Number($("spawnSeat").value) || 0,
+      s = doc.spawns[i],
+      a = doc.deploymentAreas[i];
+    if (!s) return;
+    for (const [id, v] of Object.entries({
+      spawnX: s.x,
+      spawnY: s.y,
+      areaX: a.x,
+      areaY: a.y,
+      areaWidth: a.width,
+      areaHeight: a.height,
+    }))
+      $(id).value = v;
+    drawSoon();
+  }
+  function refreshRule() {
+    const rule = activeRule(),
+      panel = $("ruleEditor");
+    panel.replaceChildren();
+    $("ruleName").value = rule?.name || "";
+    $("ruleName").disabled = !rule;
+    $("deleteRule").disabled = !rule;
+    $("addVariant").disabled = rule?.type !== "random";
+    if (!rule) return;
+    if (rule.type === "random") {
+      rule.variants.forEach((v, i) => {
+        const row = node("div", undefined, "variant");
+        row.append(node("span", doc.tiles.find((t) => t.id === v.tileId)?.name || v.tileId));
+        const weight = node("input");
+        weight.type = "number";
+        weight.min = "0.01";
+        weight.step = "0.1";
+        weight.value = v.weight;
+        weight.setAttribute("aria-label", "候选" + (i + 1) + "权重");
+        weight.onchange = () =>
+          run(() => {
+            if (!(Number(weight.value) > 0)) throw Error("权重必须大于0。");
+            checkpoint();
+            v.weight = Number(weight.value);
+            changed("已更新随机权重");
+          });
+        const remove = node("button", "×");
+        remove.disabled = rule.variants.length === 1;
+        remove.onclick = () => {
+          checkpoint();
+          rule.variants.splice(i, 1);
+          changed();
+        };
+        row.append(weight, remove);
+        panel.append(row);
+      });
+    } else {
+      const grid = node("div", undefined, "nine-grid");
+      rule.tiles.forEach((id, i) => {
+        const button = node(
+          "button",
+          ["左上", "上", "右上", "左", "中心", "右", "左下", "下", "右下"][i],
+        );
+        button.title = doc.tiles.find((t) => t.id === id)?.name || id;
+        button.style.borderTop =
+          "6px solid " + (doc.tiles.find((t) => t.id === id)?.color || "#777");
+        button.onclick = () => {
+          checkpoint();
+          rule.tiles[i] = tileId;
+          changed("已将当前Tile绑定到九宫格位置" + (i + 1));
+        };
+        grid.append(button);
+      });
+      panel.append(grid);
+    }
+  }
+  function pickTile(id, addRandom = false) {
+    tileId = id;
+    stamp = null;
+    if (addRandom) run(addVariant);
+    refresh();
+    drawSoon();
+    status("已选择：" + activeTile().name);
+  }
+  function addVariant() {
+    const r = activeRule();
+    if (!r || r.type !== "random") throw Error("先在“规则”页新建或选择随机规则。");
+    if (!r.variants.some((v) => v.tileId === tileId)) {
+      checkpoint();
+      r.variants.push({ tileId, weight: 1 });
+      changed("已添加随机候选");
+    }
+  }
+  function drawAtlas() {
+    const canvas = $("atlasCanvas"),
+      set = doc.tilesets.find((s) => s.id === $("tilesetList").value);
+    canvas.hidden = !set;
+    if (!set) return;
+    const image = renderer.image(set.image);
+    if (!image) return;
+    const scale = Math.min(1, 1024 / Math.max(set.width, set.height));
+    canvas.width = Math.round(set.width * scale);
+    canvas.height = Math.round(set.height * scale);
+    const c = canvas.getContext("2d");
+    c.imageSmoothingEnabled = false;
+    c.drawImage(image, 0, 0, canvas.width, canvas.height);
+    c.strokeStyle = "#ffffff40";
+    c.lineWidth = 0.5;
+    for (const t of doc.tiles.filter((t) => t.tilesetId === set.id)) {
+      c.strokeRect(t.x * scale, t.y * scale, set.tileWidth * scale, set.tileHeight * scale);
+      if (t.id === tileId) {
+        c.strokeStyle = "#ffdf64";
+        c.lineWidth = 2;
+        c.strokeRect(
+          t.x * scale + 1,
+          t.y * scale + 1,
+          set.tileWidth * scale - 2,
+          set.tileHeight * scale - 2,
+        );
+        c.strokeStyle = "#ffffff40";
+        c.lineWidth = 0.5;
+      }
+    }
+  }
+  function atlasTile(event) {
+    const set = doc.tilesets.find((s) => s.id === $("tilesetList").value);
+    if (!set) return null;
+    const r = $("atlasCanvas").getBoundingClientRect(),
+      x = ((event.clientX - r.left) / r.width) * set.width,
+      y = ((event.clientY - r.top) / r.height) * set.height;
+    return doc.tiles.find(
+      (t) =>
+        t.tilesetId === set.id &&
+        x >= t.x &&
+        y >= t.y &&
+        x < t.x + set.tileWidth &&
+        y < t.y + set.tileHeight,
+    );
+  }
+  $("atlasCanvas").onpointerdown = (e) => {
+    const t = atlasTile(e);
+    if (t) {
+      atlasStart = t;
+      pickTile(t.id, e.ctrlKey || e.metaKey);
+      $("atlasCanvas").setPointerCapture(e.pointerId);
+    }
+  };
+  $("atlasCanvas").onpointerup = (e) => {
+    const end = atlasTile(e),
+      start = atlasStart;
+    atlasStart = null;
+    if (!e.shiftKey || !start || !end) return;
+    const set = doc.tilesets.find((s) => s.id === start.tilesetId),
+      left = Math.min(start.x, end.x),
+      top = Math.min(start.y, end.y);
+    const width = Math.abs(start.x - end.x) / (set.tileWidth + set.spacing) + 1,
+      height = Math.abs(start.y - end.y) / (set.tileHeight + set.spacing) + 1;
+    stamp = { width, height, data: [] };
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++)
+        stamp.data.push(
+          doc.tiles.find(
+            (t) =>
+              t.tilesetId === set.id &&
+              t.x === left + x * (set.tileWidth + set.spacing) &&
+              t.y === top + y * (set.tileHeight + set.spacing),
+          )?.id || null,
+        );
+    ruleId = "";
+    refresh();
+    status("多格画笔：" + width + "×" + height);
+  };
+  function metrics() {
+    return { cw: doc.tileWidth * camera.zoom, ch: doc.tileHeight * camera.zoom };
+  }
+  function cell(e) {
+    const r = canvas.getBoundingClientRect(),
+      { cw, ch } = metrics();
+    return {
+      x: Math.floor((e.clientX - r.left - camera.x) / cw),
+      y: Math.floor((e.clientY - r.top - camera.y) / ch),
+    };
+  }
+  function drawSoon() {
+    if (pendingFrame) return;
+    pendingFrame = true;
+    requestAnimationFrame(() => {
+      pendingFrame = false;
+      draw();
+    });
+  }
+  function drawLayers(placement, view) {
+    let entry = layerCaches.get(placement);
+    if (!entry) {
+      entry = { canvas: document.createElement("canvas") };
+      layerCaches.set(placement, entry);
+    }
+    const key = [
+      paintRevision,
+      view.width,
+      view.height,
+      view.ox,
+      view.oy,
+      view.cellWidth,
+      view.cellHeight,
+    ].join(":");
+    if (entry.doc !== doc || entry.key !== key) {
+      entry.canvas.width = Math.ceil(view.width);
+      entry.canvas.height = Math.ceil(view.height);
+      renderer.draw(entry.canvas.getContext("2d"), doc, placement, view);
+      entry.key = key;
+      entry.doc = doc;
+    }
+    ctx.drawImage(entry.canvas, 0, 0, view.width, view.height);
+  }
+  function draw() {
+    const box = viewport.getBoundingClientRect(),
+      dpr = Math.min(devicePixelRatio || 1, 2);
+    const w = Math.max(1, box.width),
+      h = Math.max(1, box.height);
+    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    const { cw, ch } = metrics(),
+      ox = camera.x,
+      oy = camera.y;
+    ctx.fillStyle = doc.environment === "space" ? "#151c2a" : M.terrains[doc.defaultTerrain].color;
+    ctx.fillRect(ox, oy, doc.width * cw, doc.height * ch);
+    const view = { ox, oy, cellWidth: cw, cellHeight: ch, width: w, height: h };
+    drawLayers("below", view);
+    if ($("showUnit").checked) {
+      const x = ox + (doc.width / 2 + 0.5) * cw,
+        y = oy + (doc.height / 2 + 0.5) * ch;
+      ctx.fillStyle = "#d9e5f2";
+      ctx.fillRect(x - cw * 0.3, y - ch * 0.35, cw * 0.6, ch * 0.7);
+      ctx.strokeStyle = "#70c6ff";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(x - cw * 0.3, y - ch * 0.35, cw * 0.6, ch * 0.7);
+    }
+    drawLayers("above", view);
+    const x0 = Math.max(0, Math.floor(-ox / cw)),
+      y0 = Math.max(0, Math.floor(-oy / ch));
+    const x1 = Math.min(doc.width, Math.ceil((w - ox) / cw)),
+      y1 = Math.min(doc.height, Math.ceil((h - oy) / ch));
+    if ($("showTerrain").checked) {
+      const map = terrainCache || (terrainCache = M.terrainData(doc));
+      ctx.globalAlpha = 0.55;
+      for (let y = y0; y < y1; y++)
+        for (let x = x0; x < x1; x++) {
+          ctx.fillStyle = M.terrains[map.tiles[y][x]].color;
+          ctx.fillRect(ox + x * cw, oy + y * ch, cw, ch);
+        }
+      ctx.globalAlpha = 1;
+    }
+    if ($("showGrid").checked && cw >= 6 && ch >= 6) {
+      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = "#17253799";
+      ctx.beginPath();
+      for (let x = x0; x <= x1; x++) {
+        ctx.moveTo(ox + x * cw, oy + y0 * ch);
+        ctx.lineTo(ox + x * cw, oy + y1 * ch);
+      }
+      for (let y = y0; y <= y1; y++) {
+        ctx.moveTo(ox + x0 * cw, oy + y * ch);
+        ctx.lineTo(ox + x1 * cw, oy + y * ch);
+      }
+      ctx.stroke();
+    }
+    if ($("showDeployment").checked) {
+      const colors = [
+        "#69c9ff",
+        "#ff8598",
+        "#9beb8a",
+        "#e8ce6a",
+        "#c397ee",
+        "#65dece",
+        "#f09f63",
+        "#e99fe0",
+      ];
+      for (const [i, area] of doc.deploymentAreas.entries()) {
+        const s = doc.spawns[i],
+          color = colors[s.team];
+        ctx.fillStyle = color + "22";
+        ctx.strokeStyle = color;
+        ctx.lineWidth = Number($("spawnSeat").value) === i ? 2 : 1;
+        ctx.fillRect(ox + area.x * cw, oy + area.y * ch, area.width * cw, area.height * ch);
+        ctx.strokeRect(ox + area.x * cw, oy + area.y * ch, area.width * cw, area.height * ch);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(
+          ox + (s.x + 0.5) * cw,
+          oy + (s.y + 0.5) * ch,
+          Math.max(3, Math.min(cw, ch) * 0.25),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 11px sans-serif";
+        ctx.fillText(s.team + 1 + "-" + s.position, ox + s.x * cw, oy + s.y * ch - 2);
+      }
+    }
+    const bounds =
+      drag && ["rect", "select", "deployment"].includes(drag.tool)
+        ? M.rect(drag.start, drag.last)
+        : selectedArea;
+    if (bounds) {
+      ctx.strokeStyle = "#ffe17b";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 4]);
+      ctx.strokeRect(ox + bounds.x * cw, oy + bounds.y * ch, bounds.width * cw, bounds.height * ch);
+      ctx.setLineDash([]);
+    }
+    if (hover && M.inside(doc, hover.x, hover.y)) {
+      ctx.strokeStyle = "#e1f3ff";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(ox + hover.x * cw, oy + hover.y * ch, cw, ch);
+    }
+    $("zoomValue").textContent = Math.round(camera.zoom * 100) + "%";
+  }
+  function fit() {
+    const r = viewport.getBoundingClientRect();
+    camera.zoom = Math.max(
+      0.05,
+      Math.min(
+        (r.width - 40) / (doc.width * doc.tileWidth),
+        (r.height - 40) / (doc.height * doc.tileHeight),
+        2,
+      ),
+    );
+    camera.x = (r.width - doc.width * doc.tileWidth * camera.zoom) / 2;
+    camera.y = (r.height - doc.height * doc.tileHeight * camera.zoom) / 2;
+    drawSoon();
+  }
+  function zoom(factor, x = viewport.clientWidth / 2, y = viewport.clientHeight / 2) {
+    const before = camera.zoom,
+      next = Math.max(0.05, Math.min(4, before * factor));
+    camera.x = x - ((x - camera.x) * next) / before;
+    camera.y = y - ((y - camera.y) * next) / before;
+    camera.zoom = next;
+    drawSoon();
+  }
+  function paintAt(x, y, erase = false) {
+    const l = activeLayer();
+    if (!M.inside(doc, x, y) || l?.type !== "tile") return;
+    terrainCache = null;
+    paintRevision++;
+    if (erase) l.data[y * doc.width + x] = null;
+    else if (stamp && !ruleId) M.paste(doc, l, stamp, x, y);
+    else
+      l.data[y * doc.width + x] = M.ruleTile(doc, activeRule(), tileId, x, y, {
+        x: x - 1,
+        y: y - 1,
+        width: 3,
+        height: 3,
+      });
+  }
+  canvas.onpointerdown = (e) =>
+    run(() => {
+      if (e.button !== 0 && e.button !== 1 && e.button !== 2) return;
+      canvas.focus();
+      const p = cell(e),
+        current = e.button === 1 || space ? "pan" : e.button === 2 ? "erase" : tool;
+      if (current !== "pan" && !M.inside(doc, p.x, p.y)) return;
+      if (!["pan", "spawn", "deployment"].includes(current) && activeLayer()?.type !== "tile")
+        throw Error("请先选择图块图层；整图图层可在右侧修改位置与尺寸。");
+      if (current === "spawn") {
+        checkpoint();
+        const s = doc.spawns[Number($("spawnSeat").value)];
+        s.x = p.x;
+        s.y = p.y;
+        changed("已设置出生地");
+        chooseTool("brush");
+        return;
+      }
+      if (current === "paste") {
+        if (clipboard) {
+          checkpoint();
+          M.paste(doc, activeLayer(), clipboard, p.x, p.y);
+          selectedArea = { ...p, width: clipboard.width, height: clipboard.height };
+          changed("已粘贴选区");
+        }
+        chooseTool("select");
+        return;
+      }
+      if (
+        current === "select" &&
+        selectedArea &&
+        p.x >= selectedArea.x &&
+        p.x < selectedArea.x + selectedArea.width &&
+        p.y >= selectedArea.y &&
+        p.y < selectedArea.y + selectedArea.height
+      ) {
+        drag = {
+          tool: "move-selection",
+          start: p,
+          last: p,
+          source: { ...selectedArea },
+          block: M.selection(doc, activeLayer(), selectedArea),
+        };
+      } else
+        drag = {
+          tool: current,
+          start: p,
+          last: p,
+          screen: { x: e.clientX, y: e.clientY },
+          camera: { ...camera },
+        };
+      canvas.setPointerCapture(e.pointerId);
+      if (["brush", "erase", "fill"].includes(current)) {
+        checkpoint();
+        terrainCache = null;
+        paintRevision++;
+        if (current === "fill") M.fill(doc, activeLayer(), p.x, p.y, tileId, activeRule());
+        else paintAt(p.x, p.y, current === "erase");
+        renderer.invalidate();
+      }
+      drawSoon();
+    });
+  canvas.onpointermove = (e) => {
+    const p = cell(e);
+    hover = p;
+    $("coordinates").textContent = "X " + p.x + " · Y " + p.y;
+    if (drag) {
+      p.x = Math.max(0, Math.min(doc.width - 1, p.x));
+      p.y = Math.max(0, Math.min(doc.height - 1, p.y));
+      if (drag.tool === "pan") {
+        camera.x = drag.camera.x + e.clientX - drag.screen.x;
+        camera.y = drag.camera.y + e.clientY - drag.screen.y;
+      } else if (["brush", "erase"].includes(drag.tool))
+        M.line(drag.last, p, (x, y) => paintAt(x, y, drag.tool === "erase"));
+      drag.last = p;
+    }
+    drawSoon();
+  };
+  canvas.onpointerup = () =>
+    run(() => {
+      if (!drag) return;
+      const d = drag;
+      drag = null;
+      const bounds = M.rect(d.start, d.last);
+      if (["rect", "line", "deployment", "move-selection"].includes(d.tool)) checkpoint();
+      if (d.tool === "rect")
+        M.paintRect(doc, activeLayer(), bounds, tileId, activeRule(), $("outline").checked);
+      if (d.tool === "line") M.line(d.start, d.last, paintAt);
+      if (d.tool === "select") selectedArea = bounds;
+      if (d.tool === "deployment") {
+        doc.deploymentAreas[Number($("spawnSeat").value)] = bounds;
+        chooseTool("brush");
+      }
+      if (d.tool === "move-selection") {
+        M.paintRect(doc, activeLayer(), d.source, null);
+        const x = Math.max(
+            0,
+            Math.min(doc.width - d.block.width, d.source.x + d.last.x - d.start.x),
+          ),
+          y = Math.max(0, Math.min(doc.height - d.block.height, d.source.y + d.last.y - d.start.y));
+        M.paste(doc, activeLayer(), d.block, x, y);
+        selectedArea = { x, y, width: d.block.width, height: d.block.height };
+      }
+      if (d.tool !== "pan") changed("操作完成");
+      else drawSoon();
+    });
+  canvas.onpointercancel = () => {
+    drag = null;
+    drawSoon();
+  };
+  canvas.oncontextmenu = (e) => e.preventDefault();
+  canvas.onwheel = (e) => {
+    e.preventDefault();
+    const r = canvas.getBoundingClientRect();
+    zoom(e.deltaY < 0 ? 1.12 : 1 / 1.12, e.clientX - r.left, e.clientY - r.top);
+  };
+  function deleteSelection(cut = false) {
+    const l = activeLayer();
+    if (!selectedArea || l?.type !== "tile") return;
+    if (cut) clipboard = M.selection(doc, l, selectedArea);
+    checkpoint();
+    M.paintRect(doc, l, selectedArea, null);
+    changed(cut ? "已剪切选区" : "已删除选区");
+  }
+  function copySelection() {
+    if (selectedArea && activeLayer()?.type === "tile") {
+      clipboard = M.selection(doc, activeLayer(), selectedArea);
+      status("已复制选区；点击粘贴后在地图上选择落点");
+    }
+  }
+  function validate() {
+    const issues = M.gameIssues(doc);
+    $("validation").replaceChildren(
+      ...(issues.length ? issues : ["地图可导出为两队对战地图。"]).map((t) => node("li", t)),
+    );
+    status(
+      issues.length ? "检查发现" + issues.length + "项问题，可保存工程继续编辑" : "地图检查通过",
+    );
+    return issues;
+  }
+  function download(value, suffix) {
+    const blob = new Blob([JSON.stringify(value)], { type: "application/json" });
+    if (blob.size > 64 * 1024 * 1024) throw Error("导出文件超过64MB，请减少或缩小图片后再导出。");
+    const url = URL.createObjectURL(blob);
+    const a = node("a");
+    a.href = url;
+    a.download = doc.id + suffix;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    dirty = false;
+    status("已导出 " + a.download);
+  }
+  function replaceMap(value) {
+    const next = M.importMap(value);
+    const apply = () => {
+      doc = next;
+      layerId = doc.layers[0].id;
+      tileId = doc.tiles[0].id;
+      ruleId = "";
+      history = [];
+      future = [];
+      selectedArea = stamp = clipboard = null;
+      dirty = false;
+      changed("已导入地图");
+      fit();
+      validate();
+    };
+    if (dirty) message("导入地图", "当前未导出的修改会被替换，是否继续？", apply);
+    else apply();
+  }
+  function pickFile(purpose) {
+    filePurpose = purpose;
+    $("fileInput").accept =
+      purpose === "map"
+        ? ".json,.greed,application/json"
+        : "image/png,image/jpeg,image/webp,image/gif";
+    $("fileInput").click();
+  }
+  async function importFile(file, purpose = "map") {
+    if (!file) return;
+    if (file.size > 64 * 1024 * 1024) throw Error("文件超过64MB，请先缩小图片或图集。");
+    if (purpose === "map") {
+      replaceMap(JSON.parse((await file.text()).replace(/^\uFEFF/, "")));
+      return;
+    }
+    if (!/^image\/(png|jpeg|webp|gif)$/.test(file.type)) throw Error("支持PNG/JPEG/WebP/GIF图片。");
+    if (file.size > 36 * 1024 * 1024) throw Error("单张图片不得超过36MB。");
+    const src = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+    const image = new Image();
+    image.src = src;
+    await image.decode();
+    if (image.naturalWidth > 8192 || image.naturalHeight > 8192)
+      throw Error("图片长宽最多8192像素。");
+    if (purpose === "atlas") {
+      const tw = number("atlasTileWidth"),
+        th = number("atlasTileHeight"),
+        margin = number("atlasMargin"),
+        spacing = number("atlasSpacing");
+      if (
+        ![tw, th].every((n) => Number.isInteger(n) && n >= 4 && n <= 512) ||
+        ![margin, spacing].every((n) => Number.isInteger(n) && n >= 0 && n <= 512)
+      )
+        throw Error("切片宽高应为4–512的整数，间距/边距为0–512。");
+      const count =
+        Math.floor((image.naturalWidth - margin * 2 + spacing) / (tw + spacing)) *
+        Math.floor((image.naturalHeight - margin * 2 + spacing) / (th + spacing));
+      if (count <= 0 || count + doc.tiles.length > 16384)
+        throw Error("切片尺寸超出图片，或Tile总数超过16384。");
+      checkpoint();
+      const id = M.addTileset(doc, {
+        name: file.name,
+        image: src,
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+        tileWidth: tw,
+        tileHeight: th,
+        margin,
+        spacing,
+      });
+      refresh();
+      $("tilesetList").value = id;
+      tileId = doc.tiles.find((t) => t.tilesetId === id).id;
+      tab("tiles");
+    } else {
+      if (doc.layers.length >= 32) throw Error("最多32个图层。");
+      checkpoint();
+      const l = {
+        id: M.uid("image"),
+        name: file.name,
+        type: "image",
+        placement: "below",
+        decorative: true,
+        dynamic: false,
+        visible: true,
+        opacity: 1,
+        image: { src, x: 0, y: 0, width: doc.width, height: doc.height },
+      };
+      doc.layers.push(l);
+      layerId = l.id;
+    }
+    changed("图片已嵌入工程，可随地图导出");
+  }
+  $("fileInput").onchange = (e) => {
+    run(() => importFile(e.target.files[0], filePurpose));
+    e.target.value = "";
+  };
+  document.querySelectorAll("[data-tab]").forEach((b) => (b.onclick = () => tab(b.dataset.tab)));
+  document
+    .querySelectorAll("[data-tool]")
+    .forEach((b) => (b.onclick = () => chooseTool(b.dataset.tool)));
+  $("newMap").onclick = () =>
+    message("新建地图", "新建会清空当前地图。请先导出需要保留的修改。", () => {
+      dirty = false;
+      replaceMap(M.create());
+    });
+  $("importMap").onclick = () => pickFile("map");
+  $("addAtlas").onclick = () => pickFile("atlas");
+  $("addImage").onclick = () => pickFile("image");
+  $("exportProject").onclick = () =>
+    run(() => {
+      M.validate(doc);
+      download(doc, ".pgmap.json");
+    });
+  $("exportGame").onclick = () =>
+    run(() => {
+      const issues = validate();
+      if (issues.length) throw Error(issues.join("\n"));
+      download(M.compile(doc), ".json");
+    });
+  $("validateMap").onclick = validate;
+  $("help").onclick = () =>
+    message(
+      "地图编辑器",
+      "1. 在地图页设置大小、Tile尺寸、队伍、出生地和部署区。\n2. 图块页可导入图集；也可导入整张图片作为装饰地图。\n3. 选择图层，用画笔、油漆桶、方框或直线绘制。图层和Tile的地形属性独立于视觉层级。透明度为0的非装饰层仍提供地形。\n4. 选择工具框选后，可拖动选区，或复制/剪切后粘贴。空格/中键平移，滚轮缩放。\n5. 随机规则支持权重，九宫格使用矩形工具。\n6. 导出工程可继续编辑；导出游戏地图先检查两队兼容性。\n7. 将游戏地图注册到项目：npm run maps:import -- 文件路径，再构建客户端并重启服务器。\n8. 当前游戏支持2队；3–8队配置、动态Tile均保留在工程中供后续功能使用。",
+    );
+  $("resizeMap").onclick = () =>
+    run(() => {
+      const next = M.snapshot(doc);
+      M.resize(next, number("mapWidth"), number("mapHeight"));
+      checkpoint();
+      doc = next;
+      selectedArea = null;
+      changed("地图尺寸已更新，超出新边界的Tile已裁切");
+      fit();
+    });
+  $("applyPlayers").onclick = () =>
+    message("重设玩家配置", "将重新生成出生地及部署区，保留图块和图层。", () => {
+      const next = M.snapshot(doc);
+      M.setPlayers(next, number("maxTeams"), number("playersPerTeam"));
+      checkpoint();
+      doc = next;
+      changed("已生成玩家席位与部署区");
+      validate();
+    });
+  $("spawnSeat").onchange = refreshSpawn;
+  $("placeSpawn").onclick = () => chooseTool("spawn");
+  $("drawDeployment").onclick = () => chooseTool("deployment");
+  $("tilesetList").onchange = () => {
+    tileId =
+      doc.tiles.find((t) =>
+        $("tilesetList").value === "builtin"
+          ? !t.tilesetId
+          : t.tilesetId === $("tilesetList").value,
+      )?.id || tileId;
+    stamp = null;
+    refresh();
+  };
+  $("tileList").onchange = () => pickTile($("tileList").value);
+  $("paintRule").onchange = () => {
+    ruleId = $("paintRule").value;
+    stamp = null;
+    refreshRule();
+  };
+  $("newRandom").onclick = () => {
+    checkpoint();
+    const r = {
+      id: M.uid("random"),
+      name: "随机规则 " + (doc.rules.length + 1),
+      type: "random",
+      variants: [{ tileId, weight: 1 }],
+    };
+    doc.rules.push(r);
+    ruleId = r.id;
+    changed();
+  };
+  $("newNine").onclick = () => {
+    checkpoint();
+    const t = activeTile(),
+      set = doc.tilesets.find((s) => s.id === t.tilesetId);
+    const tiles = Array.from({ length: 9 }, (_, i) =>
+      set
+        ? doc.tiles.find(
+            (other) =>
+              other.tilesetId === set.id &&
+              other.x === t.x + (i % 3) * (set.tileWidth + set.spacing) &&
+              other.y === t.y + Math.floor(i / 3) * (set.tileHeight + set.spacing),
+          )?.id || tileId
+        : tileId,
+    );
+    const r = { id: M.uid("nine"), name: "九宫格 " + (doc.rules.length + 1), type: "nine", tiles };
+    doc.rules.push(r);
+    ruleId = r.id;
+    chooseTool("rect");
+    changed();
+  };
+  $("addVariant").onclick = () => run(addVariant);
+  $("deleteRule").onclick = () => {
+    if (ruleId) {
+      checkpoint();
+      doc.rules = doc.rules.filter((r) => r.id !== ruleId);
+      ruleId = "";
+      changed();
+    }
+  };
+  $("addLayer").onclick = () =>
+    run(() => {
+      if (doc.layers.length >= 32) throw Error("最多32个图层。");
+      checkpoint();
+      const l = M.layer(doc, "图层 " + (doc.layers.length + 1));
+      doc.layers.push(l);
+      layerId = l.id;
+      changed();
+    });
+  $("deleteLayer").onclick = () =>
+    message("删除图层", "删除当前图层及其中的内容？可以撤销。", () => {
+      if (doc.layers.length <= 1) return;
+      checkpoint();
+      doc.layers = doc.layers.filter((l) => l.id !== layerId);
+      layerId = doc.layers.at(-1).id;
+      selectedArea = null;
+      changed();
+    });
+  function moveLayer(delta) {
+    const i = doc.layers.findIndex((l) => l.id === layerId),
+      j = i + delta;
+    if (j < 0 || j >= doc.layers.length) return;
+    checkpoint();
+    [doc.layers[i], doc.layers[j]] = [doc.layers[j], doc.layers[i]];
+    changed();
+  }
+  $("layerUp").onclick = () => moveLayer(1);
+  $("layerDown").onclick = () => moveLayer(-1);
+  function bind(id, target, key, convert = (e) => e.value) {
+    $(id).onchange = () =>
+      run(() => {
+        const object = target();
+        if (!object) return;
+        const next = convert($(id));
+        checkpoint();
+        object[key] = next;
+        changed();
+      });
+  }
+  bind("mapId", () => doc, "id");
+  bind("mapName", () => doc, "name");
+  bind("mapDescription", () => doc, "description");
+  bind("mapEnvironment", () => doc, "environment");
+  bind("defaultTerrain", () => doc, "defaultTerrain");
+  for (const id of ["tileWidth", "tileHeight"])
+    bind(
+      id,
+      () => doc,
+      id,
+      (e) => {
+        const n = Number(e.value);
+        if (!Number.isInteger(n) || n < 4 || n > 512) throw Error("Tile尺寸应为4–512的整数。");
+        return n;
+      },
+    );
+  bind(
+    "randomSeed",
+    () => doc,
+    "seed",
+    (e) => {
+      const n = Number(e.value);
+      if (!Number.isSafeInteger(n)) throw Error("种子必须为整数。");
+      return n;
+    },
+  );
+  for (const [id, key] of [
+    ["tileName", "name"],
+    ["tileTerrain", "terrain"],
+    ["tileEnvironment", "environment"],
+  ])
+    bind(id, activeTile, key);
+  for (const [id, key] of [
+    ["tileDecorative", "decorative"],
+    ["tileDynamic", "dynamic"],
+  ])
+    bind(id, activeTile, key, (e) => e.checked);
+  for (const [id, key] of [
+    ["layerName", "name"],
+    ["layerPlacement", "placement"],
+  ])
+    bind(id, activeLayer, key);
+  bind("layerOpacity", activeLayer, "opacity", (e) => Number(e.value));
+  for (const [id, key] of [
+    ["layerVisible", "visible"],
+    ["layerDecorative", "decorative"],
+    ["layerDynamic", "dynamic"],
+  ])
+    bind(id, activeLayer, key, (e) => e.checked);
+  bind("ruleName", activeRule, "name");
+  for (const [id, key] of [
+    ["spawnX", "x"],
+    ["spawnY", "y"],
+  ])
+    bind(
+      id,
+      () => doc.spawns[Number($("spawnSeat").value)],
+      key,
+      (e) => {
+        const n = Number(e.value),
+          max = key === "x" ? doc.width : doc.height;
+        if (!Number.isInteger(n) || n < 0 || n >= max) throw Error("出生地坐标超出地图。");
+        return n;
+      },
+    );
+  for (const [id, key] of [
+    ["areaX", "x"],
+    ["areaY", "y"],
+    ["areaWidth", "width"],
+    ["areaHeight", "height"],
+  ])
+    bind(
+      id,
+      () => doc.deploymentAreas[Number($("spawnSeat").value)],
+      key,
+      (e) => {
+        const n = Number(e.value);
+        if (!Number.isInteger(n) || n < (key === "x" || key === "y" ? 0 : 1))
+          throw Error("区域必须使用有效整数。");
+        return n;
+      },
+    );
+  for (const key of ["x", "y", "width", "height"])
+    bind(
+      "image" + key[0].toUpperCase() + key.slice(1),
+      () => activeLayer()?.image,
+      key,
+      (e) => {
+        const n = Number(e.value);
+        if (!Number.isFinite(n) || (["width", "height"].includes(key) && n <= 0))
+          throw Error("图片尺寸或位置无效。");
+        return n;
+      },
+    );
+  for (const id of ["modeRegular", "modeQuick"])
+    $(id).onchange = () => {
+      checkpoint();
+      doc.supportedModes = [
+        $("modeRegular").checked && "regular",
+        $("modeQuick").checked && "quick",
+      ].filter(Boolean);
+      changed();
+    };
+  $("undo").onclick = () => undo();
+  $("redo").onclick = () => undo(true);
+  $("copy").onclick = copySelection;
+  $("cut").onclick = () => deleteSelection(true);
+  $("deleteSelection").onclick = () => deleteSelection();
+  $("paste").onclick = () => {
+    if (clipboard) chooseTool("paste");
+    else status("请先选择并复制一片区域");
+  };
+  $("fit").onclick = fit;
+  $("zoomIn").onclick = () => zoom(1.2);
+  $("zoomOut").onclick = () => zoom(1 / 1.2);
+  for (const id of ["showGrid", "showTerrain", "showDeployment", "showUnit"])
+    $(id).onchange = drawSoon;
+  window.addEventListener("keydown", (e) => {
+    if ($("editorDialog").open || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    const cmd = e.ctrlKey || e.metaKey,
+      key = e.key.toLowerCase();
+    if (e.code === "Space") {
+      space = true;
+      e.preventDefault();
+      return;
+    }
+    if (cmd && ["z", "y", "c", "x", "v", "s"].includes(key)) {
+      e.preventDefault();
+      run(() => {
+        if (key === "z") undo(e.shiftKey);
+        if (key === "y") undo(true);
+        if (key === "c") copySelection();
+        if (key === "x") deleteSelection(true);
+        if (key === "v" && clipboard) chooseTool("paste");
+        if (key === "s") $("exportProject").click();
+      });
+      return;
+    }
+    if (e.key === "Delete" || e.key === "Backspace") {
+      e.preventDefault();
+      deleteSelection();
+    }
+    if (e.key === "Escape") {
+      selectedArea = null;
+      chooseTool("brush");
+      drawSoon();
+    }
+    const tools = { b: "brush", e: "erase", f: "fill", r: "rect", l: "line", m: "select" };
+    if (!cmd && tools[key]) chooseTool(tools[key]);
+  });
+  window.addEventListener("keyup", (e) => {
+    if (e.code === "Space") space = false;
+  });
+  window.addEventListener("blur", () => {
+    space = false;
+    drag = null;
+  });
+  viewport.ondragover = (e) => {
+    e.preventDefault();
+    $("dropHint").hidden = false;
+  };
+  viewport.ondragleave = (e) => {
+    if (!viewport.contains(e.relatedTarget)) $("dropHint").hidden = true;
+  };
+  viewport.ondrop = (e) => {
+    e.preventDefault();
+    $("dropHint").hidden = true;
+    const file = e.dataTransfer.files[0];
+    if (file) run(() => importFile(file, file.type.startsWith("image/") ? "image" : "map"));
+  };
+  new ResizeObserver(drawSoon).observe(viewport);
+  refresh();
+  requestAnimationFrame(fit);
+  return {
+    get document() {
+      return doc;
+    },
+    get selection() {
+      return selectedArea;
+    },
+    get camera() {
+      return { ...camera };
+    },
+    importMap: replaceMap,
+    importFile,
+    exportMap: () => M.compile(doc),
+    validate,
+    draw,
+    fit,
+    chooseTool,
+    tab,
+    get activeLayer() {
+      return activeLayer();
+    },
+    get activeTile() {
+      return activeTile();
+    },
+  };
+})();
+
+    </script>
+  </body>
+</html>

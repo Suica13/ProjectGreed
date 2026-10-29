@@ -2263,5 +2263,7 @@
   "每满50点增加1点每回合AP和1格移动距离，不影响回避。100点提供2点AP和2格移动，200点提供4点AP和4格移动。": "Every full 50 points adds 1 AP per turn and 1 movement tile. No evasion bonus. 100 points grants +2 AP and +2 tiles; 200 grants +4 of each.",
   "每点增加0.25个百分点的回避倍率；100点为100%，200点为125%。敌方命中率除以该倍率；与我方通讯回避倍率相乘，不再放大未命中概率。": "Each point adds 0.25 percentage points to evasion scaling: 100 points gives 100%, and 200 gives 125%. Enemy hit chance is divided by this multiplier and the communication evasion multiplier.",
   "战斗记录": "Battle records",
-  "损毁单位": "Destroyed units"
+  "损毁单位": "Destroyed units",
+  "地图编辑器": "Map editor",
+  "此地图不支持所选对战模式": "This map does not support the selected battle mode."
 }

@@ -9,6 +9,7 @@ test("movement, aircraft and space thrust never draw through fog", () => {
     draws = 0;
   const context = vm.createContext({
     ART,
+    performance: { now: () => 0 },
     SpriteEffects: {
       clipFog() {
         clips++;

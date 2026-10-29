@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ProjectGreed 地图编辑器</title>
+    <style>
+      __EDITOR_CSS__
+    </style>
+  </head>
+  <body>
+    <header>
+      <div><strong>PROJECT GREED</strong><span>地图编辑器 · __VERSION__</span></div>
+      <nav aria-label="文件操作">
+        <button id="newMap">新建</button><button id="importMap">导入地图</button>
+        <button id="exportProject">导出工程</button
+        ><button id="exportGame" class="primary">导出游戏地图</button>
+        <button id="help">使用说明</button>
+      </nav>
+    </header>
+    <main>
+      <aside class="left">
+        <div class="tabs">
+          <button data-tab="map" class="active">地图</button><button data-tab="tiles">图块</button
+          ><button data-tab="rules">规则</button>
+        </div>
+        <div class="sidebar-scroll">
+          <section data-page="map">
+            <h2>地图设置</h2>
+            <label>ID<input id="mapId" value="custom_map" spellcheck="false" /></label>
+            <label>名称<input id="mapName" value="新地图" /></label>
+            <label>说明<textarea id="mapDescription" rows="2"></textarea></label>
+            <div class="pair">
+              <label>列数<input id="mapWidth" type="number" min="12" max="128" /></label
+              ><label>行数<input id="mapHeight" type="number" min="9" max="128" /></label>
+            </div>
+            <button id="resizeMap">应用地图尺寸</button>
+            <div class="pair">
+              <label>Tile宽/px<input id="tileWidth" type="number" min="4" max="512" /></label
+              ><label>Tile高/px<input id="tileHeight" type="number" min="4" max="512" /></label>
+            </div>
+            <label
+              >默认环境<select id="mapEnvironment">
+                <option value="ground">地面</option>
+                <option value="space">宇宙</option>
+              </select></label
+            >
+            <label>默认地形<select id="defaultTerrain"></select></label>
+            <h2>玩家与队伍</h2>
+            <div class="pair">
+              <label>队伍上限<input id="maxTeams" type="number" min="2" max="8" /></label
+              ><label>每队玩家<input id="playersPerTeam" type="number" min="1" max="5" /></label>
+            </div>
+            <p id="playerCount" class="hint"></p>
+            <button id="applyPlayers">重新生成席位与部署区</button>
+            <label class="check"
+              ><input id="modeRegular" type="checkbox" checked />常规战可用</label
+            >
+            <label class="check"><input id="modeQuick" type="checkbox" checked />快速战可用</label>
+            <h2>出生地与部署区</h2>
+            <label>玩家席位<select id="spawnSeat"></select></label>
+            <div class="pair">
+              <label>出生X<input id="spawnX" type="number" min="0" /></label
+              ><label>出生Y<input id="spawnY" type="number" min="0" /></label>
+            </div>
+            <div class="pair">
+              <label>区域X<input id="areaX" type="number" min="0" /></label
+              ><label>区域Y<input id="areaY" type="number" min="0" /></label>
+            </div>
+            <div class="pair">
+              <label>区域宽<input id="areaWidth" type="number" min="1" /></label
+              ><label>区域高<input id="areaHeight" type="number" min="1" /></label>
+            </div>
+            <div class="pair">
+              <button id="placeSpawn">点选出生地</button
+              ><button id="drawDeployment">框选部署区</button>
+            </div>
+            <p class="hint">坐标从0开始。同队部署区在游戏中共享；不同席位的原始区域应互不重叠。</p>
+          </section>
+          <section data-page="tiles" hidden>
+            <h2>图集 / TileMap</h2>
+            <label
+              >图集<select id="tilesetList">
+                <option value="builtin">地形色块</option>
+              </select></label
+            >
+            <div class="pair">
+              <label
+                >切片宽/px<input
+                  id="atlasTileWidth"
+                  type="number"
+                  min="4"
+                  max="512"
+                  value="32" /></label
+              ><label
+                >切片高/px<input id="atlasTileHeight" type="number" min="4" max="512" value="32"
+              /></label>
+            </div>
+            <div class="pair">
+              <label
+                >边距/px<input id="atlasMargin" type="number" min="0" max="512" value="0" /></label
+              ><label
+                >间隔/px<input id="atlasSpacing" type="number" min="0" max="512" value="0"
+              /></label>
+            </div>
+            <button id="addAtlas">导入图集（按上方尺寸切片）</button>
+            <button id="addImage">导入整张图片作为地图图层</button>
+            <p class="hint">
+              图片会嵌入导出的文件。图集点击选Tile，Shift框选可制作多格画笔，Ctrl点击可加入随机规则。
+            </p>
+            <div id="terrainPalette" class="palette"></div>
+            <canvas id="atlasCanvas" hidden aria-label="图集选择器"></canvas>
+            <label>图块精确选择<select id="tileList"></select></label>
+            <h2>所选Tile属性</h2>
+            <label>名称<input id="tileName" /></label>
+            <label
+              >地块属性<select id="tileEnvironment">
+                <option value="ground">地面</option>
+                <option value="space">宇宙</option>
+              </select></label
+            >
+            <label>地形类型<select id="tileTerrain"></select></label>
+            <label class="check"
+              ><input id="tileDecorative" type="checkbox" />仅装饰，不覆盖地形属性</label
+            >
+            <label class="check"
+              ><input id="tileDynamic" type="checkbox" />动态Tile（预留事件标记）</label
+            >
+            <p class="hint">
+              属性作用于当前Tile的所有引用；多格画笔可通过“图块精确选择”逐项调整。动态标记暂不触发事件。
+            </p>
+          </section>
+          <section data-page="rules" hidden>
+            <h2>图块规则</h2>
+            <label
+              >当前绘制规则<select id="paintRule">
+                <option value="">单Tile / 多格画笔</option>
+              </select></label
+            >
+            <div class="pair">
+              <button id="newRandom">新建随机规则</button><button id="newNine">新建九宫格</button>
+            </div>
+            <label>规则名称<input id="ruleName" /></label>
+            <label>随机种子<input id="randomSeed" type="number" step="1" /></label>
+            <div id="ruleEditor"></div>
+            <button id="addVariant">将当前Tile加入随机候选</button>
+            <button id="deleteRule" class="danger">删除当前规则</button>
+            <p class="hint">
+              随机规则按权重确定图块，导出保存已落下的结果。九宫格用矩形工具：边角、边缘、中心分别重复，适合道路、平台和边框。
+            </p>
+            <p class="hint">
+              选择图集中一个Tile，再点“新建九宫格”，会取它右下方的3×3作为初始九宫格；也可在下方逐格重新绑定。
+            </p>
+          </section>
+        </div>
+      </aside>
+      <section class="workspace">
+        <div class="toolbar" role="toolbar" aria-label="绘图工具">
+          <button data-tool="brush" class="active" title="B">画笔</button
+          ><button data-tool="erase" title="E">删除</button>
+          <button data-tool="fill" title="F">油漆桶</button
+          ><button data-tool="rect" title="R">方框</button>
+          <button data-tool="line" title="L">直线</button
+          ><button data-tool="select" title="M">选择</button><button data-tool="pan">平移</button>
+          <label class="check"><input id="outline" type="checkbox" />空心框</label>
+        </div>
+        <div class="toolbar secondary">
+          <button id="undo" title="Ctrl+Z">撤销</button
+          ><button id="redo" title="Ctrl+Shift+Z">重做</button> <button id="copy">复制</button
+          ><button id="cut">剪切</button><button id="paste">粘贴</button
+          ><button id="deleteSelection">删除选区</button> <span class="spacer"></span
+          ><button id="zoomOut">−</button><output id="zoomValue">100%</output
+          ><button id="zoomIn">+</button><button id="fit">适应</button>
+        </div>
+        <div id="viewport">
+          <canvas id="mapCanvas" tabindex="0" aria-label="地图编辑画布"></canvas>
+          <div id="dropHint" hidden>释放以导入工程或图片</div>
+        </div>
+        <div class="toolbar view-options">
+          <label class="check"><input id="showGrid" type="checkbox" checked />网格</label>
+          <label class="check"><input id="showTerrain" type="checkbox" />地形属性</label>
+          <label class="check"><input id="showDeployment" type="checkbox" checked />部署区域</label>
+          <label class="check"><input id="showUnit" type="checkbox" />单位层次示意</label>
+          <span id="coordinates">—</span>
+        </div>
+      </section>
+      <aside class="right">
+        <h2>图层</h2>
+        <p class="hint">列表上方为更高图层；单位上方图层统一绘制在地面单位之后、空中单位之前。</p>
+        <div class="pair">
+          <button id="addLayer">新增图层</button
+          ><button id="deleteLayer" class="danger">删除图层</button>
+        </div>
+        <div id="layerList" role="listbox" aria-label="图层列表"></div>
+        <div class="pair">
+          <button id="layerUp">上移</button><button id="layerDown">下移</button>
+        </div>
+        <h2>图层属性</h2>
+        <label>名称<input id="layerName" /></label>
+        <label
+          >相对地面单位<select id="layerPlacement">
+            <option value="below">地面单位下方</option>
+            <option value="above">地面单位上方</option>
+          </select></label
+        >
+        <label>不透明度<input id="layerOpacity" type="range" min="0" max="1" step="0.05" /></label>
+        <label class="check"><input id="layerVisible" type="checkbox" />可见并参与导出</label>
+        <label class="check"
+          ><input id="layerDecorative" type="checkbox" />仅装饰，不覆盖地形属性</label
+        >
+        <label class="check"><input id="layerDynamic" type="checkbox" />动态图层（事件预留）</label>
+        <div id="imageProperties" hidden>
+          <div class="pair">
+            <label>图片X/格<input id="imageX" type="number" step="0.1" /></label
+            ><label>图片Y/格<input id="imageY" type="number" step="0.1" /></label>
+          </div>
+          <div class="pair">
+            <label>图片宽/格<input id="imageWidth" type="number" min="0.1" step="0.1" /></label
+            ><label>图片高/格<input id="imageHeight" type="number" min="0.1" step="0.1" /></label>
+          </div>
+        </div>
+        <h2>地图检查</h2>
+        <button id="validateMap">检查游戏兼容性</button>
+        <ul id="validation"></ul>
+        <p class="hint">
+          工程保存所有图层、图片和规则。游戏地图同时包含工程及已合成的地形，可直接重新导入继续编辑。
+        </p>
+      </aside>
+    </main>
+    <footer>
+      <span id="status" role="status">准备就绪</span
+      ><span>空格/中键平移 · 滚轮缩放 · Ctrl+Z撤销 · Delete删除选区</span>
+    </footer>
+    <input id="fileInput" type="file" hidden />
+    <dialog id="editorDialog">
+      <h2 id="dialogTitle"></h2>
+      <p id="dialogMessage"></p>
+      <div id="dialogActions"></div>
+    </dialog>
+    <script>
+      __MAP_DOCUMENT__
+    </script>
+    <script>
+      __EDITOR_JS__
+    </script>
+  </body>
+</html>

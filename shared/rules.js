@@ -21,7 +21,10 @@ const Tactics = (() => {
   const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
   // SFS passengers remain independent combat actors; enclosed cargo stays hidden.
   const onMap = (u) => !!u && u.hp > 0 && (!u.embarked || u.embarked.exposed === true);
-  const sensors = sensorModule.create({ modelOf, cells, onMap, minovskyAt });
+  const sensors = sensorModule.create({
+    modelOf, cells, onMap, minovskyAt,
+    spaceAt: (g, x, y) => cellEnvironment(g, x, y) === "space",
+  });
   const turnTransitionMs = 3600;
   const W = catalog.map.width,
     H = catalog.map.height;
@@ -909,8 +912,13 @@ const Tactics = (() => {
     return variants.get(pilot);
   }
   // Derive damage penalties from current parts; never modify a shared catalog or AI variant.
+  function cellEnvironment(g, x, y) {
+    return g?.cellEnvironments?.[y]?.[x] ??
+      (g?.mapId ? getMap(g.mapId).cellEnvironments?.[y]?.[x] : null) ??
+      g?.environment ?? "ground";
+  }
   function environmentOf(g, unit, x = unit.x, y = unit.y) {
-    if ((g?.environment ?? unit.environment) === "space") return "space";
+    if ((g ? cellEnvironment(g, x, y) : unit.environment) === "space") return "space";
     const movement = unit.flying ? "air" : models[unit.model].movementType;
     if (movement === "air") return "air";
     if (movement === "hover") return "ground";
@@ -1036,6 +1044,8 @@ const Tactics = (() => {
   }
   const terrain = {
     plain: { name: "平地", cost: 1, cover: 0, color: "#243b3d" },
+    snow: { name: "雪地", cost: 1, cover: 0, color: "#d7e5ee" },
+    desert: { name: "沙漠", cost: 1, cover: 0, color: "#c5a86d" },
     highland: { name: "高地", cost: 1, cover: 0, color: "#9c986b" },
     forest: { name: "林地", cost: 1, cover: 10, meleeCover: 10, color: "#294738" },
     rubble: { name: "废墟", cost: 2, cover: 25, meleeCover: 0, color: "#43494a" },
@@ -1088,6 +1098,8 @@ const Tactics = (() => {
     return result;
   }
   const skills = skillModule.create({
+    cellEnvironment,
+    environmentOf,
     pilots,
     cells,
     sensors,
@@ -1358,6 +1370,8 @@ const Tactics = (() => {
         settings.seatUnitLimits?.[seat] ?? unitLimit,
       ),
     );
+    if (map.supportedModes && !map.supportedModes.includes(settings.mode || "regular"))
+      throw Error("此地图不支持所选对战模式");
     if (formations.length !== map.spawns.length) throw Error("编组数量必须匹配地图席位");
     const rulesForSeat = (seat) =>
       settings.seatFormationRules?.[seat] ||
@@ -1486,7 +1500,7 @@ const Tactics = (() => {
   function terrainCost(g, u, x, y) {
     const movement = modelOf(u).movementType;
     const tile = g.tiles[y][x];
-    if (g.environment !== "space") {
+    if (cellEnvironment(g, x, y) !== "space") {
       if (movement === "air") return 1;
       if (movement === "naval") return tile === "water" ? 1 : Infinity;
       if (tile === "water") {
@@ -3152,6 +3166,7 @@ const Tactics = (() => {
     canUseSkill: skills.canUse,
     skillTargets: skills.targets,
     useSkill: skills.use,
+    cellEnvironment,
     environmentOf,
     adaptationOf,
     terrainCost,

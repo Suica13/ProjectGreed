@@ -10,6 +10,7 @@ project = json.loads((root / 'project.json').read_text(encoding='utf-8'))
 archive = root / f'dist/{project["name"]}-{project["version"]}-client.zip'
 with ZipFile(archive, 'w', compression=ZIP_DEFLATED, compresslevel=9) as bundle:
     bundle.write(client, 'client.html')
+    bundle.write(root / 'public/map-editor.html', 'map-editor.html')
     bundle.write(notes, notes.name)
 with ZipFile(archive) as bundle:
     assert bundle.testzip() is None

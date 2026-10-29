@@ -207,8 +207,11 @@ const RoomPanel = (() => {
     const settings = snapshot.settings || Rules.defaultRoomSettings();
     const mapSelect = byId("roomMapSelect");
     mapSelect.replaceChildren();
-    for (const map of Object.values(Rules.catalog.maps))
-      mapSelect.add(new Option(map.name, map.id));
+    for (const map of Object.values(Rules.catalog.maps)) {
+      const option = new Option(map.name, map.id);
+      option.disabled = !!map.supportedModes && !map.supportedModes.includes(settings.mode);
+      mapSelect.add(option);
+    }
     const nextKey = JSON.stringify([snapshot.room, snapshot.you?.id, snapshot.hostId]);
     if (nextKey !== settingsKey) {
       settingsKey = nextKey;

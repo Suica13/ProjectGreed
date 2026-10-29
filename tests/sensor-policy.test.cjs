@@ -26,7 +26,8 @@ test("unmarked visible targets still apply a 25 percent final hit penalty", () =
   Object.assign(target, { x: 25, y: 4 });
   game.tiles.forEach((row) => row.fill("plain"));
   assert.equal(G.sensors.detected(game, attacker.team, target), false);
-  const weapon = G.modelOf(attacker).weapons[0],
+  // Keep both cases below the final 100% cap to isolate the marking penalty.
+  const weapon = { ...G.modelOf(attacker).weapons[0], hit: 40 },
     unmarked = G.estimate(game, attacker, target, weapon).hit;
   target.detectedBy = { [attacker.team]: game.round };
   assert.equal(G.sensors.detected(game, attacker.team, target), true);

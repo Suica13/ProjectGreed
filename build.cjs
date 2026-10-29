@@ -71,6 +71,8 @@ html = html.replace(
   }),
 );
 for (const [key, file] of [
+  ["TILEMAP_VIEW", "shared/tilemap-view.js"],
+  ["TILEMAP_RENDERER", "client/tilemap-renderer.js"],
   ["MENU_SHELL", "client/menu-shell.js"],
   ["DATA", null],
   ["I18N", "client/i18n.js"],
@@ -208,3 +210,5 @@ for (const [name, content] of outputs) {
 fs.rmSync(path.join(root, "public/index.html"), { force: true });
 for (const [name, content] of outputs)
   console.log("Built " + name + ": " + Buffer.byteLength(content) + " bytes");
+
+require("./tools/build-map-editor.cjs").buildMapEditor(root);

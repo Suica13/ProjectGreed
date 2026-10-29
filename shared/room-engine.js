@@ -2649,6 +2649,9 @@ function createRoomEngine({
         } else if (msg.action === "start_game") {
           if (member.id !== room.hostId) throw Error("只有房主可以开始游戏");
           if (room.started) throw Error("游戏已经开始");
+          if (G.getMap(room.settings.mapId).supportedModes &&
+              !G.getMap(room.settings.mapId).supportedModes.includes(room.settings.mode))
+            throw Error("此地图不支持所选对战模式");
           const players = room.seats.filter(Boolean);
           if (!players.every((player) => player.bot || onlineMember(player)))
             throw Error("等待出战玩家重新连接");

@@ -56,6 +56,15 @@ const ClientSettings = (() => {
     dialog.showModal();
   };
   document.getElementById("closeClientSettings").onclick = () => dialog.close();
+  const editor = document.createElement("a");
+  editor.id = "openMapEditor";
+  editor.href = "map-editor.html";
+  editor.target = "_blank";
+  editor.rel = "noopener";
+  editor.textContent = I18n.text("地图编辑器");
+  editor.style.cssText = "display:inline-block;margin:12px 0;padding:8px 12px;border:1px solid #627f97;border-radius:3px;color:#a1d9ff";
+  document.getElementById("closeClientSettings").before(editor);
+  window.addEventListener("language-change", () => { editor.textContent = I18n.text("地图编辑器"); });
   render();
   return {
     volume: (name) => values.master * values[name],

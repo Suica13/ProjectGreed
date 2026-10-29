@@ -43,6 +43,7 @@ function loadCatalog({
   embedMusic = false,
   catalogOverride = null,
   unitOverrides = {},
+  mapOverrides = {},
   wipOverride = null,
 } = {}) {
   const localize = require("./display-localization.cjs").createLocalizer();
@@ -95,7 +96,7 @@ function loadCatalog({
   result.maps = {};
   if (!Array.isArray(catalog.maps) || !catalog.maps.length) throw Error("Missing preset maps");
   for (const reference of catalog.maps) {
-    const map = read(file(root, reference));
+    const map = mapOverrides[reference] || read(file(root, reference));
     localize.record(map);
     validateLocalization(map.localization, map.id);
     map.environment ??= "ground";
@@ -123,7 +124,7 @@ function loadCatalog({
         (row) =>
           !Array.isArray(row) ||
           row.length !== map.width ||
-          row.some((t) => !["plain", "forest", "rubble", "rock", "water", "highland"].includes(t)),
+          row.some((t) => !["plain", "forest", "rubble", "rock", "water", "highland", "snow", "desert"].includes(t)),
       )
     )
       throw Error("Invalid map: " + reference);
@@ -136,12 +137,24 @@ function loadCatalog({
         !map.appearance.colors ||
         Object.entries(map.appearance.colors).some(
           ([kind, color]) =>
-            !["plain", "forest", "rubble", "rock", "water", "highland"].includes(kind) ||
+            !["plain", "forest", "rubble", "rock", "water", "highland", "snow", "desert"].includes(kind) ||
             typeof color !== "string" ||
             !/^#[0-9a-f]{6}$/i.test(color),
         ))
     )
       throw Error("Invalid map appearance: " + map.id);
+    if (map.maxTeams !== undefined && map.maxTeams !== 2) throw Error("Current game supports two teams: " + map.id);
+    if (map.supportedModes !== undefined && (!Array.isArray(map.supportedModes) || !map.supportedModes.length ||
+        map.supportedModes.some(mode => !["regular", "quick"].includes(mode)))) throw Error("Invalid map modes: " + map.id);
+    if (map.cellEnvironments !== undefined && (!Array.isArray(map.cellEnvironments) || map.cellEnvironments.length !== map.height ||
+        map.cellEnvironments.some(row => !Array.isArray(row) || row.length !== map.width || row.some(e => !["ground", "space"].includes(e)))))
+      throw Error("Invalid cell environments: " + map.id);
+    if (map.tileMap) {
+      const M = require("../shared/map-document.js");
+      M.validate(map.tileMap);
+      if (map.tileMap.id !== map.id || map.tileMap.width !== map.width || map.tileMap.height !== map.height)
+        throw Error("TileMap dimensions/ID mismatch: " + map.id);
+    }
     const areas = map.deploymentAreas;
     const expansion = map.deploymentExpansion;
     if (

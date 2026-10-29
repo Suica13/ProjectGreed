@@ -322,7 +322,7 @@ const UnitSkills = (() => {
         (skill.type !== "flight" ||
           ((unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost &&
             !skill.requiredParts.some((part) => unit.brokenParts?.[part]) &&
-            game.environment !== "space" &&
+            G.environmentOf(game, unit) !== "space" &&
             (!unit.flying || fits(game, { ...unit, flying: false }, unit.x, unit.y)))) &&
         (skill.type !== "overboost" ||
           (!unit.overBoost &&
@@ -471,7 +471,7 @@ const UnitSkills = (() => {
       if (
         source &&
         (source.hp <= 0 ||
-          (models[source.model].adaptability?.[game.environment ?? "ground"] ?? 100) <= 0 ||
+          (models[source.model].adaptability?.[G.cellEnvironment(game, source.x, source.y)] ?? 100) <= 0 ||
           !fits({ ...game, units: game.units.filter((u) => u !== unit) }, source))
       )
         return null;
@@ -577,7 +577,7 @@ const UnitSkills = (() => {
       );
       if (
         probe.hp <= 0 ||
-        (models[probe.model].adaptability?.[game.environment ?? "ground"] ?? 100) <= 0
+        (models[probe.model].adaptability?.[G.cellEnvironment(game, probe.x, probe.y)] ?? 100) <= 0
       )
         return [];
       const cells = [],

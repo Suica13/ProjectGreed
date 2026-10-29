@@ -115,6 +115,8 @@ function createServer({
         ? path.join(publicDir, "client.html")
         : pathname === "/client.html"
           ? path.join(publicDir, "client.html")
+          : pathname === "/map-editor.html" || pathname === "/map-editor"
+            ? path.join(publicDir, "map-editor.html")
           : pathname === "/developer.html"
             ? path.join(publicDir, "developer.html")
             : null;

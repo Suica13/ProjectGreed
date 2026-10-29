@@ -1,7 +1,7 @@
 "use strict";
 // Sight and radar are independent, team-scoped facts. Only visible targets can be attacked.
 const UnitSensors = {
-  create({ modelOf, cells, onMap, minovskyAt = () => false }) {
+  create({ modelOf, cells, onMap, minovskyAt = () => false, spaceAt = g => g.environment === "space" }) {
     const fogMode = (game) =>
       ["full", "visible", "disabled"].includes(game?.fogMode) ? game.fogMode : "full";
     function ranges(unit, game = null) {
@@ -13,7 +13,7 @@ const UnitSensors = {
       const water =
         !!game &&
         !unit.sensorArea &&
-        game.environment !== "space" &&
+        !spaceAt(game, unit.x, unit.y) &&
         game.tiles?.[unit.y]?.[unit.x] === "water";
       const head = unit.brokenParts?.head ? 0.75 : 1;
       return {
@@ -45,7 +45,7 @@ const UnitSensors = {
         })),
     ];
     function crossLayer(g, a, b) {
-      if (g.environment === "space") return 1;
+      if (spaceAt(g, a.x, a.y) && spaceAt(g, b.x, b.y)) return 1;
       const airborne = (u) => !u.sensorArea && (u.flying || modelOf(u).movementType === "air");
       return !!airborne(a) !== !!airborne(b) ? 0.5 : 1;
     }
