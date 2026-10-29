@@ -550,7 +550,7 @@ const RoomPanel = (() => {
     }
   });
   function renderFinalAssembly(snapshot, busy) {
-    const active = snapshot.phase === "assembly";
+    const active = snapshot.started && snapshot.phase === "assembly";
     byId("finalAssemblyPanel").hidden = !active;
     byId("roomLobbyContent").hidden = active;
     byId("roomActions").hidden = active;
@@ -777,6 +777,7 @@ const RoomPanel = (() => {
         " · " +
         I18n.text("编组已锁定");
     const teams = byId("teamSlots");
+    teams.classList.toggle("observer-teams", self.seat === null);
     for (const button of joinButtons) button.remove();
     teams.replaceChildren();
     for (let team = 0; team < 2; team++) {

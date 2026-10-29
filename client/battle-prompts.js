@@ -61,9 +61,10 @@ const BattlePrompts = (() => {
     if (returnDialog.open) returnDialog.close();
   }
   function receive(snapshot) {
+    if (snapshot !== Net.snapshot) return;
     refreshEnd();
     const countdown = snapshot.returnCountdown;
-    if (!countdown) {
+    if (!countdown || !snapshot.started || snapshot.phase === "waiting") {
       resetReturn();
       return;
     }

@@ -58,18 +58,34 @@ const MatchResults = (() => {
     let icons = byId("victoryUnitIcons");
     if (!icons) { icons = element("div"); icons.id = "victoryUnitIcons"; rewards.after(icons); }
     icons.replaceChildren();
-    for (const [label, records] of [["损失单位", awards.flatMap(a => a.lostUnits || [])], ["击毁单位", awards.filter(a => a.kind === "kill")]]) {
-      icons.append(element("h4", "", label));
+    const spectating = Net.active && Net.seat === null;
+    const sections = spectating
+      ? (Net.snapshot?.teamLosses || [0, 1].map(team => ({ team, units: [] })))
+          .map(({ team, units }) => ({
+            team, records: units,
+            label: I18n.text("队伍") + (team + 1) + " · " + I18n.text("损毁单位") + " " + units.length,
+          }))
+      : [
+          { label: I18n.text("损失单位"), records: awards.flatMap(a => a.lostUnits || []) },
+          { label: I18n.text("击毁单位"), records: awards.filter(a => a.kind === "kill") },
+        ];
+    for (const { label, records, team } of sections) {
+      const section = element("section", team === undefined ? "" : "result-team-losses");
+      if (team !== undefined) section.dataset.team = String(team);
+      section.append(element("h4", "", label));
       const list = element("div", "result-unit-icons");
       for (const record of records) {
         if (!UnitModels[record.model]) continue;
         const img = element("img"); img.src = unitIcon(record.model); img.alt = UnitModels[record.model].name; img.title = img.alt;
+        img.dataset.unitId = record.id || "";
         list.append(img);
       }
-      if (!list.children.length) list.append(element("span", "muted", "无"));
-      icons.append(list);
+      if (!list.children.length) list.append(element("span", "muted", I18n.text("无")));
+      section.append(list);
+      icons.append(section);
     }
-    icons.hidden = rewards.hidden;
+    rewards.hidden ||= spectating;
+    icons.hidden = !Net.active || !!Net.snapshot?.replay;
     const snapshot = Net.snapshot,
       next = Net.active ? snapshot?.matchId : "offline-" + session;
     if (next !== key || !timer) {
@@ -87,6 +103,7 @@ const MatchResults = (() => {
     }
     render();
   }
+  byId("victoryRecords").onclick = () => window.ReplayPlayer?.openRecords();
   byId("playAgain").onclick = () => {
     if (!Net.active) {
       openMenu();

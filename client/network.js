@@ -278,6 +278,8 @@ const Net = (() => {
     n.connecting = false;
     clearActions();
     n.snapshot = null;
+    window.BattleAssets?.cancel();
+    window.BattlePrompts?.reset();
     n.seen.clear();
     n.seat = null;
     n.revision = -1;
@@ -522,7 +524,11 @@ const Net = (() => {
   }
   // 服务端快照是联机状态来源，按阶段恢复地图、应战或战斗画面。
   function applySnapshot(s) {
-    if (BattleAssets.guard(s, () => applySnapshot(s))) {
+    // Resource/loading/playback callbacks may finish after returning or reconnecting.
+    // They must never restore a superseded room phase or reopen its modal.
+    if (!n.active || !s || s !== n.snapshot) return;
+    if (!s.started || s.returnCountdown) BattleAssets.cancel();
+    else if (BattleAssets.guard(s, () => applySnapshot(s))) {
       phase = "loading";
       return;
     }
@@ -580,7 +586,7 @@ const Net = (() => {
       n.applied = true;
       return;
     }
-    if (s.phase === "assembly") {
+    if (s.started && s.phase === "assembly") {
       phase = "assembly";
       battleView = null;
       if (

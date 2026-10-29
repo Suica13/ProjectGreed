@@ -1903,3 +1903,66 @@ body.replay-active #gameScene .hud-terrain-strip {
 
 .pilot-skills-heading { margin-top:12px; border-top:1px solid #527492; padding-top:10px; }
 .pilot-skill-icon { width:34px; height:34px; object-fit:contain; float:left; margin:0 8px 4px 0; }
+
+/* Each team keeps its own scroll position while the observer inspects both rosters. */
+#gameScene #unitRoster {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 10px;
+}
+#gameScene .roster-team {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 0;
+  overflow: hidden;
+}
+#gameScene .roster-team[hidden] { display: none; }
+#gameScene #unitRoster.split-teams .roster-team {
+  border: 1px solid #526477;
+  background: #1b222c;
+}
+#gameScene #unitRoster.split-teams .roster-team[data-team="0"] { border-color: #67bfff; }
+#gameScene #unitRoster.split-teams .roster-team[data-team="1"] { border-color: #ef7b88; }
+#gameScene .roster-team-heading {
+  margin: 0;
+  padding: 7px 9px;
+  flex-shrink: 0;
+  font-size: 14px;
+  border-bottom: 1px solid #526477;
+}
+#gameScene .roster-team[data-team="0"] .roster-team-heading { color: #8fd2ff; }
+#gameScene .roster-team[data-team="1"] .roster-team-heading { color: #ff9aa5; }
+#gameScene #allies, #gameScene #enemies {
+  display: block;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 4px;
+}
+#gameScene #enemies[hidden] { display: none; }
+#victory > .modal { max-height: 90dvh; overflow-y: auto; }
+#victoryRecords { margin: 6px 8px 6px 0; }
+#victoryUnitIcons .result-unit-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+#victoryUnitIcons .result-team-losses {
+  padding: 8px 10px;
+  margin: 8px 0;
+  border: 1px solid #67bfff;
+  background: #202730;
+}
+#victoryUnitIcons .result-team-losses[data-team="1"] { border-color: #ef7b88; }
+#victoryUnitIcons h4 { margin: 0 0 8px; }
+
+#roomMain #teamSlots.observer-teams > .team-slot {
+  max-height: 36dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}

@@ -440,10 +440,21 @@ function renderRoster(busy) {
     scrollTop = roster.scrollTop;
   const allies = byId("allies"),
     enemies = byId("enemies");
+  const spectating = Net.active && Net.seat === null;
+  const splitTeams = spectating || viewerTeam === null;
+  const teamScroll = [allies.scrollTop, enemies.scrollTop];
+  roster.classList.toggle("split-teams", splitTeams);
+  byId("rosterTeam1").hidden = !splitTeams;
+  byId("rosterTeam0").dataset.team = String(splitTeams ? 0 : viewerTeam);
+  for (const team of [0, 1]) {
+    const title = byId("rosterTeam" + team + "Title");
+    title.hidden = !splitTeams;
+    title.textContent = I18n.text("队伍") + (team + 1);
+  }
   allies.replaceChildren();
   enemies.replaceChildren();
-  enemies.hidden = viewerTeam !== null;
-  const visible = game.units.filter((unit) => viewerTeam === null || unit.team === viewerTeam);
+  enemies.hidden = !splitTeams;
+  const visible = game.units.filter((unit) => splitTeams || unit.team === viewerTeam);
   const owners = [...new Set(visible.map(Rules.ownerOf))].sort((a, b) =>
     a === Net.seat ? -1 : b === Net.seat ? 1 : a - b,
   );
@@ -544,9 +555,11 @@ function renderRoster(busy) {
       };
       group.append(button);
     }
-    (viewerTeam === null && units[0].team === 1 ? enemies : allies).append(group);
+    (splitTeams && units[0].team === 1 ? enemies : allies).append(group);
   }
   roster.scrollTop = scrollTop;
+  allies.scrollTop = teamScroll[0];
+  enemies.scrollTop = teamScroll[1];
 }
 // 右侧单位详情：属性、动作、武器和目标。选中单位后重新生成。
 let unitNameEdit = null;
@@ -2887,6 +2900,8 @@ byId("endTurn").onclick = () => {
   endTurn();
 };
 function showVictory() {
+  if (Net.active && (!Net.snapshot?.started || Net.snapshot.phase !== "finished")) return;
+  if (game.winner === null) return;
   if (MapEffects.pending()) {
     phase = "victory";
     MapEffects.after(showVictory);

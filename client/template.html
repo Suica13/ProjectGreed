@@ -1974,8 +1974,14 @@
             role="region"
             aria-label="单位列表"
           >
-            <div data-ui-node="node-18" id="allies"></div>
-            <div data-ui-node="node-22" id="enemies" hidden></div>
+            <section id="rosterTeam0" class="roster-team" data-team="0">
+              <h3 class="roster-team-heading" id="rosterTeam0Title"></h3>
+              <div data-ui-node="node-18" id="allies" class="roster-team-scroll"></div>
+            </section>
+            <section id="rosterTeam1" class="roster-team" data-team="1" hidden>
+              <h3 class="roster-team-heading" id="rosterTeam1Title"></h3>
+              <div data-ui-node="node-22" id="enemies" class="roster-team-scroll" hidden></div>
+            </section>
           </div>
           <div data-ui-node="node-23" class="left-note">
             双方携带各自编组出击。<br
@@ -2419,6 +2425,7 @@
         <h2 data-ui-node="node-146" id="victoryTitle" class="win-title"></h2>
         <p data-ui-node="node-147" id="victoryNote" class="win-note"></p>
         <p id="victoryCountdown" role="status"></p>
+        <button id="victoryRecords" type="button">战斗记录</button>
         <button data-ui-node="node-148" id="playAgain" class="primary">立即返回主菜单</button>
       </div>
     </div>

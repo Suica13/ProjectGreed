@@ -554,3 +554,21 @@ test("ACE experience acceleration is credited once by the authoritative award pa
   assert.equal(u.pilot.experience, award.experiencePoints);
   assert(!u.pilot.stats.shooting.temporary);
 });
+test("finished team-loss summaries include bot casualties and are public to observers only after combat", (t) => {
+  const f = fixture(t);
+  f.act(0, "sync");
+  assert.equal(f.frames.get(f.clients[0]).teamLosses, null);
+  f.room.battleRoster["bot-casualty"] = {
+    memberId: "bot", bot: true, unitId: "Type61", model: f.attacker.model,
+    money: 12345, supplies: 67890, team: 0,
+  };
+  f.kill(); f.finish();
+  const watcher = { readyState: 1 };
+  f.engine.join(watcher, { mode: "join", room: "REWARD", characterFaction: "PMC", name: "Observer" });
+  const snapshot = f.frames.get(watcher);
+  assert.equal(snapshot.you.seat, null);
+  assert.deepEqual(snapshot.economyAwards, []);
+  assert.deepEqual(snapshot.teamLosses.map(team => team.units.length), [1, 1]);
+  assert.equal(snapshot.teamLosses[0].units[0].id, "bot-casualty");
+  assert.deepEqual(Object.keys(snapshot.teamLosses[0].units[0]).sort(), ["id", "model", "unitId"]);
+});

@@ -664,6 +664,16 @@ function createRoomEngine({
       combatIntel:
         room.phase === "playback" && team !== null ? room.playbackIntel?.[team] || null : null,
       startedFromSave: !!room.startedFromSave,
+      // Public only after battle finishes; no inventory, member token or prices are exposed.
+      teamLosses: room.started && room.phase === "finished"
+        ? [0, 1].map(teamId => ({
+            team: teamId,
+            units: Object.entries(room.battleRoster || {})
+              .filter(([id, record]) => record.team === teamId &&
+                !room.game.units.some(actor => actor.id === id && actor.hp > 0))
+              .map(([id, record]) => ({ id, model: record.model, unitId: record.unitId })),
+          }))
+        : null,
       economyAwards: recipient
         ? (room.economyAwards || [])
             .filter((a) => a.memberId === recipient.id)

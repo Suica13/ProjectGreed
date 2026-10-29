@@ -121,16 +121,14 @@ window.ReplayPlayer = (() => {
   logDownload.textContent = "下载战斗LOG";
   byId("roomDownloadBattleLog").hidden = true;
   byId("roomLogPerspective").style.display = "none";
-  const access = button("对局记录", () => {
+  function openRecords() {
     refresh();
-    dialog.showModal();
-  });
+    if (!dialog.open) dialog.showModal();
+  }
+  const access = button("对局记录", openRecords);
   access.id = "openMatchRecords";
   byId("netSettings").before(access);
-  const roomAccess = button("对局记录", () => {
-    refresh();
-    dialog.showModal();
-  });
+  const roomAccess = button("对局记录", openRecords);
   roomAccess.id = "roomOpenMatchRecords";
   byId("roomShowLog").after(roomAccess);
   byId("roomRulesActions").append(loadSave);
@@ -537,6 +535,7 @@ window.ReplayPlayer = (() => {
   }
   window.addEventListener("language-change", refresh);
   return {
+    openRecords,
     logOptions,
     downloadLog,
     receive,
