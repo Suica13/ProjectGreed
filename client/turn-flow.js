@@ -52,6 +52,7 @@ const TurnFlow = (() => {
   async function play(fromTeam, round, toTeam) {
     reset();
     if (
+      fromTeam === toTeam ||
       window.ReplayPresentation?.immersive ||
       pageView !== "game" ||
       window.GamePreview?.active ||

@@ -1277,7 +1277,7 @@
       "enCostPercent": 50,
       "cooldownTurns": 3,
       "maxUses": 99,
-      "consumeAction": true,
+      "consumeAction": false,
       "baseHit": 60,
       "damageComponents": {
         "beam": 39956.341552734375,
@@ -1294,7 +1294,7 @@
       "muzzle": {
         "mounts": [
           {
-            "bone": "Body",
+            "root": true,
             "offset": {
               "x": 0.0,
               "y": 70.0
@@ -1302,6 +1302,41 @@
           }
         ]
       },
+      "chargeMuzzle": {
+        "mounts": [
+          {
+            "root": true,
+            "offset": {
+              "x": 0.0,
+              "y": 90.0
+            }
+          }
+        ]
+      },
+      "beamWidth": 315.0,
+      "chargeScale": 1.3,
+      "fireSound": {
+        "file": "../../sounds/BeamCannon_6.ogg",
+        "volume": 1
+      },
+      "beamSections": [
+        {
+          "part": "Start",
+          "left": -101.25,
+          "width": 452.5
+        },
+        {
+          "part": "Mid",
+          "left": 351.625,
+          "width": 173.75
+        },
+        {
+          "part": "End",
+          "left": 525.375,
+          "width": 431.25
+        }
+      ],
+      "beamLength": 956.625,
       "weaponDisplayIndex": 0,
       "clip": null,
       "effect": "Irradiation_Charge_Pink",

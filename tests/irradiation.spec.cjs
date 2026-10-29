@@ -65,12 +65,12 @@ for (const entry of ["client", "developer"])
         const visible = pixels.some((a, i) => i % 4 === 3 && a > 0),
           transparent = pixels.some((a, i) => i % 4 === 3 && a === 0);
         IrradiationFX.reset();
-        IrradiationFX.start({ ...event, id: "wide-beam", to: { x: 25, y: 8 } }, () => {});
+        IrradiationFX.start({ ...event, id: "wide-beam", to: { x: 45, y: 8 } }, () => {});
         draws.length = 0;
         IrradiationFX.draw(ctx, 1000, position, 40);
         draws.length = 0;
         IrradiationFX.draw(ctx, 1000 + skill.chargeSeconds * 1000 + 400, position, 40);
-        const longer = draws[1].width;
+        const longer = draws.filter((d) => d.key.includes("Irradiation_Mid")).map((d) => d.width);
         IrradiationFX.reset();
         SpriteEffects.setFogClip(null, ctx);
         IrradiationFX.start({
@@ -95,8 +95,16 @@ for (const entry of ["client", "developer"])
         };
       });
       expect(result.charge).toBe(1);
-      expect(result.parts).toHaveLength(3);
-      expect(result.longer).toBeGreaterThan(result.widths[1]);
+      expect(result.parts[0]).toContain("Irradiation_Start");
+      expect(result.parts.at(-1)).toContain("Irradiation_End");
+      const middle = result.parts.flatMap((part, i) =>
+        part.includes("Irradiation_Mid") ? [result.widths[i]] : [],
+      );
+      expect(result.longer.length).toBeGreaterThan(middle.length);
+      expect(result.longer.length).toBeGreaterThan(2);
+      for (const width of result.longer.slice(0, -1))
+        expect(width).toBeCloseTo(result.longer[0], 5);
+      expect(result.longer.at(-1)).toBeLessThanOrEqual(result.longer[0]);
       expect(result.visible).toBe(true);
       expect(result.transparent).toBe(true);
       expect(result.buttons).toBeGreaterThan(0);
@@ -156,4 +164,56 @@ test("red thrusters require active boost; normal and broken GM shield art are mu
   expect(result.intact).not.toContain("Shield_Breaked");
   expect(result.broken).toContain("Shield_Breaked");
   expect(result.broken).not.toContain("Shield");
+});
+
+test("irradiation root attachments ignore the torso rotation and same-team resume never plays a turn cutin", async ({
+  page,
+}) => {
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(() => assetsReady);
+  const result = await page.evaluate(async () => {
+    const model = Object.keys(UnitModels).find((id) => UnitModels[id].prefabId === "RX_78_4_Bst"),
+      skill = UnitModels[model].skills.find((s) => s.type === "irradiation");
+    const actor = { x: 100, y: 200, scale: 1, angle: 90 };
+    const shots = [0, 0.4, 2.1].map((t) =>
+      SpriteRenderer.muzzle(
+        model,
+        { muzzle: skill.muzzle, attack: { muzzleIndices: [0] } },
+        actor,
+        skill.clip,
+        t,
+      ),
+    );
+    const charge = SpriteRenderer.muzzle(
+      model,
+      { muzzle: skill.chargeMuzzle, attack: { muzzleIndices: [0] } },
+      actor,
+      skill.clip,
+      1,
+    );
+    const round = game.round,
+      team = game.team;
+    setPageView("game");
+    await TurnFlow.play(team, round, team);
+    return {
+      shots,
+      charge,
+      round: game.round,
+      team: game.team,
+      expectedRound: round,
+      expectedTeam: team,
+      active: TurnFlow.active,
+      hidden: byId("turnCutin").hidden,
+    };
+  });
+  expect(result.shots).toEqual([
+    { x: 140, y: 209 },
+    { x: 140, y: 209 },
+    { x: 140, y: 209 },
+  ]);
+  expect(result.charge).toEqual({ x: 150, y: 209 });
+  expect(result.round).toBe(result.expectedRound);
+  expect(result.team).toBe(result.expectedTeam);
+  expect(result.active).toBe(false);
+  expect(result.hidden).toBe(true);
 });

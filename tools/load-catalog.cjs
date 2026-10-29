@@ -501,6 +501,19 @@ function loadCatalog({
       result.sounds[asset] =
         "data:audio/ogg;base64," + fs.readFileSync(file(base, skill.sound.file)).toString("base64");
       skill.sound.asset = asset;
+      if (skill.fireSound) {
+        if (
+          !Number.isFinite(skill.fireSound.volume) ||
+          skill.fireSound.volume < 0 ||
+          skill.fireSound.volume > 1
+        )
+          throw Error("Invalid skill firing sound: " + skill.id);
+        const fireAsset = asset + "/fire";
+        result.sounds[fireAsset] =
+          "data:audio/ogg;base64," +
+          fs.readFileSync(file(base, skill.fireSound.file)).toString("base64");
+        skill.fireSound.asset = fireAsset;
+      }
     }
     prefab.stats.adaptability ??= { ground: 100, space: 100 };
     for (const extra of ["water", "air", "atmosphere", "mountain"])

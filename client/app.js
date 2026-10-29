@@ -701,7 +701,14 @@ function renderPanel() {
     xp.dataset.pilotExperience = "";
     if (pilot.ace) {
       const placeholder = element("small", "muted", "ACE技能（占位）");
-      placeholder.append(document.createTextNode(" · " + PilotSystem.aceProfile(pilot).skills.map(s => s.name).join(" / ")));
+      placeholder.append(
+        document.createTextNode(
+          " · " +
+            PilotSystem.aceProfile(pilot)
+              .skills.map((s) => s.name)
+              .join(" / "),
+        ),
+      );
       xp.append(placeholder);
     }
     stats.prepend(pilotLine, xp, pilotStats);
@@ -1990,7 +1997,28 @@ function drawMap(now) {
   if (!smokeDrawn) EnvironmentVisuals.smoke(ctx, game, mapPosition, tile);
   if (!immersive) PlanningUI.sniperLocks(ctx, now);
   drawVisibleEffects(() => SkillEffects.draw(ctx, now, mapPosition, tile));
-  IrradiationFX.draw(ctx, now, mapPosition, tile); // Native beam/charge sprites remain visible through fog.
+  IrradiationFX.draw(ctx, now, mapPosition, tile, (id) => {
+    const pose = mapUnitPoses.find((item) => item.u.id === id);
+    if (!pose) return null;
+    const { u, pos, angle, anim, t, groundCell } = pose;
+    const environment = EnvironmentVisuals.pose(u, groundCell);
+    const scale =
+      (tile / 64) *
+      1.2 *
+      (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
+      Rules.modelOf(u).presentation.mapScale;
+    return {
+      x: pos.x,
+      y:
+        pos.y +
+        tile * (0.035 + environment.offset) +
+        SpriteRenderer.flightOffset(u.model, now, !!u.flying, game.environment) * scale,
+      scale,
+      angle,
+      clip: anim,
+      time: t,
+    };
+  }); // Native beam/charge sprites remain visible through fog.
   drawVisibleEffects(() => MapEffects.draw(ctx, now, mapPosition, tile));
   if (!immersive && hover) {
     let p = mapPosition(hover.x, hover.y);

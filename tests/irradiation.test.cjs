@@ -123,3 +123,20 @@ test("AI uses irradiation only on visible enemies and refuses friendly fire", ()
   target.x = 12;
   assert.equal(G.aiAreaSkill(g, u), null);
 });
+
+test("native irradiation presentation preserves charge/beam attachment offsets, original thickness and phase-specific sounds", () => {
+  for (const id of ["RX_78_4_Bst", "ApsarasII", "Burstliner", "MA_08", "AMX_002", "Skiure"]) {
+    const model = Object.values(G.models).find((m) => m.prefabId === id),
+      skill = model.skills.find((s) => s.type === "irradiation");
+    assert.equal(skill.consumeAction, false);
+    assert.equal(skill.beamWidth, 315);
+    assert.equal(skill.chargeScale, 1.3);
+    assert.ok(skill.fireSound.asset);
+    assert.ok(G.catalog.sounds[skill.fireSound.asset]);
+    if (id !== "Skiure") assert.match(skill.fireSound.file, /BeamCannon_6\.ogg$/);
+    if (id === "RX_78_4_Bst") {
+      assert.deepEqual(skill.chargeMuzzle.mounts[0], { root: true, offset: { x: 9, y: 50 } });
+      assert.deepEqual(skill.muzzle.mounts[0], { root: true, offset: { x: 9, y: 40 } });
+    }
+  }
+});

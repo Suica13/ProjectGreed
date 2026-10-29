@@ -317,3 +317,72 @@ test("dynamic skill and command descriptions translate completely and preserve v
   assert.match(api.text(sample), /250,000/);
   assert.match(api.text(sample), /独立耐久/);
 });
+
+test("Chinese restores every catalog name, kit and skill after repeated English/Japanese binding", () => {
+  const api = i18n(["en-US"]),
+    catalog = loadCatalog(),
+    originals = [];
+  const remember = (record, field = "name", localization = record.localization) =>
+    originals.push({
+      record,
+      field,
+      expected: localization?.zh?.[field === "kitName" ? "name" : field] ?? record[field],
+    });
+  for (const prefab of catalog.prefabs) {
+    remember(prefab);
+    remember(prefab, "description");
+    for (const record of [
+      ...prefab.weaponKits,
+      ...Object.values(prefab.weapons),
+      ...(prefab.skills || []),
+    ])
+      remember(record);
+  }
+  for (const model of Object.values(catalog.models)) {
+    remember(model);
+    remember(model, "kitName", model.kitLocalization);
+    for (const record of [...model.weapons, ...(model.skills || [])]) remember(record);
+  }
+  api.bindCatalog(catalog);
+  api.bindCatalog(catalog);
+  api.setLanguage("ja");
+  api.bindCatalog(catalog);
+  api.setLanguage("en");
+  api.setLanguage("zh");
+  for (const { record, field, expected } of originals)
+    assert.equal(record[field], expected, record.id + "/" + field);
+  const g4 = Object.values(catalog.models).find((m) => m.prefabId === "RX_78_4_Bst");
+  assert.match(g4.kitName, /套件/);
+  assert.equal(g4.skills.find((s) => s.type === "irradiation").name, "光束照射");
+});
+
+test("already-translated UI text restores its Chinese source without touching input values", () => {
+  const label = { nodeType: 3, nodeValue: "", parentElement: { closest: () => null } };
+  const attrs = { placeholder: "" };
+  const input = {
+    nodeType: 1,
+    tagName: "INPUT",
+    value: "My Player Name",
+    childNodes: [],
+    closest: () => null,
+    hasAttribute: (key) => Object.hasOwn(attrs, key),
+    getAttribute: (key) => attrs[key],
+    setAttribute: (key, value) => (attrs[key] = value),
+  };
+  const body = {
+    nodeType: 1,
+    tagName: "DIV",
+    closest: () => null,
+    hasAttribute: () => false,
+    childNodes: [label, input],
+  };
+  const api = i18n(["en"], undefined, body);
+  label.nodeValue = api.text("生产单位");
+  attrs.placeholder = api.text("选择出生点");
+  api.refresh();
+  assert.equal(label.nodeValue, "Produce units");
+  api.setLanguage("zh");
+  assert.equal(label.nodeValue, "生产单位");
+  assert.equal(attrs.placeholder, "选择出生点");
+  assert.equal(input.value, "My Player Name");
+});

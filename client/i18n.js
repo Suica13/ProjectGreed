@@ -14,6 +14,18 @@ const I18n = (() => {
     const saved = localStorage.getItem(storageKey);
     if (supported.includes(saved)) language = saved;
   } catch {}
+  const boundFields = new WeakMap();
+  // UI builders sometimes pass an already-translated string into a new node.
+  // Retain its unambiguous Chinese source for later language changes. User input
+  // and explicitly ignored identity/chat nodes never go through this path.
+  const renderedSources = new Map();
+  function rememberSource(original, rendered) {
+    if (original !== rendered) {
+      if (!renderedSources.has(rendered)) renderedSources.set(rendered, original);
+      else if (renderedSources.get(rendered) !== original) renderedSources.set(rendered, null);
+      if (renderedSources.size > 8192) renderedSources.delete(renderedSources.keys().next().value);
+    }
+  }
   const textSources = new WeakMap(),
     attributeSources = new WeakMap(),
     cache = new Map();
@@ -65,6 +77,7 @@ const I18n = (() => {
     translated ??= key.replace(fragmentRegex, (key) => dictionary[key] ?? UI_LOCALES.en[key]);
     if (cache.size > 4096) cache.clear();
     cache.set(key, translated);
+    rememberSource(key, translated);
     return translated;
   }
   function localized(record, field = "name") {
@@ -82,6 +95,10 @@ const I18n = (() => {
     return profile ? localized(profile) : pilot?.custom ? pilot.name : text(pilot?.name || "");
   }
   function bind(record, field = "name", localization = record.localization) {
+    let fields = boundFields.get(record);
+    if (!fields) boundFields.set(record, (fields = new Set()));
+    if (fields.has(field)) return;
+    fields.add(field);
     const original = record[field],
       key = field === "kitName" ? "name" : field;
     if (["标准套件", "复合发射器套件"].includes(original)) localization = undefined;
@@ -93,7 +110,13 @@ const I18n = (() => {
       enumerable: true,
       configurable: true,
       get() {
-        return localization?.[language]?.[key] ?? localization?.en?.[key] ?? text(original);
+        if (language === "zh") return localization?.zh?.[key] ?? original;
+        return (
+          localization?.[language]?.[key] ??
+          UI_LOCALES[language]?.[original] ??
+          localization?.en?.[key] ??
+          text(original)
+        );
       },
     });
   }
@@ -141,7 +164,8 @@ const I18n = (() => {
     if (node.nodeType === Node.TEXT_NODE) {
       if (ignored(node.parentElement) || node.parentElement?.closest("input,textarea")) return;
       let source = textSources.get(node);
-      if (!source || node.nodeValue !== source.rendered) source = { original: node.nodeValue };
+      if (!source || node.nodeValue !== source.rendered)
+        source = { original: renderedSources.get(node.nodeValue) ?? node.nodeValue };
       source.rendered = text(source.original);
       textSources.set(node, source);
       if (node.nodeValue !== source.rendered) node.nodeValue = source.rendered;
@@ -153,7 +177,9 @@ const I18n = (() => {
       const entries = attributeSources.get(node) || {};
       let source = entries[key];
       if (!source || node.getAttribute(key) !== source.rendered)
-        source = { original: node.getAttribute(key) };
+        source = {
+          original: renderedSources.get(node.getAttribute(key)) ?? node.getAttribute(key),
+        };
       source.rendered = text(source.original);
       entries[key] = source;
       attributeSources.set(node, entries);

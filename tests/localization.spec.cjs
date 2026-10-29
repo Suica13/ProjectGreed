@@ -147,3 +147,95 @@ for (const width of [390, 1280])
     await page.evaluate(() => I18n.setLanguage("zh"));
     await expect(page.locator(".ace-biography")).toContainText("白色流星");
   });
+
+test("Chinese mode keeps catalog, shell pages, unit preview and skills Chinese after language switches", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.addInitScript(() => localStorage.setItem("projectgreed.language", "en"));
+  await page.goto(url);
+  await page.waitForFunction(() => assetsReady);
+  for (const language of ["ja", "en", "zh"]) {
+    await page.evaluate((language) => I18n.setLanguage(language), language);
+    await expect(page.locator("html")).toHaveAttribute(
+      "lang",
+      language === "zh" ? "zh-CN" : language,
+    );
+  }
+  const leftovers = [];
+  for (const view of ["menu", "formation", "pilots", "production", "development", "records"]) {
+    await page.evaluate((view) => MenuShell.go(view), view);
+    const found = await page.evaluate(() => {
+      I18n.refresh();
+      const english = new Map(
+        Object.entries(UI_LOCALES.en)
+          .filter(([key, value]) => key !== value && !value.includes("{"))
+          .map(([key, value]) => [value, key]),
+      );
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT),
+        result = [];
+      while (walker.nextNode()) {
+        const node = walker.currentNode,
+          parent = node.parentElement,
+          text = node.nodeValue.trim();
+        if (
+          !text ||
+          !parent?.getClientRects().length ||
+          parent.closest("script,style,input,textarea,[data-i18n-ignore]")
+        )
+          continue;
+        if (
+          [
+            "COST",
+            "AP",
+            "EN",
+            "HP",
+            "MS",
+            "SP",
+            "ACE",
+            "PMC",
+            "EFSF",
+            "ZEON",
+            "WIP",
+            "LOG",
+          ].includes(text)
+        )
+          continue;
+        if (english.has(text)) result.push({ text, expected: english.get(text) });
+      }
+      return result;
+    });
+    leftovers.push(...found.map((text) => ({ view, ...text })));
+  }
+  expect(leftovers).toEqual([]);
+  await page.evaluate(() => {
+    MenuShell.go("formation");
+    Formation.previewUnit("RX_78_4_Bst");
+  });
+  await expect(page.locator("#formationDetailKit")).not.toContainText("Beam rifle kit");
+  const kits = await page.locator("#formationDetailKit option").allTextContents();
+  expect(kits.length).toBeGreaterThan(0);
+  for (const kit of kits) expect(kit).toContain("套件");
+  const skills = await page.evaluate(() => {
+    const model = Object.values(UnitModels).find((m) => m.prefabId === "RX_78_4_Bst");
+    const panel = document.createElement("div");
+    SkillControls.render(
+      panel,
+      {
+        id: "zh-skill",
+        model: model.id || Object.keys(UnitModels).find((id) => UnitModels[id] === model),
+        hp: model.hp,
+        en: model.en,
+        x: 4,
+        y: 4,
+        actionPoints: 5,
+      },
+      true,
+    );
+    return panel.textContent;
+  });
+  expect(skills).toContain("光束照射");
+  expect(skills).not.toContain("Irradiation Beam");
+  expect(errors).toEqual([]);
+});

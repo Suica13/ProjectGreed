@@ -2337,6 +2337,7 @@ const Tactics = (() => {
             expiresRound: g.round + weapon.burn.durationTurns * 2,
             hpPercent: weapon.burn.hpPercent,
             sourceId: from.id,
+            lastTickRound: to.burning?.lastTickRound,
           };
         if (hit && to.hp > 0 && weapon.onHitAPLoss) to.apPenaltyNextTurn = weapon.onHitAPLoss;
         const wasOverdrive = !!to.overdrive;
@@ -2586,6 +2587,12 @@ const Tactics = (() => {
       color: skill.visualColor,
       chargeSeconds: skill.chargeSeconds,
       fireSeconds: skill.fireSeconds,
+      fireSound: skill.fireSound,
+      beamWidth: skill.beamWidth,
+      beamSections: skill.beamSections,
+      beamLength: skill.beamLength,
+      chargeScale: skill.chargeScale,
+      chargeMuzzle: skill.chargeMuzzle,
       weaponDisplayIndex: skill.weaponDisplayIndex,
       clip: skill.clip,
       muzzle: skill.muzzle,
@@ -2628,8 +2635,7 @@ const Tactics = (() => {
         return { skillId: skill.id, x: unit.x, y: unit.y };
     return null;
   }
-  function tickBurning(g, seconds = 1) {
-    if (!Number.isInteger(seconds) || seconds < 1 || seconds > 60) throw Error("Invalid burn tick");
+  function tickBurning(g) {
     if (g.winner !== null) return [];
     const events = [];
     for (const u of g.units) {
@@ -2639,11 +2645,13 @@ const Tactics = (() => {
         delete u.burning;
         continue;
       }
+      if (u.team !== g.team || burn.lastTickRound === g.round) continue;
+      burn.lastTickRound = g.round;
       const m = modelOf(u),
         resistance = Math.max(0, Math.min(100, m.defenses.sp?.percent || 0));
       const damage = Math.min(
         u.hp,
-        Math.round(((m.hp * burn.hpPercent) / 100) * (1 - resistance / 100)) * seconds,
+        Math.round(((m.hp * burn.hpPercent) / 100) * (1 - resistance / 100)),
       );
       const before = u.hp;
       u.hp -= damage;
@@ -2666,7 +2674,7 @@ const Tactics = (() => {
   }
   function end(g) {
     if (g.winner !== null) throw Error("战斗已经结束");
-    g.turnEffects = [];
+    g.turnEffects = tickBurning(g);
     for (const u of g.units) if (!u.overdrive) skills.revertDamaged(u);
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.overdrive)) {
       const active = u.overdrive,

@@ -1598,13 +1598,11 @@
   "燃烧伤害": "Burn damage",
   "电击：下回合AP减少1点": "Stunned: -1 AP next turn",
   "命中后使目标下回合AP减少1点（不叠加）": "On hit: target loses 1 AP next turn (does not stack)",
-  "命中后燃烧{turns}回合，每秒扣除{percent}%最大耐久（受SP百分比防御减免）": "On hit: burns for {turns} turns, losing {percent}% max HP per second (reduced by SP percentage defense)",
   "选择方向照射10格；消耗5 AP与50%最大EN，冷却3个己方回合。基础命中60%，对沿途每台单位（含友军）判定一次，基础伤害为原MOD完整伤害的1/20。": "Fire a directional beam over 10 tiles. Costs 5 AP and 50% max EN; cooldown: 3 own turns. Base accuracy: 60%. Rolls once per hull along its path, including allies. Base damage is 1/20 of the full MOD total.",
   "消耗2 AP与80 EN，周围3格内所有敌人下回合AP减少1点，不叠加，冷却2个己方回合。": "Costs 2 AP and 80 EN. Enemies within 3 tiles lose 1 AP next turn (does not stack). Cooldown: 2 own turns.",
   "射程10～15格，消耗3 AP与30 EN；揭露目标半径3格视野并探测敌人，持续至下次己方回合。": "Range: 10–15 tiles. Costs 3 AP and 30 EN. Reveals and scans a 3-tile radius until the next own turn.",
   "选择目标地格发射，消耗4 AP与50%最大EN；半径4格内持续2回合，穿过区域的光束弹伤害降低50%，同类区域不叠加。": "Launch a beam disruption screen. Costs 4 AP and 50% max EN. Beams crossing the radius-4 area deal 50% less damage for 2 full turn cycles.",
   "命中后使目标下回合AP减少1点，不叠加": "On hit: target loses 1 AP next turn; does not stack",
-  "命中附加燃烧，持续3回合；重复命中刷新时长": "Inflicts burning for 3 turns; further hits refresh the duration",
   "烟雾弹": "Smoke Grenade",
   "烟雾掩护：受到远程攻击时命中率×75%": "Smoke cover: incoming ranged accuracy ×75%",
   "I立场": "I-field",
@@ -2223,5 +2221,7 @@
   "第{index}项": "Item {index}",
   "扫描{range}格内{targets}，标记持续至下次己方回合；消除己方未侦测命中惩罚，不直接揭露普通单位。消耗{en} EN和本次行动。": "Scan {targets} within {range} cells. Marks last until the next allied turn and remove your undetected-target hit penalty without directly revealing ordinary units. Costs {en} EN and this action.",
   "扫描{range}格内{targets}，标记持续至下次己方回合；消除己方未侦测命中惩罚，不直接揭露普通单位。消耗{en} EN、{ap} AP。下次己方回合可再次使用。": "Scan {targets} within {range} cells. Marks last until the next allied turn and remove your undetected-target hit penalty without directly revealing ordinary units. Costs {en} EN and {ap} AP; reusable next allied turn.",
-  "水域中的敌军": "enemies in water"
+  "水域中的敌军": "enemies in water",
+  "命中附加燃烧，持续3回合；每回合结算一次，重复命中刷新时长": "Inflicts burning for 3 turns; damage occurs once at the end of the affected team’s turn; further hits refresh the duration",
+  "命中后燃烧{turns}回合，每回合扣除{percent}%最大耐久（受SP百分比防御减免）": "On hit: burns for {turns} turns, losing {percent}% max HP once per turn (reduced by SP percentage defense)"
 }

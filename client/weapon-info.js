@@ -203,7 +203,7 @@ const WeaponInfo = (() => {
         node(
           "div",
           "weapon-pilot-requirement",
-          I18n.text("命中附加燃烧，持续3回合；重复命中刷新时长"),
+          I18n.text("命中附加燃烧，持续3回合；每回合结算一次，重复命中刷新时长"),
         ),
       );
     if (weapon.requiresSfsMS)

@@ -204,7 +204,7 @@ const MapEffects = (() => {
   }
   function captureTurn(game) {
     const events = (game.turnEffects || [])
-      .filter((e) => e.type === "overdrive" && e.hp <= 0)
+      .filter((e) => (e.type === "overdrive" && e.hp <= 0) || (e.type === "burn" && e.after <= 0))
       .map((e) => ({ hit: true, before: 1, after: 0, to: e.unitId }));
     if (events.length) capture({ networkId: "upkeep-" + game.round, events });
   }

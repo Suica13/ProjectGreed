@@ -291,7 +291,7 @@ test("irradiation is authoritative, deduplicated, visible through fog and waits 
   assert.equal(room.irradiationActors, null);
 });
 
-test("burn clock runs during planning and sync does not postpone its one-second cadence", async (t) => {
+test("burn waits through planning and sync, then ticks once at its owner team turn end", async (t) => {
   const { app, client } = await setup(t),
     blue = await client(),
     red = await client();
@@ -305,12 +305,20 @@ test("burn clock runs during planning and sync does not postpone its one-second 
   u.burning = { expiresRound: g.round + 6, hpPercent: 5, sourceId: source.id };
   const hp = u.hp;
   assert.equal((await blue.act("wait", { unitId: source.id })).type, "state");
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 1200));
   await blue.act("sync");
-  await blue.wait((m) => m.type === "state" && m.lastEvent?.type === "burn_tick", 0, 4000);
-  assert.ok(u.hp < hp);
-  assert.equal(hp - u.hp, Math.round(G.modelOf(u).hp * 0.05));
-  assert.equal(g.round, 1);
+  assert.equal(u.hp,hp);
+  assert.equal((await blue.act("end_turn")).type,"state");
+  assert.equal(u.hp,hp);
+  await red.latest(s=>s.revision===room.revision);
+  room.turnNotBefore=0;
+  assert.equal((await red.act("end_turn")).type,"state");
+  assert.equal(hp-u.hp,Math.round(G.modelOf(u).hp*.05));
+  assert.equal(g.turnEffects.filter(e=>e.type==='burn').length,1);
+  await blue.latest(s=>s.revision===room.revision);
+  await blue.act('sync');
+  assert.equal(hp-u.hp,Math.round(G.modelOf(u).hp*.05));
+
 });
 
 test("irradiation settles a destroyed carrier and trapped passengers exactly once", async (t) => {
@@ -393,4 +401,25 @@ test("smoke cost and area are authoritative and repeated requests cannot spend t
     (await red.act("skill", { unitId: u.id, skillId: skill.id, x: u.x, y: u.y })).type,
     "error",
   );
+});
+
+
+test("turn-end burning credits a destroyed carrier and trapped passengers exactly once", async t=>{
+  const {app,client}=await setup(t),blue=await client(),red=await client();
+  await blue.hello('create','BURNCARRIER');await red.hello('join','BURNCARRIER');
+  await readyMatch(blue,red);
+  const room=app.rooms.get('BURNCARRIER'),g=room.game;
+  assert.equal((await blue.act('end_turn')).type,'state');
+  const source=g.units.find(u=>u.id==='0-0'),carrier=g.units.find(u=>u.id==='1-0'),passenger=g.units.find(u=>u.id==='1-1');
+  carrier.model=Object.keys(G.models).find(id=>G.models[id].prefabId==='Medea');
+  Object.assign(carrier,{hp:1,shield:0,burning:{expiresRound:g.round+6,hpPercent:5,sourceId:source.id}});
+  Object.assign(passenger,{embarked:{carrierId:carrier.id,hangarId:'Hangar_1'}});
+  g.tiles.forEach(row=>row.fill('rock'));
+  room.turnNotBefore=0;
+  await red.latest(s=>s.revision===room.revision);
+  assert.equal((await red.act('end_turn')).type,'state');
+  for(const actor of [carrier,passenger]){
+    assert.equal(actor.hp,0);
+    assert.equal(room.economyAwards.filter(a=>a.targetId===actor.id&&a.kind==='kill').length,1);
+  }
 });

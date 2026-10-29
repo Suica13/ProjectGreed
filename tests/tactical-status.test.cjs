@@ -125,29 +125,46 @@ test("heat rods and native stun payloads apply one non-stacking AP penalty at th
   assert.equal(b.actionPoints, G.actionBudget(b));
 });
 
-test("burn ticks every second, uses maximum HP and SP percentage only, and expires without stacking", () => {
+test("burn deals damage once at each affected team's turn end for three turns, refreshing without stacking", () => {
   const { g, a, b } = fixture();
   b.x = 6;
   const w = { ...G.modelOf(a).weapons[0], hitScale: 100, burn: { durationTurns: 3, hpPercent: 5 } };
   G.fight(g, a, b, w, "evade", null, false);
   const expires = b.burning.expiresRound;
-  assert.equal(expires, g.round + 6);
-  const maximum = G.modelOf(b).hp,
-    before = b.hp;
-  G.tickBurning(g);
-  assert.equal(before - b.hp, Math.round(maximum * 0.05));
   a.acted = false;
   G.fight(g, a, b, w, "evade", null, false);
   assert.equal(b.burning.expiresRound, expires);
+  const hp = b.hp,
+    damage = Math.round(G.modelOf(b).hp * 0.05);
+  assert.deepEqual(G.tickBurning(g), []);
+  assert.equal(b.hp, hp);
+  const ticks = [];
+  for (let i = 0; i < 6; i++) {
+    const outgoing = g.team;
+    G.end(g);
+    const events = g.turnEffects.filter((e) => e.type === "burn");
+    assert.equal(events.length, outgoing === b.team ? 1 : 0);
+    ticks.push(...events);
+  }
+  assert.equal(ticks.length, 3);
+  assert.equal(b.hp, hp - damage * 3);
+  assert.equal(b.burning, undefined);
+});
+test("burn ignores SP flat defense, respects percentage defense and deduplicates repeated processing in one turn", () => {
+  const { g, b } = fixture();
+  g.team = b.team;
+  b.burning = { expiresRound: g.round + 6, hpPercent: 5 };
   const previous = G.models[b.model].defenses.sp;
   G.models[b.model].defenses.sp = { percent: 50, flat: 999999 };
   try {
-    const before = b.hp;
-    G.tickBurning(g);
-    assert.equal(before - b.hp, Math.round(maximum * 0.025));
+    const hp = b.hp;
+    assert.equal(G.tickBurning(g).length, 1);
+    assert.equal(hp - b.hp, Math.round(G.modelOf(b).hp * 0.025));
+    assert.deepEqual(G.tickBurning(g), []);
+    G.end(g);
+    assert.equal(hp - b.hp, Math.round(G.modelOf(b).hp * 0.025));
+    assert.equal(g.turnEffects.filter((e) => e.type === "burn").length, 0);
   } finally {
     G.models[b.model].defenses.sp = previous;
   }
-  for (let i = 0; i < 6; i++) G.end(g);
-  assert.equal(b.burning, undefined);
 });

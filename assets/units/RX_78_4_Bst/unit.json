@@ -3614,7 +3614,7 @@
       "enCostPercent": 50,
       "cooldownTurns": 3,
       "maxUses": 99,
-      "consumeAction": true,
+      "consumeAction": false,
       "baseHit": 60,
       "damageComponents": {
         "beam": 49945.42694091797,
@@ -3633,14 +3633,49 @@
       "muzzle": {
         "mounts": [
           {
-            "layer": "EF_RX_78_4_HighMegaLauncher",
-            "point": {
-              "x": -1.1764705882352937,
-              "y": -9.411764705882353
+            "root": true,
+            "offset": {
+              "x": 9.0,
+              "y": 40.0
             }
           }
         ]
       },
+      "chargeMuzzle": {
+        "mounts": [
+          {
+            "root": true,
+            "offset": {
+              "x": 9.0,
+              "y": 50.0
+            }
+          }
+        ]
+      },
+      "beamWidth": 315.0,
+      "chargeScale": 1.3,
+      "fireSound": {
+        "file": "../../sounds/BeamCannon_6.ogg",
+        "volume": 1
+      },
+      "beamSections": [
+        {
+          "part": "Start",
+          "left": -101.25,
+          "width": 452.5
+        },
+        {
+          "part": "Mid",
+          "left": 351.625,
+          "width": 173.75
+        },
+        {
+          "part": "End",
+          "left": 525.375,
+          "width": 431.25
+        }
+      ],
+      "beamLength": 956.625,
       "weaponDisplayIndex": 2,
       "clip": "Common_Shoot_Two_Handed_A",
       "effect": "Irradiation_Charge_Pink",

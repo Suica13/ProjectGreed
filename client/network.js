@@ -640,7 +640,10 @@ const Net = (() => {
         PlanningUI.stop(event.unitId);
       if (event.type === "skill" && s.phase === "idle" && online && n.applied)
         SkillControls.applied(event);
-      if (event.type === "turn") {
+      if (
+        event.type === "turn" &&
+        (event.fromTeam ?? previousGame.team) !== (event.toTeam ?? game.team)
+      ) {
         selected = null;
         weaponId = null;
         mode = "select";

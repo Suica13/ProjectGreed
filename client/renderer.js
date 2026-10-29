@@ -187,6 +187,14 @@ const SpriteRenderer = (() => {
         actor.aimAngle ?? actor.unit?.aimAngle ?? actor.angle,
         weapon.moduleIds || [],
       );
+    if (mount.root) {
+      const theta = radians(actor.angle - 90),
+        offset = mount.offset;
+      return {
+        x: actor.x + (Math.cos(theta) * offset.y - Math.sin(theta) * offset.x) * actor.scale,
+        y: actor.y + (Math.sin(theta) * offset.y + Math.cos(theta) * offset.x) * actor.scale,
+      };
+    }
     const layer = mount.layer
       ? unit.decals.find((layer) => layer.name === mount.layer)
       : {

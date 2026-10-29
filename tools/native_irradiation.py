@@ -1,5 +1,5 @@
 """Native continuous beam payloads become one directional skill hit per hull."""
-import copy,json
+import copy,json,re,shutil,struct
 from mod_source import ASSETS,ROOT,MAIN,load
 BEAMS={'ApsarasII':'ZN_ApsarasII_MegaBeamCannon','RX_78_4_Bst':'EF_RX_78_4_HighMegaLauncher',
        'Burstliner':'EF_Burstliner_BeamCannon','MA_08':'ZN_MA_08_MegaBeamCannon','AMX_002':'ZN_AMX_002_MegaBeamCannon','Skiure':'ZN_Skiure_BeamCannon'}
@@ -10,6 +10,37 @@ def apply(prefab,native=None):
     weapon=prefab['weapons'][key]
     data=load(ROOT/weapon['source']['file'])
     color=next((s.get('sendMessageWithTags','')[9:] for s in data.values() if s.get('sendMessageWithTags','').startswith('SetColor_')),'Pink')
+    charge_attachment=data.get('attachment_'+key+'_ChargeEffect_1')
+    beam_attachment=data.get('attachment_'+key+'_BulletEffect_1')
+    charge_decal=load(MAIN/'Resource/Image/Fx/Weapon/Beam/Charge/Beam_Charge_1_EffectUnit.ini',MAIN)['decal_Beam_Charge_1_Pink']
+    beam_decal=load(MAIN/'Resource/Image/Fx/Weapon/Beam/HighMegaCannon/HighMegaCannon_1_EffectUnit_M_Pink.ini',MAIN)['decal_Effect_Mid']
+    native_sheet=MAIN/'Resource/Image/Fx/Weapon/Beam/HighMegaCannon/Image/HighMegaCannon_1_Mid_Pink.png'
+    native_height=struct.unpack_from('>II',native_sheet.read_bytes(),16)[1]
+    beam_width=native_height*float(beam_decal['imageScale'])*float(beam_decal['imageScaleY'])
+    def attachment_muzzle(attachment,forward=0):
+        return {'mounts':[{'root':True,'offset':{'x':float(attachment['x']),'y':float(attachment['y'])+forward}}]}
+    beam_parent=load(MAIN/'Resource/Image/Fx/Weapon/Beam/HighMegaCannon/HighMegaCannon_1_EffectUnit.ini',MAIN)
+    beam_sections=[]
+    for part,suffix in [('Start','S'),('Mid','M'),('End','E')]:
+        native_part=load(MAIN/f'Resource/Image/Fx/Weapon/Beam/HighMegaCannon/HighMegaCannon_1_EffectUnit_{suffix}_Pink.ini',MAIN)['decal_Effect_'+part]
+        sheet=MAIN/f'Resource/Image/Fx/Weapon/Beam/HighMegaCannon/Image/HighMegaCannon_1_{part}_Pink.png'
+        frame_width=struct.unpack_from('>II',sheet.read_bytes(),16)[0]/28
+        width=frame_width*float(native_part['imageScale'])
+        center=float(beam_parent['attachment_Effect_'+part]['y'])
+        beam_sections.append(dict(part=part,left=center-width/2,width=width))
+    beam_length=max(part['left']+part['width'] for part in beam_sections)
+    charge_muzzle=attachment_muzzle(charge_attachment,float(charge_decal.get('yOffsetRelative',0))) if charge_attachment else copy.deepcopy(weapon.get('muzzle',{}))
+    beam_muzzle=attachment_muzzle(beam_attachment) if beam_attachment else copy.deepcopy(weapon.get('muzzle',{}))
+    fire_action=data.get('hiddenAction_'+key+'_Fire_Step_1',{})
+    fire_audio=fire_action.get('playSoundAtUnit')
+    if fire_audio:
+        audio_path,volume=fire_audio.rsplit(':',1)
+        source=MAIN/audio_path.removeprefix('ROOT:').replace('\\','/')
+        destination=ASSETS/'sounds'/source.name
+        if not destination.exists():shutil.copyfile(source,destination)
+        fire_sound={'file':'../../sounds/'+source.name,'volume':min(1,float(volume))}
+    else:
+        fire_sound=copy.deepcopy(weapon.get('sound'))
     payload=weapon.get('nativePayload',{})
     repeat=int(payload.get('ProjectileAttackTimes',1));decay=payload.get('ProjectileAttackTimesDamageModifier',1)
     repeat_multiplier=sum(decay**index for index in range(repeat))
@@ -18,11 +49,12 @@ def apply(prefab,native=None):
         for channel,damage in step.get('damageComponents',weapon['damageComponents']).items():
             totals[channel]=totals.get(channel,0)+damage*step.get('shots',0)*step.get('repeat',1)*step.get('damageMultiplier',1)*repeat_multiplier
     skill=dict(id='Irradiation',type='irradiation',name='光束照射',range=10,minRange=1,actionCost=5,enCostPercent=50,
-        cooldownTurns=3,maxUses=99,consumeAction=True,baseHit=60,damageComponents={k:v/20 for k,v in totals.items()},
+        cooldownTurns=3,maxUses=99,consumeAction=False,baseHit=60,damageComponents={k:v/20 for k,v in totals.items()},
         nativeTotalDamage=sum(totals.values()),nativeRepeatMultiplier=repeat_multiplier,sourceWeapon=key,
         requiredParts=copy.deepcopy(weapon.get('requiredParts',[])),requiresSfsMS=prefab['id'] in ('Burstliner','Skiure'),
         chargeSeconds=round(max(1,weapon.get('nativeTiming',{}).get('firstShot',2)),3),fireSeconds=2,
-        visualColor=color,muzzle=copy.deepcopy(weapon.get('muzzle',{})),weaponDisplayIndex=weapon.get('displayIndex',0),
+        visualColor=color,muzzle=beam_muzzle,chargeMuzzle=charge_muzzle,beamWidth=beam_width,
+        chargeScale=float(charge_decal['imageScale'])*2,fireSound=fire_sound,beamSections=beam_sections,beamLength=beam_length,weaponDisplayIndex=weapon.get('displayIndex',0),
         clip=next((step['animation'] for step in weapon['attack']['steps'] if step.get('animation')),None),
         effect='Irradiation_Charge_'+color,sound={'file':'../../sounds/BeamCharge_4.ogg','volume':.7},
         localization={'zh':{'name':'光束照射'},'en':{'name':'Irradiation Beam'},'ja':{'name':'照射ビーム'}},

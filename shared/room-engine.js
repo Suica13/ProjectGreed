@@ -874,108 +874,67 @@ function createRoomEngine({
     entry.timer.unref?.();
     hostTimers.set(room, entry);
   }
-  // The same authority clock is used by WebSocket rooms and offline local rooms.
-  // Chat, retries and refreshes never reset the one-second damage cadence.
-  const burnTimers = new Map();
-  function scheduleBurning(room) {
-    const active = () =>
-      rooms.get(room.code) === room &&
-      room.started &&
-      !room.replay &&
-      !room.returnCountdown &&
-      room.game.winner === null &&
-      connected(room).every(Boolean) &&
-      ["idle", "reaction", "battle", "playback"].includes(room.phase) &&
-      room.game.units.some(
-        (u) => u.hp > 0 && u.burning && u.burning.expiresRound > room.game.round,
-      );
-    if (!active()) {
-      clearTimeout(burnTimers.get(room)?.timer);
-      burnTimers.delete(room);
-      return;
-    }
-    if (burnTimers.get(room)?.game === room.game) return;
-    const entry = { game: room.game };
-    entry.timer = setTimeout(() => {
-      burnTimers.delete(room);
-      if (!active() || entry.game !== room.game) return;
-      const events = G.tickBurning(room.game);
-      for (const event of events) {
-        if (event.type !== "burn") continue;
-        const target = room.game.units.find((u) => u.id === event.unitId),
-          source = room.game.units.find((u) => u.id === event.sourceId);
-        if (!target) continue;
-        if (source && source.team !== target.team && event.damage > 0) {
-          const owner = room.seats[G.ownerOf(source)],
-            faction = G.modelOf(source).faction;
-          if (owner) {
-            const contributions = ((room.playerDamage ||= {})[target.id] ||= {});
-            const contribution = (contributions[owner.id] ||= {
-              seat: G.ownerOf(source),
-              damage: 0,
-              factions: {},
-            });
-            contribution.damage += event.damage;
-            contribution.factions[faction] = (contribution.factions[faction] || 0) + event.damage;
-          }
-          if (source.pilot?.custom) {
-            const damage = ((room.pilotDamage ||= {})[target.id] ||= {});
-            const contribution = (damage[G.ownerOf(source) + ":" + source.pilot.id] ||= {
-              seat: G.ownerOf(source),
-              pilotId: source.pilot.id,
-              damage: 0,
-            });
-            contribution.damage += event.damage;
-          }
+  // Burn rewards use the authoritative end-of-turn events, never a wall clock.
+  function settleBurning(room, events) {
+    for (const event of events) {
+      if (event.type !== "burn") continue;
+      const target = room.game.units.find((u) => u.id === event.unitId),
+        source = room.game.units.find((u) => u.id === event.sourceId);
+      if (!target) continue;
+      if (source && source.team !== target.team && event.damage > 0) {
+        const owner = room.seats[G.ownerOf(source)],
+          faction = G.modelOf(source).faction;
+        if (owner) {
+          const contributions = ((room.playerDamage ||= {})[target.id] ||= {});
+          const contribution = (contributions[owner.id] ||= {
+            seat: G.ownerOf(source),
+            damage: 0,
+            factions: {},
+          });
+          contribution.damage += event.damage;
+          contribution.factions[faction] = (contribution.factions[faction] || 0) + event.damage;
         }
-        if (event.before > 0 && event.after <= 0) {
-          const model = G.modelOf(target);
-          if (source?.hp > 0 && source.team !== target.team)
-            recordPilotBattle(room, source, "kill", model.cost, !!model.ship);
-          recordPilotBattle(room, target, "loss", model.cost);
-          awardDefeat(room, source, target, model);
-          settlePilotAssists(room, target, source);
+        if (source.pilot?.custom) {
+          const damage = ((room.pilotDamage ||= {})[target.id] ||= {});
+          const contribution = (damage[G.ownerOf(source) + ":" + source.pilot.id] ||= {
+            seat: G.ownerOf(source),
+            pilotId: source.pilot.id,
+            damage: 0,
+          });
+          contribution.damage += event.damage;
         }
-        log(room, `${unitLabel(room, target)} ${"燃烧伤害"}：${event.damage}`, { units: [target] });
       }
-      for (const evacuation of events.filter(
-        (event) => event.type === "evacuation" && !event.escaped,
-      )) {
-        const passenger = unit(room, evacuation.unitId),
-          model = G.modelOf(passenger);
-        const burn = events.find(
-          (event) => event.type === "burn" && event.unitId === evacuation.carrierId,
-        );
-        const source = room.game.units.find((actor) => actor.id === burn?.sourceId);
-        if (source?.hp > 0 && source.team !== passenger.team)
+      if (event.before > 0 && event.after <= 0) {
+        const model = G.modelOf(target);
+        if (source?.hp > 0 && source.team !== target.team)
           recordPilotBattle(room, source, "kill", model.cost, !!model.ship);
-        recordPilotBattle(room, passenger, "loss", model.cost);
-        awardDefeat(room, source, passenger, model);
-        settlePilotAssists(room, passenger, source);
+        recordPilotBattle(room, target, "loss", model.cost);
+        awardDefeat(room, source, target, model);
+        settlePilotAssists(room, target, source);
       }
-      if (room.game.winner !== null && room.phase !== "playback") {
-        room.phase = "finished";
-        room.pending = null;
-        room.reactions = [];
-      } else if (room.phase === "reaction") {
-        for (const request of [...(room.reactions || [])])
-          if (!room.game.units.some((u) => u.id === request.target && u.hp > 0))
-            planner.choose(room, request.id, "evade");
-        if (!room.pending && !room.reactions?.length) resolvePlans(room);
-      }
-      room.lastEvent = { id: randomId(), type: "burn_tick", events };
-      room.revision++;
-      broadcast(room);
-    }, 1000);
-    entry.timer.unref?.();
-    burnTimers.set(room, entry);
+      log(room, `${unitLabel(room, target)} ${"燃烧伤害"}：${event.damage}`, { units: [target] });
+    }
+    for (const evacuation of events.filter(
+      (event) => event.type === "evacuation" && !event.escaped,
+    )) {
+      const passenger = unit(room, evacuation.unitId),
+        model = G.modelOf(passenger);
+      const burn = events.find(
+        (event) => event.type === "burn" && event.unitId === evacuation.carrierId,
+      );
+      const source = room.game.units.find((actor) => actor.id === burn?.sourceId);
+      if (source?.hp > 0 && source.team !== passenger.team)
+        recordPilotBattle(room, source, "kill", model.cost, !!model.ship);
+      recordPilotBattle(room, passenger, "loss", model.cost);
+      awardDefeat(room, source, passenger, model);
+      settlePilotAssists(room, passenger, source);
+    }
   }
   function broadcast(room, ack) {
     if (!retained(room)) {
       destroyRoom(room);
       return;
     }
-    scheduleBurning(room);
     refreshHost(room);
     if (!room.returnCountdown) {
       completePlayback(room);
@@ -1461,8 +1420,20 @@ function createRoomEngine({
       room.game.units.filter((u) => u.hp > 0).map((u) => [u.id, G.modelOf(u).cost]),
     );
     G.end(room.game);
+    const burns = (room.game.turnEffects || []).filter((effect) => effect.type === "burn");
+    const burnDeaths = new Set(
+      burns.filter((effect) => effect.after <= 0).map((effect) => effect.unitId),
+    );
+    const burnEvacuations = (room.game.turnEffects || []).filter(
+      (effect) => effect.type === "evacuation" && burnDeaths.has(effect.carrierId),
+    );
+    settleBurning(room, [...burns, ...burnEvacuations]);
+    const settled = new Set([
+      ...burnDeaths,
+      ...burnEvacuations.filter((effect) => !effect.escaped).map((effect) => effect.unitId),
+    ]);
     for (const actor of room.game.units)
-      if (actor.hp <= 0 && living.has(actor.id)) {
+      if (actor.hp <= 0 && living.has(actor.id) && !settled.has(actor.id)) {
         recordPilotBattle(room, actor, "loss", living.get(actor.id));
         awardDefeat(room, null, actor, G.modelOf(actor));
         settlePilotAssists(room, actor);
@@ -3552,8 +3523,6 @@ function createRoomEngine({
     }
   }
   function close() {
-    for (const entry of burnTimers.values()) clearTimeout(entry.timer);
-    burnTimers.clear();
     for (const member of [...reconnectTimers.keys()]) clearReconnect(member);
     for (const timer of returnTimers.values()) clearTimeout(timer);
     returnTimers.clear();

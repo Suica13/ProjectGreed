@@ -1,7 +1,7 @@
 """Resize native indexed beam sheets frame by frame, preserving exact colors and alpha.
 Uses the standard library only; neither image packages nor runtime helper units are needed.
 """
-import struct,zlib
+import struct,zlib,math
 from pathlib import Path
 from mod_source import MAIN,ASSETS
 
@@ -32,7 +32,36 @@ def decode(png):
             pixels[at]=(value+predictor)&255
     return width,height,pixels,pieces
 
-def resize(source,target,frames):
+def seamless_frames(width,height,pixels,palette,frames):
+    """Periodize each native frame independently; never blend adjacent animation frames.
+    Only narrow edge bands change. The original palette and transparent index survive.
+    """
+    colors=next(data for kind,data in palette if kind==b'PLTE')
+    alpha=next((data for kind,data in palette if kind==b'tRNS'),b'')
+    rgba=[(colors[i]*((alpha[i//3] if i//3<len(alpha) else 255)/255),
+           colors[i+1]*((alpha[i//3] if i//3<len(alpha) else 255)/255),
+           colors[i+2]*((alpha[i//3] if i//3<len(alpha) else 255)/255),
+           alpha[i//3] if i//3<len(alpha) else 255) for i in range(0,len(colors),3)]
+    nearest={}
+    def quantize(value):
+        key=tuple(round(channel,2) for channel in value)
+        if key not in nearest:
+            nearest[key]=min(range(len(rgba)),key=lambda index:sum((a-b)**2 for a,b in zip(rgba[index],value)))
+        return nearest[key]
+    result=bytearray(pixels);fw=width//frames;band=max(2,min(12,fw//5))
+    for frame in range(frames):
+        for y in range(height):
+            row=y*width+frame*fw
+            seam=tuple((a+b)/2 for a,b in zip(rgba[pixels[row]],rgba[pixels[row+fw-1]]))
+            boundary=quantize(seam)
+            for x in range(band):
+                weight=(1-math.cos(math.pi*x/band))/2
+                for column in (x,fw-1-x):
+                    original=rgba[pixels[row+column]]
+                    result[row+column]=boundary if x==0 else quantize(tuple(a*(1-weight)+b*weight for a,b in zip(seam,original)))
+    return result
+
+def resize(source,target,frames,seamless=False):
     sw,sh,original,palette=decode(source.read_bytes());fw=sw//frames;assert fw*frames==sw
     dw,dh=(fw+1)//2,(sh+1)//2;tw=dw*frames;pixels=bytearray(tw*dh)
     for y in range(dh):
@@ -41,6 +70,7 @@ def resize(source,target,frames):
             for x in range(dw):
                 sx=frame*fw+min(fw-1,int((x+.5)*fw/dw))
                 pixels[y*tw+frame*dw+x]=original[sy*sw+sx]
+    if seamless:pixels=seamless_frames(tw,dh,pixels,palette,frames)
     # Try common PNG row predictors and retain the smallest lossless representation.
     candidates=[]
     for kind in (0,1,2):
@@ -63,6 +93,6 @@ if __name__=='__main__':
     for color in ('Pink','Blue','Yellow'):
         for part in ('Start','Mid','End','Charge'):
             source=root/(f'Charge/Image/Beam_Charge_1_{color}.png' if part=='Charge' else f'HighMegaCannon/Image/HighMegaCannon_1_{part}_{color}.png')
-            result=resize(source,ASSETS/f'effects/textures/Irradiation_{part}_{color}.png',12 if part=='Charge' else 28)
+            result=resize(source,ASSETS/f'effects/textures/Irradiation_{part}_{color}.png',12 if part=='Charge' else 28,seamless=part=='Mid')
             totals=[a+b for a,b in zip(totals,result)]
     print(f'12 alpha-preserving indexed sheets: {totals[0]} -> {totals[1]} bytes; decoded pixels {totals[2]} -> {totals[3]}')
