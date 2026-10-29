@@ -15,13 +15,23 @@ const UnitHangars = {
     const exposed = u => u?.embarked?.exposed === true;
     const slotCost = (u, h) => h?.kind === "sfs" ? 1 : (modelOf(u).transport?.slotCost || 1);
     function sync(g) {
-      for (const passenger of g.units.filter(u => u.hp > 0 && u.embarked)) {
-        const carrier = g.units.find(c => c.id === passenger.embarked.carrierId);
-        const h = carrier && of(carrier).find(h => h.id === passenger.embarked.hangarId);
-        if (h?.kind !== "sfs") continue;
-        passenger.embarked.exposed = true;
-        passenger.x = carrier.x; passenger.y = carrier.y;
+      const units = new Map(g.units.map(u => [u.id, u]));
+      const done = new Set(), visiting = new Set();
+      function follow(passenger) {
+        if (!passenger?.embarked || done.has(passenger.id) || visiting.has(passenger.id)) return;
+        visiting.add(passenger.id);
+        const carrier = units.get(passenger.embarked.carrierId);
+        if (carrier) {
+          follow(carrier);
+          const h = of(carrier).find(h => h.id === passenger.embarked.hangarId);
+          passenger.embarked.exposed = h?.kind === "sfs" && onMap(carrier);
+          passenger.x = carrier.x;
+          passenger.y = carrier.y;
+        }
+        visiting.delete(passenger.id);
+        done.add(passenger.id);
       }
+      for (const passenger of g.units) follow(passenger);
     }
     const used = (g, carrier, hangarId) =>
       cargo(g, carrier, hangarId).reduce(
@@ -39,9 +49,8 @@ const UnitHangars = {
       if (
         !onMap(u) ||
         !onMap(carrier) ||
-        u === carrier ||
+        u.id === carrier.id ||
         u.team !== carrier.team ||
-        of(u).length ||
         g.winner !== null
       )
         return false;
@@ -206,6 +215,7 @@ const UnitHangars = {
           carrier.lastCargoLaunchRound = g.round;
         }
       }
+      sync(g);
       return { type: "launch", unitId: u.id, carrierId, x, y, from, path };
     }
     function readyToLaunch(u) {
@@ -245,7 +255,7 @@ const UnitHangars = {
       return u.hp < m.hp * 0.25 || u.en < m.en * 0.5 || outOfAmmo || damaged;
     }
     function recoveryOrder(g, u) {
-      if (!onMap(u) || of(u).length || u.acted || u.plan || u.lastLaunchRound === g.round)
+      if (!onMap(u) || u.acted || u.plan || u.lastLaunchRound === g.round)
         return null;
       const m = modelOf(u);
       const repair = needsRecovery(u);
@@ -255,6 +265,7 @@ const UnitHangars = {
       if (!repair && !longJourney) return null;
       const candidates = g.units.filter(
         (c) =>
+          c.id !== u.id &&
           onMap(c) &&
           c.team === u.team &&
           (repair ||
@@ -325,7 +336,19 @@ const UnitHangars = {
     }
     function evacuate(g) {
       const events = [];
-      for (const u of g.units.filter((u) => u.hp > 0 && u.embarked)) {
+      sync(g);
+      const depth = (u) => {
+        const seen = new Set();
+        while (u?.embarked && !seen.has(u.id)) {
+          seen.add(u.id);
+          u = g.units.find(c => c.id === u.embarked.carrierId);
+        }
+        return seen.size;
+      };
+      // Resolve outer carriers first, including a nested carrier destroyed during evacuation.
+      const passengers = g.units.filter(u => u.hp > 0 && u.embarked)
+        .sort((a, b) => depth(a) - depth(b));
+      for (const u of passengers) {
         const carrier = g.units.find((c) => c.id === u.embarked.carrierId);
         if (carrier?.hp > 0) continue;
         const carrierId = u.embarked.carrierId,
@@ -353,6 +376,7 @@ const UnitHangars = {
         });
         events.push({ unitId: u.id, carrierId, x: u.x, y: u.y, hp: u.hp, escaped: u.hp > 0 });
       }
+      sync(g);
       return events;
     }
     return {

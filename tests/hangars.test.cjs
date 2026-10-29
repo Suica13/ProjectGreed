@@ -454,3 +454,87 @@ for (const deployment of [true, false])
     }
     assert.throws(() => G.confirmMove(g, u));
   });
+
+function nestedFixture(platform = "Type74") {
+  const f = fixture();
+  const {g,carrier,u}=f;
+  u.model = Object.keys(G.models).find(id=>id.startsWith(platform+"__"));
+  u.pilot = undefined;
+  Object.assign(u,{hp:G.modelOf(u).hp,en:G.modelOf(u).en});
+  const passenger=g.units[2];
+  if(platform==="Type74") {
+    passenger.model=Object.keys(G.models).find(id=>id.startsWith("Army_Squad_EFSF_0079_N_G_A__"));
+    passenger.pilot=undefined;
+    Object.assign(passenger,{hp:G.modelOf(passenger).hp,en:G.modelOf(passenger).en});
+  }
+  Object.assign(passenger,{x:u.x-1,y:u.y});
+  const inner=G.hangars.of(u)[0];
+  G.hangars.embark(g,passenger,u,inner.id);
+  return {...f,passenger,inner};
+}
+test("loaded APC boards a ship, retains cargo and only occupies its own transport points",()=>{
+  const {g,carrier,u,h,passenger,inner}=nestedFixture();
+  assert(G.hangars.canEmbark(g,u,carrier,h.id));
+  G.hangars.embark(g,u,carrier,h.id);
+  assert.equal(G.hangars.used(g,carrier,h.id),1);
+  assert.equal(G.hangars.used(g,u,inner.id),1);
+  assert.equal(passenger.embarked.carrierId,u.id);
+  assert(!G.onMap(passenger));
+  assert.equal(G.hangars.launchCells(g,passenger).length,0);
+  carrier.x+=2;G.hangars.sync(g);
+  assert.equal(passenger.x,carrier.x);
+  assert(!G.hangars.canEmbark(g,carrier,u,inner.id));
+  G.end(g);G.end(g);
+  const point=G.hangars.launchCells(g,u)[0];
+  assert(point);
+  G.hangars.launch(g,u,point.x,point.y);
+  assert.equal(passenger.embarked.carrierId,u.id);
+  assert.equal(passenger.x,u.x);
+  assert(G.hangars.launchCells(g,passenger).length>0);
+});
+test("nested SFS riders are hidden while the platform is inside a ship and restored on launch",()=>{
+  const {g,carrier,u,h,passenger}=nestedFixture("FF_X7Bst");
+  assert(G.onMap(passenger));
+  G.hangars.embark(g,u,carrier,h.id);
+  assert(!G.onMap(passenger));
+  assert(!passenger.embarked.exposed);
+  G.end(g);G.end(g);
+  const point=G.hangars.launchCells(g,u)[0];
+  assert(point);
+  G.hangars.launch(g,u,point.x,point.y);
+  assert(G.onMap(passenger));
+  assert.equal(passenger.x,u.x);
+});
+test("nested evacuation resolves parents first regardless of unit array order",()=>{
+  for(const destroyAPC of [false,true]) {
+    const {g,carrier,u,h,passenger}=nestedFixture();
+    G.hangars.embark(g,u,carrier,h.id);
+    carrier.x+=3;G.hangars.sync(g);
+    if(destroyAPC) u.hp=1;
+    carrier.hp=0;
+    g.units.reverse();
+    const events=G.hangars.evacuate(g);
+    assert(events.some(e=>e.unitId===u.id));
+    if(destroyAPC) {
+      assert.equal(u.hp,0);
+      assert(events.some(e=>e.unitId===passenger.id));
+      assert(!passenger.embarked);
+    } else {
+      assert(u.hp>0);
+      assert.equal(passenger.embarked.carrierId,u.id);
+      assert.equal(passenger.x,u.x);
+      assert.equal(events.length,1);
+    }
+  }
+});
+test("Gogg chest diffusion beams retain beam payload and localized confirmed names",()=>{
+  const p=G.catalog.prefabs.find(p=>p.id==="MSM_03");
+  for(const id of ["ZN_MSM_03_ChestBeam","ZN_MSM_03_ChestBeam_L"]) {
+    const w=p.weapons[id];
+    assert.equal(w.name,"胸部光束扩散炮");
+    assert.equal(w.type,"beam");
+    assert(w.damageComponents.beam>0);
+    assert.equal(w.localization.en.name,"Chest Diffusion Beam Cannon");
+  }
+  assert.equal(p.weapons.ZN_MSM_03_SMS.type,"shell");
+});

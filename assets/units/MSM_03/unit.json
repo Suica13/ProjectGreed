@@ -660,7 +660,7 @@
       "actionCost": 5
     },
     "ZN_MSM_03_ChestBeam": {
-      "name": "导弹发射器",
+      "name": "胸部光束扩散炮",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -834,10 +834,21 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "胸部光束扩散炮"
+        },
+        "en": {
+          "name": "Chest Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "胸部拡散ビーム砲"
+        }
+      }
     },
     "ZN_MSM_03_ChestBeam_L": {
-      "name": "导弹发射器",
+      "name": "胸部光束扩散炮",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -1014,7 +1025,18 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "胸部光束扩散炮"
+        },
+        "en": {
+          "name": "Chest Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "胸部拡散ビーム砲"
+        }
+      }
     },
     "ZN_MSM_03_SMS": {
       "name": "导弹发射器",

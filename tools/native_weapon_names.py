@@ -2,6 +2,7 @@
 import re
 
 EXACT = {
+    "ZN_MSM_03_ChestBeam": ("胸部光束扩散炮", "Chest Diffusion Beam Cannon", "胸部拡散ビーム砲"),
     "ZN_Wappa_C4": ("投掷C4", "Throw C4", "C4投擲"),
     "Common_DoubleMS_ZN_APC": ("导弹发射器", "Missile Launcher", "ミサイルランチャー"),
     "EF_Railgun_79_D_RG": ("电磁炮", "Railgun", "レールガン"),

@@ -210,3 +210,25 @@ test("cancel launch restores carrier focus and reopens remaining cargo",async({p
  assert(await page.locator('#hangarDialog').isVisible());
  assert.equal(await page.evaluate(()=>!!getUnit("0-1").embarked),true);
 });
+
+for (const width of [390,1280]) test(`loaded APC boards through its own hangar and shows internal capacity after EN (${width}px)`,async({page})=>{
+  await page.setViewportSize({width,height:900});
+  await fixture(page);
+  await page.evaluate(()=>{
+    const u=game.units[1], p=game.units[2];
+    u.model=Object.keys(UnitModels).find(id=>id.startsWith("Type74__"));
+    p.model=Object.keys(UnitModels).find(id=>id.startsWith("Army_Squad_EFSF_0079_N_G_A__"));
+    Object.assign(u,{hp:Rules.modelOf(u).hp,en:Rules.modelOf(u).en});
+    Object.assign(p,{x:u.x-1,y:u.y,hp:Rules.modelOf(p).hp});
+    Rules.hangars.embark(game,p,u,Rules.hangars.of(u)[0].id);
+    HangarUI.open(u);
+  });
+  await page.locator('[data-board-carrier="0-1"]').click();
+  assert.equal(await page.evaluate(()=>mode),"hangar-board");
+  await page.evaluate(()=>{const c=game.units[0];HangarUI.click(Rules.cells(c)[0]);});
+  await page.locator('[data-board-id="0-1"]').first().click();
+  await page.evaluate(()=>{selected="0-0";HangarUI.open(game.units[0]);});
+  const text=await page.locator('[data-cargo-id="0-1"] .hangar-unit-info small').textContent();
+  assert.match(text,/EN.*格纳库 1 \/ 1 容量点/);
+  assert.equal(await page.evaluate(()=>game.units[2].embarked.carrierId),"0-1");
+});

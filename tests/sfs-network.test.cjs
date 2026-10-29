@@ -147,3 +147,38 @@ test("real WebSocket SFS boarding, duplicate confirmation, passenger combat owne
   assert(u.embarked);
   assert.equal(u.x, carrier.x);
 });
+
+test("real WebSocket loaded APC boarding keeps nested cargo and rejects unauthorized launch", async(t)=>{
+  const app=createServer({host:"127.0.0.1",port:0}), address=await app.listen();
+  const url=`ws://127.0.0.1:${address.port}/ws`;
+  const host=await peer(url,"create"), guest=await peer(url,"join");
+  t.after(async()=>{host.ws.terminate();guest.ws.terminate();await app.close();});
+  const e={unitId:"RGM_79",kitId:"machine_gun"};
+  for(const [player,action,fields] of [
+    [host,"set_ready",{ready:true,formation:[e,e,e]}],
+    [guest,"set_ready",{ready:true,formation:[e]}],
+    [host,"start_game"],[host,"confirm_formation"],[guest,"confirm_formation"],
+    [host,"confirm_deployment"],[guest,"confirm_deployment"]
+  ]) {const r=await player.act(action,fields);assert.equal(r.type,"state",JSON.stringify(r));}
+  const room=app.rooms.get("SFSTEST"), g=room.game;
+  g.fogMode="disabled";g.tiles.forEach(r=>r.fill("plain"));
+  const [ship,apc,passenger]=g.units;
+  for(const [u,id] of [[ship,"PegasusClass"],[apc,"Type74"],[passenger,"Army_Squad_EFSF_0079_N_G_A"]]) {
+    u.model=Object.keys(G.models).find(key=>key.startsWith(id+"__"));
+    Object.assign(u,{hp:G.modelOf(u).hp,en:G.modelOf(u).en,x:10,y:8});
+  }
+  const edge=G.cells(ship)[0];Object.assign(apc,{x:edge.x-1,y:edge.y});
+  Object.assign(passenger,{x:apc.x-1,y:apc.y});
+  G.hangars.embark(g,passenger,apc,G.hangars.of(apc)[0].id);
+  await host.act("sync");
+  const fields={unitId:apc.id,carrierId:ship.id,hangarId:G.hangars.of(ship)[0].id};
+  assert.equal((await guest.act("embark",fields)).type,"error");
+  const id=randomUUID(), result=await host.act("embark",fields,id);
+  assert.equal(result.type,"state",JSON.stringify(result));
+  await host.act("embark",fields,id);
+  assert.equal(G.hangars.used(g,ship,fields.hangarId),1);
+  assert.equal(result.game.units.find(u=>u.id===passenger.id).embarked.carrierId,apc.id);
+  assert.equal(result.game.units.find(u=>u.id===apc.id).embarked.carrierId,ship.id);
+  assert.equal((await host.act("launch",{unitId:passenger.id,x:8,y:8})).type,"error");
+  assert.equal(passenger.embarked.carrierId,apc.id);
+});

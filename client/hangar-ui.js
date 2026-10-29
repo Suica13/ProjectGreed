@@ -53,6 +53,11 @@ const HangarUI = (() => {
     icon.src = unitIcon(u.model, u.pilot);
     icon.alt = "";
     const info = element("div", "hangar-unit-info");
+    const nested = Rules.hangars.cargo(game, u).length
+      ? " · " + I18n.text("格纳库") + " " +
+        Rules.hangars.of(u).map(h => Rules.hangars.used(game, u, h.id) + " / " + h.capacity).join(" · ") +
+        " " + I18n.text("容量点")
+      : "";
     const name = element("strong", "", unitName(u));
     name.setAttribute("data-i18n-ignore", "");
     info.append(
@@ -60,7 +65,7 @@ const HangarUI = (() => {
       element(
         "small",
         "muted",
-        `${UnitIdentity.owner(u).name} · ${hangar?.kind === "sfs" || u.embarked?.exposed ? 1 : Rules.modelOf(u).transport.slotCost} ${I18n.text("容量点")} · HP ${formatNumber(u.hp)} / ${formatNumber(Rules.modelOf(u).hp)} · EN ${formatNumber(u.en)} / ${formatNumber(Rules.modelOf(u).en)}`,
+        `${UnitIdentity.owner(u).name} · ${hangar?.kind === "sfs" || u.embarked?.exposed ? 1 : Rules.modelOf(u).transport.slotCost} ${I18n.text("容量点")} · HP ${formatNumber(u.hp)} / ${formatNumber(Rules.modelOf(u).hp)} · EN ${formatNumber(u.en)} / ${formatNumber(Rules.modelOf(u).en)}${nested}`,
       ),
     );
     box.append(icon, info);
@@ -102,7 +107,12 @@ const HangarUI = (() => {
       content.append(element("p", "helper", "无法查看敌军格纳库的载员"));
       return;
     }
-    const carrierMode = Rules.hangars.of(selectedUnit).length > 0;
+    const carrierMode = Rules.hangars.of(selectedUnit).length > 0 && !boardingCarrier;
+    if (carrierMode && allowed(selectedUnit) && boardingTargets(selectedUnit).length) {
+      const embarkButton = button("搭载", () => startBoarding(selectedUnit));
+      embarkButton.dataset.boardCarrier = selectedUnit.id;
+      content.append(embarkButton);
+    }
 
     const carriers = carrierMode ? [selectedUnit] : [getUnit(boardingCarrier)].filter(Boolean);
     if (!carrierMode && carriers.length)
@@ -211,16 +221,20 @@ const HangarUI = (() => {
       Rules.hangars.of(c).some((h) => Rules.hangars.canEmbark(game, u, c, h.id)),
     );
   }
+  function startBoarding(u) {
+    cancel();
+    dialog.close();
+    boarding = u.id;
+    selected = u.id;
+    mode = "hangar-board";
+    weaponId = null;
+    update();
+  }
   function open(u) {
     statusUnit = null;
     if (!Rules.hangars.of(u).length) {
       if (!allowed(u) || !boardingTargets(u).length) return;
-      cancel();
-      boarding = u.id;
-      selected = u.id;
-      mode = "hangar-board";
-      weaponId = null;
-      update();
+      startBoarding(u);
       return;
     }
     inspected = u.id;
