@@ -119,61 +119,132 @@ const Net = (() => {
         !n.snapshot?.returnCountdown)
     );
   }
-  // 所有游戏动作从这里发送，自动附带唯一请求 ID 和当前版本号。
+  // One ordered intent stream. Retransmissions keep the exact ID/payload so
+  // authority deduplication resolves lost replies without executing an action twice.
+  const actionQueue = [];
+  let actionTimer = null;
+  const profileActions = new Set(["set_ready", "start_game", "update_formation", "confirm_formation"]);
+  const rebaseActions = new Set([
+    "set_ready", "update_formation", "confirm_formation", "start_game",
+    "move", "confirm_move", "cancel_move", "rotate", "skill", "undo", "wait",
+    "attack", "cancel_attack", "end_turn", "embark", "launch", "deploy",
+    "confirm_deployment", "respond", "playback_ready",
+  ]);
+  function actionContext(snapshot = n.snapshot) {
+    return { matchId: snapshot?.matchId ?? null, round: snapshot?.game?.round ?? null,
+      phase: snapshot?.phase ?? null, reactionId: snapshot?.pending?.id ?? null };
+  }
+  function sameContext(context, snapshot = n.snapshot) {
+    return JSON.stringify(context) === JSON.stringify(actionContext(snapshot));
+  }
+  function clearActions() {
+    clearTimeout(actionTimer);
+    actionTimer = null;
+    actionQueue.length = 0;
+    n.awaiting = null;
+  }
+  function finishAction(id) {
+    if (!n.awaiting || n.awaiting.id !== id) return false;
+    clearTimeout(actionTimer);
+    actionTimer = null;
+    n.awaiting = null;
+    queueMicrotask(drainActions);
+    return true;
+  }
+  function sendPending() {
+    clearTimeout(actionTimer);
+    const request = n.awaiting, socket = n.socket;
+    if (!request || !request.payload || socket?.readyState !== WebSocket.OPEN || n.connecting) return;
+    if (socket.bufferedAmount > 256 * 1024) {
+      actionTimer = setTimeout(() => {
+        if (n.socket === socket && n.awaiting === request) sendPending();
+      }, 1000);
+      return;
+    }
+    try {
+      // A receipt means execution succeeded; only refresh state, never replay intent.
+      socket.send(request.receiptRevision === undefined ? request.payload : JSON.stringify({
+        type: "action", action: "sync", id: request.id + "-sync",
+      }));
+    } catch {
+      return; // Resume retains the unresolved intent.
+    }
+    request.attempts++;
+    const delay = Math.min(15000, Math.max(1500, (n.pingMs || 0) * 3) *
+      Math.pow(2, Math.min(4, request.attempts - 1)));
+    actionTimer = setTimeout(() => {
+      if (n.socket === socket && n.awaiting === request) sendPending();
+    }, delay);
+  }
+  function drainActions() {
+    if (n.awaiting || !actionQueue.length || n.connecting ||
+        n.socket?.readyState !== WebSocket.OPEN || !n.snapshot) return;
+    const intent = actionQueue.shift();
+    if (!sameContext(intent.context)) {
+      note("战局阶段已改变，未发送的操作已取消。");
+      queueMicrotask(drainActions);
+      return;
+    }
+    const message = {
+      type: "action", action: intent.action, id: intent.id,
+      revision: n.revision, phase: n.snapshot?.phase, round: n.snapshot?.game?.round,
+      matchId: n.snapshot?.matchId, reactionId: n.snapshot?.pending?.id,
+      ...intent.fields,
+    };
+    if (profileActions.has(intent.action)) {
+      message.inventory = Economy.snapshot().inventory;
+      if (!n.snapshot?.started) message.researched = Development.researchSnapshot();
+    }
+    n.awaiting = { ...intent, message, revision: n.revision, attempts: 0, rebases: 0,
+      payload: JSON.stringify(message) };
+    sendPending();
+    update();
+  }
   function request(action, fields = {}) {
     if (window.ReplayPlayer?.active && action !== "sync") return;
-    if (
-      n.snapshot?.returnCountdown &&
-      !["sync", "return_room", "download_log", "spectate"].includes(action)
-    )
-      return;
+    if (n.snapshot?.returnCountdown &&
+        !["sync", "return_room", "download_log", "spectate"].includes(action)) return;
     if (!n.active || n.socket?.readyState !== WebSocket.OPEN) {
       note("尚未连接服务端");
       return;
     }
-    if (n.awaiting) {
-      note("正在等待服务端确认");
+    const signature = JSON.stringify([action, fields]);
+    const existing = [n.awaiting, ...actionQueue].find(item => item?.signature === signature);
+    if (existing) return existing.id;
+    if (actionQueue.length >= 32) {
+      note("待发送操作过多，请等待服务端确认。");
       return;
     }
-    let id = crypto.randomUUID?.() || Date.now() + "-" + Math.random().toString(16).slice(2);
-    const socket = n.socket;
-    n.awaiting = { id, revision: n.revision };
-    n.socket.send(
-      JSON.stringify({
-        type: "action",
-        researched: Development.researchSnapshot(),
-        inventory: Economy.snapshot().inventory,
-        action,
-        id,
-        revision: n.revision,
-        round: n.snapshot?.game.round,
-        matchId: n.snapshot?.matchId,
-        reactionId: n.snapshot?.pending?.id,
-        ...fields,
-      }),
-    );
-    update();
-    setTimeout(
-      function checkRequest() {
-        if (n.socket === socket && socket.readyState === WebSocket.OPEN && n.awaiting?.id === id) {
-          if (document.hidden) {
-            setTimeout(checkRequest, 5000);
-            return;
-          }
-          n.awaiting = null;
-          note("请求等待超时，正在同步战局");
-          n.socket?.send(
-            JSON.stringify({
-              type: "action",
-              action: "sync",
-              id: Date.now() + "-sync",
-            }),
-          );
-          update();
-        }
-      },
-      Math.min(45000, Math.max(15000, (n.pingMs || 0) * 6)),
-    );
+    const id = crypto.randomUUID?.() || Date.now() + "-" + Math.random().toString(16).slice(2);
+    actionQueue.push({ id, action, fields: structuredClone(fields), signature,
+      context: actionContext() });
+    drainActions();
+    return id;
+  }
+  function observeActionState(snapshot) {
+    const waiting = n.awaiting;
+    if (!waiting) return;
+    // Even an older snapshot can confirm an action; do not roll back visible state.
+    if (snapshot.ack === waiting.id ||
+        (waiting.receiptRevision !== undefined && snapshot.revision >= waiting.receiptRevision)) {
+      finishAction(waiting.id);
+      return;
+    }
+    if (waiting.rebase) {
+      if (!sameContext(waiting.context, snapshot)) {
+        finishAction(waiting.id);
+        note("战局阶段已改变，未发送的操作已取消。");
+        return;
+      }
+      waiting.rebase = false;
+      waiting.message.revision = snapshot.revision;
+      waiting.revision = snapshot.revision;
+      waiting.payload = JSON.stringify(waiting.message);
+      sendPending();
+    } else if (waiting.resume) {
+      waiting.resume = false;
+      sendPending();
+    }
   }
   function leave({ notify = true, forget = true } = {}) {
     BattleAssets.cancel();
@@ -205,7 +276,7 @@ const Net = (() => {
     n.pingMs = pingStarted = null;
     n.local = false;
     n.connecting = false;
-    n.awaiting = null;
+    clearActions();
     n.snapshot = null;
     n.seen.clear();
     n.seat = null;
@@ -247,25 +318,39 @@ const Net = (() => {
       window.ReplayPlayer?.response(msg);
     } else if (msg.type === "battle_log") {
       if (msg.ack !== n.awaiting?.id) return;
-      n.awaiting = null;
+      finishAction(msg.ack);
       if (msg.matchId === n.snapshot?.matchId) Chat.saveLog(msg.log, msg.perspective);
       update();
+    } else if (msg.type === "action_receipt") {
+      if (msg.id !== n.awaiting?.id || !Number.isSafeInteger(msg.revision)) return;
+      n.awaiting.receiptRevision = msg.revision;
+      if (n.snapshot && n.revision >= msg.revision) {
+        finishAction(msg.id);
+        update();
+      }
     } else if (msg.type === "state") {
-      if (n.memberId === null || msg.revision < n.revision) return;
-      // 队友的广播不是自己的确认，弱网时尤其不能提前放开下一个请求。
-      if (n.awaiting && msg.ack === n.awaiting.id) n.awaiting = null;
+      if (n.memberId === null) return;
+      observeActionState(msg);
+      if (msg.revision < n.revision) { update(); return; }
       n.revision = msg.revision;
       msg.receivedAt = performance.now();
       n.snapshot = msg;
       closeDisconnect();
       if (!window.ReplayPlayer?.receive(msg)) applySnapshot(msg);
+      queueMicrotask(drainActions);
     } else if (msg.type === "error") {
       if (window.ReplayPlayer?.response(msg)) return;
       if (chatRequestIds.has(msg.id)) {
         Chat.reject(msg.id, msg.message);
         return;
       }
-      if (!msg.id || msg.id === n.awaiting?.id) n.awaiting = null;
+      if (msg.id === n.awaiting?.id && msg.code === "STALE" &&
+          rebaseActions.has(n.awaiting.action) && n.awaiting.rebases < 5) {
+        n.awaiting.rebases++;
+        n.awaiting.rebase = true;
+        return; // Authority follows STALE with a fresh snapshot.
+      }
+      if (!msg.id || msg.id === n.awaiting?.id) finishAction(n.awaiting?.id);
       status(msg.message);
       note(msg.message);
       if (n.connecting) {
@@ -344,7 +429,8 @@ const Net = (() => {
     n.serverURL = url;
     n.room = room;
     n.token = token;
-    n.awaiting = null;
+    if (!auto) clearActions();
+    else if (n.awaiting) n.awaiting.resume = true;
     n.snapshot = null;
     n.revision = -1;
     n.seen.clear();
@@ -379,6 +465,7 @@ const Net = (() => {
           type: "hello",
           version: PROJECT.version,
           stateDelta: 1,
+          reliableActions: 1,
           characterFaction: PlayerProfile.faction(),
           researched: Development.researchSnapshot(),
           inventory: Economy.snapshot().inventory,
@@ -414,7 +501,8 @@ const Net = (() => {
     socket.onclose = () => {
       if (n.socket !== socket) return;
       clearTimeout(connectionTimer);
-      n.awaiting = null;
+      clearTimeout(actionTimer);
+      if (n.awaiting) n.awaiting.resume = true;
       n.connecting = false;
       n.pingMs = pingStarted = null;
       if (n.manual || !n.token) {

@@ -52,7 +52,7 @@ class Peer {
     }
     throw Error("Timeout: " + JSON.stringify(this.frames.at(-1)));
   }
-  async join(mode, room, inventory) {
+  async join(mode, room, inventory, options = {}) {
     if (this.ws.readyState !== 1) await new Promise((r) => this.ws.once("open", r));
     this.ws.send(
       JSON.stringify({
@@ -63,6 +63,7 @@ class Peer {
         characterFaction: "PMC",
         inventory,
         name: mode,
+        ...options,
       }),
     );
     await this.wait((m) => m.type === "joined");
@@ -243,4 +244,64 @@ test("AI room technology merges every human and freezes the mirrored stage at st
  await a.action("confirm_formation",{researched:{EFSF:D.nodes("EFSF").map(n=>n.id)}});
  assert.equal(JSON.stringify(room.aiResearch),before);
  assert(!room.members.get(a.joined.memberId).researched.EFSF.includes("Tech_EFSF_0079_PaleRiderProject"));
+});
+
+
+test("reliable clients receive a receipt first and rejected IDs cannot execute on retry",async(t)=>{
+ const app=createServer({host:"127.0.0.1",port:0}),address=await app.listen();
+ const a=new Peer("ws://127.0.0.1:"+address.port+"/ws");
+ t.after(async()=>{a.ws.terminate();await app.close()});
+ await a.join("create","RECEIPTS",{Type61:3},{reliableActions:1});
+ const accepted=randomUUID();
+ assert.equal((await a.action("update_formation",{formation:army(1)},{id:accepted})).type,"state");
+ const receipt=a.frames.findIndex(m=>m.type==="action_receipt"&&m.id===accepted);
+ const state=a.frames.findIndex(m=>m.type==="state"&&m.ack===accepted);
+ assert(receipt>=0&&receipt<state);
+ const rejected=randomUUID();
+ assert.equal((await a.action("set_ready",{ready:true,formation:[]},{id:rejected})).type,"error");
+ a.frames=a.frames.filter(m=>m.id!==rejected);
+ assert.equal((await a.action("set_ready",{ready:true,formation:army(1)},{id:rejected})).type,"error");
+ assert.equal(app.rooms.get("RECEIPTS").seats[0].ready,false);
+});
+
+
+test("different players prepare from one revision without rejecting each other",async(t)=>{
+ const app=createServer({host:"127.0.0.1",port:0}),address=await app.listen();
+ const a=new Peer("ws://127.0.0.1:"+address.port+"/ws"),b=new Peer("ws://127.0.0.1:"+address.port+"/ws");
+ t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close()});
+ await a.join("create","PARALLEL",{Type61:3});
+ await b.join("join","PARALLEL",{Type61:3});
+ const room=app.rooms.get("PARALLEL"),revision=room.revision;
+ const fields={ready:true,formation:army(1),phase:room.phase,round:room.game.round,matchId:room.matchId};
+ assert.equal((await a.action("set_ready",fields,{revision})).type,"state");
+ assert.equal((await b.action("set_ready",fields,{revision})).type,"state");
+ const stale=await a.action("configure_room",{mapId:room.settings.mapId,costLimit:1000},{revision});
+ assert.equal(stale.code,"STALE");
+ const expired=await a.action("set_ready",{...fields,round:fields.round+1},{revision});
+ assert.equal(expired.code,"STALE");
+});
+test("network rotation stays pending until confirm and duplicate preview never rotates twice",async(t)=>{
+ const app=createServer({host:'127.0.0.1',port:0}),address=await app.listen();
+ const a=new Peer('ws://127.0.0.1:'+address.port+'/ws'),b=new Peer('ws://127.0.0.1:'+address.port+'/ws');
+ t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close()});
+ await a.join('create','ROTATE',{Type61:1});await b.join('join','ROTATE',{Type61:1});
+ await b.action('set_ready',{ready:true,formation:army(1)});
+ await a.action('start_game',{formation:army(1)});
+ await a.action('confirm_formation');await b.action('confirm_formation');
+ const room=app.rooms.get('ROTATE'),u=room.game.units[0];
+ u.model='SalamisClass__standard';room.game.tiles.forEach(r=>r.fill('plain'));
+ const anchor=G.deploymentCells(room.game,0).find(c=>G.fits(room.game,u,c.x,c.y,0,false,0));Object.assign(u,anchor,{angle:0});
+ assert.equal((await a.action('rotate',{unitId:u.id,direction:1})).type,'state');
+ assert.equal(u.angle,0);assert.ok(u.pendingMove);
+ assert.equal((await a.action('confirm_deployment')).type,'error');
+ assert.equal((await a.action('cancel_move',{unitId:u.id})).type,'state');
+ assert.equal(u.angle,0);assert.equal(u.pendingMove,undefined);
+ await a.action('rotate',{unitId:u.id,direction:1});
+ const confirmed=await a.action('confirm_move',{unitId:u.id});assert.equal(confirmed.type,'state',JSON.stringify(confirmed));assert.equal(u.angle,90);assert.equal(u.moved,false);
+ await a.action('confirm_deployment');await b.action('confirm_deployment');
+ Object.assign(u,{x:10,y:10});
+ const id=randomUUID();
+ assert.equal((await a.action('rotate',{unitId:u.id,direction:-1},{id})).type,'state');assert.equal(u.angle,90);
+ await a.action('rotate',{unitId:u.id,direction:-1},{id});assert.equal(u.angle,90);
+ assert.equal((await a.action('confirm_move',{unitId:u.id})).type,'state');assert.equal(u.angle,0);assert.equal(u.moved,true);
 });

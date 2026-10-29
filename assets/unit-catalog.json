@@ -314,7 +314,16 @@
     "units/YMS_09/unit.json",
     "units/YMS_15_MQVCustom/unit.json",
     "units/RX_79_BD_2_NMBS_EXAM/unit.json",
-    "units/RX_79_BD_3_EXAM/unit.json"
+    "units/RX_79_BD_3_EXAM/unit.json",
+    "units/AMS_Squad_Deploy/unit.json",
+    "units/FatUncle_DeployState/unit.json",
+    "units/FatUncleKai_DeployState/unit.json",
+    "units/Gunperry_DeployState/unit.json",
+    "units/Medea_DeployState/unit.json",
+    "units/MedeaKai_DeployState/unit.json",
+    "units/MS_06V_DeployState/unit.json",
+    "units/RX_75R_DeployState/unit.json",
+    "units/Type61_SPG_DeployState/unit.json"
   ],
   "effects": "effects/effects.json",
   "presentation": "presentation.json",

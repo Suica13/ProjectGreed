@@ -671,3 +671,19 @@ test("queued map deaths keep electricity active throughout the wait and stop at 
   assert.ok(!calls.some((call) => call[1] === ART.presentation.deathElectricEffect));
   assert.ok(calls.some((call) => call[1] === "Explosion_Ground_1"));
 });
+test("nuclear victims share one fixed impact and secondary records have no launch/blast audio", () => {
+  const r=runtime();
+  const modelId=Object.keys(ART.models).find(id=>ART.models[id].weapons.some(w=>w.special?.type==='nuke'));
+  const w=ART.models[modelId].weapons.find(w=>w.special?.type==='nuke');
+  const a={...source,unit:{...source.unit,model:modelId}};
+  const event={hit:true,before:100000,after:70000,impactCell:{x:8,y:10}};
+  const main=r.fx.plan(w,a,target,event);
+  const secondary=r.fx.plan(w,a,{...target,x:1000,y:800},{...event,nuclearFollowup:true});
+  assert.equal(main.shots.length,1);
+  assert.equal(main.shots[0].destination.x,544);
+  assert.equal(main.shots[0].destination.y,672);
+  assert.deepEqual(secondary.shots[0].destination,main.shots[0].destination);
+  assert.equal(secondary.cues.length,0);
+  assert.ok(main.cues.length>=2);
+  assert.equal(secondary.contacts.length,1);
+});

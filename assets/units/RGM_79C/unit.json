@@ -1283,7 +1283,7 @@
       "actionCost": 3
     },
     "EF_BeamSprayGunB2": {
-      "name": "光束炮",
+      "name": "光束喷枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -1439,10 +1439,21 @@
         ]
       },
       "category": "beam_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束喷枪"
+        },
+        "en": {
+          "name": "Beam Spray Gun"
+        },
+        "ja": {
+          "name": "ビーム・スプレーガン"
+        }
+      }
     },
     "EF_LongRifle": {
-      "name": "光束步枪",
+      "name": "长距离步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -1671,7 +1682,18 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "长距离步枪"
+        },
+        "en": {
+          "name": "Long-Range Rifle"
+        },
+        "ja": {
+          "name": "ロング・ライフル"
+        }
+      }
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",
@@ -2091,25 +2113,47 @@
     },
     {
       "id": "kit_2",
-      "name": "光束炮套件",
+      "name": "光束喷枪套件",
       "cost": 75,
       "weapons": [
         "EF_BeamSprayGunB2",
         "Common_Push_A",
         "EF_BeamSaber_A",
         "Common_DoubleVulcan_MS"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束喷枪套件"
+        },
+        "en": {
+          "name": "Beam Spray Gun Kit"
+        },
+        "ja": {
+          "name": "ビーム・スプレーガン装備"
+        }
+      }
     },
     {
       "id": "kit_3",
-      "name": "光束步枪套件",
+      "name": "长距离步枪套件",
       "cost": 100,
       "weapons": [
         "EF_LongRifle",
         "Common_Push_A",
         "EF_BeamSaber_A",
         "Common_DoubleVulcan_MS"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "长距离步枪套件"
+        },
+        "en": {
+          "name": "Long-Range Rifle Kit"
+        },
+        "ja": {
+          "name": "ロング・ライフル装備"
+        }
+      }
     }
   ],
   "description": "对吉姆进行统一化生产规格后得出的机体,稳定性有所提升",

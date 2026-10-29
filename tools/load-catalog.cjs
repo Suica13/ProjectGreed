@@ -437,7 +437,8 @@ function loadCatalog({
       if (
         !Number.isFinite(prefab.stats[key]) ||
         (prefab.stats[key] <= 0 &&
-          !(key === "cost" && prefab.id.startsWith("Army_Squad_") && prefab.stats.cost === 0))
+          !(key === "cost" && prefab.id.startsWith("Army_Squad_") && prefab.stats.cost === 0) &&
+          !(key === "move" && prefab.stats.deployed === true && prefab.stats.move === 0))
       )
         throw Error("Invalid stat " + key + ": " + ref);
     if (

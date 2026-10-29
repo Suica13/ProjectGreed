@@ -931,7 +931,7 @@ function createRoomEngine({
       settlePilotAssists(room, passenger, source);
     }
   }
-  function broadcast(room, ack) {
+  function broadcast(room, ack, actingMember = null) {
     if (!retained(room)) {
       destroyRoom(room);
       return;
@@ -942,11 +942,18 @@ function createRoomEngine({
       scheduleResultReturn(room);
     }
     settleBattleEconomy(room);
+    const recipients = members(room);
+    const actor = ack && recipients.includes(actingMember) ? actingMember : null;
+    if (actor?.ws?.reliableActions)
+      send(actor.ws, { type: "action_receipt", id: ack, revision: room.revision });
     const intelCache = new Map();
     captureRecord(room, intelCache);
     advanceReplay(room);
     room.updated = Date.now();
-    for (const member of members(room)) send(member.ws, state(room, ack, member, intelCache));
+    // Respond to the acting player before building unrelated recipients' views.
+    if (actor) send(actor.ws, state(room, ack, actor, intelCache));
+    for (const member of recipients)
+      if (member !== actor) send(member.ws, state(room, ack, member, intelCache));
     broadcastRooms();
     scheduleAutoEnd(room);
     scheduleAI(room);
@@ -2400,14 +2407,25 @@ function createRoomEngine({
   }
   // 权限、请求去重和 revision 校验通过后，才调用共用规则。
   function action(ws, msg) {
+    try {
+      return applyAction(ws, msg);
+    } catch (error) {
+      const member = rooms.get(ws.room)?.members.get(ws.memberId);
+      if (member?.ws === ws && typeof msg?.id === "string" &&
+          msg.id.length >= 4 && msg.id.length <= 100 && !member.requests.has(msg.id)) {
+        member.requests.set(msg.id, { type: "error", id: msg.id, message: error.message });
+        if (member.requests.size > 512) member.requests.delete(member.requests.keys().next().value);
+      }
+      throw error;
+    }
+  }
+  function applyAction(ws, msg) {
     let room = rooms.get(ws.room),
       seat = ws.seat;
     const member = room?.members.get(ws.memberId);
     if (!member || member.ws !== ws) throw Error("请先加入房间");
     let id = msg.id;
     if (typeof id !== "string" || id.length < 4 || id.length > 100) throw Error("请求编号无效");
-    if (!room.started && msg.researched !== undefined)
-      member.researched = roomDevelopment().normalizeResearch(msg.researched);
     const cache = member.requests;
     if (typeof msg.action !== "string") throw Error("无效的操作。");
     if (recordAction(room, member, msg)) return;
@@ -2432,7 +2450,9 @@ function createRoomEngine({
     }
     if (cache.has(id)) {
       const cached = cache.get(id);
-      if (cached?.type === "chat") {
+      if (cached?.type === "error") {
+        send(ws, cached);
+      } else if (cached?.type === "chat") {
         if (!chatChannels.canRead(member.seat, cached.message.channel || "all"))
           throw Error("你目前不能查看该聊天频道。");
         send(ws, { type: "chat", message: cached.message, ack: id });
@@ -2461,7 +2481,7 @@ function createRoomEngine({
       playback.ready.push(member.id);
       cache.set(id, true);
       room.revision++;
-      broadcast(room, id);
+      broadcast(room, id, member);
       return;
     }
     if (msg.action === "spectate") {
@@ -2542,7 +2562,7 @@ function createRoomEngine({
       returnTimers.set(room, timer);
       room.revision++;
       room.lastEvent = { id: randomId(), type: "return_room_countdown", matchId: room.matchId };
-      broadcast(room, id);
+      broadcast(room, id, member);
       return;
     }
     // 准备和席位操作同样有请求 ID、版本校验和去重，观战者只能使用这些房间操作。
@@ -2566,13 +2586,23 @@ function createRoomEngine({
         "confirm_formation",
       ].includes(msg.action)
     ) {
-      if (!Number.isSafeInteger(msg.revision) || msg.revision !== room.revision) {
+      // Member-owned preparation can be concurrent; shared configuration remains strict.
+      const independentPreparation =
+        ["set_ready", "update_formation", "confirm_formation"].includes(msg.action) &&
+        ["waiting", "assembly"].includes(room.phase) &&
+        msg.phase === room.phase && msg.round === room.game.round &&
+        (msg.matchId ?? null) === (room.matchId ?? null);
+      if (!Number.isSafeInteger(msg.revision) || msg.revision > room.revision ||
+          (msg.revision !== room.revision && !independentPreparation)) {
         send(ws, { type: "error", id, code: "STALE", message: "房间状态已更新，请重试。" });
         send(ws, state(room, undefined, member));
         return;
       }
       const previousInventory = member.inventory;
       try {
+        if (!room.started && msg.researched !== undefined &&
+            ["set_ready", "start_game", "update_formation"].includes(msg.action))
+          member.researched = roomDevelopment().normalizeResearch(msg.researched);
         if (
           (!room.started || room.phase === "assembly") &&
           msg.inventory !== undefined &&
@@ -2646,7 +2676,7 @@ function createRoomEngine({
             startDeployment(room);
             room.revision++;
             cache.set(id, true);
-            broadcast(room, id);
+            broadcast(room, id, member);
             return;
           }
           if (room.phase === "assembly" && msg.action === "update_formation")
@@ -2667,7 +2697,7 @@ function createRoomEngine({
             startDeployment(room);
             room.revision++;
             cache.set(id, true);
-            broadcast(room, id);
+            broadcast(room, id, member);
             return;
           }
           const formation =
@@ -3001,7 +3031,7 @@ function createRoomEngine({
         room.revision++;
         cache.set(id, true);
         if (cache.size > 512) cache.delete(cache.keys().next().value);
-        broadcast(room, id);
+        broadcast(room, id, member);
         return;
       } catch (error) {
         member.inventory = previousInventory;
@@ -3135,16 +3165,14 @@ function createRoomEngine({
       case "rotate": {
         if (room.phase === "deployment") {
           const u = ownUnit(room, seat, msg.unitId);
-          G.rotate(room.game, u, msg.direction);
+          G.previewRotate(room.game, u, msg.direction, seat);
           event = { type: "rotate", unitId: u.id };
         } else {
           validateActive(room, seat);
           const u = ownUnit(room, seat, msg.unitId);
-          G.rotate(room.game, u, msg.direction);
+          G.previewRotate(room.game, u, msg.direction, seat);
           event = { type: "rotate", unitId: u.id };
-          log(room, `${unitLabel(room, u)} ${msg.direction < 0 ? "左转" : "右转"}。`, {
-            units: [u],
-          });
+
         }
         break;
       }
@@ -3271,10 +3299,13 @@ function createRoomEngine({
           const pending = u.pendingMove;
           const from = pending.launch ? pending.from : { x: u.x, y: u.y },
             path = G.confirmMove(room.game, u);
-          event = { type: "move", unitId: u.id, from, path, previewTeam: u.team };
-          log(room, `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`, {
-            units: [u],
-            movement: event,
+          event = pending.rotation
+            ? { type: "rotate", unitId: u.id }
+            : { type: "move", unitId: u.id, from, path, previewTeam: u.team };
+          log(room, pending.rotation
+            ? `${unitLabel(room, u)} ${pending.rotation < 0 ? "左转" : "右转"}。`
+            : `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`, {
+            units: [u], ...(pending.rotation ? {} : { movement: event }),
           });
         }
         break;
@@ -3389,7 +3420,7 @@ function createRoomEngine({
     room.lastEvent = { id: randomId(), ...event };
     cache.set(id, true);
     if (cache.size > 512) cache.delete(cache.keys().next().value);
-    broadcast(room, id);
+    broadcast(room, id, member);
   }
   function join(ws, msg) {
     if (ws.room) throw Error("当前连接已经加入房间");

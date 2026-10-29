@@ -51,7 +51,21 @@ const MapCombat = (() => {
     for (const battle of view.battles || [])
       for (const event of battle.events)
         if (!unitStartDelays.has(event.from)) unitStartDelays.set(event.from, random());
-    lanes = (view.battles || []).map((battle) => ({
+    // A nuclear launch produces one damage record per victim, but one visual blast.
+    const nuclearLaunches = new Set();
+    const visualBattles = (view.battles || []).map((battle) => ({
+      ...battle,
+      events: battle.events.map((event) => {
+        const actor = displayed.get(event.from) || battle.actors.find((u) => u.id === event.from);
+        if (!actor || !event.impactCell || !["nuke", "blast"].includes(Rules.eventWeapon(actor, event)?.special?.type))
+          return event;
+        const key = event.blastId || JSON.stringify([event.from, event.weapon, event.impactCell]);
+        const nuclearFollowup = nuclearLaunches.has(key);
+        nuclearLaunches.add(key);
+        return { ...event, nuclearFollowup };
+      }),
+    }));
+    lanes = visualBattles.map((battle) => ({
       view: { ...battle, index: 0, displayHp: { ...battle.before }, start: now },
       delayElapsed: 0,
       delayAt: now,
@@ -145,12 +159,15 @@ const MapCombat = (() => {
           Math.min(1, (previous.y - actor.y) / (ART.presentation.dodgeDistance * actor.scale)),
         );
     }
-    const aim = (Math.atan2(target.x - source.x, -(target.y - source.y)) * 180) / Math.PI;
+    const weapon = Rules.eventWeapon(source.unit, event);
+    const impact = ["nuke", "blast"].includes(weapon.special?.type) && event.impactCell
+      ? { x: (event.impactCell.x + 0.5) * 64, y: (event.impactCell.y + 0.5) * 64 }
+      : target;
+    const aim = (Math.atan2(impact.x - source.x, -(impact.y - source.y)) * 180) / Math.PI;
     source.angle = Rules.modelOf(source.unit).ship ? source.unit.angle : aim;
     source.aimAngle = aim;
     source.unit.aimAngle = aim;
     target.angle = Rules.modelOf(target.unit).ship ? target.unit.angle : aim + 180;
-    const weapon = Rules.eventWeapon(source.unit, event);
     if (!dodgeStarts.has(event.to)) dodgeStarts.set(event.to, []);
     const plan = WeaponEffects.plan(weapon, source, target, event, {
       start,
@@ -287,7 +304,7 @@ const MapCombat = (() => {
     const stagger = latest?.hit && time < latest.at + 0.18;
     const hp = WeaponEffects.health(event, plan, time, target.unit.hp);
     const dying = plan.deathSoundAt !== null && time >= plan.deathSoundAt;
-    result.set(source.unit.id, sourcePose);
+    if (!event.nuclearFollowup) result.set(source.unit.id, sourcePose);
     result.set(target.unit.id, {
       model: latest?.modelAfter ?? target.unit.model,
       flying: latest?.flyingAfter ?? !!target.unit.flying,
@@ -517,7 +534,7 @@ const MapCombat = (() => {
     ctx.translate(geometry.ox, geometry.oy);
     ctx.scale(geometry.tile / 64, geometry.tile / 64);
     const facing = Math.atan2(target.y - source.y, target.x - source.x);
-    WeaponEffects.draw(
+    if (!event.nuclearFollowup) WeaponEffects.draw(
       ctx,
       weapon,
       plan,
@@ -532,7 +549,7 @@ const MapCombat = (() => {
       ctx.restore();
       return;
     }
-    for (const [index, contact] of plan.contacts.entries()) {
+    for (const [index, contact] of (event.nuclearFollowup ? [] : plan.contacts).entries()) {
       if (weapon.swingEffects?.length)
         SpriteEffects.draw(
           ctx,
@@ -544,15 +561,15 @@ const MapCombat = (() => {
           facing,
         );
       if (
-        contact.hit ||
+        plan.blastPoint || contact.hit ||
         weapon.projectile?.motion === "mortar" ||
         weapon.projectile?.motion === "bomb"
       )
         SpriteEffects.draw(
           ctx,
           weapon.hitEffect,
-          target.x,
-          target.y +
+          plan.blastPoint?.x ?? target.x,
+          plan.blastPoint?.y ?? target.y +
             WeaponEffects.position(plan, contact.at) *
               target.scale *
               ART.presentation.dodgeDistance,

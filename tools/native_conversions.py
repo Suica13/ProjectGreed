@@ -21,6 +21,7 @@ def result(unit_id, prefab, recovery=0, repair=False, inherit=True):
         shieldRecoveryPercent=0,repairAllParts=repair)
 
 def attach(prefab,native):
+    attach_deployment(prefab,native)
     ident=prefab["id"]
     for skill in prefab.get("skills",[]):
         if skill["type"]=="escape":skill.update(range=1,minRange=1)
@@ -72,3 +73,27 @@ def apply_action_cost(prefab):
         if skill.get("type") in ("escape", "armor_purge"):
             skill.update(actionCost=1, consumeAction=False)
     return prefab
+
+
+DEPLOYMENTS = {ident: ident + ("_Deploy" if ident == "AMS_Squad" else "_DeployState")
+    for ident in ["AMS_Squad", "FatUncle", "FatUncleKai", "Gunperry", "Medea", "MedeaKai", "MS_06V", "RX_75R", "Type61_SPG"]}
+
+def attach_deployment(prefab, native):
+    ident = prefab["id"]
+    deployed = ident in DEPLOYMENTS.values()
+    target = next((base for base, form in DEPLOYMENTS.items() if form == ident), None) if deployed else DEPLOYMENTS.get(ident)
+    if not target: return
+    config = result(target, prefab)
+    if not config: return
+    name = "解除部署" if deployed else "部署"
+    prefab["stats"]["deployed"] = deployed
+    if deployed: prefab["stats"]["move"] = 0
+    skill = dict(id="ExitDeployMode" if deployed else "EnterDeployMode", type="transform", deploymentMode=True,
+        name=name, range=0, maxUses=99, consumeAction=True,
+        source={"mode":"transform", **config}, effect="Light_75_NotAttached",
+        sound={"file":"../../sounds/Transform_4.ogg","volume":.6},
+        nativeAction="action_ExitDeployMode" if deployed else "action_EnterDeployMode",
+        localization={"zh":{"name":name}, "en":{"name":"Undeploy" if deployed else "Deploy"}, "ja":{"name":"展開解除" if deployed else "展開"}})
+    prefab["skills"] = [s for s in prefab.get("skills",[]) if s["id"] not in ("EnterDeployMode","ExitDeployMode")] + [skill]
+    for mechanic in prefab.get("mechanics",[]):
+        if mechanic["id"] == "Deploy": mechanic.update(status="adapted",name="部署：切换原生形态，部署期间禁止移动")

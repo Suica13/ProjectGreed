@@ -47,7 +47,7 @@ const UnitHangars = {
     };
     function canEmbark(g, u, carrier, hangarId) {
       if (
-        !onMap(u) ||
+        !onMap(u) || modelOf(u).deployed ||
         !onMap(carrier) ||
         u.id === carrier.id ||
         u.team !== carrier.team ||

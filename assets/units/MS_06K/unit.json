@@ -1251,7 +1251,12 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "special": {
+        "type": "blast",
+        "radius": 1,
+        "shape": "cross"
+      }
     },
     "Common_Cqb_A": {
       "name": "格斗",

@@ -217,6 +217,8 @@ def configure(prefab, native):
     for weapon in prefab["weapons"].values():
         weapon.pop("sniperDamageBeforeHalving", None)
     restore(prefab, native)
+    if prefab["id"] == "MS_06K" and "Common_Cannon_AntiAir" in prefab["weapons"]:
+        prefab["weapons"]["Common_Cannon_AntiAir"]["special"] = {"type":"blast", "radius":1, "shape":"cross"}
     flight_skill(prefab)
     for weapon in prefab["weapons"].values():
         weapon.pop("tacticalDamageMultiplier", None)

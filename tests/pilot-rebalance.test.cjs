@@ -82,7 +82,6 @@ test("all stat scaling gains are halved around 100, with awakening bonus halved"
   for (const [stat, field] of [
     ["shooting", "shooting"],
     ["melee", "melee"],
-    ["speed", "move"],
     ["accuracy", "accuracy"],
     ["reaction", "reaction"],
   ]) {
@@ -93,7 +92,7 @@ test("all stat scaling gains are halved around 100, with awakening bonus halved"
   near(base.shooting, 1);
   near(P.modifiers(unit({ defense: 110 })).defense, 0.975);
   near(P.modifiers(unit({ defense: 200 })).defense, 0.75);
-  near(P.modifiers(unit({ speed: 110 })).reaction, 1.005);
+  near(P.modifiers(unit({ speed: 110 })).reaction, 1);
   near(P.modifiers(unit({ awakening: 100 })).shooting, 1.075);
   near(P.modifiers(unit({ awakening: 100 })).melee, 1.075);
 });

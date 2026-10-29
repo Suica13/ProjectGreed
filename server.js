@@ -263,6 +263,7 @@ function createServer({
             throw Error("请使用最新客户端并选择角色阵营后加入房间。");
           if (msg.identity) activities.identify(ws, msg.identity, msg.name);
           ws.stateDelta = msg.stateDelta === 1 ? 1 : 0;
+          ws.reliableActions = msg.reliableActions === 1;
           stateEncoders.delete(ws);
           join(ws, msg);
         } else if (msg.type === "action") {

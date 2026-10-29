@@ -926,8 +926,7 @@ function renderPanel() {
       button.disabled = !commanding || !Rules.canRotate(game, u, direction);
       button.onclick = () => {
         if (Net.active) return Net.request("rotate", { unitId: u.id, direction });
-        Rules.rotate(game, u, direction);
-        addLog(`${logUnit(u)} ${direction < 0 ? "左转" : "右转"}。`);
+        Rules.previewRotate(game, u, direction, Rules.ownerOf(u));
         update();
       };
       actions.append(button);
@@ -2200,7 +2199,7 @@ function pendingMovement() {
   return game.units.find(
     (unit) =>
       unit.pendingMove &&
-      (Net.active ? unit.pendingMove.seat === Net.seat : unit.team === game.team),
+      (Net.active ? unit.pendingMove.seat === Net.seat : phase === "deployment" ? Rules.ownerOf(unit) === Deployment.team() : unit.team === game.team),
   );
 }
 function finishMovement(confirm) {
@@ -2208,8 +2207,10 @@ function finishMovement(confirm) {
   if (!unit || isBusy(true) || PlanningUI.motion(unit, performance.now())) return;
   if (Net.active) return Net.request(confirm ? "confirm_move" : "cancel_move", { unitId: unit.id });
   if (confirm) {
+    const rotation = unit.pendingMove.rotation;
     Rules.confirmMove(game, unit);
-    addLog(`${logUnit(unit)} 移动至${Rules.columnLabel(unit.x)}${unit.y + 1}。`);
+    if (rotation) addLog(`${logUnit(unit)} ${rotation < 0 ? "左转" : "右转"}。`);
+    else addLog(`${logUnit(unit)} 移动至${Rules.columnLabel(unit.x)}${unit.y + 1}。`);
   } else Rules.cancelMove(game, unit);
   PlanningUI.stop(unit.id);
   mode = "select";

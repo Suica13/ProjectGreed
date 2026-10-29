@@ -168,7 +168,7 @@ function createAttackPlanner(rules, randomId) {
         delete attacker.plan;
         continue;
       }
-      if (weapon.special?.type === "nuke") {
+      if (["nuke", "blast"].includes(weapon.special?.type)) {
         const target = intent.targetCell
           ? rules.groundTarget(room.game, attacker, intent.targetCell.x, intent.targetCell.y)
           : find(room, intent.target);
@@ -177,12 +177,13 @@ function createAttackPlanner(rules, randomId) {
           continue;
         }
         const impact = intent.aimCell ?? rules.center(target);
+        const blastId = randomId();
         const victims = room.game.units
           .filter(
             (unit) =>
               unit.team !== attacker.team &&
               rules.onMap(unit) &&
-              rules.blastContains(impact, unit, weapon.special.radius) &&
+              rules.blastContains(impact, unit, weapon.special.radius, weapon.special.shape) &&
               rules.canAttack(room.game, attacker, unit, { ...weapon, blastCenter: impact }),
           )
           .sort((a, b) => a.id.localeCompare(b.id, "en"));
@@ -192,7 +193,8 @@ function createAttackPlanner(rules, randomId) {
             target: null,
             energySpent: weapon.en,
             impactCell: impact,
-            noCounter: true,
+            blastId,
+            noCounter: weapon.noCounter === true,
           });
         } else
           victims.forEach((victim, index) =>
@@ -203,7 +205,8 @@ function createAttackPlanner(rules, randomId) {
               energySpent: index === 0 ? weapon.en : 0,
               freeFollowup: index > 0,
               impactCell: impact,
-              noCounter: true,
+            blastId,
+              noCounter: weapon.noCounter === true,
               order: intent.order + index / 10000,
             }),
           );
@@ -312,6 +315,7 @@ function createAttackPlanner(rules, randomId) {
         if (room.pending.shotIndices) event.shotIndices = room.pending.shotIndices;
         event.energySpent = weapon.en;
         if (room.pending.impactCell) event.impactCell = room.pending.impactCell;
+        if (room.pending.blastId) event.blastId = room.pending.blastId;
       }
     }
     delete attacker.plan;
@@ -450,6 +454,7 @@ function createAttackPlanner(rules, randomId) {
           shotIndices: intent.shotIndices,
           energySpent: weapon.en,
           impactCell: intent.impactCell,
+          blastId: intent.blastId,
           empty: true,
           hit: false,
           damage: 0,
@@ -521,7 +526,20 @@ function createAttackPlanner(rules, randomId) {
       }
       if (!live.length) continue;
       const attacker = find(room,live[0].targetId);
-      const actors = JSON.parse(JSON.stringify([defender,...new Set(live.map(order => find(room,order.targetId)))]));
+      const counterActors = new Set([defender, ...live.map(order => find(room,order.targetId))]);
+      for (const order of live) {
+        const target = find(room, order.targetId);
+        for (const id of order.weaponIds) {
+          const weapon = rules.modelOf(defender).weapons.find(w => w.id === id);
+          if (weapon?.special?.type !== "blast") continue;
+          const impact = rules.attackCells(defender, target, weapon)[0] || target;
+          for (const victim of room.game.units)
+            if (victim.team !== defender.team && rules.onMap(victim) &&
+                rules.blastContains(impact, victim, weapon.special.radius, weapon.special.shape))
+              counterActors.add(victim);
+        }
+      }
+      const actors = JSON.parse(JSON.stringify([...counterActors]));
       const before = Object.fromEntries(room.game.units.map(unit => [unit.id,unit.hp]));
       const events = rules.counter(room.game,defender,attacker,[],live);
       const battle = { id:randomId(), matchId:room.matchId, a:defender.id, b:attacker.id,

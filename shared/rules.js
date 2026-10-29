@@ -897,7 +897,8 @@ const Tactics = (() => {
         get kitName() {
           return base.kitName;
         },
-        move: Math.max(1, base.move * modifiers.move),
+        move: base.deployed ? 0 : Math.max(1, base.move + modifiers.moveBonus),
+        actionPoints: (base.actionPoints ?? 5) + modifiers.actionPoints,
         mobility: base.mobility * modifiers.reaction,
         accuracy: base.accuracy * modifiers.accuracy,
         pilotModifiers: modifiers,
@@ -954,7 +955,7 @@ const Tactics = (() => {
         return base.kitName;
       },
       move:
-        adaptability === 0
+        base.deployed || adaptability === 0
           ? 0
           : penalty.moveMultiplier < 1
             ? Math.max(
@@ -1023,6 +1024,7 @@ const Tactics = (() => {
     hangars.sync(g);
   }
   function confirmDeployment(g, team) {
+    if (g.units.some((u) => u.pendingMove?.seat === team)) throw Error("请先确认或取消移动");
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再次确认");
     for (const u of g.units.filter((u) => ownerOf(u) === team && onMap(u) && !u.embarked)) {
       if (!deploymentCells(g, team, u).some((c) => c.x === u.x && c.y === u.y))
@@ -1220,7 +1222,8 @@ const Tactics = (() => {
       ![-1, 1].includes(direction) ||
       !onMap(unit) ||
       unit.acted ||
-      unit.plan
+      unit.plan ||
+      unit.pendingMove
     )
       return false;
     const deploying = g.deployment && !g.deployment.every(Boolean);
@@ -1266,6 +1269,17 @@ const Tactics = (() => {
       false,
       deploying ? ownerOf(unit) : null,
     );
+  }
+  function previewRotate(g, unit, direction, seat = ownerOf(unit)) {
+    if (g.units.some((other) => other.pendingMove?.seat === seat))
+      throw Error("请先确认或取消移动");
+    if (!canRotate(g, unit, direction)) throw Error("旋转区域被占用或行动已使用");
+    const pivot = unit.rotationPivot || center(unit);
+    const angle = ((unit.angle + direction * 90) % 360 + 360) % 360;
+    unit.pendingMove = {
+      ...anchorAt(unit, pivot.x, pivot.y, angle), angle, seat,
+      rotation: direction, from: { x: unit.x, y: unit.y }, path: [],
+    };
   }
   function rotate(g, unit, direction) {
     if (!canRotate(g, unit, direction)) throw Error("战舰无法转向：行动已使用，或旋转区域被占用");
@@ -1442,6 +1456,7 @@ const Tactics = (() => {
         });
       });
     }
+    for (const unit of units) unit.actionPoints = actionBudget(unit);
     hangars.sync({ units });
     units.sort(
       (a, b) =>
@@ -1684,6 +1699,11 @@ const Tactics = (() => {
     if (!pending) throw Error("没有待确认的移动");
     delete u.pendingMove;
     try {
+      if (pending.rotation) {
+        rotate(g, u, pending.rotation);
+        u.origin = null;
+        return [];
+      }
       if (pending.boarding) {
         const route = reachable(g, u).get(key(pending.x, pending.y));
         if (
@@ -1876,9 +1896,11 @@ const Tactics = (() => {
     );
   }
   // A large unit is hit once when any occupied cell intersects the circular blast.
-  function blastContains(impact, unit, radius) {
+  function blastContains(impact, unit, radius, shape = "circle") {
     return cells(unit).some(
-      (cell) => (cell.x - impact.x) ** 2 + (cell.y - impact.y) ** 2 <= radius ** 2,
+      (cell) => shape === "cross"
+        ? Math.abs(cell.x - impact.x) + Math.abs(cell.y - impact.y) <= radius
+        : (cell.x - impact.x) ** 2 + (cell.y - impact.y) ** 2 <= radius ** 2,
     );
   }
   function attackCells(a, b, w) {
@@ -1985,7 +2007,7 @@ const Tactics = (() => {
       (w?.blastCenter || sensors.visible(g, a.team, b)) &&
       canUse(a, w) &&
       targetModifier(g, b, w) > 0 &&
-      (w.blastCenter ? blastContains(w.blastCenter, b, w.special.radius) : inRange(a, b, w)) &&
+      (w.blastCenter ? blastContains(w.blastCenter, b, w.special.radius, w.special.shape) : inRange(a, b, w)) &&
       availableStrikes(a, w, b).length > 0
     );
   }
@@ -1997,7 +2019,7 @@ const Tactics = (() => {
   function baseEventWeapon(unit, event) {
     const weapon = modelOf(unit).weapons.find((w) => w.id === event.weapon);
     // Only server-expanded impact events carry a blast centre; launch requests still check range.
-    if (weapon?.special?.type === "nuke" && event.impactCell)
+    if (["nuke", "blast"].includes(weapon?.special?.type) && event.impactCell)
       return { ...weapon, blastCenter: event.impactCell };
     if (!event.shotIndices) return weapon;
     const indices = event.shotIndices;
@@ -2489,7 +2511,17 @@ const Tactics = (() => {
           started = true;
         }
         remaining -= actionCost(weapon);
-        fire(b, enemy, weapon, "counter", true);
+        if (weapon.special?.type === "blast") {
+          const impact = attackCells(b, enemy, weapon)[0] || { x: enemy.x, y: enemy.y };
+          const victims = g.units.filter(unit => unit.team !== b.team && onMap(unit) &&
+            blastContains(impact, unit, weapon.special.radius, weapon.special.shape));
+          const blastId = `counter:${g.round}:${b.id}:${events.length}`;
+          victims.forEach((victim, index) => {
+            fire(b, victim, { ...weapon, en: index ? 0 : weapon.en, blastCenter: impact }, "counter", true);
+            Object.assign(events.at(-1), { impactCell: impact, blastId,
+              energySpent: index ? 0 : weaponStats(weapon, b).en });
+          });
+        } else fire(b, enemy, weapon, "counter", true);
       }
     }
     if (!counterOnly) {
@@ -2724,11 +2756,11 @@ const Tactics = (() => {
       const forced = !!u.brokenParts?.head;
       if (!forced) {
         if (!(active.skillId === "EXAM" && pilots.hasPassive(u, "Pilot_ExamPilot_Trigger")))
-          u.hp = Math.max(0, u.hp - roundDamage((m.hp * active.hpDrainPercent) / 100));
+          u.hp = Math.max(active.skillId === "EXAM" ? 1 : 0, u.hp - roundDamage((m.hp * active.hpDrainPercent) / 100));
         u.en = Math.max(0, u.en - (m.en * active.enDrainPercent) / 100);
         active.remaining--;
       }
-      const expired = forced || active.remaining <= 0;
+      const expired = forced || active.remaining <= 0 || (active.skillId === "EXAM" && u.hp <= 1);
       if (expired) skills.endOverdrive(u);
       g.turnEffects.push({
         type: "overdrive",
@@ -2804,6 +2836,7 @@ const Tactics = (() => {
         const m = modelOf(u);
         u.hp = Math.min(m.hp, u.hp + Math.round(m.hp * 0.25));
         u.en = Math.min(m.en, u.en + m.en * 0.5);
+        u.shield = Math.min(m.shield.hp, (u.shield || 0) + Math.round(m.shield.hp * 0.25));
         const damaged = Object.keys(u.brokenParts || {}).filter((part) => u.brokenParts[part]);
         for (let i = 0; i < 2 && damaged.length; i++) {
           const part = damaged.splice(Math.floor(random(g) * damaged.length), 1)[0];
@@ -3150,6 +3183,7 @@ const Tactics = (() => {
     fits,
     canRotate,
     rotate,
+    previewRotate,
     deploymentCells,
     deploy,
     confirmDeployment,

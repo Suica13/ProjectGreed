@@ -337,7 +337,7 @@ const UnitSkills = (() => {
         (!["repair", "recon", "minovsky", "emp"].includes(skill.type) || unit.en >= skill.enCost) &&
         game.units.includes(unit) &&
         !(
-          ["escape", "transform", "armor_purge", "overdrive"].includes(skill.type) &&
+          !skill.deploymentMode && ["escape", "transform", "armor_purge", "overdrive"].includes(skill.type) &&
           game.units.some((other) => other.hp > 0 && other.embarked?.carrierId === unit.id)
         ) &&
         unit.hp > 0 &&

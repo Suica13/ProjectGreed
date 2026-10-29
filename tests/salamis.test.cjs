@@ -80,21 +80,21 @@ test("ships cannot squeeze through a one-cell channel or end over a friendly uni
 });
 test("rotation checks its swept square, consumes movement, preserves fire heading and can be undone only into a free footprint", () => {
   const { g, a, b } = pair();
-  g.tiles[12][12] = "rock";
+  g.tiles[11][11] = "rock";
   const before = JSON.stringify(a);
   assert.equal(G.canRotate(g, a, 1), false);
   assert.throws(() => G.rotate(g, a, 1));
   assert.equal(JSON.stringify(a), before);
-  g.tiles[12][12] = "plain";
+  g.tiles[11][11] = "plain";
   G.rotate(g, a, 1);
   assert.equal(a.angle, 90);
   assert.equal(a.moved, true);
-  assert.deepEqual(G.dimensions(a), { width: 3, height: 2 });
+  assert.deepEqual(G.dimensions(a), { width: 3, height: 1 });
   assert.equal(G.canRotate(g, a, -1), false);
   G.faceTarget(a, b);
   assert.equal(a.angle, 90);
   assert.ok(Number.isFinite(a.aimAngle));
-  Object.assign(b, { x: 11, y: 12, team: 0 });
+  Object.assign(b, { x: 10, y: 12, team: 0 });
   assert.equal(G.canUndo(g, a), false);
   Object.assign(b, { x: 20, y: 20 });
   assert.equal(G.canUndo(g, a), true);
@@ -102,14 +102,14 @@ test("rotation checks its swept square, consumes movement, preserves fire headin
   assert.equal(a.angle, 0);
   assert.equal(a.moved, false);
 });
-test("deployment validates all six cells and permits turning inside the expanded strip", () => {
+test("deployment validates the full footprint and permits turning inside the expanded strip", () => {
   const { g, a } = pair(true);
   const anchor = G.deploymentCells(g, 0).find((c) => G.fits(g, a, c.x, c.y, 0, false, 0));
   assert.ok(anchor);
   Object.assign(a, { ...anchor, angle: 0 });
   assert.equal(G.canRotate(g, a, 1), true);
   G.rotate(g, a, 1);
-  assert.deepEqual(G.dimensions(a), { width: 3, height: 2 });
+  assert.deepEqual(G.dimensions(a), { width: 3, height: 1 });
   assert.equal(a.moved, false);
   const area = G.getMap(g.mapId).deploymentAreas[0];
   assert.throws(() => G.deploy(g, 0, a.id, area.x + area.width - 1, a.y));
@@ -174,4 +174,31 @@ test("ship AI uses the same legal rotation action to improve turret bearing inst
   G.rotate(g, a, choice.rotation);
   const weapon = G.modelOf(a).weapons.find((w) => w.id === choice.weapon);
   assert.equal(G.canAttack(g, a, b, weapon), true);
+});
+test("rotation preview preserves authority until confirmed and cancel restores exact state", () => {
+  const {g,a}=pair();
+  const before=structuredClone(a);
+  G.previewRotate(g,a,1);
+  assert.equal(a.angle,before.angle);
+  assert.equal(a.moved,before.moved);
+  assert.equal(a.pendingMove.angle,90);
+  assert.equal(G.canRotate(g,a,-1),false);
+  G.cancelMove(g,a);
+  assert.deepEqual(a,before);
+  G.previewRotate(g,a,-1);
+  G.confirmMove(g,a);
+  assert.equal(a.angle,270);
+  assert.equal(a.moved,true);
+  assert.equal(a.pendingMove,undefined);
+  assert.equal(a.origin,null);
+});
+test("rotation confirmation revalidates obstacles and retains cancel on rejection", () => {
+  const {g,a,b}=pair();
+  G.previewRotate(g,a,1);
+  Object.assign(b,{x:a.pendingMove.x,y:a.pendingMove.y});
+  assert.throws(()=>G.confirmMove(g,a));
+  assert.ok(a.pendingMove);
+  assert.equal(a.angle,0);
+  G.cancelMove(g,a);
+  assert.equal(a.moved,false);
 });

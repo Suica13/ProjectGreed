@@ -2,6 +2,8 @@
 import re
 
 EXACT = {
+    "EF_BeamSprayGunB2": ("光束喷枪", "Beam Spray Gun", "ビーム・スプレーガン"),
+    "EF_LongRifle": ("长距离步枪", "Long-Range Rifle", "ロング・ライフル"),
     "ZN_MSM_03_ChestBeam": ("胸部光束扩散炮", "Chest Diffusion Beam Cannon", "胸部拡散ビーム砲"),
     "ZN_Wappa_C4": ("投掷C4", "Throw C4", "C4投擲"),
     "Common_DoubleMS_ZN_APC": ("导弹发射器", "Missile Launcher", "ミサイルランチャー"),
@@ -53,5 +55,6 @@ def apply(prefab):
         for kit in prefab.get("weaponKits", []):
             if kit.get("weapons", [None])[0] == key and kit.get("name") == previous + "套件":
                 kit["name"] = names[0] + "套件"
-                kit.get("localization", {}).get("zh", {}).update(name=kit["name"])
+                for lang, name, suffix in zip(("zh", "en", "ja"), names, ("套件", " Kit", "装備")):
+                    kit.setdefault("localization", {}).setdefault(lang, {})["name"] = name + suffix
     return prefab

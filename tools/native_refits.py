@@ -31,6 +31,8 @@ def apply(prefab, native=None):
         if not key.startswith('action_CustomUnit'):
             continue
         action = section(data, key)
+        if action.get('define.CustomRule', '').strip('() ').lower() == 'false':
+            continue
         target = action.get('define.UnitID', '')
         if not re.fullmatch(r'\w+', target):
             raise ValueError('Unresolved refit target: ' + prefab['id'] + '/' + key)

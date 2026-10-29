@@ -182,10 +182,13 @@ const WeaponEffects = (() => {
     }
   }
   function plan(weapon, source, target, event = null, dodgeSchedule = null) {
+    const nuclear = ["nuke", "blast"].includes(weapon.special?.type) && event?.impactCell;
+    if (nuclear) target = { ...target,
+      x: (event.impactCell.x + 0.5) * 64, y: (event.impactCell.y + 0.5) * 64 };
     // 每发未命中子弹从发射起最多等待两秒；连射中的后续子弹独立计时。
     const missTimeout = 2,
       timedProjectile =
-        weapon.projectile && !["bomb", "mortar", "tether"].includes(weapon.projectile.motion);
+        !nuclear && weapon.projectile && !["bomb", "mortar", "tether"].includes(weapon.projectile.motion);
     const speed = animationSpeed(weapon),
       effectSpeed = ART.presentation.animationSpeed,
       lead =
@@ -195,7 +198,7 @@ const WeaponEffects = (() => {
             ? 0.35
             : 0,
       sourceY = (event?.sourceDodgeSlot || 0) * ART.presentation.dodgeDistance * source.scale,
-      initialSlot = event?.targetDodgeSlot || 0;
+      initialSlot = nuclear ? 0 : event?.targetDodgeSlot || 0;
     const remotes = remotePaths(weapon, source, target, event);
     const shots = weapon.attack.shots.map((originalAt, index) => {
       const at = lead + originalAt / speed,
@@ -314,7 +317,7 @@ const WeaponEffects = (() => {
       })
       .filter((contact) => contact.executed !== false)
       .sort((a, b) => a.at - b.at);
-    const moves = event?.empty ? [] : dodgeMoves(contacts, initialSlot, event, dodgeSchedule),
+    const moves = event?.empty || nuclear ? [] : dodgeMoves(contacts, initialSlot, event, dodgeSchedule),
       motion = { moves, initialSlot };
     // Aim at the defender's current lane, without adding artificial Miss deviation.
     for (const shot of shots)
@@ -326,7 +329,7 @@ const WeaponEffects = (() => {
       contacts.some((contact) => contact.shotIndex === shot.index),
     );
     const impacts = contacts.map((contact) => contact.at);
-    const cues = [...new Set(activeShots.map((shot) => shot.at))].map((at) => ({
+    const cues = (event?.nuclearFollowup ? [] : [...new Set(activeShots.map((shot) => shot.at))]).map((at) => ({
       at,
       sound: weapon.sound,
     }));
@@ -336,7 +339,7 @@ const WeaponEffects = (() => {
         .every((contact) => !contact.hit);
       let travel = 1;
       if (
-        shot.miss &&
+        shot.miss && !nuclear &&
         weapon.projectile &&
         !["bomb", "mortar", "tether"].includes(weapon.projectile.motion)
       ) {
@@ -381,8 +384,8 @@ const WeaponEffects = (() => {
       deathEnd = null,
       deathEvents = null;
     for (const [index, contact] of contacts.entries())
-      if (contact.hit || ["bomb", "mortar"].includes(weapon.projectile?.motion)) {
-        cues.push({ at: contact.at, sound: SpriteEffects.sound(weapon.hitEffect, index) });
+      if (nuclear || contact.hit || ["bomb", "mortar"].includes(weapon.projectile?.motion)) {
+        if (!event?.nuclearFollowup) cues.push({ at: contact.at, sound: SpriteEffects.sound(weapon.hitEffect, index) });
         end = Math.max(end, contact.at + ART.effects[weapon.hitEffect].duration / effectSpeed);
       }
     for (const contact of contacts)
@@ -448,6 +451,7 @@ const WeaponEffects = (() => {
         ),
       );
     return {
+      blastPoint: nuclear ? { x: target.x, y: target.y } : null,
       lead,
       melee,
       bomb,

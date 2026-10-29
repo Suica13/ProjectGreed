@@ -317,7 +317,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "deployed": false
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -1319,8 +1320,8 @@
     {
       "id": "Deploy",
       "source": "Template/Unit/Skill/Deploy.gw",
-      "status": "review",
-      "name": "展开／收起"
+      "status": "adapted",
+      "name": "部署：切换原生形态，部署期间禁止移动"
     }
   ],
   "weaponKits": [
@@ -1350,7 +1351,47 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "skills": [],
+  "skills": [
+    {
+      "id": "EnterDeployMode",
+      "type": "transform",
+      "deploymentMode": true,
+      "name": "部署",
+      "range": 0,
+      "maxUses": 99,
+      "consumeAction": true,
+      "source": {
+        "mode": "transform",
+        "unitId": "MS_06V_DeployState",
+        "kitId": "standard",
+        "kitMap": {
+          "standard": "standard"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 0,
+        "enRecoveryPercent": 0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      },
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_EnterDeployMode",
+      "localization": {
+        "zh": {
+          "name": "部署"
+        },
+        "en": {
+          "name": "Deploy"
+        },
+        "ja": {
+          "name": "展開"
+        }
+      }
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "MS"

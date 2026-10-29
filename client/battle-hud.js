@@ -289,7 +289,7 @@ const BattleHUD = (() => {
     const pendingMove = pendingMovement();
     const confirmingMove = !!pendingMove && mode === "move-confirm";
     const movingPreview = pendingMove && PlanningUI.motion(pendingMove, performance.now());
-    confirmMove.textContent = I18n.text(pendingMove?.pendingMove?.boarding ? "确认搭载" : "确认移动") + " (Q)";
+    confirmMove.textContent = I18n.text(pendingMove?.pendingMove?.rotation ? "确认旋转" : pendingMove?.pendingMove?.boarding ? "确认搭载" : "确认移动") + " (Q)";
     confirmMove.setAttribute("aria-keyshortcuts", "Q");
     if (confirmingMove) byId("hudCancelAction").setAttribute("aria-keyshortcuts", "W");
     else byId("hudCancelAction").removeAttribute("aria-keyshortcuts");
