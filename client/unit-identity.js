@@ -35,6 +35,30 @@ const UnitIdentity = (() => {
       team: "队伍" + (unit.team + 1),
     };
   }
+  const portraitImages = new Map();
+  function drawPilotPortrait(ctx, pilot, x, y, size) {
+    const source = PilotSystem.portrait(pilot);
+    let image = portraitImages.get(source);
+    if (!image) {
+      image = new Image();
+      // Bound uploaded-portrait memory across long sessions.
+      if (portraitImages.size >= 128) portraitImages.delete(portraitImages.keys().next().value);
+      portraitImages.set(source, image);
+      image.src = source;
+    }
+    ctx.save();
+    ctx.fillStyle = "#30343b";
+    ctx.fillRect(x, y, size, size);
+    if (image.complete && image.naturalWidth && image.naturalHeight) {
+      const crop = Math.min(image.naturalWidth, image.naturalHeight);
+      ctx.drawImage(image, (image.naturalWidth - crop) / 2,
+        (image.naturalHeight - crop) / 2, crop, crop, x, y, size, size);
+    }
+    ctx.strokeStyle = "#a9b8c8";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x, y, size, size);
+    ctx.restore();
+  }
   function drawCommandAura(ctx, unit, position, tile, selectedUnit) {
     if (!selectedUnit || !Rules.modelOf(unit).supplyAura) return;
     if (
@@ -84,5 +108,5 @@ const UnitIdentity = (() => {
     ctx.fill();
     ctx.stroke();
   }
-  return { colors, viewerSeat, relation, owner, drawRing, drawCommandAura };
+  return { colors, viewerSeat, relation, owner, drawRing, drawCommandAura, drawPilotPortrait };
 })();

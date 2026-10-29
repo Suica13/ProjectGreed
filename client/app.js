@@ -1877,23 +1877,7 @@ function drawMap(now) {
         const width = ctx.measureText(label).width,
           iconSize = nameSize * 1.1;
         const left = pos.x - (width + iconSize + 3) / 2;
-        ctx.save();
-        ctx.translate(left, labelY - iconSize / 2);
-        ctx.scale(iconSize / 16, iconSize / 16);
-        // Pilot helmet: dome, visor and chin guard; no platform emoji dependency.
-        ctx.beginPath();
-        ctx.moveTo(2, 14);
-        ctx.lineTo(1, 7);
-        ctx.quadraticCurveTo(1, 0, 8, 0);
-        ctx.quadraticCurveTo(15, 0, 15, 7);
-        ctx.lineTo(14, 14);
-        ctx.lineTo(10, 16);
-        ctx.lineTo(6, 16);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = "#152430";
-        ctx.fillRect(3, 6, 10, 4);
-        ctx.restore();
+        UnitIdentity.drawPilotPortrait(ctx, u.pilot, left, labelY - iconSize / 2, iconSize);
         ctx.fillText(label, pos.x + (iconSize + 3) / 2, labelY);
       } else ctx.fillText(label, pos.x, labelY);
       ctx.restore();
