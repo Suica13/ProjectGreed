@@ -1514,7 +1514,20 @@ function createRoomEngine({
   const aiTimers = new Map();
   const playerBudget = (room, player) => G.armyBudget(room.settings, player);
   const playerUnitLimit = (room, player) => G.armyUnitLimit(room.settings, player);
-  const playerRestrictions = (room, player) => G.armyRestrictions(room.settings, player);
+  const aiResearchCache = new WeakMap();
+  function roomAIResearch(room) {
+    if (room.started && room.aiResearch) return room.aiResearch;
+    const research = members(room).filter(member => !member.bot).map(member => member.researched);
+    const key = JSON.stringify(research);
+    const previous = aiResearchCache.get(room);
+    if (previous?.key === key) return previous.value;
+    const value = roomDevelopment().aiResearch(research);
+    aiResearchCache.set(room, { key, value });
+    return value;
+  }
+  const playerRestrictions = (room, player) => G.armyRestrictions(
+    room.settings, player?.bot ? { ...player, researched: roomAIResearch(room) } : player,
+  );
   // Preparing may acknowledge shortages. Actual deployment always uses formationPlan's stock filter.
   const readinessPlan = (room, player, formation) =>
     G.planFormation(
@@ -1523,7 +1536,7 @@ function createRoomEngine({
       { ...playerRestrictions(room, player), inventory: undefined },
       playerUnitLimit(room, player),
     );
-  // Preview generation is deterministic and independent of the room roster.
+  // Preview generation is deterministic for the merged room progression.
   // Cache by all effective inputs, never by mutable player/room identity.
   const previewArmies = new Map();
   function randomArmy(room, player, seed = randomSeed()) {
@@ -1752,6 +1765,7 @@ function createRoomEngine({
     room.pilotDamage = {};
     room.playerDamage = {};
     room.saveTurn = null;
+    room.aiResearch = roomAIResearch(room);
     room.started = true;
     room.phase = "assembly";
     room.matchId = randomId();

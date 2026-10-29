@@ -5,12 +5,12 @@ const D = require("../shared/development.js");
 const modelOf = (e) => G.models[e.unitId + "__" + e.kitId];
 const cost = (army) => army.reduce((sum, e) => sum + modelOf(e).cost, 0);
 
-test("bot progression is independent from a new player's research while all room restrictions survive", () => {
+test("bots use the supplied room progression while all room restrictions survive", () => {
   for (const faction of ["EFSF", "ZEON", "PMC"]) {
     const settings = { ...G.defaultRoomSettings(), unitCostLimit: 1000 };
     const player = { seat: 0, characterFaction: faction, researched: {} };
     const human = G.armyRestrictions(settings, player);
-    const bot = G.armyRestrictions(settings, { ...player, bot: true });
+    const bot = G.armyRestrictions(settings, { ...player, bot: true, researched: D.aiResearch([{ EFSF: D.nodes("EFSF").map(n=>n.id) }]) });
     const advanced = Object.values(G.models).filter(
       (m) =>
         !m.formOnly &&
@@ -22,7 +22,7 @@ test("bot progression is independent from a new player's research while all room
     assert.equal(human.researched, player.researched);
     const blocked = G.armyRestrictions(
       { ...settings, bannedTypes: ["MS"], bannedEras: ["0083"] },
-      { ...player, bot: true },
+      { ...player, bot: true, researched: D.aiResearch([{ EFSF: D.nodes("EFSF").map(n=>n.id) }]) },
     );
     for (const m of advanced) {
       if (m.unitTags.includes("MS") || m.tags.includes("0083"))
@@ -81,6 +81,7 @@ test("default 900/250/12 bot rosters use advanced units and most available COST 
         };
         const restrictions = G.armyRestrictions(settings, {
           bot: true,
+          researched: D.aiResearch([{ EFSF: D.nodes("EFSF").map(n=>n.id) }]),
           seat: 1,
           characterFaction: faction,
         });
@@ -104,4 +105,24 @@ test("default 900/250/12 bot rosters use advanced units and most available COST 
           ).length;
         assert(support * 4 <= army.length);
       }
+});
+
+
+test("room research unions players and mirrors main-line columns including side branches", () => {
+  const ef = D.nodes("EFSF"), ze = D.nodes("ZEON");
+  const research = { EFSF: ef.filter(n=>n.row==="mid" && n.page===0 && n.column<=3).map(n=>n.id) };
+  const original=JSON.stringify(research);
+  const result = D.aiResearch([research,research,{units:{ZEON:["MS_06F"]}}]);
+  for (const [f,nodes] of [["EFSF",ef],["ZEON",ze]]) {
+    for (const n of nodes) assert.equal(result[f].includes(n.id), n.page===0 && n.column<=3, n.id);
+    assert.equal(new Set(result[f]).size,result[f].length);
+  }
+  assert.equal(JSON.stringify(research),original);
+  const late=D.aiResearch([{EFSF:ef.filter(n=>n.row==="mid" && (n.page===0 || n.column<=2)).map(n=>n.id)}]);
+  for(const [f,nodes] of [["EFSF",ef],["ZEON",ze]])
+    for(const n of nodes) assert.equal(late[f].includes(n.id),n.page===0 || n.column<=2,n.id);
+  const side=D.aiResearch([{EFSF:[...research.EFSF,"Tech_EFSF_0079_BlueDestinyProject","Tech_EFSF_0079_PaleRiderProject"]}]);
+  assert(side.EFSF.includes("Tech_EFSF_0079_PaleRiderProject"));
+  assert(!side.ZEON.includes("Tech_ZEON_0079_PezunProject"));
+  for(const f of ["EFSF","ZEON"]) assert.equal(D.aiResearch([])[f].length,1);
 });

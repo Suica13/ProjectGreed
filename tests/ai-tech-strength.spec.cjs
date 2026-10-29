@@ -3,7 +3,7 @@ const { pathToFileURL } = require("node:url");
 const path = require("node:path");
 
 for (const html of ["client.html", "developer.html"])
-  test(`${html}: new profile's offline AI deploys advanced units within the room budget`, async ({
+  test(`${html}: new profile's offline AI respects room starter research and budget`, async ({
     page,
   }) => {
     const errors = [];
@@ -52,7 +52,7 @@ for (const html of ["client.html", "developer.html"])
       };
     });
     expect(result.count).toBeGreaterThan(0);
-    expect(result.advanced).toBe(true);
+    expect(result.advanced).toBe(false);
     expect(result.cost).toBeGreaterThanOrEqual(775);
     expect(result.cost).toBeLessThanOrEqual(900);
     expect(result.points).toBeLessThanOrEqual(12);

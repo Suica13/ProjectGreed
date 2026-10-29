@@ -488,16 +488,8 @@ const Tactics = (() => {
     rules.characterFaction = ["PMC", "EFSF", "ZEON"].includes(player?.characterFaction)
       ? player.characterFaction
       : null;
-    // Bots have no persistent player progression. Give them the complete tech
-    // catalog while preserving faction, era, WIP, map and COST restrictions.
-    rules.researched = player?.bot
-      ? Object.fromEntries(
-          ["EFSF", "ZEON"].map((faction) => [
-            faction,
-            development.nodes(faction).map((node) => node.id),
-          ]),
-        )
-      : player?.researched;
+    // Room authority supplies the merged, cross-faction AI progression.
+    rules.researched = player?.researched;
     if (player && !player.bot) {
       rules.inventory = normalizeInventory(player.inventory);
       // Readiness may skip quantity checks while retaining ownership-based deployment access.

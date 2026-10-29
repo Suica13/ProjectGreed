@@ -47,6 +47,41 @@ const Development = (() => {
     }
     return result;
   }
+  // Room-only AI progression: union human research, then mirror the furthest
+  // main-line column (page first) across both factions and all three lanes.
+  // Explicit branch/event unlocks remain in the union but cannot advance the main line.
+  function aiResearch(researches = []) {
+    const factions = ["EFSF", "ZEON"];
+    const union = { units: {} };
+    for (const faction of factions) {
+      union[faction] = new Set();
+      union.units[faction] = new Set();
+    }
+    let stage = [0, 1];
+    for (const value of researches) {
+      const clean = normalizeResearch(value);
+      for (const faction of factions) {
+        for (const id of clean[faction]) union[faction].add(id);
+        for (const id of clean.units[faction]) union.units[faction].add(id);
+        for (const node of nodes(faction)) {
+          if (node.row !== "mid" || !clean[faction].includes(node.id)) continue;
+          const next = [node.page || 0, node.column];
+          if (next[0] > stage[0] || (next[0] === stage[0] && next[1] > stage[1]))
+            stage = next;
+        }
+      }
+    }
+    for (const faction of factions) {
+      for (const node of nodes(faction)) {
+        const page = node.page || 0;
+        if (page < stage[0] || (page === stage[0] && node.column <= stage[1]))
+          union[faction].add(node.id);
+      }
+      union[faction] = [...union[faction]].sort();
+      union.units[faction] = [...union.units[faction]].sort();
+    }
+    return normalizeResearch(union);
+  }
   function research(faction, id) {
     const node = nodes(faction).find((node) => node.id === id);
     const active = new Set(unlockedTech(faction));
@@ -193,6 +228,7 @@ const Development = (() => {
     research,
     researchSnapshot,
     normalizeResearch,
+    aiResearch,
     grantUnit,
     receiveActivity,
   };

@@ -1,4 +1,4 @@
-﻿const test = require("node:test"),
+const test = require("node:test"),
   assert = require("node:assert/strict"),
   { randomUUID } = require("node:crypto"),
   WebSocket = require("ws"),
@@ -218,4 +218,29 @@ test("empty formations cannot ready and assembly formations are locked", async (
   assert.equal((await a.action("confirm_formation",{formation:[]})).type,"error");
   assert.equal((await a.action("confirm_formation")).type,"state");
   assert.equal((await b.action("confirm_formation")).phase,"deployment");
+});
+test("AI room technology merges every human and freezes the mirrored stage at start",async(t)=>{
+ const D=require("../shared/development.js");
+ const app=createServer({host:"127.0.0.1",port:0}), address=await app.listen();
+ const a=new Peer("ws://127.0.0.1:"+address.port+"/ws"),b=new Peer("ws://127.0.0.1:"+address.port+"/ws");
+ t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close()});
+ await a.join("create","AITECH",{Type61:3});
+ await b.join("join","AITECH",{Type61:3});
+ assert.equal((await a.action("configure_room",{mapId:"crossroads_2v2",costLimit:1000})).type,"state");
+ assert.equal((await a.action("add_ai",{seat:2})).type,"state");
+ const ef=D.nodes("EFSF").filter(n=>n.page===0&&n.row==="mid"&&n.column<=3).map(n=>n.id);
+ const ze=D.nodes("ZEON").filter(n=>n.page===0&&n.row==="mid"&&n.column<=2).map(n=>n.id);
+ const first={EFSF:ef},second={ZEON:ze};
+ await b.action("set_ready",{ready:true,formation:army(1),researched:second});
+ const result=await a.action("start_game",{formation:army(1),researched:first});
+ assert.equal(result.phase,"assembly");
+ const room=app.rooms.get("AITECH"), expected=D.aiResearch([first,second]);
+ assert.deepEqual(room.aiResearch,expected);
+ const bot=room.seats[2];
+ assert(bot.formation.length>0);
+ assert(bot.formation.every(e=>D.allows(bot.characterFaction,e.unitId,expected)));
+ const before=JSON.stringify(room.aiResearch);
+ await a.action("confirm_formation",{researched:{EFSF:D.nodes("EFSF").map(n=>n.id)}});
+ assert.equal(JSON.stringify(room.aiResearch),before);
+ assert(!room.members.get(a.joined.memberId).researched.EFSF.includes("Tech_EFSF_0079_PaleRiderProject"));
 });
