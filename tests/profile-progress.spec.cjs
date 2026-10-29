@@ -58,7 +58,7 @@ test("personal save download and file import preserve pilots, formations and spe
   });
   await page.reload();
   await page.waitForFunction(() => assetsReady);
-  await page.locator("#openClientSettings").click();
+  await page.locator("#shellSettings").click();
   const downloadPromise = page.waitForEvent("download");
   await page.locator("#exportProfileSave").click();
   const download = await downloadPromise,
@@ -270,7 +270,7 @@ for (const width of [1280, 360])
     });
     await page.reload();
     await page.waitForFunction(() => assetsReady);
-    await page.locator("#openClientSettings").click();
+    await page.locator("#shellSettings").click();
     const geometry = await page.evaluate(() => {
       const buttons = ["exportProfileSave", "importProfileSave", "newProfileSave"].map((id) =>
         byId(id).getBoundingClientRect(),

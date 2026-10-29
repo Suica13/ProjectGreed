@@ -1638,6 +1638,7 @@
       "unitId": "MS_06R_2_MsgCustom",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_MSG",
       "unlockUnits": [
         "MS_06R_2"
       ],
@@ -1653,6 +1654,7 @@
       "unitId": "MS_06R_2_JonCustom",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_JON",
       "unlockUnits": [
         "MS_06R_2"
       ],
@@ -1663,5 +1665,29 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_MSG",
+      "unitId": "MS_06R_2_MsgCustom",
+      "kitMap": {
+        "kit_0": "standard",
+        "kit_1": "standard",
+        "kit_2": "standard"
+      }
+    },
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_JON",
+      "unitId": "MS_06R_2_JonCustom",
+      "kitMap": {
+        "kit_0": "kit_0",
+        "kit_1": "kit_1",
+        "kit_2": "kit_2"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

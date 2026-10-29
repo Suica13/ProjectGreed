@@ -1527,5 +1527,11 @@
       ],
       "fireMode": "independent"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

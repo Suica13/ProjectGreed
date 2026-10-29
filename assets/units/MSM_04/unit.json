@@ -832,7 +832,7 @@
       "actionCost": 1
     },
     "ZN_MSM_04_BG": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -980,7 +980,18 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSM_04_MS": {
       "name": "导弹发射器",
@@ -1388,5 +1399,11 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

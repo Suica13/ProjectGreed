@@ -1456,5 +1456,13 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "MS_06J",
+      "MS_06C"
+    ]
+  }
 }

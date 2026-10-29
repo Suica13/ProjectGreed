@@ -59,11 +59,11 @@ def apply_anti_air(prefab):
 
 
 def apply_accuracy(prefab, native_restored=False):
-    """Reduce all ship weapon base accuracy by 10%, without changing native shot accuracy."""
+    """Reduce all ship weapon base accuracy by 20%, without changing native shot accuracy."""
     if not prefab["stats"].get("ship"):
         return
     for weapon in prefab["weapons"].values():
         if native_restored or "shipHitBeforeReduction" not in weapon:
             weapon["shipHitBeforeReduction"] = weapon["hit"]
-        weapon["hit"] = round(weapon["shipHitBeforeReduction"] * 0.9, 6)
-        weapon["shipAccuracyMultiplier"] = 0.9
+        weapon["hit"] = round(weapon["shipHitBeforeReduction"] * 0.8, 6)
+        weapon["shipAccuracyMultiplier"] = 0.8

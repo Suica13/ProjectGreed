@@ -1,0 +1,537 @@
+{
+  "schemaVersion": 2,
+  "id": "Apsaras",
+  "code": "Apsaras",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/Apsaras/Apsaras.ini",
+  "materials": {
+    "textures": {
+      "Apsaras_Body_1.png": "textures/Apsaras_Body_1.png",
+      "Apsaras_Eye_1.png": "textures/Apsaras_Eye_1.png",
+      "Apsaras.png": "textures/Apsaras.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "Boost_FlyHover_1.png": "textures/Boost_FlyHover_1.png"
+    },
+    "icon": "Apsaras.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 26.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "FlyHover",
+      "texture": "Boost_FlyHover_1.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 1.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "alpha": 0.35,
+      "frames": 10.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "Apsaras_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Eye",
+      "texture": "Apsaras_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.5,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__ApsarasII.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 75000,
+    "en": 450.0,
+    "move": 8,
+    "mobility": 55.0,
+    "cost": 500,
+    "counterLimit": 1,
+    "accuracy": 120.0,
+    "partStructuralStrength": 125.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 10.0,
+      "space": 50,
+      "water": 10.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "sensors": {
+      "sight": 10,
+      "radar": 12.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 15.0,
+    "shooting": 15.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 10.0,
+      "flat": 200.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 200.0
+    },
+    "melee": {
+      "percent": 10.0,
+      "flat": 200.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 30.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 60000.0,
+    "walkSpeed": 0.85,
+    "boostSpeed": 1.85,
+    "turnSpeed": 0.75,
+    "reaction": 55.0,
+    "shooting": 115.0,
+    "melee": 115.0,
+    "nativeTags": [
+      "Apsaras",
+      "Unit",
+      "MA",
+      "ZEON",
+      "0079",
+      "UC",
+      "LargeUnit"
+    ],
+    "nativeSkills": [
+      "FlyHover",
+      "FlyUnit"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 120.0,
+    "unitLevel": 2000.0,
+    "enBeforeReduction": 900.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 7,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 50.0,
+      "water": 10.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 432.0,
+      "antiDetection": 0.0
+    },
+    "v17BaseHp": 60000.0,
+    "technologyEra": "0079E"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMovingWalk",
+    "stagger": "Common_Stagger",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "walk",
+    "moveSoundKey": null
+  },
+  "name": "阿普萨拉斯",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079E"
+  ],
+  "localization": {
+    "zh": {
+      "name": "阿普萨拉斯",
+      "description": "吉翁公国军用于进攻地球联邦军加布罗基地而制造的MA"
+    },
+    "en": {
+      "name": "Apsaras",
+      "description": "An MA produced by the Principality of Zeon to attack the Earth Federation's Gabro base"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_L_A": {
+      "name": "近身格斗",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 125.0,
+      "en": 0,
+      "sourceName": "Common_Push_L_A",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Push_A",
+      "damagePerShot": 7500.0,
+      "damageComponents": {
+        "melee": 3750.0,
+        "meleeShell": 3750.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Push_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.75,
+            "requiredParts": [],
+            "delay": 0.45
+          },
+          {
+            "delay": 1.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "changeHeldWeapon": false,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A.gw",
+        "barrels": [
+          {
+            "id": "Common_Push_L_A",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "CqbDamage": 3750.0,
+        "CqbShellDamage": 3750.0,
+        "DpDamage": 1450.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 0.75,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 2.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A.gw",
+        "barrel": "Common_Push_L_A",
+        "entry": "hiddenAction_Common_Push_L_A_Fire",
+        "cooldown": 3.0,
+        "duration": 1.45,
+        "firstShot": 0.45,
+        "lastShot": 0.45,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_Common_Push_L_A_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_Common_Push_L_A_SetWeaponIndex",
+          "hiddenAction_Common_Push_L_A_Step_1",
+          "hiddenAction_Common_Push_L_A_Fire_Step_1",
+          "hiddenAction_Common_Push_L_A_Fire_Step_2",
+          "hiddenAction_Common_Push_L_A_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "melee",
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "FlyHover",
+      "source": "Template/Unit/Skill/FlyHover.gw",
+      "status": "review",
+      "name": "悬浮飞行"
+    },
+    {
+      "id": "FlyUnit",
+      "source": "Template/Unit/Skill/FlyUnit.gw",
+      "status": "review",
+      "name": "飞行模式"
+    },
+    {
+      "id": "special_Common_ReEntry_FromSpace",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_EMP_M",
+      "name": "special_Common_EMP_M",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_EMP_M.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "Common_Push_L_A"
+      ]
+    }
+  ],
+  "description": "吉翁公国军用于进攻地球联邦军加布罗基地而制造的MA",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 2000.0,
+    "levelMultiplier": 0.25,
+    "published": 500
+  },
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MA"
+  ],
+  "transport": {
+    "slotCost": 3,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
+}

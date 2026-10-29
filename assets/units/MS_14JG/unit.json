@@ -2104,6 +2104,7 @@
       "unitId": "MS_14JG_MsgCustom",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_MSG",
       "unlockUnits": [
         "MS_14JG"
       ],
@@ -2114,5 +2115,18 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_MSG",
+      "unitId": "MS_14JG_MsgCustom",
+      "kitMap": {
+        "standard": "standard"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

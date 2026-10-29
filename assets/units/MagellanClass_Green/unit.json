@@ -1159,7 +1159,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 67.5,
+      "hit": 60.0,
       "en": 560.0,
       "sourceName": "MagellanClass_Turret_BeamCannon",
       "sourceHit": 75.0,
@@ -1483,14 +1483,14 @@
       "actionCost": 3,
       "tacticalDamageMultiplier": 1.25,
       "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "MagellanClass_Turret_AMS": {
       "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 76.5,
+      "hit": 68.0,
       "en": 320.0,
       "sourceName": "MagellanClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -1689,7 +1689,7 @@
       "actionCost": 2,
       "tacticalDamageMultiplier": 1.25,
       "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -1707,7 +1707,7 @@
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 112.5,
+      "hit": 100.0,
       "en": 70.0,
       "sourceName": "MagellanClass_Turret_AA",
       "sourceHit": 125.0,
@@ -4267,7 +4267,7 @@
         }
       ],
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "对空机枪"
@@ -4424,5 +4424,10 @@
         "seconds": 30.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

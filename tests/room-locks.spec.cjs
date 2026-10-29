@@ -51,7 +51,26 @@ for (const width of [1280, 390])
       expect(box.x + box.width).toBeLessThanOrEqual(width);
       await host.locator('#roomCreateForm button[type="submit"]').click();
       await expect(host.locator("#roomPreparation")).toBeVisible();
-      await expect(host.locator("#roomFormationPreset")).toHaveValue("900,250,12");
+      await expect(host.locator("#roomFormationPreset")).toHaveValue("1000,200,12");
+      expect(
+        await host
+          .locator("#roomFormationPreset option")
+          .evaluateAll((options) => options.map((o) => o.value)),
+      ).toEqual([
+        "1000,200,12",
+        "2000,400,12",
+        "4000,800,12",
+        "6000,1200,12",
+        "8000,1600,12",
+        "10000,2000,12",
+        "custom",
+      ]);
+      if (width < 700) await host.locator('[data-room-tab="settings"]').click();
+      await host.locator("#roomFormationPreset").selectOption("10000,2000,12");
+      await expect.poll(() => app.rooms.get(code).settings.costLimit).toBe(10000);
+      expect(app.rooms.get(code).settings.unitCostLimit).toBe(2000);
+      expect(app.rooms.get(code).settings.unitLimit).toBe(12);
+      if (width < 700) await host.locator('[data-room-tab="seats"]').click();
       expect(app.rooms.get(code).settings.mode).toBe("quick");
       await guestContext.grantPermissions([]);
       await lobby(guest);

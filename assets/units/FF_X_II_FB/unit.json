@@ -722,5 +722,13 @@
         }
       ]
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "FF_X_II"
+    ]
+  }
 }

@@ -1,7 +1,7 @@
 """Native continuous beam payloads become one directional skill hit per hull."""
-import copy,json,re,shutil,struct
+import copy,json,re,shutil,struct,math
 from mod_source import ASSETS,ROOT,MAIN,load
-BEAMS={'ApsarasII':'ZN_ApsarasII_MegaBeamCannon','RX_78_4_Bst':'EF_RX_78_4_HighMegaLauncher',
+BEAMS={'ApsarasIII':'ZN_ApsarasIII_MegaBeamCannon','MA_08_DZL':'ZN_MA_08_MegaBeamCannon','ApsarasII':'ZN_ApsarasII_MegaBeamCannon','RX_78_4_Bst':'EF_RX_78_4_HighMegaLauncher',
        'Burstliner':'EF_Burstliner_BeamCannon','MA_08':'ZN_MA_08_MegaBeamCannon','AMX_002':'ZN_AMX_002_MegaBeamCannon','Skiure':'ZN_Skiure_BeamCannon'}
 
 def apply(prefab,native=None):
@@ -48,9 +48,22 @@ def apply(prefab,native=None):
     for step in weapon['attack']['steps']:
         for channel,damage in step.get('damageComponents',weapon['damageComponents']).items():
             totals[channel]=totals.get(channel,0)+damage*step.get('shots',0)*step.get('repeat',1)*step.get('damageMultiplier',1)*repeat_multiplier
+    # Balance the full native volley to 1/50, then round the combined base
+    # damage to the nearest 25. Preserve each channel's share of that total.
+    native_total=sum(totals.values())
+    raw_damage=native_total/50
+    rounded_damage=math.floor(raw_damage/25+.5)*25
+    # Distribute whole 25-point shares with largest remainders so channel totals
+    # and the displayed single hit agree, while keeping native proportions close.
+    shares=[dict(key=key,exact=value/native_total*(rounded_damage/25)) for key,value in totals.items()] if native_total else []
+    for share in shares: share['count']=math.floor(share['exact'])
+    remainder=int(rounded_damage/25)-sum(share['count'] for share in shares)
+    for share in sorted(shares,key=lambda item:-(item['exact']-item['count']))[:remainder]:share['count']+=1
+    damage_components={share['key']:share['count']*25 for share in shares}
+
     skill=dict(id='Irradiation',type='irradiation',name='光束照射',range=10,minRange=1,actionCost=5,enCostPercent=50,
-        cooldownTurns=3,maxUses=99,consumeAction=False,baseHit=60,damageComponents={k:v/20 for k,v in totals.items()},
-        nativeTotalDamage=sum(totals.values()),nativeRepeatMultiplier=repeat_multiplier,sourceWeapon=key,
+        cooldownTurns=3,maxUses=99,consumeAction=False,baseHit=60,damageComponents=damage_components,
+        nativeTotalDamage=native_total,nativeRepeatMultiplier=repeat_multiplier,sourceWeapon=key,
         requiredParts=copy.deepcopy(weapon.get('requiredParts',[])),requiresSfsMS=prefab['id'] in ('Burstliner','Skiure'),
         chargeSeconds=round(max(1,weapon.get('nativeTiming',{}).get('firstShot',2)),3),fireSeconds=2,
         visualColor=color,muzzle=beam_muzzle,chargeMuzzle=charge_muzzle,beamWidth=beam_width,
@@ -58,14 +71,14 @@ def apply(prefab,native=None):
         clip=next((step['animation'] for step in weapon['attack']['steps'] if step.get('animation')),None),
         effect='Irradiation_Charge_'+color,sound={'file':'../../sounds/BeamCharge_4.ogg','volume':.7},
         localization={'zh':{'name':'光束照射'},'en':{'name':'Irradiation Beam'},'ja':{'name':'照射ビーム'}},
-        description='选择方向照射10格；消耗5 AP与50%最大EN，冷却3个己方回合。基础命中60%，对沿途每台单位（含友军）判定一次，基础伤害为原MOD完整伤害的1/20。')
+        description=f'基础伤害 {rounded_damage:,} × 1 = {rounded_damage:,}；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。')
     if 'BeamCharge_4.ogg' not in [p.name for p in (ASSETS/'sounds').glob('*.ogg')]:raise ValueError('Missing charge audio')
     skills=prefab.setdefault('skills',[]);skills[:]=[s for s in skills if s['id']!='Irradiation'];skills.append(skill)
     weapon['availability']={'hidden':True,'reasons':['converted_skill'],'convertedSkill':'Irradiation'}
     for kit in prefab['weaponKits']:kit['weapons']=[w for w in kit['weapons'] if w!=key]
     prefab['mechanics']=[m for m in prefab.get('mechanics',[]) if not (m.get('id','').startswith('energy_capacity_') and key in m['id'])]
     prefab['mechanics']=[m for m in prefab.get('mechanics',[]) if m['id']!='Irradiation']
-    prefab['mechanics'].append(dict(id='Irradiation',status='adapted',name='光束照射：方向射线、蓄力、逐机命中与长度自适应贴图'))
+    prefab['mechanics'].append(dict(id='Irradiation',status='adapted',name='光束照射：方向射线、蓄力、逐机命中；原版固定演出与判定射程独立'))
     if prefab['id']=='ApsarasII':
         prefab['stats'].update(footprint={'width':3,'height':3},movementType='air')
         prefab['unitTags']=[tag for tag in prefab.get('unitTags',[]) if tag not in ('SmallUnit','MediumUnit','LargeUnit')]+['LargeUnit']

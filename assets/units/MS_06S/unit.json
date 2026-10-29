@@ -1581,6 +1581,7 @@
       "unitId": "MS_06S_CharCustom",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_CHA",
       "unlockUnits": [
         "MS_06S"
       ],
@@ -1596,6 +1597,7 @@
       "unitId": "MS_06S_DozleCustom",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_DZL",
       "unlockUnits": [
         "MS_06S"
       ],
@@ -1606,5 +1608,31 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_CHA",
+      "unitId": "MS_06S_CharCustom",
+      "kitMap": {
+        "kit_1": "kit_0",
+        "kit_2": "kit_1"
+      }
+    },
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_DZL",
+      "unitId": "MS_06S_DozleCustom",
+      "kitMap": {
+        "kit_1": "kit_0",
+        "kit_2": "kit_1"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "MS_06F",
+      "MS_06C",
+      "MS_06F_EFSF"
+    ]
+  }
 }

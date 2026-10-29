@@ -2724,5 +2724,14 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_81ST",
+      "RX_81AS",
+      "RX_81"
+    ]
+  }
 }

@@ -1,0 +1,412 @@
+{
+  "schemaVersion": 2,
+  "id": "FF_X7Bst_II",
+  "code": "FF-X7Bst-II",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/FF_X7Bst_II/FF_X7Bst_II.ini",
+  "materials": {
+    "textures": {
+      "FF_X7Bst_II_Body_1.png": "textures/FF_X7Bst_II_Body_1.png",
+      "FF_X7Bst_II.png": "textures/FF_X7Bst_II.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "FF_X7Bst_II.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost_M1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1.0,
+      "offset": {
+        "x": -1.0,
+        "y": -20.0
+      },
+      "scaleX": 2.0,
+      "scaleY": 2.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1.0,
+      "offset": {
+        "x": 12.0,
+        "y": -20.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 2.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1.0,
+      "offset": {
+        "x": -12.0,
+        "y": -20.0
+      },
+      "scaleX": -0.75,
+      "scaleY": 2.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "FF_X7Bst_II_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.65,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 19500,
+    "en": 375.0,
+    "move": 10,
+    "mobility": 145.0,
+    "cost": 250,
+    "counterLimit": 1,
+    "accuracy": 125.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 10.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "sensors": {
+      "sight": 10,
+      "radar": 15.277777777777779,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 35.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 15.0,
+      "flat": 150.0
+    },
+    "melee": {
+      "percent": 10.0,
+      "flat": 100.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 20.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 15500.0,
+    "walkSpeed": 1.75,
+    "boostSpeed": 2.75,
+    "turnSpeed": 2.25,
+    "reaction": 145.0,
+    "shooting": 135.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "FF_X7Bst_II",
+      "Unit",
+      "Aircraft",
+      "EFSF",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [
+      "Fighter",
+      "DogFight_A"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 125.0,
+    "unitLevel": 1000.0,
+    "enBeforeReduction": 750.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 9,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 10.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 550.0,
+      "antiDetection": 0.0
+    },
+    "v17BaseHp": 15500.0,
+    "technologyEra": "0079E"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "核心推进器",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0079E"
+  ],
+  "localization": {
+    "zh": {
+      "name": "核心推进器",
+      "description": "加装辅助推进器的核心战斗机,战斗力有所强化"
+    },
+    "en": {
+      "name": "Core Booster",
+      "description": "Core Fighter with additional booster units, enhancing its combat power"
+    },
+    "ja": {}
+  },
+  "weapons": {},
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "Fighter",
+      "source": "Template/Unit/Skill/Fighter.gw",
+      "status": "adapted",
+      "name": "战斗机特性"
+    },
+    {
+      "id": "DogFight_A",
+      "source": "Template/Unit/Skill/DogFight_A.gw",
+      "status": "review",
+      "name": "空中缠斗"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": []
+    }
+  ],
+  "description": "加装辅助推进器的核心战斗机,战斗力有所强化",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 1000.0,
+    "levelMultiplier": 0.25,
+    "published": 250
+  },
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Aircraft"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadIntoAir"
+    ]
+  },
+  "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": []
+  }
+}

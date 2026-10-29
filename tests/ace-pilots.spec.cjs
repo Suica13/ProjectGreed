@@ -47,7 +47,14 @@ for (const [html, width] of [
       .locator('#aceRecruitList [aria-pressed="true"]')
       .getAttribute("data-ace-id");
     const profile = await page.evaluate((id) => PilotSystem.aceProfile(id), id);
-    await expect(page.locator("#aceRecruitPreview")).toContainText("占位");
+    await expect(page.locator("#aceRecruitPreview")).toContainText("ACE技能");
+    if (profile.skills.some((skill) => skill.durationTurns)) {
+      await expect(page.locator("#aceRecruitPreview")).toContainText(
+        "持续1回合 · 冷却6回合（效果结束后开始）",
+      );
+      await expect(page.locator("#aceRecruitPreview")).not.toContainText("15秒");
+    }
+
     await page.locator("#confirmRecruitAce").click();
     await expect(page.locator("#customPilotPanel")).toBeVisible();
     await expect(page.locator("#customPilotStats button:visible")).toHaveCount(0);
@@ -55,7 +62,8 @@ for (const [html, width] of [
     await expect(page.locator("#renameCustomPilot")).toBeHidden();
     await expect(page.locator("#changeCustomPilotPortrait")).toBeDisabled();
     await expect(page.locator("#pilotTrainingActions")).toBeHidden();
-    await expect(page.locator("#acePilotDetails")).toContainText("占位");
+    await expect(page.locator("#acePilotDetails")).toContainText("ACE技能");
+    await expect(page.locator("#acePilotDetails")).toContainText("50 COST/Lv.");
     const after = await page.evaluate(() => Economy.snapshot());
     expect(after.money).toBe(before.money - profile.price.money);
     expect(after.supplies).toBe(before.supplies - profile.price.supplies);
@@ -75,7 +83,7 @@ for (const [html, width] of [
       .click();
     await expect(page.locator("#customPilotList")).toContainText(profile.name);
     await page.locator("#recruitAcePilot").click();
-    await expect(page.locator(`#aceRecruitList [data-ace-id="${id}"]`)).toHaveCount(0);
+    await expect(page.locator(`#aceRecruitList [data-ace-id="${id}"]`)).toContainText("已招募");
     await page.evaluate(() => byId("aceRecruitDialog").close());
     await page.locator("#shellLobby").click();
     await page.locator("#menuFactionSelect").selectOption("ZEON");
@@ -122,14 +130,14 @@ test("ACE recruitment disables when exhausted and a failed roster write rolls ba
     .locator("#shellSubnav button")
     .filter({ hasText: /^\u9a7e\u9a76\u5458$/ })
     .click();
-  await expect(page.locator("#recruitAcePilot")).toBeDisabled();
+  await expect(page.locator("#recruitAcePilot")).toBeEnabled();
 });
 
 test("technology unlocks ACE recruitment and renders native ACE portraits in the development tree", async ({
   page,
 }) => {
   await open(page, "client", false);
-  await expect(page.locator("#recruitAcePilot")).toBeDisabled();
+  await expect(page.locator("#recruitAcePilot")).toBeEnabled();
   await page.evaluate(() =>
     Development.creditAward({
       id: "ace-tech-test",
@@ -206,7 +214,7 @@ test("ACE loss archives progress, removes assignments and re-recruitment restore
     .locator("#shellSubnav button")
     .filter({ hasText: /^驾驶员$/ })
     .click();
-  await expect(page.locator("#customPilotList")).toContainText("需要重新招募");
+  await expect(page.locator("#customPilotList")).toContainText("待回归");
   const before = await page.evaluate(() => Economy.snapshot());
   await page
     .locator("#customPilotList button")
@@ -219,9 +227,71 @@ test("ACE loss archives progress, removes assignments and re-recruitment restore
   expect(result.needsRecruitment).toBe(false);
   expect(result.id).toBe(archive.id);
   expect(result.level).toBe(archive.level);
-  expect(result.experience).toBe(archive.experience);
+  expect(result.experience).toBe(0);
   expect(result.record.kills).toBe(archive.record.kills);
   expect(result.record.losses).toBe(archive.record.losses + 1);
   const price = await page.evaluate((id) => PilotSystem.aceProfile(id).price, result.aceId);
-  expect((await page.evaluate(() => Economy.snapshot())).money).toBe(before.money - price.money);
+  expect((await page.evaluate(() => Economy.snapshot())).money).toBe(
+    before.money - Math.ceil(price.money / 2),
+  );
+});
+
+test("legacy ACE profile import migrates embedded formations and persists five-level caps", async ({
+  page,
+}) => {
+  await open(page, "client", false);
+  const expected = await page.evaluate(() => {
+    const profile = PilotSystem.catalog.aces.find((p) => p.price && p.faction === "EFSF");
+    const legacy = {
+      id: "ace-" + profile.id,
+      aceId: profile.id,
+      ace: true,
+      custom: true,
+      name: profile.name,
+      faction: profile.faction,
+      level: profile.nativeGrowth.maxLevel,
+      experience: 0,
+      stats: { ...profile.maxStats },
+      record: { kills: 7, destroyedCost: 2000 },
+      points: 0,
+    };
+    const save = ProfileSave.exportData();
+    save.pilots.EFSF.pilots = [legacy];
+    save.formations.EFSF = {
+      version: 3,
+      index: 0,
+      squads: [
+        {
+          name: "Legacy ACE",
+          units: [{ unitId: "Type61", kitId: "standard", customPilot: legacy }],
+        },
+      ],
+    };
+    ProfileSave.importData(save);
+    return { id: legacy.id, stats: profile.maxStats };
+  });
+  await page.reload();
+  await page.waitForFunction(() => assetsReady);
+  const actual = await page.evaluate(() => {
+    const save = ProfileSave.exportData(),
+      pilot = save.pilots.EFSF.pilots.find((p) => p.ace);
+    const embedded = save.formations.EFSF.squads[0].units[0].customPilot;
+    return {
+      id: pilot.id,
+      level: pilot.level,
+      stats: pilot.stats,
+      version: pilot.aceGrowthVersion,
+      kills: pilot.record.kills,
+      cost: PilotSystem.cost(pilot),
+      embeddedLevel: embedded.level,
+    };
+  });
+  expect(actual).toEqual({
+    ...expected,
+    level: 5,
+    version: 2,
+    kills: 7,
+    cost: 350,
+    embeddedLevel: 5,
+  });
 });

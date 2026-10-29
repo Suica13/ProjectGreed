@@ -553,5 +553,13 @@
       "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
       "sourceUnit": "Hangar_X8"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "Medea"
+    ]
+  }
 }

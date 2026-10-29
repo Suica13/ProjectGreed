@@ -7,13 +7,12 @@ const RoomPanel = (() => {
     queuedNumericSettings = {};
   const numericDrafts = { costLimit: null, unitCostLimit: null, unitLimit: null };
   const formationPresets = new Set([
-    "900,250,12",
-    "1800,300,12",
-    "2400,400,12",
-    "3600,600,12",
-    "4800,800,12",
-    "6000,1000,12",
-    "99999,99999,72",
+    "1000,200,12",
+    "2000,400,12",
+    "4000,800,12",
+    "6000,1200,12",
+    "8000,1600,12",
+    "10000,2000,12",
   ]);
   function showFormationPreset(settings) {
     const values = ["costLimit", "unitCostLimit", "unitLimit"].map(
@@ -65,11 +64,18 @@ const RoomPanel = (() => {
         ? "快速战固定使用 PMC 阵营"
         : forced
           ? "本队已设置强制阵营"
-          : editingAI ? "选择 AI 阵营" : "选择自己的阵营";
+          : editingAI
+            ? "选择 AI 阵营"
+            : "选择自己的阵营";
     select.setAttribute("aria-label", editingAI ? "选择 AI 阵营" : "选择自己的阵营");
-    select.onchange = () => editingAI
-      ? Net.request("configure_ai", { seat: member.seat, characterFaction: select.value, config: {} })
-      : Net.request("set_faction", { faction: select.value });
+    select.onchange = () =>
+      editingAI
+        ? Net.request("configure_ai", {
+            seat: member.seat,
+            characterFaction: select.value,
+            config: {},
+          })
+        : Net.request("set_faction", { faction: select.value });
     return select;
   }
   function drawMap(map) {

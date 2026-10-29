@@ -16,6 +16,7 @@ function createRoomEngine({
   rooms = new Map(),
   send,
   onRooms = () => {},
+  onHostileDefeat = () => {},
   getRewardMultipliers = () => ({ experience: 1, money: 1, supplies: 1, technology: 1 }),
   randomId,
   randomSeed,
@@ -980,6 +981,7 @@ function createRoomEngine({
     room.economyDefeats = new Set();
     room.lossExemptMembers = new Set();
     room.economySettled = false;
+    room.teamDestroyedCost = [0, 0];
     room.pilotAwards = [];
     room.pilotParticipants = new Set();
     room.pilotDamage = {};
@@ -1227,6 +1229,12 @@ function createRoomEngine({
     room.economyDefeats ||= new Set();
     if (room.economyDefeats.has(to.id)) return;
     room.economyDefeats.add(to.id);
+    // Authoritative hostile kills count once for the whole team, including AI
+    // kills and carried units. Assists and friendly fire never add another copy.
+    if (from && from.team !== to.team) {
+      room.teamDestroyedCost ||= [0, 0];
+      room.teamDestroyedCost[from.team] += defeatedModel.cost;
+    }
     const killer = from && room.seats[G.ownerOf(from)];
     const price = room.battleRoster?.[to.id]?.money ?? roomBattleEconomy().price(to.model);
     const supplyPrice =
@@ -1284,6 +1292,8 @@ function createRoomEngine({
         supplies,
       });
     }
+    const activityParticipants =
+      !killer?.bot && killer?.activityProfileId ? [killer.activityProfileId] : [];
     if (killer) award(killer, G.modelOf(from).faction);
     for (const [memberId, contribution] of Object.entries(room.playerDamage?.[to.id] || {})) {
       if (memberId === killer?.id || contribution.damage < G.modelOf(to).hp * 0.25) continue;
@@ -1293,7 +1303,15 @@ function createRoomEngine({
         (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
       )[0]?.[0];
       award(owner, faction, true);
+      if (!owner.bot && G.seatTeam(owner.seat) !== to.team && owner.activityProfileId)
+        activityParticipants.push(owner.activityProfileId);
     }
+    if (from && from.team !== to.team && !room.replay && activityParticipants.length)
+      onHostileDefeat({
+        id: room.matchId + ":" + to.id,
+        cost: defeatedModel.cost,
+        profileIds: activityParticipants,
+      });
     if (room.playerDamage) delete room.playerDamage[to.id];
   }
   function settleBattleEconomy(room) {
@@ -1333,16 +1351,16 @@ function createRoomEngine({
         room.settings.mode,
       );
       const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
-      // A manually assigned preset's "unlimited" allowance must not inflate the victory bonus.
-      const limit = room.settings.costLimit;
+      const destroyedCost = room.teamDestroyedCost?.[G.seatTeam(player.seat)] || 0;
       const outcomeRate = won ? 1 : 0.5;
       (room.economyAwards ||= []).push({
         id: randomId(),
         matchId: room.matchId,
         memberId: player.id,
         kind: "result",
-        money: Math.floor(limit * 2.5 * outcomeRate * rate * battleRate * bonus.money),
-        supplies: Math.floor(limit * 5 * outcomeRate * rate * battleRate * bonus.supplies),
+        destroyedCost,
+        money: Math.floor(destroyedCost * 1.5 * outcomeRate * rate * battleRate * bonus.money),
+        supplies: Math.floor(destroyedCost * 3 * outcomeRate * rate * battleRate * bonus.supplies),
         losses,
         lostUnits,
       });
@@ -1728,6 +1746,7 @@ function createRoomEngine({
     room.economyDefeats = new Set();
     room.lossExemptMembers = new Set();
     room.economySettled = false;
+    room.teamDestroyedCost = [0, 0];
     room.pilotAwards = [];
     room.pilotParticipants = new Set();
     room.pilotDamage = {};
@@ -1801,10 +1820,10 @@ function createRoomEngine({
         {
           memberId: room.seats[G.ownerOf(actor)]?.id,
           bot: !!room.seats[G.ownerOf(actor)]?.bot,
-          unitId: G.models[actor.model].prefabId,
+          unitId: actor.inventoryUnitId || G.models[actor.model].prefabId,
           model: actor.model,
-          money: roomBattleEconomy().price(actor.model),
-          supplies: roomBattleEconomy().price(actor.model, "supplies"),
+          money: roomBattleEconomy().price(actor.inventoryModel || actor.model),
+          supplies: roomBattleEconomy().price(actor.inventoryModel || actor.model, "supplies"),
           team: actor.team,
           performance: actor.performance ?? 1,
         },
@@ -3441,6 +3460,7 @@ function createRoomEngine({
         id: randomId(),
         name: displayName || "玩家" + room.nextPlayerNumber++,
         characterFaction,
+        activityProfileId: ws.activityProfileId || null,
         researched: roomDevelopment().normalizeResearch(msg.researched),
         inventory: G.normalizeInventory(msg.inventory),
         seat,

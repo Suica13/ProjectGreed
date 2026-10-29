@@ -2516,5 +2516,11 @@
       "fireMode": "independent",
       "name": "腕部机枪"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

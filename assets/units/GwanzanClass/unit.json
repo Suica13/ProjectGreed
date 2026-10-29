@@ -573,7 +573,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 81.0,
+      "hit": 72.0,
       "en": 240.0,
       "sourceName": "GwanzanClass_Turret_BeamCannon",
       "sourceHit": 90.0,
@@ -813,7 +813,7 @@
       "category": "cannon",
       "actionCost": 3,
       "shipHitBeforeReduction": 90.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     }
   },
   "mechanics": [
@@ -973,5 +973,11 @@
       "source": "Units/CommonUnit/Hangar/Hangar_X6.ini",
       "sourceUnit": "Hangar_X6"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

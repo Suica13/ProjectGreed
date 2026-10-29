@@ -121,8 +121,8 @@ test("native charge anchor follows the rendered actor, firing audio is separate 
   context.fx.draw(ctx, 2200, position, 40, actor);
   context.fx.draw(ctx, 2300, position, 40, actor);
   assert.deepEqual(sounds, ["native-charge", "native-fire"]);
-  assert.ok(images.length >= 6);
-  // Range changes add middle tiles; they must never change the pixel scale.
+  assert.equal(images.length, 6);
+  // Hit range changes must not change any native section geometry.
   const first = images.slice(images.length / 2);
   images.length = 0;
   context.fx.reset();
@@ -136,8 +136,10 @@ test("native charge anchor follows the rendered actor, firing audio is separate 
     elapsedSeconds: 2.2,
   });
   context.fx.draw(ctx, 0, position, 40, actor);
-  assert.ok(images.length > first.length);
-  const ratios = images.map((args) => args[7] / args[3]);
-  assert.ok(ratios.slice(1, -1).every((ratio) => Math.abs(ratio - ratios[1]) < 1e-9));
+  assert.equal(images.length, 3);
+  assert.deepEqual(
+    images.map((args) => args.slice(5)),
+    first.map((args) => args.slice(5)),
+  );
   assert.ok(images.every((args) => args[8] >= 315 * 0.5));
 });

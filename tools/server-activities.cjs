@@ -6,6 +6,7 @@ const fs = require("node:fs"),
 function createActivityService({ rules, send, storePath = null, now = Date.now }) {
   const online = new Map();
   const developmentTree = require("../shared/development-tree.json");
+  const aceMap = new Map(require("../shared/pilots.json").aces.map((p) => [p.id, p]));
   const unitMap = new Map(rules.catalog.prefabs.map((unit) => [unit.id, unit]));
   let state = { schemaVersion: 1, serverId: crypto.randomUUID(), players: {}, activities: [] };
   function save(next) {
@@ -45,6 +46,25 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
   }
   // Stable IDs install these defaults once on both new and existing servers.
   const defaults = [
+    {
+      id: "default-cima-kill-cost-20261029",
+      title: "全服累计击坠：西玛招募解锁",
+      text: "活动期间全服累计有效击坠达到10000 COST，参与有效击坠的玩家可领取西玛招募解锁奖励。",
+      mode: "cumulative_kill_cost",
+      startsAt: new Date(2026, 9, 29, 22).getTime(),
+      endsAt: new Date(2026, 9, 31, 6).getTime(),
+      targetCost: 10000,
+      progressCost: 0,
+      participants: {},
+      killReceipts: {},
+      rewards: {
+        money: 0,
+        supplies: 0,
+        inventory: {},
+        unlockUnits: [],
+        unlockAces: ["Pilot_ZEON_0079_N_ACE_CIA"],
+      },
+    },
     {
       id: "default-super-coal-20261028",
       title: "超级煤球真理部",
@@ -129,6 +149,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       supplies: value.supplies ?? 0,
       inventory: {},
       unlockUnits: [],
+      unlockAces: [],
     };
     if (
       ![rewards.money, rewards.supplies].every(
@@ -150,6 +171,11 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       if (!unit || !(developmentTree[unit.faction] || []).some((node) => node.unlocks.includes(id)))
         throw Error("单位没有可解锁科技：" + id);
       rewards.unlockUnits.push(id);
+    }
+    if (!Array.isArray(value.unlockAces ?? [])) throw Error("ACE解锁奖励格式无效");
+    for (const id of new Set(value.unlockAces || [])) {
+      if (!aceMap.has(id)) throw Error("ACE解锁奖励无效：" + id);
+      rewards.unlockAces.push(id);
     }
     return rewards;
   }
@@ -179,7 +205,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
     return result;
   }
   function deliver(next, activity, ids, occurrence = null) {
-    if (!activity.enabled || !inPeriod(activity)) return;
+    if (!activity.enabled || (!inPeriod(activity) && !activity.reachedAt)) return;
     for (const id of ids) {
       const player = next.players[id];
       if (
@@ -229,7 +255,11 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
     if (!player) return;
     // Activity definitions are persistent listings, independent of this cycle's reward mail.
     const activities = state.activities
-      .filter((activity) => loginModes.has(activity.mode) || activity.mode === "battle_bonus")
+      .filter(
+        (activity) =>
+          loginModes.has(activity.mode) ||
+          ["battle_bonus", "cumulative_kill_cost"].includes(activity.mode),
+      )
       .map((activity) => ({
         id: activity.id,
         mode: activity.mode,
@@ -249,6 +279,14 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
                   ? loginDate(now(), activity.mode === "weekly_login")
                   : null),
           )?.confirmedAt ?? null,
+        ...(activity.mode === "cumulative_kill_cost"
+          ? {
+              targetCost: activity.targetCost,
+              progressCost: activity.progressCost || 0,
+              participated: !!activity.participants?.[ws.activityProfileId],
+              reachedAt: activity.reachedAt ?? null,
+            }
+          : {}),
         ...(activity.multipliers ? { multipliers: activity.multipliers } : {}),
         status: !activity.enabled
           ? "paused"
@@ -276,6 +314,34 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       mail: player.mail.filter((item) => item.deletedAt == null),
       activities,
     });
+  }
+  // Only the authoritative room engine supplies kills. Persistent receipts prevent
+  // replay/retry/restart double counting; one target counts once for the whole server.
+  function recordKill({ id, cost, profileIds }) {
+    if (typeof id !== "string" || !Number.isSafeInteger(cost) || cost < 1) return;
+    const ids = [...new Set(profileIds || [])].filter((id) => Object.hasOwn(state.players, id));
+    if (
+      !ids.length ||
+      !state.activities.some(
+        (a) =>
+          a.mode === "cumulative_kill_cost" && a.enabled && inPeriod(a) && !a.killReceipts?.[id],
+      )
+    )
+      return;
+    edit((next) => {
+      for (const a of next.activities) {
+        if (a.mode !== "cumulative_kill_cost" || !a.enabled || !inPeriod(a) || a.killReceipts?.[id])
+          continue;
+        (a.killReceipts ||= {})[id] = now();
+        a.progressCost = (a.progressCost || 0) + cost;
+        for (const playerId of ids) (a.participants ||= {})[playerId] = true;
+        if (a.progressCost >= a.targetCost) {
+          a.reachedAt ??= now();
+          deliver(next, a, Object.keys(a.participants));
+        }
+      }
+    });
+    broadcast();
   }
   function broadcast() {
     for (const clients of online.values()) for (const ws of clients) mailbox(ws);
@@ -429,6 +495,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
         "online_now",
         "online_window",
         "battle_bonus",
+        "cumulative_kill_cost",
         ...loginModes,
       ].includes(value.mode)
     )
@@ -452,10 +519,27 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
     };
     Object.assign(
       activity,
-      schedule(value, ["online_window", "battle_bonus"].includes(value.mode)),
+      schedule(
+        value,
+        ["online_window", "battle_bonus", "cumulative_kill_cost"].includes(value.mode),
+      ),
     );
     if (value.mode === "battle_bonus")
       activity.multipliers = validateMultipliers(value.multipliers);
+    if (value.mode === "cumulative_kill_cost") {
+      if (
+        !Number.isSafeInteger(value.targetCost) ||
+        value.targetCost < 1 ||
+        value.targetCost > 1000000000
+      )
+        throw Error("累计击坠目标须为1至10亿的整数");
+      Object.assign(activity, {
+        targetCost: value.targetCost,
+        progressCost: 0,
+        participants: {},
+        killReceipts: {},
+      });
+    }
     if (value.mode === "cumulative_login") {
       if (!Number.isSafeInteger(value.loginDays) || value.loginDays < 1 || value.loginDays > 10000)
         throw Error("累计登录天数须为1至10000的整数");
@@ -490,6 +574,12 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
         name: player.name,
         online: online.has(id),
       })),
+      aces: [...aceMap.values()].map((p) => ({
+        id: p.id,
+        name: p.name,
+        faction: p.faction,
+        era: p.era || "0079",
+      })),
       units: [...unitMap.values()].map((unit) => ({
         id: unit.id,
         name: unit.code + " " + unit.name,
@@ -515,7 +605,11 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       if (Object.hasOwn(settings, "startsAt") || Object.hasOwn(settings, "endsAt"))
         Object.assign(
           activity,
-          schedule(settings, ["online_window", "battle_bonus"].includes(activity.mode), true),
+          schedule(
+            settings,
+            ["online_window", "battle_bonus", "cumulative_kill_cost"].includes(activity.mode),
+            true,
+          ),
         );
       if (activity.mode === "cumulative_login" && Object.hasOwn(settings, "loginDays")) {
         if (
@@ -528,6 +622,19 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       }
       if (activity.mode === "battle_bonus" && Object.hasOwn(settings, "multipliers"))
         activity.multipliers = validateMultipliers(settings.multipliers);
+      if (activity.mode === "cumulative_kill_cost" && Object.hasOwn(settings, "targetCost")) {
+        if (
+          !Number.isSafeInteger(settings.targetCost) ||
+          settings.targetCost < 1 ||
+          settings.targetCost > 1000000000
+        )
+          throw Error("累计击坠目标无效");
+        activity.targetCost = settings.targetCost;
+        if ((activity.progressCost || 0) >= activity.targetCost) {
+          activity.reachedAt ??= now();
+          deliver(next, activity, Object.keys(activity.participants || {}));
+        }
+      }
       activity.title = title.trim();
       activity.text = text;
       activity.updatedAt = now();
@@ -630,6 +737,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
   }
   return {
     identify,
+    recordKill,
     receive,
     disconnect,
     tick,

@@ -7146,7 +7146,7 @@
     {
       "id": "Irradiation",
       "status": "adapted",
-      "name": "光束照射：方向射线、蓄力、逐机命中与长度自适应贴图"
+      "name": "光束照射：方向射线、蓄力、逐机命中；原版固定演出与判定射程独立"
     }
   ],
   "weaponKits": [
@@ -7183,8 +7183,8 @@
       "consumeAction": false,
       "baseHit": 60,
       "damageComponents": {
-        "beam": 53275.1220703125,
-        "beamAP": 26637.56103515625
+        "beam": 21325,
+        "beamAP": 10650
       },
       "nativeTotalDamage": 1598253.662109375,
       "nativeRepeatMultiplier": 3.6996612548828125,
@@ -7258,7 +7258,7 @@
           "name": "照射ビーム"
         }
       },
-      "description": "选择方向照射10格；消耗5 AP与50%最大EN，冷却3个己方回合。基础命中60%，对沿途每台单位（含友军）判定一次，基础伤害为原MOD完整伤害的1/20。"
+      "description": "基础伤害 31,975 × 1 = 31,975；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。"
     }
   ],
   "nativeCombatRevision": 1,
@@ -7279,6 +7279,7 @@
       "unitId": "MA_08_DZL",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_DZL",
       "unlockUnits": [
         "MA_08"
       ],
@@ -7289,5 +7290,18 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_DZL",
+      "unitId": "MA_08_DZL",
+      "kitMap": {
+        "standard": "standard"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

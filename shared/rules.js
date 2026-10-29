@@ -7,6 +7,10 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const damagePolicy =
+    typeof WeaponSequence !== "undefined" ? WeaponSequence : require("./weapon-sequence.js");
+  const roundDamage = damagePolicy.roundDamage;
+
   const development =
     typeof Development !== "undefined" ? Development : require("./development.js");
   const parts = typeof UnitParts !== "undefined" ? UnitParts : require("./unit-parts.js");
@@ -85,10 +89,21 @@ const Tactics = (() => {
   const formationWeight = (model) => (model.ship ? 4 : model.unitTags?.includes("MS") ? 2 : 1);
   const formationPoints = (entries) =>
     entries.reduce((total, entry) => {
-      const model = models[entry.unitId + "__" + entry.kitId];
+      const model = formationModel(entry);
       return total + (model ? formationWeight(model) : 0);
     }, 0);
   // 编组与房间的单位限制均按占用点数计算。
+  // Canonical formation entries always retain the purchased hull and kit. The
+  // assigned ACE selects a presentation/combat form without creating inventory.
+  function formationModelId(entry) {
+    const baseId = entry.unitId + "__" + entry.kitId;
+    const form = models[baseId]?.pilotForms?.find((f) => f.pilotId === entry.customPilot?.aceId);
+    const target = form && form.unitId + "__" + form.kitMap[entry.kitId];
+    return target && models[target] ? target : baseId;
+  }
+  function formationModel(entry) {
+    return models[formationModelId(entry)];
+  }
   function validateFormation(
     entries,
     maxCost = catalog.formation.maxCost,
@@ -113,7 +128,7 @@ const Tactics = (() => {
       const customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null;
       if (customPilot?.needsRecruitment) throw Error("该ACE需要重新招募后才能配属");
       if (!customPilot && pilots.aceProfile(entry.pilotId)) throw Error("请先招募并配属ACE驾驶员");
-      cost += model.cost + pilots.cost(customPilot);
+      cost += formationModel({ ...entry, customPilot }).cost + pilots.cost(customPilot);
       const customName = normalizeUnitName(entry.customName);
       const pilotId = customPilot?.id || pilots.validate(entry.pilotId, model);
       if (pilotId && assignedPilots.has(pilotId)) throw Error("同一驾驶员不能配属多台单位");
@@ -229,9 +244,9 @@ const Tactics = (() => {
       mode: "regular",
       fogMode: "full",
       mapId: catalog.defaultMap,
-      costLimit: 900,
+      costLimit: 1000,
       unitLimit: 12,
-      unitCostLimit: 250,
+      unitCostLimit: 200,
       shareAlliedUnits: false,
       ...validateTagRestrictions(),
       teamRestrictions: [validateTagRestrictions(), validateTagRestrictions()],
@@ -325,14 +340,24 @@ const Tactics = (() => {
     unitLimit = catalog.formation.maxUnits,
   ) {
     const clean = validateFormation(entries, Infinity, catalog.formation.maxUnits);
-    const costs = clean.map(
-      (entry) => models[entry.unitId + "__" + entry.kitId].cost + pilots.cost(entry.customPilot),
-    );
+    const costs = clean.map((entry) => formationModel(entry).cost + pilots.cost(entry.customPilot));
     const totalCost = costs.reduce((sum, value) => sum + value, 0);
     const reasons = {};
     clean.forEach((entry, index) => {
-      const reason = restrictionReason(models[entry.unitId + "__" + entry.kitId], restrictions);
+      const reason =
+        restrictionReason(models[entry.unitId + "__" + entry.kitId], restrictions) ||
+        restrictionReason(formationModel(entry), { ...restrictions, characterFaction: null });
       if (reason) reasons[index] = reason;
+      if (
+        formationModel(entry).requiredPilotId &&
+        formationModel(entry).requiredPilotId !== entry.customPilot?.aceId
+      )
+        reasons[index] = "pilot_required";
+      if (
+        restrictions.characterFaction &&
+        !pilots.canAssign(entry.customPilot, restrictions.characterFaction)
+      )
+        reasons[index] = "pilot_faction";
     });
     if (restrictions.inventory !== undefined) {
       const inventory = normalizeInventory(restrictions.inventory);
@@ -349,7 +374,7 @@ const Tactics = (() => {
     let occupied = 0;
     clean.forEach((entry, index) => {
       if (reasons[index]) return;
-      const weight = formationWeight(models[entry.unitId + "__" + entry.kitId]);
+      const weight = formationWeight(formationModel(entry));
       if (occupied + weight > unitLimit) reasons[index] = "count";
       else occupied += weight;
     });
@@ -444,7 +469,7 @@ const Tactics = (() => {
       return Math.max(
         maxCostLimit,
         player.formationPreset.units.reduce(
-          (sum, e) => sum + models[e.unitId + "__" + e.kitId].cost + pilots.cost(e.customPilot),
+          (sum, e) => sum + formationModel(e).cost + pilots.cost(e.customPilot),
           0,
         ),
       );
@@ -537,6 +562,7 @@ const Tactics = (() => {
     const choices = Object.values(models).filter(
         (model) =>
           !model.formOnly &&
+          !model.requiredPilotId &&
           !restrictionReason(model, { ...restrictions, environment }) &&
           adaptation(model) > 0 &&
           !(environment === "space" && infantry(model) && adaptation(model) < 100) &&
@@ -600,19 +626,11 @@ const Tactics = (() => {
           reserveMinimum = Math.max(reserveMinimum, flexibleMinimum);
       }
       const placementCache = new Map();
-      const commanderCount = entries.filter((entry) =>
-        commander(models[entry.unitId + "__" + entry.kitId]),
-      ).length;
-      const nonShipCount = entries.filter(
-        (entry) => !models[entry.unitId + "__" + entry.kitId].ship,
-      ).length;
+      const commanderCount = entries.filter((entry) => commander(formationModel(entry))).length;
+      const nonShipCount = entries.filter((entry) => !formationModel(entry).ship).length;
       const commandAllowance = commandAllowances[Math.floor((nonShipCount + 1) / 3)] || 0;
-      const infantryCount = entries.filter((entry) =>
-        infantry(models[entry.unitId + "__" + entry.kitId]),
-      ).length;
-      const supportCount = entries.filter((entry) =>
-        support(models[entry.unitId + "__" + entry.kitId]),
-      ).length;
+      const infantryCount = entries.filter((entry) => infantry(formationModel(entry))).length;
+      const supportCount = entries.filter((entry) => support(formationModel(entry))).length;
       const combatCount = entries.length - supportCount;
       const legal = choices.filter((model) => {
         // Keep at least three combat platforms per supply unit; never spend the army on logistics.
@@ -646,7 +664,7 @@ const Tactics = (() => {
           );
           const sharedAreaSize = areas.reduce((sum, area) => sum + area.width * area.height, 0);
           const size = (entry) => {
-            const f = models[entry.unitId + "__" + entry.kitId].footprint;
+            const f = formationModel(entry).footprint;
             return f ? f.width * f.height : 1;
           };
           const candidate = { unitId: model.prefabId, kitId: model.kitId };
@@ -676,9 +694,7 @@ const Tactics = (() => {
       let preferred = legal.filter(
         (model) => adaptation(model) >= Math.min(100, bestLegalAdaptation),
       );
-      const ships = entries.filter(
-        (entry) => models[entry.unitId + "__" + entry.kitId].ship,
-      ).length;
+      const ships = entries.filter((entry) => formationModel(entry).ship).length;
       const kind = preferred.filter((model) => !!model.ship === ships < desiredShips);
       if (kind.length) preferred = kind;
       if (ships < desiredShips) {
@@ -690,7 +706,7 @@ const Tactics = (() => {
       // Build a combat-MS backbone when the legal pool supports it. Otherwise
       // one-point aircraft/tanks at the target price can crowd out every MS.
       const frontlinePoints = entries.reduce((sum, entry) => {
-        const model = models[entry.unitId + "__" + entry.kitId];
+        const model = formationModel(entry);
         return sum + (frontlineMS(model) ? formationWeight(model) : 0);
       }, 0);
       const frontline = preferred.filter(frontlineMS);
@@ -744,14 +760,14 @@ const Tactics = (() => {
     }
     // Assign existing squad entries to compatible hangars; never create free passengers.
     const hangars = entries.flatMap((entry, carrierIndex) =>
-      (models[entry.unitId + "__" + entry.kitId].hangars || []).map((h) => ({
+      (formationModel(entry).hangars || []).map((h) => ({
         carrierIndex,
         hangar: h,
         remaining: h.capacity,
       })),
     );
     for (const [index, entry] of entries.entries()) {
-      const model = models[entry.unitId + "__" + entry.kitId];
+      const model = formationModel(entry);
       if (model.hangars?.length || !model.transport) continue;
       const compatible = hangars.filter(
         (slot) =>
@@ -790,6 +806,12 @@ const Tactics = (() => {
         : weapon.en;
     if (attackMultiplier === previousAttack && en === weapon.en) return weapon;
     const damageRatio = attackMultiplier / previousAttack;
+    // Keep intermediate modifiers exact; round the public base numbers and the
+    // final protected hit, rather than rounding every buff independently.
+    const scaledDamage = (components) =>
+      Object.fromEntries(
+        Object.entries(components).map(([key, value]) => [key, value * damageRatio]),
+      );
     return {
       ...weapon,
       en,
@@ -800,28 +822,41 @@ const Tactics = (() => {
       get description() {
         return weapon.description;
       },
-      damagePerShot: weapon.damagePerShot * damageRatio,
-      damage: weapon.damage * damageRatio,
+      damagePerShot: roundDamage(weapon.damagePerShot * damageRatio),
+      damage: weapon.attack.strikes.reduce(
+        (sum, step) =>
+          sum +
+          roundDamage(
+            Object.values(step.damageComponents || weapon.damageComponents).reduce(
+              (n, value) => n + value,
+              0,
+            ) *
+              damageRatio *
+              (step.damageMultiplier ?? 1),
+          ),
+        0,
+      ),
       hit: weapon.hit,
       attack: {
         ...weapon.attack,
+        steps: (weapon.attack.steps || []).map((step) =>
+          step.shots
+            ? {
+                ...step,
+                damageComponents: scaledDamage(step.damageComponents || weapon.damageComponents),
+              }
+            : step,
+        ),
         strikes: weapon.attack.strikes.map((step) => ({
           ...step,
           ...(step.damageComponents
             ? {
-                damageComponents: Object.fromEntries(
-                  Object.entries(step.damageComponents).map(([key, value]) => [
-                    key,
-                    value * damageRatio,
-                  ]),
-                ),
+                damageComponents: scaledDamage(step.damageComponents),
               }
             : {}),
         })),
       },
-      damageComponents: Object.fromEntries(
-        Object.entries(weapon.damageComponents).map(([key, value]) => [key, value * damageRatio]),
-      ),
+      damageComponents: scaledDamage(weapon.damageComponents),
     };
   }
   const scaledModels = new WeakMap();
@@ -874,6 +909,8 @@ const Tactics = (() => {
         mobility: base.mobility * modifiers.reaction,
         accuracy: base.accuracy * modifiers.accuracy,
         pilotModifiers: modifiers,
+        pilotExperienceMultiplier:
+          (base.pilotExperienceMultiplier ?? 1) * pilots.experienceMultiplier(unit),
       });
     }
     return variants.get(pilot);
@@ -1057,6 +1094,7 @@ const Tactics = (() => {
     return result;
   }
   const skills = skillModule.create({
+    pilots,
     cells,
     sensors,
     models,
@@ -1267,7 +1305,7 @@ const Tactics = (() => {
       .filter(({ entry }) => !entry.preload)
       .sort((a, b) => {
         const size = (entry) => {
-          const f = models[entry.unitId + "__" + entry.kitId].footprint;
+          const f = formationModel(entry).footprint;
           return f ? f.width * f.height : 1;
         };
         return size(b.entry) - size(a.entry) || a.i - b.i;
@@ -1347,8 +1385,18 @@ const Tactics = (() => {
       placements.forEach(({ entry, i, position, heading }) => {
         if (restrictionReason(models[entry.unitId + "__" + entry.kitId], rulesForSeat(seat)))
           throw Error("编组包含不被允许的单位");
+        if (
+          rulesForSeat(seat).characterFaction &&
+          !pilots.canAssign(entry.customPilot, rulesForSeat(seat).characterFaction)
+        )
+          throw Error("ACE驾驶员与编组阵营不匹配");
+        if (
+          formationModel(entry).requiredPilotId &&
+          formationModel(entry).requiredPilotId !== entry.customPilot?.aceId
+        )
+          throw Error("该机体需要配属对应ACE驾驶员");
         const team = seatTeam(seat);
-        const model = entry.unitId + "__" + entry.kitId;
+        const model = formationModelId(entry);
         const performance = settings.performances?.[seat] ?? 1;
         if (!armyPercentages.some((percent) => percent / 100 === performance))
           throw Error("性能倍率无效");
@@ -1374,6 +1422,8 @@ const Tactics = (() => {
             : {}),
           environment: map.environment || "ground",
           model,
+          inventoryUnitId: entry.unitId,
+          inventoryModel: entry.unitId + "__" + entry.kitId,
           pilot,
           ...(entry.customName ? { customName: entry.customName } : {}),
           performance,
@@ -2205,25 +2255,25 @@ const Tactics = (() => {
       const multiplier = strike.damageMultiplier ?? 1,
         normal = { absorbed: 0 },
         blocked = { absorbed: 0 };
-      damage += Math.round(
+      damage += roundDamage(
         protectedDamage(defender.defenses, multiplier, 1, fieldLeft > 0, normal),
       );
-      fieldLeft = Math.max(floor, fieldLeft - Math.round(normal.absorbed));
+      fieldLeft = Math.max(floor, fieldLeft - roundDamage(normal.absorbed));
       const active = blockedFieldLeft > 0,
         coverage = shieldLeft > 0 ? defender.shield.coverage : 0;
       const required =
         coverage > 0
-          ? Math.round(protectedDamage(defender.shield.defenses, multiplier, coverage, active))
+          ? roundDamage(protectedDamage(defender.shield.defenses, multiplier, coverage, active))
           : 0;
       const absorbedShare = coverage * (required > 0 ? Math.min(1, shieldLeft / required) : 1);
       const loss = Math.min(shieldLeft, required);
       shieldDamage += loss;
       shieldLeft -= loss;
-      blockedDamage += Math.round(
+      blockedDamage += roundDamage(
         protectedDamage(defender.defenses, multiplier, 1 - absorbedShare, active),
       );
       if (active) protectedDamage(defender.defenses, multiplier, 1, active, blocked);
-      blockedFieldLeft = Math.max(floor, blockedFieldLeft - Math.round(blocked.absorbed));
+      blockedFieldLeft = Math.max(floor, blockedFieldLeft - roundDamage(blocked.absorbed));
     }
     return {
       hit,
@@ -2651,7 +2701,7 @@ const Tactics = (() => {
         resistance = Math.max(0, Math.min(100, m.defenses.sp?.percent || 0));
       const damage = Math.min(
         u.hp,
-        Math.round(((m.hp * burn.hpPercent) / 100) * (1 - resistance / 100)),
+        roundDamage(((m.hp * burn.hpPercent) / 100) * (1 - resistance / 100)),
       );
       const before = u.hp;
       u.hp -= damage;
@@ -2681,7 +2731,8 @@ const Tactics = (() => {
         m = modelOf(u);
       const forced = !!u.brokenParts?.head;
       if (!forced) {
-        u.hp = Math.max(0, u.hp - Math.round((m.hp * active.hpDrainPercent) / 100));
+        if (!(active.skillId === "EXAM" && pilots.hasPassive(u, "Pilot_ExamPilot_Trigger")))
+          u.hp = Math.max(0, u.hp - roundDamage((m.hp * active.hpDrainPercent) / 100));
         u.en = Math.max(0, u.en - (m.en * active.enDrainPercent) / 100);
         active.remaining--;
       }
@@ -2700,7 +2751,7 @@ const Tactics = (() => {
       const active = u.overBoost;
       if (g.round > active.startedRound) {
         const maximum = performanceModelOf(u).hp;
-        u.hp = Math.max(0, u.hp - Math.round((maximum * active.hpDrainPercent) / 100));
+        u.hp = Math.max(0, u.hp - roundDamage((maximum * active.hpDrainPercent) / 100));
         g.turnEffects.push({
           type: "overboost",
           unitId: u.id,
@@ -2735,6 +2786,7 @@ const Tactics = (() => {
     if (!teamsAlive[0] || !teamsAlive[1]) g.winner = teamsAlive[0] ? 0 : 1;
     g.team = 1 - g.team;
     g.round++;
+    skills.tickPilotBuffs(g);
     for (const u of g.units) if (u.burning?.expiresRound <= g.round) delete u.burning;
     g.visionAreas = (g.visionAreas || []).filter((area) => area.expiresRound > g.round);
     g.minovskyFields = activeMinovskyFields(g);
@@ -3058,7 +3110,10 @@ const Tactics = (() => {
     H,
     models,
     catalog,
+    roundDamage,
     validateFormation,
+    formationModel,
+    formationModelId,
     formationWeight,
     formationPoints,
     pilots,

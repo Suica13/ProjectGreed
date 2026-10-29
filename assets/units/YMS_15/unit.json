@@ -1617,6 +1617,7 @@
       "unitId": "YMS_15_MQVCustom",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_MQV",
       "unlockUnits": [
         "YMS_15"
       ],
@@ -1627,5 +1628,18 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_MQV",
+      "unitId": "YMS_15_MQVCustom",
+      "kitMap": {
+        "standard": "standard"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

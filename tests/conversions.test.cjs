@@ -5,6 +5,11 @@ const G = require("../shared/rules.js"),
 const entry = (id) => ({
   unitId: id,
   kitId: Object.values(G.models).find((m) => m.prefabId === id).kitId,
+  ...(G.catalog.prefabs.find((p) => p.id === id)?.requiredPilotId
+    ? {
+        customPilot: G.pilots.createAce(G.catalog.prefabs.find((p) => p.id === id).requiredPilotId),
+      }
+    : {}),
 });
 function pair(id) {
   const g = G.create(false, 1, [[entry(id)], [entry("RGM_79")]], false, {
@@ -221,7 +226,7 @@ test("EXAM and HADES drain 25 percent maximum HP at the end of their own turn", 
       maximum = G.modelOf(u).hp;
     assert.equal(u.overdrive.hpDrainPercent, 25, base.id);
     G.end(g);
-    assert.equal(u.hp, before - Math.round(maximum * 0.25), base.id);
+    assert.equal(u.hp, before - (skill.id === "EXAM" && G.pilots.hasPassive(u,"Pilot_ExamPilot_Trigger") ? 0 : G.roundDamage(maximum * 0.25)), base.id);
     assert.equal(u.overdrive.remaining, skill.duration - 1);
   }
 });

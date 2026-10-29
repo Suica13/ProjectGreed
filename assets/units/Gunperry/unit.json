@@ -648,5 +648,11 @@
       "source": "Units/CommonUnit/Hangar/Hangar_X4.ini",
       "sourceUnit": "Hangar_X4"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

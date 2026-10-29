@@ -10,6 +10,8 @@ const Development = (() => {
     ZEON: ["Tech_ZEON_0079_BaseTech"],
   };
   const unitCache = new Map();
+  const aces =
+    (typeof PILOT_DATA !== "undefined" ? PILOT_DATA : require("./pilots.json")).aces || [];
   const progressKey = "projectgreed.developmentProgress.v1";
   let progress = { points: { EFSF: 0, ZEON: 0 }, claimed: {} };
   if (typeof localStorage !== "undefined") {
@@ -35,7 +37,10 @@ const Development = (() => {
           if (requested.has(node.id) && node.requires.every((id) => active.has(id)))
             active.add(node.id);
       result[faction] = [...active];
-      const knownUnits = new Set(nodes(faction).flatMap((node) => node.unlocks));
+      const knownUnits = new Set([
+        ...nodes(faction).flatMap((node) => node.unlocks),
+        ...aces.filter((p) => p.faction === faction).map((p) => p.id),
+      ]);
       result.units[faction] = [
         ...new Set(Array.isArray(value?.units?.[faction]) ? value.units[faction] : []),
       ].filter((id) => knownUnits.has(id));
@@ -68,7 +73,10 @@ const Development = (() => {
     const researched = normalizeResearch(progress.researched);
     if (
       !researched.units[faction] ||
-      !nodes(faction).some((node) => node.unlocks.includes(unitId)) ||
+      !(
+        nodes(faction).some((node) => node.unlocks.includes(unitId)) ||
+        aces.some((p) => p.id === unitId && p.faction === faction)
+      ) ||
       researched.units[faction].includes(unitId)
     )
       return false;
@@ -82,12 +90,14 @@ const Development = (() => {
   }
   function receiveActivity(award) {
     const next = exportProgress();
-    for (const id of award.unlockUnits || []) {
-      const faction = ["EFSF","ZEON"].find(group=>nodes(group).some(node=>node.unlocks.includes(id)));
-      if (!faction) throw Error("活动开发奖励无效："+id);
+    for (const id of [...(award.unlockUnits || []), ...(award.unlockAces || [])]) {
+      const faction =
+        aces.find((p) => p.id === id)?.faction ||
+        ["EFSF", "ZEON"].find((group) => nodes(group).some((node) => node.unlocks.includes(id)));
+      if (!faction) throw Error("活动开发奖励无效：" + id);
       if (!next.researched.units[faction].includes(id)) next.researched.units[faction].push(id);
     }
-    if (!economy.creditActivity(award,[[progressKey,JSON.stringify(next)]])) return false;
+    if (!economy.creditActivity(award, [[progressKey, JSON.stringify(next)]])) return false;
     progress = next;
     unitCache.clear();
     if (typeof window !== "undefined") window.dispatchEvent(new Event("development-changed"));
@@ -110,6 +120,12 @@ const Development = (() => {
     return unitCache.get(faction);
   }
   function allows(faction, prefabId, researched) {
+    const ace = aces.find((p) => p.id === prefabId);
+    if (ace) {
+      if (faction !== "PMC" && !(ace.availableFactions || [ace.faction]).includes(faction))
+        return false;
+      faction = ace.faction;
+    }
     if (researched !== undefined) {
       const active = normalizeResearch(researched);
       return (faction === "PMC" ? ["EFSF", "ZEON"] : [faction]).some(

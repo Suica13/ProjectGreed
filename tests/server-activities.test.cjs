@@ -362,7 +362,13 @@ test("default limited battle bonus, separate multipliers, overlap, edits and ser
     supplies: 4,
     technology: 5,
   });
-  assert.deepEqual(added.rewards, { money: 0, supplies: 0, inventory: {}, unlockUnits: [] });
+  assert.deepEqual(added.rewards, {
+    money: 0,
+    supplies: 0,
+    inventory: {},
+    unlockUnits: [],
+    unlockAces: [],
+  });
   f.service.toggle(added.id, false);
   assert.equal(f.service.rewardMultipliers().experience, 2);
   f.service.updateCopy(event.id, event.title, event.text, {
@@ -548,4 +554,96 @@ test("accepted reward deletion persists per player, retains receipts and permits
       .at(-1)
       .mail.some((m) => m.activityId === "default-daily-login" && m.confirmedAt === null),
   );
+});
+
+test("cumulative kill COST persists, deduplicates targets, rewards only contributors and unlocks ACE once", (t) => {
+  const f = fixture(t),
+    a = {},
+    b = {},
+    c = {},
+    ia = identity(),
+    ib = identity(),
+    ic = identity();
+  f.service.identify(a, ia);
+  f.service.identify(b, ib);
+  f.service.identify(c, ic);
+  const ace = "Pilot_ZEON_0079_N_ACE_CIA";
+  const event = f.service.publish(
+    activity("cumulative_kill_cost", {
+      startsAt: new Date(1000).toISOString(),
+      endsAt: new Date(5000).toISOString(),
+      targetCost: 100,
+      rewards: { unlockAces: [ace] },
+    }),
+  );
+  f.service.recordKill({ id: "match:1", cost: 75, profileIds: [ia.id, ib.id] });
+  f.service.recordKill({ id: "match:1", cost: 75, profileIds: [ia.id] });
+  assert.equal(
+    f.service.adminSnapshot().activities.find((e) => e.id === event.id).progressCost,
+    75,
+  );
+  assert(
+    !f.frames
+      .get(a)
+      .at(-1)
+      .mail.some((m) => m.activityId === event.id),
+  );
+  f.service.disconnect(b);
+  f.restart();
+  f.service.identify(a, ia);
+  f.service.recordKill({ id: "match:2", cost: 25, profileIds: [ia.id] });
+  let listing = f.frames
+    .get(a)
+    .at(-1)
+    .activities.find((e) => e.id === event.id);
+  assert.equal(listing.progressCost, 100);
+  const mb = {};
+  f.service.identify(mb, ib);
+  const reward = f.frames
+    .get(mb)
+    .at(-1)
+    .mail.find((m) => m.activityId === event.id);
+  assert.deepEqual(reward.rewards.unlockAces, [ace]);
+  f.service.receive(mb, { type: "activity_claim", mailId: reward.id });
+  f.service.receive(mb, { type: "activity_ack", mailId: reward.id });
+  f.service.recordKill({ id: "match:3", cost: 25, profileIds: [ic.id] });
+  const mc = {};
+  f.service.identify(mc, ic);
+  assert(
+    f.frames
+      .get(mc)
+      .at(-1)
+      .mail.some((m) => m.activityId === event.id),
+  );
+  f.time(6000);
+  f.service.recordKill({ id: "late", cost: 100, profileIds: [ia.id] });
+  f.service.identify(a, ia);
+  listing = f.frames
+    .get(a)
+    .at(-1)
+    .activities.find((e) => e.id === event.id);
+  assert.equal(listing.progressCost, 125);
+  assert.equal(listing.status, "ended");
+  assert.equal(
+    f.frames
+      .get(a)
+      .at(-1)
+      .mail.filter((m) => m.activityId === event.id).length,
+    1,
+  );
+  assert.throws(() => f.service.publish(activity("cumulative_kill_cost", { targetCost: 0 })));
+  assert.throws(() =>
+    f.service.publish(activity("next_login", { rewards: { unlockAces: ["unknown"] } })),
+  );
+});
+
+test("Cima default event uses requested server-local period and a 10000 COST threshold", (t) => {
+  const f = fixture(t),
+    event = f.service
+      .adminSnapshot()
+      .activities.find((e) => e.id === "default-cima-kill-cost-20261029");
+  assert.equal(event.startsAt, new Date(2026, 9, 29, 22).getTime());
+  assert.equal(event.endsAt, new Date(2026, 9, 31, 6).getTime());
+  assert.equal(event.targetCost, 10000);
+  assert.deepEqual(event.rewards.unlockAces, ["Pilot_ZEON_0079_N_ACE_CIA"]);
 });

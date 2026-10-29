@@ -20,6 +20,18 @@ function scenario(config, check) {
     Object.assign(model.defenses, config.body || {});
     Object.assign(model.shield.defenses, config.shieldDefense || {});
     Object.assign(model.shield, { coverage: config.coverage ?? 0.5, blockChance: 1 });
+    const neutral = {
+      shooting: 100,
+      melee: 100,
+      defense: 100,
+      speed: 100,
+      accuracy: 100,
+      reaction: 100,
+      leadership: 100,
+      awakening: 0,
+    };
+    a.pilot = { stats: { ...neutral } };
+    b.pilot = { stats: { ...neutral } };
     Object.assign(a, { x: 2, y: 3 });
     Object.assign(b, { x: 4, y: 3, hp: 100000, shield: config.shield ?? 5000 });
     g.tiles[3][2] = g.tiles[3][4] = "plain";
@@ -77,7 +89,7 @@ test("hull flat and percentage defense apply to the remainder, separately for ev
     },
   );
   scenario({ body: { beam: { flat: 500, percent: 20 } }, stance: "defend" }, ({ event }) => {
-    assert.equal(event.damage, Math.round((3000 - 625) * 0.75 * 0.75));
+    assert.equal(event.damage, G.roundDamage((3000 - 625) * 0.75 * 0.75));
   });
 });
 test("insufficient shield durability spills the unabsorbed raw damage back before hull defense", () => {

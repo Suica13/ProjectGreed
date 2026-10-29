@@ -2341,6 +2341,7 @@
       "unitId": "RX_79_G_Ez8",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_EFSF_0079_N_ACE_SHR",
       "unlockUnits": [
         "RX_79_G"
       ],
@@ -2351,5 +2352,22 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_EFSF_0079_N_ACE_SHR",
+      "unitId": "RX_79_G_Ez8",
+      "kitMap": {
+        "machine_gun": "kit_1",
+        "bazooka": "kit_0",
+        "beam_rifle": "kit_2",
+        "cannon": "kit_3",
+        "missile_launcher": "kit_4"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

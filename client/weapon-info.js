@@ -90,8 +90,8 @@ const WeaponInfo = (() => {
           if (step.muzzleIndex !== undefined) parts.push("炮口 " + (step.muzzleIndex + 1));
           const damage = step.damageComponents || weapon.damageComponents || {};
           const multiplier = step.damageMultiplier ?? 1;
-          const channels = Object.entries(damage)
-            .map(([key, value]) => (componentLabels[key] || key) + " " + amount(value * multiplier))
+          const channels = Object.entries(WeaponSequence.roundComponents(damage, multiplier))
+            .map(([key, value]) => (componentLabels[key] || key) + " " + amount(value))
             .join(" + ");
           if (channels) parts.push("单发 " + channels);
           if (weapon.hitsPerShot > 1) parts.push("每发 " + weapon.hitsPerShot + " 段");
@@ -122,10 +122,11 @@ const WeaponInfo = (() => {
     let total = 0;
     for (const strike of strikes) {
       const components = strike.damageComponents || weapon.damageComponents;
-      const damage =
+      const damage = Rules.roundDamage(
         (components
           ? Object.values(components).reduce((sum, value) => sum + value, 0)
-          : weapon.damagePerShot || 0) * (strike.damageMultiplier ?? 1);
+          : weapon.damagePerShot || 0) * (strike.damageMultiplier ?? 1),
+      );
       const key = Number(damage.toFixed(6));
       groups.set(key, (groups.get(key) || 0) + 1);
       total += damage;

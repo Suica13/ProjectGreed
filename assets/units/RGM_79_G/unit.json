@@ -2112,5 +2112,12 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RGM_79_G_SPACE"
+    ]
+  }
 }

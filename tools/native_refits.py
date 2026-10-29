@@ -41,6 +41,7 @@ def apply(prefab, native=None):
         pilot = action.get('define.CustomRule_PilotCustomUnit') if 'PilotCustomUnit' in key else None
         options.append(dict(id=key, unitId=target,
             money=int(action['define.Money']), supplies=int(action['define.Resource']),
+            **({"pilotId":re.search(r"includes=['\"](Pilot_\w+)['\"]",pilot)[1]} if pilot and re.search(r"includes=['\"](Pilot_\w+)['\"]",pilot) else {}),
             unlockUnits=unlocks, blocked=bool(pilot) or not supported or 'false' in remainder,
             source=dict(file=prefab['source'], action=key, seconds=number(action.get("buildSpeed", 0)))))
     prefab['refits'] = options

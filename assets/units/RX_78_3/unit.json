@@ -2381,5 +2381,13 @@
         }
       ]
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_78_2"
+    ]
+  }
 }

@@ -1478,7 +1478,7 @@
     {
       "id": "Irradiation",
       "status": "adapted",
-      "name": "光束照射：方向射线、蓄力、逐机命中与长度自适应贴图"
+      "name": "光束照射：方向射线、蓄力、逐机命中；原版固定演出与判定射程独立"
     }
   ],
   "weaponKits": [
@@ -1514,8 +1514,8 @@
       "consumeAction": false,
       "baseHit": 60,
       "damageComponents": {
-        "beam": 35516.748046875,
-        "beamAP": 17758.3740234375
+        "beam": 14200,
+        "beamAP": 7100
       },
       "nativeTotalDamage": 1065502.44140625,
       "nativeRepeatMultiplier": 3.6996612548828125,
@@ -1589,7 +1589,7 @@
           "name": "照射ビーム"
         }
       },
-      "description": "选择方向照射10格；消耗5 AP与50%最大EN，冷却3个己方回合。基础命中60%，对沿途每台单位（含友军）判定一次，基础伤害为原MOD完整伤害的1/20。"
+      "description": "基础伤害 21,300 × 1 = 21,300；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。"
     },
     {
       "id": "EMP",
@@ -1621,5 +1621,11 @@
       "CanLoadInto"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

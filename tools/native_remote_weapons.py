@@ -81,6 +81,7 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
              'wired': ('有线浮游炮', 'Wired Remote Cannons', '有線サイコミュ砲'),
              'incom': ('INCOM有线炮', 'INCOM', 'インコム')}[control]
     steps, previous = [], 0
+    native_damage = payloads[0]["BeamDamage"]
     events=sorted((round(.7+cycle*1.2+index*.13,4),index) for cycle in range(2) for index in range(len(units)))
     for at,index in events:
         steps.append(dict(delay=round(at-previous,4),shots=1,muzzleIndex=index,
@@ -88,7 +89,7 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
         previous=at
     weapon = dict(sourceName=key, name=names[0], localization={lang: {'name': name} for lang,name in zip(('zh','en','ja'),names)},
         type='beam', category='remote', slot='secondary', min=1, max=6 if control=='funnel' else 4,
-        hit=payloads[0].get('WeaponAccuracy',85), en=values[key + '_EN'], actionCost=3, damagePerShot=1000, damageComponents={'beam':1000},
+        hit=payloads[0].get('WeaponAccuracy',85), en=values[key + '_EN'], actionCost=3, damagePerShot=native_damage, damageComponents={'beam':native_damage},
         hitsPerShot=1, clip=None, changeHeldWeapon=False, requiredParts=[],
         attack={'startAnimation':None,'steps':steps}, muzzle={'mounts':mounts},
         projectile={'texture':f'../../projectiles/Beam_2_{color}.png','scale':.65,'speed':85,
@@ -99,11 +100,11 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
                 'waitSeconds':.5,'staggerSeconds':.13,'returnSeconds':.65,'awakeningScale':0 if control=='incom' else .0025},
         nativeRemote={'count':len(units),'cooldownSeconds':values.get(key+'_CD'),
                       'awakeningMinimum':awakening,'entry':key+'_Trigger','unitSources':children,'unitPayloads':payloads},
-        description=f'{names[0]}：{len(units)}个单元，每单元2发，基础伤害1000/发。消耗3 AP。')
+        description=f'{names[0]}：{len(units)}个单元，每单元2发，基础伤害{native_damage:g}/发。消耗3 AP。')
     for lang, description in {
-        'zh': f'{len(units)}个单元，每单元2发，基础伤害1000/发；消耗3 AP。',
-        'en': f'{len(units)} remote units, 2 shots each, 1000 base damage per shot; costs 3 AP.',
-        'ja': f'{len(units)}基が各2発射撃。1発の基本ダメージ1000、消費3 AP。'
+        'zh': f'{len(units)}个单元，每单元2发，基础伤害{native_damage:g}/发；消耗3 AP。',
+        'en': f'{len(units)} remote units, 2 shots each, {native_damage:g} base damage per shot; costs 3 AP.',
+        'ja': f'{len(units)}基が各2発射撃。1発の基本ダメージ{native_damage:g}、消費3 AP。'
     }.items():
         weapon['localization'][lang]['description']=description
     weapon['sourceHit'] = weapon['hit']

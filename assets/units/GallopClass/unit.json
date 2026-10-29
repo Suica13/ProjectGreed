@@ -365,7 +365,7 @@
       "type": "shell",
       "min": 5,
       "max": 9,
-      "hit": 67.5,
+      "hit": 60.0,
       "en": 0,
       "sourceName": "Common_Turret_Mortar_DabudeClass",
       "sourceHit": 75.0,
@@ -579,14 +579,14 @@
       },
       "actionCost": 5,
       "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "GallopClass_Turret_Cannon": {
       "name": "舰载加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 67.5,
+      "hit": 60.0,
       "en": 100.0,
       "sourceName": "GallopClass_Turret_Cannon",
       "sourceHit": 75.0,
@@ -735,14 +735,14 @@
       },
       "actionCost": 3,
       "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "GallopClass_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 112.5,
+      "hit": 100.0,
       "en": 10.0,
       "sourceName": "GallopClass_Turret_AA",
       "sourceHit": 125.0,
@@ -1201,7 +1201,7 @@
         }
       ],
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "对空机枪"
@@ -1322,5 +1322,11 @@
       "source": "Units/CommonUnit/Hangar/Hangar_X6.ini",
       "sourceUnit": "Hangar_X6"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

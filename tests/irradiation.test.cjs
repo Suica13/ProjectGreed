@@ -31,7 +31,7 @@ function fixture() {
     skill: G.unitSkills(u).find((s) => s.type === "irradiation"),
   };
 }
-test("native irradiation totals collapse repeat-decayed MOD damage to one twentieth", () => {
+test("native irradiation totals collapse repeat-decayed MOD damage to one fiftieth, rounded to the nearest 25", () => {
   const seen = new Set();
   for (const p of G.catalog.prefabs)
     for (const s of p.skills || [])
@@ -39,7 +39,7 @@ test("native irradiation totals collapse repeat-decayed MOD damage to one twenti
         seen.add(p.id);
         assert.equal(
           Object.values(s.damageComponents).reduce((a, b) => a + b, 0),
-          s.nativeTotalDamage / 20,
+          Math.round(s.nativeTotalDamage / 50 / 25) * 25,
         );
         assert.equal(s.baseHit, 60);
         assert.equal(s.range, 10);
@@ -139,4 +139,38 @@ test("native irradiation presentation preserves charge/beam attachment offsets, 
       assert.deepEqual(skill.muzzle.mounts[0], { root: true, offset: { x: 9, y: 40 } });
     }
   }
+});
+
+test("irradiation descriptions show the live base damage formula instead of the import conversion ratio", () => {
+  const vm = require("node:vm"),
+    fs = require("node:fs");
+  const context = vm.createContext({ I18n: { text: (text) => text } });
+  vm.runInContext(
+    fs.readFileSync("client/skill-controls.js", "utf8") +
+      ";globalThis.describe=SkillControls.description",
+    context,
+  );
+  for (const id of ["ApsarasII", "RX_78_4_Bst", "Burstliner", "MA_08", "AMX_002", "Skiure"]) {
+    const modelId = Object.keys(G.models).find((key) => G.models[key].prefabId === id);
+    const skill = G.unitSkills({ model: modelId }).find((s) => s.type === "irradiation");
+    const damage = Object.values(skill.damageComponents)
+      .reduce((sum, value) => sum + value, 0)
+      .toLocaleString(undefined, { maximumFractionDigits: 2 });
+    const text = context.describe(skill);
+    assert.ok(text.includes(`${damage} × 1 = ${damage}`), id);
+    assert.ok(text.includes(`${skill.range}`));
+    assert.ok(!text.includes("1/20"));
+    assert.ok(!text.includes("MOD"));
+  }
+  const edited = {
+    type: "irradiation",
+    damageComponents: { beam: 10000 },
+    range: 12,
+    baseHit: 70,
+    actionCost: 4,
+    enCostPercent: 25,
+    cooldownTurns: 2,
+    description: "obsolete",
+  };
+  assert.match(context.describe(edited), /10,000 × 1 = 10,000/);
 });

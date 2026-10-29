@@ -1484,3 +1484,9 @@ body.menu-shell-active #developmentScreen #developmentPageSelect:not([hidden]) {
  .ace-recruit-preview { max-height:none; overflow:visible; }
  .ace-recruit-footer { flex-wrap:wrap; }
 }
+
+.ace-candidate-content { display:flex; flex-direction:column; flex:1; min-width:0; gap:5px; }
+.ace-name { display:block; width:100%; min-width:0; margin:0; white-space:nowrap; }
+.ace-tags { display:flex; flex-wrap:wrap; gap:4px; }
+.ace-recruit-status { font-size:12px; color:#b8dfff; }
+.ace-recruit-candidate { min-width:0; width:100%; overflow:hidden; }

@@ -567,6 +567,8 @@ function renderPanel() {
       !isBusy() &&
       !isAI() &&
       (!Net.active || Net.canAct());
+  const canSkillCommand =
+    own && !pendingMovement() && !isBusy() && !isAI() && (!Net.active || Net.canAct());
   panel.replaceChildren();
   let head = element("div", "unit-card-head");
   head.innerHTML = /* HTML */ `<img src="${unitIcon(u.model, u.pilot)}" alt="" />
@@ -700,7 +702,7 @@ function renderPanel() {
     );
     xp.dataset.pilotExperience = "";
     if (pilot.ace) {
-      const placeholder = element("small", "muted", "ACE技能（占位）");
+      const placeholder = element("small", "muted", "ACE技能");
       placeholder.append(
         document.createTextNode(
           " · " +
@@ -875,7 +877,8 @@ function renderPanel() {
     [
       "技能",
       () => window.BattleHUD?.setTab("skills"),
-      !canCommand || (!m.weapons.some((w) => w.slot === "skill") && !Rules.unitSkills(u).length),
+      !canSkillCommand ||
+        (!m.weapons.some((w) => w.slot === "skill") && !Rules.unitSkills(u).length),
     ],
     [
       "取消选武器",
@@ -1012,7 +1015,7 @@ function renderPanel() {
       };
       list.append(WeaponInfo.card(w, b, { unit: u }));
     }
-    if (skills) SkillControls.render(list, u, canCommand);
+    if (skills) SkillControls.render(list, u, canSkillCommand);
     container.append(list);
   }
   if (mode === "target" && weaponId && own) {

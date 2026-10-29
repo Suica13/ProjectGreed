@@ -6,6 +6,10 @@ const PilotSystem = (() => {
   const aceById = new Map((catalog.aces || []).map((p) => [p.id, p]));
   const aceProfile = (value) =>
     aceById.get(typeof value === "string" ? value : value?.aceId) || null;
+  const canAssign = (value, faction) =>
+    !aceProfile(value) ||
+    faction === "PMC" ||
+    (aceProfile(value).availableFactions || [aceProfile(value).faction]).includes(faction);
   const maxLevel = (value) => aceProfile(value)?.maxLevel ?? growthRules.maxLevel;
   const aceStatCap = (value, key) => aceProfile(value)?.maxStats[key];
   const byId = new Map(catalog.named.map((pilot) => [pilot.id, pilot]));
@@ -50,7 +54,8 @@ const PilotSystem = (() => {
   });
   const experienceRequired = (level, value = null) => {
     const ace = aceProfile(value);
-    return ace ? ace.experienceBase * ace.experienceMultiplier ** level : 1000 * 2 ** (level - 1);
+    // ACE starts at level zero: its first upgrade matches custom level 1, at twice the XP.
+    return ace ? 2 * experienceRequired(level + 1) : 1000 * 2 ** (level - 1);
   };
   const trainingVersion = growthRules.version;
   const trainingBudget = (level) =>
@@ -93,17 +98,54 @@ const PilotSystem = (() => {
       value.level > source.maxLevel
     )
       throw Error("ACE驾驶员数据无效");
-    const experience = value.experience ?? 0;
+    let level = value.level,
+      experience = value.experience ?? 0;
+    const version = source.growthVersion ?? 2;
+    if ((value.aceGrowthVersion ?? 1) === 1) {
+      const native = source.nativeGrowth;
+      if (!native || level > native.maxLevel) throw Error("ACE驾驶员数据无效");
+      const required = native.experienceBase * native.experienceMultiplier ** level;
+      if (
+        !Number.isSafeInteger(experience) ||
+        experience < 0 ||
+        (level < native.maxLevel && experience >= required)
+      )
+        throw Error("驾驶员经验无效");
+      const oldStats = Object.fromEntries(
+        Object.entries(source.baseStats).map(([key, base]) => [
+          key,
+          base * (source.comprehension / 100) ** level,
+        ]),
+      );
+      if (value.stats && Object.keys(labels).some((key) => value.stats[key] !== oldStats[key]))
+        throw Error("ACE属性由悟性成长，不能手动修改");
+      // Carry normalized progress into the five-step curve, preserving completed
+      // growth and in-level XP progress. Old max-level pilots keep their exact cap.
+      const progress =
+        level >= native.maxLevel
+          ? source.maxLevel
+          : ((level + experience / required) / native.maxLevel) * source.maxLevel;
+      level = Math.min(source.maxLevel, Math.floor(progress));
+      experience =
+        level === source.maxLevel
+          ? 0
+          : Math.floor((progress - level) * experienceRequired(level, value));
+      value = { ...value, stats: undefined };
+    } else if (value.aceGrowthVersion !== version) throw Error("ACE驾驶员数据版本无效");
     if (
       !Number.isSafeInteger(experience) ||
       experience < 0 ||
-      (value.level < source.maxLevel && experience >= experienceRequired(value.level, value))
+      (level < source.maxLevel && experience >= experienceRequired(level, value))
     )
       throw Error("驾驶员经验无效");
     const stats = Object.fromEntries(
       Object.entries(source.baseStats).map(([key, base]) => [
         key,
-        base * (source.comprehension / 100) ** value.level,
+        level === source.maxLevel
+          ? source.maxStats[key]
+          : base > 0
+            ? base * (source.maxStats[key] / base) ** (level / source.maxLevel)
+            : 0,
       ]),
     );
     if (value.stats && Object.keys(labels).some((key) => value.stats[key] !== stats[key]))
@@ -118,11 +160,12 @@ const PilotSystem = (() => {
       id: value.id,
       aceId: source.id,
       ace: true,
+      aceGrowthVersion: version,
       custom: true,
       name: source.name,
       faction: source.faction,
-      level: value.level,
-      experience: value.level === source.maxLevel ? 0 : experience,
+      level,
+      experience: level === source.maxLevel ? 0 : experience,
       stats,
       record,
       points: 0,
@@ -132,14 +175,28 @@ const PilotSystem = (() => {
   function createAce(id) {
     const source = aceProfile(id);
     if (!source?.price) throw Error("该ACE暂不可招募");
-    return ace({ id: "ace-" + id, aceId: id, level: source.initialLevel, experience: 0 });
+    return ace({
+      id: "ace-" + id,
+      aceId: id,
+      aceGrowthVersion: source.growthVersion,
+      level: source.initialLevel,
+      experience: 0,
+    });
+  }
+  function recruitmentPrice(id, previous = null) {
+    const price = aceProfile(id)?.price;
+    if (!price) return null;
+    const returning = previous?.aceId === id && previous.needsRecruitment;
+    return Object.fromEntries(
+      ["money", "supplies"].map((key) => [key, Math.ceil(price[key] * (returning ? 0.5 : 1))]),
+    );
   }
   function recruitAce(id, previous = null) {
     if (!previous) return createAce(id);
     const pilot = custom(previous);
     if (pilot.aceId !== id || !pilot.needsRecruitment || !aceProfile(id)?.price)
       throw Error("该ACE暂不可招募");
-    return custom({ ...pilot, needsRecruitment: false });
+    return custom({ ...pilot, experience: 0, needsRecruitment: false });
   }
   function custom(value) {
     if (value?.aceId || value?.ace) return ace(value);
@@ -315,7 +372,11 @@ const PilotSystem = (() => {
   const cost = (value) => {
     if (!value) return 0;
     const pilot = custom(value);
-    return pilot.ace && pilot.needsRecruitment ? 0 : pilot.level * (pilot.ace ? 50 : 25);
+    return pilot.ace && pilot.needsRecruitment
+      ? 0
+      : pilot.ace
+        ? (aceProfile(pilot).costBase ?? 100) + pilot.level * (aceProfile(pilot).costPerLevel ?? 50)
+        : pilot.level * 25;
   };
   function commandUnit(model) {
     return !!(
@@ -376,7 +437,35 @@ const PilotSystem = (() => {
     name: "默认驾驶员",
     stats: Object.fromEntries(Object.keys(labels).map((key) => [key, 100])),
   };
+  const buffPilotCache = new WeakMap();
+  function skillsOf(unit) {
+    return aceProfile(unit?.pilot)?.skills || [];
+  }
+  function hasPassive(unit, id) {
+    return skillsOf(unit).some((s) => s.id === id && s.passive);
+  }
+  function experienceMultiplier(unit) {
+    return skillsOf(unit).reduce(
+      (rate, s) => (unit.pilotBuffs?.[s.id] ? rate * (s.experienceMultiplier ?? 1) : rate),
+      1,
+    );
+  }
   function of(unit, model = null) {
+    const base = rawPilot(unit, model);
+    if (!Object.keys(unit.pilotBuffs || {}).length) return base;
+    let cached = buffPilotCache.get(unit);
+    if (!cached || cached.base !== base || cached.buffs !== unit.pilotBuffs) {
+      const stats = { ...base.stats };
+      for (const skill of skillsOf(unit))
+        if (unit.pilotBuffs[skill.id])
+          for (const [key, multiplier] of Object.entries(skill.statMultipliers || {}))
+            stats[key] *= multiplier;
+      cached = { base, buffs: unit.pilotBuffs, value: { ...base, stats } };
+      buffPilotCache.set(unit, cached);
+    }
+    return cached.value;
+  }
+  function rawPilot(unit, model = null) {
     if (unit.visualOnly || unit.groundTarget) return neutralPilot;
     if (unit.pilot?.stats) return unit.pilot;
     if (!legacyPilots.has(unit))
@@ -403,13 +492,18 @@ const PilotSystem = (() => {
   }
   return {
     catalog,
+    skillsOf,
+    hasPassive,
+    experienceMultiplier,
     labels,
     profile,
     aceProfile,
+    canAssign,
     aceStatCap,
     maxLevel,
     createAce,
     recruitAce,
+    recruitmentPrice,
     commandUnit,
     defaultName,
     validate,

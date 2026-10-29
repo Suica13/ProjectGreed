@@ -203,6 +203,21 @@ async function confirmAssembly(...players) {
 async function readyMatch(first, second, app = first.app, stage = true) {
   first.app = second.app = app;
   await first.latest((s) => s.members.filter((member) => member.seat !== null).length === 2);
+  // Skill fixtures use higher-COST carriers; choose an explicit supported
+  // room preset instead of depending on the entry preset's single-unit cap.
+  const settings = app.rooms.get(first.joined.room).settings;
+  assert.equal(
+    (
+      await first.act("configure_room", {
+        ...settings,
+        mapId: settings.mapId,
+        costLimit: 10000,
+        unitCostLimit: 2000,
+        unitLimit: 12,
+      })
+    ).type,
+    "state",
+  );
   const ready = await first.act("set_ready", { ready: true });
   assert.equal(ready.type, "state", JSON.stringify(ready));
   await second.latest((s) => s.revision >= ready.revision);
@@ -251,7 +266,7 @@ test("irradiation is authoritative, deduplicated, visible through fog and waits 
     { unitId: u.id, skillId: skill.id, x: 4, y: 8 },
     { id: actionId },
   );
-  assert.equal(result.type, "state");
+  assert.equal(result.type, "state", JSON.stringify(result));
   assert.equal(result.phase, "playback");
   assert.equal(u.en, en * 0.5);
   assert.equal(
@@ -307,18 +322,17 @@ test("burn waits through planning and sync, then ticks once at its owner team tu
   assert.equal((await blue.act("wait", { unitId: source.id })).type, "state");
   await new Promise((resolve) => setTimeout(resolve, 1200));
   await blue.act("sync");
-  assert.equal(u.hp,hp);
-  assert.equal((await blue.act("end_turn")).type,"state");
-  assert.equal(u.hp,hp);
-  await red.latest(s=>s.revision===room.revision);
-  room.turnNotBefore=0;
-  assert.equal((await red.act("end_turn")).type,"state");
-  assert.equal(hp-u.hp,Math.round(G.modelOf(u).hp*.05));
-  assert.equal(g.turnEffects.filter(e=>e.type==='burn').length,1);
-  await blue.latest(s=>s.revision===room.revision);
-  await blue.act('sync');
-  assert.equal(hp-u.hp,Math.round(G.modelOf(u).hp*.05));
-
+  assert.equal(u.hp, hp);
+  assert.equal((await blue.act("end_turn")).type, "state");
+  assert.equal(u.hp, hp);
+  await red.latest((s) => s.revision === room.revision);
+  room.turnNotBefore = 0;
+  assert.equal((await red.act("end_turn")).type, "state");
+  assert.equal(hp - u.hp, Math.round(G.modelOf(u).hp * 0.05));
+  assert.equal(g.turnEffects.filter((e) => e.type === "burn").length, 1);
+  await blue.latest((s) => s.revision === room.revision);
+  await blue.act("sync");
+  assert.equal(hp - u.hp, Math.round(G.modelOf(u).hp * 0.05));
 });
 
 test("irradiation settles a destroyed carrier and trapped passengers exactly once", async (t) => {
@@ -403,23 +417,93 @@ test("smoke cost and area are authoritative and repeated requests cannot spend t
   );
 });
 
-
-test("turn-end burning credits a destroyed carrier and trapped passengers exactly once", async t=>{
-  const {app,client}=await setup(t),blue=await client(),red=await client();
-  await blue.hello('create','BURNCARRIER');await red.hello('join','BURNCARRIER');
-  await readyMatch(blue,red);
-  const room=app.rooms.get('BURNCARRIER'),g=room.game;
-  assert.equal((await blue.act('end_turn')).type,'state');
-  const source=g.units.find(u=>u.id==='0-0'),carrier=g.units.find(u=>u.id==='1-0'),passenger=g.units.find(u=>u.id==='1-1');
-  carrier.model=Object.keys(G.models).find(id=>G.models[id].prefabId==='Medea');
-  Object.assign(carrier,{hp:1,shield:0,burning:{expiresRound:g.round+6,hpPercent:5,sourceId:source.id}});
-  Object.assign(passenger,{embarked:{carrierId:carrier.id,hangarId:'Hangar_1'}});
-  g.tiles.forEach(row=>row.fill('rock'));
-  room.turnNotBefore=0;
-  await red.latest(s=>s.revision===room.revision);
-  assert.equal((await red.act('end_turn')).type,'state');
-  for(const actor of [carrier,passenger]){
-    assert.equal(actor.hp,0);
-    assert.equal(room.economyAwards.filter(a=>a.targetId===actor.id&&a.kind==='kill').length,1);
+test("turn-end burning credits a destroyed carrier and trapped passengers exactly once", async (t) => {
+  const { app, client } = await setup(t),
+    blue = await client(),
+    red = await client();
+  await blue.hello("create", "BURNCARRIER");
+  await red.hello("join", "BURNCARRIER");
+  await readyMatch(blue, red);
+  const room = app.rooms.get("BURNCARRIER"),
+    g = room.game;
+  assert.equal((await blue.act("end_turn")).type, "state");
+  const source = g.units.find((u) => u.id === "0-0"),
+    carrier = g.units.find((u) => u.id === "1-0"),
+    passenger = g.units.find((u) => u.id === "1-1");
+  carrier.model = Object.keys(G.models).find((id) => G.models[id].prefabId === "Medea");
+  Object.assign(carrier, {
+    hp: 1,
+    shield: 0,
+    burning: { expiresRound: g.round + 6, hpPercent: 5, sourceId: source.id },
+  });
+  Object.assign(passenger, { embarked: { carrierId: carrier.id, hangarId: "Hangar_1" } });
+  g.tiles.forEach((row) => row.fill("rock"));
+  room.turnNotBefore = 0;
+  await red.latest((s) => s.revision === room.revision);
+  assert.equal((await red.act("end_turn")).type, "state");
+  for (const actor of [carrier, passenger]) {
+    assert.equal(actor.hp, 0);
+    assert.equal(
+      room.economyAwards.filter((a) => a.targetId === actor.id && a.kind === "kill").length,
+      1,
+    );
   }
+});
+
+test("ACE active skills are authoritative, spend EN once, replicate and persist through reconnect", async (t) => {
+  const { app, client } = await setup(t),
+    blue = await client(),
+    red = await client();
+  await blue.hello("create", "ACESKILL");
+  await red.hello("join", "ACESKILL");
+  await readyMatch(blue, red);
+  const room = app.rooms.get("ACESKILL"),
+    u = room.game.units.find((u) => u.id === "0-0"),
+    id = "Pilot_SpdUp_Trigger",
+    profile = G.pilots.catalog.aces.find((p) => p.price && p.skills.some((s) => s.id === id));
+  u.pilot = G.pilots.createAce(profile.id);
+  u.en = 500;
+  u.actionPoints = 5;
+  u.acted = false;
+  u.plan = null;
+  await blue.act("sync");
+  await red.latest((s) => s.revision === room.revision);
+  const enemyEn = room.game.units.find((u) => u.id === "1-0").en;
+  assert.equal(
+    (await red.act("skill", { unitId: u.id, skillId: id, x: u.x, y: u.y })).type,
+    "error",
+  );
+  assert.equal(u.en, 500);
+  assert.equal(room.game.units.find((u) => u.id === "1-0").en, enemyEn);
+  const actionId = randomUUID(),
+    revision = room.revision,
+    result = await blue.act(
+      "skill",
+      { unitId: u.id, skillId: id, x: u.x, y: u.y },
+      { id: actionId, revision },
+    );
+  assert.equal(result.type, "state");
+  assert.equal(result.phase, "idle");
+  assert.equal(u.en, 400);
+  assert.equal(u.actionPoints, 5);
+  assert.equal(u.pilotBuffs[id].expiresRound, room.game.round + 2);
+  await red.latest((s) => s.revision === room.revision);
+  assert.deepEqual(red.state.game.units.find((a) => a.id === u.id).pilotBuffs, u.pilotBuffs);
+  await blue.act(
+    "skill",
+    { unitId: u.id, skillId: id, x: u.x, y: u.y },
+    { id: actionId, revision },
+  );
+  assert.equal(u.en, 400);
+  assert.equal(
+    (await blue.act("skill", { unitId: u.id, skillId: id, x: u.x, y: u.y })).type,
+    "error",
+  );
+  const token = blue.joined.token;
+  blue.close();
+  const reconnect = await client();
+  const joined = await reconnect.hello("resume", "ACESKILL", token);
+  assert.equal(joined.type, "joined");
+  assert.deepEqual(reconnect.state.game.units.find((a) => a.id === u.id).pilotBuffs, u.pilotBuffs);
+  assert.equal(u.en, 400);
 });

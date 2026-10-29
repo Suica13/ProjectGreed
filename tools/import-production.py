@@ -81,6 +81,9 @@ def main():
     for unit,base_id in units.items():
         base=result[base_id]
         if any(o['money']<base['money'] or o['supplies']<base['supplies'] for o in result.values() if o['unitId']==unit):raise ValueError('No cheapest base in both currencies: '+unit)
+    for reference in registry['units']:
+        p=json.loads((ASSETS/reference).read_text(encoding='utf8'))
+        units.setdefault(p['id'],p['id']+'__'+p['weaponKits'][0]['id'])
     (PROJECT/'shared/production-catalog.json').write_text(json.dumps({'schemaVersion':1,'timeEnabled':False,'equipmentPolicy':'uniform-kit','baseModels':units,'offers':result,'unavailable':unavailable},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
     costs=tech_costs();file=PROJECT/'shared/development-tree.json';tree=json.loads(file.read_text(encoding='utf8'))
     for nodes in tree.values():

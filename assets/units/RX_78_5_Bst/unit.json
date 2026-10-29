@@ -3074,5 +3074,13 @@
       "fireMode": "independent",
       "name": "腕部光束枪"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_78_5"
+    ]
+  }
 }

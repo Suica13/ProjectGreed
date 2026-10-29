@@ -1609,5 +1609,12 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "MS_09R"
+    ]
+  }
 }

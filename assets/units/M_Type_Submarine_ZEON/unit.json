@@ -538,7 +538,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 76.5,
+      "hit": 68.0,
       "en": 320.0,
       "sourceName": "M_Type_Submarine_Turret_AMS",
       "sourceHit": 85.0,
@@ -764,7 +764,7 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -782,7 +782,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 90.0,
+      "hit": 80.0,
       "en": 96.0,
       "sourceName": "M_Type_Submarine_Turret_MS",
       "sourceHit": 100.0,
@@ -1264,7 +1264,7 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     }
   },
   "mechanics": [
@@ -1383,5 +1383,11 @@
       "source": "Units/CommonUnit/Hangar/Hangar_X6_Aircraft.ini",
       "sourceUnit": "Hangar_X6_Aircraft"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

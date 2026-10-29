@@ -891,15 +891,15 @@
       "localization": {
         "zh": {
           "name": "浮游炮",
-          "description": "5个单元，每单元2发，基础伤害1000/发；消耗3 AP。"
+          "description": "5个单元，每单元2发，基础伤害1250/发；消耗3 AP。"
         },
         "en": {
           "name": "Funnels / BITs",
-          "description": "5 remote units, 2 shots each, 1000 base damage per shot; costs 3 AP."
+          "description": "5 remote units, 2 shots each, 1250 base damage per shot; costs 3 AP."
         },
         "ja": {
           "name": "ファンネル / ビット",
-          "description": "5基が各2発射撃。1発の基本ダメージ1000、消費3 AP。"
+          "description": "5基が各2発射撃。1発の基本ダメージ1250、消費3 AP。"
         }
       },
       "type": "beam",
@@ -910,9 +910,9 @@
       "hit": 85.0,
       "en": 200.0,
       "actionCost": 3,
-      "damagePerShot": 1000,
+      "damagePerShot": 1250.0,
       "damageComponents": {
-        "beam": 1000
+        "beam": 1250.0
       },
       "hitsPerShot": 1,
       "clip": null,
@@ -1244,7 +1244,7 @@
           }
         ]
       },
-      "description": "浮游炮：5个单元，每单元2发，基础伤害1000/发。消耗3 AP。",
+      "description": "浮游炮：5个单元，每单元2发，基础伤害1250/发。消耗3 AP。",
       "sourceHit": 85.0,
       "nativeTiming": {
         "source": "Units/BattleUnits/Weapon/Funnel/ZN_MAN_08_Funnel.gw",
@@ -1341,5 +1341,11 @@
         }
       ]
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

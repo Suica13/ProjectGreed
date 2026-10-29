@@ -26,7 +26,7 @@ def apply(prefab):
             prefab.setdefault("mechanics",[]).append({"id":ident,"name":"浮游兵器：部署、远程操控与回收待适配","status":"review","source":reference})
     if prefab["id"]=="PublicClass" and not any(item["id"]=="BeamDiffusionArea" for item in prefab.get("mechanics",[])):
         prefab.setdefault("mechanics",[]).append({"id":"BeamDiffusionArea","name":"光束扰乱膜区域效果待适配；保留飞弹直接伤害","status":"review","source":"Units/BattleUnits/Weapon/Shell/EF_PublicClass_BeamDiffusionMS.gw"})
-    if prefab["id"] not in ("RX_78GP02A", "MA_08"):
+    if prefab["id"] not in ("RX_78GP02A", "MA_08", "MA_08_DZL"):
         return prefab
     deferred = set()
     for key, weapon in prefab["weapons"].items():

@@ -91,6 +91,7 @@ function loadCatalog({
   )
     throw Error("Invalid default unit limit");
   const result = { ...catalog, prefabs: [], units: [], assets: {}, sounds: {}, models: {} };
+  result.sounds["pilot/activation"] = "data:audio/ogg;base64," + fs.readFileSync(file(root, "sounds/Action_8.ogg")).toString("base64");
   result.maps = {};
   if (!Array.isArray(catalog.maps) || !catalog.maps.length) throw Error("Missing preset maps");
   for (const reference of catalog.maps) {
@@ -357,6 +358,10 @@ function loadCatalog({
     if (prefab.enabled === false) continue;
     localize.prefab(prefab);
     require("./weapon-balance.cjs").applyWeaponBalance(prefab);
+    // Skills and weapons share the same 25-point damage quantization policy.
+    for (const skill of prefab.skills || [])
+      if (skill.damageComponents)
+        skill.damageComponents = WeaponSequence.roundComponents(skill.damageComponents);
     prefab.wip = isWip(prefab.id);
     prefab.disabled = prefab.wip;
     validateLocalization(prefab.localization, ref);
@@ -790,7 +795,7 @@ function loadCatalog({
             weapon.min < 1 ||
             weapon.max < weapon.min ||
             !Number.isFinite(weapon.damage) ||
-            weapon.damage <= 0 ||
+            weapon.damage < 0 ||
             !Number.isFinite(weapon.hit)
           )
             throw Error("Invalid weapon: " + key);
@@ -1017,6 +1022,9 @@ function loadCatalog({
         sourceStats: prefab.sourceStats,
         mechanics: prefab.mechanics || [],
         refits: prefab.refits || [],
+        pilotForms: prefab.pilotForms || [],
+        requiredPilotId: prefab.requiredPilotId,
+        production: prefab.production,
         hiddenWeapons: Object.entries(prefab.weapons)
           .filter(
             ([, w]) =>

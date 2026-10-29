@@ -21,7 +21,18 @@ function fixture(id = "MAN_08") {
     x: 8,
     y: 8,
     en: 100000,
-    pilot: { stats: { shooting: 100, accuracy: 100, awakening: 75 } },
+    pilot: {
+      stats: {
+        shooting: 100,
+        melee: 100,
+        defense: 100,
+        speed: 100,
+        accuracy: 100,
+        reaction: 100,
+        leadership: 100,
+        awakening: 75,
+      },
+    },
   });
   Object.assign(b, { x: 11, y: 8, hp: 1000000, shield: 0 });
   return { g, a, b, w: m.weapons.find((w) => w.remote) };
@@ -31,7 +42,7 @@ test("native remote salvos keep original counts, gates and every kit; consume EN
     const { g, a, b, w } = fixture(id);
     assert.equal(w.remote.units.length, count);
     assert.equal(w.attack.shots.length, count * 2);
-    assert.equal(w.damagePerShot, 1000);
+    assert.equal(w.damagePerShot, G.roundDamage(w.nativePayload.BeamDamage));
     assert.equal(w.actionCost, 3);
     assert.deepEqual(w.pilotRequirements, [{ stat: "awakening", operator: ">=", value: 75 }]);
     for (const m of Object.values(G.models).filter((m) => m.prefabId === id))

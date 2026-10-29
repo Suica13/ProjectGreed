@@ -1,4 +1,4 @@
-﻿"""Verify all native middle animation frames tile without losing alpha or palette."""
+﻿"""Verify optimized native middle frames preserve the original texture and alpha."""
 import importlib.util
 import sys
 import tempfile
@@ -19,13 +19,8 @@ with tempfile.TemporaryDirectory() as temporary:
             (module.ASSETS / f'effects/textures/Irradiation_Mid_{color}.png').read_bytes())
         assert (actual_width, actual_height) == (width, height) == (1960, 84)
         assert actual_palette == palette
-        frame_width = width // 28
-        for frame in range(28):
-            for y in range(height):
-                row = y * width + frame * frame_width
-                assert pixels[row] == pixels[row + frame_width - 1], (color, frame, y)
-                assert pixels[row + 12:row + frame_width - 12] == original[row + 12:row + frame_width - 12]
+        assert pixels == original, color + ": native middle pixels must remain unmodified"
         alpha = next(data for kind, data in palette if kind == b'tRNS')
         assert any(alpha[index] == 0 for index in pixels if index < len(alpha))
         assert any(alpha[index] > 0 for index in pixels if index < len(alpha))
-        print(f'{color}: all 28 frames seamless, center pixels and native transparency preserved')
+        print(f'{color}: all 28 original frames and native transparency preserved')

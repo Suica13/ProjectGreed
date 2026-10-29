@@ -2608,5 +2608,11 @@
   "availableFactions": [
     "EFSF",
     "ZEON"
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

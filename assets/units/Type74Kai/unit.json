@@ -646,5 +646,13 @@
       "source": "Units/CommonUnit/Hangar/Hangar_X1_Human_UseEN.ini",
       "sourceUnit": "Hangar_X1_Human_UseEN"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "Type74"
+    ]
+  }
 }

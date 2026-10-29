@@ -48,7 +48,7 @@ for (const width of [1280, 390])
       expect(await page.evaluate(() => Economy.snapshot().money)).toBe(10000);
       const admin = await context.newPage();
       await admin.goto(base + "/admin/activities.html");
-      await expect(admin.locator("#activities button")).toHaveCount(4);
+      await expect(admin.locator("#activities button")).toHaveCount(5);
       await admin.locator("#activities button").filter({ hasText: "首次加入服务器奖励" }).click();
       await expect(admin.locator("#newActivityPanel")).toBeHidden();
       await admin.locator("#editTitle").fill("更新后的欢迎活动");
@@ -189,7 +189,7 @@ for (const width of [1280, 390])
     page.on("pageerror", (error) => errors.push(error.message));
     try {
       await page.goto(base + "/admin/activities.html");
-      await expect(page.locator("#activities button")).toHaveCount(4);
+      await expect(page.locator("#activities button")).toHaveCount(5);
       const start = new Date(Date.now() + 86400000),
         end = new Date(Date.now() + 3 * 86400000);
       const local = (date) => {
@@ -258,7 +258,7 @@ test("opening the admin HTML file connects through the configured local server",
     await page.locator("#adminServerAddress").fill(`127.0.0.1:${address.port}`);
     await page.locator("#serverConnection button").click();
     await expect(page).toHaveURL(`http://127.0.0.1:${address.port}/admin/activities.html`);
-    await expect(page.locator("#activities button")).toHaveCount(4);
+    await expect(page.locator("#activities button")).toHaveCount(5);
     await page.locator("#activities button").filter({ hasText: "超级煤球真理部" }).click();
     await page.locator("#editBody").fill("从本地HTML连接后编辑");
     await page.locator("#saveCopy").click();
@@ -366,7 +366,7 @@ test("admin can cancel or confirm deletion and deleted defaults stay gone after 
     await expect(page.locator("#status")).toContainText("活动已删除");
     await expect(activity).toHaveCount(0);
     await page.reload();
-    await expect(page.locator("#activities button")).toHaveCount(3);
+    await expect(page.locator("#activities button")).toHaveCount(4);
     expect(app.activities.adminSnapshot().activities.some((a) => a.id === id)).toBe(false);
   } finally {
     await app.close();

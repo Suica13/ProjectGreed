@@ -5,7 +5,8 @@ const ServerActivities = (() => {
     mail = [],
     activities = [],
     selected = null;
-  let supportsDeletion = false, dismissed = new Set();
+  let supportsDeletion = false,
+    dismissed = new Set();
   const pending = new Set(),
     deleting = new Set();
   const dialog = element("dialog", "server-activities-dialog");
@@ -59,19 +60,21 @@ const ServerActivities = (() => {
   function loadDismissed() {
     try {
       const value = JSON.parse(localStorage.getItem(dismissalKey()) || "[]");
-      dismissed = new Set(Array.isArray(value) ? value.filter(id => typeof id === "string") : []);
-    } catch { dismissed = new Set(); }
+      dismissed = new Set(Array.isArray(value) ? value.filter((id) => typeof id === "string") : []);
+    } catch {
+      dismissed = new Set();
+    }
   }
   function dismissLegacy(ids) {
     // Older servers retain confirmed receipts, which already prevent duplicate rewards.
     const next = new Set(dismissed);
     for (const id of ids) {
-      const receipt = mail.find(item => item.id === id);
+      const receipt = mail.find((item) => item.id === id);
       if (receipt?.confirmedAt != null) next.add(id);
     }
     localStorage.setItem(dismissalKey(), JSON.stringify([...next]));
     dismissed = next;
-    if (!rows().some(item => item.id === selected)) selected = rows()[0]?.id || null;
+    if (!rows().some((item) => item.id === selected)) selected = rows()[0]?.id || null;
     status.textContent = I18n.text("奖励记录已删除");
   }
   function rows() {
@@ -94,10 +97,13 @@ const ServerActivities = (() => {
       };
     });
     // Past-cycle mail, including unclaimed rewards, remains accessible as history.
-    return [...mail.filter(item => !represented.has(item.id) && !dismissed.has(item.id)), ...listings]
+    return [
+      ...mail.filter((item) => !represented.has(item.id) && !dismissed.has(item.id)),
+      ...listings,
+    ]
       .map((item, index) => ({ item, index }))
       .sort((a, b) => (b.item.createdAt ?? 0) - (a.item.createdAt ?? 0) || b.index - a.index)
-      .map(entry => entry.item);
+      .map((entry) => entry.item);
   }
   function stateLabel(item) {
     if (item.persistent && item.status !== "active")
@@ -135,6 +141,14 @@ const ServerActivities = (() => {
       );
       button.type = "button";
       button.setAttribute("aria-pressed", String(item.id === selected));
+      if (item.mode === "cumulative_kill_cost")
+        button.append(
+          element(
+            "small",
+            "",
+            item.progressCost.toLocaleString() + " / " + item.targetCost.toLocaleString() + " COST",
+          ),
+        );
       if (stateLabel(item)) button.append(element("small", "", stateLabel(item)));
       button.onclick = () => {
         selected = item.id;
@@ -185,6 +199,33 @@ const ServerActivities = (() => {
             I18n.text("天"),
         ),
       );
+    if (item.mode === "cumulative_kill_cost") {
+      detail.append(
+        element(
+          "p",
+          "",
+          I18n.text("全服累计击坠COST") +
+            " " +
+            item.progressCost.toLocaleString() +
+            " / " +
+            item.targetCost.toLocaleString(),
+        ),
+      );
+      const progress = element("progress");
+      progress.max = item.targetCost;
+      progress.value = item.progressCost;
+      detail.append(
+        progress,
+        element("p", "muted", I18n.text(item.participated ? "已参与有效击坠" : "尚未参与有效击坠")),
+      );
+      detail.append(
+        element(
+          "p",
+          "muted",
+          new Date(item.startsAt).toLocaleString() + " — " + new Date(item.endsAt).toLocaleString(),
+        ),
+      );
+    }
     if (item.multipliers) {
       detail.append(element("h4", "", I18n.text("服务器房间收益倍率")));
       for (const [key, label] of [
@@ -225,6 +266,12 @@ const ServerActivities = (() => {
     }
     for (const id of item.rewards.unlockUnits || [])
       rewards.append(element("p", "", I18n.text("立即开发") + " · " + unitLabel(id)));
+    for (const id of item.rewards.unlockAces || []) {
+      const ace = PilotSystem.aceProfile(id);
+      rewards.append(
+        element("p", "", I18n.text("解锁ACE驾驶员") + " · " + (ace ? I18n.localized(ace) : id)),
+      );
+    }
     if (rewards.childElementCount) {
       detail.append(element("h4", "", I18n.text("奖励内容")), rewards);
     }
@@ -317,8 +364,11 @@ const ServerActivities = (() => {
       render();
     } else if (message.type === "activity_error") {
       if (message.message === "未知活动操作" && deleting.size) {
-        try { dismissLegacy(deleting); }
-        catch (error) { status.textContent = Economy.errorMessage(error); }
+        try {
+          dismissLegacy(deleting);
+        } catch (error) {
+          status.textContent = Economy.errorMessage(error);
+        }
         deleting.clear();
         render();
         return true;
@@ -353,8 +403,11 @@ const ServerActivities = (() => {
     )
       return;
     if (!supportsDeletion) {
-      try { dismissLegacy([id]); }
-      catch (error) { status.textContent = Economy.errorMessage(error); }
+      try {
+        dismissLegacy([id]);
+      } catch (error) {
+        status.textContent = Economy.errorMessage(error);
+      }
       render();
       return;
     }

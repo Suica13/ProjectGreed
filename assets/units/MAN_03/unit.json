@@ -721,7 +721,18 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MAN_03_BG_1_L": {
       "name": "光束炮",
@@ -897,7 +908,18 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MAN_03_BG_2": {
       "name": "光束炮",
@@ -1070,7 +1092,18 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MAN_03_BG_2_L": {
       "name": "光束炮",
@@ -1246,7 +1279,18 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MAN_03_BG_3": {
       "name": "光束炮",
@@ -1419,7 +1463,18 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MAN_03_BG_3_L": {
       "name": "光束炮",
@@ -1595,7 +1650,18 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MAN_03_Funnel": {
       "sourceName": "ZN_MAN_03_Funnel",
@@ -1603,15 +1669,15 @@
       "localization": {
         "zh": {
           "name": "有线浮游炮",
-          "description": "4个单元，每单元2发，基础伤害1000/发；消耗3 AP。"
+          "description": "4个单元，每单元2发，基础伤害2000/发；消耗3 AP。"
         },
         "en": {
           "name": "Wired Remote Cannons",
-          "description": "4 remote units, 2 shots each, 1000 base damage per shot; costs 3 AP."
+          "description": "4 remote units, 2 shots each, 2000 base damage per shot; costs 3 AP."
         },
         "ja": {
           "name": "有線サイコミュ砲",
-          "description": "4基が各2発射撃。1発の基本ダメージ1000、消費3 AP。"
+          "description": "4基が各2発射撃。1発の基本ダメージ2000、消費3 AP。"
         }
       },
       "type": "beam",
@@ -1622,9 +1688,9 @@
       "hit": 90.0,
       "en": 250.0,
       "actionCost": 3,
-      "damagePerShot": 1000,
+      "damagePerShot": 2000.0,
       "damageComponents": {
-        "beam": 1000
+        "beam": 2000.0
       },
       "hitsPerShot": 1,
       "clip": null,
@@ -1918,7 +1984,7 @@
           }
         ]
       },
-      "description": "有线浮游炮：4个单元，每单元2发，基础伤害1000/发。消耗3 AP。",
+      "description": "有线浮游炮：4个单元，每单元2发，基础伤害2000/发。消耗3 AP。",
       "sourceHit": 90.0,
       "nativeTiming": {
         "source": "Units/BattleUnits/Weapon/Funnel/ZN_MAN_03_Funnel.gw",
@@ -2055,5 +2121,11 @@
         }
       ]
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

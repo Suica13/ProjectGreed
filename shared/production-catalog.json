@@ -257,7 +257,66 @@
     "YMS_18": "YMS_18__standard",
     "EMS_10F": "EMS_10F__kit_1",
     "MS_06Z": "MS_06Z__standard",
-    "MSN_01": "MSN_01__standard"
+    "MSN_01": "MSN_01__standard",
+    "AMS_Squad": "AMS_Squad__standard",
+    "Apsaras": "Apsaras__standard",
+    "ApsarasIII": "ApsarasIII__standard",
+    "Dodai2": "Dodai2__standard",
+    "EMS_05M": "EMS_05M__standard",
+    "G_Fighter": "G_Fighter__standard",
+    "MA_04X": "MA_04X__standard",
+    "MS_06E3": "MS_06E3__kit_0",
+    "MS_06R_3S": "MS_06R_3S__standard",
+    "MS_06RD_4": "MS_06RD_4__kit_0",
+    "MS_14G": "MS_14G__kit_3",
+    "MS_17R": "MS_17R__standard",
+    "RGM_79U": "RGM_79U__main_0",
+    "RX_78_4": "RX_78_4__kit_0",
+    "RX_78_5": "RX_78_5__kit_0",
+    "RX_78_6_WIP": "RX_78_6_WIP__standard",
+    "RX_79_G_Ez8": "RX_79_G_Ez8__kit_1",
+    "RX_79_G_Ez8_WithBackpack": "RX_79_G_Ez8_WithBackpack__kit_1",
+    "SFU_X79": "SFU_X79__standard",
+    "YMS_09": "YMS_09__kit_0",
+    "RX_79_BD_1_EXAM": "RX_79_BD_1_EXAM__kit_0",
+    "RX_80PR_HADES": "RX_80PR_HADES__kit_0",
+    "RX_80PR_GroundType_HADES": "RX_80PR_GroundType_HADES__kit_0",
+    "RX_80PR_2_HADES": "RX_80PR_2_HADES__kit_0",
+    "RX_79_BD_2_EXAM": "RX_79_BD_2_EXAM__standard",
+    "MS_08TX_Kai_EXAM": "MS_08TX_Kai_EXAM__standard",
+    "MTank_Top": "MTank_Top__standard",
+    "MTank_Chassis": "MTank_Chassis__standard",
+    "YMT_05_ModeB": "YMT_05_ModeB__kit_0",
+    "FA_78_1_NA": "FA_78_1_NA__standard",
+    "RX_80PR_SpaceType_HADES": "RX_80PR_SpaceType_HADES__kit_0",
+    "MSN_02_Head": "MSN_02_Head__standard",
+    "FF_X7Bst_II": "FF_X7Bst_II__standard",
+    "G_Bull_Easy": "G_Bull_Easy__standard",
+    "MA_08_DZL": "MA_08_DZL__standard",
+    "MS_05S": "MS_05S__kit_0",
+    "MS_06F_EFSF": "MS_06F_EFSF__kit_0",
+    "MS_06R_2_JonCustom": "MS_06R_2_JonCustom__kit_0",
+    "MS_06R_2_MsgCustom": "MS_06R_2_MsgCustom__standard",
+    "MS_06S_CharCustom": "MS_06S_CharCustom__kit_0",
+    "MS_06S_DozleCustom": "MS_06S_DozleCustom__kit_0",
+    "MS_09R_CharCustom": "MS_09R_CharCustom__kit_1",
+    "MS_14B_JonCustom": "MS_14B_JonCustom__kit_0",
+    "MS_14JG_MsgCustom": "MS_14JG_MsgCustom__standard",
+    "MS_14S_CharCustom": "MS_14S_CharCustom__kit_0",
+    "MSM_07_CharCustom": "MSM_07_CharCustom__standard",
+    "BlancRival": "BlancRival__standard",
+    "Thoroughbred": "Thoroughbred__standard",
+    "WhiteBase": "WhiteBase__standard",
+    "RGM_79F": "RGM_79F__standard",
+    "RGM_79G_EarlyDeployment": "RGM_79G_EarlyDeployment__kit_2",
+    "RX_78_2_ACE": "RX_78_2_ACE__standard",
+    "RX_78_2_BPart": "RX_78_2_BPart__kit_1",
+    "RX_79_BD_2_NMBS": "RX_79_BD_2_NMBS__standard",
+    "RX_79_BD_3": "RX_79_BD_3__standard",
+    "RX_81LA_IMBA": "RX_81LA_IMBA__kit_0",
+    "YMS_15_MQVCustom": "YMS_15_MQVCustom__standard",
+    "RX_79_BD_2_NMBS_EXAM": "RX_79_BD_2_NMBS_EXAM__standard",
+    "RX_79_BD_3_EXAM": "RX_79_BD_3_EXAM__standard"
   },
   "offers": {
     "RGM_79__beam_spray": {
@@ -14009,6 +14068,1034 @@
         ]
       },
       "sourceAlternatives": []
+    },
+    "AMS_Squad__standard": {
+      "output": {
+        "unitId": "AMS_Squad",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "unitId": "AMS_Squad",
+      "faction": "EFSF",
+      "money": 250,
+      "supplies": 250,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/AMS_Squad.gw",
+        "action": "action_Produce_AMS_Squad_StandardSquad",
+        "buildSeconds": 20.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "AMS_Squad",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1001|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMS_Squad",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1001|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMS_Squad",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1001|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "Apsaras__standard": {
+      "output": {
+        "unitId": "Apsaras",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "unitId": "Apsaras",
+      "faction": "ZEON",
+      "money": 3500,
+      "supplies": 5000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Mega/Apsaras.gw",
+        "action": "action_Produce_Apsaras",
+        "buildSeconds": 50.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "Apsaras",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "ApsarasIII__standard": {
+      "output": {
+        "unitId": "ApsarasIII",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "unitId": "ApsarasIII",
+      "faction": "ZEON",
+      "money": 6000,
+      "supplies": 7250,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Mega/ApsarasIII.gw",
+        "action": "action_Produce_ApsarasIII",
+        "buildSeconds": 75.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "ApsarasIII",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "Dodai2__standard": {
+      "output": {
+        "unitId": "Dodai2",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "unitId": "Dodai2",
+      "faction": "ZEON",
+      "money": 450,
+      "supplies": 900,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/Dodai2.gw",
+        "action": "action_Produce_Dodai2_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "Dodai2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Dodai2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Dodai2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "EMS_05M__standard": {
+      "output": {
+        "unitId": "EMS_05M",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "unitId": "EMS_05M",
+      "faction": "ZEON",
+      "money": 1000,
+      "supplies": 1500,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/EMS_05M.gw",
+        "action": "action_Produce_EMS_05M_StandardSquad",
+        "buildSeconds": 30.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "EMS_05M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "EMS_05M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "EMS_05M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "G_Fighter__standard": {
+      "output": {
+        "unitId": "G_Fighter",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "unitId": "G_Fighter",
+      "faction": "EFSF",
+      "money": 1500,
+      "supplies": 2000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/G_Fighter.gw",
+        "action": "action_Produce_G_Fighter_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "G_Fighter",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MA_04X__standard": {
+      "output": {
+        "unitId": "MA_04X",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "unitId": "MA_04X",
+      "faction": "ZEON",
+      "money": 1500,
+      "supplies": 2000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MA_04X.gw",
+        "action": "action_Produce_MA_04X",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MA_04X",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MS_06E3__kit_0": {
+      "output": {
+        "unitId": "MS_06E3",
+        "kitId": "kit_0",
+        "quantity": 3
+      },
+      "unitId": "MS_06E3",
+      "faction": "ZEON",
+      "money": 1350,
+      "supplies": 2750,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06E3.gw",
+        "action": "action_Produce_MS_06E3",
+        "buildSeconds": 75.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MS_06E3",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MS_06E3",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MS_06E3",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MS_06R_3S__standard": {
+      "output": {
+        "unitId": "MS_06R_3S",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "unitId": "MS_06R_3S",
+      "faction": "ZEON",
+      "money": 1350,
+      "supplies": 1550,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06R_3S.gw",
+        "action": "action_Produce_MS_06R_3S_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MS_06R_3S",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MS_06RD_4__kit_0": {
+      "output": {
+        "unitId": "MS_06RD_4",
+        "kitId": "kit_0",
+        "quantity": 3
+      },
+      "unitId": "MS_06RD_4",
+      "faction": "ZEON",
+      "money": 1450,
+      "supplies": 2300,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_06RD_4.gw",
+        "action": "action_Produce_MS_06RD_4_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MS_06RD_4",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MS_06RD_4",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MS_06RD_4",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MS_06RD_4__kit_1": {
+      "output": {
+        "unitId": "MS_06RD_4",
+        "kitId": "kit_1",
+        "quantity": 3
+      },
+      "unitId": "MS_06RD_4",
+      "faction": "ZEON",
+      "money": 1450,
+      "supplies": 2900,
+      "quantity": 3,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_06RD_4.gw",
+        "action": "action_Produce_MS_06RD_4_BazookaSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MS_06RD_4",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "MS_06RD_4",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "MS_06RD_4",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MS_14G__kit_0": {
+      "output": {
+        "unitId": "MS_14G",
+        "kitId": "kit_0",
+        "quantity": 1
+      },
+      "unitId": "MS_14G",
+      "faction": "ZEON",
+      "money": 2250,
+      "supplies": 2850,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14G.gw",
+        "action": "action_Produce_MS_14G_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MS_14G",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MS_14G__kit_2": {
+      "output": {
+        "unitId": "MS_14G",
+        "kitId": "kit_2",
+        "quantity": 1
+      },
+      "unitId": "MS_14G",
+      "faction": "ZEON",
+      "money": 1850,
+      "supplies": 2350,
+      "quantity": 1,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14G.gw",
+        "action": "action_Produce_MS_14G_BazookaSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MS_14G",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MS_14G__kit_3": {
+      "output": {
+        "unitId": "MS_14G",
+        "kitId": "kit_3",
+        "quantity": 1
+      },
+      "unitId": "MS_14G",
+      "faction": "ZEON",
+      "money": 1850,
+      "supplies": 2150,
+      "quantity": 1,
+      "equipmentIndex": 2,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14G.gw",
+        "action": "action_Produce_MS_14G_MGSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MS_14G",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "MS_17R__standard": {
+      "output": {
+        "unitId": "MS_17R",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "unitId": "MS_17R",
+      "faction": "ZEON",
+      "money": 4500,
+      "supplies": 5500,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_17R.gw",
+        "action": "action_Produce_MS_17R_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MS_17R",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MS_17R",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MS_17R",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RGM_79U__main_0": {
+      "output": {
+        "unitId": "RGM_79U",
+        "kitId": "main_0",
+        "quantity": 3
+      },
+      "unitId": "RGM_79U",
+      "faction": "EFSF",
+      "money": 2250,
+      "supplies": 2700,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79U.gw",
+        "action": "action_Produce_RGM_79U_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "RGM_79U",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_79U",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_79U",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_78_4__kit_1": {
+      "output": {
+        "unitId": "RX_78_4",
+        "kitId": "kit_1",
+        "quantity": 1
+      },
+      "unitId": "RX_78_4",
+      "faction": "EFSF",
+      "money": 2950,
+      "supplies": 4150,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_4.gw",
+        "action": "action_Produce_RX_78_4_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_78_4",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_78_4__kit_0": {
+      "output": {
+        "unitId": "RX_78_4",
+        "kitId": "kit_0",
+        "quantity": 1
+      },
+      "unitId": "RX_78_4",
+      "faction": "EFSF",
+      "money": 2750,
+      "supplies": 3950,
+      "quantity": 1,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_4.gw",
+        "action": "action_Produce_RX_78_4_BazookaSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_78_4",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_78_5__kit_1": {
+      "output": {
+        "unitId": "RX_78_5",
+        "kitId": "kit_1",
+        "quantity": 1
+      },
+      "unitId": "RX_78_5",
+      "faction": "EFSF",
+      "money": 2950,
+      "supplies": 4150,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_5.gw",
+        "action": "action_Produce_RX_78_5_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_78_5",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_78_5__kit_0": {
+      "output": {
+        "unitId": "RX_78_5",
+        "kitId": "kit_0",
+        "quantity": 1
+      },
+      "unitId": "RX_78_5",
+      "faction": "EFSF",
+      "money": 2750,
+      "supplies": 3950,
+      "quantity": 1,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_5.gw",
+        "action": "action_Produce_RX_78_5_BazookaSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_78_5",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_78_6_WIP__standard": {
+      "output": {
+        "unitId": "RX_78_6_WIP",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "unitId": "RX_78_6_WIP",
+      "faction": "EFSF",
+      "money": 2750,
+      "supplies": 4550,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_6_WIP.gw",
+        "action": "action_Produce_RX_78_6_WIP_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_78_6_WIP",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_79_G_Ez8__kit_1": {
+      "output": {
+        "unitId": "RX_79_G_Ez8",
+        "kitId": "kit_1",
+        "quantity": 1
+      },
+      "unitId": "RX_79_G_Ez8",
+      "faction": "EFSF",
+      "money": 1750,
+      "supplies": 2250,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8.gw",
+        "action": "action_Produce_RX_79_G_Ez8_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_79_G_Ez8",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_79_G_Ez8__kit_0": {
+      "output": {
+        "unitId": "RX_79_G_Ez8",
+        "kitId": "kit_0",
+        "quantity": 1
+      },
+      "unitId": "RX_79_G_Ez8",
+      "faction": "EFSF",
+      "money": 1750,
+      "supplies": 2450,
+      "quantity": 1,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8.gw",
+        "action": "action_Produce_RX_79_G_Ez8_BazookaSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_79_G_Ez8",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_79_G_Ez8__kit_2": {
+      "output": {
+        "unitId": "RX_79_G_Ez8",
+        "kitId": "kit_2",
+        "quantity": 1
+      },
+      "unitId": "RX_79_G_Ez8",
+      "faction": "EFSF",
+      "money": 1950,
+      "supplies": 2650,
+      "quantity": 1,
+      "equipmentIndex": 2,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8.gw",
+        "action": "action_Produce_RX_79_G_Ez8_BeamRifleSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_79_G_Ez8",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_1": {
+      "output": {
+        "unitId": "RX_79_G_Ez8_WithBackpack",
+        "kitId": "kit_1",
+        "quantity": 1
+      },
+      "unitId": "RX_79_G_Ez8_WithBackpack",
+      "faction": "EFSF",
+      "money": 1750,
+      "supplies": 2500,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8_WithBackpack.gw",
+        "action": "action_Produce_RX_79_G_Ez8_WithBackpack_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_79_G_Ez8_WithBackpack",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_0": {
+      "output": {
+        "unitId": "RX_79_G_Ez8_WithBackpack",
+        "kitId": "kit_0",
+        "quantity": 1
+      },
+      "unitId": "RX_79_G_Ez8_WithBackpack",
+      "faction": "EFSF",
+      "money": 1750,
+      "supplies": 2700,
+      "quantity": 1,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8_WithBackpack.gw",
+        "action": "action_Produce_RX_79_G_Ez8_WithBackpack_BazookaSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_79_G_Ez8_WithBackpack",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_2": {
+      "output": {
+        "unitId": "RX_79_G_Ez8_WithBackpack",
+        "kitId": "kit_2",
+        "quantity": 1
+      },
+      "unitId": "RX_79_G_Ez8_WithBackpack",
+      "faction": "EFSF",
+      "money": 1950,
+      "supplies": 2900,
+      "quantity": 1,
+      "equipmentIndex": 2,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8_WithBackpack.gw",
+        "action": "action_Produce_RX_79_G_Ez8_WithBackpack_BeamWeaponSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_79_G_Ez8_WithBackpack",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_3": {
+      "output": {
+        "unitId": "RX_79_G_Ez8_WithBackpack",
+        "kitId": "kit_3",
+        "quantity": 1
+      },
+      "unitId": "RX_79_G_Ez8_WithBackpack",
+      "faction": "EFSF",
+      "money": 1800,
+      "supplies": 2800,
+      "quantity": 1,
+      "equipmentIndex": 3,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8_WithBackpack.gw",
+        "action": "action_Produce_RX_79_G_Ez8_WithBackpack_CannonSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_79_G_Ez8_WithBackpack",
+            "quantity": 1,
+            "equipmentIndex": 3,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:3"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_4": {
+      "output": {
+        "unitId": "RX_79_G_Ez8_WithBackpack",
+        "kitId": "kit_4",
+        "quantity": 1
+      },
+      "unitId": "RX_79_G_Ez8_WithBackpack",
+      "faction": "EFSF",
+      "money": 1750,
+      "supplies": 2700,
+      "quantity": 1,
+      "equipmentIndex": 4,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8_WithBackpack.gw",
+        "action": "action_Produce_RX_79_G_Ez8_WithBackpack_MSLSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_79_G_Ez8_WithBackpack",
+            "quantity": 1,
+            "equipmentIndex": 4,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:4"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "SFU_X79__standard": {
+      "output": {
+        "unitId": "SFU_X79",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "unitId": "SFU_X79",
+      "faction": "EFSF",
+      "money": 450,
+      "supplies": 650,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/SFU_X79.gw",
+        "action": "action_Produce_SFU_X79_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "SFU_X79",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "SFU_X79",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "SFU_X79",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "YMS_09__kit_1": {
+      "output": {
+        "unitId": "YMS_09",
+        "kitId": "kit_1",
+        "quantity": 3
+      },
+      "unitId": "YMS_09",
+      "faction": "ZEON",
+      "money": 2500,
+      "supplies": 3800,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/YMS_09.gw",
+        "action": "action_Produce_YMS_09_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "YMS_09",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "YMS_09",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "YMS_09",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "sourceAlternatives": []
+    },
+    "YMS_09__kit_0": {
+      "output": {
+        "unitId": "YMS_09",
+        "kitId": "kit_0",
+        "quantity": 3
+      },
+      "unitId": "YMS_09",
+      "faction": "ZEON",
+      "money": 2500,
+      "supplies": 3200,
+      "quantity": 3,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/YMS_09.gw",
+        "action": "action_Produce_YMS_09_MGSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "YMS_09",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "YMS_09",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "YMS_09",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "sourceAlternatives": []
     }
   },
   "unavailable": [
@@ -14045,6 +15132,52 @@
     "RX_80PR_SpaceType_HADES__kit_0",
     "RX_80PR_SpaceType_HADES__kit_2",
     "RX_80PR_SpaceType_HADES__kit_1",
-    "MSN_02_Head__standard"
+    "MSN_02_Head__standard",
+    "FF_X7Bst_II__standard",
+    "G_Bull_Easy__standard",
+    "MA_08_DZL__standard",
+    "MS_05S__kit_0",
+    "MS_05S__kit_1",
+    "MS_06F_EFSF__kit_0",
+    "MS_06F_EFSF__kit_1",
+    "MS_06R_2_JonCustom__kit_0",
+    "MS_06R_2_JonCustom__kit_1",
+    "MS_06R_2_JonCustom__kit_2",
+    "MS_06R_2_MsgCustom__standard",
+    "MS_06S_CharCustom__kit_0",
+    "MS_06S_CharCustom__kit_1",
+    "MS_06S_DozleCustom__kit_0",
+    "MS_06S_DozleCustom__kit_1",
+    "MS_09R_CharCustom__kit_1",
+    "MS_09R_CharCustom__kit_0",
+    "MS_09R_CharCustom__kit_2",
+    "MS_14B_JonCustom__kit_0",
+    "MS_14B_JonCustom__kit_1",
+    "MS_14B_JonCustom__kit_2",
+    "MS_14JG_MsgCustom__standard",
+    "MS_14S_CharCustom__kit_0",
+    "MS_14S_CharCustom__kit_1",
+    "MS_14S_CharCustom__kit_2",
+    "MSM_07_CharCustom__standard",
+    "BlancRival__standard",
+    "Thoroughbred__standard",
+    "WhiteBase__standard",
+    "RGM_79F__standard",
+    "RGM_79G_EarlyDeployment__kit_2",
+    "RGM_79G_EarlyDeployment__kit_1",
+    "RGM_79G_EarlyDeployment__kit_0",
+    "RX_78_2_ACE__standard",
+    "RX_78_2_BPart__kit_1",
+    "RX_78_2_BPart__kit_0",
+    "RX_78_2_BPart__main_2",
+    "RX_79_BD_2_NMBS__standard",
+    "RX_79_BD_3__standard",
+    "RX_79_G_Ez8__kit_3",
+    "RX_79_G_Ez8__kit_4",
+    "RX_81LA_IMBA__kit_0",
+    "RX_81LA_IMBA__kit_2",
+    "YMS_15_MQVCustom__standard",
+    "RX_79_BD_2_NMBS_EXAM__standard",
+    "RX_79_BD_3_EXAM__standard"
   ]
 }

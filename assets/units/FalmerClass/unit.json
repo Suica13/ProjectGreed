@@ -522,7 +522,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 67.5,
+      "hit": 60.0,
       "en": 180.0,
       "sourceName": "FalmerClass_Turret_BeamCannon",
       "sourceHit": 75.0,
@@ -732,14 +732,14 @@
       },
       "shipDamageMultiplier": 0.85,
       "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "FalmerClass_Turret_AMS": {
       "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 76.5,
+      "hit": 68.0,
       "en": 160.0,
       "sourceName": "FalmerClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -905,7 +905,7 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -923,7 +923,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 90.0,
+      "hit": 80.0,
       "en": 144.0,
       "sourceName": "FalmerClass_Turret_MS",
       "sourceHit": 100.0,
@@ -1170,7 +1170,7 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     }
   },
   "mechanics": [
@@ -1298,5 +1298,11 @@
       "source": "Units/CommonUnit/Hangar/Hangar_X6.ini",
       "sourceUnit": "Hangar_X6"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

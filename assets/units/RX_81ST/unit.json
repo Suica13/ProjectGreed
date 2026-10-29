@@ -2694,5 +2694,15 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_81LA",
+      "RX_81AS",
+      "RX_81",
+      "RX_81LA_IMBA"
+    ]
+  }
 }

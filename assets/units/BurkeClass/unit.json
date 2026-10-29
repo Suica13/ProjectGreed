@@ -377,7 +377,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 76.5,
+      "hit": 68.0,
       "en": 80.0,
       "sourceName": "BurkeClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -513,7 +513,7 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -531,7 +531,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 90.0,
+      "hit": 80.0,
       "en": 72.0,
       "sourceName": "BurkeClass_Turret_MS",
       "sourceHit": 100.0,
@@ -699,14 +699,14 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "BurkeClass_Turret_CN": {
       "name": "加农炮",
       "type": "shell",
       "min": 3,
       "max": 8,
-      "hit": 67.5,
+      "hit": 60.0,
       "en": 40.0,
       "sourceName": "BurkeClass_Turret_CN",
       "sourceHit": 75.0,
@@ -833,7 +833,7 @@
       },
       "actionCost": 3,
       "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "加农炮"
@@ -851,7 +851,7 @@
       "type": "shell",
       "min": 2,
       "max": 3,
-      "hit": 90.0,
+      "hit": 80.0,
       "en": 10.0,
       "sourceName": "BurkeClass_Turret_MG",
       "sourceHit": 100.0,
@@ -1145,7 +1145,7 @@
       },
       "actionCost": 3,
       "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     }
   },
   "mechanics": [
@@ -1239,5 +1239,11 @@
       "source": "Units/CommonUnit/Hangar/Hangar_X1_Aircraft_UseEN_Show.ini",
       "sourceUnit": "Hangar_X1_Aircraft_UseEN_Show"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

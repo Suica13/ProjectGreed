@@ -1,0 +1,1467 @@
+{
+  "schemaVersion": 2,
+  "id": "MS_06E3",
+  "code": "MS-06E3",
+  "source": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06E3/MS_06E3.ini",
+  "materials": {
+    "textures": {
+      "MS_06E3_Crotch_1.png": "textures/MS_06E3_Crotch_1.png",
+      "MS_06E3_Body_1.png": "textures/MS_06E3_Body_1.png",
+      "MS_06E3_ArmL_1.png": "textures/MS_06E3_ArmL_1.png",
+      "MS_06E3_ArmR_1.png": "textures/MS_06E3_ArmR_1.png",
+      "MS_06E3_ShoulderL_1.png": "textures/MS_06E3_ShoulderL_1.png",
+      "MS_06E3_ShoulderR_1.png": "textures/MS_06E3_ShoulderR_1.png",
+      "MS_06E3_Head_1.png": "textures/MS_06E3_Head_1.png",
+      "MS_06E3_FootL_1.png": "textures/MS_06E3_FootL_1.png",
+      "MS_06E3_LegL_1.png": "textures/MS_06E3_LegL_1.png",
+      "MS_06E3_FootR_1.png": "textures/MS_06E3_FootR_1.png",
+      "MS_06E3_LegR_1.png": "textures/MS_06E3_LegR_1.png",
+      "CameraGun.png": "textures/CameraGun.png",
+      "ZN_120mmMG_AntiAir.png": "textures/ZN_120mmMG_AntiAir.png",
+      "ZN_Panzerfaust.png": "textures/ZN_Panzerfaust.png",
+      "ZN_Panzerfaust_B.png": "textures/ZN_Panzerfaust_B.png",
+      "ZN_HeatHawk.png": "textures/ZN_HeatHawk.png",
+      "MS_06E3.png": "textures/MS_06E3.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MS_06E3.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "MS_06E3_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MS_06E3_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MS_06E3_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MS_06E3_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ZN_120mmMG_AntiAir_NotUsing",
+      "texture": "ZN_120mmMG_AntiAir.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 0.9,
+      "rotation": -90.0,
+      "offset": {
+        "x": 1.0,
+        "y": -8.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Crotch",
+      "texture": "MS_06E3_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "MS_06E3_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "MS_06E3_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ZN_Panzerfaust_NotUsing",
+      "texture": "ZN_Panzerfaust.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "scale": 0.85,
+      "rotation": 0.0,
+      "offset": {
+        "x": -8.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": {
+          "not": 3
+        }
+      }
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "ZN_Panzerfaust",
+      "texture": "ZN_Panzerfaust.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.5,
+        "y": 12.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 3
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "ZN_Panzerfaust_Used",
+      "texture": "ZN_Panzerfaust_B.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.5,
+        "y": 12.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 3
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "MS_06E3_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Common_CameraGun",
+      "texture": "CameraGun.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.65,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.0,
+        "y": 15.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "weaponDisplayIndex": 2
+      }
+    },
+    {
+      "name": "ZN_120mmMG_AntiAir",
+      "texture": "ZN_120mmMG_AntiAir.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.0,
+        "y": 15.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "ZN_HeatHawk_A",
+      "texture": "ZN_HeatHawk.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.85,
+      "scaleX": -1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 3.0,
+        "y": 19.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 1
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "ZN_HeatHawk_A_Step2",
+      "texture": "ZN_HeatHawk.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "rotation": 25.0,
+      "offset": {
+        "x": 12.0,
+        "y": 18.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 11
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MS_06E3_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MS_06E3_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "MS_06E3_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MS_06E3_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Melee_A": "../../animations/Common_Melee_A__FA_78_1.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 29500,
+    "en": 475.0,
+    "move": 7,
+    "mobility": 125.0,
+    "cost": 350,
+    "counterLimit": 1,
+    "accuracy": 125.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "sensors": {
+      "sight": 10,
+      "radar": 16.666666666666668,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "actionPoints": 5
+  },
+  "attackBonuses": {
+    "melee": 15.0,
+    "shooting": 15.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 75.0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 100.0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 10.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 23500.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.65,
+    "turnSpeed": 1.75,
+    "reaction": 125.0,
+    "shooting": 115.0,
+    "melee": 115.0,
+    "nativeTags": [
+      "MS_06E3",
+      "Unit",
+      "MS",
+      "ZEON",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "accuracy": 125.0,
+    "partStructuralStrength": 100.0,
+    "enBeforeReduction": 950.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 25.0,
+      "radar": 600.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 1350.0,
+    "tacticalMoveBeforeBonus": 6,
+    "v17BaseHp": 23500.0,
+    "technologyEra": "0079E"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "扎古强行侦查型E3",
+  "faction": "ZEON",
+  "tags": [
+    "ZEON",
+    "0079E"
+  ],
+  "localization": {
+    "zh": {
+      "name": "扎古强行侦查型E3",
+      "description": "经过改良的侦查型扎古,具备高机动力与高探知力"
+    },
+    "en": {
+      "name": "Zaku Reconnaissance Type E3",
+      "description": "An improved reconnaissance-type Zaku, featuring high mobility and enhanced detection capabilities"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "name": "冲撞",
+      "localization": {
+        "zh": {
+          "name": "冲撞"
+        },
+        "ja": {
+          "name": "体当たり"
+        },
+        "en": {
+          "name": "Body Tackle"
+        }
+      },
+      "slot": "skill",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 125.0,
+      "en": 0,
+      "clip": "Common_Push_A",
+      "sourceName": "Common_Push_A",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "changeHeldWeapon": false,
+      "requiredParts": [],
+      "partBreakModifier": 0.75,
+      "damagePerShot": 5000.0,
+      "damageComponents": {
+        "melee": 2500.0,
+        "meleeShell": 2500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Push_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 0.75,
+            "requiredParts": [],
+            "delay": 0.45
+          },
+          {
+            "delay": 1.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "sound": {
+        "file": "../../sounds/Fist_2.ogg",
+        "volume": 0.5
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_2_Kick_White_R"
+      ],
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrelX": 0,
+        "barrelY": 0,
+        "cooldownSeconds": 3,
+        "barrels": [
+          {
+            "id": "Common_Push_A",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "nativePayload": {
+        "CqbDamage": 2500.0,
+        "CqbShellDamage": 2500.0,
+        "DpDamage": 1000.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 0.75,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+        "barrel": "Common_Push_A",
+        "entry": "hiddenAction_Common_Push_A_Fire",
+        "cooldown": 3.0,
+        "duration": 1.45,
+        "firstShot": 0.45,
+        "lastShot": 0.45,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_Common_Push_A_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_Common_Push_A_SetWeaponIndex",
+          "hiddenAction_Common_Push_A_Step_1",
+          "hiddenAction_Common_Push_A_Fire_Step_1",
+          "hiddenAction_Common_Push_A_Fire_Step_2",
+          "hiddenAction_Common_Push_A_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "melee",
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 5
+    },
+    "ZN_120mmMG_AntiAir": {
+      "name": "120mm对空机枪",
+      "type": "shell",
+      "min": 2,
+      "max": 3,
+      "hit": 85.0,
+      "en": 20.0,
+      "sourceName": "ZN_120mmMG_AntiAir",
+      "sourceHit": 85.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Shoot_A",
+      "damagePerShot": 850.0,
+      "damageComponents": {
+        "shell": 850.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.3
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.15
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir.gw",
+        "barrels": [
+          {
+            "id": "ZN_120mmMG_AntiAir",
+            "x": 11.0,
+            "y": 30.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/Bazooka_1.png",
+        "scale": 0.75,
+        "speed": 85.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_S",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "ZN_120mmMG_AntiAir",
+            "point": {
+              "x": 9.18485099360515e-16,
+              "y": -15.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/MachineGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 2.5,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "MG_Fire_1"
+      ],
+      "nativePayload": {
+        "ShellDamage": 850.0,
+        "DpDamage": 50.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 2.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 0.75,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 0.75,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 85.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 40.0,
+        "ProjectileLife": 35.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 0.75,
+          "accuracy": 1.0
+        }
+      },
+      "displayIndex": 0,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir.gw",
+        "barrel": "ZN_120mmMG_AntiAir",
+        "entry": "hiddenAction_ZN_120mmMG_AntiAir_Fire",
+        "cooldown": 2.0,
+        "duration": 1.35,
+        "firstShot": 0.3,
+        "lastShot": 1.05,
+        "firingEvents": 6,
+        "projectiles": 6,
+        "declaredEnergy": 20.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 20.0,
+        "actions": [
+          "hiddenAction_ZN_120mmMG_AntiAir_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_120mmMG_AntiAir_SetWeaponIndex",
+          "hiddenAction_ZN_120mmMG_AntiAir_B6_Step_1",
+          "hiddenAction_ZN_120mmMG_AntiAir_Fire_Step_1",
+          "hiddenAction_ZN_120mmMG_AntiAir_Fire_Step_2",
+          "hiddenAction_ZN_120mmMG_AntiAir_Fire_Step_3",
+          "hiddenAction_ZN_120mmMG_AntiAir_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "machine_gun",
+      "actionCost": 3
+    },
+    "ZN_Panzerfaust": {
+      "name": "铁拳火箭弹",
+      "type": "shell",
+      "min": 2,
+      "max": 4,
+      "hit": 75.0,
+      "en": 40.0,
+      "sourceName": "ZN_Panzerfaust",
+      "sourceHit": 75.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Shoot_A",
+      "damagePerShot": 6500.0,
+      "damageComponents": {
+        "shell": 4500.0,
+        "shellAP": 2000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 3,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.25
+          },
+          {
+            "weaponDisplayIndex": 4,
+            "delay": 0.0
+          },
+          {
+            "delay": 0.25
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust.gw",
+        "barrels": [
+          {
+            "id": "ZN_Panzerfaust",
+            "x": 11.0,
+            "y": 27.0
+          }
+        ]
+      },
+      "projectile": {
+        "texture": "../../projectiles/ZN_Panzerfaust_Black.png",
+        "scale": 1.0,
+        "speed": 55.0,
+        "forwardOffset": 0.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "muzzle": {
+        "mounts": [
+          {
+            "layer": "ZN_Panzerfaust",
+            "point": {
+              "x": -0.49999999999999906,
+              "y": -15.0
+            }
+          }
+        ]
+      },
+      "sound": {
+        "file": "../../sounds/Bazooka_1.ogg",
+        "volume": 0.4
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1"
+      ],
+      "nativePayload": {
+        "ShellDamage": 4500.0,
+        "ShellAPDamage": 2000.0,
+        "DpDamage": 600.0,
+        "WeaponAccuracy": 75.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 55.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileExplosionRange": 30.0,
+        "ProjectileLife": 35.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.0,
+          "accuracy": 1.0
+        }
+      },
+      "displayIndex": 4,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust.gw",
+        "barrel": "ZN_Panzerfaust",
+        "entry": "hiddenAction_ZN_Panzerfaust_Fire",
+        "cooldown": 12.0,
+        "duration": 0.5,
+        "firstShot": 0.25,
+        "lastShot": 0.25,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 40.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 40.0,
+        "actions": [
+          "hiddenAction_ZN_Panzerfaust_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Shoot",
+          "hiddenAction_ZN_Panzerfaust_SetWeaponIndex",
+          "hiddenAction_ZN_Panzerfaust_B1_Step_1",
+          "hiddenAction_ZN_Panzerfaust_Fire_Step_1",
+          "hiddenAction_ZN_Panzerfaust_Fire_Step_2",
+          "hiddenAction_ZN_Panzerfaust_SetWeaponIndex_Step2",
+          "hiddenAction_ZN_Panzerfaust_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "bazooka",
+      "actionCost": 3
+    },
+    "ZN_HeatHawk_A": {
+      "name": "热能斧",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 125.0,
+      "en": 0,
+      "sourceName": "ZN_HeatHawk_A",
+      "sourceHit": 125.0,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_A",
+      "damagePerShot": 6000.0,
+      "damageComponents": {
+        "melee": 3000.0,
+        "meleeShell": 3000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 1,
+            "delay": 0
+          },
+          {
+            "weaponDisplayIndex": 11,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Melee_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1.25,
+            "requiredParts": [],
+            "delay": 0.6
+          },
+          {
+            "weaponDisplayIndex": 1,
+            "delay": 1.4
+          }
+        ],
+        "startAnimation": null
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "partBreakModifier": 1.25,
+      "changeHeldWeapon": true,
+      "source": {
+        "file": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw",
+        "barrels": [
+          {
+            "id": "ZN_HeatHawk_A",
+            "x": 0.0,
+            "y": 0.0
+          }
+        ]
+      },
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/HeatHawk_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "water": 0.75,
+        "ground": 1.0,
+        "space": 1.0
+      },
+      "nativePayload": {
+        "CqbDamage": 3000.0,
+        "CqbShellDamage": 3000.0,
+        "DpDamage": 850.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 35.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.25,
+        "ProjectileAttackTimes": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 0.75,
+          "accuracy": 0.75
+        },
+        "large": {
+          "damage": 1.25,
+          "accuracy": 1.25
+        }
+      },
+      "displayIndex": 1,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw",
+        "barrel": "ZN_HeatHawk_A",
+        "entry": "hiddenAction_ZN_HeatHawk_A_Fire",
+        "cooldown": 3.0,
+        "duration": 2.0,
+        "firstShot": 0.6,
+        "lastShot": 0.6,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "hiddenAction_ZN_HeatHawk_A_Fire",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_SendEnemyTryAttack_Cqb",
+          "hiddenAction_ZN_HeatHawk_A_SetWeaponIndex",
+          "hiddenAction_ZN_HeatHawk_A_SetWeaponIndex_Step2",
+          "hiddenAction_ZN_HeatHawk_A_Step_1",
+          "hiddenAction_ZN_HeatHawk_A_Fire_Step_1",
+          "hiddenAction_ZN_HeatHawk_A_Fire_Step_2",
+          "hiddenAction_ZN_HeatHawk_A_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff"
+        ]
+      },
+      "category": "melee",
+      "muzzle": {
+        "bone": "Body",
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "actionCost": 2
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "kit_0",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "ZN_120mmMG_AntiAir",
+        "Common_Push_A",
+        "ZN_HeatHawk_A",
+        "ZN_Panzerfaust"
+      ]
+    }
+  ],
+  "description": "经过改良的侦查型扎古,具备高机动力与高探知力",
+  "skills": [
+    {
+      "id": "Common_CameraGun",
+      "type": "recon",
+      "name": "摄像枪",
+      "reconMode": "camera",
+      "range": 15,
+      "enCost": 30,
+      "actionCost": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_4.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "摄像枪"
+        },
+        "en": {
+          "name": "Camera Gun"
+        },
+        "ja": {
+          "name": "カメラガン"
+        }
+      },
+      "minRange": 10,
+      "areaSight": 3,
+      "areaRadar": 3,
+      "description": "射程10～15格，消耗3 AP与30 EN；揭露目标半径3格视野并探测敌人，持续至下次己方回合。",
+      "weaponDisplayIndex": 2
+    },
+    {
+      "id": "Common_DetectArea",
+      "type": "recon",
+      "name": "索敌",
+      "reconMode": "scan",
+      "range": 25.0,
+      "enCost": 100,
+      "actionCost": 1,
+      "maxUses": 99,
+      "consumeAction": false,
+      "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "索敌"
+        },
+        "en": {
+          "name": "Active Scan"
+        },
+        "ja": {
+          "name": "索敵"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "kitAliases": {
+    "kit_1": "kit_0"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 1350.0,
+    "levelMultiplier": 0.25,
+    "published": 350
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "MS_06E"
+    ]
+  }
+}

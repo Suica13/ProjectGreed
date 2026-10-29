@@ -7,6 +7,7 @@ PURGES = {
     "RX_78NT_1_FA": ("armor_purge", "RX_78NT_1", 35, False),
     "FA_78_1": ("armor_purge", "FA_78_1_NA", 35, False),
     "FF_X7Bst": ("armor_purge", "FF_X7", 100, False),
+    "RX_79_G_Ez8_WithBackpack": ("armor_purge", "RX_79_G_Ez8", 0, False),
     "RX_79_G_WithBackpack": ("armor_purge", "RX_79_G", 0, False),
 }
 

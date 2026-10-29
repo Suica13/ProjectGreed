@@ -133,8 +133,8 @@ const DevelopmentUI = (() => {
     screen.dataset.faction = faction;
     byId("developmentMain").dataset.faction = faction;
     const allNodes = Development.nodes(faction);
-    // Temporarily expose Page_00 only; keep later research and saved progress intact.
-    const nodes = allNodes.filter((node) => (node.page || 0) === 0);
+    const nodes = allNodes;
+    const lateStart = Math.max(0, ...nodes.filter((n) => !n.page).map((n) => n.column)) + 2;
     const unlocked = new Set(Development.unlockedTech(faction));
     const badge = element("strong", "development-faction-code", faction);
     badge.setAttribute("data-i18n-ignore", "");
@@ -162,12 +162,16 @@ const DevelopmentUI = (() => {
     lines.setAttribute("class", "development-lines");
     lines.setAttribute("aria-hidden", "true");
     graph.append(lines);
+    const divider = element("div", "development-era-divider", "0079后期");
+    divider.style.gridColumn = "1 / -1";
+    divider.style.gridRow = String(lateStart - 1);
+    graph.append(divider);
     const cards = new Map();
     for (const node of nodes) {
       const card = element("button", "development-node");
       card.type = "button";
       card.style.gridColumn = String(branchColumns[node.row]);
-      card.style.gridRow = String(node.column);
+      card.style.gridRow = String(node.column + (node.page ? lateStart - 1 : 0));
       card.dataset.techId = node.id;
       card.dataset.state = unlocked.has(node.id) ? "unlocked" : "locked";
       card.dataset.prerequisiteLocked = String(

@@ -137,8 +137,13 @@
         border-radius: 6px;
         padding: 24px;
       }
-      dialog::backdrop { background: #0009; }
-      #deleteActivity, #confirmDelete { background: #773b3b; }
+      dialog::backdrop {
+        background: #0009;
+      }
+      #deleteActivity,
+      #confirmDelete {
+        background: #773b3b;
+      }
       .muted {
         color: #a9c4ce;
       }
@@ -163,21 +168,76 @@
       }
     </style>
     <style id="admin-blue-theme">
-      :root { color-scheme:dark; accent-color:#52b5e6; }
-      body { background:#081b2b; color:#e1eef8; }
-      header, nav, section { border-color:#2a536e; }
-      header { background:#0d293f; }
-      nav { background:#0b2438; }
-      section, dialog { background:#102d45; border-color:#3b6783; border-radius:4px; box-shadow:none; color:#e1eef8; }
-      button, input, select, textarea { background:#102c43; border-color:#355e79; border-radius:3px; color:#deedf7; box-shadow:none; }
-      button { background:#15364e; }
-      button:hover:not(:disabled) { background:#204b69; border-color:#6bc6ee; }
-      #publish, #saveCopy { background:#247eac; border-color:#449bc3; color:#fff; }
-      #deleteActivity, #confirmDelete { background:#3d293a; border-color:#9a5b70; color:#ffc0cb; }
-      .muted, nav small { color:#8eacbf; }
-      #status { color:#9bd7ec; }
-      dialog::backdrop { background:#03111dc9; }
-      :focus-visible { outline:2px solid #66c8f3; outline-offset:2px; }
+      :root {
+        color-scheme: dark;
+        accent-color: #52b5e6;
+      }
+      body {
+        background: #081b2b;
+        color: #e1eef8;
+      }
+      header,
+      nav,
+      section {
+        border-color: #2a536e;
+      }
+      header {
+        background: #0d293f;
+      }
+      nav {
+        background: #0b2438;
+      }
+      section,
+      dialog {
+        background: #102d45;
+        border-color: #3b6783;
+        border-radius: 4px;
+        box-shadow: none;
+        color: #e1eef8;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        background: #102c43;
+        border-color: #355e79;
+        border-radius: 3px;
+        color: #deedf7;
+        box-shadow: none;
+      }
+      button {
+        background: #15364e;
+      }
+      button:hover:not(:disabled) {
+        background: #204b69;
+        border-color: #6bc6ee;
+      }
+      #publish,
+      #saveCopy {
+        background: #247eac;
+        border-color: #449bc3;
+        color: #fff;
+      }
+      #deleteActivity,
+      #confirmDelete {
+        background: #3d293a;
+        border-color: #9a5b70;
+        color: #ffc0cb;
+      }
+      .muted,
+      nav small {
+        color: #8eacbf;
+      }
+      #status {
+        color: #9bd7ec;
+      }
+      dialog::backdrop {
+        background: #03111dc9;
+      }
+      :focus-visible {
+        outline: 2px solid #66c8f3;
+        outline-offset: 2px;
+      }
     </style>
   </head>
   <body>
@@ -214,6 +274,15 @@
               <label>开始时间（本机时区）<input id="editStartsAt" type="datetime-local" /></label
               ><label>结束时间（本机时区）<input id="editEndsAt" type="datetime-local" /></label>
             </div>
+            <label id="editTargetCostLabel" hidden
+              >累计击坠目标COST<input
+                id="editTargetCost"
+                type="number"
+                min="1"
+                max="1000000000"
+                step="1"
+                value="10000"
+            /></label>
             <label id="editLoginDaysLabel" hidden
               >累计登录天数<input
                 id="editLoginDays"
@@ -287,6 +356,7 @@
             ><textarea id="body" maxlength="12000"></textarea>
             <label for="mode">活动类型／发放范围</label
             ><select id="mode">
+              <option value="cumulative_kill_cost">全服累计击坠COST</option>
               <option value="battle_bonus">服务器房间限时收益倍率</option>
               <option value="daily_login">每日登录奖励（每天早上6点刷新）</option>
               <option value="weekly_login">每周登录奖励（周一早上6点刷新）</option>
@@ -301,6 +371,15 @@
             <p class="muted">
               时期留空为不限期。每天按服务器时间早上6点划分，同一天只记录一次，累计登录不要求连续。
             </p>
+            <label id="targetCostLabel" hidden
+              >累计击坠目标COST<input
+                id="targetCost"
+                type="number"
+                min="1"
+                max="1000000000"
+                step="1"
+                value="10000"
+            /></label>
             <label id="loginDaysLabel" hidden
               >累计登录天数<input
                 id="loginDays"
@@ -392,6 +471,12 @@
                 <button id="addUnlock" type="button">添加开发单位</button
                 ><button id="clearUnlocks" type="button">清空开发奖励</button>
               </section>
+              <section>
+                <h3>解锁ACE驾驶员</h3>
+                <div id="aceUnlocks"></div>
+                <button id="addAceUnlock" type="button">添加ACE解锁</button
+                ><button id="clearAceUnlocks" type="button">清空ACE解锁</button>
+              </section>
             </div>
             <button id="publish" type="submit">发布新活动并开始发放</button>
           </form>
@@ -402,7 +487,9 @@
     <dialog id="deleteActivityDialog" aria-labelledby="deleteActivityTitle">
       <h2 id="deleteActivityTitle">删除活动</h2>
       <p id="deleteActivityText"></p>
-      <p>删除后停止发放和倍率效果，并移除尚未接收的邮件。已接收的奖励和领取记录保留，正在领取的奖励可继续完成。</p>
+      <p>
+        删除后停止发放和倍率效果，并移除尚未接收的邮件。已接收的奖励和领取记录保留，正在领取的奖励可继续完成。
+      </p>
       <div class="line">
         <button id="cancelDelete" type="button">取消</button>
         <button id="confirmDelete" type="button">确认删除</button>
@@ -412,7 +499,8 @@
       let snapshot = null,
         selectedId = null;
       const byId = (id) => document.getElementById(id);
-      let unlockUnits = [];
+      let unlockUnits = [],
+        unlockAces = [];
       async function api(route = "", value) {
         const response = await fetch("/api/activities/admin" + route, {
           method: value ? "POST" : "GET",
@@ -424,6 +512,7 @@
         return data;
       }
       const modes = {
+        cumulative_kill_cost: "全服累计击坠COST",
         battle_bonus: "服务器房间限时收益倍率",
         daily_login: "每日登录奖励",
         weekly_login: "每周登录奖励",
@@ -458,6 +547,9 @@
             activity.delivered +
             " / 已接受 " +
             activity.accepted;
+          if (activity.mode === "cumulative_kill_cost")
+            stats.textContent +=
+              " · " + (activity.progressCost || 0) + " / " + activity.targetCost + " COST";
           button.append(stats);
           button.onclick = () => {
             selectedId = activity.id;
@@ -513,6 +605,8 @@
           "online_window",
           "battle_bonus",
         ].includes(activity.mode);
+        byId("editTargetCostLabel").hidden = activity.mode !== "cumulative_kill_cost";
+        byId("editTargetCost").value = activity.targetCost || 10000;
         byId("editLoginDaysLabel").hidden = activity.mode !== "cumulative_login";
         byId("editLoginDays").value = activity.loginDays || 7;
         byId("editBonusFields").hidden = activity.mode !== "battle_bonus";
@@ -538,7 +632,13 @@
           Object.entries(rewards.inventory)
             .map(([id, count]) => "\n" + unitName(id) + " ×" + count)
             .join("") +
-          rewards.unlockUnits.map((id) => "\n立即开发：" + unitName(id)).join("");
+          rewards.unlockUnits.map((id) => "\n立即开发：" + unitName(id)).join("") +
+          (rewards.unlockAces || [])
+            .map((id) => "\n解锁ACE：" + (snapshot.aces.find((p) => p.id === id)?.name || id))
+            .join("") +
+          (activity.mode === "cumulative_kill_cost"
+            ? "\n全服累计击坠：" + (activity.progressCost || 0) + " / " + activity.targetCost
+            : "");
         byId("toggle").textContent = activity.enabled ? "暂停后续投递" : "恢复后续投递";
       }
       async function refresh() {
@@ -619,17 +719,65 @@
           renderUnlocks();
         }
       };
+      function renderAceUnlocks() {
+        const list = byId("aceUnlocks");
+        list.replaceChildren();
+        for (const [index, id] of unlockAces.entries()) {
+          const row = document.createElement("div");
+          row.className = "reward-unlock";
+          const select = document.createElement("select");
+          select.setAttribute("aria-label", "解锁ACE驾驶员");
+          for (const ace of snapshot?.aces || []) {
+            const option = new Option(
+              ace.name + " [" + ace.faction + " / " + ace.era + "]",
+              ace.id,
+              false,
+              ace.id === id,
+            );
+            option.disabled = ace.id !== id && unlockAces.includes(ace.id);
+            select.add(option);
+          }
+          select.onchange = () => {
+            unlockAces[index] = select.value;
+            renderAceUnlocks();
+          };
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.textContent = "删除";
+          remove.onclick = () => {
+            unlockAces.splice(index, 1);
+            renderAceUnlocks();
+          };
+          row.append(select, remove);
+          list.append(row);
+        }
+        byId("addAceUnlock").disabled = unlockAces.length >= (snapshot?.aces?.length || 0);
+      }
+      byId("addAceUnlock").onclick = () => {
+        const ace = snapshot?.aces?.find((p) => !unlockAces.includes(p.id));
+        if (ace) {
+          unlockAces.push(ace.id);
+          renderAceUnlocks();
+        }
+      };
+      byId("clearAceUnlocks").onclick = () => {
+        unlockAces = [];
+        renderAceUnlocks();
+      };
       byId("addUnit").onclick = addUnit;
       byId("clearUnlocks").onclick = () => {
         unlockUnits = [];
         renderUnlocks();
       };
       byId("mode").onchange = () => {
-        const scheduled = ["online_window", "battle_bonus"].includes(byId("mode").value);
+        const scheduled = ["online_window", "battle_bonus", "cumulative_kill_cost"].includes(
+          byId("mode").value,
+        );
         byId("window").hidden = false;
         const bonus = byId("mode").value === "battle_bonus";
         byId("bonusFields").hidden = !bonus;
         byId("rewardFields").hidden = bonus;
+        byId("targetCostLabel").hidden = byId("mode").value !== "cumulative_kill_cost";
         byId("loginDaysLabel").hidden = byId("mode").value !== "cumulative_login";
         byId("startsAt").required = byId("endsAt").required = scheduled;
       };
@@ -637,6 +785,8 @@
         byId("form").reset();
         byId("inventory").replaceChildren();
         unlockUnits = [];
+        unlockAces = [];
+        renderAceUnlocks();
         renderUnlocks();
         byId("mode").onchange();
         selectedId = null;
@@ -655,7 +805,7 @@
       };
       let deletingId = null;
       byId("deleteActivity").onclick = () => {
-        const activity = snapshot.activities.find(item => item.id === selectedId);
+        const activity = snapshot.activities.find((item) => item.id === selectedId);
         if (!activity) return;
         deletingId = activity.id;
         byId("deleteActivityText").textContent = "确定删除“" + activity.title + "”？";
@@ -688,6 +838,7 @@
             text: byId("editBody").value,
             ...period("editStartsAt", "editEndsAt"),
             loginDays: Number(byId("editLoginDays").value),
+            targetCost: Number(byId("editTargetCost").value),
             ...(snapshot.activities.find((activity) => activity.id === selectedId).mode ===
             "battle_bonus"
               ? { multipliers: readMultipliers("editMultiplier") }
@@ -717,11 +868,13 @@
             supplies: Number(byId("supplies").value),
             inventory,
             unlockUnits: [...unlockUnits],
+            unlockAces: [...unlockAces],
           },
         };
         byId("publish").disabled = true;
         try {
           Object.assign(value, period("startsAt", "endsAt"));
+          value.targetCost = Number(byId("targetCost").value);
           value.loginDays = Number(byId("loginDays").value);
           if (value.mode === "battle_bonus") value.multipliers = readMultipliers("multiplier");
           snapshot = await api("/publish", value);

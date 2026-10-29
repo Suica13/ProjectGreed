@@ -421,6 +421,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_AMR",
       "name": "阿姆罗·雷",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_AMR.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_AMR.png",
       "description": "一年战争诞生的传奇驾驶员,联邦的“白色流星” \n优势 \n=成长力惊人= \n=满级技能溢出= \n=初始觉醒很高= \n劣势 \n=劣势觉得自己是存在的,但他不敢告诉阿姆罗= \n=容易被大姐姐魅惑= \n \n“真正应该打倒的不应该是扎比家的独裁者吗!”",
@@ -442,9 +443,17 @@
       },
       "comprehension": 108.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 239.34528000000003,
         "melee": 220.44960000000003,
@@ -481,7 +490,37 @@
           "name": "命中率上升",
           "description": "15秒内命中率提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "accuracy": 1.75
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AccuracyUp_ActiveTime": 15.0,
+            "Pilot_AccuracyUp_CD": 90.0,
+            "Pilot_AccuracyUp_AccuracyUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "AccuracyUp",
@@ -494,7 +533,35 @@
           "name": "经验值上升",
           "description": "15秒内经验值获取提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {},
+          "experienceMultiplier": 1.75,
+          "nativeEffect": {
+            "Pilot_ExpUp_ActiveTime": 15.0,
+            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ExpUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ExpGenUp",
@@ -511,6 +578,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_BRT",
       "name": "布莱特·诺亚",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_BRT.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_BRT.png",
       "description": "一代传奇白色木马的指挥官 \n优势 \n= 指挥能力强 = \n= 懂得操控人心 = \n= 懂得利用地形 = \n劣势 \n= 战斗能力差 = \n= 喜欢给人上压力 = \n \n \"我打你有什么不对!\"",
@@ -532,9 +600,17 @@
       },
       "comprehension": 106.5,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 157.03345124999998,
         "melee": 163.073199375,
@@ -571,7 +647,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -588,6 +694,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_CRS",
       "name": "克里斯蒂娜·麦肯吉",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_CRS.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_CRS.png",
       "description": "毕业于联邦军官学院的优秀机师,负责对新型MSRX-78NT-1高达NT-1进行测试工作 \n优势 \n=射击能力优秀= \n=防御技巧优秀= \n=红发大姐姐= \n劣势 \n=反应能力一般= \n=机动能力一般= \n \n“这孩子太过灵敏了!”",
@@ -609,9 +716,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 191.008125,
         "melee": 156.27937500000002,
@@ -648,7 +763,37 @@
           "name": "防御力上升",
           "description": "15秒内防御力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "defense": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_DefUp_ActiveTime": 15.0,
+            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_DefUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DefUp",
@@ -665,6 +810,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_FOT",
       "name": "弗特·罗姆菲洛",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_FOT.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_FOT.png",
       "description": "地球联邦军第16独立部队的测试机师,负责护送一年战争的停战条约,使其成功签订 \n优势 \n= 反应较为出色 = \n= 整体能力优秀 = \n劣势 \n= 成长能力较慢 = \n \n“我会证明,我的实力的！”",
@@ -686,9 +832,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 179.43187500000002,
         "melee": 173.64375,
@@ -725,7 +879,37 @@
           "name": "回避力上升",
           "description": "15秒内反应力提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "reaction": 1.75
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_ReactionUp_ActiveTime": 15.0,
+            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ReactionUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ReactionUp",
@@ -742,6 +926,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_HYT",
       "name": "小林隼人",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_HYT.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_HYT.png",
       "description": "一代传奇白色基地的钢坦克驾驶员 \n优势 \n= 射击能力出色 = \n= 战斗能力较为全面 = \n劣势 \n= 前期战斗能力不足 = \n \n“不能总是交给凯来处理!”",
@@ -763,9 +948,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 179.43187500000002,
         "melee": 162.06750000000002,
@@ -784,7 +977,37 @@
           "name": "命中率上升",
           "description": "15秒内命中率提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "accuracy": 1.75
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AccuracyUp_ActiveTime": 15.0,
+            "Pilot_AccuracyUp_CD": 90.0,
+            "Pilot_AccuracyUp_AccuracyUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "AccuracyUp",
@@ -799,6 +1022,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_JST",
       "name": "吉斯汀·隆伯德",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_JST.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_JST.png",
       "description": "地球联邦军第16独立部队骏马号的指挥官,拥有着冷静的判断力和出色的指挥能力 \n优势 \n= 指挥能力优秀 = \n= 属性较为平庸 = \n劣势 \n= 属性较为平庸 = \n \n“签署仪式落幕的话,这场战争也就结束了吧”",
@@ -820,9 +1044,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 156.27937500000002,
         "melee": 156.27937500000002,
@@ -859,7 +1091,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -876,6 +1138,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_KOU",
       "name": "浦木宏",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_KOU.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_KOU.png",
       "description": "被称为幻之击坠王的男人 \n优势 \n=成长力惊人= \n=综合技巧较好= \n劣势 \n=战绩不作数= \n \n“不要胡萝卜哦..”",
@@ -897,9 +1160,17 @@
       },
       "comprehension": 106.5,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 205.35143624999998,
         "melee": 193.27193999999997,
@@ -936,7 +1207,35 @@
           "name": "经验值上升",
           "description": "15秒内经验值获取提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {},
+          "experienceMultiplier": 1.75,
+          "nativeEffect": {
+            "Pilot_ExpUp_ActiveTime": 15.0,
+            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ExpUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ExpGenUp",
@@ -953,6 +1252,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_KRN",
       "name": "卡莲·约书亚",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_KRN.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_KRN.png",
       "description": "第08小队的队员之一,是队内的多面手 \n优势 \n=属性较为平均= \n劣势 \n=属性较为平均= \n \n“你的厄运也到此为止了嘛”",
@@ -974,9 +1274,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 179.43187500000002,
         "melee": 179.43187500000002,
@@ -995,7 +1303,35 @@
           "name": "经验值上升",
           "description": "15秒内经验值获取提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {},
+          "experienceMultiplier": 1.75,
+          "nativeEffect": {
+            "Pilot_ExpUp_ActiveTime": 15.0,
+            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ExpUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ExpGenUp",
@@ -1010,6 +1346,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_KSD",
       "name": "凯·西汀",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_KSD.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_KSD.png",
       "description": "一代传奇白色基地的钢加农驾驶员 \n优势 \n= 射击能力优秀 = \n= 拥有过人的反应力 = \n劣势 \n= 前期战斗能力不足 = \n \n“吉翁的混蛋居然追到这里来了!”",
@@ -1031,9 +1368,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 173.64375,
         "melee": 167.85562500000003,
@@ -1070,7 +1415,38 @@
           "name": "伤害上升",
           "description": "15秒内伤害提高20%",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.2,
+            "melee": 1.2
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DamageUp",
@@ -1087,6 +1463,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_RUT",
       "name": "鲁斯·克塞尔",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_RUT.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_RUT.png",
       "description": "地球联邦军第16独立部队的测试机师,是队伍里少有的老练军人,负责支援照顾弗特 \n优势 \n= 射击能力优秀 = \n= 整体能力优秀 = \n劣势 \n= 反应能力略弱= \n \n“如果有机会的话,我愿意赌在它上面！”",
@@ -1108,9 +1485,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 185.22000000000003,
         "melee": 179.43187500000002,
@@ -1147,7 +1532,37 @@
           "name": "命中率上升",
           "description": "15秒内命中率提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_AccuracyUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "accuracy": 1.75
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AccuracyUp_ActiveTime": 15.0,
+            "Pilot_AccuracyUp_CD": 90.0,
+            "Pilot_AccuracyUp_AccuracyUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "AccuracyUp",
@@ -1164,6 +1579,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_RVL",
       "name": "约翰·亚伯拉罕·雷比尔",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_RVL.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_RVL.png",
       "description": "宇宙世纪最伟大最璀璨的指挥官 \n优势 \n= 指挥能力极强 = \n= 懂得控制人心 = \n= 学习能力强 = \n劣势 \n= 和蔼的圣诞老爷爷 = \n \n \"吉翁已无可用之兵！\"",
@@ -1185,9 +1601,17 @@
       },
       "comprehension": 106.5,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 163.073199375,
         "melee": 163.073199375,
@@ -1224,7 +1648,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -1241,6 +1695,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_SDS",
       "name": "泰利·山达斯二世",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SDS.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_SDS.png",
       "description": "第08小队的队员之一,因出击后小队成员经常全部阵亡而被称为“死神” \n优势 \n=射击技巧较高= \n=防御技巧较高= \n劣势 \n=格斗能力一般= \n=机动能力一般= \n \n“不会让你死的,不会让任何一个人死的!”",
@@ -1262,9 +1717,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 185.22000000000003,
         "melee": 173.64375,
@@ -1283,7 +1746,37 @@
           "name": "回避力上升",
           "description": "15秒内反应力提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "reaction": 1.75
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_ReactionUp_ActiveTime": 15.0,
+            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ReactionUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ReactionUp",
@@ -1298,6 +1791,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_SHR",
       "name": "天田士郎",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SHR.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_SHR.png",
       "description": "第08小队的队长,擅长小队作战 \n优势 \n=领导较高= \n=防御技巧较高= \n=据说反射神经很好= \n劣势 \n=格斗能力一般= \n=机动能力一般= \n \n“听好了,一定要全员幸存状态的回去!”",
@@ -1319,9 +1813,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 185.22000000000003,
         "melee": 173.64375,
@@ -1358,7 +1860,37 @@
           "name": "防御力上升",
           "description": "15秒内防御力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "defense": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_DefUp_ActiveTime": 15.0,
+            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_DefUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DefUp",
@@ -1375,6 +1907,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_SLG",
       "name": "史列加·罗",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SLG.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_SLG.png",
       "description": "地球联邦白色基地的替补机师,是个举止轻佻有着轻浮个性的老兵,在基地内是年长的人 \n优势 \n= 防御较为出色 = \n= 整体属性优秀 = \n劣势 \n= 格斗能力一般 = \n \n“虽然可悲,但这就是战争啊”",
@@ -1396,9 +1929,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 196.79625000000001,
         "melee": 150.49125,
@@ -1435,7 +1976,37 @@
           "name": "回避力上升",
           "description": "15秒内反应力提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "reaction": 1.75
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_ReactionUp_ActiveTime": 15.0,
+            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ReactionUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ReactionUp",
@@ -1452,6 +2023,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_SYA",
       "name": "雪拉·玛斯",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_SYA.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_SYA.png",
       "description": "地球联邦军白色基地的医护以及通讯员，是吉翁共和国的创立者的女儿，与夏亚是兄妹 \n优势 \n= 反应较为出色 = \n= 整体能力一般 = \n劣势 \n= 整体能力一般 = \n \n“新人类也是旧人类生的，旧的东西不代表不好”",
@@ -1473,9 +2045,17 @@
       },
       "comprehension": 106.5,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 169.1129475,
         "melee": 144.95395499999998,
@@ -1512,7 +2092,37 @@
           "name": "机动力上升",
           "description": "15秒内机动力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "speed": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_SpdUp_ActiveTime": 15.0,
+            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_SpdUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "SpeedUp",
@@ -1529,6 +2139,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_TAM",
       "name": "提安姆",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_TAM.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_TAM.png",
       "description": "地球联邦军第四舰队指挥官 \n优势 \n= 指挥能力优秀 = \n劣势 \n= 战斗能力差 = \n \n“我们也是基于雷比尔取得的情报来进行作战的 ”",
@@ -1550,9 +2161,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 156.27937500000002,
         "melee": 156.27937500000002,
@@ -1589,7 +2208,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -1606,6 +2255,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_WAK",
       "name": "华肯",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_WAK.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_WAK.png",
       "description": "地球联邦军军官,月神二号司令,负责宇宙的防线. \n优势 \n= 指挥能力优秀 = \n劣势 \n= 战斗能力差 = \n \n“连平民都要动员起来,不觉得这是个冷酷的时代吗?”",
@@ -1627,9 +2277,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 156.27937500000002,
         "melee": 156.27937500000002,
@@ -1666,7 +2324,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -1683,6 +2371,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_YDR",
       "name": "哈曼·杨德里",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_YDR.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_YDR.png",
       "description": "战车小队的指挥官,有着卓越的战车技术 \n优势 \n= 指挥能力较强 = \n= 会布置战术 = \n= 自身能力优秀 = \n劣势 \n= 玩坦克玩的 = \n \n“用死神对付死神吗?”",
@@ -1704,9 +2393,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 202.58437500000002,
         "melee": 156.27937500000002,
@@ -1743,7 +2440,37 @@
           "name": "机动力上升",
           "description": "15秒内机动力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "speed": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_SpdUp_ActiveTime": 15.0,
+            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_SpdUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "SpeedUp",
@@ -1760,6 +2487,7 @@
       "id": "Pilot_EFSF_0079_N_ACE_YUU",
       "name": "加岛勇",
       "faction": "EFSF",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/EFSF_0079/Pilot_EFSF_0079_N_ACE_YUU.ini",
       "icon": "assets/pilots/Pilot_EFSF_0079_N_ACE_YUU.png",
       "description": "联邦军土拨鼠小队的队长,有着“蓝色死神”的称号,被选中之人 \n优势 \n= 综合能力优秀 = \n= 指挥较强 = \n= 受到EXAM系统的伤害减半 = \n劣势 \n= 格斗一般 = \n \n“玛丽昂,抱歉,我要杀了这个家伙！”",
@@ -1781,9 +2509,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 185.22000000000003,
         "melee": 179.43187500000002,
@@ -1820,7 +2556,35 @@
           "name": "经验值上升",
           "description": "15秒内经验值获取提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {},
+          "experienceMultiplier": 1.75,
+          "nativeEffect": {
+            "Pilot_ExpUp_ActiveTime": 15.0,
+            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ExpUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ExpGenUp",
@@ -1833,7 +2597,17 @@
           "name": "EXAM驾驶员",
           "description": "几乎不会受到EXAM系统的伤害",
           "icon": "assets/pilots/ace-skill-EXAM.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_passive",
+          "examImmunity": true,
+          "enCost": 0,
+          "passive": true,
           "localization": {
             "en": {
               "name": "EXAM Pilot",
@@ -1850,6 +2624,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_AKHN",
       "name": "阿卡汉纳",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_AKHN.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_AKHN.png",
       "description": "吉翁军有着红色鼻子的知名水产机师 \n优势 \n= 擅长水下战斗 = \n= 战斗能力较为一般 = \n劣势 \n= 战斗能力较为一般 = \n \n“进攻联邦总部的机会到了是吧!”",
@@ -1871,9 +2646,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 173.64375,
         "melee": 179.43187500000002,
@@ -1910,7 +2693,37 @@
           "name": "机动力上升",
           "description": "15秒内机动力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "speed": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_SpdUp_ActiveTime": 15.0,
+            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_SpdUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "SpeedUp",
@@ -1927,6 +2740,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_ANG",
       "name": "阿纳贝尔·卡多",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_ANG.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_ANG.png",
       "description": "被称为所罗门的噩梦的男人 \n=综合技巧较好= \n=格斗能力较高= \n劣势 \n=射击能力一般= \n \n“为了星辰作战的成功,所罗门啊,我又回来了!”",
@@ -1948,9 +2762,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 191.008125,
         "melee": 208.37250000000003,
@@ -1987,7 +2809,37 @@
           "name": "防御力上升",
           "description": "15秒内防御力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "defense": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_DefUp_ActiveTime": 15.0,
+            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_DefUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DefUp",
@@ -2004,6 +2856,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_ANS",
       "name": "爱娜·萨哈林",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_ANS.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_ANS.png",
       "description": "吉恩军的测试驾驶员,名门萨哈林家的千金,但她并非吉恩军的正规军人。 \n优势 \n=射击能力优秀= \n=反应能力优秀= \n劣势 \n=防御技巧较差= \n \n“他已经失去了攻击能力,请返航吧。”",
@@ -2025,9 +2878,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 196.79625000000001,
         "melee": 162.06750000000002,
@@ -2064,7 +2925,37 @@
           "name": "防御力上升",
           "description": "15秒内防御力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "defense": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_DefUp_ActiveTime": 15.0,
+            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_DefUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DefUp",
@@ -2081,6 +2972,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_BNI",
       "name": "巴纳德·瓦兹曼",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_BNI.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_BNI.png",
       "description": "吉翁招募的青年志愿兵之一,被选入独眼巨人小队作为后补队员 \n优势 \n=格斗技巧优秀= \n=机动能力优秀= \n劣势 \n=射击技巧一般= \n=命中技巧一般= \n=容易被红发大姐姐魅惑= \n \n“巴尼,已经不用再战斗了!”",
@@ -2102,9 +2994,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 167.85562500000003,
         "melee": 179.43187500000002,
@@ -2141,7 +3041,38 @@
           "name": "伤害上升",
           "description": "15秒内伤害提高20%",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.2,
+            "melee": 1.2
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DamageUp",
@@ -2158,6 +3089,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_CHA",
       "name": "夏亚·阿兹纳布尔",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_CHA.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_CHA.png",
       "description": "一年战争诞生的传奇驾驶员,吉翁的“赤色彗星” \n优势 \n=基础技能较高= \n=满级技能溢出= \n=初始觉醒较高= \n=复归时间只要1.5分钟= \n劣势 \n=没有人可以追上夏亚,特别是逃跑的时候= \n=有恋童恋母倾向= \n \n“拉拉,请指引我吧!”",
@@ -2179,9 +3111,17 @@
       },
       "comprehension": 106.5,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 217.43093249999998,
         "melee": 235.55017687499998,
@@ -2218,7 +3158,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -2231,7 +3201,37 @@
           "name": "回避力上升",
           "description": "15秒内反应力提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "reaction": 1.75
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_ReactionUp_ActiveTime": 15.0,
+            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ReactionUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ReactionUp",
@@ -2248,6 +3248,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_CIA",
       "name": "西玛·卡拉豪",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_CIA.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_CIA.png",
       "description": "莉莉·玛莲号的舰长 \n=双方阵营都可招募= \n劣势 \n=有黑历史= \n \n“你到底是哪一边的?”",
@@ -2269,9 +3270,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 202.58437500000002,
         "melee": 179.43187500000002,
@@ -2308,7 +3317,37 @@
           "name": "回避力上升",
           "description": "15秒内反应力提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ReactionUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "reaction": 1.75
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_ReactionUp_ActiveTime": 15.0,
+            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ReactionUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ReactionUp",
@@ -2317,12 +3356,17 @@
           }
         }
       ],
-      "unlockTech": []
+      "unlockTech": [],
+      "availableFactions": [
+        "ZEON",
+        "EFSF"
+      ]
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_DZL",
       "name": "多兹鲁·扎比",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_DZL.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_DZL.png",
       "description": "吉翁公国公王的第三子,宇宙吉翁军的司令,有传统武人风格的军人 \n= 指挥能力优秀 = \n= 防御能力优秀 = \n= 总属性较出色 = \n劣势 \n= 速度能力一般 = \n \n“吉翁的荣耀,不会败在你这种MS之下的！”",
@@ -2344,9 +3388,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 173.64375,
         "melee": 185.22000000000003,
@@ -2383,7 +3435,38 @@
           "name": "伤害上升",
           "description": "15秒内伤害提高20%",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.2,
+            "melee": 1.2
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DamageUp",
@@ -2396,7 +3479,37 @@
           "name": "防御力上升",
           "description": "15秒内防御力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "defense": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_DefUp_ActiveTime": 15.0,
+            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_DefUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DefUp",
@@ -2413,6 +3526,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_GNS",
       "name": "基尼亚斯·萨哈林",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GNS.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_GNS.png",
       "description": "吉翁技术上校,主持开发阿普撒拉斯的工作 \n优势 \n=指挥能力优秀= \n=防御能力优秀= \n=射击能力优秀= \n劣势 \n=格斗技巧较低= \n=机动技巧较低= \n \n“改变战争的一直都是科学家!”",
@@ -2434,9 +3548,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 196.79625000000001,
         "melee": 162.06750000000002,
@@ -2473,7 +3595,35 @@
           "name": "经验值上升",
           "description": "15秒内经验值获取提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_ExpUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {},
+          "experienceMultiplier": 1.75,
+          "nativeEffect": {
+            "Pilot_ExpUp_ActiveTime": 15.0,
+            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ExpUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "ExpGenUp",
@@ -2490,6 +3640,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_GRM",
       "name": "卡尔马·扎比",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GRM.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_GRM.png",
       "description": "被算计的短命吉翁公子哥 \n优势 \n= 拥有良好的指挥能力 = \n劣势 \n= 容易轻信他人 = \n= 对自己比较自信 = \n \n“别小看我m我也是扎比家的男子汉!”",
@@ -2511,9 +3662,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 156.27937500000002,
         "melee": 156.27937500000002,
@@ -2550,7 +3709,38 @@
           "name": "伤害上升",
           "description": "15秒内伤害提高20%",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.2,
+            "melee": 1.2
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DamageUp",
@@ -2567,6 +3757,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_GRN",
       "name": "基连·扎比",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_GRN.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_GRN.png",
       "description": "吉翁公国的领导人,希特勒的拙劣模仿者 \n优势 \n= 指挥能力超强 = \n劣势 \n= 战斗能力弱 = \n \n“只有身为优良人种的我们,才能够拯救全人类,zick zeon!”",
@@ -2588,9 +3779,17 @@
       },
       "comprehension": 106.5,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 163.073199375,
         "melee": 163.073199375,
@@ -2627,7 +3826,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -2644,6 +3873,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_HBT",
       "name": "赫伯特·冯·卡兹本",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_HBT.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_HBT.png",
       "description": "吉翁公国的军官,被临时调往603部队当做指挥官 \n优势 \n= 能力较为优秀 = \n劣势 \n= 防御较低 = \n \n“这就是总部答应的精英吗?简直在侮辱我的荣耀!”",
@@ -2665,9 +3895,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 196.79625000000001,
         "melee": 191.008125,
@@ -2686,7 +3924,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -2701,6 +3969,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_HRD",
       "name": "哈迪·修泰拿",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_HRD.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_HRD.png",
       "description": "吉翁军突击部队“独眼巨人队”的队长,是个身经百战的老练的军人 \n= 整体能力出色 = \n= 搭乘水用MS获得加成 = \n劣势 \n= 防御较低 = \n \n“时间并没有太多,一口气解决吧！”",
@@ -2722,9 +3991,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 185.22000000000003,
         "melee": 185.22000000000003,
@@ -2743,7 +4020,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -2760,6 +4067,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_JON",
       "name": "强尼·莱汀",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_JON.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_JON.png",
       "description": "吉翁军击坠榜第三名,有着“真红闪电”称号的王牌驾驶员 \n= 能力出色 = \n劣势 \n= 防御能力较差 = \n \n“不管是吉翁的名誉,还是宇宙居民的独立,都与我没关系”",
@@ -2781,9 +4089,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 191.008125,
         "melee": 191.008125,
@@ -2820,7 +4136,37 @@
           "name": "机动力上升",
           "description": "15秒内机动力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "speed": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_SpdUp_ActiveTime": 15.0,
+            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_SpdUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "SpeedUp",
@@ -2837,6 +4183,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_KCA",
       "name": "基西莉亚·扎比",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_KCA.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_KCA.png",
       "description": "吉翁公国公王的长女,吉翁突击机动军的司令,务实主义者,跟军人比更像政治家 \n= 指挥能力优秀 = \n劣势 \n= 总能力较为一般 = \n \n“要是我不活下去,吉翁就完了”",
@@ -2858,9 +4205,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 162.06750000000002,
         "melee": 144.70312500000003,
@@ -2897,7 +4252,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",
@@ -2914,6 +4299,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_KMSK",
       "name": "米海尔·卡明斯基",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_KMSK.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_KMSK.png",
       "description": "吉翁军突击部队“独眼巨人队”的副官,是个身经百战的军人 \n= 整体能力出色 = \n= 搭乘水用MS获得加成 = \n劣势 \n= 防御较低 = \n \n“放马过来吧,我来教你何为战斗的方法！”",
@@ -2935,9 +4321,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 196.79625000000001,
         "melee": 196.79625000000001,
@@ -2974,7 +4368,37 @@
           "name": "机动力上升",
           "description": "15秒内机动力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_SpdUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "speed": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_SpdUp_ActiveTime": 15.0,
+            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_SpdUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "SpeedUp",
@@ -2991,6 +4415,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_LLS",
       "name": "拉拉·辛",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_LLS.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_LLS.png",
       "description": "宇宙世纪最大的神棍女鬼,同时也是夏亚的妈妈 \n优势 \n= 初始觉醒能力极强 = \n= 拥有超乎常人的反应力 = \n劣势 \n= 不擅长近身格斗 = \n= 防御能力低下 = \n \n“我看到时间了”",
@@ -3012,9 +4437,17 @@
       },
       "comprehension": 106.5,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 199.311688125,
         "melee": 157.03345124999998,
@@ -3051,7 +4484,37 @@
           "name": "觉醒值上升",
           "description": "15秒内觉醒值提高75%",
           "icon": "assets/pilots/ace-skill-Pilot_AwakeningUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "awakening": 1.75
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AwakeningUp_ActiveTime": 15.0,
+            "Pilot_AwakeningUp_CD": 90.0,
+            "Pilot_AwakeningUp_AwakeningUp": 1.75
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "AwakeningUp",
@@ -3068,6 +4531,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_MQV",
       "name": "马·克贝",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_MQV.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_MQV.png",
       "description": "吉翁敖德萨攻防战的最高指挥官 \n优势 \n= 拥有优秀的指挥能力 = \n= 懂得洞察人心 = \n劣势 \n= 跑的比较快 = \n= 沉迷收集文物古董 = \n \n“北宋的壶 那可是个好东西啊”",
@@ -3089,9 +4553,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 162.06750000000002,
         "melee": 179.43187500000002,
@@ -3128,7 +4600,37 @@
           "name": "防御力上升",
           "description": "15秒内防御力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "defense": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_DefUp_ActiveTime": 15.0,
+            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_DefUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DefUp",
@@ -3145,6 +4647,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_MSG",
       "name": "松永真",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_MSG.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_MSG.png",
       "description": "吉翁军击坠榜第五名,有着“白狼”称号的王牌驾驶员 \n= 能力出色 = \n劣势 \n= 机动能力较差 = \n \n“好好将我白狼的战姿,烙印在眼底吧！”",
@@ -3166,9 +4669,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 179.43187500000002,
         "melee": 202.58437500000002,
@@ -3205,7 +4716,37 @@
           "name": "防御力上升",
           "description": "15秒内防御力提高35%",
           "icon": "assets/pilots/ace-skill-Pilot_DefUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "defense": 1.35
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_DefUp_ActiveTime": 15.0,
+            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_DefUp": 1.35
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DefUp",
@@ -3222,6 +4763,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_NMBS",
       "name": "尼姆巴斯·舒特森",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_NMBS.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_NMBS.png",
       "description": "吉翁军的王牌机师,有着“圣骑士”的称号,是被抛弃之人 \n优势 \n= 能力出色 = \n= 受到EXAM系统的伤害减半 = \n劣势 \n= 射击较差 = \n \n“玛丽昂,我是哪里错了呢”",
@@ -3243,9 +4785,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 173.64375,
         "melee": 214.160625,
@@ -3282,7 +4832,38 @@
           "name": "伤害上升",
           "description": "15秒内伤害提高20%",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.2,
+            "melee": 1.2
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DamageUp",
@@ -3295,7 +4876,17 @@
           "name": "EXAM驾驶员",
           "description": "几乎不会受到EXAM系统的伤害",
           "icon": "assets/pilots/ace-skill-EXAM.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_passive",
+          "examImmunity": true,
+          "enCost": 0,
+          "passive": true,
           "localization": {
             "en": {
               "name": "EXAM Pilot",
@@ -3312,6 +4903,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_NRS",
       "name": "诺利斯·巴卡德",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_NRS.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_NRS.png",
       "description": "吉翁贵族萨哈林家族的仆人,忠心于基尼亚斯·萨哈林和艾娜·萨哈林 \n优势 \n=格斗技巧优秀= \n=反应能力优秀= \n=机动能力优秀= \n劣势 \n=射击技巧较低= \n \n“不能引出机体性能的话就这样去死吧!”",
@@ -3333,9 +4925,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 185.22000000000003,
         "melee": 208.37250000000003,
@@ -3372,7 +4972,38 @@
           "name": "伤害上升",
           "description": "15秒内伤害提高20%",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.2,
+            "melee": 1.2
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DamageUp",
@@ -3389,6 +5020,7 @@
       "id": "Pilot_ZEON_0079_N_ACE_RBR",
       "name": "兰巴·拉尔",
       "faction": "ZEON",
+      "era": "0079",
       "source": "Units/BattleUnits/Pilot/0079/ACE/ZEON_0079/Pilot_ZEON_0079_N_ACE_RBR.ini",
       "icon": "assets/pilots/Pilot_ZEON_0079_N_ACE_RBR.png",
       "description": "吉翁的老练王牌“青之巨星”,曾差点消灭白色基地 \n优势 \n= 战斗能力惊人 = \n= 拥有较强的指挥能力 = \n= 懂得观察人心 = \n劣势 \n= 不适合单独作战 = \n \n“赢了我的是你的机体性能,而不是你的驾驶技术!”",
@@ -3410,9 +5042,17 @@
       },
       "comprehension": 105.0,
       "initialLevel": 0,
-      "maxLevel": 3,
-      "experienceBase": 7500.0,
-      "experienceMultiplier": 1.5,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 100,
+      "costPerLevel": 50,
+      "experienceBase": 2000,
+      "experienceMultiplier": 2,
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
       "maxStats": {
         "shooting": 185.22000000000003,
         "melee": 208.37250000000003,
@@ -3449,7 +5089,38 @@
           "name": "伤害上升",
           "description": "15秒内伤害提高20%",
           "icon": "assets/pilots/ace-skill-Pilot_AtkUp_Cqb.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "shooting": 1.2,
+            "melee": 1.2
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_AtkUp_ActiveTime": 15.0,
+            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_AtkUp": 1.2
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "DamageUp",
@@ -3462,7 +5133,37 @@
           "name": "领导力上升",
           "description": "15秒内领导力提高100%",
           "icon": "assets/pilots/ace-skill-Pilot_LeaderShipUp.png",
-          "implemented": false,
+          "owner": "pilot",
+          "range": 0,
+          "minRange": 0,
+          "actionCost": 0,
+          "maxUses": 99,
+          "consumeAction": false,
+          "implemented": true,
+          "type": "pilot_buff",
+          "enCost": 100,
+          "statMultipliers": {
+            "leadership": 2.0
+          },
+          "experienceMultiplier": 1,
+          "nativeEffect": {
+            "Pilot_LeaderShipUp_ActiveTime": 15.0,
+            "Pilot_LeaderShipUp_CD": 90.0,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+          },
+          "effect": "Flash_1_N",
+          "sound": {
+            "file": "assets/sounds/Action_8.ogg",
+            "asset": "pilot/activation",
+            "volume": 0.5
+          },
+          "durationTurns": 1,
+          "cooldownTurns": 6,
+          "cooldownStarts": "effect_end",
+          "nativeTiming": {
+            "durationSeconds": 15.0,
+            "cooldownSeconds": 90.0
+          },
           "localization": {
             "en": {
               "name": "LeaderShipUp",

@@ -1,4 +1,4 @@
-/* Native caps and seamless middle tiles; no stretched textures or helper units. */
+/* Fixed native three-part presentation; hit range belongs to the shared rules. */
 const IrradiationFX = (() => {
   const active = new Map();
   function reset() {
@@ -129,9 +129,8 @@ const IrradiationFX = (() => {
           events: (beam.hits || []).map((h) => ({ ...h, to: h.unitId })),
         });
       }
-      const length = Math.hypot(to.x - from.x, to.y - from.y),
-        // Native sheet height 168 × imageScale 1.25 × imageScaleY 1.5.
-        height = Math.max(tile * 0.72, Math.max(315, beam.beamWidth ?? 315) * scale),
+      const // Native sheet height 168 × imageScale 1.25 × imageScaleY 1.5.
+        height = (beam.beamWidth ?? 315) * scale,
         native = beam.beamSections || [
           { part: "Start", left: -101.25, width: 452.5 },
           { part: "Mid", left: 351.625, width: 173.75 },
@@ -141,43 +140,25 @@ const IrradiationFX = (() => {
       ctx.save();
       ctx.translate(from.x, from.y);
       ctx.rotate(Math.atan2(to.y - from.y, to.x - from.x));
-      const start = native.find((s) => s.part === "Start"),
-        middle = native.find((s) => s.part === "Mid"),
-        end = native.find((s) => s.part === "End"),
-        startX = start.left * scale,
-        startWidth = start.width * scale,
-        endWidth = end.width * scale,
-        endX = length - endWidth,
-        overlap = startX + startWidth > endX,
-        middleLeft = overlap ? length / 2 : startX + startWidth,
-        middleRight = overlap ? length / 2 : endX;
-      // Overlap natural caps at short ranges; crop only beyond the ray endpoints.
-      // Crop the final partial tile in source coordinates. Their
-      // pixel scale stays identical at every range, including point-blank beams.
-      function section(part, x, width, left, right) {
-        if (right <= left || width <= 0) return;
-        const effect = ART.effects[key(part)],
+      // Native attachment offsets and frame sizes are model-space values.
+      // Only camera/model scale and aim direction affect the presentation:
+      // never stretch, crop or repeat sheets to match the gameplay ray length.
+      for (const section of native) {
+        const effect = ART.effects[key(section.part)],
           image = SpriteRenderer.images[effect.asset],
-          fw = image.width / effect.frames,
-          fraction = (right - left) / width;
+          fw = image.width / effect.frames;
         ctx.drawImage(
           image,
-          frame * fw + ((left - x) / width) * fw,
+          frame * fw,
           0,
-          fraction * fw,
+          fw,
           image.height,
-          left,
+          section.left * scale,
           -height / 2,
-          right - left,
+          section.width * scale,
           height,
         );
       }
-      section("Start", startX, startWidth, startX, Math.min(length, startX + startWidth));
-      const period = middle.width * scale;
-      if (period > 0)
-        for (let x = middleLeft; x < middleRight; x += period)
-          section("Mid", x, period, x, Math.min(x + period, middleRight));
-      section("End", endX, endWidth, Math.max(0, endX), length);
       ctx.restore();
     }
   }

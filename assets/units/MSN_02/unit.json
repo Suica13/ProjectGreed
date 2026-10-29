@@ -957,7 +957,7 @@
       "actionCost": 3
     },
     "ZN_MSN_02_BG": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -1181,10 +1181,21 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSN_02_BG_2": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -1415,10 +1426,21 @@
         ],
         "mergedInto": "ZN_MSN_02_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSN_02_BG_3": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -1649,10 +1671,21 @@
         ],
         "mergedInto": "ZN_MSN_02_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSN_02_BG_4": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -1883,10 +1916,21 @@
         ],
         "mergedInto": "ZN_MSN_02_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSN_02_BG_5": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -2117,10 +2161,21 @@
         ],
         "mergedInto": "ZN_MSN_02_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSN_02_BG_L": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -2351,10 +2406,21 @@
         ],
         "mergedInto": "ZN_MSN_02_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSN_02_BG_L_2": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -2585,10 +2651,21 @@
         ],
         "mergedInto": "ZN_MSN_02_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSN_02_BG_L_3": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -2819,10 +2896,21 @@
         ],
         "mergedInto": "ZN_MSN_02_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSN_02_BG_L_4": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -3053,10 +3141,21 @@
         ],
         "mergedInto": "ZN_MSN_02_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSN_02_BG_L_5": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -3287,7 +3386,18 @@
         ],
         "mergedInto": "ZN_MSN_02_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -3438,15 +3548,15 @@
       "localization": {
         "zh": {
           "name": "有线浮游炮",
-          "description": "2个单元，每单元2发，基础伤害1000/发；消耗3 AP。"
+          "description": "2个单元，每单元2发，基础伤害1750/发；消耗3 AP。"
         },
         "en": {
           "name": "Wired Remote Cannons",
-          "description": "2 remote units, 2 shots each, 1000 base damage per shot; costs 3 AP."
+          "description": "2 remote units, 2 shots each, 1750 base damage per shot; costs 3 AP."
         },
         "ja": {
           "name": "有線サイコミュ砲",
-          "description": "2基が各2発射撃。1発の基本ダメージ1000、消費3 AP。"
+          "description": "2基が各2発射撃。1発の基本ダメージ1750、消費3 AP。"
         }
       },
       "type": "beam",
@@ -3457,9 +3567,9 @@
       "hit": 85.0,
       "en": 100.0,
       "actionCost": 3,
-      "damagePerShot": 1000,
+      "damagePerShot": 1750.0,
       "damageComponents": {
-        "beam": 1000
+        "beam": 1750.0
       },
       "hitsPerShot": 1,
       "clip": null,
@@ -3654,7 +3764,7 @@
           }
         ]
       },
-      "description": "有线浮游炮：2个单元，每单元2发，基础伤害1000/发。消耗3 AP。",
+      "description": "有线浮游炮：2个单元，每单元2发，基础伤害1750/发。消耗3 AP。",
       "sourceHit": 85.0,
       "nativeTiming": {
         "source": "Units/BattleUnits/Weapon/Funnel/ZN_MSN_02_HandFunnel.gw",
@@ -3914,5 +4024,11 @@
         }
       ]
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

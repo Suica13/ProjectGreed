@@ -97,6 +97,18 @@ const ProductionUI = (() => {
       return "生产失败：" + Economy.errorMessage(error);
     }
   }
+  function productionNote(prefab) {
+    const sources = prefab?.production?.refitFrom || [];
+    return sources.length
+      ? I18n.text("改装来自：") +
+          sources
+            .map((id) => {
+              const source = Rules.catalog.prefabs.find((p) => p.id === id);
+              return source ? source.code + " " + I18n.localized(source) : id;
+            })
+            .join(" / ")
+      : I18n.text("无法生产");
+  }
   function renderSale(unitId) {
     let panel = byId("formationInventorySale");
     if (!panel) {
@@ -116,13 +128,20 @@ const ProductionUI = (() => {
     if (offer) {
       resources(balance, offer, { compact: true });
       productionPrice.append(balance, element("small", "muted", "每批 " + offer.quantity + " 台"));
-    } else productionPrice.append(element("small", "muted", "暂无原厂价格"));
+    } else productionPrice.append(element("small", "muted", productionNote(prefab)));
     const actions = element("span", "inventory-actions");
     const produce = element("button", "primary", "生产单位");
     produce.id = "producePreviewUnit";
+    if (!offer || prefab?.production?.enabled === false)
+      produce.textContent = productionNote(prefab);
     const inBattle = () => Net.started && Net.snapshot?.phase !== "assembly";
     produce.disabled =
-      !offer || !prefab || !allows(prefab) || !Economy.affordable(offer) || inBattle();
+      !offer ||
+      !prefab ||
+      prefab.production?.enabled === false ||
+      !allows(prefab) ||
+      !Economy.affordable(offer) ||
+      inBattle();
     produce.onclick = () => {
       note(produceChassis(unitId));
       Formation.refresh();
@@ -320,18 +339,21 @@ const ProductionUI = (() => {
     byId("productionUnitName").textContent = prefab.code + " " + prefab.name;
     Formation.renderPreview(id, byId("productionPreview"));
     renderInfo(model);
-    const reason = prefab.wip
-      ? "WIP"
-      : !allows(prefab)
-        ? PlayerProfile.faction() !== "PMC" &&
-          !(prefab.availableFactions || [prefab.faction]).includes(PlayerProfile.faction())
-          ? "阵营不匹配"
-          : "尚未开发"
-        : !offer
-          ? "原工厂没有此单位的生产方案"
-          : !Economy.affordable(offer)
-            ? "资金或物资不足"
-            : "";
+    const reason =
+      prefab.production?.enabled === false
+        ? productionNote(prefab)
+        : prefab.wip
+          ? "WIP"
+          : !allows(prefab)
+            ? PlayerProfile.faction() !== "PMC" &&
+              !(prefab.availableFactions || [prefab.faction]).includes(PlayerProfile.faction())
+              ? "阵营不匹配"
+              : "尚未开发"
+            : !offer
+              ? "原工厂没有此单位的生产方案"
+              : !Economy.affordable(offer)
+                ? "资金或物资不足"
+                : "";
     resources(byId("productionPrice"), offer || {}, { compact: true });
     byId("productionPrice").hidden = !offer;
     byId("productionQuantity").textContent =
@@ -340,7 +362,8 @@ const ProductionUI = (() => {
       Economy.quantity(prefab.id) +
       " 台";
     byId("produceUnit").disabled = !!reason;
-    byId("produceUnit").textContent = "生产单位";
+    byId("produceUnit").textContent =
+      offer && prefab.production?.enabled !== false ? "生产单位" : productionNote(prefab);
     byId("produceUnit").title = reason;
     const baseKit = Economy.baseKit(prefab.id);
     byId("productionBaseKitName").textContent = "生产单位";
@@ -403,8 +426,8 @@ const ProductionUI = (() => {
       metadata.append(Formation.unitTags(prefab), summary);
       const price = element("span", "production-unit-price"),
         balance = element("span", "resource-balance");
-      if (offer) resources(balance, offer);
-      else balance.append(element("span", "muted", "暂无原厂价格"));
+      if (offer && prefab.production?.enabled !== false) resources(balance, offer);
+      else balance.append(element("span", "muted", productionNote(prefab)));
       price.append(cost, balance);
       const owned = element("small", "muted production-owned");
       owned.append(element("span", "", "已持有 " + count + " 台"));

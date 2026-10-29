@@ -1900,3 +1900,6 @@ body.replay-active #gameScene .hud-terrain-strip {
   #gameScene .hud-top-controls .map-camera-controls button { min-width: 26px; padding-inline: 5px; }
   #gameScene .hud-top-controls #hudTurnActions button { font-size: 11px; padding: 8px; }
 }
+
+.pilot-skills-heading { margin-top:12px; border-top:1px solid #527492; padding-top:10px; }
+.pilot-skill-icon { width:34px; height:34px; object-fit:contain; float:left; margin:0 8px 4px 0; }

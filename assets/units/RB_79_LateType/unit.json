@@ -688,5 +688,13 @@
       "CanLoadInto"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RB_79"
+    ]
+  }
 }

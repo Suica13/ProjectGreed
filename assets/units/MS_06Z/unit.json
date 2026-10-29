@@ -691,7 +691,7 @@
       "actionCost": 5
     },
     "ZN_MS_06Z_BG": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -915,10 +915,21 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MS_06Z_BG_2": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -1149,10 +1160,21 @@
         ],
         "mergedInto": "ZN_MS_06Z_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MS_06Z_BG_3": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -1383,10 +1405,21 @@
         ],
         "mergedInto": "ZN_MS_06Z_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MS_06Z_BG_4": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -1617,10 +1650,21 @@
         ],
         "mergedInto": "ZN_MS_06Z_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MS_06Z_BG_5": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -1851,10 +1895,21 @@
         ],
         "mergedInto": "ZN_MS_06Z_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MS_06Z_BG_L": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -2085,10 +2140,21 @@
         ],
         "mergedInto": "ZN_MS_06Z_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MS_06Z_BG_L_2": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -2319,10 +2385,21 @@
         ],
         "mergedInto": "ZN_MS_06Z_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MS_06Z_BG_L_3": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -2553,10 +2630,21 @@
         ],
         "mergedInto": "ZN_MS_06Z_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MS_06Z_BG_L_4": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -2787,10 +2875,21 @@
         ],
         "mergedInto": "ZN_MS_06Z_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MS_06Z_BG_L_5": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -3021,7 +3120,18 @@
         ],
         "mergedInto": "ZN_MS_06Z_BG"
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -3191,9 +3301,9 @@
       "hit": 85.0,
       "en": 100.0,
       "actionCost": 3,
-      "damagePerShot": 1000,
+      "damagePerShot": 1000.0,
       "damageComponents": {
-        "beam": 1000
+        "beam": 1000.0
       },
       "hitsPerShot": 1,
       "clip": null,
@@ -3590,5 +3700,10 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

@@ -380,7 +380,7 @@
       "slot": "primary",
       "min": 3,
       "max": 8,
-      "hit": 67.5,
+      "hit": 60.0,
       "en": 240.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -622,7 +622,7 @@
       "actionCost": 3,
       "tacticalDamageMultiplier": 1.25,
       "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "SalamisClass_Turret_MS": {
       "name": "舰载导弹",
@@ -641,7 +641,7 @@
       "slot": "fixed",
       "min": 3,
       "max": 4,
-      "hit": 90.0,
+      "hit": 80.0,
       "en": 192.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -905,7 +905,7 @@
       "actionCost": 2,
       "tacticalDamageMultiplier": 1.25,
       "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "SalamisClass_Turret_AMS": {
       "name": "反MS导弹",
@@ -924,7 +924,7 @@
       "slot": "fixed",
       "min": 3,
       "max": 4,
-      "hit": 76.5,
+      "hit": 68.0,
       "en": 160.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -1092,7 +1092,7 @@
       "actionCost": 2,
       "tacticalDamageMultiplier": 1.25,
       "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "SalamisClass_Turret_AA": {
       "name": "对空机枪",
@@ -1111,7 +1111,7 @@
       "slot": "fixed",
       "min": 1,
       "max": 2,
-      "hit": 112.5,
+      "hit": 100.0,
       "en": 20.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -1920,7 +1920,7 @@
         }
       ],
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "SalamisClass_Turret_MG": {
       "name": "舰载机炮",
@@ -1939,7 +1939,7 @@
       "slot": "fixed",
       "min": 2,
       "max": 3,
-      "hit": 112.5,
+      "hit": 100.0,
       "en": 10.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -2235,7 +2235,7 @@
       "actionCost": 3,
       "tacticalDamageMultiplier": 1.25,
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     }
   },
   "stats": {
@@ -2796,5 +2796,10 @@
         "seconds": 30.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

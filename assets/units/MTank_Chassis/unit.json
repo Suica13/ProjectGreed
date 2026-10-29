@@ -560,5 +560,10 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": []
+  }
 }

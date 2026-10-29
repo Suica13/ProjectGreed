@@ -26,6 +26,21 @@ const UnitSkills = (() => {
     if (!Array.isArray(skills) || new Set(skills.map((s) => s?.id)).size !== skills.length)
       throw Error("Invalid unit skills: " + label);
     for (const skill of skills) {
+      if (skill?.owner === "pilot") {
+        if (
+          !skill.implemented ||
+          !skill.id ||
+          !skill.name ||
+          skill.range !== 0 ||
+          skill.actionCost !== 0 ||
+          !["pilot_buff", "pilot_passive"].includes(skill.type) ||
+          !Number.isFinite(skill.enCost) ||
+          skill.enCost < 0 ||
+          (!skill.passive && (skill.durationTurns !== 1 || skill.cooldownTurns !== 6))
+        )
+          throw Error("Invalid ACE skill: " + label);
+        continue;
+      }
       if (skill?.type === "flight") {
         if (
           skill.actionCost !== 1 ||
@@ -274,6 +289,7 @@ const UnitSkills = (() => {
   function create(G) {
     const {
       models,
+      pilots,
       modelOf,
       fits,
       dist,
@@ -285,12 +301,15 @@ const UnitSkills = (() => {
       sensors,
       cells: unitCells,
     } = G;
-    const of = (unit) => models[unit.model]?.skills || [];
+    const of = (unit) => [...(models[unit.model]?.skills || []), ...pilots.skillsOf(unit)];
     const usageKey = (unit, skill) => models[unit.model].prefabId + "/" + skill.id;
     function canUse(game, unit, skillId) {
       const skill = of(unit).find((s) => s.id === skillId);
       return (
         !!skill &&
+        !skill.passive &&
+        (skill.type !== "pilot_buff" ||
+          (unit.en >= skill.enCost && !unit.pilotBuffs?.[skill.id])) &&
         (!["smoke", "emp"].includes(skill.type) || unit.en >= skill.enCost) &&
         (unit.skillReadyRound?.[skill.id] ?? 0) <= game.round &&
         (!skill.actionCost ||
@@ -323,7 +342,7 @@ const UnitSkills = (() => {
         ) &&
         unit.hp > 0 &&
         !unit.embarked &&
-        !unit.acted &&
+        (!unit.acted || skill.owner === "pilot") &&
         !unit.plan &&
         unit.team === game.team &&
         game.winner === null &&
@@ -359,6 +378,11 @@ const UnitSkills = (() => {
         environment: unit.environment,
         performance: unit.performance ?? 1,
         pilot: unit.pilot,
+        ...(unit.pilotBuffs ? { pilotBuffs: structuredClone(unit.pilotBuffs) } : {}),
+        ...(unit.skillReadyRound ? { skillReadyRound: { ...unit.skillReadyRound } } : {}),
+        ...(unit.inventoryUnitId
+          ? { inventoryUnitId: unit.inventoryUnitId, inventoryModel: unit.inventoryModel }
+          : {}),
         ...(config.inheritResources && unit.burning ? { burning: { ...unit.burning } } : {}),
         ...(config.inheritResources && unit.apPenaltyNextTurn
           ? { apPenaltyNextTurn: unit.apPenaltyNextTurn }
@@ -472,9 +496,16 @@ const UnitSkills = (() => {
       if (!canUse(game, unit, skillId)) return [];
       const skill = of(unit).find((s) => s.id === skillId);
       if (
-        ["overdrive", "overboost", "fullboost", "flight", "minovsky", "emp", "smoke"].includes(
-          skill.type,
-        )
+        [
+          "pilot_buff",
+          "overdrive",
+          "overboost",
+          "fullboost",
+          "flight",
+          "minovsky",
+          "emp",
+          "smoke",
+        ].includes(skill.type)
       )
         return [{ x: unit.x, y: unit.y }];
       if (["beam_diffusion", "irradiation", "recon"].includes(skill.type)) {
@@ -577,6 +608,26 @@ const UnitSkills = (() => {
       )
         throw Error("技能不可用，或目标不在合法范围内");
       const skill = of(unit).find((s) => s.id === skillId);
+      if (skill.type === "pilot_buff") {
+        const expiresRound = game.round + skill.durationTurns * 2;
+        unit.en -= skill.enCost;
+        unit.pilotBuffs = { ...unit.pilotBuffs, [skill.id]: { expiresRound } };
+        unit.skillReadyRound = {
+          ...unit.skillReadyRound,
+          [skill.id]: expiresRound + skill.cooldownTurns * 2,
+        };
+        unit.origin = null;
+        return {
+          type: "skill",
+          skillId,
+          unitId: unit.id,
+          resultId: unit.id,
+          from: { x: unit.x, y: unit.y },
+          to: { x: unit.x, y: unit.y },
+          effect: skill.effect,
+          sound: skill.sound,
+        };
+      }
       if (skill.type === "irradiation") {
         const event = G.irradiate(game, unit, skill, x, y);
         unit.en -= (modelOf(unit).en * skill.enCostPercent) / 100;
@@ -1035,7 +1086,17 @@ const UnitSkills = (() => {
       unit.origin = null;
       return true;
     }
-    return { of, canUse, targets, use, endOverdrive, revertDamaged };
+    function tickPilotBuffs(game) {
+      for (const unit of game.units) {
+        if (!unit.pilotBuffs) continue;
+        const active = Object.fromEntries(
+          Object.entries(unit.pilotBuffs).filter(([, buff]) => buff.expiresRound > game.round),
+        );
+        if (Object.keys(active).length !== Object.keys(unit.pilotBuffs).length)
+          unit.pilotBuffs = active;
+      }
+    }
+    return { of, canUse, targets, use, endOverdrive, revertDamaged, tickPilotBuffs };
   }
   return { validate, create };
 })();

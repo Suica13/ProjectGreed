@@ -26,7 +26,7 @@ def main():
             fields=["sourceHit","en","nativeTiming","nativePayload","damageComponents"]
             for field in fields:
                 if rebuilt.get(field)!=weapon.get(field):errors.append([prefab["id"],key,field])
-            expected_hit=rebuilt["hit"]*(0.9 if prefab["stats"].get("ship") else 1)
+            expected_hit=rebuilt["hit"]*(0.8 if prefab["stats"].get("ship") else 1)
             if abs(weapon["hit"]-expected_hit)>0.00001:errors.append([prefab["id"],key,"hit"])
             weapons+=1
     result={"units":units,"weapons":weapons,"errors":errors}

@@ -19,6 +19,8 @@ def label(key, weapon, ship=False):
         return ("对空机枪", "Anti-Air Machine Gun", "対空機銃")
     if re.search(r"Turret_?CN(?:_|$)", ident):
         return ("加农炮", "Cannon", "カノン砲")
+    if re.search(r"(?:^|_)BG(?:_|$)", ident):
+        return ("光束炮", "Beam Cannon", "ビーム砲")
     if ship and re.search(r"(?:^|_)AMS(?:_|$)", ident):
         return ("反MS导弹", "Anti-MS Missiles", "対MSミサイル")
     for token, names in {

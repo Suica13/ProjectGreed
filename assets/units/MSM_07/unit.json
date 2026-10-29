@@ -621,7 +621,7 @@
       "actionCost": 5
     },
     "ZN_MSM_07_BG": {
-      "name": "导弹发射器",
+      "name": "光束炮",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -769,7 +769,18 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "光束炮"
+        },
+        "en": {
+          "name": "Beam Cannon"
+        },
+        "ja": {
+          "name": "ビーム砲"
+        }
+      }
     },
     "ZN_MSM_07_MS": {
       "name": "导弹发射器",
@@ -1204,6 +1215,7 @@
       "unitId": "MSM_07_CharCustom",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_CHA",
       "unlockUnits": [
         "MSM_07"
       ],
@@ -1214,5 +1226,18 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_CHA",
+      "unitId": "MSM_07_CharCustom",
+      "kitMap": {
+        "standard": "standard"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

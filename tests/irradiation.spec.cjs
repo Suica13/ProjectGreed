@@ -3,7 +3,8 @@ const { pathToFileURL } = require("node:url"),
   path = require("node:path");
 for (const entry of ["client", "developer"])
   test(
-    entry + " renders native charge and a scalable beam without fog clipping",
+    entry +
+      " renders native charge and a fixed native beam independent of hit range without fog clipping",
     async ({ page }) => {
       const errors = [];
       page.on("pageerror", (error) => errors.push(error.message));
@@ -70,7 +71,7 @@ for (const entry of ["client", "developer"])
         IrradiationFX.draw(ctx, 1000, position, 40);
         draws.length = 0;
         IrradiationFX.draw(ctx, 1000 + skill.chargeSeconds * 1000 + 400, position, 40);
-        const longer = draws.filter((d) => d.key.includes("Irradiation_Mid")).map((d) => d.width);
+        const longer = draws.map((d) => d.width);
         IrradiationFX.reset();
         SpriteEffects.setFogClip(null, ctx);
         IrradiationFX.start({
@@ -92,22 +93,22 @@ for (const entry of ["client", "developer"])
           visible,
           transparent,
           buttons: panel.querySelectorAll("button[data-unit-skill]").length,
+          description: SkillControls.description(skill),
+          damage: Object.values(skill.damageComponents)
+            .reduce((sum, value) => sum + value, 0)
+            .toLocaleString(undefined, { maximumFractionDigits: 2 }),
         };
       });
       expect(result.charge).toBe(1);
       expect(result.parts[0]).toContain("Irradiation_Start");
       expect(result.parts.at(-1)).toContain("Irradiation_End");
-      const middle = result.parts.flatMap((part, i) =>
-        part.includes("Irradiation_Mid") ? [result.widths[i]] : [],
-      );
-      expect(result.longer.length).toBeGreaterThan(middle.length);
-      expect(result.longer.length).toBeGreaterThan(2);
-      for (const width of result.longer.slice(0, -1))
-        expect(width).toBeCloseTo(result.longer[0], 5);
-      expect(result.longer.at(-1)).toBeLessThanOrEqual(result.longer[0]);
+      expect(result.parts).toHaveLength(3);
+      expect(result.longer).toEqual(result.widths);
       expect(result.visible).toBe(true);
       expect(result.transparent).toBe(true);
       expect(result.buttons).toBeGreaterThan(0);
+      expect(result.description).toContain(`${result.damage} × 1 = ${result.damage}`);
+      expect(result.description).not.toContain("1/20");
       await page.screenshot({ path: ".openai/irradiation-" + entry + ".png" });
       expect(errors).toEqual([]);
     },

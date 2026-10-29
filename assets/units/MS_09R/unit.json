@@ -1585,6 +1585,7 @@
       "unitId": "MS_09R_CharCustom",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_CHA",
       "unlockUnits": [
         "MS_09R"
       ],
@@ -1610,5 +1611,22 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_CHA",
+      "unitId": "MS_09R_CharCustom",
+      "kitMap": {
+        "bazooka": "kit_1",
+        "machine_gun": "kit_0"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "MS_09",
+      "YMS_09"
+    ]
+  }
 }

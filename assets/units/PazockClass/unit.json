@@ -440,7 +440,7 @@
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 112.5,
+      "hit": 100.0,
       "en": 20.0,
       "sourceName": "PazockClass_Turret_AA",
       "sourceHit": 125.0,
@@ -1249,7 +1249,7 @@
         }
       ],
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "对空机枪"
@@ -1360,5 +1360,11 @@
       "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
       "sourceUnit": "Hangar_X8"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

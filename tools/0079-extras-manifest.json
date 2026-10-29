@@ -1,0 +1,475 @@
+[
+  {
+    "id": "AMS_Squad",
+    "name": "对MS特技兵",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/AMS_Squad/AMS_Squad.ini",
+    "tags": "AMS_Squad,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Deploy.gw",
+      "Template/Unit/Skill/Stealth.gw"
+    ]
+  },
+  {
+    "id": "Apsaras",
+    "name": "阿普萨拉斯",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/Apsaras/Apsaras.ini",
+    "tags": "Apsaras,Unit,MA,ZEON,0079,UC,LargeUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/FlyHover.gw",
+      "Template/Unit/Skill/FlyUnit.gw"
+    ]
+  },
+  {
+    "id": "ApsarasIII",
+    "name": "阿普萨拉斯III",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/ApsarasIII/ApsarasIII.ini",
+    "tags": "ApsarasIII,Unit,MA,ZEON,0079,UC,LargeUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/FlyHover.gw",
+      "Template/Unit/Skill/FlyUnit.gw"
+    ]
+  },
+  {
+    "id": "Dodai2",
+    "name": "德戴 II",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/Dodai/Dodai2.ini",
+    "tags": "Dodai2,Unit,Aircraft,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/DogFight_A.gw",
+      "Template/Unit/Skill/SFS.gw"
+    ]
+  },
+  {
+    "id": "EMS_05M",
+    "name": "阿格武装型",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/EMS_05M/EMS_05M.ini",
+    "tags": "EMS_05M,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/AntiDetect_Aqua.gw",
+      "Template/Unit/Skill/Stealth_Aqua.gw",
+      "Template/Unit/Skill/Sonar.gw",
+      "Template/Unit/Skill/Hover.gw"
+    ]
+  },
+  {
+    "id": "FF_X7Bst_II",
+    "name": "核心推进器",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/FF_X7Bst_II/FF_X7Bst_II.ini",
+    "tags": "FF_X7Bst_II,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw"
+    ]
+  },
+  {
+    "id": "G_Bull_Easy",
+    "name": "G公牛简易型",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/G_Fighter/G_Bull_Easy.ini",
+    "tags": "G_Bull_Easy,Unit,Tank,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "G_Fighter",
+    "name": "G战机",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/G_Fighter/G_Fighter.ini",
+    "tags": "G_Fighter,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Fighter.gw",
+      "Template/Unit/Skill/DogFight_A.gw",
+      "Template/Unit/Skill/SFS.gw"
+    ]
+  },
+  {
+    "id": "MA_04X",
+    "name": "扎古莱罗",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MA_04X/MA_04X.ini",
+    "tags": "MA_04X,Unit,MA,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/DogFight_MA_Fighter.gw"
+    ]
+  },
+  {
+    "id": "MA_08_DZL",
+    "name": "大扎姆[多兹鲁机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MA_08_DZL/MA_08_DZL.ini",
+    "tags": "MA_08_DZL,Unit,MA,ZEON,0079,UC,LargeUnit",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "MS_05S",
+    "name": "旧扎古[指挥官式样]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_05/MS_05S.ini",
+    "tags": "MS_05S,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CmdCom.gw"
+    ]
+  },
+  {
+    "id": "MS_06E3",
+    "name": "扎古强行侦查型E3",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_06E3/MS_06E3.ini",
+    "tags": "MS_06E3,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": []
+  },
+  {
+    "id": "MS_06F_EFSF",
+    "name": "扎古II[EFSF]",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/MS_06F_EFSF/MS_06F_EFSF.ini",
+    "tags": "MS_06F_EFSF,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "MS_06R_2_JonCustom",
+    "name": "扎古II高机动型R-2[强尼专用机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_06R_2_JonCustom/MS_06R_2_JonCustom.ini",
+    "tags": "MS_06R_2_JonCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "MS_06R_2_MsgCustom",
+    "name": "扎古II高机动型R-2[松永真专用机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_06R_2_MsgCustom/MS_06R_2_MsgCustom.ini",
+    "tags": "MS_06R_2_MsgCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/CmdDef.gw"
+    ]
+  },
+  {
+    "id": "MS_06R_3S",
+    "name": "扎古II高机动型R-3S",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_06R_3S/MS_06R_3S.ini",
+    "tags": "MS_06R_3S,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": []
+  },
+  {
+    "id": "MS_06RD_4",
+    "name": "扎古II宇宙高机动实验型",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_06RD_4/MS_06RD_4.ini",
+    "tags": "MS_06RD_4,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "MS_06S_CharCustom",
+    "name": "扎古II[夏亚专用机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_06S_CharCustom/MS_06S_CharCustom.ini",
+    "tags": "MS_06S_CharCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/CmdCom.gw"
+    ]
+  },
+  {
+    "id": "MS_06S_DozleCustom",
+    "name": "扎古II[多兹鲁专用机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_06S_DozleCustom/MS_06S_DozleCustom.ini",
+    "tags": "MS_06S_DozleCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/CmdDef.gw"
+    ]
+  },
+  {
+    "id": "MS_09R_CharCustom",
+    "name": "力克大魔[夏亚专用机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_09R_CharCustom/MS_09R_CharCustom.ini",
+    "tags": "MS_09R_CharCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/CmdCom.gw"
+    ]
+  },
+  {
+    "id": "MS_14B_JonCustom",
+    "name": "勇士高机动型[强尼专用机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_14B_JonCustom/MS_14B_JonCustom.ini",
+    "tags": "MS_14B_JonCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "MS_14G",
+    "name": "勇士陆战型",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_14G/MS_14G.ini",
+    "tags": "MS_14G,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": []
+  },
+  {
+    "id": "MS_14JG_MsgCustom",
+    "name": "勇士J型[松永真专用机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_14JG_MsgCustom/MS_14JG_MsgCustom.ini",
+    "tags": "MS_14JG_MsgCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/CmdDef.gw"
+    ]
+  },
+  {
+    "id": "MS_14S_CharCustom",
+    "name": "勇士[夏亚专用机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_14S_CharCustom/MS_14S_CharCustom.ini",
+    "tags": "MS_14S_CharCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/CmdCom.gw"
+    ]
+  },
+  {
+    "id": "MS_17R",
+    "name": "加里波第α高机动型",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MS_17R/MS_17R.ini",
+    "tags": "MS_17R,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": []
+  },
+  {
+    "id": "MSM_07_CharCustom",
+    "name": "魔蟹[夏亚专用机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/MSM_07_CharCustom/MSM_07_CharCustom.ini",
+    "tags": "MSM_07_CharCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/CmdCom.gw",
+      "Template/Unit/Skill/AntiDetect_Aqua.gw",
+      "Template/Unit/Skill/Stealth_Aqua.gw",
+      "Template/Unit/Skill/Sonar.gw"
+    ]
+  },
+  {
+    "id": "BlancRival",
+    "name": "白色对抗马",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/PegasusClass/BlancRival.ini",
+    "tags": "BlancRival,Unit,CmdUnit,Ship,EFSF,0079,UC,LargeUnit,MpUpUnit_X16",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "Thoroughbred",
+    "name": "纯血种马",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/PegasusClass/Thoroughbred.ini",
+    "tags": "Thoroughbred,Unit,CmdUnit,Ship,EFSF,0079,UC,LargeUnit,MpUpUnit_X16",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "WhiteBase",
+    "name": "白色基地",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/PegasusClass/WhiteBase.ini",
+    "tags": "WhiteBase,Unit,CmdUnit,Ship,EFSF,0079,UC,LargeUnit,MpUpUnit_X12",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "RGM_79F",
+    "name": "吉姆陆地战斗型",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RGM_79F/RGM_79F.ini",
+    "tags": "RGM_79F,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": []
+  },
+  {
+    "id": "RGM_79G_EarlyDeployment",
+    "name": "吉姆突击型[先行配备]",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RGM_79G_EarlyDeployment/RGM_79G_EarlyDeployment.ini",
+    "tags": "RGM_79G_EarlyDeployment,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw",
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "RGM_79U",
+    "name": "吉姆海防型",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RGM_79U/RGM_79U.ini",
+    "tags": "RGM_79U,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/Sonar.gw"
+    ]
+  },
+  {
+    "id": "RX_78_2_ACE",
+    "name": "高达[ACE]",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RX_78_2/RX_78_2_ACE.ini",
+    "tags": "RX_78_2_ACE,Unit,MS,EFSF,0079,UC,ACE_Unit",
+    "nativeSkills": [
+      "Template/Unit/Skill/LPC.gw",
+      "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "RX_78_2_BPart",
+    "name": "高达+B部件",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RX_78_2/RX_78_2_BPart.ini",
+    "tags": "RX_78_2_BPart,Unit,MS,EFSF,0079,UC,CanFuse",
+    "nativeSkills": [
+      "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+      "Template/Unit/Skill/LPC.gw",
+      "Template/Unit/Skill/FlyUnit.gw",
+      "Template/Unit/Skill/FlyMS.gw",
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  },
+  {
+    "id": "RX_78_4",
+    "name": "高达4号机",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RX_78_4/RX_78_4.ini",
+    "tags": "RX_78_4,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ]
+  },
+  {
+    "id": "RX_78_5",
+    "name": "高达5号机",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RX_78_5/RX_78_5.ini",
+    "tags": "RX_78_5,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ]
+  },
+  {
+    "id": "RX_78_6_WIP",
+    "name": "高达6号机[WIP]",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RX_78_6/RX_78_6_WIP.ini",
+    "tags": "RX_78_6_WIP,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw"
+    ]
+  },
+  {
+    "id": "RX_79_BD_2_NMBS",
+    "name": "苍蓝宿命二号机[尼姆巴斯]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/RX_79_BD_2/RX_79_BD_2_NMBS.ini",
+    "tags": "RX_79_BD_2_NMBS,Unit,MS,ZEON,0079,UC,EXAM_Unit",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/Exam_Off.gw"
+    ]
+  },
+  {
+    "id": "RX_79_BD_3",
+    "name": "苍蓝宿命三号机",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RX_79_BD_3/RX_79_BD_3.ini",
+    "tags": "RX_79_BD_3,Unit,MS,EFSF,0079,UC,EXAM_Unit",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/Exam_Off.gw"
+    ]
+  },
+  {
+    "id": "RX_79_G_Ez8",
+    "name": "高达Ez8",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8.ini",
+    "tags": "RX_79_G_Ez8,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/CustomUnit.gw",
+      "Template/Unit/Skill/CmdDef.gw"
+    ]
+  },
+  {
+    "id": "RX_79_G_Ez8_WithBackpack",
+    "name": "高达Ez8[武器货柜]",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8_WithBackpack.ini",
+    "tags": "RX_79_G_Ez8_WithBackpack,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw",
+      "Template/Unit/Skill/UnloadEquipment.gw",
+      "Template/Unit/Skill/CmdDef.gw"
+    ]
+  },
+  {
+    "id": "RX_81LA_IMBA",
+    "name": "GLine 轻装甲型 Super Ultra Plus",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/RX_81LA_IMBA/RX_81LA_IMBA.ini",
+    "tags": "RX_81LA_IMBA,Unit,MS,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CustomUnit.gw",
+      "Template/Unit/Skill/CmdAtk.gw"
+    ]
+  },
+  {
+    "id": "SFU_X79",
+    "name": "克罗贝特助推器",
+    "faction": "EFSF",
+    "source": "Units/BattleUnits/SFU_X79/SFU_X79.ini",
+    "tags": "SFU_X79,Unit,Aircraft,EFSF,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/SFS.gw"
+    ]
+  },
+  {
+    "id": "YMS_09",
+    "name": "试作型大魔",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/YMS_09/YMS_09.ini",
+    "tags": "YMS_09,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": []
+  },
+  {
+    "id": "YMS_15_MQVCustom",
+    "name": "强人[马克贝机]",
+    "faction": "ZEON",
+    "source": "Units/BattleUnits/YMS_15_MQVCustom/YMS_15_MQVCustom.ini",
+    "tags": "YMS_15_MQVCustom,Unit,MS,ZEON,0079,UC",
+    "nativeSkills": [
+      "Template/Unit/Skill/CantDeconstruct.gw"
+    ]
+  }
+]

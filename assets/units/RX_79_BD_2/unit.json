@@ -2297,6 +2297,7 @@
       "unitId": "RX_79_BD_2_NMBS",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_NMBS",
       "unlockUnits": [
         "RX_79_BD_2"
       ],
@@ -2312,6 +2313,7 @@
       "unitId": "RX_79_BD_3",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_EFSF_0079_N_ACE_YUU",
       "unlockUnits": [
         "RX_79_BD_2"
       ],
@@ -2322,5 +2324,27 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_NMBS",
+      "unitId": "RX_79_BD_2_NMBS",
+      "kitMap": {
+        "standard": "standard"
+      }
+    },
+    {
+      "pilotId": "Pilot_EFSF_0079_N_ACE_YUU",
+      "unitId": "RX_79_BD_3",
+      "kitMap": {
+        "standard": "standard"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_79_BD_1"
+    ]
+  }
 }

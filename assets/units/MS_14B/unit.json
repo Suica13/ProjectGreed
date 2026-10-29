@@ -1679,6 +1679,7 @@
       "unitId": "MS_14B_JonCustom",
       "money": 200,
       "supplies": 400,
+      "pilotId": "Pilot_ZEON_0079_N_ACE_JON",
       "unlockUnits": [
         "MS_14B"
       ],
@@ -1689,5 +1690,20 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [
+    {
+      "pilotId": "Pilot_ZEON_0079_N_ACE_JON",
+      "unitId": "MS_14B_JonCustom",
+      "kitMap": {
+        "kit_0": "kit_0",
+        "kit_1": "kit_1",
+        "kit_2": "kit_2"
+      }
+    }
+  ],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

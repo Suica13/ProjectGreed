@@ -1922,5 +1922,12 @@
         "seconds": 20.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_78GP01_FB"
+    ]
+  }
 }

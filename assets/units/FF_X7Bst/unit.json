@@ -1727,5 +1727,13 @@
         }
       ]
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "FF_X7"
+    ]
+  }
 }

@@ -1235,7 +1235,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 67.5,
+      "hit": 60.0,
       "en": 360.0,
       "sourceName": "ChivvayClass_Turret_BeamCannon",
       "sourceHit": 75.0,
@@ -1419,14 +1419,14 @@
       },
       "actionCost": 3,
       "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "ChivvayClass_Turret_AMS": {
       "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 76.5,
+      "hit": 68.0,
       "en": 320.0,
       "sourceName": "ChivvayClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -1652,7 +1652,7 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -1670,7 +1670,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 90.0,
+      "hit": 80.0,
       "en": 144.0,
       "sourceName": "ChivvayClass_Turret_MS",
       "sourceHit": 100.0,
@@ -1917,14 +1917,14 @@
       },
       "actionCost": 2,
       "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "ChivvayClass_Turret_MG": {
       "name": "舰载机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
-      "hit": 112.5,
+      "hit": 100.0,
       "en": 30.0,
       "sourceName": "ChivvayClass_Turret_MG",
       "sourceHit": 125.0,
@@ -2600,14 +2600,14 @@
       },
       "actionCost": 3,
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9
+      "shipAccuracyMultiplier": 0.8
     },
     "ChivvayClass_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 112.5,
+      "hit": 100.0,
       "en": 60.0,
       "sourceName": "ChivvayClass_Turret_AA",
       "sourceHit": 125.0,
@@ -4816,7 +4816,7 @@
         }
       ],
       "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.9,
+      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "对空机枪"
@@ -4992,5 +4992,10 @@
         "seconds": 30.0
       }
     }
-  ]
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  }
 }

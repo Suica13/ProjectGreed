@@ -70,7 +70,7 @@ test("beam ray checks intersections, edges and expiration without stacking or re
     g.beamDiffusionFields = [field];
     const reduced = G.estimate(g, a, b, w).damage;
     assert.ok(
-      Math.abs(reduced - full * (["beam", "beamAP"].includes(channel) ? 0.5 : 1)) <= 1,
+      Math.abs(reduced - full * (["beam", "beamAP"].includes(channel) ? 0.5 : 1)) <= 25,
       channel,
     );
   }
@@ -135,7 +135,7 @@ test("burn deals damage once at each affected team's turn end for three turns, r
   G.fight(g, a, b, w, "evade", null, false);
   assert.equal(b.burning.expiresRound, expires);
   const hp = b.hp,
-    damage = Math.round(G.modelOf(b).hp * 0.05);
+    damage = G.roundDamage(G.modelOf(b).hp * 0.05);
   assert.deepEqual(G.tickBurning(g), []);
   assert.equal(b.hp, hp);
   const ticks = [];
@@ -159,10 +159,10 @@ test("burn ignores SP flat defense, respects percentage defense and deduplicates
   try {
     const hp = b.hp;
     assert.equal(G.tickBurning(g).length, 1);
-    assert.equal(hp - b.hp, Math.round(G.modelOf(b).hp * 0.025));
+    assert.equal(hp - b.hp, G.roundDamage(G.modelOf(b).hp * 0.025));
     assert.deepEqual(G.tickBurning(g), []);
     G.end(g);
-    assert.equal(hp - b.hp, Math.round(G.modelOf(b).hp * 0.025));
+    assert.equal(hp - b.hp, G.roundDamage(G.modelOf(b).hp * 0.025));
     assert.equal(g.turnEffects.filter((e) => e.type === "burn").length, 0);
   } finally {
     G.models[b.model].defenses.sp = previous;

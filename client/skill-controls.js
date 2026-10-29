@@ -42,6 +42,35 @@ const SkillControls = (() => {
       ? `${I18n.text("消耗")} ${skill.actionCost} AP`
       : I18n.text(skill.consumeAction ? "消耗本次行动" : "不消耗行动");
   function description(skill) {
+    if (skill.owner === "pilot") {
+      if (skill.passive)
+        return I18n.text("被动：免除EXAM系统的耐久自损；EN消耗、持续时间和头部损毁解除规则不变。");
+      const effects = Object.entries(skill.statMultipliers || {}).map(
+        ([key, value]) => I18n.text(PilotSystem.labels[key]) + " ×" + value,
+      );
+      if ((skill.experienceMultiplier ?? 1) !== 1)
+        effects.push(I18n.text("驾驶员经验") + " ×" + skill.experienceMultiplier);
+      return (
+        (Object.keys(skill.statMultipliers || {}).length ? I18n.text("驾驶员属性") + " · " : "") +
+        effects.join(" · ") +
+        " · " +
+        I18n.text("消耗") +
+        " " +
+        skill.enCost +
+        " EN · 0 AP · " +
+        I18n.text(
+          `持续${skill.durationTurns}回合 · 冷却${skill.cooldownTurns}回合（效果结束后开始）`,
+        )
+      );
+    }
+    if (skill.type === "irradiation") {
+      const damage = Object.values(skill.damageComponents)
+        .reduce((sum, value) => sum + value, 0)
+        .toLocaleString(undefined, { maximumFractionDigits: 2 });
+      return I18n.text(
+        `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCostPercent}%最大EN，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`,
+      );
+    }
     if (skill.description) return skill.description;
     if (skill.type === "flight")
       return I18n.text(
@@ -78,11 +107,60 @@ const SkillControls = (() => {
     );
   }
   function render(list, unit, canCommand) {
+    let pilotHeading = false;
     for (const skill of Rules.unitSkills(unit)) {
+      if (skill.owner === "pilot" && !pilotHeading) {
+        list.append(element("div", "section-title pilot-skills-heading", "驾驶员技能"));
+        pilotHeading = true;
+      }
       const button = element("button", "weapon" + (activeId() === skill.id ? " active" : ""));
       button.dataset.unitSkill = skill.id;
+      if (skill.owner === "pilot") {
+        button.dataset.pilotSkill = skill.id;
+        if (skill.icon) {
+          const icon = element("img", "pilot-skill-icon");
+          icon.src = skill.icon;
+          icon.alt = "";
+          button.append(icon);
+        }
+        const active = unit.pilotBuffs?.[skill.id],
+          ready = unit.skillReadyRound?.[skill.id] || 0;
+        if (skill.passive) button.append(element("small", "muted", "被动生效"));
+        else if (active)
+          button.append(
+            element(
+              "small",
+              "muted",
+              I18n.text("生效中") +
+                " · " +
+                Math.ceil((active.expiresRound - game.round) / 2) +
+                " " +
+                I18n.text("回合"),
+            ),
+          );
+        else if (ready > game.round)
+          button.append(
+            element(
+              "small",
+              "muted",
+              I18n.text("冷却") +
+                " · " +
+                Math.ceil((ready - game.round) / 2) +
+                " " +
+                I18n.text("回合"),
+            ),
+          );
+      }
       button.append(
-        element("strong", "", skill.type === "flight" && unit.flying ? "降落" : skill.name),
+        element(
+          "strong",
+          "",
+          skill.type === "flight" && unit.flying
+            ? "降落"
+            : skill.owner === "pilot"
+              ? I18n.localized(skill)
+              : skill.name,
+        ),
         element("small", "helper", description(skill)),
       );
       const left = Math.max(
@@ -104,6 +182,7 @@ const SkillControls = (() => {
         weaponId = null;
         if (
           [
+            "pilot_buff",
             "overdrive",
             "overboost",
             "fullboost",

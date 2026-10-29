@@ -27,8 +27,8 @@ function near(a, b) {
 }
 test("MOD Steps preserve 9-round MG, 16-round alternating vulcan, one-shot weapons and native single-swing saber", () => {
   assert.deepEqual(weapon("EF_90mmMG").attack.shots, [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1]);
-  assert.equal(weapon("EF_90mmMG").damagePerShot, 725 * 0.75);
-  assert.equal(weapon("EF_90mmMG").damage, 9 * 725 * 0.75);
+  assert.equal(weapon("EF_90mmMG").damagePerShot, WeaponSequence.roundDamage(725 * 0.75));
+  assert.equal(weapon("EF_90mmMG").damage, 9 * WeaponSequence.roundDamage(725 * 0.75));
   assert.equal(weapon("Common_DoubleVulcan_MS").shotCount, 16);
   assert.equal(weapon("Common_DoubleVulcan_MS").attack.shots.at(-1), 1.5);
   assert.deepEqual(weapon("EF_BeamSprayGun").attack.shots, [0.25]);

@@ -8,7 +8,10 @@ const Economy = (() => {
       : require("./production-catalog.json");
   let kitModels;
   function modelsForKits() {
-    return kitModels ||= typeof ART !== "undefined" ? ART.models : require("../tools/load-catalog.cjs").loadCatalog().models;
+    return (kitModels ||=
+      typeof ART !== "undefined"
+        ? ART.models
+        : require("../tools/load-catalog.cjs").loadCatalog().models);
   }
   const initial = () => ({
     money: 5000,
@@ -37,7 +40,11 @@ const Economy = (() => {
     )
       throw Error("套件库存无效");
     for (const [id, count] of Object.entries(value.kits || {})) {
-      if ((!Object.hasOwn(catalog.offers, id) && !kitPrice(id)) || !Number.isSafeInteger(count) || count < 0)
+      if (
+        (!Object.hasOwn(catalog.offers, id) && !kitPrice(id)) ||
+        !Number.isSafeInteger(count) ||
+        count < 0
+      )
         throw Error("套件数量无效: " + id);
       kits[id] = count;
     }
@@ -169,27 +176,36 @@ const Economy = (() => {
     return commit(next);
   }
   function creditActivity(award, extraWrites = []) {
-    if (!award?.id || !award.matchId || Object.hasOwn(state.claimed || {},award.id)) return false;
-    if (![award.money,award.supplies].every(value=>Number.isSafeInteger(value)&&value>=0)) throw Error("活动货币奖励无效");
+    if (!award?.id || !award.matchId || Object.hasOwn(state.claimed || {}, award.id)) return false;
+    if (![award.money, award.supplies].every((value) => Number.isSafeInteger(value) && value >= 0))
+      throw Error("活动货币奖励无效");
     const next = snapshot();
-    next.money += award.money; next.supplies += award.supplies;
-    for (const [id,count] of Object.entries(award.inventory || {})) {
-      if (!Object.hasOwn(catalog.baseModels,id) || !Number.isSafeInteger(count) || count < 1) throw Error("活动单位奖励无效");
+    next.money += award.money;
+    next.supplies += award.supplies;
+    for (const [id, count] of Object.entries(award.inventory || {})) {
+      if (!Object.hasOwn(catalog.baseModels, id) || !Number.isSafeInteger(count) || count < 1)
+        throw Error("活动单位奖励无效");
       next.inventory[id] = (next.inventory[id] || 0) + count;
     }
-    next.claimed = {...next.claimed,[award.id]:award.matchId};
-    return commit(next,extraWrites);
+    next.claimed = { ...next.claimed, [award.id]: award.matchId };
+    return commit(next, extraWrites);
   }
   function sellPrice(unitId) {
     const offer = catalog.offers[baseModel(unitId)];
-    return offer ? { money: Math.floor(offer.money / offer.quantity / 100) * 50, supplies: Math.floor(offer.supplies / offer.quantity / 100) * 50 } : null;
+    return offer
+      ? {
+          money: Math.floor(offer.money / offer.quantity / 100) * 50,
+          supplies: Math.floor(offer.supplies / offer.quantity / 100) * 50,
+        }
+      : null;
   }
   function sellUnit(unitId) {
     const price = sellPrice(unitId);
     if (!price || !(state.inventory[unitId] > 0)) return false;
     const next = snapshot();
     next.inventory[unitId]--;
-    next.money += price.money; next.supplies += price.supplies;
+    next.money += price.money;
+    next.supplies += price.supplies;
     return commit(next);
   }
   function baseModel(unitId) {
@@ -203,23 +219,30 @@ const Economy = (() => {
       // Some selectable equipment has no standalone factory order in the MOD.
       // Price it from the same chassis' nearest COST tier; extrapolate only above
       // its highest priced tier. Existing imported prices remain authoritative.
-      const models = modelsForKits(), model = models[modelId];
-      const baseId = model && baseModel(model.prefabId), base = models[baseId];
+      const models = modelsForKits(),
+        model = models[modelId];
+      const baseId = model && baseModel(model.prefabId),
+        base = models[baseId];
       if (!base || modelId === baseId) return null;
       const delta = Math.max(0, model.cost - base.cost);
       const candidates = Object.entries(catalog.offers)
         .filter(([id, offer]) => offer.unitId === model.prefabId && id !== baseId && models[id])
         .map(([id]) => ({ id, delta: Math.max(0, models[id].cost - base.cost) }));
-      candidates.sort((a, b) =>
-        Number(a.delta < delta) - Number(b.delta < delta) ||
-        Math.abs(a.delta - delta) - Math.abs(b.delta - delta) || a.id.localeCompare(b.id));
+      candidates.sort(
+        (a, b) =>
+          Number(a.delta < delta) - Number(b.delta < delta) ||
+          Math.abs(a.delta - delta) - Math.abs(b.delta - delta) ||
+          a.id.localeCompare(b.id),
+      );
       const reference = candidates[0];
       if (!reference) return null;
       const price = kitPrice(reference.id);
       const scale = reference.delta > 0 ? Math.max(1, delta / reference.delta) : 1;
-      return { quantity: price.quantity,
-        money: Math.ceil(price.money / price.quantity * scale) * price.quantity,
-        supplies: Math.ceil(price.supplies / price.quantity * scale) * price.quantity };
+      return {
+        quantity: price.quantity,
+        money: Math.ceil((price.money / price.quantity) * scale) * price.quantity,
+        supplies: Math.ceil((price.supplies / price.quantity) * scale) * price.quantity,
+      };
     }
     const offer = catalog.offers[modelId],
       base = offer && catalog.offers[baseModel(offer.unitId)];
@@ -241,7 +264,9 @@ const Economy = (() => {
     if (
       !offer ||
       !["PMC", "EFSF", "ZEON"].includes(faction) ||
-      (!owned && faction !== "PMC" && !(offer.availableFactions || [offer.faction]).includes(faction))
+      (!owned &&
+        faction !== "PMC" &&
+        !(offer.availableFactions || [offer.faction]).includes(faction))
     )
       return false;
     const development =
@@ -251,32 +276,44 @@ const Economy = (() => {
         ? ART.models
         : require("../tools/load-catalog.cjs").loadCatalog().models;
     const model = models[baseModel(offer.unitId)];
-    return !!model && !model.wip && (owned || development.allows(faction, offer.unitId));
+    return (
+      !!model &&
+      !model.wip &&
+      (allowOwned || model.production?.enabled !== false) &&
+      (owned || development.allows(faction, offer.unitId))
+    );
   }
   function refitOptions(unitId) {
     return modelsForKits()[baseModel(unitId)]?.refits || [];
   }
   function refitReason(unitId, optionId, faction) {
-    const option = refitOptions(unitId).find(r => r.id === optionId);
+    const option = refitOptions(unitId).find((r) => r.id === optionId);
     if (!option) return "无效的改装项目";
     const target = modelsForKits()[baseModel(option.unitId)];
     if (!target || target.wip || target.formOnly) return "目标机体尚未开放";
     if (option.blocked) return "原MOD专属改装条件尚不满足";
-    const development = typeof Development !== "undefined" ? Development : require("./development.js");
-    if (!["PMC","EFSF","ZEON"].includes(faction) ||
-        (faction !== "PMC" && !(target.availableFactions || [target.faction]).includes(faction)))
+    const development =
+      typeof Development !== "undefined" ? Development : require("./development.js");
+    if (
+      !["PMC", "EFSF", "ZEON"].includes(faction) ||
+      (faction !== "PMC" && !(target.availableFactions || [target.faction]).includes(faction))
+    )
       return "与当前阵营不匹配";
-    if (option.unlockUnits.some(id => !development.allows(faction,id))) return "目标机体尚未开发";
+    if (option.unlockUnits.some((id) => !development.allows(faction, id)))
+      return "目标机体尚未开发";
     if (quantity(unitId) < 1) return "原机体库存不足";
     return "";
   }
-  function quantity(unitId) { return state.inventory[unitId] || 0; }
+  function quantity(unitId) {
+    return state.inventory[unitId] || 0;
+  }
   function refitUnit(unitId, optionId, faction) {
-    if (refitReason(unitId,optionId,faction)) return false;
-    const option = refitOptions(unitId).find(r => r.id === optionId);
+    if (refitReason(unitId, optionId, faction)) return false;
+    const option = refitOptions(unitId).find((r) => r.id === optionId);
     if (!affordable(option)) return false;
     const next = snapshot();
-    next.money -= option.money; next.supplies -= option.supplies;
+    next.money -= option.money;
+    next.supplies -= option.supplies;
     next.inventory[unitId]--;
     next.inventory[option.unitId] = (next.inventory[option.unitId] || 0) + 1;
     // Extra weapon kits remain separately owned; converted hulls use their base kit.
@@ -318,7 +355,10 @@ const Economy = (() => {
   }
   function canBuyKit(modelId, faction) {
     const unitId = modelId.split("__")[0];
-    return !!kitPrice(modelId) && available(catalog.offers[modelId] || catalog.offers[baseModel(unitId)], faction, true);
+    return (
+      !!kitPrice(modelId) &&
+      available(catalog.offers[modelId] || catalog.offers[baseModel(unitId)], faction, true)
+    );
   }
   function buyKit(modelId, faction) {
     const price = kitPrice(modelId);

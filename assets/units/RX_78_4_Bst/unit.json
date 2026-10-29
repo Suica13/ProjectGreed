@@ -3552,7 +3552,7 @@
     {
       "id": "Irradiation",
       "status": "adapted",
-      "name": "光束照射：方向射线、蓄力、逐机命中与长度自适应贴图"
+      "name": "光束照射：方向射线、蓄力、逐机命中；原版固定演出与判定射程独立"
     }
   ],
   "weaponKits": [
@@ -3617,8 +3617,8 @@
       "consumeAction": false,
       "baseHit": 60,
       "damageComponents": {
-        "beam": 49945.42694091797,
-        "beamAP": 24972.713470458984
+        "beam": 19975,
+        "beamAP": 10000
       },
       "nativeTotalDamage": 1498362.808227539,
       "nativeRepeatMultiplier": 3.6996612548828125,
@@ -3694,7 +3694,7 @@
           "name": "照射ビーム"
         }
       },
-      "description": "选择方向照射10格；消耗5 AP与50%最大EN，冷却3个己方回合。基础命中60%，对沿途每台单位（含友军）判定一次，基础伤害为原MOD完整伤害的1/20。"
+      "description": "基础伤害 29,975 × 1 = 29,975；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。"
     }
   ],
   "kitAliases": {
@@ -3747,5 +3747,13 @@
       "fireMode": "independent",
       "name": "腕部光束枪"
     }
-  ]
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_78_4"
+    ]
+  }
 }

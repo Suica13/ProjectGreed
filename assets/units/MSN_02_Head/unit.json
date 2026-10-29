@@ -703,5 +703,10 @@
   },
   "hangars": [],
   "refits": [],
-  "formOnly": true
+  "formOnly": true,
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": []
+  }
 }

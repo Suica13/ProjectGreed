@@ -47,7 +47,9 @@ function createServer({
   const resources = require("./tools/client-resources.cjs").createClientResources({
     loadDocument: () => fs.promises.readFile(path.join(publicDir, "client.html")),
   });
-  const serveClient = require("./tools/static-client.cjs").createStaticClient({ transform: resources.transform });
+  const serveClient = require("./tools/static-client.cjs").createStaticClient({
+    transform: resources.transform,
+  });
   const server = http.createServer((req, res) => {
     let pathname;
     try {
@@ -152,6 +154,7 @@ function createServer({
   const engine = createRoomEngine({
     rules,
     getRewardMultipliers: () => activities.rewardMultipliers(),
+    onHostileDefeat: (event) => activities.recordKill(event),
     createPasswordVerifier: (password) => {
       const salt = crypto.randomBytes(16),
         digest = crypto.scryptSync(password, salt, 32);
