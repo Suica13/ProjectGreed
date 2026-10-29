@@ -2297,7 +2297,7 @@ const Formation = (() => {
         element("p", "muted", "点击下方“新增驾驶员”创建。未配属时使用单位所属阵营的默认驾驶员。"),
       );
     const search = byId("pilotRosterSearch").value.trim().toLocaleLowerCase();
-    const visible = pilotStore.pilots.filter((p) => p.name.toLocaleLowerCase().includes(search));
+    const visible = pilotStore.pilots.filter((p) => (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search));
     if (pilotStore.pilots.length && !visible.length)
       list.append(element("p", "muted", "没有符合条件的驾驶员。"));
     for (const p of visible) {
@@ -2305,7 +2305,10 @@ const Formation = (() => {
       const img = element("img");
       img.src = PilotSystem.portrait(p);
       img.alt = "";
-      const text = element("span", "", `${p.name} · Lv.${p.level} · COST +${PilotSystem.cost(p)}`);
+      const text = element("span");
+      const pilotName = element("span", "", I18n.pilotName(p));
+      pilotName.dataset.i18nIgnore = "";
+      text.append(pilotName, document.createTextNode(` · Lv.${p.level} · COST +${PilotSystem.cost(p)}`));
       text.append(
         element(
           "small",
@@ -2420,7 +2423,7 @@ const Formation = (() => {
         ),
     );
     pilotOriginal = JSON.stringify(pilotEdit);
-    byId("customPilotName").value = pilotEdit.name;
+    byId("customPilotName").value = I18n.pilotName(pilotEdit);
     byId("customPilotName").disabled = true;
     byId("renameCustomPilot").textContent = "修改名称";
     byId("renameCustomPilot").hidden = !!pilotEdit.ace;
@@ -2721,6 +2724,13 @@ const Formation = (() => {
         event.preventDefault();
         first.focus();
       }
+    }
+  });
+  window.addEventListener("language-change", () => {
+    if (aceRecruit.open) renderAceRecruitment();
+    if (pilotEdit && !pilotEditor.hidden) {
+      if (pilotEdit.ace) byId("customPilotName").value = I18n.pilotName(pilotEdit);
+      renderPilotStats();
     }
   });
   window.addEventListener("page-changing", finishPilotEditor);

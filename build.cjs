@@ -14,7 +14,7 @@ let html = read("client/template.html").replace(
 html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
 const developmentTree = JSON.parse(read("shared/development-tree.json"));
-const pilotData = JSON.parse(read("shared/pilots.json"));
+const pilotData = require("./tools/display-localization.cjs").createLocalizer().pilotCatalog(JSON.parse(read("shared/pilots.json")));
 for (const pilot of [...pilotData.named, ...pilotData.portraits, ...(pilotData.aces || []), ...(pilotData.aces || []).flatMap(p => p.skills).filter(s => s.icon)]) {
   if (!/^assets\/pilots\/[\w-]+\.png$/.test(pilot.icon))
     throw Error("Invalid pilot icon: " + pilot.id);

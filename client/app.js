@@ -679,8 +679,11 @@ function renderPanel() {
       ${Rules.terrainStyle(game.mapId, game.tiles[u.y][u.x]).name}
     </div>`;
   const pilot = PilotSystem.of(u),
-    pilotLine = element("div", "unit-pilot-heading", "驾驶员 · " + pilot.name),
+    pilotLine = element("div", "unit-pilot-heading"),
     pilotStats = element("div", "unit-pilot-stats");
+  const pilotLabel = element("span", "", I18n.pilotName(pilot));
+  pilotLabel.dataset.i18nIgnore = "";
+  pilotLine.append(document.createTextNode(I18n.text("驾驶员") + " · "), pilotLabel);
   for (const [key, label] of Object.entries(PilotSystem.labels)) {
     const cell = element("div");
     cell.append(
@@ -1857,7 +1860,7 @@ function drawMap(now) {
       ctx.textAlign = "center";
       ctx.save();
       ctx.textBaseline = "middle";
-      const label = u.pilot?.custom ? u.pilot.name : unitName(u);
+      const label = u.pilot?.custom ? I18n.pilotName(u.pilot) : unitName(u);
       const labelY = bary + 12 + nameSize / 2;
       if (u.pilot?.custom) {
         const width = ctx.measureText(label).width,

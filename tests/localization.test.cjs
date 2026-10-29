@@ -111,7 +111,7 @@ test("catalog preflight rejects duplicate IDs without writing the real catalog",
   assert.equal(loadCatalog().models.RGM_79__bazooka.kitLocalization.ja.name, "バズーカ装備");
 });
 
-test("native introductions keep only the first content line and missing Japanese descriptions fall back to English", () => {
+test("native introductions retain their content and now provide Japanese descriptions", () => {
   const catalog = loadCatalog();
   const expected = {
     SalamisClass: "地球联邦军舰队主力战舰",
@@ -134,7 +134,8 @@ test("native introductions keep only the first content line and missing Japanese
     assert.equal(prefab.description, expected[prefab.id]);
     assert.equal(prefab.localization.zh.description, prefab.description);
     assert.ok(prefab.localization.en.description.length > 0);
-    assert.equal(prefab.localization.ja.description, undefined);
+    assert.ok(prefab.localization.ja.description.length > 0);
+    assert.notEqual(prefab.localization.ja.description, prefab.localization.en.description);
     for (const line of [prefab.description, prefab.localization.en.description])
       assert.doesNotMatch(line, /\\n|[\r\n]|Strengths|Weaknesses|优点|缺点/);
     for (const model of Object.values(catalog.models).filter((m) => m.prefabId === prefab.id))
@@ -198,16 +199,121 @@ test("form hints translate while player-entered values remain untouched", () => 
   assert.equal(attrs.placeholder, "选择出生点");
 });
 
-
 test("new UI terminology, precise patterns and canonical kit names localize in both languages", () => {
   for (const language of ["en", "ja"]) {
     const api = i18n([language]);
-    for (const message of ["生产单位", "尚未开发", "一键生产", "确认强化", "导出存档", "资金", "物资", "本局收益：资金 400 · 物资 300 · 损毁扣除 2 台"])
+    for (const message of [
+      "生产单位",
+      "尚未开发",
+      "一键生产",
+      "确认强化",
+      "导出存档",
+      "资金",
+      "物资",
+      "本局收益：资金 400 · 物资 300 · 损毁扣除 2 台",
+    ])
       assert.notEqual(api.text(message), message);
     const catalog = loadCatalog();
     api.bindCatalog(catalog);
-    assert.equal(catalog.models.Type61__standard.kitName, language === "en" ? "Standard kit" : "標準装備");
-    assert.equal(catalog.models.RX_80PR_2__kit_0.kitName, language === "en" ? "Composite launcher kit" : "複合ランチャー装備");
+    assert.equal(
+      catalog.models.Type61__standard.kitName,
+      language === "en" ? "Standard kit" : "標準装備",
+    );
+    assert.equal(
+      catalog.models.RX_80PR_2__kit_0.kitName,
+      language === "en" ? "Composite launcher kit" : "複合ランチャー装備",
+    );
   }
   assert.equal(i18n(["en"]).text("编组单位点数: 7 / 72"), "Formation points: 7 / 72");
+});
+
+test("every catalog unit, weapon, kit and skill has English and Japanese display text", () => {
+  const catalog = loadCatalog();
+  for (const p of catalog.prefabs) {
+    for (const language of ["en", "ja"]) {
+      for (const field of ["name", "description"]) {
+        assert.ok(p.localization?.[language]?.[field]?.trim(), p.id + "/" + language + "/" + field);
+      }
+      for (const item of [...Object.values(p.weapons), ...p.weaponKits, ...(p.skills || [])])
+        assert.ok(
+          item.localization?.[language]?.name?.trim(),
+          p.id + "/" + item.name + "/" + language,
+        );
+    }
+  }
+});
+test("curated display overlays survive reimport without changing gameplay or source names", () => {
+  const localize = require("../tools/display-localization.cjs").createLocalizer();
+  const p = JSON.parse(fs.readFileSync("assets/units/MSM_03/unit.json"));
+  const original = structuredClone(p);
+  localize.prefab(p);
+  assert.equal(p.localization.ja.name, "ゴッグ");
+  assert.deepEqual(p.stats, original.stats);
+  assert.deepEqual(
+    p.weaponKits.map((k) => k.weapons),
+    original.weaponKits.map((k) => k.weapons),
+  );
+  assert.equal(p.id, original.id);
+  assert.equal(p.name, original.name);
+  for (const [id, weapon] of Object.entries(p.weapons)) {
+    const { localization, ...rest } = weapon;
+    const { localization: oldLocalization, ...oldRest } = original.weapons[id];
+    assert.deepEqual(rest, oldRest);
+  }
+});
+test("all ACE names, biographies and skill descriptions have Japanese translations", () => {
+  const data = require("../tools/display-localization.cjs")
+    .createLocalizer()
+    .pilotCatalog(JSON.parse(fs.readFileSync("shared/pilots.json")));
+  for (const ace of data.aces) {
+    assert.ok(ace.localization.ja.name, ace.id);
+    assert.ok(ace.localization.ja.description, ace.id);
+    for (const skill of ace.skills)
+      for (const field of ["name", "description"])
+        assert.ok(skill.localization?.ja?.[field], ace.id + "/" + skill.id + "/" + field);
+  }
+});
+test("locale dictionaries have matching keys and preserve template placeholders", () => {
+  const en = JSON.parse(fs.readFileSync("client/locales/en.json"));
+  const ja = JSON.parse(fs.readFileSync("client/locales/ja.json"));
+  assert.deepEqual(Object.keys(en).sort(), Object.keys(ja).sort());
+  const tokens = (text) => (text.match(/\{\w+\}/g) || []).sort();
+  for (const key of Object.keys(en)) {
+    assert.deepEqual(tokens(en[key]), tokens(key), key + "/en");
+    assert.deepEqual(tokens(ja[key]), tokens(key), key + "/ja");
+  }
+});
+
+test("dynamic skill and command descriptions translate completely and preserve values", () => {
+  const catalog = loadCatalog();
+  const api = i18n(["en"]);
+  api.bindCatalog(catalog);
+  const context = { I18n: api, UnitModels: catalog.models };
+  vm.runInNewContext(
+    fs.readFileSync("client/skill-controls.js", "utf8") + ";globalThis.skills=SkillControls;",
+    context,
+  );
+  for (const p of catalog.prefabs) {
+    for (const skill of p.skills || []) {
+      const text = api.text(context.skills.description(skill));
+      assert.doesNotMatch(text, /[\u3400-\u9fff]/, p.id + "/" + skill.id + ": " + text);
+    }
+  }
+  for (const model of Object.values(catalog.models))
+    for (const item of [
+      ...context.skills.commandAbilities(model),
+      ...context.skills.defensiveAbilities(model),
+    ])
+      assert.doesNotMatch(
+        api.text(item.description),
+        /[\u3400-\u9fff]/,
+        model.prefabId + ": " + item.description,
+      );
+  const sample =
+    "独立耐久 250,000；吸收普通远程光束95%、贯穿光束50%，不影响实弹和格斗。耐久耗尽后失效，可过载至最大耐久的25%；每个己方回合恢复25%。";
+  assert.match(api.text(sample), /250,000/);
+  assert.doesNotMatch(api.text(sample), /[\u3400-\u9fff]/);
+  api.setLanguage("ja");
+  assert.match(api.text(sample), /250,000/);
+  assert.match(api.text(sample), /独立耐久/);
 });

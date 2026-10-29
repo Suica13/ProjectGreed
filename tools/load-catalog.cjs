@@ -45,6 +45,7 @@ function loadCatalog({
   unitOverrides = {},
   wipOverride = null,
 } = {}) {
+  const localize = require("./display-localization.cjs").createLocalizer();
   const catalog = catalogOverride || read(path.join(root, "unit-catalog.json"));
   const wipPolicy = wipOverride || read(path.join(root, "unit-wip.json"));
   if (
@@ -94,6 +95,7 @@ function loadCatalog({
   if (!Array.isArray(catalog.maps) || !catalog.maps.length) throw Error("Missing preset maps");
   for (const reference of catalog.maps) {
     const map = read(file(root, reference));
+    localize.record(map);
     validateLocalization(map.localization, map.id);
     map.environment ??= "ground";
     if (!["ground", "space"].includes(map.environment))
@@ -353,6 +355,8 @@ function loadCatalog({
       base = path.dirname(source),
       prefab = unitOverrides[ref] ? structuredClone(unitOverrides[ref]) : read(source);
     if (prefab.enabled === false) continue;
+    localize.prefab(prefab);
+    require("./weapon-balance.cjs").applyWeaponBalance(prefab);
     prefab.wip = isWip(prefab.id);
     prefab.disabled = prefab.wip;
     validateLocalization(prefab.localization, ref);

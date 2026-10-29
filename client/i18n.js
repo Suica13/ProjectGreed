@@ -38,7 +38,11 @@ const I18n = (() => {
     .sort((a, b) => b.length - a.length);
   let fragmentRegex = new RegExp(fragments.map(escape).join("|"), "g");
   function text(value) {
-    if (typeof value !== "string" || language === "zh" || !/[\u3400-\u9fff]/.test(value))
+    if (
+      typeof value !== "string" ||
+      language === "zh" ||
+      (!/[\u3400-\u9fff]/.test(value) && !Object.hasOwn(UI_LOCALES.en, value.trim()))
+    )
       return value;
     const key = value.trim().replace(/\s+/g, " ");
     if (cache.has(key)) return cache.get(key);
@@ -64,12 +68,18 @@ const I18n = (() => {
     return translated;
   }
   function localized(record, field = "name") {
+    if (language === "zh") return record.localization?.zh?.[field] ?? record[field] ?? "";
     return (
       record.localization?.[language]?.[field] ??
+      UI_LOCALES[language]?.[record[field]] ??
       record.localization?.en?.[field] ??
       record[field] ??
       ""
     );
+  }
+  function pilotName(pilot) {
+    const profile = typeof PilotSystem !== "undefined" ? PilotSystem.aceProfile(pilot) : null;
+    return profile ? localized(profile) : pilot?.custom ? pilot.name : text(pilot?.name || "");
   }
   function bind(record, field = "name", localization = record.localization) {
     const original = record[field],
@@ -97,14 +107,20 @@ const I18n = (() => {
       bind(prefab, "description");
       for (const kit of prefab.weaponKits) bind(kit);
       for (const weapon of Object.values(prefab.weapons)) bind(weapon);
-      for (const skill of prefab.skills || []) bind(skill);
+      for (const skill of prefab.skills || []) {
+        bind(skill);
+        bind(skill, "description");
+      }
     }
     for (const model of Object.values(catalog.models)) {
       bind(model);
       bind(model, "description");
       bind(model, "kitName", model.kitLocalization);
       for (const weapon of model.weapons) bind(weapon);
-      for (const skill of model.skills || []) bind(skill);
+      for (const skill of model.skills || []) {
+        bind(skill);
+        bind(skill, "description");
+      }
     }
     rebuildFragments();
     cache.clear();
@@ -194,6 +210,7 @@ const I18n = (() => {
     detect,
     text,
     localized,
+    pilotName,
     bindCatalog,
     start,
     setLanguage,

@@ -1,0 +1,1709 @@
+{
+  "AMX_002": {
+    "ja": {
+      "name": "ノイエ・ジール",
+      "description": "アクシズが開発した重MA。極めて強力な火力を持つ。"
+    }
+  },
+  "AlbionClass": {
+    "ja": {
+      "name": "アルビオン",
+      "description": "ペガサス級の改良型。総合性能が強化されている。"
+    }
+  },
+  "AntiZakuTank": {
+    "ja": {
+      "name": "対ザク戦車",
+      "description": "連邦軍がザクへの対抗用に製造した戦車。"
+    }
+  },
+  "ApsarasII": {
+    "ja": {
+      "name": "アプサラスII",
+      "description": "ジオン公国軍が地球連邦軍のジャブロー基地攻略用に開発したMA。"
+    }
+  },
+  "Army_Squad_EFSF_0079_N_G_A": {
+    "ja": {
+      "name": "歩兵分隊［地球連邦軍・0079］",
+      "description": "地球連邦軍の一般歩兵分隊。"
+    }
+  },
+  "Army_Squad_ZEON_0079_N_G_A": {
+    "ja": {
+      "name": "歩兵分隊［ジオン軍・0079］",
+      "description": "ジオン軍の一般歩兵分隊。"
+    }
+  },
+  "BigTrayClass": {
+    "ja": {
+      "name": "ビッグ・トレー級",
+      "description": "熱核エンジンにより海上移動も可能な巨大陸戦艦。"
+    },
+    "en": {
+      "name": "Big Tray Class"
+    }
+  },
+  "BirminghamClass": {
+    "ja": {
+      "name": "バーミンガム級",
+      "description": "大艦巨砲主義の野望を背負った悲劇の戦艦。"
+    }
+  },
+  "BurkeClass": {
+    "ja": {
+      "name": "バーク級駆逐艦",
+      "description": "連邦軍の主力駆逐艦。"
+    }
+  },
+  "Burstliner": {
+    "ja": {
+      "name": "バストライナー",
+      "description": "連邦軍が開発した砲撃用プラットフォーム。"
+    }
+  },
+  "ChivvayClass": {
+    "ja": {
+      "name": "チベ級",
+      "description": "ジオン公国軍艦隊の高速重巡洋艦。"
+    }
+  },
+  "ChivvayClassKai": {
+    "ja": {
+      "name": "チベ改級",
+      "description": "ジオン公国軍艦隊の高速重巡洋艦。"
+    }
+  },
+  "ColumbusClass": {
+    "ja": {
+      "name": "コロンブス級",
+      "description": "地球連邦軍艦隊の主力補給艦。"
+    }
+  },
+  "ColumbusClassKai": {
+    "ja": {
+      "name": "コロンブス改級",
+      "description": "地球連邦軍艦隊の主力補給艦。"
+    }
+  },
+  "Cui": {
+    "ja": {
+      "name": "キュイ",
+      "description": "ジオン軍の兵員輸送車。"
+    }
+  },
+  "DEPP_ROG": {
+    "ja": {
+      "name": "デプ・ロッグ",
+      "description": "連邦軍の高性能な高高度重爆撃機。"
+    }
+  },
+  "DabudeClass": {
+    "ja": {
+      "name": "ダブデ級",
+      "description": "広範囲の指揮支援を行う巨大な陸上指揮艦。"
+    }
+  },
+  "Dash": {
+    "ja": {
+      "name": "ディッシュ",
+      "description": "連邦軍の高高度偵察機。"
+    }
+  },
+  "DodaiYS": {
+    "ja": {
+      "name": "ドダイYS",
+      "description": "ジオン軍の対地爆撃機。史上初のSFSでもある。"
+    }
+  },
+  "DonEscargot": {
+    "ja": {
+      "name": "ドン・エスカルゴ",
+      "description": "連邦軍の対潜爆撃機。"
+    }
+  },
+  "Dopp": {
+    "ja": {
+      "name": "ドップ",
+      "description": "ジオン軍の主力戦闘機。"
+    }
+  },
+  "EF_Heli": {
+    "ja": {
+      "name": "戦闘ヘリ［地球連邦軍・0079］",
+      "description": "連邦軍の対地攻撃ヘリ。"
+    }
+  },
+  "EF_MinigunAPC": {
+    "ja": {
+      "name": "ガトリング装甲車",
+      "description": "軽装甲目標への対処を目的とした連邦軍の改造戦闘車両。"
+    },
+    "en": {
+      "name": "Gatling APC"
+    }
+  },
+  "EF_TorpedoBoat": {
+    "ja": {
+      "name": "魚雷艇",
+      "description": "連邦軍の制式魚雷艇。"
+    }
+  },
+  "EMS_10": {
+    "ja": {
+      "name": "ヅダ",
+      "description": "ザクとの競作に敗れた後、再設計を施した改良型MS。推力が非常に高い。"
+    }
+  },
+  "EMS_10F": {
+    "ja": {
+      "name": "ヅダF",
+      "description": "ヅダの改良型。性能は大幅に向上したが、構造上の脆弱性は残る。"
+    }
+  },
+  "EMS_10_1": {
+    "ja": {
+      "name": "ヅダ［指揮官機］",
+      "description": "ヅダの指揮官仕様。"
+    }
+  },
+  "FA_78_1": {
+    "ja": {
+      "name": "フルアーマーガンダム",
+      "description": "重装甲と追加武装を備え、戦艦級の火力を持つガンダム。"
+    }
+  },
+  "FA_78_1_NA": {
+    "ja": {
+      "name": "フルアーマーガンダム［装甲排除］",
+      "description": "ジオン軍に恐れられたMS。終戦まで通用する性能を持つ。"
+    }
+  },
+  "FA_78_2": {
+    "ja": {
+      "name": "ヘビーガンダム",
+      "description": "フルアーマーガンダムの再設計機。火力と機動性が向上している。"
+    }
+  },
+  "FA_78_3": {
+    "ja": {
+      "name": "フルアーマーガンダム7号機",
+      "description": "フルアーマー装備を施したガンダム7号機。"
+    }
+  },
+  "FA_78_G": {
+    "ja": {
+      "name": "フルアーマーガンダム陸戦タイプ",
+      "description": "フルアーマーガンダムの陸戦派生型。機動性と火力を重視する。"
+    }
+  },
+  "FFB_7Bst": {
+    "ja": {
+      "name": "ジェット・コア・ブースター",
+      "description": "生産性を重視したコア・ブースターの量産型。"
+    }
+  },
+  "FF_4": {
+    "ja": {
+      "name": "トリアーエズ",
+      "description": "迎撃任務に使用する軽戦闘機。"
+    }
+  },
+  "FF_6": {
+    "ja": {
+      "name": "TINコッド",
+      "description": "連邦軍の主力迎撃機。"
+    }
+  },
+  "FF_B2": {
+    "ja": {
+      "name": "フライ・マンタ",
+      "description": "連邦軍の主力爆撃機。"
+    }
+  },
+  "FF_S3": {
+    "ja": {
+      "name": "セイバーフィッシュ",
+      "description": "連邦軍の高性能な地上・宇宙両用戦闘機。"
+    }
+  },
+  "FF_X7": {
+    "ja": {
+      "name": "コア・ファイター",
+      "description": "V作戦の成果の一つ。MSパイロットの生存性向上を目的とする。"
+    }
+  },
+  "FF_X7Bst": {
+    "ja": {
+      "name": "コア・ブースター",
+      "description": "補助ブースターを装備し、戦闘力を強化したコア・ファイター。"
+    }
+  },
+  "FF_X_II": {
+    "ja": {
+      "name": "コア・ファイターII",
+      "description": "ガンダム試作1号機のコア・ファイター。パイロットの生存性向上を目的とする。"
+    },
+    "en": {
+      "name": "Core Fighter II"
+    }
+  },
+  "FF_X_II_FB": {
+    "ja": {
+      "name": "コア・ファイターII［フルバーニアン］",
+      "description": "ガンダム試作1号機のコア・ファイター。パイロットの生存性向上を目的とする。"
+    },
+    "en": {
+      "name": "Core Fighter II [Full Burnernian]"
+    }
+  },
+  "FalmerClass": {
+    "ja": {
+      "name": "ファルメル級",
+      "description": "ムサイ級の指揮官仕様。"
+    }
+  },
+  "FanFan": {
+    "ja": {
+      "name": "ファンファン",
+      "description": "連邦軍の施設防衛用ヘリ。"
+    }
+  },
+  "FatUncle": {
+    "ja": {
+      "name": "ファット・アンクル",
+      "description": "ジオン軍の補給輸送機。"
+    },
+    "en": {
+      "name": "Fat Uncle"
+    }
+  },
+  "FatUncleKai": {
+    "ja": {
+      "name": "ファット・アンクル改",
+      "description": "ファット・アンクルの改良型。機動性が向上している。"
+    },
+    "en": {
+      "name": "Fat Uncle Kai"
+    }
+  },
+  "GallopClass": {
+    "ja": {
+      "name": "ギャロップ級",
+      "description": "熱核エンジンにより海上移動も可能な大型陸戦艦。"
+    },
+    "en": {
+      "name": "Gallop Class"
+    }
+  },
+  "Gattle": {
+    "ja": {
+      "name": "ガトル",
+      "description": "ジオン軍が生産した旧式宇宙爆撃機。"
+    }
+  },
+  "GawClass": {
+    "ja": {
+      "name": "ガウ級",
+      "description": "ジオン軍が建造した大型空母。爆撃任務にも使用できる。"
+    }
+  },
+  "GrayPhantomClass": {
+    "ja": {
+      "name": "グレイファントム",
+      "description": "ペガサス級の改良型。総合性能が強化されている。"
+    }
+  },
+  "Gunperry": {
+    "ja": {
+      "name": "ガンペリー",
+      "description": "対地ミサイルを搭載した強襲輸送機。"
+    }
+  },
+  "GwanzanClass": {
+    "ja": {
+      "name": "グワンザン",
+      "description": "デラーズ・フリート所属のグワジン級戦艦。"
+    }
+  },
+  "GwazineClass": {
+    "ja": {
+      "name": "グワジン級",
+      "description": "ジオン公国軍艦隊の旗艦。"
+    }
+  },
+  "HeavyForkClass": {
+    "ja": {
+      "name": "ヘビィ・フォーク級",
+      "description": "改良型の陸上戦艦。ミサイル・ランチャーを追加装備する。"
+    },
+    "en": {
+      "name": "Heavy Fork Class"
+    }
+  },
+  "HimalayaClass": {
+    "ja": {
+      "name": "ヒマラヤ級",
+      "description": "連邦軍が建造した航空母艦。"
+    }
+  },
+  "JiccoClass": {
+    "ja": {
+      "name": "ジッコ級",
+      "description": "ジオン軍が生産した旧式宇宙突撃艇。"
+    },
+    "en": {
+      "name": "Jicco Class"
+    }
+  },
+  "JotunheimClass": {
+    "ja": {
+      "name": "ヨーツンヘイム級",
+      "description": "民間輸送船から改造された試験支援艦。"
+    }
+  },
+  "Luggun": {
+    "ja": {
+      "name": "ルッグン",
+      "description": "ジオン軍の高高度偵察機。"
+    }
+  },
+  "MAM_07": {
+    "ja": {
+      "name": "グラブロ",
+      "description": "艦隊への奇襲に用いるMA。極めて高い機動性を持つ。"
+    }
+  },
+  "MAN_03": {
+    "ja": {
+      "name": "ブラウ・ブロ",
+      "description": "フラナガン機関がサイコミュを搭載して開発した最初の機動兵器。"
+    },
+    "en": {
+      "name": "Braw Bro"
+    }
+  },
+  "MAN_08": {
+    "ja": {
+      "name": "エルメス",
+      "description": "フラナガン機関が開発した2番目のニュータイプ専用MA。実戦運用が可能。"
+    }
+  },
+  "MAX_03": {
+    "ja": {
+      "name": "アッザム",
+      "description": "ジオン公国軍が移動式対地攻撃兵器G87ルナタンクを改修した移動砲座。"
+    }
+  },
+  "MA_05": {
+    "ja": {
+      "name": "ビグロ",
+      "description": "艦隊への奇襲に用いるMA。極めて高い機動性を持つ。"
+    }
+  },
+  "MA_06": {
+    "ja": {
+      "name": "ヴァル・ヴァロ",
+      "description": "ビグロの改良型。機動性と火力の両面に優れる。"
+    }
+  },
+  "MA_08": {
+    "ja": {
+      "name": "ビグ・ザム",
+      "description": "ジオンの威信を示すため開発された、要塞攻略用の巨大MA。"
+    }
+  },
+  "MP_02A": {
+    "ja": {
+      "name": "オッゴ",
+      "description": "増大する連邦軍の戦力に対抗するため、ジオン軍が急造したモビルポッド。"
+    }
+  },
+  "MSM_03": {
+    "ja": {
+      "name": "ゴッグ",
+      "description": "実験的なビーム兵器を装備した水陸両用MS。"
+    }
+  },
+  "MSM_03C": {
+    "ja": {
+      "name": "ハイゴッグ",
+      "description": "統合整備計画の一環としてゴッグを再設計した機体。"
+    }
+  },
+  "MSM_04": {
+    "ja": {
+      "name": "アッガイ",
+      "description": "隠密作戦用の特殊な水陸両用MS。偵察と破壊工作に優れる。"
+    }
+  },
+  "MSM_04G": {
+    "ja": {
+      "name": "ジュアッグ",
+      "description": "アッガイを改修して砲撃能力を与えた砲撃型MS。"
+    }
+  },
+  "MSM_04N": {
+    "ja": {
+      "name": "アッグガイ",
+      "description": "強行偵察用の水陸両用MS。"
+    }
+  },
+  "MSM_07": {
+    "ja": {
+      "name": "ズゴック",
+      "description": "再設計された水中用MS。非常に優れた性能を持つ。"
+    }
+  },
+  "MSM_07E": {
+    "ja": {
+      "name": "ズゴックE",
+      "description": "統合整備計画で改良されたズゴック。"
+    }
+  },
+  "MSM_07S": {
+    "ja": {
+      "name": "ズゴック［指揮官機］",
+      "description": "リミッターを解除したズゴックの指揮官型。"
+    }
+  },
+  "MSM_08": {
+    "ja": {
+      "name": "ゾゴック",
+      "description": "格闘戦に特化した水陸両用MS。高い瞬発力を持つ。"
+    }
+  },
+  "MSM_10": {
+    "ja": {
+      "name": "ゾック",
+      "description": "実験型の水陸両用MS。強力な火力と装甲を備えるが、機動性は極めて低い。"
+    }
+  },
+  "MSN_01": {
+    "ja": {
+      "name": "サイコミュ高機動試験用ザク",
+      "description": "サイコミュ試験用ザクの高機動型。"
+    }
+  },
+  "MSN_02": {
+    "ja": {
+      "name": "ジオング",
+      "description": "ジオンを象徴する機体。"
+    }
+  },
+  "MSN_02_Head": {
+    "ja": {
+      "name": "ジオング［頭部］",
+      "description": "ジオンを象徴する機体。"
+    }
+  },
+  "MS_05": {
+    "ja": {
+      "name": "ザクI",
+      "description": "旧式のザク。一定の戦闘能力を維持している。"
+    }
+  },
+  "MS_05SP": {
+    "ja": {
+      "name": "ザクI・スナイパータイプ",
+      "description": "ビーム・スナイパー・ライフル用の外部ジェネレーターを装備した旧型ザク。"
+    }
+  },
+  "MS_06C": {
+    "ja": {
+      "name": "ザクII C型",
+      "description": "核弾頭を装備したザクII。"
+    }
+  },
+  "MS_06D": {
+    "ja": {
+      "name": "ザク・デザートタイプ",
+      "description": "防塵処理と推進器の追加を施したザクII。"
+    }
+  },
+  "MS_06E": {
+    "ja": {
+      "name": "ザク強行偵察型",
+      "description": "偵察任務向けに改修されたザク。"
+    }
+  },
+  "MS_06F": {
+    "ja": {
+      "name": "ザクII F型",
+      "description": "最も広く知られるMS。各性能のバランスが良い。"
+    }
+  },
+  "MS_06F2": {
+    "ja": {
+      "name": "ザクII F2型",
+      "description": "ザクIIの後期改修型。装甲と推進器を強化している。"
+    }
+  },
+  "MS_06F2_Commander": {
+    "ja": {
+      "name": "ザクII F2型［指揮官機］",
+      "description": "ザクII後期型の指揮官機。"
+    }
+  },
+  "MS_06FZ": {
+    "ja": {
+      "name": "ザクII改",
+      "description": "統合整備計画の成果の一つ。ザクの性能をほぼ限界まで引き上げた機体。"
+    }
+  },
+  "MS_06FZ_Commander": {
+    "ja": {
+      "name": "ザクII改［指揮官仕様］",
+      "description": "ザクII改の指揮官仕様。"
+    }
+  },
+  "MS_06F_MineLayer": {
+    "ja": {
+      "name": "ザク・マインレイヤー",
+      "description": "機雷散布用バックパックを装備したザクII。"
+    }
+  },
+  "MS_06F_Sniper": {
+    "ja": {
+      "name": "ザクII・スナイパータイプ",
+      "description": "最も広く知られるMS。各性能のバランスが良い。"
+    }
+  },
+  "MS_06G": {
+    "ja": {
+      "name": "陸戦高機動型ザク",
+      "description": "推進器を追加し、機動性を高めた陸戦型ザク。"
+    }
+  },
+  "MS_06J": {
+    "ja": {
+      "name": "ザクII J型",
+      "description": "重力下での戦闘に適応するため改修されたザク。"
+    }
+  },
+  "MS_06JK": {
+    "ja": {
+      "name": "ザク・ハーフキャノン",
+      "description": "ザク・キャノンの部品とガトリング砲を流用したザクII。掃討戦に適する。"
+    }
+  },
+  "MS_06K": {
+    "ja": {
+      "name": "ザク・キャノン",
+      "description": "対空戦闘を目的に開発された機体。"
+    }
+  },
+  "MS_06M": {
+    "ja": {
+      "name": "ザク・マリンタイプ",
+      "description": "水中戦用装備を施したザク。"
+    }
+  },
+  "MS_06R_1": {
+    "ja": {
+      "name": "高機動型ザクII R-1型",
+      "description": "推進器を追加し、機動性を高めたザク。"
+    }
+  },
+  "MS_06R_1A": {
+    "ja": {
+      "name": "高機動型ザクII R-1A型",
+      "description": "高機動型ザクIIの改修型。信頼性が向上している。"
+    }
+  },
+  "MS_06R_2": {
+    "ja": {
+      "name": "高機動型ザクII R-2型",
+      "description": "高機動型ザクの最終案。極めて高い機動性を持つ。"
+    }
+  },
+  "MS_06S": {
+    "ja": {
+      "name": "ザクII S型",
+      "description": "リミッターを解除し、アンテナを追加した指揮官用ザクII。"
+    }
+  },
+  "MS_06V": {
+    "ja": {
+      "name": "ザクタンク",
+      "description": "ザクとマゼラ・アタックを組み合わせた戦時改修機。"
+    }
+  },
+  "MS_06Z": {
+    "ja": {
+      "name": "サイコミュ試験用ザク",
+      "description": "フラナガン機関のサイコミュ試験機。有線式誘導砲を装備する。"
+    }
+  },
+  "MS_07A": {
+    "ja": {
+      "name": "グフA型",
+      "description": "ザクの陸戦用発展型。各種性能も向上している。"
+    }
+  },
+  "MS_07B": {
+    "ja": {
+      "name": "グフB型",
+      "description": "A型にヒート・ソードを追加し、格闘能力を強化した機体。"
+    }
+  },
+  "MS_07B3": {
+    "ja": {
+      "name": "グフ・カスタム",
+      "description": "グフを改修した強襲用機体。"
+    }
+  },
+  "MS_07H": {
+    "ja": {
+      "name": "グフ飛行試験型",
+      "description": "短時間の滞空が可能な軽量型グフ。"
+    }
+  },
+  "MS_07H8": {
+    "ja": {
+      "name": "グフ・フライトタイプ",
+      "description": "グフの飛行能力実現を目指した機体の一つ。"
+    }
+  },
+  "MS_08TX": {
+    "ja": {
+      "name": "イフリート",
+      "description": "グフを基に徹底的な強化を施した、格闘戦向けの機体。"
+    },
+    "en": {
+      "name": "Efreet"
+    }
+  },
+  "MS_08TX_Kai": {
+    "ja": {
+      "name": "イフリート改",
+      "description": "EXAMシステム搭載のイフリート。短時間だけ機体の性能制限を解除できる。"
+    },
+    "en": {
+      "name": "Efreet Custom"
+    }
+  },
+  "MS_08TX_Kai_EXAM": {
+    "ja": {
+      "name": "イフリート改［EXAM］",
+      "description": "EXAMシステム搭載のイフリート。短時間だけ機体の性能制限を解除できる。"
+    }
+  },
+  "MS_09": {
+    "ja": {
+      "name": "ドム",
+      "description": "ホバー移動を行う重MS。拠点破壊任務に優れる。"
+    }
+  },
+  "MS_09D": {
+    "ja": {
+      "name": "ドム・トロピカルテストタイプ",
+      "description": "熱帯地域の局地戦に特化したドムの改修型。"
+    }
+  },
+  "MS_09F": {
+    "ja": {
+      "name": "ドム・フュンフ",
+      "description": "統合整備計画の成果の一つ。ドムより部品の共通化が進んでいる。"
+    }
+  },
+  "MS_09F_TROP": {
+    "ja": {
+      "name": "ドム・トローペン",
+      "description": "ドム熱帯仕様の技術を取り入れた改良型。大型バズーカを装備する。"
+    }
+  },
+  "MS_09F_TROP_0083": {
+    "ja": {
+      "name": "ドム・トローペン［0083］",
+      "description": "ドム熱帯仕様の技術を取り入れた改良型。大型バズーカを装備する。"
+    }
+  },
+  "MS_09G": {
+    "ja": {
+      "name": "ドワッジ",
+      "description": "ドムを超える機体を目指した最終生産型。航続性能と機動性が向上している。"
+    }
+  },
+  "MS_09R": {
+    "ja": {
+      "name": "リック・ドム",
+      "description": "ドムの宇宙戦仕様。性能はまずまずの水準。"
+    }
+  },
+  "MS_09R2": {
+    "ja": {
+      "name": "リック・ドムII",
+      "description": "ドムの宇宙戦仕様。性能はまずまずの水準。"
+    }
+  },
+  "MS_09S": {
+    "ja": {
+      "name": "ドワス",
+      "description": "リック・ドムの最終生産型。生産数はごく少ない。"
+    }
+  },
+  "MS_09_K_1": {
+    "ja": {
+      "name": "ドム・キャノン［単砲仕様］",
+      "description": "キャノン砲を搭載したドム。機体バランスには課題が残る。"
+    }
+  },
+  "MS_09_K_2": {
+    "ja": {
+      "name": "ドム・キャノン［複砲仕様］",
+      "description": "再設計によって最適化され、性能が向上したドム・キャノン。"
+    }
+  },
+  "MS_10": {
+    "ja": {
+      "name": "ペズン・ドワッジ",
+      "description": "ペズン計画の成果の一つ。ドムの格闘性能強化を目的とする。"
+    }
+  },
+  "MS_11": {
+    "ja": {
+      "name": "アクト・ザク",
+      "description": "ペズン計画で開発された高性能ザク。ビーム・ライフルを装備できる。"
+    }
+  },
+  "MS_11S": {
+    "ja": {
+      "name": "アクト・ザク［指揮官仕様］",
+      "description": "アクト・ザクの指揮官型。"
+    }
+  },
+  "MS_12": {
+    "ja": {
+      "name": "ギガン",
+      "description": "基地防衛と砲撃戦を担当するMS。"
+    }
+  },
+  "MS_14A": {
+    "ja": {
+      "name": "ゲルググ",
+      "description": "ジオン軍が一年戦争末期に開発したMS。ガンダムに匹敵する性能を持つ。"
+    }
+  },
+  "MS_14B": {
+    "ja": {
+      "name": "高機動型ゲルググ",
+      "description": "追加バックパックで機動性を大幅に高めたゲルググ。"
+    }
+  },
+  "MS_14C": {
+    "ja": {
+      "name": "ゲルググ・キャノン",
+      "description": "ビーム・キャノンを追加し、火力を大幅に高めたゲルググ。"
+    },
+    "en": {
+      "name": "Gelgoog Cannon"
+    }
+  },
+  "MS_14F": {
+    "ja": {
+      "name": "ゲルググM",
+      "description": "ゲルググの海兵隊仕様。非常に高い性能を持つ。"
+    }
+  },
+  "MS_14FS": {
+    "ja": {
+      "name": "ゲルググM［指揮官機］",
+      "description": "ゲルググMの指揮官型。"
+    }
+  },
+  "MS_14JG": {
+    "ja": {
+      "name": "ゲルググJ",
+      "description": "推進力と射撃性能を強化したゲルググ。一年戦争末期でも屈指の性能を持つ。"
+    }
+  },
+  "MS_14S": {
+    "ja": {
+      "name": "ゲルググ［指揮官機］",
+      "description": "ゲルググの先行生産兼指揮官型。通信能力に優れる。"
+    }
+  },
+  "MS_15A": {
+    "ja": {
+      "name": "ギャン量産型",
+      "description": "追加通信装置を省いたギャンの量産型。"
+    }
+  },
+  "MS_15B": {
+    "ja": {
+      "name": "高機動型ギャン",
+      "description": "ビーム・ランスを装備したギャンの高機動型。"
+    }
+  },
+  "MS_15C": {
+    "ja": {
+      "name": "ギャン・キャノン",
+      "description": "追加通信装置を省いたギャンの量産型。"
+    }
+  },
+  "MS_15F": {
+    "ja": {
+      "name": "ギャンM",
+      "description": "ギャンの海兵隊仕様。非常に高い性能を持つ。"
+    }
+  },
+  "MS_15FS": {
+    "ja": {
+      "name": "ギャンM［指揮官機］",
+      "description": "ギャンMの指揮官型。"
+    }
+  },
+  "MS_15Kg": {
+    "ja": {
+      "name": "ギャン・クリーガー",
+      "description": "ギャンの全面強化型。新型の複合シールドも装備する。"
+    }
+  },
+  "MS_17": {
+    "ja": {
+      "name": "ガルバルディα",
+      "description": "ゲルググとギャンの特徴を兼ね備えるが、性能は理想には届かなかった。"
+    }
+  },
+  "MS_18E": {
+    "ja": {
+      "name": "ケンプファー",
+      "description": "統合整備計画から生まれた強襲用MS。機動性が非常に高い。"
+    },
+    "en": {
+      "name": "Kämpfer"
+    }
+  },
+  "MS_21C": {
+    "ja": {
+      "name": "ドラッツェ",
+      "description": "残存部品を組み合わせて製造した機体。性能は低い。"
+    }
+  },
+  "MTank": {
+    "ja": {
+      "name": "マゼラ・アタック",
+      "description": "ジオン軍の主力地上支援車両。"
+    },
+    "en": {
+      "name": "Magella Attack"
+    }
+  },
+  "MTank_Chassis": {
+    "ja": {
+      "name": "マゼラ・ベース",
+      "description": "マゼラ・アタックの下部車体。"
+    },
+    "en": {
+      "name": "Magella Base"
+    }
+  },
+  "MTank_Eins": {
+    "ja": {
+      "name": "マゼラ・アイン",
+      "description": "マゼラ・アタックを再設計した空挺戦車。"
+    },
+    "en": {
+      "name": "Magella Eins"
+    }
+  },
+  "MTank_Top": {
+    "ja": {
+      "name": "マゼラ・トップ",
+      "description": "マゼラ・アタックの上部ユニット。"
+    },
+    "en": {
+      "name": "Magella Top"
+    }
+  },
+  "M_Type_Submarine": {
+    "ja": {
+      "name": "M型潜水艦",
+      "description": "連邦海軍が建造した大型ミサイル攻撃潜水艦。"
+    }
+  },
+  "M_Type_Submarine_ZEON": {
+    "ja": {
+      "name": "マッド・アングラー級",
+      "description": "連邦海軍製の大型ミサイル攻撃潜水艦をジオン軍が運用したもの。"
+    }
+  },
+  "MagellanClass": {
+    "ja": {
+      "name": "マゼラン級",
+      "description": "地球連邦軍艦隊の重戦艦。"
+    }
+  },
+  "MagellanClassKai": {
+    "ja": {
+      "name": "マゼラン改級",
+      "description": "マゼラン級の戦後改修型。火力が大幅に強化されている。"
+    }
+  },
+  "MagellanClassLateType": {
+    "ja": {
+      "name": "マゼラン級後期型",
+      "description": "格納庫を追加し、武装も強化したマゼラン級。"
+    }
+  },
+  "MagellanClass_Green": {
+    "ja": {
+      "name": "マゼラン級［指揮艦］",
+      "description": "地球連邦軍艦隊の重戦艦。"
+    }
+  },
+  "Medea": {
+    "ja": {
+      "name": "ミデア",
+      "description": "連邦軍の補給輸送機。"
+    }
+  },
+  "MedeaKai": {
+    "ja": {
+      "name": "ミデア改",
+      "description": "ミデアの改良型。機動性が向上している。"
+    },
+    "en": {
+      "name": "Medea Kai"
+    }
+  },
+  "MiniTrayClass": {
+    "ja": {
+      "name": "ミニ・トレー級",
+      "description": "熱核エンジンにより海上移動も可能な小型陸戦艦。"
+    },
+    "en": {
+      "name": "Mini Tray Class"
+    }
+  },
+  "MissileCar": {
+    "ja": {
+      "name": "ミサイル車両",
+      "description": "ミサイル・ランチャーを装備した戦闘車両。"
+    },
+    "en": {
+      "name": "Missile Carrier"
+    }
+  },
+  "MusaiClass": {
+    "ja": {
+      "name": "ムサイ級",
+      "description": "ジオン公国軍艦隊の主力艦。"
+    }
+  },
+  "MusaiClassLateType": {
+    "ja": {
+      "name": "ムサイ級後期型",
+      "description": "ムサイ級の後期生産型。戦闘力と輸送能力が向上している。"
+    }
+  },
+  "MusaiClassLateType_0083": {
+    "ja": {
+      "name": "ムサイ級後期型［0083］",
+      "description": "ムサイ級後期生産型の0083年改修仕様。"
+    }
+  },
+  "PapuaClass": {
+    "ja": {
+      "name": "パプア級",
+      "description": "ジオン公国軍艦隊の主力補給艦。"
+    }
+  },
+  "PazockClass": {
+    "ja": {
+      "name": "パゾク級",
+      "description": "ジオン公国軍艦隊の主力補給艦。"
+    }
+  },
+  "PegasusClass": {
+    "ja": {
+      "name": "ペガサス級",
+      "description": "ペガサス級の1番艦。MSの運用と試験を担当する。"
+    }
+  },
+  "PublicClass": {
+    "ja": {
+      "name": "パブリク級",
+      "description": "重装甲目標への攻撃を目的とした、連邦軍製の突撃艇。"
+    },
+    "en": {
+      "name": "Public Class"
+    }
+  },
+  "RAG_79": {
+    "ja": {
+      "name": "アクア・ジム",
+      "description": "海軍が設計した水中戦用MS。隠密性には課題が残る。"
+    }
+  },
+  "RAG_79_G1": {
+    "ja": {
+      "name": "水中型ガンダム",
+      "description": "アクア・ジムの欠点を改良し、水中用ビーム兵器を装備した機体。"
+    }
+  },
+  "RB_79": {
+    "ja": {
+      "name": "ボール",
+      "description": "連邦軍の中距離支援用宇宙ポッド。MSと連携して戦うことが多い。"
+    }
+  },
+  "RB_79K": {
+    "ja": {
+      "name": "ボールK型",
+      "description": "ボールの先行量産型。ザク・マシンガンに耐えるルナ・チタニウム装甲を備える。"
+    }
+  },
+  "RB_79M": {
+    "ja": {
+      "name": "ボールM型",
+      "description": "宇宙での防御陣地構築に用いる、機雷ポッド装備のボール。"
+    }
+  },
+  "RB_79N": {
+    "ja": {
+      "name": "フィッシュアイ",
+      "description": "水中用に改修されたボール。レールガンと大型クローを備える。"
+    }
+  },
+  "RB_79_LateType": {
+    "ja": {
+      "name": "ボール後期型",
+      "description": "ボールの後期生産型。性能が向上している。"
+    }
+  },
+  "RFF_06": {
+    "ja": {
+      "name": "ザニー",
+      "description": "連邦軍が鹵獲したザクを改修して運用した試験機。"
+    }
+  },
+  "RGC_80": {
+    "ja": {
+      "name": "ジム・キャノン",
+      "description": "中距離支援に優れる砲撃型MS。"
+    }
+  },
+  "RGC_80S": {
+    "ja": {
+      "name": "ジム・キャノン［空間突撃仕様］",
+      "description": "中距離支援に優れる砲撃型MS。"
+    }
+  },
+  "RGC_83": {
+    "ja": {
+      "name": "ジム・キャノンII",
+      "description": "ジム・キャノンの後継発展型。射撃戦に優れる。"
+    }
+  },
+  "RGM_79": {
+    "ja": {
+      "name": "ジム",
+      "description": "連邦軍の主力汎用MS。"
+    }
+  },
+  "RGM_79C": {
+    "ja": {
+      "name": "ジム改",
+      "description": "ジムの生産規格を統一して開発された機体。信頼性が向上している。"
+    }
+  },
+  "RGM_79C_Space": {
+    "ja": {
+      "name": "ジム改［宇宙配色］",
+      "description": "ジムの生産規格を統一して開発された機体。信頼性が向上している。"
+    }
+  },
+  "RGM_79D": {
+    "ja": {
+      "name": "ジム寒冷地仕様",
+      "description": "ドムへの対抗を目的とした新型ジム。推進器が強化されている。"
+    }
+  },
+  "RGM_79DO": {
+    "ja": {
+      "name": "ジム・ドミナンス",
+      "description": "ジム・スナイパーIIの部品を用いて開発された高性能MS。"
+    }
+  },
+  "RGM_79FD": {
+    "ja": {
+      "name": "装甲強化型ジム",
+      "description": "デザート・ジムのデータを基に開発され、装甲と機動性を両立した機体。"
+    }
+  },
+  "RGM_79FP": {
+    "ja": {
+      "name": "ジム・ストライカー",
+      "description": "爆発反応装甲とビーム・スピアを装備したジム改。格闘戦に優れる。"
+    }
+  },
+  "RGM_79G": {
+    "ja": {
+      "name": "ジム・コマンド",
+      "description": "連邦軍のルナツー系ジム。ガンダムに匹敵する性能を持つ。"
+    }
+  },
+  "RGM_79GL": {
+    "ja": {
+      "name": "ジム・コマンド・ライトアーマー",
+      "description": "ジム・コマンドの軽装仕様。"
+    }
+  },
+  "RGM_79G_Space": {
+    "ja": {
+      "name": "ジム・コマンド［宇宙戦仕様］",
+      "description": "連邦軍のルナツー系ジム。ガンダムに匹敵する性能を持つ。"
+    }
+  },
+  "RGM_79HC": {
+    "ja": {
+      "name": "ジム・ガードカスタム",
+      "description": "防御戦に特化したジム。艦隊護衛任務に多く用いられる。"
+    }
+  },
+  "RGM_79L": {
+    "ja": {
+      "name": "ジム・ライトアーマー",
+      "description": "極めて高い機動性を持つ強襲型MS。"
+    }
+  },
+  "RGM_79LV": {
+    "ja": {
+      "name": "ジム・ナイトシーカーII",
+      "description": "ジム・ナイトシーカーの後継機。"
+    }
+  },
+  "RGM_79N": {
+    "ja": {
+      "name": "ジム・カスタム",
+      "description": "ガンダムNT-1の技術を活用して開発された、高機動のジム。"
+    }
+  },
+  "RGM_79S": {
+    "ja": {
+      "name": "ジム・スパルタン",
+      "description": "オーガスタ工廠で生産された、亜熱帯での運用に特化したジム。"
+    }
+  },
+  "RGM_79SC": {
+    "ja": {
+      "name": "ジム・スナイパーカスタム",
+      "description": "ジムの現地改修型の一つ。総合性能が大幅に向上している。"
+    }
+  },
+  "RGM_79SP2": {
+    "ja": {
+      "name": "ジム・スナイパーII",
+      "description": "ジム・コマンドを基にした狙撃型。総合性能はガンダムを上回る。"
+    }
+  },
+  "RGM_79V": {
+    "ja": {
+      "name": "ジム・ナイトシーカー",
+      "description": "特殊作戦向けに改修されたジム。"
+    }
+  },
+  "RGM_79_Commander": {
+    "ja": {
+      "name": "ジム［指揮官機］",
+      "description": "ジムの指揮官型。"
+    }
+  },
+  "RGM_79_D": {
+    "ja": {
+      "name": "デザート・ジム",
+      "description": "砂漠戦に特化したジム。実験型レールガンを装備する。"
+    }
+  },
+  "RGM_79_E": {
+    "ja": {
+      "name": "初期型ジム",
+      "description": "ルナツーで開発された初期型ジム。性能は平凡。"
+    }
+  },
+  "RGM_79_G": {
+    "ja": {
+      "name": "陸戦型ジム",
+      "description": "陸戦型ガンダムを再設計した汎用MS。"
+    }
+  },
+  "RGM_79_G_SP": {
+    "ja": {
+      "name": "ジム・スナイパー",
+      "description": "陸戦型ジムを改修した狙撃用MS。"
+    }
+  },
+  "RGM_79_G_SPACE": {
+    "ja": {
+      "name": "先行量産型ジム［宇宙仕様］",
+      "description": "地球へ送れなかった初期の陸戦型ジムを現地改修した、ルナツー独自のMS。"
+    }
+  },
+  "RGM_79_G_WithBackpack": {
+    "ja": {
+      "name": "陸戦型ジム［ウェポン・コンテナ］",
+      "description": "ウェポン・コンテナを装備した陸戦型ジム。"
+    }
+  },
+  "RMV_1": {
+    "ja": {
+      "name": "ガンタンクII",
+      "description": "ガンタンクの発展型。MSより戦車に近い構造を持つ。"
+    }
+  },
+  "RTX_440": {
+    "ja": {
+      "name": "陸戦強襲型ガンタンク",
+      "description": "局地戦に特化したガンタンク。高い強襲能力を持つ。"
+    }
+  },
+  "RX_75": {
+    "ja": {
+      "name": "ガンタンク",
+      "description": "V作戦から生まれた砲撃型MS。強力な火力を持つ。"
+    }
+  },
+  "RX_75R": {
+    "ja": {
+      "name": "量産型ガンタンク",
+      "description": "ガンタンクの量産型。装甲を簡略化し、砲塔を改良している。"
+    }
+  },
+  "RX_77D": {
+    "ja": {
+      "name": "量産型ガンキャノン",
+      "description": "生産性に優れるガンキャノンの量産型。"
+    }
+  },
+  "RX_77_2": {
+    "ja": {
+      "name": "ガンキャノン",
+      "description": "V作戦で試作された中距離支援用MS。高い火力を持つ。"
+    }
+  },
+  "RX_77_3": {
+    "ja": {
+      "name": "ガンキャノン重装型",
+      "description": "装甲を強化して防御力を高めたガンキャノン。"
+    }
+  },
+  "RX_77_3D": {
+    "ja": {
+      "name": "ガンキャノン重装型タイプD",
+      "description": "ガンキャノン重装型に推進器を追加した機体。"
+    }
+  },
+  "RX_77_4": {
+    "ja": {
+      "name": "ガンキャノンII",
+      "description": "装甲を強化して防御力を高めたガンキャノン。"
+    }
+  },
+  "RX_78GP01": {
+    "ja": {
+      "name": "ガンダム試作1号機",
+      "description": "GP計画の試作1号機。2号機の護衛を担当する予定だった。"
+    },
+    "en": {
+      "name": "Gundam GP01"
+    }
+  },
+  "RX_78GP01_FB": {
+    "ja": {
+      "name": "ガンダム試作1号機フルバーニアン",
+      "description": "GP計画の試作1号機。2号機の護衛を担当する予定だった。"
+    },
+    "en": {
+      "name": "Gundam GP01 Full Burnernian"
+    }
+  },
+  "RX_78GP02A": {
+    "ja": {
+      "name": "ガンダム試作2号機",
+      "description": "GP計画の試作2号機。核兵器の運用を目的とする。"
+    },
+    "en": {
+      "name": "Gundam GP02A"
+    }
+  },
+  "RX_78GP03D": {
+    "ja": {
+      "name": "ガンダム試作3号機デンドロビウム",
+      "description": "大型ウェポン・コンテナ・システムを装備したガンダム試作3号機。"
+    },
+    "en": {
+      "name": "Gundam GP03 Dendrobium"
+    }
+  },
+  "RX_78GP03S": {
+    "ja": {
+      "name": "ガンダム試作3号機ステイメン",
+      "description": "GP計画の試作3号機。通常はこの形態単独では出撃しない。"
+    },
+    "en": {
+      "name": "Gundam GP03S Stamen"
+    }
+  },
+  "RX_78NT_1": {
+    "ja": {
+      "name": "ガンダムNT-1",
+      "description": "ニュータイプ向けに開発された新型ガンダム。極めて優れた応答性を持つ。"
+    }
+  },
+  "RX_78NT_1_FA": {
+    "ja": {
+      "name": "ガンダムNT-1［チョバム・アーマー］",
+      "description": "チョバム・アーマーを装備したガンダム・アレックス。"
+    }
+  },
+  "RX_78SP": {
+    "ja": {
+      "name": "ガンナーガンダム",
+      "description": "ガンダムの電子戦仕様。機動性を維持しつつ火力などを強化している。"
+    }
+  },
+  "RX_78XX": {
+    "ja": {
+      "name": "ガンダム・ピクシー",
+      "description": "RX-78-2ガンダムの格闘戦特化型。"
+    }
+  },
+  "RX_78_1": {
+    "ja": {
+      "name": "プロトタイプガンダム",
+      "description": "連邦軍の試作白兵戦用MS。ザクを圧倒する性能を持つ。"
+    }
+  },
+  "RX_78_2": {
+    "ja": {
+      "name": "ガンダム",
+      "description": "ジオン軍に恐れられたMS。終戦まで通用する性能を持つ。"
+    }
+  },
+  "RX_78_3": {
+    "ja": {
+      "name": "G-3ガンダム",
+      "description": "マグネット・コーティングにより応答性を大幅に向上させたガンダム。"
+    }
+  },
+  "RX_78_4_Bst": {
+    "ja": {
+      "name": "ガンダム4号機［Bst］",
+      "description": "G4計画で開発されたガンダムの発展型。"
+    }
+  },
+  "RX_78_5_Bst": {
+    "ja": {
+      "name": "ガンダム5号機［Bst］",
+      "description": "G4計画で開発されたガンダムの発展型。"
+    }
+  },
+  "RX_78_6": {
+    "ja": {
+      "name": "ガンダム6号機マドロック",
+      "description": "ガンダムから派生した砲撃戦向けの機体。"
+    }
+  },
+  "RX_78_7": {
+    "ja": {
+      "name": "ガンダム7号機",
+      "description": "フレームから武装まで全面的に強化したガンダム。"
+    }
+  },
+  "RX_79_BD_1": {
+    "ja": {
+      "name": "ブルーディスティニー1号機",
+      "description": "EXAMシステムを搭載した試作機。短時間だけ機体の性能制限を解除できる。"
+    }
+  },
+  "RX_79_BD_1_EXAM": {
+    "ja": {
+      "name": "ブルーディスティニー1号機［EXAM］",
+      "description": "EXAMシステムを搭載した試作機。短時間だけ機体の性能制限を解除できる。"
+    }
+  },
+  "RX_79_BD_2": {
+    "ja": {
+      "name": "ブルーディスティニー2号機",
+      "description": "EXAMシステムを搭載した2号機。性能は1号機とほぼ同等。"
+    }
+  },
+  "RX_79_BD_2_EXAM": {
+    "ja": {
+      "name": "ブルーディスティニー2号機［EXAM］",
+      "description": "EXAMシステムを搭載した2号機。性能は1号機とほぼ同等。"
+    }
+  },
+  "RX_79_G": {
+    "ja": {
+      "name": "陸戦型ガンダム",
+      "description": "V作戦の規格外部品を用いて設計・組み立てられた汎用MS。"
+    }
+  },
+  "RX_79_G_WithBackpack": {
+    "ja": {
+      "name": "陸戦型ガンダム［ウェポン・コンテナ］",
+      "description": "ウェポン・コンテナを装備した陸戦型ガンダム。"
+    }
+  },
+  "RX_80PR": {
+    "ja": {
+      "name": "ペイルライダー",
+      "description": "ペイルライダー計画の最終成果。HADESシステムを搭載する。"
+    }
+  },
+  "RX_80PR_2": {
+    "ja": {
+      "name": "ペイルライダー・キャバルリー",
+      "description": "ペイルライダーの量産型。"
+    }
+  },
+  "RX_80PR_2_HADES": {
+    "ja": {
+      "name": "ペイルライダー・キャバルリー［HADES］",
+      "description": "ペイルライダーの量産型。"
+    },
+    "en": {
+      "name": "Pale Rider Cavalry [HADES]"
+    }
+  },
+  "RX_80PR_GroundType": {
+    "ja": {
+      "name": "ペイルライダー［陸戦重装備仕様］",
+      "description": "ペイルライダーの陸戦重装備仕様。"
+    }
+  },
+  "RX_80PR_GroundType_HADES": {
+    "ja": {
+      "name": "ペイルライダー［陸戦重装備仕様・HADES］",
+      "description": "ペイルライダーの陸戦重装備仕様。"
+    },
+    "en": {
+      "name": "Pale Rider [Ground Heavy Equipment / HADES]"
+    }
+  },
+  "RX_80PR_HADES": {
+    "ja": {
+      "name": "ペイルライダー［HADES］",
+      "description": "ペイルライダー計画の最終成果。HADESシステムを搭載する。"
+    },
+    "en": {
+      "name": "Pale Rider [HADES]"
+    }
+  },
+  "RX_80PR_SpaceType": {
+    "ja": {
+      "name": "ペイルライダー［空間戦仕様］",
+      "description": "ペイルライダーの空間戦仕様。"
+    }
+  },
+  "RX_80PR_SpaceType_HADES": {
+    "ja": {
+      "name": "ペイルライダー［空間戦仕様・HADES］",
+      "description": "ペイルライダーの宇宙仕様。"
+    },
+    "en": {
+      "name": "Pale Rider [Space Type / HADES]"
+    }
+  },
+  "RX_81": {
+    "ja": {
+      "name": "ジーライン",
+      "description": "本格的な量産型ガンダム。性能は原型機を上回る。"
+    }
+  },
+  "RX_81AS": {
+    "ja": {
+      "name": "ジーライン・アサルトアーマー",
+      "description": "本格的な量産型ガンダム。性能は原型機を上回る。"
+    }
+  },
+  "RX_81FC": {
+    "ja": {
+      "name": "ジーライン・フルカスタム",
+      "description": "本格的な量産型ガンダム。性能は原型機を上回る。"
+    }
+  },
+  "RX_81LA": {
+    "ja": {
+      "name": "ジーライン・ライトアーマー",
+      "description": "本格的な量産型ガンダム。性能は原型機を上回る。"
+    }
+  },
+  "RX_81ST": {
+    "ja": {
+      "name": "ジーライン・スタンダードアーマー",
+      "description": "本格的な量産型ガンダム。性能は原型機を上回る。"
+    }
+  },
+  "SalamisClass": {
+    "ja": {
+      "name": "サラミス級",
+      "description": "地球連邦軍艦隊の主力艦。"
+    }
+  },
+  "SalamisClassKai": {
+    "ja": {
+      "name": "サラミス改級",
+      "description": "サラミス級の戦後改修型。多数の武装を装備する。"
+    }
+  },
+  "SalamisClassLateType": {
+    "ja": {
+      "name": "サラミス級後期型",
+      "description": "格納庫を追加したサラミス級後期生産型。フジ級とも呼ばれる。"
+    }
+  },
+  "SamsonGroundTransportTruck": {
+    "ja": {
+      "name": "サムソン・トレーラー",
+      "description": "ジオン軍の輸送トラック。"
+    },
+    "en": {
+      "name": "Samson Ground Transport Truck"
+    }
+  },
+  "Skiure": {
+    "ja": {
+      "name": "スキウレ",
+      "description": "ジオン軍が開発したMS用補助兵器。長距離砲撃に用いる。"
+    }
+  },
+  "Type61": {
+    "ja": {
+      "name": "61式戦車",
+      "description": "旧世代の主力戦闘車両。"
+    }
+  },
+  "Type61A5": {
+    "ja": {
+      "name": "61式戦車5型",
+      "description": "近代化改修を施した61式戦車。"
+    }
+  },
+  "Type61_SPG": {
+    "ja": {
+      "name": "61式戦車［榴弾砲搭載型］",
+      "description": "［オリジナル］61式戦車に榴弾砲を搭載した改修型。"
+    }
+  },
+  "Type74": {
+    "ja": {
+      "name": "ホバートラック",
+      "description": "連邦軍の貨物輸送兼偵察車両。"
+    }
+  },
+  "Type74Kai": {
+    "ja": {
+      "name": "ホバートラック［ブラッドハウンド］",
+      "description": "連邦軍の貨物輸送兼偵察車両。"
+    }
+  },
+  "U_Type_Submarine": {
+    "ja": {
+      "name": "U型潜水艦",
+      "description": "連邦軍の制式潜水艦。"
+    }
+  },
+  "U_Type_Submarine_ZEON": {
+    "ja": {
+      "name": "ユーコン級",
+      "description": "ジオン軍が使用する連邦軍規格の潜水艦。"
+    },
+    "en": {
+      "name": "Yukon Class"
+    }
+  },
+  "Wappa": {
+    "ja": {
+      "name": "ワッパ",
+      "description": "ジオン軍の高速偵察ユニット。"
+    }
+  },
+  "YMS_09J": {
+    "ja": {
+      "name": "ドム高速実験型",
+      "description": "大型ヒート・ホークを装備した、ドムの高機動試作型。"
+    }
+  },
+  "YMS_15": {
+    "ja": {
+      "name": "ギャン",
+      "description": "連邦軍のRXシリーズに対抗するため開発された、格闘戦に優れるジオン軍の新型機。"
+    }
+  },
+  "YMS_15E": {
+    "ja": {
+      "name": "ギャン・エーオース",
+      "description": "新型装備を搭載し、総合性能を向上させたギャン。"
+    }
+  },
+  "YMS_16M": {
+    "ja": {
+      "name": "ザメル",
+      "description": "一年戦争末期にジオン軍が開発した長距離攻撃用試作MS。操縦手と砲手の2名で運用する。"
+    }
+  },
+  "YMS_18": {
+    "ja": {
+      "name": "プロトタイプ・ケンプファー",
+      "description": "統合整備計画から生まれた強襲用MS。機動性が非常に高い。"
+    },
+    "en": {
+      "name": "Prototype Kämpfer"
+    }
+  },
+  "YMT_05": {
+    "ja": {
+      "name": "ヒルドルブ",
+      "description": "ブリティッシュ作戦の検討時に、将来の地上戦を見据えてジオン軍が開発した機体。"
+    }
+  },
+  "YMT_05_ModeB": {
+    "ja": {
+      "name": "ヒルドルブ［モビル形態］",
+      "description": "ブリティッシュ作戦の検討時に、将来の地上戦を見据えてジオン軍が開発した機体。"
+    },
+    "en": {
+      "name": "Hildolfr [Mobile Form]"
+    }
+  },
+  "ZN_APC": {
+    "ja": {
+      "name": "装甲車",
+      "description": "ジオン軍の水陸両用戦闘車両。"
+    }
+  },
+  "ZN_APC_WithMS": {
+    "ja": {
+      "name": "装甲車［ミサイル搭載型］",
+      "description": "ミサイルを追加装備した水陸両用装甲車。"
+    }
+  },
+  "ZN_Heli": {
+    "ja": {
+      "name": "戦闘ヘリ［ジオン軍・0079］",
+      "description": "ジオン軍の対地攻撃ヘリ。"
+    }
+  },
+  "ZanzibarClass": {
+    "ja": {
+      "name": "ザンジバル級",
+      "description": "ジオン軍の大気圏内・宇宙両用巡洋艦。"
+    }
+  },
+  "ZanzibarClassKai": {
+    "ja": {
+      "name": "ザンジバル改級",
+      "description": "ザンジバル級の改良型。総合性能が向上している。"
+    }
+  },
+  "ZanzibarClassKai_0083": {
+    "ja": {
+      "name": "ザンジバル改級［0083］",
+      "description": "ザンジバル級をジオン残党が改修した機体。総合性能が向上している。"
+    }
+  }
+}
