@@ -28,7 +28,8 @@
     "desktop": "npm run build && electron .",
     "package:desktop": "npm run build && electron-builder --publish never",
     "package:desktop:dir": "npm run build && electron-builder --dir --publish never",
-    "test:desktop": "node tools/desktop-smoke.cjs"
+    "test:desktop": "node tools/desktop-smoke.cjs",
+    "package:android": "npm run build && python3 tools/package-android.py"
   },
   "dependencies": {
     "ws": "8.22.0"

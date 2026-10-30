@@ -16,3 +16,10 @@ build/ProjectGreed_V02.html
 /public/*.br
 
 /dist/
+
+/android/.gradle/
+/android/local.properties
+/android/**/build/
+/android/app/src/main/assets/client.html
+*.jks
+*.keystore
