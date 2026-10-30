@@ -1,6 +1,6 @@
 # Android 本地客户端测试版
 
-使用系统 Android WebView，最低 Android 8.0（API 26）。横屏，包含现有客户端素材，不需要本机服务器。触屏操作沿用原客户端。支持系统文件选择器导入存档、保存对话框导出存档（最多 16 MiB）。存档位于应用私有 WebView 数据目录；卸载/清除应用数据会删除存档，请先导出。
+使用系统 Android WebView，最低 Android 8.0（API 26）。跟随系统旋转设置，支持横竖屏，包含现有客户端素材，不需要本机服务器。触屏操作沿用原客户端。支持系统文件选择器导入存档、保存对话框导出存档（最多 16 MiB）。存档位于应用私有 WebView 数据目录；卸载/清除应用数据会删除存档，请先导出。
 
 使用虚拟 HTTP 本地来源加载 APK 内唯一 client.html，所有同域其他资源请求返回 404，不会请求远程同名服务器。这样可以兼容现有 ws:// 局域网服务器；manifest 有明确的明文网络许可。页面外跳和子框架被禁止，导出桥仅允许弹出用户确认的文件保存界面，不授予任意文件路径写权限。没有提供 MOD 加载或自动更新功能。
 
@@ -14,7 +14,7 @@ npm run build
 python3 tools/package-android.py
 ```
 
-生成 `dist/android/ProjectGreed-0.50.0-android-test1.apk`。脚本仅使用 javac、D8、aapt2、zipalign 和 apksigner，无 Gradle 依赖下载；会校验签名并打印 APK manifest 信息。安装包包含压缩的客户端 HTML 和 DEX，没有原生 ABI 库，可由系统 WebView 适配 ARM/ARM64/x86。
+生成 `dist/android/ProjectGreed-0.50.0-android-test2.apk`。脚本仅使用 javac、D8、aapt2、zipalign 和 apksigner，无 Gradle 依赖下载；会校验签名并打印 APK manifest 信息。安装包包含压缩的客户端 HTML 和 DEX，没有原生 ABI 库，可由系统 WebView 适配 ARM/ARM64/x86。
 
 另提供 Android Studio/Gradle 项目；先将构建后的 public/client.html 复制到 android/app/src/main/assets/client.html，再执行 Gradle assembleDebug。
 

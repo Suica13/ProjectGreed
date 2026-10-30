@@ -18,7 +18,7 @@ ns = 'http://schemas.android.com/apk/res/android'
 ET.register_namespace('android', ns)
 manifest = ET.parse(root/'android/app/src/main/AndroidManifest.xml')
 m = manifest.getroot(); m.set('package', 'com.suica13.projectgreed')
-m.set('{'+ns+'}versionCode','5001'); m.set('{'+ns+'}versionName','0.50.0-android-test1')
+m.set('{'+ns+'}versionCode','5002'); m.set('{'+ns+'}versionName','0.50.0-android-test2')
 manifest.write(out/'AndroidManifest.xml', encoding='utf-8', xml_declaration=True)
 assets=out/'assets';assets.mkdir(exist_ok=True)
 shutil.copyfile(root/'public/client.html',assets/'client.html')
@@ -29,7 +29,7 @@ run(bt/'zipalign','-f','4',out/'unsigned.apk',out/'aligned.apk')
 key=pathlib.Path(os.environ.get('PROJECTGREED_ANDROID_KEYSTORE',str(out/'projectgreed-test.jks')))
 if not key.exists():
  run('keytool','-genkeypair','-keystore',key,'-storepass','android','-keypass','android','-alias','projectgreed-test','-dname','CN=ProjectGreed Test','-keyalg','RSA','-keysize','2048','-validity','10000')
-apk=out/'ProjectGreed-0.50.0-android-test1.apk'
+apk=out/'ProjectGreed-0.50.0-android-test2.apk'
 run(bt/'apksigner','sign','--ks',key,'--ks-pass','pass:android','--key-pass','pass:android','--ks-key-alias','projectgreed-test','--out',apk,out/'aligned.apk')
 run(bt/'apksigner','verify','--verbose',apk)
 run(bt/'aapt2','dump','badging',apk)
