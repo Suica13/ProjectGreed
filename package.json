@@ -24,13 +24,20 @@
     "package:server": "python tools/package-server.py",
     "build:developer": "node build.cjs --developer",
     "maps:import": "node tools/import-map.cjs",
-    "build:map-editor": "node tools/build-map-editor.cjs"
+    "build:map-editor": "node tools/build-map-editor.cjs",
+    "desktop": "npm run build && electron .",
+    "package:desktop": "npm run build && electron-builder --publish never",
+    "package:desktop:dir": "npm run build && electron-builder --dir --publish never",
+    "test:desktop": "node tools/desktop-smoke.cjs"
   },
   "dependencies": {
     "ws": "8.22.0"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
+    "electron": "45.1.0",
+    "electron-builder": "26.18.0",
     "prettier": "3.9.10"
-  }
+  },
+  "main": "desktop/main.cjs"
 }
