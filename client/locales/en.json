@@ -2260,7 +2260,7 @@
   "战局阶段已改变，未发送的操作已取消。": "The battle phase changed; unsent actions were cancelled.",
   "待发送操作过多，请等待服务端确认。": "Too many pending actions. Please wait for server confirmation.",
   "确认旋转": "Confirm rotation",
-  "每满50点增加1点每回合AP和1格移动距离，不影响回避。100点提供2点AP和2格移动，200点提供4点AP和4格移动。": "Every full 50 points adds 1 AP per turn and 1 movement tile. No evasion bonus. 100 points grants +2 AP and +2 tiles; 200 grants +4 of each.",
+  "以100点为基准，每多满50点增加1点额外基础AP和1格额外基础移动距离，每少满50点则各减少1。不影响回避。50点为−1，100点为0，150点为+1，200点为+2。": "Relative to 100, every full 50 points above or below adds or subtracts 1 extra base AP and 1 extra base movement tile. Evasion is unaffected. At 50: -1; 100: 0; 150: +1; 200: +2.",
   "每点增加0.25个百分点的回避倍率；100点为100%，200点为125%。敌方命中率除以该倍率；与我方通讯回避倍率相乘，不再放大未命中概率。": "Each point adds 0.25 percentage points to evasion scaling: 100 points gives 100%, and 200 gives 125%. Enemy hit chance is divided by this multiplier and the communication evasion multiplier.",
   "战斗记录": "Battle records",
   "损毁单位": "Destroyed units",

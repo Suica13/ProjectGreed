@@ -680,6 +680,7 @@ function renderPanel() {
   stats.innerHTML = /* HTML */ `<div><span>移动力</span>${Math.round(m.move)} 格</div>
     <div data-sensor-range="sight"><span>视野距离</span>${formatDistance(sensorRanges.sight)}</div>
     <div data-sensor-range="radar"><span>侦察距离</span>${formatDistance(sensorRanges.radar)}</div>
+    <div><span>机动</span>${m.speed ?? 100}</div>
     <div><span>反应系数</span>${Math.round(m.mobility)}</div>
     <div><span>命中系数</span>${Math.round(m.accuracy)}%</div>
     <div><span>地面适应性</span>${m.adaptability.ground}%</div>

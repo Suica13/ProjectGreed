@@ -227,7 +227,8 @@ const ProductionUI = (() => {
         ["视野距离", formatDistance(model.sensors.sight)],
         ["侦察距离", formatDistance(model.sensors.radar)],
         ["命中系数", model.accuracy + "%"],
-        ["反应系数", model.mobility],
+        ["机动", model.speed ?? 100],
+      ["反应系数", model.mobility],
       ]);
       const environments = {
         ground: "地面",

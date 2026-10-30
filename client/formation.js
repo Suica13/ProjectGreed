@@ -848,6 +848,7 @@ const Formation = (() => {
       ["COST", model.cost],
       ["视野距离", formatDistance(model.sensors.sight)],
       ["侦察距离", formatDistance(model.sensors.radar)],
+      ["机动", model.speed ?? 100],
       ["反应系数", model.mobility],
       ["命中系数", model.accuracy + "%"],
       ["行动点", model.actionPoints ?? 5],
@@ -2850,7 +2851,7 @@ const Formation = (() => {
     ["防御", "每点降低0.25个百分点的承受伤害倍率；100点为100%，200点为75%。"],
     [
       "机动",
-      "每满50点增加1点每回合AP和1格移动距离，不影响回避。100点提供2点AP和2格移动，200点提供4点AP和4格移动。",
+      "以100点为基准，每多满50点增加1点额外基础AP和1格额外基础移动距离，每少满50点则各减少1。不影响回避。50点为−1，100点为0，150点为+1，200点为+2。",
     ],
     [
       "命中",

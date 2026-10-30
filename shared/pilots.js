@@ -519,8 +519,8 @@ const PilotSystem = (() => {
       melee: factor(stats.melee, 0.25) * awakening,
       defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.0025),
       move: 1,
-      moveBonus: Math.floor(stats.speed / 50),
-      actionPoints: Math.floor(stats.speed / 50),
+      moveBonus: Math.trunc((stats.speed - 100) / 50),
+      actionPoints: Math.trunc((stats.speed - 100) / 50),
       accuracy: factor(stats.accuracy, 0.25),
       reaction: factor(stats.reaction, 0.25),
     };

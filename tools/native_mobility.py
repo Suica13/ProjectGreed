@@ -2,6 +2,8 @@
 from mod_source import stat
 
 def correct(prefab, native):
+    # Tactical unit mobility is independent from native reaction and boost speed.
+    prefab["stats"].setdefault("speed", 100)
     from unit_energy import apply_capacity_policy
     apply_capacity_policy(prefab, stat(native, "enMax"))
     raw = {name: stat(native, source + "Adaptability", 0)

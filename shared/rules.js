@@ -902,6 +902,7 @@ const Tactics = (() => {
         },
         move: base.deployed ? 0 : Math.max(1, base.move + modifiers.moveBonus),
         actionPoints: (base.actionPoints ?? 5) + modifiers.actionPoints,
+        // Legacy mobility stores native baseReactionLevel, not movement/speed.
         mobility: base.mobility * modifiers.reaction,
         accuracy: base.accuracy * modifiers.accuracy,
         pilotModifiers: modifiers,
@@ -2153,7 +2154,7 @@ const Tactics = (() => {
           : w.type === "melee"
             ? (ground.meleeCover ?? 0)
             : ground.cover,
-      mobilityPenalty =
+      reactionPenalty =
         ((defender.mobility / (defender.pilotModifiers?.reaction ?? 1)) *
           (response === "evade" ? 1.25 : 1) -
           100) *
@@ -2173,7 +2174,7 @@ const Tactics = (() => {
               sizeModifier.accuracy *
               targetFactor -
               cover -
-              mobilityPenalty,
+              reactionPenalty,
           ),
         ) * (isCounter ? 0.75 : 1),
       // 最终回避加成在机动性、地形与反击惩罚计算后生效。

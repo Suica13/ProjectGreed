@@ -46,7 +46,8 @@
     hp: "HP",
     en: "EN",
     move: "移动力",
-    mobility: "机动",
+    mobility: "反应系数",
+    speed: "机动",
     cost: "COST",
     accuracy: "命中",
     actionPoints: "行动点",
@@ -170,6 +171,7 @@
           const result = await api("unit?id=" + encodeURIComponent(unitId));
           editingUnitId = unitId;
           unitDraft = result.data;
+          unitDraft.stats.speed ??= 100;
           unitRevision = result.revision;
           unitPanel.replaceChildren(
             make("h3", "编辑单位 · " + unitDraft.name + "（" + editingUnitId + "）"),

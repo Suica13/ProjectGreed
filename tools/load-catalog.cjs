@@ -572,6 +572,10 @@ function loadCatalog({
       (!Number.isInteger(prefab.stats.counterLimit) || prefab.stats.counterLimit < 0)
     )
       throw Error("Invalid counter limit: " + ref);
+    // speed is unit mobility; legacy mobility is the native reaction coefficient.
+    prefab.stats.speed ??= 100;
+    if (!Number.isFinite(prefab.stats.speed) || prefab.stats.speed < 0)
+      throw Error("Invalid unit speed: " + ref);
     if (!Number.isFinite(prefab.stats.mobility) || prefab.stats.mobility <= 0)
       throw Error("Invalid mobility: " + ref);
     if (prefab.stats.ship || prefab.stats.modules) {
@@ -1009,6 +1013,8 @@ function loadCatalog({
       });
       result.models[id] = {
         ...prefab.stats,
+        move: prefab.stats.deployed ? 0 : prefab.stats.move + Math.trunc((prefab.stats.speed - 100) / 50),
+        actionPoints: (prefab.stats.actionPoints ?? 5) + Math.trunc((prefab.stats.speed - 100) / 50),
         wip: prefab.wip,
         disabled: prefab.disabled,
         formOnly: prefab.formOnly === true,

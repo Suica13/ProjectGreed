@@ -53,6 +53,7 @@ const RefitShop = (() => {
       ["移动", model.move],
       ["视野距离", model.sensors.sight],
       ["侦察距离", model.sensors.radar],
+      ["机动", model.speed ?? 100],
       ["反应系数", model.mobility],
       ["命中系数", model.accuracy + "%"],
     ])
