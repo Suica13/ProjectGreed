@@ -4,6 +4,7 @@ Run via npm run package:server. No npm/Python/install step is needed on the host
 Local server-data, cfg overrides, tests, dev dependencies and compressed HTML
 are deliberately excluded from distribution.
 """
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import hashlib
 import json
 from pathlib import Path
@@ -21,12 +22,12 @@ def main():
     node = shutil.which("node")
     if not node:
         raise SystemExit("Node.js >=22 is required on the packaging machine.")
-    runtime = json.loads(subprocess.check_output([
+    runtime = load_source_json(subprocess.check_output([
         node, "-p", "JSON.stringify({version:process.version,platform:process.platform,arch:process.arch})"
     ], text=True))
     if runtime["platform"] != "win32" or int(runtime["version"].split(".")[0][1:]) < 22:
         raise SystemExit("Package on Windows using Node.js >=22.")
-    project = json.loads((ROOT / "project.json").read_text(encoding="utf-8"))
+    project = load_source_json((ROOT / "project.json").read_text(encoding="utf-8"))
     name = f'{project["name"]}-{project["version"]}-server-only-win32-{runtime["arch"]}'
     output = ROOT / "build"
     output.mkdir(exist_ok=True)
@@ -53,7 +54,7 @@ def main():
             destination.parent.mkdir(exist_ok=True)
             shutil.copy2(ROOT / "tools" / filename, destination)
         catalog = subprocess.check_output([node, str(ROOT / "tools/export-server-catalog.cjs")], cwd=ROOT)
-        parsed = json.loads(catalog)
+        parsed = load_source_json(catalog)
         assert parsed["models"] and parsed["prefabs"] and parsed["maps"]
         assert not parsed["assets"] and not parsed["sounds"]
         (stage / "shared/server-catalog.json").write_bytes(catalog)
@@ -75,7 +76,7 @@ def main():
             p.relative_to(stage).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in files
         }}
-        (stage / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+        (stage / "manifest.json").write_text(dump_source_json(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
         archive = output / (name + ".zip")
         with ZipFile(archive, "w", compression=ZIP_DEFLATED, compresslevel=6) as bundle:
             for file in sorted(stage.rglob("*")):

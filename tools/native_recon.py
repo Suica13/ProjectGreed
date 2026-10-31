@@ -1,4 +1,5 @@
 """Recon migration: source equipment decides availability; durations are adapted to team turns."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import re
 from mod_source import section
 from native_sensors import RADAR_WORLD_UNITS_PER_TILE
@@ -44,7 +45,7 @@ if __name__ == "__main__":
     import json
     from mod_source import ASSETS, MOD, load
     for path in (ASSETS / "units").glob("*/unit.json"):
-        prefab = json.loads(path.read_text(encoding="utf-8-sig"))
+        prefab = load_source_json(path.read_text(encoding="utf-8-sig"))
         correct(prefab, load(MOD / prefab["source"]))
-        path.write_text(json.dumps(prefab, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        path.write_text(dump_source_json(prefab, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("Refreshed native recon skills and movement/flight sounds")

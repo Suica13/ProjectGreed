@@ -8,11 +8,11 @@ __pycache__/
 Thumbs.db
 /build/
 build/ProjectGreed_V02.html
-/public/developer.html
 
 /server-data/
 
 /public/*.gz
 /public/*.br
+/public/developer.html
 
 /tmp/

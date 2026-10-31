@@ -7,6 +7,10 @@ const zlib = require("node:zlib");
 const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 // HTML 解析器会把字符串里的 </script> 也当作脚本结束符。
 const inlineScript = (source) => source.replace(/<\/script/gi, "<\\/script");
+if (process.argv.includes("--developer")) {
+  require("./tools/build-developer.cjs").buildDeveloper(root);
+  process.exit(0);
+}
 let html = read("client/template.html").replace(
   "__BATTLE_HUD_CSS__",
   () => read("client/battle-hud.css") + "\n" + read("client/mobile-layout.css"),
@@ -61,7 +65,7 @@ html = html
   .replaceAll("__PROJECT_VERSION__", project.version)
   .replace("__PROJECT_META__", json(project))
   .replace("__DEVELOPMENT_TREE__", json(developmentTree))
-  .replace("__PRODUCTION_CATALOG__", json(JSON.parse(read("shared/production-catalog.json"))))
+  .replace("__PRODUCTION_CATALOG__", json(require("./shared/production-data.cjs")))
   .replace("__PILOT_DATA__", json(pilotData))
   .replace("__CLIENT_CONFIG__", json(clientConfig));
 html = html.replace(
@@ -80,6 +84,7 @@ for (const [key, file] of [
   ["ASSET_POOL", "shared/asset-pool.js"],
   ["DIALOG", "client/dialog.js"],
   ["FORMATION", "client/formation.js"],
+  ["UNIT_PREVIEW", "client/unit-preview.js"],
   ["UNIT_CATALOG", "client/unit-catalog.js"],
   ["WEAPON_INFO", "client/weapon-info.js"],
   ["PILOT_REWARDS", "client/pilot-rewards.js"],
@@ -89,6 +94,7 @@ for (const [key, file] of [
   ["SERVER_ACTIVITIES", "client/server-activities.js"],
   ["DEVELOPMENT_UI", "client/development.js"],
   ["PRODUCTION_UI", "client/production.js"],
+  ["ENCYCLOPEDIA", "client/encyclopedia.js"],
   ["IRRADIATION_FX", "client/irradiation-fx.js"],
   ["SPECIAL_TRANSFORMS", "client/special-transforms.js"],
   ["PROFILE_MIGRATIONS", "shared/profile-migrations.js"],
@@ -181,24 +187,7 @@ if (grantFlag >= 0) {
     () => `<script id="local-profile-grant">${inlineScript(script)}</script></body>`,
   );
 }
-const release = html;
-const outputs = process.argv.includes("--developer")
-  ? [
-      [
-        "developer.html",
-        release
-          .replace(
-            `<title>${project.name} ${project.version}</title>`,
-            `<title>${project.name} ${project.version} · 开发者版</title>`,
-          )
-          .replace(
-            "</body>",
-            () =>
-              `<style data-developer-only>${read("client/source-editor.css")}</style><script id="source-editor" data-developer-only>${inlineScript(read("client/source-editor.js"))}</script></body>`,
-          ),
-      ],
-    ]
-  : [["client.html", release]];
+const outputs = [["client.html", html]];
 fs.mkdirSync(path.join(root, "public"), { recursive: true });
 for (const [name, content] of outputs) {
   const target = path.join(root, "public", name);

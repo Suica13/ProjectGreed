@@ -1,4 +1,5 @@
 """Regenerate native EXAM/HADES forms and shared balance; source MOD stays read-only."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 from pathlib import Path
 import sys,json,importlib.util,copy
 from mod_source import ROOT,ASSETS,load,resolve
@@ -11,7 +12,7 @@ def upkeep_percent(unit_id):
 def refresh_systems(catalog, unit_ids=None, publish=True):
  forms=[]
  for ref in catalog['units']:
-  path=ASSETS/ref;p=json.loads(path.read_text(encoding='utf-8'))
+  path=ASSETS/ref;p=load_source_json(path.read_text(encoding='utf-8'))
   if unit_ids is not None and p['id'] not in unit_ids:continue
   source=ROOT/p['source'].split('/',1)[1];data=load(source)
   if not p.get('formOnly'):apply_balance(p,data)
@@ -19,7 +20,7 @@ def refresh_systems(catalog, unit_ids=None, publish=True):
    action=data.get('hiddenAction_'+system+'Start',{});target=action.get('convertTo')
    if not target:continue
    forms.append((p,system,target,data))
-  path.write_text(json.dumps(p,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+  path.write_text(dump_source_json(p,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  spec=importlib.util.spec_from_file_location('bulk',Path('tools/import-0079-page-one.py'));bulk=importlib.util.module_from_spec(spec);spec.loader.exec_module(bulk)
  effects=bulk.read(ASSETS/'effects/effects.json');index={f.stem:f for f in (ROOT/'Units/BattleUnits').rglob('*.ini')}
  for p,system,target,data in forms:
@@ -62,4 +63,4 @@ def refresh_systems(catalog, unit_ids=None, publish=True):
  return catalog
 
 if __name__=="__main__":
- refresh_systems(json.loads((ASSETS/"unit-catalog.json").read_text(encoding="utf-8")))
+ refresh_systems(load_source_json((ASSETS/"unit-catalog.json").read_text(encoding="utf-8")))

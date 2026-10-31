@@ -16,85 +16,85 @@
   },
   "skeleton": {
     "Pelvis": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftArm": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightArm": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftShoulder": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightShoulder": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "RightWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment12": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment13": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment15": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Head": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Eye": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftFoot": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "LeftLeg": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "RightFoot": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "RightLeg": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "Turret_EF_Type61A5_Cannon": {
-      "x": 0.0,
-      "y": 0.0,
+      "x": 0,
+      "y": 0,
       "endDirOffset": 0
     },
     "Turret_EF_Type61A5_MG": {
-      "x": 0.0,
-      "y": -1.0,
+      "x": 0,
+      "y": -1,
       "endDirOffset": 0
     }
   },
@@ -103,15 +103,15 @@
       "name": "BoostReversing",
       "texture": "BoostReversing_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
-      "scaleX": 1.0,
+      "order": 4,
+      "scale": 2,
+      "scaleX": 1,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
       "offset": {
         "x": -2.5,
-        "y": -12.0
+        "y": -12
       },
       "frames": 3,
       "frame": 0,
@@ -125,11 +125,11 @@
       "name": "Body",
       "texture": "Type61A5_Blue_Body_1.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.65,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -137,7 +137,7 @@
       "name": "Turret",
       "bone": "Turret_EF_Type61A5_Cannon",
       "texture": "Type61A5_Blue_Turret_1.png",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.6,
       "offset": {
         "x": 0,
@@ -150,7 +150,7 @@
       "name": "Turret_MG",
       "bone": "Turret_EF_Type61A5_MG",
       "texture": "Type61A5_Turret_1_MG.png",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.6,
       "offset": {
         "x": 0,
@@ -170,22 +170,22 @@
   },
   "stats": {
     "hp": 8500,
-    "en": 250.0,
+    "en": 250,
     "move": 5,
-    "mobility": 80.0,
+    "mobility": 80,
     "cost": 75,
     "counterLimit": 1,
-    "accuracy": 120.0,
-    "partStructuralStrength": 100.0,
+    "accuracy": 120,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
       "space": 50,
-      "water": 50.0,
-      "air": 10.0,
+      "water": 50,
+      "air": 10,
       "atmosphere": 0,
-      "mountain": 100.0,
+      "mountain": 100,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -209,8 +209,8 @@
     "actionPoints": 5,
     "sensors": {
       "sight": 7,
-      "radar": 9.0,
-      "antiDetection": 0.0,
+      "radar": 9,
+      "antiDetection": 0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -220,66 +220,66 @@
     "speed": 80
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 20.0,
+    "melee": 0,
+    "shooting": 20,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 5.0,
-      "flat": 0.0
+      "percent": 5,
+      "flat": 0
     },
     "shell": {
-      "percent": 10.0,
-      "flat": 60.0
+      "percent": 10,
+      "flat": 60
     },
     "melee": {
-      "percent": 5.0,
-      "flat": 0.0
+      "percent": 5,
+      "flat": 0
     },
     "dp": {
-      "percent": 5.0,
-      "flat": 0.0
+      "percent": 5,
+      "flat": 0
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 0.0
+      "percent": 0,
+      "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "enBeforeReduction": 500.0,
+    "enBeforeReduction": 500,
     "enCapacityMultiplier": 0.5,
-    "hp": 5500.0,
+    "hp": 5500,
     "walkSpeed": 0.6,
     "boostSpeed": 1.15,
     "turnSpeed": 1.5,
-    "reaction": 80.0,
-    "shooting": 120.0,
-    "melee": 100.0,
+    "reaction": 80,
+    "shooting": 120,
+    "melee": 100,
     "nativeTags": [
       "Type61A5",
       "Unit",
@@ -290,23 +290,23 @@
     ],
     "nativeSkills": [],
     "balanceStatus": "native-level",
-    "accuracy": 120.0,
-    "unitLevel": 250.0,
+    "accuracy": 120,
+    "unitLevel": 250,
     "tacticalMoveBeforeBonus": 4,
     "adaptability": {
-      "ground": 100.0,
-      "space": 10.0,
-      "water": 50.0,
-      "air": 10.0,
-      "mountain": 100.0,
+      "ground": 100,
+      "space": 10,
+      "water": 50,
+      "air": 10,
+      "mountain": 100,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 18.0,
-      "radar": 324.0,
-      "antiDetection": 0.0
+      "sight": 18,
+      "radar": 324,
+      "antiDetection": 0
     },
-    "v17BaseHp": 5500.0,
+    "v17BaseHp": 5500,
     "technologyEra": "0079E",
     "actionTurnSpeed": 1.5,
     "mobilityMoveTarget": 5
@@ -343,348 +343,59 @@
   },
   "weapons": {
     "EF_Type61A5_MG": {
-      "name": "机枪",
-      "type": "shell",
-      "min": 2,
-      "max": 3,
-      "hit": 110.0,
-      "en": 0.0,
-      "sourceName": "EF_Type61A5_MG",
-      "sourceHit": 110.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 75.0,
-      "damageComponents": {
-        "shell": 75.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.1
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 0.5,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_MG.gw",
-        "barrels": [
-          {
-            "id": "EF_Type61A5_MG",
-            "x": 0.5,
-            "y": 4.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/MG_1.png",
-        "scale": 0.25,
-        "speed": 85.0,
-        "forwardOffset": -10.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "MG_Hit_1_S",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_EF_Type61A5_MG",
-            "offset": {
+      "ref": "EF_Type61A5_MG__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_MG.gw",
+          "barrels": [
+            {
+              "id": "EF_Type61A5_MG",
               "x": 0.5,
-              "y": 5.0
+              "y": 4
             }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/MachineGun_2.ogg",
-        "volume": 0.3
-      },
-      "targetModifiers": {
-        "air": 1.0,
-        "water": 0.75,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "muzzleEffects": [
-        "MG_Fire_1_S"
-      ],
-      "category": "machine_gun",
-      "nativePayload": {
-        "ShellDamage": 75.0,
-        "DpDamage": 5.0,
-        "WeaponAccuracy": 110.0,
-        "PartBreakModifier": 0.5,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 1.0,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 1.0,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.75,
-        "AntiAir": 1.0,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 85.0,
-        "ProjectileSpread": 4.0,
-        "ProjectileLife": 20.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 1.0,
-          "accuracy": 1.0
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_EF_Type61A5_MG",
+              "offset": {
+                "x": 0.5,
+                "y": 5
+              }
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_MG.gw",
-        "barrel": "EF_Type61A5_MG",
-        "entry": "automatic_turret",
-        "cooldown": 2.0,
-        "duration": 1.1,
-        "firstShot": 0.0,
-        "lastShot": 1.1,
-        "firingEvents": 12,
-        "projectiles": 12,
-        "declaredEnergy": 0.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 0.0,
-        "energy": 0.0,
-        "actions": []
-      },
-      "actionCost": 1,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_MG.gw"
+      }
     },
     "EF_Type61A5_Cannon": {
-      "name": "加农炮",
-      "type": "shell",
-      "min": 2,
-      "max": 4,
-      "hit": 90.0,
-      "en": 16.0,
-      "sourceName": "EF_Type61A5_Cannon",
-      "sourceHit": 90.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 1850.0,
-      "damageComponents": {
-        "shell": 1850.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.75,
-            "requiredParts": [],
-            "delay": 0.0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.75,
-            "requiredParts": [],
-            "delay": 0.05
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 0.75,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_Cannon.gw",
-        "barrels": [
-          {
-            "id": "EF_Type61A5_Cannon",
-            "x": 3.0,
-            "y": 20.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Bazooka_1.png",
-        "scale": 0.75,
-        "speed": 60.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_S",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_EF_Type61A5_Cannon",
-            "offset": {
-              "x": 3.0,
-              "y": 20.0
-            },
-            "alternatingOffsetX": -6.0
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/Bazooka_1.ogg",
-        "volume": 0.35
-      },
-      "targetModifiers": {
-        "air": 0.25,
-        "water": 0.75,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1"
-      ],
-      "category": "cannon",
-      "nativePayload": {
-        "ShellDamage": 1850.0,
-        "DpDamage": 150.0,
-        "WeaponAccuracy": 90.0,
-        "PartBreakModifier": 0.75,
-        "CockpitBreakModifier": 2.35,
-        "PilotDamageModifier": 2.35,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.25,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 20.0,
-        "ProjectileSpeed": 60.0,
-        "ProjectileSpread": 3.0,
-        "ProjectileExplosionRange": 30.0,
-        "ProjectileLife": 25.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+      "ref": "EF_Type61A5_Cannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_Cannon.gw",
+          "barrels": [
+            {
+              "id": "EF_Type61A5_Cannon",
+              "x": 3,
+              "y": 20
+            }
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_EF_Type61A5_Cannon",
+              "offset": {
+                "x": 3,
+                "y": 20
+              },
+              "alternatingOffsetX": -6
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_Cannon.gw",
-        "barrel": "EF_Type61A5_Cannon",
-        "entry": "automatic_turret",
-        "cooldown": 4.0,
-        "duration": 0.05,
-        "firstShot": 0.0,
-        "lastShot": 0.05,
-        "firingEvents": 2,
-        "projectiles": 2,
-        "declaredEnergy": 8.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 8.0,
-        "energy": 16.0,
-        "actions": []
-      },
-      "actionCost": 2,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_Cannon.gw"
+      }
     }
   },
   "mechanics": [
@@ -707,7 +418,7 @@
   ],
   "description": "现代化改修后的61式战车",
   "costBalance": {
-    "nativeLevel": 250.0,
+    "nativeLevel": 250,
     "levelMultiplier": 0.25,
     "published": 75
   },

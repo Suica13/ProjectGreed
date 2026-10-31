@@ -1,6 +1,7 @@
 """Import Page_00 combat prefabs. Source MOD remains read-only.
 Each source weapon/skill is audited; unsupported RTS systems are never silently emulated.
 """
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy, importlib.util, json, math, re, shutil, sys, subprocess
 from pathlib import Path
 from mod_source import ROOT, MAIN, ASSETS, parse, load, section, resolve, stat, number
@@ -250,7 +251,7 @@ def main():
  refresh()
  node=shutil.which('node')
  if not node:raise SystemExit('Node.js is required to validate imported units before updating the catalog. Add Node.js to PATH.')
- check=subprocess.run([node,'-e',"require('./tools/load-catalog.cjs').loadCatalog({catalogOverride:JSON.parse(require('fs').readFileSync(0,'utf8'))})"],input=json.dumps(catalog),text=True,cwd=ASSETS.parent,capture_output=True)
+ check=subprocess.run([node,'-e',"require('./tools/load-catalog.cjs').loadCatalog({catalogOverride:JSON.parse(require('fs').readFileSync(0,'utf8'))})"],input=dump_source_json(catalog),text=True,cwd=ASSETS.parent,capture_output=True)
  if check.returncode:raise SystemExit(check.stderr)
  write(ASSETS/'unit-catalog.json',catalog)
 if __name__=='__main__':main()

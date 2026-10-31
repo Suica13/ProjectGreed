@@ -4,6 +4,9 @@ const { spawnSync } = require("node:child_process");
 const G = require("../shared/rules.js");
 test("confirmed weapon family names survive shared model loading and keep localization", () => {
   const expected = {
+    EF_BeamGun: "光束枪",
+    EF_G_Bull_Easy_BeamGun: "光束枪",
+    ZN_MS_15Kg_ShieldBeamGun: "盾牌光束枪",
     Common_DoubleMS_FF_B2: "双重导弹发射器",
     Common_DoubleMS_ZN_APC: "导弹发射器",
     Common_ArmGL: "腕部榴弹发射器",
@@ -28,8 +31,9 @@ test("confirmed weapon family names survive shared model loading and keep locali
     );
     assert(found.length, id);
     for (const w of found) {
-      assert.equal(w.name, name, id);
-      assert.equal(w.localization.zh.name, name);
+      const graded = name + (w.level >= 2 ? " Lv." + w.level : "");
+      assert.equal(w.name, graded, id);
+      assert.equal(w.localization.zh.name, graded);
       assert(w.localization.en.name);
       assert(w.localization.ja.name);
     }
@@ -41,6 +45,10 @@ from native_weapon_names import label
 assert label('Common_DoubleBR_Test',{})[0]=='双重光束枪'
 assert label('Common_DoubleGL_Test',{})[0]=='双重榴弹'
 assert label('Common_Arm_MS',{})[0]=='腕部导弹发射器'
+assert label('EF_BeamGun',{})[0]=='光束枪'
+assert label('EF_BOWA_BeamGun',{})[0]=='BOWA光束枪'
+assert label('ZN_MS_15Kg_ShieldBeamGun',{})[0]=='盾牌光束枪'
+assert label('EF_BeamSprayGunB2',{})[0]=='光束喷枪'
 assert label('MS_06F',{}) is None
 assert label('ZN_MSM_03C_AMS',{},False) is None
 compile(open('tools/weapon_policy.py',encoding='utf-8').read(),'weapon_policy.py','exec')

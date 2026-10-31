@@ -60,16 +60,14 @@ test("layout remains scoped by viewport and stable selectors", () => {
   assert.match(style.textContent, /width:320px/);
 });
 test("release contains layout and gameplay but excludes developer tools", () => {
-  const release = fs.readFileSync(path.join(root, "public/client.html"), "utf8"),
-    dev = fs.readFileSync(path.join(root, "public/developer.html"), "utf8");
+  const release = fs.readFileSync(path.join(root, "public/client.html"), "utf8");
   assert.match(release, /id="ui-layout-data"/);
   assert.match(release, /1313/);
   assert.doesNotMatch(
     release,
     /ui-editor-panel|ui-dev-launch|slg-ui-layout-dev-v1|ui-release-template|ui-preview-source|ui-editor-template|ui-editor-css/,
   );
-  assert.match(dev, /id="source-editor"/);
-  assert.doesNotMatch(dev, /ui-editor-panel|ui-dev-launch|ui-release-template/);
+  assert.doesNotMatch(release, /id="catalog-developer"|window\.CatalogDeveloper =/);
   assert.doesNotMatch(release, /id="source-editor"|developerUnitEdit|developerTreeEdit/);
   assert.equal(fs.existsSync(path.join(root, "public/index.html")), false);
 });
@@ -125,7 +123,7 @@ test("battle geometry composes global, side and model scales across viewport siz
 });
 
 test("built inline scripts remain valid after template formatting and include network runtime", () => {
-  const html = fs.readFileSync(path.join(root, "public/developer.html"), "utf8");
+  const html = fs.readFileSync(path.join(root, "public/client.html"), "utf8");
   let scripts = 0;
   for (const [, attributes, source] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
     if (attributes.includes("application/json")) continue;
@@ -136,7 +134,7 @@ test("built inline scripts remain valid after template formatting and include ne
   assert.match(html, /const Net =/);
   assert.doesNotMatch(html, /__NETWORK__|__CORE__|__BATTLE_SCENE__/);
 });
-test("server serves distinct developer and release pages", async () => {
+test("server serves client and removes developer routes", async () => {
   const { createServer } = require("../server.js"),
     app = createServer({ port: 0, host: "127.0.0.1" }),
     address = await app.listen();
@@ -144,8 +142,7 @@ test("server serves distinct developer and release pages", async () => {
     const base = "http://127.0.0.1:" + address.port;
     const dev = await fetch(base + "/developer.html"),
       release = await fetch(base + "/");
-    assert.equal(dev.status, 200);
-    assert.match(await dev.text(), /id="source-editor"/);
+    assert.equal(dev.status, 404);
     assert.doesNotMatch(await release.text(), /ui-editor-panel/);
   } finally {
     await app.close();

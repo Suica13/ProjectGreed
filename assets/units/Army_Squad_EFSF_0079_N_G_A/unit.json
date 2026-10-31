@@ -17,112 +17,112 @@
   },
   "skeleton": {
     "Pelvis": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftArm": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightArm": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftShoulder": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightShoulder": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "RightWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment12": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment13": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment15": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Head": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Eye": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftFoot": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "LeftLeg": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "RightFoot": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "RightLeg": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "Member1": {
-      "x": -3.0,
-      "y": 2.0
+      "x": -3,
+      "y": 2
     },
     "Member2": {
-      "x": 6.0,
-      "y": 12.0
+      "x": 6,
+      "y": 12
     },
     "Member3": {
-      "x": -6.0,
-      "y": 12.0
+      "x": -6,
+      "y": 12
     },
     "Member4": {
-      "x": -14.0,
-      "y": 7.0
+      "x": -14,
+      "y": 7
     },
     "Member5": {
-      "x": 14.0,
-      "y": 7.0
+      "x": 14,
+      "y": 7
     },
     "Member6": {
-      "x": 12.0,
-      "y": -10.0
+      "x": 12,
+      "y": -10
     },
     "Member7": {
-      "x": 0.0,
-      "y": -14.0
+      "x": 0,
+      "y": -14
     },
     "Member8": {
-      "x": -12.0,
-      "y": -10.0
+      "x": -12,
+      "y": -10
     },
     "Member9": {
-      "x": 3.0,
-      "y": -2.0
+      "x": 3,
+      "y": -2
     }
   },
   "layers": [
@@ -193,15 +193,15 @@
       "name": "BoostReversing",
       "texture": "BoostReversing_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
-      "scaleX": 1.0,
+      "order": 4,
+      "scale": 2,
+      "scaleX": 1,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
       "offset": {
         "x": -2.5,
-        "y": -12.0
+        "y": -12
       },
       "frames": 3,
       "frame": 0,
@@ -222,22 +222,22 @@
   },
   "stats": {
     "hp": 2000,
-    "en": 225.0,
+    "en": 225,
     "move": 5,
-    "mobility": 100.0,
+    "mobility": 100,
     "cost": 0,
     "counterLimit": 1,
-    "accuracy": 100.0,
-    "partStructuralStrength": 999.0,
+    "accuracy": 100,
+    "partStructuralStrength": 999,
     "partsBreakable": false,
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
       "space": 50,
-      "water": 50.0,
-      "air": 10.0,
+      "water": 50,
+      "air": 10,
       "atmosphere": 0,
-      "mountain": 100.0,
+      "mountain": 100,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -250,7 +250,7 @@
     "actionPoints": 5,
     "sensors": {
       "sight": 7,
-      "radar": 9.0,
+      "radar": 9,
       "antiDetection": 3.4722222222222223,
       "revealOnDetection": false,
       "antiDetect": false,
@@ -261,66 +261,66 @@
     "speed": 45
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 0.0,
+    "melee": 0,
+    "shooting": 0,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 5.0,
+      "percent": 5,
       "flat": 0
     },
     "shell": {
-      "percent": 5.0,
+      "percent": 5,
       "flat": 0
     },
     "melee": {
-      "percent": 5.0,
+      "percent": 5,
       "flat": 0
     },
     "dp": {
-      "percent": 5.0,
+      "percent": 5,
       "flat": 0
     },
     "sp": {
-      "percent": 0.0,
+      "percent": 0,
       "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "enBeforeReduction": 450.0,
+    "enBeforeReduction": 450,
     "enCapacityMultiplier": 0.5,
-    "hp": 1500.0,
+    "hp": 1500,
     "walkSpeed": 0.4,
     "boostSpeed": 0.65,
-    "turnSpeed": 2.0,
-    "reaction": 100.0,
-    "shooting": 100.0,
-    "melee": 100.0,
+    "turnSpeed": 2,
+    "reaction": 100,
+    "shooting": 100,
+    "melee": 100,
     "nativeTags": [
       "Army_Squad",
       "Unit",
@@ -335,25 +335,25 @@
       "Stealth"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 100.0,
-    "unitLevel": 100.0,
+    "accuracy": 100,
+    "unitLevel": 100,
     "tacticalMoveBeforeBonus": 3,
     "adaptability": {
-      "ground": 100.0,
-      "space": 10.0,
-      "water": 50.0,
-      "air": 10.0,
-      "mountain": 100.0,
+      "ground": 100,
+      "space": 10,
+      "water": 50,
+      "air": 10,
+      "mountain": 100,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 18.0,
-      "radar": 324.0,
-      "antiDetection": 100.0
+      "sight": 18,
+      "radar": 324,
+      "antiDetection": 100
     },
-    "v17BaseHp": 1500.0,
+    "v17BaseHp": 1500,
     "technologyEra": "0079E",
-    "actionTurnSpeed": 2.0,
+    "actionTurnSpeed": 2,
     "mobilityMoveTarget": 4
   },
   "presentation": {
@@ -388,626 +388,80 @@
   },
   "weapons": {
     "Squad_Combined_Weapons": {
-      "name": "步兵班联合武装",
-      "type": "shell",
-      "min": 1,
-      "max": 4,
-      "hit": 90.0,
-      "en": 11.4,
-      "sourceName": "Army_Squad_EFSF_0079_O_G_Member_P",
-      "sourceHit": 90.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 8.0,
-      "damageComponents": {
-        "shell": 8.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
+      "ref": "Army_Squad_EFSF_0079_O_G_Member_P__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Army_Squad/Member/EFSF_0079/Army_Squad_EFSF_0079_O_G_Member_P.ini",
+          "barrels": [
+            {
+              "id": "Army_Squad_EFSF_0079_O_G_Member_P",
+              "x": 1,
+              "y": 4
             }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.25,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 300.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.25,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 300.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.25,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 300.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.15,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.15,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.15,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.15,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.15,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.15,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.15,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.15,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0,
-            "damageComponents": {
-              "shell": 8.0
-            }
-          },
-          {
-            "delay": 0.3
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Army_Squad/Member/EFSF_0079/Army_Squad_EFSF_0079_O_G_Member_P.ini",
-        "barrels": [
-          {
-            "id": "Army_Squad_EFSF_0079_O_G_Member_P",
-            "x": 1.0,
-            "y": 4.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/MG_1.png",
-        "scale": 0.25,
-        "speed": 80.0,
-        "forwardOffset": -10.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "MG_Hit_1_S",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Member1",
-            "offset": {
-              "x": 4.0,
-              "y": 2.0
-            }
-          },
-          {
-            "bone": "Member2",
-            "offset": {
-              "x": -6.0,
-              "y": -7.0
-            }
-          },
-          {
-            "bone": "Member3",
-            "offset": {
-              "x": 6.0,
-              "y": -7.0
-            }
-          },
-          {
-            "bone": "Member4",
-            "offset": {
-              "x": 14.0,
-              "y": -2.0
-            }
-          },
-          {
-            "bone": "Member5",
-            "offset": {
-              "x": -14.0,
-              "y": -2.0
-            }
-          },
-          {
-            "bone": "Member6",
-            "offset": {
-              "x": -11.0,
-              "y": 10.0
-            }
-          },
-          {
-            "bone": "Member7",
-            "offset": {
-              "x": 1.0,
-              "y": 14.0
-            }
-          },
-          {
-            "bone": "Member8",
-            "offset": {
-              "x": 13.0,
-              "y": 10.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/MachineGun_2.ogg",
-        "volume": 0.1
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 0.75,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "muzzleEffects": [
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "BZ_Fire_1_XS",
-        "BZ_Fire_1_XS",
-        "BZ_Fire_1_XS"
-      ],
-      "category": "other",
-      "nativePayload": {
-        "ShellDamage": 8.0,
-        "DpDamage": 3.0,
-        "WeaponAccuracy": 90.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.75,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 80.0,
-        "ProjectileSpread": 6.0,
-        "ProjectileLife": 8.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Member1",
+              "offset": {
+                "x": 4,
+                "y": 2
+              }
+            },
+            {
+              "bone": "Member2",
+              "offset": {
+                "x": -6,
+                "y": -7
+              }
+            },
+            {
+              "bone": "Member3",
+              "offset": {
+                "x": 6,
+                "y": -7
+              }
+            },
+            {
+              "bone": "Member4",
+              "offset": {
+                "x": 14,
+                "y": -2
+              }
+            },
+            {
+              "bone": "Member5",
+              "offset": {
+                "x": -14,
+                "y": -2
+              }
+            },
+            {
+              "bone": "Member6",
+              "offset": {
+                "x": -11,
+                "y": 10
+              }
+            },
+            {
+              "bone": "Member7",
+              "offset": {
+                "x": 1,
+                "y": 14
+              }
+            },
+            {
+              "bone": "Member8",
+              "offset": {
+                "x": 13,
+                "y": 10
+              }
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Army_Squad/Member/EFSF_0079/Army_Squad_EFSF_0079_O_G_Member_P.ini",
-        "barrel": "Army_Squad_EFSF_0079_O_G_Member_P",
-        "entry": "automatic_turret",
-        "cooldown": 2.0,
-        "duration": 0.6,
-        "firstShot": 0.0,
-        "lastShot": 0.6,
-        "firingEvents": 3,
-        "projectiles": 3,
-        "declaredEnergy": 0.1,
-        "energyMode": "perShot",
-        "energyPerEmission": 0.1,
-        "energy": 0.30000000000000004,
-        "actions": []
-      },
-      "actionCost": 2,
-      "localization": {
-        "zh": {
-          "name": "步兵班联合武装"
-        },
-        "en": {
-          "name": "Infantry Squad Weapons"
-        },
-        "ja": {
-          "name": "歩兵分隊武装"
-        }
-      },
-      "sourceWeapons": [
-        "Army_Squad_EFSF_0079_O_G_Member_P_Member1",
-        "Army_Squad_EFSF_0079_N_G_Member_MG_Member2",
-        "Army_Squad_EFSF_0079_N_G_Member_MG_Member3",
-        "Army_Squad_EFSF_0079_N_G_Member_MG_Member4",
-        "Army_Squad_EFSF_0079_N_G_Member_MG_Member5",
-        "Army_Squad_EFSF_0079_N_G_Member_BZ_Member6",
-        "Army_Squad_EFSF_0079_N_G_Member_BZ_Member7",
-        "Army_Squad_EFSF_0079_N_G_Member_BZ_Member8"
-      ],
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Army_Squad/Member/EFSF_0079/Army_Squad_EFSF_0079_O_G_Member_P.ini"
+      }
     }
   },
   "mechanics": [
@@ -1041,7 +495,7 @@
   ],
   "description": "联邦军一般士兵班组",
   "costBalance": {
-    "nativeLevel": 100.0,
+    "nativeLevel": 100,
     "levelMultiplier": 0.25,
     "published": 0
   },

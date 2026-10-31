@@ -1,4 +1,5 @@
 """Read native refit definitions without executing MOD conditions."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import functools, json, re
 from pathlib import Path
 from mod_source import ASSETS, MOD, ROOT, parse, resolve, section, number
@@ -56,13 +57,13 @@ if __name__ == '__main__':
     from mod_source import load
     total = 0
     report = ["# 原 MOD 改装来源档案", "", "以下仅为原MOD来源档案。当前不执行库存改装；普通改装限定单位直接购买许可，ACE专用机通过驾驶员配属自动转换。", "", "| 原机体 | 目标机体 | 资金 | 物资 | 条件 |", "| --- | --- | --- | --- | --- |"]
-    for ref in json.loads((ASSETS / 'unit-catalog.json').read_text(encoding='utf-8'))['units']:
+    for ref in load_source_json((ASSETS / 'unit-catalog.json').read_text(encoding='utf-8'))['units']:
         path = ASSETS / ref
-        p = json.loads(path.read_text(encoding='utf-8'))
+        p = load_source_json(path.read_text(encoding='utf-8'))
         if not any(k.startswith('action_CustomUnit') for k in load(MOD / p['source'])):
             continue
         apply(p)
-        path.write_text(json.dumps(p, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        path.write_text(dump_source_json(p, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         total += len(p['refits'])
         for option in p['refits']:
             reason = '专属驾驶员／未支持原条件' if option['blocked'] else '目标未移植' if not (ASSETS / 'units' / option['unitId'] / 'unit.json').exists() else '、'.join(option['unlockUnits']) or '无额外开发条件'

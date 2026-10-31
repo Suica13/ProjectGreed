@@ -1,10 +1,11 @@
 """Generate the second-page migration list from registered prefabs and original tech links."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 from collections import Counter, defaultdict
 from pathlib import Path
 from mod_source import ASSETS
 
-read=lambda path:json.loads(Path(path).read_text(encoding="utf-8-sig"))
+read=lambda path:load_source_json(Path(path).read_text(encoding="utf-8-sig"))
 
 def cell(value):return str(value).replace("|","\\|").replace("\n"," ")
 

@@ -530,12 +530,6 @@ body #musicPlayer {
   border-radius: 3px;
   box-shadow: none;
 }
-body .source-editor {
-  background: #1b222e;
-  border-color: #596b80;
-  border-radius: 3px;
-}
-
 /* Battle HUD: flat blue instrument panels with clear active commands. */
 #gameScene > header {
   background: #101620;
@@ -2329,3 +2323,7 @@ body > #formationPilotPanel {
 @media (max-width: 700px) {
   #finalSquads.team-grouped { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 8px; }
 }
+
+.weapon-accuracy { display:flex; align-items:baseline; justify-content:flex-end; flex-wrap:wrap; gap:4px 6px; }
+.weapon-ap-cost { margin-right:8px; }
+.weapon-index-status { display:inline-block; margin-top:8px; color:#e4c68b; }

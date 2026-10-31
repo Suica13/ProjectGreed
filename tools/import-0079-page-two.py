@@ -1,4 +1,5 @@
 """Import Page_01 combat units only; original MOD is read-only. Re-runs retain existing edits."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import importlib.util,json,re,sys,traceback,subprocess,shutil
 from pathlib import Path
 from mod_source import ROOT,ASSETS,MOD,load,parse
@@ -39,7 +40,7 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8")
     rows,excluded=manifest()
     output=Path(__file__).with_name("0079-page-two-manifest.json")
-    output.write_text(json.dumps(rows,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    output.write_text(dump_source_json(rows,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     bulk=module("page_two_bulk","import-0079-page-one.py")
     effects=bulk.read(ASSETS/"effects/effects.json");catalog=bulk.read(ASSETS/"unit-catalog.json");report=[]
     for row in rows:
@@ -68,7 +69,7 @@ def main():
         path=ASSETS/ref;prefab=apply(bulk.read(path));bulk.write(path,prefab)
     from animation_pool import refresh
     refresh()
-    check=subprocess.run([shutil.which("node"),"-e","require('./tools/load-catalog.cjs').loadCatalog({catalogOverride:JSON.parse(require('fs').readFileSync(0,'utf8'))})"],input=json.dumps(catalog),text=True,capture_output=True,cwd=PROJECT)
+    check=subprocess.run([shutil.which("node"),"-e","require('./tools/load-catalog.cjs').loadCatalog({catalogOverride:JSON.parse(require('fs').readFileSync(0,'utf8'))})"],input=dump_source_json(catalog),text=True,capture_output=True,cwd=PROJECT)
     if check.returncode:raise SystemExit(check.stderr)
     bulk.write(ASSETS/"unit-catalog.json",catalog)
     tech=module("page_two_tech","import-0079-tech.py")

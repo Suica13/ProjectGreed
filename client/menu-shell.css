@@ -1490,3 +1490,71 @@ body.menu-shell-active #developmentScreen #developmentPageSelect:not([hidden]) {
 .ace-tags { display:flex; flex-wrap:wrap; gap:4px; }
 .ace-recruit-status { font-size:12px; color:#b8dfff; }
 .ace-recruit-candidate { min-width:0; width:100%; overflow:hidden; }
+
+/* Every pre-battle page fills the same remaining viewport, without a width cap. */
+body.menu-shell-active > .menu-screen:is(#start,#roomPreparation,#formationScreen,#productionScreen,#developmentScreen,#shellRecordsScreen,#encyclopediaScreen) {
+  position:fixed; inset:var(--shell-height) 0 0 var(--shell-sidebar-width);
+  width:auto; height:auto; min-width:0; min-height:0; max-height:none;
+  margin:0; padding:12px; box-sizing:border-box; overflow:hidden; align-items:stretch;
+}
+body.menu-shell-active > .menu-screen:is(#start,#roomPreparation,#formationScreen,#productionScreen,#developmentScreen,#shellRecordsScreen,#encyclopediaScreen) > .modal {
+  width:100%; max-width:none; height:100%; min-height:0; max-height:100%;
+  margin:0; box-sizing:border-box; flex:1 1 0;
+}
+.encyclopedia-dialog { display:flex; flex-direction:column; gap:12px; padding:18px; overflow:hidden; }
+.encyclopedia-dialog > .shell-page-heading { display:flex; flex:none; align-items:center; height:52px; min-height:52px; max-height:52px; width:100%; margin:0; padding:0 0 10px; border-bottom:1px solid #31556c; box-sizing:border-box; }
+.encyclopedia-dialog .shell-page-title { margin:0; padding:0; font-size:22px; line-height:30px; font-weight:600; color:#b2e6ff; }
+.encyclopedia-tabs { display:flex; flex:none; align-items:center; gap:8px; }
+.encyclopedia-tabs button { min-width:100px; }
+.encyclopedia-tabs button[aria-pressed="true"] { background:#244e72; border-color:#76ceff; }
+#encyclopediaCount { margin-left:auto; color:#b5c4d5; font-variant-numeric:tabular-nums; }
+.encyclopedia-filters { display:flex; flex-wrap:wrap; flex:none; gap:8px; }
+.encyclopedia-filters > * { min-width:0; flex:1 1 110px; margin:0; min-height:36px; }
+#encyclopediaSearch { flex:2 1 220px; }
+.encyclopedia-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; align-content:start; flex:1 1 0; min-height:0; overflow-y:auto; overflow-x:hidden; padding:2px 4px 6px 2px; }
+.encyclopedia-unit { display:flex; gap:12px; padding:12px; background:#1b2531; border:1px solid #586a7d; border-radius:4px; min-width:0; align-items:center; }
+.encyclopedia-portrait { position:relative; display:flex; flex:none; width:90px; min-height:90px; align-items:center; justify-content:center; background:#30353d; border:1px solid #82909e; border-radius:3px; box-sizing:border-box; }
+.encyclopedia-portrait img { width:84px; height:84px; object-fit:contain; }
+.encyclopedia-unit-body { display:flex; flex:1; flex-direction:column; gap:8px; min-width:0; }
+.encyclopedia-unit-name { color:#edf4fc; overflow-wrap:anywhere; }
+.encyclopedia-unit-body button { align-self:flex-end; margin:0; }
+.encyclopedia-grid > .weapon-card { min-width:0; margin:0; background:#1b2531; border:1px solid #586a7d; }
+.encyclopedia-grid .weapon-summary-heading { flex-wrap:wrap; }
+.encyclopedia-grid .weapon-name { overflow-wrap:anywhere; }
+.encyclopedia-users { border-top:1px solid #586a7d; margin-top:10px; padding-top:8px; }
+.encyclopedia-users button { margin:6px 6px 0 0; font-size:12px; }
+.encyclopedia-more { grid-column:1/-1; }
+.weapon-encyclopedia-link { display:inline-block; flex:none; margin-left:auto; padding:3px 6px; color:#8ed8ff; font-size:12px; text-decoration:underline; text-underline-offset:3px; }
+.weapon-encyclopedia-link:hover { color:#fff; }
+.encyclopedia-users-button { display:block; margin:12px 0 0 auto; }
+.encyclopedia-grid > .encyclopedia-weapon-target { outline:2px solid #80d4ff; outline-offset:-2px; box-shadow:inset 0 0 18px #60c7ff20; }
+.weapon-users-dialog { width:min(1000px,calc(100vw - 24px)); max-width:calc(100vw - 24px); height:min(760px,85dvh); max-height:85dvh; box-sizing:border-box; margin:auto; padding:16px; border:1px solid #80c9ef; border-radius:5px; background:#18222e; color:#eef4fb; }
+.weapon-users-dialog[open] { display:flex; flex-direction:column; gap:12px; }
+.weapon-users-dialog::backdrop { background:#030811c9; }
+.weapon-users-heading { display:flex; flex:none; align-items:center; gap:12px; padding-bottom:10px; border-bottom:1px solid #586a7d; }
+.weapon-users-heading h3 { flex:1; min-width:0; margin:0; font-size:17px; overflow-wrap:anywhere; }
+.weapon-users-heading button { flex:none; margin:0; }
+.weapon-users-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-content:start; gap:10px; min-height:0; overflow-y:auto; padding:2px 4px 4px 2px; }
+@media(max-width:600px) {
+  .weapon-users-dialog { padding:10px; }
+  .weapon-users-grid { grid-template-columns:minmax(0,1fr); }
+  .weapon-users-grid .encyclopedia-unit { flex-direction:row; align-items:center; }
+  .weapon-users-grid .encyclopedia-portrait { align-self:auto; }
+}
+@media(max-width:720px) {
+  body.menu-shell-active > .menu-screen:is(#start,#roomPreparation,#formationScreen,#productionScreen,#developmentScreen,#shellRecordsScreen,#encyclopediaScreen) {
+    inset:calc(var(--shell-height) + var(--shell-subnav-height,50px)) 0 0; padding:6px;
+  }
+  .encyclopedia-dialog { padding:10px; gap:8px; }
+  .encyclopedia-dialog > .shell-page-heading { height:48px; min-height:48px; max-height:48px; }
+  .encyclopedia-dialog .shell-page-title { font-size:20px; line-height:28px; }
+  .encyclopedia-filters { gap:5px; }
+  .encyclopedia-filters > * { flex-basis:calc(33% - 6px); font-size:12px; }
+  #encyclopediaSearch { flex-basis:100%; }
+  .encyclopedia-grid { gap:6px; }
+  .encyclopedia-unit { flex-direction:column; align-items:stretch; gap:8px; padding:8px; }
+  .encyclopedia-portrait { width:76px; min-height:76px; align-self:center; }
+  .encyclopedia-portrait img { width:70px; height:70px; }
+  .encyclopedia-unit-body { gap:6px; font-size:12px; }
+  .encyclopedia-grid[data-tab="weapons"] { grid-template-columns:minmax(0,1fr); }
+}

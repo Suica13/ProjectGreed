@@ -1,5 +1,6 @@
 /* COST 估算工具：复用实战命中、逐发防护和盾牌规则，不改变战斗随机数。 */
 "use strict";
+const WeaponStore = require("./weapon-store.cjs");
 const fs = require("node:fs"),
   path = require("node:path");
 const G = require("../shared/rules.js");
@@ -156,9 +157,9 @@ if (require.main === module) {
   if (process.argv.includes("--write")) {
     for (const prefab of referencePrefabs) {
       const file = path.join(__dirname, "../assets/units", prefab.id, "unit.json");
-      const raw = JSON.parse(fs.readFileSync(file, "utf8"));
+      const raw = WeaponStore.parse(fs.readFileSync(file, "utf8"));
       for (const kit of raw.weaponKits) kit.cost = kitCosts[kit.id];
-      fs.writeFileSync(file, JSON.stringify(raw, null, 2) + "\n");
+      fs.writeFileSync(file, WeaponStore.stringify(raw, null, 2) + "\n");
     }
     const lines = rows.map(
       (row) =>

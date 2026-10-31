@@ -1,17 +1,18 @@
 """Import native turret muzzle flashes without changing weapon balance or timing.
 Run: python tools/unit_muzzle_effects.py
 """
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 import shutil
 from mod_source import ROOT, ASSETS, load, section, resolve, number
 
 
 def read(path):
-    return json.loads(path.read_text(encoding="utf-8-sig"))
+    return load_source_json(path.read_text(encoding="utf-8-sig"))
 
 
 def write(path, value):
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(dump_source_json(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def apply_muzzle_effects(prefab, data, effects=None):

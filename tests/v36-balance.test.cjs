@@ -8,7 +8,7 @@ test("all bazookas cost 3 AP and all ship AA uses half the saved native firing c
   for (const id of fs.readdirSync("assets/units")) {
     const file = path.join("assets/units", id, "unit.json");
     if (!fs.existsSync(file)) continue;
-    const unit = JSON.parse(fs.readFileSync(file, "utf8"));
+    const unit = require("../tools/weapon-store.cjs").parse(fs.readFileSync(file, "utf8"));
     for (const [key, w] of Object.entries(unit.weapons)) {
       if (w.category === "bazooka") {
         assert.equal(w.actionCost, 3, id + ":" + key);

@@ -15,28 +15,28 @@
   },
   "skeleton": {
     "Turret_PapuaClass_Turret_AA_L1": {
-      "x": -43.0,
-      "y": 53.0,
-      "endDirOffset": -45.0
+      "x": -43,
+      "y": 53,
+      "endDirOffset": -45
     },
     "Turret_PapuaClass_Turret_AA_R1": {
-      "x": 43.0,
-      "y": 53.0,
-      "endDirOffset": 45.0
+      "x": 43,
+      "y": 53,
+      "endDirOffset": 45
     },
     "Turret_PapuaClass_Turret_AA_L2": {
-      "x": -35.0,
-      "y": -67.0,
-      "endDirOffset": -90.0
+      "x": -35,
+      "y": -67,
+      "endDirOffset": -90
     },
     "Turret_PapuaClass_Turret_AA_R2": {
-      "x": 35.0,
-      "y": -67.0,
-      "endDirOffset": 90.0
+      "x": 35,
+      "y": -67,
+      "endDirOffset": 90
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     }
   },
   "layers": [
@@ -44,17 +44,17 @@
       "name": "Boost",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
+      "order": 1,
       "scale": 1,
       "offset": {
         "x": -2.5,
-        "y": -9.0
+        "y": -9
       },
       "scaleX": 0.65,
       "scaleY": 1.15,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -66,17 +66,17 @@
       "name": "Boost_L1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
+      "order": 1,
       "scale": 3.5,
       "offset": {
-        "x": -32.0,
-        "y": -182.0
+        "x": -32,
+        "y": -182
       },
       "scaleX": -0.65,
       "scaleY": 1.15,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -88,17 +88,17 @@
       "name": "Boost_R1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
+      "order": 1,
       "scale": 3.5,
       "offset": {
-        "x": 32.0,
-        "y": -182.0
+        "x": 32,
+        "y": -182
       },
       "scaleX": 0.65,
       "scaleY": 1.15,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -110,11 +110,11 @@
       "name": "Body",
       "texture": "PapuaClass_Body_1.png",
       "bone": "Body",
-      "order": 4.0,
+      "order": 4,
       "scale": 1.25,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -124,13 +124,13 @@
       "moduleId": "PapuaClass_Turret_AA_L1",
       "texture": "PapuaClass_Turret_AA_1.png",
       "order": 5.001,
-      "scale": 1.0,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -139,13 +139,13 @@
       "moduleId": "PapuaClass_Turret_AA_R1",
       "texture": "PapuaClass_Turret_AA_1.png",
       "order": 5.001,
-      "scale": 1.0,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -154,13 +154,13 @@
       "moduleId": "PapuaClass_Turret_AA_L2",
       "texture": "PapuaClass_Turret_AA_1.png",
       "order": 5.001,
-      "scale": 1.0,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -169,13 +169,13 @@
       "moduleId": "PapuaClass_Turret_AA_R2",
       "texture": "PapuaClass_Turret_AA_1.png",
       "order": 5.001,
-      "scale": 1.0,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     }
   ],
@@ -184,22 +184,22 @@
   },
   "stats": {
     "hp": 35000,
-    "en": 15000.0,
+    "en": 15000,
     "move": 6,
-    "mobility": 50.0,
+    "mobility": 50,
     "cost": 250,
     "counterLimit": 1,
-    "accuracy": 65.0,
-    "partStructuralStrength": 100.0,
+    "accuracy": 65,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "ground",
     "adaptability": {
       "ground": 0,
       "space": 100,
-      "water": 10.0,
-      "air": 10.0,
+      "water": 10,
+      "air": 10,
       "atmosphere": 0,
-      "mountain": 10.0,
+      "mountain": 10,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -214,11 +214,11 @@
       {
         "id": "PapuaClass_Turret_AA_L1",
         "name": "PapuaClass_Turret_AA_L1",
-        "hp": 3500.0,
+        "hp": 3500,
         "bone": "Turret_PapuaClass_Turret_AA_L1",
-        "x": -43.0,
-        "y": 53.0,
-        "idleDir": -45.0,
+        "x": -43,
+        "y": 53,
+        "idleDir": -45,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -233,11 +233,11 @@
       {
         "id": "PapuaClass_Turret_AA_R1",
         "name": "PapuaClass_Turret_AA_R1",
-        "hp": 3500.0,
+        "hp": 3500,
         "bone": "Turret_PapuaClass_Turret_AA_R1",
-        "x": 43.0,
-        "y": 53.0,
-        "idleDir": 45.0,
+        "x": 43,
+        "y": 53,
+        "idleDir": 45,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -252,11 +252,11 @@
       {
         "id": "PapuaClass_Turret_AA_L2",
         "name": "PapuaClass_Turret_AA_L2",
-        "hp": 3500.0,
+        "hp": 3500,
         "bone": "Turret_PapuaClass_Turret_AA_L2",
-        "x": -35.0,
-        "y": -67.0,
-        "idleDir": -90.0,
+        "x": -35,
+        "y": -67,
+        "idleDir": -90,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -271,11 +271,11 @@
       {
         "id": "PapuaClass_Turret_AA_R2",
         "name": "PapuaClass_Turret_AA_R2",
-        "hp": 3500.0,
+        "hp": 3500,
         "bone": "Turret_PapuaClass_Turret_AA_R2",
-        "x": 35.0,
-        "y": -67.0,
-        "idleDir": 90.0,
+        "x": 35,
+        "y": -67,
+        "idleDir": 90,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -308,66 +308,66 @@
     "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 0.0,
+    "melee": 0,
+    "shooting": 0,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 25.0,
-      "flat": 0.0
+      "percent": 25,
+      "flat": 0
     },
     "shell": {
-      "percent": 30.0,
-      "flat": 75.0
+      "percent": 30,
+      "flat": 75
     },
     "melee": {
-      "percent": 25.0,
-      "flat": 0.0
+      "percent": 25,
+      "flat": 0
     },
     "dp": {
-      "percent": 100.0,
-      "flat": 0.0
+      "percent": 100,
+      "flat": 0
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 0.0
+      "percent": 0,
+      "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "enBeforeReduction": 30000.0,
+    "enBeforeReduction": 30000,
     "enCapacityMultiplier": 0.5,
-    "hp": 50000.0,
+    "hp": 50000,
     "walkSpeed": 0.65,
     "boostSpeed": 0.95,
     "turnSpeed": 0.35,
-    "reaction": 50.0,
-    "shooting": 100.0,
-    "melee": 100.0,
+    "reaction": 50,
+    "shooting": 100,
+    "melee": 100,
     "nativeTags": [
       "PapuaClass",
       "Unit",
@@ -385,21 +385,21 @@
       "SupplyPoint"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 100.0,
-    "unitLevel": 2000.0,
+    "accuracy": 100,
+    "unitLevel": 2000,
     "tacticalMoveBeforeBonus": 3,
     "adaptability": {
-      "ground": 10.0,
-      "space": 100.0,
-      "water": 10.0,
-      "air": 10.0,
-      "mountain": 10.0,
+      "ground": 10,
+      "space": 100,
+      "water": 10,
+      "air": 10,
+      "mountain": 10,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 20.0,
-      "radar": 500.0,
-      "antiDetection": -200.0
+      "sight": 20,
+      "radar": 500,
+      "antiDetection": -200
     },
     "supplyTacticalPolicy": {
       "enCostPercent": 25,
@@ -410,7 +410,7 @@
     "technologyEra": "0079E",
     "actionTurnSpeed": 0.35,
     "mobilityMoveTarget": 6,
-    "shipHullBeforeReduction": 50000.0,
+    "shipHullBeforeReduction": 50000,
     "shipBalanceMultiplier": 0.7,
     "shipFactionHullMultiplier": 1,
     "shipFactionAccuracyMultiplier": 1,
@@ -449,879 +449,71 @@
   },
   "weapons": {
     "PapuaClass_Turret_AA": {
-      "name": "对空机枪",
-      "type": "shell",
-      "min": 1,
-      "max": 2,
-      "hit": 125.0,
-      "en": 20.0,
-      "sourceName": "PapuaClass_Turret_AA",
-      "sourceHit": 125.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 200,
-      "damageComponents": {
-        "shell": 150,
-        "shellAP": 50
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/PapuaClass/PapuaClass_Turret_AA.ini",
-        "barrels": [
-          {
-            "id": "PapuaClass_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "PapuaClass_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "PapuaClass_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "PapuaClass_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/MG_1.png",
-        "scale": 0.25,
-        "speed": 90.0,
-        "forwardOffset": -10.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "MG_Hit_1_S",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_PapuaClass_Turret_AA_L1",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+      "ref": "PapuaClass_Turret_AA__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/PapuaClass/PapuaClass_Turret_AA.ini",
+          "barrels": [
+            {
+              "id": "PapuaClass_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_PapuaClass_Turret_AA_R1",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "PapuaClass_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_PapuaClass_Turret_AA_L2",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "PapuaClass_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_PapuaClass_Turret_AA_R2",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "PapuaClass_Turret_AA",
+              "x": 2,
+              "y": 6
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_PapuaClass_Turret_AA_L1",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
             },
-            "alternatingOffsetX": -4.0
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/MachineGun_2.ogg",
-        "volume": 0.3
-      },
-      "targetModifiers": {
-        "air": 1.5,
-        "water": 1.0,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "PapuaClass_Turret_AA_L1",
-        "PapuaClass_Turret_AA_R1",
-        "PapuaClass_Turret_AA_L2",
-        "PapuaClass_Turret_AA_R2"
-      ],
-      "muzzleEffects": [
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S"
-      ],
-      "category": "machine_gun",
-      "nativePayload": {
-        "ShellDamage": 200.0,
-        "ShellAPDamage": 75.0,
-        "DpDamage": 5.0,
-        "WeaponAccuracy": 125.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 1.0,
-        "AntiAir": 1.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 90.0,
-        "ProjectileSpread": 6.0,
-        "ProjectileLife": 7.5
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
-        },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+            {
+              "bone": "Turret_PapuaClass_Turret_AA_R1",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_PapuaClass_Turret_AA_L2",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_PapuaClass_Turret_AA_R2",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/PapuaClass/PapuaClass_Turret_AA.ini",
-        "barrel": "PapuaClass_Turret_AA",
-        "entry": "automatic_turret",
-        "cooldown": 2.0,
-        "duration": 1.3499999999999999,
-        "firstShot": 0.0,
-        "lastShot": 1.3499999999999999,
-        "firingEvents": 40,
-        "projectiles": 40,
-        "declaredEnergy": 0.5,
-        "energyMode": "perShot",
-        "energyPerEmission": 0.5,
-        "energy": 20.0,
-        "actions": []
-      },
-      "rangeRole": "ship_anti_air",
-      "actionCost": 2,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
-        }
-      },
-      "shipAntiAirBeforeReduction": [
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.15
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.15
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.15
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.15
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.15
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.15
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.15
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.15
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L1",
-          "delay": 0.15
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "PapuaClass_Turret_AA_R2",
-          "delay": 0.0
-        }
-      ],
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 275.0,
-        "damageComponents": {
-          "shell": 200.0,
-          "shellAP": 75.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/PapuaClass/PapuaClass_Turret_AA.ini"
+      }
     }
   },
   "mechanics": [
@@ -1401,7 +593,7 @@
   ],
   "description": "吉翁公国军舰队主要的补给舰",
   "costBalance": {
-    "nativeLevel": 2000.0,
+    "nativeLevel": 2000,
     "levelMultiplier": 0.25,
     "published": 250,
     "tacticalOverride": "Supply carrier COST halved from 500 to 250"

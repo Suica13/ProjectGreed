@@ -1,6 +1,7 @@
 """Import the original Salamis hull and sixteen independent weapon modules.
 Runtime uses ordinary JSON; no RW expressions are evaluated by the game.
 """
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json, re, shutil
 from mod_source import ROOT, MAIN, ASSETS, load, section, resolve, stat, number
 from unit_introductions import apply_introduction
@@ -9,10 +10,10 @@ from unit_muzzle_effects import apply_muzzle_effects
 BASE=ROOT/"Units/BattleUnits/SalamisClass"
 ID="SalamisClass"
 
-def read(path): return json.loads(path.read_text(encoding="utf-8-sig"))
+def read(path): return load_source_json(path.read_text(encoding="utf-8-sig"))
 def write(path,value):
     path.parent.mkdir(parents=True,exist_ok=True)
-    path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    path.write_text(dump_source_json(value,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 def copy(source,folder):
     target=ASSETS/folder/source.name;target.parent.mkdir(parents=True,exist_ok=True)
     if target.exists() and target.read_bytes()!=source.read_bytes():raise ValueError("Conflicting asset: "+str(target))

@@ -295,13 +295,13 @@ async function confirmAssembly(...players) {
   }
   for (const player of players) await player.latest((state) => state.phase !== "assembly");
 }
-async function readyMatch(first, second, app = first.app, stage = true) {
+async function readyMatch(first, second, app = first.app, stage = true, squad = {}) {
   first.app = second.app = app;
   await first.latest((s) => s.members.filter((member) => member.seat !== null).length === 2);
-  const ready = await first.act("set_ready", { ready: true });
+  const ready = await first.act("set_ready", { ready: true, ...squad });
   assert.equal(ready.type, "state");
   await second.latest((s) => s.revision >= ready.revision);
-  assert.equal((await second.act("set_ready", { ready: true })).type, "state");
+  assert.equal((await second.act("set_ready", { ready: true, ...squad })).type, "state");
   await confirmAssembly(first, second);
   await first.latest((s) => s.started);
   const placed = await first.act("deploy", { unitId: "0-0", x: 2, y: 8 });
@@ -3341,7 +3341,8 @@ test("flight stance is authoritative, deduplicated and synchronized without spen
     guest = await client();
   await host.hello("create", "FLIGHT");
   await guest.hello("join", "FLIGHT");
-  await readyMatch(host, guest, app, false);
+  const formation = [{ unitId: "Type61", kitId: "standard" }], licenses = { Type61: true };
+  await readyMatch(host, guest, app, false, { formation, licenses });
   const room = app.rooms.get("FLIGHT"),
     u = room.game.units.find((u) => G.ownerOf(u) === 0);
   u.model = Object.keys(G.models).find((id) => id.startsWith("MS_07H__"));

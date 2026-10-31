@@ -14,76 +14,76 @@
   },
   "skeleton": {
     "Pelvis": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftArm": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightArm": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftShoulder": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightShoulder": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "RightWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment12": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment13": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment15": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Head": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Eye": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftFoot": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "LeftLeg": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "RightFoot": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "RightLeg": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     }
   },
   "layers": [
@@ -91,17 +91,17 @@
       "name": "Boost_M1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
-      "scale": 1.0,
+      "order": 1,
+      "scale": 1,
       "offset": {
-        "x": -1.0,
-        "y": -20.0
+        "x": -1,
+        "y": -20
       },
-      "scaleX": 2.0,
-      "scaleY": 2.0,
-      "rotation": 0.0,
+      "scaleX": 2,
+      "scaleY": 2,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -113,17 +113,17 @@
       "name": "Boost_R1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
-      "scale": 1.0,
+      "order": 1,
+      "scale": 1,
       "offset": {
-        "x": 12.0,
-        "y": -20.0
+        "x": 12,
+        "y": -20
       },
       "scaleX": 0.75,
-      "scaleY": 2.0,
-      "rotation": 0.0,
+      "scaleY": 2,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -135,17 +135,17 @@
       "name": "Boost_L1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
-      "scale": 1.0,
+      "order": 1,
+      "scale": 1,
       "offset": {
-        "x": -12.0,
-        "y": -20.0
+        "x": -12,
+        "y": -20
       },
       "scaleX": -0.75,
-      "scaleY": 2.0,
-      "rotation": 0.0,
+      "scaleY": 2,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -157,15 +157,15 @@
       "name": "BoostReversing",
       "texture": "BoostReversing_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
-      "scaleX": 1.0,
+      "order": 4,
+      "scale": 2,
+      "scaleX": 1,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
       "offset": {
         "x": -2.5,
-        "y": -12.0
+        "y": -12
       },
       "frames": 3,
       "frame": 0,
@@ -179,11 +179,11 @@
       "name": "Body",
       "texture": "FF_X7Bst_II_Body_1.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.65,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     }
@@ -198,22 +198,22 @@
   },
   "stats": {
     "hp": 19500,
-    "en": 375.0,
+    "en": 375,
     "move": 9,
-    "mobility": 145.0,
+    "mobility": 145,
     "cost": 250,
     "counterLimit": 1,
-    "accuracy": 125.0,
-    "partStructuralStrength": 100.0,
+    "accuracy": 125,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "air",
     "adaptability": {
       "ground": 100,
       "space": 100,
-      "water": 10.0,
-      "air": 100.0,
+      "water": 10,
+      "air": 100,
       "atmosphere": 0,
-      "mountain": 10.0,
+      "mountain": 10,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -223,7 +223,7 @@
     "sensors": {
       "sight": 10,
       "radar": 15.277777777777779,
-      "antiDetection": 0.0,
+      "antiDetection": 0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -234,64 +234,64 @@
     "speed": 195
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 35.0,
+    "melee": 0,
+    "shooting": 35,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 5.0,
-      "flat": 0.0
+      "percent": 5,
+      "flat": 0
     },
     "shell": {
-      "percent": 15.0,
-      "flat": 150.0
+      "percent": 15,
+      "flat": 150
     },
     "melee": {
-      "percent": 10.0,
-      "flat": 100.0
+      "percent": 10,
+      "flat": 100
     },
     "dp": {
-      "percent": 10.0,
-      "flat": 20.0
+      "percent": 10,
+      "flat": 20
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 0.0
+      "percent": 0,
+      "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "hp": 15500.0,
+    "hp": 15500,
     "walkSpeed": 1.75,
     "boostSpeed": 2.75,
     "turnSpeed": 2.25,
-    "reaction": 145.0,
-    "shooting": 135.0,
-    "melee": 100.0,
+    "reaction": 145,
+    "shooting": 135,
+    "melee": 100,
     "nativeTags": [
       "FF_X7Bst_II",
       "Unit",
@@ -305,25 +305,25 @@
       "DogFight_A"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 125.0,
-    "unitLevel": 1000.0,
-    "enBeforeReduction": 750.0,
+    "accuracy": 125,
+    "unitLevel": 1000,
+    "enBeforeReduction": 750,
     "enCapacityMultiplier": 0.5,
     "tacticalMoveBeforeBonus": 9,
     "adaptability": {
-      "ground": 10.0,
-      "space": 100.0,
-      "water": 10.0,
-      "air": 100.0,
-      "mountain": 10.0,
+      "ground": 10,
+      "space": 100,
+      "water": 10,
+      "air": 100,
+      "mountain": 10,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 24.0,
-      "radar": 550.0,
-      "antiDetection": 0.0
+      "sight": 24,
+      "radar": 550,
+      "antiDetection": 0
     },
-    "v17BaseHp": 15500.0,
+    "v17BaseHp": 15500,
     "technologyEra": "0079E",
     "actionTurnSpeed": 2.25,
     "mobilityMoveTarget": 10
@@ -390,7 +390,7 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {
-    "nativeLevel": 1000.0,
+    "nativeLevel": 1000,
     "levelMultiplier": 0.25,
     "published": 250
   },

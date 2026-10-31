@@ -50,6 +50,7 @@ function setPageView(view) {
   byId("formationScreen").hidden = view !== "formation";
   byId("developmentScreen").hidden = view !== "development";
   byId("productionScreen").hidden = view !== "production";
+  byId("encyclopediaScreen").hidden = view !== "encyclopedia";
   byId("roomSettings").hidden = !Net.active;
   window.MenuShell?.refresh();
   if (view !== "game")

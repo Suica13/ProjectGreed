@@ -1,4 +1,5 @@
 """Read-only audit against MOD inheritance and native firing payloads."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy
 import json
 import math
@@ -9,7 +10,7 @@ from unit_ship_balance import explosive_cannon, federation_ship
 
 ships = weapons = 0
 for path in sorted((ASSETS / "units").glob("*/unit.json")):
-    prefab = json.loads(path.read_text(encoding="utf8"))
+    prefab = load_source_json(path.read_text(encoding="utf8"))
     if not prefab["stats"].get("ship"):
         continue
     root_name, reference = prefab["source"].split("/", 1)
@@ -38,4 +39,4 @@ for path in sorted((ASSETS / "units").glob("*/unit.json")):
     assert first == second, (prefab["id"], "refresh must be idempotent")
     assert prefab == first, (prefab["id"], "generated data must match policy")
     ships += 1
-print(json.dumps({"ships": ships, "weapons": weapons, "nativeAudit": "passed"}))
+print(dump_source_json({"ships": ships, "weapons": weapons, "nativeAudit": "passed"}))

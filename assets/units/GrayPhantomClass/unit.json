@@ -18,113 +18,113 @@
   },
   "skeleton": {
     "Turret_GrayPhantomClass_Turret_Cannon_M1": {
-      "x": 0.0,
-      "y": 25.0,
-      "endDirOffset": 0.0
+      "x": 0,
+      "y": 25,
+      "endDirOffset": 0
     },
     "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1": {
-      "x": -78.0,
-      "y": -7.0,
-      "endDirOffset": -35.0
+      "x": -78,
+      "y": -7,
+      "endDirOffset": -35
     },
     "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1": {
-      "x": 78.0,
-      "y": -7.0,
-      "endDirOffset": 35.0
+      "x": 78,
+      "y": -7,
+      "endDirOffset": 35
     },
     "Turret_GrayPhantomClass_Turret_MS_L1": {
-      "x": -10.0,
-      "y": -70.0,
-      "endDirOffset": 0.0
+      "x": -10,
+      "y": -70,
+      "endDirOffset": 0
     },
     "Turret_GrayPhantomClass_Turret_MS_R1": {
-      "x": 10.0,
-      "y": -70.0,
-      "endDirOffset": 0.0
+      "x": 10,
+      "y": -70,
+      "endDirOffset": 0
     },
     "Turret_GrayPhantomClass_Turret_AA_L1": {
-      "x": -7.0,
-      "y": 50.0,
-      "endDirOffset": -15.0
+      "x": -7,
+      "y": 50,
+      "endDirOffset": -15
     },
     "Turret_GrayPhantomClass_Turret_AA_R1": {
-      "x": 7.0,
-      "y": 50.0,
-      "endDirOffset": 15.0
+      "x": 7,
+      "y": 50,
+      "endDirOffset": 15
     },
     "Turret_GrayPhantomClass_Turret_AA_L2": {
-      "x": -9.0,
-      "y": 42.0,
-      "endDirOffset": -45.0
+      "x": -9,
+      "y": 42,
+      "endDirOffset": -45
     },
     "Turret_GrayPhantomClass_Turret_AA_R2": {
-      "x": 9.0,
-      "y": 42.0,
-      "endDirOffset": 45.0
+      "x": 9,
+      "y": 42,
+      "endDirOffset": 45
     },
     "Turret_GrayPhantomClass_Turret_AA_L3": {
-      "x": -11.0,
-      "y": 35.0,
-      "endDirOffset": -75.0
+      "x": -11,
+      "y": 35,
+      "endDirOffset": -75
     },
     "Turret_GrayPhantomClass_Turret_AA_R3": {
-      "x": 11.0,
-      "y": 35.0,
-      "endDirOffset": 75.0
+      "x": 11,
+      "y": 35,
+      "endDirOffset": 75
     },
     "Turret_GrayPhantomClass_Turret_AA_B_L1": {
-      "x": -40.0,
-      "y": 30.0,
-      "endDirOffset": -35.0
+      "x": -40,
+      "y": 30,
+      "endDirOffset": -35
     },
     "Turret_GrayPhantomClass_Turret_AA_B_R1": {
-      "x": 40.0,
-      "y": 30.0,
-      "endDirOffset": 35.0
+      "x": 40,
+      "y": 30,
+      "endDirOffset": 35
     },
     "Turret_GrayPhantomClass_Turret_AA_B_L2": {
-      "x": -40.0,
-      "y": 0.0,
-      "endDirOffset": -125.0
+      "x": -40,
+      "y": 0,
+      "endDirOffset": -125
     },
     "Turret_GrayPhantomClass_Turret_AA_B_R2": {
-      "x": 40.0,
-      "y": 0.0,
-      "endDirOffset": 125.0
+      "x": 40,
+      "y": 0,
+      "endDirOffset": 125
     },
     "Turret_GrayPhantomClass_Turret_AA_B_L3": {
-      "x": -55.0,
-      "y": -110.0,
-      "endDirOffset": 0.0
+      "x": -55,
+      "y": -110,
+      "endDirOffset": 0
     },
     "Turret_GrayPhantomClass_Turret_AA_B_R3": {
-      "x": 55.0,
-      "y": -110.0,
-      "endDirOffset": 0.0
+      "x": 55,
+      "y": -110,
+      "endDirOffset": 0
     },
     "Turret_GrayPhantomClass_Turret_AA_B_L4": {
-      "x": -55.0,
-      "y": -130.0,
-      "endDirOffset": -90.0
+      "x": -55,
+      "y": -130,
+      "endDirOffset": -90
     },
     "Turret_GrayPhantomClass_Turret_AA_B_R4": {
-      "x": 55.0,
-      "y": -130.0,
-      "endDirOffset": 90.0
+      "x": 55,
+      "y": -130,
+      "endDirOffset": 90
     },
     "Turret_GrayPhantomClass_Turret_AA_B_L5": {
-      "x": -55.0,
-      "y": -150.0,
-      "endDirOffset": -180.0
+      "x": -55,
+      "y": -150,
+      "endDirOffset": -180
     },
     "Turret_GrayPhantomClass_Turret_AA_B_R5": {
-      "x": 55.0,
-      "y": -150.0,
-      "endDirOffset": 180.0
+      "x": 55,
+      "y": -150,
+      "endDirOffset": 180
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     }
   },
   "layers": [
@@ -132,17 +132,17 @@
       "name": "Boost",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
+      "order": 1,
       "scale": 1,
       "offset": {
         "x": -2.5,
-        "y": -9.0
+        "y": -9
       },
       "scaleX": 0.75,
       "scaleY": 1.2,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -154,17 +154,17 @@
       "name": "Boost_L1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
-      "scale": 4.0,
+      "order": 1,
+      "scale": 4,
       "offset": {
-        "x": -47.0,
-        "y": -160.0
+        "x": -47,
+        "y": -160
       },
       "scaleX": -0.75,
       "scaleY": 1.2,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -176,17 +176,17 @@
       "name": "Boost_R1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
-      "scale": 4.0,
+      "order": 1,
+      "scale": 4,
       "offset": {
-        "x": 47.0,
-        "y": -160.0
+        "x": 47,
+        "y": -160
       },
       "scaleX": 0.75,
       "scaleY": 1.2,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -201,12 +201,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -216,12 +216,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -231,12 +231,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -246,12 +246,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -261,12 +261,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -276,12 +276,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -291,12 +291,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -306,12 +306,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -321,12 +321,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -336,12 +336,12 @@
       "texture": "GrayPhantomClass_Turret_AA_2.png",
       "order": 3.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -350,24 +350,24 @@
       "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
       "texture": "GrayPhantomClass_Turret_Cannon_1.png",
       "order": 3.005,
-      "scale": 1.0,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scale": 1,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
       "name": "Body",
       "texture": "GrayPhantomClass_Body_1.png",
       "bone": "Body",
-      "order": 4.0,
+      "order": 4,
       "scale": 1.25,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -375,11 +375,11 @@
       "name": "Body_2",
       "texture": "GrayPhantomClass_Body_2.png",
       "bone": "Body",
-      "order": 4.0,
+      "order": 4,
       "scale": 1.25,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -390,12 +390,12 @@
       "texture": "GrayPhantomClass_Turret_MegaBeamCannon_1.png",
       "order": 5.001,
       "scale": 0.75,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -405,12 +405,12 @@
       "texture": "GrayPhantomClass_Turret_MegaBeamCannon_1.png",
       "order": 5.001,
       "scale": 0.75,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -420,12 +420,12 @@
       "texture": "GrayPhantomClass_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -435,12 +435,12 @@
       "texture": "GrayPhantomClass_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -450,12 +450,12 @@
       "texture": "GrayPhantomClass_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -465,12 +465,12 @@
       "texture": "GrayPhantomClass_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -480,12 +480,12 @@
       "texture": "GrayPhantomClass_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -495,12 +495,12 @@
       "texture": "GrayPhantomClass_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     }
   ],
@@ -509,22 +509,22 @@
   },
   "stats": {
     "hp": 108000,
-    "en": 11250.0,
+    "en": 11250,
     "move": 7,
     "mobility": 97.75,
     "cost": 1875,
     "counterLimit": 1,
     "accuracy": 78.65,
-    "partStructuralStrength": 100.0,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "air",
     "adaptability": {
       "ground": 100,
       "space": 100,
-      "water": 50.0,
-      "air": 100.0,
+      "water": 50,
+      "air": 100,
       "atmosphere": 0,
-      "mountain": 10.0,
+      "mountain": 10,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -535,12 +535,12 @@
       {
         "id": "GrayPhantomClass_Turret_Cannon_M1",
         "name": "GrayPhantomClass_Turret_Cannon_M1",
-        "hp": 20000.0,
+        "hp": 20000,
         "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-        "x": 0.0,
-        "y": 25.0,
-        "idleDir": 0.0,
-        "arc": 120.0,
+        "x": 0,
+        "y": 25,
+        "idleDir": 0,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
@@ -554,12 +554,12 @@
       {
         "id": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
         "name": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-        "hp": 20000.0,
+        "hp": 20000,
         "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-        "x": -78.0,
-        "y": -7.0,
-        "idleDir": -35.0,
-        "arc": 90.0,
+        "x": -78,
+        "y": -7,
+        "idleDir": -35,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
@@ -573,12 +573,12 @@
       {
         "id": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
         "name": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-        "hp": 20000.0,
+        "hp": 20000,
         "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-        "x": 78.0,
-        "y": -7.0,
-        "idleDir": 35.0,
-        "arc": 90.0,
+        "x": 78,
+        "y": -7,
+        "idleDir": 35,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
@@ -592,11 +592,11 @@
       {
         "id": "GrayPhantomClass_Turret_MS_L1",
         "name": "GrayPhantomClass_Turret_MS_L1",
-        "hp": 10000.0,
+        "hp": 10000,
         "bone": "Turret_GrayPhantomClass_Turret_MS_L1",
-        "x": -10.0,
-        "y": -70.0,
-        "idleDir": 0.0,
+        "x": -10,
+        "y": -70,
+        "idleDir": 0,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -609,11 +609,11 @@
       {
         "id": "GrayPhantomClass_Turret_MS_R1",
         "name": "GrayPhantomClass_Turret_MS_R1",
-        "hp": 10000.0,
+        "hp": 10000,
         "bone": "Turret_GrayPhantomClass_Turret_MS_R1",
-        "x": 10.0,
-        "y": -70.0,
-        "idleDir": 0.0,
+        "x": 10,
+        "y": -70,
+        "idleDir": 0,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -626,12 +626,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_L1",
         "name": "GrayPhantomClass_Turret_AA_L1",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_L1",
-        "x": -7.0,
-        "y": 50.0,
-        "idleDir": -15.0,
-        "arc": 120.0,
+        "x": -7,
+        "y": 50,
+        "idleDir": -15,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini",
@@ -645,12 +645,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_R1",
         "name": "GrayPhantomClass_Turret_AA_R1",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_R1",
-        "x": 7.0,
-        "y": 50.0,
-        "idleDir": 15.0,
-        "arc": 120.0,
+        "x": 7,
+        "y": 50,
+        "idleDir": 15,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini",
@@ -664,12 +664,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_L2",
         "name": "GrayPhantomClass_Turret_AA_L2",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_L2",
-        "x": -9.0,
-        "y": 42.0,
-        "idleDir": -45.0,
-        "arc": 120.0,
+        "x": -9,
+        "y": 42,
+        "idleDir": -45,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini",
@@ -683,12 +683,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_R2",
         "name": "GrayPhantomClass_Turret_AA_R2",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_R2",
-        "x": 9.0,
-        "y": 42.0,
-        "idleDir": 45.0,
-        "arc": 120.0,
+        "x": 9,
+        "y": 42,
+        "idleDir": 45,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini",
@@ -702,12 +702,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_L3",
         "name": "GrayPhantomClass_Turret_AA_L3",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_L3",
-        "x": -11.0,
-        "y": 35.0,
-        "idleDir": -75.0,
-        "arc": 120.0,
+        "x": -11,
+        "y": 35,
+        "idleDir": -75,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini",
@@ -721,12 +721,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_R3",
         "name": "GrayPhantomClass_Turret_AA_R3",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_R3",
-        "x": 11.0,
-        "y": 35.0,
-        "idleDir": 75.0,
-        "arc": 120.0,
+        "x": 11,
+        "y": 35,
+        "idleDir": 75,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini",
@@ -740,12 +740,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_L1",
         "name": "GrayPhantomClass_Turret_AA_B_L1",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_L1",
-        "x": -40.0,
-        "y": 30.0,
-        "idleDir": -35.0,
-        "arc": 120.0,
+        "x": -40,
+        "y": 30,
+        "idleDir": -35,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -759,12 +759,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_R1",
         "name": "GrayPhantomClass_Turret_AA_B_R1",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_R1",
-        "x": 40.0,
-        "y": 30.0,
-        "idleDir": 35.0,
-        "arc": 120.0,
+        "x": 40,
+        "y": 30,
+        "idleDir": 35,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -778,12 +778,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_L2",
         "name": "GrayPhantomClass_Turret_AA_B_L2",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_L2",
-        "x": -40.0,
-        "y": 0.0,
-        "idleDir": -125.0,
-        "arc": 120.0,
+        "x": -40,
+        "y": 0,
+        "idleDir": -125,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -797,12 +797,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_R2",
         "name": "GrayPhantomClass_Turret_AA_B_R2",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_R2",
-        "x": 40.0,
-        "y": 0.0,
-        "idleDir": 125.0,
-        "arc": 120.0,
+        "x": 40,
+        "y": 0,
+        "idleDir": 125,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -816,12 +816,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_L3",
         "name": "GrayPhantomClass_Turret_AA_B_L3",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_L3",
-        "x": -55.0,
-        "y": -110.0,
-        "idleDir": 0.0,
-        "arc": 120.0,
+        "x": -55,
+        "y": -110,
+        "idleDir": 0,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -835,12 +835,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_R3",
         "name": "GrayPhantomClass_Turret_AA_B_R3",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_R3",
-        "x": 55.0,
-        "y": -110.0,
-        "idleDir": 0.0,
-        "arc": 120.0,
+        "x": 55,
+        "y": -110,
+        "idleDir": 0,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -854,12 +854,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_L4",
         "name": "GrayPhantomClass_Turret_AA_B_L4",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_L4",
-        "x": -55.0,
-        "y": -130.0,
-        "idleDir": -90.0,
-        "arc": 120.0,
+        "x": -55,
+        "y": -130,
+        "idleDir": -90,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -873,12 +873,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_R4",
         "name": "GrayPhantomClass_Turret_AA_B_R4",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_R4",
-        "x": 55.0,
-        "y": -130.0,
-        "idleDir": 90.0,
-        "arc": 120.0,
+        "x": 55,
+        "y": -130,
+        "idleDir": 90,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -892,12 +892,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_L5",
         "name": "GrayPhantomClass_Turret_AA_B_L5",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_L5",
-        "x": -55.0,
-        "y": -150.0,
-        "idleDir": -180.0,
-        "arc": 120.0,
+        "x": -55,
+        "y": -150,
+        "idleDir": -180,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -911,12 +911,12 @@
       {
         "id": "GrayPhantomClass_Turret_AA_B_R5",
         "name": "GrayPhantomClass_Turret_AA_B_R5",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_GrayPhantomClass_Turret_AA_B_R5",
-        "x": 55.0,
-        "y": -150.0,
-        "idleDir": 180.0,
-        "arc": 120.0,
+        "x": 55,
+        "y": -150,
+        "idleDir": 180,
+        "arc": 120,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA_2.ini",
@@ -964,64 +964,64 @@
     "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 15.0,
+    "melee": 0,
+    "shooting": 15,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 30.0,
-      "flat": 250.0
+      "percent": 30,
+      "flat": 250
     },
     "shell": {
-      "percent": 40.0,
-      "flat": 250.0
+      "percent": 40,
+      "flat": 250
     },
     "melee": {
-      "percent": 25.0,
-      "flat": 250.0
+      "percent": 25,
+      "flat": 250
     },
     "dp": {
-      "percent": 100.0,
-      "flat": 10.0
+      "percent": 100,
+      "flat": 10
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 10.0
+      "percent": 0,
+      "flat": 10
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "hp": 140000.0,
+    "hp": 140000,
     "walkSpeed": 0.65,
     "boostSpeed": 1.15,
     "turnSpeed": 0.45,
-    "reaction": 85.0,
-    "shooting": 115.0,
-    "melee": 100.0,
+    "reaction": 85,
+    "shooting": 115,
+    "melee": 100,
     "nativeTags": [
       "GrayPhantomClass",
       "Unit",
@@ -1042,29 +1042,29 @@
       "SupplyPoint_UseEN"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 110.0,
-    "unitLevel": 7500.0,
-    "enBeforeReduction": 22500.0,
+    "accuracy": 110,
+    "unitLevel": 7500,
+    "enBeforeReduction": 22500,
     "enCapacityMultiplier": 0.5,
     "tacticalMoveBeforeBonus": 4,
     "adaptability": {
-      "ground": 10.0,
-      "space": 100.0,
-      "water": 50.0,
-      "air": 100.0,
-      "mountain": 10.0,
+      "ground": 10,
+      "space": 100,
+      "water": 50,
+      "air": 100,
+      "mountain": 10,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 24.0,
-      "radar": 600.0,
-      "antiDetection": -200.0
+      "sight": 24,
+      "radar": 600,
+      "antiDetection": -200
     },
     "technologyEra": "0079L",
     "importedTechPage": 1,
     "actionTurnSpeed": 0.45,
     "mobilityMoveTarget": 7,
-    "shipHullBeforeReduction": 140000.0,
+    "shipHullBeforeReduction": 140000,
     "shipBalanceMultiplier": 0.7,
     "shipFactionHullMultiplier": 1.1,
     "shipFactionAccuracyMultiplier": 1.1,
@@ -1103,5025 +1103,694 @@
   },
   "weapons": {
     "GrayPhantomClass_Turret_Cannon": {
-      "name": "舰载加农炮",
-      "type": "shell",
-      "min": 3,
-      "max": 8,
-      "hit": 60.0,
-      "en": 240.0,
-      "sourceName": "GrayPhantomClass_Turret_Cannon",
-      "sourceHit": 75.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 7500,
-      "damageComponents": {
-        "shell": 7500
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 3.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 0.5,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
-        "barrels": [
-          {
-            "id": "GrayPhantomClass_Turret_Cannon",
-            "x": 0.0,
-            "y": 35.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_Cannon_L",
-            "x": 0.0,
-            "y": 35.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_Cannon_R",
-            "x": 0.0,
-            "y": 35.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Cannon_1.png",
-        "scale": 0.75,
-        "speed": 40.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_L",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-            "offset": {
-              "x": 0.0,
-              "y": 35.0
+      "ref": "GrayPhantomClass_Turret_Cannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_Turret_Cannon",
+              "x": 0,
+              "y": 35
+            },
+            {
+              "id": "GrayPhantomClass_Turret_Cannon_L",
+              "x": 0,
+              "y": 35
+            },
+            {
+              "id": "GrayPhantomClass_Turret_Cannon_R",
+              "x": 0,
+              "y": 35
             }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-            "offset": {
-              "x": 0.0,
-              "y": 35.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-            "offset": {
-              "x": 0.0,
-              "y": 35.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/ShellCannon_5.ogg",
-        "volume": 0.6
-      },
-      "targetModifiers": {
-        "air": 0.5,
-        "water": 0.75,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "GrayPhantomClass_Turret_Cannon_M1"
-      ],
-      "muzzleEffects": [
-        "BZ_Fire_1",
-        "BZ_Fire_1",
-        "BZ_Fire_1"
-      ],
-      "mergedPositions": [
-        "GrayPhantomClass_Turret_Cannon",
-        "GrayPhantomClass_Turret_Cannon_L",
-        "GrayPhantomClass_Turret_Cannon_R"
-      ],
-      "nativePayload": {
-        "ShellDamage": 10000.0,
-        "DpDamage": 500.0,
-        "WeaponAccuracy": 75.0,
-        "PartBreakModifier": 0.5,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.5,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 0.5,
-        "HeightHitRange": 10.0,
-        "ProjectileSpeed": 40.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 75.0,
-        "ProjectileLife": 50.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
-        },
-        "medium": {
-          "damage": 1,
-          "accuracy": 0.75
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
+              "offset": {
+                "x": 0,
+                "y": 35
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
+              "offset": {
+                "x": 0,
+                "y": 35
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
+              "offset": {
+                "x": 0,
+                "y": 35
+              }
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
-        "barrel": "GrayPhantomClass_Turret_Cannon",
-        "entry": "automatic_turret",
-        "cooldown": 8.0,
-        "duration": 3.0,
-        "firstShot": 0.0,
-        "lastShot": 3.0,
-        "firingEvents": 6,
-        "projectiles": 6,
-        "declaredEnergy": 40.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 40.0,
-        "energy": 240.0,
-        "actions": []
-      },
-      "category": "cannon",
-      "actionCost": 3,
-      "shipExplosiveAccuracyMultiplier": 0.8,
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 10000.0,
-        "damageComponents": {
-          "shell": 10000.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini"
+      }
     },
     "GrayPhantomClass_Turret_Cannon_L": {
-      "name": "舰载加农炮",
-      "type": "shell",
-      "min": 3,
-      "max": 8,
-      "hit": 60.0,
-      "en": 240.0,
-      "sourceName": "GrayPhantomClass_Turret_Cannon_L",
-      "sourceHit": 75.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 7500,
-      "damageComponents": {
-        "shell": 7500
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 3.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 0.5,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
-        "barrels": [
-          {
-            "id": "GrayPhantomClass_Turret_Cannon",
-            "x": 0.0,
-            "y": 35.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_Cannon_L",
-            "x": 0.0,
-            "y": 35.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_Cannon_R",
-            "x": 0.0,
-            "y": 35.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Cannon_1.png",
-        "scale": 0.75,
-        "speed": 40.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_L",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-            "offset": {
-              "x": 0.0,
-              "y": 35.0
+      "ref": "GrayPhantomClass_Turret_Cannon_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_Turret_Cannon",
+              "x": 0,
+              "y": 35
+            },
+            {
+              "id": "GrayPhantomClass_Turret_Cannon_L",
+              "x": 0,
+              "y": 35
+            },
+            {
+              "id": "GrayPhantomClass_Turret_Cannon_R",
+              "x": 0,
+              "y": 35
             }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-            "offset": {
-              "x": 0.0,
-              "y": 35.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-            "offset": {
-              "x": 0.0,
-              "y": 35.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/ShellCannon_5.ogg",
-        "volume": 0.6
-      },
-      "targetModifiers": {
-        "air": 0.5,
-        "water": 0.75,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "GrayPhantomClass_Turret_Cannon_M1"
-      ],
-      "muzzleEffects": [
-        "BZ_Fire_1",
-        "BZ_Fire_1",
-        "BZ_Fire_1"
-      ],
-      "availability": {
-        "hidden": true,
-        "reasons": [
-          "merged_position"
-        ],
-        "mergedInto": "GrayPhantomClass_Turret_Cannon"
-      },
-      "nativePayload": {
-        "ShellDamage": 10000.0,
-        "DpDamage": 500.0,
-        "WeaponAccuracy": 75.0,
-        "PartBreakModifier": 0.5,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.5,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 0.5,
-        "HeightHitRange": 10.0,
-        "ProjectileSpeed": 40.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 75.0,
-        "ProjectileLife": 50.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
+              "offset": {
+                "x": 0,
+                "y": 35
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
+              "offset": {
+                "x": 0,
+                "y": 35
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
+              "offset": {
+                "x": 0,
+                "y": 35
+              }
+            }
+          ]
         },
-        "medium": {
-          "damage": 1,
-          "accuracy": 0.75
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GrayPhantomClass_Turret_Cannon"
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
-        "barrel": "GrayPhantomClass_Turret_Cannon",
-        "entry": "automatic_turret",
-        "cooldown": 8.0,
-        "duration": 3.0,
-        "firstShot": 0.0,
-        "lastShot": 3.0,
-        "firingEvents": 6,
-        "projectiles": 6,
-        "declaredEnergy": 40.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 40.0,
-        "energy": 240.0,
-        "actions": []
-      },
-      "category": "cannon",
-      "actionCost": 3,
-      "shipExplosiveAccuracyMultiplier": 0.8,
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 10000.0,
-        "damageComponents": {
-          "shell": 10000.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini"
+      }
     },
     "GrayPhantomClass_Turret_Cannon_R": {
-      "name": "舰载加农炮",
-      "type": "shell",
-      "min": 3,
-      "max": 8,
-      "hit": 60.0,
-      "en": 240.0,
-      "sourceName": "GrayPhantomClass_Turret_Cannon_R",
-      "sourceHit": 75.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 7500,
-      "damageComponents": {
-        "shell": 7500
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 3.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_Cannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 0.5,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
-        "barrels": [
-          {
-            "id": "GrayPhantomClass_Turret_Cannon",
-            "x": 0.0,
-            "y": 35.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_Cannon_L",
-            "x": 0.0,
-            "y": 35.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_Cannon_R",
-            "x": 0.0,
-            "y": 35.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Cannon_1.png",
-        "scale": 0.75,
-        "speed": 40.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_L",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-            "offset": {
-              "x": 0.0,
-              "y": 35.0
+      "ref": "GrayPhantomClass_Turret_Cannon_R__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_Turret_Cannon",
+              "x": 0,
+              "y": 35
+            },
+            {
+              "id": "GrayPhantomClass_Turret_Cannon_L",
+              "x": 0,
+              "y": 35
+            },
+            {
+              "id": "GrayPhantomClass_Turret_Cannon_R",
+              "x": 0,
+              "y": 35
             }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-            "offset": {
-              "x": 0.0,
-              "y": 35.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
-            "offset": {
-              "x": 0.0,
-              "y": 35.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/ShellCannon_5.ogg",
-        "volume": 0.6
-      },
-      "targetModifiers": {
-        "air": 0.5,
-        "water": 0.75,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "GrayPhantomClass_Turret_Cannon_M1"
-      ],
-      "muzzleEffects": [
-        "BZ_Fire_1",
-        "BZ_Fire_1",
-        "BZ_Fire_1"
-      ],
-      "availability": {
-        "hidden": true,
-        "reasons": [
-          "merged_position"
-        ],
-        "mergedInto": "GrayPhantomClass_Turret_Cannon"
-      },
-      "nativePayload": {
-        "ShellDamage": 10000.0,
-        "DpDamage": 500.0,
-        "WeaponAccuracy": 75.0,
-        "PartBreakModifier": 0.5,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.5,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 0.5,
-        "HeightHitRange": 10.0,
-        "ProjectileSpeed": 40.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 75.0,
-        "ProjectileLife": 50.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
+              "offset": {
+                "x": 0,
+                "y": 35
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
+              "offset": {
+                "x": 0,
+                "y": 35
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_Cannon_M1",
+              "offset": {
+                "x": 0,
+                "y": 35
+              }
+            }
+          ]
         },
-        "medium": {
-          "damage": 1,
-          "accuracy": 0.75
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GrayPhantomClass_Turret_Cannon"
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini",
-        "barrel": "GrayPhantomClass_Turret_Cannon",
-        "entry": "automatic_turret",
-        "cooldown": 8.0,
-        "duration": 3.0,
-        "firstShot": 0.0,
-        "lastShot": 3.0,
-        "firingEvents": 6,
-        "projectiles": 6,
-        "declaredEnergy": 40.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 40.0,
-        "energy": 240.0,
-        "actions": []
-      },
-      "category": "cannon",
-      "actionCost": 3,
-      "shipExplosiveAccuracyMultiplier": 0.8,
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 10000.0,
-        "damageComponents": {
-          "shell": 10000.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_Cannon.ini"
+      }
     },
     "GrayPhantomClass_Turret_MegaBeamCannon": {
-      "name": "舰载光束炮",
-      "type": "beam",
-      "min": 3,
-      "max": 8,
-      "hit": 60.0,
-      "en": 720.0,
-      "sourceName": "GrayPhantomClass_Turret_MegaBeamCannon",
-      "sourceHit": 75.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 6000,
-      "damageComponents": {
-        "beam": 6000
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 2.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
-        "barrels": [
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
-            "x": 0.0,
-            "y": 18.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Beam_3.png",
-        "scale": 1.0,
-        "speed": 35.0,
-        "forwardOffset": -15.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Beam_Exp_1_Pink",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
+      "ref": "GrayPhantomClass_Turret_MegaBeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
+              "x": 0,
+              "y": 18
             }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/BeamCannon_2.ogg",
-        "volume": 0.5
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 0.5,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-        "GrayPhantomClass_Turret_MegaBeamCannon_R1"
-      ],
-      "muzzleEffects": [
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink"
-      ],
-      "mergedPositions": [
-        "GrayPhantomClass_Turret_MegaBeamCannon",
-        "GrayPhantomClass_Turret_MegaBeamCannon_L",
-        "GrayPhantomClass_Turret_MegaBeamCannon_R"
-      ],
-      "nativePayload": {
-        "BeamDamage": 8000.0,
-        "DpDamage": 450.0,
-        "WeaponAccuracy": 75.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.5,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.5,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.5,
-        "AntiAir": 0.75,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 35.0,
-        "ProjectileSpread": 4.0,
-        "ProjectileExplosionRange": 35.0,
-        "ProjectileLife": 55.0,
-        "ProjectileBlastRange": 75.0,
-        "ProjectileBlastDamageModifier": 0.2,
-        "ProjectileBlastDpModifier": 1.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.5,
-          "accuracy": 0.5
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
-        },
-        "medium": {
-          "damage": 1,
-          "accuracy": 0.75
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
-        "barrel": "GrayPhantomClass_Turret_MegaBeamCannon",
-        "entry": "automatic_turret",
-        "cooldown": 8.0,
-        "duration": 2.0,
-        "firstShot": 0.0,
-        "lastShot": 2.0,
-        "firingEvents": 12,
-        "projectiles": 12,
-        "declaredEnergy": 60.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 60.0,
-        "energy": 720.0,
-        "actions": []
-      },
-      "category": "cannon",
-      "actionCost": 3,
-      "shipExplosiveAccuracyMultiplier": 0.8,
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 8000.0,
-        "damageComponents": {
-          "beam": 8000.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini"
+      }
     },
     "GrayPhantomClass_Turret_MegaBeamCannon_L": {
-      "name": "舰载光束炮",
-      "type": "beam",
-      "min": 3,
-      "max": 8,
-      "hit": 60.0,
-      "en": 720.0,
-      "sourceName": "GrayPhantomClass_Turret_MegaBeamCannon_L",
-      "sourceHit": 75.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 6000,
-      "damageComponents": {
-        "beam": 6000
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 2.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
-        "barrels": [
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
-            "x": 0.0,
-            "y": 18.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Beam_3.png",
-        "scale": 1.0,
-        "speed": 35.0,
-        "forwardOffset": -15.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Beam_Exp_1_Pink",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
+      "ref": "GrayPhantomClass_Turret_MegaBeamCannon_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
+              "x": 0,
+              "y": 18
             }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/BeamCannon_2.ogg",
-        "volume": 0.5
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 0.5,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-        "GrayPhantomClass_Turret_MegaBeamCannon_R1"
-      ],
-      "muzzleEffects": [
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink"
-      ],
-      "availability": {
-        "hidden": true,
-        "reasons": [
-          "merged_position"
-        ],
-        "mergedInto": "GrayPhantomClass_Turret_MegaBeamCannon"
-      },
-      "nativePayload": {
-        "BeamDamage": 8000.0,
-        "DpDamage": 450.0,
-        "WeaponAccuracy": 75.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.5,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.5,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.5,
-        "AntiAir": 0.75,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 35.0,
-        "ProjectileSpread": 4.0,
-        "ProjectileExplosionRange": 35.0,
-        "ProjectileLife": 55.0,
-        "ProjectileBlastRange": 75.0,
-        "ProjectileBlastDamageModifier": 0.2,
-        "ProjectileBlastDpModifier": 1.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.5,
-          "accuracy": 0.5
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            }
+          ]
         },
-        "medium": {
-          "damage": 1,
-          "accuracy": 0.75
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GrayPhantomClass_Turret_MegaBeamCannon"
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
-        "barrel": "GrayPhantomClass_Turret_MegaBeamCannon",
-        "entry": "automatic_turret",
-        "cooldown": 8.0,
-        "duration": 2.0,
-        "firstShot": 0.0,
-        "lastShot": 2.0,
-        "firingEvents": 12,
-        "projectiles": 12,
-        "declaredEnergy": 60.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 60.0,
-        "energy": 720.0,
-        "actions": []
-      },
-      "category": "cannon",
-      "actionCost": 3,
-      "shipExplosiveAccuracyMultiplier": 0.8,
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 8000.0,
-        "damageComponents": {
-          "beam": 8000.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini"
+      }
     },
     "GrayPhantomClass_Turret_MegaBeamCannon_R": {
-      "name": "舰载光束炮",
-      "type": "beam",
-      "min": 3,
-      "max": 8,
-      "hit": 60.0,
-      "en": 720.0,
-      "sourceName": "GrayPhantomClass_Turret_MegaBeamCannon_R",
-      "sourceHit": 75.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 6000,
-      "damageComponents": {
-        "beam": 6000
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 2.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
-        "barrels": [
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
-            "x": 0.0,
-            "y": 18.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
-            "x": 0.0,
-            "y": 18.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Beam_3.png",
-        "scale": 1.0,
-        "speed": 35.0,
-        "forwardOffset": -15.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Beam_Exp_1_Pink",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
+      "ref": "GrayPhantomClass_Turret_MegaBeamCannon_R__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_L",
+              "x": 0,
+              "y": 18
+            },
+            {
+              "id": "GrayPhantomClass_Turret_MegaBeamCannon_R",
+              "x": 0,
+              "y": 18
             }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/BeamCannon_2.ogg",
-        "volume": 0.5
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 0.5,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "GrayPhantomClass_Turret_MegaBeamCannon_L1",
-        "GrayPhantomClass_Turret_MegaBeamCannon_R1"
-      ],
-      "muzzleEffects": [
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink",
-        "Beam_Charge_3_Pink"
-      ],
-      "availability": {
-        "hidden": true,
-        "reasons": [
-          "merged_position"
-        ],
-        "mergedInto": "GrayPhantomClass_Turret_MegaBeamCannon"
-      },
-      "nativePayload": {
-        "BeamDamage": 8000.0,
-        "DpDamage": 450.0,
-        "WeaponAccuracy": 75.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.5,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.5,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.5,
-        "AntiAir": 0.75,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 35.0,
-        "ProjectileSpread": 4.0,
-        "ProjectileExplosionRange": 35.0,
-        "ProjectileLife": 55.0,
-        "ProjectileBlastRange": 75.0,
-        "ProjectileBlastDamageModifier": 0.2,
-        "ProjectileBlastDpModifier": 1.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.5,
-          "accuracy": 0.5
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            }
+          ]
         },
-        "medium": {
-          "damage": 1,
-          "accuracy": 0.75
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GrayPhantomClass_Turret_MegaBeamCannon"
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini",
-        "barrel": "GrayPhantomClass_Turret_MegaBeamCannon",
-        "entry": "automatic_turret",
-        "cooldown": 8.0,
-        "duration": 2.0,
-        "firstShot": 0.0,
-        "lastShot": 2.0,
-        "firingEvents": 12,
-        "projectiles": 12,
-        "declaredEnergy": 60.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 60.0,
-        "energy": 720.0,
-        "actions": []
-      },
-      "category": "cannon",
-      "actionCost": 3,
-      "shipExplosiveAccuracyMultiplier": 0.8,
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 8000.0,
-        "damageComponents": {
-          "beam": 8000.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MegaBeamCannon.ini"
+      }
     },
     "GrayPhantomClass_Turret_AMS": {
-      "name": "反MS导弹",
-      "type": "shell",
-      "min": 3,
-      "max": 4,
-      "hit": 100.0,
-      "en": 192.0,
-      "sourceName": "GrayPhantomClass_Turret_AMS",
-      "sourceHit": 100.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 1325,
-      "damageComponents": {
-        "shell": 1325
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_L1",
-            "delay": 1.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_L1",
-            "delay": 1.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_L1",
-            "delay": 1.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_L1",
-            "delay": 1.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_L1",
-            "delay": 1.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_L1",
-            "delay": 1.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_L1",
-            "delay": 1.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_MS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MS.ini",
-        "barrels": [
-          {
-            "id": "GrayPhantomClass_Turret_AMS",
-            "x": 4.0,
-            "y": 0.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AMS",
-            "x": 4.0,
-            "y": 0.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Missile_3.png",
-        "scale": 0.35,
-        "speed": 35.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_XS",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MS_L1",
-            "offset": {
-              "x": 4.0,
-              "y": 0.0
+      "ref": "GrayPhantomClass_Turret_AMS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MS.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_Turret_AMS",
+              "x": 4,
+              "y": 0
             },
-            "alternatingOffsetX": -8.0
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_MS_R1",
-            "offset": {
-              "x": 4.0,
-              "y": 0.0
+            {
+              "id": "GrayPhantomClass_Turret_AMS",
+              "x": 4,
+              "y": 0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MS_L1",
+              "offset": {
+                "x": 4,
+                "y": 0
+              },
+              "alternatingOffsetX": -8
             },
-            "alternatingOffsetX": -8.0
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/Missile_1.ogg",
-        "volume": 0.2
-      },
-      "targetModifiers": {
-        "air": 1.0,
-        "water": 1.0,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "GrayPhantomClass_Turret_MS_L1",
-        "GrayPhantomClass_Turret_MS_R1"
-      ],
-      "muzzleEffects": [
-        "BZ_Fire_1_S",
-        "BZ_Fire_1_S"
-      ],
-      "nativePayload": {
-        "ShellDamage": 1750.0,
-        "DpDamage": 175.0,
-        "WeaponAccuracy": 100.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 1.0,
-        "AntiAir": 1.0,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightHitRange": 20.0,
-        "HeightChangeSpeed": 2.0,
-        "ProjectileSpeed": 35.0,
-        "ProjectileTurnspeed": 1.25,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 35.0,
-        "ProjectileLife": 40.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
-        },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_MS_R1",
+              "offset": {
+                "x": 4,
+                "y": 0
+              },
+              "alternatingOffsetX": -8
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MS.ini",
-        "barrel": "GrayPhantomClass_Turret_AMS",
-        "entry": "automatic_turret",
-        "cooldown": 12.0,
-        "duration": 7.0,
-        "firstShot": 0.0,
-        "lastShot": 7.0,
-        "firingEvents": 16,
-        "projectiles": 16,
-        "declaredEnergy": 12.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 12.0,
-        "energy": 192.0,
-        "actions": []
-      },
-      "category": "missile",
-      "actionCost": 2,
-      "localization": {
-        "zh": {
-          "name": "反MS导弹"
-        },
-        "en": {
-          "name": "Anti-MS Missiles"
-        },
-        "ja": {
-          "name": "対MSミサイル"
-        }
-      },
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 1750.0,
-        "damageComponents": {
-          "shell": 1750.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_MS.ini"
+      }
     },
     "GrayPhantomClass_Turret_AA": {
-      "name": "对空机枪",
-      "type": "shell",
-      "min": 1,
-      "max": 2,
-      "hit": 125.0,
-      "en": 80.0,
-      "sourceName": "GrayPhantomClass_Turret_AA",
-      "sourceHit": 125.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 200,
-      "damageComponents": {
-        "shell": 150,
-        "shellAP": 50
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.1,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.1,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.1,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.1,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.1,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.1,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.1,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.1,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L1",
-            "delay": 0.1,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini",
-        "barrels": [
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          },
-          {
-            "id": "GrayPhantomClass_Turret_AA",
-            "x": 0.0,
-            "y": 6.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/MG_1.png",
-        "scale": 0.25,
-        "speed": 90.0,
-        "forwardOffset": -10.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "MG_Hit_1_S",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
+      "ref": "GrayPhantomClass_Turret_AA__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "id": "GrayPhantomClass_Turret_AA",
+              "x": 0,
+              "y": 6
             }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_L2",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_R2",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_L3",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_R3",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_L2",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_R2",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_L3",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_R3",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_L4",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_R4",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_L5",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          },
-          {
-            "bone": "Turret_GrayPhantomClass_Turret_AA_B_R5",
-            "offset": {
-              "x": 0.0,
-              "y": 6.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/MachineGun_2.ogg",
-        "volume": 0.3
-      },
-      "targetModifiers": {
-        "air": 1.5,
-        "water": 1.0,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "GrayPhantomClass_Turret_AA_L1",
-        "GrayPhantomClass_Turret_AA_R1",
-        "GrayPhantomClass_Turret_AA_L2",
-        "GrayPhantomClass_Turret_AA_R2",
-        "GrayPhantomClass_Turret_AA_L3",
-        "GrayPhantomClass_Turret_AA_R3",
-        "GrayPhantomClass_Turret_AA_B_L1",
-        "GrayPhantomClass_Turret_AA_B_R1",
-        "GrayPhantomClass_Turret_AA_B_L2",
-        "GrayPhantomClass_Turret_AA_B_R2",
-        "GrayPhantomClass_Turret_AA_B_L3",
-        "GrayPhantomClass_Turret_AA_B_R3",
-        "GrayPhantomClass_Turret_AA_B_L4",
-        "GrayPhantomClass_Turret_AA_B_R4",
-        "GrayPhantomClass_Turret_AA_B_L5",
-        "GrayPhantomClass_Turret_AA_B_R5"
-      ],
-      "muzzleEffects": [
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S"
-      ],
-      "nativePayload": {
-        "ShellDamage": 200.0,
-        "ShellAPDamage": 50.0,
-        "DpDamage": 7.0,
-        "WeaponAccuracy": 125.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 1.0,
-        "AntiAir": 1.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 90.0,
-        "ProjectileSpread": 8.0,
-        "ProjectileLife": 7.5
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_L1",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_R1",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_L2",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_R2",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_L3",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_R3",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_L1",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_R1",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_L2",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_R2",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_L3",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_R3",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_L4",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_R4",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_L5",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_Turret_AA_B_R5",
+              "offset": {
+                "x": 0,
+                "y": 6
+              }
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini",
-        "barrel": "GrayPhantomClass_Turret_AA",
-        "entry": "automatic_turret",
-        "cooldown": 2.0,
-        "duration": 0.9,
-        "firstShot": 0.0,
-        "lastShot": 0.9,
-        "firingEvents": 160,
-        "projectiles": 160,
-        "declaredEnergy": 0.5,
-        "energyMode": "perShot",
-        "energyPerEmission": 0.5,
-        "energy": 80.0,
-        "actions": []
-      },
-      "category": "machine_gun",
-      "rangeRole": "ship_anti_air",
-      "actionCost": 2,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
-        }
-      },
-      "shipAntiAirBeforeReduction": [
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.1
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.1
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.1
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.1
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.1
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.1
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.1
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.1
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L1",
-          "delay": 0.1
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "GrayPhantomClass_Turret_AA_B_R5",
-          "delay": 0.0
-        }
-      ],
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 250.0,
-        "damageComponents": {
-          "shell": 200.0,
-          "shellAP": 50.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/GrayPhantomClass/GrayPhantomClass_Turret_AA.ini"
+      }
     }
   },
   "mechanics": [
@@ -6239,7 +1908,7 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {
-    "nativeLevel": 7500.0,
+    "nativeLevel": 7500,
     "levelMultiplier": 0.25,
     "published": 1875
   },

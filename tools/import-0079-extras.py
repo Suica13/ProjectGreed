@@ -1,19 +1,20 @@
-﻿"""Complete native 0079 roster, retaining state-only helpers outside the build list."""
+"""Complete native 0079 roster, retaining state-only helpers outside the build list."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import importlib.util, json, re, sys, subprocess, shutil
 from pathlib import Path
 from mod_source import ROOT, MOD, ASSETS, load, parse
 from native_refits import definitions
 
 def write(path,value):
-    path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+    path.write_text(dump_source_json(value,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 
 def main():
     sys.stdout.reconfigure(encoding='utf8')
     spec=importlib.util.spec_from_file_location('extra_bulk',Path(__file__).with_name('import-0079-page-one.py'))
     bulk=importlib.util.module_from_spec(spec);spec.loader.exec_module(bulk)
-    catalog=json.loads((ASSETS/'unit-catalog.json').read_text(encoding='utf8'))
-    effects=json.loads((ASSETS/'effects/effects.json').read_text(encoding='utf8'))
-    existing={json.loads((ASSETS/p).read_text(encoding='utf8'))['id'] for p in catalog['units']}
+    catalog=load_source_json((ASSETS/'unit-catalog.json').read_text(encoding='utf8'))
+    effects=load_source_json((ASSETS/'effects/effects.json').read_text(encoding='utf8'))
+    existing={load_source_json((ASSETS/p).read_text(encoding='utf8'))['id'] for p in catalog['units']}
     rows=[]
     for f in sorted((ROOT/'Units/BattleUnits').rglob('*.ini')):
         if any(x in f.parts for x in ['Weapon','Pilot']):continue
@@ -45,14 +46,14 @@ def main():
     # Refresh native rules only on newly imported hulls and their generated forms.
     new_ids={r['id'] for r in rows}
     for ref in catalog['units']:
-        path=ASSETS/ref;p=json.loads(path.read_text(encoding='utf8'))
+        path=ASSETS/ref;p=load_source_json(path.read_text(encoding='utf8'))
         if p['id'] in new_ids or p.get('formOf') in new_ids:
             configure(p,load(MOD/p['source']));apply_era(p);write(path,p)
     manifest=Path(__file__).with_name('0079-extras-manifest.json')
-    previous=json.loads(manifest.read_text(encoding='utf8')) if manifest.exists() else []
+    previous=load_source_json(manifest.read_text(encoding='utf8')) if manifest.exists() else []
     combined={r['id']:r for r in previous+rows}
     write(manifest,list(combined.values()))
-    subprocess.run([shutil.which('node'),'-e',"require('./tools/load-catalog.cjs').loadCatalog({catalogOverride:JSON.parse(require('fs').readFileSync(0,'utf8'))})"],input=json.dumps(catalog),text=True,check=True,cwd=ASSETS.parent)
+    subprocess.run([shutil.which('node'),'-e',"require('./tools/load-catalog.cjs').loadCatalog({catalogOverride:JSON.parse(require('fs').readFileSync(0,'utf8'))})"],input=dump_source_json(catalog),text=True,check=True,cwd=ASSETS.parent)
     write(ASSETS/'unit-catalog.json',catalog)
     print('Completed',len(rows),'extra hulls')
 if __name__=='__main__':main()

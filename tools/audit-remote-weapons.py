@@ -1,4 +1,5 @@
 """Read-only native checks and generated remote-weapon coverage report."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy
 import json
 from pathlib import Path
@@ -9,7 +10,7 @@ from weapon_policy import configure
 def main():
     rows=[]
     for ident in CARRIERS:
-        prefab=json.loads((ASSETS/f'units/{ident}/unit.json').read_text(encoding='utf-8'))
+        prefab=load_source_json((ASSETS/f'units/{ident}/unit.json').read_text(encoding='utf-8'))
         refreshed=copy.deepcopy(prefab)
         configure(refreshed,load(MOD/prefab['source']))
         for key,weapon in prefab['weapons'].items():
@@ -30,8 +31,8 @@ def main():
     assert not incom.get('pilotRequirements')
     assert incom['requiredParts']==['head']
     assert len(incom['remote']['units'])==1
-    production=json.loads(Path('shared/production-catalog.json').read_text(encoding='utf-8'))
-    tech=json.loads(Path('shared/development-tree.json').read_text(encoding='utf-8'))
+    production=load_source_json(Path('shared/production-catalog.json').read_text(encoding='utf-8'))
+    tech=load_source_json(Path('shared/development-tree.json').read_text(encoding='utf-8'))
     for ident in ('MS_06Z','MSN_01'):
         assert ident in production['baseModels']
         assert any(ident in node['unlocks'] for node in tech['ZEON'])

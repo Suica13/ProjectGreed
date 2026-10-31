@@ -1,4 +1,5 @@
 """重新读取原 MOD，核对全部预制体的资源和原生武器流程。只读，不修复文件。"""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy
 import json
 from pathlib import Path
@@ -12,7 +13,7 @@ def main():
     units = weapons = 0
     fields = ["damageComponents", "damagePerShot", "hit", "sourceHit", "en", "attack", "nativeTiming"]
     for file in (ASSETS / "units").glob("*/unit.json"):
-        unit = json.loads(file.read_text(encoding="utf-8"))
+        unit = load_source_json(file.read_text(encoding="utf-8"))
         native = load(ROOT / unit["source"].split("/", 1)[1])
         expected = (float(native["core"]["maxHp"]), capacity_for(unit["id"], stat(native, "enMax")), float(native["core"].get("maxShield", 0)))
         actual = (unit["stats"]["hp"], unit["stats"]["en"], unit["shield"]["hp"])

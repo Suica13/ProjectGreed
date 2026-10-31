@@ -1,4 +1,5 @@
 """Stable technology-page era classification, shared by imports and refreshes."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import functools,json
 from pathlib import Path
 
@@ -8,14 +9,14 @@ def eras():
     for page,name in [(0,"0079-page-one-manifest.json"),(1,"0079-page-two-manifest.json")]:
         path=Path(__file__).with_name(name)
         if path.exists():
-            for row in json.loads(path.read_text(encoding="utf-8")):
+            for row in load_source_json(path.read_text(encoding="utf-8")):
                 stardust = any(tech.endswith(("_OperationStardust", "_GPProject")) for tech in row.get("tech", []))
                 result.setdefault(row["id"], "0079E" if page == 0 else "0083" if stardust else "0079L")
     return result
 
 def apply(prefab):
     page_two=Path(__file__).with_name("0079-page-two-manifest.json")
-    rows=json.loads(page_two.read_text(encoding="utf-8")) if page_two.exists() else []
+    rows=load_source_json(page_two.read_text(encoding="utf-8")) if page_two.exists() else []
     row=next((row for row in rows if row["id"]==prefab["id"]),None)
     if row:
         factions=sorted({tech.split("_")[1] for tech in row.get("tech",[])})

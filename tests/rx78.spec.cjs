@@ -92,7 +92,7 @@ test("RX-78-1 formation explains ejection and offline room uses a clicked legal 
 test("RX-78-1 weapon layers and muzzles match the selected kit and melee weapon in both facings", async ({
   page,
 }) => {
-  await page.goto(pathToFileURL(path.resolve("public/developer.html")).href);
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.waitForFunction(
     () => typeof SpriteRenderer !== "undefined" && Object.keys(SpriteRenderer.images).length > 0,
   );

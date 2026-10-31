@@ -1,8 +1,8 @@
 {
   "name": "projectgreed",
-  "version": "0.54.0",
+  "version": "0.55.0",
   "private": true,
-  "description": "ProjectGreed V54 turn-based tactical game",
+  "description": "ProjectGreed V55 turn-based tactical game",
   "engines": {
     "node": ">=22"
   },
@@ -10,6 +10,9 @@
     "start": "node server.js",
     "dev": "node server.js --port 4173",
     "build": "node build.cjs",
+    "build:developer": "node build.cjs --developer",
+    "developer": "node tools/developer-server.cjs",
+    "developer:open": "node tools/open-developer.cjs",
     "package:client": "npm run build && python tools/package-client.py",
     "test": "node --test tests/*.test.cjs",
     "test:ui": "playwright test",
@@ -20,9 +23,8 @@
     "perf:client": "node tools/performance-benchmark.cjs",
     "perf:wire": "node tools/performance-wire-benchmark.cjs",
     "test:performance": "node --test tests/performance-core.test.cjs tests/state-wire-network.test.cjs tests/playback-visibility.test.cjs tests/fog-modes.test.cjs tests/combat-playback.test.cjs tests/match-records.test.cjs tests/ui-layout.test.cjs",
-    "test:performance:ui": "playwright test tests/performance-network.spec.cjs tests/startup-loading.spec.cjs tests/developer-unlock-list.spec.cjs tests/network-weak.spec.cjs tests/production-sort.spec.cjs",
+    "test:performance:ui": "playwright test tests/performance-network.spec.cjs tests/startup-loading.spec.cjs tests/network-weak.spec.cjs tests/production-sort.spec.cjs",
     "package:server": "python tools/package-server.py",
-    "build:developer": "node build.cjs --developer",
     "maps:import": "node tools/import-map.cjs",
     "build:map-editor": "node tools/build-map-editor.cjs"
   },

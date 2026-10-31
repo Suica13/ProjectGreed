@@ -1,4 +1,5 @@
 """Plain conversion configuration shared by importers and unit refresh."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 from mod_source import ASSETS
 
@@ -14,7 +15,7 @@ PURGES = {
 def result(unit_id, prefab, recovery=0, repair=False, inherit=True):
     path=ASSETS / "units" / unit_id / "unit.json"
     if not path.exists(): return None
-    target=json.loads(path.read_text(encoding="utf-8"))
+    target=load_source_json(path.read_text(encoding="utf-8"))
     kits={k["id"]:max(target["weaponKits"],key=lambda t:len(set(k["weapons"])&set(t["weapons"])))["id"] for k in prefab["weaponKits"]}
     return dict(unitId=unit_id,kitId=target["weaponKits"][0]["id"],kitMap=kits,
         inheritResources=inherit,hpRecoveryPercent=recovery,enRecoveryPercent=recovery,

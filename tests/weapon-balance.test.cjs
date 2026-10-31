@@ -11,7 +11,7 @@ test("machine guns use their one native-based reduction; ship weapons never stac
     arms = 0,
     ships = 0;
   for (const prefab of catalog.prefabs) {
-    const raw = JSON.parse(
+    const raw = require("../tools/weapon-store.cjs").parse(
       fs.readFileSync(path.join(__dirname, "../assets/units", prefab.id, "unit.json")),
     );
     for (const [id, before] of Object.entries(raw.weapons)) {

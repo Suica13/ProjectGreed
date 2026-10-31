@@ -5,7 +5,7 @@ const Economy = (() => {
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
       ? PRODUCTION_CATALOG
-      : require("./production-catalog.json");
+      : require("./production-data.cjs");
   let kitModels;
   function modelsForUnits() {
     return (kitModels ||=

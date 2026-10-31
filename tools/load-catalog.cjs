@@ -1,3 +1,4 @@
+const WeaponStore = require("./weapon-store.cjs");
 /* Build and server share this loader. Paths in unit.json are relative to that prefab. */
 const fs = require("node:fs");
 const path = require("node:path");
@@ -21,7 +22,7 @@ function file(base, reference) {
   if (!resolved.startsWith(root + path.sep)) throw Error("Asset outside assets/: " + reference);
   return resolved;
 }
-const read = (name) => JSON.parse(fs.readFileSync(name, "utf8").replace(/^\uFEFF/, ""));
+const read = (name) => WeaponStore.parse(fs.readFileSync(name, "utf8").replace(/^\uFEFF/, ""));
 function validateLocalization(localization, id) {
   if (localization === undefined) return;
   if (!localization || typeof localization !== "object" || Array.isArray(localization))
@@ -45,7 +46,11 @@ function loadCatalog({
   unitOverrides = {},
   mapOverrides = {},
   wipOverride = null,
+  adjustmentsOverride = null,
+  weaponDefinitionsOverride = null,
 } = {}) {
+  const Adjust = require("../shared/catalog-adjustments.cjs");
+  const adjustments = adjustmentsOverride || Adjust.read();
   const localize = require("./display-localization.cjs").createLocalizer();
   const catalog = catalogOverride || read(path.join(root, "unit-catalog.json"));
   const wipPolicy = wipOverride || read(path.join(root, "unit-wip.json"));
@@ -92,7 +97,9 @@ function loadCatalog({
   )
     throw Error("Invalid default unit limit");
   const result = { ...catalog, prefabs: [], units: [], assets: {}, sounds: {}, models: {} };
-  result.sounds["pilot/activation"] = "data:audio/ogg;base64," + fs.readFileSync(file(root, "sounds/Action_8.ogg")).toString("base64");
+  result.sounds["pilot/activation"] =
+    "data:audio/ogg;base64," +
+    fs.readFileSync(file(root, "sounds/Action_8.ogg")).toString("base64");
   result.maps = {};
   if (!Array.isArray(catalog.maps) || !catalog.maps.length) throw Error("Missing preset maps");
   for (const reference of catalog.maps) {
@@ -124,7 +131,19 @@ function loadCatalog({
         (row) =>
           !Array.isArray(row) ||
           row.length !== map.width ||
-          row.some((t) => !["plain", "forest", "rubble", "rock", "water", "highland", "snow", "desert"].includes(t)),
+          row.some(
+            (t) =>
+              ![
+                "plain",
+                "forest",
+                "rubble",
+                "rock",
+                "water",
+                "highland",
+                "snow",
+                "desert",
+              ].includes(t),
+          ),
       )
     )
       throw Error("Invalid map: " + reference);
@@ -137,22 +156,43 @@ function loadCatalog({
         !map.appearance.colors ||
         Object.entries(map.appearance.colors).some(
           ([kind, color]) =>
-            !["plain", "forest", "rubble", "rock", "water", "highland", "snow", "desert"].includes(kind) ||
+            !["plain", "forest", "rubble", "rock", "water", "highland", "snow", "desert"].includes(
+              kind,
+            ) ||
             typeof color !== "string" ||
             !/^#[0-9a-f]{6}$/i.test(color),
         ))
     )
       throw Error("Invalid map appearance: " + map.id);
-    if (map.maxTeams !== undefined && map.maxTeams !== 2) throw Error("Current game supports two teams: " + map.id);
-    if (map.supportedModes !== undefined && (!Array.isArray(map.supportedModes) || !map.supportedModes.length ||
-        map.supportedModes.some(mode => !["regular", "quick"].includes(mode)))) throw Error("Invalid map modes: " + map.id);
-    if (map.cellEnvironments !== undefined && (!Array.isArray(map.cellEnvironments) || map.cellEnvironments.length !== map.height ||
-        map.cellEnvironments.some(row => !Array.isArray(row) || row.length !== map.width || row.some(e => !["ground", "space"].includes(e)))))
+    if (map.maxTeams !== undefined && map.maxTeams !== 2)
+      throw Error("Current game supports two teams: " + map.id);
+    if (
+      map.supportedModes !== undefined &&
+      (!Array.isArray(map.supportedModes) ||
+        !map.supportedModes.length ||
+        map.supportedModes.some((mode) => !["regular", "quick"].includes(mode)))
+    )
+      throw Error("Invalid map modes: " + map.id);
+    if (
+      map.cellEnvironments !== undefined &&
+      (!Array.isArray(map.cellEnvironments) ||
+        map.cellEnvironments.length !== map.height ||
+        map.cellEnvironments.some(
+          (row) =>
+            !Array.isArray(row) ||
+            row.length !== map.width ||
+            row.some((e) => !["ground", "space"].includes(e)),
+        ))
+    )
       throw Error("Invalid cell environments: " + map.id);
     if (map.tileMap) {
       const M = require("../shared/map-document.js");
       M.validate(map.tileMap);
-      if (map.tileMap.id !== map.id || map.tileMap.width !== map.width || map.tileMap.height !== map.height)
+      if (
+        map.tileMap.id !== map.id ||
+        map.tileMap.width !== map.width ||
+        map.tileMap.height !== map.height
+      )
         throw Error("TileMap dimensions/ID mismatch: " + map.id);
     }
     const areas = map.deploymentAreas;
@@ -364,14 +404,18 @@ function loadCatalog({
     lowHp.threshold > 1
   )
     throw Error("Invalid low HP presentation setting");
-  const defaultEquipment = read(path.resolve(__dirname, "../shared/production-catalog.json")).defaultKits || {};
+  const defaultEquipment =
+    read(path.resolve(__dirname, "../shared/production-catalog.json")).defaultKits || {};
   for (const ref of catalog.units) {
     const source = file(root, ref),
       base = path.dirname(source),
-      prefab = unitOverrides[ref] ? structuredClone(unitOverrides[ref]) : read(source);
+      raw =
+        unitOverrides[ref] || JSON.parse(fs.readFileSync(source, "utf8").replace(/^\uFEFF/, "")),
+      prefab = WeaponStore.expandPrefab(raw, weaponDefinitionsOverride || undefined);
     if (prefab.enabled === false) continue;
     localize.prefab(prefab);
     require("./weapon-balance.cjs").applyWeaponBalance(prefab);
+    Adjust.unit(prefab, adjustments, raw.weapons);
     require("./weapon-level-labels.cjs").applyWeaponLevelLabels(prefab);
     // Skills and weapons share the same 25-point damage quantization policy.
     for (const skill of prefab.skills || [])
@@ -402,7 +446,10 @@ function loadCatalog({
       throw Error("Unit must have an era tag: " + ref);
     prefab.unitTags ??= [];
     if (prefab.unitTags.includes("MA"))
-      prefab.unitTags = [...prefab.unitTags.filter(tag => !["SmallUnit", "MediumUnit", "LargeUnit"].includes(tag)), "LargeUnit"];
+      prefab.unitTags = [
+        ...prefab.unitTags.filter((tag) => !["SmallUnit", "MediumUnit", "LargeUnit"].includes(tag)),
+        "LargeUnit",
+      ];
     prefab.transport ??= { slotCost: 1, loadTags: [] };
     prefab.hangars ??= [];
     const stringTags = (tags) =>
@@ -716,7 +763,9 @@ function loadCatalog({
       ]),
     );
     prefab.defaultKit = defaultEquipment[prefab.id] || prefab.weaponKits[0].id;
-    prefab.weaponKits.sort((a,b)=>Number(b.id===prefab.defaultKit)-Number(a.id===prefab.defaultKit));
+    prefab.weaponKits.sort(
+      (a, b) => Number(b.id === prefab.defaultKit) - Number(a.id === prefab.defaultKit),
+    );
     for (const kit of prefab.weaponKits) {
       validateLocalization(kit.localization, prefab.id + "/" + kit.id);
       const id = prefab.id + "__" + kit.id;
@@ -960,7 +1009,10 @@ function loadCatalog({
               }),
             };
           }
-          return require("./weapon-level-labels.cjs").labelWeapon({ ...weapon, id: key }, prefab.id);
+          return require("./weapon-level-labels.cjs").labelWeapon(
+            { ...weapon, id: key },
+            prefab.id,
+          );
         });
       if (!textureKeys[prefab.materials.icon]) throw Error("Missing unit icon: " + prefab.id);
       for (const key of ["idle", "move", "stagger"])
@@ -1019,7 +1071,9 @@ function loadCatalog({
       });
       result.models[id] = {
         ...prefab.stats,
-        move: prefab.stats.deployed ? 0 : prefab.stats.move + Math.trunc((prefab.stats.speed - 100) / 50),
+        move: prefab.stats.deployed
+          ? 0
+          : prefab.stats.move + Math.trunc((prefab.stats.speed - 100) / 50),
         actionPoints: prefab.stats.actionPoints ?? 5,
         wip: prefab.wip,
         disabled: prefab.disabled,

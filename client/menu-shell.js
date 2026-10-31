@@ -9,6 +9,7 @@ window.MenuShell = (() => {
       formation: "hangar",
       production: "hangar",
       development: "hangar",
+      encyclopedia: "hangar",
       records: "records",
     })[view];
   let navigating = false;
@@ -30,6 +31,7 @@ window.MenuShell = (() => {
         leaveEditor();
         if (view === "production") byId("openProduction").click();
         else if (view === "development") byId("openDevelopment").click();
+        else if (view === "encyclopedia") Encyclopedia.open();
         else {
           setPageView(view);
           if (view === "room" && Net.snapshot) RoomPanel.render(Net.snapshot);
@@ -88,6 +90,8 @@ window.MenuShell = (() => {
       tabs[2].id = "shellProduction";
       tabs.push(tab("开发", () => go("development"), pageView === "development"));
       tabs[3].id = "shellDevelopment";
+      tabs.push(tab("图鉴", () => go("encyclopedia"), pageView === "encyclopedia"));
+      tabs[4].id = "shellEncyclopedia";
     } else {
       tabs.push(tab("回放文件", () => byId("openReplayFile").click()));
     }

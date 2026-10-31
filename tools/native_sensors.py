@@ -1,4 +1,5 @@
 """Project conversion: sight = round(native sight * 0.4); standard radar = project sight * 1.25."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import re
 import math
 
@@ -31,9 +32,9 @@ if __name__ == "__main__":
     from mod_source import ASSETS, MOD, load
     count = 0
     for path in sorted((ASSETS / "units").glob("*/unit.json")):
-        data = json.loads(path.read_text(encoding="utf-8-sig"))
+        data = load_source_json(path.read_text(encoding="utf-8-sig"))
         source = MOD / data["source"]
         correct(data, load(source))
-        path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        path.write_text(dump_source_json(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         count += 1
     print("Updated sensor status for", count, "units")

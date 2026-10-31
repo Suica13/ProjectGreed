@@ -1,4 +1,5 @@
 """Translate numeric native pilot gates; never execute MOD expressions at runtime."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 from pathlib import Path
 import json
 import re
@@ -58,12 +59,12 @@ def apply(prefab, native):
 
 if __name__ == '__main__':
     count = 0
-    for ref in json.loads((ASSETS / 'unit-catalog.json').read_text(encoding='utf-8'))['units']:
+    for ref in load_source_json((ASSETS / 'unit-catalog.json').read_text(encoding='utf-8'))['units']:
         path = ASSETS / ref
-        prefab = json.loads(path.read_text(encoding='utf-8'))
+        prefab = load_source_json(path.read_text(encoding='utf-8'))
         if not any('pilot_skill' in w.get('availability', {}).get('reasons', []) or w.get('pilotRequirements') for w in prefab['weapons'].values()):
             continue
         apply(prefab, load(MOD / prefab['source']))
-        path.write_text(json.dumps(prefab, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        path.write_text(dump_source_json(prefab, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         count += sum(bool(w.get('pilotRequirements')) for w in prefab['weapons'].values())
     print('Pilot-gated weapons:', count)

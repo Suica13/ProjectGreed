@@ -15,76 +15,76 @@
   },
   "skeleton": {
     "Pelvis": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftArm": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightArm": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftShoulder": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightShoulder": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "RightWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment12": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment13": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment15": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Head": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Eye": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftFoot": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "LeftLeg": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "RightFoot": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "RightLeg": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     }
   },
   "layers": [
@@ -92,15 +92,15 @@
       "name": "BoostReversing",
       "texture": "BoostReversing_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
-      "scaleX": 1.0,
+      "order": 4,
+      "scale": 2,
+      "scaleX": 1,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
       "offset": {
         "x": -2.5,
-        "y": -12.0
+        "y": -12
       },
       "frames": 3,
       "frame": 0,
@@ -114,11 +114,11 @@
       "name": "Body",
       "texture": "Type61_SPG_Body_2.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.65,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -126,11 +126,11 @@
       "name": "Body_Turret",
       "texture": "Type61_SPG_Turret_1.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.65,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     }
@@ -146,22 +146,22 @@
   },
   "stats": {
     "hp": 5500,
-    "en": 175.0,
+    "en": 175,
     "move": 0,
-    "mobility": 50.0,
+    "mobility": 50,
     "cost": 75,
     "counterLimit": 1,
-    "accuracy": 100.0,
-    "partStructuralStrength": 100.0,
+    "accuracy": 100,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
       "space": 50,
-      "water": 50.0,
-      "air": 10.0,
+      "water": 50,
+      "air": 10,
       "atmosphere": 0,
-      "mountain": 100.0,
+      "mountain": 100,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -171,7 +171,7 @@
     "sensors": {
       "sight": 7,
       "radar": 8.5,
-      "antiDetection": 0.0,
+      "antiDetection": 0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -183,64 +183,64 @@
     "speed": 70
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 25.0,
+    "melee": 0,
+    "shooting": 25,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 5.0,
+      "percent": 5,
       "flat": 0
     },
     "shell": {
-      "percent": 20.0,
+      "percent": 20,
       "flat": 0
     },
     "melee": {
-      "percent": 5.0,
+      "percent": 5,
       "flat": 0
     },
     "dp": {
-      "percent": 5.0,
+      "percent": 5,
       "flat": 0
     },
     "sp": {
-      "percent": 0.0,
+      "percent": 0,
       "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "hp": 4500.0,
-    "walkSpeed": 0.0,
-    "boostSpeed": 0.0,
+    "hp": 4500,
+    "walkSpeed": 0,
+    "boostSpeed": 0,
     "turnSpeed": 0.25,
-    "reaction": 50.0,
-    "shooting": 125.0,
-    "melee": 100.0,
+    "reaction": 50,
+    "shooting": 125,
+    "melee": 100,
     "nativeTags": [
       "Type61_SPG",
       "Unit",
@@ -254,25 +254,25 @@
       "CantDeconstruct"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 100.0,
-    "unitLevel": 300.0,
-    "enBeforeReduction": 350.0,
+    "accuracy": 100,
+    "unitLevel": 300,
+    "enBeforeReduction": 350,
     "enCapacityMultiplier": 0.5,
     "tacticalMoveBeforeBonus": 3,
     "adaptability": {
-      "ground": 100.0,
-      "space": 10.0,
-      "water": 50.0,
-      "air": 10.0,
-      "mountain": 100.0,
+      "ground": 100,
+      "space": 10,
+      "water": 50,
+      "air": 10,
+      "mountain": 100,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 17.0,
-      "radar": 306.0,
-      "antiDetection": 0.0
+      "sight": 17,
+      "radar": 306,
+      "antiDetection": 0
     },
-    "v17BaseHp": 4500.0,
+    "v17BaseHp": 4500,
     "technologyEra": "0079E",
     "actionTurnSpeed": 0.75,
     "mobilityMoveTarget": 0
@@ -309,314 +309,135 @@
   },
   "weapons": {
     "EF_Type61_SPG_Cannon": {
-      "name": "加农炮",
-      "type": "shell",
-      "min": 3,
-      "max": 5,
-      "hit": 75.0,
-      "en": 30.0,
-      "sourceName": "EF_Type61_SPG_Cannon",
-      "sourceHit": 75.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 4000.0,
-      "damageComponents": {
-        "shell": 4000.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.0
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 0.5,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_Type61_SPG_Cannon.gw",
-        "barrels": [
-          {
-            "id": "EF_Type61_SPG_Cannon",
-            "x": 0.0,
-            "y": 18.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Cannon_1.png",
-        "scale": 0.5,
-        "speed": 30.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Body",
-            "offset": {
-              "x": 0.0,
-              "y": 18.0
+      "ref": "EF_Type61_SPG_Cannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_Type61_SPG_Cannon.gw",
+          "barrels": [
+            {
+              "id": "EF_Type61_SPG_Cannon",
+              "x": 0,
+              "y": 18
             }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/ShellCannon_1.ogg",
-        "volume": 0.5
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 0.75,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1"
-      ],
-      "nativePayload": {
-        "ShellDamage": 4000.0,
-        "DpDamage": 500.0,
-        "WeaponAccuracy": 75.0,
-        "PartBreakModifier": 0.5,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.5,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.75,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 0.5,
-        "HeightHitRange": 10.0,
-        "ProjectileSpeed": 30.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 30.0,
-        "ProjectileLife": 50.0,
-        "ProjectileBlastRange": 50.0,
-        "ProjectileBlastDamageModifier": 0.35,
-        "ProjectileBlastDpModifier": 1.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0,
+                "y": 18
+              }
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_Type61_SPG_Cannon.gw",
-        "barrel": "EF_Type61_SPG_Cannon",
-        "entry": "automatic_turret",
-        "cooldown": 5.0,
-        "duration": 0,
-        "firstShot": 0.0,
-        "lastShot": 0.0,
-        "firingEvents": 1,
-        "projectiles": 1,
-        "declaredEnergy": 30.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 30.0,
-        "energy": 30.0,
-        "actions": []
-      },
-      "category": "cannon",
-      "actionCost": 3,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_Type61_SPG_Cannon.gw"
+      }
     },
     "Common_Mortar_Type61_SPG": {
-      "name": "迫击炮轰炸",
-      "type": "shell",
-      "min": 5,
-      "max": 8,
-      "hit": 65.0,
-      "en": 150.0,
-      "sourceName": "Common_Mortar_Type61_SPG",
-      "sourceHit": 65.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "skill",
-      "clip": "Common_Cannon_Shoot_A",
-      "damagePerShot": 3500.0,
-      "damageComponents": {
-        "shell": 3500.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "animation": "Common_Cannon_Shoot_A",
-            "delay": 0
-          },
-          {
-            "animation": "Common_Cannon_Shoot_A",
-            "delay": 1.75
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.5
-          },
-          {
-            "animation": "Common_Cannon_Shoot_A",
-            "delay": 0.75
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.5
-          },
-          {
-            "animation": "Common_Cannon_Shoot_A",
-            "delay": 0.75
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.5
-          },
-          {
-            "delay": 2.0
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 0.5,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw",
-        "barrels": [
-          {
-            "id": "Common_Mortar_Type61_SPG",
-            "x": 0.0,
-            "y": 15.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Cannon_1.png",
-        "scale": 0.75,
-        "speed": 25.0,
-        "forwardOffset": -5.0,
-        "rotation": 0,
-        "motion": "mortar"
-      },
-      "hitEffect": "Explosion_Hit_1_XL",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Body",
-            "offset": {
-              "x": 0.0,
-              "y": 15.0
+      "ref": "Common_Mortar_Type61_SPG__lv1",
+      "overrides": {
+        "name": "迫击炮轰炸",
+        "clip": "Common_Cannon_Shoot_A",
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Cannon_Shoot_A",
+              "delay": 0
+            },
+            {
+              "animation": "Common_Cannon_Shoot_A",
+              "delay": 1.75
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.5,
+              "requiredParts": [],
+              "delay": 0.5
+            },
+            {
+              "animation": "Common_Cannon_Shoot_A",
+              "delay": 0.75
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.5,
+              "requiredParts": [],
+              "delay": 0.5
+            },
+            {
+              "animation": "Common_Cannon_Shoot_A",
+              "delay": 0.75
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.5,
+              "requiredParts": [],
+              "delay": 0.5
+            },
+            {
+              "delay": 2
             }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/ShellCannon_1.ogg",
-        "volume": 0.6
-      },
-      "targetModifiers": {
-        "air": 0.5,
-        "water": 0.75,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1"
-      ],
-      "nativePayload": {
-        "offsetRandomXY": 100.0,
-        "ShellDamage": 3500.0,
-        "DpDamage": 200.0,
-        "WeaponAccuracy": 65.0,
-        "PartBreakModifier": 0.5,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiBuilding": 2.0,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "ProjectileSpeed": 25.0,
-        "ProjectileSpread": 25.0,
-        "ProjectileExplosionRange": 80.0,
-        "ProjectileLife": 200.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 1,
-          "accuracy": 1
+          ],
+          "startAnimation": null
         },
-        "large": {
-          "damage": 1,
-          "accuracy": 1
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw",
+          "barrel": "Common_Mortar_Type61_SPG",
+          "entry": "action_Common_Mortar_Type61_SPG_Trigger",
+          "cooldown": 120,
+          "duration": 6.75,
+          "firstShot": 2.25,
+          "lastShot": 4.75,
+          "firingEvents": 3,
+          "projectiles": 3,
+          "declaredEnergy": 150,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 150,
+          "actions": [
+            "action_Common_Mortar_Type61_SPG_Trigger",
+            "hiddenAction_SetOnSkillOn",
+            "hiddenAction_Common_Mortar_Type61_SPG_SetWeaponIndex",
+            "hiddenAction_Common_Mortar_Type61_SPG_B3_Step_1",
+            "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_1",
+            "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_2",
+            "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_3",
+            "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_4",
+            "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_Final",
+            "hiddenAction_SetOnSkillOff"
+          ]
+        },
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw",
+          "barrels": [
+            {
+              "id": "Common_Mortar_Type61_SPG",
+              "x": 0,
+              "y": 15
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0,
+                "y": 15
+              }
+            }
+          ]
         }
       },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw",
-        "barrel": "Common_Mortar_Type61_SPG",
-        "entry": "action_Common_Mortar_Type61_SPG_Trigger",
-        "cooldown": 120.0,
-        "duration": 6.75,
-        "firstShot": 2.25,
-        "lastShot": 4.75,
-        "firingEvents": 3,
-        "projectiles": 3,
-        "declaredEnergy": 150.0,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 150.0,
-        "actions": [
-          "action_Common_Mortar_Type61_SPG_Trigger",
-          "hiddenAction_SetOnSkillOn",
-          "hiddenAction_Common_Mortar_Type61_SPG_SetWeaponIndex",
-          "hiddenAction_Common_Mortar_Type61_SPG_B3_Step_1",
-          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_1",
-          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_2",
-          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_3",
-          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_4",
-          "hiddenAction_Common_Mortar_Type61_SPG_Fire_Step_Final",
-          "hiddenAction_SetOnSkillOff"
-        ]
-      },
-      "category": "mortar",
-      "noCounter": true,
-      "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
-      },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw"
+      "remove": [
+        "localization"
+      ]
     }
   },
   "mechanics": [
@@ -653,7 +474,7 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {
-    "nativeLevel": 300.0,
+    "nativeLevel": 300,
     "levelMultiplier": 0.25,
     "published": 75
   },

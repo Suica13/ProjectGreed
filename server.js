@@ -1,5 +1,5 @@
 /* 联机服务端：HTTP 提供网页，WebSocket 管理房间并裁定动作。
- * 房间保存在内存中。开发者源文件编辑仅允许本机访问。
+ * 房间保存在内存中；服务端统一裁定所有游戏操作。
  */
 "use strict";
 const http = require("node:http"),
@@ -30,26 +30,7 @@ function createServer({
 } = {}) {
   const rooms = new Map(),
     publicDir = path.join(__dirname, "public");
-  // The proxy keeps this server's engine on the current catalog after a developer rebuild.
-  let currentRules = G;
-  const rules = new Proxy({}, { get: (_, key) => currentRules[key] });
-  const developerAPI = dedicated
-    ? null
-    : require("./tools/developer-api.cjs").createDeveloperAPI({
-        rooms,
-        onReload: () => {
-          for (const name of [
-            "./shared/rules.js",
-            "./shared/development.js",
-            "./shared/development-tree.json",
-            "./shared/economy.js",
-            "./shared/battle-economy.js",
-            "./shared/production-catalog.json",
-          ])
-            delete require.cache[require.resolve(name)];
-          currentRules = require("./shared/rules.js");
-        },
-      });
+  const rules = G;
   const resources = dedicated
     ? null
     : require("./tools/client-resources.cjs").createClientResources({
@@ -77,10 +58,6 @@ function createServer({
         if (!res.headersSent) res.writeHead(500);
         res.end("Activity storage failure");
       });
-      return;
-    }
-    if (pathname.startsWith("/api/developer/") && !dedicated) {
-      void developerAPI(req, res, new URL(req.url, "http://localhost"));
       return;
     }
     if (req.method !== "GET" && req.method !== "HEAD") {
@@ -118,8 +95,6 @@ function createServer({
           ? path.join(publicDir, "client.html")
           : pathname === "/map-editor.html" || pathname === "/map-editor"
             ? path.join(publicDir, "map-editor.html")
-          : pathname === "/developer.html"
-            ? path.join(publicDir, "developer.html")
             : null;
     if (!file) {
       res.writeHead(404);
@@ -254,7 +229,6 @@ function createServer({
           send(ws, { type: "rooms", rooms: roomList() });
         } else if (msg.type === "leave") leaveRoom(ws);
         else if (msg.type === "hello") {
-          if (developerAPI?.busy()) throw Error("正在重载，请稍后连接");
           // Check before creating a room or consuming a reconnect token. Older
           // clients without this field must not enter a newer server either.
           if (msg.version !== project.version) {
@@ -374,7 +348,6 @@ if (require.main === module) {
         console.log("本机活动管理: http://127.0.0.1:" + port + "/admin/activities.html");
       } else {
         console.log("发布版网页: http://127.0.0.1:" + port);
-        console.log("开发者版: http://127.0.0.1:" + port + "/developer.html");
       }
       let networkInterfaces = {};
       try {

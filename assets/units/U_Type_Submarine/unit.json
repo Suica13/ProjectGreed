@@ -13,33 +13,33 @@
   },
   "skeleton": {
     "Turret_U_Type_Submarine_Turret_AMS_L1": {
-      "x": -15.0,
-      "y": 125.0,
-      "endDirOffset": 0.0
+      "x": -15,
+      "y": 125,
+      "endDirOffset": 0
     },
     "Turret_U_Type_Submarine_Turret_AMS_R1": {
-      "x": 15.0,
-      "y": 125.0,
-      "endDirOffset": 0.0
+      "x": 15,
+      "y": 125,
+      "endDirOffset": 0
     },
     "Turret_U_Type_Submarine_Turret_MS_M1": {
-      "x": 0.0,
-      "y": 0.0,
-      "endDirOffset": 0.0
+      "x": 0,
+      "y": 0,
+      "endDirOffset": 0
     },
     "Turret_U_Type_Submarine_Turret_MS_M2": {
-      "x": 0.0,
-      "y": -20.0,
-      "endDirOffset": 0.0
+      "x": 0,
+      "y": -20,
+      "endDirOffset": 0
     },
     "Turret_U_Type_Submarine_Turret_MS_M3": {
-      "x": 0.0,
-      "y": -40.0,
-      "endDirOffset": 0.0
+      "x": 0,
+      "y": -40,
+      "endDirOffset": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     }
   },
   "layers": [
@@ -47,11 +47,11 @@
       "name": "Body",
       "texture": "U_Type_Submarine_Body_1.png",
       "bone": "Body",
-      "order": 4.0,
+      "order": 4,
       "scale": 1.25,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -59,17 +59,17 @@
       "name": "Boost",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
+      "order": 4,
+      "scale": 2,
       "offset": {
-        "x": -20.0,
-        "y": -135.0
+        "x": -20,
+        "y": -135
       },
       "scaleX": 1.25,
       "scaleY": 2.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.1,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -81,17 +81,17 @@
       "name": "Boost_R",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
+      "order": 4,
+      "scale": 2,
       "offset": {
-        "x": 20.0,
-        "y": -135.0
+        "x": 20,
+        "y": -135
       },
       "scaleX": -1.25,
       "scaleY": 2.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.1,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -105,22 +105,22 @@
   },
   "stats": {
     "hp": 58000,
-    "en": 3000.0,
+    "en": 3000,
     "move": 7,
     "mobility": 86.25,
     "cost": 500,
     "counterLimit": 1,
     "accuracy": 71.5,
-    "partStructuralStrength": 100.0,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "naval",
     "adaptability": {
       "ground": 100,
       "space": 0,
-      "water": 100.0,
-      "air": 10.0,
+      "water": 100,
+      "air": 10,
       "atmosphere": 0,
-      "mountain": 10.0,
+      "mountain": 10,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -135,11 +135,11 @@
       {
         "id": "U_Type_Submarine_Turret_AMS_L1",
         "name": "U_Type_Submarine_Turret_AMS_L1",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_U_Type_Submarine_Turret_AMS_L1",
-        "x": -15.0,
-        "y": 125.0,
-        "idleDir": 0.0,
+        "x": -15,
+        "y": 125,
+        "idleDir": 0,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -152,11 +152,11 @@
       {
         "id": "U_Type_Submarine_Turret_AMS_R1",
         "name": "U_Type_Submarine_Turret_AMS_R1",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_U_Type_Submarine_Turret_AMS_R1",
-        "x": 15.0,
-        "y": 125.0,
-        "idleDir": 0.0,
+        "x": 15,
+        "y": 125,
+        "idleDir": 0,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -169,11 +169,11 @@
       {
         "id": "U_Type_Submarine_Turret_MS_M1",
         "name": "U_Type_Submarine_Turret_MS_M1",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_U_Type_Submarine_Turret_MS_M1",
-        "x": 0.0,
-        "y": 0.0,
-        "idleDir": 0.0,
+        "x": 0,
+        "y": 0,
+        "idleDir": 0,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -186,11 +186,11 @@
       {
         "id": "U_Type_Submarine_Turret_MS_M2",
         "name": "U_Type_Submarine_Turret_MS_M2",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_U_Type_Submarine_Turret_MS_M2",
-        "x": 0.0,
-        "y": -20.0,
-        "idleDir": 0.0,
+        "x": 0,
+        "y": -20,
+        "idleDir": 0,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -203,11 +203,11 @@
       {
         "id": "U_Type_Submarine_Turret_MS_M3",
         "name": "U_Type_Submarine_Turret_MS_M3",
-        "hp": 7500.0,
+        "hp": 7500,
         "bone": "Turret_U_Type_Submarine_Turret_MS_M3",
-        "x": 0.0,
-        "y": -40.0,
-        "idleDir": 0.0,
+        "x": 0,
+        "y": -40,
+        "idleDir": 0,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -240,66 +240,66 @@
     "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 30.0,
+    "melee": 0,
+    "shooting": 30,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 30.0,
-      "flat": 25.0
+      "percent": 30,
+      "flat": 25
     },
     "shell": {
-      "percent": 25.0,
-      "flat": 25.0
+      "percent": 25,
+      "flat": 25
     },
     "melee": {
-      "percent": 20.0,
-      "flat": 0.0
+      "percent": 20,
+      "flat": 0
     },
     "dp": {
-      "percent": 100.0,
-      "flat": 0.0
+      "percent": 100,
+      "flat": 0
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 0.0
+      "percent": 0,
+      "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "enBeforeReduction": 6000.0,
+    "enBeforeReduction": 6000,
     "enCapacityMultiplier": 0.5,
-    "hp": 75000.0,
+    "hp": 75000,
     "walkSpeed": 0.65,
-    "boostSpeed": 1.0,
+    "boostSpeed": 1,
     "turnSpeed": 0.45,
-    "reaction": 75.0,
-    "shooting": 130.0,
-    "melee": 100.0,
+    "reaction": 75,
+    "shooting": 130,
+    "melee": 100,
     "nativeTags": [
       "U_Type_Submarine",
       "Unit",
@@ -320,26 +320,26 @@
       "Stealth_Aqua"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 100.0,
-    "unitLevel": 2000.0,
+    "accuracy": 100,
+    "unitLevel": 2000,
     "tacticalMoveBeforeBonus": 4,
     "adaptability": {
-      "ground": 100.0,
-      "space": 10.0,
-      "water": 100.0,
-      "air": 10.0,
-      "mountain": 10.0,
+      "ground": 100,
+      "space": 10,
+      "water": 100,
+      "air": 10,
+      "mountain": 10,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 20.0,
-      "radar": 550.0,
-      "antiDetection": -200.0
+      "sight": 20,
+      "radar": 550,
+      "antiDetection": -200
     },
     "technologyEra": "0079E",
     "actionTurnSpeed": 0.45,
     "mobilityMoveTarget": 7,
-    "shipHullBeforeReduction": 75000.0,
+    "shipHullBeforeReduction": 75000,
     "shipBalanceMultiplier": 0.7,
     "shipFactionHullMultiplier": 1.1,
     "shipFactionAccuracyMultiplier": 1.1,
@@ -378,476 +378,97 @@
   },
   "weapons": {
     "U_Type_Submarine_Turret_AMS": {
-      "name": "反MS导弹",
-      "type": "shell",
-      "min": 3,
-      "max": 4,
-      "hit": 85.0,
-      "en": 160.0,
-      "sourceName": "U_Type_Submarine_Turret_AMS",
-      "sourceHit": 85.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 1875,
-      "damageComponents": {
-        "shell": 1875
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_AMS_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_AMS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_AMS_L1",
-            "delay": 1.5,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_AMS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_AMS.ini",
-        "barrels": [
-          {
-            "id": "U_Type_Submarine_Turret_AMS",
-            "x": 0.0,
-            "y": 0.0
-          },
-          {
-            "id": "U_Type_Submarine_Turret_AMS",
-            "x": 0.0,
-            "y": 0.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Missile_3.png",
-        "scale": 0.65,
-        "speed": 30.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_S",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_U_Type_Submarine_Turret_AMS_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 0.0
+      "ref": "U_Type_Submarine_Turret_AMS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_AMS.ini",
+          "barrels": [
+            {
+              "id": "U_Type_Submarine_Turret_AMS",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "U_Type_Submarine_Turret_AMS",
+              "x": 0,
+              "y": 0
             }
-          },
-          {
-            "bone": "Turret_U_Type_Submarine_Turret_AMS_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 0.0
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_U_Type_Submarine_Turret_AMS_L1",
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            {
+              "bone": "Turret_U_Type_Submarine_Turret_AMS_R1",
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
             }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/Missile_1.ogg",
-        "volume": 0.2
-      },
-      "targetModifiers": {
-        "air": 0.25,
-        "water": 2.0,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "U_Type_Submarine_Turret_AMS_L1",
-        "U_Type_Submarine_Turret_AMS_R1"
-      ],
-      "muzzleEffects": [
-        "BZ_Fire_1_S",
-        "BZ_Fire_1_S"
-      ],
-      "category": "missile",
-      "nativePayload": {
-        "ShellDamage": 2500.0,
-        "DpDamage": 150.0,
-        "WeaponAccuracy": 85.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 0.5,
-        "AntiAqua": 2.0,
-        "AntiAir": 0.25,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightHitRange": 20.0,
-        "HeightChangeSpeed": 2.0,
-        "ProjectileSpeed": 30.0,
-        "ProjectileTurnspeed": 0.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 55.0,
-        "ProjectileLife": 70.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
-        },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_AMS.ini",
-        "barrel": "U_Type_Submarine_Turret_AMS",
-        "entry": "automatic_turret",
-        "cooldown": 4.0,
-        "duration": 1.5,
-        "firstShot": 0.0,
-        "lastShot": 1.5,
-        "firingEvents": 4,
-        "projectiles": 4,
-        "declaredEnergy": 40.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 40.0,
-        "energy": 160.0,
-        "actions": []
-      },
-      "actionCost": 2,
-      "localization": {
-        "zh": {
-          "name": "反MS导弹"
-        },
-        "en": {
-          "name": "Anti-MS Missiles"
-        },
-        "ja": {
-          "name": "対MSミサイル"
-        }
-      },
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 2500.0,
-        "damageComponents": {
-          "shell": 2500.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_AMS.ini"
+      }
     },
     "U_Type_Submarine_Turret_MS": {
-      "name": "舰载导弹发射器",
-      "type": "shell",
-      "min": 3,
-      "max": 4,
-      "hit": 100.0,
-      "en": 72.0,
-      "sourceName": "U_Type_Submarine_Turret_MS",
-      "sourceHit": 100.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 900,
-      "damageComponents": {
-        "shell": 900
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M1",
-            "delay": 0.75,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M1",
-            "delay": 0.75,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M1",
-            "delay": 0.75,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "U_Type_Submarine_Turret_MS_M3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_MS.ini",
-        "barrels": [
-          {
-            "id": "U_Type_Submarine_Turret_MS",
-            "x": 28.5,
-            "y": 0.0
-          },
-          {
-            "id": "U_Type_Submarine_Turret_MS",
-            "x": 28.5,
-            "y": 0.0
-          },
-          {
-            "id": "U_Type_Submarine_Turret_MS",
-            "x": 28.5,
-            "y": 0.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Missile_3.png",
-        "scale": 0.35,
-        "speed": 35.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_XS",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_U_Type_Submarine_Turret_MS_M1",
-            "offset": {
+      "ref": "U_Type_Submarine_Turret_MS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_MS.ini",
+          "barrels": [
+            {
+              "id": "U_Type_Submarine_Turret_MS",
               "x": 28.5,
-              "y": 0.0
+              "y": 0
             },
-            "alternatingOffsetX": -57.0
-          },
-          {
-            "bone": "Turret_U_Type_Submarine_Turret_MS_M2",
-            "offset": {
+            {
+              "id": "U_Type_Submarine_Turret_MS",
               "x": 28.5,
-              "y": 0.0
+              "y": 0
             },
-            "alternatingOffsetX": -57.0
-          },
-          {
-            "bone": "Turret_U_Type_Submarine_Turret_MS_M3",
-            "offset": {
+            {
+              "id": "U_Type_Submarine_Turret_MS",
               "x": 28.5,
-              "y": 0.0
-            },
-            "alternatingOffsetX": -57.0
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/Missile_1.ogg",
-        "volume": 0.2
-      },
-      "targetModifiers": {
-        "air": 0.25,
-        "water": 0.25,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "U_Type_Submarine_Turret_MS_M1",
-        "U_Type_Submarine_Turret_MS_M2",
-        "U_Type_Submarine_Turret_MS_M3"
-      ],
-      "muzzleEffects": [
-        "BZ_Fire_1_S",
-        "BZ_Fire_1_S",
-        "BZ_Fire_1_S"
-      ],
-      "category": "missile",
-      "nativePayload": {
-        "ShellDamage": 1200.0,
-        "DpDamage": 90.0,
-        "WeaponAccuracy": 100.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.25,
-        "AntiAir": 0.25,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightHitRange": 20.0,
-        "HeightChangeSpeed": 2.0,
-        "ProjectileSpeed": 35.0,
-        "ProjectileTurnspeed": 1.25,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 35.0,
-        "ProjectileLife": 40.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+              "y": 0
+            }
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
-        },
-        "medium": {
-          "damage": 1,
-          "accuracy": 0.75
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_U_Type_Submarine_Turret_MS_M1",
+              "offset": {
+                "x": 28.5,
+                "y": 0
+              },
+              "alternatingOffsetX": -57
+            },
+            {
+              "bone": "Turret_U_Type_Submarine_Turret_MS_M2",
+              "offset": {
+                "x": 28.5,
+                "y": 0
+              },
+              "alternatingOffsetX": -57
+            },
+            {
+              "bone": "Turret_U_Type_Submarine_Turret_MS_M3",
+              "offset": {
+                "x": 28.5,
+                "y": 0
+              },
+              "alternatingOffsetX": -57
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_MS.ini",
-        "barrel": "U_Type_Submarine_Turret_MS",
-        "entry": "automatic_turret",
-        "cooldown": 6.0,
-        "duration": 2.25,
-        "firstShot": 0.0,
-        "lastShot": 2.25,
-        "firingEvents": 12,
-        "projectiles": 12,
-        "declaredEnergy": 6.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 6.0,
-        "energy": 72.0,
-        "actions": []
-      },
-      "actionCost": 2,
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 1200.0,
-        "damageComponents": {
-          "shell": 1200.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_MS.ini"
+      }
     }
   },
   "mechanics": [
@@ -922,7 +543,7 @@
     }
   ],
   "costBalance": {
-    "nativeLevel": 2000.0,
+    "nativeLevel": 2000,
     "levelMultiplier": 0.25,
     "published": 500
   },

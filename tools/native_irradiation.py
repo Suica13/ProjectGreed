@@ -1,4 +1,5 @@
 """Native continuous beam payloads become one directional skill hit per hull."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy,json,re,shutil,struct,math
 from mod_source import ASSETS,ROOT,MAIN,load
 BEAMS={'ApsarasIII':'ZN_ApsarasIII_MegaBeamCannon','MA_08_DZL':'ZN_MA_08_MegaBeamCannon','ApsarasII':'ZN_ApsarasII_MegaBeamCannon','RX_78_4_Bst':'EF_RX_78_4_HighMegaLauncher',
@@ -94,19 +95,19 @@ def import_effects():
     for folder,name in [("Fire","BeamCharge_4"),("Hit","Beam_Hit_3")]:
         destination=ASSETS/"sounds"/(name+".ogg")
         if not destination.exists():shutil.copyfile(MAIN/f"Resource/Sound/SE/Weapon/{folder}/{name}.ogg",destination)
-    path=ASSETS/'effects/effects.json';effects=json.loads(path.read_text(encoding='utf-8'))
+    path=ASSETS/'effects/effects.json';effects=load_source_json(path.read_text(encoding='utf-8'))
     for color in ('Pink','Blue','Yellow'):
         for part in ('Start','Mid','End','Charge'):
             frames=12 if part=='Charge' else 28
             effects[f'Irradiation_{part}_{color}']=dict(texture=f'textures/Irradiation_{part}_{color}.png',frames=frames,
                 startFrame=0,endFrame=frames-1,fps=12 if part=='Charge' else 14,scaleFrom=1,scaleTo=1,alpha=1,
                 rotation=0,offset={'x':0,'y':0},drift=0,sounds=[],source='MOD native HighMegaCannon/Beam_Charge split sheets, half resolution, original palette and alpha')
-    path.write_text(json.dumps(effects,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    path.write_text(dump_source_json(effects,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 if __name__=='__main__':
     import_effects()
     for ident in BEAMS:
-        path=ASSETS/f'units/{ident}/unit.json';prefab=json.loads(path.read_text(encoding='utf-8'));apply(prefab)
-        path.write_text(json.dumps(prefab,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    path=ASSETS/'unit-wip.json';wip=json.loads(path.read_text(encoding='utf-8'));wip['units']=[name for name in wip['units'] if not name.startswith('Apsaras')];path.write_text(json.dumps(wip,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        path=ASSETS/f'units/{ident}/unit.json';prefab=load_source_json(path.read_text(encoding='utf-8'));apply(prefab)
+        path.write_text(dump_source_json(prefab,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    path=ASSETS/'unit-wip.json';wip=load_source_json(path.read_text(encoding='utf-8'));wip['units']=[name for name in wip['units'] if not name.startswith('Apsaras')];path.write_text(dump_source_json(wip,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('Converted',len(BEAMS),'native irradiation beams; Apsaras enabled')

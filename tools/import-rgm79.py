@@ -1,4 +1,5 @@
 """One-time, read-only MOD importer. Runtime only uses assets/ JSON and PNG files."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json, re, shutil
 from normalize_rgm79 import normalize
 from import_mod_effects import import_effects
@@ -50,7 +51,7 @@ def section(name, stack=()):
 
 def write(path, obj):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(obj, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+    path.write_text(dump_source_json(obj, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
 
 textures = {}
 def texture(source):

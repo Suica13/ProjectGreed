@@ -17,133 +17,133 @@
   },
   "skeleton": {
     "Turret_MagellanClassLateType_Turret_BeamCannon_M1": {
-      "x": 0.0,
-      "y": 157.0,
-      "endDirOffset": 0.0
+      "x": 0,
+      "y": 157,
+      "endDirOffset": 0
     },
     "Turret_MagellanClassLateType_Turret_BeamCannon_M2": {
-      "x": 0.0,
-      "y": 155.0,
-      "endDirOffset": 0.0
+      "x": 0,
+      "y": 155,
+      "endDirOffset": 0
     },
     "Turret_MagellanClassLateType_Turret_BeamCannon_M3": {
-      "x": 0.0,
-      "y": 9.0,
-      "endDirOffset": 0.0
+      "x": 0,
+      "y": 9,
+      "endDirOffset": 0
     },
     "Turret_MagellanClassLateType_Turret_BeamCannon_L1": {
-      "x": -35.0,
-      "y": 10.0,
-      "endDirOffset": -25.0
+      "x": -35,
+      "y": 10,
+      "endDirOffset": -25
     },
     "Turret_MagellanClassLateType_Turret_BeamCannon_R1": {
-      "x": 35.0,
-      "y": 10.0,
-      "endDirOffset": 25.0
+      "x": 35,
+      "y": 10,
+      "endDirOffset": 25
     },
     "Turret_MagellanClassLateType_Turret_AMS_L1": {
-      "x": -15.0,
-      "y": 75.0,
-      "endDirOffset": 0.0
+      "x": -15,
+      "y": 75,
+      "endDirOffset": 0
     },
     "Turret_MagellanClassLateType_Turret_AMS_R1": {
-      "x": 15.0,
-      "y": 75.0,
-      "endDirOffset": 0.0
+      "x": 15,
+      "y": 75,
+      "endDirOffset": 0
     },
     "Turret_MagellanClassLateType_Turret_AA_L1": {
-      "x": -27.0,
-      "y": -83.0,
-      "endDirOffset": -90.0
+      "x": -27,
+      "y": -83,
+      "endDirOffset": -90
     },
     "Turret_MagellanClassLateType_Turret_AA_R1": {
-      "x": 27.0,
-      "y": -83.0,
-      "endDirOffset": 90.0
+      "x": 27,
+      "y": -83,
+      "endDirOffset": 90
     },
     "Turret_MagellanClassLateType_Turret_AA_L2": {
-      "x": -27.0,
-      "y": -67.0,
-      "endDirOffset": -90.0
+      "x": -27,
+      "y": -67,
+      "endDirOffset": -90
     },
     "Turret_MagellanClassLateType_Turret_AA_R2": {
-      "x": 27.0,
-      "y": -67.0,
-      "endDirOffset": 90.0
+      "x": 27,
+      "y": -67,
+      "endDirOffset": 90
     },
     "Turret_MagellanClassLateType_Turret_AA_L3": {
-      "x": -35.0,
-      "y": -87.0,
-      "endDirOffset": -125.0
+      "x": -35,
+      "y": -87,
+      "endDirOffset": -125
     },
     "Turret_MagellanClassLateType_Turret_AA_R3": {
-      "x": 35.0,
-      "y": -87.0,
-      "endDirOffset": 125.0
+      "x": 35,
+      "y": -87,
+      "endDirOffset": 125
     },
     "Turret_MagellanClassLateType_Turret_AA_L4": {
-      "x": -35.0,
-      "y": -63.0,
-      "endDirOffset": -90.0
+      "x": -35,
+      "y": -63,
+      "endDirOffset": -90
     },
     "Turret_MagellanClassLateType_Turret_AA_R4": {
-      "x": 35.0,
-      "y": -63.0,
-      "endDirOffset": 90.0
+      "x": 35,
+      "y": -63,
+      "endDirOffset": 90
     },
     "Turret_MagellanClassLateType_Turret_AA_L5": {
-      "x": -35.0,
-      "y": -87.0,
-      "endDirOffset": -125.0
+      "x": -35,
+      "y": -87,
+      "endDirOffset": -125
     },
     "Turret_MagellanClassLateType_Turret_AA_R5": {
-      "x": 35.0,
-      "y": -87.0,
-      "endDirOffset": 125.0
+      "x": 35,
+      "y": -87,
+      "endDirOffset": 125
     },
     "Turret_MagellanClassLateType_Turret_AA_L6": {
-      "x": -35.0,
-      "y": -63.0,
-      "endDirOffset": -90.0
+      "x": -35,
+      "y": -63,
+      "endDirOffset": -90
     },
     "Turret_MagellanClassLateType_Turret_AA_R6": {
-      "x": 35.0,
-      "y": -63.0,
-      "endDirOffset": 90.0
+      "x": 35,
+      "y": -63,
+      "endDirOffset": 90
     },
     "Turret_MagellanClassLateType_Turret_AA_L7": {
-      "x": -35.0,
-      "y": -50.0,
-      "endDirOffset": -45.0
+      "x": -35,
+      "y": -50,
+      "endDirOffset": -45
     },
     "Turret_MagellanClassLateType_Turret_AA_R7": {
-      "x": 35.0,
-      "y": -50.0,
-      "endDirOffset": 45.0
+      "x": 35,
+      "y": -50,
+      "endDirOffset": 45
     },
     "Turret_MagellanClassLateType_Turret_AA_L8": {
-      "x": -43.0,
-      "y": -122.0,
-      "endDirOffset": -90.0
+      "x": -43,
+      "y": -122,
+      "endDirOffset": -90
     },
     "Turret_MagellanClassLateType_Turret_AA_R8": {
-      "x": 43.0,
-      "y": -122.0,
-      "endDirOffset": 90.0
+      "x": 43,
+      "y": -122,
+      "endDirOffset": 90
     },
     "Turret_MagellanClassLateType_Turret_AA_L9": {
-      "x": -30.0,
-      "y": -165.0,
-      "endDirOffset": -125.0
+      "x": -30,
+      "y": -165,
+      "endDirOffset": -125
     },
     "Turret_MagellanClassLateType_Turret_AA_R9": {
-      "x": 30.0,
-      "y": -165.0,
-      "endDirOffset": 125.0
+      "x": 30,
+      "y": -165,
+      "endDirOffset": 125
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     }
   },
   "layers": [
@@ -151,17 +151,17 @@
       "name": "Boost",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
+      "order": 1,
       "scale": 1,
       "offset": {
         "x": -2.5,
-        "y": -9.0
+        "y": -9
       },
       "scaleX": 0.65,
       "scaleY": 1.25,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -173,17 +173,17 @@
       "name": "Boost_L1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
+      "order": 1,
       "scale": 3.5,
       "offset": {
-        "x": -12.0,
-        "y": -225.0
+        "x": -12,
+        "y": -225
       },
       "scaleX": -0.65,
       "scaleY": 1.25,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -195,17 +195,17 @@
       "name": "Boost_R1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
+      "order": 1,
       "scale": 3.5,
       "offset": {
-        "x": 12.0,
-        "y": -225.0
+        "x": 12,
+        "y": -225
       },
       "scaleX": 0.65,
       "scaleY": 1.25,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -217,17 +217,17 @@
       "name": "Boost_L2",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
-      "scale": 2.0,
+      "order": 1,
+      "scale": 2,
       "offset": {
-        "x": -35.0,
-        "y": -205.0
+        "x": -35,
+        "y": -205
       },
       "scaleX": -0.65,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -239,17 +239,17 @@
       "name": "Boost_R2",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
-      "scale": 2.0,
+      "order": 1,
+      "scale": 2,
       "offset": {
-        "x": 35.0,
-        "y": -205.0
+        "x": 35,
+        "y": -205
       },
       "scaleX": 0.65,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -261,17 +261,17 @@
       "name": "Boost_L3",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
-      "scale": 2.0,
+      "order": 1,
+      "scale": 2,
       "offset": {
-        "x": -42.0,
-        "y": -200.0
+        "x": -42,
+        "y": -200
       },
       "scaleX": -0.65,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -283,17 +283,17 @@
       "name": "Boost_R3",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 1.0,
-      "scale": 2.0,
+      "order": 1,
+      "scale": 2,
       "offset": {
-        "x": 42.0,
-        "y": -200.0
+        "x": 42,
+        "y": -200
       },
       "scaleX": 0.65,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -308,12 +308,12 @@
       "texture": "MagellanClassLateType_Turret_BeamCannon_1.png",
       "order": 3.001,
       "scale": 1.25,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -323,12 +323,12 @@
       "texture": "MagellanClassLateType_Turret_BeamCannon_2.png",
       "order": 3.001,
       "scale": 1.25,
-      "scaleX": -1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": -1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -338,12 +338,12 @@
       "texture": "MagellanClassLateType_Turret_BeamCannon_2.png",
       "order": 3.001,
       "scale": 1.25,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -353,12 +353,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 3.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -368,12 +368,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 3.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -383,12 +383,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 3.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -398,23 +398,23 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 3.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
       "name": "Body",
       "texture": "MagellanClassLateType_Body_1.png",
       "bone": "Body",
-      "order": 4.0,
+      "order": 4,
       "scale": 1.25,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -425,12 +425,12 @@
       "texture": "MagellanClassLateType_Turret_BeamCannon_1.png",
       "order": 5.001,
       "scale": 1.25,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -440,12 +440,12 @@
       "texture": "MagellanClassLateType_Turret_BeamCannon_1.png",
       "order": 5.001,
       "scale": 1.25,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -455,12 +455,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -470,12 +470,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -485,12 +485,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -500,12 +500,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.85,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -515,12 +515,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -530,12 +530,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -545,12 +545,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -560,12 +560,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -575,12 +575,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -590,12 +590,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -605,12 +605,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -620,12 +620,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -635,12 +635,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     },
     {
@@ -650,12 +650,12 @@
       "texture": "MagellanClassLateType_Turret_AA_1.png",
       "order": 5.001,
       "scale": 0.7,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       }
     }
   ],
@@ -664,22 +664,22 @@
   },
   "stats": {
     "hp": 77000,
-    "en": 7500.0,
+    "en": 7500,
     "move": 6,
-    "mobility": 69.0,
+    "mobility": 69,
     "cost": 1250,
     "counterLimit": 1,
     "accuracy": 82.225,
-    "partStructuralStrength": 100.0,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "ground",
     "adaptability": {
       "ground": 0,
       "space": 100,
-      "water": 50.0,
-      "air": 10.0,
+      "water": 50,
+      "air": 10,
       "atmosphere": 0,
-      "mountain": 10.0,
+      "mountain": 10,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -690,12 +690,12 @@
       {
         "id": "MagellanClassLateType_Turret_BeamCannon_M1",
         "name": "MagellanClassLateType_Turret_BeamCannon_M1",
-        "hp": 20000.0,
+        "hp": 20000,
         "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_M1",
-        "x": 0.0,
-        "y": 157.0,
-        "idleDir": 0.0,
-        "arc": 150.0,
+        "x": 0,
+        "y": 157,
+        "idleDir": 0,
+        "arc": 150,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_BeamCannon.ini",
@@ -709,12 +709,12 @@
       {
         "id": "MagellanClassLateType_Turret_BeamCannon_M2",
         "name": "MagellanClassLateType_Turret_BeamCannon_M2",
-        "hp": 20000.0,
+        "hp": 20000,
         "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_M2",
-        "x": 0.0,
-        "y": 155.0,
-        "idleDir": 0.0,
-        "arc": 150.0,
+        "x": 0,
+        "y": 155,
+        "idleDir": 0,
+        "arc": 150,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_BeamCannon.ini",
@@ -728,12 +728,12 @@
       {
         "id": "MagellanClassLateType_Turret_BeamCannon_M3",
         "name": "MagellanClassLateType_Turret_BeamCannon_M3",
-        "hp": 20000.0,
+        "hp": 20000,
         "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_M3",
-        "x": 0.0,
-        "y": 9.0,
-        "idleDir": 0.0,
-        "arc": 150.0,
+        "x": 0,
+        "y": 9,
+        "idleDir": 0,
+        "arc": 150,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_BeamCannon.ini",
@@ -747,12 +747,12 @@
       {
         "id": "MagellanClassLateType_Turret_BeamCannon_L1",
         "name": "MagellanClassLateType_Turret_BeamCannon_L1",
-        "hp": 20000.0,
+        "hp": 20000,
         "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_L1",
-        "x": -35.0,
-        "y": 10.0,
-        "idleDir": -25.0,
-        "arc": 50.0,
+        "x": -35,
+        "y": 10,
+        "idleDir": -25,
+        "arc": 50,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_BeamCannon_3.ini",
@@ -766,12 +766,12 @@
       {
         "id": "MagellanClassLateType_Turret_BeamCannon_R1",
         "name": "MagellanClassLateType_Turret_BeamCannon_R1",
-        "hp": 20000.0,
+        "hp": 20000,
         "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_R1",
-        "x": 35.0,
-        "y": 10.0,
-        "idleDir": 25.0,
-        "arc": 50.0,
+        "x": 35,
+        "y": 10,
+        "idleDir": 25,
+        "arc": 50,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_BeamCannon_2.ini",
@@ -785,11 +785,11 @@
       {
         "id": "MagellanClassLateType_Turret_AMS_L1",
         "name": "MagellanClassLateType_Turret_AMS_L1",
-        "hp": 12500.0,
+        "hp": 12500,
         "bone": "Turret_MagellanClassLateType_Turret_AMS_L1",
-        "x": -15.0,
-        "y": 75.0,
-        "idleDir": 0.0,
+        "x": -15,
+        "y": 75,
+        "idleDir": 0,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -802,11 +802,11 @@
       {
         "id": "MagellanClassLateType_Turret_AMS_R1",
         "name": "MagellanClassLateType_Turret_AMS_R1",
-        "hp": 12500.0,
+        "hp": 12500,
         "bone": "Turret_MagellanClassLateType_Turret_AMS_R1",
-        "x": 15.0,
-        "y": 75.0,
-        "idleDir": 0.0,
+        "x": 15,
+        "y": 75,
+        "idleDir": 0,
         "arc": 180,
         "damageToHull": 1,
         "visual": {
@@ -819,12 +819,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_L1",
         "name": "MagellanClassLateType_Turret_AA_L1",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_L1",
-        "x": -27.0,
-        "y": -83.0,
-        "idleDir": -90.0,
-        "arc": 90.0,
+        "x": -27,
+        "y": -83,
+        "idleDir": -90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA.ini",
@@ -838,12 +838,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_R1",
         "name": "MagellanClassLateType_Turret_AA_R1",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_R1",
-        "x": 27.0,
-        "y": -83.0,
-        "idleDir": 90.0,
-        "arc": 90.0,
+        "x": 27,
+        "y": -83,
+        "idleDir": 90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA.ini",
@@ -857,12 +857,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_L2",
         "name": "MagellanClassLateType_Turret_AA_L2",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_L2",
-        "x": -27.0,
-        "y": -67.0,
-        "idleDir": -90.0,
-        "arc": 90.0,
+        "x": -27,
+        "y": -67,
+        "idleDir": -90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA.ini",
@@ -876,12 +876,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_R2",
         "name": "MagellanClassLateType_Turret_AA_R2",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_R2",
-        "x": 27.0,
-        "y": -67.0,
-        "idleDir": 90.0,
-        "arc": 90.0,
+        "x": 27,
+        "y": -67,
+        "idleDir": 90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA.ini",
@@ -895,12 +895,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_L3",
         "name": "MagellanClassLateType_Turret_AA_L3",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_L3",
-        "x": -35.0,
-        "y": -87.0,
-        "idleDir": -125.0,
-        "arc": 90.0,
+        "x": -35,
+        "y": -87,
+        "idleDir": -125,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -914,12 +914,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_R3",
         "name": "MagellanClassLateType_Turret_AA_R3",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_R3",
-        "x": 35.0,
-        "y": -87.0,
-        "idleDir": 125.0,
-        "arc": 90.0,
+        "x": 35,
+        "y": -87,
+        "idleDir": 125,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -933,12 +933,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_L4",
         "name": "MagellanClassLateType_Turret_AA_L4",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_L4",
-        "x": -35.0,
-        "y": -63.0,
-        "idleDir": -90.0,
-        "arc": 90.0,
+        "x": -35,
+        "y": -63,
+        "idleDir": -90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -952,12 +952,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_R4",
         "name": "MagellanClassLateType_Turret_AA_R4",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_R4",
-        "x": 35.0,
-        "y": -63.0,
-        "idleDir": 90.0,
-        "arc": 90.0,
+        "x": 35,
+        "y": -63,
+        "idleDir": 90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -971,12 +971,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_L5",
         "name": "MagellanClassLateType_Turret_AA_L5",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_L5",
-        "x": -35.0,
-        "y": -87.0,
-        "idleDir": -125.0,
-        "arc": 90.0,
+        "x": -35,
+        "y": -87,
+        "idleDir": -125,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -990,12 +990,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_R5",
         "name": "MagellanClassLateType_Turret_AA_R5",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_R5",
-        "x": 35.0,
-        "y": -87.0,
-        "idleDir": 125.0,
-        "arc": 90.0,
+        "x": 35,
+        "y": -87,
+        "idleDir": 125,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -1009,12 +1009,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_L6",
         "name": "MagellanClassLateType_Turret_AA_L6",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_L6",
-        "x": -35.0,
-        "y": -63.0,
-        "idleDir": -90.0,
-        "arc": 90.0,
+        "x": -35,
+        "y": -63,
+        "idleDir": -90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -1028,12 +1028,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_R6",
         "name": "MagellanClassLateType_Turret_AA_R6",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_R6",
-        "x": 35.0,
-        "y": -63.0,
-        "idleDir": 90.0,
-        "arc": 90.0,
+        "x": 35,
+        "y": -63,
+        "idleDir": 90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -1047,12 +1047,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_L7",
         "name": "MagellanClassLateType_Turret_AA_L7",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_L7",
-        "x": -35.0,
-        "y": -50.0,
-        "idleDir": -45.0,
-        "arc": 90.0,
+        "x": -35,
+        "y": -50,
+        "idleDir": -45,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -1066,12 +1066,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_R7",
         "name": "MagellanClassLateType_Turret_AA_R7",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_R7",
-        "x": 35.0,
-        "y": -50.0,
-        "idleDir": 45.0,
-        "arc": 90.0,
+        "x": 35,
+        "y": -50,
+        "idleDir": 45,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -1085,12 +1085,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_L8",
         "name": "MagellanClassLateType_Turret_AA_L8",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_L8",
-        "x": -43.0,
-        "y": -122.0,
-        "idleDir": -90.0,
-        "arc": 90.0,
+        "x": -43,
+        "y": -122,
+        "idleDir": -90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -1104,12 +1104,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_R8",
         "name": "MagellanClassLateType_Turret_AA_R8",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_R8",
-        "x": 43.0,
-        "y": -122.0,
-        "idleDir": 90.0,
-        "arc": 90.0,
+        "x": 43,
+        "y": -122,
+        "idleDir": 90,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -1123,12 +1123,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_L9",
         "name": "MagellanClassLateType_Turret_AA_L9",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_L9",
-        "x": -30.0,
-        "y": -165.0,
-        "idleDir": -125.0,
-        "arc": 90.0,
+        "x": -30,
+        "y": -165,
+        "idleDir": -125,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -1142,12 +1142,12 @@
       {
         "id": "MagellanClassLateType_Turret_AA_R9",
         "name": "MagellanClassLateType_Turret_AA_R9",
-        "hp": 4500.0,
+        "hp": 4500,
         "bone": "Turret_MagellanClassLateType_Turret_AA_R9",
-        "x": 30.0,
-        "y": -165.0,
-        "idleDir": 125.0,
-        "arc": 90.0,
+        "x": 30,
+        "y": -165,
+        "idleDir": 125,
+        "arc": 90,
         "damageToHull": 1,
         "visual": {
           "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA_2.ini",
@@ -1195,64 +1195,64 @@
     "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 30.0,
+    "melee": 0,
+    "shooting": 30,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 30.0,
-      "flat": 125.0
+      "percent": 30,
+      "flat": 125
     },
     "shell": {
-      "percent": 35.0,
-      "flat": 200.0
+      "percent": 35,
+      "flat": 200
     },
     "melee": {
-      "percent": 20.0,
-      "flat": 200.0
+      "percent": 20,
+      "flat": 200
     },
     "dp": {
-      "percent": 100.0,
-      "flat": 10.0
+      "percent": 100,
+      "flat": 10
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 10.0
+      "percent": 0,
+      "flat": 10
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "hp": 100000.0,
+    "hp": 100000,
     "walkSpeed": 0.6,
     "boostSpeed": 0.9,
     "turnSpeed": 0.4,
-    "reaction": 60.0,
-    "shooting": 130.0,
-    "melee": 100.0,
+    "reaction": 60,
+    "shooting": 130,
+    "melee": 100,
     "nativeTags": [
       "MagellanClassLateType",
       "Unit",
@@ -1273,29 +1273,29 @@
       "SupplyPoint_UseEN"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 115.0,
-    "unitLevel": 5000.0,
-    "enBeforeReduction": 15000.0,
+    "accuracy": 115,
+    "unitLevel": 5000,
+    "enBeforeReduction": 15000,
     "enCapacityMultiplier": 0.5,
     "tacticalMoveBeforeBonus": 3,
     "adaptability": {
-      "ground": 10.0,
-      "space": 100.0,
-      "water": 50.0,
-      "air": 10.0,
-      "mountain": 10.0,
+      "ground": 10,
+      "space": 100,
+      "water": 50,
+      "air": 10,
+      "mountain": 10,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 22.0,
-      "radar": 550.0,
-      "antiDetection": -250.0
+      "sight": 22,
+      "radar": 550,
+      "antiDetection": -250
     },
     "technologyEra": "0079L",
     "importedTechPage": 1,
     "actionTurnSpeed": 0.4,
     "mobilityMoveTarget": 6,
-    "shipHullBeforeReduction": 100000.0,
+    "shipHullBeforeReduction": 100000,
     "shipBalanceMultiplier": 0.7,
     "shipFactionHullMultiplier": 1.1,
     "shipFactionAccuracyMultiplier": 1.1,
@@ -1334,3989 +1334,372 @@
   },
   "weapons": {
     "MagellanClassLateType_Turret_BeamCannon": {
-      "name": "舰载光束炮",
-      "type": "beam",
-      "min": 3,
-      "max": 8,
-      "hit": 75.0,
-      "en": 400.0,
-      "sourceName": "MagellanClassLateType_Turret_BeamCannon",
-      "sourceHit": 75.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 3375,
-      "damageComponents": {
-        "beam": 3375
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_M1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_M2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_M3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_M1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_M2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_M3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_BeamCannon_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_BeamCannon.ini",
-        "barrels": [
-          {
-            "id": "MagellanClassLateType_Turret_BeamCannon",
-            "x": 2.0,
-            "y": 18.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_BeamCannon",
-            "x": 2.0,
-            "y": 18.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_BeamCannon",
-            "x": 2.0,
-            "y": 18.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_BeamCannon",
-            "x": 2.0,
-            "y": 18.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_BeamCannon",
-            "x": 2.0,
-            "y": 18.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Beam_2.png",
-        "scale": 1.0,
-        "speed": 45.0,
-        "forwardOffset": -7.5,
-        "rotation": 0.0
-      },
-      "hitEffect": "Beam_Hit_2_Pink",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_M1",
-            "offset": {
-              "x": 2.0,
-              "y": 18.0
+      "ref": "MagellanClassLateType_Turret_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_BeamCannon.ini",
+          "barrels": [
+            {
+              "id": "MagellanClassLateType_Turret_BeamCannon",
+              "x": 2,
+              "y": 18
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_M2",
-            "offset": {
-              "x": 2.0,
-              "y": 18.0
+            {
+              "id": "MagellanClassLateType_Turret_BeamCannon",
+              "x": 2,
+              "y": 18
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_M3",
-            "offset": {
-              "x": 2.0,
-              "y": 18.0
+            {
+              "id": "MagellanClassLateType_Turret_BeamCannon",
+              "x": 2,
+              "y": 18
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_L1",
-            "offset": {
-              "x": 2.0,
-              "y": 18.0
+            {
+              "id": "MagellanClassLateType_Turret_BeamCannon",
+              "x": 2,
+              "y": 18
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_R1",
-            "offset": {
-              "x": 2.0,
-              "y": 18.0
-            },
-            "alternatingOffsetX": -4.0
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/BeamCannon_1.ogg",
-        "volume": 0.5
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 0.5,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "MagellanClassLateType_Turret_BeamCannon_M1",
-        "MagellanClassLateType_Turret_BeamCannon_M2",
-        "MagellanClassLateType_Turret_BeamCannon_M3",
-        "MagellanClassLateType_Turret_BeamCannon_L1",
-        "MagellanClassLateType_Turret_BeamCannon_R1"
-      ],
-      "muzzleEffects": [
-        "Beam_Fire_1_Pink",
-        "Beam_Fire_1_Pink",
-        "Beam_Fire_1_Pink",
-        "Beam_Fire_1_Pink",
-        "Beam_Fire_1_Pink"
-      ],
-      "nativePayload": {
-        "BeamDamage": 4500.0,
-        "DpDamage": 150.0,
-        "WeaponAccuracy": 75.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.5,
-        "AntiSizeSmallDamage": 0.5,
-        "AntiSizeLargeAccuracy": 1.5,
-        "AntiSizeSmallAccuracy": 0.5,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.5,
-        "AntiAir": 0.75,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 45.0,
-        "ProjectileSpread": 4.0,
-        "ProjectileLife": 50.0,
-        "ProjectileAttackTimes": 2.0,
-        "ProjectileAttackTimesDamageModifier": 0.5
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.5,
-          "accuracy": 0.5
+            {
+              "id": "MagellanClassLateType_Turret_BeamCannon",
+              "x": 2,
+              "y": 18
+            }
+          ]
         },
-        "large": {
-          "damage": 1.5,
-          "accuracy": 1.5
-        },
-        "medium": {
-          "damage": 1,
-          "accuracy": 0.75
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 2,
+                "y": 18
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 2,
+                "y": 18
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 2,
+                "y": 18
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_L1",
+              "offset": {
+                "x": 2,
+                "y": 18
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_BeamCannon_R1",
+              "offset": {
+                "x": 2,
+                "y": 18
+              },
+              "alternatingOffsetX": -4
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_BeamCannon.ini",
-        "barrel": "MagellanClassLateType_Turret_BeamCannon",
-        "entry": "automatic_turret",
-        "cooldown": 6.0,
-        "duration": 0.2,
-        "firstShot": 0.0,
-        "lastShot": 0.2,
-        "firingEvents": 10,
-        "projectiles": 10,
-        "declaredEnergy": 40.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 40.0,
-        "energy": 400.0,
-        "actions": []
-      },
-      "category": "cannon",
-      "actionCost": 3,
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 4500.0,
-        "damageComponents": {
-          "beam": 4500.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_BeamCannon.ini"
+      }
     },
     "MagellanClassLateType_Turret_AMS": {
-      "name": "反MS导弹",
-      "type": "shell",
-      "min": 3,
-      "max": 4,
-      "hit": 85.0,
-      "en": 320.0,
-      "sourceName": "MagellanClassLateType_Turret_AMS",
-      "sourceHit": 85.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 1125,
-      "damageComponents": {
-        "shell": 1125
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AMS_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AMS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AMS_L1",
-            "delay": 0.5,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AMS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AMS_L1",
-            "delay": 0.5,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AMS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AMS_L1",
-            "delay": 0.5,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AMS_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AMS.ini",
-        "barrels": [
-          {
-            "id": "MagellanClassLateType_Turret_AMS",
-            "x": 0.0,
-            "y": 0.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AMS",
-            "x": 0.0,
-            "y": 0.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Missile_3.png",
-        "scale": 0.65,
-        "speed": 20.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_S",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AMS_L1",
-            "offset": {
-              "x": 0.0,
-              "y": 0.0
+      "ref": "MagellanClassLateType_Turret_AMS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AMS.ini",
+          "barrels": [
+            {
+              "id": "MagellanClassLateType_Turret_AMS",
+              "x": 0,
+              "y": 0
+            },
+            {
+              "id": "MagellanClassLateType_Turret_AMS",
+              "x": 0,
+              "y": 0
             }
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AMS_R1",
-            "offset": {
-              "x": 0.0,
-              "y": 0.0
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AMS_L1",
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AMS_R1",
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
             }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/Missile_1.ogg",
-        "volume": 0.2
-      },
-      "targetModifiers": {
-        "air": 1.0,
-        "water": 1.0,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "MagellanClassLateType_Turret_AMS_L1",
-        "MagellanClassLateType_Turret_AMS_R1"
-      ],
-      "muzzleEffects": [
-        "BZ_Fire_1_S",
-        "BZ_Fire_1_S"
-      ],
-      "nativePayload": {
-        "ShellDamage": 1500.0,
-        "DpDamage": 150.0,
-        "WeaponAccuracy": 85.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 0.5,
-        "AntiAqua": 1.0,
-        "AntiAir": 1.0,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightHitRange": 20.0,
-        "HeightChangeSpeed": 2.0,
-        "ProjectileSpeed": 20.0,
-        "ProjectileTurnspeed": 0.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 55.0,
-        "ProjectileLife": 70.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
-        },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AMS.ini",
-        "barrel": "MagellanClassLateType_Turret_AMS",
-        "entry": "automatic_turret",
-        "cooldown": 12.0,
-        "duration": 1.5,
-        "firstShot": 0.0,
-        "lastShot": 1.5,
-        "firingEvents": 8,
-        "projectiles": 8,
-        "declaredEnergy": 40.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 40.0,
-        "energy": 320.0,
-        "actions": []
-      },
-      "category": "missile",
-      "actionCost": 2,
-      "localization": {
-        "zh": {
-          "name": "反MS导弹"
-        },
-        "en": {
-          "name": "Anti-MS Missiles"
-        },
-        "ja": {
-          "name": "対MSミサイル"
-        }
-      },
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 1500.0,
-        "damageComponents": {
-          "shell": 1500.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AMS.ini"
+      }
     },
     "MagellanClassLateType_Turret_AA": {
-      "name": "对空机枪",
-      "type": "shell",
-      "min": 1,
-      "max": 2,
-      "hit": 125.0,
-      "en": 90.0,
-      "sourceName": "MagellanClassLateType_Turret_AA",
-      "sourceHit": 125.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 225,
-      "damageComponents": {
-        "shell": 175,
-        "shellAP": 50
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L1",
-            "delay": 0.2,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R1",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 2,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 3,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R2",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 4,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 5,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R3",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 6,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 7,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R4",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 8,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 9,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R5",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 10,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 11,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R6",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 12,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 13,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R7",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 14,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 15,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R8",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 16,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_L9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          },
-          {
-            "shots": 0,
-            "muzzleIndex": 17,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "moduleId": "MagellanClassLateType_Turret_AA_R9",
-            "delay": 0.0,
-            "shipDamageBeforeReduction": {}
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA.ini",
-        "barrels": [
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          },
-          {
-            "id": "MagellanClassLateType_Turret_AA",
-            "x": 2.0,
-            "y": 6.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/MG_1.png",
-        "scale": 0.25,
-        "speed": 90.0,
-        "forwardOffset": -10.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "MG_Hit_1_S",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_L1",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+      "ref": "MagellanClassLateType_Turret_AA__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA.ini",
+          "barrels": [
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_R1",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_L2",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_R2",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_L3",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_R3",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_L4",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_R4",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_L5",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_R5",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_L6",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_R6",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_L7",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_R7",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_L8",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_R8",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_L9",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
             },
-            "alternatingOffsetX": -4.0
-          },
-          {
-            "bone": "Turret_MagellanClassLateType_Turret_AA_R9",
-            "offset": {
-              "x": 2.0,
-              "y": 6.0
-            },
-            "alternatingOffsetX": -4.0
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/MachineGun_2.ogg",
-        "volume": 0.3
-      },
-      "targetModifiers": {
-        "air": 1.5,
-        "water": 1.0,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "moduleIds": [
-        "MagellanClassLateType_Turret_AA_L1",
-        "MagellanClassLateType_Turret_AA_R1",
-        "MagellanClassLateType_Turret_AA_L2",
-        "MagellanClassLateType_Turret_AA_R2",
-        "MagellanClassLateType_Turret_AA_L3",
-        "MagellanClassLateType_Turret_AA_R3",
-        "MagellanClassLateType_Turret_AA_L4",
-        "MagellanClassLateType_Turret_AA_R4",
-        "MagellanClassLateType_Turret_AA_L5",
-        "MagellanClassLateType_Turret_AA_R5",
-        "MagellanClassLateType_Turret_AA_L6",
-        "MagellanClassLateType_Turret_AA_R6",
-        "MagellanClassLateType_Turret_AA_L7",
-        "MagellanClassLateType_Turret_AA_R7",
-        "MagellanClassLateType_Turret_AA_L8",
-        "MagellanClassLateType_Turret_AA_R8",
-        "MagellanClassLateType_Turret_AA_L9",
-        "MagellanClassLateType_Turret_AA_R9"
-      ],
-      "muzzleEffects": [
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S",
-        "MG_Fire_1_S"
-      ],
-      "nativePayload": {
-        "ShellDamage": 225.0,
-        "ShellAPDamage": 50.0,
-        "DpDamage": 5.0,
-        "WeaponAccuracy": 125.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 1.0,
-        "AntiAir": 1.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 90.0,
-        "ProjectileSpread": 6.0,
-        "ProjectileLife": 7.5
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+            {
+              "id": "MagellanClassLateType_Turret_AA",
+              "x": 2,
+              "y": 6
+            }
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_L1",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_R1",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_L2",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_R2",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_L3",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_R3",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_L4",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_R4",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_L5",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_R5",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_L6",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_R6",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_L7",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_R7",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_L8",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_R8",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_L9",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            },
+            {
+              "bone": "Turret_MagellanClassLateType_Turret_AA_R9",
+              "offset": {
+                "x": 2,
+                "y": 6
+              },
+              "alternatingOffsetX": -4
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA.ini",
-        "barrel": "MagellanClassLateType_Turret_AA",
-        "entry": "automatic_turret",
-        "cooldown": 2.0,
-        "duration": 1.8,
-        "firstShot": 0.0,
-        "lastShot": 1.8,
-        "firingEvents": 180,
-        "projectiles": 180,
-        "declaredEnergy": 0.5,
-        "energyMode": "perShot",
-        "energyPerEmission": 0.5,
-        "energy": 90.0,
-        "actions": []
-      },
-      "category": "machine_gun",
-      "rangeRole": "ship_anti_air",
-      "actionCost": 2,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
-        }
-      },
-      "shipAntiAirBeforeReduction": [
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.2
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.2
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.2
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.2
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.2
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.2
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.2
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.2
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 0,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L1",
-          "delay": 0.2
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 1,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R1",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 2,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 3,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R2",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 4,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 5,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R3",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 6,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 7,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R4",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 8,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 9,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R5",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 10,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 11,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R6",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 12,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 13,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R7",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 14,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 15,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R8",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 16,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_L9",
-          "delay": 0.0
-        },
-        {
-          "shots": 1,
-          "muzzleIndex": 17,
-          "partBreakModifier": 1.0,
-          "requiredParts": [],
-          "moduleId": "MagellanClassLateType_Turret_AA_R9",
-          "delay": 0.0
-        }
-      ],
-      "shipDamageBeforeReduction": {
-        "damagePerShot": 275.0,
-        "damageComponents": {
-          "shell": 225.0,
-          "shellAP": 50.0
-        }
-      },
-      "shipDamageMultiplier": 0.75,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/MagellanClassLateType/MagellanClassLateType_Turret_AA.ini"
+      }
     }
   },
   "mechanics": [
@@ -5421,7 +1804,7 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {
-    "nativeLevel": 5000.0,
+    "nativeLevel": 5000,
     "levelMultiplier": 0.25,
     "published": 1250
   },

@@ -11,7 +11,7 @@ const I18n = (() => {
   }
   let language = detect(navigator.languages?.length ? navigator.languages : [navigator.language]);
   try {
-    const saved = localStorage.getItem(storageKey);
+    const saved = window.CATALOG_DEVELOPER_MODE ? null : localStorage.getItem(storageKey);
     if (supported.includes(saved)) language = saved;
   } catch {}
   const boundFields = new WeakMap();
@@ -214,7 +214,7 @@ const I18n = (() => {
     language = value;
     cache.clear();
     try {
-      localStorage.setItem(storageKey, language);
+      if (!window.CATALOG_DEVELOPER_MODE) localStorage.setItem(storageKey, language);
     } catch {}
     window.dispatchEvent(new CustomEvent("language-change", { detail: language }));
     refresh();

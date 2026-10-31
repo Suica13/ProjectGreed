@@ -3,6 +3,7 @@
 python tools/import-additional-units.py
 The MOD is read only. Runtime receives ordinary JSON, PNG and OGG assets.
 """
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import argparse
 import copy
 import json
@@ -19,11 +20,11 @@ from unit_muzzle_effects import apply_muzzle_effects
 from unit_skills import import_tackle_assets
 
 def read(path):
-    return json.loads(path.read_text(encoding="utf-8-sig"))
+    return load_source_json(path.read_text(encoding="utf-8-sig"))
 
 def write(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(dump_source_json(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 def asset(source, target):
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -396,7 +397,7 @@ def build(unit, effects):
             melee=next(key for key in secondary if prefab["weapons"][key]["type"]=="melee")
             layer["visibleWhen"]=dict(heldWeapon={"not":melee})
     # Reject unhandled source expressions instead of embedding them in runtime JSON.
-    if re.search(r"memory\.|self\.resource|\$\{",json.dumps(prefab)):
+    if re.search(r"memory\.|self\.resource|\$\{",dump_source_json(prefab)):
         raise ValueError("Untranslated MOD expression: "+unit_id)
     if unit_id == "RX_79_G":
         prefab["stats"]["cost"] = 750

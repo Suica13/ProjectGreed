@@ -19,8 +19,8 @@ function i18n(languages, saved, body = { nodeType: 0 }) {
     CustomEvent: class {},
     Node: { TEXT_NODE: 3, ELEMENT_NODE: 1 },
     UI_LOCALES: {
-      en: JSON.parse(fs.readFileSync("client/locales/en.json")),
-      ja: JSON.parse(fs.readFileSync("client/locales/ja.json")),
+      en: require("../tools/weapon-store.cjs").parse(fs.readFileSync("client/locales/en.json")),
+      ja: require("../tools/weapon-store.cjs").parse(fs.readFileSync("client/locales/ja.json")),
     },
   };
   vm.runInNewContext(fs.readFileSync("client/i18n.js", "utf8") + ";globalThis.api=I18n;", context);
@@ -39,7 +39,7 @@ test("unit and weapon localization changes display names only and falls back to 
   const api = i18n(["en-US"]),
     catalog = loadCatalog(),
     model = catalog.models.RGM_79__bazooka;
-  const original = JSON.parse(JSON.stringify(model));
+  const original = require("../tools/weapon-store.cjs").parse(JSON.stringify(model));
   api.bindCatalog(catalog);
   assert.equal(model.name, "GM");
   assert.equal(model.weapons[0].name, "Hyper Bazooka");
@@ -99,14 +99,14 @@ test("unit discovery includes new files, omits disabled units and preserves exis
 test("catalog preflight rejects duplicate IDs without writing the real catalog", () => {
   const file = "assets/unit-catalog.json",
     before = fs.readFileSync(file),
-    catalog = JSON.parse(before);
+    catalog = require("../tools/weapon-store.cjs").parse(before);
   assert.throws(
     () =>
       loadCatalog({ catalogOverride: { ...catalog, units: [catalog.units[0], catalog.units[0]] } }),
     /Invalid prefab/,
   );
   assert.deepEqual(fs.readFileSync(file), before);
-  const source = JSON.parse(fs.readFileSync("assets/units/RGM_79/unit.json"));
+  const source = require("../tools/weapon-store.cjs").parse(fs.readFileSync("assets/units/RGM_79/unit.json"));
   assert.equal(source.localization.en.name, "GM");
   assert.equal(loadCatalog().models.RGM_79__bazooka.kitLocalization.ja.name, "バズーカ装備");
 });
@@ -244,7 +244,7 @@ test("every catalog unit, weapon, kit and skill has English and Japanese display
 });
 test("curated display overlays survive reimport without changing gameplay or source names", () => {
   const localize = require("../tools/display-localization.cjs").createLocalizer();
-  const p = JSON.parse(fs.readFileSync("assets/units/MSM_03/unit.json"));
+  const p = require("../tools/weapon-store.cjs").parse(fs.readFileSync("assets/units/MSM_03/unit.json"));
   const original = structuredClone(p);
   localize.prefab(p);
   assert.equal(p.localization.ja.name, "ゴッグ");
@@ -264,7 +264,7 @@ test("curated display overlays survive reimport without changing gameplay or sou
 test("all ACE names, biographies and skill descriptions have Japanese translations", () => {
   const data = require("../tools/display-localization.cjs")
     .createLocalizer()
-    .pilotCatalog(JSON.parse(fs.readFileSync("shared/pilots.json")));
+    .pilotCatalog(require("../tools/weapon-store.cjs").parse(fs.readFileSync("shared/pilots.json")));
   for (const ace of data.aces) {
     assert.ok(ace.localization.ja.name, ace.id);
     assert.ok(ace.localization.ja.description, ace.id);
@@ -274,8 +274,8 @@ test("all ACE names, biographies and skill descriptions have Japanese translatio
   }
 });
 test("locale dictionaries have matching keys and preserve template placeholders", () => {
-  const en = JSON.parse(fs.readFileSync("client/locales/en.json"));
-  const ja = JSON.parse(fs.readFileSync("client/locales/ja.json"));
+  const en = require("../tools/weapon-store.cjs").parse(fs.readFileSync("client/locales/en.json"));
+  const ja = require("../tools/weapon-store.cjs").parse(fs.readFileSync("client/locales/ja.json"));
   assert.deepEqual(Object.keys(en).sort(), Object.keys(ja).sort());
   const tokens = (text) => (text.match(/\{\w+\}/g) || []).sort();
   for (const key of Object.keys(en)) {

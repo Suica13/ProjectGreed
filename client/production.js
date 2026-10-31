@@ -241,7 +241,7 @@ const ProductionUI = (() => {
       }
     } else if (tab === "weapons") {
       for (const weapon of model.weapons) {
-        const card = WeaponInfo.card(weapon);
+        const card = WeaponInfo.card(weapon, null, { encyclopediaLink: true });
         info.append(card);
       }
     } else {
@@ -255,6 +255,8 @@ const ProductionUI = (() => {
           element("strong", "", skill.name),
           element("p", "", SkillControls.description(skill)),
         );
+        if (skill.sourceWeapon)
+          card.append(WeaponInfo.encyclopediaLink(skill), Encyclopedia.usersButton(skill));
         info.append(card);
       }
       if (model.supplyAura)

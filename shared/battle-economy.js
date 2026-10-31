@@ -4,7 +4,7 @@ const BattleEconomy = (() => {
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
       ? PRODUCTION_CATALOG
-      : require("./production-catalog.json");
+      : require("./production-data.cjs");
   const killTechnologyRate = 0.75;
   function price(modelId, resource = "money") {
     const unitId = modelId.split("__")[0];

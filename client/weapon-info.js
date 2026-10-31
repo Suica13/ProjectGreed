@@ -164,6 +164,8 @@ const WeaponInfo = (() => {
       unit && target ? attackForecast(unit, target, weapon, response, isCounter) : null;
     const accuracy = node("div", "weapon-accuracy");
     accuracy.append(
+      node("span", "weapon-stat-label", "AP"),
+      node("strong", "weapon-ap-cost", String(Rules.actionCost(weapon))),
       node("span", "weapon-stat-label", "命中"),
       node("strong", "", number(forecast?.hit ?? weapon.hit) + "%"),
     );
@@ -309,10 +311,25 @@ const WeaponInfo = (() => {
     details.append(body);
     return details;
   }
+  function encyclopediaLink(weapon) {
+      const link = node("a", "weapon-encyclopedia-link", I18n.text("查看图鉴"));
+      link.href = "#" + Encyclopedia.weaponAnchor(weapon);
+      link.onclick = (event) => {
+        event.preventDefault();
+        Encyclopedia.openWeapon(weapon);
+      };
+      return link;
+  }
   function card(weapon, content = null, options = {}) {
     const wrapper = node("article", "weapon-card");
+    wrapper.dataset.weaponId = weapon.id;
     wrapper.append(content || summary(weapon, options), inspector(weapon, options));
+    if (options.encyclopediaLink) {
+      wrapper.querySelector(".weapon-summary-heading")?.append(encyclopediaLink(weapon));
+      wrapper.append(Encyclopedia.usersButton(weapon));
+    }
+    if (window.CatalogDeveloper) window.CatalogDeveloper.decorateWeapon(wrapper, weapon, !!options.encyclopediaLink);
     return wrapper;
   }
-  return { effects, summary, inspector, card };
+  return { effects, summary, inspector, card, encyclopediaLink };
 })();

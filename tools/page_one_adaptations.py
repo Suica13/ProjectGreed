@@ -1,4 +1,5 @@
 """Apply explicit adaptations shared by the Page_00 importer and audited JSON refresh."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json,re,importlib.util
 from pathlib import Path
 from mod_source import ROOT,ASSETS,load,section,resolve
@@ -10,7 +11,7 @@ import copy
 LEGACY=["RGM_79","RGC_80","RGM_79L","MS_06F","MS_09","RGM_79_G","MS_06J","MS_06K","MS_14A","RX_79_G","MS_06F2","MS_09R","SalamisClass","RX_78_1","FF_X7"]
 BALANCED={}
 for ident in LEGACY:
- prefab=json.loads((ASSETS/f"units/{ident}/unit.json").read_text(encoding="utf-8"))
+ prefab=load_source_json((ASSETS/f"units/{ident}/unit.json").read_text(encoding="utf-8"))
  for key,w in prefab["weapons"].items():BALANCED.setdefault(key,w)
 LABELS={'AutoRepair':'自动修复','AntiDetect':'反侦测','AntiDetect_Aqua':'水下反侦测','CmdAtk':'攻击指挥','CmdCom':'通信指挥','CmdDef':'防御指挥','CustomUnit':'换装／改修','CustomUnit_NewUnit':'改修生成新机体','CustomUnit_PilotCustomUnit':'驾驶员专属改修','ChangeStyle':'姿态切换','Deploy':'展开／收起','DogFight_A':'空中缠斗','Exam_Off':'EXAM系统','ExitUnit':'脱出','ExitUnit_NewUnit':'脱出并生成新机体','Fighter':'战斗机特性','FlyHover':'悬浮飞行','FlyStyle':'飞行形态','FlyUnit':'飞行模式','FuseUnit_B':'合体','HADES_Off':'HADES系统','HADES_PR2_Off':'HADES系统(PR2)','Hover':'气垫移动','HoverEffect':'气垫特效','LPC':'学习型电脑','LaunchAllUnits':'搭载与放出','SFS':'辅助飞行平台','Sonar':'声呐','Stealth':'隐蔽','Stealth_Aqua':'水下隐蔽','SupplyPoint':'整备补给','SupplyPoint_UseEN':'整备消耗EN','Transform_LandLand_Tank':'MS／坦克变形','Unit_BreakableTurret':'独立炮塔损毁','UnloadEquipment':'装备分离'}
 
@@ -64,7 +65,7 @@ def finalize(p,row,data):
  if "Army_Squad" in data["core"].get("tags", "") and not p["weapons"]:populate_infantry(p,data)
  skills=p['sourceStats'].get('nativeSkills',[]);tags=p['sourceStats'].get('nativeTags',[])
  if p['id'] in ['RX_78_2','RX_77_2','RX_75'] and not any(s['id']=='ExitUnit' for s in p.get('skills',[])):
-  escape=json.loads((ASSETS/'units/RX_78_1/unit.json').read_text(encoding='utf-8'))['skills'][0]
+  escape=load_source_json((ASSETS/'units/RX_78_1/unit.json').read_text(encoding='utf-8'))['skills'][0]
   p.setdefault('skills',[]).append(copy.deepcopy(escape))
  if 'AutoRepair' in skills:p['stats']['autoRepair']={'hpPercent':10,'enCost':10}
  if 'MS' in tags:
@@ -186,11 +187,11 @@ def finalize(p,row,data):
  return correct(p,row,data)
 
 def main():
- manifest=json.loads(Path('tools/0079-page-one-manifest.json').read_text(encoding='utf-8'))
+ manifest=load_source_json(Path('tools/0079-page-one-manifest.json').read_text(encoding='utf-8'))
  for row in manifest:
   path=ASSETS/f"units/{row['id']}/unit.json"
   if not path.exists():continue
-  p=json.loads(path.read_text(encoding='utf-8'))
+  p=load_source_json(path.read_text(encoding='utf-8'))
   if 'mechanics' not in p:continue
-  p=finalize(p,row,load(ROOT/row['source']));path.write_text(json.dumps(p,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+  p=finalize(p,row,load(ROOT/row['source']));path.write_text(dump_source_json(p,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 if __name__=='__main__':main()

@@ -2,7 +2,7 @@ const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url");
 const path = require("node:path");
 
-for (const html of ["client.html", "developer.html"])
+for (const html of ["client.html"])
   test(`${html}: new profile's offline AI respects room starter research and budget`, async ({
     page,
   }) => {

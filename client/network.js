@@ -591,7 +591,7 @@ const Net = (() => {
       battleView = null;
       if (
         !n.applied ||
-        !["menu", "formation", "production", "development", "records"].includes(pageView)
+        !["menu", "formation", "production", "development", "records", "encyclopedia"].includes(pageView)
       )
         setPageView("room");
       RoomPanel.render(s);
@@ -617,7 +617,7 @@ const Net = (() => {
       if (
         wasStarted ||
         !n.applied ||
-        !["menu", "formation", "production", "development", "records"].includes(pageView)
+        !["menu", "formation", "production", "development", "records", "encyclopedia"].includes(pageView)
       )
         setPageView("room");
       RoomPanel.render(s);
@@ -816,6 +816,7 @@ const Net = (() => {
   // Wait for both assets and the character choice before restoring that character's seat.
   let restoredCharacter = false;
   function restoreCharacter() {
+    if (window.CATALOG_DEVELOPER_MODE) return;
     if (restoredCharacter || !assetsReady || !PlayerProfile.selected() || window.isLayoutPreview)
       return;
     restoredCharacter = true;

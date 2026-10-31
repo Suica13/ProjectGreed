@@ -1,4 +1,5 @@
 """Native smoke equipment and I-field provenance, adapted to authoritative turns."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json,shutil
 from mod_source import ASSETS,MOD,MAIN,load
 from native_combat import globals_for
@@ -28,11 +29,11 @@ if __name__=='__main__':
         dest=ASSETS/'sounds'/name
         if not dest.exists():shutil.copyfile(MAIN/source,dest)
     shutil.copyfile(MAIN/'Resource/Image/Fx/Unit/Image/I_Field_2.png',ASSETS/'effects/textures/I_Field_2.png')
-    path=ASSETS/'effects/effects.json';effects=json.loads(path.read_text(encoding='utf-8'))
+    path=ASSETS/'effects/effects.json';effects=load_source_json(path.read_text(encoding='utf-8'))
     effects['I_Field_2']=dict(texture='textures/I_Field_2.png',frames=1,startFrame=0,endFrame=0,fps=1.2,
         scaleFrom=1,scaleTo=1,alpha=.8,rotation=0,offset={'x':0,'y':0},drift=0,sounds=[],source='MOD native Resource/Image/Fx/Unit/I_Field_2.gw')
-    path.write_text(json.dumps(effects,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    path.write_text(dump_source_json(effects,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     for path in (ASSETS/'units').glob('*/unit.json'):
-        prefab=json.loads(path.read_text(encoding='utf-8'));before=json.dumps(prefab,ensure_ascii=False)
+        prefab=load_source_json(path.read_text(encoding='utf-8'));before=dump_source_json(prefab,ensure_ascii=False)
         apply(prefab)
-        if before!=json.dumps(prefab,ensure_ascii=False):path.write_text(json.dumps(prefab,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print(prefab['id'])
+        if before!=dump_source_json(prefab,ensure_ascii=False):path.write_text(dump_source_json(prefab,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print(prefab['id'])

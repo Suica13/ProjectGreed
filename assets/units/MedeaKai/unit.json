@@ -14,76 +14,76 @@
   },
   "skeleton": {
     "Pelvis": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftArm": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightArm": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftShoulder": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightShoulder": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "RightWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment12": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment13": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment15": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Head": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Eye": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftFoot": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "LeftLeg": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "RightFoot": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "RightLeg": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     }
   },
   "layers": [
@@ -91,15 +91,15 @@
       "name": "BoostReversing",
       "texture": "BoostReversing_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
-      "scaleX": 1.0,
+      "order": 4,
+      "scale": 2,
+      "scaleX": 1,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
       "offset": {
         "x": -2.5,
-        "y": -12.0
+        "y": -12
       },
       "frames": 3,
       "frame": 0,
@@ -113,11 +113,11 @@
       "name": "Body",
       "texture": "MedeaKai_Body_1.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.75,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -125,17 +125,17 @@
       "name": "Boost_R1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 5.0,
-      "scale": 1.0,
+      "order": 5,
+      "scale": 1,
       "offset": {
-        "x": 10.0,
-        "y": -2.0
+        "x": 10,
+        "y": -2
       },
       "scaleX": 0.65,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleY": 1,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -147,17 +147,17 @@
       "name": "Boost_R2",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 5.0,
-      "scale": 1.0,
+      "order": 5,
+      "scale": 1,
       "offset": {
-        "x": 20.0,
-        "y": -4.0
+        "x": 20,
+        "y": -4
       },
       "scaleX": 0.65,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleY": 1,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -169,17 +169,17 @@
       "name": "Boost_R3",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 5.0,
-      "scale": 1.0,
+      "order": 5,
+      "scale": 1,
       "offset": {
-        "x": 45.0,
-        "y": -8.0
+        "x": 45,
+        "y": -8
       },
       "scaleX": 0.65,
-      "scaleY": 2.0,
-      "rotation": 0.0,
+      "scaleY": 2,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -191,17 +191,17 @@
       "name": "Boost_R4",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 5.0,
-      "scale": 1.0,
+      "order": 5,
+      "scale": 1,
       "offset": {
-        "x": 54.0,
-        "y": -7.0
+        "x": 54,
+        "y": -7
       },
       "scaleX": 0.65,
-      "scaleY": 2.0,
-      "rotation": 0.0,
+      "scaleY": 2,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -213,17 +213,17 @@
       "name": "Boost_L1",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 5.0,
-      "scale": 1.0,
+      "order": 5,
+      "scale": 1,
       "offset": {
-        "x": -10.0,
-        "y": -2.0
+        "x": -10,
+        "y": -2
       },
       "scaleX": -0.65,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleY": 1,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -235,17 +235,17 @@
       "name": "Boost_L2",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 5.0,
-      "scale": 1.0,
+      "order": 5,
+      "scale": 1,
       "offset": {
-        "x": -20.0,
-        "y": -4.0
+        "x": -20,
+        "y": -4
       },
       "scaleX": -0.65,
-      "scaleY": 1.0,
-      "rotation": 0.0,
+      "scaleY": 1,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -257,17 +257,17 @@
       "name": "Boost_L3",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 5.0,
-      "scale": 1.0,
+      "order": 5,
+      "scale": 1,
       "offset": {
-        "x": -45.0,
-        "y": -8.0
+        "x": -45,
+        "y": -8
       },
       "scaleX": -0.65,
-      "scaleY": 2.0,
-      "rotation": 0.0,
+      "scaleY": 2,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -279,17 +279,17 @@
       "name": "Boost_L4",
       "texture": "Boost_1.png",
       "bone": "Body",
-      "order": 5.0,
-      "scale": 1.0,
+      "order": 5,
+      "scale": 1,
       "offset": {
-        "x": -56.0,
-        "y": -7.0
+        "x": -56,
+        "y": -7
       },
       "scaleX": 0.65,
-      "scaleY": 2.0,
-      "rotation": 0.0,
+      "scaleY": 2,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -303,22 +303,22 @@
   },
   "stats": {
     "hp": 31500,
-    "en": 7500.0,
+    "en": 7500,
     "move": 9,
-    "mobility": 130.0,
+    "mobility": 130,
     "cost": 250,
     "counterLimit": 1,
-    "accuracy": 100.0,
-    "partStructuralStrength": 100.0,
+    "accuracy": 100,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "air",
     "adaptability": {
       "ground": 100,
       "space": 50,
-      "water": 10.0,
-      "air": 100.0,
+      "water": 10,
+      "air": 100,
       "atmosphere": 0,
-      "mountain": 10.0,
+      "mountain": 10,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -329,7 +329,7 @@
     "sensors": {
       "sight": 9,
       "radar": 13.88888888888889,
-      "antiDetection": 0.0,
+      "antiDetection": 0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -340,66 +340,66 @@
     "speed": 180
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 0.0,
+    "melee": 0,
+    "shooting": 0,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 10.0,
-      "flat": 0.0
+      "percent": 10,
+      "flat": 0
     },
     "shell": {
-      "percent": 10.0,
-      "flat": 25.0
+      "percent": 10,
+      "flat": 25
     },
     "melee": {
-      "percent": 5.0,
-      "flat": 0.0
+      "percent": 5,
+      "flat": 0
     },
     "dp": {
       "percent": 0,
-      "flat": 0.0
+      "flat": 0
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 0.0
+      "percent": 0,
+      "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "enBeforeReduction": 15000.0,
+    "enBeforeReduction": 15000,
     "enCapacityMultiplier": 0.5,
-    "hp": 25000.0,
+    "hp": 25000,
     "walkSpeed": 1.75,
     "boostSpeed": 2.5,
     "turnSpeed": 1.5,
-    "reaction": 130.0,
-    "shooting": 100.0,
-    "melee": 100.0,
+    "reaction": 130,
+    "shooting": 100,
+    "melee": 100,
     "nativeTags": [
       "MedeaKai",
       "Unit",
@@ -413,23 +413,23 @@
       "Deploy"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 100.0,
-    "unitLevel": 1000.0,
+    "accuracy": 100,
+    "unitLevel": 1000,
     "tacticalMoveBeforeBonus": 9,
     "adaptability": {
-      "ground": 10.0,
-      "space": 10.0,
-      "water": 10.0,
-      "air": 100.0,
-      "mountain": 10.0,
+      "ground": 10,
+      "space": 10,
+      "water": 10,
+      "air": 100,
+      "mountain": 10,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 22.0,
-      "radar": 500.0,
-      "antiDetection": 0.0
+      "sight": 22,
+      "radar": 500,
+      "antiDetection": 0
     },
-    "v17BaseHp": 25000.0,
+    "v17BaseHp": 25000,
     "supplyTacticalPolicy": {
       "enCostPercent": 25,
       "enRecoveryPercent": 50,
@@ -500,7 +500,7 @@
   ],
   "description": "米迪亚改良型,机动性得到了提升",
   "costBalance": {
-    "nativeLevel": 1000.0,
+    "nativeLevel": 1000,
     "levelMultiplier": 0.25,
     "published": 250
   },

@@ -1,4 +1,5 @@
 """Adapt native passive tags and self-buffs into ProjectGreed rules."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 
 
 def _skills(prefab):
@@ -139,8 +140,8 @@ if __name__ == "__main__":
     from mod_source import ASSETS, MOD, load
     count = 0
     for path in sorted((ASSETS / "units").glob("*/unit.json")):
-        prefab = json.loads(path.read_text(encoding="utf-8-sig"))
+        prefab = load_source_json(path.read_text(encoding="utf-8-sig"))
         correct(prefab, load(MOD / prefab["source"]))
-        path.write_text(json.dumps(prefab, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+        path.write_text(dump_source_json(prefab, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
         count += 1
     print("Updated native passives for", count, "units")

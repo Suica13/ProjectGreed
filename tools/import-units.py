@@ -2,6 +2,7 @@
 
 Run: python tools/import-units.py. Edit the resulting ordinary JSON for game balance.
 """
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy
 import json
 import re
@@ -156,7 +157,7 @@ def add_stats(prefab, data, hp, move, cost):
 
 
 gm_file = DEST / 'units/RGM_79/unit.json'
-gm = json.loads(gm_file.read_text(encoding='utf-8'))
+gm = load_source_json(gm_file.read_text(encoding='utf-8'))
 gm_data = load(ROOT / 'Units/BattleUnits/RGM_79/RGM_79.ini')
 add_stats(gm, gm_data, 21000, 5, 300)
 gm['description'] = '标准型：均衡的机动性与耐久，主武器可选三种套件。'
@@ -200,7 +201,7 @@ for unit_id in ('RGC_80', 'RGM_79L'):
     new_prefabs.append(prefab)
 
 for prefab in (gm, *new_prefabs):
-    kit_costs = json.loads((DEST / 'weapon-kit-costs.json').read_text(encoding='utf-8'))
+    kit_costs = load_source_json((DEST / 'weapon-kit-costs.json').read_text(encoding='utf-8'))
     for kit in prefab['weaponKits']:
         kit['cost'] = kit_costs[kit['id']]
     for key, weapon in prefab['weapons'].items():
@@ -246,7 +247,7 @@ for prefab in (gm, *new_prefabs):
     apply_parts(prefab)
     write(DEST / f'units/{prefab["id"]}/unit.json', prefab)
 
-catalog = json.loads((DEST / 'unit-catalog.json').read_text(encoding='utf-8'))
+catalog = load_source_json((DEST / 'unit-catalog.json').read_text(encoding='utf-8'))
 catalog['units'] = [f'units/{p["id"]}/unit.json' for p in (gm, *new_prefabs)]
 catalog['map'] = dict(width=24, height=18)
 catalog['formation'] = dict(maxUnits=12, maxCost=4500, aiUnits=12, unitCostLimit=1500, defaultUnits=6)
@@ -259,7 +260,7 @@ for index in range(1, 7):
     copy_asset(ROOT / f'Resource/Music/{name}.ogg', DEST / f'music/{name}.ogg')
     tracks.append(dict(name=name, file=name+'.ogg'))
 write(DEST / 'music/playlist.json', dict(volume=.25, tracks=tracks))
-presentation = json.loads((DEST / 'presentation.json').read_text(encoding='utf-8'))
+presentation = load_source_json((DEST / 'presentation.json').read_text(encoding='utf-8'))
 presentation['sfxVolume'] = .5
 presentation.pop('dodgeHold', None)
 presentation.pop('dodgeReturn', None)

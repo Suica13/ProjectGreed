@@ -1,6 +1,7 @@
 """Source-backed corrections shared by batch import and existing-prefab migration.
 Native conditions become plain requirements; no MOD expression is executed at runtime.
 """
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy,json,re
 from pathlib import Path
 from mod_source import ROOT,ASSETS,load,section,resolve,number
@@ -226,13 +227,13 @@ def correct(p,row,data):
  return kit_names(apply_balance(visibility_and_deferred(p,data),data))
 
 def main():
- rows=json.loads(Path(__file__).with_name('0079-page-one-manifest.json').read_text(encoding='utf-8'));catalog=json.loads((ASSETS/'unit-catalog.json').read_text(encoding='utf-8'));byid={r['id']:r for r in rows}
+ rows=load_source_json(Path(__file__).with_name('0079-page-one-manifest.json').read_text(encoding='utf-8'));catalog=load_source_json((ASSETS/'unit-catalog.json').read_text(encoding='utf-8'));byid={r['id']:r for r in rows}
  report=[]
  for ref in catalog['units']:
-  path=ASSETS/ref;p=json.loads(path.read_text(encoding='utf-8'));row=byid.get(p['id'])
+  path=ASSETS/ref;p=load_source_json(path.read_text(encoding='utf-8'));row=byid.get(p['id'])
   if not row:continue
-  p=correct(p,row,load(ROOT/row['source']));path.write_text(json.dumps(p,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+  p=correct(p,row,load(ROOT/row['source']));path.write_text(dump_source_json(p,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
   report.append({'id':p['id'],'kits':len(p['weaponKits']),'hidden':{k:w['availability'] for k,w in p['weapons'].items() if w.get('availability')},'cost':p.get('costBalance')})
- Path('tools/0079-layout-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+ Path('tools/0079-layout-audit.json').write_text(dump_source_json(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  print('Corrected',len(report),'prefabs')
 if __name__=='__main__':main()

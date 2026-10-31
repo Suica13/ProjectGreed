@@ -14,76 +14,76 @@
   },
   "skeleton": {
     "Pelvis": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftArm": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightArm": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftShoulder": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightShoulder": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "RightWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment12": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment13": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment15": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Head": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Eye": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftFoot": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "LeftLeg": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "RightFoot": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "RightLeg": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     }
   },
   "layers": [
@@ -91,15 +91,15 @@
       "name": "BoostReversing",
       "texture": "BoostReversing_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
-      "scaleX": 1.0,
+      "order": 4,
+      "scale": 2,
+      "scaleX": 1,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
       "offset": {
         "x": -2.5,
-        "y": -12.0
+        "y": -12
       },
       "frames": 3,
       "frame": 0,
@@ -114,15 +114,15 @@
       "texture": "Boost_1.png",
       "bone": "Body",
       "order": 4.1,
-      "scale": 2.0,
+      "scale": 2,
       "offset": {
         "x": -2.5,
-        "y": -7.0
+        "y": -7
       },
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -134,11 +134,11 @@
       "name": "Body",
       "texture": "Dodai2_Body_1.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     }
@@ -153,22 +153,22 @@
   },
   "stats": {
     "hp": 7500,
-    "en": 300.0,
+    "en": 300,
     "move": 9,
-    "mobility": 125.0,
+    "mobility": 125,
     "cost": 100,
     "counterLimit": 1,
-    "accuracy": 105.0,
-    "partStructuralStrength": 100.0,
+    "accuracy": 105,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "air",
     "adaptability": {
       "ground": 100,
       "space": 50,
-      "water": 10.0,
-      "air": 100.0,
+      "water": 10,
+      "air": 100,
       "atmosphere": 0,
-      "mountain": 10.0,
+      "mountain": 10,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -178,7 +178,7 @@
     "sensors": {
       "sight": 9,
       "radar": 13.88888888888889,
-      "antiDetection": 0.0,
+      "antiDetection": 0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -189,64 +189,64 @@
     "speed": 180
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 0.0,
+    "melee": 0,
+    "shooting": 0,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 5.0,
-      "flat": 0.0
+      "percent": 5,
+      "flat": 0
     },
     "shell": {
-      "percent": 10.0,
-      "flat": 25.0
+      "percent": 10,
+      "flat": 25
     },
     "melee": {
-      "percent": 5.0,
-      "flat": 0.0
+      "percent": 5,
+      "flat": 0
     },
     "dp": {
-      "percent": 5.0,
-      "flat": 0.0
+      "percent": 5,
+      "flat": 0
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 0.0
+      "percent": 0,
+      "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "hp": 6000.0,
+    "hp": 6000,
     "walkSpeed": 1.75,
     "boostSpeed": 2.5,
     "turnSpeed": 2.25,
-    "reaction": 125.0,
-    "shooting": 100.0,
-    "melee": 100.0,
+    "reaction": 125,
+    "shooting": 100,
+    "melee": 100,
     "nativeTags": [
       "Dodai2",
       "Unit",
@@ -260,25 +260,25 @@
       "SFS"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 105.0,
-    "unitLevel": 400.0,
-    "enBeforeReduction": 600.0,
+    "accuracy": 105,
+    "unitLevel": 400,
+    "enBeforeReduction": 600,
     "enCapacityMultiplier": 0.5,
     "tacticalMoveBeforeBonus": 9,
     "adaptability": {
-      "ground": 10.0,
-      "space": 10.0,
-      "water": 10.0,
-      "air": 100.0,
-      "mountain": 10.0,
+      "ground": 10,
+      "space": 10,
+      "water": 10,
+      "air": 100,
+      "mountain": 10,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 22.0,
-      "radar": 500.0,
-      "antiDetection": 0.0
+      "sight": 22,
+      "radar": 500,
+      "antiDetection": 0
     },
-    "v17BaseHp": 6000.0,
+    "v17BaseHp": 6000,
     "technologyEra": "0079E",
     "actionTurnSpeed": 2.25,
     "mobilityMoveTarget": 10
@@ -345,7 +345,7 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {
-    "nativeLevel": 400.0,
+    "nativeLevel": 400,
     "levelMultiplier": 0.25,
     "published": 100
   },
@@ -373,9 +373,9 @@
       "launchRange": 1,
       "emergencyRange": 3,
       "offset": {
-        "x": 0.0,
+        "x": 0,
         "y": -7.5,
-        "height": 1.0
+        "height": 1
       },
       "source": "Template/Unit/Transport_SFS.ini",
       "sourceUnit": "SFS_X1"

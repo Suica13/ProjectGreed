@@ -1,4 +1,5 @@
 """Separate native turning/AP, boost/movement and reaction/evasion policies."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 import math
 from mod_source import ASSETS, MOD, load, stat
@@ -26,7 +27,7 @@ def apply(prefab, native):
         parent = parent or prefab.get("formOf")
         if not parent:
             raise ValueError("Missing deployment parent: " + prefab["id"])
-        original = json.loads((ASSETS / "units" / parent / "unit.json").read_text(encoding="utf-8"))
+        original = load_source_json((ASSETS / "units" / parent / "unit.json").read_text(encoding="utf-8"))
         reference = original["source"].split("/", 1)
         root = MOD / reference[0]
         base_native = load(root / reference[1], root=root)
@@ -50,11 +51,11 @@ def refresh():
     paths = sorted((ASSETS / "units").glob("*/unit.json"))
     pending = []
     for path in paths:
-        prefab = json.loads(path.read_text(encoding="utf-8"))
+        prefab = load_source_json(path.read_text(encoding="utf-8"))
         reference = prefab["source"].split("/", 1)
         root = MOD / reference[0]
         apply(prefab, load(root / reference[1], root=root))
-        pending.append((path, json.dumps(prefab, ensure_ascii=False, indent=2) + "\n"))
+        pending.append((path, dump_source_json(prefab, ensure_ascii=False, indent=2) + "\n"))
     for path, text in pending:
         path.write_text(text, encoding="utf-8", newline="\n")
     print(f"Updated only movement/AP policy for {len(pending)} units.")

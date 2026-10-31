@@ -5219,6 +5219,25 @@
         </div>
       </div>
     </section>
+    <section id="encyclopediaScreen" class="menu-screen" hidden aria-labelledby="encyclopediaTitle">
+      <div class="modal encyclopedia-dialog">
+        <header class="shell-page-heading"><h2 id="encyclopediaTitle" class="shell-page-title">图鉴</h2></header>
+        <nav class="encyclopedia-tabs" aria-label="图鉴分类">
+          <button id="encyclopediaUnitsTab" type="button" aria-pressed="true">单位</button>
+          <button id="encyclopediaWeaponsTab" type="button" aria-pressed="false">武器</button>
+          <span id="encyclopediaCount" aria-live="polite"></span>
+        </nav>
+        <div class="encyclopedia-filters">
+          <input id="encyclopediaSearch" type="search" placeholder="搜索名称或编号" aria-label="搜索名称或编号" />
+          <select id="encyclopediaFaction" aria-label="阵营筛选"></select>
+          <select id="encyclopediaEra" aria-label="年代筛选"></select>
+          <select id="encyclopediaType" aria-label="类型筛选"></select>
+          <select id="encyclopediaStatus" aria-label="开发与许可筛选"></select>
+          <select id="encyclopediaLevel" aria-label="武器等级筛选" hidden></select>
+        </div>
+        <div id="encyclopediaList" class="encyclopedia-grid" tabindex="0" aria-label="图鉴内容"></div>
+      </div>
+    </section>
     <script>
       const PROJECT = __PROJECT_META__;
       const DEVELOPMENT_TREE = __DEVELOPMENT_TREE__;
@@ -5281,10 +5300,12 @@
       __LOBBY__;
       __ROOM__;
       __UNIT_CATALOG__;
+      __UNIT_PREVIEW__;
       __FORMATION__;
       __REWARD_NOTIFICATIONS__;
       __DEVELOPMENT_UI__;
       __PRODUCTION_UI__;
+      __ENCYCLOPEDIA__;
       __SPECIAL_TRANSFORMS__;
       __PILOT_REWARDS__;
       __PROFILE_SAVE__;

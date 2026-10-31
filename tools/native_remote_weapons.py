@@ -1,6 +1,7 @@
 """Compile native remote launch actions into one authoritative beam weapon.
 Remote units are presentation objects, never extra simulation/network entities.
 """
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 import re
 import shutil
@@ -151,19 +152,19 @@ def apply(prefab, native=None):
 
 def connect_prototype_technology():
     path=ASSETS.parent/'shared/development-tree.json'
-    tree=json.loads(path.read_text(encoding='utf-8'))
+    tree=load_source_json(path.read_text(encoding='utf-8'))
     node=next(n for n in tree['ZEON'] if n['id']=='Tech_ZEON_0079_T2_ZeongDevelopmentPlan')
     for ident in ('MS_06Z','MSN_01'):
         if (ASSETS/f'units/{ident}/unit.json').exists() and ident not in node['unlocks']:
             node['unlocks'].append(ident)
-    path.write_text(json.dumps(tree,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    path.write_text(dump_source_json(tree,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 if __name__ == '__main__':
     connect_prototype_technology()
     for ident in CARRIERS:
         path=ASSETS/f'units/{ident}/unit.json'
-        prefab=json.loads(path.read_text(encoding='utf-8'))
+        prefab=load_source_json(path.read_text(encoding='utf-8'))
         apply(prefab)
-        path.write_text(json.dumps(prefab,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        path.write_text(dump_source_json(prefab,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         for w in prefab['weapons'].values():
             if w.get('remote'):print(ident,w['remote']['kind'],len(w['remote']['units']))

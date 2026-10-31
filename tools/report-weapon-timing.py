@@ -1,4 +1,5 @@
 """输出原生时间统计；运行时多武器攻击由AP规则控制。"""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import csv
 import json
 from collections import Counter, defaultdict
@@ -19,7 +20,7 @@ def flow_class(value):
 def main():
     rows=[]
     for file in sorted((ROOT/"assets/units").glob("*/unit.json")):
-        unit=json.loads(file.read_text(encoding="utf-8"))
+        unit=load_source_json(file.read_text(encoding="utf-8"))
         for key,weapon in unit["weapons"].items():
             native=weapon["nativeTiming"]
             burst_end=native["duration"]
@@ -39,7 +40,7 @@ def main():
                 "hidden":bool(weapon.get("availability",{}).get("hidden")),"source":native["source"],
                 "nativePayload":weapon["nativePayload"],"timeline":weapon["attack"]["steps"],
             })
-    (ROOT/"tools/weapon-timing-report.json").write_text(json.dumps(rows,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    (ROOT/"tools/weapon-timing-report.json").write_text(dump_source_json(rows,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     fields=[key for key in rows[0] if key not in ["nativePayload","timeline"]]
     with (ROOT/"武器时间与CD统计.csv").open("w",encoding="utf-8-sig",newline="") as file:
         writer=csv.DictWriter(file,fieldnames=fields,extrasaction="ignore");writer.writeheader();writer.writerows(rows)

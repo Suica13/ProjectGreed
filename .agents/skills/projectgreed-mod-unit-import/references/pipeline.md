@@ -35,3 +35,7 @@
 4. `npm run build`；相关 `npx playwright test tests/<name>.spec.cjs`。重点单元测试：`paired-weapons`、`conversions`、`ship-arcs`、`native-combat`；浏览器参照 `native-layout`、`conversions`、`muzzle-effects`。
 
 不要为消除测试失败而重新采用过时手调伤害。先确认测试验证的是现行原生契约还是已被用户覆盖的旧政策。不要删除仍有调用方的旧版本脚本或回归测试。
+
+## 共用武器源文件
+
+`assets/weapons.json`维护共用武器，单位JSON的weapons项保存ref与overrides/remove。Node脚本通过tools/weapon-store.cjs的parse/stringify读写；Python通过tools/weapon_store.py的loads/dumps读写。生成、维护脚本在内存中操作展开对象，保存自动转换引用；不要把ref当完整武器读取。单机贴图、枪口和硬点依赖留在单位覆盖。武器名称与等级、战斗政策仍在加载编译阶段统一应用。迁移及使用说明见仓库根目录《共用武器与图鉴.md》。

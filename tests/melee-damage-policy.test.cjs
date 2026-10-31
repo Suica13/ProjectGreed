@@ -8,7 +8,7 @@ const S = require('../shared/weapon-sequence.js');
 test('all melee weapons gain only 10 percent, ramming stays native, and source data stays intact', () => {
   let melee = 0, beamMelee = 0, ramming = 0;
   for (const prefab of loadCatalog().prefabs) {
-    const raw = JSON.parse(fs.readFileSync(`assets/units/${prefab.id}/unit.json`, 'utf8'));
+    const raw = require("../tools/weapon-store.cjs").parse(fs.readFileSync(`assets/units/${prefab.id}/unit.json`, 'utf8'));
     for (const [id, before] of Object.entries(raw.weapons)) {
       if (before.type !== 'melee' && before.category !== 'melee') continue;
       const after = prefab.weapons[id];

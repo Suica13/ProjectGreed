@@ -37,7 +37,7 @@ test('Unit 4 and Bst use equal grade-2 wrist guns without beam-rifle scaling', (
       assert.equal(w.damage, 9750);
       assert.equal(w.beamDamageScale ?? 1, 1);
     }
-    const raw = JSON.parse(fs.readFileSync(`assets/units/${model.prefabId}/unit.json`, 'utf8'));
+    const raw = require("../tools/weapon-store.cjs").parse(fs.readFileSync(`assets/units/${model.prefabId}/unit.json`, 'utf8'));
     assert.equal(raw.weapons.Common_ArmBR_Pink_L.nativePayload.BeamDamage, 3750);
   }
 });

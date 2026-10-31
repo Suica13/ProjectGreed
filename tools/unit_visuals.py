@@ -1,6 +1,7 @@
 """Semantic names for imported skeletons, animation curves and visual attachments.
 Only the MOD reader uses legacy arm/leg numbers; runtime JSON uses part names.
 """
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy
 import json
 from pathlib import Path
@@ -31,10 +32,10 @@ def normalize_visuals(prefab, base):
     prefab = rename_bones(copy.deepcopy(prefab))
     for reference in prefab["animations"].values():
         path = (Path(base) / reference).resolve()
-        old = json.loads(path.read_text(encoding="utf-8"))
+        old = load_source_json(path.read_text(encoding="utf-8"))
         new = rename_bones(old)
         if new != old:
-            path.write_text(json.dumps(new, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            path.write_text(dump_source_json(new, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     prefab.setdefault("tags", ["EFSF" if prefab["id"].startswith("R") else "ZEON"])
     if "0079" not in prefab["tags"]: prefab["tags"].append("0079")
     return prefab

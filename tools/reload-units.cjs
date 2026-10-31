@@ -1,11 +1,12 @@
 /* 扫描项目内 unit.json，先完整校验，再更新目录和网页。不会调用 MOD 导入器。 */
 "use strict";
+const WeaponStore = require("./weapon-store.cjs");
 const fs = require("node:fs"),
   path = require("node:path"),
   { spawnSync } = require("node:child_process");
 const { loadCatalog } = require("./load-catalog.cjs");
 const root = path.resolve(__dirname, "..");
-const readJSON = (name) => JSON.parse(fs.readFileSync(name, "utf8").replace(/^\uFEFF/, ""));
+const readJSON = (name) => WeaponStore.parse(fs.readFileSync(name, "utf8").replace(/^\uFEFF/, ""));
 function discoverUnits(directory, assetsDirectory = path.dirname(directory)) {
   const found = [];
   function walk(current) {
@@ -42,7 +43,7 @@ function reloadUnits({ checkOnly = false } = {}) {
   const catalogFile = path.join(root, "assets/unit-catalog.json"),
     original = fs.readFileSync(catalogFile, "utf8");
   const candidate = nextCatalog(
-    JSON.parse(original.replace(/^\uFEFF/, "")),
+    WeaponStore.parse(original.replace(/^\uFEFF/, "")),
     discoverUnits(path.join(root, "assets/units")),
   );
   if (!candidate.units.length)
@@ -59,7 +60,7 @@ function reloadUnits({ checkOnly = false } = {}) {
   for (const prefab of validated.prefabs) console.log("  " + prefab.id + " - " + prefab.name);
   if (checkOnly) return validated;
   try {
-    fs.writeFileSync(catalogFile, JSON.stringify(candidate, null, 2) + "\n");
+    fs.writeFileSync(catalogFile, WeaponStore.stringify(candidate, null, 2) + "\n");
     const result = spawnSync(process.execPath, [path.join(root, "build.cjs")], {
       cwd: root,
       stdio: "inherit",

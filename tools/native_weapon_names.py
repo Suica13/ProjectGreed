@@ -17,6 +17,12 @@ def label(key, weapon, ship=False):
     ident = re.sub(r"_(?:L|R)$", "", weapon.get("sourceName", key))
     if ident in EXACT:
         return EXACT[ident]
+    if "BeamGun" in ident:
+        if "ShieldBeamGun" in ident:
+            return ("盾牌光束枪", "Shield Beam Gun", "シールド・ビームガン")
+        if "BOWA" in ident:
+            return ("BOWA光束枪", "BOWA Beam Gun", "BOWAビーム・ガン")
+        return ("光束枪", "Beam Gun", "ビーム・ガン")
     if re.search(r"Turret_?AA(?:_|$)", ident):
         return ("对空机枪", "Anti-Air Machine Gun", "対空機銃")
     if re.search(r"Turret_?CN(?:_|$)", ident):

@@ -1,0 +1,246 @@
+html.catalog-developer #menuShell,
+html.catalog-developer #shellSidebar,
+html.catalog-developer #musicPlayer,
+html.catalog-developer .menu-screen:not(#encyclopediaScreen),
+html.catalog-developer #producePreviewUnit,
+html.catalog-developer #formationDetailHangars [data-preload-hangar],
+html.catalog-developer #openSpecialTransforms {
+  display: none !important;
+}
+#editorLoginScreen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 100;
+  background: #101923;
+  padding: 20px;
+}
+#editorLoginScreen[hidden] {
+  display: none !important;
+}
+#editorLogin {
+  box-sizing: border-box;
+  width: min(480px, 100%);
+  padding: 28px;
+  background: #1b2938;
+  border: 1px solid #6bbce9;
+  border-radius: 8px;
+}
+#editorLogin h1 {
+  margin-top: 0;
+  color: #b9e5ff;
+}
+#editorLogin label {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0;
+}
+#editorLogin input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+#editorLoginStatus {
+  color: #c6d9e7;
+  overflow-wrap: anywhere;
+  min-height: 2em;
+}
+#confirmEditorLogin {
+  width: 100%;
+}
+.developer-toolbar > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+html.catalog-developer #encyclopediaScreen {
+  position: fixed;
+  inset: 58px 0 0 !important;
+  padding: 12px !important;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+html.catalog-developer #encyclopediaScreen > .modal {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  flex: 1 1 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.developer-toolbar {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 58px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+  background: #121e2b;
+  border-bottom: 1px solid #62bbee;
+  box-sizing: border-box;
+}
+.developer-toolbar strong {
+  margin-right: auto;
+}
+.developer-toolbar input {
+  width: 235px;
+}
+.developer-toolbar small {
+  color: #b5cfe1;
+}
+.catalog-editor-dialog {
+  width: min(1000px, 94vw);
+  max-height: 92dvh;
+  padding: 0;
+  color: #ecf4fb;
+  background: #182635;
+  border: 1px solid #71c8fa;
+  border-radius: 8px;
+}
+.catalog-editor-dialog::backdrop {
+  background: #000b;
+}
+.catalog-editor-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: #223549;
+  border-bottom: 1px solid #48677f;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.catalog-editor-header h3 {
+  margin: 0;
+  flex: 1;
+}
+.catalog-editor-body {
+  padding: 16px;
+}
+.catalog-editor-body fieldset {
+  min-width: 0;
+  margin: 0 0 16px;
+  padding: 14px;
+  border: 1px solid #49667f;
+  border-radius: 5px;
+}
+.catalog-editor-body legend {
+  color: #9cdbff;
+  padding: 0 8px;
+  font-weight: 600;
+}
+.catalog-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.catalog-editor-grid label {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #cee1ef;
+  font-size: 13px;
+}
+.catalog-editor-grid input,
+.catalog-editor-grid select {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.catalog-editor-grid details {
+  grid-column: 1 / -1;
+}
+.catalog-editor-grid details > .catalog-editor-grid {
+  padding: 12px 0;
+}
+.catalog-editor-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.catalog-editor-row > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+.catalog-editor-note {
+  color: #c2d3df;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+#unitSourceEditor {
+  padding: 16px;
+  border-top: 1px solid #5c87a8;
+}
+#unitSourceEditor[hidden] {
+  display: none;
+}
+html.catalog-developer #formationUnitDetail {
+  z-index: 70;
+}
+html.catalog-developer #formationUnitDetail > .modal {
+  width: min(1360px, 96vw);
+}
+html.catalog-developer #formationUnitDetail .unit-detail-header {
+  flex-wrap: wrap;
+}
+.catalog-editor-error {
+  color: #ffb6a6;
+  white-space: pre-wrap;
+}
+.catalog-weapon-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.catalog-weapon-actions > button {
+  display: inline-block;
+  margin: 0;
+}
+@media (max-width: 650px) {
+  .developer-toolbar {
+    gap: 6px;
+    padding: 6px;
+  }
+  .developer-toolbar strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  .developer-toolbar input {
+    width: 120px;
+    flex: none;
+  }
+  .developer-toolbar small {
+    display: none;
+  }
+  .catalog-editor-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.catalog-numeric-delta {
+  display: block;
+  color: #9dcbe8;
+  font-size: 11px;
+  font-weight: normal;
+}

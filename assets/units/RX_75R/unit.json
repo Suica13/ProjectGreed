@@ -295,7 +295,7 @@
   },
   "stats": {
     "hp": 15500,
-    "en": 375.0,
+    "en": 375,
     "move": 5,
     "mobility": 75,
     "cost": 200,
@@ -329,7 +329,7 @@
     "sensors": {
       "sight": 7,
       "radar": 8.5,
-      "antiDetection": 0.0,
+      "antiDetection": 0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -426,9 +426,9 @@
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 17.0,
-      "radar": 306.0,
-      "antiDetection": 0.0
+      "sight": 17,
+      "radar": 306,
+      "antiDetection": 0
     },
     "v17BaseHp": 12500,
     "technologyEra": "0079E",
@@ -467,910 +467,194 @@
   },
   "weapons": {
     "EF_RX_75R_Cannon": {
-      "name": "加农炮",
-      "type": "shell",
-      "min": 3,
-      "max": 5,
-      "hit": 75,
-      "en": 70,
-      "sourceName": "EF_RX_75R_Cannon",
-      "sourceHit": 75,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 3000,
-      "damageComponents": {
-        "shell": 3000
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0
-          }
+      "ref": "EF_RX_75R_Cannon__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
         ],
-        "startAnimation": null
-      },
-      "requiredParts": [
-        "rightArm"
-      ],
-      "partBreakModifier": 0.5,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw",
-        "barrels": [
-          {
-            "id": "EF_RX_75R_Cannon",
-            "x": 4,
-            "y": 20
-          },
-          {
-            "id": "EF_RX_75R_Cannon_Fake",
-            "x": 4,
-            "y": 20
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Cannon_1.png",
-        "scale": 0.5,
-        "speed": 25,
-        "forwardOffset": -5,
-        "rotation": 0
-      },
-      "hitEffect": "Explosion_Hit_1",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Body",
-            "offset": {
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw",
+          "barrels": [
+            {
+              "id": "EF_RX_75R_Cannon",
               "x": 4,
               "y": 20
             },
-            "alternatingOffsetX": -8
-          },
-          {
-            "bone": "Turret_EF_RX_75R_Cannon_Fake",
-            "offset": {
+            {
+              "id": "EF_RX_75R_Cannon_Fake",
               "x": 4,
               "y": 20
-            },
-            "alternatingOffsetX": -8
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/ShellCannon_1.ogg",
-        "volume": 0.6
-      },
-      "targetModifiers": {
-        "air": 0.5,
-        "water": 0.75,
-        "ground": 1,
-        "space": 1
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1",
-        "BZ_Fire_1"
-      ],
-      "category": "cannon",
-      "nativePayload": {
-        "ShellDamage": 3000,
-        "DpDamage": 200,
-        "WeaponAccuracy": 75,
-        "PartBreakModifier": 0.5,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1,
-        "PilotTrueDamage": 0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.5,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.5,
-        "AntiLand": 1,
-        "AntiSpace": 1,
-        "HeightChangeSpeed": 0.5,
-        "HeightHitRange": 10,
-        "ProjectileSpeed": 25,
-        "ProjectileSpread": 0,
-        "ProjectileExplosionRange": 30,
-        "ProjectileLife": 50,
-        "ProjectileBlastRange": 60,
-        "ProjectileBlastDamageModifier": 0.35,
-        "ProjectileBlastDpModifier": 1
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+            }
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 4,
+                "y": 20
+              },
+              "alternatingOffsetX": -8
+            },
+            {
+              "bone": "Turret_EF_RX_75R_Cannon_Fake",
+              "offset": {
+                "x": 4,
+                "y": 20
+              },
+              "alternatingOffsetX": -8
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw",
-        "barrel": "EF_RX_75R_Cannon",
-        "entry": "automatic_turret",
-        "cooldown": 7,
-        "duration": 0,
-        "firstShot": 0,
-        "lastShot": 0,
-        "firingEvents": 2,
-        "projectiles": 2,
-        "declaredEnergy": 35,
-        "energyMode": "perShot",
-        "energyPerEmission": 35,
-        "energy": 70,
-        "actions": []
-      },
-      "actionCost": 3,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw"
+      }
     },
     "EF_RX_75R_Cannon_Fake": {
-      "name": "加农炮",
-      "type": "shell",
-      "min": 3,
-      "max": 5,
-      "hit": 75,
-      "en": 70,
-      "sourceName": "EF_RX_75R_Cannon_Fake",
-      "sourceHit": 75,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 3000,
-      "damageComponents": {
-        "shell": 3000
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0
-          }
+      "ref": "EF_RX_75R_Cannon_Fake__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
         ],
-        "startAnimation": null
-      },
-      "requiredParts": [
-        "rightArm"
-      ],
-      "partBreakModifier": 0.5,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw",
-        "barrels": [
-          {
-            "id": "EF_RX_75R_Cannon",
-            "x": 4,
-            "y": 20
-          },
-          {
-            "id": "EF_RX_75R_Cannon_Fake",
-            "x": 4,
-            "y": 20
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Cannon_1.png",
-        "scale": 0.5,
-        "speed": 25,
-        "forwardOffset": -5,
-        "rotation": 0
-      },
-      "hitEffect": "Explosion_Hit_1",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Body",
-            "offset": {
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw",
+          "barrels": [
+            {
+              "id": "EF_RX_75R_Cannon",
               "x": 4,
               "y": 20
             },
-            "alternatingOffsetX": -8
-          },
-          {
-            "bone": "Turret_EF_RX_75R_Cannon_Fake",
-            "offset": {
+            {
+              "id": "EF_RX_75R_Cannon_Fake",
               "x": 4,
               "y": 20
-            },
-            "alternatingOffsetX": -8
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/ShellCannon_1.ogg",
-        "volume": 0.6
-      },
-      "targetModifiers": {
-        "air": 0.5,
-        "water": 0.75,
-        "ground": 1,
-        "space": 1
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1",
-        "BZ_Fire_1"
-      ],
-      "category": "cannon",
-      "nativePayload": {
-        "ShellDamage": 3000,
-        "DpDamage": 200,
-        "WeaponAccuracy": 75,
-        "PartBreakModifier": 0.5,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1,
-        "PilotTrueDamage": 0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.5,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.5,
-        "AntiLand": 1,
-        "AntiSpace": 1,
-        "HeightChangeSpeed": 0.5,
-        "HeightHitRange": 10,
-        "ProjectileSpeed": 25,
-        "ProjectileSpread": 0,
-        "ProjectileExplosionRange": 30,
-        "ProjectileLife": 50,
-        "ProjectileBlastRange": 60,
-        "ProjectileBlastDamageModifier": 0.35,
-        "ProjectileBlastDpModifier": 1
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+            }
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 4,
+                "y": 20
+              },
+              "alternatingOffsetX": -8
+            },
+            {
+              "bone": "Turret_EF_RX_75R_Cannon_Fake",
+              "offset": {
+                "x": 4,
+                "y": 20
+              },
+              "alternatingOffsetX": -8
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "EF_RX_75R_Cannon"
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw",
-        "barrel": "EF_RX_75R_Cannon_Fake",
-        "entry": "automatic_turret",
-        "cooldown": 7,
-        "duration": 0,
-        "firstShot": 0,
-        "lastShot": 0,
-        "firingEvents": 2,
-        "projectiles": 2,
-        "declaredEnergy": 35,
-        "energyMode": "perShot",
-        "energyPerEmission": 35,
-        "energy": 70,
-        "actions": []
-      },
-      "actionCost": 3,
-      "availability": {
-        "hidden": true,
-        "reasons": [
-          "merged_position"
-        ],
-        "mergedInto": "EF_RX_75R_Cannon"
-      },
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw"
+      }
     },
     "EF_RX_75R_DoubleMG": {
-      "name": "机枪",
-      "type": "shell",
-      "min": 2,
-      "max": 3,
-      "hit": 75,
-      "en": 0,
-      "sourceName": "EF_RX_75R_DoubleMG",
-      "sourceHit": 75,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 350,
-      "damageComponents": {
-        "shell": 350
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1,
-            "requiredParts": [],
-            "delay": 0.125
-          }
+      "ref": "EF_RX_75R_DoubleMG__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
         ],
-        "startAnimation": null
-      },
-      "requiredParts": [
-        "rightArm"
-      ],
-      "partBreakModifier": 1,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_DoubleMG.gw",
-        "barrels": [
-          {
-            "id": "EF_RX_75R_DoubleMG",
-            "x": 14,
-            "y": 10
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/MG_1.png",
-        "scale": 0.5,
-        "speed": 65,
-        "forwardOffset": -10,
-        "rotation": 0
-      },
-      "hitEffect": "MG_Hit_1",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Body",
-            "offset": {
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_DoubleMG.gw",
+          "barrels": [
+            {
+              "id": "EF_RX_75R_DoubleMG",
               "x": 14,
               "y": 10
-            },
-            "alternatingOffsetX": -28
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/MachineGun_2.ogg",
-        "volume": 0.3
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 0.75,
-        "ground": 1,
-        "space": 1
-      },
-      "muzzleEffects": [
-        "MG_Fire_1"
-      ],
-      "category": "machine_gun",
-      "nativePayload": {
-        "ShellDamage": 350,
-        "DpDamage": 25,
-        "WeaponAccuracy": 75,
-        "PartBreakModifier": 1,
-        "CockpitBreakModifier": 1,
-        "PilotDamageModifier": 1,
-        "PilotTrueDamage": 0,
-        "AntiSizeLargeDamage": 1,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.75,
-        "AntiLand": 1,
-        "AntiSpace": 1,
-        "HeightChangeSpeed": 2,
-        "HeightHitRange": 20,
-        "ProjectileSpeed": 65,
-        "ProjectileSpread": 3,
-        "ProjectileLife": 30
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+            }
+          ]
         },
-        "large": {
-          "damage": 1,
-          "accuracy": 1
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 14,
+                "y": 10
+              },
+              "alternatingOffsetX": -28
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_DoubleMG.gw",
-        "barrel": "EF_RX_75R_DoubleMG",
-        "entry": "automatic_turret",
-        "cooldown": 3,
-        "duration": 1.375,
-        "firstShot": 0,
-        "lastShot": 1.375,
-        "firingEvents": 12,
-        "projectiles": 12,
-        "declaredEnergy": 0,
-        "energyMode": "perShot",
-        "energyPerEmission": 0,
-        "energy": 0,
-        "actions": []
-      },
-      "actionCost": 3,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_DoubleMG.gw"
+      }
     },
     "Common_Push_A": {
-      "name": "冲撞",
-      "localization": {
-        "zh": {
-          "name": "冲撞"
+      "ref": "Common_Push_A__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0,
+              "y": 0
+            }
+          ]
         },
-        "ja": {
-          "name": "体当たり"
-        },
-        "en": {
-          "name": "Body Tackle"
-        }
-      },
-      "slot": "skill",
-      "type": "melee",
-      "min": 1,
-      "max": 1,
-      "hit": 125,
-      "en": 0,
-      "clip": "Common_Push_A",
-      "sourceName": "Common_Push_A",
-      "sourceHit": 125,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "changeHeldWeapon": false,
-      "requiredParts": [],
-      "partBreakModifier": 0.75,
-      "damagePerShot": 5000,
-      "damageComponents": {
-        "melee": 2500,
-        "meleeShell": 2500
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "animation": "Common_Push_A",
-            "delay": 0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.75,
-            "requiredParts": [],
-            "delay": 0.45
-          },
-          {
-            "delay": 1
-          }
-        ],
-        "startAnimation": null
-      },
-      "sound": {
-        "file": "../../sounds/Fist_2.ogg",
-        "volume": 0.5
-      },
-      "hitEffect": "Cqb_Hit_1",
-      "swingEffects": [
-        "Cqb_Fire_2_Kick_White_R"
-      ],
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
-        "barrelX": 0,
-        "barrelY": 0,
-        "cooldownSeconds": 3,
-        "barrels": [
-          {
-            "id": "Common_Push_A",
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
             "x": 0,
             "y": 0
           }
-        ]
-      },
-      "category": "melee",
-      "nativePayload": {
-        "CqbDamage": 2500,
-        "CqbShellDamage": 2500,
-        "DpDamage": 1000,
-        "WeaponAccuracy": 125,
-        "PartBreakModifier": 0.75,
-        "CockpitBreakModifier": 0.75,
-        "PilotDamageModifier": 1,
-        "PilotTrueDamage": 0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.75,
-        "AntiLand": 1,
-        "AntiSpace": 1,
-        "HeightHitRange": 35,
-        "ProjectileSpeed": 0,
-        "ProjectileSpread": 0,
-        "ProjectileLife": 0.25,
-        "ProjectileAttackTimes": 1
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
-        },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
         }
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 0.75,
-        "ground": 1,
-        "space": 1
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
-        "barrel": "Common_Push_A",
-        "entry": "hiddenAction_Common_Push_A_Fire",
-        "cooldown": 3,
-        "duration": 1.45,
-        "firstShot": 0.45,
-        "lastShot": 0.45,
-        "firingEvents": 1,
-        "projectiles": 1,
-        "declaredEnergy": 0,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 0,
-        "actions": [
-          "hiddenAction_Common_Push_A_Fire",
-          "hiddenAction_SetAttackingOn",
-          "hiddenAction_SendEnemyTryAttack_Cqb",
-          "hiddenAction_Common_Push_A_SetWeaponIndex",
-          "hiddenAction_Common_Push_A_Step_1",
-          "hiddenAction_Common_Push_A_Fire_Step_1",
-          "hiddenAction_Common_Push_A_Fire_Step_2",
-          "hiddenAction_Common_Push_A_Fire_Step_Final",
-          "hiddenAction_SetAttackingOff"
-        ]
-      },
-      "muzzle": {
-        "bone": "Body",
-        "offset": {
-          "x": 0,
-          "y": 0
-        }
-      },
-      "actionCost": 5,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
+      }
     },
     "Common_MortarDouble_RX_75R": {
-      "name": "迫击炮轰炸",
-      "type": "shell",
-      "min": 5,
-      "max": 8,
-      "hit": 75,
-      "en": 200,
-      "sourceName": "Common_MortarDouble_RX_75R",
-      "sourceHit": 75,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "skill",
-      "clip": null,
-      "damagePerShot": 2500,
-      "damageComponents": {
-        "shell": 2500
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 2.25
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.01
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 1.25
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.01
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 1.25
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.01
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 1.25
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 0.5,
-            "requiredParts": [],
-            "delay": 0.01
-          },
-          {
-            "delay": 2
-          }
+      "ref": "Common_MortarDouble_RX_75R__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
         ],
-        "startAnimation": null
-      },
-      "requiredParts": [
-        "rightArm"
-      ],
-      "partBreakModifier": 0.5,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw",
-        "barrels": [
-          {
-            "id": "Common_MortarDouble_RX_75R",
-            "x": 7,
-            "y": 25
-          },
-          {
-            "id": "Common_MortarDouble_RX_75R_L",
-            "x": -7,
-            "y": 25
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Cannon_1.png",
-        "scale": 0.75,
-        "speed": 25,
-        "forwardOffset": -5,
-        "rotation": 0,
-        "motion": "mortar"
-      },
-      "hitEffect": "Explosion_Hit_1_XL",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Body",
-            "offset": {
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw",
+          "barrels": [
+            {
+              "id": "Common_MortarDouble_RX_75R",
               "x": 7,
               "y": 25
-            }
-          },
-          {
-            "bone": "Turret_EF_RX_75R_Cannon_Fake",
-            "offset": {
+            },
+            {
+              "id": "Common_MortarDouble_RX_75R_L",
               "x": -7,
               "y": 25
             }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/ShellCannon_1.ogg",
-        "volume": 0.6
-      },
-      "targetModifiers": {
-        "air": 0.5,
-        "water": 0.75,
-        "ground": 1,
-        "space": 1
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1",
-        "BZ_Fire_1"
-      ],
-      "nativePayload": {
-        "offsetRandomXY": 100,
-        "ShellDamage": 2500,
-        "DpDamage": 300,
-        "WeaponAccuracy": 75,
-        "PartBreakModifier": 0.5,
-        "CockpitBreakModifier": 0.5,
-        "PilotDamageModifier": 1,
-        "PilotTrueDamage": 0,
-        "AntiBuilding": 2,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.5,
-        "AntiLand": 1,
-        "AntiSpace": 1,
-        "ProjectileSpeed": 25,
-        "ProjectileSpread": 25,
-        "ProjectileExplosionRange": 80,
-        "ProjectileLife": 200
-      },
-      "antiSize": {
-        "small": {
-          "damage": 1,
-          "accuracy": 1
+          ]
         },
-        "large": {
-          "damage": 1,
-          "accuracy": 1
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 7,
+                "y": 25
+              }
+            },
+            {
+              "bone": "Turret_EF_RX_75R_Cannon_Fake",
+              "offset": {
+                "x": -7,
+                "y": 25
+              }
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw",
-        "barrel": "Common_MortarDouble_RX_75R",
-        "entry": "action_Common_MortarDouble_RX_75R_Trigger",
-        "cooldown": 120,
-        "duration": 8.04,
-        "firstShot": 2.25,
-        "lastShot": 6.039999999999999,
-        "firingEvents": 8,
-        "projectiles": 8,
-        "declaredEnergy": 200,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 200,
-        "actions": [
-          "action_Common_MortarDouble_RX_75R_Trigger",
-          "hiddenAction_SetOnSkillOn",
-          "hiddenAction_PlayCommon_Cannon_Shoot_A_Step_1",
-          "hiddenAction_PlayCommon_Cannon_Shoot_A_Step_2",
-          "hiddenAction_Common_MortarDouble_RX_75R_SetWeaponIndex",
-          "hiddenAction_Common_MortarDouble_RX_75R_B4_Step_1",
-          "hiddenAction_Common_MortarDouble_RX_75R_Fire_Step_1",
-          "hiddenAction_Common_MortarDouble_RX_75R_Fire_Step_2",
-          "hiddenAction_Common_MortarDouble_RX_75R_Fire_Step_3",
-          "hiddenAction_Common_MortarDouble_RX_75R_Fire_Step_4",
-          "hiddenAction_Common_MortarDouble_RX_75R_Fire_Step_5",
-          "hiddenAction_Common_MortarDouble_RX_75R_Fire_Step_Final",
-          "hiddenAction_SetOnSkillOff"
-        ]
-      },
-      "category": "mortar",
-      "noCounter": true,
-      "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
-      },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5,
-      "localization": {
-        "zh": {
-          "name": "迫击炮轰炸"
-        },
-        "en": {
-          "name": "Mortar Bombardment"
-        },
-        "ja": {
-          "name": "迫撃砲砲撃"
-        }
-      },
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw"
+      }
     }
   },
   "mechanics": [

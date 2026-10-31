@@ -1,11 +1,12 @@
 """Import native 0079 Minovsky dispensers as turn-based grid fields."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 from mod_source import ASSETS, MOD, load
 
 
 def correct(prefab, native):
     skills = prefab.setdefault("skills", [])
-    before = json.dumps(skills, ensure_ascii=False, sort_keys=True)
+    before = dump_source_json(skills, ensure_ascii=False, sort_keys=True)
     skills[:] = [skill for skill in skills if skill.get("id") not in [
         "Common_MinovskyParticle_S", "Common_MinovskyParticle_M"
     ]]
@@ -45,16 +46,16 @@ def correct(prefab, native):
             mechanic.update(info)
         else:
             mechanics.append(info)
-    return before != json.dumps(skills, ensure_ascii=False, sort_keys=True)
+    return before != dump_source_json(skills, ensure_ascii=False, sort_keys=True)
 
 
 def main():
     changed = []
     for path in (ASSETS / "units").glob("*/unit.json"):
-        prefab = json.loads(path.read_text(encoding="utf-8-sig"))
+        prefab = load_source_json(path.read_text(encoding="utf-8-sig"))
         native = load(MOD / prefab["source"])
         if correct(prefab, native):
-            path.write_text(json.dumps(prefab, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            path.write_text(dump_source_json(prefab, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             changed.append(prefab["id"])
     print("Minovsky skills refreshed:", ", ".join(changed) if changed else "none")
 

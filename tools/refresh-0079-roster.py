@@ -1,4 +1,5 @@
-﻿"""Refresh roster access, native refit/ACE forms and selected balance policies."""
+"""Refresh roster access, native refit/ACE forms and selected balance policies."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 from pathlib import Path
 from mod_source import ASSETS,MOD,load
@@ -6,12 +7,12 @@ from native_refits import apply as refits
 from native_weapon_names import apply as names
 from unit_ship_balance import apply_accuracy
 
-def write(path,value):path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+def write(path,value):path.write_text(dump_source_json(value,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 def main():
-    catalog=json.loads((ASSETS/'unit-catalog.json').read_text(encoding='utf8'))
+    catalog=load_source_json((ASSETS/'unit-catalog.json').read_text(encoding='utf8'))
     roster={}
     for ref in catalog['units']:
-        p=json.loads((ASSETS/ref).read_text(encoding='utf8'));roster[p['id']]=p
+        p=load_source_json((ASSETS/ref).read_text(encoding='utf8'));roster[p['id']]=p
         refits(p);names(p);apply_accuracy(p)
     for p in roster.values():
         p['pilotForms']=[]
@@ -27,9 +28,9 @@ def main():
     for p in roster.values():
         if p['id']=='RX_79_G_Ez8_WithBackpack':attach(p,load(MOD/p['source']))
         write(ASSETS/f"units/{p['id']}/unit.json",p)
-    production=json.loads(Path('shared/production-catalog.json').read_text(encoding='utf8'))
+    production=load_source_json(Path('shared/production-catalog.json').read_text(encoding='utf8'))
     rows=['# 0079非科技树单位与获取路线','','专用形态随ACE配属自动切换，库存仍归原始机体；取消配属恢复原机体。状态、炮塔与飞行辅助实体不作为独立库存。','','| 单位 | 阵营 | 获取方式 |','| --- | --- | --- |']
-    tree=json.loads(Path('shared/development-tree.json').read_text(encoding='utf8'))
+    tree=load_source_json(Path('shared/development-tree.json').read_text(encoding='utf8'))
     on_tree={i for nodes in tree.values() for n in nodes for i in n['unlocks']}
     for p in roster.values():
         sources=[s for s in roster.values() if s['id'] != p['id'] and any(r['unitId']==p['id'] for r in s.get('refits',[]))]
@@ -42,7 +43,7 @@ def main():
         write(ASSETS/f"units/{p['id']}/unit.json",p)
     write(Path('shared/production-catalog.json'),production)
     routes=['# 原MOD库存改装路线','','普通改装消费原机体与表列原生费用；驾驶员专用路线在配属对应ACE时自动转换，不扣费用、不产生目标库存，取消配属恢复原机体。自引用路线不展示。','','| 原机体 | 目标机体 | 原生资金 | 原生物资 | 条件 |','| --- | --- | ---: | ---: | --- |']
-    pilots={p['id']:p['name'] for p in json.loads(Path('shared/pilots.json').read_text(encoding='utf8'))['aces']}
+    pilots={p['id']:p['name'] for p in load_source_json(Path('shared/pilots.json').read_text(encoding='utf8'))['aces']}
     for p in roster.values():
         for option in p.get('refits',[]):
             if option['unitId']==p['id']:continue

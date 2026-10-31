@@ -1,15 +1,16 @@
 """Refresh provenance and the human-readable Page_00 implementation audit from actual prefabs."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 from pathlib import Path
 from mod_source import ASSETS
 from page_one_adaptations import LABELS
-read=lambda path:json.loads(path.read_text(encoding='utf-8'))
+read=lambda path:load_source_json(path.read_text(encoding='utf-8'))
 manifest=read(Path('tools/0079-page-one-manifest.json'));catalog=read(ASSETS/'unit-catalog.json');prefabs={p['id']:p for p in [read(ASSETS/ref) for ref in catalog['units']]}
 rows=[]
 for row in manifest:
  if 'Pilot' in row['tags'].split(','):continue
  p=prefabs[row['id']];rows.append({'id':p['id'],'faction':p.get('faction',row['faction']),'name':p['name'],'source':row['source'],'status':'imported' if p.get('mechanics') else 'existing','weapons':len(p['weapons']),'skills':[{'id':s['id'],'name':s['name'],'type':s['type']} for s in p.get('skills',[])],'mechanics':p.get('mechanics',[])})
-Path('tools/0079-import-report.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+Path('tools/0079-import-report.json').write_text(dump_source_json(rows,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 pending={}
 for row in rows:
  for m in row['mechanics']:

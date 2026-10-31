@@ -32,76 +32,76 @@
   },
   "skeleton": {
     "Pelvis": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftArm": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightArm": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftShoulder": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightShoulder": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "RightWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment12": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment13": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment15": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Head": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Eye": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftFoot": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "LeftLeg": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "RightFoot": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "RightLeg": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     }
   },
   "layers": [
@@ -109,10 +109,10 @@
       "name": "LeftFoot",
       "texture": "RAG_79_Foot_1.png",
       "bone": "LeftFoot",
-      "order": 1.0,
+      "order": 1,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftLeg"
@@ -123,10 +123,10 @@
       "name": "RightFoot",
       "texture": "RAG_79_Foot_1.png",
       "bone": "RightFoot",
-      "order": 1.0,
+      "order": 1,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightLeg"
@@ -137,10 +137,10 @@
       "name": "LeftLeg",
       "texture": "RAG_79_LegL_1.png",
       "bone": "LeftLeg",
-      "order": 2.0,
+      "order": 2,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftLeg"
@@ -151,10 +151,10 @@
       "name": "RightLeg",
       "texture": "RAG_79_LegR_1.png",
       "bone": "RightLeg",
-      "order": 2.0,
+      "order": 2,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightLeg"
@@ -165,12 +165,12 @@
       "name": "EF_AquaMissileLauncher_NotUsing",
       "texture": "EF_AquaMissileLauncher.png",
       "bone": "Pelvis",
-      "order": 3.0,
+      "order": 3,
       "scale": 0.9,
-      "rotation": -90.0,
+      "rotation": -90,
       "offset": {
-        "x": 5.0,
-        "y": -12.0
+        "x": 5,
+        "y": -12
       },
       "visibleWhen": {
         "kit": [
@@ -190,10 +190,10 @@
       "bone": "Pelvis",
       "order": 3.5,
       "scale": 0.65,
-      "rotation": -90.0,
+      "rotation": -90,
       "offset": {
-        "x": 13.0,
-        "y": -8.0
+        "x": 13,
+        "y": -8
       },
       "visibleWhen": {
         "kit": [
@@ -213,10 +213,10 @@
       "bone": "Pelvis",
       "order": 3.5,
       "scale": 0.55,
-      "rotation": -90.0,
+      "rotation": -90,
       "offset": {
-        "x": -7.0,
-        "y": -7.0
+        "x": -7,
+        "y": -7
       },
       "requiredParts": [
         "rightArm"
@@ -236,10 +236,10 @@
       "bone": "Pelvis",
       "order": 3.5,
       "scale": 0.55,
-      "rotation": -90.0,
+      "rotation": -90,
       "offset": {
-        "x": -7.0,
-        "y": -9.0
+        "x": -7,
+        "y": -9
       },
       "requiredParts": [
         "rightArm"
@@ -257,10 +257,10 @@
       "name": "Crotch",
       "texture": "RAG_79_Crotch_1.png",
       "bone": "Pelvis",
-      "order": 4.0,
+      "order": 4,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -268,10 +268,10 @@
       "name": "ArmL",
       "texture": "RAG_79_ArmL_1.png",
       "bone": "LeftArm",
-      "order": 4.0,
+      "order": 4,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftArm"
@@ -282,10 +282,10 @@
       "name": "ArmR",
       "texture": "RAG_79_ArmR_1.png",
       "bone": "RightArm",
-      "order": 4.0,
+      "order": 4,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightArm"
@@ -296,10 +296,10 @@
       "name": "AnchorL_1",
       "texture": "RAG_79_AnchorL_1.png",
       "bone": "LeftArm",
-      "order": 4.0,
+      "order": 4,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftArm"
@@ -310,10 +310,10 @@
       "name": "AnchorL_2",
       "texture": "RAG_79_AnchorL_2.png",
       "bone": "LeftArm",
-      "order": 4.0,
+      "order": 4,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftArm"
@@ -324,10 +324,10 @@
       "name": "AnchorR_1",
       "texture": "RAG_79_AnchorR_1.png",
       "bone": "RightArm",
-      "order": 4.0,
+      "order": 4,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightArm"
@@ -338,10 +338,10 @@
       "name": "AnchorR_2",
       "texture": "RAG_79_AnchorR_2.png",
       "bone": "RightArm",
-      "order": 4.0,
+      "order": 4,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightArm"
@@ -352,14 +352,14 @@
       "name": "BoostReversing",
       "texture": "BoostReversing_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
+      "order": 4,
+      "scale": 2,
       "offset": {
         "x": -2.5,
-        "y": -12.0
+        "y": -12
       },
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
       "frames": 3,
       "frameFps": 12,
@@ -367,7 +367,7 @@
       "visibleWhen": {
         "sustainedThrust": true
       },
-      "scaleX": 1.0,
+      "scaleX": 1,
       "independentClock": true
     },
     {
@@ -375,15 +375,15 @@
       "texture": "Boost_1.png",
       "bone": "Body",
       "order": 4.1,
-      "scale": 2.0,
+      "scale": 2,
       "offset": {
         "x": -2.5,
-        "y": -7.0
+        "y": -7
       },
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -396,12 +396,12 @@
       "texture": "EF_BeamPickaxe.png",
       "bone": "RightWeapon",
       "order": 4.5,
-      "scale": 1.0,
-      "scaleX": -1.0,
-      "rotation": -10.0,
+      "scale": 1,
+      "scaleX": -1,
+      "rotation": -10,
       "offset": {
-        "x": 7.0,
-        "y": 26.0
+        "x": 7,
+        "y": 26
       },
       "visibleWhen": {
         "kit": [
@@ -418,10 +418,10 @@
       "name": "Body",
       "texture": "RAG_79_Body_1.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -431,9 +431,9 @@
       "bone": "RightArm",
       "order": 5.5,
       "scale": 0.75,
-      "rotation": 0.0,
+      "rotation": 0,
       "offset": {
-        "x": 1.0,
+        "x": 1,
         "y": 5.5
       },
       "visibleWhen": {
@@ -452,10 +452,10 @@
       "bone": "RightArm",
       "order": 5.5,
       "scale": 0.65,
-      "rotation": 0.0,
+      "rotation": 0,
       "offset": {
         "x": 2.5,
-        "y": 31.0
+        "y": 31
       },
       "requiredParts": [
         "rightArm"
@@ -473,10 +473,10 @@
       "bone": "RightArm",
       "order": 5.5,
       "scale": 0.65,
-      "rotation": 0.0,
+      "rotation": 0,
       "offset": {
         "x": -0.5,
-        "y": 31.0
+        "y": 31
       },
       "requiredParts": [
         "rightArm"
@@ -493,11 +493,11 @@
       "texture": "EF_AquaMissileLauncher.png",
       "bone": "RightArm",
       "order": 5.5,
-      "scale": 1.0,
-      "rotation": 0.0,
+      "scale": 1,
+      "rotation": 0,
       "offset": {
-        "x": 1.0,
-        "y": 8.0
+        "x": 1,
+        "y": 8
       },
       "visibleWhen": {
         "kit": [
@@ -513,10 +513,10 @@
       "name": "ShoulderL",
       "texture": "RAG_79_ShoulderL_1.png",
       "bone": "LeftShoulder",
-      "order": 6.0,
+      "order": 6,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftArm"
@@ -527,10 +527,10 @@
       "name": "ShoulderR",
       "texture": "RAG_79_ShoulderR_1.png",
       "bone": "RightShoulder",
-      "order": 6.0,
+      "order": 6,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightArm"
@@ -541,10 +541,10 @@
       "name": "Head",
       "texture": "RAG_79_Head_1.png",
       "bone": "Head",
-      "order": 7.0,
+      "order": 7,
       "offset": {
         "x": -0.5,
-        "y": 0.0
+        "y": 0
       },
       "visibleWhen": {
         "visorClosed": false
@@ -557,10 +557,10 @@
       "name": "Head_Close",
       "texture": "RAG_79_Head_1_Close.png",
       "bone": "Head",
-      "order": 7.0,
+      "order": 7,
       "offset": {
         "x": -0.5,
-        "y": 0.0
+        "y": 0
       },
       "visibleWhen": {
         "visorClosed": true
@@ -596,22 +596,22 @@
   },
   "stats": {
     "hp": 25000,
-    "en": 375.0,
+    "en": 375,
     "move": 6,
-    "mobility": 120.0,
+    "mobility": 120,
     "cost": 325,
     "counterLimit": 1,
-    "accuracy": 120.0,
-    "partStructuralStrength": 120.0,
+    "accuracy": 120,
+    "partStructuralStrength": 120,
     "partsBreakable": true,
     "movementType": "amphibious",
     "adaptability": {
       "ground": 100,
       "space": 50,
-      "water": 105.0,
-      "air": 10.0,
+      "water": 105,
+      "air": 10,
       "atmosphere": 0,
-      "mountain": 100.0,
+      "mountain": 100,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -620,8 +620,8 @@
     "ship": false,
     "sensors": {
       "sight": 8,
-      "radar": 10.0,
-      "antiDetection": 0.0,
+      "radar": 10,
+      "antiDetection": 0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -632,65 +632,65 @@
     "speed": 105
   },
   "attackBonuses": {
-    "melee": 15.0,
-    "shooting": 20.0,
+    "melee": 15,
+    "shooting": 20,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 5.0,
-      "flat": 0.0
+      "percent": 5,
+      "flat": 0
     },
     "shell": {
-      "percent": 10.0,
-      "flat": 75.0
+      "percent": 10,
+      "flat": 75
     },
     "melee": {
-      "percent": 10.0,
-      "flat": 100.0
+      "percent": 10,
+      "flat": 100
     },
     "dp": {
-      "percent": 10.0,
-      "flat": 15.0
+      "percent": 10,
+      "flat": 15
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 0.0
+      "percent": 0,
+      "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     },
     "requiredParts": []
   },
   "sourceStats": {
-    "hp": 20000.0,
+    "hp": 20000,
     "walkSpeed": 0.65,
     "boostSpeed": 1.45,
     "turnSpeed": 1.75,
-    "reaction": 120.0,
-    "shooting": 120.0,
-    "melee": 115.0,
+    "reaction": 120,
+    "shooting": 120,
+    "melee": 115,
     "nativeTags": [
       "RAG_79",
       "Unit",
@@ -702,27 +702,27 @@
     "nativeSkills": [
       "Sonar"
     ],
-    "accuracy": 120.0,
-    "partStructuralStrength": 120.0,
-    "enBeforeReduction": 750.0,
+    "accuracy": 120,
+    "partStructuralStrength": 120,
+    "enBeforeReduction": 750,
     "enCapacityMultiplier": 0.5,
     "adaptability": {
-      "ground": 100.0,
-      "space": 25.0,
-      "water": 105.0,
-      "air": 10.0,
-      "mountain": 100.0,
+      "ground": 100,
+      "space": 25,
+      "water": 105,
+      "air": 10,
+      "mountain": 100,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 20.0,
-      "radar": 360.0,
-      "antiDetection": 0.0
+      "sight": 20,
+      "radar": 360,
+      "antiDetection": 0
     },
     "balanceStatus": "native-level",
-    "unitLevel": 1250.0,
+    "unitLevel": 1250,
     "tacticalMoveBeforeBonus": 5,
-    "v17BaseHp": 20000.0,
+    "v17BaseHp": 20000,
     "technologyEra": "0079L",
     "importedTechPage": 1,
     "actionTurnSpeed": 1.75,
@@ -760,1194 +760,231 @@
   },
   "weapons": {
     "Common_Push_A": {
-      "name": "冲撞",
-      "localization": {
-        "zh": {
-          "name": "冲撞"
+      "ref": "Common_Push_A__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0,
+              "y": 0
+            }
+          ]
         },
-        "ja": {
-          "name": "体当たり"
-        },
-        "en": {
-          "name": "Body Tackle"
-        }
-      },
-      "slot": "skill",
-      "type": "melee",
-      "min": 1,
-      "max": 1,
-      "hit": 125.0,
-      "en": 0,
-      "clip": "Common_Push_A",
-      "sourceName": "Common_Push_A",
-      "sourceHit": 125.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "changeHeldWeapon": false,
-      "requiredParts": [],
-      "partBreakModifier": 0.75,
-      "damagePerShot": 5000.0,
-      "damageComponents": {
-        "melee": 2500.0,
-        "meleeShell": 2500.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "animation": "Common_Push_A",
-            "delay": 0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.75,
-            "requiredParts": [],
-            "delay": 0.45
-          },
-          {
-            "delay": 1.0
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0,
+            "y": 0
           }
-        ],
-        "startAnimation": null
-      },
-      "sound": {
-        "file": "../../sounds/Fist_2.ogg",
-        "volume": 0.5
-      },
-      "hitEffect": "Cqb_Hit_1",
-      "swingEffects": [
-        "Cqb_Fire_2_Kick_White_R"
-      ],
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
-        "barrelX": 0,
-        "barrelY": 0,
-        "cooldownSeconds": 3,
-        "barrels": [
-          {
-            "id": "Common_Push_A",
-            "x": 0.0,
-            "y": 0.0
-          }
-        ]
-      },
-      "nativePayload": {
-        "CqbDamage": 2500.0,
-        "CqbShellDamage": 2500.0,
-        "DpDamage": 1000.0,
-        "WeaponAccuracy": 125.0,
-        "PartBreakModifier": 0.75,
-        "CockpitBreakModifier": 0.75,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.75,
-        "AntiAir": 0.75,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightHitRange": 35.0,
-        "ProjectileSpeed": 0.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileLife": 0.25,
-        "ProjectileAttackTimes": 1.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
-        },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
         }
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 0.75,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
-        "barrel": "Common_Push_A",
-        "entry": "hiddenAction_Common_Push_A_Fire",
-        "cooldown": 3.0,
-        "duration": 1.45,
-        "firstShot": 0.45,
-        "lastShot": 0.45,
-        "firingEvents": 1,
-        "projectiles": 1,
-        "declaredEnergy": 0.0,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 0,
-        "actions": [
-          "hiddenAction_Common_Push_A_Fire",
-          "hiddenAction_SetAttackingOn",
-          "hiddenAction_SendEnemyTryAttack_Cqb",
-          "hiddenAction_Common_Push_A_SetWeaponIndex",
-          "hiddenAction_Common_Push_A_Step_1",
-          "hiddenAction_Common_Push_A_Fire_Step_1",
-          "hiddenAction_Common_Push_A_Fire_Step_2",
-          "hiddenAction_Common_Push_A_Fire_Step_Final",
-          "hiddenAction_SetAttackingOff"
-        ]
-      },
-      "category": "melee",
-      "muzzle": {
-        "bone": "Body",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        }
-      },
-      "actionCost": 5,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
+      }
     },
     "EF_HarpoonGun": {
-      "name": "EF HarpoonGun",
-      "type": "shell",
-      "min": 1,
-      "max": 2,
-      "hit": 100.0,
-      "en": 25.0,
-      "sourceName": "EF_HarpoonGun",
-      "sourceHit": 100.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": "Common_Shoot_Two_Handed_A",
-      "damagePerShot": 4500.0,
-      "damageComponents": {
-        "shell": 4500.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "weaponDisplayIndex": 0,
-            "delay": 0
-          },
-          {
-            "animation": "Common_Shoot_Two_Handed_A",
-            "delay": 0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.75,
-            "requiredParts": [],
-            "delay": 0.35
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.75,
-            "requiredParts": [],
-            "delay": 0.1
-          },
-          {
-            "delay": 0.3
-          }
+      "ref": "EF_HarpoonGun__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
         ],
-        "startAnimation": null
-      },
-      "requiredParts": [
-        "rightArm"
-      ],
-      "partBreakModifier": 0.75,
-      "changeHeldWeapon": true,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_HarpoonGun.gw",
-        "barrels": [
-          {
-            "id": "EF_HarpoonGun",
-            "x": 10.0,
-            "y": 5.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Harpoon_1.png",
-        "scale": 0.75,
-        "speed": 60.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_XS",
-      "muzzle": {
-        "mounts": [
-          {
-            "layer": "EF_HarpoonGun",
-            "point": {
-              "x": -4.082155997157844e-17,
-              "y": 0.6666666666666666
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_HarpoonGun.gw",
+          "barrels": [
+            {
+              "id": "EF_HarpoonGun",
+              "x": 10,
+              "y": 5
             }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/Missile_1.ogg",
-        "volume": 0.4
-      },
-      "targetModifiers": {
-        "air": 0.5,
-        "water": 2.5,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1"
-      ],
-      "nativePayload": {
-        "ShellDamage": 4500.0,
-        "DpDamage": 375.0,
-        "WeaponAccuracy": 100.0,
-        "PartBreakModifier": 0.75,
-        "CockpitBreakModifier": 1.25,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 0.5,
-        "AntiAqua": 2.5,
-        "AntiAir": 0.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 25.0,
-        "ProjectileSpeed": 60.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 35.0,
-        "ProjectileLife": 30.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_HarpoonGun",
+              "point": {
+                "x": -4.082155997157844e-17,
+                "y": 0.6666666666666666
+              }
+            }
+          ]
         }
-      },
-      "displayIndex": 0,
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_HarpoonGun.gw",
-        "barrel": "EF_HarpoonGun",
-        "entry": "hiddenAction_EF_HarpoonGun_Fire",
-        "cooldown": 5.0,
-        "duration": 0.75,
-        "firstShot": 0.35,
-        "lastShot": 0.44999999999999996,
-        "firingEvents": 2,
-        "projectiles": 2,
-        "declaredEnergy": 25.0,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 25.0,
-        "actions": [
-          "hiddenAction_EF_HarpoonGun_Fire",
-          "hiddenAction_SetAttackingOn",
-          "hiddenAction_SendEnemyTryAttack_Shoot",
-          "hiddenAction_EF_HarpoonGun_SetWeaponIndex",
-          "hiddenAction_EF_HarpoonGun_B2_Step_1",
-          "hiddenAction_EF_HarpoonGun_Fire_Step_1",
-          "hiddenAction_EF_HarpoonGun_Fire_Step_2",
-          "hiddenAction_EF_HarpoonGun_Fire_Step_3",
-          "hiddenAction_EF_HarpoonGun_Fire_Step_Final",
-          "hiddenAction_SetAttackingOff"
-        ]
-      },
-      "category": "other",
-      "actionCost": 2,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HarpoonGun.gw"
+      }
     },
     "EF_AquaMissileLauncher": {
-      "name": "导弹发射器",
-      "type": "shell",
-      "min": 3,
-      "max": 4,
-      "hit": 90.0,
-      "en": 90.0,
-      "sourceName": "EF_AquaMissileLauncher",
-      "sourceHit": 90.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": "Common_Shoot_A",
-      "damagePerShot": 1250.0,
-      "damageComponents": {
-        "shell": 1250.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "weaponDisplayIndex": 0,
-            "delay": 0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.3
-          },
-          {
-            "animation": "Common_Shoot_A",
-            "delay": 0.0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.3
-          },
-          {
-            "animation": "Common_Shoot_A",
-            "delay": 0.0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.3
-          },
-          {
-            "animation": "Common_Shoot_A",
-            "delay": 0.0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "damageComponents": {
-              "shell": 3500.0
-            },
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.3
-          },
-          {
-            "animation": "Common_Shoot_A",
-            "delay": 0.0
-          },
-          {
-            "delay": 0.3
-          }
+      "ref": "EF_AquaMissileLauncher__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
         ],
-        "startAnimation": null
-      },
-      "requiredParts": [
-        "rightArm"
-      ],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": true,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_AquaMissileLauncher.gw",
-        "barrels": [
-          {
-            "id": "EF_AquaMissileLauncher",
-            "x": 10.0,
-            "y": 18.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Missile_3.png",
-        "scale": 0.35,
-        "speed": 40.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_XS",
-      "muzzle": {
-        "mounts": [
-          {
-            "layer": "EF_AquaMissileLauncher",
-            "point": {
-              "x": 6.123233995736766e-16,
-              "y": -10.0
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_AquaMissileLauncher.gw",
+          "barrels": [
+            {
+              "id": "EF_AquaMissileLauncher",
+              "x": 10,
+              "y": 18
             }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/Missile_1.ogg",
-        "volume": 0.4
-      },
-      "targetModifiers": {
-        "air": 0.5,
-        "water": 1.5,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1"
-      ],
-      "nativePayload": {
-        "ShellDamage": 1250.0,
-        "DpDamage": 80.0,
-        "WeaponAccuracy": 90.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 1.5,
-        "AntiAir": 0.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 10.0,
-        "ProjectileSpeed": 40.0,
-        "ProjectileTurnspeed": 1.25,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 35.0,
-        "ProjectileLife": 40.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_AquaMissileLauncher",
+              "point": {
+                "x": 6.123233995736766e-16,
+                "y": -10
+              }
+            }
+          ]
         }
-      },
-      "displayIndex": 0,
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_AquaMissileLauncher.gw",
-        "barrel": "EF_AquaMissileLauncher",
-        "entry": "hiddenAction_EF_AquaMissileLauncher_Fire",
-        "cooldown": 4.5,
-        "duration": 1.5,
-        "firstShot": 0.3,
-        "lastShot": 1.2,
-        "firingEvents": 4,
-        "projectiles": 4,
-        "declaredEnergy": 90.0,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 90.0,
-        "actions": [
-          "hiddenAction_EF_AquaMissileLauncher_Fire",
-          "hiddenAction_SetAttackingOn",
-          "hiddenAction_SendEnemyTryAttack_Shoot",
-          "hiddenAction_EF_AquaMissileLauncher_SetWeaponIndex",
-          "hiddenAction_EF_AquaMissileLauncher_B3_Step_1",
-          "hiddenAction_EF_AquaMissileLauncher_Fire_Step_1",
-          "hiddenAction_EF_AquaMissileLauncher_Fire_Step_2",
-          "hiddenAction_EF_AquaMissileLauncher_Fire_Step_3",
-          "hiddenAction_EF_AquaMissileLauncher_Fire_Step_4",
-          "hiddenAction_EF_AquaMissileLauncher_Fire_Step_Final",
-          "hiddenAction_SetAttackingOff"
-        ]
-      },
-      "category": "missile",
-      "actionCost": 2,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_AquaMissileLauncher.gw"
+      }
     },
     "EF_RAG_79_Anchor_L": {
-      "name": "近身格斗",
-      "type": "melee",
-      "min": 1,
-      "max": 1,
-      "hit": 85.0,
-      "en": 0,
-      "sourceName": "EF_RAG_79_Anchor_L",
-      "sourceHit": 85.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "secondary",
-      "clip": "Common_Melee_B_L",
-      "damagePerShot": 3500.0,
-      "damageComponents": {
-        "melee": 3500.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "animation": "Common_Melee_B_L",
-            "delay": 0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.25,
-            "requiredParts": [],
-            "delay": 0.5
-          },
-          {
-            "delay": 0.5
-          }
+      "ref": "EF_RAG_79_Anchor_L__lv1",
+      "overrides": {
+        "requiredParts": [
+          "leftArm"
         ],
-        "startAnimation": null
-      },
-      "requiredParts": [
-        "leftArm"
-      ],
-      "partBreakModifier": 1.25,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Cqb/EF_RAG_79_Anchor_L.gw",
-        "barrels": [
-          {
-            "id": "EF_RAG_79_Anchor_L",
-            "x": -11.0,
-            "y": 17.0
-          }
-        ]
-      },
-      "hitEffect": "Cqb_Hit_1",
-      "swingEffects": [
-        "Cqb_Fire_1_Pink_R",
-        "Cqb_Fire_1_Pink_L"
-      ],
-      "sound": {
-        "file": "../../sounds/Fist_2.ogg",
-        "volume": 0.5
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 1.5,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "nativePayload": {
-        "CqbDamage": 3500.0,
-        "DpDamage": 750.0,
-        "WeaponAccuracy": 85.0,
-        "PartBreakModifier": 1.25,
-        "CockpitBreakModifier": 0.75,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiAqua": 1.5,
-        "AntiAir": 0.75,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 0.75,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 20.0,
-        "ProjectileSpeed": 55.0,
-        "ProjectileSpread": 1.0,
-        "ProjectileLife": 10.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_RAG_79_Anchor_L.gw",
+          "barrels": [
+            {
+              "id": "EF_RAG_79_Anchor_L",
+              "x": -11,
+              "y": 17
+            }
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": -11,
+            "y": 17
+          }
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Cqb/EF_RAG_79_Anchor_L.gw",
-        "barrel": "EF_RAG_79_Anchor_L",
-        "entry": "hiddenAction_EF_RAG_79_Anchor_L_Fire",
-        "cooldown": 5.0,
-        "duration": 1.0,
-        "firstShot": 0.5,
-        "lastShot": 0.5,
-        "firingEvents": 1,
-        "projectiles": 1,
-        "declaredEnergy": 0.0,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 0,
-        "actions": [
-          "hiddenAction_EF_RAG_79_Anchor_L_Fire",
-          "hiddenAction_SetAttackingOn",
-          "hiddenAction_SendEnemyTryAttack_Shoot",
-          "hiddenAction_EF_RAG_79_Anchor_L_SetWeaponIndex",
-          "hiddenAction_EF_RAG_79_Anchor_L_B1_Step_1",
-          "hiddenAction_EF_RAG_79_Anchor_L_Fire_Step_1",
-          "hiddenAction_EF_RAG_79_Anchor_L_Fire_Step_2",
-          "hiddenAction_EF_RAG_79_Anchor_L_Fire_Step_Final",
-          "hiddenAction_SetAttackingOff"
-        ]
-      },
-      "category": "melee",
-      "muzzle": {
-        "bone": "Body",
-        "offset": {
-          "x": -11.0,
-          "y": 17.0
-        }
-      },
-      "actionCost": 2,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_RAG_79_Anchor_L.gw"
+      }
     },
     "EF_RAG_79_MS": {
-      "name": "导弹发射器",
-      "type": "shell",
-      "min": 3,
-      "max": 4,
-      "hit": 85.0,
-      "en": 35.0,
-      "sourceName": "EF_RAG_79_MS",
-      "sourceHit": 85.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": "Common_Cannon_Shoot_A",
-      "damagePerShot": 1000.0,
-      "damageComponents": {
-        "shell": 1000.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "animation": "Common_Cannon_Shoot_A",
-            "delay": 0.3
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [
-              "rightArm"
-            ],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [
-              "leftArm"
-            ],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [
-              "rightArm"
-            ],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [
-              "leftArm"
-            ],
-            "delay": 0.1
-          },
-          {
-            "delay": 0.3
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw",
-        "barrels": [
-          {
-            "id": "EF_RAG_79_MS",
-            "x": 8.0,
-            "y": -10.0
-          },
-          {
-            "id": "EF_RAG_79_MS_L",
-            "x": -8.0,
-            "y": -10.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Missile_3.png",
-        "scale": 0.35,
-        "speed": 30.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_XS",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Body",
-            "offset": {
-              "x": 8.0,
-              "y": -10.0
+      "ref": "EF_RAG_79_MS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw",
+          "barrels": [
+            {
+              "id": "EF_RAG_79_MS",
+              "x": 8,
+              "y": -10
+            },
+            {
+              "id": "EF_RAG_79_MS_L",
+              "x": -8,
+              "y": -10
             }
-          },
-          {
-            "bone": "Body",
-            "offset": {
-              "x": -8.0,
-              "y": -10.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/Missile_1.ogg",
-        "volume": 0.25
-      },
-      "targetModifiers": {
-        "air": 1.0,
-        "water": 1.0,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1_S",
-        "BZ_Fire_1_S"
-      ],
-      "mergedPositions": [
-        "EF_RAG_79_MS",
-        "EF_RAG_79_MS_L"
-      ],
-      "nativePayload": {
-        "ShellDamage": 1000.0,
-        "DpDamage": 50.0,
-        "WeaponAccuracy": 85.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 1.0,
-        "AntiAir": 1.0,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightHitRange": 20.0,
-        "HeightChangeSpeed": 2.0,
-        "ProjectileSpeed": 30.0,
-        "ProjectileTurnspeed": 1.5,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 35.0,
-        "ProjectileLife": 50.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
-        }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw",
-        "barrel": "EF_RAG_79_MS",
-        "entry": "hiddenAction_EF_RAG_79_MS_Fire",
-        "cooldown": 7.0,
-        "duration": 1.0,
-        "firstShot": 0.4,
-        "lastShot": 0.7,
-        "firingEvents": 4,
-        "projectiles": 4,
-        "declaredEnergy": 35.0,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 35.0,
-        "actions": [
-          "hiddenAction_EF_RAG_79_MS_Fire",
-          "hiddenAction_SetAttackingOn",
-          "hiddenAction_SendEnemyTryAttack_Shoot",
-          "hiddenAction_EF_RAG_79_MS_SetWeaponIndex",
-          "hiddenAction_EF_RAG_79_MS_B4_Step_1",
-          "hiddenAction_EF_RAG_79_MS_Fire_Step_1",
-          "hiddenAction_EF_RAG_79_MS_Fire_Step_2",
-          "hiddenAction_EF_RAG_79_MS_Fire_Step_3",
-          "hiddenAction_EF_RAG_79_MS_Fire_Step_Final",
-          "hiddenAction_SetAttackingOff"
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 8,
+                "y": -10
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -8,
+                "y": -10
+              }
+            }
+          ]
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
         ]
-      },
-      "category": "missile",
-      "actionCost": 2,
-      "anyParts": [
-        "leftArm",
-        "rightArm"
-      ],
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw"
+      }
     },
     "EF_RAG_79_MS_L": {
-      "name": "导弹发射器",
-      "type": "shell",
-      "min": 3,
-      "max": 4,
-      "hit": 85.0,
-      "en": 35.0,
-      "sourceName": "EF_RAG_79_MS_L",
-      "sourceHit": 85.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": "Common_Cannon_Shoot_A",
-      "damagePerShot": 1000.0,
-      "damageComponents": {
-        "shell": 1000.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "animation": "Common_Cannon_Shoot_A",
-            "delay": 0.3
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [
-              "rightArm"
-            ],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [
-              "leftArm"
-            ],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [
-              "rightArm"
-            ],
-            "delay": 0.1
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 1,
-            "partBreakModifier": 1.0,
-            "requiredParts": [
-              "leftArm"
-            ],
-            "delay": 0.1
-          },
-          {
-            "delay": 0.3
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw",
-        "barrels": [
-          {
-            "id": "EF_RAG_79_MS",
-            "x": 8.0,
-            "y": -10.0
-          },
-          {
-            "id": "EF_RAG_79_MS_L",
-            "x": -8.0,
-            "y": -10.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Missile_3.png",
-        "scale": 0.35,
-        "speed": 30.0,
-        "forwardOffset": -5.0,
-        "rotation": 0.0
-      },
-      "hitEffect": "Explosion_Hit_1_XS",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Body",
-            "offset": {
-              "x": 8.0,
-              "y": -10.0
+      "ref": "EF_RAG_79_MS_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw",
+          "barrels": [
+            {
+              "id": "EF_RAG_79_MS",
+              "x": 8,
+              "y": -10
+            },
+            {
+              "id": "EF_RAG_79_MS_L",
+              "x": -8,
+              "y": -10
             }
-          },
-          {
-            "bone": "Body",
-            "offset": {
-              "x": -8.0,
-              "y": -10.0
-            }
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/Missile_1.ogg",
-        "volume": 0.25
-      },
-      "targetModifiers": {
-        "air": 1.0,
-        "water": 1.0,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "muzzleEffects": [
-        "BZ_Fire_1_S",
-        "BZ_Fire_1_S"
-      ],
-      "availability": {
-        "hidden": true,
-        "reasons": [
-          "paired_weapon"
-        ],
-        "mergedInto": "EF_RAG_79_MS"
-      },
-      "nativePayload": {
-        "ShellDamage": 1000.0,
-        "DpDamage": 50.0,
-        "WeaponAccuracy": 85.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 1.0,
-        "AntiAir": 1.0,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightHitRange": 20.0,
-        "HeightChangeSpeed": 2.0,
-        "ProjectileSpeed": 30.0,
-        "ProjectileTurnspeed": 1.5,
-        "ProjectileSpread": 0.0,
-        "ProjectileExplosionRange": 35.0,
-        "ProjectileLife": 50.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
-        }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw",
-        "barrel": "EF_RAG_79_MS",
-        "entry": "hiddenAction_EF_RAG_79_MS_Fire",
-        "cooldown": 7.0,
-        "duration": 1.0,
-        "firstShot": 0.4,
-        "lastShot": 0.7,
-        "firingEvents": 4,
-        "projectiles": 4,
-        "declaredEnergy": 35.0,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 35.0,
-        "actions": [
-          "hiddenAction_EF_RAG_79_MS_Fire",
-          "hiddenAction_SetAttackingOn",
-          "hiddenAction_SendEnemyTryAttack_Shoot",
-          "hiddenAction_EF_RAG_79_MS_SetWeaponIndex",
-          "hiddenAction_EF_RAG_79_MS_B4_Step_1",
-          "hiddenAction_EF_RAG_79_MS_Fire_Step_1",
-          "hiddenAction_EF_RAG_79_MS_Fire_Step_2",
-          "hiddenAction_EF_RAG_79_MS_Fire_Step_3",
-          "hiddenAction_EF_RAG_79_MS_Fire_Step_Final",
-          "hiddenAction_SetAttackingOff"
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 8,
+                "y": -10
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -8,
+                "y": -10
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "EF_RAG_79_MS"
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
         ]
-      },
-      "category": "missile",
-      "actionCost": 2,
-      "anyParts": [
-        "leftArm",
-        "rightArm"
-      ],
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw"
+      }
     },
     "EF_BeamPickaxe_B": {
-      "name": "近身格斗",
-      "type": "melee",
-      "min": 1,
-      "max": 1,
-      "hit": 125.0,
-      "en": 0,
-      "sourceName": "EF_BeamPickaxe_B",
-      "sourceHit": 125.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "secondary",
-      "clip": "Common_Melee_B",
-      "damagePerShot": 6000.0,
-      "damageComponents": {
-        "melee": 3000.0,
-        "meleeBeam": 3000.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "weaponDisplayIndex": 1,
-            "delay": 0
-          },
-          {
-            "animation": "Common_Melee_B",
-            "delay": 0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 0.75,
-            "requiredParts": [],
-            "delay": 0.4
-          },
-          {
-            "delay": 1.0
-          }
+      "ref": "EF_BeamPickaxe_B__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
         ],
-        "startAnimation": null
-      },
-      "requiredParts": [
-        "rightArm"
-      ],
-      "partBreakModifier": 0.75,
-      "changeHeldWeapon": true,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamPickaxe_B.gw",
-        "barrels": [
-          {
-            "id": "EF_BeamPickaxe_B",
-            "x": 0.0,
-            "y": 0.0
-          }
-        ]
-      },
-      "hitEffect": "Cqb_Hit_1",
-      "swingEffects": [
-        "Cqb_Fire_1_Pink_R",
-        "Cqb_Fire_1_Pink_L"
-      ],
-      "sound": {
-        "file": "../../sounds/BeamSaber_1.ogg",
-        "volume": 0.5
-      },
-      "targetModifiers": {
-        "air": 0.75,
-        "water": 1.25,
-        "ground": 1.0,
-        "space": 1.0
-      },
-      "nativePayload": {
-        "CqbDamage": 3000.0,
-        "CqbBeamDamage": 3000.0,
-        "DpDamage": 750.0,
-        "WeaponAccuracy": 125.0,
-        "PartBreakModifier": 0.75,
-        "CockpitBreakModifier": 1.25,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.25,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.25,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 1.25,
-        "AntiAir": 0.75,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.0,
-        "HeightHitRange": 35.0,
-        "ProjectileSpeed": 0.0,
-        "ProjectileSpread": 0.0,
-        "ProjectileLife": 0.25,
-        "ProjectileAttackTimes": 1.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamPickaxe_B.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamPickaxe_B",
+              "x": 0,
+              "y": 0
+            }
+          ]
         },
-        "large": {
-          "damage": 1.25,
-          "accuracy": 1.25
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0,
+            "y": 0
+          }
         }
-      },
-      "displayIndex": 1,
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamPickaxe_B.gw",
-        "barrel": "EF_BeamPickaxe_B",
-        "entry": "hiddenAction_EF_BeamPickaxe_B_Fire",
-        "cooldown": 3.0,
-        "duration": 1.4,
-        "firstShot": 0.4,
-        "lastShot": 0.4,
-        "firingEvents": 1,
-        "projectiles": 1,
-        "declaredEnergy": 0.0,
-        "energyMode": "perVolley",
-        "energyPerEmission": 0,
-        "energy": 0,
-        "actions": [
-          "hiddenAction_EF_BeamPickaxe_B_Fire",
-          "hiddenAction_SetAttackingOn",
-          "hiddenAction_SendEnemyTryAttack_Cqb",
-          "hiddenAction_EF_BeamPickaxe_B_SetWeaponIndex",
-          "hiddenAction_EF_BeamPickaxe_B_Step_1",
-          "hiddenAction_EF_BeamPickaxe_B_Fire_Step_1",
-          "hiddenAction_EF_BeamPickaxe_B_Fire_Step_2",
-          "hiddenAction_EF_BeamPickaxe_B_Fire_Step_Final",
-          "hiddenAction_SetAttackingOff"
-        ]
-      },
-      "category": "melee",
-      "muzzle": {
-        "bone": "Body",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        }
-      },
-      "actionCost": 2,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamPickaxe_B.gw"
+      }
     }
   },
   "mechanics": [
@@ -2019,7 +1056,7 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {
-    "nativeLevel": 1250.0,
+    "nativeLevel": 1250,
     "levelMultiplier": 0.25,
     "published": 325
   },

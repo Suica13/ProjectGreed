@@ -19,7 +19,7 @@ test("Apsaras is released after irradiation and EMP integration", () => {
   }
   assert.equal(catalog.prefabs.find((p) => p.id === "MS_06F").wip, false);
   assert.equal(
-    JSON.parse(fs.readFileSync("assets/units/ApsarasII/unit.json", "utf8")).wip,
+    require("../tools/weapon-store.cjs").parse(fs.readFileSync("assets/units/ApsarasII/unit.json", "utf8")).wip,
     undefined,
   );
 });

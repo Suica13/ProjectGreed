@@ -13,7 +13,9 @@ function applyWeaponBalance(prefab) {
         for (const field of ["damage", "damagePerShot"])
           if (Number.isFinite(payload[field])) payload[field] *= ratio;
         if (payload.damageComponents)
-          payload.damageComponents = Object.fromEntries(Object.entries(payload.damageComponents).map(([key, value]) => [key, value * ratio]));
+          payload.damageComponents = Object.fromEntries(
+            Object.entries(payload.damageComponents).map(([key, value]) => [key, value * ratio]),
+          );
       }
       left.wristDamageScale = targetScale;
     }
@@ -49,8 +51,16 @@ function applyWeaponBalance(prefab) {
     const armMounted = /Arm|Hand/i.test(id + " " + (weapon.sourceName || ""));
     const targetBeamScale = !melee && beamFamily && !armMounted ? beamScale : 1;
     const meleeScale = melee && !id.startsWith("Common_Push_") ? 1.1 : 1;
-    if (!melee && weapon.type !== "beam" && !Object.entries(weapon.damageComponents || {}).some(([key, value]) => /beam/i.test(key) && value > 0)) continue;
-    const ratio = (targetBeamScale / (weapon.beamDamageScale ?? 1)) *
+    if (
+      !melee &&
+      weapon.type !== "beam" &&
+      !Object.entries(weapon.damageComponents || {}).some(
+        ([key, value]) => /beam/i.test(key) && value > 0,
+      )
+    )
+      continue;
+    const ratio =
+      (targetBeamScale / (weapon.beamDamageScale ?? 1)) *
       (meleeScale / (weapon.meleeDamageScale ?? 1));
     if (ratio !== 1)
       for (const payload of [weapon, ...(weapon.attack?.steps || [])]) {
@@ -61,13 +71,23 @@ function applyWeaponBalance(prefab) {
             Object.entries(payload.damageComponents).map(([key, value]) => [key, value * ratio]),
           );
       }
-    if (targetBeamScale !== 1 || weapon.beamDamageScale !== undefined) weapon.beamDamageScale = targetBeamScale;
-    if (meleeScale !== 1 || weapon.meleeDamageScale !== undefined) weapon.meleeDamageScale = meleeScale;
+    if (targetBeamScale !== 1 || weapon.beamDamageScale !== undefined)
+      weapon.beamDamageScale = targetBeamScale;
+    if (meleeScale !== 1 || weapon.meleeDamageScale !== undefined)
+      weapon.meleeDamageScale = meleeScale;
   }
   for (const skill of prefab.skills || []) {
-    if (!Object.entries(skill.damageComponents || {}).some(([key, value]) => /beam/i.test(key) && value > 0)) continue;
+    if (
+      !Object.entries(skill.damageComponents || {}).some(
+        ([key, value]) => /beam/i.test(key) && value > 0,
+      )
+    )
+      continue;
     const ratio = 1 / (skill.beamDamageScale ?? 1);
-    if (ratio !== 1) skill.damageComponents = Object.fromEntries(Object.entries(skill.damageComponents).map(([key, value]) => [key, value * ratio]));
+    if (ratio !== 1)
+      skill.damageComponents = Object.fromEntries(
+        Object.entries(skill.damageComponents).map(([key, value]) => [key, value * ratio]),
+      );
     if (skill.beamDamageScale !== undefined) skill.beamDamageScale = 1;
   }
   return prefab;

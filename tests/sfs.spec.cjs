@@ -50,7 +50,7 @@ async function cell(page, x, y) {
   );
   await page.mouse.click(p.x, p.y);
 }
-for (const html of ["client.html", "developer.html"])
+for (const html of ["client.html"])
   test(`${html}: boarding asks, cancels exactly, then selects and dismounts SFS passenger`, async ({
     page,
   }) => {

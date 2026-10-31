@@ -1,4 +1,5 @@
 """Install the native arm-independent body tackle into every weapon kit."""
+from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 import shutil
 from pathlib import Path
@@ -47,8 +48,8 @@ def import_tackle_assets():
         ("Resource/Image/Fx/Weapon/Cqb/Image/Cqb_Fire_2_White.png", "effects/textures/Cqb_Fire_2_White.png")]:
         shutil.copyfile(ROOT/source, ASSETS/target)
     path=ASSETS/"effects/effects.json"
-    effects=json.loads(path.read_text(encoding="utf-8"))
+    effects=load_source_json(path.read_text(encoding="utf-8"))
     effects["Cqb_Fire_2_Kick_White_R"]=dict(texture="textures/Cqb_Fire_2_White.png",frames=6,startFrame=0,endFrame=5,
         fps=15,scaleFrom=.45,scaleTo=.25,alpha=.85,rotation=90,offset={"x":5,"y":5},drift=21,sounds=[],
         source="Resource/Image/Fx/Weapon/Cqb/Common/Cqb_Fire_2_Kick_White_R.gw")
-    path.write_text(json.dumps(effects,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    path.write_text(dump_source_json(effects,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")

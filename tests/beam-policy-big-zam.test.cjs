@@ -3,7 +3,7 @@ const G=require('../shared/rules.js'),S=require('../shared/weapon-sequence.js'),
 test('non-ship non-MA beam policy covers native weapons and skills without changing resources or source payloads',()=>{
  let beams=0,excluded=0,skills=0;
  for(const prefab of G.catalog.prefabs){
-  const raw=JSON.parse(fs.readFileSync(path.join('assets/units',prefab.id,'unit.json'),'utf8'));
+  const raw=require("../tools/weapon-store.cjs").parse(fs.readFileSync(path.join('assets/units',prefab.id,'unit.json'),'utf8'));
   const beamFactor=raw.stats.ship||raw.unitTags.includes('MA')?1:1.5;
   const copy=structuredClone(raw);applyWeaponBalance(copy);
   for(const [id,before] of Object.entries(raw.weapons)){
@@ -33,7 +33,7 @@ for(const id of ['MA_08','MA_08_DZL'])test(id+' exposes exactly one 14-emitter v
  assert(w);assert.equal(w.damage,35000);assert.equal(w.shotCount,14);assert.equal(w.en,180);assert.equal(w.actionCost,3);
  assert.equal(w.nativeTiming.projectiles,168);assert.equal(w.beamDamageScale,undefined);
  assert.equal(m.weapons.filter(w=>w.id.startsWith(root)).length,1);
- const raw=JSON.parse(fs.readFileSync('assets/units/'+id+'/unit.json','utf8'));
+ const raw=require("../tools/weapon-store.cjs").parse(fs.readFileSync('assets/units/'+id+'/unit.json','utf8'));
  assert(!raw.mechanics.some(s=>s.id.startsWith('energy_capacity_'+root)));
  for(const heading of [0,90,180,270,-90,630]){
   const a={id:'a',model:id+'__standard',x:10,y:10,hp:m.hp,en:m.en,shield:0,angle:heading,team:0,actionPoints:5};

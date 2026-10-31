@@ -15,80 +15,80 @@
   },
   "skeleton": {
     "Pelvis": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftArm": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightArm": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftShoulder": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightShoulder": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "RightWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment12": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment13": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment15": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Head": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Eye": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftFoot": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "LeftLeg": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "RightFoot": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "RightLeg": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "Turret_EF_G_Bull_Easy_BeamGun": {
-      "x": 0.0,
-      "y": 0.0,
+      "x": 0,
+      "y": 0,
       "endDirOffset": 0
     }
   },
@@ -97,15 +97,15 @@
       "name": "BoostReversing",
       "texture": "BoostReversing_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
-      "scaleX": 1.0,
+      "order": 4,
+      "scale": 2,
+      "scaleX": 1,
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
       "offset": {
         "x": -2.5,
-        "y": -12.0
+        "y": -12
       },
       "frames": 3,
       "frame": 0,
@@ -119,11 +119,11 @@
       "name": "Body",
       "texture": "G_BullEasy_Head_1.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.65,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {}
     },
@@ -131,7 +131,7 @@
       "name": "Turret",
       "bone": "Turret_EF_G_Bull_Easy_BeamGun",
       "texture": "G_Fighter_BeamGun.png",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.6,
       "offset": {
         "x": 0,
@@ -151,22 +151,22 @@
   },
   "stats": {
     "hp": 10500,
-    "en": 325.0,
+    "en": 325,
     "move": 5,
-    "mobility": 100.0,
+    "mobility": 100,
     "cost": 375,
     "counterLimit": 1,
-    "accuracy": 130.0,
-    "partStructuralStrength": 100.0,
+    "accuracy": 130,
+    "partStructuralStrength": 100,
     "partsBreakable": false,
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
       "space": 50,
-      "water": 25.0,
-      "air": 10.0,
+      "water": 25,
+      "air": 10,
       "atmosphere": 0,
-      "mountain": 75.0,
+      "mountain": 75,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -183,8 +183,8 @@
     ],
     "sensors": {
       "sight": 8,
-      "radar": 10.0,
-      "antiDetection": 0.0,
+      "radar": 10,
+      "antiDetection": 0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -195,64 +195,64 @@
     "speed": 85
   },
   "attackBonuses": {
-    "melee": 0.0,
-    "shooting": 35.0,
+    "melee": 0,
+    "shooting": 35,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 5.0,
-      "flat": 150.0
+      "percent": 5,
+      "flat": 150
     },
     "shell": {
-      "percent": 15.0,
-      "flat": 150.0
+      "percent": 15,
+      "flat": 150
     },
     "melee": {
-      "percent": 10.0,
-      "flat": 100.0
+      "percent": 10,
+      "flat": 100
     },
     "dp": {
-      "percent": 10.0,
-      "flat": 20.0
+      "percent": 10,
+      "flat": 20
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 0.0
+      "percent": 0,
+      "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     }
   },
   "sourceStats": {
-    "hp": 8500.0,
+    "hp": 8500,
     "walkSpeed": 0.6,
     "boostSpeed": 1.2,
     "turnSpeed": 1.5,
-    "reaction": 100.0,
-    "shooting": 135.0,
-    "melee": 100.0,
+    "reaction": 100,
+    "shooting": 135,
+    "melee": 100,
     "nativeTags": [
       "G_Bull_Easy",
       "Unit",
@@ -265,25 +265,25 @@
       "CantDeconstruct"
     ],
     "balanceStatus": "native-level",
-    "accuracy": 130.0,
-    "unitLevel": 1500.0,
-    "enBeforeReduction": 650.0,
+    "accuracy": 130,
+    "unitLevel": 1500,
+    "enBeforeReduction": 650,
     "enCapacityMultiplier": 0.5,
     "tacticalMoveBeforeBonus": 4,
     "adaptability": {
-      "ground": 100.0,
-      "space": 10.0,
-      "water": 25.0,
-      "air": 10.0,
-      "mountain": 75.0,
+      "ground": 100,
+      "space": 10,
+      "water": 25,
+      "air": 10,
+      "mountain": 75,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 20.0,
-      "radar": 360.0,
-      "antiDetection": 0.0
+      "sight": 20,
+      "radar": 360,
+      "antiDetection": 0
     },
-    "v17BaseHp": 8500.0,
+    "v17BaseHp": 8500,
     "technologyEra": "0079E",
     "actionTurnSpeed": 1.5,
     "mobilityMoveTarget": 5
@@ -320,141 +320,32 @@
   },
   "weapons": {
     "EF_G_Bull_Easy_BeamGun": {
-      "name": "光束炮",
-      "type": "beam",
-      "min": 2,
-      "max": 3,
-      "hit": 90.0,
-      "en": 16.0,
-      "sourceName": "EF_G_Bull_Easy_BeamGun",
-      "sourceHit": 90.0,
-      "hitMultiplier": 1,
-      "hitBonus": 0,
-      "slot": "primary",
-      "clip": null,
-      "damagePerShot": 4000.0,
-      "damageComponents": {
-        "beam": 4000.0
-      },
-      "hitsPerShot": 1,
-      "attack": {
-        "steps": [
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.0
-          },
-          {
-            "shots": 1,
-            "muzzleIndex": 0,
-            "partBreakModifier": 1.0,
-            "requiredParts": [],
-            "delay": 0.05
-          }
-        ],
-        "startAnimation": null
-      },
-      "requiredParts": [],
-      "partBreakModifier": 1.0,
-      "changeHeldWeapon": false,
-      "source": {
-        "file": "Units/BattleUnits/Weapon/Beam/EF_G_Bull_Easy_BeamGun.gw",
-        "barrels": [
-          {
-            "id": "EF_G_Bull_Easy_BeamGun",
-            "x": 3.0,
-            "y": 10.0
-          }
-        ]
-      },
-      "projectile": {
-        "texture": "../../projectiles/Beam_1.png",
-        "scale": 1.0,
-        "speed": 75.0,
-        "forwardOffset": -7.5,
-        "rotation": 0.0
-      },
-      "hitEffect": "Beam_Hit_1_S_Pink",
-      "muzzle": {
-        "mounts": [
-          {
-            "bone": "Turret_EF_G_Bull_Easy_BeamGun",
-            "offset": {
-              "x": 3.0,
-              "y": 10.0
-            },
-            "alternatingOffsetX": -6.0
-          }
-        ]
-      },
-      "sound": {
-        "file": "../../sounds/BeamRifle_1.ogg",
-        "volume": 0.75
-      },
-      "targetModifiers": {
-        "air": 1.5,
-        "water": 0.5,
-        "ground": 1.0,
-        "space": 1.5
-      },
-      "muzzleEffects": [
-        "Beam_Fire_1_Pink"
-      ],
-      "nativePayload": {
-        "BeamDamage": 4000.0,
-        "DpDamage": 100.0,
-        "WeaponAccuracy": 90.0,
-        "PartBreakModifier": 1.0,
-        "CockpitBreakModifier": 1.0,
-        "PilotDamageModifier": 1.0,
-        "PilotTrueDamage": 0.0,
-        "AntiSizeLargeDamage": 1.0,
-        "AntiSizeSmallDamage": 0.75,
-        "AntiSizeLargeAccuracy": 1.0,
-        "AntiSizeSmallAccuracy": 0.75,
-        "AntiBuilding": 1.0,
-        "AntiAqua": 0.5,
-        "AntiAir": 1.5,
-        "AntiLand": 1.0,
-        "AntiSpace": 1.5,
-        "HeightChangeSpeed": 2.0,
-        "HeightHitRange": 20.0,
-        "ProjectileSpeed": 75.0,
-        "ProjectileSpread": 1.0,
-        "ProjectileLife": 30.0
-      },
-      "antiSize": {
-        "small": {
-          "damage": 0.75,
-          "accuracy": 0.75
+      "ref": "EF_G_Bull_Easy_BeamGun__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/EF_G_Bull_Easy_BeamGun.gw",
+          "barrels": [
+            {
+              "id": "EF_G_Bull_Easy_BeamGun",
+              "x": 3,
+              "y": 10
+            }
+          ]
         },
-        "large": {
-          "damage": 1.0,
-          "accuracy": 1.0
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_EF_G_Bull_Easy_BeamGun",
+              "offset": {
+                "x": 3,
+                "y": 10
+              },
+              "alternatingOffsetX": -6
+            }
+          ]
         }
-      },
-      "nativeTiming": {
-        "source": "Units/BattleUnits/Weapon/Beam/EF_G_Bull_Easy_BeamGun.gw",
-        "barrel": "EF_G_Bull_Easy_BeamGun",
-        "entry": "automatic_turret",
-        "cooldown": 4.0,
-        "duration": 0.05,
-        "firstShot": 0.0,
-        "lastShot": 0.05,
-        "firingEvents": 2,
-        "projectiles": 2,
-        "declaredEnergy": 8.0,
-        "energyMode": "perShot",
-        "energyPerEmission": 8.0,
-        "energy": 16.0,
-        "actions": []
-      },
-      "category": "beam_gun",
-      "actionCost": 2,
-      "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_G_Bull_Easy_BeamGun.gw"
+      }
     }
   },
   "mechanics": [
@@ -484,7 +375,7 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {
-    "nativeLevel": 1500.0,
+    "nativeLevel": 1500,
     "levelMultiplier": 0.25,
     "published": 375
   },
