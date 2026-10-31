@@ -695,7 +695,9 @@
           "hiddenAction_SetAttackingCantTurnOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Bombing_Shell_Napalm.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -844,7 +846,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_YMT_05_MainCannon_AP": {
       "name": "加农炮",
@@ -996,7 +1000,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_AP.gw"
     },
     "ZN_YMT_05_MainCannon_HE": {
       "name": "加农炮",
@@ -1146,7 +1152,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_HE.gw"
     },
     "ZN_105mmMG_L": {
       "name": "105mm机枪",
@@ -1375,7 +1383,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_105mmMG_L_Lv2.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -1542,7 +1552,9 @@
         "stats": [
           "pilotCqbSkillFinal"
         ]
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_Lv2.gw"
     },
     "Common_Cqb_Double_A": {
       "name": "近身格斗",
@@ -1699,7 +1711,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A_Lv2.gw"
     }
   },
   "mechanics": [

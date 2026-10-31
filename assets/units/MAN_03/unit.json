@@ -551,7 +551,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A_Lv2.gw"
     },
     "ZN_MAN_03_BG_1": {
       "name": "光束炮",
@@ -735,7 +737,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MAN_03_BG_1.gw"
     },
     "ZN_MAN_03_BG_1_L": {
       "name": "光束炮",
@@ -922,7 +926,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MAN_03_BG_1.gw"
     },
     "ZN_MAN_03_BG_2": {
       "name": "光束炮",
@@ -1106,7 +1112,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MAN_03_BG_2.gw"
     },
     "ZN_MAN_03_BG_2_L": {
       "name": "光束炮",
@@ -1293,7 +1301,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MAN_03_BG_2.gw"
     },
     "ZN_MAN_03_BG_3": {
       "name": "光束炮",
@@ -1477,7 +1487,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MAN_03_BG_3.gw"
     },
     "ZN_MAN_03_BG_3_L": {
       "name": "光束炮",
@@ -1664,7 +1676,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MAN_03_BG_3.gw"
     },
     "ZN_MAN_03_Funnel": {
       "sourceName": "ZN_MAN_03_Funnel",
@@ -2010,7 +2024,9 @@
           "operator": ">=",
           "value": 75
         }
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Funnel/ZN_MAN_03_Funnel.gw"
     }
   },
   "mechanics": [

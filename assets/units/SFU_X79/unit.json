@@ -562,7 +562,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_SFU_X79.gw"
     },
     "Common_DoubleMS_SFU_X79_L": {
       "name": "双重导弹发射器",
@@ -793,7 +795,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_SFU_X79.gw"
     }
   },
   "mechanics": [

@@ -1370,7 +1370,9 @@
           "shell": 3000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/HeavyForkClass/HeavyForkClass_Turret_Cannon.ini"
     },
     "HeavyForkClass_Turret_Cannon": {
       "name": "舰载加农炮",
@@ -1657,7 +1659,9 @@
           "shell": 6000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/HeavyForkClass/HeavyForkClass_Turret_Cannon.ini"
     },
     "HeavyForkClass_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -1899,7 +1903,9 @@
           "shell": 1750.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/HeavyForkClass/HeavyForkClass_Turret_MS.ini"
     },
     "HeavyForkClass_Turret_AA": {
       "name": "对空机枪",
@@ -3142,7 +3148,9 @@
           "shellAP": 75.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/HeavyForkClass/HeavyForkClass_Turret_AA.ini"
     },
     "HeavyForkClass_Turret_MG": {
       "name": "舰载机枪",
@@ -3895,7 +3903,9 @@
           "shellAP": 75.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/HeavyForkClass/HeavyForkClass_Turret_MG.ini"
     }
   },
   "mechanics": [

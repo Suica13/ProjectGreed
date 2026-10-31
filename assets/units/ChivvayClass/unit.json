@@ -1442,7 +1442,9 @@
           "beam": 5500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ChivvayClass/ChivvayClass_Turret_BeamCannon.ini"
     },
     "ChivvayClass_Turret_AMS": {
       "name": "反MS导弹",
@@ -1699,7 +1701,9 @@
           "shell": 1000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ChivvayClass/ChivvayClass_Turret_AMS.ini"
     },
     "ChivvayClass_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -1974,7 +1978,9 @@
           "shell": 900.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ChivvayClass/ChivvayClass_Turret_MS.ini"
     },
     "ChivvayClass_Turret_MG": {
       "name": "舰载机枪",
@@ -2727,7 +2733,9 @@
           "shellAP": 75.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ChivvayClass/ChivvayClass_Turret_MG.ini"
     },
     "ChivvayClass_Turret_AA": {
       "name": "对空机枪",
@@ -5080,7 +5088,9 @@
           "shellAP": 50.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ChivvayClass/ChivvayClass_Turret_AA.ini"
     }
   },
   "mechanics": [

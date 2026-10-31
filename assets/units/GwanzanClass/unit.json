@@ -837,7 +837,9 @@
           "beamAP": 5000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/GwanzanClass/GwanzanClass_Turret_BeamCannon.ini"
     }
   },
   "mechanics": [

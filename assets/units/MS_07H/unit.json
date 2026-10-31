@@ -749,7 +749,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_MS_07B_HandMG": {
       "name": "机枪",
@@ -979,7 +981,9 @@
       },
       "rangeRole": "short_secondary",
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_07B_HandMG.gw"
     },
     "ZN_120mmMG": {
       "name": "120mm机枪",
@@ -1208,7 +1212,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw"
     },
     "ZN_270mmBazooka": {
       "name": "270mm火箭筒",
@@ -1363,7 +1369,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -1506,7 +1514,9 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
     }
   },
   "mechanics": [

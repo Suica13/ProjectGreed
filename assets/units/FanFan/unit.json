@@ -452,7 +452,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FanFan.gw"
     }
   },
   "mechanics": [

@@ -954,7 +954,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_R4_BeamSniperRifle": {
       "name": "光束狙击枪",
@@ -1107,7 +1109,9 @@
         ]
       },
       "category": "sniper",
-      "actionCost": 4
+      "actionCost": 4,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle.gw"
     },
     "EF_R4_BeamSniperRifle_Sniper_Aim": {
       "name": "狙击蓄力",
@@ -1279,7 +1283,9 @@
           "beam": 15000.0,
           "beamAP": 7500.0
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle_Sniper.gw"
     },
     "EF_75mmSniperRifle": {
       "name": "狙击步枪",
@@ -1430,7 +1436,9 @@
         ]
       },
       "category": "sniper",
-      "actionCost": 4
+      "actionCost": 4,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_75mmSniperRifle_Lv2.gw"
     },
     "EF_75mmSniperRifle_Sniper_Aim": {
       "name": "狙击蓄力",
@@ -1599,7 +1607,9 @@
         "damageComponents": {
           "shell": 30000.0
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_75mmSniperRifle_Sniper_Lv2.gw"
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",
@@ -1754,7 +1764,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_Lv2.gw"
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -1994,7 +2006,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw"
     },
     "Common_Grenade_B": {
       "name": "手雷",
@@ -2157,7 +2171,9 @@
         "ja": {
           "name": "手榴弾"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Grenade_B_Lv2.gw"
     },
     "EF_BeamSaber_AF_A": {
       "name": "光束军刀",
@@ -2314,7 +2330,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Lv2.gw"
     }
   },
   "mechanics": [

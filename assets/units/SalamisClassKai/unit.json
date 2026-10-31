@@ -1113,7 +1113,9 @@
           "beam": 5000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_BeamCannon.ini"
     },
     "SalamisClassKai_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -1409,7 +1411,9 @@
           "shell": 1500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MS.ini"
     },
     "SalamisClassKai_Turret_AMS": {
       "name": "反MS导弹",
@@ -1602,7 +1606,9 @@
           "shell": 2000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AMS.ini"
     },
     "SalamisClassKai_Turret_AA": {
       "name": "对空机枪",
@@ -2290,7 +2296,9 @@
           "shellAP": 75.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_AA.ini"
     },
     "SalamisClassKai_Turret_MG": {
       "name": "舰载机枪",
@@ -2623,7 +2631,9 @@
           "shellAP": 100.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClassKai/SalamisClassKai_Turret_MG.ini"
     }
   },
   "mechanics": [

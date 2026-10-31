@@ -776,7 +776,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_LongRangeBeamSniperRifle": {
       "name": "光束狙击枪",
@@ -929,7 +931,9 @@
         ]
       },
       "category": "sniper",
-      "actionCost": 4
+      "actionCost": 4,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle.gw"
     },
     "ZN_LongRangeBeamSniperRifle_Sniper_Aim": {
       "name": "狙击蓄力",
@@ -1101,7 +1105,9 @@
           "beam": 20000.0,
           "beamAP": 15000.0
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_LongRangeBeamSniperRifle_Sniper.gw"
     },
     "ZN_Shotgun": {
       "name": "ZN Shotgun",
@@ -1260,7 +1266,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw"
     },
     "ZN_HeatHawk_F": {
       "name": "热能斧",
@@ -1404,7 +1412,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_F.gw"
     }
   },
   "mechanics": [

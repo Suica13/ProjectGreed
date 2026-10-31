@@ -753,7 +753,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_MMP80MG": {
       "name": "MMP-80机枪",
@@ -993,7 +995,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Lv2.gw"
     },
     "ZN_120mmMG_AntiAir": {
       "name": "120mm对空机枪",
@@ -1201,7 +1205,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir_Lv2.gw"
     },
     "Common_HandMS_L": {
       "name": "Common HandMS L",
@@ -1372,7 +1378,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_HandMS_L_Lv2.gw"
     },
     "Common_DoubleCannon": {
       "name": "加农炮",
@@ -1548,7 +1556,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleCannon_Lv2.gw"
     },
     "Common_DoubleCannon_L": {
       "name": "加农炮",
@@ -1727,7 +1737,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleCannon_Lv2.gw"
     },
     "Common_MortarDouble": {
       "name": "迫击炮轰炸",
@@ -1943,7 +1955,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw"
     },
     "Common_MortarDouble_L": {
       "name": "迫击炮轰炸",
@@ -2162,7 +2176,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -2305,7 +2321,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_Lv2.gw"
     }
   },
   "mechanics": [

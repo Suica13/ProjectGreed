@@ -800,7 +800,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_MMP80MG_Kai": {
       "name": "机枪",
@@ -1056,7 +1058,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Kai.gw"
     },
     "ZN_360mmBazookaKai": {
       "name": "360mm火箭筒",
@@ -1211,7 +1215,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazookaKai.gw"
     },
     "ZN_MS_09_ChestBeam": {
       "name": "胸部扩散光束炮",
@@ -1354,7 +1360,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam_Lv2.gw"
     },
     "ZN_Panzerfaust_Orange": {
       "name": "ZN Panzerfaust Orange",
@@ -1504,7 +1512,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust_Orange_L_Lv2.gw"
     },
     "ZN_HeatSaber_AF_A": {
       "name": "热能军刀",
@@ -1661,7 +1671,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_AF_Lv2.gw"
     }
   },
   "mechanics": [

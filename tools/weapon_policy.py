@@ -348,4 +348,5 @@ def configure(prefab, native):
     prefab = apply_action_mobility(apply_remote(apply_action_cost(apply_names(apply_defensive(apply_irradiation(apply_status(apply_refits(apply_pilot_weapons(apply_page_two(apply_era(prefab)), native), native), native), native), native))), native), native)
     from native_big_zam import apply as apply_big_zam
     from unit_classification import apply as apply_classification
-    return finalize_weapon_slots(apply_classification(apply_big_zam(prefab, native)))
+    from native_weapon_levels import apply as apply_levels
+    return apply_levels(finalize_weapon_slots(apply_classification(apply_big_zam(prefab, native))))

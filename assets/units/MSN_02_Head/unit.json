@@ -508,7 +508,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSN_02_Head_BR.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -657,7 +659,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     }
   },
   "mechanics": [

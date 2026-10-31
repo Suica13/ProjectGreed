@@ -851,7 +851,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_RX_81_GG": {
       "name": "EF RX 81 GG",
@@ -1095,7 +1097,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_GG.gw"
     },
     "EF_RX_81_GG_L": {
       "name": "EF RX 81 GG L",
@@ -1342,7 +1346,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_GG.gw"
     },
     "EF_RX_81_MS": {
       "name": "导弹发射器",
@@ -1560,7 +1566,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw"
     },
     "EF_RX_81_MS_L": {
       "name": "导弹发射器",
@@ -1781,7 +1789,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw"
     },
     "EF_GLine_HBR": {
       "name": "光束炮",
@@ -1932,7 +1942,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GLine_HBR.gw"
     },
     "EF_BeamSaber_BF_B": {
       "name": "光束军刀",
@@ -2090,7 +2102,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF_Lv2.gw"
     },
     "EF_BeamSaber_Double_BBLDF": {
       "name": "光束军刀",
@@ -2298,7 +2312,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_BBLDF.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2536,7 +2552,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

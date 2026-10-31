@@ -461,7 +461,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_DEPP_ROG.gw"
     },
     "Common_Bomb_DEPP_ROG": {
       "name": "航空炸弹",
@@ -675,7 +677,9 @@
       },
       "actionCost": 3,
       "displayIndex": 0,
-      "v17BombMultiplier": 1.5
+      "v17BombMultiplier": 1.5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Bomb_DEPP_ROG.gw"
     },
     "Common_Bomb_DEPP_ROG_L": {
       "name": "航空炸弹",
@@ -892,7 +896,9 @@
       },
       "actionCost": 3,
       "displayIndex": 0,
-      "v17BombMultiplier": 1.5
+      "v17BombMultiplier": 1.5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Bomb_DEPP_ROG.gw"
     }
   },
   "mechanics": [

@@ -544,7 +544,9 @@
         "energy": 0.0,
         "actions": []
       },
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_MG.gw"
     },
     "EF_Type61A5_Cannon": {
       "name": "加农炮",
@@ -680,7 +682,9 @@
         "energy": 16.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_Type61A5_Cannon.gw"
     }
   },
   "mechanics": [

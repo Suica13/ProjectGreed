@@ -631,7 +631,9 @@
         "actions": []
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw"
     },
     "EF_RX_75R_Cannon_Fake": {
       "name": "加农炮",
@@ -786,7 +788,9 @@
         "actions": []
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw"
     },
     "EF_RX_75R_DoubleMG": {
       "name": "机枪",
@@ -993,7 +997,9 @@
         "actions": []
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_DoubleMG.gw"
     },
     "Common_MortarDouble_RX_75R": {
       "name": "迫击炮轰炸",
@@ -1227,7 +1233,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw"
     },
     "Common_MortarDouble_RX_75R_L": {
       "name": "迫击炮轰炸",
@@ -1464,7 +1472,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1613,7 +1623,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     }
   },
   "mechanics": [

@@ -594,7 +594,9 @@
         "actions": []
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_AMS_Squad_MG.gw"
     }
   },
   "mechanics": [

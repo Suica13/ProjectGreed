@@ -819,7 +819,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_RX_78_7_BR": {
       "name": "光束步枪",
@@ -970,7 +972,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_7_BR.gw"
     },
     "Common_ArmBR_Pink": {
       "name": "腕部光束枪",
@@ -1151,7 +1155,9 @@
         "ja": {
           "name": "腕部ビームガン"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink_Lv2.gw"
     },
     "Common_ArmGL_L": {
       "name": "腕部榴弹发射器",
@@ -1322,7 +1328,9 @@
         "ja": {
           "name": "腕部グレネードランチャー"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_ArmGL_L_Lv2.gw"
     },
     "EF_BeamSaber_AF_Fast_A": {
       "name": "光束军刀",
@@ -1479,7 +1487,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast_Lv2.gw"
     },
     "EF_BeamSaber_Double_AALDF": {
       "name": "双光束军刀",
@@ -1692,7 +1702,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1930,7 +1942,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

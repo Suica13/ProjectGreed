@@ -660,7 +660,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_MSM_03_ChestBeam": {
       "name": "胸部光束扩散炮",
@@ -848,7 +850,9 @@
         "ja": {
           "name": "胸部拡散ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSM_03_ChestBeam.gw"
     },
     "ZN_MSM_03_ChestBeam_L": {
       "name": "胸部光束扩散炮",
@@ -1039,7 +1043,9 @@
         "ja": {
           "name": "胸部拡散ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSM_03_ChestBeam.gw"
     },
     "ZN_MSM_03_SMS": {
       "name": "导弹发射器",
@@ -1245,7 +1251,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MSM_03_SMS.gw"
     },
     "ZN_MSM_03_SMS_L": {
       "name": "导弹发射器",
@@ -1454,7 +1462,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MSM_03_SMS.gw"
     },
     "Common_Cqb_Double_A": {
       "name": "近身格斗",
@@ -1611,7 +1621,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A.gw"
     }
   },
   "mechanics": [

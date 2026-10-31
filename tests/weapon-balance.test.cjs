@@ -16,10 +16,11 @@ test("machine guns use their one native-based reduction; ship weapons never stac
     );
     for (const [id, before] of Object.entries(raw.weapons)) {
       const after = prefab.weapons[id];
+      const wristScale = ["RX_78_4", "RX_78_4_Bst"].includes(prefab.id) && id === "Common_ArmBR_Pink_L" ? raw.weapons.Common_ArmBR_Pink.damagePerShot / before.damagePerShot : 1;
       const eligibleBeam = ["beam_rifle", "bazooka"].includes(before.category) && !/Arm|Hand/i.test(id + " " + (before.sourceName || ""));
       const melee = before.type === "melee" || before.category === "melee";
       if (before.category !== "machine_gun" || /^Common_ArmGL(?:_|$)/.test(id)) {
-        assert.equal(after.damagePerShot, before.damagePerShot * (melee ? (id.startsWith("Common_Push_") ? 1 : 1.1) : ((before.type === "beam" || Object.entries(before.damageComponents).some(([k,v])=>/beam/i.test(k)&&v>0)) && eligibleBeam && !prefab.stats.ship && !prefab.unitTags.includes("MA") ? 1.35 : 1)));
+        assert.equal(after.damagePerShot, before.damagePerShot * wristScale * (melee ? (id.startsWith("Common_Push_") ? 1 : 1.1) : ((before.type === "beam" || Object.entries(before.damageComponents).some(([k,v])=>/beam/i.test(k)&&v>0)) && eligibleBeam && !prefab.stats.ship && !prefab.unitTags.includes("MA") ? 1.5 : 1)));
         assert.equal(after.actionCost, before.actionCost);
         continue;
       }
@@ -38,7 +39,7 @@ test("machine guns use their one native-based reduction; ship weapons never stac
               ) *
                 (step.damageMultiplier ?? 1) *
                 (prefab.stats.ship ? 1 : 0.75 / (before.machineGunDamageScale ?? 1)) *
-                ((before.type === "beam" || Object.entries(before.damageComponents).some(([k,v])=>/beam/i.test(k)&&v>0)) && eligibleBeam && !prefab.stats.ship && !prefab.unitTags.includes("MA") ? 1.35 : 1),
+                ((before.type === "beam" || Object.entries(before.damageComponents).some(([k,v])=>/beam/i.test(k)&&v>0)) && eligibleBeam && !prefab.stats.ship && !prefab.unitTags.includes("MA") ? 1.5 : 1),
             ) *
               (step.shots || 0) *
               (step.repeat || 1),

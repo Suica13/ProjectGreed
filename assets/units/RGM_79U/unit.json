@@ -688,7 +688,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "EF_HarpoonGun": {
       "name": "EF HarpoonGun",
@@ -848,7 +850,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HarpoonGun.gw"
     },
     "EF_HarpoonGun_Cqb_B": {
       "name": "近身格斗",
@@ -991,7 +995,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_HarpoonGun_Cqb_B.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1227,7 +1233,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw"
     }
   },
   "mechanics": [

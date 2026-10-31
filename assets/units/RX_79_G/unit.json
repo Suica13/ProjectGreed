@@ -886,7 +886,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka_Lv2.gw"
     },
     "EF_100mmMG": {
       "name": "100mm机枪",
@@ -1128,7 +1130,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw"
     },
     "EF_GroundTypeBeamRifle": {
       "name": "陆战型光束步枪",
@@ -1292,7 +1296,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw"
     },
     "EF_180mmCannon": {
       "name": "180mm加农炮",
@@ -1457,7 +1463,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_180mmCannon_Lv2.gw"
     },
     "EF_GroundTypeMissileLauncher": {
       "name": "陆战型导弹发射器",
@@ -1647,7 +1655,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GroundTypeMissileLauncher_Lv2.gw"
     },
     "Common_SingleVulcan_RX_79_G": {
       "name": "胸部火神炮",
@@ -1878,7 +1888,9 @@
         "energy": 0.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_SingleVulcan_RX_79_G.gw"
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",
@@ -2034,7 +2046,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A_Lv2.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -2183,7 +2197,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     }
   },
   "weaponKits": [

@@ -837,7 +837,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw"
     },
     "EF_BOWA_BeamGun": {
       "name": "BOWA光束枪",
@@ -997,7 +999,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BOWA_BeamGun.gw"
     },
     "EF_BeamSaber_BF": {
       "name": "光束军刀",
@@ -1168,7 +1172,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1413,7 +1419,9 @@
         "actions": []
       },
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1562,7 +1570,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     }
   },
   "weaponKits": [

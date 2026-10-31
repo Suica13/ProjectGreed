@@ -519,7 +519,9 @@
         "energy": 6.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_APC_MG.gw"
     }
   },
   "mechanics": [

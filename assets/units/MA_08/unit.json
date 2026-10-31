@@ -1203,7 +1203,9 @@
           "converted_skill"
         ],
         "convertedSkill": "Irradiation"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_MegaBeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon": {
       "name": "周身光束炮",
@@ -1711,7 +1713,9 @@
         "ja": {
           "name": "全周囲ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_L": {
       "name": "周身光束炮",
@@ -2222,7 +2226,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_R2": {
       "name": "周身光束炮",
@@ -2733,7 +2739,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_L2": {
       "name": "周身光束炮",
@@ -3244,7 +3252,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_R3": {
       "name": "周身光束炮",
@@ -3755,7 +3765,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_L3": {
       "name": "周身光束炮",
@@ -4266,7 +4278,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_R4": {
       "name": "周身光束炮",
@@ -4777,7 +4791,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_L4": {
       "name": "周身光束炮",
@@ -5288,7 +5304,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_R5": {
       "name": "周身光束炮",
@@ -5799,7 +5817,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_L5": {
       "name": "周身光束炮",
@@ -6310,7 +6330,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_R6": {
       "name": "周身光束炮",
@@ -6821,7 +6843,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_L6": {
       "name": "周身光束炮",
@@ -7332,7 +7356,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_R7": {
       "name": "周身光束炮",
@@ -7843,7 +7869,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_AA_BeamCannon_L7": {
       "name": "周身光束炮",
@@ -8354,7 +8382,9 @@
           "paired_weapon"
         ],
         "mergedInto": "ZN_MA_08_AA_BeamCannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw"
     },
     "ZN_MA_08_BeamCannon": {
       "name": "光束炮",
@@ -8509,7 +8539,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_BeamCannon.gw"
     },
     "ZN_MA_08_Shock_A": {
       "name": "近身格斗",
@@ -8648,7 +8680,9 @@
           "y": 55.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_MA_08_Shock_A.gw"
     },
     "Common_DoubleVulcan_MA_08": {
       "name": "火神炮",
@@ -8881,7 +8915,9 @@
         "actions": []
       },
       "category": "machine_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MA_08.gw"
     }
   },
   "mechanics": [
@@ -9024,7 +9060,9 @@
           "name": "照射ビーム"
         }
       },
-      "description": "基础伤害 31,975 × 1 = 31,975；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。"
+      "description": "基础伤害 31,975 × 1 = 31,975；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。",
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_MegaBeamCannon.gw"
     }
   ],
   "nativeCombatRevision": 1,

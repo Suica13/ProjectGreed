@@ -1005,7 +1005,9 @@
         "Army_Squad_EFSF_0079_N_G_Member_BZ_Member6",
         "Army_Squad_EFSF_0079_N_G_Member_BZ_Member7",
         "Army_Squad_EFSF_0079_N_G_Member_BZ_Member8"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Army_Squad/Member/EFSF_0079/Army_Squad_EFSF_0079_O_G_Member_P.ini"
     }
   },
   "mechanics": [

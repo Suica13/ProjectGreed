@@ -442,7 +442,9 @@
         "actions": []
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MTank_Cannon.gw"
     }
   },
   "mechanics": [

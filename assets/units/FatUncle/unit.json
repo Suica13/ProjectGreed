@@ -589,7 +589,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "ship_anti_air",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/FatUncle/FatUncle_Turret_MG.ini"
     }
   },
   "mechanics": [

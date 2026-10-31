@@ -535,7 +535,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RB_79K_Cannon.gw"
     },
     "EF_RB_79K_Cannon_R": {
       "name": "加农炮",
@@ -713,7 +715,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RB_79K_Cannon.gw"
     },
     "EF_RB_79K_Anchor": {
       "name": "缆绳锚",
@@ -881,7 +885,9 @@
           "retract": 0.35
         }
       },
-      "rangeRole": "tether_melee"
+      "rangeRole": "tether_melee",
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_RB_79K_Anchor.gw"
     },
     "Common_Cqb_BF_B": {
       "name": "近身格斗",
@@ -1032,7 +1038,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_BF.gw"
     }
   },
   "mechanics": [

@@ -722,7 +722,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_RX_77_4_BeamCannon": {
       "name": "光束炮",
@@ -873,7 +875,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_77_4_BeamCannon.gw"
     },
     "EF_RX_77_2_BR": {
       "name": "光束步枪",
@@ -1026,7 +1030,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_77_2_BR.gw"
     },
     "EF_100mmMG": {
       "name": "100mm机枪",
@@ -1255,7 +1261,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw"
     },
     "Common_Grenade_B_Burned": {
       "name": "燃烧手雷",
@@ -1418,7 +1426,9 @@
         "ja": {
           "name": "焼夷手榴弾"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Grenade_B_Burned.gw"
     },
     "Common_Cqb_BF_B": {
       "name": "近身格斗",
@@ -1576,7 +1586,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_BF_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1814,7 +1826,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

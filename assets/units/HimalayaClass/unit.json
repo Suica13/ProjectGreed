@@ -693,7 +693,9 @@
           "shell": 3500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/HimalayaClass/HimalayaClass_Turret_CN.ini"
     },
     "HimalayaClass_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -989,7 +991,9 @@
           "shell": 1500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/HimalayaClass/HimalayaClass_Turret_MS.ini"
     },
     "HimalayaClass_Turret_AA": {
       "name": "对空机枪",
@@ -1858,7 +1862,9 @@
           "shellAP": 75.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/HimalayaClass/HimalayaClass_Turret_AA.ini"
     }
   },
   "mechanics": [

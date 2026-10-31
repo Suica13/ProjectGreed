@@ -457,7 +457,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_X7.gw"
     },
     "Common_DoubleMS_FF_X7": {
       "name": "双重导弹发射器",
@@ -645,7 +647,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_X7.gw"
     }
   },
   "weaponKits": [

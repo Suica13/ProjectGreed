@@ -597,7 +597,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_PublicClass.gw"
     },
     "Common_DoubleMS_PublicClass_L": {
       "name": "双重导弹发射器",
@@ -816,7 +818,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_PublicClass.gw"
     },
     "EF_PublicClass_AntiShipMS": {
       "name": "EF PublicClass AntiShipMS",
@@ -965,7 +969,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_PublicClass_AntiShipMS.gw"
     },
     "EF_PublicClass_BeamDiffusionMS": {
       "name": "EF PublicClass BeamDiffusionMS",
@@ -1121,7 +1127,9 @@
           "converted_skill"
         ],
         "convertedSkill": "BeamDiffusion"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_PublicClass_BeamDiffusionMS.gw"
     }
   },
   "mechanics": [

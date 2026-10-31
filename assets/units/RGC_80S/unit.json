@@ -765,7 +765,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "EF_BalzacBazooka": {
       "name": "火箭筒",
@@ -920,7 +922,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_BalzacBazooka.gw"
     },
     "EF_BeamSprayGun": {
       "name": "光束喷枪",
@@ -1071,7 +1075,9 @@
         ]
       },
       "category": "beam_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGun.gw"
     },
     "Common_Cannon": {
       "name": "肩部加农炮",
@@ -1222,7 +1228,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Cannon.gw"
     },
     "Common_Mortar_Bombing_Shell": {
       "name": "迫击炮轰炸",
@@ -1410,7 +1418,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Bombing_Shell.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -1553,7 +1563,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
     }
   },
   "mechanics": [

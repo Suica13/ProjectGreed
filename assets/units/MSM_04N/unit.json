@@ -623,7 +623,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "Common_EyeFlash": {
       "name": "Common EyeFlash",
@@ -776,7 +778,9 @@
       },
       "category": "other",
       "actionCost": 2,
-      "onHitAPLoss": 0.25
+      "onHitAPLoss": 0.25,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_EyeFlash.gw"
     },
     "Common_Cqb_F_MSM_04N": {
       "name": "近身格斗",
@@ -922,7 +926,9 @@
         }
       },
       "actionCost": 2,
-      "onHitAPLoss": 0.25
+      "onHitAPLoss": 0.25,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_F_MSM_04N.gw"
     },
     "Common_Cqb_G_MSM_04N": {
       "name": "近身格斗",
@@ -1068,7 +1074,9 @@
         }
       },
       "actionCost": 2,
-      "onHitAPLoss": 0.25
+      "onHitAPLoss": 0.25,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_G_MSM_04N.gw"
     },
     "Common_DoubleVulcan_MS_MSM_04N": {
       "name": "火神炮",
@@ -1331,7 +1339,9 @@
         "actions": []
       },
       "category": "machine_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_MSM_04N.gw"
     }
   },
   "mechanics": [

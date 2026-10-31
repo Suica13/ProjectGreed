@@ -372,6 +372,7 @@ function loadCatalog({
     if (prefab.enabled === false) continue;
     localize.prefab(prefab);
     require("./weapon-balance.cjs").applyWeaponBalance(prefab);
+    require("./weapon-level-labels.cjs").applyWeaponLevelLabels(prefab);
     // Skills and weapons share the same 25-point damage quantization policy.
     for (const skill of prefab.skills || [])
       if (skill.damageComponents)
@@ -959,7 +960,7 @@ function loadCatalog({
               }),
             };
           }
-          return { ...weapon, id: key };
+          return require("./weapon-level-labels.cjs").labelWeapon({ ...weapon, id: key }, prefab.id);
         });
       if (!textureKeys[prefab.materials.icon]) throw Error("Missing unit icon: " + prefab.id);
       for (const key of ["idle", "move", "stagger"])

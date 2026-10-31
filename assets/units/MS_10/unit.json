@@ -818,7 +818,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_360mmBazooka": {
       "name": "360mm火箭筒",
@@ -973,7 +975,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw"
     },
     "ZN_BeamBazooka": {
       "name": "火箭筒",
@@ -1130,7 +1134,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_BeamBazooka.gw"
     },
     "ZN_MS_10_MS_AMS": {
       "name": "导弹发射器",
@@ -1307,7 +1313,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_AMS.gw"
     },
     "ZN_MS_10_MS_AMS_R": {
       "name": "导弹发射器",
@@ -1487,7 +1495,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_AMS.gw"
     },
     "ZN_MS_10_MS_MS": {
       "name": "导弹发射器",
@@ -1707,7 +1717,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_MS.gw"
     },
     "ZN_MS_10_MS_MS_R": {
       "name": "导弹发射器",
@@ -1930,7 +1942,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_10_MS_MS.gw"
     },
     "ZN_MS_09_ChestBeam": {
       "name": "胸部扩散光束炮",
@@ -2073,7 +2087,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw"
     },
     "ZN_HeatSaber_F": {
       "name": "热能军刀",
@@ -2216,7 +2232,9 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_F.gw"
     }
   },
   "mechanics": [

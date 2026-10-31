@@ -829,7 +829,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -1069,7 +1071,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw"
     },
     "EF_75mmMG_Double": {
       "name": "75mm机枪",
@@ -1382,7 +1386,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_75mmMG_Double_Lv2.gw"
     },
     "EF_75mmMG_Double_L": {
       "name": "75mm机枪",
@@ -1698,7 +1704,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_75mmMG_Double_Lv2.gw"
     },
     "Common_Grenade_B": {
       "name": "手雷",
@@ -1861,7 +1869,9 @@
         "ja": {
           "name": "手榴弾"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Grenade_B_Lv2.gw"
     },
     "EF_BeamDagger_Double_AALDF": {
       "name": "近身格斗",
@@ -2050,7 +2060,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamDagger_Double_AALDF.gw"
     },
     "EF_BeamDagger_Double_AALDE": {
       "name": "近身格斗",
@@ -2327,7 +2339,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamDagger_Double_AALDE.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2565,7 +2579,9 @@
         "actions": []
       },
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

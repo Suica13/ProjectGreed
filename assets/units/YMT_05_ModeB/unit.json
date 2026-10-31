@@ -569,7 +569,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_YMT_05_MainCannon_AP": {
       "name": "加农炮",
@@ -721,7 +723,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_AP.gw"
     },
     "ZN_YMT_05_MainCannon_HE": {
       "name": "加农炮",
@@ -871,7 +875,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_HE.gw"
     }
   },
   "mechanics": [

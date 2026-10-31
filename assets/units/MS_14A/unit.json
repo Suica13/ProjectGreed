@@ -827,7 +827,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR.gw"
     },
     "ZN_360mmBazooka": {
       "name": "360mm火箭筒",
@@ -995,7 +997,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka_Lv2.gw"
     },
     "ZN_MMP80MG": {
       "name": "MMP-80机枪",
@@ -1248,7 +1252,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Lv2.gw"
     },
     "ZN_TwinBeamSword_A": {
       "name": "双刃光束剑",
@@ -1409,7 +1415,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_TwinBeamSword_A_Lv2.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1558,7 +1566,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     }
   },
   "weaponKits": [

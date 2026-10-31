@@ -765,7 +765,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_120mmMG": {
       "name": "120mm机枪",
@@ -994,7 +996,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw"
     },
     "ZN_270mmBazooka": {
       "name": "270mm火箭筒",
@@ -1149,7 +1153,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw"
     },
     "ZN_HeatHawk_A": {
       "name": "热能斧",
@@ -1298,7 +1304,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
     }
   },
   "mechanics": [

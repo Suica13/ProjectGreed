@@ -574,7 +574,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_G_Fighter.gw"
     },
     "Common_DoubleMS_G_Fighter_L": {
       "name": "双重导弹发射器",
@@ -791,7 +793,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_G_Fighter.gw"
     },
     "EF_G_Fighter_BR": {
       "name": "光束步枪",
@@ -961,7 +965,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_G_Fighter_BR.gw"
     },
     "EF_G_Fighter_BR_R": {
       "name": "光束炮",
@@ -1134,7 +1140,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_G_Fighter_BR.gw"
     }
   },
   "mechanics": [

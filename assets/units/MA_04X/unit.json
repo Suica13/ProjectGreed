@@ -525,7 +525,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A.gw"
     },
     "ZN_MA_04X_BeamShotgun": {
       "name": "光束炮",
@@ -700,7 +702,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_04X_BeamShotgun.gw"
     },
     "ZN_MA_04X_BeamShotgun_L": {
       "name": "光束炮",
@@ -878,7 +882,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_04X_BeamShotgun.gw"
     },
     "ZN_MA_04X_MS": {
       "name": "导弹发射器",
@@ -1096,7 +1102,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MA_04X_MS.gw"
     },
     "ZN_MA_04X_MS_L": {
       "name": "导弹发射器",
@@ -1317,7 +1325,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MA_04X_MS.gw"
     },
     "Common_Cqb_Double_L_A_Fixed_MA_04X": {
       "name": "近身格斗",
@@ -1460,7 +1470,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_L_A_Fixed_MA_04X.gw"
     }
   },
   "mechanics": [

@@ -565,7 +565,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_MSM_10_ChestBeam": {
       "name": "导弹发射器",
@@ -755,7 +757,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSM_10_ChestBeam.gw"
     },
     "ZN_MSM_10_ChestBeam_L": {
       "name": "导弹发射器",
@@ -948,7 +952,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSM_10_ChestBeam.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -1091,7 +1097,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
     },
     "ZN_MSM_10_HighBeamRifle": {
       "name": "光束步枪",
@@ -1393,7 +1401,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSM_10_HighBeamRifle.gw"
     }
   },
   "mechanics": [

@@ -626,7 +626,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw"
     },
     "ZN_270mmBazooka": {
       "name": "270mm火箭筒",
@@ -779,7 +781,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw"
     },
     "ZN_MP_02A_MS": {
       "name": "导弹发射器",
@@ -977,7 +981,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MP_02A_MS.gw"
     },
     "ZN_MP_02A_MS_L": {
       "name": "导弹发射器",
@@ -1178,7 +1184,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MP_02A_MS.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -1319,7 +1327,9 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
     }
   },
   "mechanics": [

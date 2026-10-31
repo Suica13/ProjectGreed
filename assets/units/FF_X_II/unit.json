@@ -479,7 +479,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X_II_BR.gw"
     },
     "EF_FF_X_II_BR_R": {
       "name": "光束炮",
@@ -647,7 +649,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X_II_BR.gw"
     }
   },
   "mechanics": [

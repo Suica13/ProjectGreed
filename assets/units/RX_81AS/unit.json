@@ -865,7 +865,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "Common_Cannon": {
       "name": "肩部加农炮",
@@ -1016,7 +1018,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Cannon_Lv2.gw"
     },
     "EF_RX_81_GG": {
       "name": "EF RX 81 GG",
@@ -1260,7 +1264,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_GG.gw"
     },
     "EF_RX_81_GG_L": {
       "name": "EF RX 81 GG L",
@@ -1507,7 +1513,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_GG.gw"
     },
     "EF_RX_81_MS": {
       "name": "导弹发射器",
@@ -1725,7 +1733,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw"
     },
     "EF_RX_81_MS_L": {
       "name": "导弹发射器",
@@ -1946,7 +1956,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw"
     },
     "EF_RX_81AS_Shotgun": {
       "name": "EF RX 81AS Shotgun",
@@ -2108,7 +2120,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81AS_Shotgun.gw"
     },
     "EF_HSP_BF_B": {
       "name": "近身格斗",
@@ -2266,7 +2280,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_HSP_BF.gw"
     },
     "EF_BeamSaber_F": {
       "name": "光束军刀",
@@ -2433,7 +2449,9 @@
         "stats": [
           "pilotCqbSkillFinal"
         ]
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Lv2.gw"
     },
     "Common_Cqb_A_L": {
       "name": "近身格斗",
@@ -2571,7 +2589,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2809,7 +2829,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

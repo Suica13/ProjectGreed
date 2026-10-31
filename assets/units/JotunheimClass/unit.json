@@ -585,7 +585,9 @@
           "beam": 2750.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/JotunheimClass/JotunheimClass_Turret_BeamCannon.ini"
     },
     "JotunheimClass_Turret_AA": {
       "name": "对空机枪",
@@ -1458,7 +1460,9 @@
           "shellAP": 50.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/JotunheimClass/JotunheimClass_Turret_AA.ini"
     }
   },
   "mechanics": [

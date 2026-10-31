@@ -2105,7 +2105,9 @@
           "converted_skill"
         ],
         "convertedSkill": "Irradiation"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_4_HighMegaLauncher.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -2254,7 +2256,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",
@@ -2409,7 +2413,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_Lv2.gw"
     },
     "EF_HyperBeamRifle": {
       "name": "光束步枪",
@@ -2560,7 +2566,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_HyperBeamRifle.gw"
     },
     "Common_ArmBR_Pink": {
       "name": "腕部光束枪",
@@ -2741,7 +2749,9 @@
         "ja": {
           "name": "腕部ビームガン"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink_Lv2.gw"
     },
     "Common_ArmBR_Pink_L": {
       "name": "腕部光束枪",
@@ -2929,7 +2939,9 @@
         "ja": {
           "name": "腕部ビームガン"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink_L_Lv2.gw"
     },
     "EF_BeamSaber_AF_Fast_A": {
       "name": "光束军刀",
@@ -3086,7 +3098,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast_Lv2.gw"
     },
     "EF_BeamSaber_Double_AALDF": {
       "name": "双光束军刀",
@@ -3299,7 +3313,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -3537,7 +3553,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [
@@ -3697,7 +3715,9 @@
           "name": "照射ビーム"
         }
       },
-      "description": "基础伤害 29,975 × 1 = 29,975；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。"
+      "description": "基础伤害 29,975 × 1 = 29,975；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。",
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_4_HighMegaLauncher.gw"
     }
   ],
   "kitAliases": {

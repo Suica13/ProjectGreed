@@ -567,7 +567,9 @@
           "shell": 2500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_AMS.ini"
     },
     "U_Type_Submarine_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -842,7 +844,9 @@
           "shell": 1200.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/U_Type_Submarine/U_Type_Submarine_Turret_MS.ini"
     }
   },
   "mechanics": [

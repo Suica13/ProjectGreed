@@ -619,7 +619,9 @@
         "energy": 70,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw"
     },
     "EF_RX_75R_Cannon_Fake": {
       "name": "加农炮",
@@ -781,7 +783,9 @@
           "merged_position"
         ],
         "mergedInto": "EF_RX_75R_Cannon"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_Cannon.gw"
     },
     "EF_RX_75R_DoubleMG": {
       "name": "机枪",
@@ -988,7 +992,9 @@
         "energy": 0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75R_DoubleMG.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1137,7 +1143,9 @@
           "y": 0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "Common_MortarDouble_RX_75R": {
       "name": "迫击炮轰炸",
@@ -1360,7 +1368,9 @@
         "ja": {
           "name": "迫撃砲砲撃"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw"
     }
   },
   "mechanics": [

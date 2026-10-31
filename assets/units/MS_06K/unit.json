@@ -873,7 +873,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw"
     },
     "ZN_MS_06K_BigGun": {
       "name": "双联装大枪",
@@ -1090,7 +1092,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_06K_BigGun.gw"
     },
     "Common_Cannon_AntiAir": {
       "name": "肩部防空加农炮",
@@ -1259,7 +1263,9 @@
         "type": "blast",
         "radius": 1,
         "shape": "cross"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Cannon_AntiAir.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -1416,7 +1422,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1565,7 +1573,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     }
   },
   "weaponKits": [

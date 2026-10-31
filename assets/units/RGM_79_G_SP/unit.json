@@ -797,7 +797,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "EF_LongRangeBeamSniperRifle": {
       "name": "光束狙击枪",
@@ -950,7 +952,9 @@
         ]
       },
       "actionCost": 4,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_LongRangeBeamSniperRifle.gw"
     },
     "EF_LongRangeBeamSniperRifle_Sniper_Aim": {
       "name": "狙击蓄力",
@@ -1122,7 +1126,9 @@
           "beam": 20000.0,
           "beamAP": 15000.0
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_LongRangeBeamSniperRifle_Sniper.gw"
     },
     "EF_100mmMG": {
       "name": "100mm机枪",
@@ -1351,7 +1357,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 2
+      "displayIndex": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw"
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",
@@ -1494,7 +1502,9 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw"
     }
   },
   "mechanics": [

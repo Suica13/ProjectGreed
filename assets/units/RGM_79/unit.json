@@ -668,7 +668,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGun.gw"
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -917,7 +919,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw"
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",
@@ -1081,7 +1085,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw"
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",
@@ -1237,7 +1243,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1482,7 +1490,9 @@
         "actions": []
       },
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1631,7 +1641,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     }
   },
   "weaponKits": [

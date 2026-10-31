@@ -525,7 +525,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Dash.gw"
     },
     "Common_DoubleVulcan_Dash_L": {
       "name": "火神炮",
@@ -741,7 +743,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Dash.gw"
     }
   },
   "mechanics": [

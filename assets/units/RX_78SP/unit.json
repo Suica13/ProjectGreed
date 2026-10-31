@@ -728,7 +728,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_RX_78SP_BR": {
       "name": "光束步枪",
@@ -889,7 +891,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78SP_BR.gw"
     },
     "EF_RX_78SP_BR_Sniper_Aim": {
       "name": "光束狙击枪",
@@ -1041,7 +1045,9 @@
         ]
       },
       "category": "sniper",
-      "actionCost": 4
+      "actionCost": 4,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78SP_BR_Sniper.gw"
     },
     "EF_BeamSaber_BF_B": {
       "name": "光束军刀",
@@ -1199,7 +1205,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1437,7 +1445,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

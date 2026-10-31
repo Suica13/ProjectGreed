@@ -519,7 +519,9 @@
         "energy": 0.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_MinigunAPC_MG.gw"
     }
   },
   "mechanics": [

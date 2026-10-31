@@ -860,7 +860,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "EF_BeamSprayGunE2": {
       "name": "光束炮",
@@ -1012,7 +1014,9 @@
         ]
       },
       "category": "beam_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGunE2.gw"
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",
@@ -1167,7 +1171,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw"
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -1407,7 +1413,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw"
     },
     "EF_RGM_79HC_ShieldMG": {
       "name": "机枪",
@@ -1663,7 +1671,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RGM_79HC_ShieldMG.gw"
     },
     "EF_RGM_79HC_ShieldMG_L": {
       "name": "机枪",
@@ -1922,7 +1932,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RGM_79HC_ShieldMG.gw"
     },
     "EF_BeamDagger_BF_B": {
       "name": "近身格斗",
@@ -2080,7 +2092,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamDagger_BF.gw"
     },
     "Common_DoubleVulcan_RGM_79HC": {
       "name": "火神炮",
@@ -2301,7 +2315,9 @@
         "actions": []
       },
       "category": "machine_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_RGM_79HC.gw"
     }
   },
   "mechanics": [

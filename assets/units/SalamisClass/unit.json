@@ -636,7 +636,9 @@
           "beam": 4000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClass/SalamisClass_Turret_BeamCannon.ini"
     },
     "SalamisClass_Turret_MS": {
       "name": "舰载导弹",
@@ -943,7 +945,9 @@
           "shell": 1200.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClass/SalamisClass_Turret_MS.ini"
     },
     "SalamisClass_Turret_AMS": {
       "name": "反MS导弹",
@@ -1138,7 +1142,9 @@
           "shell": 1500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClass/SalamisClass_Turret_AMS.ini"
     },
     "SalamisClass_Turret_AA": {
       "name": "对空机枪",
@@ -2011,7 +2017,9 @@
           "shellAP": 50.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClass/SalamisClass_Turret_AA.ini"
     },
     "SalamisClass_Turret_MG": {
       "name": "舰载机炮",
@@ -2355,7 +2363,9 @@
           "shellAP": 50.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/SalamisClass/SalamisClass_Turret_MG.ini"
     }
   },
   "stats": {

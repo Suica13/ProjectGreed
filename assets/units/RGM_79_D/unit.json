@@ -825,7 +825,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_Railgun_79_D_MS": {
       "name": "导弹发射器",
@@ -1012,7 +1014,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_Railgun_79_D_MS.gw"
     },
     "EF_Railgun_79_D_RG": {
       "name": "电磁炮",
@@ -1177,7 +1181,9 @@
         "ja": {
           "name": "レールガン"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_Railgun_79_D_RG.gw"
     },
     "EF_BeamSprayGunFD": {
       "name": "光束炮",
@@ -1329,7 +1335,9 @@
         ]
       },
       "category": "beam_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGunFD.gw"
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",
@@ -1472,7 +1480,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A_Lv2.gw"
     },
     "Common_Cqb_A_L": {
       "name": "近身格斗",
@@ -1635,7 +1645,9 @@
           "pilotCqbSkillFinal"
         ]
       },
-      "requiresShield": true
+      "requiresShield": true,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L_Lv2.gw"
     }
   },
   "mechanics": [

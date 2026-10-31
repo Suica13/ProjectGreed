@@ -577,7 +577,9 @@
         "energy": 10.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Cui_AA.gw"
     }
   },
   "mechanics": [

@@ -452,7 +452,9 @@
         "actions": []
       },
       "category": "beam_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_G_Bull_Easy_BeamGun.gw"
     }
   },
   "mechanics": [

@@ -795,7 +795,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "Common_Grenade_D": {
       "name": "手雷",
@@ -958,7 +960,9 @@
         "ja": {
           "name": "手榴弾"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Grenade_D.gw"
     },
     "ZN_MMP80MG": {
       "name": "MMP-80机枪",
@@ -1198,7 +1202,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Lv2.gw"
     },
     "ZN_270mmBazooka": {
       "name": "270mm火箭筒",
@@ -1353,7 +1359,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka_Lv2.gw"
     },
     "ZN_HeatHawk_A": {
       "name": "热能斧",
@@ -1502,7 +1510,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A_Lv2.gw"
     }
   },
   "mechanics": [

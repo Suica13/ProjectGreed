@@ -682,7 +682,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "Common_Mortar_YMS_16M": {
       "name": "迫击炮轰炸",
@@ -886,7 +888,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar_YMS_16M.gw"
     },
     "ZN_YMS_16M_Cannon_AP": {
       "name": "加农炮",
@@ -1043,7 +1047,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMS_16M_Cannon_AP.gw"
     },
     "ZN_YMS_16M_Cannon_HE": {
       "name": "加农炮",
@@ -1198,7 +1204,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMS_16M_Cannon_HE.gw"
     },
     "ZN_YMS_16M_MS": {
       "name": "导弹发射器",
@@ -1417,7 +1425,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMS_16M_MS.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1655,7 +1665,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

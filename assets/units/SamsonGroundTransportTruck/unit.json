@@ -764,7 +764,9 @@
         "energy": 20.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_SamsonGroundTransportTruck_AA.gw"
     },
     "ZN_SamsonGroundTransportTruck_AA_R": {
       "name": "ZN SamsonGroundTransportTruck AA R",
@@ -1184,7 +1186,9 @@
         "energy": 20.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_SamsonGroundTransportTruck_AA.gw"
     }
   },
   "mechanics": [

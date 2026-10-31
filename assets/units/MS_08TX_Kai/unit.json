@@ -796,7 +796,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_Shotgun": {
       "name": "ZN Shotgun",
@@ -955,7 +957,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw"
     },
     "Common_ArmGL": {
       "name": "腕部榴弹发射器",
@@ -1126,7 +1130,9 @@
         "ja": {
           "name": "腕部グレネードランチャー"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_ArmGL_Lv2.gw"
     },
     "ZN_MS_08TX_Kai_LegMS": {
       "name": "腿部导弹发射器",
@@ -1350,7 +1356,9 @@
         "ja": {
           "name": "脚部ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_08TX_Kai_LegMS.gw"
     },
     "ZN_MS_08TX_Kai_LegMS_L": {
       "name": "腿部导弹发射器",
@@ -1577,7 +1585,9 @@
         "ja": {
           "name": "脚部ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_08TX_Kai_LegMS.gw"
     },
     "ZN_HeatSword_Double_DBDF": {
       "name": "近身格斗",
@@ -1760,7 +1770,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_Double_DBDF.gw"
     }
   },
   "mechanics": [

@@ -588,7 +588,9 @@
         "actions": []
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_06V_Cannon.gw"
     },
     "ZN_MS_06V_Cannon_Fake": {
       "name": "加农炮",
@@ -741,7 +743,9 @@
         "actions": []
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_06V_Cannon.gw"
     },
     "Common_DoubleVulcan_MTank": {
       "name": "火神炮",
@@ -945,7 +949,9 @@
         "actions": []
       },
       "category": "machine_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MTank.gw"
     },
     "ZN_MS_06V_MG": {
       "name": "机枪",
@@ -1151,7 +1157,9 @@
         "actions": []
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_06V_MG.gw"
     },
     "Common_Mortar": {
       "name": "迫击炮轰炸",
@@ -1328,7 +1336,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1477,7 +1487,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     }
   },
   "mechanics": [

@@ -561,7 +561,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A.gw"
     },
     "ZN_MA_05_BeamCannon": {
       "name": "光束炮",
@@ -720,7 +722,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_05_BeamCannon.gw"
     },
     "ZN_MA_05_MS": {
       "name": "导弹发射器",
@@ -938,7 +942,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MA_05_MS.gw"
     },
     "ZN_MA_05_MS_L": {
       "name": "导弹发射器",
@@ -1159,7 +1165,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MA_05_MS.gw"
     },
     "Common_Cqb_Double_L_A_Fixed_MA_05": {
       "name": "近身格斗",
@@ -1302,7 +1310,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_L_A_Fixed_MA_05.gw"
     }
   },
   "mechanics": [

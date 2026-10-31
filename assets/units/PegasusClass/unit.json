@@ -1320,7 +1320,9 @@
           "shell": 8000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/PegasusClass/PegasusClass_Turret_Cannon.ini"
     },
     "PegasusClass_Turret_Cannon_L": {
       "name": "舰载加农炮",
@@ -1543,7 +1545,9 @@
           "shell": 8000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/PegasusClass/PegasusClass_Turret_Cannon.ini"
     },
     "PegasusClass_Turret_Cannon_R": {
       "name": "舰载加农炮",
@@ -1766,7 +1770,9 @@
           "shell": 8000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/PegasusClass/PegasusClass_Turret_Cannon.ini"
     },
     "PegasusClass_Turret_MegaBeamCannon": {
       "name": "舰载光束炮",
@@ -2084,7 +2090,9 @@
           "beam": 7500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/PegasusClass/PegasusClass_Turret_MegaBeamCannon.ini"
     },
     "PegasusClass_Turret_MegaBeamCannon_L": {
       "name": "舰载光束炮",
@@ -2404,7 +2412,9 @@
           "beam": 7500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/PegasusClass/PegasusClass_Turret_MegaBeamCannon.ini"
     },
     "PegasusClass_Turret_MegaBeamCannon_R": {
       "name": "舰载光束炮",
@@ -2724,7 +2734,9 @@
           "beam": 7500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/PegasusClass/PegasusClass_Turret_MegaBeamCannon.ini"
     },
     "PegasusClass_Turret_AMS": {
       "name": "反MS导弹",
@@ -3027,7 +3039,9 @@
           "shell": 1500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/PegasusClass/PegasusClass_Turret_AMS.ini"
     },
     "PegasusClass_Turret_AA": {
       "name": "对空机枪",
@@ -6104,7 +6118,9 @@
           "shellAP": 50.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/PegasusClass/PegasusClass_Turret_AA.ini"
     }
   },
   "mechanics": [

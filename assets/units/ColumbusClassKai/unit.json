@@ -1316,7 +1316,9 @@
           "shellAP": 75.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ColumbusClassKai/ColumbusClassKai_Turret_AA.ini"
     }
   },
   "mechanics": [

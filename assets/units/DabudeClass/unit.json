@@ -930,7 +930,9 @@
           "shell": 4000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/DabudeClass/DabudeClass_Turret_Cannon.ini"
     },
     "DabudeClass_Turret_Cannon": {
       "name": "舰载加农炮",
@@ -1144,7 +1146,9 @@
           "shell": 7500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/DabudeClass/DabudeClass_Turret_Cannon.ini"
     },
     "DabudeClass_Turret_AA": {
       "name": "对空机枪",
@@ -2387,7 +2391,9 @@
           "shellAP": 75.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/DabudeClass/DabudeClass_Turret_AA.ini"
     }
   },
   "mechanics": [

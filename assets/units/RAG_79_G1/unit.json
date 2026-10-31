@@ -860,7 +860,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_BeamRifleAuqa": {
       "name": "光束步枪",
@@ -1011,7 +1013,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamRifleAuqa.gw"
     },
     "EF_AquaMissileLauncher": {
       "name": "导弹发射器",
@@ -1202,7 +1206,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_AquaMissileLauncher.gw"
     },
     "EF_RAG_79_G1_HG": {
       "name": "EF RAG 79 G1 HG",
@@ -1361,7 +1367,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_G1_HG.gw"
     },
     "EF_RAG_79_G1_MS": {
       "name": "导弹发射器",
@@ -1534,7 +1542,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_G1_MS.gw"
     },
     "EF_RAG_79_G1_MS_L": {
       "name": "导弹发射器",
@@ -1710,7 +1720,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_G1_MS.gw"
     },
     "EF_RAG_79_Anchor": {
       "name": "近身格斗",
@@ -1846,7 +1858,9 @@
           "y": 17.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_RAG_79_Anchor.gw"
     },
     "EF_BeamPickaxe_BF_B": {
       "name": "近身格斗",
@@ -2004,7 +2018,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamPickaxe_BF_Lv2.gw"
     }
   },
   "mechanics": [

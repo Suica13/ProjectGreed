@@ -925,7 +925,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_ShotgunKai": {
       "name": "ZN ShotgunKai",
@@ -1084,7 +1086,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_ShotgunKai.gw"
     },
     "ZN_360mmBazookaKai_Double": {
       "name": "360mm火箭筒",
@@ -1274,7 +1278,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazookaKai_Double.gw"
     },
     "ZN_360mmBazookaKai_Double_L": {
       "name": "360mm火箭筒",
@@ -1467,7 +1473,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazookaKai_Double.gw"
     },
     "ZN_Panzerfaust_Double": {
       "name": "ZN Panzerfaust Double",
@@ -1657,7 +1665,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust_Double_Lv2.gw"
     },
     "ZN_Panzerfaust_Double_L": {
       "name": "ZN Panzerfaust Double L",
@@ -1850,7 +1860,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust_Double_Lv2.gw"
     },
     "EF_BeamSaber_BF_Yellow_B": {
       "name": "光束军刀",
@@ -2008,7 +2020,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF_Yellow_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2246,7 +2260,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

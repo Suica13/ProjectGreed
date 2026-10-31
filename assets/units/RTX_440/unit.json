@@ -722,7 +722,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "Common_Mortar_Bombing_MS": {
       "name": "迫击炮轰炸",
@@ -918,7 +920,9 @@
           "hiddenAction_SetAttackingCantTurnOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Bombing_MS.gw"
     },
     "EF_RTX_440_Rocket": {
       "name": "导弹发射器",
@@ -1148,7 +1152,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Rocket.gw"
     },
     "EF_RTX_440_Rocket_L": {
       "name": "导弹发射器",
@@ -1381,7 +1387,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Rocket.gw"
     },
     "Common_Cannon_NoStop": {
       "name": "加农炮",
@@ -1532,7 +1540,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Cannon_NoStop_Lv2.gw"
     },
     "EF_RTX_440_HandGun": {
       "name": "EF RTX 440 HandGun",
@@ -1785,7 +1795,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_HandGun.gw"
     },
     "EF_RTX_440_HandGun_L": {
       "name": "EF RTX 440 HandGun L",
@@ -2041,7 +2053,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_HandGun.gw"
     },
     "EF_RTX_440_Flamethrower": {
       "name": "喷火器",
@@ -2176,7 +2190,9 @@
       "burn": {
         "durationTurns": 3,
         "hpPercent": 5
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RTX_440_Flamethrower.gw"
     }
   },
   "mechanics": [

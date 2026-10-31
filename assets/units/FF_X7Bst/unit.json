@@ -575,7 +575,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_X7Bst.gw"
     },
     "Common_DoubleVulcan_FF_X7Bst_L": {
       "name": "火神炮",
@@ -791,7 +793,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_X7Bst.gw"
     },
     "Common_DoubleMS_FF_X7Bst": {
       "name": "双重导弹发射器",
@@ -991,7 +995,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_X7Bst.gw"
     },
     "Common_DoubleMS_FF_X7Bst_L": {
       "name": "双重导弹发射器",
@@ -1194,7 +1200,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_X7Bst.gw"
     },
     "EF_FF_X7Bst_BR": {
       "name": "光束步枪",
@@ -1364,7 +1372,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X7Bst_BR.gw"
     },
     "EF_FF_X7Bst_BR_R": {
       "name": "光束炮",
@@ -1537,7 +1547,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X7Bst_BR.gw"
     }
   },
   "mechanics": [

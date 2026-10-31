@@ -1232,7 +1232,9 @@
           "beam": 10000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ZanzibarClassKai_0083/ZanzibarClassKai_0083_Turret_MegaBeamCannon.ini"
     },
     "ZanzibarClassKai_0083_Turret_MegaBeamCannon_L": {
       "name": "舰载光束炮",
@@ -1552,7 +1554,9 @@
           "beam": 10000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ZanzibarClassKai_0083/ZanzibarClassKai_0083_Turret_MegaBeamCannon.ini"
     },
     "ZanzibarClassKai_0083_Turret_MegaBeamCannon_R": {
       "name": "舰载光束炮",
@@ -1872,7 +1876,9 @@
           "beam": 10000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ZanzibarClassKai_0083/ZanzibarClassKai_0083_Turret_MegaBeamCannon.ini"
     },
     "ZanzibarClassKai_0083_Turret_AMS": {
       "name": "反MS导弹",
@@ -2103,7 +2109,9 @@
           "shell": 3000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ZanzibarClassKai_0083/ZanzibarClassKai_0083_Turret_AMS.ini"
     },
     "ZanzibarClassKai_0083_Turret_AA": {
       "name": "对空机枪",
@@ -3716,7 +3724,9 @@
           "shellAP": 100.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ZanzibarClassKai_0083/ZanzibarClassKai_0083_Turret_AA.ini"
     },
     "ZanzibarClassKai_0083_Turret_MG": {
       "name": "舰载机枪",
@@ -4259,7 +4269,9 @@
           "shellAP": 125.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/ZanzibarClassKai_0083/ZanzibarClassKai_0083_Turret_MG.ini"
     }
   },
   "mechanics": [

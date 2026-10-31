@@ -632,7 +632,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "Common_MortarDouble_Bombing_Shell": {
       "name": "迫击炮轰炸",
@@ -853,7 +855,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Bombing_Shell.gw"
     },
     "Common_MortarDouble_Bombing_Shell_R": {
       "name": "迫击炮轰炸",
@@ -1077,7 +1081,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Bombing_Shell.gw"
     },
     "ZN_MSM_04G_HG": {
       "name": "导弹发射器",
@@ -1296,7 +1302,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MSM_04G_HG.gw"
     },
     "ZN_MSM_04G_HG_L": {
       "name": "导弹发射器",
@@ -1518,7 +1526,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MSM_04G_HG.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -1661,7 +1671,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
     }
   },
   "mechanics": [

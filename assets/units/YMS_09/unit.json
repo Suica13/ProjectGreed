@@ -807,7 +807,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_120mmMG": {
       "name": "120mm机枪",
@@ -1036,7 +1038,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw"
     },
     "ZN_360mmBazooka": {
       "name": "360mm火箭筒",
@@ -1191,7 +1195,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka.gw"
     },
     "ZN_MS_09_ChestBeam": {
       "name": "胸部扩散光束炮",
@@ -1334,7 +1340,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw"
     },
     "ZN_HeatSaber_A": {
       "name": "热能军刀",
@@ -1477,7 +1485,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_A.gw"
     }
   },
   "mechanics": [

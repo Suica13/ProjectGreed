@@ -828,7 +828,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -1068,7 +1070,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw"
     },
     "EF_GroundTypeBeamRifle": {
       "name": "陆战型光束步枪",
@@ -1219,7 +1223,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw"
     },
     "EF_GroundTypeBazooka": {
       "name": "陆战型火箭筒",
@@ -1374,7 +1380,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka_Lv2.gw"
     },
     "Common_ArmBR_Pink": {
       "name": "腕部光束枪",
@@ -1555,7 +1563,9 @@
         "ja": {
           "name": "腕部ビームガン"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink.gw"
     },
     "Common_ArmBR_Pink_L": {
       "name": "腕部光束枪",
@@ -1743,7 +1753,9 @@
         "ja": {
           "name": "腕部ビームガン"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/Common_ArmBR_Pink_L.gw"
     },
     "EF_RX_80PR_LegMS": {
       "name": "腿部导弹发射器",
@@ -1967,7 +1979,9 @@
         "ja": {
           "name": "脚部ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw"
     },
     "EF_RX_80PR_LegMS_L": {
       "name": "腿部导弹发射器",
@@ -2194,7 +2208,9 @@
         "ja": {
           "name": "脚部ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_80PR_LegMS.gw"
     },
     "EF_BeamSaber_AF_Fast_A": {
       "name": "光束军刀",
@@ -2351,7 +2367,9 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast_Lv2.gw"
     },
     "Common_Cqb_B_L": {
       "name": "近身格斗",
@@ -2514,7 +2532,9 @@
           "pilotCqbSkillFinal"
         ]
       },
-      "requiresShield": true
+      "requiresShield": true,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_B_L_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2752,7 +2772,9 @@
         "actions": []
       },
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

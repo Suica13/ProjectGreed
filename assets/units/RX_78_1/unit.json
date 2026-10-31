@@ -894,7 +894,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_Lv2.gw"
     },
     "EF_RX_78_1_BR": {
       "name": "试作型光束步枪",
@@ -1059,7 +1061,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_1_BR.gw"
     },
     "EF_100mmMG": {
       "name": "100mm机枪",
@@ -1300,7 +1304,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw"
     },
     "EF_BeamSaber_AF_Fast_A": {
       "name": "光束军刀",
@@ -1474,7 +1480,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Fast_Lv2.gw"
     },
     "EF_BeamSaber_Double_AALDF": {
       "name": "双光束军刀",
@@ -1704,7 +1712,9 @@
         "stats": [
           "pilotCqbSkillFinal"
         ]
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF_Lv2.gw"
     },
     "EF_BeamJavelin_BF_B": {
       "name": "光束标枪",
@@ -1879,7 +1889,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamJavelin_BF_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2157,7 +2169,9 @@
         "actions": []
       },
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -2306,7 +2320,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     }
   },
   "weaponKits": [

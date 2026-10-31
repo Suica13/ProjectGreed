@@ -889,7 +889,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_Panzerfaust": {
       "name": "铁拳火箭弹",
@@ -1044,7 +1046,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust_Lv2.gw"
     },
     "Common_ArmMG": {
       "name": "腕部机枪",
@@ -1293,7 +1297,9 @@
         "ja": {
           "name": "腕部機関銃"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_ArmMG_Lv2.gw"
     },
     "Common_ArmMG_L": {
       "name": "腕部机枪",
@@ -1549,7 +1555,9 @@
         "ja": {
           "name": "腕部機関銃"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_ArmMG_L_Lv2.gw"
     },
     "ZN_MS_14_BR": {
       "name": "格鲁古古光束步枪",
@@ -1700,7 +1708,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR.gw"
     },
     "ZN_360mmBazookaKai": {
       "name": "360mm火箭筒",
@@ -1855,7 +1865,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazookaKai.gw"
     },
     "ZN_MMP80MG": {
       "name": "MMP-80机枪",
@@ -2095,7 +2107,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Lv2.gw"
     },
     "EF_BeamSaber_BF_Yellow_B": {
       "name": "光束军刀",
@@ -2253,7 +2267,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF_Yellow_Lv2.gw"
     }
   },
   "mechanics": [

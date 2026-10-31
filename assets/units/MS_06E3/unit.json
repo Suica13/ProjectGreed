@@ -810,7 +810,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_120mmMG_AntiAir": {
       "name": "120mm对空机枪",
@@ -1018,7 +1020,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir.gw"
     },
     "ZN_Panzerfaust": {
       "name": "铁拳火箭弹",
@@ -1177,7 +1181,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust.gw"
     },
     "ZN_HeatHawk_A": {
       "name": "热能斧",
@@ -1326,7 +1332,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A_Lv2.gw"
     }
   },
   "mechanics": [

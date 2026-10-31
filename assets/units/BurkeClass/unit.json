@@ -539,7 +539,9 @@
           "shell": 3500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/BurkeClass/BurkeClass_Turret_AMS.ini"
     },
     "BurkeClass_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -729,7 +731,9 @@
           "shell": 1500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/BurkeClass/BurkeClass_Turret_MS.ini"
     },
     "BurkeClass_Turret_CN": {
       "name": "加农炮",
@@ -885,7 +889,9 @@
           "shell": 4500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/BurkeClass/BurkeClass_Turret_CN.ini"
     },
     "BurkeClass_Turret_MG": {
       "name": "舰载机枪",
@@ -1216,7 +1222,9 @@
           "shellAP": 50.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/BurkeClass/BurkeClass_Turret_MG.ini"
     }
   },
   "mechanics": [

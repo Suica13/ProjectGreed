@@ -782,7 +782,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_MS_17R_BR": {
       "name": "光束步枪",
@@ -983,7 +985,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_17R_BR.gw"
     },
     "ZN_YMS_15_ShieldMS": {
       "name": "ZN YMS 15 ShieldMS",
@@ -1213,7 +1217,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMS_15_ShieldMS.gw"
     },
     "ZN_YMS_15_ShieldMS_L": {
       "name": "ZN YMS 15 ShieldMS L",
@@ -1446,7 +1452,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMS_15_ShieldMS.gw"
     },
     "ZN_YMS_15_BeamSaber_B3": {
       "name": "光束军刀",
@@ -1605,7 +1613,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_YMS_15_BeamSaber_B3.gw"
     }
   },
   "mechanics": [

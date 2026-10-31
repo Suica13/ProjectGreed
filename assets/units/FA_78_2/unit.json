@@ -740,7 +740,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_FA_78_2_BeamCannon": {
       "name": "光束炮",
@@ -891,7 +893,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FA_78_2_BeamCannon.gw"
     },
     "EF_FA_78_2_FrameLauncher_GL": {
       "name": "下挂榴弹发射器",
@@ -1080,7 +1084,9 @@
         "ja": {
           "name": "アンダーバレル・グレネードランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_FA_78_2_FrameLauncher_GL.gw"
     },
     "EF_FA_78_2_FrameLauncher_MG": {
       "name": "机枪",
@@ -1336,7 +1342,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_FA_78_2_FrameLauncher_MG.gw"
     },
     "EF_BeamSaber_AF_A": {
       "name": "光束军刀",
@@ -1493,7 +1501,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1731,7 +1741,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

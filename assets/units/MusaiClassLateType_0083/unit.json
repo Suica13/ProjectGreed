@@ -1226,7 +1226,9 @@
           "beam": 6500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/MusaiClassLateType_0083/MusaiClassLateType_0083_Turret_BeamCannon.ini"
     },
     "MusaiClassLateType_0083_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -1501,7 +1503,9 @@
           "shell": 2250.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/MusaiClassLateType_0083/MusaiClassLateType_0083_Turret_MS.ini"
     },
     "MusaiClassLateType_0083_Turret_AA": {
       "name": "对空机枪",
@@ -3484,7 +3488,9 @@
           "shellAP": 75.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/MusaiClassLateType_0083/MusaiClassLateType_0083_Turret_AA.ini"
     }
   },
   "mechanics": [

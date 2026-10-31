@@ -883,7 +883,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka.gw"
     },
     "EF_100mmMG": {
       "name": "100mm机枪",
@@ -1125,7 +1127,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw"
     },
     "EF_GroundTypeBeamRifle": {
       "name": "陆战型光束步枪",
@@ -1289,7 +1293,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw"
     },
     "EF_180mmCannon": {
       "name": "180mm加农炮",
@@ -1454,7 +1460,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_180mmCannon.gw"
     },
     "EF_GroundTypeMissileLauncher": {
       "name": "陆战型导弹发射器",
@@ -1644,7 +1652,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GroundTypeMissileLauncher.gw"
     },
     "EF_BeamSaber_A": {
       "name": "光束军刀",
@@ -1800,7 +1810,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1949,7 +1961,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     }
   },
   "weaponKits": [

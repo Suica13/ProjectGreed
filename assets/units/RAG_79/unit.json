@@ -906,7 +906,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "EF_HarpoonGun": {
       "name": "EF HarpoonGun",
@@ -1066,7 +1068,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HarpoonGun.gw"
     },
     "EF_AquaMissileLauncher": {
       "name": "导弹发射器",
@@ -1257,7 +1261,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_AquaMissileLauncher.gw"
     },
     "EF_RAG_79_Anchor_L": {
       "name": "近身格斗",
@@ -1393,7 +1399,9 @@
           "y": 17.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_RAG_79_Anchor_L.gw"
     },
     "EF_RAG_79_MS": {
       "name": "导弹发射器",
@@ -1590,7 +1598,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw"
     },
     "EF_RAG_79_MS_L": {
       "name": "导弹发射器",
@@ -1790,7 +1800,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RAG_79_MS.gw"
     },
     "EF_BeamPickaxe_B": {
       "name": "近身格斗",
@@ -1933,7 +1945,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamPickaxe_B.gw"
     }
   },
   "mechanics": [

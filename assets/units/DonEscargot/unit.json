@@ -602,7 +602,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_DonEscargot.gw"
     },
     "Common_DoubleVulcan_DonEscargot_L": {
       "name": "火神炮",
@@ -895,7 +897,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_DonEscargot.gw"
     },
     "Common_DoubleVulcan_DonEscargot_R2": {
       "name": "火神炮",
@@ -1188,7 +1192,9 @@
         "mergedInto": "Common_DoubleVulcan_DonEscargot"
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_DonEscargot.gw"
     },
     "Common_DoubleVulcan_DonEscargot_L2": {
       "name": "火神炮",
@@ -1481,7 +1487,9 @@
         "mergedInto": "Common_DoubleVulcan_DonEscargot"
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_DonEscargot.gw"
     },
     "Common_Bomb_DonEscargot": {
       "name": "航空炸弹",
@@ -1653,7 +1661,9 @@
       },
       "actionCost": 3,
       "displayIndex": 0,
-      "v17BombMultiplier": 1.5
+      "v17BombMultiplier": 1.5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Bomb_DonEscargot.gw"
     },
     "Common_Bomb_DonEscargot_L": {
       "name": "航空炸弹",
@@ -1828,7 +1838,9 @@
       },
       "actionCost": 3,
       "displayIndex": 0,
-      "v17BombMultiplier": 1.5
+      "v17BombMultiplier": 1.5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Bomb_DonEscargot.gw"
     }
   },
   "mechanics": [

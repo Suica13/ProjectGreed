@@ -703,7 +703,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_MS_07B3_HandMG": {
       "name": "机枪",
@@ -933,7 +935,9 @@
       },
       "rangeRole": "short_secondary",
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_07B3_HandMG.gw"
     },
     "ZN_MS_07B3_Minigun": {
       "name": "加特林盾牌",
@@ -1251,7 +1255,9 @@
         "ja": {
           "name": "ガトリングシールド"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_07B3_Minigun.gw"
     },
     "ZN_MS_07B_HeatRod": {
       "name": "热能鞭",
@@ -1422,7 +1428,9 @@
         }
       },
       "rangeRole": "tether_melee",
-      "onHitAPLoss": 0.25
+      "onHitAPLoss": 0.25,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_MS_07B_HeatRod.gw"
     },
     "ZN_HeatSword_MS_07B3_BF_B": {
       "name": "近身格斗",
@@ -1584,7 +1592,9 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_MS_07B3_BF.gw"
     }
   },
   "mechanics": [

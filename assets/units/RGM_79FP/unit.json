@@ -841,7 +841,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_100mmMG": {
       "name": "100mm机枪",
@@ -1070,7 +1072,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw"
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",
@@ -1225,7 +1229,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_Lv2.gw"
     },
     "EF_BeamLancer_BF_B": {
       "name": "近身格斗",
@@ -1387,7 +1393,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamLancer_BF.gw"
     },
     "EF_BeamSaber_F": {
       "name": "光束军刀",
@@ -1554,7 +1562,9 @@
         "stats": [
           "pilotCqbSkillFinal"
         ]
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Lv2.gw"
     },
     "Common_Cqb_A_L": {
       "name": "近身格斗",
@@ -1717,7 +1727,9 @@
           "pilotCqbSkillFinal"
         ]
       },
-      "requiresShield": true
+      "requiresShield": true,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_L_Lv2.gw"
     }
   },
   "mechanics": [

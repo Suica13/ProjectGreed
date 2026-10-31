@@ -527,7 +527,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A_Lv2.gw"
     },
     "ZN_MAN_08_BeamCannon": {
       "name": "光束炮",
@@ -705,7 +707,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MAN_08_BeamCannon.gw"
     },
     "ZN_MAN_08_BeamCannon_L": {
       "name": "光束炮",
@@ -886,7 +890,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MAN_08_BeamCannon.gw"
     },
     "ZN_MAN_08_Funnel": {
       "sourceName": "ZN_MAN_08_Funnel",
@@ -1270,7 +1276,9 @@
           "operator": ">=",
           "value": 75
         }
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Funnel/ZN_MAN_08_Funnel.gw"
     }
   },
   "mechanics": [

@@ -785,7 +785,9 @@
           "shell": 5000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/MiniTrayClass/MiniTrayClass_Turret_Cannon.ini"
     },
     "MiniTrayClass_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -1007,7 +1009,9 @@
           "shell": 1000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/MiniTrayClass/MiniTrayClass_Turret_MS.ini"
     }
   },
   "mechanics": [

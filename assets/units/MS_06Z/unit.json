@@ -691,7 +691,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_MS_06Z_BG": {
       "name": "光束炮",
@@ -929,7 +931,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG.gw"
     },
     "ZN_MS_06Z_BG_2": {
       "name": "光束炮",
@@ -1174,7 +1178,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG.gw"
     },
     "ZN_MS_06Z_BG_3": {
       "name": "光束炮",
@@ -1419,7 +1425,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG.gw"
     },
     "ZN_MS_06Z_BG_4": {
       "name": "光束炮",
@@ -1664,7 +1672,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG.gw"
     },
     "ZN_MS_06Z_BG_5": {
       "name": "光束炮",
@@ -1909,7 +1919,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG.gw"
     },
     "ZN_MS_06Z_BG_L": {
       "name": "光束炮",
@@ -2154,7 +2166,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG_L.gw"
     },
     "ZN_MS_06Z_BG_L_2": {
       "name": "光束炮",
@@ -2399,7 +2413,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG_L.gw"
     },
     "ZN_MS_06Z_BG_L_3": {
       "name": "光束炮",
@@ -2644,7 +2660,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG_L.gw"
     },
     "ZN_MS_06Z_BG_L_4": {
       "name": "光束炮",
@@ -2889,7 +2907,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG_L.gw"
     },
     "ZN_MS_06Z_BG_L_5": {
       "name": "光束炮",
@@ -3134,7 +3154,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_06Z_BG_L.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -3277,7 +3299,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A_Lv2.gw"
     },
     "ZN_MS_06Z_HandFunnel": {
       "sourceName": "ZN_MS_06Z_HandFunnel",
@@ -3524,7 +3548,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Funnel/ZN_MS_06Z_HandFunnel.gw"
     }
   },
   "mechanics": [

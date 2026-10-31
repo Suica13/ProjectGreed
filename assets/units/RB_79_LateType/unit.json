@@ -510,7 +510,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RB_79_LateType_Cannon.gw"
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -651,7 +653,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw"
     }
   },
   "mechanics": [

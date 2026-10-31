@@ -824,7 +824,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_RGM_79DO_BR": {
       "name": "光束步枪",
@@ -1001,7 +1003,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_79DO_BR.gw"
     },
     "EF_RGM_79DO_BR_R": {
       "name": "光束炮",
@@ -1181,7 +1185,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_79DO_BR.gw"
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",
@@ -1336,7 +1342,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_Lv2.gw"
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -1576,7 +1584,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 2
+      "displayIndex": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw"
     },
     "EF_BeamSaber_AF_A": {
       "name": "光束军刀",
@@ -1733,7 +1743,9 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Lv2.gw"
     },
     "Common_ArmBeamSaber_F": {
       "name": "光束军刀",
@@ -1900,7 +1912,9 @@
         "stats": [
           "pilotCqbSkillFinal"
         ]
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_F_Lv2.gw"
     }
   },
   "mechanics": [

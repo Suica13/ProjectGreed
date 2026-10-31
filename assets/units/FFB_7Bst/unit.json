@@ -571,7 +571,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FFB_7Bst.gw"
     },
     "Common_DoubleVulcan_FFB_7Bst_L": {
       "name": "火神炮",
@@ -787,7 +789,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FFB_7Bst.gw"
     },
     "Common_DoubleMS_FFB_7Bst": {
       "name": "双重导弹发射器",
@@ -987,7 +991,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FFB_7Bst.gw"
     },
     "Common_DoubleMS_FFB_7Bst_L": {
       "name": "双重导弹发射器",
@@ -1190,7 +1196,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FFB_7Bst.gw"
     },
     "Common_Bomb_FFB_7Bst": {
       "name": "航空炸弹",
@@ -1354,7 +1362,9 @@
       },
       "actionCost": 3,
       "displayIndex": 0,
-      "v17BombMultiplier": 1.5
+      "v17BombMultiplier": 1.5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Bomb_FFB_7Bst.gw"
     },
     "Common_Bomb_FFB_7Bst_L": {
       "name": "航空炸弹",
@@ -1521,7 +1531,9 @@
       },
       "actionCost": 3,
       "displayIndex": 0,
-      "v17BombMultiplier": 1.5
+      "v17BombMultiplier": 1.5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Bomb_FFB_7Bst.gw"
     },
     "EF_FFB_7Bst_BR": {
       "name": "光束步枪",
@@ -1666,7 +1678,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FFB_7Bst_BR.gw"
     }
   },
   "mechanics": [

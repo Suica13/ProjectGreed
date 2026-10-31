@@ -746,7 +746,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_GLine_HBR": {
       "name": "光束炮",
@@ -897,7 +899,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GLine_HBR.gw"
     },
     "EF_BeamLancer_Double_DF": {
       "name": "近身格斗",
@@ -1054,7 +1058,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamLancer_Double_DF.gw"
     },
     "EF_RGC_83_DoubleBeamCannon": {
       "name": "光束炮",
@@ -1230,7 +1236,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGC_83_DoubleBeamCannon.gw"
     },
     "EF_RGC_83_DoubleBeamCannon_L": {
       "name": "光束炮",
@@ -1409,7 +1417,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGC_83_DoubleBeamCannon.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -1647,7 +1657,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

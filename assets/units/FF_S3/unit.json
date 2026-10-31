@@ -525,7 +525,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_S3.gw"
     },
     "Common_DoubleVulcan_FF_S3_L": {
       "name": "火神炮",
@@ -741,7 +743,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_S3.gw"
     },
     "Common_DoubleMS_FF_S3": {
       "name": "双重导弹发射器",
@@ -937,7 +941,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_S3.gw"
     },
     "Common_DoubleMS_FF_S3_L": {
       "name": "双重导弹发射器",
@@ -1136,7 +1142,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FF_S3.gw"
     }
   },
   "mechanics": [

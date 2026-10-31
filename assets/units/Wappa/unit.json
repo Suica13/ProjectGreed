@@ -527,7 +527,9 @@
         "energy": 5.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Wappa_MG.gw"
     },
     "ZN_Wappa_C4": {
       "name": "投掷C4",
@@ -667,7 +669,9 @@
         "ja": {
           "name": "C4投擲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Wappa_C4.gw"
     }
   },
   "mechanics": [

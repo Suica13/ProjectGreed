@@ -861,7 +861,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "EF_R4_BeamSniperRifle": {
       "name": "光束狙击枪",
@@ -1014,7 +1016,9 @@
         ]
       },
       "category": "sniper",
-      "actionCost": 4
+      "actionCost": 4,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle.gw"
     },
     "EF_R4_BeamSniperRifle_Sniper_Aim": {
       "name": "狙击蓄力",
@@ -1186,7 +1190,9 @@
           "beam": 15000.0,
           "beamAP": 7500.0
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_R4_BeamSniperRifle_Sniper.gw"
     },
     "EF_HypeBazooka": {
       "name": "火箭筒",
@@ -1341,7 +1347,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka.gw"
     },
     "EF_BeamSprayGun": {
       "name": "光束喷枪",
@@ -1492,7 +1500,9 @@
         ]
       },
       "category": "beam_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGun.gw"
     },
     "Common_ArmBeamSaber_B": {
       "name": "光束军刀",
@@ -1635,7 +1645,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_B_Lv2.gw"
     }
   },
   "mechanics": [

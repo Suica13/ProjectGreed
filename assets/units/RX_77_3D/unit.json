@@ -788,7 +788,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "Common_MortarDouble": {
       "name": "迫击炮轰炸",
@@ -1016,7 +1018,9 @@
           "hiddenAction_SetOnSkillOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw"
     },
     "Common_MortarDouble_L": {
       "name": "迫击炮轰炸",
@@ -1247,7 +1251,9 @@
           "hiddenAction_SetOnSkillOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw"
     },
     "Common_DoubleCannon": {
       "name": "加农炮",
@@ -1423,7 +1429,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleCannon_Lv2.gw"
     },
     "Common_DoubleCannon_L": {
       "name": "加农炮",
@@ -1602,7 +1610,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleCannon_Lv2.gw"
     },
     "EF_RX_77_2_BR": {
       "name": "光束步枪",
@@ -1755,7 +1765,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_77_2_BR.gw"
     },
     "EF_BalzacBazooka": {
       "name": "火箭筒",
@@ -1910,7 +1922,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_BalzacBazooka.gw"
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -2150,7 +2164,9 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw"
     },
     "Common_Grenade_B": {
       "name": "手雷",
@@ -2313,7 +2329,9 @@
         "ja": {
           "name": "手榴弾"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Grenade_B_Lv2.gw"
     },
     "Common_Cqb_BF_B": {
       "name": "近身格斗",
@@ -2471,7 +2489,9 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_BF_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2709,7 +2729,9 @@
         "actions": []
       },
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

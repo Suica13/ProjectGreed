@@ -1347,7 +1347,9 @@
           "converted_skill"
         ],
         "convertedSkill": "Irradiation"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_AMX_002_MegaBeamCannon.gw"
     },
     "ZN_AMX_002_AntiShipMS": {
       "name": "ZN AMX 002 AntiShipMS",
@@ -1530,7 +1532,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_AMX_002_AntiShipMS.gw"
     },
     "ZN_AMX_002_AntiShipMS_L": {
       "name": "ZN AMX 002 AntiShipMS L",
@@ -1716,7 +1720,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_AMX_002_AntiShipMS.gw"
     },
     "ZN_AMX_002_BeamCannon": {
       "name": "光束炮",
@@ -1872,7 +1878,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_AMX_002_BeamCannon.gw"
     },
     "ZN_AMX_002_MS": {
       "name": "导弹发射器",
@@ -2202,7 +2210,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_AMX_002_MS.gw"
     },
     "ZN_AMX_002_MS_L": {
       "name": "导弹发射器",
@@ -2535,7 +2545,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_AMX_002_MS.gw"
     },
     "EF_BeamSaber_Double_L_A_Fixed_AMX_002": {
       "name": "光束军刀",
@@ -2684,7 +2696,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_L_A_Fixed_AMX_002.gw"
     }
   },
   "mechanics": [
@@ -2815,7 +2829,9 @@
           "name": "照射ビーム"
         }
       },
-      "description": "基础伤害 47,950 × 1 = 47,950；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。"
+      "description": "基础伤害 47,950 × 1 = 47,950；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。",
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_AMX_002_MegaBeamCannon.gw"
     }
   ],
   "nativeCombatRevision": 1,

@@ -493,7 +493,9 @@
         "actions": []
       },
       "category": "machine_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MTank.gw"
     }
   },
   "mechanics": [

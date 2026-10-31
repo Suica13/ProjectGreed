@@ -606,7 +606,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_MSM_03C_AMS": {
       "name": "导弹发射器",
@@ -761,7 +763,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MSM_03C_AMS.gw"
     },
     "ZN_MSM_03C_BG": {
       "name": "光束炮",
@@ -938,7 +942,9 @@
         "ja": {
           "name": "ビーム砲"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSM_03C_BG.gw"
     },
     "ZN_MSM_03C_MG": {
       "name": "机枪",
@@ -1251,7 +1257,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MSM_03C_MG.gw"
     },
     "ZN_MSM_03C_MG_L": {
       "name": "机枪",
@@ -1567,7 +1575,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MSM_03C_MG.gw"
     },
     "ZN_MSM_03C_MS": {
       "name": "导弹发射器",
@@ -1738,7 +1748,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MSM_03C_MS.gw"
     },
     "Common_Cqb_Double_A": {
       "name": "近身格斗",
@@ -1895,7 +1907,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A_Lv2.gw"
     }
   },
   "mechanics": [

@@ -578,7 +578,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_EMS_05M_TMS": {
       "name": "ZN EMS 05M TMS",
@@ -773,7 +775,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_EMS_05M_TMS.gw"
     },
     "ZN_EMS_05M_TMS_L": {
       "name": "ZN EMS 05M TMS L",
@@ -973,7 +977,9 @@
       "anyParts": [
         "leftArm",
         "rightArm"
-      ]
+      ],
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_EMS_05M_TMS.gw"
     },
     "ZN_EMS_05M_MS": {
       "name": "导弹发射器",
@@ -1155,7 +1161,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_EMS_05M_MS.gw"
     },
     "Common_Cqb_BBB_EMS_05M": {
       "name": "近身格斗",
@@ -1313,7 +1321,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_BBB_EMS_05M.gw"
     }
   },
   "mechanics": [

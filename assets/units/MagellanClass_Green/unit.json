@@ -1513,7 +1513,9 @@
           "beam": 4000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/MagellanClass_Green/MagellanClass_Green_Turret_BeamCannon.ini"
     },
     "MagellanClass_Turret_AMS": {
       "name": "反MS导弹",
@@ -1742,7 +1744,9 @@
           "shell": 1500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/MagellanClass_Green/MagellanClass_Green_Turret_AMS.ini"
     },
     "MagellanClass_Turret_AA": {
       "name": "对空机枪",
@@ -4465,7 +4469,9 @@
           "shellAP": 50.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/MagellanClass_Green/MagellanClass_Green_Turret_AA.ini"
     }
   },
   "mechanics": [

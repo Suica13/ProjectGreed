@@ -599,7 +599,9 @@
         "energy": 60.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_06V_Cannon.gw"
     },
     "ZN_MS_06V_Cannon_Fake": {
       "name": "加农炮",
@@ -752,7 +754,9 @@
         "energy": 60.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_06V_Cannon.gw"
     },
     "Common_DoubleVulcan_MTank": {
       "name": "火神炮",
@@ -956,7 +960,9 @@
         "energy": 6.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MTank.gw"
     },
     "ZN_MS_06V_MG": {
       "name": "机枪",
@@ -1162,7 +1168,9 @@
         "energy": 12.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_06V_MG.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1311,7 +1319,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     }
   },
   "mechanics": [

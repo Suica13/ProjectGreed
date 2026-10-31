@@ -823,7 +823,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_MMP80MG": {
       "name": "MMP-80机枪",
@@ -1063,7 +1065,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Lv2.gw"
     },
     "ZN_880mmBazooka": {
       "name": "880mm火箭筒",
@@ -1218,7 +1222,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_880mmBazooka.gw"
     },
     "ZN_MS_09_ChestBeam": {
       "name": "胸部扩散光束炮",
@@ -1361,7 +1367,9 @@
         ]
       },
       "category": "other",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam_Lv2.gw"
     },
     "ZN_Panzerfaust": {
       "name": "铁拳火箭弹",
@@ -1511,7 +1519,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust.gw"
     },
     "ZN_HeatSaber_AF_A": {
       "name": "热能军刀",
@@ -1668,7 +1678,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSaber_AF_Lv2.gw"
     }
   },
   "mechanics": [

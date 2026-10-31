@@ -515,7 +515,9 @@
           "hiddenAction_SetAttackingCantTurnOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MAX_03_Leader.gw"
     }
   },
   "mechanics": [

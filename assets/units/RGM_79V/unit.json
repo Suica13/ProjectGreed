@@ -798,7 +798,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "EF_BOWA_BeamGun": {
       "name": "BOWA光束枪",
@@ -949,7 +951,9 @@
         ]
       },
       "category": "beam_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BOWA_BeamGun.gw"
     },
     "EF_90mmMG": {
       "name": "90mm机枪",
@@ -1189,7 +1193,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw"
     },
     "Common_Grenade_B": {
       "name": "手雷",
@@ -1352,7 +1358,9 @@
         "ja": {
           "name": "手榴弾"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Grenade_B.gw"
     },
     "EF_BeamSaber_BF_B": {
       "name": "光束军刀",
@@ -1510,7 +1518,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw"
     }
   },
   "mechanics": [

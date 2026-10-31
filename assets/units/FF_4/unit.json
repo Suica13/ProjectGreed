@@ -525,7 +525,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_4.gw"
     },
     "Common_DoubleVulcan_FF_4_L": {
       "name": "火神炮",
@@ -741,7 +743,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_FF_4.gw"
     }
   },
   "mechanics": [

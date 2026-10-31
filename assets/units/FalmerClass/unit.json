@@ -740,7 +740,9 @@
           "beam": 4250.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/FalmerClass/FalmerClass_Turret_BeamCannon.ini"
     },
     "FalmerClass_Turret_AMS": {
       "name": "反MS导弹",
@@ -933,7 +935,9 @@
           "shell": 1000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/FalmerClass/FalmerClass_Turret_AMS.ini"
     },
     "FalmerClass_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -1208,7 +1212,9 @@
           "shell": 1250.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/FalmerClass/FalmerClass_Turret_MS.ini"
     }
   },
   "mechanics": [

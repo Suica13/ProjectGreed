@@ -573,7 +573,9 @@
           "hiddenAction_SetOnSkillOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble.gw"
     },
     "Common_MortarDouble_L": {
       "name": "迫击炮轰炸",
@@ -792,7 +794,9 @@
           "hiddenAction_SetOnSkillOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble.gw"
     },
     "EF_RMV_1_Cannon": {
       "name": "加农炮",
@@ -933,7 +937,9 @@
         "energy": 60.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RMV_1_Cannon.gw"
     },
     "EF_RMV_1_DoubleMS": {
       "name": "双重导弹发射器",
@@ -1125,7 +1131,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RMV_1_DoubleMS.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1274,7 +1282,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     }
   },
   "mechanics": [

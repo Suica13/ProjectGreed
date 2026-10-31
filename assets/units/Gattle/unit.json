@@ -525,7 +525,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Gattle.gw"
     },
     "Common_DoubleVulcan_Gattle_L": {
       "name": "火神炮",
@@ -741,7 +743,9 @@
         ]
       },
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_Gattle.gw"
     },
     "Common_DoubleMS_Gattle": {
       "name": "双重导弹发射器",
@@ -941,7 +945,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Gattle.gw"
     },
     "Common_DoubleMS_Gattle_L": {
       "name": "双重导弹发射器",
@@ -1144,7 +1150,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_Gattle.gw"
     }
   },
   "mechanics": [

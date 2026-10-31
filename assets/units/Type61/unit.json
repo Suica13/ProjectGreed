@@ -453,7 +453,9 @@
         "energy": 16.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_Type61_Cannon.gw"
     }
   },
   "mechanics": [

@@ -467,7 +467,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A_Lv2.gw"
     }
   },
   "mechanics": [

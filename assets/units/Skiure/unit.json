@@ -471,7 +471,9 @@
           "converted_skill"
         ],
         "convertedSkill": "Irradiation"
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_Skiure_BeamCannon"
     }
   },
   "mechanics": [
@@ -603,7 +605,9 @@
           "name": "照射ビーム"
         }
       },
-      "description": "基础伤害 450 × 1 = 450；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。"
+      "description": "基础伤害 450 × 1 = 450；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。",
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_Skiure_BeamCannon"
     }
   ],
   "nativeCombatRevision": 1,

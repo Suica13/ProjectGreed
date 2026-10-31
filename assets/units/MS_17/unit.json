@@ -859,7 +859,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_MS_17_BR": {
       "name": "光束步枪",
@@ -1010,7 +1012,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_17_BR.gw"
     },
     "ZN_360mmBazooka": {
       "name": "360mm火箭筒",
@@ -1165,7 +1169,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka_Lv2.gw"
     },
     "ZN_MMP80MG_Kai": {
       "name": "机枪",
@@ -1421,7 +1427,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MMP80MG_Kai.gw"
     },
     "ZN_YMS_15_BeamSaber_BF_B": {
       "name": "光束军刀",
@@ -1579,7 +1587,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_YMS_15_BeamSaber_BF.gw"
     }
   },
   "mechanics": [

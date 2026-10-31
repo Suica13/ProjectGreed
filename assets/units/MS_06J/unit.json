@@ -909,7 +909,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw"
     },
     "ZN_270mmBazooka": {
       "name": "270mm火箭筒",
@@ -1077,7 +1079,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw"
     },
     "ZN_MagellaCannon": {
       "name": "马哲拉顶炮",
@@ -1241,7 +1245,9 @@
       },
       "actionCost": 3,
       "changeHeldWeapon": true,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MagellaCannon.gw"
     },
     "ZN_MS_06J_LegMS": {
       "name": "腿部导弹发射器",
@@ -1434,7 +1440,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_06J_LegMS.gw"
     },
     "ZN_HeatHawk_A": {
       "name": "热能斧",
@@ -1601,7 +1609,9 @@
       },
       "actionCost": 2,
       "changeHeldWeapon": true,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_A.gw"
     },
     "Common_Push_A": {
       "name": "冲撞",
@@ -1750,7 +1760,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     }
   },
   "weaponKits": [

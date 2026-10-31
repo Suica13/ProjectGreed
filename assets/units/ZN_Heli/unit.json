@@ -465,7 +465,9 @@
         "ja": {
           "name": "二連装ミサイルランチャー"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_ZN_Heli.gw"
     },
     "Common_Vulcan_ZN_Heli": {
       "name": "火神炮",
@@ -669,7 +671,9 @@
         "energy": 6.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Vulcan_ZN_Heli.gw"
     }
   },
   "mechanics": [

@@ -505,7 +505,9 @@
         "energy": 6.0,
         "actions": []
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MTank.gw"
     },
     "ZN_MTank_Cannon": {
       "name": "加农炮",
@@ -636,7 +638,9 @@
         "energy": 35.0,
         "actions": []
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MTank_Cannon.gw"
     }
   },
   "mechanics": [

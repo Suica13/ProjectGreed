@@ -500,7 +500,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_AMS_Squad_AMS.gw"
     }
   },
   "mechanics": [

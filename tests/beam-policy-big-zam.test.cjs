@@ -4,11 +4,12 @@ test('non-ship non-MA beam policy covers native weapons and skills without chang
  let beams=0,excluded=0,skills=0;
  for(const prefab of G.catalog.prefabs){
   const raw=JSON.parse(fs.readFileSync(path.join('assets/units',prefab.id,'unit.json'),'utf8'));
-  const beamFactor=raw.stats.ship||raw.unitTags.includes('MA')?1:1.35;
+  const beamFactor=raw.stats.ship||raw.unitTags.includes('MA')?1:1.5;
   const copy=structuredClone(raw);applyWeaponBalance(copy);
   for(const [id,before] of Object.entries(raw.weapons)){
    const after=copy.weapons[id];
-   const factor=before.type==='melee'||before.category==='melee'?(id.startsWith('Common_Push_')?1:1.1):(['beam_rifle','bazooka'].includes(before.category)&&!/Arm|Hand/i.test(id+' '+(before.sourceName||''))?beamFactor:1);
+   let factor=before.type==='melee'||before.category==='melee'?(id.startsWith('Common_Push_')?1:1.1):(['beam_rifle','bazooka'].includes(before.category)&&!/Arm|Hand/i.test(id+' '+(before.sourceName||''))?beamFactor:1);
+   if(['RX_78_4','RX_78_4_Bst'].includes(raw.id)&&id==='Common_ArmBR_Pink_L')factor*=raw.weapons.Common_ArmBR_Pink.damagePerShot/before.damagePerShot;
    if(before.type==='beam'||Object.entries(before.damageComponents).some(([k,v])=>/beam/i.test(k)&&v>0)){
     if(beamFactor===1)excluded++;else beams++;
     const mg=before.category==='machine_gun'&&!/^Common_ArmGL(?:_|$)/.test(id)&&!raw.stats.ship?.valueOf()?0.75/(before.machineGunDamageScale??1):1;

@@ -1002,7 +1002,9 @@
           "beam": 3850.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/GawClass/GawClass_Turret_BeamCannon.ini"
     },
     "GawClass_Turret_MS": {
       "name": "舰载导弹发射器",
@@ -1298,7 +1300,9 @@
           "shell": 1500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/GawClass/GawClass_Turret_MS.ini"
     },
     "GawClass_Turret_Bomb": {
       "name": "舰载航空炸弹",
@@ -1628,7 +1632,9 @@
           "shell": 1250.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/GawClass/GawClass_Turret_Bomb.ini"
     },
     "GawClass_Turret_AA": {
       "name": "对空机枪",
@@ -3233,7 +3239,9 @@
           "shellAP": 50.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/GawClass/GawClass_Turret_AA.ini"
     }
   },
   "mechanics": [

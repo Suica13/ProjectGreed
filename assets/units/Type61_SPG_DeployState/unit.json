@@ -437,7 +437,9 @@
         "actions": []
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_Type61_SPG_Cannon.gw"
     },
     "Common_Mortar_Type61_SPG": {
       "name": "迫击炮轰炸",
@@ -612,7 +614,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw"
     }
   },
   "mechanics": [

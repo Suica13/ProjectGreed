@@ -715,7 +715,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "ZN_MS_15B_ShieldRocket": {
       "name": "导弹发射器",
@@ -902,7 +904,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_15B_ShieldRocket.gw"
     },
     "ZN_MS_15B_ShieldRocket_L": {
       "name": "导弹发射器",
@@ -1092,7 +1096,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_15B_ShieldRocket.gw"
     },
     "ZN_MS_15Kg_ShieldBeamGun": {
       "name": "导弹发射器",
@@ -1246,7 +1252,9 @@
         ]
       },
       "category": "beam_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_15Kg_ShieldBeamGun.gw"
     },
     "ZN_MS_15B_BeamLance_BF_B": {
       "name": "近身格斗",
@@ -1404,7 +1412,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_MS_15B_BeamLance_BF.gw"
     },
     "ZN_MS_15B_BeamLance_B2": {
       "name": "近身格斗",
@@ -1579,7 +1589,9 @@
         "stats": [
           "pilotCqbSkillFinal"
         ]
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_MS_15B_BeamLance_B2.gw"
     }
   },
   "mechanics": [

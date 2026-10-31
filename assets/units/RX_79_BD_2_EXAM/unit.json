@@ -849,7 +849,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "EF_GroundTypeBeamRifle_Blue": {
       "name": "光束步枪",
@@ -1000,7 +1002,9 @@
       },
       "category": "beam_rifle",
       "actionCost": 2,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle_Blue.gw"
     },
     "EF_RX_79_BD_ChestMS_Line": {
       "name": "胸部有线导弹",
@@ -1184,7 +1188,9 @@
         }
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMS_Line.gw"
     },
     "EF_RX_79_BD_ChestMS_Line_R": {
       "name": "胸部有线导弹",
@@ -1371,7 +1377,9 @@
         }
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMS_Line.gw"
     },
     "EF_RX_79_BD_ChestMG": {
       "name": "机枪",
@@ -1623,7 +1631,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMG.gw"
     },
     "EF_RX_79_BD_ChestMG_L": {
       "name": "机枪",
@@ -1878,7 +1888,9 @@
         ]
       },
       "category": "machine_gun",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_79_BD_ChestMG.gw"
     },
     "EF_BeamSaber_AF_A": {
       "name": "光束军刀",
@@ -2035,7 +2047,9 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Lv2.gw"
     },
     "EF_BeamSaber_F": {
       "name": "光束军刀",
@@ -2202,7 +2216,9 @@
         "stats": [
           "pilotCqbSkillFinal"
         ]
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Lv2.gw"
     },
     "Common_DoubleVulcan_MS": {
       "name": "头部火神炮",
@@ -2440,7 +2456,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "short_secondary",
-      "actionCost": 1
+      "actionCost": 1,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS_Lv2.gw"
     }
   },
   "mechanics": [

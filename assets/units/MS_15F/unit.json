@@ -698,7 +698,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "Common_ArmMG": {
       "name": "腕部机枪",
@@ -947,7 +949,9 @@
         "ja": {
           "name": "腕部機関銃"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_ArmMG_Lv2.gw"
     },
     "Common_ArmMG_L": {
       "name": "腕部机枪",
@@ -1203,7 +1207,9 @@
         "ja": {
           "name": "腕部機関銃"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_ArmMG_L_Lv2.gw"
     },
     "ZN_MS_15B_ShieldRocket": {
       "name": "导弹发射器",
@@ -1390,7 +1396,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_15B_ShieldRocket.gw"
     },
     "ZN_MS_15B_ShieldRocket_L": {
       "name": "导弹发射器",
@@ -1580,7 +1588,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_15B_ShieldRocket.gw"
     },
     "ZN_MS_15B_BeamLance_BF_B": {
       "name": "近身格斗",
@@ -1738,7 +1748,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_MS_15B_BeamLance_BF.gw"
     }
   },
   "mechanics": [

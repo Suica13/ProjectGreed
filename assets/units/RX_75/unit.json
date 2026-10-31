@@ -646,7 +646,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "Common_MortarDouble_RX_75": {
       "name": "迫击炮轰炸",
@@ -891,7 +893,9 @@
         "ja": {
           "name": "迫撃砲砲撃"
         }
-      }
+      },
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75.gw"
     },
     "Common_MortarDouble_RX_75_L": {
       "name": "迫击炮轰炸",
@@ -1128,7 +1132,9 @@
           "hiddenAction_SetOnSkillOff"
         ]
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75.gw"
     },
     "EF_RX_75_Cannon": {
       "name": "加农炮",
@@ -1303,7 +1309,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75_Cannon.gw"
     },
     "EF_RX_75_Cannon_R": {
       "name": "加农炮",
@@ -1481,7 +1489,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75_Cannon.gw"
     },
     "EF_RX_75_MS": {
       "name": "导弹发射器",
@@ -1711,7 +1721,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75_MS.gw"
     },
     "EF_RX_75_MS_L": {
       "name": "导弹发射器",
@@ -1944,7 +1956,9 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_75_MS.gw"
     }
   },
   "mechanics": [

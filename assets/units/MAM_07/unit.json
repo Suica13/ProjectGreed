@@ -585,7 +585,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw"
     },
     "ZN_MAM_07_MS": {
       "name": "导弹发射器",
@@ -803,7 +805,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MAM_07_MS.gw"
     },
     "ZN_MAM_07_MS_L": {
       "name": "导弹发射器",
@@ -1024,7 +1028,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MAM_07_MS.gw"
     },
     "ZN_MAM_07_AMS": {
       "name": "ZN MAM 07 AMS",
@@ -1242,7 +1248,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MAM_07_AMS.gw"
     },
     "ZN_MAM_07_AMS_L": {
       "name": "ZN MAM 07 AMS L",
@@ -1463,7 +1471,9 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MAM_07_AMS.gw"
     },
     "Common_Cqb_Double_L_A_Fixed_MAM_07": {
       "name": "近身格斗",
@@ -1606,7 +1616,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_L_A_Fixed_MAM_07.gw"
     }
   },
   "mechanics": [

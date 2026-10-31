@@ -688,7 +688,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_Push_A_Lv2.gw"
     },
     "Common_MortarDouble": {
       "name": "迫击炮轰炸",
@@ -904,7 +906,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw"
     },
     "Common_MortarDouble_L": {
       "name": "迫击炮轰炸",
@@ -1123,7 +1127,9 @@
         "emptyCells": true
       },
       "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
-      "actionCost": 5
+      "actionCost": 5,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw"
     },
     "Common_DoubleCannon": {
       "name": "加农炮",
@@ -1299,7 +1305,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleCannon_Lv2.gw"
     },
     "Common_DoubleCannon_L": {
       "name": "加农炮",
@@ -1478,7 +1486,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_DoubleCannon_Lv2.gw"
     },
     "Common_ArmGL": {
       "name": "腕部榴弹发射器",
@@ -1649,7 +1659,9 @@
         "ja": {
           "name": "腕部グレネードランチャー"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_ArmGL_Lv2.gw"
     },
     "Common_ArmGL_L": {
       "name": "腕部榴弹发射器",
@@ -1827,7 +1839,9 @@
         "ja": {
           "name": "腕部グレネードランチャー"
         }
-      }
+      },
+      "level": 2,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/Common_ArmGL_L_Lv2.gw"
     },
     "ZN_YMS_15_BeamSaber_B2": {
       "name": "光束军刀",
@@ -1978,7 +1992,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_YMS_15_BeamSaber_B2.gw"
     }
   },
   "mechanics": [

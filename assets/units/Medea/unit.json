@@ -807,7 +807,9 @@
       },
       "category": "machine_gun",
       "rangeRole": "ship_anti_air",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Medea/Medea_Turret_MG.ini"
     }
   },
   "mechanics": [

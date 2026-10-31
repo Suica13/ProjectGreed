@@ -1236,7 +1236,9 @@
           "beam": 6000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_BeamCannon.ini"
     },
     "AlbionClass_Turret_MegaBeamCannon": {
       "name": "舰载光束炮",
@@ -1521,7 +1523,9 @@
           "beamAP": 4000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini"
     },
     "AlbionClass_Turret_MegaBeamCannon_L": {
       "name": "舰载光束炮",
@@ -1808,7 +1812,9 @@
           "beamAP": 4000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini"
     },
     "AlbionClass_Turret_MegaBeamCannon_R": {
       "name": "舰载光束炮",
@@ -2095,7 +2101,9 @@
           "beamAP": 4000.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MegaBeamCannon_L.ini"
     },
     "AlbionClass_Turret_AMS": {
       "name": "反MS导弹",
@@ -2398,7 +2406,9 @@
           "shell": 1750.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_MS.ini"
     },
     "AlbionClass_Turret_AA": {
       "name": "对空机枪",
@@ -4739,7 +4749,9 @@
           "shellAP": 100.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA.ini"
     },
     "AlbionClass_Turret_AA_2": {
       "name": "对空机枪",
@@ -5103,7 +5115,9 @@
           "beam": 1250.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/AlbionClass/AlbionClass_Turret_AA_2.ini"
     }
   },
   "mechanics": [

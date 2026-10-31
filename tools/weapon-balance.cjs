@@ -1,6 +1,24 @@
 // Applied before timeline/paired-weapon compilation in both server and client builds.
 // Raw MOD payloads stay intact for auditing and future imports.
 function applyWeaponBalance(prefab) {
+  // The native Unit 4 Lv2 left wrist file disagrees with its same-grade right copy.
+  // Keep nativePayload intact while normalizing this explicit source-data exception.
+  if (["RX_78_4", "RX_78_4_Bst"].includes(prefab.id)) {
+    const right = prefab.weapons?.Common_ArmBR_Pink;
+    const left = prefab.weapons?.Common_ArmBR_Pink_L;
+    if (right && left && right.level === left.level) {
+      const targetScale = right.damagePerShot / (left.damagePerShot / (left.wristDamageScale ?? 1));
+      const ratio = targetScale / (left.wristDamageScale ?? 1);
+      for (const payload of [left, ...(left.attack?.steps || [])]) {
+        for (const field of ["damage", "damagePerShot"])
+          if (Number.isFinite(payload[field])) payload[field] *= ratio;
+        if (payload.damageComponents)
+          payload.damageComponents = Object.fromEntries(Object.entries(payload.damageComponents).map(([key, value]) => [key, value * ratio]));
+      }
+      left.wristDamageScale = targetScale;
+    }
+  }
+
   for (const [id, weapon] of Object.entries(prefab.weapons || {})) {
     // These launchers inherited the machine-gun category from their animation.
     if (/^Common_ArmGL(?:_|$)/.test(id)) continue;
@@ -24,7 +42,7 @@ function applyWeaponBalance(prefab) {
     weapon.machineGunDamageScale = 0.75;
   }
   // Native payloads remain intact; scale before the shared 25-point quantization.
-  const beamScale = prefab.stats?.ship || prefab.unitTags?.includes("MA") ? 1 : 1.35;
+  const beamScale = prefab.stats?.ship || prefab.unitTags?.includes("MA") ? 1 : 1.5;
   for (const [id, weapon] of Object.entries(prefab.weapons || {})) {
     const melee = weapon.type === "melee" || weapon.category === "melee";
     const beamFamily = ["beam_rifle", "bazooka"].includes(weapon.category);

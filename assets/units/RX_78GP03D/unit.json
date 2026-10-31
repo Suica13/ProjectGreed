@@ -1033,7 +1033,9 @@
         ]
       },
       "category": "cannon",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP03D_BeamCannon.gw"
     },
     "EF_RX_78GP01_BR": {
       "name": "光束步枪",
@@ -1190,7 +1192,9 @@
         ]
       },
       "category": "beam_rifle",
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP01_BR.gw"
     },
     "EF_HypeBazooka_GP03S_Double": {
       "name": "火箭筒",
@@ -1403,7 +1407,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_GP03S_Double.gw"
     },
     "EF_HypeBazooka_GP03S_Double_L": {
       "name": "火箭筒",
@@ -1619,7 +1625,9 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazooka_GP03S_Double.gw"
     },
     "Common_ArmBeamSaber_XL_F_GP_03D": {
       "name": "光束军刀",
@@ -1760,7 +1768,9 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_XL_F_GP_03D.gw"
     }
   },
   "mechanics": [

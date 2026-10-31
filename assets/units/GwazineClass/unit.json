@@ -1221,7 +1221,9 @@
           "beam": 8500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/GwazineClass/GwazineClass_Turret_MegaBeamCannon.ini"
     },
     "GwazineClass_Turret_MegaBeamCannon_L": {
       "name": "舰载光束炮",
@@ -1635,7 +1637,9 @@
           "beam": 8500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/GwazineClass/GwazineClass_Turret_MegaBeamCannon.ini"
     },
     "GwazineClass_Turret_MegaBeamCannon_R": {
       "name": "舰载光束炮",
@@ -2049,7 +2053,9 @@
           "beam": 8500.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/GwazineClass/GwazineClass_Turret_MegaBeamCannon.ini"
     },
     "GwazineClass_Turret_AA": {
       "name": "对空机枪",
@@ -4032,7 +4038,9 @@
           "shellAP": 50.0
         }
       },
-      "shipDamageMultiplier": 0.75
+      "shipDamageMultiplier": 0.75,
+      "level": 1,
+      "levelSource": "Units/BattleUnits/GwazineClass/GwazineClass_Turret_AA.ini"
     }
   },
   "mechanics": [
