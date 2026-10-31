@@ -401,20 +401,21 @@ const Tactics = (() => {
     };
   }
   const armyPercentages = Object.freeze(Array.from({ length: 12 }, (_, i) => (i + 1) * 25));
+  const strengthPercentages = Object.freeze(armyPercentages.filter((percent) => percent <= 200));
   const aiCountPercentages = armyPercentages;
   const aiDefaults = Object.freeze({ difficulty: "medium", fill: 100, countPercent: 100 });
   const aiPerformance = Object.freeze({
     easy: 0.75,
     medium: 1,
     hard: 1.25,
-    ...Object.fromEntries(armyPercentages.map((percent) => [percent, percent / 100])),
+    ...Object.fromEntries(strengthPercentages.map((percent) => [percent, percent / 100])),
   });
   function validateAISettings(value = {}) {
     if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("AI 设置无效");
     const clean = { ...aiDefaults, ...value };
     if (
       !(
-        armyPercentages.includes(clean.difficulty) ||
+        strengthPercentages.includes(clean.difficulty) ||
         ["easy", "medium", "hard"].includes(clean.difficulty)
       ) ||
       !armyPercentages.includes(clean.fill) ||
@@ -1453,7 +1454,7 @@ const Tactics = (() => {
         const team = seatTeam(seat);
         const model = formationModelId(entry);
         const performance = settings.performances?.[seat] ?? 1;
-        if (!armyPercentages.some((percent) => percent / 100 === performance))
+        if (!strengthPercentages.some((percent) => percent / 100 === performance))
           throw Error("性能倍率无效");
         const pilot = entry.customPilot
           ? pilots.custom(entry.customPilot)
@@ -3102,7 +3103,16 @@ const Tactics = (() => {
       ));
       if (squad.length > 1 && !contact) {
         const rearDistance = Math.max(...squad.map(nearestEnemy));
-        const advanceLimit = Math.min(nearestEnemy(u), rearDistance - 4);
+        // Cohesion can trim at most a quarter of this unit's reachable advance.
+        // Round the retained distance up so short moves do not lose a whole extra cell.
+        const currentDistance = nearestEnemy(u);
+        const maximumAdvance = Math.max(0, ...cells.map((cell) =>
+          currentDistance - nearestEnemy({ ...u, x: cell.x, y: cell.y }),
+        ));
+        const advanceLimit = Math.min(
+          currentDistance - Math.ceil(maximumAdvance * 0.75),
+          rearDistance - 4,
+        );
         cells = cells.filter((cell) =>
           nearestEnemy({ ...u, x: cell.x, y: cell.y }) >= advanceLimit - 0.001,
         );
@@ -3282,6 +3292,7 @@ const Tactics = (() => {
     aiDefaults,
     aiCountPercentages,
     armyPercentages,
+    strengthPercentages,
     aiUnitLimit,
     aiShipQuota,
     aiPerformance,

@@ -32,8 +32,8 @@ test("MOD Steps preserve 9-round MG, 16-round alternating vulcan, one-shot weapo
   assert.equal(weapon("Common_DoubleVulcan_MS").shotCount, 16);
   assert.equal(weapon("Common_DoubleVulcan_MS").attack.shots.at(-1), 1.5);
   assert.deepEqual(weapon("EF_BeamSprayGun").attack.shots, [0.25]);
-  near(weapon("EF_BeamSprayGun").damage, 6250);
-  near(weapon("EF_BeamSprayGun").damagePerShot, 6250);
+  near(weapon("EF_BeamSprayGun").damage, 5000);
+  near(weapon("EF_BeamSprayGun").damagePerShot, 5000);
   assert.deepEqual(weapon("EF_HypeBazooka").attack.shots, [0.35]);
   assert.equal(weapon("EF_HypeBazooka").damage, 8500);
   assert.equal(weapon("EF_BeamSaber_A").shotCount, 1);

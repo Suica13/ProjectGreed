@@ -1388,7 +1388,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 0,
       "localization": {
         "zh": {

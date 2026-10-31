@@ -4,14 +4,15 @@ test('non-ship non-MA beam policy covers native weapons and skills without chang
  let beams=0,excluded=0,skills=0;
  for(const prefab of G.catalog.prefabs){
   const raw=JSON.parse(fs.readFileSync(path.join('assets/units',prefab.id,'unit.json'),'utf8'));
-  const factor=raw.stats.ship||raw.unitTags.includes('MA')?1:1.25;
+  const beamFactor=raw.stats.ship||raw.unitTags.includes('MA')?1:1.35;
   const copy=structuredClone(raw);applyWeaponBalance(copy);
   for(const [id,before] of Object.entries(raw.weapons)){
    const after=copy.weapons[id];
+   const factor=before.type==='melee'||before.category==='melee'?(id.startsWith('Common_Push_')?1:1.1):(['beam_rifle','bazooka'].includes(before.category)&&!/Arm|Hand/i.test(id+' '+(before.sourceName||''))?beamFactor:1);
    if(before.type==='beam'||Object.entries(before.damageComponents).some(([k,v])=>/beam/i.test(k)&&v>0)){
-    if(factor===1)excluded++;else beams++;
+    if(beamFactor===1)excluded++;else beams++;
     const mg=before.category==='machine_gun'&&!/^Common_ArmGL(?:_|$)/.test(id)&&!raw.stats.ship?.valueOf()?0.75/(before.machineGunDamageScale??1):1;
-    assert.equal(after.damagePerShot,before.damagePerShot*factor*mg,prefab.id+'/'+id);
+    assert.ok(Math.abs(after.damagePerShot-before.damagePerShot*factor*mg)<1e-7,prefab.id+'/'+id);
     const expected=before.attack.steps.reduce((n,s)=>n+S.roundDamage(Object.values(s.damageComponents||before.damageComponents).reduce((a,b)=>a+b,0)*factor*mg*(s.damageMultiplier??1))*(s.shots||0)*(s.repeat||1),0)*(before.hitsPerShot||1);
     assert.equal(S.compile(after).damage,expected,prefab.id+'/'+id);
     assert.deepEqual(after.nativePayload,before.nativePayload);assert.deepEqual(after.nativeTiming,before.nativeTiming);
@@ -19,7 +20,7 @@ test('non-ship non-MA beam policy covers native weapons and skills without chang
    }
   }
   for(const skill of raw.skills||[])if(Object.entries(skill.damageComponents||{}).some(([k,v])=>/beam/i.test(k)&&v>0)){
-   skills++;assert.deepEqual(copy.skills.find(s=>s.id===skill.id).damageComponents,Object.fromEntries(Object.entries(skill.damageComponents).map(([k,v])=>[k,v*factor])));
+   skills++;assert.deepEqual(copy.skills.find(s=>s.id===skill.id).damageComponents,Object.fromEntries(Object.entries(skill.damageComponents).map(([k,v])=>[k,v])));
   }
   const once=structuredClone(copy);applyWeaponBalance(copy);assert.deepEqual(copy,once);
  }

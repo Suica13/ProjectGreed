@@ -1383,7 +1383,7 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2,
+      "actionCost": 3,
       "localization": {
         "zh": {
           "name": "4X导弹货柜"

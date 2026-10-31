@@ -55,6 +55,8 @@ def category(weapon_id, weapon):
 
 
 def action_cost(prefab, key, weapon):
+    if key in {"EF_GroundTypeMissileLauncher", "ZN_4XMSL"}:
+        return 3
     if prefab["id"] == "RTX_440" and key in {"EF_RTX_440_Rocket", "EF_RTX_440_Rocket_L"}:
         return 5
     # User policy: every bazooka costs 3 AP, including secondary variants.

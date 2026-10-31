@@ -69,7 +69,7 @@ test("unit strength scales only hull HP and EN without changing other stats or a
   const id = "RGM_79__machine_gun",
     base = G.models[id],
     before = JSON.stringify(base);
-  for (const performance of G.armyPercentages.map((n) => n / 100)) {
+  for (const performance of G.strengthPercentages.map((n) => n / 100)) {
     const u = { model: id, performance },
       m = G.modelOf(u),
       w = m.weapons[0];
@@ -217,7 +217,7 @@ test("all unit platforms retain every non-resource stat at minimum and maximum s
   for (const model of Object.keys(G.models)) {
     const baseline = G.modelOf({ model });
     const { hp, en, ...baseStats } = baseline;
-    for (const performance of [0.25, 3]) {
+    for (const performance of [0.25, 2]) {
       const scaled = G.modelOf({ model, performance });
       const { hp: scaledHp, en: scaledEn, ...stats } = scaled;
       assert.equal(scaledHp, Math.round(hp * performance), model);
@@ -240,12 +240,12 @@ test("ship turret module durability does not scale with hull strength", () => {
       mapId: map.id,
       costLimit: 99999,
       unitCostLimit: 99999,
-      performances: [3, 0.25],
+      performances: [2, 0.25],
     },
   );
   const ship = g.units.find((u) => u.ownerSeat === 0);
-  assert.equal(ship.hp, base.hp * 3);
-  assert.equal(ship.en, base.en * 3);
+  assert.equal(ship.hp, base.hp * 2);
+  assert.equal(ship.en, base.en * 2);
   assert.equal(ship.shield, base.shield.hp);
   assert.deepEqual(ship.moduleHp, Object.fromEntries(base.modules.map((m) => [m.id, m.hp])));
 });

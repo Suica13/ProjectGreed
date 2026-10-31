@@ -20,11 +20,11 @@ test("AI count percentage defaults to 100, validates discrete options and is ind
   );
   for (const percentage of G.armyPercentages) {
     const settings = G.validateArmySettings({
-      difficulty: percentage,
+      difficulty: Math.min(percentage, 200),
       fill: percentage,
       countPercent: percentage,
     });
-    assert.equal(G.aiPerformance[settings.difficulty], percentage / 100);
+    assert.equal(G.aiPerformance[settings.difficulty], Math.min(percentage, 200) / 100);
   }
   for (const field of ["difficulty", "fill", "countPercent"])
     for (const value of [0, 24, 26, 301, "300", null, NaN])

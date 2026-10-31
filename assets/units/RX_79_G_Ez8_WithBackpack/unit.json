@@ -1777,7 +1777,7 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 3
     },
     "Common_SingleVulcan_RX_79_G": {
       "name": "胸部火神炮",

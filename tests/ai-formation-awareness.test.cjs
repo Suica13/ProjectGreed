@@ -26,10 +26,13 @@ test('AI approaches unseen actual enemies instead of a fixed map edge',()=>{
   assert.equal(c.target,null);
   assert.deepEqual(G.sensors.view(g,fast.team),before);
 });
-test('front units wait for rear units, rear units advance, contact releases formation',()=>{
+test('front units retain at least 75 percent advance, rear units advance, contact releases formation',()=>{
   const {g,fast,slow,enemy}=fixture();
   let c=G.aiChoice(g,fast);
-  assert(G.dist({...fast,x:c.x,y:c.y},enemy)>=G.dist(fast,enemy)-.001);
+  const maximumAdvance = Math.max(...[...G.reachable(g, fast).values()].map(p => G.dist(fast,enemy)-G.dist({...fast,x:p.x,y:p.y},enemy)));
+  const advance=G.dist(fast,enemy)-G.dist({...fast,x:c.x,y:c.y},enemy);
+  assert(advance>=Math.ceil(maximumAdvance*.75));
+  assert(advance<maximumAdvance);
   c=G.aiChoice(g,slow);
   assert(G.dist({...slow,x:c.x,y:c.y},enemy)<G.dist(slow,enemy));
   Object.assign(enemy,{x:21,y:12});

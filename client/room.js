@@ -323,7 +323,7 @@ const RoomPanel = (() => {
     factionLabel.append(faction);
     const strengthLabel = element("label", "", "AI 单位强度");
     const strength = element("select");
-    for (const percent of Rules.armyPercentages)
+    for (const percent of Rules.strengthPercentages)
       strength.add(new Option(percent + "%", String(percent)));
     const config = Rules.armySettings(player);
     strength.value = String(Rules.aiPerformance[config.difficulty] * 100);
@@ -350,7 +350,7 @@ const RoomPanel = (() => {
     ]) {
       const field = element("label", "", label);
       const select = element("select");
-      for (const percent of Rules.armyPercentages)
+      for (const percent of key === "difficulty" ? Rules.strengthPercentages : Rules.armyPercentages)
         select.add(new Option(percent + "%", String(percent)));
       select.value = String(value);
       select.disabled = locked;

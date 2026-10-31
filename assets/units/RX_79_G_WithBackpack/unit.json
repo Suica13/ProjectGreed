@@ -1777,7 +1777,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2,
+      "actionCost": 3,
       "displayIndex": 0
     },
     "Common_SingleVulcan_RX_79_G": {
