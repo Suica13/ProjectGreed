@@ -103,9 +103,11 @@ const Net = (() => {
       .find(Boolean);
   const canControl = (unit) =>
     !window.ReplayPlayer?.active &&
+    !n.snapshot?.campaign?.delegatedSeats?.includes(n.seat) &&
+    !n.snapshot?.campaign?.delegatedSeats?.includes(Rules.ownerOf(unit || {})) &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
-    if (BattleAssets.loading) return false;
+    if (BattleAssets.loading || n.snapshot?.campaign?.delegatedSeats?.includes(n.seat)) return false;
     if (window.ReplayPlayer?.active) return false;
     return (
       !n.active ||
@@ -191,7 +193,7 @@ const Net = (() => {
       matchId: n.snapshot?.matchId, reactionId: n.snapshot?.pending?.id,
       ...intent.fields,
     };
-    if (profileActions.has(intent.action)) {
+    if (profileActions.has(intent.action) && n.snapshot?.settings.mode !== "campaign") {
       message.licenses = Economy.snapshot().licenses;
       if (!n.snapshot?.started) message.researched = Development.researchSnapshot();
     }
@@ -316,6 +318,11 @@ const Net = (() => {
       if (n.snapshot && !(n.snapshot.chat || []).some((old) => old.id === msg.message.id))
         n.snapshot.chat = [...(n.snapshot.chat || []), msg.message].slice(-100);
       Chat.receive(msg.message, msg.ack);
+    } else if (msg.type === "campaign_save" || msg.type === "campaign_upload_ack") {
+      finishAction(msg.ack);
+      window.CampaignUI?.reply(msg);
+      if (pageView === "campaign") window.CampaignUI?.render();
+      update();
     } else if (msg.type === "record_reply") {
       window.ReplayPlayer?.response(msg);
     } else if (msg.type === "battle_log") {
@@ -341,6 +348,7 @@ const Net = (() => {
       if (!window.ReplayPlayer?.receive(msg)) applySnapshot(msg);
       queueMicrotask(drainActions);
     } else if (msg.type === "error") {
+      window.CampaignUI?.failure(msg.id, msg.message);
       if (window.ReplayPlayer?.response(msg)) return;
       if (chatRequestIds.has(msg.id)) {
         Chat.reject(msg.id, msg.message);
@@ -558,8 +566,11 @@ const Net = (() => {
       n.memberId = s.you.id;
     }
     n.started = s.started;
+    document.body.classList.toggle("campaign-active", !!s.campaign);
+    document.body.classList.toggle("campaign-room", s.settings.mode === "campaign");
+    document.body.classList.toggle("campaign-delegated", !!s.campaign?.delegatedSeats?.includes(n.seat));
     window.MenuShell?.refresh();
-    Formation.alignWithRoom(s);
+    if (!s.campaign && s.settings.mode !== "campaign") Formation.alignWithRoom(s);
     MusicPlayer.sync();
     Formation.refresh();
     if (previousSeat !== n.seat) {
@@ -595,6 +606,20 @@ const Net = (() => {
       )
         setPageView("room");
       RoomPanel.render(s);
+      n.applied = true;
+      update();
+      return;
+    }
+    if (!s.started && s.campaign) {
+      MatchResults.reset(); CombatPlayback.reset(); PlanningUI.reset();
+      if (wasStarted) {
+        MapEffects.reset(); WeaponAudio.stop(); TurnFlow.reset(); MapCamera.reset();
+      }
+      byId("reaction").hidden = true;
+      battleView = moving = pending = selected = weaponId = null;
+      mode = "select";
+      phase = "waiting";
+      window.CampaignUI?.receive(s);
       n.applied = true;
       update();
       return;
@@ -670,6 +695,14 @@ const Net = (() => {
         if (!legal.some((w) => w.id === counterId)) {
           response = legal.length ? "counter" : "defend";
           counterId = legal[0]?.id || null;
+        }
+        if (s.pending.savedChoice && counterDraftState?.reviewEditId !== s.pending.reviewEditId) {
+          const saved = s.pending.savedChoice;
+          const entries = saved.orders.flatMap((order) => order.weaponIds.map((weaponId) => ({ targetId: order.targetId, weaponId })));
+          response = saved.response;
+          counterTargetId = entries[0]?.targetId || s.pending.attacker;
+          counterId = entries.at(-1)?.weaponId || null;
+          counterDraftState = { key: s.pending.id, session, entries, ids: entries.map((entry) => entry.weaponId), reviewEditId: s.pending.reviewEditId };
         }
         renderReaction();
         byId("reaction").hidden = false;

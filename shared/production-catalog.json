@@ -45207,5 +45207,3505 @@
         }
       }
     }
+  },
+  "nativeEquipmentCosts": {
+    "RGM_79__beam_spray": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGC_80__beam_spray": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGC_80/RGC_80.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGC_80__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGC_80/RGC_80.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79L__beam_gun": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79L/RGM_79L.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79L__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79L/RGM_79L.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06F.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06F.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09/MS_09.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09/MS_09.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G__beam_rifle": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G__cannon": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G__missile_launcher": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G.ini",
+          "action": "action_Set_Equipment4",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06J__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06J/MS_06J.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06J__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06J/MS_06J.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06J__magella_cannon": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06J/MS_06J.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06K__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06K/MS_06K.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06K__big_gun": {
+      "money": 0.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06K/MS_06K.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14A__beam_rifle": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14A/MS_14A.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14A__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14A/MS_14A.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14A__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14A/MS_14A.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G__beam_rifle": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G__cannon": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G__missile_launcher": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G.ini",
+          "action": "action_Set_Equipment4",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F2__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F2/MS_06F2.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F2__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F2/MS_06F2.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F2__anti_air": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F2/MS_06F2.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09R__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09/MS_09R.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09R__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09/MS_09R.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_1__machine_gun": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_1/RX_78_1.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_1/RX_78_1.ini",
+          "action": "action_Set_EquipmentSubA_1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_1__bazooka": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_1/RX_78_1.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_1__beam_rifle": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_1/RX_78_1.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RFF_06__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RFF_06/RFF_06.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RFF_06__kit_1": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RFF_06/RFF_06.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_E__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_E/RGM_79_E.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_E__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_E/RGM_79_E.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_WithBackpack__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_WithBackpack__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_WithBackpack__kit_2": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_WithBackpack__kit_3": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_WithBackpack__kit_4": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G/RX_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment4",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_WithBackpack__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_WithBackpack__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_WithBackpack__kit_2": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_WithBackpack__kit_3": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_WithBackpack__kit_4": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G/RGM_79_G_WithBackpack.ini",
+          "action": "action_Set_Equipment4",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_SPACE__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G_SPACE/RGM_79_G_SPACE.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_SPACE__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G_SPACE/RGM_79_G_SPACE.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_SPACE__kit_2": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G_SPACE/RGM_79_G_SPACE.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_SPACE__kit_3": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G_SPACE/RGM_79_G_SPACE.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_G_SPACE__kit_4": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_G_SPACE/RGM_79_G_SPACE.ini",
+          "action": "action_Set_Equipment4",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_2__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2.ini",
+          "action": "action_Set_EquipmentSubA_0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_2__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2.ini",
+          "action": "action_Set_EquipmentSubA_0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_2__main_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2.ini",
+          "action": "action_Set_EquipmentSubA_1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_77_2__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_77_2/RX_77_2.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_77_2__kit_4": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_77_2/RX_77_2.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_Commander__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79_Commander.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_Commander__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79_Commander.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_Commander__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79/RGM_79_Commander.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_BD_1__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_BD_1/RX_79_BD_1.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_BD_1__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_BD_1/RX_79_BD_1.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_GroundType__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR_GroundType.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_GroundType__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR_GroundType.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_GroundType__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR_GroundType.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_2__kit_0": {
+      "money": 300.0,
+      "supplies": 600.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_2/RX_80PR_2.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_2__kit_3": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_2/RX_80PR_2.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79DO__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79DO/RGM_79DO.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79DO__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79DO/RGM_79DO.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_77_3__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_77_3/RX_77_3.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_77_3__kit_4": {
+      "money": 500.0,
+      "supplies": 500.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_77_3/RX_77_3.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_77_3D__kit_4": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_77_3D/RX_77_3D.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_77_3D__kit_6": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_77_3D/RX_77_3D.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_77_3D__kit_5": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_77_3D/RX_77_3D.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78XX__kit_3": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78XX/RX_78XX.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78XX__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78XX/RX_78XX.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_05__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_05/MS_05.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_05__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_05/MS_05.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06S__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06S.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06S__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06S.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_1__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_1/MS_06R_1.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_1__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_1/MS_06R_1.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F_MineLayer__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06F_MineLayer.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F_MineLayer__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F/MS_06F_MineLayer.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06G__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06G/MS_06G.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06G__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06G/MS_06G.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06G__kit_2": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06G/MS_06G.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_1A__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_1/MS_06R_1A.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_1A__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_1/MS_06R_1A.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06D__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06D/MS_06D.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06D__kit_1": {
+      "money": 0.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06D/MS_06D.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_07A__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_07B/MS_07A.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_07A__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_07B/MS_07A.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_07A__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_07B/MS_07A.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F2_Commander__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F2/MS_06F2_Commander.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F2_Commander__kit_3": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F2/MS_06F2_Commander.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F2_Commander__kit_4": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F2/MS_06F2_Commander.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06JK__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06JK/MS_06JK.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06JK__kit_1": {
+      "money": 0.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06JK/MS_06JK.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09D__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09D/MS_09D.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09D__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09D/MS_09D.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "EMS_10__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/EMS_10/EMS_10.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "EMS_10__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/EMS_10/EMS_10.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "EMS_10_1__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/EMS_10_1/EMS_10_1.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "EMS_10_1__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/EMS_10_1/EMS_10_1.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "EMS_10_1__kit_2": {
+      "money": 300.0,
+      "supplies": 500.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/EMS_10_1/EMS_10_1.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MP_02A__standard": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MP_02A/MP_02A.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MP_02A__main_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MP_02A/MP_02A.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MP_02A__main_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MP_02A/MP_02A.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_10__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_10/MS_10.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_10__kit_1": {
+      "money": 500.0,
+      "supplies": 1000.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_10/MS_10.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_10__kit_2": {
+      "money": 400.0,
+      "supplies": 800.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_10/MS_10.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_11__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_11/MS_11.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_11__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_11/MS_11.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_11S__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_11S/MS_11S.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_11S__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_11S/MS_11S.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_08TX__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_08TX/MS_08TX.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_08TX__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_08TX/MS_08TX.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_08TX__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_08TX/MS_08TX.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_07H__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_07H/MS_07H.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_07H__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_07H/MS_07H.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_BD_1_EXAM__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_BD_1_EXAM/RX_79_BD_1_EXAM.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_BD_1_EXAM__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_BD_1_EXAM/RX_79_BD_1_EXAM.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_HADES__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_HADES.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_HADES__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_HADES.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_HADES__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_HADES.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_GroundType_HADES__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_GroundType_HADES.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_GroundType_HADES__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_GroundType_HADES.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_GroundType_HADES__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_GroundType_HADES.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_2_HADES__kit_0": {
+      "money": 300.0,
+      "supplies": 600.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_2_HADES/RX_80PR_2_HADES.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_2_HADES__kit_3": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_2_HADES/RX_80PR_2_HADES.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78NT_1__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78NT_1/RX_78NT_1.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78NT_1__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78NT_1/RX_78NT_1.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78NT_1_FA__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78NT_1/RX_78NT_1_FA.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78NT_1_FA__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78NT_1/RX_78NT_1_FA.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGC_80S__kit_1": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGC_80S/RGC_80S.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGC_80S__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGC_80S/RGC_80S.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79SC__kit_0": {
+      "money": 400.0,
+      "supplies": 800.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79SC/RGM_79SC.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79SC__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79SC/RGM_79SC.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79HC__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79HC/RGM_79HC.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79HC__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79HC/RGM_79HC.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79HC__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79HC/RGM_79HC.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RAG_79__kit_1": {
+      "money": 0.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RAG_79/RAG_79.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RAG_79__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RAG_79/RAG_79.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79V__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79V/RGM_79V.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79V__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79V/RGM_79V.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_3__kit_2": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_3/RX_78_3.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_3/RX_78_3.ini",
+          "action": "action_Set_EquipmentSubA_0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_3__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_3/RX_78_3.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_3/RX_78_3.ini",
+          "action": "action_Set_EquipmentSubA_1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79G__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79G/RGM_79G.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79G__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79G/RGM_79G.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79G__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79G/RGM_79G.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79G_Space__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79G_Space/RGM_79G_Space.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79G_Space__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79G_Space/RGM_79G_Space.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79G_Space__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79G_Space/RGM_79G_Space.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79D__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79D/RGM_79D.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79D__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79D/RGM_79D.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RAG_79_G1__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RAG_79_G1/RAG_79_G1.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RAG_79_G1__kit_1": {
+      "money": 0.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RAG_79_G1/RAG_79_G1.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79SP2__kit_2": {
+      "money": 300.0,
+      "supplies": 500.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79SP2/RGM_79SP2.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79SP2__kit_0": {
+      "money": 400.0,
+      "supplies": 800.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79SP2/RGM_79SP2.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79SP2__kit_4": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79SP2/RGM_79SP2.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79LV__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79LV/RGM_79LV.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79LV__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79LV/RGM_79LV.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79LV__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79LV/RGM_79LV.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79C__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79C/RGM_79C.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79C__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79C/RGM_79C.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79C__kit_2": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79C/RGM_79C.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79C__kit_3": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79C/RGM_79C.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79C_Space__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79C_Space/RGM_79C_Space.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79C_Space__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79C_Space/RGM_79C_Space.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79C_Space__kit_2": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79C_Space/RGM_79C_Space.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79C_Space__kit_3": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79C_Space/RGM_79C_Space.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_77_4__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_77_4/RX_77_4.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_77_4__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_77_4/RX_77_4.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81ST__kit_0": {
+      "money": 200.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81ST/RX_81ST.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81ST__kit_2": {
+      "money": 200.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81ST/RX_81ST.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81LA__kit_0": {
+      "money": 200.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81LA/RX_81LA.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81LA__kit_2": {
+      "money": 200.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81LA/RX_81LA.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81AS__kit_1": {
+      "money": 200.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81AS/RX_81AS.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81AS__kit_3": {
+      "money": 200.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81AS/RX_81AS.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81AS__kit_0": {
+      "money": 300.0,
+      "supplies": 500.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81AS/RX_81AS.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81/RX_81.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81/RX_81.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78GP01__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78GP01/RX_78GP01.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78GP01__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78GP01/RX_78GP01.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78GP01_FB__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78GP01_FB/RX_78GP01_FB.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78GP01_FB__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78GP01_FB/RX_78GP01_FB.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79N__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79N/RGM_79N.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79N__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79N/RGM_79N.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79N__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79N/RGM_79N.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGC_83__kit_3": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGC_83/RGC_83.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGC_83__kit_2": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGC_83/RGC_83.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_4_Bst__kit_2": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_4/RX_78_4_Bst.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_4_Bst__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_4/RX_78_4_Bst.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_5_Bst__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_5/RX_78_5_Bst.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_5_Bst__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_5/RX_78_5_Bst.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_SpaceType__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR_SpaceType.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_SpaceType__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR_SpaceType.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_SpaceType__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR/RX_80PR_SpaceType.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79GL__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79GL/RGM_79GL.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79GL__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79GL/RGM_79GL.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79GL__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79GL/RGM_79GL.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79FP__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79FP/RGM_79FP.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79FP__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79FP/RGM_79FP.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79FD__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79FD/RGM_79FD.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79FD__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79FD/RGM_79FD.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79FD__kit_2": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79FD/RGM_79FD.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_D__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_D/RGM_79_D.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79_D__kit_2": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79_D/RGM_79_D.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_2__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_2/MS_06R_2.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_2__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_2/MS_06R_2.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_2__kit_2": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_2/MS_06R_2.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09_K_1__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09_K_1/MS_09_K_1.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09_K_1__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09_K_1/MS_09_K_1.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "YMS_09J__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/YMS_09J/YMS_09J.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "YMS_09J__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/YMS_09J/YMS_09J.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14S__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14A/MS_14S.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14S__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14A/MS_14S.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14S__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14A/MS_14S.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06FZ__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06FZ/MS_06FZ.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06FZ__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06FZ/MS_06FZ.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06FZ_Commander__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06FZ/MS_06FZ_Commander.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06FZ_Commander__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06FZ/MS_06FZ_Commander.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09R2__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09R2/MS_09R2.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09R2__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09R2/MS_09R2.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09F__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09F/MS_09F.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09F__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09F/MS_09F.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14B__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14B/MS_14B.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14B__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14B/MS_14B.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14B__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14B/MS_14B.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14C__kit_2": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14C/MS_14C.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14C__kit_3": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14C/MS_14C.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14C__kit_4": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14C/MS_14C.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09F_TROP_0083__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09F_TROP_0083/MS_09F_TROP_0083.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09F_TROP_0083__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09F_TROP_0083/MS_09F_TROP_0083.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09S__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09S/MS_09S.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09S__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09S/MS_09S.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14F__kit_5": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14F/MS_14F.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14F__kit_4": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14F/MS_14F.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14F__kit_3": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14F/MS_14F.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14FS__kit_3": {
+      "money": 400.0,
+      "supplies": 600.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14F/MS_14FS.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14FS__kit_5": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14F/MS_14FS.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14FS__kit_4": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14F/MS_14FS.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09G__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09G/MS_09G.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09G/MS_09G.ini",
+          "action": "action_Set_EquipmentSubA_0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09G__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09G/MS_09G.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09G/MS_09G.ini",
+          "action": "action_Set_EquipmentSubA_0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09F_TROP__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09F_TROP/MS_09F_TROP.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09F_TROP__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09F_TROP/MS_09F_TROP.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09_K_2__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09_K_2/MS_09_K_2.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09_K_2__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09_K_2/MS_09_K_2.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_17__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_17/MS_17.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_17__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_17/MS_17.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_17__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_17/MS_17.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "EMS_10F__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/EMS_10F/EMS_10F.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "EMS_10F__kit_2": {
+      "money": 300.0,
+      "supplies": 500.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/EMS_10F/EMS_10F.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_SpaceType_HADES__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_SpaceType_HADES.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_SpaceType_HADES__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_SpaceType_HADES.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_80PR_SpaceType_HADES__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_80PR_HADES/RX_80PR_SpaceType_HADES.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_05S__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_05/MS_05S.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_05S__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_05/MS_05S.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F_EFSF__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F_EFSF/MS_06F_EFSF.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06F_EFSF__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06F_EFSF/MS_06F_EFSF.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_2_JonCustom__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_2_JonCustom/MS_06R_2_JonCustom.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_2_JonCustom__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_2_JonCustom/MS_06R_2_JonCustom.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06R_2_JonCustom__kit_2": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06R_2_JonCustom/MS_06R_2_JonCustom.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06RD_4__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06RD_4/MS_06RD_4.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06RD_4__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06RD_4/MS_06RD_4.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06S_CharCustom__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06S_CharCustom/MS_06S_CharCustom.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06S_CharCustom__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06S_CharCustom/MS_06S_CharCustom.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06S_DozleCustom__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06S_DozleCustom/MS_06S_DozleCustom.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_06S_DozleCustom__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06S_DozleCustom/MS_06S_DozleCustom.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09R_CharCustom__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09R_CharCustom/MS_09R_CharCustom.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09R_CharCustom__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09R_CharCustom/MS_09R_CharCustom.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_09R_CharCustom__kit_2": {
+      "money": 500.0,
+      "supplies": 1000.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_09R_CharCustom/MS_09R_CharCustom.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14B_JonCustom__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14B_JonCustom/MS_14B_JonCustom.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14B_JonCustom__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14B_JonCustom/MS_14B_JonCustom.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14B_JonCustom__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14B_JonCustom/MS_14B_JonCustom.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14G__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14G/MS_14G.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14G__kit_2": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14G/MS_14G.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14G__kit_3": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14G/MS_14G.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14S_CharCustom__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14S_CharCustom/MS_14S_CharCustom.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14S_CharCustom__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14S_CharCustom/MS_14S_CharCustom.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "MS_14S_CharCustom__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_14S_CharCustom/MS_14S_CharCustom.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79G_EarlyDeployment__kit_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79G_EarlyDeployment/RGM_79G_EarlyDeployment.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79G_EarlyDeployment__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79G_EarlyDeployment/RGM_79G_EarlyDeployment.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RGM_79G_EarlyDeployment__kit_0": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RGM_79G_EarlyDeployment/RGM_79G_EarlyDeployment.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_2_BPart__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2_BPart.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2_BPart.ini",
+          "action": "action_Set_EquipmentSubA_0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_2_BPart__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2_BPart.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2_BPart.ini",
+          "action": "action_Set_EquipmentSubA_0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_2_BPart__main_2": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2_BPart.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        },
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_2/RX_78_2_BPart.ini",
+          "action": "action_Set_EquipmentSubA_0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_4__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_4/RX_78_4.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_4__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_4/RX_78_4.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_5__kit_1": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_5/RX_78_5.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_78_5__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78_5/RX_78_5.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8__kit_2": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8__kit_3": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8__kit_4": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8.ini",
+          "action": "action_Set_Equipment4",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_1": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8_WithBackpack.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_0": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8_WithBackpack.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_2": {
+      "money": 200.0,
+      "supplies": 400.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8_WithBackpack.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_3": {
+      "money": 150.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8_WithBackpack.ini",
+          "action": "action_Set_Equipment3",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_79_G_Ez8_WithBackpack__kit_4": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_G_Ez8/RX_79_G_Ez8_WithBackpack.ini",
+          "action": "action_Set_Equipment4",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81LA_IMBA__kit_0": {
+      "money": 200.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81LA_IMBA/RX_81LA_IMBA.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "RX_81LA_IMBA__kit_2": {
+      "money": 200.0,
+      "supplies": 300.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81LA_IMBA/RX_81LA_IMBA.ini",
+          "action": "action_Set_Equipment2",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "YMS_09__kit_1": {
+      "money": 0.0,
+      "supplies": 200.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/YMS_09/YMS_09.ini",
+          "action": "action_Set_Equipment0",
+          "seconds": 3.0
+        }
+      ]
+    },
+    "YMS_09__kit_0": {
+      "money": 0.0,
+      "supplies": 0.0,
+      "sources": [
+        {
+          "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/YMS_09/YMS_09.ini",
+          "action": "action_Set_Equipment1",
+          "seconds": 3.0
+        }
+      ]
+    }
   }
 }

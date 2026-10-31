@@ -32,6 +32,19 @@ function createRoomEngine({
 }) {
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
+  let campaignAdapter = null;
+  const automatedRequests = new WeakSet();
+  const delegated = (room, seat) => Number.isInteger(seat) && !!room.campaignBattle?.delegatedSeats?.includes(seat);
+  const aiControlled = (room, player) => !!player && (player.bot || delegated(room, player.seat));
+  function automate(ws, msg) { automatedRequests.add(msg); action(ws, msg); }
+
+  function campaign() {
+    if (!campaignAdapter) {
+      const factory = typeof createCampaignRoom === "undefined" ? require("./campaign-room.js").createCampaignRoom : createCampaignRoom;
+      campaignAdapter = factory({ G, Records, randomId, randomSeed, members, planner, log });
+    }
+    return campaignAdapter;
+  }
   function captureRecord(room, intelCache) {
     const chatOnly = ["move_preview", "move_cancel"].includes(room.lastEvent?.type);
     if (chatOnly && room.recordChat === room.chat.at(-1)?.id) return;
@@ -667,7 +680,7 @@ function createRoomEngine({
       replay: replaySnapshot(room, recipient),
       combatIntel:
         room.phase === "playback" && team !== null ? room.playbackIntel?.[team] || null : null,
-      startedFromSave: !!room.startedFromSave,
+      startedFromSave: !!room.startedFromSave && !room.campaign,
       // Public only after battle finishes; no inventory, member token or prices are exposed.
       teamLosses:
         room.started && room.phase === "finished"
@@ -736,8 +749,17 @@ function createRoomEngine({
         .filter((battle) => !combats.includes(battle))
         .map(effectBattle),
       phase: room.phase,
+      campaign: room.campaign ? campaign().view(room) : null,
       pending,
       reactions,
+      reactionReview: room.phase === "reaction" && reactionReviewSeats(room).includes(recipient?.seat) ? {
+        id: room.reactionReviewId,
+        required: reactionReviewSeats(room),
+        ready: room.reactionReady || [],
+        choices: (room.responses || []).filter((choice) => canControl(room, recipient.seat, unit(room, choice.intent.target))).map((choice) => ({
+          id: choice.intent.id, target: choice.intent.target, response: choice.response,
+        })),
+      } : null,
       playback: room.playback
         ? {
             ...room.playback,
@@ -1050,7 +1072,7 @@ function createRoomEngine({
       room.seats.every(
         (player) =>
           !player ||
-          player.bot ||
+          aiControlled(room, player) ||
           G.seatTeam(player.seat) !== room.game.team ||
           room.turnDone[player.seat],
       ) &&
@@ -1068,9 +1090,18 @@ function createRoomEngine({
     return (
       (room.reactions || []).find((request) => {
         const owner = G.ownerOf(unit(room, request.target));
-        return room.seats[owner]?.bot && reactionForSeat(room, owner)?.id === request.id;
+        return aiControlled(room, room.seats[owner]) && reactionForSeat(room, owner)?.id === request.id;
       }) || null
     );
+  }
+  function reactionReviewSeats(room) {
+    const intents = [...(room.reactions || []), ...(room.responses || []).map((choice) => choice.intent)];
+    if (!intents.some((intent) => room.campaign || room.settings.shareAlliedUnits || room.seats[G.ownerOf(unit(room, intent.target))]?.shareUnits)) return [];
+    return room.seats.filter((member) => member && !aiControlled(room, member) && intents.some((intent) => canControl(room, member.seat, unit(room, intent.target)))).map((member) => member.seat);
+  }
+  function invalidateReactionReview(room) {
+    room.reactionReviewId = randomId();
+    room.reactionReady = [];
   }
   function resolvePlans(room, automatic = false) {
     const requests = planner.prepare(room);
@@ -1111,6 +1142,14 @@ function createRoomEngine({
       room.phase = "reaction";
       return { type: "attack", ...room.pending };
     }
+    const reviewSeats = reactionReviewSeats(room);
+    if (reviewSeats.length && !reviewSeats.every((seat) => room.reactionReady?.includes(seat))) {
+      room.reactionReviewId ||= randomId();
+      room.phase = "reaction";
+      return { type: "reaction_review" };
+    }
+    room.reactionReady = [];
+    room.reactionReviewId = null;
     const intelBeforeCombat = Object.fromEntries(
       [...new Set(room.game.units.map((u) => u.team))].map((team) => [
         team,
@@ -1231,8 +1270,9 @@ function createRoomEngine({
     room.irradiationHits = null;
     room.playbackIntel = null;
     room.phase = room.game.winner === null ? "idle" : "finished";
-    const event =
-      room.game.winner === null
+    const event = room.campaign && room.game.winner !== null
+      ? campaign().checkpoint(room)
+      : room.game.winner === null
         ? playback.resumeTurn
           ? resumeActionPhase(room, playback.automatic)
           : advanceTurn(room, playback.automatic)
@@ -1252,6 +1292,10 @@ function createRoomEngine({
     };
   }
   function awardDefeat(room, from, to, defeatedModel) {
+    if (room.campaign) {
+      if (from && from.team !== to.team) to.campaignDefeatedBy = from.team;
+      return;
+    }
     if (room.startedFromSave || (from && from.team === to.team)) return;
     room.economyDefeats ||= new Set();
     if (room.economyDefeats.has(to.id)) return;
@@ -1390,6 +1434,7 @@ function createRoomEngine({
     }
   }
   function recordSettlement(room) {
+    if (room.campaign) return;
     if (
       !room.started ||
       room.phase !== "finished" ||
@@ -1561,6 +1606,10 @@ function createRoomEngine({
           `${unitLabel(room, unit(room, effect.unitId))} 舰毁紧急退出：${effect.escaped ? "成功" : "未能生还"}。`,
           { units: [unit(room, effect.unitId)] },
         );
+    if (room.campaign) {
+      const boundary = campaign().boundary(room);
+      if (boundary) return boundary;
+    }
     if (room.game.winner !== null) {
       room.phase = "finished";
       return { type: "match_end" };
@@ -1574,6 +1623,7 @@ function createRoomEngine({
         );
     planner.resumeCharges(room);
     room.turnDone = Array(room.seats.length).fill(false);
+    if (room.campaign) campaign().resetTurns(room);
     room.turnNotBefore = Date.now() + G.turnTransitionMs;
     log(room, `第${room.game.round}回合 · 队伍${room.game.team + 1}开始行动。`);
     if (room.plans.length) {
@@ -2021,7 +2071,7 @@ function createRoomEngine({
       if (!pending) return null;
       const target = unit(room, pending.target);
       const player = room.seats[G.ownerOf(target)];
-      if (!player?.bot) return null;
+      if (!aiControlled(room, player)) return null;
       const attacker = unit(room, pending.attacker);
       const weapon = G.modelOf(attacker).weapons.find((w) => w.id === pending.weapon);
       let response = G.bestResponse(room.game, attacker, target, weapon),
@@ -2095,7 +2145,7 @@ function createRoomEngine({
     const pendingMover = room.game.units.find(
       (u) =>
         u.pendingMove &&
-        room.seats[u.pendingMove.seat]?.bot &&
+        aiControlled(room, room.seats[u.pendingMove.seat]) &&
         allowed(room.seats[u.pendingMove.seat]),
     );
     if (pendingMover)
@@ -2106,10 +2156,10 @@ function createRoomEngine({
       };
     for (const passenger of room.game.units.filter((u) => u.embarked && u.hp > 0)) {
       const owner = room.seats[G.ownerOf(passenger)];
-      if (!owner?.bot || !allowed(owner) || room.turnDone[owner.seat]) continue;
+      if (!aiControlled(room, owner) || !allowed(owner) || room.turnDone[owner.seat]) continue;
       const point = G.aiLaunchChoice(room.game, passenger);
       if (
-        owner?.bot &&
+        aiControlled(room, owner) &&
         !room.turnDone[owner.seat] &&
         point &&
         G.hangars.shouldLaunch(room.game, passenger)
@@ -2124,7 +2174,7 @@ function createRoomEngine({
     for (const passenger of room.game.units) {
       const owner = room.seats[G.ownerOf(passenger)];
       if (
-        !owner?.bot ||
+        !aiControlled(room, owner) ||
         !allowed(owner) ||
         passenger.team !== room.game.team ||
         room.turnDone[owner.seat]
@@ -2153,7 +2203,7 @@ function createRoomEngine({
     };
     const player = room.seats.find(
       (p) =>
-        p?.bot &&
+        aiControlled(room, p) &&
         allowed(p) &&
         G.seatTeam(p.seat) === room.game.team &&
         !room.turnDone[p.seat] &&
@@ -2162,7 +2212,7 @@ function createRoomEngine({
     if (!player) {
       const unfinished = room.seats.find(
         (player) =>
-          player?.bot &&
+          aiControlled(room, player) &&
           allowed(player) &&
           G.seatTeam(player.seat) === room.game.team &&
           !room.turnDone[player.seat],
@@ -2393,7 +2443,7 @@ function createRoomEngine({
     if (
       room.phase === "idle" &&
       !room.seats.some(
-        (p) => p?.bot && G.seatTeam(p.seat) === room.game.team && !room.turnDone[p.seat],
+        (p) => aiControlled(room, p) && G.seatTeam(p.seat) === room.game.team && !room.turnDone[p.seat],
       )
     )
       return;
@@ -2401,7 +2451,7 @@ function createRoomEngine({
     const bots =
       room.phase === "idle"
         ? room.seats.filter(
-            (p) => p?.bot && G.seatTeam(p.seat) === room.game.team && !room.turnDone[p.seat],
+            (p) => aiControlled(room, p) && G.seatTeam(p.seat) === room.game.team && !room.turnDone[p.seat],
           )
         : [];
     const movementDelay = bots.length
@@ -2427,7 +2477,7 @@ function createRoomEngine({
             broadcast(room);
             return;
           }
-          action(intent.player.ws, {
+          automate(intent.player.ws, {
             id: randomId(),
             revision: room.revision,
             round: room.game.round,
@@ -2463,7 +2513,7 @@ function createRoomEngine({
             unit.team === room.game.team
           ) {
             try {
-              action(intent.player.ws, {
+              automate(intent.player.ws, {
                 id: randomId(),
                 revision: room.revision,
                 round: room.game.round,
@@ -2559,7 +2609,7 @@ function createRoomEngine({
         room.lastEvent = { id: randomId(), type: "move_cancel", unitId: u.id };
       }
   }
-  const canControl = (room, seat, u) => G.canControlUnit(room.settings, members(room), seat, u);
+  const canControl = (room, seat, u) => (!u || !delegated(room, G.ownerOf(u)) || G.ownerOf(u) === seat) && G.canControlUnit(room.settings, members(room), seat, u);
   function ownUnit(room, seat, id, allowCargo = false, allowPending = false) {
     let u = unit(room, id);
     if (!u || !canControl(room, seat, u) || u.hp <= 0 || (!allowCargo && u.embarked && !G.onMap(u)))
@@ -2625,6 +2675,8 @@ function createRoomEngine({
       const cached = cache.get(id);
       if (cached?.type === "error") {
         send(ws, cached);
+      } else if (cached?.type === "campaign_save" || cached?.type === "campaign_upload_ack") {
+        send(ws, cached);
       } else if (cached?.type === "chat") {
         if (!chatChannels.canRead(member.seat, cached.message.channel || "all"))
           throw Error("你目前不能查看该聊天频道。");
@@ -2632,8 +2684,36 @@ function createRoomEngine({
       } else send(ws, state(room, id, member));
       return;
     }
+    if (room.campaignBattle && !automatedRequests.has(msg) &&
+        (delegated(room, seat) || (msg.unitId && delegated(room, G.ownerOf(unit(room, msg.unitId) || {})))) &&
+        !["sync", "chat", "playback_ready", "campaign_export", "download_log", "spectate"].includes(msg.action))
+      throw Error("部队已委任AI，本阶段由AI操作");
     if (room.returnCountdown && !["sync", "chat", "return_room", "spectate"].includes(msg.action))
       throw Error("正在返回房间，请稍候。");
+    if (msg.action.startsWith("campaign_")) {
+      const samePreparation = msg.action === "campaign_enter" && Number.isSafeInteger(msg.revision) && msg.revision <= room.revision && msg.preparationId === campaign().preparation(room)?.id;
+      if (msg.revision !== room.revision && !samePreparation) throw Error("战役已更新，请重新操作");
+      const result = campaign().handle(room, member, msg);
+      if (result?.quiet) {
+        const reply = result.save ? { type: "campaign_save", ack: id, save: result.save, auto: !!msg.auto }
+          : { type: "campaign_upload_ack", ack: id };
+        if (reply.type === "campaign_save") for (const [key, value] of cache) if (value?.type === "campaign_save") cache.delete(key);
+        cache.set(id, reply);
+        if (cache.size > 64) cache.delete(cache.keys().next().value);
+        send(ws, reply);
+      } else {
+        room.revision++;
+        const opening = room.started && room.plans.length ? resolvePlans(room, false) : null;
+        room.lastEvent = { id: randomId(), ...(opening || { type: "campaign_changed" }) };
+        cache.set(id, true);
+        broadcast(room, id, member);
+      }
+      return;
+    }
+    if (room.campaign && ["start_game", "set_ready", "update_formation", "confirm_formation", "configure_room", "move_player", "switch_seat", "join_team", "remove_ai"].includes(msg.action))
+      throw Error("战役使用独立部队和固定席位，请在战略地图操作");
+    if (room.campaign && room.started && msg.action === "return_room")
+      throw Error("局地战会在指定轮数后自动返回战略地图；可先保存战役再离开");
     if (msg.action === "playback_ready") {
       const playback = room.playback;
       if (
@@ -2803,8 +2883,9 @@ function createRoomEngine({
           if (member.id !== room.hostId) throw Error("只有房主可以开始游戏");
           if (room.started) throw Error("游戏已经开始");
           if (
+            room.settings.mode !== "campaign" &&
             G.getMap(room.settings.mapId).supportedModes &&
-            !G.getMap(room.settings.mapId).supportedModes.includes(room.settings.mode)
+            !G.getMap(room.settings.mapId).supportedModes.includes(room.settings.mode === "campaign" ? "regular" : room.settings.mode)
           )
             throw Error("此地图不支持所选对战模式");
           const players = room.seats.filter(Boolean);
@@ -2814,6 +2895,14 @@ function createRoomEngine({
             throw Error("两支队伍都至少需要一名玩家或 AI");
           if (players.some((player) => player !== member && !player.ready))
             throw Error("等待其他出战玩家准备");
+          if (room.settings.mode === "campaign") {
+            campaign().start(room, member, msg.campaignRounds);
+            room.revision++;
+            room.lastEvent = { id: randomId(), type: "campaign_changed" };
+            cache.set(id, true);
+            broadcast(room, id, member);
+            return;
+          }
           const oldFormation = member.formation,
             oldReady = member.ready;
           try {
@@ -3023,9 +3112,10 @@ function createRoomEngine({
           if (room.resumeSave && msg.mapId !== room.resumeSave.settings.mapId)
             throw Error("存档地图不可更改。");
           const map = G.getMap(msg.mapId);
-          if (msg.shareAlliedUnits !== undefined && typeof msg.shareAlliedUnits !== "boolean")
+          const strategic = G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "campaign";
+          if (!strategic && msg.shareAlliedUnits !== undefined && typeof msg.shareAlliedUnits !== "boolean")
             throw Error("友军单位共享设置无效");
-          const settings = {
+          const settings = strategic ? G.campaignRoomSettings({ mapId: map.id }) : {
             mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
             mapId: map.id,
             fogMode: G.validateFogMode(msg.fogMode ?? room.settings.fogMode),
@@ -3179,7 +3269,7 @@ function createRoomEngine({
           const oldFormation = member.formation,
             oldReady = member.ready;
           try {
-            if (msg.ready && !room.resumeSave) {
+            if (msg.ready && !room.resumeSave && room.settings.mode !== "campaign") {
               const formation = G.validateFormation(
                 member.formationPreset?.units || msg.formation,
                 Infinity,
@@ -3254,6 +3344,7 @@ function createRoomEngine({
         "embark",
         "launch",
       ].includes(msg.action);
+    const currentReviewConfirmation = msg.action === "confirm_responses" && room.phase === "reaction" && msg.reviewId === room.reactionReviewId;
     const currentResponse =
       msg.action === "respond" &&
       !!reactionForSeat(room, seat) &&
@@ -3264,7 +3355,7 @@ function createRoomEngine({
       (msg.revision !== room.revision &&
         !concurrentPlan &&
         !concurrentDeployment &&
-        !currentResponse)
+        !currentResponse && !currentReviewConfirmation)
     ) {
       send(ws, {
         type: "error",
@@ -3307,10 +3398,10 @@ function createRoomEngine({
             units: [passenger, carrier],
           });
         } else {
-          event = member.bot
+          event = aiControlled(room, member)
             ? G.hangars.launch(room.game, passenger, msg.x, msg.y)
             : G.hangars.previewLaunch(room.game, passenger, msg.x, msg.y, seat);
-          if (member.bot)
+          if (aiControlled(room, member))
             log(
               room,
               `${unitLabel(room, passenger)} 出击至${G.columnLabel(passenger.x)}${passenger.y + 1}。`,
@@ -3451,11 +3542,11 @@ function createRoomEngine({
         let u = ownUnit(room, seat, msg.unitId);
         if (!Number.isInteger(msg.x) || !Number.isInteger(msg.y)) throw Error("目标格无效");
         let from = { x: u.x, y: u.y },
-          steps = member.bot
+          steps = aiControlled(room, member)
             ? G.move(room.game, u, msg.x, msg.y)
             : G.previewMove(room.game, u, msg.x, msg.y, seat);
-        event = { type: member.bot ? "move" : "move_preview", unitId: u.id, from, path: steps };
-        if (member.bot)
+        event = { type: aiControlled(room, member) ? "move" : "move_preview", unitId: u.id, from, path: steps };
+        if (aiControlled(room, member))
           log(room, `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`, {
             units: [u],
             movement: event,
@@ -3571,6 +3662,31 @@ function createRoomEngine({
         log(room, `${unitLabel(room, attacker)} 取消攻击计划。`, { units: [attacker] });
         break;
       }
+      case "edit_response": {
+        if (room.phase !== "reaction") throw Error("应战方案已开始执行，不能修改");
+        const index = (room.responses || []).findIndex((choice) => choice.intent.id === msg.reactionId);
+        const choice = room.responses?.[index];
+        if (!choice || !reactionReviewSeats(room).includes(seat) || !canControl(room, seat, unit(room, choice.intent.target))) throw Error("不能修改该单位的应战");
+        room.responses.splice(index, 1);
+        room.reactions ||= [];
+        room.reactions.unshift({ ...choice.intent, reviewEditId: randomId(), savedChoice: {
+          response: choice.response,
+          orders: choice.counterOrders || (choice.counterIds || []).map((weaponId) => ({ targetId: choice.counterTargetId, weaponIds: [weaponId] })),
+        } });
+        room.pending = room.reactions[0];
+        invalidateReactionReview(room);
+        event = { type: "edit_response", unitId: choice.intent.target };
+        break;
+      }
+      case "confirm_responses": {
+        if (room.phase !== "reaction" || !reactionReviewSeats(room).includes(seat)) throw Error("当前没有需要确认的应战方案");
+        if (room.reactions?.length || room.plans.length) throw Error("请先完成所有单位的应战选择");
+        if (!msg.reviewId || msg.reviewId !== room.reactionReviewId) throw Error("应战方案已被修改，请检查后重新确认");
+        room.reactionReady ||= [];
+        if (!room.reactionReady.includes(seat)) room.reactionReady.push(seat);
+        event = resolvePlans(room);
+        break;
+      }
       case "respond": {
         const pending = reactionForSeat(room, seat);
         if (room.phase !== "reaction" || !pending) throw Error("当前没有待应战的攻击");
@@ -3590,6 +3706,7 @@ function createRoomEngine({
         const decision =
           msg.response === "counter" ? "反击" : msg.response === "defend" ? "防御" : "回避";
         log(room, `${unitLabel(room, b)} 选择${decision}。`, { units: [b] });
+        invalidateReactionReview(room);
         event = resolvePlans(room);
         break;
       }
@@ -3638,7 +3755,7 @@ function createRoomEngine({
         phase: "waiting",
         revision: 0,
         seats: [null, null],
-        settings: {
+        settings: G.validateBattleMode(msg.roomMode) === "campaign" ? G.campaignRoomSettings() : {
           ...G.defaultRoomSettings(),
           mode: G.validateBattleMode(msg.roomMode),
         },

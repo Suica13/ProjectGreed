@@ -209,7 +209,7 @@ const RoomPanel = (() => {
     mapSelect.replaceChildren();
     for (const map of Object.values(Rules.catalog.maps)) {
       const option = new Option(map.name, map.id);
-      option.disabled = !!map.supportedModes && !map.supportedModes.includes(settings.mode);
+      option.disabled = !!map.supportedModes && !map.supportedModes.includes(settings.mode === "campaign" ? "regular" : settings.mode);
       mapSelect.add(option);
     }
     const nextKey = JSON.stringify([snapshot.room, snapshot.you?.id, snapshot.hostId]);
@@ -293,7 +293,25 @@ const RoomPanel = (() => {
     byId("roomCostLimit").step = Rules.catalog.formation.costStep;
     byId("roomCostLimit").min = Math.min(...Object.values(UnitModels).map((model) => model.cost));
 
-    drawMap(Rules.getMap(mapSelect.value));
+    const strategic = settings.mode === "campaign";
+    byId("roomScenarioSelect").hidden = !strategic;
+    byId("roomScenarioSelect").disabled = locked;
+    mapSelect.hidden = strategic;
+    for (const id of ["roomFormationPreset", "roomTagRestrictions", "roomTeamRestrictions"]) byId(id).closest("details").hidden = strategic;
+    for (const id of ["roomFogMode", "roomShareAlliedUnits"]) byId(id).closest("label").hidden = strategic;
+    let summary = byId("campaignRoomRuleSummary");
+    if (!summary) {
+      summary = element("p", "muted", "战略模式使用剧本部队与共享资源，不限制编组COST、单位点数或禁用标签。");
+      summary.id = "campaignRoomRuleSummary";
+      byId("roomBattleMode").closest("details").append(summary);
+    }
+    summary.hidden = !strategic;
+    if (strategic) {
+      window.CampaignUI.preview(byId("roomMapPreview"), snapshot.campaign);
+      byId("roomMapTitle").textContent = CAMPAIGN_WORLD.name;
+      byId("roomMapInfo").textContent = I18n.text("地球") + " · " + CAMPAIGN_WORLD.regions.length + I18n.text("个区域") + " · EFSF / ZEON";
+      byId("roomMapChoiceHint").textContent = I18n.text("战役剧本");
+    } else drawMap(Rules.getMap(mapSelect.value));
   }
   function closeDetail() {
     detail = null;
@@ -693,7 +711,7 @@ const RoomPanel = (() => {
           : "超限时从编组末尾向前禁用；不符合标签限制的单位无法出击。";
   }
   function render(snapshot) {
-    Formation.alignWithRoom(snapshot);
+    if (snapshot.settings.mode !== "campaign") Formation.alignWithRoom(snapshot);
     if (!Net.awaiting) {
       pendingSettings = null;
       for (const [key, value] of Object.entries(submittedNumericSettings || {})) {
@@ -768,7 +786,7 @@ const RoomPanel = (() => {
     } catch {
       valid = false;
     }
-    if (snapshot.loadedSave) {
+    if (snapshot.loadedSave || snapshot.settings.mode === "campaign") {
       valid = true;
       disabledCount = 0;
     }
@@ -781,7 +799,7 @@ const RoomPanel = (() => {
     );
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local
-      ? "离线" + (snapshot.settings.mode === "quick" ? "快速战" : "常规战") + "房间"
+      ? "离线" + ({ quick: "快速战", campaign: "战略模式", regular: "常规战" }[snapshot.settings.mode]) + "房间"
       : "房间 " + snapshot.room;
     byId("roomStatus").hidden = !snapshot.started && !snapshot.loadedSave;
     byId("roomStatus").textContent = snapshot.connected.every(Boolean)
@@ -948,6 +966,13 @@ const RoomPanel = (() => {
     byId("toggleReady").textContent = own?.ready ? "取消准备" : "准备";
     const participants = roster.filter((player) => player.seat !== null);
     byId("startRoomGame").hidden = snapshot.started || self.id !== snapshot.hostId;
+    for (const id of ["importCampaignRoom", "restoreCampaignBackup"]) {
+      const control = byId(id);
+      if (control) {
+        control.hidden = snapshot.settings.mode !== "campaign" || !!snapshot.campaign || self.id !== snapshot.hostId;
+        control.disabled = busy;
+      }
+    }
     byId("startRoomGame").disabled =
       busy ||
       (self.seat !== null && !valid) ||
@@ -981,6 +1006,7 @@ const RoomPanel = (() => {
   byId("returnAssemblyToRoom").onclick = () => BattlePrompts.requestReturn();
   byId("toggleReady").onclick = () => {
     const self = Net.snapshot?.members.find((member) => member.id === Net.memberId);
+    if (Net.snapshot?.settings.mode === "campaign") return Net.request("set_ready", { ready: !self?.ready });
     const entries = self?.formationPreset?.units || Formation.current();
     const proceed = () => Net.request("set_ready", { ready: !self?.ready, formation: entries });
     if (!self?.ready && !Net.snapshot?.loadedSave) Formation.checkLicenses(entries, proceed);
@@ -1013,6 +1039,7 @@ const RoomPanel = (() => {
     const snapshot = Net.snapshot;
     if (!snapshot || snapshot.started || snapshot.you?.id !== snapshot.hostId || Net.awaiting)
       return;
+    if (snapshot.settings.mode === "campaign") return window.CampaignUI?.create();
     const own = snapshot.members.find((p) => p.id === snapshot.you?.id);
     const entries = own?.formationPreset?.units || Formation.current();
     const proceed = () => Net.request("start_game", { formation: entries });

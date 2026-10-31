@@ -1966,3 +1966,24 @@ body.replay-active #gameScene .hud-terrain-strip {
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+
+.reaction-review-panel {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(540px, calc(100vw - 32px));
+  box-sizing: border-box;
+  max-height: calc(100dvh - 80px);
+  overflow-y: auto;
+  z-index: 1400;
+  padding: 20px;
+  background: #18222e;
+  color: #edf5fc;
+  border: 1px solid #67c4fb;
+  border-radius: 8px;
+}
+.reaction-review-panel[hidden] { display: none; }
+.reaction-review-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+.reaction-review-row span { flex: 1; }
+#confirmReactionReview { width: 100%; margin-top: 12px; }

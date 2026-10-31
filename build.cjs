@@ -136,6 +136,8 @@ for (const [key, file] of [
   ["MATCH_RECORDS", "shared/match-records.js"],
   ["REPLAY_PLAYER", "client/replay-player.js"],
   ["MOVEMENT_TIMING", "shared/movement-timing.js"],
+  ["CAMPAIGN_RULES", "shared/campaign.js"],
+  ["CAMPAIGN_ROOM", "shared/campaign-room.js"],
   ["ROOM_ENGINE", "shared/room-engine.js"],
   ["PLANNING_UI", "client/planning-ui.js"],
   ["MAP_COMBAT", "client/map-combat.js"],
@@ -155,6 +157,7 @@ for (const [key, file] of [
         ).replace(/</g, "\\u003c")
       : inlineScript(read(file)),
   );
+html = html.replace("</body>", () => `<style>${read("client/campaign.css")}</style><script>const CAMPAIGN_WORLD=${json(JSON.parse(read("shared/campaign-world.json")))};${inlineScript(read("client/campaign-workspace.js"))}${inlineScript(read("client/campaign.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
 html = html.replace(
   "</body>",

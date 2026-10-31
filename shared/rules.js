@@ -40,7 +40,7 @@ const Tactics = (() => {
     if (ownerOf(unit) === seat) return true;
     return (
       unit.team === seatTeam(seat) &&
-      (settings?.shareAlliedUnits === true ||
+      (settings?.campaignCommanders?.[unit.team] === seat || settings?.shareAlliedUnits === true ||
         members.some((m) => m.seat === ownerOf(unit) && m.shareUnits === true))
     );
   }
@@ -119,9 +119,9 @@ const Tactics = (() => {
       !Array.isArray(entries) ||
       !entries.length ||
       entries.length > unitLimit ||
-      !Number.isInteger(unitLimit) ||
+      (unitLimit !== Infinity && !Number.isInteger(unitLimit)) ||
       unitLimit < 1 ||
-      unitLimit > catalog.formation.maxUnits
+      (unitLimit !== Infinity && unitLimit > catalog.formation.maxUnits)
     )
       throw Error("编组无效，请检查单位点数上限");
     let cost = 0;
@@ -241,7 +241,7 @@ const Tactics = (() => {
     return value;
   }
   function validateBattleMode(value = "regular") {
-    if (!["regular", "quick"].includes(value)) throw Error("对战模式无效");
+    if (!["regular", "quick", "campaign"].includes(value)) throw Error("对战模式无效");
     return value;
   }
   function defaultRoomSettings() {
@@ -258,7 +258,20 @@ const Tactics = (() => {
       teamFactions: [null, null],
     };
   }
+  // Strategic rooms use scenario armies; ordinary formation and tag settings do not apply.
+  function campaignRoomSettings(settings = {}) {
+    return {
+      ...defaultRoomSettings(), mapId: settings.mapId || catalog.defaultMap,
+      mode: "campaign", scenarioId: "earth_0079_mid", costLimit: maxCostLimit,
+      unitCostLimit: maxCostLimit, unitLimit: catalog.formation.maxUnits,
+    };
+  }
   function formationRestrictions(settings = {}, seat = null) {
+    if (settings.mode === "campaign") return {
+      environment: getMap(settings.mapId).environment, mapId: settings.mapId,
+      deploymentSeat: seat ?? 0, unitCostLimit: Infinity,
+      ...validateTagRestrictions(),
+    };
     const teamRules =
       seat === null || settings.mode !== "quick"
         ? null
@@ -1464,11 +1477,11 @@ const Tactics = (() => {
         settings.seatUnitLimits?.[seat] ?? unitLimit,
       ),
     );
-    if (map.supportedModes && !map.supportedModes.includes(settings.mode || "regular"))
+    if (map.supportedModes && !map.supportedModes.includes(settings.mode === "campaign" ? "regular" : settings.mode || "regular"))
       throw Error("此地图不支持所选对战模式");
     if (formations.length !== map.spawns.length) throw Error("编组数量必须匹配地图席位");
     const rulesForSeat = (seat) =>
-      settings.seatFormationRules?.[seat] ||
+      (settings.mode !== "campaign" && settings.seatFormationRules?.[seat]) ||
       formationRestrictions({ ...settings, mapId: map.id }, seat);
     const tiles = map.tiles.map((row) => row.slice());
     let units = [];
@@ -1478,8 +1491,8 @@ const Tactics = (() => {
       if (formations[seat] === null) continue;
       formations[seat] = validateFormation(
         formations[seat],
-        settings.seatCostLimits?.[seat] ?? costLimit,
-        settings.seatUnitLimits?.[seat] ?? unitLimit,
+        settings.mode === "campaign" ? Infinity : settings.seatCostLimits?.[seat] ?? costLimit,
+        settings.mode === "campaign" ? Infinity : settings.seatUnitLimits?.[seat] ?? unitLimit,
       );
       const licenses = rulesForSeat(seat).licenses;
       const stockPlan =
@@ -3355,6 +3368,7 @@ const Tactics = (() => {
     validateTeamFactions,
     validateFogMode,
     validateBattleMode,
+    campaignRoomSettings,
     defaultRoomSettings,
     formationRestrictions,
     restrictionReason,

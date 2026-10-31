@@ -87,6 +87,8 @@ def main():
     (PROJECT/'shared/production-catalog.json').write_text(json.dumps({'schemaVersion':1,'timeEnabled':False,'equipmentPolicy':'free-equipment-deployment-license','defaultKits':__import__('default_equipment').collect(),'baseModels':units,'offers':result,'unavailable':unavailable},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
     import subprocess
     subprocess.run(["node",str(PROJECT/"tools/license-catalog.cjs")],check=True)
+    import sys
+    subprocess.run([sys.executable,str(PROJECT/"tools/import-equipment-prices.py")],check=True)
     costs=tech_costs();file=PROJECT/'shared/development-tree.json';tree=json.loads(file.read_text(encoding='utf8'))
     for nodes in tree.values():
         for node in nodes:

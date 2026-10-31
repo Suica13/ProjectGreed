@@ -6,7 +6,8 @@ const { applyWeaponBalance } = require("../tools/weapon-balance.cjs");
 const { loadCatalog } = require("../tools/load-catalog.cjs");
 const Codec = require("../tools/weapon-store.cjs"),
   Classes = require("../shared/weapon-classes.js");
-const catalog = loadCatalog();
+// Policy invariants exclude administrator offsets, which are applied afterwards.
+const catalog = loadCatalog({ adjustmentsOverride: { schemaVersion: 1, units: {}, weapons: {}, prices: {} } });
 
 test("all main/subclass damage rules preserve source payloads and do not stack on reload", () => {
   let count = 0,

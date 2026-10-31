@@ -69,7 +69,7 @@ test("common and unit-specific classifications persist, rebase, audit and reject
   t.after(f.cleanup);
   const ref = f.read("assets/units/RX_78_2/unit.json").weapons.EF_RX_78_2_BR.ref;
   const before = f.store.getWeapon(ref),
-    source = structuredClone(before.weapon);
+    source = structuredClone(f.read("assets/weapons.json").definitions[ref]);
   before.weapon.weaponClass = "wrist";
   const saved = f.store.saveWeapon(before);
   assert(saved.auditLog);

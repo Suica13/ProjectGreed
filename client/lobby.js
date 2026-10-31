@@ -172,7 +172,7 @@ const Lobby = (() => {
       const roomName = element(
         "th",
         "",
-        room.code + " · " + (room.mode === "quick" ? "快速战" : "常规战"),
+        room.code + " · " + ({ quick: "快速战", campaign: "战略模式", regular: "常规战" }[room.mode] || "常规战"),
       );
       roomName.scope = "row";
       if (room.locked) {

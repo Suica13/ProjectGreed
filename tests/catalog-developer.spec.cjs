@@ -464,3 +464,32 @@ test("editor runtime failures stay visible on the login screen", async ({ page }
     await app.close();
   }
 });
+
+
+test("shared head vulcan editor agrees with converted AP and saves a final-value adjustment", async ({ page }) => {
+  test.setTimeout(60000);
+  const f = editorFixture();
+  const app = createDeveloperServer({ port: 0, store: f.store, catalog: f.catalog });
+  const address = await app.listen();
+  try {
+    await login(page, "http://127.0.0.1:" + address.port);
+    await page.locator("#encyclopediaSearch").fill("RX_78_2");
+    await page.locator('[data-unit-id="RX_78_2"] button').click();
+    await page.locator('#formationDetailSlots [data-weapon-id="Common_DoubleVulcan_MS"] .edit-common-weapon').click();
+    const initialRef = f.read("assets/units/RX_78_2/unit.json").weapons.Common_DoubleVulcan_MS.ref;
+    const currentAP = f.store.getWeapon(initialRef).weapon.actionCost;
+    await expect(page.locator('[data-field="common.actionCost"]')).toHaveValue(String(currentAP));
+    await expect(page.locator('[data-field="common.actionCost"]').locator("..")).toContainText("基准 3 · 调整 " + (currentAP >= 3 ? "+" : "") + (currentAP - 3));
+    await page.locator('[data-field="common.actionCost"]').fill("2");
+    await page.locator("#commonWeaponEditor").getByRole("button", { name: "保存修改", exact: true }).click();
+    await expect(page.locator("#commonWeaponEditor")).not.toBeVisible();
+    const ref = f.read("assets/units/RX_78_2/unit.json").weapons.Common_DoubleVulcan_MS.ref;
+    expect(f.read("assets/weapons.json").definitions[ref].actionCost).toBe(1);
+    expect(f.read("shared/editor-adjustments.json").weapons[ref]["/actionCost"]).toBe(-1);
+    expect(f.store.getUnit("RX_78_2").unit.weapons.Common_DoubleVulcan_MS.actionCost).toBe(2);
+  } finally {
+    await page.close();
+    await app.close();
+    f.cleanup();
+  }
+});

@@ -51,8 +51,8 @@ const LocalRoom = (() => {
       room: "OFFLINE",
       name: PlayerProfile.name(),
       characterFaction: PlayerProfile.faction(),
-      researched: Development.researchSnapshot(),
-      licenses: Economy.snapshot().licenses,
+      researched: byId("offlineRoomMode").value === "campaign" ? {} : Development.researchSnapshot(),
+      licenses: byId("offlineRoomMode").value === "campaign" ? {} : Economy.snapshot().licenses,
       roomMode: byId("offlineRoomMode").value,
     });
     engine.action(socket, {
@@ -61,6 +61,7 @@ const LocalRoom = (() => {
       id: id(),
       revision: engine.rooms.get("OFFLINE").revision,
     });
+
   }
   function closeSetup() {
     byId("skirmishSetup").hidden = true;

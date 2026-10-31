@@ -74,15 +74,26 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
       },
     };
   }
+  function weaponBaseline(source) {
+    const weapon = structuredClone(source);
+    // Shared templates have no owning unit. Apply ordinary global/class policies;
+    // ship/MA and explicit per-unit exceptions remain the unit's own responsibility.
+    const prefab = { id: "__shared_weapon__", stats: {}, weapons: {}, skills: [] };
+    if (require("../shared/weapon-classes.js").isWeaponSkill(weapon)) prefab.skills.push(weapon);
+    else prefab.weapons[weapon.sourceName || weapon.id || "shared"] = weapon;
+    balance(prefab);
+    return weapon;
+  }
   function getWeapon(ref) {
     const weapon = library().definitions[ref];
     if (!weapon) throw Error("共用武器不存在：" + ref);
+    const baseline = weaponBaseline(weapon);
     return {
       revision: revision(),
       ref,
-      weapon: Adjust.apply(structuredClone(weapon), read(Adjust.file).weapons[ref]),
+      weapon: Adjust.apply(structuredClone(baseline), read(Adjust.file).weapons[ref]),
       adjustments: read(Adjust.file).weapons[ref] || {},
-      baseline: structuredClone(weapon),
+      baseline,
     };
   }
   function templates() {
@@ -202,7 +213,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
       original = lib.definitions[payload.ref];
     if (!original) throw Error("请选择共用武器模板");
     const registry = read(Adjust.file);
-    const current = Adjust.apply(structuredClone(original), registry.weapons[payload.ref]);
+    const current = getWeapon(payload.ref).weapon;
     let candidate;
     if (original.sourceWeapon) {
       candidate = structuredClone(current);

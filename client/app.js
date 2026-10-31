@@ -387,6 +387,7 @@ function updateContents() {
       Net.roleName()
     : "常规战";
   renderRoster(busy);
+  renderReactionReview();
   let hint = busy
     ? phase === "moving"
       ? "单位移动中…"
@@ -430,6 +431,42 @@ function updateContents() {
   TurnFlow.refreshAutoEnd();
 }
 // 左侧只按当前视角显示我军；观战者可查看两队，每名所有者单独成组。
+function renderReactionReview() {
+  let panel = byId("reactionReviewPanel");
+  if (!panel) {
+    panel = element("section", "reaction-review-panel");
+    panel.id = "reactionReviewPanel";
+    panel.setAttribute("aria-label", "应战方案复核");
+    document.body.append(panel);
+  }
+  const snapshot = Net.snapshot, review = snapshot?.reactionReview;
+  panel.hidden = !Net.active || snapshot?.phase !== "reaction" || !review || !!snapshot.reactions?.length;
+  if (panel.hidden) return;
+  const key = snapshot.revision + ":" + !!Net.awaiting;
+  if (panel.dataset.renderKey === key) return;
+  panel.dataset.renderKey = key;
+  panel.replaceChildren(element("strong", "", "应战方案复核"), element("p", "", "可修改已保存的方案；所有相关玩家确认后执行。"));
+  for (const choice of review.choices) {
+    const actor = getUnit(choice.target);
+    const row = element("div", "reaction-review-row");
+    row.append(element("span", "", (actor ? Rules.modelOf(actor).name : choice.target) + " · " + I18n.text({ counter: "反击", defend: "防御", evade: "回避" }[choice.response] || choice.response)));
+    const edit = element("button", "", "修改");
+    edit.disabled = !!Net.awaiting;
+    edit.onclick = () => Net.request("edit_response", { reactionId: choice.id });
+    row.append(edit);
+    panel.append(row);
+  }
+  const names = review.required.map((seat) => {
+    const name = snapshot.members.find((member) => member.seat === seat)?.name || "玩家";
+    return name + ": " + I18n.text(review.ready.includes(seat) ? "已确认" : "待确认");
+  });
+  panel.append(element("p", "", names.join(" · ")));
+  const confirm = element("button", "primary", review.ready.includes(Net.seat) ? "已确认，等待队友" : "确认应战方案");
+  confirm.id = "confirmReactionReview";
+  confirm.disabled = !!Net.awaiting || review.ready.includes(Net.seat);
+  confirm.onclick = () => Net.request("confirm_responses", { reviewId: review.id });
+  panel.append(confirm);
+}
 function renderRoster(busy) {
   const viewerTeam = Net.active
     ? (Net.snapshot?.viewTeam ?? (Net.seat === null ? null : Rules.seatTeam(Net.seat)))
@@ -2346,6 +2383,7 @@ function renderCounterSummary(panel, unit) {
 }
 // 应战弹窗展示预估值，不扣血或消耗资源。
 function renderReaction() {
+  byId("confirmResponse").textContent = I18n.text(Net.active && Net.snapshot?.reactionReview ? "保存单位应战方案" : "确认应战");
   const targets = pending.counterTargets || [
     {
       attacker: pending.attacker,

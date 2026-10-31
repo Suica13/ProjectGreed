@@ -2364,7 +2364,7 @@
             <h3 id="skirmishSetupTitle">创建对战</h3>
             <p class="muted">创建离线房间与 AI 对战，或连接服务器加入多人房间。</p>
             <label>离线房间模式<select id="offlineRoomMode">
-              <option value="regular">常规战</option><option value="quick">快速战</option>
+              <option value="regular">常规战</option><option value="quick">快速战</option><option value="campaign">战略模式</option>
             </select></label>
             <div class="net-buttons">
               <button id="createOfflineRoom" class="primary">单机 · 创建房间</button>
@@ -2517,6 +2517,7 @@
                       aria-describedby="roomMapChoiceHint"
                     ></select>
                   </div>
+                  <select id="roomScenarioSelect" aria-label="选择剧本" hidden><option value="earth_0079_mid">地球攻略战[0079中期]</option></select>
                   <div class="room-map-choice">
                     <canvas
                       id="roomMapPreview"
@@ -2580,7 +2581,7 @@
                     <summary>战场规则</summary>
                     <div class="room-battle-rules">
                       <label>对战模式<select id="roomBattleMode" aria-label="对战模式">
-                        <option value="regular">常规战</option><option value="quick">快速战</option>
+                        <option value="regular">常规战</option><option value="quick">快速战</option><option value="campaign">战略模式</option>
                       </select></label>
                       <label class="room-fog-option"
                         >战争迷雾
@@ -5058,7 +5059,7 @@
               autocomplete="off"
           /></label>
           <label>新房间模式<select id="newRoomMode">
-            <option value="regular">常规战</option><option value="quick">快速战</option>
+            <option value="regular">常规战</option><option value="quick">快速战</option><option value="campaign">战略模式</option>
           </select></label>
         <label class="settings-toggle">密码锁<input id="newRoomLocked" type="checkbox" /></label>
         <label id="newRoomPasswordLabel" hidden>房间密码<input id="newRoomPassword" type="password" maxlength="64" autocomplete="new-password" /></label>
@@ -5282,6 +5283,8 @@
       __MATCH_RECORDS__;
       __BATTLE_ECONOMY__;
       __MOVEMENT_TIMING__;
+      __CAMPAIGN_RULES__;
+      __CAMPAIGN_ROOM__;
       __ROOM_ENGINE__;
       __PLANNING_UI__;
       __MAP_COMBAT__;

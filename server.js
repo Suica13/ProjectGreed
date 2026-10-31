@@ -214,7 +214,7 @@ function createServer({
           ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action);
         const payloadLimit = formationAction
           ? 4 * 1024 * 1024
-          : msg?.action === "record_upload_chunk"
+          : ["record_upload_chunk", "campaign_import_chunk", "campaign_move", "campaign_transfer"].includes(msg?.action)
             ? 128 * 1024
             : 16384;
         if (data.length > payloadLimit) throw Error("消息过大。");

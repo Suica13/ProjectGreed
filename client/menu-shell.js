@@ -5,6 +5,7 @@ window.MenuShell = (() => {
   const sectionFor = (view) =>
     ({
       menu: "lobby",
+      campaign: "lobby",
       room: "lobby",
       formation: "hangar",
       production: "hangar",
@@ -17,6 +18,10 @@ window.MenuShell = (() => {
     if (pageView === "formation") byId("saveFormation").click();
   }
   function go(view) {
+    if (Net.snapshot?.campaign && !Net.started && ["formation", "pilots", "production", "development"].includes(view)) {
+      window.CampaignUI?.open(view === "production" ? "production" : view === "development" ? "research" : "units");
+      return;
+    }
     if (navigating || (Net.started && Net.snapshot?.phase !== "assembly")) return;
     navigating = true;
     try {
@@ -51,7 +56,7 @@ window.MenuShell = (() => {
     return button;
   }
   function refresh() {
-    const inBattle = pageView === "game" || (Net.started && Net.snapshot?.phase !== "assembly");
+    const inBattle = pageView === "campaign" || pageView === "game" || (Net.started && Net.snapshot?.phase !== "assembly");
     shell.hidden = inBattle;
     byId("shellSidebar").hidden = inBattle;
     document.body.classList.toggle("menu-shell-active", !inBattle);
@@ -67,6 +72,7 @@ window.MenuShell = (() => {
       button.setAttribute("aria-pressed", String(button.dataset.shellSection === section));
     const tabs = [];
     if (section === "lobby") {
+      if (Net.snapshot?.campaign) tabs.push(tab("战略地图", () => window.CampaignUI?.open(), pageView === "campaign"));
       tabs.push(tab("作战大厅", () => go("menu"), pageView === "menu"));
       tabs.push(tab("当前房间", () => go("room"), pageView === "room", !Net.active));
       tabs.push(
@@ -77,8 +83,8 @@ window.MenuShell = (() => {
           byId("openServerActivities").disabled,
         ),
       );
-      tabs[2].id = "shellActivities";
-      tabs[2].classList.toggle(
+      tabs.at(-1).id = "shellActivities";
+      tabs.at(-1).classList.toggle(
         "has-unclaimed",
         Number(byId("openServerActivities").dataset.unread) > 0,
       );

@@ -241,7 +241,7 @@ window.CatalogDeveloper = (() => {
     classification.append(rulePreview);
     drawRules();
     if (WeaponClasses.isWeaponSkill(weapon)) return;
-    const core = section(parent, "基础属性（数值修改保存为基准值的增减量；伤害按25点取整）");
+    const core = section(parent, "基础属性（换算后的游戏数值；修改以增减量保存，伤害按25点取整）");
     input(
       core,
       "基础单发伤害",

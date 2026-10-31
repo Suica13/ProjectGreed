@@ -1493,6 +1493,8 @@ body.menu-shell-active #developmentScreen .development-details {
 }
 #roomMain #roomMapPreview {
   border-color: #747d8b;
+  object-fit: contain;
+  background: #16191e;
 }
 
 /* Keep status beneath the portrait, outside its bordered image frame. */

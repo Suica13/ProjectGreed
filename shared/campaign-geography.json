@@ -1,0 +1,850 @@
+{
+  "width": 1200,
+  "height": 560,
+  "latitudeBounds": [
+    -60,
+    85
+  ],
+  "legacyRegionIds": [
+    "canada",
+    "california",
+    "new_york",
+    "central_america",
+    "andes",
+    "jaburo",
+    "belfast",
+    "europe",
+    "odessa",
+    "siberia",
+    "beijing",
+    "japan",
+    "arabia",
+    "madras",
+    "southeast_asia",
+    "dakar",
+    "kilimanjaro",
+    "south_africa",
+    "hawaii",
+    "torrington"
+  ],
+  "regions": [
+    {
+      "id": "alaska",
+      "name": "阿拉斯加",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        -151,
+        64
+      ],
+      "kind": "land",
+      "links": [
+        "canada",
+        "kamchatka"
+      ],
+      "legacyParent": "canada"
+    },
+    {
+      "id": "canada",
+      "name": "加拿大西部",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        -119,
+        57
+      ],
+      "kind": "land",
+      "links": [
+        "alaska",
+        "canada_east",
+        "america",
+        "california",
+        "greenland"
+      ]
+    },
+    {
+      "id": "canada_east",
+      "name": "加拿大东部",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        -80,
+        57
+      ],
+      "kind": "land",
+      "links": [
+        "canada",
+        "greenland",
+        "new_york",
+        "america"
+      ],
+      "legacyParent": "canada"
+    },
+    {
+      "id": "greenland",
+      "name": "格陵兰",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        -42,
+        72
+      ],
+      "kind": "land",
+      "links": [
+        "canada",
+        "canada_east",
+        "belfast"
+      ],
+      "legacyParent": "canada"
+    },
+    {
+      "id": "california",
+      "name": "加利福尼亚",
+      "owner": 1,
+      "factory": true,
+      "lonLat": [
+        -122,
+        37
+      ],
+      "kind": "land",
+      "links": [
+        "canada",
+        "america",
+        "central_america",
+        "hawaii"
+      ]
+    },
+    {
+      "id": "america",
+      "name": "北美内陆",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        -102,
+        39
+      ],
+      "kind": "land",
+      "links": [
+        "canada",
+        "canada_east",
+        "california",
+        "new_york",
+        "central_america"
+      ],
+      "legacyParent": "new_york"
+    },
+    {
+      "id": "new_york",
+      "name": "纽约",
+      "owner": 1,
+      "factory": true,
+      "lonLat": [
+        -74,
+        41
+      ],
+      "kind": "land",
+      "links": [
+        "canada_east",
+        "america",
+        "central_america",
+        "north_atlantic"
+      ]
+    },
+    {
+      "id": "central_america",
+      "name": "墨西哥与中美洲",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        -99,
+        20
+      ],
+      "kind": "land",
+      "links": [
+        "california",
+        "america",
+        "new_york",
+        "andes",
+        "jaburo"
+      ]
+    },
+    {
+      "id": "andes",
+      "name": "南美西部",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        -74,
+        -10
+      ],
+      "kind": "land",
+      "links": [
+        "central_america",
+        "jaburo",
+        "south_america",
+        "south_pacific"
+      ]
+    },
+    {
+      "id": "south_america",
+      "name": "南美南部",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        -64,
+        -38
+      ],
+      "kind": "land",
+      "links": [
+        "andes",
+        "jaburo"
+      ],
+      "legacyParent": "andes"
+    },
+    {
+      "id": "jaburo",
+      "name": "贾布罗",
+      "owner": 0,
+      "factory": true,
+      "lonLat": [
+        -55,
+        -11
+      ],
+      "kind": "land",
+      "links": [
+        "central_america",
+        "andes",
+        "south_america",
+        "south_atlantic"
+      ]
+    },
+    {
+      "id": "belfast",
+      "name": "贝尔法斯特",
+      "owner": 0,
+      "factory": true,
+      "lonLat": [
+        -6,
+        55
+      ],
+      "kind": "land",
+      "links": [
+        "greenland",
+        "scandinavia",
+        "europe",
+        "north_atlantic"
+      ],
+      "labelOffset": [
+        -36,
+        7
+      ]
+    },
+    {
+      "id": "scandinavia",
+      "name": "斯堪的纳维亚",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        17,
+        66
+      ],
+      "kind": "land",
+      "links": [
+        "belfast",
+        "europe_central",
+        "russia_west"
+      ],
+      "legacyParent": "europe"
+    },
+    {
+      "id": "europe",
+      "name": "西欧",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        1,
+        49
+      ],
+      "kind": "land",
+      "links": [
+        "belfast",
+        "europe_central",
+        "europe_south",
+        "north_atlantic",
+        "north_africa"
+      ],
+      "labelOffset": [
+        -33,
+        28
+      ]
+    },
+    {
+      "id": "europe_central",
+      "name": "中欧",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        13,
+        52
+      ],
+      "kind": "land",
+      "links": [
+        "scandinavia",
+        "europe",
+        "europe_south",
+        "odessa",
+        "russia_west"
+      ],
+      "legacyParent": "europe",
+      "labelOffset": [
+        0,
+        -2
+      ]
+    },
+    {
+      "id": "europe_south",
+      "name": "南欧",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        17,
+        41
+      ],
+      "kind": "land",
+      "links": [
+        "europe",
+        "europe_central",
+        "odessa",
+        "north_africa"
+      ],
+      "legacyParent": "europe",
+      "labelOffset": [
+        4,
+        35
+      ]
+    },
+    {
+      "id": "odessa",
+      "name": "敖德萨",
+      "owner": 1,
+      "factory": true,
+      "lonLat": [
+        30,
+        47
+      ],
+      "kind": "land",
+      "links": [
+        "europe_central",
+        "europe_south",
+        "russia_west",
+        "kazakhstan",
+        "arabia"
+      ],
+      "labelOffset": [
+        16,
+        5
+      ]
+    },
+    {
+      "id": "russia_west",
+      "name": "俄罗斯西部",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        52,
+        64
+      ],
+      "kind": "land",
+      "links": [
+        "scandinavia",
+        "europe_central",
+        "odessa",
+        "siberia",
+        "kazakhstan"
+      ],
+      "legacyParent": "siberia"
+    },
+    {
+      "id": "siberia",
+      "name": "俄罗斯中部",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        96,
+        64
+      ],
+      "kind": "land",
+      "links": [
+        "russia_west",
+        "russia_east",
+        "kazakhstan",
+        "beijing",
+        "china"
+      ]
+    },
+    {
+      "id": "russia_east",
+      "name": "俄罗斯东部",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        137,
+        63
+      ],
+      "kind": "land",
+      "links": [
+        "siberia",
+        "kamchatka",
+        "beijing"
+      ],
+      "legacyParent": "siberia"
+    },
+    {
+      "id": "kamchatka",
+      "name": "堪察加",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        163,
+        58
+      ],
+      "kind": "land",
+      "links": [
+        "alaska",
+        "russia_east",
+        "japan"
+      ],
+      "legacyParent": "siberia"
+    },
+    {
+      "id": "kazakhstan",
+      "name": "哈萨克斯坦",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        67,
+        47
+      ],
+      "kind": "land",
+      "links": [
+        "odessa",
+        "russia_west",
+        "siberia",
+        "china",
+        "arabia"
+      ],
+      "legacyParent": "odessa"
+    },
+    {
+      "id": "beijing",
+      "name": "北京",
+      "owner": 1,
+      "factory": true,
+      "lonLat": [
+        117,
+        40
+      ],
+      "kind": "land",
+      "links": [
+        "siberia",
+        "russia_east",
+        "china",
+        "japan"
+      ],
+      "labelOffset": [
+        13,
+        -9
+      ]
+    },
+    {
+      "id": "china",
+      "name": "中国内陆",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        101,
+        31
+      ],
+      "kind": "land",
+      "links": [
+        "siberia",
+        "beijing",
+        "kazakhstan",
+        "india",
+        "southeast_asia"
+      ],
+      "legacyParent": "beijing"
+    },
+    {
+      "id": "japan",
+      "name": "日本列岛",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        139,
+        37
+      ],
+      "kind": "land",
+      "links": [
+        "kamchatka",
+        "beijing",
+        "hawaii"
+      ],
+      "labelOffset": [
+        36,
+        0
+      ]
+    },
+    {
+      "id": "arabia",
+      "name": "阿拉伯",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        44,
+        25
+      ],
+      "kind": "land",
+      "links": [
+        "odessa",
+        "kazakhstan",
+        "india",
+        "north_africa",
+        "indian_ocean"
+      ]
+    },
+    {
+      "id": "india",
+      "name": "印度北部",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        76,
+        27
+      ],
+      "kind": "land",
+      "links": [
+        "china",
+        "arabia",
+        "madras",
+        "southeast_asia"
+      ],
+      "legacyParent": "madras",
+      "labelOffset": [
+        -5,
+        -5
+      ]
+    },
+    {
+      "id": "madras",
+      "name": "马德拉斯",
+      "owner": 0,
+      "factory": true,
+      "lonLat": [
+        80,
+        13
+      ],
+      "kind": "land",
+      "links": [
+        "india",
+        "southeast_asia",
+        "indian_ocean"
+      ],
+      "labelOffset": [
+        12,
+        21
+      ]
+    },
+    {
+      "id": "southeast_asia",
+      "name": "中南半岛",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        104,
+        18
+      ],
+      "kind": "land",
+      "links": [
+        "china",
+        "india",
+        "madras",
+        "indonesia"
+      ],
+      "labelOffset": [
+        12,
+        4
+      ]
+    },
+    {
+      "id": "indonesia",
+      "name": "印度尼西亚",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        118,
+        -4
+      ],
+      "kind": "land",
+      "links": [
+        "southeast_asia",
+        "australia_north",
+        "indian_ocean",
+        "south_pacific"
+      ],
+      "legacyParent": "southeast_asia"
+    },
+    {
+      "id": "dakar",
+      "name": "达喀尔",
+      "owner": 0,
+      "factory": true,
+      "lonLat": [
+        -14,
+        15
+      ],
+      "kind": "land",
+      "links": [
+        "north_africa",
+        "central_africa",
+        "north_atlantic",
+        "south_atlantic"
+      ],
+      "labelOffset": [
+        -13,
+        18
+      ]
+    },
+    {
+      "id": "north_africa",
+      "name": "北非",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        17,
+        26
+      ],
+      "kind": "land",
+      "links": [
+        "europe",
+        "europe_south",
+        "arabia",
+        "dakar",
+        "central_africa",
+        "kilimanjaro"
+      ],
+      "legacyParent": "dakar"
+    },
+    {
+      "id": "central_africa",
+      "name": "中非",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        16,
+        2
+      ],
+      "kind": "land",
+      "links": [
+        "dakar",
+        "north_africa",
+        "kilimanjaro",
+        "south_africa"
+      ],
+      "legacyParent": "south_africa"
+    },
+    {
+      "id": "kilimanjaro",
+      "name": "乞力马扎罗",
+      "owner": 1,
+      "factory": true,
+      "lonLat": [
+        36,
+        -3
+      ],
+      "kind": "land",
+      "links": [
+        "north_africa",
+        "central_africa",
+        "south_africa",
+        "indian_ocean"
+      ]
+    },
+    {
+      "id": "south_africa",
+      "name": "南部非洲",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        25,
+        -26
+      ],
+      "kind": "land",
+      "links": [
+        "central_africa",
+        "kilimanjaro",
+        "south_atlantic",
+        "indian_ocean"
+      ]
+    },
+    {
+      "id": "australia_west",
+      "name": "澳大利亚西部",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        120,
+        -26
+      ],
+      "kind": "land",
+      "links": [
+        "australia_north",
+        "torrington",
+        "indian_ocean"
+      ],
+      "legacyParent": "torrington"
+    },
+    {
+      "id": "australia_north",
+      "name": "澳大利亚北部",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        135,
+        -17
+      ],
+      "kind": "land",
+      "links": [
+        "indonesia",
+        "australia_west",
+        "torrington"
+      ],
+      "legacyParent": "torrington"
+    },
+    {
+      "id": "torrington",
+      "name": "特林顿",
+      "owner": 0,
+      "factory": true,
+      "lonLat": [
+        151,
+        -32
+      ],
+      "kind": "land",
+      "links": [
+        "australia_west",
+        "australia_north",
+        "south_pacific"
+      ],
+      "labelOffset": [
+        5,
+        17
+      ]
+    },
+    {
+      "id": "north_atlantic",
+      "name": "北大西洋",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        -38,
+        36
+      ],
+      "kind": "sea",
+      "links": [
+        "new_york",
+        "belfast",
+        "europe",
+        "dakar",
+        "south_atlantic"
+      ],
+      "legacyParent": "belfast",
+      "initialUnits": 0
+    },
+    {
+      "id": "south_atlantic",
+      "name": "南大西洋",
+      "owner": 0,
+      "factory": false,
+      "lonLat": [
+        -22,
+        -10
+      ],
+      "kind": "sea",
+      "links": [
+        "jaburo",
+        "dakar",
+        "south_africa",
+        "north_atlantic",
+        "indian_ocean"
+      ],
+      "legacyParent": "jaburo",
+      "initialUnits": 0
+    },
+    {
+      "id": "indian_ocean",
+      "name": "印度洋",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        68,
+        -22
+      ],
+      "kind": "sea",
+      "links": [
+        "arabia",
+        "madras",
+        "indonesia",
+        "kilimanjaro",
+        "south_africa",
+        "australia_west",
+        "south_atlantic",
+        "south_pacific"
+      ],
+      "legacyParent": "kilimanjaro",
+      "initialUnits": 0
+    },
+    {
+      "id": "south_pacific",
+      "name": "南太平洋",
+      "owner": 1,
+      "factory": false,
+      "lonLat": [
+        171,
+        -32
+      ],
+      "kind": "sea",
+      "links": [
+        "andes",
+        "indonesia",
+        "torrington",
+        "indian_ocean",
+        "hawaii"
+      ],
+      "legacyParent": "hawaii",
+      "initialUnits": 0
+    },
+    {
+      "id": "hawaii",
+      "name": "夏威夷",
+      "owner": 1,
+      "factory": true,
+      "lonLat": [
+        -155,
+        20
+      ],
+      "kind": "sea",
+      "links": [
+        "california",
+        "south_pacific",
+        "japan"
+      ]
+    }
+  ],
+  "references": {
+    "design": "https://w.atwiki.jp/imperatorgirenv/pages/982.html",
+    "coastline": "https://www.naturalearthdata.com/",
+    "license": "public-domain",
+    "note": "参考阿克西斯的威胁V区域层级；轮廓与通路为本项目改编，并非原作地图逐格复刻。"
+  }
+}
