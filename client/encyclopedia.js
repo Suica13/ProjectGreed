@@ -95,10 +95,10 @@ const Encyclopedia = (() => {
     card.dataset.unitId = prefab.id;
     const portrait = element("div", "encyclopedia-portrait"),
       image = element("img");
-    image.src = unitIcon(modelId);
+    if (!window.CATALOG_DEVELOPER_MODE) image.src = unitIcon(modelId);
     image.alt = "";
     image.loading = "lazy";
-    portrait.append(image);
+    if (!window.CATALOG_DEVELOPER_MODE) portrait.append(image);
     if (prefab.wip) portrait.append(element("small", "unit-portrait-status", "WIP"));
     const body = element("div", "encyclopedia-unit-body");
     body.append(element("strong", "encyclopedia-unit-name", prefab.code + " " + prefab.name));

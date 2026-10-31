@@ -5,6 +5,8 @@ const http = require("node:http"),
   path = require("node:path"),
   crypto = require("node:crypto"),
   net = require("node:net");
+const { gzipSync } = require("node:zlib");
+const { resolveEditorHost } = require("./developer-host.cjs");
 const { createEditorStore } = require("./catalog-editor-store.cjs");
 const digest = (value) => crypto.createHash("sha256").update(String(value)).digest();
 function clientAllowed(address, entries) {
@@ -34,10 +36,12 @@ function createDeveloperServer({
   port = 1314,
   host = "127.0.0.1",
   allowedClients = null,
+  logger = null,
   key = process.env.PROJECTGREED_EDITOR_KEY || "13450",
   store = createEditorStore(root),
-  catalog = () => require("./load-catalog.cjs").loadCatalog(),
+  catalog = () => require("./load-catalog.cjs").loadCatalog({ embedAssets: false }),
 } = {}) {
+  host = resolveEditorHost(host);
   if (["0.0.0.0", "::", ""].includes(host)) throw Error("请指定编辑服务绑定的具体IP");
   const sessions = new Map(),
     failures = new Map(),
@@ -45,6 +49,8 @@ function createDeveloperServer({
       service: "ProjectGreedCatalogEditor",
       workspaceId: digest(path.resolve(root).toLowerCase()).toString("hex"),
       protocol: 2,
+      dataOnlyVersion: 1,
+      incrementalCatalog: true,
     };
   let busy = false;
   async function body(req) {
@@ -57,18 +63,46 @@ function createDeveloperServer({
     }
     return JSON.parse(Buffer.concat(chunks).toString("utf8"));
   }
+  function editorCatalog() {
+    const data = catalog();
+    // The editor fetches complete source JSON only when editing an individual item.
+    // These drawing-only fields are unused by its text-based catalog and inspector.
+    const prefabs = data.prefabs.map((prefab) => {
+      const { materials, skeleton, layers, animations, source, sourceStats, ...editable } = prefab;
+      return editable;
+    });
+    return { ...data, prefabs, units: [], assets: {}, sounds: {}, music: [], maps: {}, effects: {} };
+  }
   const server = http.createServer(async (req, res) => {
     const send = (status, value) => {
+      const json = Buffer.from(JSON.stringify(value));
+      const compressed = json.length > 2048 && /(?:^|,)\s*gzip(?:\s*;\s*q=(?!0(?:\.0*)?(?:\s|,|$))[0-9.]+)?(?:\s|,|$)/i.test(req.headers["accept-encoding"] || "");
+      const payload = compressed ? gzipSync(json, { level: 3 }) : json;
       res.writeHead(status, {
         "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "no-store",
+        "Vary": "Origin, Accept-Encoding",
+        "Content-Length": payload.length,
+        "X-Editor-JSON-Bytes": json.length,
+        "Access-Control-Expose-Headers": "X-Editor-JSON-Bytes",
+        ...(compressed ? { "Content-Encoding": "gzip" } : {}),
       });
-      res.end(JSON.stringify(value));
+      res.end(payload);
     };
     try {
       const url = new URL(req.url, "http://localhost");
-      if (!clientAllowed(req.socket.remoteAddress, allowedClients))
-        return send(403, { error: "当前IP未获编辑访问授权。" });
+      if (logger) {
+        const routes = ["/api/editor/session", "/api/editor/bootstrap", "/api/editor/unit", "/api/editor/weapon", "/api/editor/conversion", "/api/editor/wip"];
+        const route = routes.includes(url.pathname) ? url.pathname : "其他接口";
+        res.once("finish", () => {
+          if (res.statusCode >= 400 || (req.method === "POST" && routes.includes(url.pathname)) || url.pathname === "/api/editor/bootstrap") {
+            const result = url.pathname === "/api/editor/session" && req.method === "POST"
+              ? (res.statusCode === 200 ? "认证通过" : "认证失败")
+              : "请求完成";
+            logger(`[${new Date().toISOString()}] ${req.socket.remoteAddress} ${result} ${req.method} ${route} HTTP ${res.statusCode} · 发送 ${res.getHeader("Content-Length") || 0} 字节`);
+          }
+        });
+      }
       const origin = req.headers.origin;
       if (origin && origin !== "null") {
         let match = false;
@@ -79,6 +113,8 @@ function createDeveloperServer({
       }
       if (origin) res.setHeader("Access-Control-Allow-Origin", origin);
       res.setHeader("Vary", "Origin");
+      if (!clientAllowed(req.socket.remoteAddress, allowedClients))
+        return send(403, { error: "当前IP未获编辑访问授权。" });
       if (req.method === "OPTIONS") {
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Editor-Token");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -133,10 +169,7 @@ function createDeveloperServer({
           return send(200, store.getWeapon(url.searchParams.get("ref")));
         if (url.pathname === "/api/editor/templates") return send(200, store.templates());
         if (url.pathname === "/api/editor/bootstrap") {
-          const data = catalog();
-          data.sounds = {};
-          data.music = [];
-          data.maps = {};
+          const data = editorCatalog();
           return send(200, {
             catalog: require("../shared/asset-pool.js").pack(data),
             production: require("../shared/catalog-adjustments.cjs").production(
@@ -152,18 +185,31 @@ function createDeveloperServer({
           });
         }
         if (url.pathname === "/api/editor/catalog") {
-          const data = catalog();
+          const data = editorCatalog();
+          const selected = url.searchParams.get("ids");
+          let ids = null;
+          if (selected !== null) {
+            ids = [...new Set(selected.split(",").filter(Boolean))];
+            if (ids.length > 512 || ids.some((id) => !/^[A-Za-z0-9_-]+$/.test(id)))
+              return send(400, { error: "单位刷新列表无效" });
+          }
+          const wanted = ids && new Set(ids);
+          const production = require("../shared/catalog-adjustments.cjs").production(
+            JSON.parse(fs.readFileSync(path.join(root, "shared/production-catalog.json"), "utf8")),
+            require("../shared/catalog-adjustments.cjs").read(root),
+          );
           return send(200, {
-            prefabs: data.prefabs,
-            models: data.models,
-            units: data.units,
-            ...(url.searchParams.has("assets") ? { assets: data.assets } : {}),
-            production: require("../shared/catalog-adjustments.cjs").production(
-              JSON.parse(
-                fs.readFileSync(path.join(root, "shared/production-catalog.json"), "utf8"),
-              ),
-              require("../shared/catalog-adjustments.cjs").read(root),
-            ),
+            partial: !!ids,
+            ids,
+            prefabs: wanted ? data.prefabs.filter((prefab) => wanted.has(prefab.id)) : data.prefabs,
+            models: wanted ? Object.fromEntries(Object.entries(data.models).filter(([, model]) => wanted.has(model.prefabId))) : data.models,
+            units: [],
+            assets: {},
+            production: wanted ? Object.fromEntries(
+              ["defaultKits", "licenseOffers"].map((field) => [field,
+                Object.fromEntries(Object.entries(production[field]).filter(([id]) => wanted.has(id))),
+              ]),
+            ) : production,
           });
         }
       }
@@ -225,18 +271,20 @@ if (require.main === module) {
     config = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : {};
   const app = createDeveloperServer({
     ...config,
+    logger: (message) => console.log(message),
     key: process.env.PROJECTGREED_EDITOR_KEY || config.key || "13450",
     port: Number(process.argv[2]) || config.port || 1314,
   });
   app
     .listen()
-    .then((address) =>
-      console.log(
-        "编辑服务已启动：http://" + address.address + ":" + address.port + "/developer.html",
-      ),
-    )
+    .then((address) => {
+      console.log("编辑服务已启动：http://" + address.address + ":" + address.port);
+      console.log("等待管理员连接；此窗口显示连接与编辑请求。关闭窗口或按 Ctrl+C 停止服务。");
+      console.log("管理员独立打开 developer.html，输入服务器地址与密钥即可。此服务不会自动打开网页。");
+    })
     .catch((error) => {
       console.error("编辑服务启动失败：" + error.message);
+      if (error.code === "EADDRINUSE") console.error("此端口已被占用，可能已有旧编辑服务在后台运行。请先停止旧服务，或修改 developer-config.json 的 port。");
       process.exitCode = 1;
     });
 }

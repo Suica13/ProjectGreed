@@ -1,6 +1,7 @@
 {
-  "host": "127.0.0.1",
+  "host": "lan",
   "port": 1314,
   "key": "13450",
-  "allowedClients": null
+  "allowedClients": null,
+  "_comment": "port 为编辑服务端口（默认1314），不能与 cfg.json 的游戏服务端口相同。host=lan 自动选择唯一局域网IPv4；多网卡时填写具体网卡IP，不能填写路由器公网IP。远程访问需转发并放行此TCP端口。"
 }

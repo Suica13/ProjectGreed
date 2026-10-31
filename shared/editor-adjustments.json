@@ -1,6 +1,10 @@
 {
   "schemaVersion": 1,
   "units": {},
-  "weapons": {},
+  "weapons": {
+    "Army_Squad_EFSF_0079_O_G_Member_P__lv1": {
+      "/hit": -5
+    }
+  },
   "prices": {}
 }

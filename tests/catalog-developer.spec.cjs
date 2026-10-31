@@ -22,6 +22,10 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     app = createDeveloperServer({ port: 0, store: f.store, catalog: f.catalog });
   const address = await app.listen(),
     errors = [];
+  const editorRequests = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/api/editor/")) editorRequests.push(new URL(request.url()));
+  });
   page.on("pageerror", (error) => errors.push(error.message));
   await page.setViewportSize({ width: 1440, height: 1000 });
   try {
@@ -57,10 +61,12 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     await page.locator('[data-unit-id="RX_78_2"] button').click();
     await page.locator("#editUnitProperties").click();
     await page.locator('[data-field="stats.hp"]').fill("99999");
+    const requestsBeforeDiscard = editorRequests.length;
     await page.locator("#closeFormationDetail").click();
     await page.getByRole("button", { name: "取消修改并关闭", exact: true }).click();
     await expect(page.locator("#formationUnitDetail")).toBeHidden();
     expect(f.store.getUnit("RX_78_2").unit.stats.hp).toBe(55500);
+    expect(editorRequests.length).toBe(requestsBeforeDiscard);
     await page.locator('[data-unit-id="RX_78_2"] button').click();
     await page.locator("#formationDetailSlots .edit-common-weapon").first().click();
     await expect(page.locator("#commonWeaponEditor")).toBeVisible();
@@ -84,6 +90,10 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
       .click();
     await page.getByRole("button", { name: "取消修改并关闭", exact: true }).click();
     expect(errors).toEqual([]);
+    const catalogRequests = editorRequests.filter((url) => url.pathname === "/api/editor/catalog");
+    expect(catalogRequests).toHaveLength(2);
+    expect(catalogRequests.every((url) => !!url.searchParams.get("ids"))).toBe(true);
+    expect(editorRequests.filter((url) => url.pathname === "/api/editor/bootstrap")).toHaveLength(1);
     await page.screenshot({ path: "tmp/catalog-developer.png" });
   } finally {
     await page.close();
@@ -372,3 +382,85 @@ for (const width of [1440, 390])
       f.cleanup();
     }
   });
+
+
+test("developer uses data-only catalog without unit icons or preview rendering", async ({ page }) => {
+  const app = createDeveloperServer({ port: 0 });
+  const address = await app.listen();
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  const images = [];
+  page.on("request", (request) => {
+    if (request.resourceType() === "image") images.push(request.url());
+  });
+  try {
+    await login(page, "http://127.0.0.1:" + address.port, true);
+    await page.locator("#encyclopediaSearch").fill("RX_78_2");
+    await page.locator('[data-unit-id="RX_78_2"] button').click();
+    await expect(page.locator("#formationUnitDetail")).toBeVisible();
+    await expect(page.locator("#formationDetailPreview")).toBeHidden();
+    await expect(page.locator("#encyclopediaList img")).toHaveCount(0);
+    expect(await page.evaluate(() => Object.keys(Rules.catalog.assets).length)).toBe(0);
+    await page.locator("#editUnitProperties").click();
+    await expect(page.locator("#unitSourceEditor")).toBeVisible();
+    expect(images).toEqual([]);
+    expect(errors).toEqual([]);
+  } finally {
+    await page.close();
+    await app.close();
+  }
+});
+
+
+test("remote editor completes a slow download and shows transfer progress", async ({ page }) => {
+  test.setTimeout(90000);
+  const app = createDeveloperServer({ port: 0 });
+  const address = await app.listen();
+  const { pathToFileURL } = require("node:url");
+  const path = require("node:path");
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  try {
+    await page.goto(pathToFileURL(path.resolve("public/developer.html")).href);
+    const network = await page.context().newCDPSession(page);
+    await network.send("Network.enable");
+    await network.send("Network.emulateNetworkConditions", {
+      offline: false, latency: 150, downloadThroughput: 80 * 1024, uploadThroughput: 80 * 1024,
+    });
+    await page.locator("#editorServerAddress").fill("http://127.0.0.1:" + address.port);
+    await page.locator("#editorAccessKey").fill("13450");
+    await page.locator("#confirmEditorLogin").click();
+    await expect(page.locator("#editorLoginStatus")).toContainText("已接收", { timeout: 20000 });
+    await expect(page.locator("#editorDownloadProgress")).toBeVisible();
+    await expect.poll(() => page.locator("#editorDownloadProgress").evaluate((bar) => bar.value)).toBeGreaterThan(0);
+    expect(await page.locator("#editorDownloadProgress").evaluate((bar) => bar.value)).toBeLessThan(100);
+    await expect(page.locator("#editorLoginScreen")).toBeHidden({ timeout: 60000 });
+    await expect(page.locator("#encyclopediaScreen")).toBeVisible();
+    await page.locator("#encyclopediaWeaponsTab").click();
+    await expect(page.locator("#encyclopediaList .weapon-name").first()).toBeVisible();
+    expect(errors).toEqual([]);
+  } finally {
+    await page.close();
+    await app.close();
+  }
+});
+
+test("editor runtime failures stay visible on the login screen", async ({ page }) => {
+  const app = createDeveloperServer({ port: 0 });
+  const address = await app.listen();
+  try {
+    await page.goto("http://127.0.0.1:" + address.port + "/developer.html");
+    await page.evaluate(() => {
+      document.getElementById("catalogRuntime").textContent = 'throw Error("TEST_RUNTIME_FAILURE")';
+    });
+    await page.locator("#editorAccessKey").fill("13450");
+    await page.locator("#confirmEditorLogin").click();
+    await expect(page.locator("#editorLoginStatus")).toContainText("编辑界面初始化失败：TEST_RUNTIME_FAILURE", { timeout: 15000 });
+    await expect(page.locator("#editorDownloadProgress")).toBeHidden();
+    await expect(page.locator("#editorLoginScreen")).toBeVisible();
+    await expect(page.locator("#confirmEditorLogin")).toBeEnabled();
+  } finally {
+    await page.close();
+    await app.close();
+  }
+});

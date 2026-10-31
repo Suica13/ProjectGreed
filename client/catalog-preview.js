@@ -130,7 +130,7 @@ const Formation = (() => {
     for (const mechanic of model.mechanics || []) mechanics.append(element("p", "", mechanic.name));
     byId("formationDetailMechanicsBlock").hidden = !mechanics.childElementCount;
     byId("formationUnitDetail").hidden = false;
-    UnitPreview.renderPreview(modelId);
+    byId("formationDetailPreview").dataset.previewModel = modelId;
     window.dispatchEvent(new CustomEvent("unit-preview-rendered", { detail: { id } }));
     return true;
   }

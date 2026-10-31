@@ -58,20 +58,29 @@ window.CatalogDeveloper = (() => {
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
   }
-  async function refreshCatalog(includeAssets = false) {
-    const next = await api("catalog" + (includeAssets ? "?assets=1" : ""));
+  async function refreshCatalog(ids = null) {
+    const selected = ids && [...new Set(ids)];
+    if (selected && !selected.length) return;
+    const next = await api("catalog" + (selected ? "?ids=" + encodeURIComponent(selected.join(",")) : ""));
     I18n.bindCatalog(next);
-    Rules.catalog.prefabs.splice(0, Rules.catalog.prefabs.length, ...next.prefabs);
-    for (const key of Object.keys(UnitModels)) delete UnitModels[key];
-    Object.assign(UnitModels, next.models);
-    Rules.catalog.units.splice(0, Rules.catalog.units.length, ...next.units);
-    for (const key of Object.keys(SpriteRenderer.models)) delete SpriteRenderer.models[key];
-    Object.assign(
-      SpriteRenderer.models,
-      Object.fromEntries(next.units.map((unit) => [unit.id, unit])),
-    );
-    if (next.assets) Object.assign(Rules.catalog.assets, next.assets);
-    for (const key of Object.keys(next.production)) PRODUCTION_CATALOG[key] = next.production[key];
+    if (next.partial) {
+      const replaced = new Set(next.ids);
+      const retained = Rules.catalog.prefabs.filter((prefab) => !replaced.has(prefab.id));
+      Rules.catalog.prefabs.splice(0, Rules.catalog.prefabs.length, ...retained, ...next.prefabs);
+      for (const [id, model] of Object.entries(UnitModels))
+        if (replaced.has(model.prefabId)) delete UnitModels[id];
+      Object.assign(UnitModels, next.models);
+      for (const [field, values] of Object.entries(next.production)) {
+        PRODUCTION_CATALOG[field] ||= {};
+        for (const id of replaced) delete PRODUCTION_CATALOG[field][id];
+        Object.assign(PRODUCTION_CATALOG[field], values);
+      }
+    } else {
+      Rules.catalog.prefabs.splice(0, Rules.catalog.prefabs.length, ...next.prefabs);
+      for (const key of Object.keys(UnitModels)) delete UnitModels[key];
+      Object.assign(UnitModels, next.models);
+      for (const key of Object.keys(next.production)) PRODUCTION_CATALOG[key] = next.production[key];
+    }
     Encyclopedia.invalidate();
   }
   function section(parent, title) {
@@ -499,14 +508,7 @@ window.CatalogDeveloper = (() => {
       (value) => {
         unit.presentation ??= {};
         unit.presentation.previewScale = value;
-        const modelId = byId("formationDetailPreview").dataset.previewModel;
-        if (UnitModels[modelId]) {
-          UnitModels[modelId].presentation = {
-            ...UnitModels[modelId].presentation,
-            previewScale: value,
-          };
-          Formation.renderPreview(modelId);
-        }
+
       },
       "number",
       "unit.previewScale",
@@ -624,7 +626,8 @@ window.CatalogDeveloper = (() => {
     unitSession = null;
     unitPanel.hidden = true;
     editUnit.textContent = "修改属性";
-    await refreshCatalog(result.id !== session.id);
+    if (!result.noChanges)
+      await refreshCatalog([session.id, result.id, ...(result.affectedUnits || [])]);
     activeUnitId = result.id;
     if (!closeAfter) Formation.previewUnit(result.id, editUnit);
     return true;
@@ -633,7 +636,6 @@ window.CatalogDeveloper = (() => {
     unitSession = null;
     unitPanel.hidden = true;
     editUnit.textContent = "修改属性";
-    await refreshCatalog();
   }
   async function closeChoice() {
     return GameDialog.choose({
@@ -674,7 +676,7 @@ window.CatalogDeveloper = (() => {
     if (!form.reportValidity()) return false;
     const result = await api("weapon", weaponSession);
     weaponSession.revision = result.revision;
-    await refreshCatalog();
+    if (!result.noChanges) await refreshCatalog(result.affectedUnits || null);
     if (activeUnitId && !byId("formationUnitDetail").hidden)
       Formation.previewUnit(activeUnitId, editUnit);
     return true;
@@ -957,7 +959,13 @@ window.CatalogDeveloper = (() => {
     await api("wip", { revision: wipSession.revision, units: wipSession.policy.units });
     wipSession = await api("wip");
     wipInitial = JSON.stringify(wipSession.policy.units);
-    await refreshCatalog();
+    const changedIds = Rules.catalog.prefabs.filter((prefab) => {
+      const next = wipSession.policy.units.some((pattern) =>
+        pattern.endsWith("*") ? prefab.id.startsWith(pattern.slice(0, -1)) : prefab.id === pattern,
+      );
+      return next !== prefab.wip;
+    }).map((prefab) => prefab.id);
+    await refreshCatalog(changedIds);
     renderWip();
     wipScreen.querySelector("[role=status]").textContent =
       "已保存至 assets/unit-wip.json；正式客户端仍需手动构建。";

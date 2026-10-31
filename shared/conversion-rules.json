@@ -127,7 +127,7 @@
         "maxRange": -1
       },
       "melee": {
-        "damage": 1.1,
+        "damage": 1,
         "accuracy": 1,
         "ap": 1,
         "en": 1,

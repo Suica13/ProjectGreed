@@ -8,5 +8,5 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-node tools/open-developer.cjs
+node tools/developer-server.cjs %*
 if errorlevel 1 pause

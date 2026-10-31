@@ -42,6 +42,7 @@ function validateLocalization(localization, id) {
 }
 function loadCatalog({
   embedMusic = false,
+  embedAssets = true,
   catalogOverride = null,
   unitOverrides = {},
   mapOverrides = {},
@@ -381,7 +382,7 @@ function loadCatalog({
     )
       throw Error("Invalid effect frames: " + id);
     effect.asset = "effect/" + id;
-    result.assets[effect.asset] =
+    if (embedAssets) result.assets[effect.asset] =
       "data:image/png;base64," +
       fs.readFileSync(file(effectBase, effect.texture)).toString("base64");
     effect.duration = (effect.endFrame - effect.startFrame + 1) / effect.fps;
@@ -756,7 +757,7 @@ function loadCatalog({
     for (const [id, ref] of Object.entries(prefab.materials.textures)) {
       const key = prefab.id + "/" + id;
       textureKeys[id] = key;
-      result.assets[key] =
+      if (embedAssets) result.assets[key] =
         "data:image/png;base64," + fs.readFileSync(file(base, ref)).toString("base64");
     }
     for (const [alias, target] of Object.entries(prefab.kitAliases || {})) {
@@ -934,7 +935,7 @@ function loadCatalog({
             throw Error("Invalid weapon target modifiers: " + key);
           if (weapon.projectile) {
             const projectileKey = prefab.id + "/projectile/" + key;
-            result.assets[projectileKey] =
+            if (embedAssets) result.assets[projectileKey] =
               "data:image/png;base64," +
               fs.readFileSync(file(base, weapon.projectile.texture)).toString("base64");
             weapon.projectile = { ...weapon.projectile, asset: projectileKey };

@@ -319,3 +319,35 @@ html.catalog-developer #encyclopediaScreen[hidden],
     grid-column: 1 / -1;
   }
 }
+
+/* Remote editing transfers data only; avoid blank image slots and render canvases. */
+html.catalog-developer .encyclopedia-portrait img,
+html.catalog-developer #formationUnitDetail .unit-detail-preview-box {
+  display: none !important;
+}
+html.catalog-developer .encyclopedia-portrait {
+  width: auto;
+  min-width: 0;
+  min-height: 0;
+  background: none;
+  border: 0;
+}
+html.catalog-developer #formationUnitDetail .unit-detail-summary {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#editorDownloadProgress {
+  display: block;
+  width: 100%;
+  height: 12px;
+  margin: 18px 0 8px;
+  accent-color: #62c8ff;
+  border: 1px solid #4d7189;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #101923;
+}
+#editorDownloadProgress[hidden] { display: none; }
+#editorDownloadProgress::-webkit-progress-bar { background: #101923; }
+#editorDownloadProgress::-webkit-progress-value { background: #62c8ff; }
+#editorDownloadProgress::-moz-progress-bar { background: #62c8ff; }

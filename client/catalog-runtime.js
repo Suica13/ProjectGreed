@@ -4,7 +4,7 @@ const PRODUCTION_CATALOG = window.catalogBootstrap.production;
 const UI_LOCALES = window.catalogBootstrap.locales;
 const UnitModels = ART.models;
 let pageView = "encyclopedia",
-  assetsReady = true;
+  assetsReady = false;
 const byId = (id) => document.getElementById(id);
 const element = (tag, className = "", text = "") => {
   const node = document.createElement(tag);

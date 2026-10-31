@@ -3,6 +3,7 @@
 const fs = require("node:fs"),
   path = require("node:path"),
   crypto = require("node:crypto");
+const { resolveEditorHost } = require("./developer-host.cjs");
 const { spawn, spawnSync, execFile } = require("node:child_process");
 async function ensureDeveloper({
   root = path.resolve(__dirname, ".."),
@@ -11,6 +12,7 @@ async function ensureDeveloper({
   open = true,
 } = {}) {
   root = path.resolve(root);
+  host = resolveEditorHost(host);
   const base = "http://" + host + ":" + port,
     workspaceId = crypto.createHash("sha256").update(root.toLowerCase()).digest("hex");
   const probe = async () => {
@@ -18,7 +20,7 @@ async function ensureDeveloper({
     try {
       response = await fetch(base + "/api/editor/session", { signal: AbortSignal.timeout(1500) });
     } catch (error) {
-      if (error.cause?.code === "ECONNREFUSED") return false;
+      if (error.cause?.code === "ECONNREFUSED" || error.name === "TimeoutError") return false;
       throw Error("无法检查编辑端口：" + error.message);
     }
     let value;

@@ -44,9 +44,9 @@ function buildDeveloper(root) {
       "client/catalog-developer.js",
     ]
       .map(read)
-      .join("\n") + "\nI18n.bindCatalog(ART); I18n.start(); delete window.catalogBootstrap;";
+      .join("\n") + "\nI18n.bindCatalog(ART); I18n.start(); delete window.catalogBootstrap; window.catalogEditorReady = true;";
   const html = `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ProjectGreed 配置编辑</title><style>${css}</style></head><body>
-<section id="editorLoginScreen"><form id="editorLogin"><h1>配置编辑</h1><label>编辑服务器IP／地址<input id="editorServerAddress" type="text" required autocomplete="off" placeholder="http://192.168.1.10:1314"></label><label>密钥<input id="editorAccessKey" type="password" required autocomplete="off"></label><p id="editorLoginStatus" role="status">输入服务器地址和密钥后连接。</p><button id="confirmEditorLogin" type="submit">确认</button></form></section>
+<section id="editorLoginScreen"><form id="editorLogin"><h1>配置编辑</h1><label>编辑服务器IP／地址<input id="editorServerAddress" type="text" required autocomplete="off" placeholder="http://192.168.1.10:1314"></label><label>密钥<input id="editorAccessKey" type="password" required autocomplete="off"></label><progress id="editorDownloadProgress" max="100" aria-label="编辑数据下载进度" hidden></progress><p id="editorLoginStatus" role="status">输入服务器地址和密钥后连接。</p><button id="confirmEditorLogin" type="submit">确认</button></form></section>
 ${template.slice(start, end)}\n${preview}
 <script type="text/plain" id="catalogRuntime">${inline(runtime)}</script><script>${inline(read("client/catalog-login.js"))}</script></body></html>`;
   fs.mkdirSync(path.join(root, "public"), { recursive: true });
