@@ -605,7 +605,7 @@
       "rubble": 75
     },
     "ship": false,
-    "actionPoints": 5,
+    "actionPoints": 6,
     "sensors": {
       "sight": 10,
       "radar": 12.0,
@@ -615,7 +615,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 135
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -711,7 +712,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 50000.0,
-    "technologyEra": "0079L"
+    "technologyEra": "0079L",
+    "actionTurnSpeed": 2.75,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -2342,7 +2345,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     }
   ],
   "weaponKits": [
@@ -2352,11 +2355,11 @@
       "cost": 100,
       "weapons": [
         "EF_RX_78NT_1_BR",
-        "Common_Push_A",
         "Common_ArmMG",
         "EF_BeamSaber_BF_B",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_AALDF"
+        "EF_BeamSaber_Double_AALDF",
+        "Common_Push_A"
       ]
     },
     {
@@ -2365,11 +2368,11 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazooka_NT_1",
-        "Common_Push_A",
         "Common_ArmMG",
         "EF_BeamSaber_BF_B",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_AALDF"
+        "EF_BeamSaber_Double_AALDF",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2418,6 +2421,28 @@
     ]
   },
   "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RX_78NT_1_FA",
+      "unitId": "RX_78NT_1_FA",
+      "money": 750,
+      "supplies": 750,
+      "unlockUnits": [
+        "RX_78NT_1_FA"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78NT_1/RX_78NT_1.ini",
+        "action": "action_CustomUnit_RX_78NT_1_FA",
+        "seconds": 20.0
+      }
+    }
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_ArmMG",
@@ -2444,27 +2469,5 @@
       "fireMode": "independent",
       "name": "腕部机枪"
     }
-  ],
-  "refits": [
-    {
-      "id": "action_CustomUnit_RX_78NT_1_FA",
-      "unitId": "RX_78NT_1_FA",
-      "money": 750,
-      "supplies": 750,
-      "unlockUnits": [
-        "RX_78NT_1_FA"
-      ],
-      "blocked": false,
-      "source": {
-        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_78NT_1/RX_78NT_1.ini",
-        "action": "action_CustomUnit_RX_78NT_1_FA",
-        "seconds": 20.0
-      }
-    }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

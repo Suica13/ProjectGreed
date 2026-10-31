@@ -2,9 +2,53 @@
 import re
 
 
+ARMS = {"leftArm", "rightArm"}
+
+
+def shot_limbs(weapon, muzzle_index=None):
+    return [set(step.get("requiredParts", [])) & ARMS
+            for step in weapon.get("attack", {}).get("steps", [])
+            if step.get("shots", 0) > 0 and
+            (muzzle_index is None or step.get("muzzleIndex", 0) == muzzle_index)]
+
+
+def normalize_dual_hands(prefab):
+    # A sequence with independent left/right strikes must not inherit a single
+    # right-hand requirement from the first shot. Explicit two-arm gates remain.
+    for weapon in prefab["weapons"].values():
+        limbs = shot_limbs(weapon)
+        required = set(weapon.get("requiredParts", [])) & ARMS
+        if (len(required) == 1 and limbs and all(len(parts) <= 1 for parts in limbs)
+                and set().union(*limbs) == ARMS and not weapon.get("anyParts")):
+            weapon["requiredParts"] = [part for part in weapon["requiredParts"] if part not in ARMS]
+            weapon["anyParts"] = ["leftArm", "rightArm"]
+
+
+def physical_arm_channels(prefab, physical):
+    mounted, fired = {}, {}
+    for ident, (key, index, barrel) in physical.items():
+        weapon = prefab["weapons"][key]
+        mount = weapon["muzzle"].get("mounts", [weapon["muzzle"]])[index]
+        layer = next((layer for layer in prefab["layers"] if layer["name"] == mount.get("layer")), {})
+        bone = layer.get("bone", mount.get("bone"))
+        if bone in ("LeftArm", "RightArm"):
+            mounted[ident] = bone[0].lower() + bone[1:]
+        limbs = shot_limbs(weapon, index)
+        union = set().union(*limbs) if limbs else set()
+        if len(union) == 1:
+            fired[ident] = next(iter(union))
+    # Prefer actual attachment bones; some native GP03 follow-up shots carry
+    # copied left-arm conditions even though their muzzle is on the right arm.
+    for evidence in (mounted, fired):
+        if len(evidence) == len(physical) and set(evidence.values()) == ARMS:
+            return evidence
+    return {}
+
+
 def configure(prefab):
-    prefab.pop("pairedWeapons", None)
+    normalize_dual_hands(prefab)
     if prefab["stats"].get("ship"):
+        prefab.pop("pairedWeapons", None)
         return
     if "Infantry" in prefab.get("unitTags", []):
         kit_ids = list(dict.fromkeys(
@@ -48,7 +92,7 @@ def configure(prefab):
                 return
     families = {}
     for key, weapon in prefab["weapons"].items():
-        if weapon["type"] == "melee" or weapon.get("moduleIds"):
+        if weapon["type"] == "melee" or weapon.get("moduleIds") or weapon.get("tacticalPattern", {}).get("type") == "radial_volley":
             continue
         reasons = weapon.get("availability", {}).get("reasons", [])
         if any(reason not in ["merged_position", "paired_weapon"] for reason in reasons):
@@ -85,19 +129,23 @@ def configure(prefab):
         channels = []
         arm_pair = bool(re.search(r"ArmMG|ArmBR|ArmGL|HandGun|HandMG|75mmMG_Double|BigGun", family)) or family in ["EF_RX_75_MS", "ZN_MS_06M_SMS"]
         leg_pair = "LegMS" in family
+        physical_arms = physical_arm_channels(prefab, physical)
         for ident, (key, index, barrel) in physical.items():
             weapon = prefab["weapons"][key]
             required = list(main.get("requiredParts", []))
             limb = None
-            if prefab["stats"].get("partsBreakable", True) and (arm_pair or leg_pair):
+            if prefab["stats"].get("partsBreakable", True) and ident in physical_arms:
+                limb = physical_arms[ident]
+                required = [part for part in required if part not in ARMS] + [limb]
+            elif prefab["stats"].get("partsBreakable", True) and (arm_pair or leg_pair):
                 side = "left" if barrel["x"] < 0 else "right"
                 limb = side + ("Arm" if arm_pair else "Leg")
                 required = [p for p in required if p not in ["leftArm", "rightArm", "leftLeg", "rightLeg"]] + [limb]
             channels.append(dict(id=ident, weaponId=key, muzzleIndex=index, requiredParts=required, limb=limb))
         group = dict(id=root, channels=channels)
         if {c["limb"] for c in channels} == {"leftArm", "rightArm"}:
-            # Pixy's 75mm machine guns are an explicit simultaneous-fire exception.
-            simultaneous = prefab["id"] == "RX_78XX" and family == "EF_75mmMG_Double"
+            # Existing dual launchers stay one salvo; wrist guns retain independent slots.
+            simultaneous = (bool(physical_arms) and not arm_pair) or (prefab["id"] == "RX_78XX" and family == "EF_75mmMG_Double")
             group["fireMode"] = "simultaneous" if simultaneous else "independent"
         if "ArmMG" in family:group["name"] = "腕部机枪"
         elif "ArmBR" in family:group["name"] = "腕部光束枪"
@@ -110,3 +158,5 @@ def configure(prefab):
             kit["weapons"] = list(dict.fromkeys(mapped))
     if groups:
         prefab["pairedWeapons"] = groups
+    else:
+        prefab.pop("pairedWeapons", None)

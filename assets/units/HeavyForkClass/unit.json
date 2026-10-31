@@ -400,13 +400,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 187500,
+    "hp": 115500,
     "en": 4500.0,
-    "move": 6,
-    "mobility": 50.0,
+    "move": 7,
+    "mobility": 57.5,
     "cost": 1250,
     "counterLimit": 1,
-    "accuracy": 115.0,
+    "accuracy": 82.225,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "hover",
@@ -773,7 +773,9 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 45,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -870,8 +872,14 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 150000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.25,
+    "mobilityMoveTarget": 6,
+    "shipHullBeforeReduction": 150000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1.1,
+    "shipFactionAccuracyMultiplier": 1.1,
+    "shipFactionEvasionMultiplier": 1.15
   },
   "presentation": {
     "shield": false,
@@ -918,9 +926,9 @@
       "hitBonus": 0,
       "slot": "skill",
       "clip": null,
-      "damagePerShot": 3000.0,
+      "damagePerShot": 2250,
       "damageComponents": {
-        "shell": 3000.0
+        "shell": 2250
       },
       "hitsPerShot": 1,
       "attack": {
@@ -931,7 +939,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 1.1
+            "delay": 1.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -939,7 +948,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -947,7 +957,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -955,7 +966,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -963,7 +975,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -971,7 +984,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -979,7 +993,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -987,7 +1002,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -995,7 +1011,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1003,7 +1020,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.6
+            "delay": 0.6,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1011,7 +1029,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1019,7 +1038,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1027,7 +1047,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1035,7 +1056,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1043,7 +1065,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1051,7 +1074,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1059,7 +1083,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1067,7 +1092,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1075,7 +1101,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.6
+            "delay": 0.6,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1083,7 +1110,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1091,7 +1119,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1099,7 +1128,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1107,7 +1137,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1115,7 +1146,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1123,7 +1155,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1131,7 +1164,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1139,10 +1173,12 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
-            "delay": 1.5
+            "delay": 1.5,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1297,6 +1333,10 @@
         "large": {
           "damage": 1,
           "accuracy": 1
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1323,8 +1363,14 @@
         ]
       },
       "actionCost": 5,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 3000.0,
+        "damageComponents": {
+          "shell": 3000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "HeavyForkClass_Turret_Cannon": {
       "name": "舰载加农炮",
@@ -1339,9 +1385,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 6000.0,
+      "damagePerShot": 4500,
       "damageComponents": {
-        "shell": 6000.0
+        "shell": 4500
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1352,7 +1398,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1360,7 +1407,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1368,7 +1416,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1376,7 +1425,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1384,7 +1434,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1392,7 +1443,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1400,7 +1452,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1408,7 +1461,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1416,7 +1470,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1572,6 +1627,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1591,15 +1650,21 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 6000.0,
+        "damageComponents": {
+          "shell": 6000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "HeavyForkClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 80.0,
+      "hit": 100.0,
       "en": 120.0,
       "sourceName": "HeavyForkClass_Turret_MS",
       "sourceHit": 100.0,
@@ -1607,9 +1672,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 1750.0,
+      "damagePerShot": 1325,
       "damageComponents": {
-        "shell": 1750.0
+        "shell": 1325
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1620,7 +1685,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1628,7 +1694,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1636,7 +1703,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_L1",
-            "delay": 0.5
+            "delay": 0.5,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1644,7 +1712,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1652,7 +1721,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_L1",
-            "delay": 0.5
+            "delay": 0.5,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1660,7 +1730,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1668,7 +1739,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_L1",
-            "delay": 0.5
+            "delay": 0.5,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1676,7 +1748,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1684,7 +1757,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_L1",
-            "delay": 0.5
+            "delay": 0.5,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1692,7 +1766,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1795,6 +1870,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1814,15 +1893,20 @@
         "actions": []
       },
       "actionCost": 2,
-      "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 1750.0,
+        "damageComponents": {
+          "shell": 1750.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "HeavyForkClass_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 30.0,
       "sourceName": "HeavyForkClass_Turret_AA",
       "sourceHit": 125.0,
@@ -1830,10 +1914,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 300.0,
+      "damagePerShot": 225,
       "damageComponents": {
-        "shell": 225.0,
-        "shellAP": 75.0
+        "shell": 175,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1844,7 +1928,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1852,7 +1937,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1860,7 +1946,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1868,7 +1955,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1876,7 +1964,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1884,7 +1973,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1892,7 +1982,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1900,7 +1991,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1908,7 +2000,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1916,7 +2009,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1924,7 +2018,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1932,7 +2027,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1940,7 +2036,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1948,7 +2045,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1956,7 +2054,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1964,7 +2063,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1972,7 +2072,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1980,7 +2081,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1988,7 +2090,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1996,7 +2099,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2004,7 +2108,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2012,7 +2117,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2020,7 +2126,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2028,7 +2135,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2036,7 +2144,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2044,7 +2153,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2052,7 +2162,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2060,7 +2171,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2068,7 +2180,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2076,7 +2189,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2084,7 +2198,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2092,7 +2207,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2100,7 +2216,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2108,7 +2225,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2116,7 +2234,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2124,7 +2243,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2132,7 +2252,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2140,7 +2261,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2148,7 +2270,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2156,7 +2279,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2164,7 +2288,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2172,7 +2297,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2180,7 +2306,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2188,7 +2315,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2196,7 +2324,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2204,7 +2333,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2212,7 +2342,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2220,7 +2351,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2228,7 +2360,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2236,7 +2369,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2244,7 +2378,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2252,7 +2387,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2260,7 +2396,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2268,7 +2405,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2276,7 +2414,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2284,7 +2423,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2292,7 +2432,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2300,7 +2441,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2308,7 +2450,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2316,7 +2459,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -2498,6 +2642,17 @@
       },
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -2980,26 +3135,21 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 300.0,
+        "damageComponents": {
+          "shell": 225.0,
+          "shellAP": 75.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "HeavyForkClass_Turret_MG": {
       "name": "舰载机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 30.0,
       "sourceName": "HeavyForkClass_Turret_MG",
       "sourceHit": 125.0,
@@ -3007,10 +3157,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 525.0,
+      "damagePerShot": 400,
       "damageComponents": {
-        "shell": 450.0,
-        "shellAP": 75.0
+        "shell": 350,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -3021,7 +3171,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3029,7 +3180,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3037,7 +3189,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3045,7 +3198,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3053,7 +3207,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3061,7 +3216,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3069,7 +3225,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3077,7 +3234,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3085,7 +3243,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3093,7 +3252,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3101,7 +3261,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3109,7 +3270,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3117,7 +3279,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3125,7 +3288,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3133,7 +3297,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3141,7 +3306,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3149,7 +3315,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3157,7 +3324,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3165,7 +3333,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3173,7 +3342,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3181,7 +3351,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3189,7 +3360,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3197,7 +3369,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3205,7 +3378,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3213,7 +3387,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3221,7 +3396,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3229,7 +3405,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3237,7 +3414,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3245,7 +3423,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3253,7 +3432,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3261,7 +3441,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3269,7 +3450,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3277,7 +3459,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3285,7 +3468,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3293,7 +3477,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3301,7 +3486,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3309,7 +3495,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3317,7 +3504,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3325,7 +3513,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3333,7 +3522,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3341,7 +3531,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3349,7 +3540,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3357,7 +3549,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3365,7 +3558,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3373,7 +3567,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3381,7 +3576,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3389,7 +3585,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3397,7 +3594,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3405,7 +3603,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3413,7 +3612,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3421,7 +3621,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3429,7 +3630,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3437,7 +3639,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3445,7 +3648,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3453,7 +3657,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3461,7 +3666,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3469,7 +3675,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3477,7 +3684,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3485,7 +3693,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3493,7 +3702,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HeavyForkClass_Turret_MG_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -3655,6 +3865,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -3674,8 +3888,14 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 525.0,
+        "damageComponents": {
+          "shell": 450.0,
+          "shellAP": 75.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [
@@ -3701,12 +3921,6 @@
       "source": "Template/Unit/Skill/CmdCom.gw",
       "status": "adapted",
       "name": "通信指挥：范围与效果随驾驶员领导力变化"
-    },
-    {
-      "id": "special_Common_MinovskyParticle_M",
-      "name": "special_Common_MinovskyParticle_M",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-      "status": "review"
     },
     {
       "id": "Common_MinovskyParticle_M",

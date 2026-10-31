@@ -446,7 +446,8 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 125
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -545,7 +546,9 @@
     "unitLevel": 2000.0,
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 36500.0,
-    "technologyEra": "0079L"
+    "technologyEra": "0079L",
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -1527,7 +1530,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     },
     {
       "id": "CustomUnit_PilotCustomUnit",
@@ -1561,9 +1564,9 @@
       "cost": 0,
       "weapons": [
         "ZN_YMS_15_ShieldMS",
-        "Common_Push_A",
         "ZN_YMS_15_BeamSaber_B3",
-        "ZN_YMS_15_BeamSaber_F"
+        "ZN_YMS_15_BeamSaber_F",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1608,6 +1611,14 @@
       }
     }
   ],
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": [
+      "YMS_15"
+    ]
+  },
+  "requiredPilotId": "Pilot_ZEON_0079_N_ACE_MQV",
   "pairedWeapons": [
     {
       "id": "ZN_YMS_15_ShieldMS",
@@ -1632,13 +1643,5 @@
         }
       ]
     }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": false,
-    "refitFrom": [
-      "YMS_15"
-    ]
-  },
-  "requiredPilotId": "Pilot_ZEON_0079_N_ACE_MQV"
+  ]
 }

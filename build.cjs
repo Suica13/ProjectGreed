@@ -11,6 +11,7 @@ let html = read("client/template.html").replace(
   "__BATTLE_HUD_CSS__",
   () => read("client/battle-hud.css") + "\n" + read("client/mobile-layout.css"),
 );
+html = html.replace("__LANDSCAPE_VIEWPORT__", () => inlineScript(read("client/landscape-viewport.js")));
 html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
 const developmentTree = JSON.parse(read("shared/development-tree.json"));
@@ -89,8 +90,8 @@ for (const [key, file] of [
   ["DEVELOPMENT_UI", "client/development.js"],
   ["PRODUCTION_UI", "client/production.js"],
   ["IRRADIATION_FX", "client/irradiation-fx.js"],
-  ["KIT_SHOP", "client/kit-shop.js"],
-  ["REFIT_SHOP", "client/refit-shop.js"],
+  ["SPECIAL_TRANSFORMS", "client/special-transforms.js"],
+  ["PROFILE_MIGRATIONS", "shared/profile-migrations.js"],
   ["ECONOMY", "shared/economy.js"],
   ["BATTLE_ECONOMY", "shared/battle-economy.js"],
   ["UNIT_PARTS", "shared/unit-parts.js"],
@@ -127,6 +128,7 @@ for (const [key, file] of [
   ["ATTACK_PLANS", "shared/attack-plans.js"],
   ["MATCH_RECORDS", "shared/match-records.js"],
   ["REPLAY_PLAYER", "client/replay-player.js"],
+  ["MOVEMENT_TIMING", "shared/movement-timing.js"],
   ["ROOM_ENGINE", "shared/room-engine.js"],
   ["PLANNING_UI", "client/planning-ui.js"],
   ["MAP_COMBAT", "client/map-combat.js"],
@@ -155,6 +157,12 @@ html = html.replace(
 html = html
   .replace("__MENU_SHELL_CSS__", () => read("client/menu-shell.css"))
   .replace("__BLUE_THEME_CSS__", () => read("client/blue-theme.css"));
+// Fixed virtual game dimensions keep viewport-sized panels inside landscape black bars.
+// Desktop/portrait retain their native viewport units through the fallback value.
+html = html.replace("__LANDSCAPE_VIEWPORT_CSS__", () => read("client/landscape-viewport.css"));
+html = html.replace(/<style([^>]*)>([\s\S]*?)<\/style>/g, (_, attrs, css) =>
+  `<style${attrs}>${css.replace(/(\d*\.?\d+)(dvh|svh|lvh|vh|dvw|svw|lvw|vw)\b/g,
+    (_, n, unit) => `calc(var(--game-v${unit.endsWith("h") ? "h" : "w"}, 1${unit}) * ${n})`)}</style>`);
 // Explicit local-only profile grant. Normal builds never embed personal grants.
 const grantFlag = process.argv.indexOf("--local-profile-grant");
 if (grantFlag >= 0) {

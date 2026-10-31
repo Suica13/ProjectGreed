@@ -456,7 +456,8 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 130
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -553,7 +554,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 32500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -1549,9 +1552,9 @@
       "cost": 0,
       "weapons": [
         "ZN_YMS_15E_Lance_BR",
-        "Common_Push_A",
         "ZN_YMS_15_ShieldMS",
-        "ZN_YMS_15E_Lance_BF_B"
+        "ZN_YMS_15E_Lance_BF_B",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1581,6 +1584,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_YMS_15_ShieldMS",
@@ -1605,11 +1614,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

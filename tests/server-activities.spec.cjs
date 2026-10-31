@@ -28,11 +28,11 @@ for (const width of [1280, 390])
       const before = await page.evaluate(() => ({
         money: Economy.snapshot().money,
         supplies: Economy.snapshot().supplies,
-        gm: Economy.quantity("RGM_79_G"),
-        dom: Economy.quantity("MS_09"),
+        gm: Economy.hasLicense("RGM_79_G"),
+        dom: Economy.hasLicense("MS_09"),
         identity: ProfileIdentity.snapshot(),
       }));
-      expect(before).toMatchObject({ money: 10000, supplies: 20000, gm: 3, dom: 3 });
+      expect(before).toMatchObject({ money: 10000, supplies: 20000, gm: true, dom: true });
       expect(await page.evaluate(() => ProfileSave.exportData().identity)).toEqual(before.identity);
       await page.reload();
       await page.waitForFunction(() => assetsReady);
@@ -78,7 +78,7 @@ for (const width of [1280, 390])
       await expect(admin.locator("#unlocks select[multiple]")).toHaveCount(0);
       await admin.locator("#addUnit").click();
       await admin.locator(".reward-unit select").selectOption("Type61");
-      await admin.locator(".reward-unit input").fill("2");
+      await expect(admin.locator('.reward-unit input[type="number"]')).toHaveCount(0);
       await admin.locator("#publish").click();
       await expect(admin.locator("#status")).toContainText("已投递 1 封");
       await page
@@ -92,10 +92,10 @@ for (const width of [1280, 390])
         await page.evaluate(() => ({
           money: Economy.snapshot().money,
           supplies: Economy.snapshot().supplies,
-          owned: Economy.quantity("Type61"),
+          owned: Economy.hasLicense("Type61"),
           unlocked: Development.allows("EFSF", "RGM_79_G"),
         })),
-      ).toEqual({ money: 10123, supplies: 20456, owned: 26, unlocked: true });
+      ).toEqual({ money: 10123, supplies: 20456, owned: true, unlocked: true });
       expect(
         await page
           .locator("#serverActivitiesDialog")
@@ -172,7 +172,7 @@ test("failed local persistence retries the same server mail after reconnect with
     await page.locator("#openServerActivities").click();
     await page.locator("#serverActivitiesDialog .server-activities-list button").filter({ hasText: "首次加入服务器奖励" }).click();
     await expect(page.locator("#acceptServerActivity")).toHaveText("已接受");
-    expect(await page.evaluate(() => Economy.quantity("RGM_79_G"))).toBe(3);
+    expect(await page.evaluate(() => Economy.hasLicense("RGM_79_G"))).toBe(true);
     expect(app.activities.adminSnapshot().activities[0].accepted).toBe(1);
   } finally {
     await app.close();

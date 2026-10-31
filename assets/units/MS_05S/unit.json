@@ -525,7 +525,8 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 80
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -619,7 +620,9 @@
     "unitLevel": 400.0,
     "tacticalMoveBeforeBonus": 4,
     "v17BaseHp": 12500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.45,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1355,8 +1358,8 @@
       "cost": 0,
       "weapons": [
         "ZN_105mmMG",
-        "Common_Push_A",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1365,8 +1368,8 @@
       "cost": 50,
       "weapons": [
         "ZN_270mmBazookaEarly",
-        "Common_Push_A",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     }
   ],

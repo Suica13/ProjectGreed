@@ -3393,31 +3393,25 @@ test("Chinese room names support creation, listing, joining and reconnect", asyn
   assert.equal((await invalid.hello("create", "中".repeat(21))).type, "error");
 });
 
-test("battle nicknames synchronize and log once with ownership validation", async (t) => {
-  const { app, client } = await setup(t),
-    a = await client(),
-    b = await client();
-  await a.hello("create", "RENAME");
-  await b.hello("join", "RENAME");
-  await readyMatch(a, b, app, false);
-  const room = app.rooms.get("RENAME"),
-    u = room.game.units[0],
-    before = G.unitName(u);
-  assert.equal((await b.act("rename_unit", { unitId: u.id, name: "越权" })).type, "error");
-  const id = randomUUID(),
-    result = await a.act("rename_unit", { unitId: u.id, name: "白色小队长" }, { id });
-  assert.equal(result.type, "state");
-  await b.latest((s) => s.revision === result.revision);
-  assert.equal(room.game.units.find((x) => x.id === u.id).customName, "白色小队长");
-  assert.equal(
-    b.state.game.units.some((x) => x.id === u.id),
-    false,
-  );
-  assert(room.log.some((line) => line.includes(before) && line.includes("白色小队长")));
-  const count = room.log.length;
-  await a.act("rename_unit", { unitId: u.id, name: "白色小队长" }, { id });
-  assert.equal(room.log.length, count);
-  assert.equal((await a.act("rename_unit", { unitId: u.id, name: "长".repeat(25) })).type, "error");
+test("unit renaming is rejected and deployment logs retain serials with numbered teams", async (t) => {
+  const {app,client}=await setup(t),a=await client(),b=await client();
+  await a.hello("create","RENAME");await b.hello("join","RENAME");
+  const formation=[{unitId:"Type61",kitId:"standard"}],licenses={Type61:true};
+  await a.latest(s=>s.members.length===2);
+  const ready=await a.act("set_ready",{ready:true,formation,licenses});assert.equal(ready.type,"state");
+  await b.latest(s=>s.revision===ready.revision);
+  assert.equal((await b.act("set_ready",{ready:true,formation,licenses})).type,"state");
+  await confirmAssembly(a,b);
+  const room=app.rooms.get("RENAME"),u=room.game.units[0],before=u.customName;
+  assert.match(before,/\[[A-Z]\d{2}\]$/);
+  for(const player of [a,b]){
+    await player.latest(s=>s.revision===room.revision);
+    assert.equal((await player.act("rename_unit",{unitId:u.id,name:"任意名称"})).type,"error");
+  }
+  assert.equal(u.customName,before);
+  assert(room.log.some(line=>line.includes("[队伍1]")&&line.includes(before)));
+  assert(room.log.some(line=>line.includes("[队伍2]")));
+  assert(!room.log.some(line=>/蓝方|红方/.test(line)));
 });
 
 test("mortar accepts an empty cell over the network and rejects ordinary ground-target attacks", async (t) => {
@@ -4098,4 +4092,96 @@ test("remote salvos enforce awakening, ownership, reservation and request dedupl
   assert.equal(event.strikes.length,10);
   assert.equal(new Set(event.strikes.map(s=>s.shotIndex)).size,10);
   assert.ok(target.hp<100000);assert.ok(u.en>=0);
+});
+
+test('default host disconnect immediately transfers to the first online human and reconnect keeps the new host',async t=>{
+ const {client,app}=await setup(t);
+ const host=await client(),guest=await client();
+ await host.hello('create','HOSTIMMEDIATE');await guest.hello('join','HOSTIMMEDIATE');
+ await host.latest(s=>s.members.length===2);
+ const token=host.joined.token,oldId=host.joined.memberId;
+ host.close();
+ const next=await guest.latest(s=>s.hostId===guest.joined.memberId);
+ assert(!next.connected[0]);
+ const resumed=await client();await resumed.hello('resume','HOSTIMMEDIATE',token);
+ assert.equal(resumed.joined.memberId,oldId);
+ assert.equal(resumed.state.hostId,guest.joined.memberId);
+ assert.equal(app.rooms.get('HOSTIMMEDIATE').hostId,guest.joined.memberId);
+});
+
+test('updated custom and ACE levels and XP survive room formation refresh and deployment snapshots',async t=>{
+ const {client,app}=await setup(t),host=await client(),guest=await client();
+ await host.hello('create','PILOTLEVEL');await guest.hello('join','PILOTLEVEL');
+ await host.latest(s=>s.members.length===2);
+ const e={unitId:'Type61',kitId:'standard'},licenses={Type61:true};
+ const P=G.pilots,aceSource=require('../shared/pilots.json').aces.find(a=>a.price);
+ let ace=P.createAce(aceSource.id),custom=P.createCustom('custom-level-network','Level');
+ const formation=()=>[{...e,customPilot:ace},{...e,customPilot:custom}];
+ await host.act('set_ready',{ready:true,formation:formation(),licenses});
+ for(let i=0;i<3;i++){
+  ace=P.upgrade(P.gainExperience(ace,Math.max(0,P.experienceRequired(ace.level,ace)-ace.experience)));
+  custom=P.upgrade(P.gainExperience(custom,Math.max(0,P.experienceRequired(custom.level,custom)-custom.experience)));
+ }
+ assert.equal((await host.act('update_formation',{formation:formation(),licenses})).type,'state');
+ await guest.latest(s=>s.revision===app.rooms.get('PILOTLEVEL').revision);
+ await guest.act('set_ready',{ready:true,formation:[e],licenses});
+ await host.latest(s=>s.revision===app.rooms.get('PILOTLEVEL').revision);
+ await host.act('set_ready',{ready:true,formation:formation(),licenses});
+ await confirmAssembly(host,guest);
+ const room=app.rooms.get('PILOTLEVEL');
+ for(const p of [ace,custom]){
+  const actor=room.game.units.find(u=>u.pilot?.id===p.id);
+  assert(actor);assert.equal(actor.pilot.level,3);assert.equal(actor.pilot.experience,p.experience);
+  assert.deepEqual(actor.pilot.stats,p.stats);
+  assert.equal(host.state.game.units.find(u=>u.id===actor.id).pilot.level,3);
+ }
+});
+
+test('Big Zam beam arcs survive network planning and execution without rotating the hull or spending duplicate EN',async t=>{
+ const {client,app}=await setup(t),host=await client(),guest=await client();
+ await host.hello('create','ZAMARC');await guest.hello('join','ZAMARC');await host.latest(s=>s.members.length===2);
+ await host.act('configure_room',{mapId:'asteroid_crossing_1v1',costLimit:6000,unitCostLimit:99999,fogMode:'disabled'});
+ await host.act('set_ready',{ready:true,formation:[{unitId:'MA_08',kitId:'standard'}],licenses:{MA_08:true}});
+ await guest.latest(s=>s.revision===app.rooms.get('ZAMARC').revision);
+ await guest.act('set_ready',{ready:true,formation:[{unitId:'Type61',kitId:'standard'}],licenses:{Type61:true}});
+ await confirmAssembly(host,guest);
+ await host.act('confirm_deployment');await guest.latest(s=>s.revision===app.rooms.get('ZAMARC').revision);await guest.act('confirm_deployment');
+ const room=app.rooms.get('ZAMARC'),[a,b]=room.game.units;
+ room.game.tiles.forEach(r=>r.fill('plain'));
+ Object.assign(a,{x:10,y:10,angle:0,actionPoints:5});
+ const c=G.center(a);Object.assign(b,{x:c.x,y:c.y-4,hp:1000000,shield:0});
+ room.turnNotBefore=0;
+ await host.act('sync');
+ const en=a.en;
+ assert.equal((await host.act('attack',{unitId:a.id,targetId:b.id,weaponId:'ZN_MA_08_AA_BeamCannon'})).type,'state');
+ assert.equal(a.angle,0);
+ await finishPlans(host);
+ await guest.latest(s=>s.phase==='reaction');
+ assert.equal((await guest.act('respond',{response:'defend'})).type,'state');
+ await host.latest(s=>s.phase==='playback');
+ assert.equal(a.en,en-180);assert.equal(a.angle,0);
+ const event=room.combatBatch.flatMap(c=>c.events).find(e=>e.weaponId==='ZN_MA_08_AA_BeamCannon'||e.weapon==='ZN_MA_08_AA_BeamCannon');
+ assert(event);assert.equal(event.strikeCount,2);
+});
+
+test('finished WebSocket match writes one private server settlement JSON with all player totals',async t=>{
+ const fs=require('node:fs'),os=require('node:os'),path=require('node:path');
+ const directory=fs.mkdtempSync(path.join(os.tmpdir(),'greed-ws-settlement-'));
+ const {client,app}=await setup(t,{settlementDirectory:directory});
+ t.after(()=>fs.rmSync(directory,{recursive:true,force:true}));
+ const a=await client(),b=await client();await a.hello('create','AUDIT');await b.hello('join','AUDIT');await a.latest(s=>s.members.length===2);
+ const entry={unitId:'Type61',kitId:'standard'},licenses={Type61:true};
+ await a.act('configure_room',{fogMode:'disabled'});
+ await a.act('set_ready',{ready:true,formation:[entry],licenses});await b.latest(s=>s.revision===app.rooms.get('AUDIT').revision);
+ await b.act('set_ready',{ready:true,formation:[entry],licenses});await confirmAssembly(a,b);
+ await a.act('confirm_deployment');await b.latest(s=>s.revision===app.rooms.get('AUDIT').revision);await b.act('confirm_deployment');
+ const room=app.rooms.get('AUDIT'),[attacker,target]=room.game.units;
+ room.game.tiles.forEach(r=>r.fill('plain'));Object.assign(attacker,{x:2,y:4});Object.assign(target,{x:4,y:4,hp:1,shield:0});room.game.seed=1;room.turnNotBefore=0;
+ await a.act('sync');await a.act('attack',{unitId:attacker.id,targetId:target.id,weaponId:'EF_Type61_Cannon'});await finishPlans(a);
+ await b.latest(s=>s.phase==='reaction');await b.act('respond',{response:'evade'});await a.latest(s=>s.phase==='finished');
+ const files=fs.readdirSync(directory);assert.deepEqual(files,[room.matchId+'.json']);
+ const file=path.join(directory,files[0]),saved=fs.readFileSync(file,'utf8'),record=JSON.parse(saved);
+ assert.equal(record.version,require('../project.json').version);assert.equal(record.costLimit,room.settings.costLimit);assert.equal(record.players.length,2);
+ for(const p of record.players)assert.equal(p.total.money,room.economyAwards.filter(a=>a.memberId===p.memberId).reduce((n,a)=>n+a.money,0));
+ await a.act('sync');assert.equal(fs.readFileSync(file,'utf8'),saved);assert.doesNotMatch(saved,/token|secret|seed/i);
 });

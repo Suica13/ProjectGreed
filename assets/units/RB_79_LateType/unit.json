@@ -235,7 +235,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -326,7 +327,9 @@
     },
     "v17BaseHp": 7000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.35,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,

@@ -563,7 +563,8 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -658,7 +659,9 @@
     "unitLevel": 1800.0,
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 32000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.35,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1694,9 +1697,9 @@
       "cost": 50,
       "weapons": [
         "ZN_360mmBazooka",
-        "Common_Push_A",
         "ZN_MS_09_ChestBeam",
-        "ZN_HeatSaber_A"
+        "ZN_HeatSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1705,9 +1708,9 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMG",
-        "Common_Push_A",
         "ZN_MS_09_ChestBeam",
-        "ZN_HeatSaber_A"
+        "ZN_HeatSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1716,9 +1719,9 @@
       "cost": 50,
       "weapons": [
         "ZN_BeamBazooka",
-        "Common_Push_A",
         "ZN_MS_09_ChestBeam",
-        "ZN_HeatSaber_A"
+        "ZN_HeatSaber_A",
+        "Common_Push_A"
       ]
     }
   ],

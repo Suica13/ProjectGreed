@@ -84,7 +84,9 @@ def main():
     for reference in registry['units']:
         p=json.loads((ASSETS/reference).read_text(encoding='utf8'))
         units.setdefault(p['id'],p['id']+'__'+p['weaponKits'][0]['id'])
-    (PROJECT/'shared/production-catalog.json').write_text(json.dumps({'schemaVersion':1,'timeEnabled':False,'equipmentPolicy':'uniform-kit','baseModels':units,'offers':result,'unavailable':unavailable},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+    (PROJECT/'shared/production-catalog.json').write_text(json.dumps({'schemaVersion':1,'timeEnabled':False,'equipmentPolicy':'free-equipment-deployment-license','defaultKits':__import__('default_equipment').collect(),'baseModels':units,'offers':result,'unavailable':unavailable},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+    import subprocess
+    subprocess.run(["node",str(PROJECT/"tools/license-catalog.cjs")],check=True)
     costs=tech_costs();file=PROJECT/'shared/development-tree.json';tree=json.loads(file.read_text(encoding='utf8'))
     for nodes in tree.values():
         for node in nodes:

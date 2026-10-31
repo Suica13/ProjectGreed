@@ -37,7 +37,9 @@ def apply_learning_computer(prefab, native=None):
     if not present:
         prefab.setdefault("stats", {}).pop("pilotExperienceMultiplier", None)
         return
-    multiplier = float(match[1]) if match else 1.1
+    native_multiplier = float(match[1]) if match else 1.1
+    prefab.setdefault("sourceStats", {})["learningComputerNativeMultiplier"] = native_multiplier
+    multiplier = 1.25  # Tactical policy; preserve the native value for provenance.
     prefab.setdefault("stats", {})["pilotExperienceMultiplier"] = multiplier
     mechanics = prefab.setdefault("mechanics", [])
     mechanic = next((m for m in mechanics if m.get("id") == "LPC"), None)

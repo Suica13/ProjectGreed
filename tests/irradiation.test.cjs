@@ -81,7 +81,7 @@ test("configurable beam length changes geometry and a large hull is hit only onc
   s.range = 24;
   assert.doesNotThrow(() => Skills.validate([s]));
 });
-test("Apsaras is enabled, large, occupies 3x3 and EMP refreshes a one-point next-turn penalty", () => {
+test("Apsaras is enabled, large, occupies 3x3 and EMP refreshes a 25 percent next-turn penalty", () => {
   const m = Object.values(G.models).find((m) => m.prefabId === "ApsarasII");
   assert.equal(m.wip, false);
   assert.equal(G.unitSize(m), "large");
@@ -99,13 +99,13 @@ test("Apsaras is enabled, large, occupies 3x3 and EMP refreshes a one-point next
   const s = G.unitSkills(u).find((s) => s.type === "emp"),
     en = u.en;
   G.useSkill(g, u, s.id, u.x, u.y);
-  assert.equal(a.apPenaltyNextTurn, 1);
+  assert.equal(a.apPenaltyNextTurn, 0.25);
   assert.equal(b.apPenaltyNextTurn, undefined);
   assert.equal(u.actionPoints, 3);
   assert.equal(u.en, en - 80);
   assert.equal(u.skillReadyRound[s.id], g.round + 4);
   G.end(g);
-  assert.equal(a.actionPoints, G.actionBudget(a) - 1);
+  assert.equal(a.actionPoints, Math.floor(G.actionBudget(a) * 0.75));
 });
 
 test("AI uses irradiation only on visible enemies and refuses friendly fire", () => {

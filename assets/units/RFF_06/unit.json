@@ -455,7 +455,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 65
   },
   "attackBonuses": {
     "melee": -5.0,
@@ -547,7 +548,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 13500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.25,
+    "mobilityMoveTarget": 4
   },
   "presentation": {
     "shield": false,
@@ -1268,8 +1271,8 @@
       "cost": 0,
       "weapons": [
         "EF_100mmMG",
-        "Common_Push_A",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1278,8 +1281,8 @@
       "cost": 100,
       "weapons": [
         "EF_RFF_06_Cannon",
-        "Common_Push_A",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     }
   ],

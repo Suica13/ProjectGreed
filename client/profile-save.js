@@ -62,7 +62,7 @@ const ProfileSave = (() => {
       pilots: {},
       formations: {},
       development: Development.validateProgress(value.development),
-      economy: Economy.validate(value.economy),
+      economy: Economy.validate(ProfileMigrations.economy(value.economy)),
     };
     for (const faction of factions) {
       const store = value.pilots?.[faction];

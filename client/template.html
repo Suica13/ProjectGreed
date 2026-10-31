@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script>__LANDSCAPE_VIEWPORT__</script>
     <title>__PROJECT_NAME__ __PROJECT_VERSION__</title>
     <style>
       .resources-loading #start {
@@ -1445,6 +1446,9 @@
       .game-dialog-message { line-height:1.7; white-space:pre-wrap; overflow-wrap:anywhere; margin:16px 0; }
       .game-dialog-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:10px; margin-top:20px; }
       .game-dialog-actions button { min-height:38px; }
+      #loadBattleSaveDialog .game-dialog-message { text-align:center; }
+      #loadBattleSaveDialog .game-dialog-actions { justify-content:center; }
+      #loadBattleSaveDialog .game-dialog-actions button { flex:none; min-width:160px; }
       .game-dialog-list { line-height:1.8; padding-left:20px; overflow-wrap:anywhere; }
       .game-dialog-input { display:grid; gap:8px; }
       .game-dialog-input input { width:100%; box-sizing:border-box; }
@@ -2344,7 +2348,7 @@
             </div>
           </div>
           <button id="openDevelopment" type="button">开发</button>
-          <button id="openProduction" type="button">生产</button>
+          <button id="openProduction" type="button">部署许可</button>
           <button data-ui-node="node-198" id="openFormation">编成</button>
           <button id="openReplayFile" type="button">回放</button>
         </div>
@@ -2938,17 +2942,6 @@
     <style>
       .formation-kit-select { display:flex; gap:6px; }
       .formation-kit-select select { min-width:0; flex:1; width:0; }
-      #openFormationKitShop { flex:none; width:40px; padding:4px; }
-      #formationKitShop { width:min(460px,calc(100vw - 32px)); max-height:85dvh; overflow:auto; border:1px solid #7896aa; border-radius:10px; padding:24px; background:#101e29; color:#e0edf5; box-shadow:0 20px 80px #000a; }
-      #formationKitShop::backdrop { background:#050d16ba; backdrop-filter:blur(3px); }
-      #formationKitShop h3 { margin:0 0 16px; }
-      #formationKitShop label { display:grid; gap:8px; margin-top:20px; }
-      #formationKitShop select { width:100%; }
-      #formationKitWallet { padding-bottom:12px; border-bottom:1px solid #405968; }
-      #formationKitShopStatus { min-height:1.5em; }
-      #kitPurchasePreview { display:block; width:100%; height:150px; background:radial-gradient(ellipse,#294355,#10202b); margin-top:12px; }
-      #kitPurchaseWeapons { font-size:12px; line-height:1.5; }
-      #formationKitShop .resource-balance { gap:10px; margin-top:10px; }
       .resource-balance { display:flex; align-items:center; flex-wrap:wrap; gap:20px; font-variant-numeric:tabular-nums; }
       .resource-balance span { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
       .resource-balance svg { width:20px; height:20px; flex:none; }
@@ -2999,7 +2992,8 @@
       .production-purchase .resource-balance { flex-wrap:nowrap; gap:8px; font-size:11px; }
       .production-purchase .resource-balance span { gap:3px; }
       .production-purchase .resource-balance svg { width:12px; height:12px; }
-      #productionQuantity,#productionKitQuantity { min-height:26px; line-height:1.25; }
+      .production-purchases { grid-template-columns:1fr; }
+      #productionQuantity { min-height:26px; line-height:1.25; }
       .production-purchase + .production-purchase { border-left:1px solid #405968; padding-left:10px; }
       #productionStatus { margin:0; min-height:15px; font-size:11px; line-height:1.3; }
       .production-unit-price { display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px; }
@@ -3033,7 +3027,7 @@
     <section id="productionScreen" class="menu-screen" hidden aria-labelledby="productionTitle">
       <div class="modal production-dialog">
         <header class="production-heading shell-page-heading">
-          <h2 id="productionTitle" class="shell-page-title">生产</h2>
+          <h2 id="productionTitle" class="shell-page-title">部署许可</h2>
           <div id="productionResources" class="resource-balance" aria-label="账户资源"></div>
           <button id="closeProduction" type="button">返回主菜单</button>
         </header>
@@ -3045,7 +3039,7 @@
               <label>类型／环境<select id="productionType"></select></label>
             </div>
             <input id="productionSearch" type="search" placeholder="搜索单位" aria-label="搜索单位" />
-            <div id="productionList" class="production-list" role="listbox" aria-label="生产单位"></div>
+            <div id="productionList" class="production-list" role="listbox" aria-label="单位部署许可"></div>
           </div>
           <aside class="production-details">
             <h3 id="productionUnitName"></h3>
@@ -3062,16 +3056,10 @@
             <div class="production-order">
               <div class="production-purchases">
                 <div class="production-purchase">
-                  <span id="productionBaseKitName" class="muted">生产单位</span>
+                  <span id="productionBaseKitName" class="muted">购买部署许可</span>
                   <div id="productionPrice" class="resource-balance"></div>
                   <div id="productionQuantity"></div>
-                  <button id="produceUnit" type="button" class="primary">生产单位</button>
-                </div>
-                <div class="production-purchase">
-                  <span class="muted">购买武器套件</span>
-                  <div id="productionKitPrice" class="resource-balance"></div>
-                  <div id="productionKitQuantity"></div>
-                  <button id="buyProductionKit" type="button">购买武器套件</button>
+                  <button id="produceUnit" type="button" class="primary">购买部署许可</button>
                 </div>
               </div>
               <p id="productionStatus" role="status" aria-live="polite"></p>
@@ -3159,7 +3147,7 @@
             ></div>
             <div class="formation-unit-actions">
               <button id="openFormationPicker" type="button">添加单位</button>
-              <button id="produceMissingFormation" type="button" hidden>一键生产</button>
+              <button id="produceMissingFormation" type="button" hidden>一键购买许可</button>
                 </div>
           </section>
         </div>
@@ -3235,7 +3223,7 @@
                 ><span class="formation-filter-label">类型筛选</span
                 ><select id="formationType" aria-label="类型筛选"></select
               ></label>
-              <label><span class="formation-filter-label">库存筛选</span><select id="formationStock" aria-label="库存筛选"><option value="all">全部</option><option value="owned" selected>有库存</option></select></label>
+              <label><span class="formation-filter-label">许可筛选</span><select id="formationStock" aria-label="许可筛选"><option value="all">全部</option><option value="owned" selected>已许可</option></select></label>
             </div>
             <input
               id="formationSearch"
@@ -3280,32 +3268,8 @@
             <section class="unit-detail-block unit-detail-loadout">
               <h3>单位与武器配置</h3>
               <p id="formationDetailIntro" class="muted"></p>
-              <label id="formationDetailNameEditor"
-                >单位名称
-                <div class="formation-name-editor">
-                  <input
-                    id="formationDetailName"
-                    type="text"
-                    maxlength="24"
-                    aria-label="单位名称"
-                    autocomplete="off"
-                  /><button id="editFormationUnitName" type="button">修改名称</button
-                  ><button id="resetFormationUnitName" type="button">重置名称</button>
-                </div>
-              </label>
-              <label>武器套件<span class="formation-kit-select"><select id="formationDetailKit" aria-label="武器套件"></select><span class="formation-kit-tools"><button id="openFormationRefits" type="button" hidden>改装单位</button><button id="openFormationKitShop" type="button" aria-label="购买武器套件" title="购买武器套件">＋</button></span></span></label>
-              <dialog id="formationKitShop" aria-labelledby="formationKitShopTitle">
-                <h3 id="formationKitShopTitle">购买武器套件</h3>
-                <div id="formationKitWallet" class="resource-balance"></div>
-                <label>购买套件<select id="formationKitPurchase" aria-label="购买套件"></select></label>
-                <canvas id="kitPurchasePreview" width="480" height="200" role="img" aria-label="套件预览"></canvas>
-                <p id="kitPurchaseWeapons" class="muted"></p>
-                <div id="formationKitPrice" class="resource-balance"></div>
-                <p id="formationKitStock"></p>
-                <button id="buyFormationKit" type="button">购买并装备 1 套</button>
-                <button id="closeFormationKitShop" type="button">关闭</button>
-                <p id="formationKitShopStatus" role="status"></p>
-              </dialog>
+
+              <label>武器套件<span class="formation-kit-select"><select id="formationDetailKit" aria-label="武器套件"></select><span class="formation-kit-tools"><button id="openSpecialTransforms" type="button" hidden>特殊变换</button></span></span></label>
               <label id="formationDetailCarrierField"
                 ><span>搭载至</span
                 ><select id="formationDetailCarrier" aria-label="搭载至"></select
@@ -5224,6 +5188,7 @@
     </script>
     <style>__MENU_SHELL_CSS__</style>
     <style id="blue-theme">__BLUE_THEME_CSS__</style>
+    <style>__LANDSCAPE_VIEWPORT_CSS__</style>
     <header id="menuShell" aria-label="主导航">
       <div class="shell-top">
         <div class="shell-brand"><strong>PROJECT GREED</strong><small>TACTICAL OPERATIONS / __PROJECT_VERSION__</small></div>
@@ -5273,6 +5238,7 @@
       __UNIT_HANGARS__;
       __PILOTS__;
       __PROFILE_IDENTITY__;
+      __PROFILE_MIGRATIONS__;
       __ECONOMY__;
       __DEVELOPMENT__;
       __UNIT_SENSORS__;
@@ -5300,6 +5266,7 @@
       __ATTACK_PLANS__;
       __MATCH_RECORDS__;
       __BATTLE_ECONOMY__;
+      __MOVEMENT_TIMING__;
       __ROOM_ENGINE__;
       __PLANNING_UI__;
       __MAP_COMBAT__;
@@ -5318,8 +5285,7 @@
       __REWARD_NOTIFICATIONS__;
       __DEVELOPMENT_UI__;
       __PRODUCTION_UI__;
-      __KIT_SHOP__;
-      __REFIT_SHOP__;
+      __SPECIAL_TRANSFORMS__;
       __PILOT_REWARDS__;
       __PROFILE_SAVE__;
       __BATTLE_PROMPTS__;

@@ -232,7 +232,7 @@
   "stats": {
     "hp": 40500,
     "en": 375.0,
-    "move": 10,
+    "move": 9,
     "mobility": 110.0,
     "cost": 375,
     "counterLimit": 1,
@@ -263,7 +263,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 175
   },
   "attackBonuses": {
     "melee": 30.0,
@@ -355,7 +356,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 32500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.25,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -1480,9 +1483,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MA_04X_BeamShotgun",
-        "Common_Push_L_A",
         "ZN_MA_04X_MS",
-        "Common_Cqb_Double_L_A_Fixed_MA_04X"
+        "Common_Cqb_Double_L_A_Fixed_MA_04X",
+        "Common_Push_L_A"
       ]
     }
   ],
@@ -1497,7 +1500,8 @@
   "skills": [],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "MA"
+    "MA",
+    "LargeUnit"
   ],
   "transport": {
     "slotCost": 3,
@@ -1507,6 +1511,11 @@
   },
   "hangars": [],
   "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MA_04X_BeamShotgun",
@@ -1546,10 +1555,5 @@
         }
       ]
     }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

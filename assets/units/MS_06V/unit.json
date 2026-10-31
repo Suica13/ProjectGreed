@@ -278,7 +278,7 @@
   "stats": {
     "hp": 10500,
     "en": 325.0,
-    "move": 4,
+    "move": 5,
     "mobility": 50.0,
     "cost": 150,
     "counterLimit": 1,
@@ -318,7 +318,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "deployed": false
+    "deployed": false,
+    "speed": 45
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -412,7 +413,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 8500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.65,
+    "mobilityMoveTarget": 4
   },
   "presentation": {
     "shield": false,

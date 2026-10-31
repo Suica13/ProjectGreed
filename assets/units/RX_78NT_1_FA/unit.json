@@ -645,7 +645,8 @@
       "antiDetectAqua": false
     },
     "shellFinalResistance": 25,
-    "pilotExperienceMultiplier": 1.1
+    "pilotExperienceMultiplier": 1.25,
+    "speed": 110
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -743,7 +744,10 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 55000.0,
-    "technologyEra": "0079L"
+    "technologyEra": "0079L",
+    "learningComputerNativeMultiplier": 1.1,
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -2320,7 +2324,7 @@
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
       "status": "adapted",
-      "name": "学习型电脑：驾驶员经验获取×1.1"
+      "name": "学习型电脑：驾驶员经验获取×1.25"
     }
   ],
   "weaponKits": [
@@ -2330,11 +2334,11 @@
       "cost": 100,
       "weapons": [
         "EF_RX_78NT_1_BR",
-        "Common_Push_A",
         "Common_ArmMG",
         "EF_BeamSaber_AF_A",
         "Common_Cqb_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2343,11 +2347,11 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazooka_NT_1",
-        "Common_Push_A",
         "Common_ArmMG",
         "EF_BeamSaber_AF_A",
         "Common_Cqb_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2418,6 +2422,14 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_78NT_1"
+    ]
+  },
   "pairedWeapons": [
     {
       "id": "Common_ArmMG",
@@ -2444,13 +2456,5 @@
       "fireMode": "independent",
       "name": "腕部机枪"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": [
-      "RX_78NT_1"
-    ]
-  }
+  ]
 }

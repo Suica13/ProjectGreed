@@ -381,7 +381,8 @@
       "stealth": false,
       "stealthAqua": true,
       "antiDetectAqua": true
-    }
+    },
+    "speed": 70
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -477,7 +478,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 24000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1506,9 +1509,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.0,
       "changeHeldWeapon": true,
       "source": {
@@ -1606,7 +1607,11 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     }
   },
   "mechanics": [
@@ -1646,9 +1651,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MSM_03_ChestBeam",
-        "Common_Push_A",
         "ZN_MSM_03_SMS",
-        "Common_Cqb_Double_A"
+        "Common_Cqb_Double_A",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1697,6 +1702,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MSM_03_ChestBeam",
@@ -1744,11 +1755,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

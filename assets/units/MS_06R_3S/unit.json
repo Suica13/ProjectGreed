@@ -472,7 +472,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -564,7 +565,9 @@
     "unitLevel": 1650.0,
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 30000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.95,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1308,9 +1311,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MS_17_BR",
-        "Common_Push_A",
         "ZN_HeatSaber_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

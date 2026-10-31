@@ -430,7 +430,8 @@
     "stealth": {
       "waterOnly": true
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -527,7 +528,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 25000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1681,9 +1684,9 @@
       "weapons": [
         "ZN_Panzerfaust",
         "ZN_MSM_08_MS",
-        "Common_Push_A",
         "Common_Cqb_B_L_MSM_08",
-        "ZN_HeatSword_BF_B"
+        "ZN_HeatSword_BF_B",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1731,6 +1734,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MSM_08_MS",
@@ -1755,11 +1764,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

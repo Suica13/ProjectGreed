@@ -191,7 +191,7 @@
   "stats": {
     "hp": 5500,
     "en": 500.0,
-    "move": 10,
+    "move": 8,
     "mobility": 155.0,
     "cost": 125,
     "counterLimit": 1,
@@ -236,7 +236,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 215
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -329,7 +330,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 4500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.25,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -1653,6 +1656,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_Luggun_AA_L",
@@ -1673,11 +1682,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

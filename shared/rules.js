@@ -88,7 +88,7 @@ const Tactics = (() => {
     }
     throw Error("没有可用的单位编号");
   }
-  const unitName = (unit) => unit.customName || modelOf(unit).name;
+  const unitName = (unit) => modelOf(unit).name + (unit.customName?.match(/\[[A-Z]\d{2}\]$/)?.[0] || "");
   const formationWeight = (model) => (model.ship ? 4 : model.unitTags?.includes("MS") ? 2 : 1);
   const formationPoints = (entries) =>
     entries.reduce((total, entry) => {
@@ -132,7 +132,8 @@ const Tactics = (() => {
       if (customPilot?.needsRecruitment) throw Error("该ACE需要重新招募后才能配属");
       if (!customPilot && pilots.aceProfile(entry.pilotId)) throw Error("请先招募并配属ACE驾驶员");
       cost += formationModel({ ...entry, customPilot }).cost + pilots.cost(customPilot);
-      const customName = normalizeUnitName(entry.customName);
+      const serial = normalizeUnitName(entry.customName).match(/\[[A-Z]\d{2}\]$/)?.[0];
+      const customName = serial ? Array.from(model.name).slice(0, 19).join("") + serial : "";
       const pilotId = customPilot?.id || pilots.validate(entry.pilotId, model);
       if (pilotId && assignedPilots.has(pilotId)) throw Error("同一驾驶员不能配属多台单位");
       if (pilotId) assignedPilots.add(pilotId);
@@ -279,27 +280,18 @@ const Tactics = (() => {
       ],
     };
   }
-  function normalizeInventory(value = {}) {
-    if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("单位库存无效");
+  function normalizeLicenses(value = {}) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("部署许可无效");
     const result = {};
     for (const [id, count] of Object.entries(value)) {
-      if (!catalog.prefabs.some((p) => p.id === id) || !Number.isSafeInteger(count) || count < 0)
-        throw Error("单位库存无效：" + id);
-      result[id] = count;
+      if (!catalog.prefabs.some((p) => p.id === id) || typeof count !== "boolean")
+        throw Error("部署许可无效：" + id);
+      if (count) result[id] = true;
     }
     return result;
   }
-  function inventoryPlan(entries, inventory) {
-    const used = {},
-      required = {},
-      missing = [];
-    entries.forEach((entry, index) => {
-      const id = entry.unitId;
-      required[id] = (required[id] || 0) + 1;
-      used[id] = (used[id] || 0) + 1;
-      if (used[id] > (inventory[id] || 0)) missing.push(index);
-    });
-    return { missing, required };
+  function licensePlan(entries, licenses) {
+    return { missing: entries.flatMap((entry, index) => licenses[entry.unitId] === true ? [] : [index]) };
   }
   function restrictionReason(model, restrictions = {}) {
     if (model.wip) return "wip";
@@ -311,7 +303,7 @@ const Tactics = (() => {
     if (
       ["PMC", "EFSF", "ZEON"].includes(restrictions.characterFaction) &&
       !development.allows(restrictions.characterFaction, model.prefabId, restrictions.researched) &&
-      !((restrictions.inventory ?? restrictions.ownedInventory)?.[model.prefabId] > 0)
+      (restrictions.licenses ?? restrictions.ownedLicenses)?.[model.prefabId] !== true
     )
       return "not_developed";
     if (restrictions.environment && (model.adaptability?.[restrictions.environment] ?? 100) <= 0)
@@ -362,17 +354,17 @@ const Tactics = (() => {
       )
         reasons[index] = "pilot_faction";
     });
-    if (restrictions.inventory !== undefined) {
-      const inventory = normalizeInventory(restrictions.inventory);
-      // Disabled units do not reserve stock ahead of units that can actually deploy.
+    if (restrictions.licenses !== undefined) {
+      const licenses = normalizeLicenses(restrictions.licenses);
+      // Only otherwise legal entries need a deployment license.
       const candidates = clean.flatMap((entry, index) =>
         reasons[index] ? [] : [{ entry, index }],
       );
-      for (const i of inventoryPlan(
+      for (const i of licensePlan(
         candidates.map((c) => c.entry),
-        inventory,
+        licenses,
       ).missing)
-        reasons[candidates[i].index] = "inventory";
+        reasons[candidates[i].index] = "license";
     }
     let occupied = 0;
     clean.forEach((entry, index) => {
@@ -467,6 +459,14 @@ const Tactics = (() => {
   }
   const armySettings = (player) =>
     validateArmySettings(player?.armySettings || player?.aiSettings || {});
+  function aiFormationVariation(seed, seat = 0) {
+    let state = (seed ^ Math.imul(seat + 1, 0x9e3779b9)) >>> 0;
+    const next = () => {
+      state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+      return (75 + Math.floor((state / 4294967296) * 26)) / 100;
+    };
+    return {budget: next(), points: next(), unitCost: next()};
+  }
   function armyBudget(settings, player) {
     if (player?.formationPreset)
       return Math.max(
@@ -476,15 +476,15 @@ const Tactics = (() => {
           0,
         ),
       );
-    return Math.floor((settings.costLimit * armySettings(player).fill) / 100);
+    return Math.floor((settings.costLimit * armySettings(player).fill / 100) *
+      (player?.bot ? player.formationVariation?.budget ?? 1 : 1));
   }
   function armyUnitLimit(settings, player) {
-    return player?.formationPreset
-      ? formationPoints(player.formationPreset.units)
-      : Math.min(
-          catalog.formation.maxUnits,
-          Math.max(1, Math.floor((settings.unitLimit * armySettings(player).countPercent) / 100)),
-        );
+    if (player?.formationPreset) return formationPoints(player.formationPreset.units);
+    const base = Math.min(catalog.formation.maxUnits,
+      Math.max(1, Math.floor((settings.unitLimit * armySettings(player).countPercent) / 100)));
+    return player?.bot && player.formationVariation
+      ? Math.max(Math.ceil(base * 0.75), Math.floor(base * player.formationVariation.points)) : base;
   }
   function armyRestrictions(settings, player) {
     const rules = formationRestrictions(settings, player?.seat ?? null);
@@ -494,9 +494,9 @@ const Tactics = (() => {
     // Room authority supplies the merged, cross-faction AI progression.
     rules.researched = player?.researched;
     if (player && !player.bot) {
-      rules.inventory = normalizeInventory(player.inventory);
+      rules.licenses = normalizeLicenses(player.licenses);
       // Readiness may skip quantity checks while retaining ownership-based deployment access.
-      rules.ownedInventory = rules.inventory;
+      rules.ownedLicenses = rules.licenses;
     }
     const config = armySettings(player);
     rules.unitCostLimit =
@@ -504,6 +504,8 @@ const Tactics = (() => {
       Math.max(1, Math.floor((rules.unitCostLimit * config.unitCostPercent) / 100));
     if (player?.formationPreset) {
       rules.unitCostLimit = maxCostLimit;
+    } else if (player?.bot && player.formationVariation) {
+      rules.unitCostLimit = Math.max(1, Math.floor(rules.unitCostLimit * player.formationVariation.unitCost));
     }
     return rules;
   }
@@ -567,6 +569,8 @@ const Tactics = (() => {
       ),
       entries = [];
     if (!choices.length) return entries;
+    const mainlineUnits = new Set(["EFSF", "ZEON"].flatMap(faction =>
+      development.nodes(faction).filter(node => node.row === "mid").flatMap(node => node.unlocks)));
     const costPerPoint = (model) => model.cost / formationWeight(model);
     const combatChoices = choices.filter((model) => !support(model));
     const coreChoices = combatChoices.length ? combatChoices : choices;
@@ -714,12 +718,12 @@ const Tactics = (() => {
       let affordableTier;
       if (budgetPerPoint >= highestCost) {
         // 预算充足时选择最高价格档附近的机体，保留同档多样性。
-        affordableTier = preferred.filter((model) => costPerPoint(model) >= highestCost * 0.85);
+        affordableTier = preferred.filter((model) => costPerPoint(model) >= highestCost * 0.65);
       } else {
         affordableTier = preferred.filter(
           (model) =>
-            costPerPoint(model) >= budgetPerPoint * 0.9 &&
-            costPerPoint(model) <= budgetPerPoint * 1.15,
+            costPerPoint(model) >= budgetPerPoint * 0.75 &&
+            costPerPoint(model) <= budgetPerPoint * 1.25,
         );
         if (!affordableTier.length) {
           const closestCost = preferred.reduce((best, model) => {
@@ -732,16 +736,28 @@ const Tactics = (() => {
           }, costPerPoint(preferred[0]));
           affordableTier = preferred.filter(
             (model) =>
-              costPerPoint(model) >= closestCost * 0.9 && costPerPoint(model) <= closestCost * 1.15,
+              costPerPoint(model) >= closestCost * 0.75 && costPerPoint(model) <= closestCost * 1.25,
           );
         }
+      }
+      // Narrow price bands must not force another copy while comparable unused platforms exist.
+      if (affordableTier.every(model => copies(model.prefabId) > 0)) {
+        const tierPrice = Math.max(...affordableTier.map(costPerPoint));
+        const unused = preferred.filter(model => copies(model.prefabId) === 0 &&
+          costPerPoint(model) >= tierPrice * 0.6 && costPerPoint(model) <= tierPrice * 1.25);
+        affordableTier.push(...unused);
       }
       const fewestCopies = Math.min(...affordableTier.map((model) => copies(model.prefabId)));
       affordableTier = affordableTier.filter((model) => copies(model.prefabId) === fewestCopies);
       // 先抽机体再抽套件，避免套件更多的廉价机体获得额外抽取权重。
       const prefabIds = [...new Set(affordableTier.map((model) => model.prefabId))];
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-      const prefabId = prefabIds[Math.floor((seed / 4294967296) * prefabIds.length)];
+      // Main-line units have triple weight; kits never multiply a platform's probability.
+      const weights = prefabIds.map(id => mainlineUnits.has(id) ? 3 : 1);
+      let pick = (seed / 4294967296) * weights.reduce((sum, weight) => sum + weight, 0);
+      let chosen = 0;
+      for (; chosen < prefabIds.length - 1 && pick >= weights[chosen]; chosen++) pick -= weights[chosen];
+      const prefabId = prefabIds[chosen];
       const kits = affordableTier.filter((model) => model.prefabId === prefabId);
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
       const model = kits[seed % kits.length];
@@ -780,10 +796,21 @@ const Tactics = (() => {
     }
     return entries;
   }
-  // 武器只应用部位损坏惩罚；玩家强度仅影响本体耐久和 EN。
+  // 武器应用部位损坏与浮游炮觉醒成长；玩家强度仅影响本体耐久和 EN。
   function weaponStats(weapon, unit) {
     const attackMultiplier = parts.penalties(unit).attackMultiplier,
       previousAttack = weapon.partDamageMultiplier ?? 1;
+    const awakening = weapon.remote && weapon.remote.kind !== "incom"
+      ? pilots.of(unit, models[unit.model]).stats.awakening : 100;
+    const remoteMultiplier = weapon.remote && weapon.remote.kind !== "incom"
+      ? awakening < 100 ? Math.max(0, awakening / 100)
+        : 1 + (awakening - 100) * weapon.remote.awakeningScale
+      : 1;
+    const previousRemote = weapon.remoteDamageMultiplier ?? 1;
+    if (previousRemote === 0 && remoteMultiplier > 0) {
+      const original = models[unit.model]?.weapons.find(candidate => candidate.id === weapon.id);
+      if (original) return weaponStats(original, unit);
+    }
     const liveChannels =
       weapon.pairedChannels && weapon.energySpent === undefined
         ? new Set(availableStrikes(unit, weapon).map((s) => s.channelId))
@@ -799,8 +826,8 @@ const Tactics = (() => {
             ),
           ).size * weapon.nativeTiming.energyPerEmission
         : weapon.en;
-    if (attackMultiplier === previousAttack && en === weapon.en) return weapon;
-    const damageRatio = attackMultiplier / previousAttack;
+    if (attackMultiplier === previousAttack && en === weapon.en && remoteMultiplier === previousRemote) return weapon;
+    const damageRatio = (attackMultiplier / previousAttack) * (previousRemote === 0 ? 1 : remoteMultiplier / previousRemote);
     // Keep intermediate modifiers exact; round the public base numbers and the
     // final protected hit, rather than rounding every buff independently.
     const scaledDamage = (components) =>
@@ -811,6 +838,7 @@ const Tactics = (() => {
       ...weapon,
       en,
       partDamageMultiplier: attackMultiplier,
+      remoteDamageMultiplier: remoteMultiplier,
       get name() {
         return weapon.name;
       },
@@ -900,8 +928,8 @@ const Tactics = (() => {
         get kitName() {
           return base.kitName;
         },
-        move: base.deployed ? 0 : Math.max(1, base.move + modifiers.moveBonus),
-        actionPoints: (base.actionPoints ?? 5) + modifiers.actionPoints,
+        move: base.deployed ? 0 : Math.max(1, base.move * modifiers.move),
+        actionPoints: Math.max(1, Math.round((base.actionPoints ?? 5) * modifiers.actionPointsMultiplier)),
         // Legacy mobility stores native baseReactionLevel, not movement/speed.
         mobility: base.mobility * modifiers.reaction,
         accuracy: base.accuracy * modifiers.accuracy,
@@ -931,12 +959,18 @@ const Tactics = (() => {
         ? "water"
         : "ground";
   }
+  function flightAdaptability(unit) {
+    return models[unit.model].skills?.find(skill => skill.type === "flight")?.airAdaptability ?? 100;
+  }
   function adaptationOf(g, unit, x = unit.x, y = unit.y) {
-    return (models[unit.model].adaptability?.[environmentOf(g, unit, x, y)] ?? 100) / 100;
+    const environment = environmentOf(g, unit, x, y);
+    return (unit.flying && environment === "air" ? flightAdaptability(unit) :
+      (models[unit.model].adaptability?.[environment] ?? 100)) / 100;
   }
   function modelOf(unit, g = null) {
     const original = pilotModelOf(unit, performanceModelOf(unit)),
-      base = unit.flying ? { ...original, movementType: "air" } : original,
+      base = unit.flying ? { ...original, movementType: "air",
+        adaptability: {...original.adaptability, air: flightAdaptability(unit)} } : original,
       penalty = parts.penalties(base.partsBreakable === false ? {} : unit),
       environment = environmentOf(g, unit),
       adaptability = (base.adaptability?.[environment] ?? 100) / 100,
@@ -1231,7 +1265,7 @@ const Tactics = (() => {
   }
   function canRotate(g, unit, direction) {
     if (
-      !models[unit.model]?.ship ||
+      !(models[unit.model]?.ship || models[unit.model]?.fixedWeaponFacing) ||
       ![-1, 1].includes(direction) ||
       !onMap(unit) ||
       unit.acted ||
@@ -1388,11 +1422,11 @@ const Tactics = (() => {
         settings.seatCostLimits?.[seat] ?? costLimit,
         settings.seatUnitLimits?.[seat] ?? unitLimit,
       );
-      const inventory = rulesForSeat(seat).inventory;
+      const licenses = rulesForSeat(seat).licenses;
       const stockPlan =
-        inventory === undefined
+        licenses === undefined
           ? null
-          : planFormation(formations[seat], Infinity, { inventory }, catalog.formation.maxUnits);
+          : planFormation(formations[seat], Infinity, { licenses }, catalog.formation.maxUnits);
       sourceIndices[seat] = (stockPlan?.indices || formations[seat].map((_, i) => i)).map(
         (i) => settings.formationIndices?.[seat]?.[i] ?? i,
       );
@@ -1443,10 +1477,11 @@ const Tactics = (() => {
             : {}),
           environment: map.environment || "ground",
           model,
-          inventoryUnitId: entry.unitId,
-          inventoryModel: entry.unitId + "__" + entry.kitId,
+          deploymentUnitId: entry.unitId,
+          deploymentModel: entry.unitId + "__" + entry.kitId,
           pilot,
-          ...(entry.customName ? { customName: entry.customName } : {}),
+          customName: entry.customName || generateUnitName(m.name, units,
+            () => ((seed ^ Math.imul(seat + 1, 2654435761) ^ Math.imul(i + 1, 1597334677)) >>> 0) / 4294967296),
           performance,
           team,
           x: position.x,
@@ -1622,7 +1657,7 @@ const Tactics = (() => {
       dy = targetCenter.y - sourceCenter.y;
     if (dx || dy) {
       const angle = (Math.atan2(dx, -dy) * 180) / Math.PI;
-      if (!models[unit.model]?.ship) unit.angle = angle;
+      if (!models[unit.model]?.ship && !models[unit.model]?.fixedWeaponFacing) unit.angle = angle;
     }
   }
   function move(g, u, x, y) {
@@ -1657,7 +1692,7 @@ const Tactics = (() => {
       ...(u.rotationPivot ? { rotationPivot: { ...u.rotationPivot } } : {}),
     };
     const from = tile.path.length > 1 ? tile.path[tile.path.length - 2] : u;
-    const direction = { ...from };
+    const direction = { ...from, model: undefined };
     faceTarget(direction, { x, y });
     if (!models[u.model]?.ship) u.angle = direction.angle;
     u.x = x;
@@ -1753,17 +1788,22 @@ const Tactics = (() => {
     if (!moduleId || !target) return true;
     const module = models[unit.model]?.modules?.find((m) => m.id === moduleId);
     if (!module) return false;
+    return firingArcCanBear(unit, module, target);
+  }
+  function firingArcCanBear(unit, firingArc, target) {
+    if (!firingArc || !target) return true;
     const a = center(unit),
       b = target.aimCell ?? center(target),
       aim = (Math.atan2(b.x - a.x, -(b.y - a.y)) * 180) / Math.PI;
-    const delta = ((((aim - (unit.angle ?? 0) - module.idleDir + 180) % 360) + 360) % 360) - 180;
-    return Math.abs(delta) <= module.arc;
+    const delta = ((((aim - (unit.angle ?? 0) - firingArc.idleDir + 180) % 360) + 360) % 360) - 180;
+    return Math.abs(delta) <= firingArc.arc + 1e-9;
   }
   function availableStrikes(u, w, target = null) {
     if (parts.unavailable(u, w).length) return [];
     return w.attack.strikes.filter(
       (step) =>
-        !parts.unavailable(u, step).length && moduleCanBear(u, step.moduleId, w.aimCell ?? target),
+        !parts.unavailable(u, step).length && moduleCanBear(u, step.moduleId, w.aimCell ?? target) &&
+        firingArcCanBear(u, step.firingArc, w.aimCell ?? target),
     );
   }
   function actionBudget(u) {
@@ -1797,6 +1837,13 @@ const Tactics = (() => {
       weapons,
     };
   }
+  // A volley against a large unit must share one legal impact cell, including turret arcs.
+  function attackAimCell(g, u, target, weapons) {
+    if (!target || target.groundTarget || !weapons?.length || weapons.some(w => !w)) return null;
+    const fixed = target.aimCell ?? weapons[0].aimCell;
+    return (fixed ? [fixed] : cells(target)).find(cell => weapons.every(w =>
+      canAttack(g, u, {...target, aimCell: cell}, {...w, aimCell: cell}))) ?? null;
+  }
   function attackQueue(g, u, target, weapons) {
     if (!Array.isArray(weapons) || !weapons.length || weapons.length > 32)
       throw Error("请选择有效的武器序列");
@@ -1804,8 +1851,11 @@ const Tactics = (() => {
       throw Error("武器、目标、射程或部位条件不满足");
     if (weapons.some((w) => w.slot === "skill") && weapons.length !== 1)
       throw Error("技能武器须独立使用");
+    if (!target.groundTarget && !attackAimCell(g, u, target, weapons))
+      throw Error("没有所有所选武器均可攻击的目标格");
     const budget = attackBudget(u, target);
     const allWeapons = [...budget.weapons, ...weapons];
+    validatePilotWeaponQueue(u, allWeapons);
     if (allWeapons.length > 32) throw Error("攻击计划最多包含32次武器使用");
     if (allWeapons.filter((weapon) => weapon.special?.type === "snipe").length > 1)
       throw Error("同一单位只能保留一个狙击蓄力计划");
@@ -1830,6 +1880,7 @@ const Tactics = (() => {
       throw Error("反击次数已用完，或武器不满足射程与 EN 条件");
     if (weapons.some((w) => w.slot === "skill") && weapons.length !== 1)
       throw Error("技能武器须独立使用");
+    validatePilotWeaponQueue(u, weapons);
     const ap = weapons.reduce((n, w) => n + actionCost(w), 0);
     const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
     if (ap > counterActionBudget(u)) throw Error("反击行动点不足");
@@ -1857,6 +1908,7 @@ const Tactics = (() => {
       throw Error("反击武器序列总EN不足");
     if (weapons.some((w) => w.slot === "skill") && weapons.length !== 1)
       throw Error("技能武器须独立使用");
+    validatePilotWeaponQueue(unit, weapons);
     for (const weapon of new Set(weapons))
       if (
         Number.isInteger(weapon.maxUses) &&
@@ -1897,10 +1949,25 @@ const Tactics = (() => {
       }
     });
   }
+  function validatePilotWeaponQueue(unit, weapons) {
+    const counts = new Map();
+    for (const weapon of weapons) {
+      if (!weapon.pilotRequirements?.length || weapon.turnUseContinuation) continue;
+      const count = (counts.get(weapon.id) || 0) + 1;
+      counts.set(weapon.id, count);
+      if ((unit.pilotWeaponTurnUses?.[weapon.id] || 0) + count > 1)
+        throw Error("驾驶员条件武装每回合只能使用一次");
+    }
+  }
+  function recordPilotWeaponUse(unit, weapon) {
+    if (weapon.pilotRequirements?.length && !weapon.turnUseContinuation)
+      (unit.pilotWeaponTurnUses ||= {})[weapon.id] = 1;
+  }
   function canUse(u, w) {
     return (
       !!w &&
       pilotWeaponAllowed(u, w) &&
+      (!w.pilotRequirements?.length || w.turnUseContinuation || !u.pilotWeaponTurnUses?.[w.id]) &&
       (!w.requiresShield || u.shield > 0) &&
       !weaponCooldown(u, w) &&
       (!Number.isInteger(w.maxUses) || (u.weaponUses?.[w.id] || 0) < w.maxUses) &&
@@ -2028,14 +2095,17 @@ const Tactics = (() => {
   }
   // Scatter records carry only shot indices and energy actually paid; clients rebuild the same visual slice.
   function eventWeapon(unit, event) {
-    const weapon = baseEventWeapon(unit, event);
+    let weapon = baseEventWeapon(unit, event);
+    if (weapon && (event.turnUseContinuation || event.freeFollowup))
+      weapon = { ...weapon, turnUseContinuation: true };
     return weapon && event.aimCell ? { ...weapon, aimCell: event.aimCell } : weapon;
   }
   function baseEventWeapon(unit, event) {
     const weapon = modelOf(unit).weapons.find((w) => w.id === event.weapon);
     // Only server-expanded impact events carry a blast centre; launch requests still check range.
     if (["nuke", "blast"].includes(weapon?.special?.type) && event.impactCell)
-      return { ...weapon, blastCenter: event.impactCell };
+      return { ...weapon, blastCenter: event.impactCell,
+        ...(event.energySpent !== undefined ? {en: event.energySpent, energySpent: event.energySpent} : {}) };
     if (!event.shotIndices) return weapon;
     const indices = event.shotIndices;
     const strikes = weapon.attack.strikes
@@ -2134,14 +2204,6 @@ const Tactics = (() => {
   function estimate(g, a, b, w, response = "counter", isCounter = false) {
     w = weaponStats(w, a);
     const attacker = modelOf(a, g),
-      // Native psychommu remotes inherit an extra awakening modifier; INCOM does not.
-      remoteFactor =
-        w.remote && w.remote.kind !== "incom"
-          ? Math.max(
-              0,
-              1 + (pilots.of(a, models[a.model]).stats.awakening - 100) * w.remote.awakeningScale,
-            )
-          : 1,
       bonuses = attacker.attackBonuses,
       attackCommand = commandEffects(g, a),
       defenseCommand = commandEffects(g, b),
@@ -2184,7 +2246,6 @@ const Tactics = (() => {
         Math.max(0, baseHit - (response === "evade" ? 15 : 0)) *
         (w.hitScale || 1) *
         (attacker.pilotModifiers?.accuracy ?? 1) *
-        remoteFactor *
         (1 + attackCommand.communication),
       pilotEvasionHit =
         rawHit / ((defender.pilotModifiers?.reaction ?? 1) * (1 + defenseCommand.communication)),
@@ -2213,7 +2274,6 @@ const Tactics = (() => {
         (defender.pilotModifiers?.defense ?? 1) *
         (1 - defenseCommand.defense) *
         (attacker.pilotModifiers?.[w.type === "melee" ? "melee" : "shooting"] ?? 1) *
-        remoteFactor *
         (1 + attackCommand.attack),
       strikes = availableStrikes(a, w, b);
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.
@@ -2319,6 +2379,7 @@ const Tactics = (() => {
   }
   function spend(u, w) {
     if (w.en) u.en -= w.en;
+    recordPilotWeaponUse(u, w);
     if (Number.isInteger(w.maxUses)) (u.weaponUses ||= {})[w.id] = (u.weaponUses[w.id] || 0) + 1;
     if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
   }
@@ -2337,6 +2398,7 @@ const Tactics = (() => {
     allowCounter = true,
     counterOnly = false,
     counterOrders = null,
+    counterProgress = null,
   ) {
     if (
       g.winner !== null ||
@@ -2345,7 +2407,11 @@ const Tactics = (() => {
       throw Error("攻击条件已失效");
     if (!["counter", "defend", "evade"].includes(response)) throw Error("未知应战方式");
     const counterIds = Array.isArray(counterId) ? counterId : [counterId];
-    if (counterOnly && counterOrders) counterPlan(g, b, counterOrders);
+    if (counterOnly && counterOrders) {
+      const validationUnit = counterProgress?.started ? {...b,
+        counterCount: counterProgress.initialCount, counterTargetId: counterProgress.initialTarget} : b;
+      counterPlan(g, validationUnit, counterOrders);
+    }
     else if (response === "counter" && allowCounter)
       counterQueue(
         g,
@@ -2388,7 +2454,8 @@ const Tactics = (() => {
           executed =
             to.hp > 0 &&
             !parts.unavailable(from, step).length &&
-            moduleCanBear(from, step.moduleId, weapon.aimCell ?? to),
+            moduleCanBear(from, step.moduleId, weapon.aimCell ?? to) &&
+            firingArcCanBear(from, step.firingArc, weapon.aimCell ?? to),
           hit = executed && random(g) < e.hit / 100,
           blocked = hit && to.shield > 0 && random(g) < e.blockChance,
           shieldDamage = blocked ? e.shieldDamage : 0,
@@ -2418,7 +2485,7 @@ const Tactics = (() => {
             sourceId: from.id,
             lastTickRound: to.burning?.lastTickRound,
           };
-        if (hit && to.hp > 0 && weapon.onHitAPLoss) to.apPenaltyNextTurn = weapon.onHitAPLoss;
+        if (hit && to.hp > 0 && weapon.onHitAPLoss) to.apPenaltyNextTurn = 0.25;
         const wasOverdrive = !!to.overdrive;
         const formReverted = skills.revertDamaged(to);
         const overdriveEnded = wasOverdrive && !to.overdrive;
@@ -2498,8 +2565,8 @@ const Tactics = (() => {
     }
     if (!counterOnly) fire(a, b, w, response);
     if (response === "counter" && allowCounter && b.hp > 0 && a.hp > 0) {
-      let remaining = counterActionBudget(b),
-        started = false;
+      let remaining = counterProgress?.remaining ?? counterActionBudget(b),
+        started = counterProgress?.started ?? false;
       const entries = counterOrders
         ? counterOrders.flatMap((order) =>
             order.weaponIds.map((id) => ({
@@ -2530,14 +2597,19 @@ const Tactics = (() => {
           const impact = attackCells(b, enemy, weapon)[0] || { x: enemy.x, y: enemy.y };
           const victims = g.units.filter(unit => unit.team !== b.team && onMap(unit) &&
             blastContains(impact, unit, weapon.special.radius, weapon.special.shape));
-          const blastId = `counter:${g.round}:${b.id}:${events.length}`;
+          const blastId = `counter:${g.round}:${b.id}:${counterProgress?.sequence ?? 0}:${events.length}`;
+          const launchEnergy = weaponStats(weapon, b).en;
           victims.forEach((victim, index) => {
-            fire(b, victim, { ...weapon, en: index ? 0 : weapon.en, blastCenter: impact }, "counter", true);
-            Object.assign(events.at(-1), { impactCell: impact, blastId,
-              energySpent: index ? 0 : weaponStats(weapon, b).en });
+            const energySpent = index ? 0 : launchEnergy;
+            fire(b, victim, { ...weapon, en: energySpent, energySpent,
+              turnUseContinuation: index > 0,
+              maxUses: index ? undefined : weapon.maxUses, blastCenter: impact }, "counter", true);
+            Object.assign(events.at(-1), { impactCell: impact, blastId, energySpent });
           });
         } else fire(b, enemy, weapon, "counter", true);
+        if (counterProgress) counterProgress.sequence = (counterProgress.sequence ?? 0) + 1;
       }
+      if (counterProgress) Object.assign(counterProgress, {remaining, started});
     }
     if (!counterOnly) {
       a.acted = true;
@@ -2552,9 +2624,9 @@ const Tactics = (() => {
     if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
     return events;
   }
-  // Run a validated counter sequence after the offensive phase has fully resolved.
-  function counter(g, defender, attacker, weaponIds, orders = null) {
-    return fight(g, attacker, defender, null, "counter", weaponIds, true, true, orders);
+  // Counter waves share one reaction opportunity and one AP budget across the entire batch.
+  function counter(g, defender, attacker, weaponIds, orders = null, progress = null) {
+    return fight(g, attacker, defender, null, "counter", weaponIds, true, true, orders, progress);
   }
   function wait(g, u) {
     if (!onMap(u) || g.winner !== null || u.team !== g.team || u.acted) throw Error("无法待机");
@@ -2836,6 +2908,7 @@ const Tactics = (() => {
     // One round number is one team action phase; all counter budgets refresh on handoff.
     for (const u of g.units) {
       u.counterCount = 0;
+      delete u.pilotWeaponTurnUses;
       delete u.counterTargetId;
     }
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0)) {
@@ -2875,7 +2948,7 @@ const Tactics = (() => {
           iFieldHP(u) + (field.capacity * field.recoveryPercent) / 100,
         );
       u.acted = false;
-      u.actionPoints = Math.max(0, actionBudget(u) - (u.apPenaltyNextTurn || 0));
+      u.actionPoints = Math.max(0, Math.floor(actionBudget(u) * (u.apPenaltyNextTurn ? 0.75 : 1)));
       delete u.apPenaltyNextTurn;
       u.moved = false;
       u.origin = null;
@@ -2897,8 +2970,13 @@ const Tactics = (() => {
       delete u.snipeOrder;
       const target = g.units.find((t) => t.id === order.target),
         weapon = modelOf(u).weapons.find((w) => w.id === order.weapon);
-      if (target && weapon && canAttack(g, u, target, weapon)) {
-        u.readySnipe = { target: target.id, weapon: weapon.id, aimCell: order.aimCell };
+      // Lock the target unit, not the tile it occupied when charging began.
+      const lockedTarget = target && order.aimCell && occupies(target, order.aimCell.x, order.aimCell.y)
+        ? {...target, aimCell: order.aimCell} : target;
+      const aimCell = weapon && lockedTarget &&
+        (attackAimCell(g, u, lockedTarget, [weapon]) || attackAimCell(g, u, target, [weapon]));
+      if (aimCell) {
+        u.readySnipe = { target: target.id, weapon: weapon.id, aimCell };
         u.plan = { ...u.readySnipe, charged: true };
         u.acted = true;
         u.actionPoints = 0;
@@ -2996,18 +3074,41 @@ const Tactics = (() => {
         destinations ??
         (u.moved ? [{ x: u.x, y: u.y, cost: 0, path: [] }] : [...reachable(g, u).values()]),
       enemies = g.units.filter(
-        (e) => e.team !== u.team && onMap(e) && sensors.visible(g, u.team, e),
+        (e) => e.team !== u.team && onMap(e),
       ),
       best = null;
     const weapons = modelOf(u).weapons,
       pressure = aiTargetPressure(g, u.team);
-    // Visibility is fixed during this decision; do not rescan every allied
-    // sensor for each cell × enemy × weapon combination.
+    // AI navigation knows enemy positions even through fog. Keep actual sight
+    // separate so this knowledge does not grant attacks against unseen targets.
     const decisionGame = {
       ...g,
-      intel: { ...g.intel, team: u.team, visibleIds: enemies.map((e) => e.id) },
+      intel: {
+        ...g.intel,
+        team: u.team,
+        visibleIds: enemies.filter((e) => sensors.visible(g, u.team, e)).map((e) => e.id),
+      },
     };
-    if (!destinations && models[u.model]?.ship && !u.moved)
+    // Keep each AI player's mobile force together during the approach. Once
+    // any member makes contact, combat positioning takes priority over waiting.
+    if (!destinations && enemies.length && !u.moved) {
+      const squad = g.units.filter((ally) =>
+        onMap(ally) && ally.team === u.team && ownerOf(ally) === ownerOf(u) &&
+        modelOf(ally).move > 0 && !ally.deployed && !ally.embarked,
+      );
+      const nearestEnemy = (unit) => Math.min(...enemies.map((enemy) => dist(unit, enemy)));
+      const contact = squad.some((ally) => nearestEnemy(ally) <= Math.max(
+        6, ...modelOf(ally).weapons.filter((w) => w.slot !== "skill").map((w) => w.max),
+      ));
+      if (squad.length > 1 && !contact) {
+        const rearDistance = Math.max(...squad.map(nearestEnemy));
+        const advanceLimit = Math.min(nearestEnemy(u), rearDistance - 4);
+        cells = cells.filter((cell) =>
+          nearestEnemy({ ...u, x: cell.x, y: cell.y }) >= advanceLimit - 0.001,
+        );
+      }
+    }
+    if (!destinations && (models[u.model]?.ship || models[u.model]?.fixedWeaponFacing) && !u.moved)
       for (const direction of [-1, 1])
         if (canRotate(g, u, direction)) {
           const pivot = u.rotationPivot || center(u);
@@ -3140,8 +3241,8 @@ const Tactics = (() => {
     defaultRoomSettings,
     formationRestrictions,
     restrictionReason,
-    normalizeInventory,
-    inventoryPlan,
+    normalizeLicenses,
+    licensePlan,
     factions,
     eras,
     unitTags,
@@ -3174,6 +3275,7 @@ const Tactics = (() => {
     planFormation,
     validateArmySettings,
     armySettings,
+    aiFormationVariation,
     armyBudget,
     armyUnitLimit,
     armyRestrictions,
@@ -3226,11 +3328,13 @@ const Tactics = (() => {
     weaponCooldown,
     startWeaponCooldown,
     canUse,
+    recordPilotWeaponUse,
     pilotWeaponAllowed,
     actionBudget,
     counterActionBudget,
     actionPoints,
     actionCost,
+    attackAimCell,
     attackQueue,
     attackOrders,
     attackPlanFor,

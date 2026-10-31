@@ -319,7 +319,8 @@
       "stealthAqua": true,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -415,7 +416,9 @@
     },
     "v17BaseHp": 50000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.25,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1643,9 +1646,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MAM_07_MS",
-        "Common_Push_A",
         "ZN_MAM_07_AMS",
-        "Common_Cqb_Double_L_A_Fixed_MAM_07"
+        "Common_Cqb_Double_L_A_Fixed_MAM_07",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1677,7 +1680,8 @@
   "nativeCombatRevision": 1,
   "unitTags": [
     "MA",
-    "Recon"
+    "Recon",
+    "LargeUnit"
   ],
   "transport": {
     "slotCost": 3,
@@ -1686,6 +1690,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MAM_07_MS",
@@ -1725,11 +1735,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

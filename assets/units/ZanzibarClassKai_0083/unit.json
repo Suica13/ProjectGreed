@@ -417,13 +417,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 281500,
+    "hp": 157500,
     "en": 15000.0,
     "move": 8,
     "mobility": 90.0,
     "cost": 2250,
     "counterLimit": 1,
-    "accuracy": 135.0,
+    "accuracy": 87.75,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "air",
@@ -773,7 +773,9 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -872,9 +874,15 @@
       "radar": 600.0,
       "antiDetection": -250.0
     },
-    "v17BaseHp": 225000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 0.5,
+    "mobilityMoveTarget": 8,
+    "shipHullBeforeReduction": 225000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1
   },
   "presentation": {
     "shield": false,
@@ -921,9 +929,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 10000.0,
+      "damagePerShot": 7500,
       "damageComponents": {
-        "beam": 10000.0
+        "beam": 7500
       },
       "hitsPerShot": 1,
       "attack": {
@@ -934,7 +942,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -942,7 +951,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -950,7 +960,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -958,7 +969,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -966,7 +978,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -974,7 +987,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -982,7 +996,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 2.0
+            "delay": 2.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -990,7 +1005,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -998,7 +1014,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1006,7 +1023,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1014,7 +1032,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1022,7 +1041,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1181,6 +1201,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1201,8 +1225,14 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 10000.0,
+        "damageComponents": {
+          "beam": 10000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "ZanzibarClassKai_0083_Turret_MegaBeamCannon_L": {
       "name": "舰载光束炮",
@@ -1217,9 +1247,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 10000.0,
+      "damagePerShot": 7500,
       "damageComponents": {
-        "beam": 10000.0
+        "beam": 7500
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1230,7 +1260,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1238,7 +1269,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1246,7 +1278,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1254,7 +1287,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1262,7 +1296,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1270,7 +1305,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1278,7 +1314,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 2.0
+            "delay": 2.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1286,7 +1323,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1294,7 +1332,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1302,7 +1341,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1310,7 +1350,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1318,7 +1359,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1479,6 +1521,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1499,8 +1545,14 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 10000.0,
+        "damageComponents": {
+          "beam": 10000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "ZanzibarClassKai_0083_Turret_MegaBeamCannon_R": {
       "name": "舰载光束炮",
@@ -1515,9 +1567,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 10000.0,
+      "damagePerShot": 7500,
       "damageComponents": {
-        "beam": 10000.0
+        "beam": 7500
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1528,7 +1580,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1536,7 +1589,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1544,7 +1598,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1552,7 +1607,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1560,7 +1616,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1568,7 +1625,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1576,7 +1634,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 2.0
+            "delay": 2.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1584,7 +1643,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1592,7 +1652,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1600,7 +1661,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1608,7 +1670,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1616,7 +1679,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1777,6 +1841,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1797,15 +1865,21 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 10000.0,
+        "damageComponents": {
+          "beam": 10000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "ZanzibarClassKai_0083_Turret_AMS": {
       "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 60.0,
+      "hit": 75.0,
       "en": 320.0,
       "sourceName": "ZanzibarClassKai_0083_Turret_AMS",
       "sourceHit": 75.0,
@@ -1813,9 +1887,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 3000.0,
+      "damagePerShot": 2250,
       "damageComponents": {
-        "shell": 3000.0
+        "shell": 2250
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1826,7 +1900,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AMS_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1834,7 +1909,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1842,7 +1918,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1850,7 +1927,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1858,7 +1936,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1866,7 +1945,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1874,7 +1954,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1882,7 +1963,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -2004,8 +2086,6 @@
       },
       "category": "missile",
       "actionCost": 2,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -2016,14 +2096,21 @@
         "ja": {
           "name": "対MSミサイル"
         }
-      }
+      },
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 3000.0,
+        "damageComponents": {
+          "shell": 3000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "ZanzibarClassKai_0083_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 40.0,
       "sourceName": "ZanzibarClassKai_0083_Turret_AA",
       "sourceHit": 125.0,
@@ -2031,10 +2118,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 400.0,
+      "damagePerShot": 300,
       "damageComponents": {
-        "shell": 300.0,
-        "shellAP": 100.0
+        "shell": 225,
+        "shellAP": 75
       },
       "hitsPerShot": 1,
       "attack": {
@@ -2045,7 +2132,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2053,7 +2141,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2061,7 +2150,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2069,7 +2159,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2077,7 +2168,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2085,7 +2177,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2093,7 +2186,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2101,7 +2195,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2109,7 +2204,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2117,7 +2213,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2125,7 +2222,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2133,7 +2231,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2141,7 +2240,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2149,7 +2249,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2157,7 +2258,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2165,7 +2267,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2173,7 +2276,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2181,7 +2285,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2189,7 +2294,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2197,7 +2303,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2205,7 +2312,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2213,7 +2321,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2221,7 +2330,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2229,7 +2339,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2237,7 +2348,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2245,7 +2357,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2253,7 +2366,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2261,7 +2375,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2269,7 +2384,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2277,7 +2393,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2285,7 +2402,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2293,7 +2411,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2301,7 +2420,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2309,7 +2429,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2317,7 +2438,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2325,7 +2447,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2333,7 +2456,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2341,7 +2465,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2349,7 +2474,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2357,7 +2483,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2365,7 +2492,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2373,7 +2501,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2381,7 +2510,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2389,7 +2519,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2397,7 +2528,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2405,7 +2537,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2413,7 +2546,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2421,7 +2555,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2429,7 +2564,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2437,7 +2573,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2445,7 +2582,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2453,7 +2591,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2461,7 +2600,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2469,7 +2609,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2477,7 +2618,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2485,7 +2627,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2493,7 +2636,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2501,7 +2645,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2509,7 +2654,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2517,7 +2663,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2525,7 +2672,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2533,7 +2681,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2541,7 +2690,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2549,7 +2699,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2557,7 +2708,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2565,7 +2717,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2573,7 +2726,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2581,7 +2735,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2589,7 +2744,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2597,7 +2753,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2605,7 +2762,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2613,7 +2771,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2621,7 +2780,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2629,7 +2789,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2637,7 +2798,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2645,7 +2807,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2653,7 +2816,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2661,7 +2825,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2669,7 +2834,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2677,7 +2843,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -2889,6 +3056,17 @@
       "category": "machine_gun",
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -3531,26 +3709,21 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 400.0,
+        "damageComponents": {
+          "shell": 300.0,
+          "shellAP": 100.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "ZanzibarClassKai_0083_Turret_MG": {
       "name": "舰载机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 20.0,
       "sourceName": "ZanzibarClassKai_0083_Turret_MG",
       "sourceHit": 125.0,
@@ -3558,10 +3731,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 500.0,
+      "damagePerShot": 375,
       "damageComponents": {
-        "shell": 375.0,
-        "shellAP": 125.0
+        "shell": 275,
+        "shellAP": 100
       },
       "hitsPerShot": 1,
       "attack": {
@@ -3572,7 +3745,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3580,7 +3754,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3588,7 +3763,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3596,7 +3772,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3604,7 +3781,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3612,7 +3790,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3620,7 +3799,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3628,7 +3808,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3636,7 +3817,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3644,7 +3826,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3652,7 +3835,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3660,7 +3844,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3668,7 +3853,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3676,7 +3862,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3684,7 +3871,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3692,7 +3880,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3700,7 +3889,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3708,7 +3898,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3716,7 +3907,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3724,7 +3916,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3732,7 +3925,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3740,7 +3934,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3748,7 +3943,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3756,7 +3952,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3764,7 +3961,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3772,7 +3970,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3780,7 +3979,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3788,7 +3988,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3796,7 +3997,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3804,7 +4006,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3812,7 +4015,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3820,7 +4024,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3828,7 +4033,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3836,7 +4042,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3844,7 +4051,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3852,7 +4060,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3860,7 +4069,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3868,7 +4078,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3876,7 +4087,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3884,7 +4096,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ZanzibarClassKai_0083_Turret_MG_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -4015,6 +4228,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -4035,8 +4252,14 @@
       },
       "category": "machine_gun",
       "actionCost": 3,
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 500.0,
+        "damageComponents": {
+          "shell": 375.0,
+          "shellAP": 125.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [

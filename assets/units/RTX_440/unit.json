@@ -445,7 +445,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 70
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -539,7 +540,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 27500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1145,7 +1148,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 5
     },
     "EF_RTX_440_Rocket_L": {
       "name": "导弹发射器",
@@ -1378,7 +1381,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 5
     },
     "Common_Cannon_NoStop": {
       "name": "加农炮",
@@ -1651,9 +1654,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.0,
       "changeHeldWeapon": false,
       "source": {
@@ -1780,7 +1781,11 @@
         ]
       },
       "rangeRole": "short_secondary",
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_RTX_440_HandGun_L": {
       "name": "EF RTX 440 HandGun L",
@@ -1902,9 +1907,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.0,
       "changeHeldWeapon": false,
       "source": {
@@ -2034,7 +2037,11 @@
         ]
       },
       "rangeRole": "short_secondary",
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_RTX_440_Flamethrower": {
       "name": "喷火器",
@@ -2198,11 +2205,11 @@
       "cost": 0,
       "weapons": [
         "EF_RTX_440_Rocket",
-        "Common_Push_A",
         "Common_Mortar_Bombing_MS",
         "Common_Cannon_NoStop",
         "EF_RTX_440_HandGun",
-        "EF_RTX_440_Flamethrower"
+        "EF_RTX_440_Flamethrower",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2236,6 +2243,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_RTX_440_Rocket",
@@ -2284,11 +2297,5 @@
       ],
       "fireMode": "independent"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

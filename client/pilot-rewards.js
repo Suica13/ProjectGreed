@@ -15,7 +15,7 @@ const PilotRewards = (() => {
     for (const award of snapshot.pilotAwards || []) {
       if (seen.has(award.id) || Formation.hasPilotAward(award.id)) continue;
       seen.add(award.id);
-      if (award.experiencePoints > 0 || award.leveledUp) pending.push(award);
+      if (award.experiencePoints > 0) pending.push(award);
     }
     for (const award of pending.splice(0))
       RewardNotifications.defer(() => active.push({ ...award, start: performance.now() }), snapshot);
@@ -38,7 +38,6 @@ const PilotRewards = (() => {
       const labels = [];
       if (award.experiencePoints > 0)
         labels.push([I18n.text("+" + award.experiencePoints + "经验值"), "#9cffa8"]);
-      if (award.leveledUp) labels.push(["LEVEL UP", "#ffdc6e"]);
       labels.forEach(([text, color], j) => {
         ctx.fillStyle = color;
         ctx.strokeText(text, x, top + j * 16);

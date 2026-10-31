@@ -17,6 +17,7 @@ RANGES = {
     "machine_gun": (2, 3),
     "missile": (3, 4),
 }
+SNIPER_RANGE_BONUS = 2
 DEFENSE_CHANNELS = {"beam": "Beam", "shell": "Shell", "melee": "Cqb", "dp": "Dp", "sp": "Sp"}
 
 
@@ -54,6 +55,8 @@ def category(weapon_id, weapon):
 
 
 def action_cost(prefab, key, weapon):
+    if prefab["id"] == "RTX_440" and key in {"EF_RTX_440_Rocket", "EF_RTX_440_Rocket_L"}:
+        return 5
     # User policy: every bazooka costs 3 AP, including secondary variants.
     if weapon.get("category") == "bazooka":
         return 3
@@ -72,6 +75,17 @@ def action_cost(prefab, key, weapon):
     return 2
 
 
+def finalize_weapon_slots(prefab):
+    """Keep ordinary slot order stable and place native ramming skills last."""
+    for kit in prefab["weaponKits"]:
+        kit["weapons"].sort(key=lambda key: key.startswith("Common_Push_"))
+    if prefab["id"] == "RTX_440":
+        for key in ("EF_RTX_440_Rocket", "EF_RTX_440_Rocket_L"):
+            if key in prefab["weapons"]:
+                prefab["weapons"][key]["actionCost"] = action_cost(prefab, key, prefab["weapons"][key])
+    return prefab
+
+
 def configure_sniper(prefab):
     ordinary = [(key, weapon) for key, weapon in prefab["weapons"].items()
                 if weapon["category"] == "sniper" and "_Sniper_Aim" not in key]
@@ -87,7 +101,7 @@ def configure_sniper(prefab):
         # 伤害、耗能、步骤使用原生技能；仅保留回合制蓄力与命中倍率规则。
         weapon.update(
             name="狙击蓄力", slot="skill", changeHeldWeapon=False, noCounter=True, hitScale=2,
-            description="本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害为原MOD技能的一半，EN不变。",
+            description="本回合锁定目标，下次己方回合开始时目标仍在射程内则自动射击；命中率×2，伤害为原MOD技能的一半，EN不变。",
             special={"type": "snipe", "delayOwnTurns": 1, "baseWeapon": base_id},
         )
         baseline = weapon.setdefault("sniperDamageBeforeHalving", {
@@ -110,7 +124,7 @@ def extended_ranges(prefab):
     for weapon in prefab["weapons"].values():
         kind = weapon.get("category")
         if kind == "sniper":
-            weapon["min"], weapon["max"] = RANGES["sniper"]
+            weapon["min"], weapon["max"] = RANGES["sniper"][0], RANGES["sniper"][1] + SNIPER_RANGE_BONUS
             weapon["actionCost"] = 4
         if prefab["stats"].get("ship") and kind in ["cannon", "mortar"] and weapon.get("rangeRole") != "ship_anti_air":
             weapon["max"] = RANGES[kind][1] + (3 if kind == "cannon" else 1)
@@ -119,30 +133,19 @@ def extended_ranges(prefab):
         if special.get("type") == "snipe":
             base = prefab["weapons"][special["baseWeapon"]]
             weapon["min"] = base["min"]
-            weapon["max"] = math.ceil(base["max"] * 1.5)
-
-
-def federation_space_turret_damage(prefab):
-    # Tactical bonus; preserve nativePayload as the original MOD audit source.
-    if prefab["id"] not in {"SalamisClass", "MagellanClass", "MagellanClass_Green"}:
-        return
-    for weapon in prefab["weapons"].values():
-        if not (weapon.get("moduleIds") or weapon.get("moduleId")):
-            continue
-        factor = 1.25 / weapon.get("tacticalDamageMultiplier", 1)
-        for payload in [weapon, *weapon.get("attack", {}).get("steps", [])]:
-            if "damagePerShot" in payload:
-                payload["damagePerShot"] *= factor
-            if "damageComponents" in payload:
-                payload["damageComponents"] = {k: v * factor for k, v in payload["damageComponents"].items()}
-        weapon["tacticalDamageMultiplier"] = 1.25
+            weapon["max"] = math.ceil((base["max"] - SNIPER_RANGE_BONUS) * 1.5) + SNIPER_RANGE_BONUS
 
 
 def flight_skill(prefab):
     if not any(m["id"] == "FlyStyle" for m in prefab.get("mechanics", [])):
         return
     prefab["skills"] = [s for s in prefab.get("skills", []) if s["id"] != "flight_stance"]
-    prefab["skills"].append({"id":"flight_stance", "type":"flight", "name":"飞行姿态", "actionCost":1,
+    # Flight variants have their own sky compatibility; standing values can be only 10%.
+    from mod_source import MOD
+    source = MOD / prefab["source"]
+    flight_source = source.with_name(prefab["id"] + "_FlyStyle.ini")
+    air_adaptability = stat(load(flight_source), "skyAdaptability", 100) if flight_source.exists() else 100
+    prefab["skills"].append({"airAdaptability":air_adaptability, "id":"flight_stance", "type":"flight", "name":"飞行姿态", "actionCost":1,
         "requiredParts":["head","backpack","leftArm","rightArm","leftLeg","rightLeg"],
         "maxUses":99999, "consumeAction":False, "range":0, "effect":"Light_75_NotAttached",
         "sound":{"file":"../../sounds/Fly_1.ogg","volume":0.6},
@@ -222,14 +225,17 @@ def configure(prefab, native):
     flight_skill(prefab)
     for weapon in prefab["weapons"].values():
         weapon.pop("tacticalDamageMultiplier", None)
-    federation_space_turret_damage(prefab)
     if prefab["stats"].get("ship"):
         native_accuracy = stat(native, "baseAccuracyLevel", 100)
+        prefab["sourceStats"]["hp"] = float(native["core"]["maxHp"])
+        native_reaction = stat(native, "baseReactionLevel", 100)
+        prefab["sourceStats"]["reaction"] = native_reaction
+        prefab["stats"]["mobility"] = native_reaction
         prefab["sourceStats"]["accuracy"] = native_accuracy
         prefab["stats"]["accuracy"] = native_accuracy
         prefab["stats"].pop("accuracyMultiplier", None)
     # Store the pre-bonus distance so refreshes never add the bonus twice.
-    baseline = prefab["sourceStats"].setdefault("tacticalMoveBeforeBonus", prefab["stats"]["move"])
+    baseline = prefab["sourceStats"].setdefault("tacticalMoveBeforeBonus", prefab["sourceStats"].get("movementBeforeMobility", prefab["stats"]["move"]))
     prefab["stats"]["move"] = baseline + (3 if prefab["stats"].get("ship") else 1)
     shooting = stat(native, "baseShootLevel", 100)
     melee = stat(native, "baseCqbLevel", 100)
@@ -321,9 +327,10 @@ def configure(prefab, native):
         prefab["weapons"]["EF_Burstliner_BeamCannon"]["requiresSfsMS"] = True
     from v17_balance import apply as apply_v17_balance
     from unit_supply import apply as apply_supply_policy
-    from unit_ship_balance import apply_anti_air, apply_accuracy
+    from unit_ship_balance import apply_anti_air, apply_accuracy, apply_damage
     prefab = apply_supply_policy(apply_v17_balance(prefab))
     apply_anti_air(prefab)
+    apply_damage(prefab)
     apply_accuracy(prefab, native_restored=True)
     from unit_eras import apply as apply_era
     from page_two_adaptations import apply as apply_page_two
@@ -335,4 +342,8 @@ def configure(prefab, native):
     from native_weapon_names import apply as apply_names
     from native_conversions import apply_action_cost
     from native_remote_weapons import apply as apply_remote
-    return apply_remote(apply_action_cost(apply_names(apply_defensive(apply_irradiation(apply_status(apply_refits(apply_pilot_weapons(apply_page_two(apply_era(prefab)), native), native), native), native), native))), native)
+    from unit_action_mobility import apply as apply_action_mobility
+    prefab = apply_action_mobility(apply_remote(apply_action_cost(apply_names(apply_defensive(apply_irradiation(apply_status(apply_refits(apply_pilot_weapons(apply_page_two(apply_era(prefab)), native), native), native), native), native))), native), native)
+    from native_big_zam import apply as apply_big_zam
+    from unit_classification import apply as apply_classification
+    return finalize_weapon_slots(apply_classification(apply_big_zam(prefab, native)))

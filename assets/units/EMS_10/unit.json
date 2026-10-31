@@ -581,7 +581,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -675,7 +676,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 16500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -1556,9 +1559,9 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMG",
-        "Common_Push_A",
         "ZN_Panzerfaust_Orange",
-        "ZN_HeatHawk_F"
+        "ZN_HeatHawk_F",
+        "Common_Push_A"
       ]
     },
     {
@@ -1567,9 +1570,9 @@
       "cost": 50,
       "weapons": [
         "ZN_270mmBazooka",
-        "Common_Push_A",
         "ZN_Panzerfaust_Orange",
-        "ZN_HeatHawk_F"
+        "ZN_HeatHawk_F",
+        "Common_Push_A"
       ]
     }
   ],

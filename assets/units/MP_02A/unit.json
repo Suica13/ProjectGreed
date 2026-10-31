@@ -275,7 +275,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 80
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -365,7 +366,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 5500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.25,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1375,6 +1378,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MP_02A_MS",
@@ -1395,11 +1404,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

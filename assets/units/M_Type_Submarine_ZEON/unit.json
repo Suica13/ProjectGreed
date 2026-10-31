@@ -139,13 +139,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 150000,
+    "hp": 84000,
     "en": 4500.0,
     "move": 7,
     "mobility": 85.0,
     "cost": 1000,
     "counterLimit": 1,
-    "accuracy": 105.0,
+    "accuracy": 68.25,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "naval",
@@ -397,7 +397,9 @@
       "stealth": false,
       "stealthAqua": true,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 70,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -498,8 +500,14 @@
       "radar": 600.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 120000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.35,
+    "mobilityMoveTarget": 7,
+    "shipHullBeforeReduction": 120000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1
   },
   "presentation": {
     "shield": false,
@@ -538,7 +546,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 68.0,
+      "hit": 85.0,
       "en": 320.0,
       "sourceName": "M_Type_Submarine_Turret_AMS",
       "sourceHit": 85.0,
@@ -546,9 +554,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 2500.0,
+      "damagePerShot": 1875,
       "damageComponents": {
-        "shell": 2500.0
+        "shell": 1875
       },
       "hitsPerShot": 1,
       "attack": {
@@ -559,7 +567,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_AMS_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -567,7 +576,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -575,7 +585,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_AMS_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -583,7 +594,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_AMS_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -591,7 +603,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_AMS_L1",
-            "delay": 1.5
+            "delay": 1.5,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -599,7 +612,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -607,7 +621,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_AMS_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -615,7 +630,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_AMS_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -763,8 +779,6 @@
         "actions": []
       },
       "actionCost": 2,
-      "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -775,14 +789,21 @@
         "ja": {
           "name": "対MSミサイル"
         }
-      }
+      },
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 2500.0,
+        "damageComponents": {
+          "shell": 2500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "M_Type_Submarine_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 80.0,
+      "hit": 100.0,
       "en": 96.0,
       "sourceName": "M_Type_Submarine_Turret_MS",
       "sourceHit": 100.0,
@@ -790,9 +811,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 1200.0,
+      "damagePerShot": 900,
       "damageComponents": {
-        "shell": 1200.0
+        "shell": 900
       },
       "hitsPerShot": 1,
       "attack": {
@@ -803,7 +824,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -811,7 +833,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -819,7 +842,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -827,7 +851,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -835,7 +860,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -843,7 +869,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M6",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -851,7 +878,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M7",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -859,7 +887,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M8",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -867,7 +896,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -875,7 +905,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -883,7 +914,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -891,7 +923,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -899,7 +932,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -907,7 +941,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M6",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -915,7 +950,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M7",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -923,7 +959,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M8",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -931,7 +968,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -939,7 +977,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -947,7 +986,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -955,7 +995,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -963,7 +1004,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -971,7 +1013,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M6",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -979,7 +1022,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M7",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -987,7 +1031,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M8",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -995,7 +1040,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1003,7 +1049,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1011,7 +1058,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1019,7 +1067,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1027,7 +1076,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1035,7 +1085,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M6",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1043,7 +1094,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M7",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1051,7 +1103,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "M_Type_Submarine_Turret_MS_M8",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1244,6 +1297,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1263,8 +1320,13 @@
         "actions": []
       },
       "actionCost": 2,
-      "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 1200.0,
+        "damageComponents": {
+          "shell": 1200.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [

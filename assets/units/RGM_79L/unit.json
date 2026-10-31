@@ -489,7 +489,7 @@
       "rubble": 75
     },
     "accuracy": 110,
-    "actionPoints": 5,
+    "actionPoints": 6,
     "sensors": {
       "sight": 8,
       "radar": 10.0,
@@ -499,7 +499,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -584,7 +585,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 17000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 8
   },
   "weapons": {
     "EF_90mmMG": {

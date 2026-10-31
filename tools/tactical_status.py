@@ -2,7 +2,7 @@
 def apply(prefab, native=None):
     for weapon in prefab['weapons'].values():
         if weapon.get('nativePayload', {}).get('StunDamage', 0) > 0 or 'HeatRod' in weapon.get('sourceName', ''):
-            weapon['onHitAPLoss'] = 1
+            weapon['onHitAPLoss'] = 0.25
         if weapon.get('nativePayload', {}).get('BurnedDamage', 0) > 0 or 'Flamethrower' in weapon.get('sourceName', ''):
             weapon.update(actionCost=3, burn=dict(durationTurns=3, hpPercent=5))
     if prefab['id'] == 'PublicClass':

@@ -487,7 +487,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 95
   },
   "attackBonuses": {
     "melee": 10.0,
@@ -582,7 +583,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 19500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.65,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": true,
@@ -1567,10 +1570,10 @@
       "cost": 75,
       "weapons": [
         "EF_BeamSprayGun",
-        "Common_Push_A",
         "Common_Cannon",
         "Common_Mortar_Bombing_Shell",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1579,10 +1582,10 @@
       "cost": 50,
       "weapons": [
         "EF_BalzacBazooka",
-        "Common_Push_A",
         "Common_Cannon",
         "Common_Mortar_Bombing_Shell",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     }
   ],

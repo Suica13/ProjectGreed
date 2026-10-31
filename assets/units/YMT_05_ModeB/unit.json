@@ -290,7 +290,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 130
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -386,7 +387,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 32500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.5,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": false,
@@ -897,8 +900,8 @@
       "cost": 100,
       "weapons": [
         "ZN_YMT_05_MainCannon_AP",
-        "Common_Push_A",
-        "ZN_YMT_05_MainCannon_HE"
+        "ZN_YMT_05_MainCannon_HE",
+        "Common_Push_A"
       ]
     }
   ],

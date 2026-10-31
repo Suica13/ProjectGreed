@@ -421,7 +421,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 115
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -516,7 +517,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 27500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.15,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -1327,8 +1330,8 @@
       "cost": 0,
       "weapons": [
         "ZN_YMS_15_ShieldMS",
-        "Common_Push_A",
-        "ZN_YMS_15_BeamSaber_B2"
+        "ZN_YMS_15_BeamSaber_B2",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1357,6 +1360,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_YMS_15_ShieldMS",
@@ -1381,11 +1390,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

@@ -118,13 +118,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 56500,
+    "hp": 31500,
     "en": 3000.0,
-    "move": 6,
+    "move": 7,
     "mobility": 50.0,
     "cost": 500,
     "counterLimit": 1,
-    "accuracy": 105.0,
+    "accuracy": 68.25,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "hover",
@@ -226,7 +226,9 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 45,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -325,8 +327,14 @@
       "radar": 500.0,
       "antiDetection": -150.0
     },
-    "v17BaseHp": 45000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.25,
+    "mobilityMoveTarget": 6,
+    "shipHullBeforeReduction": 45000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1
   },
   "presentation": {
     "shield": false,
@@ -373,9 +381,9 @@
       "hitBonus": 0,
       "slot": "skill",
       "clip": null,
-      "damagePerShot": 3000.0,
+      "damagePerShot": 2250,
       "damageComponents": {
-        "shell": 3000.0
+        "shell": 2250
       },
       "hitsPerShot": 1,
       "attack": {
@@ -386,7 +394,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 1.1
+            "delay": 1.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -394,7 +403,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -402,7 +412,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -410,7 +421,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.6
+            "delay": 0.6,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -418,7 +430,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -426,7 +439,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -434,7 +448,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.6
+            "delay": 0.6,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -442,7 +457,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -450,10 +466,12 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
-            "delay": 1.5
+            "delay": 1.5,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -552,6 +570,10 @@
         "large": {
           "damage": 1,
           "accuracy": 1
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -578,8 +600,14 @@
         ]
       },
       "actionCost": 5,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 3000.0,
+        "damageComponents": {
+          "shell": 3000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "GallopClass_Turret_Cannon": {
       "name": "舰载加农炮",
@@ -594,9 +622,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 4000.0,
+      "damagePerShot": 3000,
       "damageComponents": {
-        "shell": 4000.0
+        "shell": 3000
       },
       "hitsPerShot": 1,
       "attack": {
@@ -607,7 +635,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -615,7 +644,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_Cannon_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -715,6 +745,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -734,15 +768,21 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 4000.0,
+        "damageComponents": {
+          "shell": 4000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "GallopClass_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 10.0,
       "sourceName": "GallopClass_Turret_AA",
       "sourceHit": 125.0,
@@ -750,10 +790,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 300.0,
+      "damagePerShot": 250,
       "damageComponents": {
-        "shell": 250.0,
-        "shellAP": 50.0
+        "shell": 200,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -764,7 +804,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -772,7 +813,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -780,7 +822,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -788,7 +831,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -796,7 +840,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -804,7 +849,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -812,7 +858,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -820,7 +867,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -828,7 +876,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -836,7 +885,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -844,7 +894,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -852,7 +903,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -860,7 +912,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -868,7 +921,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -876,7 +930,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -884,7 +939,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -892,7 +948,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -900,7 +957,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -908,7 +966,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -916,7 +975,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GallopClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1038,6 +1098,17 @@
       },
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -1200,19 +1271,14 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 300.0,
+        "damageComponents": {
+          "shell": 250.0,
+          "shellAP": 50.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [
@@ -1232,12 +1298,6 @@
       "source": "Template/Unit/Skill/CmdCom.gw",
       "status": "adapted",
       "name": "通信指挥：范围与效果随驾驶员领导力变化"
-    },
-    {
-      "id": "special_Common_MinovskyParticle_M",
-      "name": "special_Common_MinovskyParticle_M",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-      "status": "review"
     },
     {
       "id": "Common_MinovskyParticle_M",

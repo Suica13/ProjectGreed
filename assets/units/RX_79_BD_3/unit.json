@@ -453,7 +453,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -551,7 +552,9 @@
     "unitLevel": 3000.0,
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 45000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": true,
@@ -2179,11 +2182,11 @@
       "cost": 0,
       "weapons": [
         "EF_GroundTypeBeamRifle_LateType",
-        "Common_Push_A",
         "EF_RX_79_BD_ChestMS_Line",
         "EF_RX_79_BD_ChestMG",
         "EF_BeamSaber_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2199,14 +2202,14 @@
       "consumeAction": false,
       "enPercent": 25,
       "duration": 3,
-      "hpDrainPercent": 25,
+      "hpDrainPercent": 10,
       "enDrainPercent": 5,
       "formUnitId": "RX_79_BD_3_EXAM",
       "formKits": {
         "standard": "standard"
       },
       "sound": {
-        "file": "../../sounds/Exam_1.ogg",
+        "file": "../../sounds/Exam_2.mp3",
         "volume": 0.5
       }
     },
@@ -2257,6 +2260,14 @@
   },
   "hangars": [],
   "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": [
+      "RX_79_BD_2"
+    ]
+  },
+  "requiredPilotId": "Pilot_EFSF_0079_N_ACE_YUU",
   "pairedWeapons": [
     {
       "id": "EF_RX_79_BD_ChestMS_Line",
@@ -2304,13 +2315,5 @@
         }
       ]
     }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": false,
-    "refitFrom": [
-      "RX_79_BD_2"
-    ]
-  },
-  "requiredPilotId": "Pilot_EFSF_0079_N_ACE_YUU"
+  ]
 }

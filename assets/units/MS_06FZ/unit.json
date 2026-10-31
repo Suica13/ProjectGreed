@@ -519,7 +519,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -612,7 +613,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 25000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.85,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1516,9 +1519,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MMP80MG",
-        "Common_Push_A",
         "Common_Grenade_D",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1527,9 +1530,9 @@
       "cost": 50,
       "weapons": [
         "ZN_270mmBazooka",
-        "Common_Push_A",
         "Common_Grenade_D",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     }
   ],

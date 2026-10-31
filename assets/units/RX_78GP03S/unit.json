@@ -497,7 +497,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 7,
+    "speed": 145
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -592,7 +593,9 @@
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 47500.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 3.0,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -1015,9 +1018,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1146,7 +1147,11 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_HypeBazooka_GP03S_Double_L": {
       "name": "火箭筒",
@@ -1230,9 +1235,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1364,7 +1367,11 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_BeamSaber_BF_B": {
       "name": "光束军刀",
@@ -1777,10 +1784,10 @@
       "cost": 0,
       "weapons": [
         "EF_RX_78GP01_BR",
-        "Common_Push_A",
         "EF_HypeBazooka_GP03S_Double",
         "EF_BeamSaber_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1810,6 +1817,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_HypeBazooka_GP03S_Double",
@@ -1821,24 +1834,19 @@
           "requiredParts": [
             "rightArm"
           ],
-          "limb": null
+          "limb": "rightArm"
         },
         {
           "id": "EF_HypeBazooka_GP03S_Double_L",
           "weaponId": "EF_HypeBazooka_GP03S_Double_L",
           "muzzleIndex": 1,
           "requiredParts": [
-            "rightArm"
+            "leftArm"
           ],
-          "limb": null
+          "limb": "leftArm"
         }
-      ]
+      ],
+      "fireMode": "simultaneous"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

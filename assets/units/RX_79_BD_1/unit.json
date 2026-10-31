@@ -499,7 +499,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 95
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -597,7 +598,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 35000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": true,
@@ -2455,7 +2458,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     }
   ],
   "weaponKits": [
@@ -2465,11 +2468,11 @@
       "cost": 0,
       "weapons": [
         "EF_100mmMG_Blue",
-        "Common_Push_A",
         "EF_RX_79_BD_ChestMS_Line",
         "EF_RX_79_BD_ChestMG",
         "EF_BeamSaber_AF_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2478,11 +2481,11 @@
       "cost": 100,
       "weapons": [
         "EF_GroundTypeBeamRifle_Blue",
-        "Common_Push_A",
         "EF_RX_79_BD_ChestMS_Line",
         "EF_RX_79_BD_ChestMG",
         "EF_BeamSaber_AF_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2511,7 +2514,7 @@
       "consumeAction": false,
       "enPercent": 25,
       "duration": 3,
-      "hpDrainPercent": 25,
+      "hpDrainPercent": 10,
       "enDrainPercent": 5,
       "formUnitId": "RX_79_BD_1_EXAM",
       "formKits": {
@@ -2536,6 +2539,28 @@
     ]
   },
   "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RX_79_BD_2",
+      "unitId": "RX_79_BD_2",
+      "money": 500,
+      "supplies": 500,
+      "unlockUnits": [
+        "RX_79_BD_2"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_BD_1/RX_79_BD_1.ini",
+        "action": "action_CustomUnit_RX_79_BD_2",
+        "seconds": 20.0
+      }
+    }
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_RX_79_BD_ChestMS_Line",
@@ -2583,27 +2608,5 @@
         }
       ]
     }
-  ],
-  "refits": [
-    {
-      "id": "action_CustomUnit_RX_79_BD_2",
-      "unitId": "RX_79_BD_2",
-      "money": 500,
-      "supplies": 500,
-      "unlockUnits": [
-        "RX_79_BD_2"
-      ],
-      "blocked": false,
-      "source": {
-        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_79_BD_1/RX_79_BD_1.ini",
-        "action": "action_CustomUnit_RX_79_BD_2",
-        "seconds": 20.0
-      }
-    }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

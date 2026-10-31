@@ -4,7 +4,7 @@ const G = require("../shared/rules.js"),
   P = require("../shared/pilots.js"),
   E = require("../shared/economy.js"),
   D = require("../shared/development.js");
-const entry = (id) => ({ unitId: id, kitId: E.baseKit(id) });
+const entry = (id) => ({ unitId: id, kitId: E.defaultKit(id) });
 function game(first) {
   const g = G.create(false, 1, [[first], [entry("Type61")]], false, {
     costLimit: 99999,
@@ -45,14 +45,14 @@ test("native ACE forms resolve every kit without mutating the purchased hull and
         const g = game(e),
           u = g.units[0];
         assert.equal(u.model, id);
-        assert.equal(u.inventoryUnitId, prefab.id);
+        assert.equal(u.deploymentUnitId, prefab.id);
         assert.equal(
-          G.planFormation([e], Infinity, { inventory: { [prefab.id]: 1 } }).disabled.length,
+          G.planFormation([e], Infinity, { licenses: { [prefab.id]: true } }).disabled.length,
           0,
         );
         assert.equal(
-          G.planFormation([e], Infinity, { inventory: { [form.unitId]: 1 } }).reasons[0],
-          "inventory",
+          G.planFormation([e], Infinity, { licenses: { [form.unitId]: true } }).reasons[0],
+          "license",
         );
         delete e.customPilot;
         assert.equal(G.formationModelId(e), prefab.id + "__" + kit.id);
@@ -72,15 +72,15 @@ test("ACE-specific EXAM and armor purge retain the origin hull, pilot and unit i
     G.useSkill(g, u, skill, u.x, u.y);
     assert.equal(G.modelOf(u).prefabId, target);
     assert.equal(u.id, uid);
-    assert.equal(u.inventoryUnitId, id);
+    assert.equal(u.deploymentUnitId, id);
     assert.equal(u.pilot.aceId, pilotId);
   }
 });
 test("extra hull stock is valid, nonfactory hulls cannot be produced even after activity unlock", () => {
   const id = "MS_06S_CharCustom";
   D.grantUnit("ZEON", id);
-  assert.equal(E.validate({ money: 0, supplies: 0, inventory: { [id]: 1 } }).inventory[id], 1);
-  assert.equal(E.produce(id, "PMC"), false);
+  assert.equal(E.validate({ money: 0, supplies: 0, licenses: { [id]: true } }).licenses[id], true);
+  assert.equal(E.purchaseLicense(id, "PMC"), false);
   const p = G.catalog.prefabs.find((p) => p.id === id);
   assert(!p.production.enabled);
   assert(p.production.refitFrom.includes("MS_06S"));

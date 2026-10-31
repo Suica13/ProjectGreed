@@ -208,7 +208,8 @@
     "footprint": {
       "width": 3,
       "height": 3
-    }
+    },
+    "speed": 135
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -302,7 +303,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 75000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.75,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": false,
@@ -1471,7 +1474,7 @@
     },
     {
       "id": "special_Common_EMP_M",
-      "name": "EMP：周围3格敌人下回合AP减少1，2 AP，冷却2回合",
+      "name": "EMP：周围3格敌人下回合AP减少25%，2 AP，冷却2回合",
       "source": "Units/BattleUnits/Weapon/Sp/Common_EMP_M.gw",
       "status": "adapted"
     },
@@ -1607,7 +1610,7 @@
         "file": "../../sounds/Beam_Hit_3.ogg",
         "volume": 0.7
       },
-      "description": "消耗2 AP与80 EN，周围3格内所有敌人下回合AP减少1点，不叠加，冷却2个己方回合。"
+      "description": "消耗2 AP与80 EN，周围3格内所有敌人下回合AP减少25%，不叠加，冷却2个己方回合。"
     }
   ],
   "nativeCombatRevision": 1,

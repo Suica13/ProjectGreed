@@ -40,8 +40,35 @@ const activity = (mode, extra = {}) => ({
   title: "活动",
   text: "内容",
   mode,
-  rewards: { money: 10, supplies: 20, inventory: { Type61: 3 }, unlockUnits: ["RGM_79_G"] },
+  rewards: { money: 10, supplies: 20, licenses: { Type61: true }, unlockUnits: ["RGM_79_G"] },
   ...extra,
+});
+
+test("legacy activity storage converts quantities once without losing claims or duplicating mail", (t) => {
+  const f = fixture(t), profile = identity(), ws = {};
+  f.service.identify(ws, profile);
+  const mail = f.frames.get(ws).at(-1).mail[0];
+  f.service.receive(ws, {type:"activity_claim", mailId:mail.id});
+  f.service.receive(ws, {type:"activity_ack", mailId:mail.id});
+  const old = JSON.parse(fs.readFileSync(f.options.storePath, "utf8"));
+  old.schemaVersion = 1;
+  for (const item of [...old.activities, ...Object.values(old.players).flatMap(p => p.mail)]) {
+    item.rewards.inventory = Object.fromEntries(Object.keys(item.rewards.licenses).map(id => [id, 3]));
+    delete item.rewards.licenses;
+  }
+  const beforeCount = old.players[profile.id].mail.length;
+  fs.writeFileSync(f.options.storePath, JSON.stringify(old));
+  f.restart();
+  const migrated = JSON.parse(fs.readFileSync(f.options.storePath,"utf8"));
+  assert.equal(migrated.schemaVersion, 2);
+  assert.equal(migrated.players[profile.id].mail.length,beforeCount);
+  const accepted = migrated.players[profile.id].mail.find(item => item.id === mail.id);
+  assert.equal(accepted.confirmedAt,1000);
+  assert.deepEqual(accepted.rewards.licenses,{RGM_79_G:true,MS_09:true});
+  assert.equal(accepted.rewards.inventory,undefined);
+  const reconnect = {};
+  f.service.identify(reconnect,profile);
+  assert.equal(f.frames.get(reconnect).at(-1).mail.length,beforeCount);
 });
 test("welcome is durable, private, authenticated and accepted once, including interrupted delivery", (t) => {
   const f = fixture(t),
@@ -52,7 +79,7 @@ test("welcome is durable, private, authenticated and accepted once, including in
   f.service.identify(ws, id, "First");
   f.service.identify(other, otherId, "Other");
   let mail = f.frames.get(ws).at(-1).mail[0];
-  assert.deepEqual(mail.rewards.inventory, { RGM_79_G: 3, MS_09: 3 });
+  assert.deepEqual(mail.rewards.licenses, { RGM_79_G: true, MS_09: true });
   assert.equal(mail.rewards.money, 5000);
   assert(!JSON.stringify(f.frames.get(ws)).includes(id.secret));
   assert.throws(() => f.service.identify({}, { ...id, secret: "0".repeat(64) }), /验证失败/);
@@ -136,7 +163,7 @@ test("bad rewards, expired windows and unrequested acknowledgements are rejected
   assert.throws(() => f.service.receive(ws, { type: "activity_ack", mailId: mail.id }));
   assert.throws(() => f.service.publish(activity("all_known", { rewards: { money: -1 } })));
   assert.throws(() =>
-    f.service.publish(activity("all_known", { rewards: { inventory: { not_a_unit: 1 } } })),
+    f.service.publish(activity("all_known", { rewards: { licenses: { not_a_unit: true } } })),
   );
   assert.throws(() =>
     f.service.publish(
@@ -185,13 +212,13 @@ test("daily and weekly defaults reset at server-local 06:00, not after 24 hours,
   assert.deepEqual(mails("default-daily-login")[0].rewards, {
     money: 2500,
     supplies: 5000,
-    inventory: { RX_79_G: 1, MS_14A: 1 },
+    licenses: { RX_79_G: true, MS_14A: true },
     unlockUnits: [],
   });
   assert.deepEqual(mails("default-weekly-login")[0].rewards, {
     money: 5000,
     supplies: 10000,
-    inventory: {},
+    licenses: {},
     unlockUnits: [],
   });
   f.time(localTime(26, 5, 59));
@@ -365,7 +392,7 @@ test("default limited battle bonus, separate multipliers, overlap, edits and ser
   assert.deepEqual(added.rewards, {
     money: 0,
     supplies: 0,
-    inventory: {},
+    licenses: {},
     unlockUnits: [],
     unlockAces: [],
   });

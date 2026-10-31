@@ -192,7 +192,7 @@ async function copyQqGroup() {
 byId("copyQqGroup").onclick = copyQqGroup;
 function logUnit(unit) {
   const model = Rules.modelOf(unit);
-  return `[${teamName(unit.team)}][${UnitIdentity.owner(unit).name}]${Rules.pilotUnitName(unit)}(${model.code} ${model.name})`;
+  return `[队伍${unit.team + 1}][${UnitIdentity.owner(unit).name}]${Rules.pilotUnitName(unit)}(${model.code} ${model.name})`;
 }
 function addLog(text) {
   log.unshift(text);
@@ -562,7 +562,6 @@ function renderRoster(busy) {
   enemies.scrollTop = teamScroll[1];
 }
 // 右侧单位详情：属性、动作、武器和目标。选中单位后重新生成。
-let unitNameEdit = null;
 function renderPanel() {
   let panel = byId("unitPanel"),
     u = getUnit(selected);
@@ -590,52 +589,6 @@ function renderPanel() {
       ><small>${m.code} · ${m.kitName} · ${teamName(u.team)}</small>
     </div>`;
   if (displaysCustomUnitName(u)) head.querySelector("strong").setAttribute("data-i18n-ignore", "");
-  if (unitNameEdit && unitNameEdit.id !== u.id) unitNameEdit = null;
-  if (
-    (Net.active ? Net.canControl(u) : own) &&
-    !["waiting", "assembly", "finished"].includes(phase)
-  ) {
-    const nameHost = head.querySelector("strong").parentElement;
-    const edit = element("button", "", unitNameEdit ? "保存名称" : "修改名称");
-    edit.id = "editBattleUnitName";
-    edit.disabled = !!Net.awaiting;
-    if (unitNameEdit) {
-      const input = element("input");
-      input.id = "battleUnitNameInput";
-      input.maxLength = 24;
-      input.value = unitNameEdit.value;
-      input.setAttribute("aria-label", "单位名称");
-      input.oninput = () => {
-        unitNameEdit.value = input.value;
-      };
-      nameHost.querySelector("strong").replaceWith(input);
-    }
-    edit.onclick = () => {
-      if (!unitNameEdit) {
-        unitNameEdit = { id: u.id, value: u.customName || unitName(u) };
-        renderPanel();
-        byId("battleUnitNameInput").focus();
-        return;
-      }
-      try {
-        const name = Rules.normalizeUnitName(unitNameEdit.value);
-        if (Net.active) Net.request("rename_unit", { unitId: u.id, name });
-        else {
-          const before = logUnit(u);
-          if (name) u.customName = name;
-          else delete u.customName;
-          addLog(`${before} 更名为 ${Rules.unitName(u)}。`);
-        }
-        unitNameEdit = null;
-        update();
-      } catch (error) {
-        note(error.message);
-      }
-    };
-    const nameRow = element("div", "unit-name-row");
-    nameRow.append(nameHost.querySelector("strong, input"), edit);
-    nameHost.prepend(nameRow);
-  }
   panel.append(head);
   const identity = UnitIdentity.owner(u),
     ownership = element("div", "unit-ownership"),
@@ -677,7 +630,7 @@ function renderPanel() {
   panel.append(overview);
   const sensorRanges = Rules.sensors.ranges(u, game);
   let stats = element("div", "stats");
-  stats.innerHTML = /* HTML */ `<div><span>移动力</span>${Math.round(m.move)} 格</div>
+  stats.innerHTML = /* HTML */ `<div><span>移动力</span>${formatDistance(m.move)}</div>
     <div data-sensor-range="sight"><span>视野距离</span>${formatDistance(sensorRanges.sight)}</div>
     <div data-sensor-range="radar"><span>侦察距离</span>${formatDistance(sensorRanges.radar)}</div>
     <div><span>机动</span>${m.speed ?? 100}</div>
@@ -785,7 +738,7 @@ function renderPanel() {
     effects.push(I18n.text("背包损毁：移动力-25%（向下取整，至少1格）"));
   if (penalty.resistancePenalty)
     effects.push(I18n.text("四肢损毁：抗性降低") + " " + penalty.resistancePenalty + "%");
-  if (u.apPenaltyNextTurn) effects.push(I18n.text("电击：下回合AP减少1点"));
+  if (u.apPenaltyNextTurn) effects.push(I18n.text("硬直：下回合AP减少25%"));
   if (u.burning) effects.push(I18n.text("燃烧中"));
   if (m.iField)
     partStatus.append(
@@ -924,7 +877,7 @@ function renderPanel() {
     b.onclick = fn;
     actions.append(b);
   }
-  if (m.ship)
+  if (m.ship || m.fixedWeaponFacing)
     for (const [direction, label] of [
       [-1, "左转90°"],
       [1, "右转90°"],
@@ -977,7 +930,7 @@ function renderPanel() {
       ),
     );
   if (u.snipeOrder)
-    panel.append(element("p", "helper", "狙击蓄力中：下次己方回合检查射程并自动执行，命中率×2。"));
+    panel.append(element("p", "helper", "狙击锁定中：下次己方回合开始时检查射程并自动射击，命中率×2。"));
   if (u.overBoost)
     panel.append(
       element(
@@ -2217,7 +2170,7 @@ async function performMove(u, x, y) {
     from,
     path,
     start: performance.now(),
-    step: byId("quick").checked ? 50 : 120,
+    step: MovementTiming.step(path, byId("quick").checked),
   };
   update();
   let stamp = session;
@@ -2897,7 +2850,7 @@ function endTurn() {
   selected = null;
   weaponId = null;
   mode = "select";
-  addLog(`第${game.round}回合 · ${teamName(game.team)}行动开始。`);
+  addLog(`第${game.round}回合 · 队伍${game.team + 1}行动开始。`);
   if (game.winner !== null) {
     showVictory();
     return;

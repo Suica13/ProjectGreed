@@ -178,13 +178,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 156500,
+    "hp": 96500,
     "en": 7500.0,
     "move": 6,
-    "mobility": 75.0,
+    "mobility": 86.25,
     "cost": 1000,
     "counterLimit": 1,
-    "accuracy": 105.0,
+    "accuracy": 75.075,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "naval",
@@ -367,7 +367,9 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 60,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -468,8 +470,14 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 125000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.2,
+    "mobilityMoveTarget": 6,
+    "shipHullBeforeReduction": 125000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1.1,
+    "shipFactionAccuracyMultiplier": 1.1,
+    "shipFactionEvasionMultiplier": 1.15
   },
   "presentation": {
     "shield": false,
@@ -516,9 +524,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 3500.0,
+      "damagePerShot": 2625,
       "damageComponents": {
-        "shell": 3500.0
+        "shell": 2625
       },
       "hitsPerShot": 1,
       "attack": {
@@ -529,7 +537,8 @@
             "partBreakModifier": 1.25,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_CN_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -537,7 +546,8 @@
             "partBreakModifier": 1.25,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_CN_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -545,7 +555,8 @@
             "partBreakModifier": 1.25,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_CN_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -553,7 +564,8 @@
             "partBreakModifier": 1.25,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_CN_M1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -640,6 +652,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -659,8 +675,6 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "加农炮"
@@ -671,14 +685,22 @@
         "ja": {
           "name": "カノン砲"
         }
-      }
+      },
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 3500.0,
+        "damageComponents": {
+          "shell": 3500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "HimalayaClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 80.0,
+      "hit": 100.0,
       "en": 192.0,
       "sourceName": "HimalayaClass_Turret_MS",
       "sourceHit": 100.0,
@@ -686,9 +708,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 1500.0,
+      "damagePerShot": 1125,
       "damageComponents": {
-        "shell": 1500.0
+        "shell": 1125
       },
       "hitsPerShot": 1,
       "attack": {
@@ -699,7 +721,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -707,7 +730,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -715,7 +739,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -723,7 +748,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -731,7 +757,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -739,7 +766,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -747,7 +775,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -755,7 +784,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -763,7 +793,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -771,7 +802,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -779,7 +811,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -787,7 +820,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -795,7 +829,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -803,7 +838,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -811,7 +847,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -819,7 +856,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_MS_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -922,6 +960,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -941,15 +983,20 @@
         "actions": []
       },
       "actionCost": 2,
-      "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 1500.0,
+        "damageComponents": {
+          "shell": 1500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "HimalayaClass_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 80.0,
+      "hit": 100.0,
       "en": 20.0,
       "sourceName": "HimalayaClass_Turret_AA",
       "sourceHit": 100.0,
@@ -957,10 +1004,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 300.0,
+      "damagePerShot": 225,
       "damageComponents": {
-        "shell": 225.0,
-        "shellAP": 75.0
+        "shell": 175,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -971,7 +1018,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -979,7 +1027,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -987,7 +1036,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -995,7 +1045,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1003,7 +1054,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1011,7 +1063,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1019,7 +1072,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1027,7 +1081,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1035,7 +1090,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1043,7 +1099,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1051,7 +1108,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1059,7 +1117,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1067,7 +1126,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1075,7 +1135,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1083,7 +1144,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1091,7 +1153,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1099,7 +1162,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1107,7 +1171,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1115,7 +1180,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1123,7 +1189,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1131,7 +1198,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1139,7 +1207,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1147,7 +1216,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1155,7 +1225,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1163,7 +1234,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1171,7 +1243,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1179,7 +1252,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1187,7 +1261,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1195,7 +1270,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1203,7 +1279,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1211,7 +1288,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1219,7 +1297,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1227,7 +1306,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1235,7 +1315,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1243,7 +1324,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1251,7 +1333,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1259,7 +1342,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1267,7 +1351,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1275,7 +1360,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1283,7 +1369,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "HimalayaClass_Turret_AA_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1431,6 +1518,17 @@
       },
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -1753,19 +1851,14 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 300.0,
+        "damageComponents": {
+          "shell": 225.0,
+          "shellAP": 75.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [

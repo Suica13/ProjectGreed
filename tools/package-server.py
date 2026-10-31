@@ -14,7 +14,7 @@ import urllib.request
 from zipfile import ZipFile, ZIP_DEFLATED
 
 ROOT = Path(__file__).resolve().parents[1]
-TOOLS = ["server-activities.cjs", "open-server-activities.cjs"]
+TOOLS = ["server-activities.cjs", "open-server-activities.cjs", "settlement-log.cjs"]
 
 
 def main():

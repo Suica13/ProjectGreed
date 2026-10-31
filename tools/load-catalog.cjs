@@ -364,6 +364,7 @@ function loadCatalog({
     lowHp.threshold > 1
   )
     throw Error("Invalid low HP presentation setting");
+  const defaultEquipment = read(path.resolve(__dirname, "../shared/production-catalog.json")).defaultKits || {};
   for (const ref of catalog.units) {
     const source = file(root, ref),
       base = path.dirname(source),
@@ -399,6 +400,8 @@ function loadCatalog({
     if (!prefab.tags.some((tag) => /^\d{4}(?:[EL])?$/.test(tag)))
       throw Error("Unit must have an era tag: " + ref);
     prefab.unitTags ??= [];
+    if (prefab.unitTags.includes("MA"))
+      prefab.unitTags = [...prefab.unitTags.filter(tag => !["SmallUnit", "MediumUnit", "LargeUnit"].includes(tag)), "LargeUnit"];
     prefab.transport ??= { slotCost: 1, loadTags: [] };
     prefab.hangars ??= [];
     const stringTags = (tags) =>
@@ -711,6 +714,8 @@ function loadCatalog({
         PairedWeapons.variants(prefab, group, animations),
       ]),
     );
+    prefab.defaultKit = defaultEquipment[prefab.id] || prefab.weaponKits[0].id;
+    prefab.weaponKits.sort((a,b)=>Number(b.id===prefab.defaultKit)-Number(a.id===prefab.defaultKit));
     for (const kit of prefab.weaponKits) {
       validateLocalization(kit.localization, prefab.id + "/" + kit.id);
       const id = prefab.id + "__" + kit.id;
@@ -757,7 +762,7 @@ function loadCatalog({
               ))
           )
             throw Error("Invalid pilot weapon requirement: " + prefab.id + "/" + key);
-          if (raw.onHitAPLoss !== undefined && raw.onHitAPLoss !== 1)
+          if (raw.onHitAPLoss !== undefined && ![0.25, 1].includes(raw.onHitAPLoss))
             throw Error("Invalid on-hit AP loss: " + prefab.id + "/" + key);
           if (raw.burn !== undefined && (raw.burn.durationTurns !== 3 || raw.burn.hpPercent !== 5))
             throw Error("Invalid burn status: " + prefab.id + "/" + key);
@@ -1014,7 +1019,7 @@ function loadCatalog({
       result.models[id] = {
         ...prefab.stats,
         move: prefab.stats.deployed ? 0 : prefab.stats.move + Math.trunc((prefab.stats.speed - 100) / 50),
-        actionPoints: (prefab.stats.actionPoints ?? 5) + Math.trunc((prefab.stats.speed - 100) / 50),
+        actionPoints: prefab.stats.actionPoints ?? 5,
         wip: prefab.wip,
         disabled: prefab.disabled,
         formOnly: prefab.formOnly === true,
@@ -1041,7 +1046,6 @@ function loadCatalog({
         description: prefab.description,
         sourceStats: prefab.sourceStats,
         mechanics: prefab.mechanics || [],
-        refits: prefab.refits || [],
         pilotForms: prefab.pilotForms || [],
         requiredPilotId: prefab.requiredPilotId,
         production: prefab.production,

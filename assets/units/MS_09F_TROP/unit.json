@@ -544,7 +544,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 140
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -641,7 +642,9 @@
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 28500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": false,
@@ -1679,7 +1682,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     }
   ],
   "weaponKits": [
@@ -1689,10 +1692,10 @@
       "cost": 50,
       "weapons": [
         "ZN_880mmBazooka",
-        "Common_Push_A",
         "ZN_MS_09_ChestBeam",
         "ZN_Panzerfaust",
-        "ZN_HeatSaber_AF_A"
+        "ZN_HeatSaber_AF_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1701,10 +1704,10 @@
       "cost": 0,
       "weapons": [
         "ZN_MMP80MG",
-        "Common_Push_A",
         "ZN_MS_09_ChestBeam",
         "ZN_Panzerfaust",
-        "ZN_HeatSaber_AF_A"
+        "ZN_HeatSaber_AF_A",
+        "Common_Push_A"
       ]
     }
   ],

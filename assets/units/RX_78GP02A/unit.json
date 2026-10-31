@@ -720,7 +720,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 140
   },
   "attackBonuses": {
     "melee": 50.0,
@@ -815,7 +816,9 @@
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 60000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -2543,12 +2546,12 @@
       "cost": 50,
       "weapons": [
         "EF_RX_78GP02A_BeamBazooka",
-        "Common_Push_A",
         "EF_BeamSaber_AF_Large_Green_A",
         "Common_DoubleVulcan_MS",
         "EF_RX_78GP02A_MRLS_L",
         "EF_RX_78GP02A_MRLS_L_L",
-        "EF_RX_78GP02A_MRLS_S"
+        "EF_RX_78GP02A_MRLS_S",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2580,6 +2583,16 @@
     ]
   },
   "hangars": [],
+  "availableFactions": [
+    "EFSF",
+    "ZEON"
+  ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_RX_78GP02A_MRLS_S",
@@ -2604,15 +2617,5 @@
         }
       ]
     }
-  ],
-  "availableFactions": [
-    "EFSF",
-    "ZEON"
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

@@ -132,7 +132,7 @@ for (const scenario of [
     assert.ok(assist);
     const xp = scenario.startsWith("saved")
       ? 0
-      : Math.floor(G.modelOf(target).cost * 0.25 * (scenario === "quick" ? 0.1 : 1));
+      : Math.floor(G.modelOf(target).cost * 0.25 * (scenario === "quick" ? 0.25 : 1));
     assert.equal(assist.experiencePoints, xp);
     assert.equal(contributor.pilot.experience, xp);
     if (scenario === "embarked") assert.equal(assist.carrierId, contributor.embarked.carrierId);
@@ -200,11 +200,11 @@ for (const mode of ["regular", "quick"]) for (const saved of [false,true]) for (
       assert.equal(contributor.pilot.experience,0);
       return;
     }
-    const speed = mode === "quick" ? .1 : 1;
+    const speed = mode === "quick" ? .25 : 1;
     for (const [actor,kind,share] of [[killer,"kill",1],[contributor,"assist",.25]]) {
       const award = awards.find(a=>a.pilotId === actor.pilot.id && a.kind === kind);
       assert.ok(award,JSON.stringify(awards));
-      const expected = Math.floor(G.modelOf(target).cost * share * speed * bonus * 1.1);
+      const expected = Math.floor(G.modelOf(target).cost * share * speed * bonus * 1.25);
       assert.equal(award.experiencePoints,expected);
       assert.equal(actor.pilot.experience,expected);
       const store = {pilots:[P.createCustom(actor.pilot.id,actor.pilot.name)],awards:[]};
@@ -216,15 +216,15 @@ for (const mode of ["regular", "quick"]) for (const saved of [false,true]) for (
 }
 
 test("learning computer is attached to all native LPC hulls, including legacy core fighter", () => {
-  const expected = new Set(["RX_78_1","FF_X7","RX_78_2","RX_77_2","RX_75","FF_X7Bst","RX_78NT_1_FA","RX_78_3"]);
+  const expected = new Set(["RX_78_1","FF_X7","RX_78_2","RX_77_2","RX_75","FF_X7Bst","RX_78NT_1_FA","RX_78_3","RX_78_2_ACE","RX_78_2_BPart"]);
   const actual = new Set();
   for (const m of Object.values(G.models)) {
     if (!m.pilotExperienceMultiplier) continue;
     actual.add(m.prefabId);
-    assert.equal(m.pilotExperienceMultiplier,1.1);
+    assert.equal(m.pilotExperienceMultiplier,1.25);
     const mechanic = m.mechanics.find(m=>m.id === "LPC");
     assert.equal(mechanic.status,"adapted");
-    assert.equal(mechanic.name,"学习型电脑：驾驶员经验获取×1.1");
+    assert.equal(mechanic.name,"学习型电脑：驾驶员经验获取×1.25");
   }
   assert.deepEqual(actual,expected);
 });
@@ -267,7 +267,7 @@ for (const scenario of ["regular", "quick", "saved", "max"]) {
         scenario === "max"
           ? 0
           : Math.floor(
-              G.modelOf(target).cost * (scenario === "quick" ? 0.1 : 1),
+              G.modelOf(target).cost * (scenario === "quick" ? 0.25 : 1),
             ),
       );
       assert.equal(actor.pilot.level, before.level);

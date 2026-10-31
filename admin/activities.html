@@ -104,7 +104,7 @@
       }
       .reward-unit {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 100px auto;
+        grid-template-columns: minmax(0, 1fr) auto;
         gap: 8px;
         margin: 8px 0;
       }
@@ -243,7 +243,7 @@
   <body>
     <header>
       <h1>服务器活动管理</h1>
-      <button id="refresh">刷新</button><span id="clock"></span>
+      <button id="refresh">刷新</button><button id="clearAllActivities" type="button">清空所有活动</button><span id="clock"></span>
     </header>
     <form id="serverConnection" hidden style="max-width: 720px; margin: 24px auto; padding: 20px">
       <h2>连接活动管理服务器</h2>
@@ -460,13 +460,13 @@
                 </div>
               </section>
               <section>
-                <h3>单位库存</h3>
-                <div id="inventory"></div>
-                <button id="addUnit" type="button">添加单位</button>
+                <h3>部署许可奖励</h3><p class="muted">直接授予永久部署许可，即使尚未开发也可以编组出战；不会额外开发科技。</p>
+                <div id="licenseRewards"></div>
+                <button id="addUnit" type="button">添加部署许可</button>
               </section>
               <section>
-                <h3>立即开发单位</h3>
-                <p class="muted">逐条添加需要立即开发的单位，不消耗科技点或货币。</p>
+                <h3>开发奖励</h3>
+                <p class="muted">逐条添加需要立即开发的单位，不消耗科技点或货币。仅开放部署许可的购买条件，不赠送部署许可。</p>
                 <div id="unlocks"></div>
                 <button id="addUnlock" type="button">添加开发单位</button
                 ><button id="clearUnlocks" type="button">清空开发奖励</button>
@@ -629,8 +629,8 @@
           rewards.money +
           " · 物资：" +
           rewards.supplies +
-          Object.entries(rewards.inventory)
-            .map(([id, count]) => "\n" + unitName(id) + " ×" + count)
+          Object.entries(rewards.licenses)
+            .map(([id, count]) => "\n部署许可：" + unitName(id))
             .join("") +
           rewards.unlockUnits.map((id) => "\n立即开发：" + unitName(id)).join("") +
           (rewards.unlockAces || [])
@@ -654,25 +654,15 @@
         const row = document.createElement("div");
         row.className = "reward-unit";
         const select = document.createElement("select");
-        select.setAttribute("aria-label", "奖励单位");
+        select.setAttribute("aria-label", "部署许可奖励单位");
         for (const unit of snapshot.units)
           select.add(new Option(unit.name + " [" + unit.faction + "]", unit.id));
-        const count = document.createElement("input");
-        Object.assign(count, {
-          type: "number",
-          min: "1",
-          max: "1000000",
-          step: "1",
-          value: "1",
-          required: true,
-        });
-        count.setAttribute("aria-label", "奖励数量");
         const remove = document.createElement("button");
         remove.type = "button";
         remove.textContent = "删除";
         remove.onclick = () => row.remove();
-        row.append(select, count, remove);
-        byId("inventory").append(row);
+        row.append(select, remove);
+        byId("licenseRewards").append(row);
       }
       function renderUnlocks() {
         const list = byId("unlocks");
@@ -783,7 +773,7 @@
       };
       byId("newActivity").onclick = () => {
         byId("form").reset();
-        byId("inventory").replaceChildren();
+        byId("licenseRewards").replaceChildren();
         unlockUnits = [];
         unlockAces = [];
         renderAceUnlocks();
@@ -804,6 +794,13 @@
         }
       };
       let deletingId = null;
+      byId("clearAllActivities").onclick = () => {
+        if (!snapshot?.activities.length) return;
+        deletingId = "*";
+        byId("deleteActivityText").textContent = "确定清空所有活动？未领取奖励会撤销，已领取收益保留。重启后不会恢复已删除的默认活动。";
+        byId("deleteActivityDialog").showModal();
+        byId("cancelDelete").focus();
+      };
       byId("deleteActivity").onclick = () => {
         const activity = snapshot.activities.find((item) => item.id === selectedId);
         if (!activity) return;
@@ -816,7 +813,8 @@
       byId("confirmDelete").onclick = async () => {
         byId("confirmDelete").disabled = true;
         try {
-          snapshot = await api("/delete", { id: deletingId });
+          const ids = deletingId === "*" ? snapshot.activities.map((item) => item.id) : [deletingId];
+          for (const id of ids) snapshot = await api("/delete", { id });
           selectedId = null;
           byId("deleteActivityDialog").close();
           render();
@@ -854,10 +852,10 @@
       };
       byId("form").onsubmit = async (event) => {
         event.preventDefault();
-        const inventory = {};
-        for (const row of byId("inventory").children) {
+        const licenses = {};
+        for (const row of byId("licenseRewards").children) {
           const id = row.querySelector("select").value;
-          inventory[id] = (inventory[id] || 0) + Number(row.querySelector("input").value);
+          licenses[id] = true;
         }
         const value = {
           title: byId("title").value,
@@ -866,7 +864,7 @@
           rewards: {
             money: Number(byId("money").value),
             supplies: Number(byId("supplies").value),
-            inventory,
+            licenses,
             unlockUnits: [...unlockUnits],
             unlockAces: [...unlockAces],
           },

@@ -568,7 +568,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 80
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -660,7 +661,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 16500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1389,9 +1392,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.0,
       "changeHeldWeapon": true,
       "source": {
@@ -1522,7 +1523,11 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "ZN_MS_06D_HandMS": {
       "name": "导弹发射器",
@@ -2095,10 +2100,10 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMGShortVer",
-        "Common_Push_A",
         "ZN_MS_06D_HandMS",
         "Common_DoubleVulcan_MS",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -2107,10 +2112,10 @@
       "cost": 50,
       "weapons": [
         "ZN_MS_06K_BigGun",
-        "Common_Push_A",
         "ZN_MS_06D_HandMS",
         "Common_DoubleVulcan_MS",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2139,6 +2144,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MS_06K_BigGun",
@@ -2164,11 +2175,5 @@
       ],
       "fireMode": "independent"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

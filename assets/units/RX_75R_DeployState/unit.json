@@ -347,7 +347,8 @@
       }
     ],
     "deployed": true,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 50
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -442,7 +443,9 @@
     "unitLevel": 800.0,
     "tacticalMoveBeforeBonus": 3,
     "v17BaseHp": 12500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.25,
+    "mobilityMoveTarget": 0
   },
   "presentation": {
     "shield": false,
@@ -1714,6 +1717,9 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "formOnly": true,
+  "formOf": "RX_75R",
   "pairedWeapons": [
     {
       "id": "Common_MortarDouble_RX_75R",
@@ -1738,8 +1744,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "formOnly": true,
-  "formOf": "RX_75R"
+  ]
 }

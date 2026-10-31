@@ -515,13 +515,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 187500,
+    "hp": 115500,
     "en": 13500.0,
     "move": 7,
-    "mobility": 85.0,
+    "mobility": 97.75,
     "cost": 2125,
     "counterLimit": 1,
-    "accuracy": 125.0,
+    "accuracy": 89.375,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "air",
@@ -985,7 +985,9 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 85,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -1085,8 +1087,14 @@
       "radar": 600.0,
       "antiDetection": -250.0
     },
-    "v17BaseHp": 150000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.5,
+    "mobilityMoveTarget": 7,
+    "shipHullBeforeReduction": 150000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1.1,
+    "shipFactionAccuracyMultiplier": 1.1,
+    "shipFactionEvasionMultiplier": 1.15
   },
   "presentation": {
     "shield": false,
@@ -1133,9 +1141,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 8000.0,
+      "damagePerShot": 6000,
       "damageComponents": {
-        "shell": 8000.0
+        "shell": 6000
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1146,7 +1154,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1154,7 +1163,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1162,7 +1172,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1170,7 +1181,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1178,7 +1190,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1186,7 +1199,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1194,7 +1208,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 3.0
+            "delay": 3.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1202,7 +1217,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1210,7 +1226,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1218,7 +1235,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1226,7 +1244,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1234,7 +1253,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1390,6 +1410,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1410,8 +1434,14 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 8000.0,
+        "damageComponents": {
+          "shell": 8000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "PegasusClass_Turret_Cannon_L": {
       "name": "舰载加农炮",
@@ -1426,9 +1456,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 8000.0,
+      "damagePerShot": 6000,
       "damageComponents": {
-        "shell": 8000.0
+        "shell": 6000
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1439,7 +1469,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1447,7 +1478,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1455,7 +1487,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1463,7 +1496,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1471,7 +1505,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1479,7 +1514,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1487,7 +1523,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 3.0
+            "delay": 3.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1495,7 +1532,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1503,7 +1541,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1511,7 +1550,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1519,7 +1559,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1527,7 +1568,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1685,6 +1727,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1705,8 +1751,14 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 8000.0,
+        "damageComponents": {
+          "shell": 8000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "PegasusClass_Turret_Cannon_R": {
       "name": "舰载加农炮",
@@ -1721,9 +1773,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 8000.0,
+      "damagePerShot": 6000,
       "damageComponents": {
-        "shell": 8000.0
+        "shell": 6000
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1734,7 +1786,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1742,7 +1795,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1750,7 +1804,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1758,7 +1813,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1766,7 +1822,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1774,7 +1831,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1782,7 +1840,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 3.0
+            "delay": 3.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1790,7 +1849,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1798,7 +1858,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1806,7 +1867,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1814,7 +1876,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1822,7 +1885,8 @@
             "partBreakModifier": 0.5,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_Cannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1980,6 +2044,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -2000,8 +2068,14 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 8000.0,
+        "damageComponents": {
+          "shell": 8000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "PegasusClass_Turret_MegaBeamCannon_S": {
       "name": "舰载光束炮",
@@ -2016,9 +2090,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 7500.0,
+      "damagePerShot": 5625,
       "damageComponents": {
-        "beam": 7500.0
+        "beam": 5625
       },
       "hitsPerShot": 1,
       "attack": {
@@ -2029,7 +2103,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2037,7 +2112,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2045,7 +2121,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2053,7 +2130,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2061,7 +2139,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2069,7 +2148,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2077,7 +2157,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 2.0
+            "delay": 2.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2085,7 +2166,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2093,7 +2175,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2101,7 +2184,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2109,7 +2193,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2117,7 +2202,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -2276,6 +2362,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -2296,8 +2386,14 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 7500.0,
+        "damageComponents": {
+          "beam": 7500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "PegasusClass_Turret_MegaBeamCannon_S_L": {
       "name": "舰载光束炮",
@@ -2312,9 +2408,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 7500.0,
+      "damagePerShot": 5625,
       "damageComponents": {
-        "beam": 7500.0
+        "beam": 5625
       },
       "hitsPerShot": 1,
       "attack": {
@@ -2325,7 +2421,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2333,7 +2430,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2341,7 +2439,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2349,7 +2448,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2357,7 +2457,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2365,7 +2466,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2373,7 +2475,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 2.0
+            "delay": 2.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2381,7 +2484,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2389,7 +2493,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2397,7 +2502,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2405,7 +2511,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2413,7 +2520,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -2574,6 +2682,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -2594,8 +2706,14 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 7500.0,
+        "damageComponents": {
+          "beam": 7500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "PegasusClass_Turret_MegaBeamCannon_S_R": {
       "name": "舰载光束炮",
@@ -2610,9 +2728,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 7500.0,
+      "damagePerShot": 5625,
       "damageComponents": {
-        "beam": 7500.0
+        "beam": 5625
       },
       "hitsPerShot": 1,
       "attack": {
@@ -2623,7 +2741,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2631,7 +2750,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2639,7 +2759,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2647,7 +2768,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2655,7 +2777,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2663,7 +2786,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2671,7 +2795,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 2.0
+            "delay": 2.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2679,7 +2804,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2687,7 +2813,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2695,7 +2822,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2703,7 +2831,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2711,7 +2840,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_MegaBeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -2872,6 +3002,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -2892,15 +3026,21 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 7500.0,
+        "damageComponents": {
+          "beam": 7500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "PegasusClass_Turret_AMS": {
       "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 68.0,
+      "hit": 85.0,
       "en": 640.0,
       "sourceName": "PegasusClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -2908,9 +3048,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 1500.0,
+      "damagePerShot": 1125,
       "damageComponents": {
-        "shell": 1500.0
+        "shell": 1125
       },
       "hitsPerShot": 1,
       "attack": {
@@ -2921,7 +3061,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2929,7 +3070,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2937,7 +3079,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2945,7 +3088,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2953,7 +3097,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2961,7 +3106,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2969,7 +3115,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2977,7 +3124,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2985,7 +3133,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2993,7 +3142,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3001,7 +3151,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3009,7 +3160,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3017,7 +3169,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3025,7 +3178,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3033,7 +3187,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3041,7 +3196,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -3163,8 +3319,6 @@
       },
       "category": "missile",
       "actionCost": 2,
-      "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -3175,14 +3329,21 @@
         "ja": {
           "name": "対MSミサイル"
         }
-      }
+      },
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 1500.0,
+        "damageComponents": {
+          "shell": 1500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "PegasusClass_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 80.0,
       "sourceName": "PegasusClass_Turret_AA",
       "sourceHit": 125.0,
@@ -3190,10 +3351,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 175.0,
+      "damagePerShot": 150,
       "damageComponents": {
-        "shell": 125.0,
-        "shellAP": 50.0
+        "shell": 100,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -3204,7 +3365,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3212,7 +3374,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3220,7 +3383,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3228,7 +3392,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3236,7 +3401,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3244,7 +3410,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3252,7 +3419,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3260,7 +3428,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3268,7 +3437,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3276,7 +3446,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3284,7 +3455,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3292,7 +3464,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3300,7 +3473,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3308,7 +3482,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3316,7 +3491,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3324,7 +3500,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3332,7 +3509,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3340,7 +3518,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3348,7 +3527,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3356,7 +3536,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3364,7 +3545,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3372,7 +3554,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3380,7 +3563,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3388,7 +3572,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3396,7 +3581,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3404,7 +3590,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3412,7 +3599,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3420,7 +3608,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3428,7 +3617,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3436,7 +3626,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3444,7 +3635,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3452,7 +3644,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3460,7 +3653,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3468,7 +3662,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3476,7 +3671,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3484,7 +3680,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3492,7 +3689,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3500,7 +3698,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3508,7 +3707,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3516,7 +3716,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3524,7 +3725,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3532,7 +3734,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3540,7 +3743,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3548,7 +3752,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3556,7 +3761,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3564,7 +3770,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3572,7 +3779,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3580,7 +3788,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3588,7 +3797,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3596,7 +3806,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3604,7 +3815,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3612,7 +3824,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3620,7 +3833,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3628,7 +3842,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3636,7 +3851,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3644,7 +3860,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3652,7 +3869,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3660,7 +3878,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3668,7 +3887,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3676,7 +3896,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3684,7 +3905,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3692,7 +3914,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3700,7 +3923,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3708,7 +3932,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3716,7 +3941,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3724,7 +3950,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3732,7 +3959,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3740,7 +3968,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3748,7 +3977,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3756,7 +3986,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3764,7 +3995,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3772,7 +4004,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3780,7 +4013,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3788,7 +4022,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3796,7 +4031,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3804,7 +4040,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3812,7 +4049,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3820,7 +4058,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3828,7 +4067,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -3836,7 +4076,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3844,7 +4085,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3852,7 +4094,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3860,7 +4103,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3868,7 +4112,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3876,7 +4121,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3884,7 +4130,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3892,7 +4139,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3900,7 +4148,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3908,7 +4157,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3916,7 +4166,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3924,7 +4175,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3932,7 +4184,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3940,7 +4193,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3948,7 +4202,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3956,7 +4211,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3964,7 +4220,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3972,7 +4229,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3980,7 +4238,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3988,7 +4247,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -3996,7 +4256,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4004,7 +4265,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4012,7 +4274,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4020,7 +4283,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4028,7 +4292,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4036,7 +4301,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4044,7 +4310,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4052,7 +4319,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4060,7 +4328,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4068,7 +4337,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4076,7 +4346,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4084,7 +4355,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4092,7 +4364,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4100,7 +4373,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4108,7 +4382,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4116,7 +4391,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4124,7 +4400,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4132,7 +4409,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4140,7 +4418,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4148,7 +4427,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4156,7 +4436,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4164,7 +4445,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4172,7 +4454,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4180,7 +4463,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4188,7 +4472,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4196,7 +4481,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4204,7 +4490,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4212,7 +4499,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4220,7 +4508,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4228,7 +4517,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4236,7 +4526,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4244,7 +4535,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4252,7 +4544,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4260,7 +4553,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4268,7 +4562,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4276,7 +4571,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4284,7 +4580,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4292,7 +4589,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4300,7 +4598,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4308,7 +4607,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4316,7 +4616,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4324,7 +4625,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4332,7 +4634,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4340,7 +4643,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4348,7 +4652,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4356,7 +4661,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L1",
-            "delay": 0.1
+            "delay": 0.1,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4364,7 +4670,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4372,7 +4679,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4380,7 +4688,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4388,7 +4697,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4396,7 +4706,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4404,7 +4715,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4412,7 +4724,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4420,7 +4733,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4428,7 +4742,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4436,7 +4751,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4444,7 +4760,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4452,7 +4769,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4460,7 +4778,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4468,7 +4787,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -4476,7 +4796,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PegasusClass_Turret_AA_B_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -4792,6 +5113,17 @@
       "category": "machine_gun",
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -6074,19 +6406,14 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 175.0,
+        "damageComponents": {
+          "shell": 125.0,
+          "shellAP": 50.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [

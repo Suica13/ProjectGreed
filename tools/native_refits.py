@@ -49,13 +49,13 @@ def apply(prefab, native=None):
     prefab['refits'] = options
     for mechanic in prefab.get('mechanics', []):
         if mechanic.get('id') in ('CustomUnit', 'CustomUnit_NewUnit') and options:
-            mechanic.update(status='adapted', name='库存改装：在单位预览中按原MOD费用改装，使用目标素体套件')
+            mechanic.update(status='adapted', name='特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源')
     return prefab
 
 if __name__ == '__main__':
     from mod_source import load
     total = 0
-    report = ["# 原 MOD 库存改装路线", "", "每次消耗1台原机体，得到1台目标素体；价格沿用原MOD，不使用科技研发的双倍价格。原科技条件保留。专属驾驶员路线及未移植目标仍禁用。", "", "| 原机体 | 目标机体 | 资金 | 物资 | 条件 |", "| --- | --- | --- | --- | --- |"]
+    report = ["# 原 MOD 改装来源档案", "", "以下仅为原MOD来源档案。当前不执行库存改装；普通改装限定单位直接购买许可，ACE专用机通过驾驶员配属自动转换。", "", "| 原机体 | 目标机体 | 资金 | 物资 | 条件 |", "| --- | --- | --- | --- | --- |"]
     for ref in json.loads((ASSETS / 'unit-catalog.json').read_text(encoding='utf-8'))['units']:
         path = ASSETS / ref
         p = json.loads(path.read_text(encoding='utf-8'))

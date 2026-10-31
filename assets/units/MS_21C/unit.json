@@ -435,7 +435,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -530,7 +531,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 17500.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -1275,9 +1278,9 @@
       "cost": 0,
       "weapons": [
         "ZN_Panzerfaust",
-        "Common_Push_A",
         "ZN_MS_21C_MG",
-        "EF_BeamSaber_FL_Yellow"
+        "EF_BeamSaber_FL_Yellow",
+        "Common_Push_A"
       ]
     }
   ],

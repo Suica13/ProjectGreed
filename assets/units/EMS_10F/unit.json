@@ -651,7 +651,7 @@
   "stats": {
     "hp": 33000,
     "en": 450.0,
-    "move": 9,
+    "move": 8,
     "mobility": 150.0,
     "cost": 625,
     "counterLimit": 1,
@@ -682,7 +682,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 155
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -775,7 +776,9 @@
     "tacticalMoveBeforeBonus": 8,
     "v17BaseHp": 26500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.45,
+    "mobilityMoveTarget": 9
   },
   "presentation": {
     "shield": false,
@@ -1345,7 +1348,7 @@
       "name": "狙击步枪",
       "type": "shell",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 150.0,
       "en": 45.0,
       "sourceName": "ZN_135mmAntiShipSniper",
@@ -1496,7 +1499,7 @@
       "name": "狙击蓄力",
       "type": "shell",
       "min": 3,
-      "max": 9,
+      "max": 11,
       "hit": 150.0,
       "en": 75.0,
       "sourceName": "ZN_135mmAntiShipSniper_Sniper_Aim",
@@ -1647,7 +1650,7 @@
       "category": "sniper",
       "noCounter": true,
       "hitScale": 2,
-      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害为原MOD技能的一半，EN不变。",
+      "description": "本回合锁定目标，下次己方回合开始时目标仍在射程内则自动射击；命中率×2，伤害为原MOD技能的一半，EN不变。",
       "special": {
         "type": "snipe",
         "delayOwnTurns": 1,
@@ -1979,10 +1982,10 @@
       "cost": 50,
       "weapons": [
         "ZN_360mmBazooka",
-        "Common_Push_A",
         "ZN_120mmMG",
         "ZN_Panzerfaust",
-        "ZN_HeatHawk_F"
+        "ZN_HeatHawk_F",
+        "Common_Push_A"
       ]
     },
     {
@@ -1991,11 +1994,11 @@
       "cost": 0,
       "weapons": [
         "ZN_135mmAntiShipSniper",
-        "Common_Push_A",
         "ZN_120mmMG",
         "ZN_135mmAntiShipSniper_Sniper_Aim",
         "ZN_Panzerfaust",
-        "ZN_HeatHawk_F"
+        "ZN_HeatHawk_F",
+        "Common_Push_A"
       ]
     }
   ],

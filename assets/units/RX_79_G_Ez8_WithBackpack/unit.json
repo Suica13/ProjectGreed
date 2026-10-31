@@ -633,7 +633,8 @@
         "source": "Template/Unit/Skill/CmdDef.gw"
       }
     ],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 75
   },
   "attackBonuses": {
     "melee": 10.0,
@@ -731,7 +732,9 @@
     "unitLevel": 2250.0,
     "tacticalMoveBeforeBonus": 4,
     "v17BaseHp": 37500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.3,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": true,
@@ -2406,10 +2409,10 @@
       "cost": 0,
       "weapons": [
         "EF_100mmMG",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2418,10 +2421,10 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeBazooka",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2430,10 +2433,10 @@
       "cost": 100,
       "weapons": [
         "EF_GroundTypeBeamRifle",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2442,10 +2445,10 @@
       "cost": 100,
       "weapons": [
         "EF_180mmCannon",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2454,10 +2457,10 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeMissileLauncher",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

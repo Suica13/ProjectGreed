@@ -267,7 +267,7 @@
   "stats": {
     "hp": 50000,
     "en": 450.0,
-    "move": 10,
+    "move": 9,
     "mobility": 120.0,
     "cost": 625,
     "counterLimit": 1,
@@ -298,7 +298,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 195
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -391,7 +392,9 @@
     },
     "v17BaseHp": 40000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.35,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -683,6 +686,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "displayIndex": 2,
@@ -1318,9 +1325,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MA_05_BeamCannon",
-        "Common_Push_L_A",
         "ZN_MA_05_MS",
-        "Common_Cqb_Double_L_A_Fixed_MA_05"
+        "Common_Cqb_Double_L_A_Fixed_MA_05",
+        "Common_Push_L_A"
       ]
     }
   ],
@@ -1335,7 +1342,8 @@
   "skills": [],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "MA"
+    "MA",
+    "LargeUnit"
   ],
   "transport": {
     "slotCost": 3,
@@ -1344,6 +1352,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MA_05_MS",
@@ -1364,11 +1378,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

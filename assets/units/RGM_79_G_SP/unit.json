@@ -520,7 +520,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 85
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -614,7 +615,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 25000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.25,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": true,
@@ -800,7 +803,7 @@
       "name": "光束狙击枪",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 150.0,
       "en": 45.0,
       "sourceName": "EF_LongRangeBeamSniperRifle",
@@ -953,7 +956,7 @@
       "name": "狙击蓄力",
       "type": "beam",
       "min": 3,
-      "max": 9,
+      "max": 11,
       "hit": 125.0,
       "en": 100.0,
       "sourceName": "EF_LongRangeBeamSniperRifle_Sniper_Aim",
@@ -1049,7 +1052,7 @@
         "delayOwnTurns": 1,
         "baseWeapon": "EF_LongRangeBeamSniperRifle"
       },
-      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害为原MOD技能的一半，EN不变。",
+      "description": "本回合锁定目标，下次己方回合开始时目标仍在射程内则自动射击；命中率×2，伤害为原MOD技能的一半，EN不变。",
       "nativePayload": {
         "BeamDamage": 20000.0,
         "BeamAPDamage": 15000.0,
@@ -1508,10 +1511,10 @@
       "cost": 0,
       "weapons": [
         "EF_100mmMG",
-        "Common_Push_A",
         "EF_LongRangeBeamSniperRifle_Sniper_Aim",
         "EF_BeamSaber_A",
-        "EF_LongRangeBeamSniperRifle"
+        "EF_LongRangeBeamSniperRifle",
+        "Common_Push_A"
       ]
     }
   ],

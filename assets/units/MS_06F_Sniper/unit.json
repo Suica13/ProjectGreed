@@ -498,7 +498,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 100
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -593,7 +594,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 20000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.65,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -779,7 +782,7 @@
       "name": "光束狙击枪",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 150.0,
       "en": 50.0,
       "sourceName": "ZN_LongRangeBeamSniperRifle",
@@ -932,7 +935,7 @@
       "name": "狙击蓄力",
       "type": "beam",
       "min": 3,
-      "max": 9,
+      "max": 11,
       "hit": 125.0,
       "en": 100.0,
       "sourceName": "ZN_LongRangeBeamSniperRifle_Sniper_Aim",
@@ -1085,7 +1088,7 @@
       "category": "sniper",
       "noCounter": true,
       "hitScale": 2,
-      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害为原MOD技能的一半，EN不变。",
+      "description": "本回合锁定目标，下次己方回合开始时目标仍在射程内则自动射击；命中率×2，伤害为原MOD技能的一半，EN不变。",
       "special": {
         "type": "snipe",
         "delayOwnTurns": 1,
@@ -1424,10 +1427,10 @@
       "cost": 0,
       "weapons": [
         "ZN_LongRangeBeamSniperRifle",
-        "Common_Push_A",
         "ZN_LongRangeBeamSniperRifle_Sniper_Aim",
         "ZN_Shotgun",
-        "ZN_HeatHawk_F"
+        "ZN_HeatHawk_F",
+        "Common_Push_A"
       ]
     }
   ],

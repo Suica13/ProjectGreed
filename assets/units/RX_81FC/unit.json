@@ -467,7 +467,8 @@
       "antiDetectAqua": false
     },
     "shellFinalResistance": 25,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 40.0,
@@ -563,7 +564,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 50000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.85,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -949,9 +952,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1049,7 +1050,11 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_RGC_83_DoubleBeamCannon": {
       "name": "光束炮",
@@ -1655,7 +1660,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     },
     {
       "id": "ExplosiveReactiveArmor_Shell",
@@ -1671,10 +1676,10 @@
       "cost": 0,
       "weapons": [
         "EF_GLine_HBR",
-        "Common_Push_A",
         "EF_BeamLancer_Double_DF",
         "EF_RGC_83_DoubleBeamCannon",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1704,6 +1709,30 @@
     ]
   },
   "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_RX_81",
+      "unitId": "RX_81",
+      "money": 0,
+      "supplies": 0,
+      "unlockUnits": [
+        "RX_81"
+      ],
+      "blocked": false,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81FC/RX_81FC.ini",
+        "action": "action_CustomUnit_RX_81",
+        "seconds": 20.0
+      }
+    }
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_81"
+    ]
+  },
   "pairedWeapons": [
     {
       "id": "EF_RGC_83_DoubleBeamCannon",
@@ -1728,29 +1757,5 @@
         }
       ]
     }
-  ],
-  "refits": [
-    {
-      "id": "action_CustomUnit_RX_81",
-      "unitId": "RX_81",
-      "money": 0,
-      "supplies": 0,
-      "unlockUnits": [
-        "RX_81"
-      ],
-      "blocked": false,
-      "source": {
-        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/RX_81FC/RX_81FC.ini",
-        "action": "action_CustomUnit_RX_81",
-        "seconds": 20.0
-      }
-    }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": [
-      "RX_81"
-    ]
-  }
+  ]
 }

@@ -343,7 +343,8 @@
     "stealth": {
       "waterOnly": true
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 30.0,
@@ -440,7 +441,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 25000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -773,7 +776,7 @@
       },
       "category": "other",
       "actionCost": 2,
-      "onHitAPLoss": 1
+      "onHitAPLoss": 0.25
     },
     "Common_Cqb_F_MSM_04N": {
       "name": "近身格斗",
@@ -919,7 +922,7 @@
         }
       },
       "actionCost": 2,
-      "onHitAPLoss": 1
+      "onHitAPLoss": 0.25
     },
     "Common_Cqb_G_MSM_04N": {
       "name": "近身格斗",
@@ -1065,7 +1068,7 @@
         }
       },
       "actionCost": 2,
-      "onHitAPLoss": 1
+      "onHitAPLoss": 0.25
     },
     "Common_DoubleVulcan_MS_MSM_04N": {
       "name": "火神炮",
@@ -1368,10 +1371,10 @@
       "cost": 0,
       "weapons": [
         "Common_EyeFlash",
-        "Common_Push_A",
         "Common_Cqb_F_MSM_04N",
         "Common_Cqb_G_MSM_04N",
-        "Common_DoubleVulcan_MS_MSM_04N"
+        "Common_DoubleVulcan_MS_MSM_04N",
+        "Common_Push_A"
       ]
     }
   ],

@@ -153,7 +153,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 125
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -243,7 +244,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 3750.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.65,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,

@@ -473,7 +473,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 80
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -568,7 +569,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 14500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1100,7 +1103,7 @@
       "id": "CustomUnit_NewUnit",
       "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     }
   ],
   "weaponKits": [
@@ -1110,8 +1113,8 @@
       "cost": 0,
       "weapons": [
         "ZN_MS_06C_Bombing_Nuke",
-        "Common_Push_A",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     }
   ],

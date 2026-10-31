@@ -1,4 +1,4 @@
-/* Personal wallet and inventory. Authoritative awards and final losses are persisted atomically. */
+/* Personal wallet and permanent deployment licenses; old inventory migrates once. */
 "use strict";
 const Economy = (() => {
   const key = "projectgreed.economy.v1";
@@ -7,63 +7,45 @@ const Economy = (() => {
       ? PRODUCTION_CATALOG
       : require("./production-catalog.json");
   let kitModels;
-  function modelsForKits() {
+  function modelsForUnits() {
     return (kitModels ||=
       typeof ART !== "undefined"
         ? ART.models
         : require("../tools/load-catalog.cjs").loadCatalog().models);
   }
   const initial = () => ({
+    schemaVersion: 2,
     money: 5000,
     supplies: 10000,
-    inventory: { Type61: 24, FF_B2: 12, Medea: 3, MS_06F: 4, MS_06S: 2, FatUncle: 3 },
-    kits: {},
+    licenses: Object.fromEntries(
+      ["Type61", "FF_B2", "Medea", "MS_06F", "MS_06S", "FatUncle"].map((id) => [id, true]),
+    ),
   });
   function validate(value) {
-    if (value === undefined) return initial(); // Profiles from before production existed.
+    if (value === undefined) return initial();
     if (
       !value ||
       !Number.isSafeInteger(value.money) ||
       value.money < 0 ||
       !Number.isSafeInteger(value.supplies) ||
-      value.supplies < 0 ||
-      !value.inventory ||
-      typeof value.inventory !== "object" ||
-      Array.isArray(value.inventory)
+      value.supplies < 0
     )
-      throw Error("资金、物资或库存无效");
-    const inventory = {},
-      kits = {};
-    if (
-      value.kits !== undefined &&
-      (!value.kits || typeof value.kits !== "object" || Array.isArray(value.kits))
-    )
-      throw Error("套件库存无效");
-    for (const [id, count] of Object.entries(value.kits || {})) {
+      throw Error("资金、物资或部署许可无效");
+    if (Object.hasOwn(value, "inventory") || Object.hasOwn(value, "kits"))
+      throw Error("旧库存格式必须先转换为部署许可");
+    const owned = value.licenses;
+    if (!owned || typeof owned !== "object" || Array.isArray(owned)) throw Error("部署许可无效");
+    const licenses = {};
+    for (const [id, amount] of Object.entries(owned)) {
+      if (typeof amount !== "boolean")
+        throw Error("部署许可无效: " + id);
+      const unitId = id;
       if (
-        (!Object.hasOwn(catalog.offers, id) && !kitPrice(id)) ||
-        !Number.isSafeInteger(count) ||
-        count < 0
+        !Object.hasOwn(catalog.baseModels, unitId) &&
+        !Object.values(modelsForUnits()).some((model) => model.prefabId === unitId)
       )
-        throw Error("套件数量无效: " + id);
-      kits[id] = count;
-    }
-    for (const [id, count] of Object.entries(value.inventory)) {
-      if (!Number.isSafeInteger(count) || count < 0) throw Error("单位数量无效: " + id);
-      // Early production previews stored complete units under model/kit IDs.
-      // Preserve those paid-for chassis and their included extra equipment.
-      const legacy = Object.hasOwn(catalog.offers, id) ? catalog.offers[id] : null;
-      const unitId = legacy ? legacy.unitId : id;
-      // Ownership includes refit/event-only chassis, not just factory offers.
-      if (!Object.hasOwn(catalog.baseModels, unitId) &&
-          !Object.values(modelsForKits()).some(model => model.prefabId === unitId))
         throw Error("存档包含当前版本不支持的单位: " + id);
-      inventory[unitId] = (inventory[unitId] || 0) + count;
-      if (!Number.isSafeInteger(inventory[unitId])) throw Error("单位数量超出上限: " + unitId);
-      if (legacy && id !== baseModel(unitId)) {
-        kits[id] = (kits[id] || 0) + count;
-        if (!Number.isSafeInteger(kits[id])) throw Error("套件数量超出上限: " + id);
-      }
+      if (amount) licenses[unitId] = true;
     }
     const claimed = {};
     if (value.claimed !== undefined) {
@@ -78,8 +60,8 @@ const Economy = (() => {
     return {
       money: value.money,
       supplies: value.supplies,
-      inventory,
-      kits,
+      schemaVersion: 2,
+      licenses,
       ...(Object.keys(claimed).length ? { claimed } : {}),
     };
   }
@@ -90,9 +72,11 @@ const Economy = (() => {
       const saved = localStorage.getItem(key);
       if (saved !== null) {
         const parsed = JSON.parse(saved);
-        state = validate(parsed);
-        if (Object.keys(parsed.inventory).some((id) => Object.hasOwn(catalog.offers, id))) {
-          const backupKey = key + ".before-unit-inventory";
+        const migrations = typeof ProfileMigrations !== "undefined"
+          ? ProfileMigrations : require("./profile-migrations.js");
+        state = validate(migrations.economy(parsed));
+        if (parsed.schemaVersion !== 2 || parsed.licenses === undefined) {
+          const backupKey = key + ".before-deployment-licenses";
           if (localStorage.getItem(backupKey) === null) localStorage.setItem(backupKey, saved);
           localStorage.setItem(key, JSON.stringify(state));
         }
@@ -121,7 +105,7 @@ const Economy = (() => {
   }
   function exportProgress() {
     if (storageError) throw storageError;
-    return snapshot();
+    return structuredClone(state);
   }
   function affordable(cost) {
     return ["money", "supplies"].every(
@@ -129,21 +113,17 @@ const Economy = (() => {
         Number.isSafeInteger(cost[k] ?? 0) && (cost[k] ?? 0) >= 0 && state[k] >= (cost[k] ?? 0),
     );
   }
-  // Persist the wallet, inventory and optional research progress as one rollback-able change.
+  // Persist the wallet, licenses and optional research progress as one rollback-able change.
   // Memory is only updated after every storage write succeeds.
-  function transact(cost, quantities = {}, extraWrites = [], kits = {}) {
+  function transact(cost, licenses = {}, extraWrites = []) {
     if (storageError) throw storageError;
     if (!affordable(cost)) return false;
     const next = snapshot();
     next.money -= cost.money ?? 0;
     next.supplies -= cost.supplies ?? 0;
-    for (const [id, count] of Object.entries(quantities)) {
-      if (!Number.isSafeInteger(count) || count < 1) throw Error("生产数量无效");
-      next.inventory[id] = (next.inventory[id] || 0) + count;
-    }
-    for (const [id, count] of Object.entries(kits)) {
-      if (!Number.isSafeInteger(count) || count < 1) throw Error("套件数量无效");
-      next.kits[id] = (next.kits[id] || 0) + count;
+    for (const [id, owned] of Object.entries(licenses)) {
+      if (owned !== true) throw Error("部署许可必须为true");
+      next.licenses[id] = true;
     }
     return commit(next, extraWrites);
   }
@@ -182,11 +162,7 @@ const Economy = (() => {
     const next = snapshot();
     next.money += award.money;
     next.supplies += award.supplies;
-    for (const [unitId, count] of Object.entries(award.losses || {})) {
-      if (!Object.hasOwn(catalog.baseModels, unitId) || !Number.isSafeInteger(count) || count < 0)
-        throw Error("战损库存无效");
-      next.inventory[unitId] = Math.max(0, (next.inventory[unitId] || 0) - count);
-    }
+    // Battle damage is a match record; permanent deployment licenses cannot be lost.
     next.claimed = { ...next.claimed, [award.id]: award.matchId };
     return commit(next);
   }
@@ -197,209 +173,70 @@ const Economy = (() => {
     const next = snapshot();
     next.money += award.money;
     next.supplies += award.supplies;
-    for (const [id, count] of Object.entries(award.inventory || {})) {
-      if (!Object.hasOwn(catalog.baseModels, id) || !Number.isSafeInteger(count) || count < 1)
+    if (award.inventory !== undefined) throw Error("活动奖励仅支持部署许可");
+    for (const [id, owned] of Object.entries(award.licenses || {})) {
+      if (!Object.hasOwn(catalog.baseModels, id) || owned !== true)
         throw Error("活动单位奖励无效");
-      next.inventory[id] = (next.inventory[id] || 0) + count;
+      next.licenses[id] = true;
     }
     next.claimed = { ...next.claimed, [award.id]: award.matchId };
     return commit(next, extraWrites);
   }
-  function sellPrice(unitId) {
-    const offer = catalog.offers[baseModel(unitId)];
-    return offer
-      ? {
-          money: Math.floor(offer.money / offer.quantity / 100) * 50,
-          supplies: Math.floor(offer.supplies / offer.quantity / 100) * 50,
-        }
-      : null;
-  }
-  function sellUnit(unitId) {
-    const price = sellPrice(unitId);
-    if (!price || !(state.inventory[unitId] > 0)) return false;
-    const next = snapshot();
-    next.inventory[unitId]--;
-    next.money += price.money;
-    next.supplies += price.supplies;
-    return commit(next);
-  }
   function baseModel(unitId) {
     return catalog.baseModels[unitId] || null;
   }
-  function baseKit(unitId) {
-    return baseModel(unitId)?.slice(unitId.length + 2) || null;
+  function defaultKit(unitId) {
+    return catalog.defaultKits?.[unitId] || baseModel(unitId)?.slice(unitId.length + 2) || null;
   }
-  function kitPrice(modelId) {
-    if (!catalog.offers[modelId]) {
-      // Some selectable equipment has no standalone factory order in the MOD.
-      // Price it from the same chassis' nearest COST tier; extrapolate only above
-      // its highest priced tier. Existing imported prices remain authoritative.
-      const models = modelsForKits(),
-        model = models[modelId];
-      const baseId = model && baseModel(model.prefabId),
-        base = models[baseId];
-      if (!base || modelId === baseId) return null;
-      const delta = Math.max(0, model.cost - base.cost);
-      const candidates = Object.entries(catalog.offers)
-        .filter(([id, offer]) => offer.unitId === model.prefabId && id !== baseId && models[id])
-        .map(([id]) => ({ id, delta: Math.max(0, models[id].cost - base.cost) }));
-      candidates.sort(
-        (a, b) =>
-          Number(a.delta < delta) - Number(b.delta < delta) ||
-          Math.abs(a.delta - delta) - Math.abs(b.delta - delta) ||
-          a.id.localeCompare(b.id),
-      );
-      const reference = candidates[0];
-      if (!reference) return null;
-      const price = kitPrice(reference.id);
-      const scale = reference.delta > 0 ? Math.max(1, delta / reference.delta) : 1;
-      return {
-        quantity: price.quantity,
-        money: Math.ceil((price.money / price.quantity) * scale) * price.quantity,
-        supplies: Math.ceil((price.supplies / price.quantity) * scale) * price.quantity,
-      };
-    }
-    const offer = catalog.offers[modelId],
-      base = offer && catalog.offers[baseModel(offer.unitId)];
-    if (!base || modelId === baseModel(offer.unitId)) return null;
-    const price = { quantity: base.quantity };
-    for (const key of ["money", "supplies"])
-      price[key] =
-        Math.max(
-          0,
-          Math.ceil(
-            (offer[key] * base.quantity - base[key] * offer.quantity) /
-              (offer.quantity * base.quantity),
-          ),
-        ) * base.quantity;
-    return price;
+  function licenseOffer(unitId) {
+    return catalog.licenseOffers[unitId] || null;
   }
-  function available(offer, faction, allowOwned = false) {
-    const owned = allowOwned && offer && (state.inventory[offer.unitId] || 0) > 0;
+  function available(offer, faction) {
     if (
       !offer ||
       !["PMC", "EFSF", "ZEON"].includes(faction) ||
-      (!owned &&
-        faction !== "PMC" &&
-        !(offer.availableFactions || [offer.faction]).includes(faction))
+      (faction !== "PMC" && !(offer.availableFactions || [offer.faction]).includes(faction))
     )
       return false;
     const development =
       typeof Development !== "undefined" ? Development : require("./development.js");
-    const models =
-      typeof ART !== "undefined"
-        ? ART.models
-        : require("../tools/load-catalog.cjs").loadCatalog().models;
-    const model = models[baseModel(offer.unitId)];
+    const model = modelsForUnits()[offer.unitId + "__" + defaultKit(offer.unitId)];
     return (
       !!model &&
       !model.wip &&
-      (allowOwned || model.production?.enabled !== false) &&
-      (owned || development.allows(faction, offer.unitId))
+      !model.formOnly &&
+      development.allows(faction, offer.unitId)
     );
   }
-  function refitOptions(unitId) {
-    return modelsForKits()[baseModel(unitId)]?.refits || [];
+  function purchaseLicense(unitId, faction) {
+    const offer = licenseOffer(unitId);
+    if (state.licenses[unitId] || !available(offer, faction)) return false;
+    return transact(offer, { [unitId]: true });
   }
-  function refitReason(unitId, optionId, faction) {
-    const option = refitOptions(unitId).find((r) => r.id === optionId);
-    if (!option) return "无效的改装项目";
-    const target = modelsForKits()[baseModel(option.unitId)];
-    if (!target || target.wip || target.formOnly) return "目标机体尚未开放";
-    if (option.blocked) return "原MOD专属改装条件尚不满足";
-    const development =
-      typeof Development !== "undefined" ? Development : require("./development.js");
-    if (
-      !["PMC", "EFSF", "ZEON"].includes(faction) ||
-      (faction !== "PMC" && !(target.availableFactions || [target.faction]).includes(faction))
-    )
-      return "与当前阵营不匹配";
-    if (option.unlockUnits.some((id) => !development.allows(faction, id)))
-      return "目标机体尚未开发";
-    if (quantity(unitId) < 1) return "原机体库存不足";
-    return "";
-  }
-  function quantity(unitId) {
-    return state.inventory[unitId] || 0;
-  }
-  function refitUnit(unitId, optionId, faction) {
-    if (refitReason(unitId, optionId, faction)) return false;
-    const option = refitOptions(unitId).find((r) => r.id === optionId);
-    if (!affordable(option)) return false;
-    const next = snapshot();
-    next.money -= option.money;
-    next.supplies -= option.supplies;
-    next.inventory[unitId]--;
-    next.inventory[option.unitId] = (next.inventory[option.unitId] || 0) + 1;
-    // Extra weapon kits remain separately owned; converted hulls use their base kit.
-    return commit(next);
-  }
-  function produce(unitId, faction) {
-    const offer = catalog.offers[baseModel(unitId)];
-    if (!available(offer, faction)) return false;
-    return transact(offer, { [unitId]: offer.quantity });
-  }
-  function productionPlan(entries) {
-    const required = {};
-    for (const entry of entries) required[entry.unitId] = (required[entry.unitId] || 0) + 1;
+  function licensePlan(entries) {
     const items = [],
       total = { money: 0, supplies: 0 };
-    for (const [unitId, count] of Object.entries(required)) {
-      const missing = Math.max(0, count - (state.inventory[unitId] || 0));
-      if (!missing) continue;
-      const offer = catalog.offers[baseModel(unitId)];
-      const batches = offer ? Math.ceil(missing / offer.quantity) : 0;
-      items.push({ unitId, missing, batches, quantity: offer ? batches * offer.quantity : 0 });
+    for (const unitId of new Set(entries.map(entry => entry.unitId))) {
+      if (state.licenses[unitId]) continue;
+      const offer = licenseOffer(unitId);
+      items.push({ unitId });
       if (offer) {
-        total.money += offer.money * batches;
-        total.supplies += offer.supplies * batches;
+        total.money += offer.money;
+        total.supplies += offer.supplies;
       }
     }
     return { ...total, items };
   }
-  function produceMissing(entries, faction) {
-    const plan = productionPlan(entries);
+  function purchaseMissingLicenses(entries, faction) {
+    const plan = licensePlan(entries);
     const unavailable = plan.items.filter(
-      (item) => !available(catalog.offers[baseModel(item.unitId)], faction),
+      (item) => !available(licenseOffer(item.unitId), faction),
     );
     if (unavailable.length)
       return { ok: false, reason: "unavailable", units: unavailable.map((item) => item.unitId) };
     if (!plan.items.length) return { ok: true, plan };
-    const quantities = Object.fromEntries(plan.items.map((item) => [item.unitId, item.quantity]));
-    return { ok: transact(plan, quantities), reason: "funds", plan };
-  }
-  function canBuyKit(modelId, faction) {
-    const unitId = modelId.split("__")[0];
-    return (
-      !!kitPrice(modelId) &&
-      available(catalog.offers[modelId] || catalog.offers[baseModel(unitId)], faction, true)
-    );
-  }
-  function buyKit(modelId, faction) {
-    const price = kitPrice(modelId);
-    if (!canBuyKit(modelId, faction)) return false;
-    return transact(price, {}, [], { [modelId]: price.quantity });
-  }
-  // Presets are alternatives. Only entries in the current formation reserve equipment;
-  // changing/removing an entry releases its reservation without consuming owned stock.
-  function fitKits(entries) {
-    const used = {};
-    return entries.map((entry) => {
-      const base = baseKit(entry.unitId),
-        id = entry.unitId + "__" + entry.kitId;
-      if (!base || entry.kitId === base) return { ...entry };
-      if ((used[id] || 0) < (state.kits[id] || 0)) {
-        used[id] = (used[id] || 0) + 1;
-        return { ...entry };
-      }
-      return { ...entry, kitId: base };
-    });
-  }
-  function freeKits(modelId, entries, exceptIndex = null) {
-    const used = entries.filter(
-      (e, i) => i !== exceptIndex && e.unitId + "__" + e.kitId === modelId,
-    ).length;
-    return Math.max(0, (state.kits[modelId] || 0) - used);
+    const licenses = Object.fromEntries(plan.items.map((item) => [item.unitId, true]));
+    return { ok: transact(plan, licenses), reason: "funds", plan };
   }
   return {
     key,
@@ -409,28 +246,19 @@ const Economy = (() => {
     validate,
     snapshot,
     exportProgress,
-    storageIssue: () => storageError ? errorMessage(storageError) : null,
+    storageIssue: () => (storageError ? errorMessage(storageError) : null),
     affordable,
     transact,
-    produce,
-    refitOptions,
-    refitReason,
-    refitUnit,
-    buyKit,
-    canBuyKit,
-    productionPlan,
+    purchaseLicense,
+    licenseOffer,
+    licensePlan,
     creditAward,
     creditActivity,
-    sellPrice,
-    sellUnit,
-    produceMissing,
+    purchaseMissingLicenses,
     baseModel,
-    baseKit,
-    kitPrice,
-    fitKits,
-    freeKits,
-    quantity: (unitId) => state.inventory[unitId] || 0,
-    kitQuantity: (modelId) => state.kits[modelId] || 0,
+    defaultKit,
+    defaultModel: (unitId) => unitId + "__" + defaultKit(unitId),
+    hasLicense: (unitId) => !!state.licenses[unitId],
   };
 })();
 if (typeof module !== "undefined") module.exports = Economy;

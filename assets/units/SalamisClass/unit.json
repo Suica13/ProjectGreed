@@ -380,7 +380,7 @@
       "slot": "primary",
       "min": 3,
       "max": 8,
-      "hit": 60.0,
+      "hit": 75.0,
       "en": 240.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -388,9 +388,9 @@
       "sourceHit": 75.0,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "damagePerShot": 5000.0,
+      "damagePerShot": 3000,
       "damageComponents": {
-        "beam": 5000.0
+        "beam": 3000
       },
       "hitsPerShot": 1,
       "requiredParts": [],
@@ -403,7 +403,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_BeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -411,7 +412,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_BeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -419,7 +421,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_BeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -427,7 +430,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_BeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -435,7 +439,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_BeamCannon_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -443,7 +448,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_BeamCannon_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -528,6 +534,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "source": {
@@ -620,9 +630,13 @@
         "actions": []
       },
       "actionCost": 3,
-      "tacticalDamageMultiplier": 1.25,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 4000.0,
+        "damageComponents": {
+          "beam": 4000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "SalamisClass_Turret_MS": {
       "name": "舰载导弹",
@@ -641,7 +655,7 @@
       "slot": "fixed",
       "min": 3,
       "max": 4,
-      "hit": 80.0,
+      "hit": 100.0,
       "en": 192.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -649,9 +663,9 @@
       "sourceHit": 100.0,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "damagePerShot": 1500.0,
+      "damagePerShot": 900,
       "damageComponents": {
-        "shell": 1500.0
+        "shell": 900
       },
       "hitsPerShot": 1,
       "requiredParts": [],
@@ -664,7 +678,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -672,7 +687,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -680,7 +696,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_L1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -688,7 +705,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -696,7 +714,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_L1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -704,7 +723,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -712,7 +732,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_L1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -720,7 +741,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -728,7 +750,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_L1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -736,7 +759,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -744,7 +768,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_L1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -752,7 +777,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -760,7 +786,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_L1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -768,7 +795,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -776,7 +804,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_L1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -784,7 +813,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -833,6 +863,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "source": {
@@ -903,9 +937,13 @@
         "actions": []
       },
       "actionCost": 2,
-      "tacticalDamageMultiplier": 1.25,
-      "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 1200.0,
+        "damageComponents": {
+          "shell": 1200.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "SalamisClass_Turret_AMS": {
       "name": "反MS导弹",
@@ -924,7 +962,7 @@
       "slot": "fixed",
       "min": 3,
       "max": 4,
-      "hit": 68.0,
+      "hit": 85.0,
       "en": 160.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -932,9 +970,9 @@
       "sourceHit": 85.0,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "damagePerShot": 1875.0,
+      "damagePerShot": 1125,
       "damageComponents": {
-        "shell": 1875.0
+        "shell": 1125
       },
       "hitsPerShot": 1,
       "requiredParts": [],
@@ -947,7 +985,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AMS_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -955,7 +994,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -963,7 +1003,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AMS_L1",
-            "delay": 1.0
+            "delay": 1.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -971,7 +1012,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1090,9 +1132,13 @@
         "actions": []
       },
       "actionCost": 2,
-      "tacticalDamageMultiplier": 1.25,
-      "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 1500.0,
+        "damageComponents": {
+          "shell": 1500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "SalamisClass_Turret_AA": {
       "name": "对空机枪",
@@ -1111,7 +1157,7 @@
       "slot": "fixed",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 20.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -1119,10 +1165,10 @@
       "sourceHit": 125.0,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "damagePerShot": 281.25,
+      "damagePerShot": 175,
       "damageComponents": {
-        "shell": 218.75,
-        "shellAP": 62.5
+        "shell": 125,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "requiredParts": [],
@@ -1135,7 +1181,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1143,7 +1190,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1151,7 +1199,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1159,7 +1208,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1167,7 +1217,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1175,7 +1226,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1183,7 +1235,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1191,7 +1244,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1199,7 +1253,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1207,7 +1262,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1215,7 +1271,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1223,7 +1280,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1231,7 +1289,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1239,7 +1298,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1247,7 +1307,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1255,7 +1316,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1263,7 +1325,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1271,7 +1334,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1279,7 +1343,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1287,7 +1352,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1295,7 +1361,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1303,7 +1370,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1311,7 +1379,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1319,7 +1388,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1327,7 +1397,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1335,7 +1406,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1343,7 +1415,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1351,7 +1424,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1359,7 +1433,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1367,7 +1442,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1375,7 +1451,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1383,7 +1460,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1391,7 +1469,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1399,7 +1478,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1407,7 +1487,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1415,7 +1496,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1423,7 +1505,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1431,7 +1514,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1439,7 +1523,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -1447,7 +1532,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1596,7 +1682,6 @@
       },
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
-      "tacticalDamageMultiplier": 1.25,
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -1919,8 +2004,14 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 225.0,
+        "damageComponents": {
+          "shell": 175.0,
+          "shellAP": 50.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "SalamisClass_Turret_MG": {
       "name": "舰载机炮",
@@ -1939,7 +2030,7 @@
       "slot": "fixed",
       "min": 2,
       "max": 3,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 10.0,
       "clip": null,
       "changeHeldWeapon": false,
@@ -1947,10 +2038,10 @@
       "sourceHit": 125.0,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "damagePerShot": 375.0,
+      "damagePerShot": 250,
       "damageComponents": {
-        "shell": 312.5,
-        "shellAP": 62.5
+        "shell": 200,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "requiredParts": [],
@@ -1963,7 +2054,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1971,7 +2063,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1979,7 +2072,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1987,7 +2081,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1995,7 +2090,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2003,7 +2099,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2011,7 +2108,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2019,7 +2117,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2027,7 +2126,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2035,7 +2135,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2043,7 +2144,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2051,7 +2153,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2059,7 +2162,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2067,7 +2171,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2075,7 +2180,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2083,7 +2189,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2091,7 +2198,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2099,7 +2207,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2107,7 +2216,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2115,7 +2225,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "SalamisClass_Turret_MG_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -2164,6 +2275,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "source": {
@@ -2233,17 +2348,22 @@
         "actions": []
       },
       "actionCost": 3,
-      "tacticalDamageMultiplier": 1.25,
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 300.0,
+        "damageComponents": {
+          "shell": 250.0,
+          "shellAP": 50.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "stats": {
-    "hp": 75000,
+    "hp": 46000,
     "en": 2250.0,
     "move": 7,
-    "mobility": 50,
-    "accuracy": 105.0,
+    "mobility": 57.5,
+    "accuracy": 75.075,
     "cost": 500,
     "counterLimit": 1,
     "partStructuralStrength": 100,
@@ -2602,7 +2722,9 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 80,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -2659,9 +2781,9 @@
   "sourceStats": {
     "enBeforeReduction": 4500.0,
     "enCapacityMultiplier": 0.5,
-    "hp": 60000,
+    "hp": 60000.0,
     "en": 4500,
-    "reaction": 50,
+    "reaction": 50.0,
     "accuracy": 105.0,
     "partStructuralStrength": 100,
     "turnSpeed": 0.45,
@@ -2684,8 +2806,14 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 60000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.45,
+    "mobilityMoveTarget": 7,
+    "shipHullBeforeReduction": 60000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1.1,
+    "shipFactionAccuracyMultiplier": 1.1,
+    "shipFactionEvasionMultiplier": 1.15
   },
   "presentation": {
     "shield": false,

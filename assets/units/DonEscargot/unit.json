@@ -154,7 +154,7 @@
   "stats": {
     "hp": 7500,
     "en": 200.0,
-    "move": 10,
+    "move": 9,
     "mobility": 110.0,
     "cost": 100,
     "counterLimit": 1,
@@ -185,7 +185,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 180
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -278,7 +279,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 6000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -1903,6 +1906,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_DoubleVulcan_DonEscargot",
@@ -1937,11 +1946,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

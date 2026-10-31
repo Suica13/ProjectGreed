@@ -475,7 +475,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -570,7 +571,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 26500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -2319,11 +2322,11 @@
       "cost": 0,
       "weapons": [
         "ZN_MMP80MG",
-        "Common_Push_A",
         "Common_HandMS_L",
         "Common_DoubleCannon",
         "Common_MortarDouble",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -2332,11 +2335,11 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMG_AntiAir",
-        "Common_Push_A",
         "Common_HandMS_L",
         "Common_DoubleCannon",
         "Common_MortarDouble",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2369,6 +2372,14 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "MS_09_K_1"
+    ]
+  },
   "pairedWeapons": [
     {
       "id": "Common_DoubleCannon",
@@ -2416,13 +2427,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": [
-      "MS_09_K_1"
-    ]
-  }
+  ]
 }

@@ -399,7 +399,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 110
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -494,7 +495,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 35000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.35,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -1669,11 +1672,11 @@
       "cost": 0,
       "weapons": [
         "ZN_YMS_16M_Cannon_AP",
-        "Common_Push_A",
         "Common_Mortar_YMS_16M",
         "ZN_YMS_16M_Cannon_HE",
         "ZN_YMS_16M_MS",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

@@ -55,9 +55,18 @@ const PilotSystem = (() => {
   });
   const experienceRequired = (level, value = null) => {
     const ace = aceProfile(value);
-    // Both start at zero; ACE retains its existing 2000, 4000, ... XP curve.
-    return (ace ? 2 : 1) * 1000 * 2 ** level;
+    // Lifetime XP thresholds: custom stages cost 1000, 2000, ... 10000.
+    // ACE keeps its existing stage curve, expressed as cumulative thresholds.
+    return ace ? 2000 * (2 ** (level + 1) - 1) : 500 * (level + 1) * (level + 2);
   };
+  function cumulativeExperience(value, level, experience) {
+    if (value.experienceVersion === 2) return experience;
+    if (value.experienceVersion != null && value.experienceVersion !== 1)
+      throw Error("驾驶员经验版本无效");
+    const total = experience + (aceProfile(value) ? 2000 : 1000) * (2 ** level - 1);
+    if (!Number.isSafeInteger(total)) throw Error("驾驶员经验无效");
+    return total;
+  }
   const trainingVersion = growthRules.version;
   const trainingBudget = (level) => growthRules.initialPoints + level * growthRules.pointsPerLevel;
   const statCap = (level) =>
@@ -127,13 +136,12 @@ const PilotSystem = (() => {
       experience =
         level === source.maxLevel
           ? 0
-          : Math.floor((progress - level) * experienceRequired(level, value));
+          : Math.floor((progress - level) * 2000 * 2 ** level);
       value = { ...value, stats: undefined };
     } else if (value.aceGrowthVersion !== version) throw Error("ACE驾驶员数据版本无效");
     if (
       !Number.isSafeInteger(experience) ||
-      experience < 0 ||
-      (level < source.maxLevel && experience >= experienceRequired(level, value))
+      experience < 0
     )
       throw Error("驾驶员经验无效");
     const stats = Object.fromEntries(
@@ -163,7 +171,8 @@ const PilotSystem = (() => {
       name: source.name,
       faction: source.faction,
       level,
-      experience: level === source.maxLevel ? 0 : experience,
+      experience: cumulativeExperience(value, level, experience),
+      experienceVersion: 2,
       stats,
       record,
       points: 0,
@@ -194,7 +203,7 @@ const PilotSystem = (() => {
     const pilot = custom(previous);
     if (pilot.aceId !== id || !pilot.needsRecruitment || !aceProfile(id)?.price)
       throw Error("该ACE暂不可招募");
-    return custom({ ...pilot, experience: 0, needsRecruitment: false });
+    return custom({ ...pilot, needsRecruitment: false });
   }
   const skillUnlockLevel = 6;
   const skillChoices = catalog.customSkills || [];
@@ -261,10 +270,10 @@ const PilotSystem = (() => {
     if (
       !Number.isSafeInteger(rawExperience) ||
       rawExperience < 0 ||
-      rawExperience >= (reset ? 1000 * 2 ** (value.level - 1) : experienceRequired(value.level))
+      (reset && rawExperience >= 1000 * 2 ** (value.level - 1))
     )
       throw Error("驾驶员经验无效");
-    const experience = level === growthRules.maxLevel ? 0 : rawExperience;
+    const experience = cumulativeExperience(value, reset ? Math.max(0, value.level - 1) : level, rawExperience);
     const selectedSkillId = value.selectedSkillId;
     if (
       selectedSkillId != null &&
@@ -296,6 +305,7 @@ const PilotSystem = (() => {
       ...(uploadedPortrait ? { uploadedPortrait } : {}),
       level,
       experience,
+      experienceVersion: 2,
       stats,
       record,
       points: trainingBudget(level) - spent,
@@ -318,21 +328,33 @@ const PilotSystem = (() => {
   function gainExperience(value, amount) {
     const p = custom(value);
     if (!Number.isSafeInteger(amount) || amount < 0) throw Error("驾驶员经验奖励无效");
-    if (p.ace) {
-      if (p.level >= maxLevel(p)) return p;
-      p.experience += amount;
-      while (p.level < maxLevel(p) && p.experience >= experienceRequired(p.level, p)) {
-        p.experience -= experienceRequired(p.level, p);
-        p.level++;
-      }
-      delete p.stats; // Recompute from the immutable native base, never from rounded UI values.
-      return ace(p);
-    }
-    if (p.level >= growthRules.maxLevel) return p;
     p.experience += amount;
-    if (p.experience >= experienceRequired(p.level) && p.level < growthRules.maxLevel) {
-      p.level++;
-      p.experience = 0;
+    return custom(p);
+  }
+  const upgradePrices = Object.freeze([1000, 2000, 4000, 6000, 10000, 15000, 22000, 30000, 40000, 50000]);
+  const customRecruitmentCost = 1000;
+  const upgradeCost = (value) => value.level < maxLevel(value)
+    ? aceProfile(value) ? aceProfile(value).price?.money ?? null : upgradePrices[value.level] : 0;
+  const demotionCost = (value) => value.level > 0
+    ? aceProfile(value) ? aceProfile(value).price?.money ?? null : upgradePrices[value.level - 1] / 2 : 0;
+  const canUpgrade = (value) => !value.needsRecruitment && value.level < maxLevel(value) &&
+    upgradeCost(value) !== null && value.experience >= experienceRequired(value.level, value);
+  function upgrade(value) {
+    const p = custom(value);
+    if (!canUpgrade(p)) throw Error("驾驶员尚未满足升职条件");
+    p.level++;
+    if (p.ace) delete p.stats;
+    return custom(p);
+  }
+  function demote(value) {
+    const p = custom(value);
+    if (p.level <= 0 || p.needsRecruitment || demotionCost(p) === null)
+      throw Error("驾驶员尚未满足降职条件");
+    p.level--;
+    if (p.ace) delete p.stats;
+    else {
+      p.stats = baseStats();
+      delete p.selectedSkillId;
     }
     return custom(p);
   }
@@ -518,9 +540,8 @@ const PilotSystem = (() => {
       shooting: factor(stats.shooting, 0.25) * awakening,
       melee: factor(stats.melee, 0.25) * awakening,
       defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.0025),
-      move: 1,
-      moveBonus: Math.trunc((stats.speed - 100) / 50),
-      actionPoints: Math.trunc((stats.speed - 100) / 50),
+      move: factor(stats.speed, 0.5),
+      actionPointsMultiplier: factor(stats.speed, 0.25),
       accuracy: factor(stats.accuracy, 0.25),
       reaction: factor(stats.reaction, 0.25),
     };
@@ -554,6 +575,12 @@ const PilotSystem = (() => {
     custom,
     createCustom,
     gainExperience,
+    upgradeCost,
+    canUpgrade,
+    upgrade,
+    demote,
+    demotionCost,
+    customRecruitmentCost,
     experienceRequired,
     cost,
     portrait,

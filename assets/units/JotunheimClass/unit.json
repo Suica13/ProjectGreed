@@ -158,13 +158,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 75000,
+    "hp": 42000,
     "en": 11250.0,
     "move": 6,
     "mobility": 55.0,
     "cost": 500,
     "counterLimit": 1,
-    "accuracy": 115.0,
+    "accuracy": 74.75,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "ground",
@@ -304,7 +304,9 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 55,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -401,8 +403,14 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 60000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.35,
+    "mobilityMoveTarget": 6,
+    "shipHullBeforeReduction": 60000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1
   },
   "presentation": {
     "shield": false,
@@ -441,7 +449,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 60.0,
+      "hit": 75.0,
       "en": 40.0,
       "sourceName": "JotunheimClass_Turret_BeamCannon",
       "sourceHit": 75.0,
@@ -449,9 +457,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 2750.0,
+      "damagePerShot": 2075,
       "damageComponents": {
-        "beam": 2750.0
+        "beam": 2075
       },
       "hitsPerShot": 1,
       "attack": {
@@ -462,7 +470,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_BeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -547,6 +556,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -566,15 +579,20 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 2750.0,
+        "damageComponents": {
+          "beam": 2750.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "JotunheimClass_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 20.0,
       "sourceName": "JotunheimClass_Turret_AA",
       "sourceHit": 125.0,
@@ -582,10 +600,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 225.0,
+      "damagePerShot": 175,
       "damageComponents": {
-        "shell": 175.0,
-        "shellAP": 50.0
+        "shell": 125,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -596,7 +614,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -604,7 +623,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -612,7 +632,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -620,7 +641,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -628,7 +650,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -636,7 +659,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -644,7 +668,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -652,7 +677,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -660,7 +686,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -668,7 +695,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -676,7 +704,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -684,7 +713,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -692,7 +722,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -700,7 +731,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -708,7 +740,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -716,7 +749,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -724,7 +758,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -732,7 +767,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -740,7 +776,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -748,7 +785,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -756,7 +794,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -764,7 +803,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -772,7 +812,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -780,7 +821,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -788,7 +830,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -796,7 +839,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -804,7 +848,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -812,7 +857,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -820,7 +866,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -828,7 +875,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -836,7 +884,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -844,7 +893,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -852,7 +902,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -860,7 +911,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -868,7 +920,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -876,7 +929,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -884,7 +938,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -892,7 +947,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -900,7 +956,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -908,7 +965,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "JotunheimClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1060,6 +1118,17 @@
       },
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -1382,19 +1451,14 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 225.0,
+        "damageComponents": {
+          "shell": 175.0,
+          "shellAP": 50.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [

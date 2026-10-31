@@ -237,7 +237,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -332,7 +333,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 30000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.75,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -561,7 +564,8 @@
   "skills": [],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "MA"
+    "MA",
+    "LargeUnit"
   ],
   "transport": {
     "slotCost": 3,

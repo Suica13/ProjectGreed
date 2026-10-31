@@ -649,7 +649,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 130
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -742,7 +743,9 @@
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 32500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": false,
@@ -1139,9 +1142,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1269,7 +1270,11 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "ZN_360mmBazookaKai_Double_L": {
       "name": "360mm火箭筒",
@@ -1327,9 +1332,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1460,7 +1463,11 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "ZN_Panzerfaust_Double": {
       "name": "ZN Panzerfaust Double",
@@ -1519,9 +1526,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1648,7 +1653,11 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "ZN_Panzerfaust_Double_L": {
       "name": "ZN Panzerfaust Double L",
@@ -1707,9 +1716,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1839,7 +1846,11 @@
         ]
       },
       "category": "bazooka",
-      "actionCost": 3
+      "actionCost": 3,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_BeamSaber_BF_Yellow_B": {
       "name": "光束军刀",
@@ -2252,11 +2263,11 @@
       "cost": 0,
       "weapons": [
         "ZN_ShotgunKai",
-        "Common_Push_A",
         "ZN_360mmBazookaKai_Double",
         "ZN_Panzerfaust_Double",
         "EF_BeamSaber_BF_Yellow_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2308,6 +2319,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_360mmBazookaKai_Double",
@@ -2319,18 +2336,19 @@
           "requiredParts": [
             "rightArm"
           ],
-          "limb": null
+          "limb": "rightArm"
         },
         {
           "id": "ZN_360mmBazookaKai_Double_L",
           "weaponId": "ZN_360mmBazookaKai_Double_L",
           "muzzleIndex": 1,
           "requiredParts": [
-            "rightArm"
+            "leftArm"
           ],
-          "limb": null
+          "limb": "leftArm"
         }
-      ]
+      ],
+      "fireMode": "simultaneous"
     },
     {
       "id": "ZN_Panzerfaust_Double",
@@ -2342,24 +2360,19 @@
           "requiredParts": [
             "rightArm"
           ],
-          "limb": null
+          "limb": "rightArm"
         },
         {
           "id": "ZN_Panzerfaust_Double_L",
           "weaponId": "ZN_Panzerfaust_Double_L",
           "muzzleIndex": 1,
           "requiredParts": [
-            "rightArm"
+            "leftArm"
           ],
-          "limb": null
+          "limb": "leftArm"
         }
-      ]
+      ],
+      "fireMode": "simultaneous"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

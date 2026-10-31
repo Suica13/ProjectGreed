@@ -585,7 +585,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -678,7 +679,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 25000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.85,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -864,7 +867,7 @@
       "name": "光束狙击枪",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 125.0,
       "en": 35.0,
       "sourceName": "EF_R4_BeamSniperRifle",
@@ -1017,7 +1020,7 @@
       "name": "狙击蓄力",
       "type": "beam",
       "min": 3,
-      "max": 9,
+      "max": 11,
       "hit": 150.0,
       "en": 75.0,
       "sourceName": "EF_R4_BeamSniperRifle_Sniper_Aim",
@@ -1170,7 +1173,7 @@
       "category": "sniper",
       "noCounter": true,
       "hitScale": 2,
-      "description": "本回合蓄力，下次己方回合目标仍在射程内时自动攻击；命中率×2，伤害为原MOD技能的一半，EN不变。",
+      "description": "本回合锁定目标，下次己方回合开始时目标仍在射程内则自动射击；命中率×2，伤害为原MOD技能的一半，EN不变。",
       "special": {
         "type": "snipe",
         "delayOwnTurns": 1,
@@ -1649,10 +1652,10 @@
       "cost": 100,
       "weapons": [
         "EF_R4_BeamSniperRifle",
-        "Common_Push_A",
         "EF_R4_BeamSniperRifle_Sniper_Aim",
         "EF_BeamSprayGun",
-        "Common_ArmBeamSaber_B"
+        "Common_ArmBeamSaber_B",
+        "Common_Push_A"
       ]
     },
     {
@@ -1661,9 +1664,9 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazooka",
-        "Common_Push_A",
         "EF_BeamSprayGun",
-        "Common_ArmBeamSaber_B"
+        "Common_ArmBeamSaber_B",
+        "Common_Push_A"
       ]
     }
   ],

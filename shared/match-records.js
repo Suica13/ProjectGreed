@@ -217,6 +217,9 @@ const MatchRecords = (() => {
     });
     if (save?.format !== "ProjectGreed-save" || save.version !== 1 || save.rules !== fingerprint(G))
       throw Error("存档版本或单位规则不兼容。");
+    const migrations = typeof ProfileMigrations !== "undefined"
+      ? ProfileMigrations : require("./profile-migrations.js");
+    migrations.battleGame(save.game);
     validateGame(G, save.game, save.game?.tiles);
     const g = save.game,
       settings = save.settings;

@@ -19,7 +19,7 @@ test("all native pilot weapons enforce strict source thresholds and remain in ev
     u.pilot.stats.melee = 90;
     assert.equal(G.canUse(u, w), false);
   }
-  assert.equal(unique.size, 30);
+  assert.equal(unique.size, 38);
 });
 test("pilot gates cannot bypass shield, energy or broken native arms", () => {
   for (const model of models) for (const w of model.weapons.filter(w => w.pilotRequirements?.some(r => r.stat === "melee"))) {

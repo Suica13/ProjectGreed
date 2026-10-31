@@ -306,7 +306,8 @@
       }
     ],
     "deployed": true,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 45
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -401,7 +402,9 @@
     "unitLevel": 600.0,
     "tacticalMoveBeforeBonus": 3,
     "v17BaseHp": 8500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.65,
+    "mobilityMoveTarget": 0
   },
   "presentation": {
     "shield": false,

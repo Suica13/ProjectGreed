@@ -578,8 +578,9 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "pilotExperienceMultiplier": 1.1,
-    "actionPoints": 5
+    "pilotExperienceMultiplier": 1.25,
+    "actionPoints": 5,
+    "speed": 110
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -678,7 +679,10 @@
     "unitLevel": 4500.0,
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 37500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "learningComputerNativeMultiplier": 1.1,
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -1748,7 +1752,7 @@
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
       "status": "adapted",
-      "name": "学习型电脑：驾驶员经验获取×1.1"
+      "name": "学习型电脑：驾驶员经验获取×1.25"
     },
     {
       "id": "ExitUnit_NewUnit",
@@ -1770,11 +1774,11 @@
       "cost": 0,
       "weapons": [
         "EF_RX_78_2_BR",
-        "Common_Push_A",
         "EF_BeamSaber_AF_Fast_A",
         "EF_HypeBazooka_ACE",
         "EF_SHM_ACE",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

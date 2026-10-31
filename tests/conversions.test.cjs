@@ -216,19 +216,20 @@ test("any broken part immediately cancels flight and reversible forms, never pur
   }
 });
 
-test("EXAM and HADES drain 25 percent maximum HP at the end of their own turn", () => {
+test("EXAM and HADES drain 10 percent maximum HP; Pale Rider Cavalry drains 7.5 percent", () => {
   for (const base of G.catalog.prefabs.filter((p) =>
     p.skills?.some((s) => s.type === "overdrive" && ["EXAM", "HADES"].includes(s.id)),
   )) {
     const { g, u } = pair(base.id);
     const skill = G.unitSkills(u).find((s) => s.type === "overdrive");
-    assert.equal(skill.hpDrainPercent, 25, base.id);
+    const percent = base.id === "RX_80PR_2" ? 7.5 : 10;
+    assert.equal(skill.hpDrainPercent, percent, base.id);
     G.useSkill(g, u, skill.id, u.x, u.y);
     const before = u.hp,
       maximum = G.modelOf(u).hp;
-    assert.equal(u.overdrive.hpDrainPercent, 25, base.id);
+    assert.equal(u.overdrive.hpDrainPercent, percent, base.id);
     G.end(g);
-    assert.equal(u.hp, before - (skill.id === "EXAM" && G.pilots.hasPassive(u,"Pilot_ExamPilot_Trigger") ? 0 : G.roundDamage(maximum * 0.25)), base.id);
+    assert.equal(u.hp, before - (skill.id === "EXAM" && G.pilots.hasPassive(u,"Pilot_ExamPilot_Trigger") ? 0 : G.roundDamage(maximum * percent / 100)), base.id);
     assert.equal(u.overdrive.remaining, skill.duration - 1);
   }
 });

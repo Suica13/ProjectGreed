@@ -47,7 +47,7 @@ const Development = (() => {
     }
     return result;
   }
-  // Room-only AI progression: union human research, then mirror the furthest
+  // Room-only AI progression: union each participant's active-faction research, then mirror the furthest
   // main-line column (page first) across both factions and all three lanes.
   // Explicit branch/event unlocks remain in the union but cannot advance the main line.
   function aiResearch(researches = []) {
@@ -59,8 +59,10 @@ const Development = (() => {
     }
     let stage = [0, 1];
     for (const value of researches) {
-      const clean = normalizeResearch(value);
-      for (const faction of factions) {
+      const clean = normalizeResearch(value?.researched ?? value);
+      const activeFactions = factions.includes(value?.characterFaction)
+        ? [value.characterFaction] : factions;
+      for (const faction of activeFactions) {
         for (const id of clean[faction]) union[faction].add(id);
         for (const id of clean.units[faction]) union.units[faction].add(id);
         for (const node of nodes(faction)) {

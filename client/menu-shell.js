@@ -84,7 +84,7 @@ window.MenuShell = (() => {
       const pilots = pageView === "formation" && byId("formationMain").dataset.page === "pilots";
       tabs.push(tab("编组", () => go("formation"), pageView === "formation" && !pilots));
       tabs.push(tab("驾驶员", () => go("pilots"), pilots));
-      tabs.push(tab("生产", () => go("production"), pageView === "production"));
+      tabs.push(tab("部署许可", () => go("production"), pageView === "production"));
       tabs[2].id = "shellProduction";
       tabs.push(tab("开发", () => go("development"), pageView === "development"));
       tabs[3].id = "shellDevelopment";

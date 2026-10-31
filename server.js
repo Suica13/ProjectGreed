@@ -23,9 +23,10 @@ function createServer({
   roomReturnMs = 5000,
   aiDelayMs = 500,
   aiBattleMs = 10000,
-  hostReconnectMs = 60000,
+  hostReconnectMs = 0,
   reconnectGraceMs = 60000,
   activitiesPath = port === 0 ? null : path.join(__dirname, "server-data", "activities.json"),
+  settlementDirectory = port === 0 ? null : path.join(__dirname, "server-data", "settlements"),
 } = {}) {
   const rooms = new Map(),
     publicDir = path.join(__dirname, "public");
@@ -171,10 +172,14 @@ function createServer({
   }, 1000);
   activityTimer.unref();
   let lastRoomList = "";
+  const writeSettlement = require("./tools/settlement-log.cjs").createSettlementLog({
+    directory: settlementDirectory, version: project.version,
+  });
   const engine = createRoomEngine({
     rules,
     getRewardMultipliers: () => activities.rewardMultipliers(),
     onHostileDefeat: (event) => activities.recordKill(event),
+    onSettlement: writeSettlement,
     createPasswordVerifier: (password) => {
       const salt = crypto.randomBytes(16),
         digest = crypto.scryptSync(password, salt, 32);

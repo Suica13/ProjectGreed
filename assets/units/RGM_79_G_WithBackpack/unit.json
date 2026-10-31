@@ -626,7 +626,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 85
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -722,7 +723,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 25000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": true,
@@ -1931,8 +1934,8 @@
       "cost": 0,
       "weapons": [
         "EF_100mmMG",
-        "Common_Push_A",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1941,8 +1944,8 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeBazooka",
-        "Common_Push_A",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1951,8 +1954,8 @@
       "cost": 100,
       "weapons": [
         "EF_GroundTypeBeamRifle",
-        "Common_Push_A",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1961,8 +1964,8 @@
       "cost": 100,
       "weapons": [
         "EF_180mmCannon",
-        "Common_Push_A",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1971,8 +1974,8 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeMissileLauncher",
-        "Common_Push_A",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     }
   ],

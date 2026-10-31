@@ -581,7 +581,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 100
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -673,7 +674,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 24500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1337,9 +1340,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.0,
       "changeHeldWeapon": true,
       "source": {
@@ -1470,7 +1471,11 @@
         ]
       },
       "actionCost": 3,
-      "displayIndex": 0
+      "displayIndex": 0,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "ZN_MS_06JK_Gatling": {
       "name": "导弹发射器",
@@ -1884,9 +1889,9 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMG_AntiAir",
-        "Common_Push_A",
         "ZN_MS_06JK_Gatling",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1895,9 +1900,9 @@
       "cost": 50,
       "weapons": [
         "ZN_MS_06K_BigGun",
-        "Common_Push_A",
         "ZN_MS_06JK_Gatling",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1926,6 +1931,14 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "MS_06K"
+    ]
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MS_06K_BigGun",
@@ -1951,13 +1964,5 @@
       ],
       "fireMode": "independent"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": [
-      "MS_06K"
-    ]
-  }
+  ]
 }

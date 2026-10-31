@@ -623,7 +623,7 @@
       "rubble": 75
     },
     "ship": false,
-    "actionPoints": 5,
+    "actionPoints": 6,
     "sensors": {
       "sight": 8,
       "radar": 13.88888888888889,
@@ -633,7 +633,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 140
   },
   "attackBonuses": {
     "melee": 55.0,
@@ -730,7 +731,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 32500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": false,
@@ -1768,9 +1771,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1872,7 +1873,11 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "ZN_HeatSword_Double_DE": {
       "name": "近身格斗",
@@ -1967,9 +1972,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -2071,7 +2074,11 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     }
   },
   "mechanics": [
@@ -2094,11 +2101,11 @@
       "cost": 0,
       "weapons": [
         "ZN_Shotgun",
-        "Common_Push_A",
         "Common_ArmGL",
         "ZN_MS_08TX_Kai_LegMS",
         "ZN_HeatSword_Double_DBDF",
-        "ZN_HeatSword_Double_DE"
+        "ZN_HeatSword_Double_DE",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2132,6 +2139,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MS_08TX_Kai_LegMS",
@@ -2156,11 +2169,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": false,
-    "refitFrom": []
-  }
+  ]
 }

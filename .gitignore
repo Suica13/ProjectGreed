@@ -14,3 +14,5 @@ build/ProjectGreed_V02.html
 
 /public/*.gz
 /public/*.br
+
+/tmp/

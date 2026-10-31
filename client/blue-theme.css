@@ -2234,89 +2234,10 @@ body > #formationPilotPanel {
   flex: none;
   gap: 5px;
 }
-#openFormationRefits {
+#openSpecialTransforms {
   white-space: nowrap;
   padding: 6px 9px;
 }
-.formation-kit-tools #openFormationKitShop {
-  width: 100%;
-}
-.refit-dialog {
-  width: min(620px, calc(100vw - 24px));
-  max-height: 90dvh;
-  box-sizing: border-box;
-  padding: 20px;
-  background: #1b222e;
-  color: #f3f5f8;
-  border: 1px solid #718197;
-  border-radius: 4px;
-  overflow: hidden;
-}
-.refit-dialog[open] {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.refit-dialog::backdrop {
-  background: #050912b8;
-}
-.refit-dialog h3,
-.refit-dialog p {
-  margin: 0;
-}
-.refit-list {
-  overflow-y: auto;
-  min-height: 80px;
-  max-height: 52dvh;
-  display: grid;
-  gap: 8px;
-}
-.refit-option {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border: 1px solid #657389;
-  border-radius: 3px;
-  cursor: pointer;
-}
-.refit-option[aria-selected="true"] {
-  border-color: #6fcaff;
-  background: #25384c;
-}
-.refit-option img {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-  background: #363c43;
-  border: 1px solid #83919f;
-  flex: none;
-}
-.refit-option-info {
-  min-width: 0;
-  flex: 1;
-  display: grid;
-  gap: 5px;
-}
-.refit-footer {
-  display: flex;
-  gap: 10px;
-}
-.refit-footer button {
-  flex: 1;
-}
-.refit-dialog button {
-  min-height: 36px;
-}
-.refit-viewer {
-  overflow-y: auto;
-}
-.refit-viewer canvas {
-  max-width: 100%;
-  flex: none;
-  background: #303a46;
-}
-
 .development-era-divider {
   display: flex;
   align-items: center;
@@ -2381,4 +2302,30 @@ body > #formationPilotPanel {
   }
   #roomSettingsSheet { height: calc(100dvh - 16px); }
   #roomDetailPanel .formation-detail-dialog { max-height: calc(100dvh - 42px); }
+}
+.special-transforms-dialog {
+  width: min(620px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  background: #202a35;
+  color: #edf5ff;
+  border: 1px solid #78bced;
+  border-radius: 8px;
+  padding: 20px;
+}
+.special-transforms-list { display: grid; gap: 12px; margin: 16px 0; }
+.special-transform-row { display: flex; align-items: center; gap: 12px; }
+.special-transform-row img { width: 72px; height: 72px; object-fit: contain; background: #303943; border: 1px solid #718395; }
+.final-squad-team { min-width: 0; min-height: 0; display: flex; flex-direction: column; border: 1px solid #6fbaff; border-radius: 6px; background: #1b222e; overflow: hidden; }
+.final-squad-team[data-team="1"] { border-color: #ed8591; }
+.final-squad-team > h4 { flex: none; margin: 0; padding: 10px 12px; color: #8dcbff; border-bottom: 1px solid #596b80; }
+.final-squad-team[data-team="1"] > h4 { color: #f2a2ad; }
+.final-squad-team-list { min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 0 10px; scrollbar-gutter: stable; }
+#finalAssemblyPanel.is-observer:not([hidden]) { height: 100%; min-height: 0; display: flex; flex-direction: column; box-sizing: border-box; }
+#finalAssemblyPanel.is-observer > :not(#finalSquads) { flex: none; }
+#finalSquads.team-grouped { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; overflow: hidden; }
+.team-grouped .final-squad { padding: 10px; }
+.team-grouped .final-squad-heading { overflow-wrap: anywhere; }
+@media (max-width: 700px) {
+  #finalSquads.team-grouped { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 8px; }
 }

@@ -297,7 +297,8 @@
       "antiDetectAqua": false
     },
     "deployed": true,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 145
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -393,7 +394,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 20000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.0,
+    "mobilityMoveTarget": 0
   },
   "presentation": {
     "shield": false,

@@ -199,7 +199,7 @@
   "stats": {
     "hp": 19500,
     "en": 375.0,
-    "move": 10,
+    "move": 9,
     "mobility": 145.0,
     "cost": 250,
     "counterLimit": 1,
@@ -220,7 +220,7 @@
       "rubble": 75
     },
     "ship": false,
-    "actionPoints": 5,
+    "actionPoints": 6,
     "sensors": {
       "sight": 10,
       "radar": 15.277777777777779,
@@ -231,7 +231,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "pilotExperienceMultiplier": 1.1
+    "pilotExperienceMultiplier": 1.25,
+    "speed": 195
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -327,7 +328,10 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 15500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "learningComputerNativeMultiplier": 1.1,
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -1570,7 +1574,7 @@
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
       "status": "adapted",
-      "name": "学习型电脑：驾驶员经验获取×1.1"
+      "name": "学习型电脑：驾驶员经验获取×1.25"
     }
   ],
   "weaponKits": [
@@ -1669,6 +1673,14 @@
       "sourceUnit": "SFS_X1"
     }
   ],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "FF_X7"
+    ]
+  },
   "pairedWeapons": [
     {
       "id": "Common_DoubleVulcan_FF_X7Bst",
@@ -1727,13 +1739,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": [
-      "FF_X7"
-    ]
-  }
+  ]
 }

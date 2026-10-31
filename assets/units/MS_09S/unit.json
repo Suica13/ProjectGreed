@@ -522,7 +522,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 125
   },
   "attackBonuses": {
     "melee": 30.0,
@@ -618,7 +619,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 35000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -1676,10 +1679,10 @@
       "cost": 50,
       "weapons": [
         "ZN_360mmBazookaKai",
-        "Common_Push_A",
         "ZN_MS_09_ChestBeam",
         "ZN_Panzerfaust_Orange",
-        "ZN_HeatSaber_AF_A"
+        "ZN_HeatSaber_AF_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1688,10 +1691,10 @@
       "cost": 0,
       "weapons": [
         "ZN_MMP80MG_Kai",
-        "Common_Push_A",
         "ZN_MS_09_ChestBeam",
         "ZN_Panzerfaust_Orange",
-        "ZN_HeatSaber_AF_A"
+        "ZN_HeatSaber_AF_A",
+        "Common_Push_A"
       ]
     }
   ],

@@ -45,7 +45,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -73,7 +73,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -259,6 +259,11 @@
         "id": "adjacent_en_supply",
         "name": "EN补给",
         "type": "resupply"
+      },
+      {
+        "id": "EnterDeployMode",
+        "name": "部署",
+        "type": "transform"
       }
     ],
     "mechanics": [
@@ -277,13 +282,13 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       },
       {
         "id": "Deploy",
         "source": "Template/Unit/Skill/Deploy.gw",
-        "status": "review",
-        "name": "展开／收起"
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
       }
     ]
   },
@@ -512,7 +517,7 @@
       },
       {
         "id": "special_Common_ReEntry_NeedBooster",
-        "name": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
         "status": "review"
       }
@@ -585,7 +590,13 @@
     "source": "Units/BattleUnits/Type61_SPG/Type61_SPG.ini",
     "status": "imported",
     "weapons": 1,
-    "skills": [],
+    "skills": [
+      {
+        "id": "EnterDeployMode",
+        "name": "部署",
+        "type": "transform"
+      }
+    ],
     "mechanics": [
       {
         "id": "movement",
@@ -595,8 +606,8 @@
       {
         "id": "Deploy",
         "source": "Template/Unit/Skill/Deploy.gw",
-        "status": "review",
-        "name": "展开／收起"
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
       }
     ]
   },
@@ -778,7 +789,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -872,12 +883,6 @@
         "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
-      },
-      {
         "id": "Common_MinovskyParticle_M",
         "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
         "status": "adapted",
@@ -925,7 +930,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       },
       {
         "id": "CustomUnit_PilotCustomUnit",
@@ -991,7 +996,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -1018,7 +1023,13 @@
     "source": "Units/BattleUnits/RX_75R/RX_75R.ini",
     "status": "imported",
     "weapons": 5,
-    "skills": [],
+    "skills": [
+      {
+        "id": "EnterDeployMode",
+        "name": "部署",
+        "type": "transform"
+      }
+    ],
     "mechanics": [
       {
         "id": "movement",
@@ -1028,8 +1039,8 @@
       {
         "id": "Deploy",
         "source": "Template/Unit/Skill/Deploy.gw",
-        "status": "review",
-        "name": "展开／收起"
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
       }
     ]
   },
@@ -1127,12 +1138,6 @@
         "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
-      },
-      {
         "id": "Common_MinovskyParticle_M",
         "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
         "status": "adapted",
@@ -1187,17 +1192,11 @@
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
-      },
-      {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       },
       {
         "id": "special_Common_ReEntry_NeedBooster",
-        "name": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
         "status": "review"
       },
@@ -1233,7 +1232,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       },
       {
         "id": "ExitUnit_NewUnit",
@@ -1245,7 +1244,7 @@
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
         "status": "adapted",
-        "name": "学习型电脑：驾驶员经验获取×1.1"
+        "name": "学习型电脑：驾驶员经验获取×1.25"
       },
       {
         "id": "FuseUnit_B",
@@ -1291,7 +1290,7 @@
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
         "status": "adapted",
-        "name": "学习型电脑：驾驶员经验获取×1.1"
+        "name": "学习型电脑：驾驶员经验获取×1.25"
       }
     ]
   },
@@ -1325,7 +1324,7 @@
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
         "status": "adapted",
-        "name": "学习型电脑：驾驶员经验获取×1.1"
+        "name": "学习型电脑：驾驶员经验获取×1.25"
       }
     ]
   },
@@ -1348,7 +1347,7 @@
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
         "status": "adapted",
-        "name": "学习型电脑：驾驶员经验获取×1.1"
+        "name": "学习型电脑：驾驶员经验获取×1.25"
       }
     ]
   },
@@ -1365,7 +1364,7 @@
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
         "status": "adapted",
-        "name": "学习型电脑：驾驶员经验获取×1.1"
+        "name": "学习型电脑：驾驶员经验获取×1.25"
       }
     ]
   },
@@ -1417,7 +1416,7 @@
         "id": "LPC",
         "source": "Template/Unit/Skill/LPC.gw",
         "status": "adapted",
-        "name": "学习型电脑：驾驶员经验获取×1.1"
+        "name": "学习型电脑：驾驶员经验获取×1.25"
       }
     ]
   },
@@ -1472,6 +1471,11 @@
         "id": "SmokeGrenade",
         "name": "烟雾弹",
         "type": "smoke"
+      },
+      {
+        "id": "EnterDeployMode",
+        "name": "部署",
+        "type": "transform"
       }
     ],
     "mechanics": [
@@ -1489,8 +1493,8 @@
       {
         "id": "Deploy",
         "source": "Template/Unit/Skill/Deploy.gw",
-        "status": "review",
-        "name": "展开／收起"
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
       },
       {
         "id": "special_Common_SmokingLauncher_NowPos",
@@ -1556,26 +1560,20 @@
         "name": "防御指挥：范围与效果随驾驶员领导力变化"
       },
       {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
-      },
-      {
         "id": "special_Common_ReEntry",
-        "name": "special_Common_ReEntry",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
         "status": "review"
       },
       {
         "id": "special_Common_ReEntry_FromSpace",
-        "name": "special_Common_ReEntry_FromSpace",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
         "status": "review"
       },
       {
         "id": "special_Common_ReEntry_Both",
-        "name": "special_Common_ReEntry_Both",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
         "status": "review"
       },
@@ -1634,17 +1632,11 @@
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
-      },
-      {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       },
       {
         "id": "special_Common_ReEntry_NeedBooster",
-        "name": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
         "status": "review"
       },
@@ -1700,6 +1692,11 @@
         "id": "adjacent_en_supply",
         "name": "EN补给",
         "type": "resupply"
+      },
+      {
+        "id": "EnterDeployMode",
+        "name": "部署",
+        "type": "transform"
       }
     ],
     "mechanics": [
@@ -1717,8 +1714,8 @@
       {
         "id": "Deploy",
         "source": "Template/Unit/Skill/Deploy.gw",
-        "status": "review",
-        "name": "展开／收起"
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
       }
     ]
   },
@@ -1746,7 +1743,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -1809,12 +1806,6 @@
         "source": "Template/Unit/Skill/CmdCom.gw",
         "status": "adapted",
         "name": "通信指挥：范围与效果随驾驶员领导力变化"
-      },
-      {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
       },
       {
         "id": "Common_MinovskyParticle_M",
@@ -1897,7 +1888,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       },
       {
         "id": "CustomUnit_PilotCustomUnit",
@@ -2189,6 +2180,11 @@
         "id": "adjacent_en_supply",
         "name": "EN补给",
         "type": "resupply"
+      },
+      {
+        "id": "EnterDeployMode",
+        "name": "部署",
+        "type": "transform"
       }
     ],
     "mechanics": [
@@ -2206,8 +2202,8 @@
       {
         "id": "Deploy",
         "source": "Template/Unit/Skill/Deploy.gw",
-        "status": "review",
-        "name": "展开／收起"
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
       }
     ]
   },
@@ -2301,7 +2297,7 @@
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -2339,7 +2335,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       },
       {
         "id": "CustomUnit_PilotCustomUnit",
@@ -2497,17 +2493,11 @@
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
-      },
-      {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       },
       {
         "id": "special_Common_ReEntry_NeedBooster",
-        "name": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
         "status": "review"
       },
@@ -2552,7 +2542,7 @@
       },
       {
         "id": "special_Common_ReEntry_NeedBooster",
-        "name": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
         "status": "review"
       }
@@ -2651,7 +2641,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -2906,12 +2896,6 @@
         "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
-      },
-      {
         "id": "Common_MinovskyParticle_M",
         "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
         "status": "adapted",
@@ -2986,7 +2970,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -3029,7 +3013,13 @@
     "source": "Units/BattleUnits/MS_06V/MS_06V.ini",
     "status": "imported",
     "weapons": 5,
-    "skills": [],
+    "skills": [
+      {
+        "id": "EnterDeployMode",
+        "name": "部署",
+        "type": "transform"
+      }
+    ],
     "mechanics": [
       {
         "id": "movement",
@@ -3039,8 +3029,8 @@
       {
         "id": "Deploy",
         "source": "Template/Unit/Skill/Deploy.gw",
-        "status": "review",
-        "name": "展开／收起"
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
       }
     ]
   },
@@ -3138,12 +3128,6 @@
         "name": "通信指挥：范围与效果随驾驶员领导力变化"
       },
       {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
-      },
-      {
         "id": "Common_MinovskyParticle_M",
         "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
         "status": "adapted",
@@ -3198,17 +3182,11 @@
         "id": "CustomUnit_NewUnit",
         "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
-      },
-      {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       },
       {
         "id": "special_Common_ReEntry_NeedBooster",
-        "name": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
         "status": "review"
       },
@@ -3270,7 +3248,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -3352,12 +3330,6 @@
         "name": "空中缠斗"
       },
       {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
-      },
-      {
         "id": "Common_MinovskyParticle_M",
         "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
         "status": "adapted",
@@ -3396,12 +3368,6 @@
         "source": "Template/Unit/Skill/CmdCom.gw",
         "status": "adapted",
         "name": "通信指挥：范围与效果随驾驶员领导力变化"
-      },
-      {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
       },
       {
         "id": "Common_MinovskyParticle_M",
@@ -3455,26 +3421,20 @@
         "name": "防御指挥：范围与效果随驾驶员领导力变化"
       },
       {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
-      },
-      {
         "id": "special_Common_ReEntry_NeedBooster",
-        "name": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
         "status": "review"
       },
       {
         "id": "special_Common_ReEntry_FromSpace",
-        "name": "special_Common_ReEntry_FromSpace",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
         "status": "review"
       },
       {
         "id": "special_Common_ReEntry_NeedBooster_Both",
-        "name": "special_Common_ReEntry_NeedBooster_Both",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster_Both.gw",
         "status": "review"
       },
@@ -3530,14 +3490,8 @@
         "name": "防御指挥：范围与效果随驾驶员领导力变化"
       },
       {
-        "id": "special_Common_MinovskyParticle_M",
-        "name": "special_Common_MinovskyParticle_M",
-        "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-        "status": "review"
-      },
-      {
         "id": "special_Common_ReEntry_NeedBooster",
-        "name": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
         "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
         "status": "review"
       },
@@ -3637,7 +3591,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -3653,6 +3607,11 @@
         "id": "adjacent_en_supply",
         "name": "EN补给",
         "type": "resupply"
+      },
+      {
+        "id": "EnterDeployMode",
+        "name": "部署",
+        "type": "transform"
       }
     ],
     "mechanics": [
@@ -3670,8 +3629,8 @@
       {
         "id": "Deploy",
         "source": "Template/Unit/Skill/Deploy.gw",
-        "status": "review",
-        "name": "展开／收起"
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
       }
     ]
   },
@@ -3860,7 +3819,7 @@
         "id": "CustomUnit",
         "source": "Template/Unit/Skill/CustomUnit.gw",
         "status": "adapted",
-        "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
       }
     ]
   },
@@ -4025,14 +3984,14 @@
       },
       {
         "id": "special_Common_EMP_M",
-        "name": "EMP：周围3格敌人下回合AP减少1，2 AP，冷却2回合",
+        "name": "EMP：周围3格敌人下回合AP减少25%，2 AP，冷却2回合",
         "source": "Units/BattleUnits/Weapon/Sp/Common_EMP_M.gw",
         "status": "adapted"
       },
       {
         "id": "Irradiation",
         "status": "adapted",
-        "name": "光束照射：方向射线、蓄力、逐机命中与长度自适应贴图"
+        "name": "光束照射：方向射线、蓄力、逐机命中；原版固定演出与判定射程独立"
       }
     ]
   },

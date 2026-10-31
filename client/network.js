@@ -192,7 +192,7 @@ const Net = (() => {
       ...intent.fields,
     };
     if (profileActions.has(intent.action)) {
-      message.inventory = Economy.snapshot().inventory;
+      message.licenses = Economy.snapshot().licenses;
       if (!n.snapshot?.started) message.researched = Development.researchSnapshot();
     }
     n.awaiting = { ...intent, message, revision: n.revision, attempts: 0, rebases: 0,
@@ -470,7 +470,7 @@ const Net = (() => {
           reliableActions: 1,
           characterFaction: PlayerProfile.faction(),
           researched: Development.researchSnapshot(),
-          inventory: Economy.snapshot().inventory,
+          licenses: Economy.snapshot().licenses,
           roomMode: mode === "create" ? byId("newRoomMode").value : undefined,
           mode,
           room,

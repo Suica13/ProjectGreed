@@ -84,9 +84,9 @@ def apply(prefab,native=None):
         prefab['unitTags']=[tag for tag in prefab.get('unitTags',[]) if tag not in ('SmallUnit','MediumUnit','LargeUnit')]+['LargeUnit']
         skills[:]=[s for s in skills if s['id']!='EMP'];skills.append(dict(id='EMP',type='emp',name='EMP',range=0,radius=3,
             actionCost=2,enCost=80,cooldownTurns=2,maxUses=99,consumeAction=False,effect='Light_75_NotAttached',
-            sound={'file':'../../sounds/Beam_Hit_3.ogg','volume':.7},description='消耗2 AP与80 EN，周围3格内所有敌人下回合AP减少1点，不叠加，冷却2个己方回合。'))
+            sound={'file':'../../sounds/Beam_Hit_3.ogg','volume':.7},description='消耗2 AP与80 EN，周围3格内所有敌人下回合AP减少25%，不叠加，冷却2个己方回合。'))
         for mechanic in prefab['mechanics']:
-            if mechanic['id']=='special_Common_EMP_M':mechanic.update(status='adapted',name='EMP：周围3格敌人下回合AP减少1，2 AP，冷却2回合')
+            if mechanic['id']=='special_Common_EMP_M':mechanic.update(status='adapted',name='EMP：周围3格敌人下回合AP减少25%，2 AP，冷却2回合')
     return prefab
 
 def import_effects():

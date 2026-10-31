@@ -633,7 +633,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 80
   },
   "attackBonuses": {
     "melee": 10.0,
@@ -732,7 +733,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 35000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.35,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": true,
@@ -2155,7 +2158,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     },
     {
       "id": "CustomUnit_PilotCustomUnit",
@@ -2177,9 +2180,9 @@
       "cost": 0,
       "weapons": [
         "EF_100mmMG",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -2188,9 +2191,9 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeBazooka",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -2199,9 +2202,9 @@
       "cost": 100,
       "weapons": [
         "EF_GroundTypeBeamRifle",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -2210,9 +2213,9 @@
       "cost": 100,
       "weapons": [
         "EF_180mmCannon",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -2221,9 +2224,9 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeMissileLauncher",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
-        "EF_BeamSaber_A"
+        "EF_BeamSaber_A",
+        "Common_Push_A"
       ]
     }
   ],

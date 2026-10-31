@@ -2,29 +2,20 @@ const test = require("node:test"),
   assert = require("node:assert/strict");
 const G = require("../shared/rules.js");
 const entry = { unitId: "RGM_79", kitId: "machine_gun" };
-test("per-unit names survive sanitizing, cost filtering and deployment without modifying shared models", () => {
-  const entries = [
-    { ...entry, customName: "  先锋\n一号  ", hp: 99999 },
-    { ...entry, customName: "二号" },
-    { ...entry },
-  ];
-  const clean = G.validateFormation(entries);
-  assert.deepEqual(clean, [
-    { ...entry, customName: "先锋一号" },
-    { ...entry, customName: "二号" },
-    entry,
-  ]);
-  const cost = G.models.RGM_79__machine_gun.cost;
-  const plan = G.planFormation(clean, cost * 2);
-  assert.deepEqual(plan.disabled, [2]);
-  assert.equal(plan.deployable[0].customName, "先锋一号");
-  const g = G.create(false, 1, [plan.deployable, [entry]]);
-  assert.equal(G.unitName(g.units[0]), "先锋一号");
-  assert.equal(G.unitName(g.units[1]), "二号");
-  assert.equal(G.unitName(g.units[2]), G.models.RGM_79__machine_gun.name);
-  assert.equal(G.models.RGM_79__machine_gun.customName, undefined);
-  assert.equal(JSON.parse(JSON.stringify(g)).units[0].customName, "先锋一号");
+test("unit names use fixed models plus serials and deployment fills missing codes deterministically", () => {
+  const entries = [{...entry,customName:"任意改名[A12]"},{...entry,customName:"任意改名"},{...entry}];
+  const clean=G.validateFormation(entries);
+  assert.equal(clean[0].customName,G.models.RGM_79__machine_gun.name+"[A12]");
+  assert.equal(clean[1].customName,undefined);
+  const game=G.create(false,123,[clean,[entry]]);
+  assert.equal(G.unitName(game.units[0]),G.models.RGM_79__machine_gun.name+"[A12]");
+  for(const u of game.units)assert.match(G.unitName(u),/\[[A-Z]\d{2}\]$/);
+  assert.equal(new Set(game.units.map(u=>u.customName)).size,game.units.length);
+  assert.deepEqual(game,G.create(false,123,[clean,[entry]]));
+  assert.equal(G.models.RGM_79__machine_gun.customName,undefined);
+  assert.equal(G.unitName({...game.units[0],customName:"旧名称"}),G.models.RGM_79__machine_gun.name);
 });
+
 test("empty/reset names restore defaults and invalid names never enter authoritative formations", () => {
   for (const customName of ["", " \n\t "])
     assert.deepEqual(G.validateFormation([{ ...entry, customName }]), [entry]);

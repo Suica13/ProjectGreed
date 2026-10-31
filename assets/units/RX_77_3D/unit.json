@@ -511,7 +511,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -605,7 +606,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 40000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": true,
@@ -2723,12 +2726,12 @@
       "cost": 100,
       "weapons": [
         "EF_RX_77_2_BR",
-        "Common_Push_A",
         "Common_MortarDouble",
         "Common_DoubleCannon",
         "Common_Grenade_B",
         "Common_Cqb_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2737,12 +2740,12 @@
       "cost": 0,
       "weapons": [
         "EF_90mmMG",
-        "Common_Push_A",
         "Common_MortarDouble",
         "Common_DoubleCannon",
         "Common_Grenade_B",
         "Common_Cqb_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2751,12 +2754,12 @@
       "cost": 50,
       "weapons": [
         "EF_BalzacBazooka",
-        "Common_Push_A",
         "Common_MortarDouble",
         "Common_DoubleCannon",
         "Common_Grenade_B",
         "Common_Cqb_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2788,6 +2791,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_MortarDouble",
@@ -2835,11 +2844,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

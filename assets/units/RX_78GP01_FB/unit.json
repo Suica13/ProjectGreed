@@ -653,7 +653,7 @@
   "stats": {
     "hp": 69000,
     "en": 475.0,
-    "move": 9,
+    "move": 8,
     "mobility": 190.0,
     "cost": 1125,
     "counterLimit": 1,
@@ -684,7 +684,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 7,
+    "speed": 160
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -782,7 +783,9 @@
     "tacticalMoveBeforeBonus": 8,
     "v17BaseHp": 55000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 3.5,
+    "mobilityMoveTarget": 9
   },
   "presentation": {
     "shield": true,
@@ -1838,7 +1841,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     },
     {
       "id": "ExitUnit_NewUnit",
@@ -1854,10 +1857,10 @@
       "cost": 100,
       "weapons": [
         "EF_RX_78GP01_BR",
-        "Common_Push_A",
         "EF_RX_78GP01_LBR",
         "EF_BeamSaber_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -1866,10 +1869,10 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazookaKai",
-        "Common_Push_A",
         "EF_RX_78GP01_LBR",
         "EF_BeamSaber_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

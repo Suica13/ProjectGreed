@@ -141,7 +141,7 @@ test("pilot buffs and cooldowns follow armor purge and EXAM pilot prevents only 
     const hp = f.u.hp,
       en = f.u.en;
     G.end(f.g);
-    assert.equal(f.u.hp, over.id === "EXAM" ? hp : hp - G.roundDamage(G.modelOf(f.u).hp * 0.25));
+    assert.equal(f.u.hp, over.id === "EXAM" ? hp : hp - G.roundDamage(G.modelOf(f.u).hp * over.hpDrainPercent / 100));
     assert(f.u.en < en);
   }
 });

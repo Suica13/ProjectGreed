@@ -366,13 +366,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 187500,
+    "hp": 105000,
     "en": 9000.0,
-    "move": 6,
+    "move": 7,
     "mobility": 50.0,
     "cost": 1500,
     "counterLimit": 1,
-    "accuracy": 120.0,
+    "accuracy": 78.0,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "ground",
@@ -669,7 +669,9 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 50,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -768,8 +770,14 @@
       "radar": 550.0,
       "antiDetection": -250.0
     },
-    "v17BaseHp": 150000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.35,
+    "mobilityMoveTarget": 6,
+    "shipHullBeforeReduction": 150000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1
   },
   "presentation": {
     "shield": false,
@@ -816,9 +824,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 8500.0,
+      "damagePerShot": 6375,
       "damageComponents": {
-        "beam": 8500.0
+        "beam": 6375
       },
       "hitsPerShot": 1,
       "attack": {
@@ -829,7 +837,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -837,7 +846,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -845,7 +855,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -853,7 +864,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -861,7 +873,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -869,7 +882,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -877,7 +891,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -885,7 +900,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -893,7 +909,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -901,7 +918,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 2.0
+            "delay": 2.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -909,7 +927,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -917,7 +936,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -925,7 +945,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -933,7 +954,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -941,7 +963,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -949,7 +972,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -957,7 +981,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -965,7 +990,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1165,6 +1191,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1184,8 +1214,14 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 8500.0,
+        "damageComponents": {
+          "beam": 8500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "GwazineClass_Turret_MegaBeamCannon_L": {
       "name": "舰载光束炮",
@@ -1200,9 +1236,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 8500.0,
+      "damagePerShot": 6375,
       "damageComponents": {
-        "beam": 8500.0
+        "beam": 6375
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1213,7 +1249,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1221,7 +1258,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1229,7 +1267,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1237,7 +1276,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1245,7 +1285,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1253,7 +1294,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1261,7 +1303,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1269,7 +1312,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1277,7 +1321,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1285,7 +1330,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 2.0
+            "delay": 2.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1293,7 +1339,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1301,7 +1348,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1309,7 +1357,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1317,7 +1366,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1325,7 +1375,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1333,7 +1384,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1341,7 +1393,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1349,7 +1402,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1551,6 +1605,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1570,8 +1628,14 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 8500.0,
+        "damageComponents": {
+          "beam": 8500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "GwazineClass_Turret_MegaBeamCannon_R": {
       "name": "舰载光束炮",
@@ -1586,9 +1650,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 8500.0,
+      "damagePerShot": 6375,
       "damageComponents": {
-        "beam": 8500.0
+        "beam": 6375
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1599,7 +1663,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1607,7 +1672,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1615,7 +1681,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1623,7 +1690,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1631,7 +1699,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1639,7 +1708,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1647,7 +1717,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1655,7 +1726,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1663,7 +1735,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1671,7 +1744,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 2.0
+            "delay": 2.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1679,7 +1753,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1687,7 +1762,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1695,7 +1771,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1703,7 +1780,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1711,7 +1789,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1719,7 +1798,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1727,7 +1807,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1735,7 +1816,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_MegaBeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1937,6 +2019,10 @@
         "large": {
           "damage": 1.25,
           "accuracy": 1.25
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1956,15 +2042,21 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 8500.0,
+        "damageComponents": {
+          "beam": 8500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "GwazineClass_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 50.0,
       "sourceName": "GwazineClass_Turret_AA",
       "sourceHit": 125.0,
@@ -1972,10 +2064,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 300.0,
+      "damagePerShot": 250,
       "damageComponents": {
-        "shell": 250.0,
-        "shellAP": 50.0
+        "shell": 200,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1986,7 +2078,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1994,7 +2087,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2002,7 +2096,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2010,7 +2105,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2018,7 +2114,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2026,7 +2123,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2034,7 +2132,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2042,7 +2141,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2050,7 +2150,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2058,7 +2159,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2066,7 +2168,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2074,7 +2177,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2082,7 +2186,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2090,7 +2195,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2098,7 +2204,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2106,7 +2213,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2114,7 +2222,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2122,7 +2231,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2130,7 +2240,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2138,7 +2249,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2146,7 +2258,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2154,7 +2267,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2162,7 +2276,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2170,7 +2285,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2178,7 +2294,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2186,7 +2303,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2194,7 +2312,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2202,7 +2321,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2210,7 +2330,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2218,7 +2339,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2226,7 +2348,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2234,7 +2357,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2242,7 +2366,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2250,7 +2375,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2258,7 +2384,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2266,7 +2393,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2274,7 +2402,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2282,7 +2411,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2290,7 +2420,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2298,7 +2429,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2306,7 +2438,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2314,7 +2447,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2322,7 +2456,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2330,7 +2465,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2338,7 +2474,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2346,7 +2483,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2354,7 +2492,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2362,7 +2501,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2370,7 +2510,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2378,7 +2519,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2386,7 +2528,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2394,7 +2537,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2402,7 +2546,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2410,7 +2555,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2418,7 +2564,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2426,7 +2573,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2434,7 +2582,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2442,7 +2591,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2450,7 +2600,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2458,7 +2609,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2466,7 +2618,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2474,7 +2627,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2482,7 +2636,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2490,7 +2645,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2498,7 +2654,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2506,7 +2663,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2514,7 +2672,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2522,7 +2681,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2530,7 +2690,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2538,7 +2699,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2546,7 +2708,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2554,7 +2717,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2562,7 +2726,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2570,7 +2735,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2578,7 +2744,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2586,7 +2753,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2594,7 +2762,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2602,7 +2771,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2610,7 +2780,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2618,7 +2789,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2626,7 +2798,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2634,7 +2807,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2642,7 +2816,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2650,7 +2825,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2658,7 +2834,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2666,7 +2843,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2674,7 +2852,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2682,7 +2861,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2690,7 +2870,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2698,7 +2879,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2706,7 +2888,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2714,7 +2897,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2722,7 +2906,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2730,7 +2915,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2738,7 +2924,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2746,7 +2933,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2754,7 +2942,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2762,7 +2951,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2770,7 +2960,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2778,7 +2969,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "GwazineClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -3020,6 +3212,17 @@
       },
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -3822,19 +4025,14 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 300.0,
+        "damageComponents": {
+          "shell": 250.0,
+          "shellAP": 50.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [
@@ -3862,14 +4060,8 @@
       "name": "防御指挥：范围与效果随驾驶员领导力变化"
     },
     {
-      "id": "special_Common_MinovskyParticle_M",
-      "name": "special_Common_MinovskyParticle_M",
-      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw",
-      "status": "review"
-    },
-    {
       "id": "special_Common_ReEntry_NeedBooster",
-      "name": "special_Common_ReEntry_NeedBooster",
+      "name": "大气层突入",
       "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
       "status": "review"
     },

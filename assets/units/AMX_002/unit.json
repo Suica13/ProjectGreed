@@ -267,7 +267,7 @@
   "stats": {
     "hp": 244000,
     "en": 1200.0,
-    "move": 10,
+    "move": 9,
     "mobility": 135.0,
     "cost": 2250,
     "counterLimit": 1,
@@ -307,7 +307,8 @@
       "nativeRecoverySpeed": 500.0,
       "minimumRatio": -0.25,
       "effect": "I_Field_2"
-    }
+    },
+    "speed": 175
   },
   "attackBonuses": {
     "melee": 85.0,
@@ -401,7 +402,9 @@
     },
     "v17BaseHp": 195000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -2817,7 +2820,8 @@
   ],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "MA"
+    "MA",
+    "LargeUnit"
   ],
   "transport": {
     "slotCost": 3,
@@ -2826,6 +2830,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_AMX_002_AntiShipMS",
@@ -2865,11 +2875,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

@@ -631,8 +631,9 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "pilotExperienceMultiplier": 1.1,
-    "actionPoints": 5
+    "pilotExperienceMultiplier": 1.25,
+    "actionPoints": 5,
+    "speed": 145
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -733,7 +734,10 @@
     "unitLevel": 3500.0,
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 37500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "learningComputerNativeMultiplier": 1.1,
+    "actionTurnSpeed": 1.0,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -2160,7 +2164,7 @@
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
       "status": "adapted",
-      "name": "学习型电脑：驾驶员经验获取×1.1"
+      "name": "学习型电脑：驾驶员经验获取×1.25"
     },
     {
       "id": "FlyUnit",
@@ -2188,10 +2192,10 @@
       "cost": 100,
       "weapons": [
         "EF_RX_78_2_BR",
-        "Common_Push_A",
         "EF_BeamSaber_AF_Fast_A",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_AALDF"
+        "EF_BeamSaber_Double_AALDF",
+        "Common_Push_A"
       ]
     },
     {
@@ -2200,10 +2204,10 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazooka",
-        "Common_Push_A",
         "EF_BeamSaber_AF_Fast_A",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_AALDF"
+        "EF_BeamSaber_Double_AALDF",
+        "Common_Push_A"
       ]
     },
     {
@@ -2213,9 +2217,9 @@
       "weapons": [
         "Common_DoubleVulcan_MS",
         "EF_SHM",
-        "Common_Push_A",
         "EF_BeamSaber_AF_Fast_A",
-        "EF_BeamSaber_Double_AALDF"
+        "EF_BeamSaber_Double_AALDF",
+        "Common_Push_A"
       ]
     }
   ],

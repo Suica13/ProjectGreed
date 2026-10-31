@@ -45,23 +45,22 @@ test("shared deployment still requires every ship footprint cell to remain insid
   G.deploy(game, 0, actor.id, area.x + 3, area.y + 3);
   assert.throws(() => G.deploy(game, 0, actor.id, area.x + area.width - 1, area.y + 3));
 });
-test("Musai and Falmer hulls and beam payloads are reduced 15 percent with ceiling rounding to multiples of 500", () => {
-  for (const [id, hp, beam] of [
-    ["MusaiClass", 59000, 4500],
-    ["FalmerClass", 69500, 4000],
-  ]) {
-    const prefab = G.catalog.prefabs.find((prefab) => prefab.id === id);
-    assert.equal(prefab.stats.hp, hp);
-    const weapon = Object.values(prefab.weapons).find((weapon) => weapon.type === "beam");
-    assert.equal(weapon.damagePerShot, beam);
-    assert.equal(weapon.damageComponents.beam, beam);
-    for (const step of weapon.attack.steps)
-      if (step.damageComponents) assert.equal(step.damageComponents.beam, beam);
-    for (const model of Object.values(G.models).filter((model) => model.prefabId === id))
-      assert.equal(model.hp, hp);
-    const shell = Object.values(prefab.weapons)
-      .filter((weapon) => weapon.type === "shell")
-      .map((weapon) => weapon.damagePerShot);
-    assert.deepEqual(shell, [1000, 1250]);
+test("all ship hulls and weapon payloads use native baselines and the unified 75 percent policy", () => {
+  for (const prefab of G.catalog.prefabs.filter(p => p.stats.ship)) {
+    const federation = prefab.tags.includes("EFSF");
+    assert.equal(prefab.stats.hp,Math.max(500,Math.round(prefab.sourceStats.hp * .7 * (federation ? 1.1 : 1) / 500) * 500),prefab.id);
+    assert.equal(prefab.stats.mobility,Number((prefab.sourceStats.reaction * (federation ? 1.15 : 1)).toFixed(6)),prefab.id);
+    for (const weapon of Object.values(prefab.weapons)) {
+      assert.equal(weapon.shipDamageMultiplier,.75);
+      for(const payload of [weapon,...weapon.attack.steps]) {
+        const baseline=payload.shipDamageBeforeReduction;
+        for(const [channel,value] of Object.entries(baseline.damageComponents || {}))
+          assert.equal(payload.damageComponents[channel],Math.round(value * .75 / 25)*25,prefab.id);
+      }
+    }
+    for(const model of Object.values(G.models).filter(m=>m.prefabId === prefab.id)) {
+      assert.equal(model.hp,prefab.stats.hp);
+      assert.equal(model.accuracy,Number((prefab.sourceStats.accuracy*.65*(federation ? 1.1 : 1)).toFixed(6)));
+    }
   }
 });

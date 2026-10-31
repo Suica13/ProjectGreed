@@ -595,7 +595,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -689,7 +690,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 28500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -2031,10 +2034,10 @@
       "cost": 0,
       "weapons": [
         "ZN_Shotgun",
-        "Common_Push_A",
         "ZN_HeatSword_AF_A",
         "Common_DoubleVulcan_MS",
-        "ZN_HeatSword_BF_B"
+        "ZN_HeatSword_BF_B",
+        "Common_Push_A"
       ]
     },
     {
@@ -2043,10 +2046,10 @@
       "cost": 0,
       "weapons": [
         "ZN_MMP80MG",
-        "Common_Push_A",
         "ZN_HeatSword_AF_A",
         "Common_DoubleVulcan_MS",
-        "ZN_HeatSword_BF_B"
+        "ZN_HeatSword_BF_B",
+        "Common_Push_A"
       ]
     },
     {
@@ -2055,10 +2058,10 @@
       "cost": 50,
       "weapons": [
         "ZN_360mmBazooka",
-        "Common_Push_A",
         "ZN_HeatSword_AF_A",
         "Common_DoubleVulcan_MS",
-        "ZN_HeatSword_BF_B"
+        "ZN_HeatSword_BF_B",
+        "Common_Push_A"
       ]
     }
   ],

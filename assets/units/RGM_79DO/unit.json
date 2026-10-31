@@ -535,7 +535,7 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "actionPoints": 5,
+    "actionPoints": 6,
     "sensors": {
       "sight": 9,
       "radar": 11.0,
@@ -545,7 +545,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 125
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -641,7 +642,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 28500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -1920,10 +1923,10 @@
       "cost": 100,
       "weapons": [
         "EF_RGM_79DO_BR",
-        "Common_Push_A",
         "EF_90mmMG",
         "EF_BeamSaber_AF_A",
-        "Common_ArmBeamSaber_F"
+        "Common_ArmBeamSaber_F",
+        "Common_Push_A"
       ]
     },
     {
@@ -1932,10 +1935,10 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazooka",
-        "Common_Push_A",
         "EF_90mmMG",
         "EF_BeamSaber_AF_A",
-        "Common_ArmBeamSaber_F"
+        "Common_ArmBeamSaber_F",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1964,6 +1967,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_RGM_79DO_BR",
@@ -1988,11 +1997,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

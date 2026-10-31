@@ -565,7 +565,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 90
   },
   "attackBonuses": {
     "melee": 10.0,
@@ -659,7 +660,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 16500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1593,7 +1596,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     }
   ],
   "weaponKits": [
@@ -1603,8 +1606,8 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMG",
-        "Common_Push_A",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1613,8 +1616,8 @@
       "cost": 50,
       "weapons": [
         "ZN_270mmBazooka",
-        "Common_Push_A",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1623,8 +1626,8 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMG_AntiAir",
-        "Common_Push_A",
-        "ZN_HeatHawk_A"
+        "ZN_HeatHawk_A",
+        "Common_Push_A"
       ]
     }
   ],

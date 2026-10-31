@@ -721,7 +721,7 @@
   "stats": {
     "hp": 53000,
     "en": 450.0,
-    "move": 9,
+    "move": 8,
     "mobility": 168.75,
     "cost": 950,
     "counterLimit": 1,
@@ -752,7 +752,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 155
   },
   "attackBonuses": {
     "melee": 60.0,
@@ -850,7 +851,9 @@
     "unitLevel": 3750.0,
     "tacticalMoveBeforeBonus": 8,
     "v17BaseHp": 42500.0,
-    "technologyEra": "0079L"
+    "technologyEra": "0079L",
+    "actionTurnSpeed": 2.75,
+    "mobilityMoveTarget": 9
   },
   "presentation": {
     "shield": true,
@@ -2779,9 +2782,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -2885,7 +2886,11 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_BeamSaber_Double_DE": {
       "name": "光束军刀",
@@ -3377,12 +3382,12 @@
       "cost": 0,
       "weapons": [
         "EF_90mmMG",
-        "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_Minigun",
         "EF_BeamSaber_Double_AALDF",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_DE"
+        "EF_BeamSaber_Double_DE",
+        "Common_Push_A"
       ]
     },
     {
@@ -3391,12 +3396,12 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeBazooka",
-        "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_Minigun",
         "EF_BeamSaber_Double_AALDF",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_DE"
+        "EF_BeamSaber_Double_DE",
+        "Common_Push_A"
       ]
     },
     {
@@ -3405,12 +3410,12 @@
       "cost": 100,
       "weapons": [
         "EF_HyperBeamRifle",
-        "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_Minigun",
         "EF_BeamSaber_Double_AALDF",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_DE"
+        "EF_BeamSaber_Double_DE",
+        "Common_Push_A"
       ]
     }
   ],
@@ -3443,6 +3448,12 @@
   "hangars": [],
   "formOnly": true,
   "formOf": "RX_80PR_SpaceType",
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_ArmBR_Pink",
@@ -3492,11 +3503,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": false,
-    "refitFrom": []
-  }
+  ]
 }

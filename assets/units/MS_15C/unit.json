@@ -412,7 +412,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -505,7 +506,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 36500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1992,10 +1995,10 @@
       "cost": 0,
       "weapons": [
         "Common_DoubleCannon",
-        "Common_Push_A",
         "Common_MortarDouble",
         "Common_ArmGL",
-        "ZN_YMS_15_BeamSaber_B2"
+        "ZN_YMS_15_BeamSaber_B2",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2028,6 +2031,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_MortarDouble",
@@ -2099,11 +2108,5 @@
       ],
       "fireMode": "independent"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

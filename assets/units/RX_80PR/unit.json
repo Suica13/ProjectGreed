@@ -548,7 +548,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -645,7 +646,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 35000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": true,
@@ -2766,12 +2769,12 @@
       "cost": 0,
       "weapons": [
         "EF_90mmMG",
-        "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_RX_80PR_LegMS",
         "EF_BeamSaber_AF_Fast_A",
         "Common_DoubleVulcan_MS",
-        "Common_Cqb_B_L"
+        "Common_Cqb_B_L",
+        "Common_Push_A"
       ]
     },
     {
@@ -2780,12 +2783,12 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeBazooka",
-        "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_RX_80PR_LegMS",
         "EF_BeamSaber_AF_Fast_A",
         "Common_DoubleVulcan_MS",
-        "Common_Cqb_B_L"
+        "Common_Cqb_B_L",
+        "Common_Push_A"
       ]
     },
     {
@@ -2794,12 +2797,12 @@
       "cost": 100,
       "weapons": [
         "EF_GroundTypeBeamRifle",
-        "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_RX_80PR_LegMS",
         "EF_BeamSaber_AF_Fast_A",
         "Common_DoubleVulcan_MS",
-        "Common_Cqb_B_L"
+        "Common_Cqb_B_L",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2828,7 +2831,7 @@
       "consumeAction": false,
       "enPercent": 25,
       "duration": 3,
-      "hpDrainPercent": 25,
+      "hpDrainPercent": 10,
       "enDrainPercent": 5,
       "formUnitId": "RX_80PR_HADES",
       "formKits": {
@@ -2854,6 +2857,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_ArmBR_Pink",
@@ -2903,11 +2912,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

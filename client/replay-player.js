@@ -92,7 +92,33 @@ window.ReplayPlayer = (() => {
   saveFile.hidden = true;
   const loadSave = button("加载存档", () => {});
   loadSave.id = "roomLoadSave";
-  loadSave.onclick = () => saveFile.click();
+  const loadSaveDialog = create("dialog");
+  loadSaveDialog.id = "loadBattleSaveDialog";
+  loadSaveDialog.className = "game-dialog";
+  loadSaveDialog.setAttribute("aria-labelledby", "loadBattleSaveTitle");
+  loadSaveDialog.setAttribute("aria-describedby", "loadBattleSaveNotice");
+  const loadHeading = create("header");
+  loadHeading.className = "game-dialog-heading";
+  const loadTitle = create("h3", "加载存档");
+  loadTitle.id = "loadBattleSaveTitle";
+  const closeLoad = button("×", () => loadSaveDialog.close());
+  closeLoad.className = "game-dialog-close";
+  closeLoad.setAttribute("aria-label", "关闭");
+  loadHeading.append(loadTitle, closeLoad);
+  const loadNotice = create("p", "存档对局无收益，无单位损失");
+  loadNotice.id = "loadBattleSaveNotice";
+  loadNotice.className = "game-dialog-message";
+  const loadActions = create("div");
+  loadActions.className = "game-dialog-actions";
+  const chooseSave = button("加载存档", () => {});
+  chooseSave.id = "chooseBattleSave";
+  chooseSave.onclick = () => saveFile.click();
+  loadActions.append(chooseSave);
+  loadSaveDialog.append(loadHeading, loadNotice, loadActions);
+  document.body.append(loadSaveDialog);
+  loadSave.onclick = () => {
+    if (!loadSave.disabled && !loadSaveDialog.open) loadSaveDialog.showModal();
+  };
   saveFile.onchange = async () => {
     try {
       const selected = saveFile.files[0];
@@ -101,6 +127,7 @@ window.ReplayPlayer = (() => {
       const value = MatchRecords.validateSave(Rules, JSON.parse(await selected.text()));
       await upload(value, "save");
       await request("save_load");
+      loadSaveDialog.close();
       note("存档已加载，请选择席位并准备。");
     } catch (error) {
       note(error.message);
@@ -384,14 +411,14 @@ window.ReplayPlayer = (() => {
     duration = ReplayPresentation.immersive ? 0 : 250;
     if (event && ["move", "launch"].includes(event.type) && event.path?.length) {
       PlanningUI.move(event);
-      duration = event.path.length * 120 + 150;
+      duration = MovementTiming.duration(event.path, byId("quick").checked) + 150;
     }
     if (view.effectEvent?.path?.length) {
       PlanningUI.move(
         view.effectEvent,
         view.effectActors?.find((u) => u.id === view.effectEvent.unitId),
       );
-      duration = Math.max(duration, view.effectEvent.path.length * 120 + 150);
+      duration = Math.max(duration, MovementTiming.duration(view.effectEvent.path, byId("quick").checked) + 150);
     }
     if (event?.effect) {
       SkillEffects.start(event);
@@ -494,6 +521,9 @@ window.ReplayPlayer = (() => {
     saveGame.disabled = !isHost || !room?.saveAvailable || active;
     saveReplay.disabled = active && !shared ? !record : !isHost || !room?.record?.frames;
     loadSave.disabled = !isHost || !!room?.started || !!room?.replay || !!Net.awaiting;
+    chooseSave.disabled = loadSave.disabled;
+    if (loadSaveDialog.open && (!isHost || room?.started || room?.replay))
+      loadSaveDialog.close();
     hint.textContent = room?.record?.truncated
       ? "记录已达到容量上限，已保留此前内容。"
       : "存档保存回合初状态；回放可转存为对局存档后在房间加载。";

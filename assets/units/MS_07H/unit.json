@@ -472,7 +472,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 85
   },
   "attackBonuses": {
     "melee": 10.0,
@@ -566,7 +567,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 20000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1526,9 +1529,9 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMG",
-        "Common_Push_A",
         "Common_Cqb_A",
-        "ZN_MS_07B_HandMG"
+        "ZN_MS_07B_HandMG",
+        "Common_Push_A"
       ]
     },
     {
@@ -1537,8 +1540,8 @@
       "cost": 50,
       "weapons": [
         "ZN_270mmBazooka",
-        "Common_Push_A",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1585,7 +1588,8 @@
         "ja": {
           "name": "飛行形態"
         }
-      }
+      },
+      "airAdaptability": 100.0
     }
   ],
   "nativeCombatRevision": 1,

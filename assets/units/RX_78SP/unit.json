@@ -448,7 +448,8 @@
     "stealth": {
       "waterOnly": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -545,7 +546,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 47500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.35,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -892,7 +895,7 @@
       "name": "光束狙击枪",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 125.0,
       "en": 75.0,
       "sourceName": "EF_RX_78SP_BR_Sniper_Aim",
@@ -1469,10 +1472,10 @@
       "cost": 100,
       "weapons": [
         "EF_RX_78SP_BR",
-        "Common_Push_A",
         "EF_RX_78SP_BR_Sniper_Aim",
         "EF_BeamSaber_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

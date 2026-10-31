@@ -183,13 +183,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 62500,
+    "hp": 35000,
     "en": 15000.0,
     "move": 6,
     "mobility": 50.0,
     "cost": 250,
     "counterLimit": 1,
-    "accuracy": 100.0,
+    "accuracy": 65.0,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "ground",
@@ -303,7 +303,9 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 70,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -399,14 +401,20 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 50000.0,
     "supplyTacticalPolicy": {
       "enCostPercent": 25,
       "enRecoveryPercent": 50,
       "actionCost": 2,
       "usesPerOwnTurn": 1
     },
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.35,
+    "mobilityMoveTarget": 6,
+    "shipHullBeforeReduction": 50000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1
   },
   "presentation": {
     "shield": false,
@@ -445,7 +453,7 @@
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 20.0,
       "sourceName": "PapuaClass_Turret_AA",
       "sourceHit": 125.0,
@@ -453,10 +461,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 275.0,
+      "damagePerShot": 200,
       "damageComponents": {
-        "shell": 200.0,
-        "shellAP": 75.0
+        "shell": 150,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -467,7 +475,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -475,7 +484,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -483,7 +493,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -491,7 +502,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -499,7 +511,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -507,7 +520,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -515,7 +529,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -523,7 +538,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -531,7 +547,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -539,7 +556,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -547,7 +565,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -555,7 +574,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -563,7 +583,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -571,7 +592,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -579,7 +601,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -587,7 +610,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -595,7 +619,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -603,7 +628,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -611,7 +637,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -619,7 +646,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -627,7 +655,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -635,7 +664,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -643,7 +673,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -651,7 +682,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -659,7 +691,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -667,7 +700,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -675,7 +709,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -683,7 +718,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -691,7 +727,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -699,7 +736,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -707,7 +745,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -715,7 +754,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -723,7 +763,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -731,7 +772,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -739,7 +781,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -747,7 +790,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -755,7 +799,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -763,7 +808,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -771,7 +817,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -779,7 +826,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "PapuaClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -931,6 +979,17 @@
       },
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -1253,19 +1312,14 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 275.0,
+        "damageComponents": {
+          "shell": 200.0,
+          "shellAP": 75.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [
@@ -1282,7 +1336,7 @@
     },
     {
       "id": "special_Common_ReEntry_NeedBooster",
-      "name": "special_Common_ReEntry_NeedBooster",
+      "name": "大气层突入",
       "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
       "status": "review"
     }

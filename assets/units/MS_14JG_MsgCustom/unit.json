@@ -459,7 +459,8 @@
         "source": "Template/Unit/Skill/CmdDef.gw"
       }
     ],
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 140
   },
   "attackBonuses": {
     "melee": 40.0,
@@ -554,7 +555,9 @@
     "unitLevel": 3000.0,
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 40000.0,
-    "technologyEra": "0079L"
+    "technologyEra": "0079L",
+    "actionTurnSpeed": 2.75,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": false,
@@ -591,7 +594,7 @@
       "name": "光束狙击枪",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 125.0,
       "en": 75.0,
       "sourceName": "ZN_MS_14JG_BMG_Sniper_Aim",
@@ -2023,10 +2026,10 @@
       "weapons": [
         "ZN_MS_14JG_BMG",
         "ZN_MS_14JG_BMG_Sniper_Aim",
-        "Common_Push_A",
         "Common_ArmMG",
         "EF_BeamSaber_BF_Yellow_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2078,6 +2081,14 @@
   },
   "hangars": [],
   "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": [
+      "MS_14JG"
+    ]
+  },
+  "requiredPilotId": "Pilot_ZEON_0079_N_ACE_MSG",
   "pairedWeapons": [
     {
       "id": "Common_ArmMG",
@@ -2104,13 +2115,5 @@
       "fireMode": "independent",
       "name": "腕部机枪"
     }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": false,
-    "refitFrom": [
-      "MS_14JG"
-    ]
-  },
-  "requiredPilotId": "Pilot_ZEON_0079_N_ACE_MSG"
+  ]
 }

@@ -322,7 +322,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 145
   },
   "attackBonuses": {
     "melee": 30.0,
@@ -417,7 +418,9 @@
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 60000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": false,
@@ -3548,15 +3551,15 @@
       "localization": {
         "zh": {
           "name": "有线浮游炮",
-          "description": "2个单元，每单元2发，基础伤害1750/发；消耗3 AP。"
+          "description": "2个单元，每单元2发；75觉醒可用，100觉醒时整次基础伤害4000，100以上每点觉醒增加基础伤害4%，200觉醒时20000；低于100按觉醒比例计算。基础命中100%，消耗3 AP。"
         },
         "en": {
           "name": "Wired Remote Cannons",
-          "description": "2 remote units, 2 shots each, 1750 base damage per shot; costs 3 AP."
+          "description": "2 units, 2 shots each. Requires 75 Awakening. Base salvo damage: 4000 at 100 Awakening; +4% per point above 100, reaching 20000 at 200. Below 100, scales proportionally. Base accuracy 100%; costs 3 AP."
         },
         "ja": {
           "name": "有線サイコミュ砲",
-          "description": "2基が各2発射撃。1発の基本ダメージ1750、消費3 AP。"
+          "description": "2基が各2発。覚醒75で使用可能。覚醒100で全弾の基本ダメージ4000、100を超える1点ごとに4%増加、200で20000。100未満は覚醒値に比例。基本命中100%、消費3 AP。"
         }
       },
       "type": "beam",
@@ -3564,12 +3567,12 @@
       "slot": "secondary",
       "min": 1,
       "max": 4,
-      "hit": 85.0,
+      "hit": 100,
       "en": 100.0,
       "actionCost": 3,
-      "damagePerShot": 1750.0,
+      "damagePerShot": 1000.0,
       "damageComponents": {
-        "beam": 1750.0
+        "beam": 1000.0
       },
       "hitsPerShot": 1,
       "clip": null,
@@ -3704,12 +3707,12 @@
         "waitSeconds": 0.5,
         "staggerSeconds": 0.13,
         "returnSeconds": 0.65,
-        "awakeningScale": 0.0025
+        "awakeningScale": 0.04
       },
       "nativeRemote": {
         "count": 2,
         "cooldownSeconds": 18.0,
-        "awakeningMinimum": 75.0,
+        "awakeningMinimum": 75,
         "entry": "ZN_MSN_02_HandFunnel_Trigger",
         "unitSources": [
           "MSN_02_HandFunnel_L",
@@ -3764,8 +3767,8 @@
           }
         ]
       },
-      "description": "有线浮游炮：2个单元，每单元2发，基础伤害1750/发。消耗3 AP。",
-      "sourceHit": 85.0,
+      "description": "2个单元，每单元2发；75觉醒可用，100觉醒时整次基础伤害4000，100以上每点觉醒增加基础伤害4%，200觉醒时20000；低于100按觉醒比例计算。基础命中100%，消耗3 AP。",
+      "sourceHit": 100,
       "nativeTiming": {
         "source": "Units/BattleUnits/Weapon/Funnel/ZN_MSN_02_HandFunnel.gw",
         "entry": "ZN_MSN_02_HandFunnel_Trigger",
@@ -3785,7 +3788,7 @@
         {
           "stat": "awakening",
           "operator": ">=",
-          "value": 75.0
+          "value": 75
         }
       ],
       "anyParts": [
@@ -3820,10 +3823,10 @@
       "cost": 0,
       "weapons": [
         "ZN_MSN_02_BeamCannon",
-        "Common_Push_A",
         "ZN_MSN_02_BG",
         "Common_Cqb_A",
-        "ZN_MSN_02_HandFunnel"
+        "ZN_MSN_02_HandFunnel",
+        "Common_Push_A"
       ]
     }
   ],
@@ -3905,6 +3908,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MSN_02_BeamCannon",
@@ -4024,11 +4033,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

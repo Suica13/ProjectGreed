@@ -4,6 +4,10 @@ import sys,json,importlib.util,copy
 from mod_source import ROOT,ASSETS,load,resolve
 from v05_balance import apply_balance
 
+def upkeep_percent(unit_id):
+ return 7.5 if unit_id == 'RX_80PR_2' else 10
+
+
 def refresh_systems(catalog, unit_ids=None, publish=True):
  forms=[]
  for ref in catalog['units']:
@@ -25,7 +29,7 @@ def refresh_systems(catalog, unit_ids=None, publish=True):
   form['stats']['hp']=p['stats']['hp'];form['stats']['en']=p['stats']['en'];form['shield']=copy.deepcopy(p['shield'])
   form['stats']['mobility']=max(form['stats']['mobility'],p['stats']['mobility']*1.35)
   form['stats']['accuracy']=max(form['stats']['accuracy'],p['stats']['accuracy']*1.2)
-  form['stats']['move']=max(form['stats']['move'],p['stats']['move']+1)
+  form['stats']['move']=max(form['stats']['move']+int((form['stats'].get('speed',100)-100)/50),p['stats']['move']+int((p['stats'].get('speed',100)-100)/50)+1)
   form['sourceStats']['tacticalMoveBeforeBonus']=form['stats']['move']-1
   for w in form['weapons'].values():
    w['damageComponents']={k:v*1.35 for k,v in w['damageComponents'].items()};w['damagePerShot']=sum(w['damageComponents'].values())
@@ -37,10 +41,12 @@ def refresh_systems(catalog, unit_ids=None, publish=True):
    formMap[kit['id']]=chosen['id']
   from native_movement_effects import import_system_effect
   import_system_effect(system,data,effects)
-  skill={'effect':'System_'+system+'_1','id':system,'type':'overdrive','name':system+'系统','range':0,'maxUses':99,'consumeAction':False,'enPercent':25,'duration':3,'hpDrainPercent':25,'enDrainPercent':5,'formUnitId':target,'formKits':formMap}
+  skill={'effect':'System_'+system+'_1','id':system,'type':'overdrive','name':system+'系统','range':0,'maxUses':99,'consumeAction':False,'enPercent':25,'duration':3,'hpDrainPercent':upkeep_percent(p['id']),'enDrainPercent':5,'formUnitId':target,'formKits':formMap}
   sound=data.get('action_'+system,{}).get('playSoundAtUnit','').split(':')
   if len(sound)>=2 and sound[0]=='ROOT':
    native=resolve('ROOT:'+sound[1]);dest=ASSETS/'sounds'/native.name;dest.write_bytes(native.read_bytes());skill['sound']={'file':'../../sounds/'+native.name,'volume':.5}
+  if p['id']=='RX_79_BD_3' and system=='EXAM':
+   skill['sound']={'file':'../../sounds/Exam_2.mp3','volume':.5}
   p['skills']=[s for s in p.get('skills',[]) if s['id']!=system]+[skill]
   # The actionable skill card is the single source of truth; imported mechanics used to duplicate it.
   p['mechanics']=[m for m in p.get('mechanics',[]) if system not in str(m.get('id','')).upper() and system not in str(m.get('name','')).upper()]

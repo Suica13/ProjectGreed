@@ -543,7 +543,7 @@ const SpriteRenderer = (() => {
     ];
   }
   function loadMenu(onProgress) {
-    const owned = new Set(Object.keys(Economy.snapshot().inventory).slice(0, 12));
+    const owned = new Set(Object.keys(Economy.snapshot().licenses).slice(0, 12));
     let icons = ART.units
       .filter((unit) => owned.has(ART.models[unit.id].prefabId))
       .map((unit) => unit.icon);

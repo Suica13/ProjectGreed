@@ -536,7 +536,7 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "actionPoints": 5,
+    "actionPoints": 6,
     "sensors": {
       "sight": 8,
       "radar": 10.0,
@@ -546,7 +546,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 110
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -640,7 +641,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 26500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.1,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -1542,9 +1545,9 @@
       "cost": 0,
       "weapons": [
         "ZN_ACT_Zaku_MG",
-        "Common_Push_A",
         "ZN_HeatHawk_ACT_A_Fast",
-        "EF_BeamSaber_F_Yellow"
+        "EF_BeamSaber_F_Yellow",
+        "Common_Push_A"
       ]
     },
     {
@@ -1553,9 +1556,9 @@
       "cost": 100,
       "weapons": [
         "ZN_ACT_Zaku_BR",
-        "Common_Push_A",
         "ZN_HeatHawk_ACT_A_Fast",
-        "EF_BeamSaber_F_Yellow"
+        "EF_BeamSaber_F_Yellow",
+        "Common_Push_A"
       ]
     }
   ],

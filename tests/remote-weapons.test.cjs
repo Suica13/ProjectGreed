@@ -42,7 +42,8 @@ test("native remote salvos keep original counts, gates and every kit; consume EN
     const { g, a, b, w } = fixture(id);
     assert.equal(w.remote.units.length, count);
     assert.equal(w.attack.shots.length, count * 2);
-    assert.equal(w.damagePerShot, G.roundDamage(w.nativePayload.BeamDamage));
+    assert.equal(w.damage, 4000);
+    assert.equal(w.hit, 100);
     assert.equal(w.actionCost, 3);
     assert.deepEqual(w.pilotRequirements, [{ stat: "awakening", operator: ">=", value: 75 }]);
     for (const m of Object.values(G.models).filter((m) => m.prefabId === id))
@@ -54,7 +55,7 @@ test("native remote salvos keep original counts, gates and every kit; consume EN
     assert.equal(G.canAttack(g, a, b, w), true);
     assert.equal(G.canCounter(g, a, b, w), true);
     assert.deepEqual(G.attackQueue(g, a, b, [w]), { ap: 3, en: w.en });
-    assert.throws(() => G.attackQueue(g, a, b, [w, w]));
+    assert.throws(() => G.attackQueue(g, a, b, [w, w]), /每回合只能使用一次/);
     const en = a.en,
       units = g.units.length;
     const events = G.fight(g, a, b, w, "evade", null, false);
@@ -76,19 +77,31 @@ test("wired hands lose only the broken arm volley, and both broken arms prohibit
     assert.equal(G.canUse(a, w), false);
   }
 });
-test("psychommu damage scales with native awakening while INCOM bypasses only this extra modifier", () => {
-  const { g, a, b, w } = fixture();
-  a.pilot.stats.awakening = 100;
-  const base = G.estimate(g, a, b, w, "evade");
-  a.pilot.stats.awakening = 150;
-  const grown = G.estimate(g, a, b, w, "evade");
-  const incom = { ...w, remote: { ...w.remote, kind: "incom", awakeningScale: 0 } };
-  const fixed = G.estimate(g, a, b, incom, "evade");
-  assert.ok(grown.damage > fixed.damage);
-  assert.ok(grown.hit > fixed.hit);
-  assert.ok(Math.abs(grown.damage / fixed.damage - 1.125) < 0.01);
-  assert.ok(base.damage > 0);
+test("remote base salvo damage follows Awakening, is repeat-safe and leaves hit/AP unchanged", () => {
+  for (const id of Object.keys(expected)) {
+    const {g,a,b,w}=fixture(id);
+    for(const [awakening,total] of [[75,3000],[100,4000],[150,12000],[200,20000]]) {
+      a.pilot.stats.awakening=awakening;
+      const scaled=G.weaponStats(w,a);
+      assert.equal(scaled.damage,total,id+":"+awakening);
+      assert.equal(G.weaponStats(scaled,a).damage,total);
+      assert.equal(scaled.hit,100);
+      assert.equal(scaled.actionCost,3);
+      const raw=G.estimate(g,a,b,w,"evade"),again=G.estimate(g,a,b,scaled,"evade");
+      assert.equal(raw.damage,again.damage);
+      assert.equal(raw.hit,again.hit);
+    }
+    a.pilot.stats.awakening=0;
+    const locked=G.weaponStats(w,a);
+    assert.equal(locked.damage,0);
+    assert.equal(G.canAttack(g,a,b,w),false);
+    a.pilot.stats.awakening=100;
+    assert.equal(G.weaponStats(locked,a).damage,4000);
+    const incom={...w,remote:{...w.remote,kind:"incom",awakeningScale:0}};
+    assert.equal(G.weaponStats(incom,a).damage,4000);
+  }
 });
+
 function fx() {
   const context = vm.createContext({
     ART: {

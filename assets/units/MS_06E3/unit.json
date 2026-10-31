@@ -535,7 +535,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -627,7 +628,9 @@
     "unitLevel": 1350.0,
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 23500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -1340,9 +1343,9 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMG_AntiAir",
-        "Common_Push_A",
         "ZN_HeatHawk_A",
-        "ZN_Panzerfaust"
+        "ZN_Panzerfaust",
+        "Common_Push_A"
       ]
     }
   ],

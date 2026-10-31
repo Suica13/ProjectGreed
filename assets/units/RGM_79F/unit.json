@@ -512,7 +512,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 100
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -606,7 +607,9 @@
     "unitLevel": 1250.0,
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 19500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": true,
@@ -1502,10 +1505,10 @@
       "cost": 0,
       "weapons": [
         "EF_BeamSprayGunF",
-        "Common_Push_A",
         "EF_RailBazooka",
         "EF_BeamSaber_F",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

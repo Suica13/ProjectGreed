@@ -15,7 +15,7 @@ const PlanningUI = (() => {
       path: event.path,
       // Start when the first map frame is drawn, after snapshot/UI work.
       start: null,
-      step: byId("quick").checked ? 50 : 120,
+      step: MovementTiming.step(event.path, byId("quick").checked),
     });
   }
   function motion(unit, now) {
@@ -143,7 +143,7 @@ const PlanningUI = (() => {
     canvas.dataset.counterPlanCount = counterCount;
   }
   function facing(unit, fallback = unit.angle) {
-    if (Rules.modelOf(unit).ship) return fallback;
+    if (Rules.modelOf(unit).ship || Rules.modelOf(unit).fixedWeaponFacing) return fallback;
     let targetId = (Net.snapshot?.counterPlans || []).find(
       (plan) => plan.attacker === unit.id,
     )?.target;

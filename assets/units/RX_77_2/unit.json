@@ -421,7 +421,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "pilotExperienceMultiplier": 1.1
+    "pilotExperienceMultiplier": 1.25,
+    "speed": 95
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -516,7 +517,10 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 35000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "learningComputerNativeMultiplier": 1.1,
+    "actionTurnSpeed": 1.65,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -2545,7 +2549,7 @@
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
       "status": "adapted",
-      "name": "学习型电脑：驾驶员经验获取×1.1"
+      "name": "学习型电脑：驾驶员经验获取×1.25"
     }
   ],
   "weaponKits": [
@@ -2556,10 +2560,10 @@
       "weapons": [
         "EF_RX_77_2_BR",
         "Common_DoubleCannon",
-        "Common_Push_A",
         "Common_MortarDouble",
         "Common_Cqb_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2569,9 +2573,9 @@
       "weapons": [
         "EF_RX_77_2_BR",
         "EF_RX_77_2_MS",
-        "Common_Push_A",
         "Common_Cqb_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2642,6 +2646,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_MortarDouble",
@@ -2712,11 +2722,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

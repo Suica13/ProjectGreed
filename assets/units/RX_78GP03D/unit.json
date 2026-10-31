@@ -708,7 +708,7 @@
   "stats": {
     "hp": 219000,
     "en": 1050.0,
-    "move": 10,
+    "move": 9,
     "mobility": 120.0,
     "cost": 2250,
     "counterLimit": 1,
@@ -748,7 +748,8 @@
       "nativeRecoverySpeed": 500.0,
       "minimumRatio": -0.25,
       "effect": "I_Field_2"
-    }
+    },
+    "speed": 195
   },
   "attackBonuses": {
     "melee": 75.0,
@@ -843,7 +844,9 @@
     },
     "v17BaseHp": 175000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.0,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -1858,7 +1861,8 @@
   ],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "MA"
+    "MA",
+    "LargeUnit"
   ],
   "transport": {
     "slotCost": 3,
@@ -1867,6 +1871,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_HypeBazooka_GP03S_Double",
@@ -1887,11 +1897,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

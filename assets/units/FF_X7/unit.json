@@ -80,7 +80,7 @@
   "stats": {
     "hp": 10500,
     "en": 225.0,
-    "move": 10,
+    "move": 9,
     "mobility": 140,
     "cost": 125,
     "counterLimit": 1,
@@ -100,7 +100,7 @@
     },
     "movementType": "air",
     "partsBreakable": false,
-    "actionPoints": 5,
+    "actionPoints": 6,
     "sensors": {
       "sight": 9,
       "radar": 13.88888888888889,
@@ -111,7 +111,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "pilotExperienceMultiplier": 1.1
+    "pilotExperienceMultiplier": 1.25,
+    "speed": 195
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -195,7 +196,10 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 8500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "learningComputerNativeMultiplier": 1.1,
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -691,7 +695,7 @@
       "id": "LPC",
       "source": "Template/Unit/Skill/LPC.gw",
       "status": "adapted",
-      "name": "学习型电脑：驾驶员经验获取×1.1"
+      "name": "学习型电脑：驾驶员经验获取×1.25"
     }
   ],
   "refits": [

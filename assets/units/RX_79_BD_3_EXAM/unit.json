@@ -566,7 +566,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 140
   },
   "attackBonuses": {
     "melee": 50.0,
@@ -666,7 +667,9 @@
     "unitLevel": 3000.0,
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 45000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -2467,12 +2470,12 @@
       "cost": 0,
       "weapons": [
         "EF_GroundTypeBeamRifle_LateType",
-        "Common_Push_A",
         "EF_RX_79_BD_ChestMS_Line",
         "EF_RX_79_BD_ChestMG",
         "EF_BeamSaber_BF_B",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_F"
+        "EF_BeamSaber_F",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2508,6 +2511,11 @@
   "refits": [],
   "formOnly": true,
   "formOf": "RX_79_BD_3",
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_RX_79_BD_ChestMS_Line",
@@ -2555,10 +2563,5 @@
         }
       ]
     }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": false,
-    "refitFrom": []
-  }
+  ]
 }

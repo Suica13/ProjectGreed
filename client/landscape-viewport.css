@@ -1,0 +1,21 @@
+/* The black canvas surrounds a centred desktop-sized game, including fixed HUDs. */
+html.phone-landscape {
+  --game-vw: 16px;
+  --game-vh: 9px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+html.phone-landscape body {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1600px !important;
+  height: 900px !important;
+  min-width: 1600px !important;
+  min-height: 900px !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}

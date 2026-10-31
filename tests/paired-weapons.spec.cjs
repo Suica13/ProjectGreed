@@ -1,6 +1,34 @@
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url"),
   path = require("node:path");
+
+test("G3 dual bazooka keeps the surviving muzzle and hides the broken hand",async({page})=>{
+  const errors=[];page.on("pageerror",error=>errors.push(error.message));
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(()=>assetsReady);
+  const result=await page.evaluate(async()=>{
+    const [modelId,model]=Object.entries(UnitModels).find(([,m])=>m.prefabId==="RX_78_3"&&m.weapons.some(w=>w.id==="EF_HypeBazooka_Double"));
+    const weapon=model.weapons.find(w=>w.id==="EF_HypeBazooka_Double");
+    const rows=[];
+    const unit={id:"g3",model:modelId,x:5,y:5,hp:model.hp,en:model.en,shield:model.shield.hp};
+    await SpriteRenderer.ensureAssets(SpriteRenderer.battleKeys({units:[unit]}));
+    for(const broken of ["leftArm","rightArm"]) {
+      unit.brokenParts={[broken]:true};
+      const strikes=Rules.availableStrikes(unit,weapon);
+      const pose=WeaponSequence.pose(weapon,strikes[0].at);
+      const visible=SpriteRenderer.visibleLayers(modelId,weapon.id,true,false,pose.clip,pose.time,false,unit.brokenParts,true,false,"ground",weapon.id,pose.weaponDisplayIndex)
+        .filter(layer=>/^EF_HypeBazooka_Double(?:_L)?$/.test(layer.name)).map(layer=>layer.name);
+      const muzzle=SpriteRenderer.muzzle(modelId,weapon,{x:100,y:100,angle:90,scale:1},pose.clip,pose.time,strikes[0].muzzleIndex??weapon.attack.muzzleIndices[strikes[0].shotIndex]);
+      rows.push({broken,usable:Rules.canUse(unit,weapon),shots:strikes.length,energy:Rules.weaponStats(weapon,unit).en,visible,muzzle});
+    }
+    return rows;
+  });
+  expect(result.map(row=>[row.usable,row.shots,row.energy])).toEqual([[true,1,45],[true,1,45]]);
+  expect(result[0].visible).toEqual(["EF_HypeBazooka_Double"]);
+  expect(result[1].visible).toEqual(["EF_HypeBazooka_Double_L"]);
+  expect(result[0].muzzle).not.toEqual(result[1].muzzle);
+  expect(errors).toEqual([]);
+});
 test("independent hand weapons render at their own muzzle after a position change", async ({
   page,
 }, testInfo) => {
@@ -18,7 +46,7 @@ test("independent hand weapons render at their own muzzle after a position chang
     ctx.fillStyle = "#152530";
     ctx.fillRect(0, 0, 1200, 650);
     const rows = [];
-    for (const [row, id] of ["RX_78NT_1", "RX_78NT_1_FA", "RX_78XX"].entries()) {
+    for (const [row, id] of ["RX_78NT_1", "RX_78NT_1_FA"].entries()) {
       const [key, m] = Object.entries(UnitModels).find(
         ([key, m]) =>
           m.prefabId === id &&

@@ -104,21 +104,21 @@ test("all native camera guns share 10-15 range, three AP and a three-tile sight/
   assert.equal(G.sensors.visible(g, a.team, b), true);
   assert.equal(G.sensors.detected(g, a.team, b), true);
 });
-test("heat rods and native stun payloads apply one non-stacking AP penalty at the next own turn", () => {
+test("heat rods and native stun payloads apply a non-stacking 25 percent AP penalty at the next own turn", () => {
   for (const p of G.catalog.prefabs)
     for (const w of Object.values(p.weapons))
       if (w.nativePayload?.StunDamage > 0 || w.sourceName.includes("HeatRod"))
-        assert.equal(w.onHitAPLoss, 1, p.id);
+        assert.equal(w.onHitAPLoss, 0.25, p.id);
   const { g, a, b } = fixture();
   b.x = 6;
-  const w = { ...G.modelOf(a).weapons[0], hitScale: 100, onHitAPLoss: 1 };
+  const w = { ...G.modelOf(a).weapons[0], hitScale: 100, onHitAPLoss: 0.25 };
   for (let i = 0; i < 2; i++) {
     a.acted = false;
     G.fight(g, a, b, w, "evade", null, false);
-    assert.equal(b.apPenaltyNextTurn, 1);
+    assert.equal(b.apPenaltyNextTurn, 0.25);
   }
   G.end(g);
-  assert.equal(b.actionPoints, G.actionBudget(b) - 1);
+  assert.equal(b.actionPoints, Math.floor(G.actionBudget(b) * 0.75));
   assert.equal(b.apPenaltyNextTurn, undefined);
   G.end(g);
   G.end(g);

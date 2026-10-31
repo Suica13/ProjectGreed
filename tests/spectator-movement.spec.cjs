@@ -21,7 +21,7 @@ function snapshots() {
         mode: i ? "join" : "create",
         room: "MOVESPEC",
         characterFaction: "PMC",
-        inventory: { Type61: 4 },
+        licenses: { Type61: true },
       }),
     );
     const room = engine.rooms.get("MOVESPEC");

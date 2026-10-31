@@ -264,7 +264,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 125
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -357,7 +358,9 @@
     },
     "v17BaseHp": 75000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.35,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -891,15 +894,15 @@
       "localization": {
         "zh": {
           "name": "浮游炮",
-          "description": "5个单元，每单元2发，基础伤害1250/发；消耗3 AP。"
+          "description": "5个单元，每单元2发；75觉醒可用，100觉醒时整次基础伤害4000，100以上每点觉醒增加基础伤害4%，200觉醒时20000；低于100按觉醒比例计算。基础命中100%，消耗3 AP。"
         },
         "en": {
           "name": "Funnels / BITs",
-          "description": "5 remote units, 2 shots each, 1250 base damage per shot; costs 3 AP."
+          "description": "5 units, 2 shots each. Requires 75 Awakening. Base salvo damage: 4000 at 100 Awakening; +4% per point above 100, reaching 20000 at 200. Below 100, scales proportionally. Base accuracy 100%; costs 3 AP."
         },
         "ja": {
           "name": "ファンネル / ビット",
-          "description": "5基が各2発射撃。1発の基本ダメージ1250、消費3 AP。"
+          "description": "5基が各2発。覚醒75で使用可能。覚醒100で全弾の基本ダメージ4000、100を超える1点ごとに4%増加、200で20000。100未満は覚醒値に比例。基本命中100%、消費3 AP。"
         }
       },
       "type": "beam",
@@ -907,12 +910,12 @@
       "slot": "secondary",
       "min": 1,
       "max": 6,
-      "hit": 85.0,
+      "hit": 100,
       "en": 200.0,
       "actionCost": 3,
-      "damagePerShot": 1250.0,
+      "damagePerShot": 400.0,
       "damageComponents": {
-        "beam": 1250.0
+        "beam": 400.0
       },
       "hitsPerShot": 1,
       "clip": null,
@@ -1112,12 +1115,12 @@
         "waitSeconds": 0.5,
         "staggerSeconds": 0.13,
         "returnSeconds": 0.65,
-        "awakeningScale": 0.0025
+        "awakeningScale": 0.04
       },
       "nativeRemote": {
         "count": 5,
         "cooldownSeconds": 15.0,
-        "awakeningMinimum": 75.0,
+        "awakeningMinimum": 75,
         "entry": "ZN_MAN_08_Funnel_Trigger",
         "unitSources": [
           "MAN_08_Funnel",
@@ -1244,8 +1247,8 @@
           }
         ]
       },
-      "description": "浮游炮：5个单元，每单元2发，基础伤害1250/发。消耗3 AP。",
-      "sourceHit": 85.0,
+      "description": "5个单元，每单元2发；75觉醒可用，100觉醒时整次基础伤害4000，100以上每点觉醒增加基础伤害4%，200觉醒时20000；低于100按觉醒比例计算。基础命中100%，消耗3 AP。",
+      "sourceHit": 100,
       "nativeTiming": {
         "source": "Units/BattleUnits/Weapon/Funnel/ZN_MAN_08_Funnel.gw",
         "entry": "ZN_MAN_08_Funnel_Trigger",
@@ -1265,7 +1268,7 @@
         {
           "stat": "awakening",
           "operator": ">=",
-          "value": 75.0
+          "value": 75
         }
       ]
     }
@@ -1296,8 +1299,8 @@
       "cost": 0,
       "weapons": [
         "ZN_MAN_08_BeamCannon",
-        "Common_Push_L_A",
-        "ZN_MAN_08_Funnel"
+        "ZN_MAN_08_Funnel",
+        "Common_Push_L_A"
       ]
     }
   ],
@@ -1312,7 +1315,8 @@
   "skills": [],
   "nativeCombatRevision": 1,
   "unitTags": [
-    "MA"
+    "MA",
+    "LargeUnit"
   ],
   "transport": {
     "slotCost": 3,
@@ -1321,6 +1325,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MAN_08_BeamCannon",
@@ -1341,11 +1351,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

@@ -352,7 +352,8 @@
     "stealth": {
       "waterOnly": true
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 70
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -449,7 +450,9 @@
     "tacticalMoveBeforeBonus": 4,
     "v17BaseHp": 22500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.35,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1164,9 +1167,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 0.75,
       "changeHeldWeapon": true,
       "source": {
@@ -1291,7 +1292,11 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "ZN_MSM_04G_HG_L": {
       "name": "导弹发射器",
@@ -1381,9 +1386,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 0.75,
       "changeHeldWeapon": true,
       "source": {
@@ -1511,7 +1514,11 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -1694,9 +1701,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MSM_04G_HG",
-        "Common_Push_A",
         "Common_MortarDouble_Bombing_Shell",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1745,6 +1752,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_MortarDouble_Bombing_Shell",
@@ -1779,24 +1792,19 @@
           "requiredParts": [
             "rightArm"
           ],
-          "limb": null
+          "limb": "rightArm"
         },
         {
           "id": "ZN_MSM_04G_HG_L",
           "weaponId": "ZN_MSM_04G_HG_L",
           "muzzleIndex": 1,
           "requiredParts": [
-            "rightArm"
+            "leftArm"
           ],
-          "limb": null
+          "limb": "leftArm"
         }
-      ]
+      ],
+      "fireMode": "simultaneous"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

@@ -6,29 +6,29 @@ const test = require("node:test"),
   { createServer } = require("../server.js");
 const tank = { unitId: "Type61", kitId: "standard" };
 const army = (n) => Array.from({ length: n }, () => ({ ...tank }));
-test("stock is shared across duplicate kits and the creation boundary omits excess units", () => {
+test("one deployment license permits duplicate units and the creation boundary omits unlicensed units", () => {
   const entries = army(3),
-    rules = { inventory: { Type61: 1 } };
+    rules = { licenses: { Type61: true } };
   assert.equal(G.validateFormation(entries, 99999).length, 3);
   const plan = G.planFormation(entries, 99999, rules);
-  assert.deepEqual(plan.indices, [0]);
-  assert.equal(plan.reasons[1], "inventory");
+  assert.deepEqual(plan.indices, [0,1,2]);
+  assert.equal(plan.reasons[1], undefined);
   const game = G.create(false, 1, [entries, army(1)], true, {
     costLimit: 99999,
     unitCostLimit: 99999,
-    seatFormationRules: [rules, { inventory: { Type61: 1 } }],
+    seatFormationRules: [rules, { licenses: { Type61: true } }],
   });
-  assert.equal(game.units.filter((u) => u.ownerSeat === 0).length, 1);
+  assert.equal(game.units.filter((u) => u.ownerSeat === 0).length, 3);
   assert.deepEqual(
     game.units.filter((u) => u.ownerSeat === 0).map((u) => u.id),
-    ["0-0"],
+    ["0-0","0-1","0-2"],
   );
   assert.equal(
-    G.armyRestrictions(G.defaultRoomSettings(), { seat: 0, bot: true }).inventory,
+    G.armyRestrictions(G.defaultRoomSettings(), { seat: 0, bot: true }).licenses,
     undefined,
   );
-  assert.deepEqual(G.armyRestrictions(G.defaultRoomSettings(), { seat: 0 }).inventory, {});
-  assert.throws(() => G.normalizeInventory({ fake: 1 }));
+  assert.deepEqual(G.armyRestrictions(G.defaultRoomSettings(), { seat: 0 }).licenses, {});
+  assert.throws(() => G.normalizeLicenses({ fake: 1 }));
 });
 class Peer {
   static peers = new Set();
@@ -52,7 +52,7 @@ class Peer {
     }
     throw Error("Timeout: " + JSON.stringify(this.frames.at(-1)));
   }
-  async join(mode, room, inventory, options = {}) {
+  async join(mode, room, licenses, options = {}) {
     if (this.ws.readyState !== 1) await new Promise((r) => this.ws.once("open", r));
     this.ws.send(
       JSON.stringify({
@@ -61,7 +61,7 @@ class Peer {
         mode,
         room,
         characterFaction: "PMC",
-        inventory,
+        licenses,
         name: mode,
         ...options,
       }),
@@ -93,7 +93,7 @@ class Peer {
     );
   }
 }
-test("real WebSocket ready/assembly/start paths enforce stock and keep inventory private", async (t) => {
+test("real WebSocket ready/assembly/start paths enforce stock and keep licenses private", async (t) => {
   const app = createServer({ host: "127.0.0.1", port: 0 });
   const address = await app.listen();
   const a = new Peer(`ws://127.0.0.1:${address.port}/ws`),
@@ -103,38 +103,38 @@ test("real WebSocket ready/assembly/start paths enforce stock and keep inventory
     b.ws.terminate();
     await app.close();
   });
-  await a.join("create", "STOCK", { Type61: 1 });
-  await b.join("join", "STOCK", { Type61: 2 });
+  await a.join("create", "STOCK", { Type61: true });
+  await b.join("join", "STOCK", { Type61: true });
   let r = await b.action("set_ready", {
     ready: true,
     formation: army(3),
-    inventory: { Type61: 2 },
+    licenses: { Type61: true },
   });
   assert.equal(r.type, "state");
-  r = await a.action("start_game", { formation: army(3), inventory: { Type61: 1 } });
+  r = await a.action("start_game", { formation: army(3), licenses: { Type61: true } });
   assert.equal(r.phase, "assembly");
   const own = r.assembly.players.find((p) => p.memberId === a.joined.memberId);
-  assert.equal(own.deployable.length, 1);
-  assert.equal(own.reasons[2], "inventory");
-  assert.deepEqual(r.members.find((m) => m.id === a.joined.memberId).inventory, { Type61: 1 });
-  assert.equal(r.members.find((m) => m.id === b.joined.memberId).inventory, undefined);
+  assert.equal(own.deployable.length, 3);
+  assert.equal(own.reasons[2], undefined);
+  assert.deepEqual(r.members.find((m) => m.id === a.joined.memberId).licenses, { Type61: true });
+  assert.equal(r.members.find((m) => m.id === b.joined.memberId).licenses, undefined);
   const room = app.rooms.get("STOCK"),
-    oldInventory = room.seats[0].inventory;
+    oldLicenses = room.seats[0].licenses;
   r = await a.action("update_formation", {
     formation: [{ unitId: "fake", kitId: "fake" }],
-    inventory: { Type61: 99 },
+    licenses: { Type61: true },
   });
   assert.equal(r.type, "error");
-  assert.deepEqual(room.seats[0].inventory, oldInventory);
+  assert.deepEqual(room.seats[0].licenses, oldLicenses);
   const requestId = randomUUID();
-  r = await a.action("confirm_formation", { inventory: { Type61: 1 } }, { id: requestId });
+  r = await a.action("confirm_formation", { licenses: { Type61: true } }, { id: requestId });
   assert.equal(r.type, "state");
-  await a.action("confirm_formation", { inventory: { Type61: 99 } }, { id: requestId });
-  assert.equal(room.seats[0].inventory.Type61, 1);
-  r = await b.action("confirm_formation", { inventory: { Type61: 2 } });
+  await a.action("confirm_formation", { licenses: { Type61: true } }, { id: requestId });
+  assert.equal(room.seats[0].licenses.Type61, true);
+  r = await b.action("confirm_formation", { licenses: { Type61: true } });
   assert.equal(r.phase, "deployment");
-  assert.equal(room.game.units.filter((u) => u.ownerSeat === 0).length, 1);
-  assert.equal(room.game.units.filter((u) => u.ownerSeat === 1).length, 2);
+  assert.equal(room.game.units.filter((u) => u.ownerSeat === 0).length, 3);
+  assert.equal(room.game.units.filter((u) => u.ownerSeat === 1).length, 3);
 });
 
 test("a human may force readiness with zero stock but receives no spawned units", async (t) => {
@@ -148,17 +148,17 @@ test("a human may force readiness with zero stock but receives no spawned units"
     await app.close();
   });
   await a.join("create", "ZERO", {});
-  await b.join("join", "ZERO", { Type61: 1 });
-  let result = await a.action("set_ready", { ready: true, formation: army(1), inventory: {} });
+  await b.join("join", "ZERO", { Type61: true });
+  let result = await a.action("set_ready", { ready: true, formation: army(1), licenses: {} });
   assert.equal(result.type, "state");
   assert.equal(result.members.find((m) => m.id === a.joined.memberId).ready, true);
-  await b.action("set_ready", { ready: true, formation: army(1), inventory: { Type61: 1 } });
+  await b.action("set_ready", { ready: true, formation: army(1), licenses: { Type61: true } });
   await a.wait(m => m.type === "state" && m.revision === app.rooms.get("ZERO").revision);
-  result = await a.action("start_game", { formation: army(1), inventory: {} });
+  result = await a.action("start_game", { formation: army(1), licenses: {} });
   assert.equal(result.phase, "assembly");
-  await a.action("confirm_formation", { inventory: {} });
+  await a.action("confirm_formation", { licenses: {} });
   await b.wait(m => m.type === "state" && m.revision === app.rooms.get("ZERO").revision);
-  result = await b.action("confirm_formation", { inventory: { Type61: 1 } });
+  result = await b.action("confirm_formation", { licenses: { Type61: true } });
   assert.equal(result.phase, "deployment");
   const game = app.rooms.get("ZERO").game;
   assert.equal(game.units.filter((u) => u.ownerSeat === 0).length, 0);
@@ -171,30 +171,30 @@ const lockedModel = Object.values(G.models).find(m => !m.wip && m.faction === 'E
   m.movementType !== 'naval' && (m.adaptability?.ground ?? 100) > 0 &&
   !Development.allows('PMC', m.prefabId, {}));
 const lockedEntry = {unitId: lockedModel.prefabId, kitId: Object.keys(G.models).find(id => G.models[id] === lockedModel).split('__')[1]};
-test('owned undeveloped units bypass research only, retain quantity, faction, cost and tag restrictions', () => {
+test('licensed undeveloped units bypass research only, retain faction, cost and tag restrictions', () => {
   const settings = {...G.defaultRoomSettings(), costLimit:99999, unitCostLimit:99999};
-  const rules = G.armyRestrictions(settings, {seat:0, characterFaction:'PMC', researched:{}, inventory:{[lockedEntry.unitId]:1}});
+  const rules = G.armyRestrictions(settings, {seat:0, characterFaction:'PMC', researched:{}, licenses:{[lockedEntry.unitId]:true}});
   assert.equal(G.restrictionReason(lockedModel, rules), null);
-  assert.equal(G.planFormation([lockedEntry,lockedEntry],Infinity,rules).reasons[1], 'inventory');
-  assert.equal(G.planFormation([lockedEntry],Infinity,{...rules,inventory:undefined}).deployable.length,1);
-  assert.equal(G.restrictionReason(lockedModel,{...rules,inventory:{}}),'not_developed');
+  assert.equal(G.planFormation([lockedEntry,lockedEntry],Infinity,rules).reasons[1], undefined);
+  assert.equal(G.planFormation([lockedEntry],Infinity,{...rules,licenses:undefined}).deployable.length,1);
+  assert.equal(G.restrictionReason(lockedModel,{...rules,licenses:{}}),'not_developed');
   assert.equal(G.restrictionReason(lockedModel,{...rules,characterFaction:'ZEON'}),'faction_mismatch');
   assert.equal(G.restrictionReason(lockedModel,{...rules,unitCostLimit:0}),'cost');
   assert.equal(G.restrictionReason(lockedModel,{...rules,bannedFactions:['EFSF']}),'not_allowed');
 });
-test('real WebSocket undeveloped inventory survives ready, assembly confirmation and spawning',async t=>{
+test('real WebSocket undeveloped licenses survives ready, assembly confirmation and spawning',async t=>{
  const app=createServer({host:'127.0.0.1',port:0}), address=await app.listen();
  const a=new Peer(`ws://127.0.0.1:${address.port}/ws`),b=new Peer(`ws://127.0.0.1:${address.port}/ws`);
  t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close()});
- const stock={[lockedEntry.unitId]:1},formation=[lockedEntry];
+ const stock={[lockedEntry.unitId]:true},formation=[lockedEntry];
  await a.join('create','LOCKED',stock);await b.join('join','LOCKED',stock);
  let r=await a.action('configure_room',{...G.defaultRoomSettings(),costLimit:99999,unitCostLimit:99999});
  assert.equal(r.type,'state');
- r=await b.action('set_ready',{ready:true,formation,inventory:stock});assert.equal(r.type,'state');
- r=await a.action('start_game',{formation,inventory:stock});assert.equal(r.phase,'assembly');
+ r=await b.action('set_ready',{ready:true,formation,licenses:stock});assert.equal(r.type,'state');
+ r=await a.action('start_game',{formation,licenses:stock});assert.equal(r.phase,'assembly');
  assert(r.assembly.players.every(p=>p.deployable.length===1));
- r=await a.action('confirm_formation',{formation,inventory:stock});assert.equal(r.type,'state');
- r=await b.action('confirm_formation',{formation,inventory:stock});assert.equal(r.phase,'deployment');
+ r=await a.action('confirm_formation',{formation,licenses:stock});assert.equal(r.type,'state');
+ r=await b.action('confirm_formation',{formation,licenses:stock});assert.equal(r.phase,'deployment');
  assert.equal(app.rooms.get('LOCKED').game.units.filter(u=>G.modelOf(u).prefabId===lockedEntry.unitId).length,2);
 });
 test("empty formations cannot ready and assembly formations are locked", async (t) => {
@@ -203,8 +203,8 @@ test("empty formations cannot ready and assembly formations are locked", async (
   const a=new Peer("ws://127.0.0.1:"+address.port+"/ws");
   const b=new Peer("ws://127.0.0.1:"+address.port+"/ws");
   t.after(async()=>{ a.ws.terminate();b.ws.terminate();await app.close(); });
-  await a.join("create","EMPTYLOCK",{Type61:3});
-  await b.join("join","EMPTYLOCK",{Type61:3});
+  await a.join("create","EMPTYLOCK",{Type61:true});
+  await b.join("join","EMPTYLOCK",{Type61:true});
   assert.equal(G.defaultRoomSettings().unitCostLimit,250);
   assert.equal((await b.action("update_formation",{formation:[]})).type,"state");
   assert.equal((await b.action("set_ready",{ready:true,formation:[]})).type,"error");
@@ -225,8 +225,8 @@ test("AI room technology merges every human and freezes the mirrored stage at st
  const app=createServer({host:"127.0.0.1",port:0}), address=await app.listen();
  const a=new Peer("ws://127.0.0.1:"+address.port+"/ws"),b=new Peer("ws://127.0.0.1:"+address.port+"/ws");
  t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close()});
- await a.join("create","AITECH",{Type61:3});
- await b.join("join","AITECH",{Type61:3});
+ await a.join("create","AITECH",{Type61:true});
+ await b.join("join","AITECH",{Type61:true});
  assert.equal((await a.action("configure_room",{mapId:"crossroads_2v2",costLimit:1000})).type,"state");
  assert.equal((await a.action("add_ai",{seat:2})).type,"state");
  const ef=D.nodes("EFSF").filter(n=>n.page===0&&n.row==="mid"&&n.column<=3).map(n=>n.id);
@@ -251,7 +251,7 @@ test("reliable clients receive a receipt first and rejected IDs cannot execute o
  const app=createServer({host:"127.0.0.1",port:0}),address=await app.listen();
  const a=new Peer("ws://127.0.0.1:"+address.port+"/ws");
  t.after(async()=>{a.ws.terminate();await app.close()});
- await a.join("create","RECEIPTS",{Type61:3},{reliableActions:1});
+ await a.join("create","RECEIPTS",{Type61:true},{reliableActions:1});
  const accepted=randomUUID();
  assert.equal((await a.action("update_formation",{formation:army(1)},{id:accepted})).type,"state");
  const receipt=a.frames.findIndex(m=>m.type==="action_receipt"&&m.id===accepted);
@@ -269,8 +269,8 @@ test("different players prepare from one revision without rejecting each other",
  const app=createServer({host:"127.0.0.1",port:0}),address=await app.listen();
  const a=new Peer("ws://127.0.0.1:"+address.port+"/ws"),b=new Peer("ws://127.0.0.1:"+address.port+"/ws");
  t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close()});
- await a.join("create","PARALLEL",{Type61:3});
- await b.join("join","PARALLEL",{Type61:3});
+ await a.join("create","PARALLEL",{Type61:true});
+ await b.join("join","PARALLEL",{Type61:true});
  const room=app.rooms.get("PARALLEL"),revision=room.revision;
  const fields={ready:true,formation:army(1),phase:room.phase,round:room.game.round,matchId:room.matchId};
  assert.equal((await a.action("set_ready",fields,{revision})).type,"state");
@@ -284,7 +284,7 @@ test("network rotation stays pending until confirm and duplicate preview never r
  const app=createServer({host:'127.0.0.1',port:0}),address=await app.listen();
  const a=new Peer('ws://127.0.0.1:'+address.port+'/ws'),b=new Peer('ws://127.0.0.1:'+address.port+'/ws');
  t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close()});
- await a.join('create','ROTATE',{Type61:1});await b.join('join','ROTATE',{Type61:1});
+ await a.join('create','ROTATE',{Type61:true});await b.join('join','ROTATE',{Type61:true});
  await b.action('set_ready',{ready:true,formation:army(1)});
  await a.action('start_game',{formation:army(1)});
  await a.action('confirm_formation');await b.action('confirm_formation');

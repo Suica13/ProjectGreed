@@ -252,7 +252,7 @@ const ServerActivities = (() => {
       ProductionUI.resources(wallet, item.rewards);
       rewards.append(wallet);
     }
-    for (const [id, count] of Object.entries(item.rewards.inventory || {})) {
+    for (const id of Object.keys(item.rewards.licenses || {})) {
       const row = element("div", "server-activity-unit"),
         image = element("img");
       const model = Economy.baseModel(id);
@@ -261,7 +261,7 @@ const ServerActivities = (() => {
         image.alt = "";
         row.append(image);
       }
-      row.append(element("span", "", unitLabel(id) + " ×" + count));
+      row.append(element("span", "", unitLabel(id) + " · 部署许可"));
       rewards.append(row);
     }
     for (const id of item.rewards.unlockUnits || [])

@@ -640,7 +640,7 @@
       "rubble": 75
     },
     "ship": false,
-    "actionPoints": 5,
+    "actionPoints": 6,
     "sensors": {
       "sight": 8,
       "radar": 10.0,
@@ -650,7 +650,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 130
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -748,7 +749,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 33500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -2250,11 +2253,11 @@
       "weapons": [
         "EF_RX_80_PR_2_FrameLauncher_MG",
         "EF_RX_80_PR_2_FrameLauncher_BR",
-        "Common_Push_A",
         "EF_BeamSaber_AF_Fast_A",
         "EF_BeamJavelin_BF_B",
         "Common_DoubleVulcan_MS",
-        "EF_RX_80_PR_2_FrameLauncher_MS"
+        "EF_RX_80_PR_2_FrameLauncher_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2263,10 +2266,10 @@
       "cost": 100,
       "weapons": [
         "EF_HyperBeamRifle",
-        "Common_Push_A",
         "EF_BeamSaber_AF_Fast_A",
         "EF_BeamJavelin_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

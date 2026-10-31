@@ -14,7 +14,7 @@ test("AI mixes full-tech platforms, respects budget and counts command auras acr
           characterFaction: faction,
           environment,
           unitCostLimit: 500,
-          researched: G.armyRestrictions(G.defaultRoomSettings(), { bot: true }).researched,
+          researched: require("../shared/development.js").aiResearch([{EFSF: require("../shared/development.js").nodes("EFSF").map(n=>n.id)}]),
         };
         const army = G.randomFormation(seedOf(n), 3000, restrictions, 12);
         assert.deepEqual(army, G.randomFormation(seedOf(n), 3000, restrictions, 12));

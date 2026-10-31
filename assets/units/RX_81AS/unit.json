@@ -584,7 +584,8 @@
       "antiDetectAqua": false
     },
     "shellFinalResistance": 25,
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 115
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -682,7 +683,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 47500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -2819,7 +2822,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     },
     {
       "id": "ExplosiveReactiveArmor_Shell",
@@ -2836,11 +2839,11 @@
       "weapons": [
         "EF_RX_81AS_Shotgun",
         "EF_RX_81_GG",
-        "Common_Push_A",
         "EF_HSP_BF_B",
         "Common_Cqb_A_L",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_F"
+        "EF_BeamSaber_F",
+        "Common_Push_A"
       ]
     },
     {
@@ -2850,11 +2853,11 @@
       "weapons": [
         "EF_RX_81AS_Shotgun",
         "EF_RX_81_MS",
-        "Common_Push_A",
         "EF_HSP_BF_B",
         "Common_Cqb_A_L",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_F"
+        "EF_BeamSaber_F",
+        "Common_Push_A"
       ]
     },
     {
@@ -2864,11 +2867,11 @@
       "weapons": [
         "EF_RX_81AS_Shotgun",
         "Common_Cannon",
-        "Common_Push_A",
         "EF_HSP_BF_B",
         "Common_Cqb_A_L",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_F"
+        "EF_BeamSaber_F",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2909,54 +2912,6 @@
     ]
   },
   "hangars": [],
-  "pairedWeapons": [
-    {
-      "id": "EF_RX_81_GG",
-      "channels": [
-        {
-          "id": "EF_RX_81_GG",
-          "weaponId": "EF_RX_81_GG",
-          "muzzleIndex": 0,
-          "requiredParts": [
-            "backpack"
-          ],
-          "limb": null
-        },
-        {
-          "id": "EF_RX_81_GG_L",
-          "weaponId": "EF_RX_81_GG_L",
-          "muzzleIndex": 1,
-          "requiredParts": [
-            "backpack"
-          ],
-          "limb": null
-        }
-      ]
-    },
-    {
-      "id": "EF_RX_81_MS",
-      "channels": [
-        {
-          "id": "EF_RX_81_MS",
-          "weaponId": "EF_RX_81_MS",
-          "muzzleIndex": 0,
-          "requiredParts": [
-            "backpack"
-          ],
-          "limb": null
-        },
-        {
-          "id": "EF_RX_81_MS_L",
-          "weaponId": "EF_RX_81_MS_L",
-          "muzzleIndex": 1,
-          "requiredParts": [
-            "backpack"
-          ],
-          "limb": null
-        }
-      ]
-    }
-  ],
   "refits": [
     {
       "id": "action_CustomUnit_RX_81",
@@ -3013,5 +2968,53 @@
       "RX_81",
       "RX_81LA_IMBA"
     ]
-  }
+  },
+  "pairedWeapons": [
+    {
+      "id": "EF_RX_81_GG",
+      "channels": [
+        {
+          "id": "EF_RX_81_GG",
+          "weaponId": "EF_RX_81_GG",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "EF_RX_81_GG_L",
+          "weaponId": "EF_RX_81_GG_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        }
+      ]
+    },
+    {
+      "id": "EF_RX_81_MS",
+      "channels": [
+        {
+          "id": "EF_RX_81_MS",
+          "weaponId": "EF_RX_81_MS",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "EF_RX_81_MS_L",
+          "weaponId": "EF_RX_81_MS_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        }
+      ]
+    }
+  ]
 }

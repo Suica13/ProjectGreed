@@ -475,7 +475,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -571,7 +572,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 26000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -1843,7 +1846,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     }
   ],
   "weaponKits": [
@@ -1853,11 +1856,11 @@
       "cost": 0,
       "weapons": [
         "ZN_105mmMG",
-        "Common_Push_A",
         "ZN_MS_06D_HandMS",
         "Common_Cannon",
         "Common_Mortar",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     },
     {
@@ -1866,11 +1869,11 @@
       "cost": 0,
       "weapons": [
         "ZN_120mmMG_AntiAir",
-        "Common_Push_A",
         "ZN_MS_06D_HandMS",
         "Common_Cannon",
         "Common_Mortar",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     }
   ],

@@ -638,7 +638,8 @@
         "source": "Template/Unit/Skill/CmdAtk.gw"
       }
     ],
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 40.0,
@@ -735,7 +736,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 34000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.35,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -2430,11 +2433,11 @@
       "cost": 50,
       "weapons": [
         "ZN_MS_14FS_BMG",
-        "Common_Push_A",
         "ZN_Panzerfaust",
         "Common_ArmMG",
         "EF_BeamSaber_BF_Yellow_B",
-        "EF_BeamSaber_F_Yellow"
+        "EF_BeamSaber_F_Yellow",
+        "Common_Push_A"
       ]
     },
     {
@@ -2443,11 +2446,11 @@
       "cost": 50,
       "weapons": [
         "ZN_360mmBazookaKai",
-        "Common_Push_A",
         "ZN_Panzerfaust",
         "Common_ArmMG",
         "EF_BeamSaber_BF_Yellow_B",
-        "EF_BeamSaber_F_Yellow"
+        "EF_BeamSaber_F_Yellow",
+        "Common_Push_A"
       ]
     },
     {
@@ -2456,11 +2459,11 @@
       "cost": 100,
       "weapons": [
         "ZN_MS_14_BR",
-        "Common_Push_A",
         "ZN_Panzerfaust",
         "Common_ArmMG",
         "EF_BeamSaber_BF_Yellow_B",
-        "EF_BeamSaber_F_Yellow"
+        "EF_BeamSaber_F_Yellow",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2490,6 +2493,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_ArmMG",
@@ -2516,11 +2525,5 @@
       "fireMode": "independent",
       "name": "腕部机枪"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

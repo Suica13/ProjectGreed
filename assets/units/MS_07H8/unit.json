@@ -443,7 +443,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 90
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -539,7 +540,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 24500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.6,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": true,
@@ -1440,8 +1443,8 @@
       "weapons": [
         "ZN_MS_07B3_Minigun",
         "ZN_MS_07B3_HandMG",
-        "Common_Push_A",
-        "ZN_HeatSword_MS_07H8_A"
+        "ZN_HeatSword_MS_07H8_A",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1488,7 +1491,8 @@
         "ja": {
           "name": "飛行形態"
         }
-      }
+      },
+      "airAdaptability": 100.0
     }
   ],
   "nativeCombatRevision": 1,

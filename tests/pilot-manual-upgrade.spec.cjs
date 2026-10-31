@@ -1,0 +1,52 @@
+const {test,expect}=require('@playwright/test');
+const {pathToFileURL}=require('node:url'),path=require('node:path'),P=require('../shared/pilots.js');
+test('manual upgrade flashes, charges funds once, saves XP and level across reload',async({page})=>{
+ const pilot=P.gainExperience(P.createCustom('custom-manual-ui','Manual'),3500);
+ await page.addInitScript(p=>{
+  if(localStorage.getItem('manual-seeded'))return;
+  localStorage.setItem('manual-seeded','yes');
+  localStorage.setItem('projectgreed.custom-pilots.v3.shared',JSON.stringify({pilots:[p],awards:[]}));
+ },pilot);
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);
+ await page.waitForFunction(()=>assetsReady);
+ await page.locator('#shellHangar').click();
+ await page.locator('#shellSubnav button').filter({hasText:/\u9a7e\u9a76\u5458/}).click();
+ await page.getByRole('button',{name:/Manual/}).first().click();
+ const upgrade=page.locator('#upgradePilot');
+ await expect(upgrade).toHaveClass(/pilot-skill-alert/);
+ const money=await page.evaluate(()=>Economy.snapshot().money);
+ await upgrade.click();
+ await expect(page.locator('#customPilotProgress')).toContainText('Lv.1');
+ expect(await page.evaluate(()=>Economy.snapshot().money)).toBe(money-1000);
+ let p=await page.evaluate(()=>JSON.parse(localStorage.getItem('projectgreed.custom-pilots.v3.shared')).pilots[0]);
+ expect(p.experience).toBe(3500);expect(p.points).toBe(120);
+ await upgrade.click();
+ await expect(page.locator('#customPilotProgress')).toContainText('Lv.2');
+ await expect(upgrade).toBeDisabled();
+ expect(await page.evaluate(()=>Economy.snapshot().money)).toBe(money-3000);
+ await page.locator('#demotePilot').click();
+ await page.locator('#gameDialog button').last().click();
+ await expect(page.locator('#customPilotProgress')).toContainText('Lv.1');
+ expect(await page.evaluate(()=>Economy.snapshot().money)).toBe(money-4000);
+ await expect(upgrade).toBeDisabled();
+ await expect(upgrade).toHaveClass(/pilot-skill-alert/);
+ await page.reload();await page.waitForFunction(()=>assetsReady);
+ p=await page.evaluate(()=>JSON.parse(localStorage.getItem('projectgreed.custom-pilots.v3.shared')).pilots[0]);
+ expect(p.level).toBe(1);expect(p.experience).toBe(3500);
+});
+
+test('custom recruitment charges 1000 on confirmation, cancellation is free',async({page})=>{
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);
+ await page.waitForFunction(()=>assetsReady);
+ await page.locator('#shellHangar').click();
+ await page.locator('#shellSubnav button').filter({hasText:/\u9a7e\u9a76\u5458/}).click();
+ const money=await page.evaluate(()=>Economy.snapshot().money);
+ await page.locator('#createCustomPilot').click();
+ await expect(page.locator('#createPilotConfirm')).toContainText('1000');
+ await page.locator('#finishCustomPilot').click();
+ expect(await page.evaluate(()=>Economy.snapshot().money)).toBe(money);
+ await page.locator('#createCustomPilot').click();
+ await page.locator('#createPilotConfirm').click();
+ expect(await page.evaluate(()=>Economy.snapshot().money)).toBe(money-1000);
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('projectgreed.custom-pilots.v3.shared')).pilots.length)).toBe(1);
+});

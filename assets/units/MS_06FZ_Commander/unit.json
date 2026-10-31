@@ -503,7 +503,8 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -598,7 +599,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 27500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.85,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1519,9 +1522,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MMP80MG_Kai",
-        "Common_Push_A",
         "Common_Grenade_D",
-        "ZN_HeatHawk_F"
+        "ZN_HeatHawk_F",
+        "Common_Push_A"
       ]
     },
     {
@@ -1530,9 +1533,9 @@
       "cost": 50,
       "weapons": [
         "ZN_270mmBazooka",
-        "Common_Push_A",
         "Common_Grenade_D",
-        "ZN_HeatHawk_F"
+        "ZN_HeatHawk_F",
+        "Common_Push_A"
       ]
     }
   ],

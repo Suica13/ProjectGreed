@@ -53,7 +53,11 @@ const MapCombat = (() => {
         if (!unitStartDelays.has(event.from)) unitStartDelays.set(event.from, random());
     // A nuclear launch produces one damage record per victim, but one visual blast.
     const nuclearLaunches = new Set();
-    const visualBattles = (view.battles || []).map((battle) => ({
+    const orderedBattles = [...(view.battles || [])].sort((a, b) =>
+      Number.isInteger(a.combatWave) && Number.isInteger(b.combatWave)
+        ? a.combatWave - b.combatWave || Number(a.combatStage === "counter") - Number(b.combatStage === "counter")
+        : 0);
+    const visualBattles = orderedBattles.map((battle) => ({
       ...battle,
       events: battle.events.map((event) => {
         const actor = displayed.get(event.from) || battle.actors.find((u) => u.id === event.from);
@@ -85,20 +89,22 @@ const MapCombat = (() => {
             lane.view.attackQueue?.length > 1 &&
             entry.lane.view.attackQueue?.attacker === lane.view.attackQueue.attacker,
         );
-        const offensiveDependencies =
-          lane.view.combatStage === "counter"
-            ? earlier.filter(
-                (entry) => entry.lane !== lane && entry.lane.view.combatStage !== "counter",
-              )
+        const waveDependencies = Number.isInteger(lane.view.combatWave)
+          ? earlier.filter(entry => entry.lane !== lane &&
+              (entry.lane.view.combatWave < lane.view.combatWave ||
+                (entry.lane.view.combatWave === lane.view.combatWave &&
+                  lane.view.combatStage === "counter" && entry.lane.view.combatStage !== "counter")))
+          : lane.view.combatStage === "counter"
+            ? earlier.filter(entry => entry.lane !== lane && entry.lane.view.combatStage !== "counter")
             : [];
         if (
-          offensiveDependencies.length ||
+          waveDependencies.length ||
           queueDependencies.length ||
           (event.after <= 0 && event.before > 0) ||
           event.brokenParts?.length
         )
           lane.dependencies.set(index, [
-            ...offensiveDependencies,
+            ...waveDependencies,
             ...queueDependencies,
             ...earlier.filter(
               (entry) =>
@@ -164,10 +170,10 @@ const MapCombat = (() => {
       ? { x: (event.impactCell.x + 0.5) * 64, y: (event.impactCell.y + 0.5) * 64 }
       : target;
     const aim = (Math.atan2(impact.x - source.x, -(impact.y - source.y)) * 180) / Math.PI;
-    source.angle = Rules.modelOf(source.unit).ship ? source.unit.angle : aim;
+    source.angle = (Rules.modelOf(source.unit).ship || Rules.modelOf(source.unit).fixedWeaponFacing) ? source.unit.angle : aim;
     source.aimAngle = aim;
     source.unit.aimAngle = aim;
-    target.angle = Rules.modelOf(target.unit).ship ? target.unit.angle : aim + 180;
+    target.angle = (Rules.modelOf(target.unit).ship || Rules.modelOf(target.unit).fixedWeaponFacing) ? target.unit.angle : aim + 180;
     if (!dodgeStarts.has(event.to)) dodgeStarts.set(event.to, []);
     const plan = WeaponEffects.plan(weapon, source, target, event, {
       start,
@@ -208,8 +214,8 @@ const MapCombat = (() => {
         0,
         source.en - (event.energySpent ?? getWeapon(source, event.weapon).en),
       );
-    if (source && frame && !Rules.modelOf(source).ship) source.angle = frame.source.angle;
-    if (target && frame && !Rules.modelOf(target).ship) target.angle = frame.target.angle;
+    if (source && frame && !Rules.modelOf(source).ship && !Rules.modelOf(source).fixedWeaponFacing) source.angle = frame.source.angle;
+    if (target && frame && !Rules.modelOf(target).ship && !Rules.modelOf(target).fixedWeaponFacing) target.angle = frame.target.angle;
     view.displayHp[event.to] = event.after;
     view.index++;
     frame = null;
@@ -332,7 +338,7 @@ const MapCombat = (() => {
     });
     return result;
   }
-  // 每个攻击计划有自己的时间轴；不同交战同时推进，单场中的反击仍在受击后开始。
+  // 同一波全体单位并行；全部攻击演完才反击，全部反击演完才进入下一波。
   function update(now) {
     const dodgeRate = window.ReplayPlayer?.active ? 1 : byId("quick").checked ? 1 / 0.35 : 1;
     if (battleView?.mapBattle && battleView.suspendedAt === undefined && pageView === "game")

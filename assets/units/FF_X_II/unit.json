@@ -154,7 +154,7 @@
   "stats": {
     "hp": 15000,
     "en": 300.0,
-    "move": 10,
+    "move": 8,
     "mobility": 140.0,
     "cost": 200,
     "counterLimit": 1,
@@ -185,7 +185,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 205
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -280,7 +281,9 @@
     },
     "v17BaseHp": 12000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -669,7 +672,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     }
   ],
   "weaponKits": [
@@ -702,27 +705,6 @@
     ]
   },
   "hangars": [],
-  "pairedWeapons": [
-    {
-      "id": "EF_FF_X_II_BR",
-      "channels": [
-        {
-          "id": "EF_FF_X_II_BR",
-          "weaponId": "EF_FF_X_II_BR",
-          "muzzleIndex": 0,
-          "requiredParts": [],
-          "limb": null
-        },
-        {
-          "id": "EF_FF_X_II_BR_R",
-          "weaponId": "EF_FF_X_II_BR_R",
-          "muzzleIndex": 1,
-          "requiredParts": [],
-          "limb": null
-        }
-      ]
-    }
-  ],
   "refits": [
     {
       "id": "action_CustomUnit_FF_X_II_FB",
@@ -744,5 +726,26 @@
   "production": {
     "enabled": true,
     "refitFrom": []
-  }
+  },
+  "pairedWeapons": [
+    {
+      "id": "EF_FF_X_II_BR",
+      "channels": [
+        {
+          "id": "EF_FF_X_II_BR",
+          "weaponId": "EF_FF_X_II_BR",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "EF_FF_X_II_BR_R",
+          "weaponId": "EF_FF_X_II_BR_R",
+          "muzzleIndex": 1,
+          "requiredParts": [],
+          "limb": null
+        }
+      ]
+    }
+  ]
 }

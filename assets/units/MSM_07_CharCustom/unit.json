@@ -346,7 +346,8 @@
     "stealth": {
       "waterOnly": true
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 110
   },
   "attackBonuses": {
     "melee": 55.0,
@@ -444,7 +445,9 @@
     "unitLevel": 1800.0,
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 27500.0,
-    "technologyEra": "0079L"
+    "technologyEra": "0079L",
+    "actionTurnSpeed": 1.85,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": false,
@@ -1166,9 +1169,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MSM_07_BG",
-        "Common_Push_A",
         "ZN_MSM_07_MS",
-        "Common_Cqb_B"
+        "Common_Cqb_B",
+        "Common_Push_A"
       ]
     }
   ],

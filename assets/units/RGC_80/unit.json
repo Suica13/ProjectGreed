@@ -476,7 +476,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 90
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -561,7 +562,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 18500.0,
-    "technologyEra": "0079L"
+    "technologyEra": "0079L",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 5
   },
   "weapons": {
     "EF_BeamSprayGun": {
@@ -1628,8 +1631,8 @@
         "EF_BeamSprayGun",
         "Common_Cannon",
         "Common_Cqb_A",
-        "Common_Push_A",
-        "Common_Mortar"
+        "Common_Mortar",
+        "Common_Push_A"
       ],
       "localization": {
         "zh": {
@@ -1651,8 +1654,8 @@
         "EF_90mmMG",
         "Common_Cannon",
         "Common_Cqb_A",
-        "Common_Push_A",
-        "Common_Mortar"
+        "Common_Mortar",
+        "Common_Push_A"
       ],
       "localization": {
         "zh": {

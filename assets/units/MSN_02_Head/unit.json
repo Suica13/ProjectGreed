@@ -234,7 +234,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -328,7 +329,9 @@
     "unitLevel": 4500.0,
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 15000.0,
-    "technologyEra": "0079L"
+    "technologyEra": "0079L",
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,

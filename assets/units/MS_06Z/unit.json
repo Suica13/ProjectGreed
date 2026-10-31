@@ -414,7 +414,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 10.0,
@@ -508,7 +509,9 @@
     "unitLevel": 2500.0,
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 25000.0,
-    "technologyEra": "0079L"
+    "technologyEra": "0079L",
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -3282,15 +3285,15 @@
       "localization": {
         "zh": {
           "name": "有线浮游炮",
-          "description": "2个单元，每单元2发，基础伤害1000/发；消耗3 AP。"
+          "description": "2个单元，每单元2发；75觉醒可用，100觉醒时整次基础伤害4000，100以上每点觉醒增加基础伤害4%，200觉醒时20000；低于100按觉醒比例计算。基础命中100%，消耗3 AP。"
         },
         "en": {
           "name": "Wired Remote Cannons",
-          "description": "2 remote units, 2 shots each, 1000 base damage per shot; costs 3 AP."
+          "description": "2 units, 2 shots each. Requires 75 Awakening. Base salvo damage: 4000 at 100 Awakening; +4% per point above 100, reaching 20000 at 200. Below 100, scales proportionally. Base accuracy 100%; costs 3 AP."
         },
         "ja": {
           "name": "有線サイコミュ砲",
-          "description": "2基が各2発射撃。1発の基本ダメージ1000、消費3 AP。"
+          "description": "2基が各2発。覚醒75で使用可能。覚醒100で全弾の基本ダメージ4000、100を超える1点ごとに4%増加、200で20000。100未満は覚醒値に比例。基本命中100%、消費3 AP。"
         }
       },
       "type": "beam",
@@ -3298,7 +3301,7 @@
       "slot": "secondary",
       "min": 1,
       "max": 4,
-      "hit": 85.0,
+      "hit": 100,
       "en": 100.0,
       "actionCost": 3,
       "damagePerShot": 1000.0,
@@ -3434,12 +3437,12 @@
         "waitSeconds": 0.5,
         "staggerSeconds": 0.13,
         "returnSeconds": 0.65,
-        "awakeningScale": 0.0025
+        "awakeningScale": 0.04
       },
       "nativeRemote": {
         "count": 2,
         "cooldownSeconds": 18.0,
-        "awakeningMinimum": 75.0,
+        "awakeningMinimum": 75,
         "entry": "ZN_MS_06Z_HandFunnel_Trigger",
         "unitSources": [
           "MS_06Z_HandFunnel_L",
@@ -3494,8 +3497,8 @@
           }
         ]
       },
-      "description": "有线浮游炮：2个单元，每单元2发，基础伤害1000/发。消耗3 AP。",
-      "sourceHit": 85.0,
+      "description": "2个单元，每单元2发；75觉醒可用，100觉醒时整次基础伤害4000，100以上每点觉醒增加基础伤害4%，200觉醒时20000；低于100按觉醒比例计算。基础命中100%，消耗3 AP。",
+      "sourceHit": 100,
       "nativeTiming": {
         "source": "Units/BattleUnits/Weapon/Funnel/ZN_MS_06Z_HandFunnel.gw",
         "entry": "ZN_MS_06Z_HandFunnel_Trigger",
@@ -3515,7 +3518,7 @@
         {
           "stat": "awakening",
           "operator": ">=",
-          "value": 75.0
+          "value": 75
         }
       ],
       "anyParts": [
@@ -3534,7 +3537,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     },
     {
       "id": "remote_weapon_ZN_MS_06Z_HandFunnel",
@@ -3550,9 +3553,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MS_06Z_BG",
-        "Common_Push_A",
         "Common_Cqb_A",
-        "ZN_MS_06Z_HandFunnel"
+        "ZN_MS_06Z_HandFunnel",
+        "Common_Push_A"
       ]
     }
   ],
@@ -3589,6 +3592,26 @@
     ]
   },
   "hangars": [],
+  "refits": [
+    {
+      "id": "action_CustomUnit_MSN_01",
+      "unitId": "MSN_01",
+      "money": 250,
+      "supplies": 250,
+      "unlockUnits": [],
+      "blocked": true,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06Z/MS_06Z.ini",
+        "action": "action_CustomUnit_MSN_01",
+        "seconds": 20.0
+      }
+    }
+  ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MS_06Z_BG",
@@ -3685,25 +3708,5 @@
         }
       ]
     }
-  ],
-  "refits": [
-    {
-      "id": "action_CustomUnit_MSN_01",
-      "unitId": "MSN_01",
-      "money": 250,
-      "supplies": 250,
-      "unlockUnits": [],
-      "blocked": true,
-      "source": {
-        "file": "GW_BattleUniverse_DLC_0079/Units/BattleUnits/MS_06Z/MS_06Z.ini",
-        "action": "action_CustomUnit_MSN_01",
-        "seconds": 20.0
-      }
-    }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

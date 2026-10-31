@@ -560,7 +560,8 @@
       "antiDetectAqua": false
     },
     "shellFinalResistance": 25,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 130
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -658,7 +659,9 @@
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 26500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -1743,10 +1746,10 @@
       "cost": 0,
       "weapons": [
         "EF_100mmMG",
-        "Common_Push_A",
         "EF_BeamLancer_BF_B",
         "EF_BeamSaber_F",
-        "Common_Cqb_A_L"
+        "Common_Cqb_A_L",
+        "Common_Push_A"
       ]
     },
     {
@@ -1755,10 +1758,10 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazooka",
-        "Common_Push_A",
         "EF_BeamLancer_BF_B",
         "EF_BeamSaber_F",
-        "Common_Cqb_A_L"
+        "Common_Cqb_A_L",
+        "Common_Push_A"
       ]
     }
   ],

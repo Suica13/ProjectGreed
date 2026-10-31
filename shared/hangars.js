@@ -239,7 +239,6 @@ const UnitHangars = {
         (enemy) =>
           onMap(enemy) &&
           enemy.team !== carrier.team &&
-          sensors.visible(g, carrier.team, enemy) &&
           edgeDistance(carrier, enemy) <= range,
       );
     }
@@ -366,7 +365,7 @@ const UnitHangars = {
           u.y = carrier?.y ?? u.y;
         }
         const actionPoints = u.hp > 0
-          ? Math.max(0, Math.round((u.actionPoints ?? m.actionPoints ?? 5) * 0.75)) : 0;
+          ? Math.max(0, Math.round((u.actionPoints ?? m.actionPoints ?? 5) * 0.5)) : 0;
         Object.assign(u, {
           acted: u.acted || actionPoints <= 0,
           moved: true,

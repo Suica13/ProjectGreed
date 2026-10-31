@@ -634,7 +634,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 140
   },
   "attackBonuses": {
     "melee": 65.0,
@@ -734,7 +735,9 @@
     "unitLevel": 3000.0,
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 40000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -2024,9 +2027,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -2130,7 +2131,11 @@
           "y": 0.0
         }
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_BeamSaber_Double_DE": {
       "name": "光束军刀",
@@ -2622,12 +2627,12 @@
       "cost": 0,
       "weapons": [
         "EF_GroundTypeBeamRifle_Blue",
-        "Common_Push_A",
         "EF_RX_79_BD_ChestMS_Line",
         "EF_RX_79_BD_ChestMG",
         "EF_BeamSaber_Double_AALDF",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_DE"
+        "EF_BeamSaber_Double_DE",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2663,6 +2668,11 @@
   "refits": [],
   "formOnly": true,
   "formOf": "RX_79_BD_2_NMBS",
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_RX_79_BD_ChestMS_Line",
@@ -2710,10 +2720,5 @@
         }
       ]
     }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": false,
-    "refitFrom": []
-  }
+  ]
 }

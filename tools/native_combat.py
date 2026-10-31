@@ -134,6 +134,8 @@ def native_weapon(prefab, weapon, unit_data):
     root=next(("hiddenAction_"+name+"_Fire" for name in candidates if "hiddenAction_"+name+"_Fire" in data),None)
     if not root:
         root=next(("action_"+name+"_Trigger" for name in candidates if "action_"+name+"_Trigger" in data),None)
+    if not root and stem == "ZN_MA_08_AA_BeamCannon":
+        root = "action_" + stem + "_B1_Trigger"
     if root:
         visit(root,0)
     if not any(e.get("shots") for e in events):
@@ -219,7 +221,11 @@ def restore(prefab, native):
     for weapon in prefab["weapons"].values():
         if not weapon.get("remote"):
             native_weapon(prefab,weapon,native)
-    from unit_ship_balance import apply_beams
-    apply_beams(prefab, native_restored=True)
+    if prefab["stats"].get("ship"):
+        for weapon in prefab["weapons"].values():
+            for payload in [weapon, *weapon.get("attack", {}).get("steps", [])]:
+                payload.pop("shipDamageBeforeReduction", None)
+            weapon.pop("shipDamageMultiplier", None)
+            weapon.pop("shipAntiAirBeforeReduction", None)
     prefab["nativeCombatRevision"]=1
     return prefab

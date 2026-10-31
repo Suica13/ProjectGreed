@@ -517,7 +517,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -611,7 +612,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 23500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1336,7 +1339,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     }
   ],
   "weaponKits": [
@@ -1346,8 +1349,8 @@
       "cost": 0,
       "weapons": [
         "ZN_ACT_Zaku_MG",
-        "Common_Push_A",
-        "ZN_HeatHawk_ACT_A_Fast"
+        "ZN_HeatHawk_ACT_A_Fast",
+        "Common_Push_A"
       ]
     },
     {
@@ -1356,8 +1359,8 @@
       "cost": 100,
       "weapons": [
         "ZN_ACT_Zaku_BR",
-        "Common_Push_A",
-        "ZN_HeatHawk_ACT_A_Fast"
+        "ZN_HeatHawk_ACT_A_Fast",
+        "Common_Push_A"
       ]
     }
   ],

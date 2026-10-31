@@ -505,13 +505,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 281500,
+    "hp": 173500,
     "en": 7500.0,
     "move": 7,
-    "mobility": 65.0,
+    "mobility": 74.75,
     "cost": 2000,
     "counterLimit": 1,
-    "accuracy": 130.0,
+    "accuracy": 92.95,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "ground",
@@ -989,7 +989,9 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 80,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -1085,9 +1087,15 @@
       "radar": 600.0,
       "antiDetection": -250.0
     },
-    "v17BaseHp": 225000.0,
     "technologyEra": "0083",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 0.5,
+    "mobilityMoveTarget": 7,
+    "shipHullBeforeReduction": 225000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1.1,
+    "shipFactionAccuracyMultiplier": 1.1,
+    "shipFactionEvasionMultiplier": 1.15
   },
   "presentation": {
     "shield": false,
@@ -1126,7 +1134,7 @@
       "type": "beam",
       "min": 3,
       "max": 8,
-      "hit": 60.0,
+      "hit": 75.0,
       "en": 720.0,
       "sourceName": "BirminghamClass_Turret_BeamCannon",
       "sourceHit": 75.0,
@@ -1134,9 +1142,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 5500.0,
+      "damagePerShot": 4125,
       "damageComponents": {
-        "beam": 5500.0
+        "beam": 4125
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1147,7 +1155,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1155,7 +1164,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1163,7 +1173,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1171,7 +1182,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1179,7 +1191,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1187,7 +1200,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1195,7 +1209,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1203,7 +1218,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1211,7 +1227,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1219,7 +1236,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1227,7 +1245,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1235,7 +1254,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1243,7 +1263,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1251,7 +1272,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_M5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1259,7 +1281,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1267,7 +1290,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1275,7 +1299,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1283,7 +1308,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_BeamCannon_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1490,6 +1516,10 @@
         "large": {
           "damage": 1.5,
           "accuracy": 1.5
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1510,15 +1540,20 @@
       },
       "category": "cannon",
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 5500.0,
+        "damageComponents": {
+          "beam": 5500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "BirminghamClass_Turret_AMS": {
       "name": "反MS导弹",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 68.0,
+      "hit": 85.0,
       "en": 320.0,
       "sourceName": "BirminghamClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -1526,9 +1561,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 2000.0,
+      "damagePerShot": 1500,
       "damageComponents": {
-        "shell": 2000.0
+        "shell": 1500
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1539,7 +1574,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AMS_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1547,7 +1583,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1555,7 +1592,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AMS_L1",
-            "delay": 0.5
+            "delay": 0.5,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1563,7 +1601,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1571,7 +1610,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AMS_L1",
-            "delay": 0.5
+            "delay": 0.5,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1579,7 +1619,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1587,7 +1628,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AMS_L1",
-            "delay": 0.5
+            "delay": 0.5,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1595,7 +1637,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AMS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1715,8 +1758,6 @@
       },
       "category": "missile",
       "actionCost": 2,
-      "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -1727,14 +1768,21 @@
         "ja": {
           "name": "対MSミサイル"
         }
-      }
+      },
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 2000.0,
+        "damageComponents": {
+          "shell": 2000.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "BirminghamClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 68.0,
+      "hit": 85.0,
       "en": 360.0,
       "sourceName": "BirminghamClass_Turret_MS",
       "sourceHit": 85.0,
@@ -1742,9 +1790,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 1250.0,
+      "damagePerShot": 950,
       "damageComponents": {
-        "shell": 1250.0
+        "shell": 950
       },
       "hitsPerShot": 1,
       "attack": {
@@ -1755,7 +1803,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1763,7 +1812,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1771,7 +1821,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1779,7 +1830,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1787,7 +1839,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1795,7 +1848,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1803,7 +1857,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1811,7 +1866,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1819,7 +1875,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1827,7 +1884,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1835,7 +1893,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1843,7 +1902,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1851,7 +1911,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1859,7 +1920,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1867,7 +1929,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1875,7 +1938,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1883,7 +1947,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1891,7 +1956,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1899,7 +1965,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1907,7 +1974,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1915,7 +1983,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1923,7 +1992,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1931,7 +2001,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1939,7 +2010,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1947,7 +2019,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1955,7 +2028,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1963,7 +2037,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1971,7 +2046,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1979,7 +2055,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_L1",
-            "delay": 0.25
+            "delay": 0.25,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1987,7 +2064,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_MS_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -2089,6 +2167,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -2109,15 +2191,20 @@
       },
       "category": "missile",
       "actionCost": 2,
-      "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 1250.0,
+        "damageComponents": {
+          "shell": 1250.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "BirminghamClass_Turret_AA": {
       "name": "对空机枪",
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 50.0,
       "sourceName": "BirminghamClass_Turret_AA",
       "sourceHit": 125.0,
@@ -2125,10 +2212,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 250.0,
+      "damagePerShot": 200,
       "damageComponents": {
-        "shell": 200.0,
-        "shellAP": 50.0
+        "shell": 150,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -2139,7 +2226,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2147,7 +2235,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2155,7 +2244,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2163,7 +2253,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2171,7 +2262,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2179,7 +2271,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2187,7 +2280,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2195,7 +2289,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2203,7 +2298,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2211,7 +2307,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2219,7 +2316,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2227,7 +2325,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2235,7 +2334,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2243,7 +2343,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2251,7 +2352,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2259,7 +2361,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2267,7 +2370,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2275,7 +2379,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2283,7 +2388,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2291,7 +2397,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2299,7 +2406,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2307,7 +2415,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2315,7 +2424,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2323,7 +2433,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2331,7 +2442,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2339,7 +2451,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2347,7 +2460,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2355,7 +2469,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2363,7 +2478,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2371,7 +2487,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2379,7 +2496,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2387,7 +2505,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2395,7 +2514,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2403,7 +2523,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2411,7 +2532,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2419,7 +2541,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2427,7 +2550,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2435,7 +2559,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2443,7 +2568,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2451,7 +2577,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2459,7 +2586,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2467,7 +2595,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2475,7 +2604,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2483,7 +2613,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2491,7 +2622,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2499,7 +2631,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2507,7 +2640,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2515,7 +2649,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2523,7 +2658,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -2531,7 +2667,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2539,7 +2676,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2547,7 +2685,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2555,7 +2694,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2563,7 +2703,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2571,7 +2712,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2579,7 +2721,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2587,7 +2730,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2595,7 +2739,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2603,7 +2748,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2611,7 +2757,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2619,7 +2766,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2627,7 +2775,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2635,7 +2784,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2643,7 +2793,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2651,7 +2802,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2659,7 +2811,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2667,7 +2820,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2675,7 +2829,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2683,7 +2838,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2691,7 +2847,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2699,7 +2856,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2707,7 +2865,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2715,7 +2874,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2723,7 +2883,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2731,7 +2892,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2739,7 +2901,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2747,7 +2910,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2755,7 +2919,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2763,7 +2928,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2771,7 +2937,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2779,7 +2946,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2787,7 +2955,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2795,7 +2964,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2803,7 +2973,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2811,7 +2982,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2819,7 +2991,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2827,7 +3000,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2835,7 +3009,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2843,7 +3018,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2851,7 +3027,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2859,7 +3036,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L1",
-            "delay": 0.2
+            "delay": 0.2,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2867,7 +3045,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2875,7 +3054,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2883,7 +3063,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2891,7 +3072,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2899,7 +3081,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R3",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2907,7 +3090,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2915,7 +3099,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R4",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2923,7 +3108,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_L5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -2931,7 +3117,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BirminghamClass_Turret_AA_R5",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -3173,6 +3360,17 @@
       "category": "machine_gun",
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -3975,19 +4173,14 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 250.0,
+        "damageComponents": {
+          "shell": 200.0,
+          "shellAP": 50.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [

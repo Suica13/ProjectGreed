@@ -128,7 +128,6 @@ const Formation = (() => {
   let index = 0,
     returnView = "menu",
     draft = [],
-    nameEdit = null,
     previewModel = null,
     previewRoot = null,
     detailIndex = null,
@@ -145,7 +144,7 @@ const Formation = (() => {
     !squads[index].units.length
       ? []
       : Rules.validateFormation(
-          Economy.fitKits(hydratePilots(squads[index].units)),
+          hydratePilots(squads[index].units),
           Infinity,
           Rules.catalog.formation.maxUnits,
         );
@@ -159,7 +158,7 @@ const Formation = (() => {
       ? Rules.armyRestrictions(Net.snapshot.settings, ownPlayer())
       : {}),
     characterFaction: group,
-    inventory: Economy.snapshot().inventory,
+    licenses: Economy.snapshot().licenses,
   });
   // Drafts may contain future units; technology is required to produce them; owned stock can deploy.
   const canAddUnit = (model) =>
@@ -176,7 +175,7 @@ const Formation = (() => {
     const prefab = Rules.catalog.prefabs.find((item) => item.id === byId("formationPrefab").value);
     if (!prefab) return Infinity;
     const kitId =
-      pickerKits.get(prefab.id) || Economy.baseKit(prefab.id) || prefab.weaponKits[0].id;
+      pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id;
     const model = UnitModels[prefab.id + "__" + kitId];
     return model ? Rules.formationWeight(model) : Infinity;
   }
@@ -185,7 +184,7 @@ const Formation = (() => {
       prefab = Rules.catalog.prefabs.find((candidate) => candidate.id === prefabId),
       kitId =
         prefab &&
-        (pickerKits.get(prefab.id) || Economy.baseKit(prefab.id) || prefab.weaponKits[0].id),
+        (pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id),
       model = kitId && UnitModels[prefab.id + "__" + kitId],
       formationCost = cost(draft),
       formationLimit = budget(),
@@ -382,9 +381,7 @@ const Formation = (() => {
     byId("deleteFormation").title = squads.length <= 1 ? "至少保留一个编组。" : "";
   }
   function closeDetail() {
-    byId("formationKitShop").close();
-    if (typeof RefitShop !== "undefined") RefitShop.close();
-    nameEdit = null;
+    if (typeof SpecialTransforms !== "undefined") SpecialTransforms.close();
     previewModel = null;
     previewRoot = null;
     byId("formationUnitDetail").hidden = true;
@@ -793,8 +790,7 @@ const Formation = (() => {
     byId("formationDetailTitle").textContent = model.code + " " + (entry.customName || model.name);
     byId("formationDetailTitle").toggleAttribute("data-i18n-ignore", !!entry.customName);
     byId("formationDetailTags").replaceChildren(unitTags(model));
-    ProductionUI.renderSale(originalEntry.unitId);
-    byId("formationDetailNameEditor").hidden = detailIndex === null || !!previewModel;
+    ProductionUI.renderLicensePurchase(originalEntry.unitId);
     const pilotButton = byId("formationDetailPilot");
     pilotButton.hidden = detailIndex === null || !!previewModel;
     pilotButtonText(pilotButton, "配属驾驶员", originalEntry, model);
@@ -805,12 +801,6 @@ const Formation = (() => {
       byId("formationDetailCarrierField").hidden = true;
       byId("formationDetailHangarsBlock").hidden = true;
     }
-    if (nameEdit && nameEdit.entry !== entry) nameEdit = null;
-    byId("formationDetailName").value = nameEdit ? nameEdit.value : entry.customName || "";
-    byId("formationDetailName").readOnly = !nameEdit;
-    byId("editFormationUnitName").textContent = I18n.text(nameEdit ? "保存名称" : "修改名称");
-    byId("formationDetailName").placeholder = model.name;
-    byId("resetFormationUnitName").disabled = !entry.customName;
     byId("formationDetailIntro").textContent = model.description;
     const kits = byId("formationDetailKit");
     kits.replaceChildren();
@@ -818,13 +808,7 @@ const Formation = (() => {
       ? prefab
       : Rules.catalog.prefabs.find((p) => p.id === originalEntry.unitId);
     for (const kit of equipmentPrefab.weaponKits) {
-      const suffix =
-        kit.id === Economy.baseKit(equipmentPrefab.id)
-          ? " · 素体"
-          : " · 可用 " +
-            Economy.freeKits(equipmentPrefab.id + "__" + kit.id, draft, detailIndex) +
-            " / 持有 " +
-            Economy.kitQuantity(equipmentPrefab.id + "__" + kit.id);
+      const suffix = kit.id === Economy.defaultKit(equipmentPrefab.id) ? " · 默认装备" : "";
       const displayKit = previewModel
         ? model
         : Rules.formationModel({ ...originalEntry, kitId: kit.id });
@@ -832,15 +816,9 @@ const Formation = (() => {
     }
     kits.value = previewModel ? entry.kitId : originalEntry.kitId;
     kits.disabled = !!previewModel;
-    byId("openFormationKitShop").disabled =
+    byId("openSpecialTransforms").hidden =
       !!previewModel ||
-      !equipmentPrefab.weaponKits.some((kit) =>
-        Economy.canBuyKit(equipmentPrefab.id + "__" + kit.id, group),
-      );
-    if (previewModel) byId("formationKitShop").close();
-    byId("openFormationRefits").hidden =
-      !!previewModel ||
-      !Economy.refitOptions(originalEntry.unitId).filter((r) => !r.pilotId).length;
+      !equipmentPrefab.pilotForms?.length;
 
     detailMetrics(byId("formationDetailStats"), [
       ["HP", model.hp.toLocaleString()],
@@ -1080,9 +1058,6 @@ const Formation = (() => {
     return warning;
   }
   function render() {
-    const equipped = Economy.fitKits(draft);
-    for (let i = 0; i < draft.length; i++)
-      if (draft[i].kitId !== equipped[i].kitId) draft[i].kitId = equipped[i].kitId;
     saveDraft();
     byId("formationGroup").disabled = Net.active && Net.snapshot?.settings?.mode === "quick";
     const unitCostLimit = restrictions().unitCostLimit;
@@ -1112,14 +1087,13 @@ const Formation = (() => {
     const plan = draft.length
       ? Rules.planFormation(draft, budget(), restrictions(), Rules.catalog.formation.maxUnits)
       : { disabled: [] };
-    const shortagePlan = Economy.productionPlan(draft);
+    const shortagePlan = Economy.licensePlan(draft);
     byId("produceMissingFormation").hidden =
       byId("formationMain").dataset.page === "pilots" || !shortagePlan.items.length;
     byId("produceMissingFormation").classList.toggle(
       "inventory-attention",
       !!shortagePlan.items.length,
     );
-    const required = Rules.inventoryPlan(draft, Economy.snapshot().inventory).required;
     const list = byId("formationUnits"),
       scrollTop = list.scrollTop;
     list.replaceChildren();
@@ -1189,8 +1163,8 @@ const Formation = (() => {
           element(
             "span",
             "overcost-label",
-            plan.reasons[i] === "inventory"
-              ? "数量不足"
+            plan.reasons[i] === "license"
+              ? "未获得部署许可"
               : plan.reasons[i] === "wip"
                 ? "WIP"
                 : plan.reasons[i] === "faction_mismatch"
@@ -1251,21 +1225,18 @@ const Formation = (() => {
         element(
           "small",
           "formation-inventory-count",
-          "持有 " +
-            Economy.quantity(entry.unitId) +
-            " 台 · 编组需要 " +
-            required[entry.unitId] +
-            " 台",
+          Economy.hasLicense(entry.unitId) ? "已获得部署许可" : "未获得部署许可",
         ),
       );
-      if (!Development.allows(group, entry.unitId)) portrait.append(undevelopedWarning());
-      if (plan.reasons[i] === "inventory") {
+      if (!Economy.hasLicense(entry.unitId) && !Development.allows(group, entry.unitId))
+        portrait.append(undevelopedWarning());
+      if (plan.reasons[i] === "license") {
         row.classList.add("inventory-shortage");
-        const produce = element("button", "produce-shortage-unit", "生产");
+        const produce = element("button", "produce-shortage-unit", "部署许可");
         produce.type = "button";
         produce.onclick = () => openProduction(entry.unitId);
         const prompt = element("div", "inventory-shortage-prompt");
-        prompt.append(element("span", "", "数量不足"), produce);
+        prompt.append(element("span", "", "未获得部署许可"), produce);
         row.querySelector(":scope > .overcost-label")?.remove();
         row.append(prompt);
       }
@@ -1400,85 +1371,20 @@ const Formation = (() => {
       }
     }
   });
-  byId("formationDetailName").oninput = (event) => {
-    if (nameEdit) nameEdit.value = event.target.value;
-  };
-  byId("editFormationUnitName").onclick = () => {
-    if (detailIndex === null) return;
-    const entry = draft[detailIndex];
-    if (!nameEdit) {
-      nameEdit = { entry, value: entry.customName || "" };
-      renderDetail();
-      byId("formationDetailName").focus();
-      return;
-    }
-    try {
-      const name = Rules.normalizeUnitName(nameEdit.value);
-      if (name) entry.customName = name;
-      else delete entry.customName;
-      nameEdit = null;
-      render();
-      renderDetail();
-    } catch (error) {
-      byId("formationStatus").textContent = error.message;
-    }
-  };
-  byId("resetFormationUnitName").onclick = () => {
-    if (detailIndex === null) return;
-    nameEdit = null;
-    delete draft[detailIndex].customName;
-    render();
-    renderDetail();
-    byId("formationDetailName").focus();
-  };
   byId("formationDetailKit").onchange = (event) => {
     const entry = detailIndex === null ? catalogDetail : draft[detailIndex];
     if (!entry) return;
     previewModel = null;
     GameAudio.play("changeEquipmentSound");
-    const requested = event.target.value,
-      id = entry.unitId + "__" + requested;
-    const base = Economy.baseKit(entry.unitId);
-    entry.kitId =
-      base && requested !== base && Economy.freeKits(id, draft, detailIndex) < 1 ? base : requested;
-    if (entry.kitId !== requested) note("套件不足，已退回素体套件。可点击＋购买套件。");
+    entry.kitId = event.target.value;
     if (detailIndex === null) pickerKits.set(entry.unitId, entry.kitId);
     if (detailIndex !== null) render();
     renderDetail();
   };
-  byId("openFormationRefits").onclick = () => {
+  byId("openSpecialTransforms").onclick = () => {
     const entry = detailIndex === null ? catalogDetail : draft[detailIndex];
     if (!entry) return;
-    RefitShop.open(entry.unitId, group, (targetId) => {
-      entry.unitId = targetId;
-      entry.kitId = Economy.baseKit(targetId);
-      delete entry.preload;
-      if (detailIndex !== null) {
-        for (const other of draft)
-          if (other.preload?.carrierIndex === detailIndex) delete other.preload;
-        render();
-      }
-      renderDetail();
-    });
-  };
-  byId("openFormationKitShop").onclick = () => {
-    const entry = detailIndex === null ? catalogDetail : draft[detailIndex];
-    if (!entry) return;
-    KitShop.open(entry.unitId, {
-      faction: group,
-      kitId: entry.kitId,
-      equip: true,
-      entries: () => draft,
-      exceptIndex: detailIndex,
-      trigger: byId("openFormationKitShop"),
-      onPurchase: (kit, quantity) => {
-        entry.kitId = kit;
-        if (detailIndex === null) pickerKits.set(entry.unitId, kit);
-        else render();
-        renderDetail();
-        note("已购买 " + quantity + " 套，并装备 1 套");
-      },
-    });
+    SpecialTransforms.open(entry.unitId);
   };
   byId("formationDetailCarrier").onchange = (event) => {
     const entry = detailIndex === null ? catalogDetail : draft[detailIndex];
@@ -1524,7 +1430,7 @@ const Formation = (() => {
     detailIndex = null;
     catalogDetail = {
       unitId: prefabId,
-      kitId: Economy.baseKit(prefab.id) || prefab.weaponKits[0].id,
+      kitId: Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
     };
     previewRoot = null;
     document.body.append(byId("formationUnitDetail"));
@@ -1644,7 +1550,7 @@ const Formation = (() => {
     if (points(draft) >= unitLimit()) return note("已达到编组单位点数上限。");
     const entry = {
       unitId: prefab.id,
-      kitId: pickerKits.get(prefab.id) || Economy.baseKit(prefab.id) || prefab.weaponKits[0].id,
+      kitId: pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
       customName: Rules.generateUnitName(prefab.name, draft),
       ...(pickerContext ? { preload: { ...pickerContext } } : {}),
     };
@@ -1654,13 +1560,6 @@ const Formation = (() => {
       note(error.message);
       return;
     }
-    const base = Economy.baseKit(entry.unitId);
-    if (
-      base &&
-      entry.kitId !== base &&
-      Economy.freeKits(entry.unitId + "__" + entry.kitId, draft) < 1
-    )
-      entry.kitId = base;
     appendUnit(entry);
     render();
     byId("formationUnits").scrollTop = byId("formationUnits").scrollHeight;
@@ -1675,7 +1574,7 @@ const Formation = (() => {
       .filter(
         (prefab) =>
           pickerCompatible(prefab) &&
-          (byId("formationStock").value === "all" || Economy.quantity(prefab.id) > 0),
+          (byId("formationStock").value === "all" || Economy.hasLicense(prefab.id)),
       )
       .sort(UnitCatalog.compareDevelopedCost(group));
     if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
@@ -1692,7 +1591,7 @@ const Formation = (() => {
       card.setAttribute("aria-selected", String(byId("formationPrefab").value === prefab.id));
       const image = element("img");
       image.src = unitIcon(
-        prefab.id + "__" + (Economy.baseKit(prefab.id) || prefab.weaponKits[0].id),
+        prefab.id + "__" + (Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id),
       );
       image.alt = prefab.name;
       const title = element("strong", "", prefab.code + " " + prefab.name);
@@ -1717,17 +1616,14 @@ const Formation = (() => {
         element(
           "small",
           "formation-inventory-count",
-          "持有 " +
-            Economy.quantity(prefab.id) +
-            " 台 · 编组需要 " +
-            draft.filter((entry) => entry.unitId === prefab.id).length +
-            " 台",
+          Economy.hasLicense(prefab.id) ? "已获得部署许可" : "未获得部署许可",
         ),
       );
       info.append(stockLine);
       const portrait = element("span", "catalog-unit-portrait");
       portrait.append(image);
-      if (!Development.allows(group, prefab.id)) portrait.append(undevelopedWarning());
+      if (!Economy.hasLicense(prefab.id) && !Development.allows(group, prefab.id))
+        portrait.append(undevelopedWarning());
       card.append(portrait, info);
       card.onclick = () => {
         GameAudio.selectUnit(prefab);
@@ -1747,7 +1643,7 @@ const Formation = (() => {
         byId("formationUnitPicker").hidden = true;
         catalogDetail = {
           unitId: prefab.id,
-          kitId: pickerKits.get(prefab.id) || Economy.baseKit(prefab.id) || prefab.weaponKits[0].id,
+          kitId: pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
         };
         renderDetail();
         byId("formationDetailKit").focus();
@@ -1890,7 +1786,7 @@ const Formation = (() => {
       byId("formationShareCode").focus();
     }
   };
-  function showInventoryDialog(title, text, units, choices) {
+  function showLicenseDialog(title, text, units, choices) {
     GameDialog.choose({
       title,
       message: text,
@@ -1904,7 +1800,7 @@ const Formation = (() => {
     });
   }
   async function replenish(entries, faction = group) {
-    const plan = Economy.productionPlan(entries);
+    const plan = Economy.licensePlan(entries);
     if (!plan.items.length) return true;
     // Only shortage-plan items participate in production checks or the purchase.
     // Stocked units never reach development validation, regardless of their unlock state.
@@ -1915,9 +1811,9 @@ const Formation = (() => {
       const originalGroup = group,
         originalIndex = index,
         originalDraft = JSON.stringify(draft);
-      showInventoryDialog(
-        "尚未开发，无法生产",
-        "存在尚未开发单位，无法生产，是否从当前编组移除？本次生产已中止。",
+      showLicenseDialog(
+        "尚未开发，无法购买许可",
+        "存在尚未开发单位，无法购买许可，是否从当前编组移除？本次购买已中止。",
         undeveloped,
         [
           ["取消", "cancelRemoveUndeveloped"],
@@ -1937,7 +1833,7 @@ const Formation = (() => {
                 if (undeveloped.includes(draft[i].unitId)) removeEntry(i);
               render();
               renderCatalog();
-              note("已移除尚未开发单位，请重新确认生产。");
+              note("已移除尚未开发单位，请重新确认购买。");
             },
           ],
         ],
@@ -1945,7 +1841,7 @@ const Formation = (() => {
       return false;
     }
     const unavailable = plan.items.filter((item) => {
-      const offer = Economy.catalog.offers[Economy.baseModel(item.unitId)];
+      const offer = Economy.licenseOffer(item.unitId);
       const prefab = Rules.catalog.prefabs.find((unit) => unit.id === item.unitId);
       return (
         !offer ||
@@ -1955,9 +1851,9 @@ const Formation = (() => {
       );
     });
     if (unavailable.length) {
-      showInventoryDialog(
-        "无法生产",
-        "以下单位无法生产，已中止本次生产：",
+      showLicenseDialog(
+        "无法购买许可",
+        "以下单位无法购买许可，已中止本次购买：",
         unavailable.map((item) => item.unitId),
         [["确认", "acknowledgeUnavailableUnits"]],
       );
@@ -1966,17 +1862,17 @@ const Formation = (() => {
     const originalEntries = JSON.stringify(entries),
       originalGroup = group,
       originalIndex = index;
-    const confirmed = await GameDialog.confirm("是否一键生产补齐库存不足的单位？", {
-      title: "一键生产",
+    const confirmed = await GameDialog.confirm("是否购买以下单位的永久部署许可？", {
+      title: "一键购买许可",
       items: [
         ...plan.items.map((item) => {
           const unit = Rules.catalog.prefabs.find((prefab) => prefab.id === item.unitId);
-          return unit.code + " " + I18n.text(unit.name) + " × " + item.quantity;
+          return unit.code + " " + I18n.text(unit.name) + " · 部署许可";
         }),
         I18n.text("资金") + "：" + formatNumber(plan.money),
         I18n.text("物资") + "：" + formatNumber(plan.supplies),
       ],
-      confirmText: "确认生产",
+      confirmText: "确认购买",
     });
     if (!confirmed) return false;
     // A confirmation authorizes exactly the displayed units and price, never a changed plan.
@@ -1984,37 +1880,37 @@ const Formation = (() => {
       group !== originalGroup ||
       index !== originalIndex ||
       JSON.stringify(entries) !== originalEntries ||
-      JSON.stringify(Economy.productionPlan(entries)) !== JSON.stringify(plan)
+      JSON.stringify(Economy.licensePlan(entries)) !== JSON.stringify(plan)
     ) {
-      note("编组或库存已变化，请重新确认生产。");
+      note("编组或许可已变化，请重新确认购买。");
       return false;
     }
     try {
-      const result = Economy.produceMissing(entries, faction);
+      const result = Economy.purchaseMissingLicenses(entries, faction);
       if (!result.ok) {
         if (result.reason === "unavailable")
-          showInventoryDialog("无法生产", "以下单位无法生产，已中止本次生产：", result.units, [
+          showLicenseDialog("无法购买许可", "以下单位无法购买许可，已中止本次购买：", result.units, [
             ["确认", "acknowledgeUnavailableUnits"],
           ]);
-        else note("货币不足，已取消生产。");
+        else note("货币不足，已取消购买。");
         return false;
       }
-      note("已按完整批次补齐单位库存。");
+      note("已获得所需单位的永久部署许可。");
       return true;
     } catch (error) {
-      note("生产失败：" + Economy.errorMessage(error));
+      note("许可购买失败：" + Economy.errorMessage(error));
       return false;
     }
   }
-  function checkInventory(entries, proceed) {
-    if (!Economy.productionPlan(entries).items.length) return proceed();
-    showInventoryDialog(
-      "单位库存不足",
-      "编组中存在库存不足的单位。强制准备后，缺货单位不会生成。",
+  function checkLicenses(entries, proceed) {
+    if (!Economy.licensePlan(entries).items.length) return proceed();
+    showLicenseDialog(
+      "单位未获得部署许可",
+      "编组中存在未获得部署许可的单位。强制准备后，未许可单位不会生成。",
       [],
       [
         ["取消", "cancelMissingStock"],
-        ["去往仓库（编组）", "openStockWarehouse", () => open()],
+        ["去往机库（编组）", "openStockWarehouse", () => open()],
         ["强制准备", "forceReadyWithoutStock", proceed],
       ],
     );
@@ -2467,7 +2363,7 @@ const Formation = (() => {
     byId("formationUnitsWorkspace").hidden = pilots;
     byId("formationPilotToolbar").hidden = !pilots;
     byId("formationPilotBudget").hidden = !pilots;
-    byId("produceMissingFormation").hidden = pilots || !Economy.productionPlan(draft).items.length;
+    byId("produceMissingFormation").hidden = pilots || !Economy.licensePlan(draft).items.length;
     byId("saveFormation").hidden = false;
     if (pilots) renderPilotRoster();
   }
@@ -2500,6 +2396,11 @@ const Formation = (() => {
     persist();
     render();
     renderPilotRoster();
+    // Refresh a submitted room squad after training or rank changes. The room
+    // otherwise retains the profile captured when the player last readied.
+    if (Net.active && Net.seat !== null && !Net.snapshot?.started &&
+        !Net.snapshot?.loadedSave && !ownPlayer()?.formationPreset)
+      Net.request("update_formation", { formation: current() });
     return clean;
   }
   function editPilot(p = null) {
@@ -2645,6 +2546,22 @@ const Formation = (() => {
     );
     const original = JSON.parse(pilotOriginal);
     const pendingPoints = original.points - pilotEdit.points;
+    const readyToUpgrade = PilotSystem.canUpgrade(pilotEdit);
+    upgradePilotButton.hidden = pilotIsNew || pilotEdit.level >= PilotSystem.maxLevel(pilotEdit);
+    upgradePilotButton.classList.toggle("pilot-skill-alert", readyToUpgrade);
+    upgradePilotButton.disabled = !readyToUpgrade || pendingPoints !== 0 ||
+      !Economy.affordable({ money: PilotSystem.upgradeCost(pilotEdit) });
+    upgradePilotButton.textContent = I18n.text("升职") + " · " + I18n.text("资金") + " " +
+      (PilotSystem.upgradeCost(pilotEdit) ?? "—");
+    demotePilotButton.hidden = pilotIsNew || pilotEdit.level === 0;
+    demotePilotButton.disabled = !!pilotEdit.needsRecruitment || pendingPoints !== 0 ||
+      PilotSystem.demotionCost(pilotEdit) === null ||
+      !Economy.affordable({ money: PilotSystem.demotionCost(pilotEdit) });
+    demotePilotButton.textContent = I18n.text("降职") + " · " + I18n.text("资金") + " " +
+      (PilotSystem.demotionCost(pilotEdit) ?? "—");
+    byId("createPilotConfirm").textContent = I18n.text("招募驾驶员") + " · " +
+      I18n.text("资金") + " " + PilotSystem.customRecruitmentCost;
+    byId("createPilotConfirm").disabled = !Economy.affordable({ money: PilotSystem.customRecruitmentCost });
     byId("pilotTrainingActions").hidden = !!pilotEdit.ace;
     byId("confirmPilotTraining").disabled = pendingPoints === 0;
     byId("cancelPilotTraining").disabled = pendingPoints === 0;
@@ -2691,6 +2608,52 @@ const Formation = (() => {
       stats.append(row);
     }
   }
+  const upgradePilotButton = element("button", "primary", "升职");
+  upgradePilotButton.id = "upgradePilot";
+  upgradePilotButton.type = "button";
+  byId("customPilotProgress").after(upgradePilotButton);
+  const demotePilotButton = element("button", "", "降职");
+  demotePilotButton.id = "demotePilot";
+  demotePilotButton.type = "button";
+  upgradePilotButton.after(demotePilotButton);
+  demotePilotButton.onclick = async () => {
+    if (!pilotEdit || pilotIsNew || demotePilotButton.disabled) return;
+    const original = pilotOriginal;
+    const cost = PilotSystem.demotionCost(pilotEdit);
+    if (!(await GameDialog.confirm(I18n.text("降职将重置已分配的强化点和所选技能，经验保留。是否继续？"), {
+      title: I18n.text("降职") + " · " + I18n.text("资金") + " " + cost,
+    }))) return;
+    if (!pilotEdit || pilotOriginal !== original || demotePilotButton.disabled) return;
+    try {
+      const clean = PilotSystem.demote(pilotEdit);
+      const next = { ...pilotStore, pilots: pilotStore.pilots.map((p) => p.id === clean.id ? clean : p) };
+      if (!Economy.transact({ money: cost }, {}, [[sharedPilotKey, JSON.stringify(next)]]))
+        return note("资金不足");
+      pilotStore = next;
+      pilotEdit = clean;
+      pilotOriginal = JSON.stringify(clean);
+      commitPilot(clean);
+      renderPilotStats();
+    } catch (error) { note(Economy.errorMessage(error)); }
+  };
+  upgradePilotButton.onclick = () => {
+    if (!pilotEdit || pilotIsNew || !PilotSystem.canUpgrade(pilotEdit)) return;
+    if (JSON.parse(pilotOriginal).points !== pilotEdit.points) return;
+    const cost = PilotSystem.upgradeCost(pilotEdit);
+    const clean = PilotSystem.upgrade(pilotEdit);
+    const next = { ...pilotStore, pilots: pilotStore.pilots.map((p) => p.id === clean.id ? clean : p) };
+    try {
+      if (!Economy.transact({ money: cost }, {}, [[sharedPilotKey, JSON.stringify(next)]]))
+        return note("资金不足");
+      pilotStore = next;
+      pilotEdit = clean;
+      pilotOriginal = JSON.stringify(clean);
+      commitPilot(clean);
+      renderPilotStats();
+    } catch (error) {
+      note(Economy.errorMessage(error));
+    }
+  };
   const resetTraining = element("button", "", "重置属性点");
   resetTraining.id = "resetPilotTraining";
   resetTraining.type = "button";
@@ -2763,8 +2726,17 @@ const Formation = (() => {
     renderPilotStats();
   };
   byId("createPilotConfirm").onclick = () => {
-    commitPilot(pilotEdit);
-    finishPilotEditor();
+    if (!pilotEdit || !pilotIsNew) return;
+    try {
+      const clean = PilotSystem.custom(pilotEdit);
+      const next = { ...pilotStore, pilots: [...pilotStore.pilots, clean] };
+      if (!Economy.transact({ money: PilotSystem.customRecruitmentCost }, {}, [[sharedPilotKey, JSON.stringify(next)]]))
+        return note("资金不足");
+      pilotStore = next;
+      pilotIsNew = false;
+      commitPilot(clean);
+      finishPilotEditor();
+    } catch (error) { note(Economy.errorMessage(error)); }
   };
   byId("changeCustomPilotPortrait").onclick = openPortraitPicker;
   byId("closePilotPortraitPicker").onclick = closePortraitPicker;
@@ -2851,7 +2823,7 @@ const Formation = (() => {
     ["防御", "每点降低0.25个百分点的承受伤害倍率；100点为100%，200点为75%。"],
     [
       "机动",
-      "以100点为基准，每多满50点增加1点额外基础AP和1格额外基础移动距离，每少满50点则各减少1。不影响回避。50点为−1，100点为0，150点为+1，200点为+2。",
+      "以100点为基准，每点使移动倍率变化0.5%、AP倍率变化0.25%。150点为125%移动、112.5% AP，200点为150%移动、125% AP。最终AP四舍五入；移动保留小数预算。不影响回避。",
     ],
     [
       "命中",
@@ -2923,7 +2895,7 @@ const Formation = (() => {
     unitTags,
     unitSummaryTags,
     replenish,
-    checkInventory,
+    checkLicenses,
     current,
     receivePilotAwards,
     exportPilotStores: () =>

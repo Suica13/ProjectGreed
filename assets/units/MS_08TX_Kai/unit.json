@@ -518,7 +518,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -613,7 +614,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 32500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1651,9 +1654,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.25,
       "changeHeldWeapon": true,
       "source": {
@@ -1755,7 +1756,11 @@
         }
       },
       "actionCost": 2,
-      "displayIndex": 1
+      "displayIndex": 1,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     }
   },
   "mechanics": [
@@ -1772,10 +1777,10 @@
       "cost": 0,
       "weapons": [
         "ZN_Shotgun",
-        "Common_Push_A",
         "Common_ArmGL",
         "ZN_MS_08TX_Kai_LegMS",
-        "ZN_HeatSword_Double_DBDF"
+        "ZN_HeatSword_Double_DBDF",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1804,7 +1809,7 @@
       "consumeAction": false,
       "enPercent": 25,
       "duration": 3,
-      "hpDrainPercent": 25,
+      "hpDrainPercent": 10,
       "enDrainPercent": 5,
       "formUnitId": "MS_08TX_Kai_EXAM",
       "formKits": {
@@ -1828,6 +1833,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MS_08TX_Kai_LegMS",
@@ -1852,11 +1863,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

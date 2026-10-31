@@ -154,7 +154,7 @@
   "stats": {
     "hp": 4000,
     "en": 175.0,
-    "move": 9,
+    "move": 8,
     "mobility": 135.0,
     "cost": 50,
     "counterLimit": 1,
@@ -185,7 +185,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 170
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -278,7 +279,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 3000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 9
   },
   "presentation": {
     "shield": false,
@@ -1197,6 +1200,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_DoubleVulcan_Gattle",
@@ -1236,11 +1245,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

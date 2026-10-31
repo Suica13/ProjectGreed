@@ -35,7 +35,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 100
   },
   "materials": {
     "icon": "RGM_79.png",
@@ -1784,7 +1785,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 21000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6
   },
   "description": "联邦军主力泛用型MS",
   "localization": {

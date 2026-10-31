@@ -185,13 +185,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 106500,
+    "hp": 65500,
     "en": 15000.0,
     "move": 7,
-    "mobility": 50.0,
+    "mobility": 57.5,
     "cost": 750,
     "counterLimit": 1,
-    "accuracy": 100.0,
+    "accuracy": 71.5,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "ground",
@@ -305,7 +305,9 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 90,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -401,9 +403,15 @@
       "radar": 550.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 85000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 0.35,
+    "mobilityMoveTarget": 7,
+    "shipHullBeforeReduction": 85000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1.1,
+    "shipFactionAccuracyMultiplier": 1.1,
+    "shipFactionEvasionMultiplier": 1.15
   },
   "presentation": {
     "shield": false,
@@ -442,7 +450,7 @@
       "type": "shell",
       "min": 1,
       "max": 2,
-      "hit": 100.0,
+      "hit": 125.0,
       "en": 20.0,
       "sourceName": "ColumbusClassKai_Turret_AA",
       "sourceHit": 125.0,
@@ -450,10 +458,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 325.0,
+      "damagePerShot": 250,
       "damageComponents": {
-        "shell": 250.0,
-        "shellAP": 75.0
+        "shell": 200,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -464,7 +472,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -472,7 +481,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -480,7 +490,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -488,7 +499,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -496,7 +508,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -504,7 +517,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -512,7 +526,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -520,7 +535,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -528,7 +544,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -536,7 +553,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -544,7 +562,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -552,7 +571,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -560,7 +580,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -568,7 +589,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -576,7 +598,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -584,7 +607,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -592,7 +616,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -600,7 +625,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -608,7 +634,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -616,7 +643,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -624,7 +652,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -632,7 +661,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -640,7 +670,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -648,7 +679,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -656,7 +688,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -664,7 +697,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -672,7 +706,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -680,7 +715,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -688,7 +724,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -696,7 +733,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -704,7 +742,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -712,7 +751,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -720,7 +760,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -728,7 +769,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -736,7 +778,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -744,7 +787,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -752,7 +796,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -760,7 +805,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -768,7 +814,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_L2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 0,
@@ -776,7 +823,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "ColumbusClassKai_Turret_AA_R2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -928,6 +976,17 @@
       "category": "machine_gun",
       "rangeRole": "ship_anti_air",
       "actionCost": 2,
+      "localization": {
+        "zh": {
+          "name": "对空机枪"
+        },
+        "en": {
+          "name": "Anti-Air Machine Gun"
+        },
+        "ja": {
+          "name": "対空機銃"
+        }
+      },
       "shipAntiAirBeforeReduction": [
         {
           "shots": 1,
@@ -1250,19 +1309,14 @@
           "delay": 0.0
         }
       ],
-      "shipHitBeforeReduction": 125.0,
-      "shipAccuracyMultiplier": 0.8,
-      "localization": {
-        "zh": {
-          "name": "对空机枪"
-        },
-        "en": {
-          "name": "Anti-Air Machine Gun"
-        },
-        "ja": {
-          "name": "対空機銃"
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 325.0,
+        "damageComponents": {
+          "shell": 250.0,
+          "shellAP": 75.0
         }
-      }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [

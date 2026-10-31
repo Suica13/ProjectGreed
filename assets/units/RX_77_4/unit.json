@@ -446,7 +446,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -539,7 +540,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 40000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1828,11 +1831,11 @@
       "cost": 100,
       "weapons": [
         "EF_RX_77_2_BR",
-        "Common_Push_A",
         "EF_RX_77_4_BeamCannon",
         "Common_Grenade_B_Burned",
         "Common_Cqb_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -1841,11 +1844,11 @@
       "cost": 0,
       "weapons": [
         "EF_100mmMG",
-        "Common_Push_A",
         "EF_RX_77_4_BeamCannon",
         "Common_Grenade_B_Burned",
         "Common_Cqb_BF_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

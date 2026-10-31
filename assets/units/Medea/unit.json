@@ -373,7 +373,8 @@
       "antiDetectAqua": false
     },
     "actionPoints": 5,
-    "deployed": false
+    "deployed": false,
+    "speed": 145
   },
   "attackBonuses": {
     "melee": 0,
@@ -473,7 +474,9 @@
       "actionCost": 2,
       "usesPerOwnTurn": 1
     },
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.0,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": false,
@@ -823,7 +826,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     },
     {
       "id": "Deploy",

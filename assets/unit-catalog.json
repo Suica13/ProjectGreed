@@ -367,7 +367,10 @@
     "maps/military_base_5v5.json",
     "maps/great_plains_5v5.json",
     "maps/outer_orbit_5v5.json",
-    "maps/coastal_supply_2v2.json"
+    "maps/coastal_supply_2v2.json",
+    "maps/a_baoa_qu_space_3v3.json",
+    "maps/colony_interior_3v3.json",
+    "maps/mass_driver_facility_3v3.json"
   ],
   "defaultMap": "frontier_1v1"
 }

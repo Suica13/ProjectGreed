@@ -556,7 +556,7 @@
       "rubble": 75
     },
     "ship": false,
-    "actionPoints": 5,
+    "actionPoints": 6,
     "sensors": {
       "sight": 8,
       "radar": 13.88888888888889,
@@ -566,7 +566,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 140
   },
   "attackBonuses": {
     "melee": 50.0,
@@ -666,7 +667,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 40000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -2466,12 +2469,12 @@
       "cost": 0,
       "weapons": [
         "EF_GroundTypeBeamRifle_Blue",
-        "Common_Push_A",
         "EF_RX_79_BD_ChestMS_Line",
         "EF_RX_79_BD_ChestMG",
         "EF_BeamSaber_AF_A",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_F"
+        "EF_BeamSaber_F",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2506,6 +2509,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": false,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_RX_79_BD_ChestMS_Line",
@@ -2553,11 +2562,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": false,
-    "refitFrom": []
-  }
+  ]
 }

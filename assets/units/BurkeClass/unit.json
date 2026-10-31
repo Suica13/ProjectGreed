@@ -107,13 +107,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 37500,
+    "hp": 23000,
     "en": 1000.0,
     "move": 7,
-    "mobility": 75.0,
+    "mobility": 86.25,
     "cost": 250,
     "counterLimit": 1,
-    "accuracy": 110.0,
+    "accuracy": 78.65,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "naval",
@@ -241,7 +241,9 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 90,
+    "accuracyMultiplier": 0.65
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -337,8 +339,14 @@
       "radar": 500.0,
       "antiDetection": -200.0
     },
-    "v17BaseHp": 30000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 0.5,
+    "mobilityMoveTarget": 7,
+    "shipHullBeforeReduction": 30000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1.1,
+    "shipFactionAccuracyMultiplier": 1.1,
+    "shipFactionEvasionMultiplier": 1.15
   },
   "presentation": {
     "shield": false,
@@ -377,7 +385,7 @@
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 68.0,
+      "hit": 85.0,
       "en": 80.0,
       "sourceName": "BurkeClass_Turret_AMS",
       "sourceHit": 85.0,
@@ -385,9 +393,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 3500.0,
+      "damagePerShot": 2625,
       "damageComponents": {
-        "shell": 3500.0
+        "shell": 2625
       },
       "hitsPerShot": 1,
       "attack": {
@@ -398,7 +406,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_AMS_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -406,7 +415,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_AMS_M1",
-            "delay": 1.5
+            "delay": 1.5,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -512,8 +522,6 @@
         "actions": []
       },
       "actionCost": 2,
-      "shipHitBeforeReduction": 85.0,
-      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "反MS导弹"
@@ -524,14 +532,21 @@
         "ja": {
           "name": "対MSミサイル"
         }
-      }
+      },
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 3500.0,
+        "damageComponents": {
+          "shell": 3500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "BurkeClass_Turret_MS": {
       "name": "舰载导弹发射器",
       "type": "shell",
       "min": 3,
       "max": 4,
-      "hit": 80.0,
+      "hit": 100.0,
       "en": 72.0,
       "sourceName": "BurkeClass_Turret_MS",
       "sourceHit": 100.0,
@@ -539,9 +554,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 1500.0,
+      "damagePerShot": 1125,
       "damageComponents": {
-        "shell": 1500.0
+        "shell": 1125
       },
       "hitsPerShot": 1,
       "attack": {
@@ -552,7 +567,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MS_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -560,7 +576,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -568,7 +585,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -576,7 +594,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -584,7 +603,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -592,7 +612,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MS_M1",
-            "delay": 0.75
+            "delay": 0.75,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -679,6 +700,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -698,8 +723,13 @@
         "actions": []
       },
       "actionCost": 2,
-      "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 1500.0,
+        "damageComponents": {
+          "shell": 1500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "BurkeClass_Turret_CN": {
       "name": "加农炮",
@@ -714,9 +744,9 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 4500.0,
+      "damagePerShot": 3375,
       "damageComponents": {
-        "shell": 4500.0
+        "shell": 3375
       },
       "hitsPerShot": 1,
       "attack": {
@@ -727,7 +757,8 @@
             "partBreakModifier": 1.25,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_CN_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -813,6 +844,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -832,8 +867,6 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 75.0,
-      "shipAccuracyMultiplier": 0.8,
       "localization": {
         "zh": {
           "name": "加农炮"
@@ -844,14 +877,22 @@
         "ja": {
           "name": "カノン砲"
         }
-      }
+      },
+      "shipExplosiveAccuracyMultiplier": 0.8,
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 4500.0,
+        "damageComponents": {
+          "shell": 4500.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     },
     "BurkeClass_Turret_MG": {
       "name": "舰载机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
-      "hit": 80.0,
+      "hit": 100.0,
       "en": 10.0,
       "sourceName": "BurkeClass_Turret_MG",
       "sourceHit": 100.0,
@@ -859,10 +900,10 @@
       "hitBonus": 0,
       "slot": "primary",
       "clip": null,
-      "damagePerShot": 250.0,
+      "damagePerShot": 200,
       "damageComponents": {
-        "shell": 200.0,
-        "shellAP": 50.0
+        "shell": 150,
+        "shellAP": 50
       },
       "hitsPerShot": 1,
       "attack": {
@@ -873,7 +914,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -881,7 +923,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -889,7 +932,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -897,7 +941,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -905,7 +950,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -913,7 +959,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -921,7 +968,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -929,7 +977,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -937,7 +986,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -945,7 +995,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -953,7 +1004,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -961,7 +1013,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -969,7 +1022,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -977,7 +1031,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -985,7 +1040,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -993,7 +1049,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1001,7 +1058,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1009,7 +1067,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1017,7 +1076,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M1",
-            "delay": 0.15
+            "delay": 0.15,
+            "shipDamageBeforeReduction": {}
           },
           {
             "shots": 1,
@@ -1025,7 +1085,8 @@
             "partBreakModifier": 1.0,
             "requiredParts": [],
             "moduleId": "BurkeClass_Turret_MG_M2",
-            "delay": 0.0
+            "delay": 0.0,
+            "shipDamageBeforeReduction": {}
           }
         ],
         "startAnimation": null
@@ -1125,6 +1186,10 @@
         "large": {
           "damage": 1.0,
           "accuracy": 1.0
+        },
+        "medium": {
+          "damage": 1,
+          "accuracy": 0.75
         }
       },
       "nativeTiming": {
@@ -1144,8 +1209,14 @@
         "actions": []
       },
       "actionCost": 3,
-      "shipHitBeforeReduction": 100.0,
-      "shipAccuracyMultiplier": 0.8
+      "shipDamageBeforeReduction": {
+        "damagePerShot": 250.0,
+        "damageComponents": {
+          "shell": 200.0,
+          "shellAP": 50.0
+        }
+      },
+      "shipDamageMultiplier": 0.75
     }
   },
   "mechanics": [

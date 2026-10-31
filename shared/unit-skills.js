@@ -46,7 +46,9 @@ const UnitSkills = (() => {
           skill.actionCost !== 1 ||
           !Array.isArray(skill.requiredParts) ||
           !skill.id ||
-          !skill.name
+          !skill.name ||
+          (skill.airAdaptability !== undefined && (!Number.isFinite(skill.airAdaptability) ||
+            skill.airAdaptability < 0 || skill.airAdaptability > 100))
         )
           throw Error("Invalid flight skill: " + label);
         continue;
@@ -380,8 +382,8 @@ const UnitSkills = (() => {
         pilot: unit.pilot,
         ...(unit.pilotBuffs ? { pilotBuffs: structuredClone(unit.pilotBuffs) } : {}),
         ...(unit.skillReadyRound ? { skillReadyRound: { ...unit.skillReadyRound } } : {}),
-        ...(unit.inventoryUnitId
-          ? { inventoryUnitId: unit.inventoryUnitId, inventoryModel: unit.inventoryModel }
+        ...(unit.deploymentUnitId
+          ? { deploymentUnitId: unit.deploymentUnitId, deploymentModel: unit.deploymentModel }
           : {}),
         ...(config.inheritResources && unit.burning ? { burning: { ...unit.burning } } : {}),
         ...(config.inheritResources && unit.apPenaltyNextTurn
@@ -392,6 +394,7 @@ const UnitSkills = (() => {
         angle: unit.angle,
         skillUses: { ...skillUses },
         weaponUses: { ...unit.weaponUses },
+        ...(unit.pilotWeaponTurnUses ? { pilotWeaponTurnUses: { ...unit.pilotWeaponTurnUses } } : {}),
         brokenParts: config.repairAllParts ? {} : { ...unit.brokenParts },
         moved: consumeAction || unit.moved,
         acted: consumeAction || unit.acted || remainingAP === 0,
@@ -609,9 +612,16 @@ const UnitSkills = (() => {
         throw Error("技能不可用，或目标不在合法范围内");
       const skill = of(unit).find((s) => s.id === skillId);
       if (skill.type === "pilot_buff") {
+        const previousBudget = modelOf(unit).actionPoints ?? 5;
+        const remainingAP = unit.actionPoints ?? previousBudget;
         const expiresRound = game.round + skill.durationTurns * 2;
         unit.en -= skill.enCost;
         unit.pilotBuffs = { ...unit.pilotBuffs, [skill.id]: { expiresRound } };
+        const budgetChange = (modelOf(unit).actionPoints ?? 5) - previousBudget;
+        if (budgetChange) {
+          unit.actionPoints = Math.max(0, remainingAP + budgetChange);
+          unit.acted = unit.actionPoints <= 0;
+        }
         unit.skillReadyRound = {
           ...unit.skillReadyRound,
           [skill.id]: expiresRound + skill.cooldownTurns * 2,
@@ -677,7 +687,7 @@ const UnitSkills = (() => {
             (!target.embarked || target.embarked.exposed) &&
             sensors.distance(unit, target) <= skill.radius,
         );
-        for (const target of affected) target.apPenaltyNextTurn = 1;
+        for (const target of affected) target.apPenaltyNextTurn = 0.25;
         unit.en -= skill.enCost;
         unit.actionPoints =
           (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;

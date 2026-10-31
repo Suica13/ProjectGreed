@@ -608,7 +608,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -703,7 +704,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 24500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.85,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": true,
@@ -2087,9 +2090,9 @@
       "cost": 0,
       "weapons": [
         "EF_90mmMG",
-        "Common_Push_A",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2098,9 +2101,9 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazookaKai",
-        "Common_Push_A",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2109,9 +2112,9 @@
       "cost": 75,
       "weapons": [
         "EF_BeamSprayGunB2",
-        "Common_Push_A",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ],
       "localization": {
         "zh": {
@@ -2131,9 +2134,9 @@
       "cost": 100,
       "weapons": [
         "EF_LongRifle",
-        "Common_Push_A",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ],
       "localization": {
         "zh": {

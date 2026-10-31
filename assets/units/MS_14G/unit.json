@@ -583,7 +583,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 130
   },
   "attackBonuses": {
     "melee": 40.0,
@@ -677,7 +678,9 @@
     "unitLevel": 2500.0,
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 31000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -1016,7 +1019,7 @@
       "name": "光束狙击枪",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 125.0,
       "en": 75.0,
       "sourceName": "ZN_MS_14G_BR_Sniper_Aim",
@@ -1748,9 +1751,9 @@
       "cost": 100,
       "weapons": [
         "ZN_MS_14G_BR",
-        "Common_Push_A",
         "ZN_MS_14G_BR_Sniper_Aim",
-        "ZN_TwinBeamSword_BF_B"
+        "ZN_TwinBeamSword_BF_B",
+        "Common_Push_A"
       ]
     },
     {
@@ -1759,9 +1762,9 @@
       "cost": 50,
       "weapons": [
         "ZN_360mmBazooka",
-        "Common_Push_A",
         "ZN_MS_14G_BR_Sniper_Aim",
-        "ZN_TwinBeamSword_BF_B"
+        "ZN_TwinBeamSword_BF_B",
+        "Common_Push_A"
       ]
     },
     {
@@ -1770,9 +1773,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MMP80MG_Kai",
-        "Common_Push_A",
         "ZN_MS_14G_BR_Sniper_Aim",
-        "ZN_TwinBeamSword_BF_B"
+        "ZN_TwinBeamSword_BF_B",
+        "Common_Push_A"
       ]
     }
   ],

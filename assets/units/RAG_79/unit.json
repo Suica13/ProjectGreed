@@ -628,7 +628,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -723,7 +724,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 20000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1458,9 +1461,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.0,
       "changeHeldWeapon": false,
       "source": {
@@ -1585,7 +1586,11 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_RAG_79_MS_L": {
       "name": "导弹发射器",
@@ -1653,9 +1658,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.0,
       "changeHeldWeapon": false,
       "source": {
@@ -1783,7 +1786,11 @@
         ]
       },
       "category": "missile",
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "EF_BeamPickaxe_B": {
       "name": "近身格斗",
@@ -1954,10 +1961,10 @@
       "cost": 50,
       "weapons": [
         "EF_AquaMissileLauncher",
-        "Common_Push_A",
         "EF_RAG_79_Anchor_L",
         "EF_RAG_79_MS",
-        "EF_BeamPickaxe_B"
+        "EF_BeamPickaxe_B",
+        "Common_Push_A"
       ]
     },
     {
@@ -1966,10 +1973,10 @@
       "cost": 0,
       "weapons": [
         "EF_HarpoonGun",
-        "Common_Push_A",
         "EF_RAG_79_Anchor_L",
         "EF_RAG_79_MS",
-        "EF_BeamPickaxe_B"
+        "EF_BeamPickaxe_B",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2016,6 +2023,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_RAG_79_MS",
@@ -2027,24 +2040,19 @@
           "requiredParts": [
             "rightArm"
           ],
-          "limb": null
+          "limb": "rightArm"
         },
         {
           "id": "EF_RAG_79_MS_L",
           "weaponId": "EF_RAG_79_MS_L",
           "muzzleIndex": 1,
           "requiredParts": [
-            "rightArm"
+            "leftArm"
           ],
-          "limb": null
+          "limb": "leftArm"
         }
-      ]
+      ],
+      "fireMode": "simultaneous"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

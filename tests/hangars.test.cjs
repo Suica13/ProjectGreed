@@ -141,7 +141,7 @@ test("carrier loss unloads cargo once, applies native 25% loss and never stacks 
   assert.equal(new Set(events.map((e) => e.x + "," + e.y)).size, 3);
   assert.equal(G.hangars.evacuate(g).length, 0);
   assert.equal(u.acted, false);
-  assert.equal(u.actionPoints, Math.round(G.actionBudget(u) * 0.75));
+  assert.equal(u.actionPoints, Math.round(G.actionBudget(u) * 0.5));
 });
 test("blocked emergency exits kill cargo and do not keep the defeated team alive", () => {
   const { g, carrier, u, h } = fixture(true);
@@ -537,4 +537,17 @@ test("Gogg chest diffusion beams retain beam payload and localized confirmed nam
     assert.equal(w.localization.en.name,"Chest Diffusion Beam Cannon");
   }
   assert.equal(p.weapons.ZN_MSM_03_SMS.type,"shell");
+});
+
+for (const ap of [0,1,3,5,8]) test(`emergency evacuation halves remaining AP once with rounding: ${ap}`, () => {
+  const {g,carrier,u,h}=fixture(true);
+  G.hangars.embark(g,u,carrier,h.id);
+  u.actionPoints=ap;
+  carrier.hp=0;
+  G.hangars.evacuate(g);
+  assert(u.hp>0);
+  assert.equal(u.actionPoints,Math.round(ap*.5));
+  const remaining=u.actionPoints;
+  G.hangars.evacuate(g);
+  assert.equal(u.actionPoints,remaining);
 });

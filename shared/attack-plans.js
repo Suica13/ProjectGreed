@@ -35,8 +35,7 @@ function createAttackPlanner(rules, randomId) {
     )
       throw Error("目标、武器、射程或资源不满足条件");
     const weapons = Array.isArray(weapon) ? weapon : [weapon];
-    const aimCell = target.groundTarget ? undefined : target.aimCell ?? weapons[0]?.aimCell ??
-      rules.cells(target).find(cell => weapons.every(w => rules.inRange(attacker, target, {...w, aimCell:cell})));
+    const aimCell = target.groundTarget ? undefined : rules.attackAimCell(room.game, attacker, target, weapons);
     if (!target.groundTarget && !aimCell) throw Error("没有所有所选武器均可攻击的目标格");
     if (aimCell) target = {...target, aimCell};
     const budget = rules.attackQueue(room.game, attacker, target, weapons);
@@ -243,6 +242,7 @@ function createAttackPlanner(rules, randomId) {
           target: enemy ? occupant.id : null,
           aimCell: enemy ? cell : undefined,
           shotIndices: [shot],
+          turnUseContinuation: index > 0,
           energySpent: index === 0 ? weapon.en : 0,
           impactCell: cell,
           noCounter: true,
@@ -415,21 +415,36 @@ function createAttackPlanner(rules, randomId) {
     room.responses = [];
     room.combatBatch = [];
     const executions = choices.flatMap((choice) =>
-      (choice.intent.attacks || [choice.intent]).map((intent) => ({ ...choice, intent })),
+      (choice.intent.attacks || [choice.intent]).map((intent) => ({
+        ...choice,
+        intent,
+      })),
     );
-    executions.push(...(room.emptyImpacts || []).map((intent) => ({ intent, response: "evade" })));
+    executions.push(
+      ...(room.emptyImpacts || []).map((intent) => ({
+        intent,
+        response: "evade",
+      })),
+    );
     room.emptyImpacts = [];
     executions.sort((a, b) => (a.intent.order || 0) - (b.intent.order || 0));
     const attackedPairs = new Set();
-    for (const choice of executions) {
+    function executeAttack(choice, wave) {
       const { intent } = choice;
       const attacker = find(room, intent.attacker),
         target = find(room, intent.target);
       const weapon = attacker && rules.eventWeapon(attacker, intent);
       const validationWeapon =
-        intent.freeFollowup && weapon ? { ...weapon, en: 0, maxUses: undefined } : weapon;
-      if (attacker && weapon && intent.impactCell && (!target || target.hp <= 0)) {
-        if (attacker.hp <= 0 || attacker.en < validationWeapon.en) continue;
+        intent.freeFollowup && weapon
+          ? { ...weapon, en: 0, maxUses: undefined }
+          : weapon;
+      if (
+        attacker &&
+        weapon &&
+        intent.impactCell &&
+        (!target || target.hp <= 0)
+      ) {
+        if (attacker.hp <= 0 || attacker.en < validationWeapon.en) return;
         const ghost = {
           ...JSON.parse(JSON.stringify(attacker)),
           id: "impact-" + randomId(),
@@ -439,11 +454,15 @@ function createAttackPlanner(rules, randomId) {
           shield: 0,
           visualOnly: true,
         };
-        const before = Object.fromEntries([attacker, ghost].map((u) => [u.id, u.hp]));
+        const before = Object.fromEntries(
+          [attacker, ghost].map((u) => [u.id, u.hp]),
+        );
         const actors = JSON.parse(JSON.stringify([attacker, ghost]));
         attacker.en -= validationWeapon.en;
+        rules.recordPilotWeaponUse(attacker, validationWeapon);
         if (Number.isInteger(validationWeapon.maxUses))
-          (attacker.weaponUses ||= {})[weapon.id] = (attacker.weaponUses[weapon.id] || 0) + 1;
+          (attacker.weaponUses ||= {})[weapon.id] =
+            (attacker.weaponUses[weapon.id] || 0) + 1;
         attacker.acted = true;
         delete attacker.plan;
         const event = {
@@ -484,10 +503,17 @@ function createAttackPlanner(rules, randomId) {
           actors,
           before,
           events: [event],
+          combatStage: "attack",
+          combatWave: wave,
+          attackQueue: {
+            attacker: attacker.id,
+            index: intent.queueIndex ?? 0,
+            length: intent.queueLength ?? 1,
+          },
         };
         room.combats.push(battle);
         room.combatBatch.push(battle);
-        continue;
+        return;
       }
       if (
         room.game.winner !== null ||
@@ -496,11 +522,13 @@ function createAttackPlanner(rules, randomId) {
         !weapon ||
         !rules.canAttack(room.game, attacker, target, validationWeapon)
       )
-        continue;
+        return;
       room.pending = { ...intent, id: randomId() };
       const battle = respond(room, room.pending.id, choice.response, [], false);
       battle.combatStage = "attack";
-      if (!intent.noCounter) attackedPairs.add(intent.target + ":" + intent.attacker);
+      battle.combatWave = wave;
+      if (!intent.noCounter)
+        attackedPairs.add(intent.target + ":" + intent.attacker);
       battle.attackQueue = {
         attacker: intent.attacker,
         index: intent.queueIndex ?? 0,
@@ -508,45 +536,137 @@ function createAttackPlanner(rules, randomId) {
       };
       room.combatBatch.push(battle);
     }
-    // No counter may affect a later offensive action in the same batch.
-    for (const choice of choices) {
-      if (choice.response !== "counter" || room.game.winner !== null) continue;
-      const defender = find(room,choice.intent.target);
-      if (!defender || defender.hp <= 0) continue;
-      const orders = choice.counterOrders || [{targetId:choice.counterTargetId || choice.intent.attacker,
-        weaponIds:choice.counterIds || [choice.counterId]}];
-      const live = [];
-      for (const order of orders) {
-        if (!attackedPairs.has(defender.id + ":" + order.targetId)) continue;
-        for (const id of order.weaponIds) {
-          const next = {targetId:order.targetId,weaponIds:[id]};
-          try { rules.counterPlan(room.game,defender,[...live,next]); live.push(next); }
-          catch {}
+    const counterRuns = choices
+      .filter((choice) => choice.response === "counter")
+      .map((choice) => {
+        const defender = find(room, choice.intent.target);
+        const orders = choice.counterOrders || [
+          {
+            targetId: choice.counterTargetId || choice.intent.attacker,
+            weaponIds: choice.counterIds || [choice.counterId],
+          },
+        ];
+        return {
+          defender,
+          entries: orders.flatMap((order) =>
+            order.weaponIds.map((id) => ({
+              targetId: order.targetId,
+              weaponIds: [id],
+            })),
+          ),
+          next: 0,
+          progress: {
+            remaining: defender ? rules.counterActionBudget(defender) : 0,
+            started: false,
+            initialCount: defender?.counterCount ?? 0,
+            initialTarget: defender?.counterTargetId,
+          },
+        };
+      });
+    function executeCounter(run, wave) {
+      const { defender, progress } = run;
+      if (!defender || defender.hp <= 0 || room.game.winner !== null) return;
+      while (run.next < run.entries.length) {
+        const order = run.entries[run.next];
+        if (!attackedPairs.has(defender.id + ":" + order.targetId)) {
+          // Do not counter a later target before it has actually attacked this defender.
+          const future = executions.some(
+            (choice) =>
+              choice.intent.attacker === order.targetId &&
+              choice.intent.target === defender.id &&
+              !choice.intent.noCounter &&
+              (choice.intent.queueIndex ?? 0) > wave,
+          );
+          if (future) return;
+          run.next++;
+          continue;
         }
-      }
-      if (!live.length) continue;
-      const attacker = find(room,live[0].targetId);
-      const counterActors = new Set([defender, ...live.map(order => find(room,order.targetId))]);
-      for (const order of live) {
-        const target = find(room, order.targetId);
-        for (const id of order.weaponIds) {
-          const weapon = rules.modelOf(defender).weapons.find(w => w.id === id);
-          if (weapon?.special?.type !== "blast") continue;
-          const impact = rules.attackCells(defender, target, weapon)[0] || target;
+        run.next++;
+        const attacker = find(room, order.targetId);
+        const weapon = rules
+          .modelOf(defender)
+          .weapons.find((w) => w.id === order.weaponIds[0]);
+        if (
+          !attacker ||
+          attacker.hp <= 0 ||
+          !weapon ||
+          rules.actionCost(weapon) > progress.remaining
+        )
+          continue;
+        const counterActors = new Set([defender, attacker]);
+        if (weapon.special?.type === "blast") {
+          const impact =
+            rules.attackCells(defender, attacker, weapon)[0] || attacker;
           for (const victim of room.game.units)
-            if (victim.team !== defender.team && rules.onMap(victim) &&
-                rules.blastContains(impact, victim, weapon.special.radius, weapon.special.shape))
+            if (
+              victim.team !== defender.team &&
+              rules.onMap(victim) &&
+              rules.blastContains(
+                impact,
+                victim,
+                weapon.special.radius,
+                weapon.special.shape,
+              )
+            )
               counterActors.add(victim);
         }
+        const actors = JSON.parse(JSON.stringify([...counterActors]));
+        const before = Object.fromEntries(
+          room.game.units.map((unit) => [unit.id, unit.hp]),
+        );
+        let events;
+        try {
+          events = rules.counter(
+            room.game,
+            defender,
+            attacker,
+            [],
+            [order],
+            progress,
+          );
+        } catch {
+          continue;
+        } // Casualties/parts/EN may invalidate a previously selected counter.
+        if (!events.length) continue;
+        const battle = {
+          id: randomId(),
+          matchId: room.matchId,
+          a: defender.id,
+          b: attacker.id,
+          actors,
+          before,
+          events,
+          combatStage: "counter",
+          combatWave: wave,
+          attackQueue: {
+            attacker: defender.id,
+            index: run.next - 1,
+            length: run.entries.length,
+          },
+        };
+        room.combats.push(battle);
+        room.combats = room.combats.slice(-128);
+        room.combatBatch.push(battle);
+        return; // One weapon use per surviving defender in each counter wave.
       }
-      const actors = JSON.parse(JSON.stringify([...counterActors]));
-      const before = Object.fromEntries(room.game.units.map(unit => [unit.id,unit.hp]));
-      const events = rules.counter(room.game,defender,attacker,[],live);
-      const battle = { id:randomId(), matchId:room.matchId, a:defender.id, b:attacker.id,
-        actors, before, events, combatStage:"counter" };
-      room.combats.push(battle);
-      room.combats = room.combats.slice(-128);
-      room.combatBatch.push(battle);
+    }
+    const attackWaves = executions.reduce(
+      (n, choice) => Math.max(n, (choice.intent.queueIndex ?? 0) + 1),
+      0,
+    );
+    const counterWaves = counterRuns.reduce(
+      (n, run) => Math.max(n, run.entries.length),
+      0,
+    );
+    // Additional rounds cover defenders whose first incoming attack belongs to a later wave.
+    for (
+      let wave = 0;
+      wave < attackWaves + counterWaves && room.game.winner === null;
+      wave++
+    ) {
+      for (const choice of executions)
+        if ((choice.intent.queueIndex ?? 0) === wave) executeAttack(choice, wave);
+      for (const run of counterRuns) executeCounter(run, wave);
     }
     room.pending = null;
     for (const choice of executions) {

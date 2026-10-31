@@ -18,20 +18,20 @@ test("unit mobility has independent 100-point thresholds and stacks with pilot m
     const bonus = Math.trunc((p.stats.speed - 100) / 50);
     for (const m of Object.values(catalog.models).filter(m => m.prefabId === p.id)) {
       assert.equal(m.move, p.stats.deployed ? 0 : p.stats.move + bonus, ref);
-      assert.equal(m.actionPoints, (p.stats.actionPoints ?? 5) + bonus, ref);
+      assert.equal(m.actionPoints, p.stats.actionPoints ?? 5, ref);
       assert.equal(m.mobility, p.stats.mobility, "reaction is unchanged");
     }
   }
   const id = Object.keys(G.models).find(id => G.models[id].prefabId === "RGM_79");
   const original = G.models[id];
-  const base = {...original, speed: 200, move: original.move + 2, actionPoints: original.actionPoints + 2};
+  const base = {...original, speed: 200, move: original.move + 2, actionPoints: original.actionPoints};
   G.models[id] = base;
   try {
     const unit = {id:"speed-check",model:id, x:10,y:10,hp:base.hp,
       pilot:{stats:{...G.pilots.baseStats(),speed:150}}};
     const model = G.modelOf(unit);
-    assert.equal(model.move, original.move + 3);
-    assert.equal(G.actionBudget(unit), original.actionPoints + 3);
+    assert.equal(model.move, base.move * 1.25);
+    assert.equal(G.actionBudget(unit), Math.round(original.actionPoints * 1.125));
     assert.equal(model.mobility, original.mobility);
     assert.equal(model.pilotModifiers.reaction, 1);
   } finally { G.models[id] = original; }

@@ -12,8 +12,8 @@ test('all native deployment forms transform back, preserve resources and prohibi
 test('hangar maintenance restores destroyed shields and caps partial repair',()=>{
  const {g,u}=world('Medea');const passenger=structuredClone(g.units[1]);passenger.id='cargo';passenger.team=0;passenger.ownerSeat=0;passenger.embarked={carrierId:u.id,hangarId:G.modelOf(u).hangars[0].id};passenger.shield=0;g.units.push(passenger);G.end(g);G.end(g);const max=G.modelOf(passenger).shield.hp;assert(max>0);assert.equal(passenger.shield,Math.round(max*.25));passenger.shield=max-1;G.end(g);G.end(g);assert.equal(passenger.shield,max);
 });
-test('pilot speed gives integer AP and movement without evasion scaling, including first turn',()=>{
- const {g,u}=world();for(const speed of [0,1,49,50,51,99,100,149,150,200]){u.pilot={stats:{...G.pilots.baseStats(),speed}};const m=G.modelOf(u),base=G.models[u.model];assert.equal(m.move,base.move+Math.trunc((speed-100)/50));assert.equal(G.actionBudget(u),(base.actionPoints||5)+Math.trunc((speed-100)/50));assert.equal(m.pilotModifiers.reaction,1);G.end(g);G.end(g);assert.equal(u.actionPoints,G.actionBudget(u));}
+test('pilot speed scales movement and AP without affecting evasion, including first turn',()=>{
+ const {g,u}=world();for(const speed of [0,1,49,50,51,99,100,149,150,200]){u.pilot={stats:{...G.pilots.baseStats(),speed}};const m=G.modelOf(u),base=G.models[u.model];assert.equal(m.move,Math.max(1,base.move*Math.max(.5,1+(speed-100)*.005)));assert.equal(G.actionBudget(u),Math.round((base.actionPoints||5)*Math.max(.5,1+(speed-100)*.0025)));assert.equal(m.pilotModifiers.reaction,1);G.end(g);G.end(g);assert.equal(u.actionPoints,G.actionBudget(u));}
  const pilot=G.pilots.createCustom('custom-test-ap','AP');const w=G.create(false,42,[[{...entry('RGM_79'),customPilot:pilot}],[entry('RGM_79')]],false,{costLimit:99999,unitCostLimit:99999});assert.equal(w.units[0].actionPoints,5);
 });
 test('Zaku cannon cross blast hits centre and cardinal neighbours once, excludes diagonals, charges once',()=>{

@@ -452,7 +452,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 130
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -548,7 +549,9 @@
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 37500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.75,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": false,
@@ -585,7 +588,7 @@
       "name": "光束狙击枪",
       "type": "beam",
       "min": 3,
-      "max": 6,
+      "max": 8,
       "hit": 125.0,
       "en": 75.0,
       "sourceName": "ZN_MS_14JG_BMG_Sniper_Aim",
@@ -2000,7 +2003,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     },
     {
       "id": "CustomUnit_PilotCustomUnit",
@@ -2017,10 +2020,10 @@
       "weapons": [
         "ZN_MS_14JG_BMG",
         "ZN_MS_14JG_BMG_Sniper_Aim",
-        "Common_Push_A",
         "Common_ArmMG",
         "EF_BeamSaber_BF_Yellow_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2071,33 +2074,6 @@
     ]
   },
   "hangars": [],
-  "pairedWeapons": [
-    {
-      "id": "Common_ArmMG",
-      "channels": [
-        {
-          "id": "Common_ArmMG",
-          "weaponId": "Common_ArmMG",
-          "muzzleIndex": 0,
-          "requiredParts": [
-            "rightArm"
-          ],
-          "limb": "rightArm"
-        },
-        {
-          "id": "Common_ArmMG_L",
-          "weaponId": "Common_ArmMG_L",
-          "muzzleIndex": 0,
-          "requiredParts": [
-            "leftArm"
-          ],
-          "limb": "leftArm"
-        }
-      ],
-      "fireMode": "independent",
-      "name": "腕部机枪"
-    }
-  ],
   "refits": [
     {
       "id": "action_CustomUnit_PilotCustomUnit_MS_14JG_MsgCustom",
@@ -2128,5 +2104,32 @@
   "production": {
     "enabled": true,
     "refitFrom": []
-  }
+  },
+  "pairedWeapons": [
+    {
+      "id": "Common_ArmMG",
+      "channels": [
+        {
+          "id": "Common_ArmMG",
+          "weaponId": "Common_ArmMG",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        },
+        {
+          "id": "Common_ArmMG_L",
+          "weaponId": "Common_ArmMG_L",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        }
+      ],
+      "fireMode": "independent",
+      "name": "腕部机枪"
+    }
+  ]
 }

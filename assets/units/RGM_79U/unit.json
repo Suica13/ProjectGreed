@@ -411,7 +411,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 90
   },
   "attackBonuses": {
     "melee": 5.0,
@@ -505,7 +506,9 @@
     "unitLevel": 1150.0,
     "tacticalMoveBeforeBonus": 4,
     "v17BaseHp": 18500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 5
   },
   "presentation": {
     "shield": false,
@@ -1252,9 +1255,9 @@
       "cost": 0,
       "weapons": [
         "EF_HarpoonGun",
-        "Common_Push_A",
         "EF_HarpoonGun_Cqb_B",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

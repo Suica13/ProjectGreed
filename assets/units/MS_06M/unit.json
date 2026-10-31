@@ -427,7 +427,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 70
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -521,7 +522,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 14500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.45,
+    "mobilityMoveTarget": 4
   },
   "presentation": {
     "shield": false,
@@ -956,9 +959,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.0,
       "changeHeldWeapon": false,
       "source": {
@@ -1083,7 +1084,11 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "ZN_MS_06M_SMS_L": {
       "name": "导弹发射器",
@@ -1151,9 +1156,7 @@
         ],
         "startAnimation": null
       },
-      "requiredParts": [
-        "rightArm"
-      ],
+      "requiredParts": [],
       "partBreakModifier": 1.0,
       "changeHeldWeapon": false,
       "source": {
@@ -1281,7 +1284,11 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "actionCost": 2
+      "actionCost": 2,
+      "anyParts": [
+        "leftArm",
+        "rightArm"
+      ]
     },
     "Common_Cqb_A": {
       "name": "格斗",
@@ -1452,9 +1459,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MS_06M_MSL",
-        "Common_Push_A",
         "ZN_MS_06M_SMS",
-        "Common_Cqb_A"
+        "Common_Cqb_A",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1502,6 +1509,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "ZN_MS_06M_SMS",
@@ -1527,11 +1540,5 @@
       ],
       "fireMode": "independent"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

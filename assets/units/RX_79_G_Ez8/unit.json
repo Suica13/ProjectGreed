@@ -621,7 +621,8 @@
         "source": "Template/Unit/Skill/CmdDef.gw"
       }
     ],
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 95
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -719,7 +720,9 @@
     "unitLevel": 2500.0,
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 37500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.7,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": true,
@@ -2378,7 +2381,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     },
     {
       "id": "CmdDef",
@@ -2394,10 +2397,10 @@
       "cost": 0,
       "weapons": [
         "EF_100mmMG",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2406,10 +2409,10 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeBazooka",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2418,10 +2421,10 @@
       "cost": 100,
       "weapons": [
         "EF_GroundTypeBeamRifle",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2430,10 +2433,10 @@
       "cost": 100,
       "weapons": [
         "EF_180mmCannon",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     },
     {
@@ -2442,10 +2445,10 @@
       "cost": 50,
       "weapons": [
         "EF_GroundTypeMissileLauncher",
-        "Common_Push_A",
         "Common_SingleVulcan_RX_79_G",
         "EF_BeamSaber_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],

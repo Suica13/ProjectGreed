@@ -17,7 +17,7 @@ test("custom pilot baseline and training follow revised budget without changing 
   });
   assert.equal(p.level, 0);
   assert.equal(p.points, 80);
-  const next = P.gainExperience(p, P.experienceRequired(0));
+  const next = P.upgrade(P.gainExperience(p, P.experienceRequired(0)));
   assert.equal(next.level, 1);
   assert.equal(next.points, 120);
   assert.equal(P.cost(p), 0);
@@ -32,6 +32,7 @@ test("previous custom growth migrates safely, refunds training and preserves pro
   const old = {
     ...fresh(),
     trainingVersion: 4,
+    experienceVersion: 1,
     level: 10,
     experience: 0,
     stats: {
@@ -58,7 +59,7 @@ test("previous custom growth migrates safely, refunds training and preserves pro
     experience: 321,
     stats: { ...old.stats, shooting: 145 },
   });
-  assert.equal(progressing.experience, 321);
+  assert.equal(progressing.experience, 3321);
   assert.equal(progressing.points, 200);
 });
 
@@ -118,13 +119,14 @@ test("version five custom pilots refund valid training at their preserved level 
   const old = {
     ...fresh(),
     trainingVersion: 5,
+    experienceVersion: 1,
     level: 2,
     experience: 1999,
     stats: { ...P.baseStats(), shooting: 135, melee: 135, leadership: 90 },
   };
   const migrated = P.custom(old);
   assert.equal(migrated.level, 2);
-  assert.equal(migrated.experience, 1999);
+  assert.equal(migrated.experience, 2999);
   assert.equal(migrated.points, 160);
   assert.deepEqual(migrated.stats, P.baseStats());
   assert.deepEqual(P.custom(migrated), migrated);
@@ -134,10 +136,10 @@ test("version five custom pilots refund valid training at their preserved level 
 test("custom pilots require ten upgrades from zero, keep XP overflow policy and reject invalid levels", () => {
   let pilot = fresh();
   for (let level = 0; level < 10; level++) {
-    assert.equal(P.experienceRequired(level), 1000 * 2 ** level);
-    pilot = P.gainExperience(pilot, P.experienceRequired(level) + 123);
+    assert.equal(P.experienceRequired(level), 500 * (level + 1) * (level + 2));
+    pilot = P.upgrade(P.gainExperience(pilot, P.experienceRequired(level) + 123));
     assert.equal(pilot.level, level + 1);
-    assert.equal(pilot.experience, 0);
+    assert.equal(pilot.experience, Array.from({length:level+1},(_,i)=>P.experienceRequired(i)+123).reduce((a,b)=>a+b,0));
     assert.equal(pilot.points, 80 + 40 * (level + 1));
   }
   assert.equal(P.gainExperience(pilot, 9999999).level, 10);

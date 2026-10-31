@@ -517,7 +517,8 @@
     "stealth": {
       "waterOnly": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 115
   },
   "attackBonuses": {
     "melee": 15.0,
@@ -615,7 +616,9 @@
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 21000.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -1536,9 +1539,9 @@
       "cost": 75,
       "weapons": [
         "EF_BOWA_BeamGun",
-        "Common_Push_A",
         "Common_Grenade_B",
-        "EF_BeamSaber_BF_B"
+        "EF_BeamSaber_BF_B",
+        "Common_Push_A"
       ]
     },
     {
@@ -1547,9 +1550,9 @@
       "cost": 0,
       "weapons": [
         "EF_90mmMG",
-        "Common_Push_A",
         "Common_Grenade_B",
-        "EF_BeamSaber_BF_B"
+        "EF_BeamSaber_BF_B",
+        "Common_Push_A"
       ]
     }
   ],

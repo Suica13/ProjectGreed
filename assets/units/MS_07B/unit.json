@@ -444,7 +444,8 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
-    }
+    },
+    "speed": 95
   },
   "attackBonuses": {
     "melee": 20.0,
@@ -540,7 +541,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 16500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": true,
@@ -1121,7 +1124,7 @@
         }
       },
       "rangeRole": "tether_melee",
-      "onHitAPLoss": 1
+      "onHitAPLoss": 0.25
     },
     "ZN_HeatSword_A": {
       "name": "近身格斗",
@@ -1293,9 +1296,9 @@
       "cost": 0,
       "weapons": [
         "ZN_MS_07B_HandMG",
-        "Common_Push_A",
         "ZN_MS_07B_HeatRod",
-        "ZN_HeatSword_A"
+        "ZN_HeatSword_A",
+        "Common_Push_A"
       ]
     }
   ],

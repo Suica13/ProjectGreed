@@ -3,7 +3,7 @@ const test = require("node:test"),
 const G = require("../shared/rules.js");
 test("native reaction and accuracy match the original MOD including ships", () => {
   const expected = {
-    SalamisClass: [50, 105],
+    SalamisClass: [57.5, 75.075],
     RX_78_1: [134, 124],
     FF_X7: [140, 115],
     RGM_79: [115, 115],
@@ -24,7 +24,7 @@ test("native reaction and accuracy match the original MOD including ships", () =
     assert.deepEqual([p.stats.mobility, p.stats.accuracy], expected[p.id], p.id);
     assert.deepEqual(
       [p.sourceStats.reaction, p.sourceStats.accuracy],
-      [expected[p.id][0], expected[p.id][1]],
+      [p.stats.ship ? 50 : expected[p.id][0], p.stats.ship ? 105 : expected[p.id][1]],
     );
     for (const kit of p.weaponKits) {
       const m = G.models[p.id + "__" + kit.id];
@@ -41,6 +41,7 @@ function duel() {
   ]);
   g.tiles = g.tiles.map((row) => row.map(() => "plain"));
   const [a, b] = g.units;
+  for (const unit of [a,b]) unit.pilot = {stats:{shooting:100,melee:100,accuracy:100,reaction:100,defense:100,speed:100,leadership:100,awakening:100}};
   Object.assign(a, { x: 2, y: 3 });
   Object.assign(b, { x: 3, y: 3 });
   return {
@@ -56,8 +57,8 @@ test("unit accuracy multiplies ranged and melee base hit before cover, mobility,
   assert.equal(G.estimate(g, a, b, { ...w, type: "melee" }).hit, 75);
   assert.equal(G.estimate(g, a, b, w, "defend").hit, 75);
   assert.equal(G.estimate(g, a, b, w, "counter", true).hit, 56.25);
-  assert.equal(G.estimate(g, a, b, w, "evade").hit, 53.75);
-  assert.equal(G.estimate(g, a, b, w, "evade", true).hit, 36.5625);
+  assert.equal(G.estimate(g, a, b, w, "evade").hit, 55.3125);
+  assert.equal(G.estimate(g, a, b, w, "evade", true).hit, 37.734375);
   g.tiles[b.y][b.x] = "forest";
   assert.equal(G.estimate(g, a, b, w).hit, 65);
   g.tiles[b.y][b.x] = "rubble";
@@ -78,9 +79,9 @@ test("accuracy applies once to AI, survives snapshots and does not inherit defen
   assert.equal(G.models.MS_14A__machine_gun.accuracy, 125);
 });
 
-test("all ship accuracy coefficients match native values without a bonus", () => {
+test("all ship accuracy coefficients use 65 percent of native values", () => {
   for (const p of G.catalog.prefabs.filter((p) => p.stats.ship)) {
-    assert.ok(Math.abs(p.stats.accuracy - p.sourceStats.accuracy) < 1e-8, p.id);
-    assert.equal(p.stats.accuracyMultiplier, undefined);
+    assert.ok(Math.abs(p.stats.accuracy - p.sourceStats.accuracy * 0.65 * (p.tags.includes("EFSF") ? 1.1 : 1)) < 1e-8, p.id);
+    assert.equal(p.stats.accuracyMultiplier, 0.65);
   }
 });

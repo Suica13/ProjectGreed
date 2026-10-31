@@ -177,7 +177,7 @@
   "stats": {
     "hp": 10500,
     "en": 300.0,
-    "move": 10,
+    "move": 9,
     "mobility": 135.0,
     "cost": 100,
     "counterLimit": 1,
@@ -208,7 +208,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 180
   },
   "attackBonuses": {
     "melee": 0.0,
@@ -300,7 +301,9 @@
       "antiDetection": 0.0
     },
     "v17BaseHp": 8500.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 10
   },
   "presentation": {
     "shield": false,
@@ -857,6 +860,11 @@
     }
   ],
   "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_DoubleMS_SFU_X79",
@@ -877,10 +885,5 @@
         }
       ]
     }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

@@ -9,7 +9,7 @@ rows=[]
 for row in manifest:
  if 'Pilot' in row['tags'].split(','):continue
  p=prefabs[row['id']];rows.append({'id':p['id'],'faction':p.get('faction',row['faction']),'name':p['name'],'source':row['source'],'status':'imported' if p.get('mechanics') else 'existing','weapons':len(p['weapons']),'skills':[{'id':s['id'],'name':s['name'],'type':s['type']} for s in p.get('skills',[])],'mechanics':p.get('mechanics',[])})
-Path('tools/0079-import-report.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+Path('tools/0079-import-report.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 pending={}
 for row in rows:
  for m in row['mechanics']:
@@ -22,7 +22,7 @@ lines=['# 0079第一页单位移植核对','',
 '',
 '- 已接入：地面／空中／气垫／两栖／海军通行区别；坦克等非MS不套用六肢损毁；MS读取原结构强度和武器依赖；舰船完整矩形占地、独立炮塔耐久、同类完好炮塔齐射；直升机原旋翼循环；扎古热能斧中途换贴图。',
 '- 补给（回合制改编）：具有SupplyPoint的单位提供被动范围补给，每个己方回合开始时为范围内存活友军（包括自身）恢复5%最大HP、10%最大EN；不消耗EN或行动，多个补给光环不叠加，不恢复护盾、不修复部位、不复活。补给单位的原自动修复并入这套规则。普通单位不再每回合自然恢复EN。',
-'- 学习型电脑（LPC）：按原MOD经验成长1.1倍接入搭乘驾驶员；击杀与存活助攻经验均乘1.1，与快速战、强度和服务器活动经验倍率相乘，最终统一向下取整。存档对局不获得经验。',
+'- 学习型电脑（LPC）：保留原MOD来源并按战术政策1.25倍接入搭乘驾驶员；击杀与存活助攻经验均乘1.25，与快速战、强度和服务器活动经验倍率相乘，最终统一向下取整。存档对局不获得经验。',
 '- 核心战斗机脱出：RX-78-2、RX-77-2与RX-75沿用RX-78-1的明确配置；原机体移除，仅在相邻1格选择合法位置生成满HP、满EN、修复部位的FF-X7（不含原地及斜角），保留所有者和自定义名字，消耗一次行动，每场一次。',
 '- 自动修复（回合制改编）：来源具有AutoRepair的单位，在己方行动开始时，若受损且至少有10 EN，消耗10 EN恢复10%HP，没有普通回合EN恢复；补给单位的自动修复已并入补给光环。不复活。',
 '- 侦察／声呐／隐蔽（回合制改编）：本项目尚无战争迷雾，使用战术标记代替直接照搬探测半径。侦察消耗15 EN和一次行动，标记范围6内敌军；声呐仅标记水域敌军。标记在下次己方行动开始前有效，友军对标记目标命中+10%，并解除该目标的隐蔽命中惩罚。隐蔽使一格以外的敌人命中-10%，水下隐蔽只在水域生效。来源侦察单位及声呐单位会显示对应技能。',
@@ -75,7 +75,7 @@ lines += ['', '## 原MOD资源与武器数据', '',
 '- 原生AP伤害独立保留：不减固定防御，只按相应防御百分比的四分之一计算，并穿透护盾；DP及其他异常载荷在面板/源数据中保留，未假装已完整实现原RTS全部异常状态。',
 '- 时间明细、CD分组与多武器排队建议见《武器时间与CD统计.md》及同名CSV；全部单位—武器时间线见tools/weapon-timing-report.json。现已用AP启用单目标多武器顺序攻击，原生时间/CD只影响演出，不作为AP费用。',
 '- 显示名不明确的武器见《武器命名待确认.md》，等待用户命名逻辑后统一修改，不改武器ID。',
-'- 战舰命中系数直接采用原MOD baseAccuracyLevel，与sourceStats.accuracy一致，不再附加1.10倍率。',
+'- 战舰回避采用原MOD baseReactionLevel；命中系数为原MOD的65%，爆炸弹舰炮命中额外乘80%，所有武器伤害为原MOD的75%，耐久为原MOD的70%；联邦系再提高耐久10%、命中10%、回避15%，最终耐久按500取整。伤害按25取整；不叠加旧通用耐久、炮塔、机枪和姆塞/法梅尔例外修正。',
 '- tools/native_combat.py负责原生数值和流程；tools/native_presentation.py负责狙击持握/射击显示、钢坦克炮管图层、钢加农套件与主手优先。tools/weapon_policy.py负责格子射程与回合制特殊规则。',
 '- python tools/refresh_weapon_skills.py刷新预制体；python tools/report-weapon-timing.py重建统计。批量导入末尾执行相同政策，避免回到手工平衡值。']
 
@@ -90,4 +90,4 @@ lines += ['', '## 下一步机制讨论（尚未接入）', '',
 '', '来源入口：原MOD Template/Unit/Skill/{SFS,FlyStyle,FlyUnit,FlyHover}.gw，以及Template/Unit/Transport_SFS.ini。以上是分析及建议，不代表功能已接入。',
 '', '移植流程模板见 `.agents/skills/projectgreed-mod-unit-import/SKILL.md`。']
 
-Path('0079第一页移植核对.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+Path('0079第一页移植核对.md').write_text('\n'.join(lines)+'\n',encoding='utf-8',newline='\n')

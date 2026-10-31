@@ -27,6 +27,11 @@ for (const id of ["MS_07H", "MS_07H8"])
     assert.equal(u.moved, false);
     assert.equal(u.acted, false);
     assert.equal(G.modelOf(u).movementType, "air");
+    assert.equal(G.modelOf(u, g).adaptability.air, 100);
+    assert.equal(G.adaptationOf(g, u), 1);
+    assert.equal(G.modelOf(u, g).move, G.modelOf(u).move);
+    assert(G.modelOf(u, g).move >= m.move, "flight must not inherit standing 10% sky compatibility");
+    assert.equal(m.adaptability.air, 10, "standing/native model is not mutated");
     g.tiles[10][11] = "water";
     g.tiles[10][12] = "rock";
     assert.equal(G.terrainCost(g, u, 11, 10), 1);

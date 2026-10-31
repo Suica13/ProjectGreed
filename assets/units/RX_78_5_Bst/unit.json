@@ -619,7 +619,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 135
   },
   "attackBonuses": {
     "melee": 45.0,
@@ -716,7 +717,9 @@
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 47500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 8
   },
   "presentation": {
     "shield": true,
@@ -2955,12 +2958,12 @@
       "cost": 100,
       "weapons": [
         "EF_HyperBeamRifle",
-        "Common_Push_A",
         "EF_Minigun",
         "Common_ArmBR_Pink",
         "EF_BeamSaber_AF_Fast_A",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_AALDF"
+        "EF_BeamSaber_Double_AALDF",
+        "Common_Push_A"
       ]
     },
     {
@@ -2969,12 +2972,12 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazooka",
-        "Common_Push_A",
         "EF_Minigun",
         "Common_ArmBR_Pink",
         "EF_BeamSaber_AF_Fast_A",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_AALDF"
+        "EF_BeamSaber_Double_AALDF",
+        "Common_Push_A"
       ]
     }
   ],
@@ -3025,6 +3028,14 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": [
+      "RX_78_5"
+    ]
+  },
   "pairedWeapons": [
     {
       "id": "EF_Minigun",
@@ -3074,13 +3085,5 @@
       "fireMode": "independent",
       "name": "腕部光束枪"
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": [
-      "RX_78_5"
-    ]
-  }
+  ]
 }

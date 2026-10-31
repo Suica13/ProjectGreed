@@ -564,9 +564,24 @@ const RoomPanel = (() => {
       : "最终编组确认后进入部署。";
     const squads = byId("finalSquads");
     squads.replaceChildren();
+    const observing = snapshot.you?.seat === null;
+    byId("finalAssemblyPanel").classList.toggle("is-observer", observing);
+    squads.classList.toggle("team-grouped", observing);
+    const teamLists = new Map();
+    if (observing) for (const team of [0, 1]) {
+      const section = element("section", "final-squad-team");
+      section.dataset.team = team;
+      section.setAttribute("aria-label", I18n.text("队伍" + (team + 1)));
+      const list = element("div", "final-squad-team-list");
+      section.append(element("h4", "", "队伍" + (team + 1)), list);
+      squads.append(section);
+      teamLists.set(team, list);
+    }
     for (const player of snapshot.assembly?.players || []) {
       const card = element("section", "final-squad");
       card.dataset.memberId = player.memberId;
+      const team = Rules.seatTeam(player.seat);
+      card.dataset.team = team;
       const heading = element("div", "final-squad-heading"),
         name = element("strong", playerNameClass(player.memberId), player.name);
       name.setAttribute("data-i18n-ignore", "");
@@ -630,8 +645,8 @@ const RoomPanel = (() => {
             element(
               "span",
               "overcost-label",
-              player.reasons?.[index] === "inventory"
-                ? "库存不足"
+              player.reasons?.[index] === "license"
+                ? "未获得部署许可"
                 : player.reasons?.[index] === "wip"
                   ? "WIP"
                   : player.reasons?.[index] === "faction_mismatch"
@@ -648,7 +663,7 @@ const RoomPanel = (() => {
         icons.append(icon);
       });
       card.append(heading, icons);
-      squads.append(card);
+      (teamLists.get(team) || squads).append(card);
     }
     const own = snapshot.assembly?.players.find((player) => player.memberId === snapshot.you?.id);
     byId("editFinalFormation").hidden = true;
@@ -744,7 +759,7 @@ const RoomPanel = (() => {
       const plan = Rules.planFormation(
         units,
         limit,
-        { ...Rules.armyRestrictions(snapshot.settings, own), inventory: undefined },
+        { ...Rules.armyRestrictions(snapshot.settings, own), licenses: undefined },
         Rules.armyUnitLimit(snapshot.settings, own),
       );
       valid = !!plan.deployable.length;
@@ -941,7 +956,6 @@ const RoomPanel = (() => {
       ![0, 1].every((team) => participants.some((player) => Rules.seatTeam(player.seat) === team));
     byId("roomMainMenu").textContent =
       snapshot.started && snapshot.phase !== "assembly" ? "返回战斗" : "主菜单";
-    byId("roomProduction").hidden = snapshot.started && snapshot.phase !== "assembly";
     renderFinalAssembly(snapshot, busy);
     renderDetail(snapshot);
   }
@@ -956,7 +970,7 @@ const RoomPanel = (() => {
     const snapshot = Net.snapshot;
     const own = snapshot?.assembly?.players.find((p) => p.memberId === snapshot.you?.id);
     const proceed = () => Net.request("confirm_formation");
-    if (!snapshot?.loadedSave && own) Formation.checkInventory(own.entries, proceed);
+    if (!snapshot?.loadedSave && own) Formation.checkLicenses(own.entries, proceed);
     else proceed();
   };
   byId("joinTeam1").onclick = () => joinTeam(0);
@@ -968,7 +982,7 @@ const RoomPanel = (() => {
     const self = Net.snapshot?.members.find((member) => member.id === Net.memberId);
     const entries = self?.formationPreset?.units || Formation.current();
     const proceed = () => Net.request("set_ready", { ready: !self?.ready, formation: entries });
-    if (!self?.ready && !Net.snapshot?.loadedSave) Formation.checkInventory(entries, proceed);
+    if (!self?.ready && !Net.snapshot?.loadedSave) Formation.checkLicenses(entries, proceed);
     else proceed();
   };
   byId("roomFormationSelect").onchange = () => {
@@ -1000,7 +1014,7 @@ const RoomPanel = (() => {
     const own = snapshot.members.find((p) => p.id === snapshot.you?.id);
     const entries = own?.formationPreset?.units || Formation.current();
     const proceed = () => Net.request("start_game", { formation: entries });
-    if (!snapshot.loadedSave && own?.seat !== null) Formation.checkInventory(entries, proceed);
+    if (!snapshot.loadedSave && own?.seat !== null) Formation.checkLicenses(entries, proceed);
     else proceed();
   };
   function sendSettings(patch) {

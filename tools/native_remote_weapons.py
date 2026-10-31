@@ -82,6 +82,9 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
              'incom': ('INCOM有线炮', 'INCOM', 'インコム')}[control]
     steps, previous = [], 0
     native_damage = payloads[0]["BeamDamage"]
+    shot_damage = 4000 / (len(units) * 2) if control != 'incom' else native_damage
+    if control != 'incom':
+        awakening = 75
     events=sorted((round(.7+cycle*1.2+index*.13,4),index) for cycle in range(2) for index in range(len(units)))
     for at,index in events:
         steps.append(dict(delay=round(at-previous,4),shots=1,muzzleIndex=index,
@@ -89,7 +92,7 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
         previous=at
     weapon = dict(sourceName=key, name=names[0], localization={lang: {'name': name} for lang,name in zip(('zh','en','ja'),names)},
         type='beam', category='remote', slot='secondary', min=1, max=6 if control=='funnel' else 4,
-        hit=payloads[0].get('WeaponAccuracy',85), en=values[key + '_EN'], actionCost=3, damagePerShot=native_damage, damageComponents={'beam':native_damage},
+        hit=100 if control!='incom' else payloads[0].get('WeaponAccuracy',85), en=values[key + '_EN'], actionCost=3, damagePerShot=shot_damage, damageComponents={'beam':shot_damage},
         hitsPerShot=1, clip=None, changeHeldWeapon=False, requiredParts=[],
         attack={'startAnimation':None,'steps':steps}, muzzle={'mounts':mounts},
         projectile={'texture':f'../../projectiles/Beam_2_{color}.png','scale':.65,'speed':85,
@@ -97,7 +100,7 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
         hitEffect='Beam_Hit_2_'+color, nativePayload=payloads[0], sound={'file':'../../sounds/BeamGun_3.ogg','volume':.45},
         source={'file':str(path.relative_to(root)).replace('\\','/'),'root':root.name},
         remote={'kind':control,'units':units,'shotsPerUnit':2,'moveSeconds':.6,'settleSeconds':.1,
-                'waitSeconds':.5,'staggerSeconds':.13,'returnSeconds':.65,'awakeningScale':0 if control=='incom' else .0025},
+                'waitSeconds':.5,'staggerSeconds':.13,'returnSeconds':.65,'awakeningScale':0 if control=='incom' else .04},
         nativeRemote={'count':len(units),'cooldownSeconds':values.get(key+'_CD'),
                       'awakeningMinimum':awakening,'entry':key+'_Trigger','unitSources':children,'unitPayloads':payloads},
         description=f'{names[0]}：{len(units)}个单元，每单元2发，基础伤害{native_damage:g}/发。消耗3 AP。')
@@ -107,6 +110,15 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
         'ja': f'{len(units)}基が各2発射撃。1発の基本ダメージ{native_damage:g}、消費3 AP。'
     }.items():
         weapon['localization'][lang]['description']=description
+    if control != 'incom':
+        descriptions = {
+            'zh': f'{len(units)}个单元，每单元2发；75觉醒可用，100觉醒时整次基础伤害4000，100以上每点觉醒增加基础伤害4%，200觉醒时20000；低于100按觉醒比例计算。基础命中100%，消耗3 AP。',
+            'en': f'{len(units)} units, 2 shots each. Requires 75 Awakening. Base salvo damage: 4000 at 100 Awakening; +4% per point above 100, reaching 20000 at 200. Below 100, scales proportionally. Base accuracy 100%; costs 3 AP.',
+            'ja': f'{len(units)}基が各2発。覚醒75で使用可能。覚醒100で全弾の基本ダメージ4000、100を超える1点ごとに4%増加、200で20000。100未満は覚醒値に比例。基本命中100%、消費3 AP。',
+        }
+        weapon['description'] = descriptions['zh']
+        for lang, text in descriptions.items():
+            weapon['localization'][lang]['description'] = text
     weapon['sourceHit'] = weapon['hit']
     weapon['nativeTiming'] = dict(source=weapon['source']['file'], entry=key+'_Trigger',
         cooldown=values.get(key+'_CD',0), duration=previous, firstShot=.7,lastShot=previous,

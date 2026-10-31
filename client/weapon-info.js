@@ -197,7 +197,7 @@ const WeaponInfo = (() => {
     }
     if (weapon.onHitAPLoss)
       root.append(
-        node("div", "weapon-pilot-requirement", I18n.text("命中后使目标下回合AP减少1点，不叠加")),
+        node("div", "weapon-pilot-requirement", I18n.text("命中后使目标下回合AP减少25%，不叠加")),
       );
     if (weapon.burn)
       root.append(
@@ -239,6 +239,8 @@ const WeaponInfo = (() => {
       ["EN", amount(weapon.en)],
     ];
     if (unit) rows.push(["剩余 EN", amount(unit.en)]);
+    if (weapon.pilotRequirements?.length)
+      rows.push(["本回合可用次数", unit ? (unit.pilotWeaponTurnUses?.[weapon.id] ? "0/1" : "1/1") : "1"]);
     if (Number.isInteger(weapon.maxUses))
       rows.push([
         unit ? "剩余次数" : "使用次数",

@@ -432,7 +432,8 @@
       "antiDetectAqua": false
     },
     "shellFinalResistance": 25,
-    "actionPoints": 5
+    "actionPoints": 5,
+    "speed": 105
   },
   "attackBonuses": {
     "melee": 25.0,
@@ -528,7 +529,9 @@
     "tacticalMoveBeforeBonus": 5,
     "v17BaseHp": 47500.0,
     "technologyEra": "0079L",
-    "importedTechPage": 1
+    "importedTechPage": 1,
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 6
   },
   "presentation": {
     "shield": false,
@@ -1884,11 +1887,11 @@
       "cost": 0,
       "weapons": [
         "EF_FA_78_G_BR",
-        "Common_Push_A",
         "Common_Cannon",
         "EF_FA_78_G_MS",
         "EF_BeamSaber_AF_A",
-        "Common_DoubleVulcan_MS"
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
       ]
     }
   ],
@@ -1919,6 +1922,12 @@
     ]
   },
   "hangars": [],
+  "refits": [],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "EF_FA_78_G_BR",
@@ -1943,11 +1952,5 @@
         }
       ]
     }
-  ],
-  "refits": [],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }

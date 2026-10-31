@@ -8,7 +8,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
   const developmentTree = require("../shared/development-tree.json");
   const aceMap = new Map(require("../shared/pilots.json").aces.map((p) => [p.id, p]));
   const unitMap = new Map(rules.catalog.prefabs.map((unit) => [unit.id, unit]));
-  let state = { schemaVersion: 1, serverId: crypto.randomUUID(), players: {}, activities: [] };
+  let state = { schemaVersion: 2, serverId: crypto.randomUUID(), players: {}, activities: [] };
   function save(next) {
     if (storePath) {
       fs.mkdirSync(path.dirname(storePath), { recursive: true });
@@ -21,12 +21,17 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
   if (storePath && fs.existsSync(storePath)) {
     state = JSON.parse(fs.readFileSync(storePath, "utf8"));
     if (
-      state.schemaVersion !== 1 ||
+      ![1,2].includes(state.schemaVersion) ||
       !state.serverId ||
       !state.players ||
       !Array.isArray(state.activities)
     )
       throw Error("服务器活动存储格式无效，未重置发放记录");
+    if (state.schemaVersion === 1) {
+      require("../shared/profile-migrations.js").activityStore(state);
+      state.schemaVersion = 2;
+      save(state);
+    }
   } else {
     state.activities.push({
       id: "first-server-visit",
@@ -38,7 +43,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       rewards: {
         money: 5000,
         supplies: 10000,
-        inventory: { RGM_79_G: 3, MS_09: 3 },
+        licenses: { RGM_79_G: true, MS_09: true },
         unlockUnits: [],
       },
     });
@@ -60,7 +65,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       rewards: {
         money: 0,
         supplies: 0,
-        inventory: {},
+        licenses: {},
         unlockUnits: [],
         unlockAces: ["Pilot_ZEON_0079_N_ACE_CIA"],
       },
@@ -73,7 +78,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       startsAt: new Date(2026, 9, 28).getTime(),
       endsAt: new Date(2026, 10, 2).getTime(),
       multipliers: { experience: 2, money: 2, supplies: 2, technology: 2 },
-      rewards: { money: 0, supplies: 0, inventory: {}, unlockUnits: [] },
+      rewards: { money: 0, supplies: 0, licenses: {}, unlockUnits: [] },
     },
     {
       id: "default-daily-login",
@@ -83,7 +88,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       rewards: {
         money: 2500,
         supplies: 5000,
-        inventory: { RX_79_G: 1, MS_14A: 1 },
+        licenses: { RX_79_G: true, MS_14A: true },
         unlockUnits: [],
       },
     },
@@ -92,7 +97,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       title: "每周登录奖励",
       text: "感谢本周登录服务器！每周一早上6点刷新。",
       mode: "weekly_login",
-      rewards: { money: 5000, supplies: 10000, inventory: {}, unlockUnits: [] },
+      rewards: { money: 5000, supplies: 10000, licenses: {}, unlockUnits: [] },
     },
   ];
   if (
@@ -147,7 +152,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
     const rewards = {
       money: value.money ?? 0,
       supplies: value.supplies ?? 0,
-      inventory: {},
+      licenses: {},
       unlockUnits: [],
       unlockAces: [],
     };
@@ -157,13 +162,12 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       )
     )
       throw Error("资金、物资必须为0至10亿的整数");
-    if (!value.inventory || typeof value.inventory !== "object" || Array.isArray(value.inventory)) {
-      if (value.inventory !== undefined) throw Error("单位库存奖励格式无效");
-    }
-    for (const [id, count] of Object.entries(value.inventory || {})) {
-      if (!unitMap.has(id) || !Number.isSafeInteger(count) || count < 1 || count > 1000000)
-        throw Error("单位奖励无效：" + id);
-      rewards.inventory[id] = count;
+    if (Object.hasOwn(value,"inventory")) throw Error("旧库存奖励接口已移除，请使用部署许可");
+    if (value.licenses !== undefined && (!value.licenses || typeof value.licenses !== "object" || Array.isArray(value.licenses)))
+      throw Error("部署许可奖励格式无效");
+    for (const [id,owned] of Object.entries(value.licenses || {})) {
+      if (!unitMap.has(id) || owned !== true) throw Error("单位许可奖励无效：" + id);
+      rewards.licenses[id]=true;
     }
     if (!Array.isArray(value.unlockUnits ?? [])) throw Error("开发奖励格式无效");
     for (const id of new Set(value.unlockUnits || [])) {

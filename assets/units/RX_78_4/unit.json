@@ -578,7 +578,8 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5
+    "actionPoints": 6,
+    "speed": 120
   },
   "attackBonuses": {
     "melee": 35.0,
@@ -674,7 +675,9 @@
     "unitLevel": 3500.0,
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 42000.0,
-    "technologyEra": "0079E"
+    "technologyEra": "0079E",
+    "actionTurnSpeed": 2.5,
+    "mobilityMoveTarget": 7
   },
   "presentation": {
     "shield": true,
@@ -2150,7 +2153,7 @@
       "id": "CustomUnit",
       "source": "Template/Unit/Skill/CustomUnit.gw",
       "status": "adapted",
-      "name": "库存改装：在单位预览中按原MOD费用改装，使用目标素体套件"
+      "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
     }
   ],
   "weaponKits": [
@@ -2160,11 +2163,11 @@
       "cost": 100,
       "weapons": [
         "EF_HyperBeamRifle",
-        "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_BeamSaber_AF_Fast_A",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_AALDF"
+        "EF_BeamSaber_Double_AALDF",
+        "Common_Push_A"
       ]
     },
     {
@@ -2173,11 +2176,11 @@
       "cost": 50,
       "weapons": [
         "EF_HypeBazooka",
-        "Common_Push_A",
         "Common_ArmBR_Pink",
         "EF_BeamSaber_AF_Fast_A",
         "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_AALDF"
+        "EF_BeamSaber_Double_AALDF",
+        "Common_Push_A"
       ]
     }
   ],
@@ -2223,6 +2226,11 @@
       }
     }
   ],
+  "pilotForms": [],
+  "production": {
+    "enabled": true,
+    "refitFrom": []
+  },
   "pairedWeapons": [
     {
       "id": "Common_ArmBR_Pink",
@@ -2249,10 +2257,5 @@
       "fireMode": "independent",
       "name": "腕部光束枪"
     }
-  ],
-  "pilotForms": [],
-  "production": {
-    "enabled": true,
-    "refitFrom": []
-  }
+  ]
 }
