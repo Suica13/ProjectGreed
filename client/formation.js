@@ -860,8 +860,13 @@ const Formation = (() => {
         element("strong", "", I18n.language === "zh" ? skill.name : I18n.localized(skill)),
         element("p", "muted", SkillControls.description(skill)),
       );
+      if (WeaponClasses.isWeaponSkill(skill))
+        card.append(WeaponInfo.classBadge(skill), WeaponInfo.conversionRules(skill));
       if (skill.sourceWeapon)
-        card.append(WeaponInfo.classBadge(skill), WeaponInfo.conversionRules(skill), WeaponInfo.encyclopediaLink(skill), Encyclopedia.usersButton(skill));
+        card.append(
+          WeaponInfo.encyclopediaLink(skill),
+          Encyclopedia.usersButton(skill),
+        );
       mechanics.append(card);
     }
     for (const weapon of model.hiddenWeapons || []) {

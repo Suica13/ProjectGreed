@@ -55,9 +55,9 @@ const PilotSystem = (() => {
   });
   const experienceRequired = (level, value = null) => {
     const ace = aceProfile(value);
-    // Lifetime XP thresholds: custom stages cost 1000, 2000, ... 10000.
+    // Custom cumulative thresholds follow 1000 * targetLevel^2: level 10 needs 100000 XP.
     // ACE keeps its existing stage curve, expressed as cumulative thresholds.
-    return ace ? 2000 * (2 ** (level + 1) - 1) : 500 * (level + 1) * (level + 2);
+    return ace ? 2000 * (2 ** (level + 1) - 1) : 1000 * (level + 1) ** 2;
   };
   function cumulativeExperience(value, level, experience) {
     if (value.experienceVersion === 2) return experience;

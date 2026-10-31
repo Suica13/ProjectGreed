@@ -24,6 +24,8 @@ const WeaponInfo = (() => {
     backpack: "背包",
     leftArm: "左臂",
     rightArm: "右臂",
+    LegL: "左腿",
+    LegR: "右腿",
     leftLeg: "左腿",
     rightLeg: "右腿",
   };
@@ -140,16 +142,7 @@ const WeaponInfo = (() => {
     heading.append(node("strong", "weapon-name", weapon.name));
     const tags = node("div", "weapon-attributes");
     for (const attribute of attributes) tags.append(node("span", "weapon-attribute", attribute));
-    const category = WeaponClasses.classify(weapon);
-    const classTag = node("span", "weapon-class-tag", I18n.text(WeaponClasses.labels[category]));
-    classTag.dataset.weaponClass = category;
-    classTag.title = I18n.text("换算分类");
-    tags.prepend(classTag);
-    for (const kind of WeaponClasses.tags(weapon).slice(1)) {
-      const tag = node("span", "weapon-class-tag", I18n.text(WeaponClasses.labels[kind]));
-      tag.dataset.weaponClass = kind;
-      tags.append(tag);
-    }
+    for (const path of WeaponClasses.paths(weapon)) tags.prepend(classBadge(weapon, path));
     heading.append(tags);
     const damageLine = node("div", "weapon-damage-line");
     damageLine.append(node("span", "weapon-stat-label", "基础伤害"));
@@ -325,10 +318,19 @@ const WeaponInfo = (() => {
     details.append(body);
     return details;
   }
-  function classBadge(weapon) {
-    const category = WeaponClasses.classify(weapon);
-    const badge = node("span", "weapon-class-tag", I18n.text(WeaponClasses.labels[category]));
-    badge.dataset.weaponClass = category;
+  function classBadge(
+    weapon,
+    path = { main: WeaponClasses.mainClass(weapon), sub: WeaponClasses.classify(weapon) },
+  ) {
+    const badge = node(
+      "span",
+      "weapon-class-tag",
+      I18n.text(WeaponClasses.mainLabels[path.main]) +
+        " / " +
+        I18n.text(WeaponClasses.labels[path.sub]),
+    );
+    badge.dataset.weaponMainClass = path.main;
+    badge.dataset.weaponClass = path.sub;
     return badge;
   }
   function conversionRules(weapon) {
@@ -347,7 +349,7 @@ const WeaponInfo = (() => {
       for (const text of [
         "分类只控制数值换算，不改变伤害属性、枪口或发射演出。",
         "基础AP和射程沿用源数据；通用射程加值只增加最大射程。头部与腕部武器使用固定AP和射程。",
-        "光束步枪伤害加成排除战舰和MA；机枪分类减伤不重复作用于战舰。火箭筒不叠加光束步枪倍率。",
+        "主手光束武器默认伤害×1.5，腕部光束武器×0.75，其余部位光束武器×1。战舰与MA保留排除规则，战舰不重复叠加机枪减伤。",
         "AP按0.5点四舍五入，伤害按25点取整；EN倍率不为1时向上取整。人工数值差值在换算后应用。",
       ])
         body.append(node("p", "", I18n.text(text)));

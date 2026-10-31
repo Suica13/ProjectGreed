@@ -1,7 +1,7 @@
 const {test,expect}=require('@playwright/test');
 const {pathToFileURL}=require('node:url'),path=require('node:path'),P=require('../shared/pilots.js');
 test('manual upgrade flashes, charges funds once, saves XP and level across reload',async({page})=>{
- const pilot=P.gainExperience(P.createCustom('custom-manual-ui','Manual'),3500);
+ const pilot=P.gainExperience(P.createCustom('custom-manual-ui','Manual'),4500);
  await page.addInitScript(p=>{
   if(localStorage.getItem('manual-seeded'))return;
   localStorage.setItem('manual-seeded','yes');
@@ -19,7 +19,7 @@ test('manual upgrade flashes, charges funds once, saves XP and level across relo
  await expect(page.locator('#customPilotProgress')).toContainText('Lv.1');
  expect(await page.evaluate(()=>Economy.snapshot().money)).toBe(money-1000);
  let p=await page.evaluate(()=>JSON.parse(localStorage.getItem('projectgreed.custom-pilots.v3.shared')).pilots[0]);
- expect(p.experience).toBe(3500);expect(p.points).toBe(120);
+ expect(p.experience).toBe(4500);expect(p.points).toBe(120);
  await upgrade.click();
  await expect(page.locator('#customPilotProgress')).toContainText('Lv.2');
  await expect(upgrade).toBeDisabled();
@@ -32,7 +32,7 @@ test('manual upgrade flashes, charges funds once, saves XP and level across relo
  await expect(upgrade).toHaveClass(/pilot-skill-alert/);
  await page.reload();await page.waitForFunction(()=>assetsReady);
  p=await page.evaluate(()=>JSON.parse(localStorage.getItem('projectgreed.custom-pilots.v3.shared')).pilots[0]);
- expect(p.level).toBe(1);expect(p.experience).toBe(3500);
+ expect(p.level).toBe(1);expect(p.experience).toBe(4500);
 });
 
 test('custom recruitment charges 1000 on confirmation, cancellation is free',async({page})=>{

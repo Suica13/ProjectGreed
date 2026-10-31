@@ -136,7 +136,7 @@ test("version five custom pilots refund valid training at their preserved level 
 test("custom pilots require ten upgrades from zero, keep XP overflow policy and reject invalid levels", () => {
   let pilot = fresh();
   for (let level = 0; level < 10; level++) {
-    assert.equal(P.experienceRequired(level), 500 * (level + 1) * (level + 2));
+    assert.equal(P.experienceRequired(level), 1000 * (level + 1) ** 2);
     pilot = P.upgrade(P.gainExperience(pilot, P.experienceRequired(level) + 123));
     assert.equal(pilot.level, level + 1);
     assert.equal(pilot.experience, Array.from({length:level+1},(_,i)=>P.experienceRequired(i)+123).reduce((a,b)=>a+b,0));

@@ -2349,5 +2349,21 @@
   "分类只控制数值换算，不改变伤害属性、枪口或发射演出。": "Classification controls numerical conversion only; damage channels, muzzles and firing animations are preserved.",
   "基础AP和射程沿用源数据；通用射程加值只增加最大射程。头部与腕部武器使用固定AP和射程。": "Base AP and range come from source data. Range bonuses extend maximum range only. Head and wrist weapons use fixed AP and range.",
   "光束步枪伤害加成排除战舰和MA；机枪分类减伤不重复作用于战舰。火箭筒不叠加光束步枪倍率。": "Beam rifle bonuses exclude warships and MAs. Machine-gun class damage reduction does not stack on warships. Bazookas do not stack with the beam rifle multiplier.",
-  "AP按0.5点四舍五入，伤害按25点取整；EN倍率不为1时向上取整。人工数值差值在换算后应用。": "AP rounds to the nearest 0.5 and damage to the nearest 25. EN rounds up when its multiplier differs from 1. Manual numeric offsets apply after conversion."
+  "AP按0.5点四舍五入，伤害按25点取整；EN倍率不为1时向上取整。人工数值差值在换算后应用。": "AP rounds to the nearest 0.5 and damage to the nearest 25. EN rounds up when its multiplier differs from 1. Manual numeric offsets apply after conversion.",
+  "主分类": "Main class",
+  "子分类": "Subclass",
+  "主手武器": "Handheld weapon",
+  "身体武器": "Body-mounted weapon",
+  "头部武器": "Head-mounted weapon",
+  "内藏武器": "Built-in weapon",
+  "腿部武器": "Leg-mounted weapon",
+  "光束武器": "Beam weapon",
+  "基础AP": "Base AP",
+  "基础EN": "Base EN",
+  "基础命中率": "Base accuracy",
+  "基础射程": "Base range",
+  "继承源值": "Inherited",
+  "LegR": "Right Leg",
+  "LegL": "Left Leg",
+  "主手光束武器默认伤害×1.5，腕部光束武器×0.75，其余部位光束武器×1。战舰与MA保留排除规则，战舰不重复叠加机枪减伤。": "Default beam damage: handheld ×1.5, wrist ×0.75, other mounts ×1. Warship/MA exclusions remain; warships do not stack machine-gun reductions."
 }

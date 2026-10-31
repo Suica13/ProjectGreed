@@ -15,6 +15,11 @@ EXACT = {
 def label(key, weapon, ship=False):
     # Strip physical left/right copies without treating MS model names as missiles.
     ident = re.sub(r"_(?:L|R)$", "", weapon.get("sourceName", key))
+    side = re.search(r"Leg([RL])(?=_|$|[A-Z])", ident)
+    if side:
+        right = side.group(1) == "R"
+        family = ("导弹发射器", "Missile Launcher", "ミサイルランチャー") if "MS" in ident else (("光束枪", "Beam Gun", "ビームガン") if weapon.get("type") == "beam" else ("机枪", "Machine Gun", "機関銃"))
+        return (("右腿" if right else "左腿") + family[0], ("Right Leg " if right else "Left Leg ") + family[1], ("右脚" if right else "左脚") + family[2])
     if ident in EXACT:
         return EXACT[ident]
     if "BeamGun" in ident:

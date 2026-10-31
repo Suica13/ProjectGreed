@@ -1,97 +1,58 @@
-const test = require("node:test");
-const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const path = require("node:path");
+const test = require("node:test"),
+  assert = require("node:assert/strict");
+const fs = require("node:fs"),
+  path = require("node:path");
 const { applyWeaponBalance } = require("../tools/weapon-balance.cjs");
 const { loadCatalog } = require("../tools/load-catalog.cjs");
-const Sequence = require("../shared/weapon-sequence.js");
+const Codec = require("../tools/weapon-store.cjs"),
+  Classes = require("../shared/weapon-classes.js");
 const catalog = loadCatalog();
-test("machine guns use their one native-based reduction; ship weapons never stack another reduction", () => {
+
+test("all main/subclass damage rules preserve source payloads and do not stack on reload", () => {
   let count = 0,
-    arms = 0,
+    wrists = 0,
     ships = 0;
   for (const prefab of catalog.prefabs) {
-    const raw = require("../tools/weapon-store.cjs").parse(
+    const raw = Codec.parse(
       fs.readFileSync(path.join(__dirname, "../assets/units", prefab.id, "unit.json")),
     );
     for (const [id, before] of Object.entries(raw.weapons)) {
       const after = prefab.weapons[id];
-      const wristScale =
-        ["RX_78_4", "RX_78_4_Bst"].includes(prefab.id) && id === "Common_ArmBR_Pink_L"
-          ? raw.weapons.Common_ArmBR_Pink.damagePerShot / before.damagePerShot
-          : 1;
-      const eligibleBeam =
-        before.category === "beam_rifle" &&
-        !/Arm|Hand/i.test(id + " " + (before.sourceName || ""));
-      const melee = before.type === "melee" || before.category === "melee";
-      if (before.category !== "machine_gun" || /^Common_ArmGL(?:_|$)/.test(id)) {
-        assert.equal(
-          after.damagePerShot,
-          before.damagePerShot *
-            wristScale *
-            (melee
-              ? id.startsWith("Common_Push_")
-                ? 1
-                : 1.1
-              : before.category === "bazooka" ? 1.25
-              : (before.type === "beam" ||
-                    Object.entries(before.damageComponents).some(
-                      ([k, v]) => /beam/i.test(k) && v > 0,
-                    )) &&
-                  eligibleBeam &&
-                  !prefab.stats.ship &&
-                  !prefab.unitTags.includes("MA")
-                ? 1.5
-                : 1),
-        );
-        assert.equal(after.actionCost, require("../shared/conversion-rules.cjs").isHeadOrWrist(before, id) ? 3 : before.actionCost * 2);
-        continue;
+      let base = before.damagePerShot;
+      if (["RX_78_4", "RX_78_4_Bst"].includes(prefab.id) && id === "Common_ArmBR_Pink_L")
+        base = raw.weapons.Common_ArmBR_Pink.damagePerShot;
+      let factor = Classes.rule(before, catalog.conversionRules, id).damage;
+      if (prefab.stats.ship && Classes.machineGun(before, id)) {
+        factor = 1;
+        ships++;
       }
-      count++;
-      if (/ArmMG/.test(id)) arms++;
-      if (prefab.stats.ship) ships++;
-      assert.equal(after.actionCost, require("../shared/conversion-rules.cjs").isHeadOrWrist(before, id) ? 3 : 4, `${prefab.id}/${id}`);
-      const expected =
-        before.attack.steps.reduce(
-          (sum, step) =>
-            sum +
-            Sequence.roundDamage(
-              Object.values(step.damageComponents || before.damageComponents).reduce(
-                (n, v) => n + v,
-                0,
-              ) *
-                (step.damageMultiplier ?? 1) *
-                (prefab.stats.ship ? 1 : 0.75 / (before.machineGunDamageScale ?? 1)) *
-                ((before.type === "beam" ||
-                  Object.entries(before.damageComponents).some(
-                    ([k, v]) => /beam/i.test(k) && v > 0,
-                  )) &&
-                eligibleBeam &&
-                !prefab.stats.ship &&
-                !prefab.unitTags.includes("MA")
-                  ? 1.5
-                  : 1),
-            ) *
-              (step.shots || 0) *
-              (step.repeat || 1),
-          0,
-        ) * (before.hitsPerShot || 1);
-      assert.equal(Sequence.compile(after).damage, expected, `${prefab.id}/${id}`);
+      if (
+        (prefab.stats.ship || prefab.unitTags.includes("MA")) &&
+        Classes.mainClass(before, id) === "hand" &&
+        Classes.classify(before, id) === "beam"
+      )
+        factor = 1;
+      assert.equal(after.damagePerShot, base * factor, prefab.id + "/" + id);
       assert.deepEqual(after.nativePayload, before.nativePayload);
       assert.equal(after.en, before.en);
-      assert.equal(Sequence.compile(after).shotCount, Sequence.compile(before).shotCount);
+      assert.deepEqual(
+        after.attack.steps.map((s) => [s.shots, s.repeat, s.delay]),
+        before.attack.steps.map((s) => [s.shots, s.repeat, s.delay]),
+      );
+      if (Classes.wristBeam(before, id)) wrists++;
+      count++;
     }
-    const snapshot = structuredClone(prefab);
+    const saved = structuredClone(prefab);
     applyWeaponBalance(prefab);
-    assert.deepEqual(prefab, snapshot, "reloading must not compound damage reduction");
+    assert.deepEqual(prefab, saved, prefab.id);
   }
-  assert.ok(count > 250 && arms > 0 && ships > 0);
+  assert(count > 1000 && wrists > 0 && ships > 0);
 });
-test("compiled paired/kit machine guns retain the unified AP policy", () => {
+
+test("head/wrist and machine-gun costs remain consistent after paired-weapon compilation", () => {
   for (const model of Object.values(catalog.models))
-    for (const weapon of model.weapons)
-      if (weapon.category === "machine_gun" && !/^Common_ArmGL(?:_|$)/.test(weapon.id)) {
-        assert.equal(weapon.actionCost, require("../shared/conversion-rules.cjs").isHeadOrWrist(weapon) ? 3 : 4);
-        assert.equal(weapon.machineGunDamageScale, model.ship ? undefined : 0.75);
-      }
+    for (const weapon of model.weapons) {
+      if (Classes.headOrWrist(weapon)) assert.equal(weapon.actionCost, 3);
+      else if (Classes.machineGun(weapon)) assert.equal(weapon.actionCost, 4);
+    }
 });

@@ -12,7 +12,7 @@ const Encyclopedia = (() => {
     JSON.stringify([
       weapon.sourceName || weapon.id,
       weapon.level,
-      WeaponClasses.tags(weapon),
+      WeaponClasses.paths(weapon),
       weapon.damage,
       weapon.shotCount,
       weapon.en,
@@ -50,7 +50,12 @@ const Encyclopedia = (() => {
       ["locked", "未解锁"],
     ]);
     if (tab === "units") UnitCatalog.populateTypeFilter(field("Type"), field("Type").value);
-    else options("Type", [["", "\u5168\u90e8\u7c7b\u578b"], ...Object.entries(categories)]);
+    else
+      options("Type", [
+        ["", "全部类型"],
+        ...Object.entries(WeaponClasses.mainLabels).map(([key, name]) => ["main:" + key, name]),
+        ...Object.entries(categories),
+      ]);
     options("Level", [
       ["", "全部等级"],
       ...[
@@ -131,7 +136,7 @@ const Encyclopedia = (() => {
           min: skill.minRange,
           max: skill.range,
           hit: skill.baseHit,
-          en: (model.en * skill.enCostPercent) / 100,
+          en: skill.enCost ?? (model.en * skill.enCostPercent) / 100,
           damagePerShot: Object.values(skill.damageComponents).reduce((a, b) => a + b, 0),
           damage: Object.values(skill.damageComponents).reduce((a, b) => a + b, 0),
           shotCount: 1,
@@ -180,11 +185,13 @@ const Encyclopedia = (() => {
           weapon.name = converted.name;
           weapon.localization = converted.localization;
           weapon.actionCost = converted.actionCost;
-          weapon.en = converted.enCostPercent
-            ? (UnitModels[prefab.id + "__" + prefab.weaponKits[0].id].en *
-                converted.enCostPercent) /
-              100
-            : converted.enCost || 0;
+          weapon.en =
+            converted.enCost ??
+            (converted.enCostPercent
+              ? (UnitModels[prefab.id + "__" + prefab.weaponKits[0].id].en *
+                  converted.enCostPercent) /
+                100
+              : converted.enCost || 0);
           weapon.damage = weapon.damagePerShot = 0;
           weapon.damageComponents = {};
           weapon.attack.strikes = weapon.attack.strikes.map((strike) => ({
@@ -237,7 +244,10 @@ const Encyclopedia = (() => {
         .filter(
           ({ weapon, users }) =>
             [...users].some((id) => ids.has(id)) &&
-            (!field("Type").value || WeaponClasses.tags(weapon).includes(field("Type").value)) &&
+            (!field("Type").value ||
+              (field("Type").value.startsWith("main:")
+                ? WeaponClasses.mainTags(weapon).includes(field("Type").value.slice(5))
+                : WeaponClasses.tags(weapon).includes(field("Type").value))) &&
             (!field("Level").value || weapon.level === Number(field("Level").value)) &&
             (!query ||
               [

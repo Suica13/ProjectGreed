@@ -8,6 +8,13 @@ function createLocalizer() {
   const dictionaries = { en: read("client/locales/en.json"), ja: read("client/locales/ja.json") };
   function record(value, override = {}) {
     if (!value) return value;
+    if (value.name && /Leg[RL]/.test(value.name)) {
+      value.name = value.name.replace(/LegR/g, "右腿").replace(/LegL/g, "左腿");
+      if (value.localization?.zh?.name)
+        value.localization.zh.name = value.localization.zh.name
+          .replace(/LegR/g, "右腿")
+          .replace(/LegL/g, "左腿");
+    }
     for (const language of ["en", "ja"]) {
       for (const field of ["name", "description"]) {
         const original = value[field];

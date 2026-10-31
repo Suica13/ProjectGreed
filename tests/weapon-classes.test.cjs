@@ -18,9 +18,9 @@ test("every weapon has a valid balance class, including skill weapons and physic
     }
   assert(count > 1000);
   for (const [sourceName, category, type, expected] of [
-    ["Common_ArmBR_Pink", "beam_rifle", "beam", "wrist"],
+    ["Common_ArmBR_Pink", "beam_rifle", "beam", "beam"],
     ["Common_ArmBeamSaber_B", "melee", "melee", "melee"],
-    ["Common_DoubleVulcan_MS", "machine_gun", "shell", "head_vulcan"],
+    ["Common_DoubleVulcan_MS", "machine_gun", "shell", "small_vulcan"],
     ["Common_DoubleVulcan_FF_4", "machine_gun", "shell", "small_vulcan"],
     ["SalamisClass_Turret_AA", "machine_gun", "shell", "close_defense"],
     ["Common_Grenade_A", "other", "shell", "grenade"],
@@ -38,7 +38,7 @@ test("explicit classes control balance without changing source damage channels o
   );
   const source = raw.weapons.EF_RX_78_2_BR;
   for (const [kind, scale, cost, range] of [
-    ["wrist", 1, 3, 2],
+    ["wrist", 0.75, 3, 2],
     ["beam_rifle", 1.5, 4, 4],
     ["machine_gun", 0.75, 4, 4],
     ["bazooka", 1.25, 6, 4],

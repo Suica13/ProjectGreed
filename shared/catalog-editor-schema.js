@@ -3,6 +3,8 @@ const CatalogEditorSchema = (() => {
   const weaponFields = [
     "name",
     "weaponClass",
+    "weaponMainClass",
+    "weaponSubClass",
     "localization",
     "damagePerShot",
     "damageComponents",

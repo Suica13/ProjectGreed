@@ -24,7 +24,7 @@ test("conversion settings apply before additive unit offsets and log every affec
   f.store.saveUnit(unit);
   const offsets = f.read("shared/editor-adjustments.json");
   const rules = f.store.getConversion();
-  rules.rules.weapons.beamRifleDamage = 1.35;
+  rules.rules.weaponClasses.hand.beam.damage = 1.35;
   rules.rules.weapons.ap = 1.5;
   rules.rules.units.hp = 1.1;
   const result = f.store.saveConversion(rules, { ip: "127.0.0.1" });
@@ -72,7 +72,7 @@ test("invalid global fields and failed validation cannot change rules or generat
 });
 test("classification exclusions and repeated conversion remain correct with non-default multipliers", () => {
   const config = Conversion.read();
-  config.weapons.beamRifleDamage = 1.35;
+  config.weaponClasses.hand.beam.damage = 1.35;
   config.weapons.ap = 1.4;
   config.weapons.damage = 1.2;
   config.units.hp = 1.1;
@@ -85,7 +85,8 @@ test("classification exclusions and repeated conversion remain correct with non-
     const snapshot = structuredClone(unit);
     applyWeaponBalance(unit, config);
     assert.deepEqual(unit, snapshot, id);
-    for (const weapon of Object.values(unit.weapons)) assert(Number.isInteger(weapon.actionCost * 2));
+    for (const weapon of Object.values(unit.weapons))
+      assert(Number.isInteger(weapon.actionCost * 2));
   }
 });
 

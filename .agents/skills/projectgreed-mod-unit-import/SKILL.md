@@ -55,3 +55,11 @@ description: 移植、修复或核对 ProjectGreed 的 Rusted Warfare Battle Uni
 - 分类以 `shared/weapon-classes.js` 为唯一显示／换算入口；可选 `weaponClass` 覆盖自动识别。旧category不再是运行时平衡分类的唯一依据。新增武器必须能得到有效标签；腕部军刀、飞机火神炮、头部火神炮和腕部枪炮不得混为一类。
 - 用户手动分类保存在通用模板或单位武器覆盖中，修改时保留原MOD载荷、发数、伤害属性和演出。伤害倍率、机枪费用、头部／腕部固定范围、迫击炮命中与狙击额外射程均读取同一分类。
 - 规则参考 [武器分类与换算规则](../../../武器分类与换算规则.md)。补充运行 `node --test tests/weapon-classes.test.cjs tests/weapon-balance.test.cjs tests/ap-range-conversion.test.cjs`，确认分类覆盖、无数值烘焙、原生数据保留、错误分类事务回滚和已有数值兼容。
+
+
+## 当前两级武器分类（覆盖前文单层分类说明）
+
+- 主分类为主手、身体、腕部、头部、内藏、腿部；子分类为光束、机枪、火箭筒等20种种类。使用 `weaponMainClass` / `weaponSubClass` 覆盖，旧weaponClass只兼容读取。LegR右腿、LegL左腿，导入名称政策由native_weapon_names.py维护。
+- 默认主手光束伤害×1.5，腕部光束×0.75，其余部位光束×1；各部位继承机枪×0.75、火箭筒×1.25、近战×1.10、迫击炮命中×1.10。冲撞不吃近战加成。腕部光束枪不叠加主手光束倍率，最终伤害仍按25取整。
+- `shared/conversion-rules.json` schemaVersion=2，分类规则位于weaponClasses.<main>.<sub>，包含基础AP/EN/命中/最小最大射程（-1继承）及伤害、AP、EN、命中、射程倍率与最大射程增减。使用同一分类应用规则，不将派生数值烘焙回原始载荷。
+- 必须核对用户点名的BD-1胸部有线导弹、陆战型高达胸部火神炮、魔蟹内藏光束枪、腿部导弹与左右腕枪。运行 `node --test tests/weapon-hierarchy.test.cjs tests/weapon-classes.test.cjs tests/weapon-balance.test.cjs tests/ap-range-conversion.test.cjs`。

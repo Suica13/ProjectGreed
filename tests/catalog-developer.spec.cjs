@@ -270,7 +270,7 @@ for (const width of [1440, 390])
         .click();
       await expect(page.locator("#conversionRulesScreen")).toBeVisible();
       await expect(page.locator("#encyclopediaScreen")).toBeHidden();
-      await page.locator('[data-field="conversion.weapons.beamRifleDamage"]').fill("1.35");
+      await page.locator('[data-field="conversion.weaponClasses.hand.beam.damage"]').fill("1.35");
       await page.locator('[data-field="conversion.weapons.ap"]').fill("1.5");
       await page
         .locator("#conversionRulesScreen")
@@ -278,6 +278,27 @@ for (const width of [1440, 390])
         .click();
       await expect(page.locator("#conversionRulesScreen [role=status]")).toContainText("已保存");
       expect(f.read("shared/conversion-rules.json").weapons.ap).toBe(1.5);
+      await page.locator("[data-rule-main-class]").selectOption("leg");
+      await page.locator("[data-rule-sub-class]").selectOption("missile");
+      for (const [key, value] of Object.entries({
+        baseAP: 2,
+        baseEN: 25,
+        baseHit: 88,
+        minRange: 2,
+        maxRange: 5,
+      }))
+        await page
+          .locator(`[data-field="conversion.weaponClasses.leg.missile.${key}"]`)
+          .fill(String(value));
+      await page
+        .locator("#conversionRulesScreen")
+        .getByRole("button", { name: "保存规则", exact: true })
+        .click();
+      await expect(page.locator("#conversionRulesScreen [role=status]")).toContainText("已保存");
+      await expect(page.locator("[data-rule-main-class]")).toHaveValue("leg");
+      const leg = f.store.getUnit("RX_80PR").unit.weapons.EF_RX_80PR_LegMS;
+      expect([leg.actionCost, leg.en, leg.hit, leg.min, leg.max]).toEqual([3, 25, 88, 2, 6]);
+
       await page
         .locator(".developer-toolbar")
         .getByRole("button", { name: "图鉴", exact: true })

@@ -6,21 +6,6 @@ const file = "shared/conversion-rules.json";
 const Classes = require("./weapon-classes.js");
 const fields = {
   weapons: {
-    beamRifleDamage: [
-      "光束步枪伤害倍率",
-      0.01,
-      10,
-      false,
-      "排除战舰、MA、腕部内置武器与格斗武器。当前150%。",
-    ],
-    bazookaDamage: [
-      "火箭筒伤害倍率",
-      0.01,
-      10,
-      false,
-      "实弹和光束火箭筒统一使用，不叠加光束步枪倍率。",
-    ],
-    mortarAccuracy: ["迫击炮基础命中倍率", 0.01, 10, false, "按原始基础命中相乘，包含分段命中率。"],
     headWristAP: [
       "头部火神炮／腕部武器最终AP",
       0.5,
@@ -35,8 +20,6 @@ const fields = {
       true,
       "最小射程固定1，不叠加普通额外射程。",
     ],
-    meleeDamage: ["格斗伤害倍率", 0.01, 10, false, "冲撞除外。当前110%。"],
-    machineGunDamage: ["机枪伤害倍率", 0.01, 10, false, "不重复缩减战舰原生伤害。当前75%。"],
     machineGunAP: ["机枪基础AP消耗", 1, 99, true, "固定基础值，再乘下方武器AP倍率。"],
     damage: ["全部武装伤害倍率", 0.01, 10, false, "在武器分类倍率之后叠乘，包含有伤害的机体技能。"],
     accuracy: ["武器命中率倍率", 0.01, 10, false, "同时处理单发及分段命中率。"],
@@ -73,11 +56,26 @@ const fields = {
     reaction: ["单位反应系数倍率", 0.01, 10, false, "对应回避用的反应系数，不是机动。"],
   },
 };
+const classFields = {
+  baseAP: ["基础AP（-1继承）", -1, 99, false],
+  baseEN: ["基础EN（-1继承）", -1, 999999, false],
+  baseHit: ["基础命中率（-1继承）", -1, 1000, false],
+  minRange: ["基础最小射程（-1继承）", -1, 100, false],
+  maxRange: ["基础最大射程（-1继承）", -1, 100, false],
+  damage: ["分类伤害倍率", 0.01, 10, false],
+  accuracy: ["分类命中倍率", 0.01, 10, false],
+  ap: ["分类AP倍率", 0.01, 10, false],
+  en: ["分类EN倍率", 0.01, 10, false],
+  range: ["分类射程倍率", 0.01, 10, false],
+  rangeBonus: ["分类最大射程增减", -100, 100, true],
+};
 function validate(value) {
   if (
     !value ||
-    value.schemaVersion !== 1 ||
-    Object.keys(value).some((k) => !["schemaVersion", ...Object.keys(fields)].includes(k))
+    value.schemaVersion !== 2 ||
+    Object.keys(value).some(
+      (k) => !["schemaVersion", "weaponClasses", ...Object.keys(fields)].includes(k),
+    )
   )
     throw Error("换算规则版本或字段无效");
   for (const [group, entries] of Object.entries(fields)) {
@@ -87,6 +85,37 @@ function validate(value) {
       const n = value[group][key];
       if (!Number.isFinite(n) || n < min || n > max || (integer && !Number.isInteger(n)))
         throw Error(`${label}必须在${min}～${max}之间${integer ? "且为整数" : ""}`);
+    }
+  }
+  const checkKeys = (object, expected) =>
+    object &&
+    !Array.isArray(object) &&
+    Object.keys(object).length === expected.length &&
+    expected.every((key) => Object.hasOwn(object, key));
+  if (!checkKeys(value.weaponClasses, Object.keys(Classes.mainLabels)))
+    throw Error("武器主分类规则不完整");
+  for (const main of Object.keys(Classes.mainLabels)) {
+    const entries = value.weaponClasses[main];
+    if (!checkKeys(entries, Object.keys(Classes.labels)))
+      throw Error("武器子分类规则不完整：" + main);
+    for (const [sub, group] of Object.entries(entries)) {
+      if (!checkKeys(group, Object.keys(classFields)))
+        throw Error("分类规则字段不完整：" + main + "/" + sub);
+      if (group.minRange >= 0 && group.maxRange >= 0 && group.minRange > group.maxRange)
+        throw Error("分类基础最小射程不能大于最大射程：" + main + "/" + sub);
+      for (const [key, [label, min, max, integer]] of Object.entries(classFields)) {
+        const n = group[key];
+        if (
+          !Number.isFinite(n) ||
+          n < min ||
+          n > max ||
+          (integer && !Number.isInteger(n)) ||
+          (["baseAP", "baseEN", "baseHit", "minRange", "maxRange"].includes(key) &&
+            n < 0 &&
+            n !== -1)
+        )
+          throw Error(label + "无效：" + main + "/" + sub);
+      }
     }
   }
   return value;
@@ -109,19 +138,25 @@ const isHeadOrWrist = Classes.headOrWrist;
 const roundAP = (value) => Math.round(value * 2) / 2;
 function globals(prefab, rules) {
   const w = rules.weapons;
-  const isWeaponSkill = (skill) =>
-    !!skill.sourceWeapon || skill.reconMode === "camera" || skill.type === "beam_diffusion";
-  const scaled = (value) =>
-    [value.damage, value.accuracy, value.ap, value.en, value.range].some((n) => n !== 1) ||
-    value.rangeBonus !== 0 ||
-    value.sniperRangeBonus !== 0;
+  const isWeaponSkill = Classes.isWeaponSkill;
   for (const weapon of [
     ...Object.values(prefab.weapons || {}),
     ...(prefab.skills || []).filter(isWeaponSkill),
   ]) {
+    const group = Classes.rule(weapon, rules);
     const old = weapon.conversionMultipliers;
-    if (!old && !scaled(w) && !isHeadOrWrist(weapon)) continue;
-    const numericFields = ["hit", "actionCost", "en", "enCost", "min", "minRange", "max", "range"];
+    const numericFields = [
+      "hit",
+      "baseHit",
+      "actionCost",
+      "en",
+      "enCost",
+      "enCostPercent",
+      "min",
+      "minRange",
+      "max",
+      "range",
+    ];
     const base =
       old ||
       Object.fromEntries(
@@ -129,42 +164,76 @@ function globals(prefab, rules) {
           .filter((key) => Number.isFinite(weapon[key]))
           .map((key) => [key, weapon[key]]),
       );
-    if (Classes.machineGun(weapon)) base.actionCost = w.machineGunAP;
-    if (Classes.classify(weapon) === "bazooka") base.actionCost = 3;
+    const accuracy = w.accuracy * group.accuracy,
+      en = w.en * group.en,
+      range = w.range * group.range;
     scaleDamage(weapon, w.damage / (old?.damageScale || 1));
-    if (base.hit !== undefined) weapon.hit = base.hit * w.accuracy;
-    if (base.actionCost !== undefined)
-      weapon.actionCost = Math.max(0.5, roundAP(base.actionCost * w.ap));
-    for (const key of ["en", "enCost"])
+    for (const key of ["hit", "baseHit"])
       if (base[key] !== undefined)
-        weapon[key] = w.en === 1 ? base[key] : Math.ceil(base[key] * w.en);
+        weapon[key] = (group.baseHit >= 0 ? group.baseHit : base[key]) * accuracy;
+    const tacticalAP =
+      group.baseAP >= 0
+        ? group.baseAP
+        : Classes.machineGun(weapon)
+          ? w.machineGunAP
+          : Classes.classify(weapon) === "bazooka"
+            ? 3
+            : base.actionCost;
+    if (tacticalAP !== undefined)
+      weapon.actionCost = Math.max(0.5, roundAP(tacticalAP * w.ap * group.ap));
+    for (const key of ["en", "enCost"])
+      if (base[key] !== undefined) {
+        const value = group.baseEN >= 0 ? group.baseEN : base[key];
+        weapon[key] = en === 1 ? value : Math.ceil(value * en);
+      }
+    if (base.enCostPercent !== undefined) {
+      weapon.enCostPercent = base.enCostPercent * en;
+      if (group.baseEN >= 0) weapon.enCost = en === 1 ? group.baseEN : Math.ceil(group.baseEN * en);
+      else if (base.enCost === undefined) delete weapon.enCost;
+    }
     for (const key of ["min", "minRange"])
       if (base[key] !== undefined)
-        weapon[key] = w.range === 1 ? base[key] : Math.round(base[key] * w.range);
-    const bonus = Classes.classify(weapon) === "sniper" ? w.sniperRangeBonus : w.rangeBonus;
-    if (base.max !== undefined)
-      weapon.max = Math.max(1, (w.range === 1 ? base.max : Math.round(base.max * w.range)) + bonus);
-    if (base.range !== undefined)
-      weapon.range = Math.max(
-        1,
-        (w.range === 1 ? base.range : Math.round(base.range * w.range)) + bonus,
-      );
+        weapon[key] =
+          range === 1
+            ? group.minRange >= 0
+              ? group.minRange
+              : base[key]
+            : Math.round((group.minRange >= 0 ? group.minRange : base[key]) * range);
+    const bonus =
+      (Classes.classify(weapon) === "sniper" ? w.sniperRangeBonus : w.rangeBonus) +
+      group.rangeBonus;
+    for (const key of ["max", "range"])
+      if (base[key] !== undefined)
+        weapon[key] = Math.max(
+          1,
+          (range === 1
+            ? group.maxRange >= 0
+              ? group.maxRange
+              : base[key]
+            : Math.round((group.maxRange >= 0 ? group.maxRange : base[key]) * range)) + bonus,
+        );
     if (isHeadOrWrist(weapon)) {
-      weapon.actionCost = Math.max(0.5, roundAP(w.headWristAP));
-      if (weapon.sourceWeapon || weapon.minRange !== undefined) {
-        weapon.minRange = 1;
-        weapon.range = w.headWristRange;
+      if (group.baseAP < 0) weapon.actionCost = Math.max(0.5, roundAP(w.headWristAP * group.ap));
+      const min = Math.max(1, Math.round((group.minRange >= 0 ? group.minRange : 1) * group.range)),
+        max = Math.max(
+          min,
+          Math.round((group.maxRange >= 0 ? group.maxRange : w.headWristRange) * group.range) +
+            group.rangeBonus,
+        );
+      if (weapon.sourceWeapon || base.minRange !== undefined) {
+        weapon.minRange = min;
+        weapon.range = max;
       } else {
-        weapon.min = 1;
-        weapon.max = w.headWristRange;
+        weapon.min = min;
+        weapon.max = max;
       }
     }
     for (const step of weapon.attack?.steps || [])
       if (step.accuracy !== undefined)
-        step.accuracy = (step.accuracy / (old?.accuracyScale || 1)) * w.accuracy;
-    if (!scaled(w)) delete weapon.conversionMultipliers;
-    else
-      weapon.conversionMultipliers = { ...base, damageScale: w.damage, accuracyScale: w.accuracy };
+        step.accuracy =
+          (group.baseHit >= 0 ? group.baseHit : step.accuracy / (old?.accuracyScale || 1)) *
+          accuracy;
+    weapon.conversionMultipliers = { ...base, damageScale: w.damage, accuracyScale: accuracy };
   }
   for (const skill of (prefab.skills || []).filter((skill) => !isWeaponSkill(skill)))
     if (skill.damageComponents) {
@@ -204,4 +273,14 @@ function globals(prefab, rules) {
   }
   return prefab;
 }
-module.exports = { file, fields, validate, read, globals, isHeadOrWrist, roundAP };
+module.exports = {
+  file,
+  fields,
+  classFields,
+  validate,
+  read,
+  globals,
+  isHeadOrWrist,
+  roundAP,
+  scaleDamage,
+};

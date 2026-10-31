@@ -50,6 +50,8 @@ const I18n = (() => {
     .sort((a, b) => b.length - a.length);
   let fragmentRegex = new RegExp(fragments.map(escape).join("|"), "g");
   function text(value) {
+    if (language === "zh" && ["LegR", "LegL"].includes(value))
+      return value === "LegR" ? "右腿" : "左腿";
     if (
       typeof value !== "string" ||
       language === "zh" ||

@@ -206,8 +206,10 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     let candidate;
     if (original.sourceWeapon) {
       candidate = structuredClone(current);
-      if (payload.weapon.weaponClass === undefined) delete candidate.weaponClass;
-      else candidate.weaponClass = payload.weapon.weaponClass;
+      for (const field of ["weaponClass", "weaponMainClass", "weaponSubClass"]) {
+        if (payload.weapon[field] === undefined) delete candidate[field];
+        else candidate[field] = payload.weapon[field];
+      }
       require("../shared/weapon-classes.js").classify(candidate);
       if (!equal(candidate, payload.weapon)) throw Error("武器技能仅支持修改换算分类");
     } else candidate = weaponChanges(current, payload.weapon);
@@ -311,15 +313,19 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     sourceNext.skills = next.skills.map((skill) => {
       const raw = rawUnit.skills.find((item) => item.id === skill.id);
       const previous = original.skills.find((item) => item.id === skill.id);
-      if (raw && skill.sourceWeapon && previous) {
+      if (raw && require("../shared/weapon-classes.js").isWeaponSkill(skill) && previous) {
         const comparison = { ...skill },
           old = { ...previous };
-        delete comparison.weaponClass;
-        delete old.weaponClass;
+        for (const field of ["weaponClass", "weaponMainClass", "weaponSubClass"]) {
+          delete comparison[field];
+          delete old[field];
+        }
         if (equal(comparison, old)) {
           const result = structuredClone(raw);
-          if (skill.weaponClass === undefined) delete result.weaponClass;
-          else result.weaponClass = skill.weaponClass;
+          for (const field of ["weaponClass", "weaponMainClass", "weaponSubClass"]) {
+            if (skill[field] === undefined) delete result[field];
+            else result[field] = skill[field];
+          }
           return result;
         }
       }
@@ -412,7 +418,12 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     };
   }
   function getConversion() {
-    return { revision: revision(), rules: Conversion.read(root), fields: Conversion.fields };
+    return {
+      revision: revision(),
+      rules: Conversion.read(root),
+      fields: Conversion.fields,
+      classFields: Conversion.classFields,
+    };
   }
   function saveConversion(payload, actor = {}) {
     assertRevision(payload.revision);

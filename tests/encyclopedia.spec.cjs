@@ -55,7 +55,7 @@ for (const width of [2400, 1440, 390]) {
     await expect(page.locator('#encyclopediaScreen')).toBeVisible();
     await page.locator('#encyclopediaSearch').fill('');
     await page.locator('#encyclopediaWeaponsTab').click();
-    await page.locator('#encyclopediaType').selectOption('beam_rifle');
+    await page.locator('#encyclopediaType').selectOption('beam');
     await page.locator('#encyclopediaLevel').selectOption('2');
     await expect(page.locator('#encyclopediaList .weapon-card').first()).toBeVisible();
     const names = await page.locator('#encyclopediaList .weapon-name').allTextContents();

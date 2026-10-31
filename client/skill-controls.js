@@ -67,8 +67,15 @@ const SkillControls = (() => {
       const damage = Object.values(skill.damageComponents)
         .reduce((sum, value) => sum + value, 0)
         .toLocaleString(undefined, { maximumFractionDigits: 2 });
+      if (Number.isFinite(skill.enCost)) {
+        if (I18n.language === "en")
+          return `Damage ${damage} × 1 = ${damage}; range ${skill.range}, accuracy ${skill.baseHit}%; ${skill.actionCost} AP and ${skill.enCost} EN; cooldown ${skill.cooldownTurns} turns. Hits each unit along the beam once, including allies.`;
+        if (I18n.language === "ja")
+          return `ダメージ ${damage} × 1 = ${damage}；射程${skill.range}、命中${skill.baseHit}%。消費${skill.actionCost} AP・${skill.enCost} EN、冷却${skill.cooldownTurns}ターン。射線上の味方を含む各機に1回判定。`;
+        return `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCost} EN，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`;
+      }
       return I18n.text(
-        `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCostPercent}%最大EN，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`,
+        `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCost !== undefined ? skill.enCost + " EN" : skill.enCostPercent + "%最大EN"}，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`,
       );
     }
     if (skill.type === "recon" && skill.reconMode === "camera") {
@@ -80,10 +87,10 @@ const SkillControls = (() => {
     }
     if (skill.type === "beam_diffusion") {
       if (I18n.language === "en")
-        return `Range ${skill.range}; ${skill.actionCost} AP and ${skill.enCostPercent}% max EN. Beams crossing the radius-${skill.radius} area deal 50% less damage for 2 full turn cycles. Does not stack.`;
+        return `Range ${skill.range}; ${skill.actionCost} AP and ${skill.enCost !== undefined ? skill.enCost + " EN" : skill.enCostPercent + "% max EN"}. Beams crossing the radius-${skill.radius} area deal 50% less damage for 2 full turn cycles. Does not stack.`;
       if (I18n.language === "ja")
-        return `射程${skill.range}マス。${skill.actionCost} APと最大ENの${skill.enCostPercent}%を消費。半径${skill.radius}マスを通るビームの威力を50%軽減。2往復ターン持続、重複不可。`;
-      return `射程${skill.range}格，消耗${skill.actionCost} AP与${skill.enCostPercent}%最大EN；半径${skill.radius}格内持续2个完整回合周期，穿过区域的光束弹伤害降低50%，同类区域不叠加。`;
+        return `射程${skill.range}マス。${skill.actionCost} APと${skill.enCost !== undefined ? skill.enCost + " EN" : "最大ENの" + skill.enCostPercent + "%"}を消費。半径${skill.radius}マスを通るビームの威力を50%軽減。2往復ターン持続、重複不可。`;
+      return `射程${skill.range}格，消耗${skill.actionCost} AP与${skill.enCost !== undefined ? skill.enCost + " EN" : skill.enCostPercent + "%最大EN"}；半径${skill.radius}格内持续2个完整回合周期，穿过区域的光束弹伤害降低50%，同类区域不叠加。`;
     }
     if (skill.description) return skill.description;
     if (skill.type === "flight")
@@ -176,7 +183,7 @@ const SkillControls = (() => {
         ),
         element("small", "helper", description(skill)),
       );
-      if (skill.sourceWeapon) button.append(WeaponInfo.classBadge(skill));
+      if (WeaponClasses.isWeaponSkill(skill)) button.append(WeaponInfo.classBadge(skill));
       const left = Math.max(
         0,
         skill.maxUses - (unit.skillUses?.[UnitModels[unit.model].prefabId + "/" + skill.id] || 0),

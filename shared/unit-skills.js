@@ -114,13 +114,18 @@ const UnitSkills = (() => {
           !Number.isInteger(skill.actionCost * 2) ||
           skill.actionCost < 0.5 ||
           skill.actionCost > 99 ||
-          skill.enCostPercent !== 50 ||
+          !Number.isFinite(skill.enCostPercent) ||
+          skill.enCostPercent < 0 ||
+          (skill.enCost !== undefined && (!Number.isFinite(skill.enCost) || skill.enCost < 0)) ||
           !Number.isFinite(skill.range) ||
           skill.range < 1 ||
           skill.range > 100 ||
-          skill.minRange !== 1 ||
+          !Number.isFinite(skill.minRange) ||
+          skill.minRange < 0 ||
+          skill.minRange > skill.range ||
           skill.cooldownTurns !== 3 ||
-          skill.baseHit !== 60 ||
+          !Number.isFinite(skill.baseHit) ||
+          skill.baseHit < 0 ||
           !skill.damageComponents ||
           Object.values(skill.damageComponents).some((n) => !Number.isFinite(n) || n < 0) ||
           !["Pink", "Blue", "Yellow"].includes(skill.visualColor) ||
@@ -164,7 +169,9 @@ const UnitSkills = (() => {
           !Number.isInteger(skill.actionCost * 2) ||
           skill.actionCost < 0.5 ||
           skill.actionCost > 99 ||
-          skill.enCostPercent !== 50 ||
+          !Number.isFinite(skill.enCostPercent) ||
+          skill.enCostPercent < 0 ||
+          (skill.enCost !== undefined && (!Number.isFinite(skill.enCost) || skill.enCost < 0)) ||
           skill.radius !== 4 ||
           skill.durationRounds !== 4 ||
           !Number.isFinite(skill.range) ||
@@ -194,7 +201,7 @@ const UnitSkills = (() => {
           skill.range < 1 ||
           skill.range > 100 ||
           !Number.isFinite(skill.enCost) ||
-          skill.enCost <= 0 ||
+          skill.enCost < 0 ||
           !Number.isInteger(skill.maxUses) ||
           skill.maxUses < 1 ||
           skill.maxUses > 99 ||
@@ -311,6 +318,8 @@ const UnitSkills = (() => {
     } = G;
     const of = (unit) => [...(models[unit.model]?.skills || []), ...pilots.skillsOf(unit)];
     const usageKey = (unit, skill) => models[unit.model].prefabId + "/" + skill.id;
+    const energyCost = (unit, skill) =>
+      skill.enCost ?? (modelOf(unit).en * skill.enCostPercent) / 100;
     function canUse(game, unit, skillId) {
       const skill = of(unit).find((s) => s.id === skillId);
       return (
@@ -323,7 +332,7 @@ const UnitSkills = (() => {
         (!skill.actionCost ||
           (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost) &&
         (!["resupply", "beam_diffusion", "irradiation"].includes(skill.type) ||
-          unit.en >= (modelOf(unit).en * skill.enCostPercent) / 100) &&
+          unit.en >= energyCost(unit, skill)) &&
         (!skill.requiresSfsMS || G.hasSfsMS(game, unit)) &&
         !parts.unavailable(unit, skill).length &&
         (skill.type !== "transform" || !Object.values(unit.brokenParts || {}).some(Boolean)) &&
@@ -650,7 +659,7 @@ const UnitSkills = (() => {
       }
       if (skill.type === "irradiation") {
         const event = G.irradiate(game, unit, skill, x, y);
-        unit.en -= (modelOf(unit).en * skill.enCostPercent) / 100;
+        unit.en -= energyCost(unit, skill);
         unit.actionPoints =
           (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         unit.acted = unit.actionPoints <= 0;
@@ -732,7 +741,7 @@ const UnitSkills = (() => {
           modelOf(target).en,
           target.en + (modelOf(target).en * skill.enRecoveryPercent) / 100,
         );
-        unit.en -= (modelOf(unit).en * skill.enCostPercent) / 100;
+        unit.en -= energyCost(unit, skill);
         unit.actionPoints =
           (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         if (unit.actionPoints <= 0) unit.acted = true;
@@ -865,7 +874,7 @@ const UnitSkills = (() => {
           radius: skill.radius,
           expiresRound: game.round + skill.durationRounds,
         });
-        unit.en -= (modelOf(unit).en * skill.enCostPercent) / 100;
+        unit.en -= energyCost(unit, skill);
         unit.actionPoints =
           (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         unit.origin = null;

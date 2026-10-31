@@ -57,7 +57,7 @@ test("mortar accuracy scales by 1.10, all bazookas by 1.25, and FA781 keeps its 
   const fa = catalog.prefabs.find((p) => p.id === "FA_78_1");
   for (const id of ["EF_FA_78_1_BR", "EF_FA_78_1_BR_R"]) {
     assert.equal(fa.weapons[id].damagePerShot, 7500);
-    assert.equal(fa.weapons[id].beamDamageScale, 1.5);
+    assert.equal(fa.weapons[id].classDamageScale, 1.5);
   }
 });
 
@@ -77,7 +77,7 @@ test("fractional AP conversion and repeated changes to classification rules pres
   const p = structuredClone(
     custom.prefabs.find((p) => Object.values(p.weapons).some((w) => w.category === "mortar")),
   );
-  config.weapons.mortarAccuracy = 1.2;
+  for (const group of Object.values(config.weaponClasses)) group.mortar.accuracy = 1.2;
   applyWeaponBalance(p, config);
   const saved = structuredClone(p);
   applyWeaponBalance(p, config);

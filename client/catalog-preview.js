@@ -116,13 +116,10 @@ const Formation = (() => {
         element("strong", "", skill.name),
         element("p", "muted", SkillControls.description(skill)),
       );
+      if (WeaponClasses.isWeaponSkill(skill))
+        card.append(WeaponInfo.classBadge(skill), WeaponInfo.conversionRules(skill));
       if (skill.sourceWeapon)
-        card.append(
-          WeaponInfo.classBadge(skill),
-          WeaponInfo.conversionRules(skill),
-          WeaponInfo.encyclopediaLink(skill),
-          Encyclopedia.usersButton(skill),
-        );
+        card.append(WeaponInfo.encyclopediaLink(skill), Encyclopedia.usersButton(skill));
       if (skill.sourceWeapon && window.CatalogDeveloper)
         window.CatalogDeveloper.decorateWeapon(card, skill, true);
       skills.append(card);

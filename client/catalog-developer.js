@@ -190,29 +190,48 @@ window.CatalogDeveloper = (() => {
     }
   }
   function weaponForm(parent, weapon, prefix, view = weapon) {
-    if (!weapon.sourceWeapon) names(section(parent, "武器名称"), weapon, prefix);
+    if (!WeaponClasses.isWeaponSkill(weapon)) names(section(parent, "武器名称"), weapon, prefix);
     const classification = section(parent, "武器分类与换算规则");
-    const auto = WeaponClasses.classify({ ...weapon, weaponClass: undefined });
+    const auto = { ...weapon };
+    for (const key of ["weaponClass", "weaponMainClass", "weaponSubClass"]) delete auto[key];
     const rulePreview = node("div");
     const drawRules = () => {
       rulePreview.replaceChildren(WeaponInfo.conversionRules(weapon));
       rulePreview.firstElementChild.open = true;
     };
-    const picker = select(
-      classification,
-      "换算分类",
-      weapon.weaponClass || "",
-      [["", "自动识别：" + WeaponClasses.labels[auto]], ...Object.entries(WeaponClasses.labels)],
-      (value) => {
-        if (value) weapon.weaponClass = value;
-        else delete weapon.weaponClass;
-        drawRules();
-      },
-    );
-    picker.dataset.weaponClassEditor = prefix;
+    for (const [field, label, labels, guess, dataKey] of [
+      [
+        "weaponMainClass",
+        "主分类",
+        WeaponClasses.mainLabels,
+        WeaponClasses.mainClass(auto),
+        "weaponMainClassEditor",
+      ],
+      [
+        "weaponSubClass",
+        "子分类",
+        WeaponClasses.labels,
+        WeaponClasses.classify(auto),
+        "weaponClassEditor",
+      ],
+    ]) {
+      const picker = select(
+        classification,
+        label,
+        weapon[field] || "",
+        [["", "自动识别：" + labels[guess]], ...Object.entries(labels)],
+        (value) => {
+          delete weapon.weaponClass;
+          if (value) weapon[field] = value;
+          else delete weapon[field];
+          drawRules();
+        },
+      );
+      picker.dataset[dataKey] = prefix;
+    }
     classification.append(rulePreview);
     drawRules();
-    if (weapon.sourceWeapon) return;
+    if (WeaponClasses.isWeaponSkill(weapon)) return;
     const core = section(parent, "基础属性（数值修改保存为基准值的增减量；伤害按25点取整）");
     input(
       core,
@@ -531,7 +550,7 @@ window.CatalogDeveloper = (() => {
     numbers(movement, { adaptability: unit.stats.adaptability }, "stats.");
     numbers(section(unitPanel, "伤害加成（%）"), unit.attackBonuses, "attackBonuses.");
     templatesEditor(unitPanel, unit);
-    for (const skill of (unit.skills || []).filter((item) => item.sourceWeapon)) {
+    for (const skill of (unit.skills || []).filter(WeaponClasses.isWeaponSkill)) {
       const detail = node("details"),
         body = node("div");
       detail.dataset.sourceSkill = skill.id;
@@ -793,6 +812,8 @@ window.CatalogDeveloper = (() => {
       "已保存，编辑器预览已刷新；正式客户端仍需手动构建。";
     return true;
   }
+  let ruleMain = "hand",
+    ruleSub = "beam";
   function renderRules() {
     const header = node("header", "", "catalog-editor-header");
     header.append(
@@ -834,6 +855,60 @@ window.CatalogDeveloper = (() => {
         control.parentElement.append(node("small", description, "catalog-editor-note"));
       }
     }
+    const categories = section(form, "主分类 × 子分类换算规则");
+    let selectedMain = ruleMain,
+      selectedSub = ruleSub;
+    const classGrid = node("div", "", "catalog-editor-grid");
+    const redrawClassRules = () => {
+      classGrid.replaceChildren();
+      const group = rulesSession.rules.weaponClasses[selectedMain][selectedSub];
+      for (const [key, [label, min, max, integer]] of Object.entries(rulesSession.classFields)) {
+        const control = input(
+          classGrid,
+          label,
+          group[key],
+          (value) => {
+            group[key] = value;
+          },
+          "number",
+          `conversion.weaponClasses.${selectedMain}.${selectedSub}.${key}`,
+        );
+        control.min = min;
+        control.max = max;
+        control.step = integer ? "1" : "0.01";
+      }
+    };
+    const mainPicker = select(
+      categories,
+      "主分类",
+      selectedMain,
+      Object.entries(WeaponClasses.mainLabels),
+      (value) => {
+        selectedMain = ruleMain = value;
+        redrawClassRules();
+      },
+    );
+    mainPicker.dataset.ruleMainClass = "";
+    const subPicker = select(
+      categories,
+      "子分类",
+      selectedSub,
+      Object.entries(WeaponClasses.labels),
+      (value) => {
+        selectedSub = ruleSub = value;
+        redrawClassRules();
+      },
+    );
+    subPicker.dataset.ruleSubClass = "";
+    categories.append(
+      node(
+        "p",
+        "-1继承源武器值；指定基础值后再乘对应倍率。射程加值仅影响最大射程。头部火神炮和腕部武器默认保留最终3 AP、1～2格；指定分类基础AP可覆盖固定费用。",
+        "catalog-editor-note",
+      ),
+      classGrid,
+    );
+    redrawClassRules();
     const status = node("p", "", "catalog-editor-note");
     status.setAttribute("role", "status");
     rulesScreen.replaceChildren(header, form, status);
