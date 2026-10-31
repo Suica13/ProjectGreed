@@ -466,7 +466,7 @@
       "rubble": 75
     },
     "accuracy": 120,
-    "actionPoints": 5,
+    "actionPoints": 10,
     "sensors": {
       "sight": 8,
       "radar": 10,

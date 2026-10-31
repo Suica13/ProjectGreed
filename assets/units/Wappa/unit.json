@@ -203,7 +203,7 @@
     "stealth": {
       "waterOnly": false
     },
-    "actionPoints": 5,
+    "actionPoints": 10,
     "sensors": {
       "sight": 8,
       "radar": 12.5,

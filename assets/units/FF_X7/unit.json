@@ -100,7 +100,7 @@
     },
     "movementType": "air",
     "partsBreakable": false,
-    "actionPoints": 6,
+    "actionPoints": 11,
     "sensors": {
       "sight": 9,
       "radar": 13.88888888888889,

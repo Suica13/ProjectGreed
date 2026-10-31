@@ -497,7 +497,7 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 7,
+    "actionPoints": 12,
     "speed": 145
   },
   "attackBonuses": {
@@ -594,7 +594,7 @@
     "v17BaseHp": 47500,
     "technologyEra": "0083",
     "importedTechPage": 1,
-    "actionTurnSpeed": 3,
+    "actionTurnSpeed": 3.0,
     "mobilityMoveTarget": 8
   },
   "presentation": {

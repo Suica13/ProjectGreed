@@ -4187,3 +4187,43 @@ test('finished WebSocket match writes one private server settlement JSON with al
  for(const p of record.players)assert.equal(p.total.money,room.economyAwards.filter(a=>a.memberId===p.memberId).reduce((n,a)=>n+a.money,0));
  await a.act('sync');assert.equal(fs.readFileSync(file,'utf8'),saved);assert.doesNotMatch(saved,/token|secret|seed/i);
 });
+
+
+test("ten-AP rules enforce doubled weapon costs, extended reach and atomic refunds over WebSocket",async t=>{
+ const {app,client}=await setup(t),blue=await client(),red=await client();
+ await blue.hello("create","AP10");await red.hello("join","AP10");
+ await blue.latest(s=>s.members.length===2);
+ await blue.act("configure_room",{...G.defaultRoomSettings(),fogMode:"disabled"});
+ await readyMatch(blue,red,app,false,{formation:[{unitId:"Type61",kitId:"standard",customPilot:G.pilots.createCustom("custom-ap-network","AP")}],licenses:{Type61:true}});
+ const room=app.rooms.get("AP10"),[a,b]=room.game.units;
+ room.game.tiles.forEach(row=>row.fill("plain"));Object.assign(a,{x:5,y:8});Object.assign(b,{x:10,y:8});
+ assert.equal(a.actionPoints,10);
+ const weapon=G.modelOf(a).weapons.find(w=>w.actionCost===4 && w.max>=5);assert(weapon);
+ await blue.latest(s=>s.revision===room.revision);
+ const before=room.revision;
+ assert.equal((await blue.act("attack",{unitId:a.id,orders:[{targetId:b.id,weaponIds:[weapon.id,weapon.id,weapon.id]}]})).type,"error");
+ assert.equal(room.revision,before);assert.equal(a.actionPoints,10);
+ assert.equal((await blue.act("attack",{unitId:a.id,orders:[{targetId:b.id,weaponIds:[weapon.id,weapon.id]}]})).type,"state");
+ assert.equal(a.actionPoints,2);
+ assert.equal((await blue.act("cancel_attack",{unitId:a.id})).type,"state");assert.equal(a.actionPoints,10);
+});
+
+
+test("half-point AP survives authoritative WebSocket reservations and cancellation",async t=>{
+ const {app,client}=await setup(t),blue=await client(),red=await client();
+ await blue.hello("create","APHALF");await red.hello("join","APHALF");
+ await blue.latest(s=>s.members.length===2);
+ await blue.act("configure_room",{...G.defaultRoomSettings(),fogMode:"disabled",costLimit:6000,unitCostLimit:1200});
+ await readyMatch(blue,red,app,false,{formation:[{unitId:"RX_78_2",kitId:"kit_1",customPilot:G.pilots.createCustom("custom-half-network","Half AP")}],licenses:{RX_78_2:true}});
+ const room=app.rooms.get("APHALF"),[a,b]=room.game.units;
+ room.game.tiles.forEach(row=>row.fill("plain"));Object.assign(a,{x:5,y:8});Object.assign(b,{x:7,y:8});
+ assert.equal(a.actionPoints,10.5);
+ const weapon=G.modelOf(a).weapons.find(w=>w.id==="EF_RX_78_2_BR");assert.equal(weapon.actionCost,4);
+ await blue.latest(s=>s.revision===room.revision);
+ const result=await blue.act("attack",{unitId:a.id,orders:[{targetId:b.id,weaponIds:[weapon.id,weapon.id]}]});
+ assert.equal(result.type,"state");assert.equal(a.actionPoints,2.5);
+ assert.equal(result.game.units.find(u=>u.id===a.id).actionPoints,2.5);
+ assert.equal((await blue.act("cancel_attack",{unitId:a.id})).type,"state");
+ assert.equal(a.actionPoints,10.5);
+ assert.equal(G.counterActionBudget(a),8);
+});

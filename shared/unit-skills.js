@@ -59,7 +59,7 @@ const UnitSkills = (() => {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
           !skill.name ||
-          !Number.isInteger(skill.actionCost) ||
+          !Number.isInteger(skill.actionCost * 2) ||
           skill.actionCost < 0 ||
           !Number.isFinite(skill.enCost) ||
           skill.enCost < 0 ||
@@ -111,7 +111,9 @@ const UnitSkills = (() => {
         if (
           !skill.id ||
           !skill.name ||
-          skill.actionCost !== 5 ||
+          !Number.isInteger(skill.actionCost * 2) ||
+          skill.actionCost < 0.5 ||
+          skill.actionCost > 99 ||
           skill.enCostPercent !== 50 ||
           !Number.isFinite(skill.range) ||
           skill.range < 1 ||
@@ -159,7 +161,9 @@ const UnitSkills = (() => {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
           !skill.name ||
-          skill.actionCost !== 4 ||
+          !Number.isInteger(skill.actionCost * 2) ||
+          skill.actionCost < 0.5 ||
+          skill.actionCost > 99 ||
           skill.enCostPercent !== 50 ||
           skill.radius !== 4 ||
           skill.durationRounds !== 4 ||
@@ -177,8 +181,8 @@ const UnitSkills = (() => {
           !skill.name ||
           (skill.reconMode !== undefined && !["camera", "scan"].includes(skill.reconMode)) ||
           (skill.reconMode &&
-            (!Number.isInteger(skill.actionCost) ||
-              skill.actionCost < 1 ||
+            (!Number.isInteger(skill.actionCost * 2) ||
+              skill.actionCost < 0.5 ||
               !Number.isInteger(skill.durationRounds) ||
               skill.durationRounds < 1)) ||
           (skill.reconMode === "camera" &&
@@ -209,8 +213,8 @@ const UnitSkills = (() => {
           skill.radius > 20 ||
           !Number.isFinite(skill.enCost) ||
           skill.enCost <= 0 ||
-          !Number.isInteger(skill.actionCost) ||
-          skill.actionCost < 1 ||
+          !Number.isInteger(skill.actionCost * 2) ||
+          skill.actionCost < 0.5 ||
           !Number.isInteger(skill.durationRounds) ||
           skill.durationRounds < 1 ||
           !Number.isInteger(skill.cooldownTurns) ||
@@ -271,7 +275,7 @@ const UnitSkills = (() => {
         skill.maxUses > 99 ||
         typeof skill.consumeAction !== "boolean" ||
         (skill.actionCost !== undefined &&
-          (!Number.isInteger(skill.actionCost) || skill.actionCost < 0)) ||
+          (!Number.isInteger(skill.actionCost * 2) || skill.actionCost < 0)) ||
         !["remove", "keep", "transform"].includes(skill.source?.mode) ||
         (skill.source.mode === "remove" && !skill.spawn)
       )

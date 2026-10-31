@@ -306,7 +306,7 @@
       }
     ],
     "deployed": true,
-    "actionPoints": 5,
+    "actionPoints": 10,
     "speed": 45
   },
   "attackBonuses": {

@@ -2327,3 +2327,12 @@ body > #formationPilotPanel {
 .weapon-accuracy { display:flex; align-items:baseline; justify-content:flex-end; flex-wrap:wrap; gap:4px 6px; }
 .weapon-ap-cost { margin-right:8px; }
 .weapon-index-status { display:inline-block; margin-top:8px; color:#e4c68b; }
+
+/* Shared weapon balance tags and compact rule reference. */
+.weapon-class-tag { display:inline-flex; align-items:center; padding:2px 7px; border:1px solid #70c7f6; border-radius:3px; color:#bce9ff; background:#233645; font-size:12px; white-space:nowrap; }
+.weapon-conversion-rules { margin-top:8px; border-top:1px solid #506174; padding-top:6px; color:#d1dde8; }
+.weapon-conversion-rules > summary { cursor:pointer; font-size:12px; color:#a6dfff; }
+.weapon-rule-grid { display:grid; grid-template-columns:minmax(100px,1fr) minmax(80px,1fr); gap:4px 12px; margin:8px 0; font-size:12px; }
+.weapon-rule-grid dt, .weapon-rule-grid dd { margin:0; }
+.weapon-rule-grid dd { text-align:right; }
+.weapon-rule-body p { font-size:12px; line-height:1.5; margin:5px 0; }

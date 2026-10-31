@@ -190,7 +190,29 @@ window.CatalogDeveloper = (() => {
     }
   }
   function weaponForm(parent, weapon, prefix, view = weapon) {
-    names(section(parent, "武器名称"), weapon, prefix);
+    if (!weapon.sourceWeapon) names(section(parent, "武器名称"), weapon, prefix);
+    const classification = section(parent, "武器分类与换算规则");
+    const auto = WeaponClasses.classify({ ...weapon, weaponClass: undefined });
+    const rulePreview = node("div");
+    const drawRules = () => {
+      rulePreview.replaceChildren(WeaponInfo.conversionRules(weapon));
+      rulePreview.firstElementChild.open = true;
+    };
+    const picker = select(
+      classification,
+      "换算分类",
+      weapon.weaponClass || "",
+      [["", "自动识别：" + WeaponClasses.labels[auto]], ...Object.entries(WeaponClasses.labels)],
+      (value) => {
+        if (value) weapon.weaponClass = value;
+        else delete weapon.weaponClass;
+        drawRules();
+      },
+    );
+    picker.dataset.weaponClassEditor = prefix;
+    classification.append(rulePreview);
+    drawRules();
+    if (weapon.sourceWeapon) return;
     const core = section(parent, "基础属性（数值修改保存为基准值的增减量；伤害按25点取整）");
     input(
       core,
@@ -509,6 +531,14 @@ window.CatalogDeveloper = (() => {
     numbers(movement, { adaptability: unit.stats.adaptability }, "stats.");
     numbers(section(unitPanel, "伤害加成（%）"), unit.attackBonuses, "attackBonuses.");
     templatesEditor(unitPanel, unit);
+    for (const skill of (unit.skills || []).filter((item) => item.sourceWeapon)) {
+      const detail = node("details"),
+        body = node("div");
+      detail.dataset.sourceSkill = skill.id;
+      detail.append(node("summary", "", skill.name + " · 换算分类"), body);
+      weaponForm(body, skill, "skill." + skill.id);
+      unitPanel.append(detail);
+    }
     const slots = section(unitPanel, "武器槽位顺序（每套装备单独调整）");
     for (const kit of unit.weaponKits) {
       const detail = node("details"),
@@ -636,7 +666,11 @@ window.CatalogDeveloper = (() => {
       return;
     }
     const ref =
-      (weapon.sourceName || weapon.sourceWeapon || weapon.id) + "__lv" + (weapon.level || 1);
+      (weapon.sourceWeapon
+        ? weapon.sourceWeapon + "__skill_irradiation"
+        : weapon.sourceName || weapon.id) +
+      "__lv" +
+      (weapon.level || 1);
     const data = await api("weapon?ref=" + encodeURIComponent(ref));
     weaponSession = { ...data };
     const header = node("header", "", "catalog-editor-header");

@@ -71,6 +71,20 @@ const SkillControls = (() => {
         `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCostPercent}%最大EN，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`,
       );
     }
+    if (skill.type === "recon" && skill.reconMode === "camera") {
+      if (I18n.language === "en")
+        return `Range ${skill.minRange}–${skill.range}; ${skill.actionCost} AP, ${skill.enCost} EN. Reveals ${skill.areaSight} tiles and detects within ${skill.areaRadar} tiles until your next turn.`;
+      if (I18n.language === "ja")
+        return `射程${skill.minRange}～${skill.range}マス。${skill.actionCost} AP・${skill.enCost} EN。次の自軍ターンまで半径${skill.areaSight}マスの視界と${skill.areaRadar}マスの探知を提供。`;
+      return `射程${skill.minRange}～${skill.range}格，消耗${skill.actionCost} AP与${skill.enCost} EN；揭露目标半径${skill.areaSight}格视野并以${skill.areaRadar}格范围探测敌人，持续至下次己方回合。`;
+    }
+    if (skill.type === "beam_diffusion") {
+      if (I18n.language === "en")
+        return `Range ${skill.range}; ${skill.actionCost} AP and ${skill.enCostPercent}% max EN. Beams crossing the radius-${skill.radius} area deal 50% less damage for 2 full turn cycles. Does not stack.`;
+      if (I18n.language === "ja")
+        return `射程${skill.range}マス。${skill.actionCost} APと最大ENの${skill.enCostPercent}%を消費。半径${skill.radius}マスを通るビームの威力を50%軽減。2往復ターン持続、重複不可。`;
+      return `射程${skill.range}格，消耗${skill.actionCost} AP与${skill.enCostPercent}%最大EN；半径${skill.radius}格内持续2个完整回合周期，穿过区域的光束弹伤害降低50%，同类区域不叠加。`;
+    }
     if (skill.description) return skill.description;
     if (skill.type === "flight")
       return I18n.text(
@@ -83,7 +97,6 @@ const SkillControls = (() => {
       return skill.reconMode === "camera"
         ? `选择${skill.minRange ?? 0}～${Number(skill.range.toFixed(2))}格的位置，提供${skill.areaSight}格视野与${Number(skill.areaRadar.toFixed(2))}格侦测，持续至下次己方回合。消耗${skill.enCost} EN、${skill.actionCost} AP；下次己方回合可再次使用。`
         : `扫描${Number(skill.range.toFixed(2))}格内${skill.waterOnly ? "水域中的" : ""}敌军，标记持续至下次己方回合；消除己方未侦测命中惩罚，不直接揭露普通单位。消耗${skill.enCost} EN${skill.actionCost ? "、" + skill.actionCost + " AP" : "和本次行动"}。${skill.reconMode ? "下次己方回合可再次使用。" : ""}`;
-    if (skill.type === "beam_diffusion") return I18n.text(skill.description);
     if (skill.type === "minovsky")
       return `以自身为中心散布半径 ${skill.radius} 格的米诺夫斯基粒子，持续两个完整回合周期。区域内所有防守单位的回避率乘以 1.25，反侦测距离 +5 格；来袭导弹与迫击炮命中率再乘以 0.75。消耗 ${skill.enCost} EN、${skill.actionCost} AP，冷却 ${skill.cooldownTurns} 个自身回合。`;
     if (skill.type === "resupply")
@@ -163,6 +176,7 @@ const SkillControls = (() => {
         ),
         element("small", "helper", description(skill)),
       );
+      if (skill.sourceWeapon) button.append(WeaponInfo.classBadge(skill));
       const left = Math.max(
         0,
         skill.maxUses - (unit.skillUses?.[UnitModels[unit.model].prefabId + "/" + skill.id] || 0),

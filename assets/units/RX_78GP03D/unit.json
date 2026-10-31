@@ -739,7 +739,7 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5,
+    "actionPoints": 10,
     "iField": {
       "capacity": 250000,
       "reduction": 0.95,
@@ -845,7 +845,7 @@
     "v17BaseHp": 175000,
     "technologyEra": "0083",
     "importedTechPage": 1,
-    "actionTurnSpeed": 1,
+    "actionTurnSpeed": 1.0,
     "mobilityMoveTarget": 10
   },
   "presentation": {

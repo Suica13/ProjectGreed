@@ -117,7 +117,14 @@ const Formation = (() => {
         element("p", "muted", SkillControls.description(skill)),
       );
       if (skill.sourceWeapon)
-        card.append(WeaponInfo.encyclopediaLink(skill), Encyclopedia.usersButton(skill));
+        card.append(
+          WeaponInfo.classBadge(skill),
+          WeaponInfo.conversionRules(skill),
+          WeaponInfo.encyclopediaLink(skill),
+          Encyclopedia.usersButton(skill),
+        );
+      if (skill.sourceWeapon && window.CatalogDeveloper)
+        window.CatalogDeveloper.decorateWeapon(card, skill, true);
       skills.append(card);
     }
     byId("formationDetailSkillsBlock").hidden = !skills.childElementCount;

@@ -30,6 +30,7 @@ function buildDeveloper(root) {
       "client/catalog-runtime.js",
       "client/i18n.js",
       "client/dialog.js",
+      "shared/weapon-classes.js",
       "shared/weapon-sequence.js",
       "shared/unit-parts.js",
       "shared/catalog-editor-schema.js",

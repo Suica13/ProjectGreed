@@ -134,16 +134,10 @@ const PilotSystem = (() => {
           : ((level + experience / required) / native.maxLevel) * source.maxLevel;
       level = Math.min(source.maxLevel, Math.floor(progress));
       experience =
-        level === source.maxLevel
-          ? 0
-          : Math.floor((progress - level) * 2000 * 2 ** level);
+        level === source.maxLevel ? 0 : Math.floor((progress - level) * 2000 * 2 ** level);
       value = { ...value, stats: undefined };
     } else if (value.aceGrowthVersion !== version) throw Error("ACE驾驶员数据版本无效");
-    if (
-      !Number.isSafeInteger(experience) ||
-      experience < 0
-    )
-      throw Error("驾驶员经验无效");
+    if (!Number.isSafeInteger(experience) || experience < 0) throw Error("驾驶员经验无效");
     const stats = Object.fromEntries(
       Object.entries(source.baseStats).map(([key, base]) => [
         key,
@@ -273,7 +267,11 @@ const PilotSystem = (() => {
       (reset && rawExperience >= 1000 * 2 ** (value.level - 1))
     )
       throw Error("驾驶员经验无效");
-    const experience = cumulativeExperience(value, reset ? Math.max(0, value.level - 1) : level, rawExperience);
+    const experience = cumulativeExperience(
+      value,
+      reset ? Math.max(0, value.level - 1) : level,
+      rawExperience,
+    );
     const selectedSkillId = value.selectedSkillId;
     if (
       selectedSkillId != null &&
@@ -331,14 +329,27 @@ const PilotSystem = (() => {
     p.experience += amount;
     return custom(p);
   }
-  const upgradePrices = Object.freeze([1000, 2000, 4000, 6000, 10000, 15000, 22000, 30000, 40000, 50000]);
+  const upgradePrices = Object.freeze([
+    1000, 2000, 4000, 6000, 10000, 15000, 22000, 30000, 40000, 50000,
+  ]);
   const customRecruitmentCost = 1000;
-  const upgradeCost = (value) => value.level < maxLevel(value)
-    ? aceProfile(value) ? aceProfile(value).price?.money ?? null : upgradePrices[value.level] : 0;
-  const demotionCost = (value) => value.level > 0
-    ? aceProfile(value) ? aceProfile(value).price?.money ?? null : upgradePrices[value.level - 1] / 2 : 0;
-  const canUpgrade = (value) => !value.needsRecruitment && value.level < maxLevel(value) &&
-    upgradeCost(value) !== null && value.experience >= experienceRequired(value.level, value);
+  const upgradeCost = (value) =>
+    value.level < maxLevel(value)
+      ? aceProfile(value)
+        ? (aceProfile(value).price?.money ?? null)
+        : upgradePrices[value.level]
+      : 0;
+  const demotionCost = (value) =>
+    value.level > 0
+      ? aceProfile(value)
+        ? (aceProfile(value).price?.money ?? null)
+        : upgradePrices[value.level - 1] / 2
+      : 0;
+  const canUpgrade = (value) =>
+    !value.needsRecruitment &&
+    value.level < maxLevel(value) &&
+    upgradeCost(value) !== null &&
+    value.experience >= experienceRequired(value.level, value);
   function upgrade(value) {
     const p = custom(value);
     if (!canUpgrade(p)) throw Error("驾驶员尚未满足升职条件");
@@ -541,7 +552,7 @@ const PilotSystem = (() => {
       melee: factor(stats.melee, 0.25) * awakening,
       defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.0025),
       move: factor(stats.speed, 0.5),
-      actionPointsMultiplier: factor(stats.speed, 0.25),
+      actionPointsMultiplier: factor(stats.speed, 0.4),
       accuracy: factor(stats.accuracy, 0.25),
       reaction: factor(stats.reaction, 0.25),
     };

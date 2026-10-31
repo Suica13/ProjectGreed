@@ -526,7 +526,7 @@
         "source": "Template/Unit/Skill/CmdDef.gw"
       }
     ],
-    "actionPoints": 5,
+    "actionPoints": 10,
     "speed": 90
   },
   "attackBonuses": {

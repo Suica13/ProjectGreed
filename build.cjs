@@ -109,6 +109,7 @@ for (const [key, file] of [
   ["SFS_UI", "client/sfs-ui.js"],
   ["CORE", "shared/rules.js"],
   ["WEAPON_SEQUENCE", "shared/weapon-sequence.js"],
+  ["WEAPON_CLASSES", "shared/weapon-classes.js"],
   ["RENDERER", "client/renderer.js"],
   ["SPRITE_EFFECTS", "client/sprite-effects.js"],
   ["BATTLE_SCENE", "client/battle-scene.js"],

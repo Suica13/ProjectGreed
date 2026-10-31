@@ -467,7 +467,7 @@
       "antiDetectAqua": false
     },
     "shellFinalResistance": 25,
-    "actionPoints": 5,
+    "actionPoints": 10,
     "speed": 120
   },
   "attackBonuses": {

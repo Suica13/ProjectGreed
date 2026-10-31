@@ -1095,7 +1095,7 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5,
+    "actionPoints": 10,
     "speed": 65,
     "accuracyMultiplier": 0.65
   },

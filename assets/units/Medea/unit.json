@@ -372,7 +372,7 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5,
+    "actionPoints": 10,
     "deployed": false,
     "speed": 145
   },
@@ -475,7 +475,7 @@
       "usesPerOwnTurn": 1
     },
     "technologyEra": "0079E",
-    "actionTurnSpeed": 1,
+    "actionTurnSpeed": 1.0,
     "mobilityMoveTarget": 8
   },
   "presentation": {

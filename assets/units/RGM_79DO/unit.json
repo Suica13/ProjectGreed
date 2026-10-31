@@ -535,7 +535,7 @@
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
     ],
-    "actionPoints": 6,
+    "actionPoints": 11,
     "sensors": {
       "sight": 9,
       "radar": 11,

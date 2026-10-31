@@ -98,7 +98,15 @@ function loadCatalog({
     catalog.formation.defaultUnits > catalog.formation.maxUnits
   )
     throw Error("Invalid default unit limit");
-  const result = { ...catalog, prefabs: [], units: [], assets: {}, sounds: {}, models: {} };
+  const result = {
+    ...catalog,
+    conversionRules: conversion,
+    prefabs: [],
+    units: [],
+    assets: {},
+    sounds: {},
+    models: {},
+  };
   result.sounds["pilot/activation"] =
     "data:audio/ogg;base64," +
     fs.readFileSync(file(root, "sounds/Action_8.ogg")).toString("base64");
@@ -434,7 +442,7 @@ function loadCatalog({
     )
       throw Error("Invalid available factions: " + prefab.id);
     if (
-      !Number.isInteger(prefab.stats.actionPoints) ||
+      !Number.isInteger(prefab.stats.actionPoints * 2) ||
       prefab.stats.actionPoints < 1 ||
       prefab.stats.actionPoints > 99
     )
@@ -822,7 +830,8 @@ function loadCatalog({
             throw Error("Invalid SFS weapon requirement: " + prefab.id + "/" + key);
           if (raw.requiresShield !== undefined && typeof raw.requiresShield !== "boolean")
             throw Error("Invalid weapon shield requirement: " + prefab.id + "/" + key);
-          if (!Number.isInteger(raw?.actionCost) || raw.actionCost < 1 || raw.actionCost > 99)
+          require("../shared/weapon-classes.js").classify(raw, key);
+          if (!Number.isInteger(raw?.actionCost * 2) || raw.actionCost < 0.5 || raw.actionCost > 99)
             throw Error("Invalid weapon action cost: " + prefab.id + "/" + key);
           validateParts(raw?.requiredParts, prefab.id + "/" + key);
           validateParts(raw?.anyParts, prefab.id + "/" + key);
@@ -1076,7 +1085,7 @@ function loadCatalog({
         move: prefab.stats.deployed
           ? 0
           : prefab.stats.move + Math.trunc((prefab.stats.speed - 100) / 50),
-        actionPoints: prefab.stats.actionPoints ?? 5,
+        actionPoints: prefab.stats.actionPoints ?? 10,
         wip: prefab.wip,
         disabled: prefab.disabled,
         formOnly: prefab.formOnly === true,

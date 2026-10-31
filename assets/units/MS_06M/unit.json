@@ -417,7 +417,7 @@
       "rubble": 75
     },
     "ship": false,
-    "actionPoints": 5,
+    "actionPoints": 10,
     "sensors": {
       "sight": 7,
       "radar": 9,

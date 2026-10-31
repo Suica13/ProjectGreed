@@ -1001,7 +1001,7 @@
       "hpPercent": 10,
       "enCost": 10
     },
-    "actionPoints": 5,
+    "actionPoints": 10,
     "sensors": {
       "sight": 8,
       "radar": 13.88888888888889,

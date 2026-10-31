@@ -536,7 +536,7 @@
       "rubble": 75
     },
     "accuracy": 125,
-    "actionPoints": 5,
+    "actionPoints": 10,
     "sensors": {
       "sight": 8,
       "radar": 10,
@@ -633,7 +633,7 @@
     },
     "v17BaseHp": 28500,
     "technologyEra": "0079L",
-    "actionTurnSpeed": 2,
+    "actionTurnSpeed": 2.0,
     "mobilityMoveTarget": 7
   },
   "presentation": {

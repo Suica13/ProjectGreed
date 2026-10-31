@@ -564,7 +564,7 @@
     "stealth": {
       "waterOnly": false
     },
-    "actionPoints": 6,
+    "actionPoints": 11,
     "speed": 125
   },
   "attackBonuses": {

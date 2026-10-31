@@ -861,7 +861,7 @@ const Formation = (() => {
         element("p", "muted", SkillControls.description(skill)),
       );
       if (skill.sourceWeapon)
-        card.append(WeaponInfo.encyclopediaLink(skill), Encyclopedia.usersButton(skill));
+        card.append(WeaponInfo.classBadge(skill), WeaponInfo.conversionRules(skill), WeaponInfo.encyclopediaLink(skill), Encyclopedia.usersButton(skill));
       mechanics.append(card);
     }
     for (const weapon of model.hiddenWeapons || []) {
@@ -2711,7 +2711,7 @@ const Formation = (() => {
     ["防御", "每点降低0.25个百分点的承受伤害倍率；100点为100%，200点为75%。"],
     [
       "机动",
-      "以100点为基准，每点使移动倍率变化0.5%、AP倍率变化0.25%。150点为125%移动、112.5% AP，200点为150%移动、125% AP。最终AP四舍五入；移动保留小数预算。不影响回避。",
+      "以100点为基准，每点使移动倍率变化0.5%、AP倍率变化0.4%。150点为125%移动、120% AP，200点为150%移动、140% AP。AP与机体机动倍率相乘后按0.5点四舍五入；移动保留小数预算。不影响回避。",
     ],
     [
       "命中",

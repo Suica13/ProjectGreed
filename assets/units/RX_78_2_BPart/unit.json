@@ -632,7 +632,7 @@
       "antiDetectAqua": false
     },
     "pilotExperienceMultiplier": 1.25,
-    "actionPoints": 5,
+    "actionPoints": 10,
     "speed": 145
   },
   "attackBonuses": {
@@ -736,7 +736,7 @@
     "v17BaseHp": 37500,
     "technologyEra": "0079E",
     "learningComputerNativeMultiplier": 1.1,
-    "actionTurnSpeed": 1,
+    "actionTurnSpeed": 1.0,
     "mobilityMoveTarget": 8
   },
   "presentation": {

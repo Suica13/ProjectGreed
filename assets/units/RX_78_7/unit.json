@@ -538,7 +538,7 @@
         "source": "Template/Unit/Skill/CmdAtk.gw"
       }
     ],
-    "actionPoints": 6,
+    "actionPoints": 11,
     "speed": 120
   },
   "attackBonuses": {

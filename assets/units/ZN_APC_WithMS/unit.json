@@ -195,7 +195,7 @@
         "arc": 180
       }
     ],
-    "actionPoints": 5,
+    "actionPoints": 10,
     "sensors": {
       "sight": 8,
       "radar": 9.5,

@@ -144,6 +144,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     ])
       if (next[key] !== undefined && (!Number.isFinite(next[key]) || next[key] < 0))
         throw Error("武器数值无效：" + key);
+    require("../shared/weapon-classes.js").classify(next);
     if (next.min > next.max) throw Error("最小射程不能大于最大射程");
     if (!next.name?.trim()) throw Error("请填写武器名称");
     require("../shared/weapon-sequence.js").compile(next);
@@ -199,10 +200,17 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     checkJSON(payload);
     const lib = library(),
       original = lib.definitions[payload.ref];
-    if (!original || original.sourceWeapon) throw Error("请选择共用武器模板");
+    if (!original) throw Error("请选择共用武器模板");
     const registry = read(Adjust.file);
     const current = Adjust.apply(structuredClone(original), registry.weapons[payload.ref]);
-    const candidate = weaponChanges(current, payload.weapon);
+    let candidate;
+    if (original.sourceWeapon) {
+      candidate = structuredClone(current);
+      if (payload.weapon.weaponClass === undefined) delete candidate.weaponClass;
+      else candidate.weaponClass = payload.weapon.weaponClass;
+      require("../shared/weapon-classes.js").classify(candidate);
+      if (!equal(candidate, payload.weapon)) throw Error("武器技能仅支持修改换算分类");
+    } else candidate = weaponChanges(current, payload.weapon);
     const captured = Adjust.capture(original, current, candidate, registry.weapons[payload.ref]);
     lib.definitions[payload.ref] = captured.source;
     if (Object.keys(captured.deltas).length) registry.weapons[payload.ref] = captured.deltas;
@@ -303,6 +311,18 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     sourceNext.skills = next.skills.map((skill) => {
       const raw = rawUnit.skills.find((item) => item.id === skill.id);
       const previous = original.skills.find((item) => item.id === skill.id);
+      if (raw && skill.sourceWeapon && previous) {
+        const comparison = { ...skill },
+          old = { ...previous };
+        delete comparison.weaponClass;
+        delete old.weaponClass;
+        if (equal(comparison, old)) {
+          const result = structuredClone(raw);
+          if (skill.weaponClass === undefined) delete result.weaponClass;
+          else result.weaponClass = skill.weaponClass;
+          return result;
+        }
+      }
       return raw && equal(skill, previous) ? structuredClone(raw) : skill;
     });
     const packed = structuredClone(record.raw);

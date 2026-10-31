@@ -208,7 +208,7 @@ const UnitHangars = {
       if (!deploying(g)) {
         u.moved = true;
         u.lastLaunchRound = g.round;
-        u.actionPoints = Math.ceil((u.actionPoints ?? modelOf(u).actionPoints ?? 5) * 0.75);
+        u.actionPoints = Math.round((u.actionPoints ?? modelOf(u).actionPoints ?? 10) * 0.75 * 2) / 2;
         const carrier = g.units.find((c) => c.id === carrierId);
         if (carrier) {
           carrier.origin = null;
@@ -365,7 +365,7 @@ const UnitHangars = {
           u.y = carrier?.y ?? u.y;
         }
         const actionPoints = u.hp > 0
-          ? Math.max(0, Math.round((u.actionPoints ?? m.actionPoints ?? 5) * 0.5)) : 0;
+          ? Math.max(0, Math.round((u.actionPoints ?? m.actionPoints ?? 10) * 0.5 * 2) / 2) : 0;
         Object.assign(u, {
           acted: u.acted || actionPoints <= 0,
           moved: true,

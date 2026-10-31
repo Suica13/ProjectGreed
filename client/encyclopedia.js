@@ -12,6 +12,7 @@ const Encyclopedia = (() => {
     JSON.stringify([
       weapon.sourceName || weapon.id,
       weapon.level,
+      WeaponClasses.tags(weapon),
       weapon.damage,
       weapon.shotCount,
       weapon.en,
@@ -27,21 +28,7 @@ const Encyclopedia = (() => {
       weapon.level,
       weapon.category === "irradiation" ? "irradiation" : "weapon",
     ].join(":");
-  const categories = {
-    beam_rifle: "光束步枪",
-    beam_gun: "光束枪",
-    bazooka: "火箭筒",
-    melee: "格斗",
-    machine_gun: "机枪",
-    missile: "导弹",
-    cannon: "加农炮",
-    sniper: "狙击",
-    mortar: "迫击炮",
-    bomb: "航空炸弹",
-    nuke: "核弹",
-    irradiation: "光束照射",
-    other: "其他",
-  };
+  const categories = WeaponClasses.labels;
   const field = (name) => byId("encyclopedia" + name);
   function options(name, items) {
     const select = field(name),
@@ -250,7 +237,7 @@ const Encyclopedia = (() => {
         .filter(
           ({ weapon, users }) =>
             [...users].some((id) => ids.has(id)) &&
-            (!field("Type").value || weapon.category === field("Type").value) &&
+            (!field("Type").value || WeaponClasses.tags(weapon).includes(field("Type").value)) &&
             (!field("Level").value || weapon.level === Number(field("Level").value)) &&
             (!query ||
               [

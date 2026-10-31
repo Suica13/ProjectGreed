@@ -7,9 +7,15 @@
     "machineGunAP": 2,
     "damage": 1,
     "accuracy": 1,
-    "ap": 1,
+    "ap": 2,
     "en": 1,
-    "range": 1
+    "range": 1,
+    "rangeBonus": 1,
+    "sniperRangeBonus": 2,
+    "bazookaDamage": 1.25,
+    "mortarAccuracy": 1.1,
+    "headWristAP": 3,
+    "headWristRange": 2
   },
   "units": {
     "hp": 1,

@@ -85,7 +85,7 @@ test("classification exclusions and repeated conversion remain correct with non-
     const snapshot = structuredClone(unit);
     applyWeaponBalance(unit, config);
     assert.deepEqual(unit, snapshot, id);
-    for (const weapon of Object.values(unit.weapons)) assert(Number.isInteger(weapon.actionCost));
+    for (const weapon of Object.values(unit.weapons)) assert(Number.isInteger(weapon.actionCost * 2));
   }
 });
 

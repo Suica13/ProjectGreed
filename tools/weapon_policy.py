@@ -321,7 +321,7 @@ def configure(prefab, native):
     attach(prefab, native)
     from paired_weapons import configure as pair_weapons
     pair_weapons(prefab)
-    prefab["stats"].setdefault("actionPoints", 5)
+    prefab["stats"].setdefault("actionPoints", 10)
     for key, weapon in prefab["weapons"].items():
         weapon["actionCost"] = action_cost(prefab, key, weapon)
     configure_type61_tactical_weapons(prefab)

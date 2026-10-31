@@ -298,7 +298,7 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5,
+    "actionPoints": 10,
     "iField": {
       "capacity": 275000,
       "reduction": 0.95,

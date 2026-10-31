@@ -175,7 +175,7 @@
       "rubble": 75
     },
     "ship": false,
-    "actionPoints": 5,
+    "actionPoints": 10,
     "sensors": {
       "sight": 9,
       "radar": 13.88888888888889,
@@ -280,7 +280,7 @@
     },
     "v17BaseHp": 3500,
     "technologyEra": "0079E",
-    "actionTurnSpeed": 2,
+    "actionTurnSpeed": 2.0,
     "mobilityMoveTarget": 10
   },
   "presentation": {

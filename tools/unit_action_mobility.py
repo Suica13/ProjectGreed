@@ -8,11 +8,11 @@ from mod_source import ASSETS, MOD, load, stat
 def action_points(turn_speed, ship=False):
     # Ships use a different native turning scale; keep their existing action budget.
     if ship:
-        return 5
+        return 10
     if turn_speed <= 0:
         raise ValueError("Action turn speed must be positive")
     # Match JavaScript Math.round, including the negative logarithmic adjustment.
-    return max(5, 5 + math.floor(2 * math.log2(turn_speed / 1.75) + 0.5))
+    return max(10, 10 + math.floor(2 * math.log2(turn_speed / 1.75) + 0.5))
 
 
 def apply(prefab, native):

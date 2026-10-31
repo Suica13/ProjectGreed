@@ -608,7 +608,7 @@
       "stealthAqua": false,
       "antiDetectAqua": false
     },
-    "actionPoints": 5,
+    "actionPoints": 10,
     "speed": 105
   },
   "attackBonuses": {

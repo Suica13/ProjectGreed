@@ -140,6 +140,16 @@ const WeaponInfo = (() => {
     heading.append(node("strong", "weapon-name", weapon.name));
     const tags = node("div", "weapon-attributes");
     for (const attribute of attributes) tags.append(node("span", "weapon-attribute", attribute));
+    const category = WeaponClasses.classify(weapon);
+    const classTag = node("span", "weapon-class-tag", I18n.text(WeaponClasses.labels[category]));
+    classTag.dataset.weaponClass = category;
+    classTag.title = I18n.text("换算分类");
+    tags.prepend(classTag);
+    for (const kind of WeaponClasses.tags(weapon).slice(1)) {
+      const tag = node("span", "weapon-class-tag", I18n.text(WeaponClasses.labels[kind]));
+      tag.dataset.weaponClass = kind;
+      tags.append(tag);
+    }
     heading.append(tags);
     const damageLine = node("div", "weapon-damage-line");
     damageLine.append(node("span", "weapon-stat-label", "基础伤害"));
@@ -242,7 +252,10 @@ const WeaponInfo = (() => {
     ];
     if (unit) rows.push(["剩余 EN", amount(unit.en)]);
     if (weapon.pilotRequirements?.length)
-      rows.push(["本回合可用次数", unit ? (unit.pilotWeaponTurnUses?.[weapon.id] ? "0/1" : "1/1") : "1"]);
+      rows.push([
+        "本回合可用次数",
+        unit ? (unit.pilotWeaponTurnUses?.[weapon.id] ? "0/1" : "1/1") : "1",
+      ]);
     if (Number.isInteger(weapon.maxUses))
       rows.push([
         unit ? "剩余次数" : "使用次数",
@@ -308,17 +321,48 @@ const WeaponInfo = (() => {
             "s",
         ),
       );
+    body.append(conversionRules(weapon));
     details.append(body);
     return details;
   }
+  function classBadge(weapon) {
+    const category = WeaponClasses.classify(weapon);
+    const badge = node("span", "weapon-class-tag", I18n.text(WeaponClasses.labels[category]));
+    badge.dataset.weaponClass = category;
+    return badge;
+  }
+  function conversionRules(weapon) {
+    const panel = node("details", "weapon-conversion-rules");
+    panel.append(node("summary", "", I18n.text("分类与换算规则")));
+    const body = node("div", "weapon-rule-body");
+    panel.addEventListener("toggle", () => {
+      if (!panel.open || body.childElementCount) return;
+      const config = Rules.catalog.conversionRules;
+      if (config) {
+        const table = node("dl", "weapon-rule-grid");
+        for (const row of WeaponClasses.rules(weapon, config))
+          table.append(node("dt", "", I18n.text(row.label)), node("dd", "", I18n.text(row.value)));
+        body.append(table);
+      }
+      for (const text of [
+        "分类只控制数值换算，不改变伤害属性、枪口或发射演出。",
+        "基础AP和射程沿用源数据；通用射程加值只增加最大射程。头部与腕部武器使用固定AP和射程。",
+        "光束步枪伤害加成排除战舰和MA；机枪分类减伤不重复作用于战舰。火箭筒不叠加光束步枪倍率。",
+        "AP按0.5点四舍五入，伤害按25点取整；EN倍率不为1时向上取整。人工数值差值在换算后应用。",
+      ])
+        body.append(node("p", "", I18n.text(text)));
+    });
+    panel.append(body);
+    return panel;
+  }
   function encyclopediaLink(weapon) {
-      const link = node("a", "weapon-encyclopedia-link", I18n.text("查看图鉴"));
-      link.href = "#" + Encyclopedia.weaponAnchor(weapon);
-      link.onclick = (event) => {
-        event.preventDefault();
-        Encyclopedia.openWeapon(weapon);
-      };
-      return link;
+    const link = node("a", "weapon-encyclopedia-link", I18n.text("查看图鉴"));
+    link.href = "#" + Encyclopedia.weaponAnchor(weapon);
+    link.onclick = (event) => {
+      event.preventDefault();
+      Encyclopedia.openWeapon(weapon);
+    };
+    return link;
   }
   function card(weapon, content = null, options = {}) {
     const wrapper = node("article", "weapon-card");
@@ -328,8 +372,9 @@ const WeaponInfo = (() => {
       wrapper.querySelector(".weapon-summary-heading")?.append(encyclopediaLink(weapon));
       wrapper.append(Encyclopedia.usersButton(weapon));
     }
-    if (window.CatalogDeveloper) window.CatalogDeveloper.decorateWeapon(wrapper, weapon, !!options.encyclopediaLink);
+    if (window.CatalogDeveloper)
+      window.CatalogDeveloper.decorateWeapon(wrapper, weapon, !!options.encyclopediaLink);
     return wrapper;
   }
-  return { effects, summary, inspector, card, encyclopediaLink };
+  return { effects, summary, inspector, card, encyclopediaLink, conversionRules, classBadge };
 })();

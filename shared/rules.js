@@ -945,6 +945,8 @@ const Tactics = (() => {
     }
     return variants.get(factor);
   }
+  const roundAP = (value) => Math.round(value * 2) / 2;
+  const mobilityActionMultiplier = (base) => Math.max(1, 1 + ((base.speed ?? 100) - 100) * 0.005);
   function pilotModelOf(unit, base) {
     const pilot = pilots.of(unit, base);
     let variants = pilotModels.get(base);
@@ -965,7 +967,10 @@ const Tactics = (() => {
         move: base.deployed ? 0 : Math.max(1, base.move * modifiers.move),
         actionPoints: Math.max(
           1,
-          Math.round((base.actionPoints ?? 5) * modifiers.actionPointsMultiplier),
+          roundAP(
+            (base.actionPoints ?? 10) * mobilityActionMultiplier(base) *
+              modifiers.actionPointsMultiplier,
+          ),
         ),
         // Legacy mobility stores native baseReactionLevel, not movement/speed.
         mobility: base.mobility * modifiers.reaction,
@@ -1551,7 +1556,7 @@ const Tactics = (() => {
           en: m.en,
           moved: false,
           acted: false,
-          actionPoints: m.actionPoints ?? 5,
+          actionPoints: m.actionPoints ?? 10,
           origin: null,
           counterCount: 0,
           angle: heading,
@@ -1861,10 +1866,10 @@ const Tactics = (() => {
     );
   }
   function actionBudget(u) {
-    return modelOf(u).actionPoints ?? 5;
+    return modelOf(u).actionPoints ?? 10;
   }
   function counterActionBudget(u) {
-    return Math.ceil(actionBudget(u) * 0.75);
+    return roundAP(actionBudget(u) * 0.75);
   }
   function actionPoints(u) {
     return u.actionPoints ?? actionBudget(u);
@@ -3036,7 +3041,7 @@ const Tactics = (() => {
           iFieldHP(u) + (field.capacity * field.recoveryPercent) / 100,
         );
       u.acted = false;
-      u.actionPoints = Math.max(0, Math.floor(actionBudget(u) * (u.apPenaltyNextTurn ? 0.75 : 1)));
+      u.actionPoints = Math.max(0, roundAP(actionBudget(u) * (u.apPenaltyNextTurn ? 0.75 : 1)));
       delete u.apPenaltyNextTurn;
       u.moved = false;
       u.origin = null;
@@ -3291,7 +3296,7 @@ const Tactics = (() => {
       ...u,
       embarked: undefined,
       moved: true,
-      actionPoints: Math.ceil(actionPoints(u) * 0.75),
+      actionPoints: roundAP(actionPoints(u) * 0.75),
     };
     return aiChoice(g, passenger, destinations);
   }
