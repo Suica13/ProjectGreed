@@ -2,26 +2,22 @@
 const ClientSettings = (() => {
   const key = "projectgreed.settings";
   const values = { master: 1, music: 1, sfx: 1 };
-  let trueUnitNames = false,
-    unitShadows = false;
+  let unitShadows = false;
   try {
     const saved = JSON.parse(localStorage.getItem(key));
     for (const name of Object.keys(values))
       if (Number.isFinite(saved?.[name])) values[name] = Math.max(0, Math.min(1, saved[name]));
-    trueUnitNames = saved?.trueUnitNames === true;
     unitShadows = saved?.unitShadows === true;
   } catch {}
   const dialog = document.getElementById("clientSettingsDialog");
-  const language = document.getElementById("settingsLanguage"),
-    trueNames = document.getElementById("settingsTrueUnitNames");
+  const language = document.getElementById("settingsLanguage");
   function persist() {
     try {
-      localStorage.setItem(key, JSON.stringify({ ...values, trueUnitNames, unitShadows }));
+      localStorage.setItem(key, JSON.stringify({ ...values, unitShadows }));
     } catch {}
   }
   function render() {
     language.value = I18n.language;
-    trueNames.checked = trueUnitNames;
     document.getElementById("settingsUnitShadows").checked = unitShadows;
     for (const name of Object.keys(values)) {
       document.getElementById("volume-" + name).value = Math.round(values[name] * 100);
@@ -41,11 +37,6 @@ const ClientSettings = (() => {
       .getElementById("volume-" + name)
       .addEventListener("input", (event) => set(name, Number(event.target.value) / 100));
   language.addEventListener("change", () => I18n.setLanguage(language.value));
-  trueNames.addEventListener("change", () => {
-    trueUnitNames = trueNames.checked;
-    persist();
-    window.dispatchEvent(new CustomEvent("unit-name-display-change"));
-  });
   document.getElementById("settingsUnitShadows").addEventListener("change", (event) => {
     unitShadows = event.target.checked;
     persist();
@@ -62,15 +53,17 @@ const ClientSettings = (() => {
   editor.target = "_blank";
   editor.rel = "noopener";
   editor.textContent = I18n.text("地图编辑器");
-  editor.style.cssText = "display:inline-block;margin:12px 0;padding:8px 12px;border:1px solid #627f97;border-radius:3px;color:#a1d9ff";
+  editor.style.cssText =
+    "display:inline-block;margin:12px 0;padding:8px 12px;border:1px solid #627f97;border-radius:3px;color:#a1d9ff";
   document.getElementById("closeClientSettings").before(editor);
-  window.addEventListener("language-change", () => { editor.textContent = I18n.text("地图编辑器"); });
+  window.addEventListener("language-change", () => {
+    editor.textContent = I18n.text("地图编辑器");
+  });
   render();
   return {
     volume: (name) => values.master * values[name],
     set,
     values,
-    trueUnitNames: () => trueUnitNames,
     unitShadows: () => unitShadows,
   };
 })();

@@ -7,10 +7,12 @@ const { isDeepStrictEqual: equal } = require("node:util");
 const Schema = require("../shared/catalog-editor-schema.js"),
   Codec = require("./weapon-store.cjs");
 const Adjust = require("../shared/catalog-adjustments.cjs");
-const balance = (unit) => require("./weapon-balance.cjs").applyWeaponBalance(unit);
+const Conversion = require("../shared/conversion-rules.cjs");
 const encode = (value) => JSON.stringify(value, null, 2) + "\n";
 function createEditorStore(root = path.resolve(__dirname, ".."), validate = null) {
   const read = (name) => JSON.parse(fs.readFileSync(path.join(root, name), "utf8"));
+  const balance = (unit) =>
+    require("./weapon-balance.cjs").applyWeaponBalance(unit, Conversion.read(root));
   const registered = () => read("assets/unit-catalog.json").units;
   const library = () => read("assets/weapons.json");
   const unitFiles = () => registered().map((ref) => ({ ref, raw: read("assets/" + ref) }));
@@ -26,6 +28,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
         [
           "assets/weapons.json",
           Adjust.file,
+          Conversion.file,
           "shared/production-catalog.json",
           "assets/localization/units.json",
           "assets/unit-catalog.json",
@@ -296,6 +299,12 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     if (Object.keys(captured.deltas).length) registry.units[original.id] = captured.deltas;
     else delete registry.units[original.id];
     const sourceNext = captured.source;
+    // Skill editing is add/remove only. Do not bake live global skill damage into its source.
+    sourceNext.skills = next.skills.map((skill) => {
+      const raw = rawUnit.skills.find((item) => item.id === skill.id);
+      const previous = original.skills.find((item) => item.id === skill.id);
+      return raw && equal(skill, previous) ? structuredClone(raw) : skill;
+    });
     const packed = structuredClone(record.raw);
     for (const key of Object.keys(sourceNext))
       if (!["weapons", "skills"].includes(key)) packed[key] = sourceNext[key];
@@ -382,6 +391,68 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
       id: next.id,
     };
   }
-  return { getUnit, getWeapon, templates, saveUnit, saveWeapon, revision };
+  function getConversion() {
+    return { revision: revision(), rules: Conversion.read(root), fields: Conversion.fields };
+  }
+  function saveConversion(payload, actor = {}) {
+    assertRevision(payload.revision);
+    checkJSON(payload);
+    Conversion.validate(payload.rules);
+    return transaction(new Map([[Conversion.file, encode(payload.rules)]]), {
+      operation: "conversion-rules",
+      target: { id: "global", name: "全局换算规则" },
+      revision: payload.revision,
+      actor,
+    });
+  }
+  function getWip() {
+    return {
+      revision: revision(),
+      policy: read("assets/unit-wip.json"),
+      units: unitFiles().map(({ raw }) => ({ id: raw.id, name: raw.name })),
+    };
+  }
+  function saveWip(payload, actor = {}) {
+    assertRevision(payload.revision);
+    checkJSON(payload);
+    const current = read("assets/unit-wip.json"),
+      ids = unitFiles().map(({ raw }) => raw.id);
+    if (
+      !Array.isArray(payload.units) ||
+      payload.units.length > 1000 ||
+      new Set(payload.units).size !== payload.units.length ||
+      payload.units.some((id) => typeof id !== "string" || !/^[A-Za-z0-9_-]+\*?$/.test(id))
+    )
+      throw Error("WIP列表包含重复或无效的单位ID");
+    for (const pattern of payload.units)
+      if (
+        !current.units.includes(pattern) &&
+        !ids.some((id) =>
+          pattern.endsWith("*") ? id.startsWith(pattern.slice(0, -1)) : id === pattern,
+        )
+      )
+        throw Error("WIP条目未匹配项目单位：" + pattern);
+    return transaction(
+      new Map([["assets/unit-wip.json", encode({ ...current, units: payload.units })]]),
+      {
+        operation: "wip-list",
+        target: { id: "unit-wip", name: "WIP列表" },
+        revision: payload.revision,
+        actor,
+      },
+    );
+  }
+  return {
+    getUnit,
+    getWeapon,
+    templates,
+    saveUnit,
+    saveWeapon,
+    revision,
+    getConversion,
+    saveConversion,
+    getWip,
+    saveWip,
+  };
 }
 module.exports = { createEditorStore };

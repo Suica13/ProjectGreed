@@ -302,10 +302,9 @@ const Formation = (() => {
       payload = JSON.stringify({
         version: 1,
         name: name.trim().slice(0, 32) || "未命名编组",
-        units: clean.map(({ unitId, kitId, customName, preload }) => ({
+        units: clean.map(({ unitId, kitId, preload }) => ({
           unitId,
           kitId,
-          customName,
           preload,
         })),
       }),
@@ -337,10 +336,9 @@ const Formation = (() => {
     )
       throw Error("编组分享代码无效。");
     const units = Rules.validateFormation(
-        payload.units.map(({ unitId, kitId, customName, preload }) => ({
+        payload.units.map(({ unitId, kitId, preload }) => ({
           unitId,
           kitId,
-          customName,
           preload,
         })),
         Infinity,
@@ -526,7 +524,7 @@ const Formation = (() => {
         )
           continue;
         const option = new Option(
-          `${carrier.customName || cm.name} · ${hangarLabel(carrierIndex, h.id)} · ${I18n.text("剩余容量")} ${h.capacity - used}/${h.capacity}`,
+          `${cm.name} · ${hangarLabel(carrierIndex, h.id)} · ${I18n.text("剩余容量")} ${h.capacity - used}/${h.capacity}`,
           JSON.stringify({ carrierIndex, hangarId: h.id }),
         );
         option.setAttribute("data-i18n-ignore", "");
@@ -570,7 +568,7 @@ const Formation = (() => {
       add.onclick = () => {
         if (!canAddUnit(model)) return note("单位禁用，或与当前阵营不匹配。");
         if (detailIndex === null) {
-          const entry = { ...catalogDetail, customName: Rules.generateUnitName(model.name, draft) };
+          const entry = { ...catalogDetail };
           try {
             Rules.validateFormation([...draft, entry], Infinity, unitLimit());
           } catch (error) {
@@ -604,8 +602,7 @@ const Formation = (() => {
         image.src = unitIcon(Rules.formationModelId(entry), entry.customPilot);
         image.alt = "";
         const label = element("span"),
-          name = element("strong", "", entry.customName || m.name);
-        name.toggleAttribute("data-i18n-ignore", !!entry.customName);
+          name = element("strong", "", m.name);
         label.append(
           name,
           document.createTextNode(" · "),
@@ -615,7 +612,7 @@ const Formation = (() => {
           kits = element("select"),
           prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId);
         kits.dataset.preloadKit = String(i);
-        kits.setAttribute("aria-label", I18n.text("装备组") + " · " + (entry.customName || m.name));
+        kits.setAttribute("aria-label", I18n.text("装备组") + " · " + m.name);
         for (const kit of prefab.weaponKits)
           kits.add(new Option(`${kit.name} · COST ${prefab.stats.cost + kit.cost}`, kit.id));
         kits.value = entry.kitId;
@@ -716,8 +713,7 @@ const Formation = (() => {
     const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId);
     const model = Rules.formationModel(entry);
     window.dispatchEvent(new CustomEvent("unit-preview", { detail: { id: entry.unitId } }));
-    byId("formationDetailTitle").textContent = model.code + " " + (entry.customName || model.name);
-    byId("formationDetailTitle").toggleAttribute("data-i18n-ignore", !!entry.customName);
+    byId("formationDetailTitle").textContent = model.code + " " + model.name;
     byId("formationDetailTags").replaceChildren(unitTags(model));
     ProductionUI.renderLicensePurchase(originalEntry.unitId);
     const pilotButton = byId("formationDetailPilot");
@@ -745,9 +741,7 @@ const Formation = (() => {
     }
     kits.value = previewModel ? entry.kitId : originalEntry.kitId;
     kits.disabled = !!previewModel;
-    byId("openSpecialTransforms").hidden =
-      !!previewModel ||
-      !equipmentPrefab.pilotForms?.length;
+    byId("openSpecialTransforms").hidden = !!previewModel || !equipmentPrefab.pilotForms?.length;
 
     detailMetrics(byId("formationDetailStats"), [
       ["HP", model.hp.toLocaleString()],
@@ -918,7 +912,9 @@ const Formation = (() => {
     document.body.append(byId("formationUnitDetail"));
     byId("formationUnitDetail").hidden = false;
     byId("formationMain").inert = true;
-    window.dispatchEvent(new CustomEvent("unit-preview-rendered", { detail: { id: entry.unitId } }));
+    window.dispatchEvent(
+      new CustomEvent("unit-preview-rendered", { detail: { id: entry.unitId } }),
+    );
   }
   function environmentLabel(adaptability) {
     return ["ground", "space"]
@@ -1038,7 +1034,7 @@ const Formation = (() => {
         image = element("img");
       image.src = unitIcon(Rules.formationModelId(entry), entry.customPilot);
       image.width = 56;
-      image.alt = entry.customName || model.name;
+      image.alt = model.name;
       icon.append(image);
       const portrait = element("span", "formation-unit-portrait");
       portrait.append(icon);
@@ -1080,20 +1076,14 @@ const Formation = (() => {
       metadata.append(unitTags(model));
       label.title = model.description || "";
       label.append(
-        element(
-          "strong",
-          "",
-          `${entry.preload ? "" : i + 1 + ". "}${model.code} ${entry.customName || model.name}`,
-        ),
+        element("strong", "", `${entry.preload ? "" : i + 1 + ". "}${model.code} ${model.name}`),
         metadata,
         unitSummaryTags(model.adaptability, model.kitName, model.cost),
       );
-      if (entry.customName) label.querySelector("strong").setAttribute("data-i18n-ignore", "");
       if (entry.preload) {
         const carrier = draft[entry.preload.carrierIndex],
           annotation = element("small", "formation-cargo-note"),
-          name = element("span", "", carrier.customName || Rules.formationModel(carrier).name);
-        name.toggleAttribute("data-i18n-ignore", !!carrier.customName);
+          name = element("span", "", Rules.formationModel(carrier).name);
         annotation.append(
           document.createTextNode(I18n.text("预先搭载") + " · "),
           name,
@@ -1166,7 +1156,7 @@ const Formation = (() => {
     const entry = draft[index],
       model = Rules.formationModel(entry),
       list = byId("formationPilotList");
-    byId("formationPilotTitle").textContent = "驾驶员配属 · " + (entry.customName || model.name);
+    byId("formationPilotTitle").textContent = "驾驶员配属 · " + model.name;
     list.replaceChildren();
     const command = PilotSystem.commandUnit(model);
     const available = pilotStore.pilots.filter(
@@ -1290,7 +1280,6 @@ const Formation = (() => {
           throw Error("单位尚未开发，或与当前阵营不匹配。");
         if (!next.preload) return;
         if (points(draft) >= unitLimit()) throw Error("已达到编组单位点数上限。");
-        next.customName = Rules.generateUnitName(Rules.formationModel(next).name, draft);
       }
       const entries =
         detailIndex === null
@@ -1443,7 +1432,6 @@ const Formation = (() => {
     const entry = {
       unitId: prefab.id,
       kitId: pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
-      customName: Rules.generateUnitName(prefab.name, draft),
       ...(pickerContext ? { preload: { ...pickerContext } } : {}),
     };
     try {
@@ -1535,7 +1523,8 @@ const Formation = (() => {
         byId("formationUnitPicker").hidden = true;
         catalogDetail = {
           unitId: prefab.id,
-          kitId: pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
+          kitId:
+            pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
         };
         renderDetail();
         byId("formationDetailKit").focus();
@@ -1760,9 +1749,12 @@ const Formation = (() => {
       const result = Economy.purchaseMissingLicenses(entries, faction);
       if (!result.ok) {
         if (result.reason === "unavailable")
-          showLicenseDialog("无法购买许可", "以下单位无法购买许可，已中止本次购买：", result.units, [
-            ["确认", "acknowledgeUnavailableUnits"],
-          ]);
+          showLicenseDialog(
+            "无法购买许可",
+            "以下单位无法购买许可，已中止本次购买：",
+            result.units,
+            [["确认", "acknowledgeUnavailableUnits"]],
+          );
         else note("货币不足，已取消购买。");
         return false;
       }
@@ -1793,12 +1785,7 @@ const Formation = (() => {
       returnView: "formation",
       onReturn: () => {
         render();
-        if (
-          Net.active &&
-          Net.seat !== null &&
-          !Net.awaiting &&
-          !Net.snapshot.started
-        )
+        if (Net.active && Net.seat !== null && !Net.awaiting && !Net.snapshot.started)
           Net.request("update_formation", { formation: current() });
       },
     });
@@ -1817,12 +1804,7 @@ const Formation = (() => {
     finishPilotEditor();
     saveDraft();
     const units = current();
-    if (
-      Net.active &&
-      Net.seat !== null &&
-      points(units) <= unitLimit() &&
-      !Net.snapshot.started
-    )
+    if (Net.active && Net.seat !== null && points(units) <= unitLimit() && !Net.snapshot.started)
       Net.request("update_formation", { formation: units });
     closeDetail();
     setPageView(returnView);
@@ -2269,8 +2251,13 @@ const Formation = (() => {
     renderPilotRoster();
     // Refresh a submitted room squad after training or rank changes. The room
     // otherwise retains the profile captured when the player last readied.
-    if (Net.active && Net.seat !== null && !Net.snapshot?.started &&
-        !Net.snapshot?.loadedSave && !ownPlayer()?.formationPreset)
+    if (
+      Net.active &&
+      Net.seat !== null &&
+      !Net.snapshot?.started &&
+      !Net.snapshot?.loadedSave &&
+      !ownPlayer()?.formationPreset
+    )
       Net.request("update_formation", { formation: current() });
     return clean;
   }
@@ -2420,19 +2407,33 @@ const Formation = (() => {
     const readyToUpgrade = PilotSystem.canUpgrade(pilotEdit);
     upgradePilotButton.hidden = pilotIsNew || pilotEdit.level >= PilotSystem.maxLevel(pilotEdit);
     upgradePilotButton.classList.toggle("pilot-skill-alert", readyToUpgrade);
-    upgradePilotButton.disabled = !readyToUpgrade || pendingPoints !== 0 ||
+    upgradePilotButton.disabled =
+      !readyToUpgrade ||
+      pendingPoints !== 0 ||
       !Economy.affordable({ money: PilotSystem.upgradeCost(pilotEdit) });
-    upgradePilotButton.textContent = I18n.text("升职") + " · " + I18n.text("资金") + " " +
+    upgradePilotButton.textContent =
+      I18n.text("升职") +
+      " · " +
+      I18n.text("资金") +
+      " " +
       (PilotSystem.upgradeCost(pilotEdit) ?? "—");
     demotePilotButton.hidden = pilotIsNew || pilotEdit.level === 0;
-    demotePilotButton.disabled = !!pilotEdit.needsRecruitment || pendingPoints !== 0 ||
+    demotePilotButton.disabled =
+      !!pilotEdit.needsRecruitment ||
+      pendingPoints !== 0 ||
       PilotSystem.demotionCost(pilotEdit) === null ||
       !Economy.affordable({ money: PilotSystem.demotionCost(pilotEdit) });
-    demotePilotButton.textContent = I18n.text("降职") + " · " + I18n.text("资金") + " " +
+    demotePilotButton.textContent =
+      I18n.text("降职") +
+      " · " +
+      I18n.text("资金") +
+      " " +
       (PilotSystem.demotionCost(pilotEdit) ?? "—");
-    byId("createPilotConfirm").textContent = I18n.text("招募驾驶员") + " · " +
-      I18n.text("资金") + " " + PilotSystem.customRecruitmentCost;
-    byId("createPilotConfirm").disabled = !Economy.affordable({ money: PilotSystem.customRecruitmentCost });
+    byId("createPilotConfirm").textContent =
+      I18n.text("招募驾驶员") + " · " + I18n.text("资金") + " " + PilotSystem.customRecruitmentCost;
+    byId("createPilotConfirm").disabled = !Economy.affordable({
+      money: PilotSystem.customRecruitmentCost,
+    });
     byId("pilotTrainingActions").hidden = !!pilotEdit.ace;
     byId("confirmPilotTraining").disabled = pendingPoints === 0;
     byId("cancelPilotTraining").disabled = pendingPoints === 0;
@@ -2491,13 +2492,22 @@ const Formation = (() => {
     if (!pilotEdit || pilotIsNew || demotePilotButton.disabled) return;
     const original = pilotOriginal;
     const cost = PilotSystem.demotionCost(pilotEdit);
-    if (!(await GameDialog.confirm(I18n.text("降职将重置已分配的强化点和所选技能，经验保留。是否继续？"), {
-      title: I18n.text("降职") + " · " + I18n.text("资金") + " " + cost,
-    }))) return;
+    if (
+      !(await GameDialog.confirm(
+        I18n.text("降职将重置已分配的强化点和所选技能，经验保留。是否继续？"),
+        {
+          title: I18n.text("降职") + " · " + I18n.text("资金") + " " + cost,
+        },
+      ))
+    )
+      return;
     if (!pilotEdit || pilotOriginal !== original || demotePilotButton.disabled) return;
     try {
       const clean = PilotSystem.demote(pilotEdit);
-      const next = { ...pilotStore, pilots: pilotStore.pilots.map((p) => p.id === clean.id ? clean : p) };
+      const next = {
+        ...pilotStore,
+        pilots: pilotStore.pilots.map((p) => (p.id === clean.id ? clean : p)),
+      };
       if (!Economy.transact({ money: cost }, {}, [[sharedPilotKey, JSON.stringify(next)]]))
         return note("资金不足");
       pilotStore = next;
@@ -2505,14 +2515,19 @@ const Formation = (() => {
       pilotOriginal = JSON.stringify(clean);
       commitPilot(clean);
       renderPilotStats();
-    } catch (error) { note(Economy.errorMessage(error)); }
+    } catch (error) {
+      note(Economy.errorMessage(error));
+    }
   };
   upgradePilotButton.onclick = () => {
     if (!pilotEdit || pilotIsNew || !PilotSystem.canUpgrade(pilotEdit)) return;
     if (JSON.parse(pilotOriginal).points !== pilotEdit.points) return;
     const cost = PilotSystem.upgradeCost(pilotEdit);
     const clean = PilotSystem.upgrade(pilotEdit);
-    const next = { ...pilotStore, pilots: pilotStore.pilots.map((p) => p.id === clean.id ? clean : p) };
+    const next = {
+      ...pilotStore,
+      pilots: pilotStore.pilots.map((p) => (p.id === clean.id ? clean : p)),
+    };
     try {
       if (!Economy.transact({ money: cost }, {}, [[sharedPilotKey, JSON.stringify(next)]]))
         return note("资金不足");
@@ -2601,13 +2616,19 @@ const Formation = (() => {
     try {
       const clean = PilotSystem.custom(pilotEdit);
       const next = { ...pilotStore, pilots: [...pilotStore.pilots, clean] };
-      if (!Economy.transact({ money: PilotSystem.customRecruitmentCost }, {}, [[sharedPilotKey, JSON.stringify(next)]]))
+      if (
+        !Economy.transact({ money: PilotSystem.customRecruitmentCost }, {}, [
+          [sharedPilotKey, JSON.stringify(next)],
+        ])
+      )
         return note("资金不足");
       pilotStore = next;
       pilotIsNew = false;
       commitPilot(clean);
       finishPilotEditor();
-    } catch (error) { note(Economy.errorMessage(error)); }
+    } catch (error) {
+      note(Economy.errorMessage(error));
+    }
   };
   byId("changeCustomPilotPortrait").onclick = openPortraitPicker;
   byId("closePilotPortraitPicker").onclick = closePortraitPicker;
@@ -2630,11 +2651,7 @@ const Formation = (() => {
     let choice = pilotEdit.selectedSkillId || null;
     const title = element("h3", "", "选择驾驶员技能");
     title.id = "pilotSkillPickerTitle";
-    const explanation = element(
-      "p",
-      "muted",
-      "选择一个技能；重置属性时会清除技能，可重新选择。",
-    );
+    const explanation = element("p", "muted", "选择一个技能；重置属性时会清除技能，可重新选择。");
     const grid = element("div", "pilot-skill-choices");
     const confirm = element("button", "primary", "确认技能");
     confirm.id = "confirmPilotSkill";
@@ -2808,11 +2825,13 @@ const Formation = (() => {
     presets: () =>
       squads.map((squad) => ({
         name: squad.name,
-        units: !squad.units.length ? [] : Rules.validateFormation(
-          hydratePilots(squad.units),
-          Infinity,
-          Rules.catalog.formation.maxUnits,
-        ),
+        units: !squad.units.length
+          ? []
+          : Rules.validateFormation(
+              hydratePilots(squad.units),
+              Infinity,
+              Rules.catalog.formation.maxUnits,
+            ),
       })),
   };
 })();

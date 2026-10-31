@@ -47,10 +47,12 @@ function loadCatalog({
   mapOverrides = {},
   wipOverride = null,
   adjustmentsOverride = null,
+  conversionOverride = null,
   weaponDefinitionsOverride = null,
 } = {}) {
   const Adjust = require("../shared/catalog-adjustments.cjs");
   const adjustments = adjustmentsOverride || Adjust.read();
+  const conversion = conversionOverride || require("../shared/conversion-rules.cjs").read();
   const localize = require("./display-localization.cjs").createLocalizer();
   const catalog = catalogOverride || read(path.join(root, "unit-catalog.json"));
   const wipPolicy = wipOverride || read(path.join(root, "unit-wip.json"));
@@ -414,7 +416,7 @@ function loadCatalog({
       prefab = WeaponStore.expandPrefab(raw, weaponDefinitionsOverride || undefined);
     if (prefab.enabled === false) continue;
     localize.prefab(prefab);
-    require("./weapon-balance.cjs").applyWeaponBalance(prefab);
+    require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion);
     Adjust.unit(prefab, adjustments, raw.weapons);
     require("./weapon-level-labels.cjs").applyWeaponLevelLabels(prefab);
     // Skills and weapons share the same 25-point damage quantization policy.

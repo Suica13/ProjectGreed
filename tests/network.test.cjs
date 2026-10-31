@@ -3394,7 +3394,7 @@ test("Chinese room names support creation, listing, joining and reconnect", asyn
   assert.equal((await invalid.hello("create", "中".repeat(21))).type, "error");
 });
 
-test("unit renaming is rejected and deployment logs retain serials with numbered teams", async (t) => {
+test("unit renaming is rejected and deployment logs use formation ordinals with numbered teams", async (t) => {
   const {app,client}=await setup(t),a=await client(),b=await client();
   await a.hello("create","RENAME");await b.hello("join","RENAME");
   const formation=[{unitId:"Type61",kitId:"standard"}],licenses={Type61:true};
@@ -3403,13 +3403,14 @@ test("unit renaming is rejected and deployment logs retain serials with numbered
   await b.latest(s=>s.revision===ready.revision);
   assert.equal((await b.act("set_ready",{ready:true,formation,licenses})).type,"state");
   await confirmAssembly(a,b);
-  const room=app.rooms.get("RENAME"),u=room.game.units[0],before=u.customName;
-  assert.match(before,/\[[A-Z]\d{2}\]$/);
+  const room=app.rooms.get("RENAME"),u=room.game.units[0],before=G.unitLogName(u);
+  assert.match(before,/\[No\.1\]$/);
   for(const player of [a,b]){
     await player.latest(s=>s.revision===room.revision);
     assert.equal((await player.act("rename_unit",{unitId:u.id,name:"任意名称"})).type,"error");
   }
-  assert.equal(u.customName,before);
+  assert.equal(G.unitLogName(u),before);
+  assert.equal(u.customName,undefined);
   assert(room.log.some(line=>line.includes("[队伍1]")&&line.includes(before)));
   assert(room.log.some(line=>line.includes("[队伍2]")));
   assert(!room.log.some(line=>/蓝方|红方/.test(line)));

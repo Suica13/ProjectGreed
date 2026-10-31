@@ -244,3 +244,78 @@ html.catalog-developer #formationUnitDetail .unit-detail-header {
   font-size: 11px;
   font-weight: normal;
 }
+
+html.catalog-developer #encyclopediaScreen[hidden],
+.developer-rules-screen[hidden] {
+  display: none !important;
+}
+.developer-rules-screen {
+  position: fixed;
+  inset: 58px 0 0;
+  overflow-y: auto;
+  padding: 18px;
+  background: #14202c;
+}
+.developer-rules-screen > header {
+  position: sticky;
+  top: -18px;
+  background: #14202c;
+  z-index: 1;
+  padding: 12px 0;
+}
+.developer-rules-screen .catalog-editor-body {
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+}
+.developer-toolbar > button {
+  flex: 0 0 auto;
+}
+.developer-toolbar > button[aria-pressed="true"] {
+  border-color: #79ceff;
+  background: #26445a;
+}
+@media (max-width: 650px) {
+  .developer-toolbar > span {
+    display: none;
+  }
+  .developer-toolbar > strong {
+    flex: 1;
+  }
+  .developer-rules-screen {
+    padding: 12px;
+  }
+}
+
+.wip-add-controls {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(160px, 2fr) auto;
+  gap: 10px;
+}
+.wip-unit-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+.wip-unit-list .catalog-editor-row {
+  border: 1px solid #47637b;
+  padding: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 650px) {
+  .developer-toolbar strong {
+    display: none;
+  }
+  .developer-toolbar {
+    gap: 4px;
+  }
+  .developer-toolbar button {
+    padding: 8px;
+  }
+  .wip-add-controls {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .wip-add-controls input {
+    grid-column: 1 / -1;
+  }
+}

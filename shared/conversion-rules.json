@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "weapons": {
+    "beamRifleDamage": 1.5,
+    "meleeDamage": 1.1,
+    "machineGunDamage": 0.75,
+    "machineGunAP": 2,
+    "damage": 1,
+    "accuracy": 1,
+    "ap": 1,
+    "en": 1,
+    "range": 1
+  },
+  "units": {
+    "hp": 1,
+    "en": 1,
+    "ap": 1,
+    "move": 1,
+    "accuracy": 1,
+    "reaction": 1
+  }
+}

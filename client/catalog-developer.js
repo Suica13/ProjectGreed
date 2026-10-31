@@ -6,6 +6,10 @@ window.CatalogDeveloper = (() => {
   let activeUnitId = null,
     unitSession = null,
     weaponSession = null,
+    rulesSession = null,
+    rulesInitial = null,
+    wipSession = null,
+    wipInitial = null,
     saving = false,
     templates = null;
   const node = (tag, text = "", className = "") => {
@@ -90,7 +94,7 @@ window.CatalogDeveloper = (() => {
     }
     let numericHint;
     let numericBase = Number(value ?? 0);
-    if (type === "number") {
+    if (type === "number" && !key.startsWith("conversion.")) {
       let source,
         parts = key.split(".");
       if (parts[0] === "common") {
@@ -714,20 +718,249 @@ window.CatalogDeveloper = (() => {
     true,
   );
   window.addEventListener("beforeunload", (event) => {
-    if (unitSession || weaponSession) {
+    if (
+      unitSession ||
+      weaponSession ||
+      (rulesSession && JSON.stringify(rulesSession.rules) !== rulesInitial) ||
+      (wipSession && JSON.stringify(wipSession.policy.units) !== wipInitial)
+    ) {
       event.preventDefault();
       event.returnValue = "";
     }
   });
+  const rulesScreen = node("section", "", "developer-rules-screen");
+  rulesScreen.id = "conversionRulesScreen";
+  rulesScreen.hidden = true;
+  document.body.append(rulesScreen);
+  const wipScreen = node("section", "", "developer-rules-screen");
+  wipScreen.id = "wipEditorScreen";
+  wipScreen.hidden = true;
+  document.body.append(wipScreen);
+  let catalogTab, conversionTab, wipTab;
+  function selectEditorTab(page) {
+    byId("encyclopediaScreen").hidden = page !== "catalog";
+    rulesScreen.hidden = page !== "conversion";
+    wipScreen.hidden = page !== "wip";
+    for (const [tab, id] of [
+      [catalogTab, "catalog"],
+      [conversionTab, "conversion"],
+      [wipTab, "wip"],
+    ])
+      tab.setAttribute("aria-pressed", String(page === id));
+  }
+  async function saveRules() {
+    if (!rulesScreen.querySelector("form").reportValidity()) return false;
+    await api("conversion", { revision: rulesSession.revision, rules: rulesSession.rules });
+    rulesSession = await api("conversion");
+    rulesInitial = JSON.stringify(rulesSession.rules);
+    await refreshCatalog();
+    renderRules();
+    rulesScreen.querySelector("[role=status]").textContent =
+      "已保存，编辑器预览已刷新；正式客户端仍需手动构建。";
+    return true;
+  }
+  function renderRules() {
+    const header = node("header", "", "catalog-editor-header");
+    header.append(
+      node("h2", "换算规则"),
+      button("保存规则", () => run(saveRules)),
+      button("撤销修改", () =>
+        run(async () => {
+          rulesSession = await api("conversion");
+          rulesInitial = JSON.stringify(rulesSession.rules);
+          renderRules();
+        }),
+      ),
+    );
+    const form = node("form", "", "catalog-editor-body");
+    form.onsubmit = (event) => event.preventDefault();
+    form.append(
+      node(
+        "p",
+        "倍率1表示100%，1.35表示135%。计算顺序：单位／武器原始基础值 → 本页规则 → 通用武器差值 → 单位特例差值 → 正常取整。保存会影响所有相关单位，但不会自动构建或重启游戏。原MOD导入阶段的转向速度、推进速度等换算公式仍由导入脚本维护。",
+        "catalog-editor-note",
+      ),
+    );
+    for (const [group, fields] of Object.entries(rulesSession.fields)) {
+      const grid = section(form, group === "weapons" ? "武器与技能" : "单位基础属性");
+      for (const [key, [label, min, max, integer, description]] of Object.entries(fields)) {
+        const control = input(
+          grid,
+          label,
+          rulesSession.rules[group][key],
+          (value) => {
+            rulesSession.rules[group][key] = value;
+          },
+          "number",
+          `conversion.${group}.${key}`,
+        );
+        control.min = min;
+        control.max = max;
+        control.step = integer ? "1" : "0.01";
+        control.parentElement.append(node("small", description, "catalog-editor-note"));
+      }
+    }
+    const status = node("p", "", "catalog-editor-note");
+    status.setAttribute("role", "status");
+    rulesScreen.replaceChildren(header, form, status);
+  }
+  async function leaveConfigTab() {
+    if (unitSession || weaponSession) {
+      await notice("请先保存或取消当前属性修改，再切换页面。");
+      return false;
+    }
+    const rulesDirty = rulesSession && JSON.stringify(rulesSession.rules) !== rulesInitial;
+    const wipDirty = wipSession && JSON.stringify(wipSession.policy.units) !== wipInitial;
+    if (rulesDirty || wipDirty) {
+      const choice = await GameDialog.choose({
+        title: rulesDirty ? "保存换算规则？" : "保存WIP列表？",
+        message: "当前修改尚未保存。",
+        actions: [
+          { label: "取消切换", value: "stay" },
+          { label: "取消修改并切换", value: "discard" },
+          { label: "保存并切换", value: "save", primary: true },
+        ],
+      });
+      if (!choice || choice === "stay") return false;
+      if (choice === "save" && !(await (rulesDirty ? saveRules() : saveWip()))) return false;
+    }
+    return true;
+  }
+  async function openRules() {
+    if (!rulesScreen.hidden || !(await leaveConfigTab())) return;
+    if (!byId("formationUnitDetail").hidden) byId("closeFormationDetail").click();
+    rulesSession = await api("conversion");
+    rulesInitial = JSON.stringify(rulesSession.rules);
+    wipSession = null;
+    wipInitial = null;
+    renderRules();
+    selectEditorTab("conversion");
+  }
+  async function openCatalogTab() {
+    if (!(await leaveConfigTab())) return;
+    rulesSession = null;
+    rulesInitial = null;
+    wipSession = null;
+    wipInitial = null;
+    selectEditorTab("catalog");
+  }
+  async function saveWip() {
+    await api("wip", { revision: wipSession.revision, units: wipSession.policy.units });
+    wipSession = await api("wip");
+    wipInitial = JSON.stringify(wipSession.policy.units);
+    await refreshCatalog();
+    renderWip();
+    wipScreen.querySelector("[role=status]").textContent =
+      "已保存至 assets/unit-wip.json；正式客户端仍需手动构建。";
+    return true;
+  }
+  function renderWip() {
+    const header = node("header", "", "catalog-editor-header");
+    header.append(
+      node("h2", "WIP列表"),
+      button("保存列表", () => run(saveWip)),
+      button("撤销修改", () =>
+        run(async () => {
+          wipSession = await api("wip");
+          wipInitial = JSON.stringify(wipSession.policy.units);
+          renderWip();
+        }),
+      ),
+    );
+    const content = node("div", "", "catalog-editor-body");
+    content.append(
+      node(
+        "p",
+        "直接维护 assets/unit-wip.json。WIP单位仍可预览，构建后会禁止编组出战及AI选取。添加、移除后点击保存列表；末尾*匹配整个系列。",
+        "catalog-editor-note",
+      ),
+    );
+    const controls = node("div", "", "wip-add-controls"),
+      search = document.createElement("input"),
+      choice = document.createElement("select");
+    search.placeholder = "搜索单位名称／ID";
+    search.id = "wipUnitSearch";
+    choice.id = "wipUnitSelect";
+    const filter = () => {
+      const text = search.value.trim().toLowerCase();
+      choice.replaceChildren();
+      for (const unit of wipSession.units.filter(
+        (u) =>
+          !wipSession.policy.units.includes(u.id) &&
+          (u.name + " " + u.id).toLowerCase().includes(text),
+      ))
+        choice.add(new Option(unit.name + " · " + unit.id, unit.id));
+    };
+    search.oninput = filter;
+    filter();
+    const add = (pattern) => {
+      pattern = pattern.trim();
+      if (!pattern) return;
+      if (wipSession.policy.units.includes(pattern)) return notice("该条目已在WIP列表中。");
+      wipSession.policy.units.push(pattern);
+      renderWip();
+    };
+    controls.append(
+      search,
+      choice,
+      button("添加单位", () => add(choice.value)),
+    );
+    const pattern = document.createElement("input");
+    pattern.placeholder = "可选：系列前缀*，例如 Apsaras*";
+    pattern.id = "wipPattern";
+    controls.append(
+      pattern,
+      button("添加系列", () => add(pattern.value)),
+    );
+    content.append(controls);
+    const list = node("div", "", "wip-unit-list");
+    list.id = "wipUnitList";
+    for (const id of wipSession.policy.units) {
+      const row = node("div", "", "catalog-editor-row");
+      row.dataset.wipId = id;
+      const matched = wipSession.units.filter((u) =>
+        id.endsWith("*") ? u.id.startsWith(id.slice(0, -1)) : u.id === id,
+      );
+      row.append(
+        node("span", id + " · " + matched.length + "个单位"),
+        node("span", matched.map((u) => u.name).join("、")),
+        button("移除", () => {
+          wipSession.policy.units = wipSession.policy.units.filter((value) => value !== id);
+          renderWip();
+        }),
+      );
+      list.append(row);
+    }
+    if (!wipSession.policy.units.length)
+      list.append(node("p", "当前没有WIP单位。", "catalog-editor-note"));
+    content.append(list);
+    const status = node("p", "", "catalog-editor-note");
+    status.setAttribute("role", "status");
+    wipScreen.replaceChildren(header, content, status);
+  }
+  async function openWip() {
+    if (!wipScreen.hidden || !(await leaveConfigTab())) return;
+    if (!byId("formationUnitDetail").hidden) byId("closeFormationDetail").click();
+    wipSession = await api("wip");
+    wipInitial = JSON.stringify(wipSession.policy.units);
+    rulesSession = null;
+    rulesInitial = null;
+    renderWip();
+    selectEditorTab("wip");
+  }
   const toolbar = node("header", "", "developer-toolbar");
   toolbar.append(
-    node("strong", "PROJECT GREED · 单位／武器编辑"),
+    node("strong", "PROJECT GREED · 配置编辑"),
+    (catalogTab = button("图鉴", () => run(openCatalogTab))),
+    (conversionTab = button("换算规则", () => run(openRules))),
+    (wipTab = button("WIP列表", () => run(openWip))),
     node("span", base),
     node("small", "已连接"),
     button("断开连接", () => location.reload()),
   );
   document.body.append(toolbar);
   Encyclopedia.open();
+  selectEditorTab("catalog");
   api("templates")
     .then((value) => (templates = value))
     .catch((error) => notice(error.message));

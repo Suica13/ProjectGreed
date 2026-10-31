@@ -202,7 +202,10 @@ const Chat = (() => {
     byId(id).onclick = downloadLog;
     byId(id).disabled = true;
   }
-  function setLog(entries, names = game.units.map((unit) => unit.customName).filter(Boolean)) {
+  function setLog(
+    entries,
+    names = game.units.map((unit) => Rules.unitLogName(unit)).filter(Boolean),
+  ) {
     battleLog = entries.slice();
     refreshExports();
     for (const id of ["log", "roomCombatLog"]) {
@@ -248,7 +251,7 @@ const Chat = (() => {
     }
     setLog(snapshot.log || [], [
       ...(snapshot.logNames || []),
-      ...snapshot.game.units.map((unit) => unit.customName).filter(Boolean),
+      ...snapshot.game.units.map((unit) => Rules.unitLogName(unit)).filter(Boolean),
     ]);
     // A seat change can remove access to the previous team's history.
     messages = (snapshot.chat || []).slice(-100);

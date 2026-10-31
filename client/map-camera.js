@@ -223,6 +223,11 @@ const MapCamera = (() => {
     reset,
     fit,
     setZoom,
+    get pilotLabels() {
+      const box = canvas.getBoundingClientRect();
+      // Preserve the old 300% of 500% readability, measured in actual displayed pixels.
+      return baseTile(box.width || 800, box.height || 600) * zoom >= (readableCellPixels * 3) / 5;
+    },
     get unitThumbnails() {
       return zoom <= minimumZoom + zoomEpsilon;
     },

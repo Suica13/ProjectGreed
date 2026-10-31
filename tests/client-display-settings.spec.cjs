@@ -84,38 +84,23 @@ test("encounter choices open in a centered modal and language is only available 
   await expect(page.locator("#openSkirmish")).toBeFocused();
 });
 
-test("actual-name setting hides custom unit names in battle UI but preserves LOG and data", async ({
+test("unit display ignores legacy random names and LOG uses formation positions", async ({
   page,
 }) => {
   await page.goto(url);
   await page.waitForFunction(() => assetsReady);
-  await page.evaluate(() => I18n.setLanguage("zh"));
   await openPresentationFixture(page, false);
   const probe = await page.evaluate(() => {
     const unit = game.units[0];
-    unit.customName = "玩家昵称[X99]";
-    Chat.setLog([
-      `[蓝方][Player]${unit.customName}(${Rules.modelOf(unit).code} ${Rules.modelOf(unit).name}) 行动`,
-    ]);
+    unit.customName = "Legacy[X99]";
+    Chat.setLog([logUnit(unit) + " 行动"]);
     update();
-    return { id: unit.id, actual: Rules.modelOf(unit).name, custom: unit.customName };
+    return { id: unit.id, actual: Rules.modelOf(unit).name };
   });
   const row = page.locator(`.roster-unit[data-unit-id="${probe.id}"]`);
-  await expect(row.locator(".roster-unit-name")).toHaveText(probe.custom);
-  await expect(page.locator("#log")).toContainText(probe.custom);
-
-  await page.locator("#openClientSettings").click();
-  await page.locator("#settingsTrueUnitNames").check();
-  await page.locator("#closeClientSettings").click();
   await expect(row.locator(".roster-unit-name")).toHaveText(probe.actual);
-  await expect(row).not.toContainText(probe.custom);
-  await expect(page.locator("#log")).toContainText(probe.custom);
-  assert.equal(
-    await page.evaluate((id) => game.units.find((unit) => unit.id === id).customName, probe.id),
-    probe.custom,
-  );
-
-  await page.reload();
+  await expect(row).not.toContainText("[X99]");
+  await expect(page.locator("#log")).toContainText("[No.1]");
   await page.locator("#openClientSettings").click();
-  await expect(page.locator("#settingsTrueUnitNames")).toBeChecked();
+  await expect(page.locator("#settingsTrueUnitNames")).toHaveCount(0);
 });

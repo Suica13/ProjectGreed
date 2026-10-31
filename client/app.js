@@ -147,8 +147,7 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
       return cache.get(key);
     };
   })(),
-  unitName = (u) => (ClientSettings.trueUnitNames() ? Rules.modelOf(u).name : Rules.unitName(u)),
-  displaysCustomUnitName = (u) => !ClientSettings.trueUnitNames() && !!u.customName,
+  unitName = (u) => Rules.unitName(u),
   formatNumber = (n) => Math.round(Number(n)).toLocaleString("en-US"),
   formatDistance = (n) =>
     Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " " + I18n.text("格"),
@@ -218,12 +217,12 @@ function escapeHtml(value) {
       })[char],
   );
 }
-// Keep player-written unit names literal while surrounding UI text is translated.
+// Keep log identifiers and player-written pilot names literal during translation.
 function setNamedText(
   el,
   text,
   names = game.units
-    .flatMap((unit) => [unit.customName, unit.pilot?.custom ? unit.pilot.name : null])
+    .flatMap((unit) => [Rules.unitLogName(unit), unit.pilot?.custom ? unit.pilot.name : null])
     .filter(Boolean),
 ) {
   el.replaceChildren();
@@ -491,7 +490,6 @@ function renderRoster(busy) {
       image.alt = "";
       const info = element("span", "roster-unit-info");
       const name = element("strong", "roster-unit-name", unitName(unit));
-      if (displaysCustomUnitName(unit)) name.setAttribute("data-i18n-ignore", "");
       info.append(name);
       for (const [kind, current, maximum] of [
         ["hp", unit.hp, model.hp],
@@ -589,7 +587,6 @@ function renderPanel() {
       <strong class="${u.team ? "red" : "blue"}">${escapeHtml(unitName(u))}</strong
       ><small>${m.code} · ${m.kitName} · ${teamName(u.team)}</small>
     </div>`;
-  if (displaysCustomUnitName(u)) head.querySelector("strong").setAttribute("data-i18n-ignore", "");
   panel.append(head);
   const identity = UnitIdentity.owner(u),
     ownership = element("div", "unit-ownership"),
@@ -931,7 +928,9 @@ function renderPanel() {
       ),
     );
   if (u.snipeOrder)
-    panel.append(element("p", "helper", "狙击锁定中：下次己方回合开始时检查射程并自动射击，命中率×2。"));
+    panel.append(
+      element("p", "helper", "狙击锁定中：下次己方回合开始时检查射程并自动射击，命中率×2。"),
+    );
   if (u.overBoost)
     panel.append(
       element(
@@ -1423,15 +1422,24 @@ function drawMap(now) {
   TileMapRenderer.draw(ctx, Rules.getMap(game.mapId), "below", mapGeo, w, h);
   if (Rules.getMap(game.mapId).tileMap && !immersive) {
     // Authored art can be opaque, so tactical guides belong above the image layers.
-    ctx.strokeStyle = "#49616b66"; ctx.lineWidth = .7; ctx.beginPath();
-    for (let x = firstX; x <= lastX; x++) { ctx.moveTo(ox + x * tile, oy + firstY * tile); ctx.lineTo(ox + x * tile, oy + lastY * tile); }
-    for (let y = firstY; y <= lastY; y++) { ctx.moveTo(ox + firstX * tile, oy + y * tile); ctx.lineTo(ox + lastX * tile, oy + y * tile); }
+    ctx.strokeStyle = "#49616b66";
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    for (let x = firstX; x <= lastX; x++) {
+      ctx.moveTo(ox + x * tile, oy + firstY * tile);
+      ctx.lineTo(ox + x * tile, oy + lastY * tile);
+    }
+    for (let y = firstY; y <= lastY; y++) {
+      ctx.moveTo(ox + firstX * tile, oy + y * tile);
+      ctx.lineTo(ox + lastX * tile, oy + y * tile);
+    }
     ctx.stroke();
     if (phase === "deployment" && Deployment.team() !== null) {
       ctx.fillStyle = "#5ee4b344";
       for (const key of deploymentArea) {
         const [x, y] = key.split(",").map(Number);
-        if (x >= firstX && x < lastX && y >= firstY && y < lastY) ctx.fillRect(ox + x * tile, oy + y * tile, tile, tile);
+        if (x >= firstX && x < lastX && y >= firstY && y < lastY)
+          ctx.fillRect(ox + x * tile, oy + y * tile, tile, tile);
       }
     }
   }
@@ -1559,7 +1567,8 @@ function drawMap(now) {
   drawVisibleEffects(() => MapCombat.drawUnderlay(ctx, mapGeo));
   const authoredMap = Rules.getMap(game.mapId);
   let aboveLayerDrawn = false;
-  const drawAboveLayer = () => drawVisibleEffects(() => TileMapRenderer.draw(ctx, authoredMap, "above", mapGeo, w, h));
+  const drawAboveLayer = () =>
+    drawVisibleEffects(() => TileMapRenderer.draw(ctx, authoredMap, "above", mapGeo, w, h));
   for (const u of IrradiationFX.units(MapCombat.units(), now).sort(
     (a, b) => Number(!!a.embarked?.exposed) - Number(!!b.embarked?.exposed),
   )) {
@@ -1678,14 +1687,20 @@ function drawMap(now) {
     skillPose,
     groundCell,
   } of mapUnitPoses) {
-    if (authoredMap.tileMap && !aboveLayerDrawn && airbornePose({ u })) { drawAboveLayer(); aboveLayerDrawn = true; }
+    if (authoredMap.tileMap && !aboveLayerDrawn && airbornePose({ u })) {
+      drawAboveLayer();
+      aboveLayerDrawn = true;
+    }
     if (!smokeDrawn && airbornePose({ u })) {
       EnvironmentVisuals.smoke(ctx, game, mapPosition, tile);
       smokeDrawn = true;
     }
     ctx.save();
     const environmentPose = EnvironmentVisuals.pose(u, groundCell);
-    if (ClientSettings.unitShadows() && Rules.cellEnvironment(game, groundCell.x, groundCell.y) !== "space") {
+    if (
+      ClientSettings.unitShadows() &&
+      Rules.cellEnvironment(game, groundCell.x, groundCell.y) !== "space"
+    ) {
       ctx.fillStyle = "rgba(0,0,0,0.28)";
       ctx.beginPath();
       ctx.ellipse(
@@ -1854,14 +1869,14 @@ function drawMap(now) {
       ctx.fillText("E", barx + hpw - 1, bary - 2);
       ctx.restore();
     }
-    if (MapCamera.zoom >= 3) {
+    if (MapCamera.pilotLabels && u.pilot?.name) {
       ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
       const nameSize = Math.max(7, tile * 0.14) * battleSettings.mapLabelSize;
       ctx.font = `${nameSize}px system-ui`;
       ctx.textAlign = "center";
       ctx.save();
       ctx.textBaseline = "middle";
-      const label = u.pilot?.custom ? I18n.pilotName(u.pilot) : unitName(u);
+      const label = I18n.pilotName(u.pilot);
       const labelY = bary + 12 + nameSize / 2;
       if (u.pilot?.custom) {
         const width = ctx.measureText(label).width,
@@ -1991,7 +2006,13 @@ function drawMap(now) {
       y:
         pos.y +
         tile * (0.035 + environment.offset) +
-        SpriteRenderer.flightOffset(u.model, now, !!u.flying, Rules.cellEnvironment(game, groundCell.x, groundCell.y)) * scale,
+        SpriteRenderer.flightOffset(
+          u.model,
+          now,
+          !!u.flying,
+          Rules.cellEnvironment(game, groundCell.x, groundCell.y),
+        ) *
+          scale,
       scale,
       angle,
       clip: anim,
@@ -2191,7 +2212,11 @@ function pendingMovement() {
   return game.units.find(
     (unit) =>
       unit.pendingMove &&
-      (Net.active ? unit.pendingMove.seat === Net.seat : phase === "deployment" ? Rules.ownerOf(unit) === Deployment.team() : unit.team === game.team),
+      (Net.active
+        ? unit.pendingMove.seat === Net.seat
+        : phase === "deployment"
+          ? Rules.ownerOf(unit) === Deployment.team()
+          : unit.team === game.team),
   );
 }
 function finishMovement(confirm) {
@@ -2355,7 +2380,6 @@ function renderReaction() {
         unitName(unit) + " · " + owner.name + " · " + Rules.columnLabel(unit.x) + (unit.y + 1),
         unit.id,
       );
-      if (displaysCustomUnitName(unit)) option.setAttribute("data-i18n-ignore", "");
       option.disabled = !legalTargets.some((target) => target.attacker === entry.attacker);
       return option;
     }),
@@ -2383,7 +2407,6 @@ function renderReaction() {
     const owner = element("small", "response-owner", identity.name + " · " + identity.team);
     owner.setAttribute("data-i18n-ignore", "");
     const title = element("strong", "", unitName(unit));
-    if (displaysCustomUnitName(unit)) title.setAttribute("data-i18n-ignore", "");
     const summary = element("div", "summary");
     summary.append(
       element("div", "", `HP ${formatNumber(unit.hp)} / ${formatNumber(Rules.modelOf(unit).hp)}`),
@@ -2948,9 +2971,6 @@ function tick(now) {
   if (pageView === "game" || window.isLayoutPreview) startRendering();
 }
 window.addEventListener("language-change", () => {
-  update();
-});
-window.addEventListener("unit-name-display-change", () => {
   update();
 });
 SpriteRenderer.loadMenu(StartupLoading.progress)

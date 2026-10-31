@@ -125,6 +125,8 @@ function createDeveloperServer({
       if ((sessions.get(req.headers["x-editor-token"]) || 0) <= Date.now())
         return send(401, { error: "编辑会话失效，请重新输入密钥连接。" });
       if (req.method === "GET") {
+        if (url.pathname === "/api/editor/conversion") return send(200, store.getConversion());
+        if (url.pathname === "/api/editor/wip") return send(200, store.getWip());
         if (url.pathname === "/api/editor/unit")
           return send(200, store.getUnit(url.searchParams.get("id")));
         if (url.pathname === "/api/editor/weapon")
@@ -167,7 +169,12 @@ function createDeveloperServer({
       }
       if (
         req.method === "POST" &&
-        ["/api/editor/unit", "/api/editor/weapon"].includes(url.pathname)
+        [
+          "/api/editor/unit",
+          "/api/editor/weapon",
+          "/api/editor/conversion",
+          "/api/editor/wip",
+        ].includes(url.pathname)
       ) {
         if (busy) return send(409, { error: "另一项保存正在进行" });
         busy = true;
@@ -181,7 +188,11 @@ function createDeveloperServer({
             200,
             url.pathname.endsWith("/unit")
               ? store.saveUnit(value, actor)
-              : store.saveWeapon(value, actor),
+              : url.pathname.endsWith("/conversion")
+                ? store.saveConversion(value, actor)
+                : url.pathname.endsWith("/wip")
+                  ? store.saveWip(value, actor)
+                  : store.saveWeapon(value, actor),
           );
         } finally {
           busy = false;

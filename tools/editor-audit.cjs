@@ -6,6 +6,7 @@ const fs = require("node:fs"),
 const { isDeepStrictEqual: equal } = require("node:util");
 const Codec = require("./weapon-store.cjs");
 const Adjust = require("../shared/catalog-adjustments.cjs");
+const Conversion = require("../shared/conversion-rules.cjs");
 const exceptionFile = "MS与舰船例外列表.md";
 const start = "<!-- catalog-editor-exceptions:start -->",
   end = "<!-- catalog-editor-exceptions:end -->";
@@ -70,23 +71,54 @@ function planAudit(root, changes, metadata) {
     );
   const beforeLocalization = json("assets/localization/units.json"),
     afterLocalization = json("assets/localization/units.json", true);
+  const beforeRules = json(Conversion.file),
+    afterRules = json(Conversion.file, true);
   const units = [];
-  const snapshot = (raw, library, production, localization, adjustments) => ({
-    ...Adjust.unit(
-      require("./weapon-balance.cjs").applyWeaponBalance(Codec.expandPrefab(raw, library)),
+  const beforeWip = json("assets/unit-wip.json"),
+    afterWip = json("assets/unit-wip.json", true);
+  const snapshot = (raw, library, production, localization, adjustments, rules, policy) => {
+    const result = Adjust.unit(
+      require("./weapon-balance.cjs").applyWeaponBalance(Codec.expandPrefab(raw, library), rules),
       adjustments,
       raw.weapons,
-    ),
-    deploymentLicense: production.licenseOffers[raw.id] || null,
-    displayLocalization: localization[raw.id] || null,
-  });
+    );
+    delete result.conversionBase;
+    for (const weapon of [...Object.values(result.weapons || {}), ...(result.skills || [])])
+      delete weapon.conversionMultipliers;
+    const wip = policy.units.some((pattern) =>
+      pattern.endsWith("*") ? raw.id.startsWith(pattern.slice(0, -1)) : raw.id === pattern,
+    );
+    return {
+      ...result,
+      wip,
+      disabled: wip,
+      deploymentLicense: production.licenseOffers[raw.id] || null,
+      displayLocalization: localization[raw.id] || null,
+    };
+  };
   for (const ref of json("assets/unit-catalog.json").units) {
     const file = "assets/" + ref,
       before = json(file),
       after = json(file, true);
     const fields = differences(
-      snapshot(before, beforeLibrary, beforeProduction, beforeLocalization, beforeAdjustments),
-      snapshot(after, afterLibrary, afterProduction, afterLocalization, afterAdjustments),
+      snapshot(
+        before,
+        beforeLibrary,
+        beforeProduction,
+        beforeLocalization,
+        beforeAdjustments,
+        beforeRules,
+        beforeWip,
+      ),
+      snapshot(
+        after,
+        afterLibrary,
+        afterProduction,
+        afterLocalization,
+        afterAdjustments,
+        afterRules,
+        afterWip,
+      ),
     );
     if (fields.length)
       units.push({
@@ -177,7 +209,14 @@ function exceptionDocument(existing, record) {
           .split(/\r?\n/)
           .filter((line) => line.startsWith("| ") && line !== heading.split("\n")[0])
       : [];
-  const label = record.operation === "unit" ? "单位特例" : "共用武器 " + record.target.id;
+  const label =
+    record.operation === "unit"
+      ? "单位特例"
+      : record.operation === "conversion-rules"
+        ? "全局换算规则"
+        : record.operation === "wip-list"
+          ? "WIP列表"
+          : "共用武器 " + record.target.id;
   const entries = record.units.length
     ? record.units
     : [

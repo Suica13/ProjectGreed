@@ -13,6 +13,7 @@ function editorFixture() {
     "assets/unit-wip.json",
     "assets/weapons.json",
     "shared/editor-adjustments.json",
+    "shared/conversion-rules.json",
     "assets/localization/units.json",
     "shared/production-catalog.json",
     "shared/development-tree.json",
@@ -30,6 +31,7 @@ function editorFixture() {
     return loadCatalog({
       catalogOverride: read("assets/unit-catalog.json"),
       adjustmentsOverride: read("shared/editor-adjustments.json"),
+      conversionOverride: read("shared/conversion-rules.json"),
       weaponDefinitionsOverride: definitions,
       wipOverride: read("assets/unit-wip.json"),
       unitOverrides: Object.fromEntries(references.map((ref) => [ref, read("assets/" + ref)])),

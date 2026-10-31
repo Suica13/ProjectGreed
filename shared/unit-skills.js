@@ -47,8 +47,10 @@ const UnitSkills = (() => {
           !Array.isArray(skill.requiredParts) ||
           !skill.id ||
           !skill.name ||
-          (skill.airAdaptability !== undefined && (!Number.isFinite(skill.airAdaptability) ||
-            skill.airAdaptability < 0 || skill.airAdaptability > 100))
+          (skill.airAdaptability !== undefined &&
+            (!Number.isFinite(skill.airAdaptability) ||
+              skill.airAdaptability < 0 ||
+              skill.airAdaptability > 100))
         )
           throw Error("Invalid flight skill: " + label);
         continue;
@@ -339,7 +341,8 @@ const UnitSkills = (() => {
         (!["repair", "recon", "minovsky", "emp"].includes(skill.type) || unit.en >= skill.enCost) &&
         game.units.includes(unit) &&
         !(
-          !skill.deploymentMode && ["escape", "transform", "armor_purge", "overdrive"].includes(skill.type) &&
+          !skill.deploymentMode &&
+          ["escape", "transform", "armor_purge", "overdrive"].includes(skill.type) &&
           game.units.some((other) => other.hp > 0 && other.embarked?.carrierId === unit.id)
         ) &&
         unit.hp > 0 &&
@@ -390,11 +393,13 @@ const UnitSkills = (() => {
           ? { apPenaltyNextTurn: unit.apPenaltyNextTurn }
           : {}),
 
-        ...(unit.customName ? { customName: unit.customName } : {}),
+        ...(Number.isInteger(unit.formationIndex) ? { formationIndex: unit.formationIndex } : {}),
         angle: unit.angle,
         skillUses: { ...skillUses },
         weaponUses: { ...unit.weaponUses },
-        ...(unit.pilotWeaponTurnUses ? { pilotWeaponTurnUses: { ...unit.pilotWeaponTurnUses } } : {}),
+        ...(unit.pilotWeaponTurnUses
+          ? { pilotWeaponTurnUses: { ...unit.pilotWeaponTurnUses } }
+          : {}),
         brokenParts: config.repairAllParts ? {} : { ...unit.brokenParts },
         moved: consumeAction || unit.moved,
         acted: consumeAction || unit.acted || remainingAP === 0,
@@ -474,7 +479,8 @@ const UnitSkills = (() => {
       if (
         source &&
         (source.hp <= 0 ||
-          (models[source.model].adaptability?.[G.cellEnvironment(game, source.x, source.y)] ?? 100) <= 0 ||
+          (models[source.model].adaptability?.[G.cellEnvironment(game, source.x, source.y)] ??
+            100) <= 0 ||
           !fits({ ...game, units: game.units.filter((u) => u !== unit) }, source))
       )
         return null;

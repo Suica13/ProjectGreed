@@ -87,7 +87,8 @@ test("native ejection removes RX-78-1, creates one fully restored craft at the s
   assert.equal(game.units.length, 2);
   const craft = game.units.find((u) => u.id === event.resultId);
   assert.equal(craft.model, "FF_X7__standard");
-  assert.equal(craft.customName, "白色一号");
+  assert.equal(craft.formationIndex, unit.formationIndex);
+  assert.equal(craft.customName, undefined);
   assert.equal(craft.ownerSeat, 0);
   assert.equal(craft.team, 0);
   assert.equal(craft.environment, "ground");

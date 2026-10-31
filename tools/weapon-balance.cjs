@@ -1,6 +1,6 @@
 // Applied before timeline/paired-weapon compilation in both server and client builds.
 // Raw MOD payloads stay intact for auditing and future imports.
-function applyWeaponBalance(prefab) {
+function applyWeaponBalance(prefab, rules = require("../shared/conversion-rules.cjs").read()) {
   // The native Unit 4 Lv2 left wrist file disagrees with its same-grade right copy.
   // Keep nativePayload intact while normalizing this explicit source-data exception.
   if (["RX_78_4", "RX_78_4_Bst"].includes(prefab.id)) {
@@ -28,11 +28,11 @@ function applyWeaponBalance(prefab) {
     // Ships already have one native-based 25% damage reduction in their source policy.
     // Keep the AP rule, without stacking the general machine-gun damage reduction.
     if (prefab.stats?.ship) {
-      weapon.actionCost = 2;
+      weapon.actionCost = rules.weapons.machineGunAP;
       continue;
     }
-    const ratio = 0.75 / (weapon.machineGunDamageScale ?? 1);
-    weapon.actionCost = 2;
+    const ratio = rules.weapons.machineGunDamage / (weapon.machineGunDamageScale ?? 1);
+    weapon.actionCost = rules.weapons.machineGunAP;
     for (const payload of [weapon, ...(weapon.attack?.steps || [])]) {
       for (const field of ["damage", "damagePerShot"])
         if (Number.isFinite(payload[field])) payload[field] *= ratio;
@@ -41,16 +41,17 @@ function applyWeaponBalance(prefab) {
           Object.entries(payload.damageComponents).map(([key, value]) => [key, value * ratio]),
         );
     }
-    weapon.machineGunDamageScale = 0.75;
+    weapon.machineGunDamageScale = rules.weapons.machineGunDamage;
   }
   // Native payloads remain intact; scale before the shared 25-point quantization.
-  const beamScale = prefab.stats?.ship || prefab.unitTags?.includes("MA") ? 1 : 1.5;
+  const beamScale =
+    prefab.stats?.ship || prefab.unitTags?.includes("MA") ? 1 : rules.weapons.beamRifleDamage;
   for (const [id, weapon] of Object.entries(prefab.weapons || {})) {
     const melee = weapon.type === "melee" || weapon.category === "melee";
     const beamFamily = ["beam_rifle", "bazooka"].includes(weapon.category);
     const armMounted = /Arm|Hand/i.test(id + " " + (weapon.sourceName || ""));
     const targetBeamScale = !melee && beamFamily && !armMounted ? beamScale : 1;
-    const meleeScale = melee && !id.startsWith("Common_Push_") ? 1.1 : 1;
+    const meleeScale = melee && !id.startsWith("Common_Push_") ? rules.weapons.meleeDamage : 1;
     if (
       !melee &&
       weapon.type !== "beam" &&
@@ -90,6 +91,6 @@ function applyWeaponBalance(prefab) {
       );
     if (skill.beamDamageScale !== undefined) skill.beamDamageScale = 1;
   }
-  return prefab;
+  return require("../shared/conversion-rules.cjs").globals(prefab, rules);
 }
 module.exports = { applyWeaponBalance };

@@ -29,7 +29,7 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     await expect(page.locator("#encyclopediaScreen")).toBeVisible();
     await expect(page.locator(".developer-toolbar small")).toHaveText("已连接");
     await expect(page.locator("#menuShell")).toBeHidden();
-    const pane = await page.locator('#encyclopediaList').boundingBox();
+    const pane = await page.locator("#encyclopediaList").boundingBox();
     expect(pane.height).toBeGreaterThan(500);
     await page.locator("#encyclopediaSearch").fill("RX_78_2");
     await page.locator('[data-unit-id="RX_78_2"] button').click();
@@ -37,8 +37,12 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     await page.locator("#editUnitProperties").click();
     await expect(page.locator("#editUnitProperties")).toHaveText("保存修改");
     await page.locator('[data-field="stats.hp"]').fill("55500");
-    await expect(page.locator('[data-field="stats.hp"]').locator("..").locator(".catalog-numeric-delta")).toContainText("基准");
-    await expect(page.locator('[data-field="stats.hp"]').locator("..").locator(".catalog-numeric-delta")).toContainText("调整");
+    await expect(
+      page.locator('[data-field="stats.hp"]').locator("..").locator(".catalog-numeric-delta"),
+    ).toContainText("基准");
+    await expect(
+      page.locator('[data-field="stats.hp"]').locator("..").locator(".catalog-numeric-delta"),
+    ).toContainText("调整");
     await page.locator('[data-field="price.money"]').fill("450");
     await page.locator('[data-field="unit.name.en"]').fill("Editor Gundam");
     await page.locator('[data-source-weapon="EF_HypeBazooka"] > summary').click();
@@ -248,3 +252,102 @@ test("authentication gates live catalog and developer runtime never accesses sav
     await app.close();
   }
 });
+
+for (const width of [1440, 390])
+  test(`developer top navigation edits conversion settings and refreshes previews (${width})`, async ({
+    page,
+  }) => {
+    test.setTimeout(120000);
+    const f = editorFixture(),
+      app = createDeveloperServer({ port: 0, store: f.store, catalog: f.catalog });
+    const address = await app.listen();
+    try {
+      await page.setViewportSize({ width, height: 960 });
+      await login(page, "http://127.0.0.1:" + address.port);
+      await page
+        .locator(".developer-toolbar")
+        .getByRole("button", { name: "换算规则", exact: true })
+        .click();
+      await expect(page.locator("#conversionRulesScreen")).toBeVisible();
+      await expect(page.locator("#encyclopediaScreen")).toBeHidden();
+      await page.locator('[data-field="conversion.weapons.beamRifleDamage"]').fill("1.35");
+      await page.locator('[data-field="conversion.weapons.ap"]').fill("1.5");
+      await page
+        .locator("#conversionRulesScreen")
+        .getByRole("button", { name: "保存规则", exact: true })
+        .click();
+      await expect(page.locator("#conversionRulesScreen [role=status]")).toContainText("已保存");
+      expect(f.read("shared/conversion-rules.json").weapons.ap).toBe(1.5);
+      await page
+        .locator(".developer-toolbar")
+        .getByRole("button", { name: "图鉴", exact: true })
+        .click();
+      await expect(page.locator("#encyclopediaScreen")).toBeVisible();
+      expect(
+        await page.evaluate(
+          () =>
+            Object.values(Rules.catalog.prefabs.find((u) => u.id === "RX_78_2").weapons).find(
+              (w) => w.category === "machine_gun",
+            ).actionCost,
+        ),
+      ).toBe(3);
+      await page
+        .locator(".developer-toolbar")
+        .getByRole("button", { name: "换算规则", exact: true })
+        .click();
+      await page.locator('[data-field="conversion.weapons.ap"]').fill("2");
+      await page
+        .locator(".developer-toolbar")
+        .getByRole("button", { name: "图鉴", exact: true })
+        .click();
+      await expect(page.locator("#gameDialog")).toBeVisible();
+      await page.getByRole("button", { name: "取消修改并切换", exact: true }).click();
+      expect(f.read("shared/conversion-rules.json").weapons.ap).toBe(1.5);
+    } finally {
+      await page.close();
+      await app.close();
+      f.cleanup();
+    }
+  });
+
+for (const width of [1440, 390])
+  test(`developer WIP navigation adds and removes project unit entries (${width})`, async ({
+    page,
+  }) => {
+    test.setTimeout(120000);
+    const f = editorFixture(),
+      app = createDeveloperServer({ port: 0, store: f.store, catalog: f.catalog });
+    const address = await app.listen();
+    try {
+      await page.setViewportSize({ width, height: 960 });
+      await login(page, "http://127.0.0.1:" + address.port);
+      await page
+        .locator(".developer-toolbar")
+        .getByRole("button", { name: "WIP列表", exact: true })
+        .click();
+      await expect(page.locator("#wipEditorScreen")).toBeVisible();
+      await page.locator("#wipUnitSearch").fill("RX_78_2");
+      await page.locator("#wipUnitSelect").selectOption("RX_78_2");
+      await page.getByRole("button", { name: "添加单位", exact: true }).click();
+      await page.getByRole("button", { name: "保存列表", exact: true }).click();
+      await expect(page.locator("#wipEditorScreen [role=status]")).toContainText("已保存");
+      expect(f.read("assets/unit-wip.json").units).toContain("RX_78_2");
+      expect(
+        await page.evaluate(() => Rules.catalog.prefabs.find((u) => u.id === "RX_78_2").wip),
+      ).toBe(true);
+      await page
+        .locator('[data-wip-id="RX_78_2"]')
+        .getByRole("button", { name: "移除", exact: true })
+        .click();
+      await page.getByRole("button", { name: "保存列表", exact: true }).click();
+      await expect(page.locator("#wipEditorScreen [role=status]")).toContainText("已保存");
+      expect(f.read("assets/unit-wip.json").units).not.toContain("RX_78_2");
+      expect(
+        await page.evaluate(() => Rules.catalog.prefabs.find((u) => u.id === "RX_78_2").wip),
+      ).toBe(false);
+    } finally {
+      await page.close();
+      await app.close();
+      f.cleanup();
+    }
+  });

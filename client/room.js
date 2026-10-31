@@ -350,7 +350,9 @@ const RoomPanel = (() => {
     ]) {
       const field = element("label", "", label);
       const select = element("select");
-      for (const percent of key === "difficulty" ? Rules.strengthPercentages : Rules.armyPercentages)
+      for (const percent of key === "difficulty"
+        ? Rules.strengthPercentages
+        : Rules.armyPercentages)
         select.add(new Option(percent + "%", String(percent)));
       select.value = String(value);
       select.disabled = locked;
@@ -568,15 +570,16 @@ const RoomPanel = (() => {
     byId("finalAssemblyPanel").classList.toggle("is-observer", observing);
     squads.classList.toggle("team-grouped", observing);
     const teamLists = new Map();
-    if (observing) for (const team of [0, 1]) {
-      const section = element("section", "final-squad-team");
-      section.dataset.team = team;
-      section.setAttribute("aria-label", I18n.text("队伍" + (team + 1)));
-      const list = element("div", "final-squad-team-list");
-      section.append(element("h4", "", "队伍" + (team + 1)), list);
-      squads.append(section);
-      teamLists.set(team, list);
-    }
+    if (observing)
+      for (const team of [0, 1]) {
+        const section = element("section", "final-squad-team");
+        section.dataset.team = team;
+        section.setAttribute("aria-label", I18n.text("队伍" + (team + 1)));
+        const list = element("div", "final-squad-team-list");
+        section.append(element("h4", "", "队伍" + (team + 1)), list);
+        squads.append(section);
+        teamLists.set(team, list);
+      }
     for (const player of snapshot.assembly?.players || []) {
       const card = element("section", "final-squad");
       card.dataset.memberId = player.memberId;
@@ -630,12 +633,10 @@ const RoomPanel = (() => {
         }
         icon.dataset.index = index;
         icon.dataset.model = id;
-        icon.title =
-          (entry.customName || model.name) + " · " + model.kitName + " · COST " + model.cost;
-        if (entry.customName) icon.setAttribute("data-i18n-ignore", "");
+        icon.title = model.name + " · " + model.kitName + " · COST " + model.cost;
         const image = element("img");
         image.src = unitIcon(id, entry.customPilot);
-        image.alt = entry.customName || model.name;
+        image.alt = model.name;
         icon.append(image);
         if (player.reasons?.[index] === "not_developed")
           icon.append(element("span", "unit-undeveloped", "⚠︎ 尚未开发"));
@@ -992,14 +993,15 @@ const RoomPanel = (() => {
     const units = Formation.current();
     if (snapshot.you?.seat !== null) {
       try {
-        if (units.length) Rules.validateFormation(
-          units,
-          Infinity,
-          Rules.armyUnitLimit(
-            snapshot.settings,
-            snapshot.members.find((p) => p.id === snapshot.you?.id),
-          ),
-        );
+        if (units.length)
+          Rules.validateFormation(
+            units,
+            Infinity,
+            Rules.armyUnitLimit(
+              snapshot.settings,
+              snapshot.members.find((p) => p.id === snapshot.you?.id),
+            ),
+          );
       } catch {
         render(snapshot);
         return;
@@ -1151,6 +1153,10 @@ const RoomPanel = (() => {
       }
     };
   }
-  mobile.addEventListener("change", () => { if (sheet.open) sheet.close(); });
-  window.addEventListener("page-changing", () => { if (sheet.open) sheet.close(); });
+  mobile.addEventListener("change", () => {
+    if (sheet.open) sheet.close();
+  });
+  window.addEventListener("page-changing", () => {
+    if (sheet.open) sheet.close();
+  });
 })();
