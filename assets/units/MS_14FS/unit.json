@@ -1217,5 +1217,9 @@
       "fireMode": "independent",
       "name": "腕部机枪"
     }
+  ],
+  "availableFactions": [
+    "ZEON",
+    "NEO_ZEON"
   ]
 }

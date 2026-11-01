@@ -1296,5 +1296,1275 @@
       "page": 1,
       "era": "0079L"
     }
+  ],
+  "AEUG": [
+    {
+      "id": "Tech_AEUG_0087_BaseTech",
+      "name": "基础科技",
+      "description": "解锁奥古基础单位",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_BaseTech.png",
+      "row": "mid",
+      "column": 1,
+      "money": 0,
+      "supplies": 0,
+      "sourceCosts": {
+        "money": 0,
+        "supplies": 0,
+        "points": 0,
+        "researchSeconds": 0
+      },
+      "points": 0,
+      "requires": [],
+      "unlocks": [
+        "RMS_179_AEUG",
+        "RGC_83_AEUG",
+        "RGM_79N_AEUG",
+        "RGM_79C_KS",
+        "RGM_79SP2",
+        "RGM_79C_Space",
+        "RX_77D",
+        "RX_77_4",
+        "RX_77_3",
+        "RGM_79SC",
+        "RGC_80",
+        "RGC_80S",
+        "MS_06M_0087",
+        "MS_07H_0087",
+        "MS_06E3",
+        "MS_11",
+        "FF_S3",
+        "MedeaKai",
+        "GrayPhantomClass_0087",
+        "ColumbusClassKai",
+        "SalamisClassKai_0087_AEUG",
+        "Factory_AEUG_0087_Land",
+        "Factory_AEUG_0087_Mega",
+        "Factory_AEUG_0087_Space",
+        "Factory_AEUG_0087_Space_Mega",
+        "Refinery_Common_T3",
+        "Institute_Common_T2",
+        "SupplyDepot_Common_T2",
+        "Academy_Common_T2",
+        "Beacon_ACE_0087",
+        "HLV_0087_Build",
+        "Turret_AA_B",
+        "Turret_MG_B",
+        "Turret_CN_B",
+        "Turret_BM_B_Yellow",
+        "Turret_Radar_B",
+        "Turret_Space_MS_B",
+        "Turret_Space_MG_B",
+        "Turret_Space_CN_B",
+        "Wall_T2_A",
+        "Wall_T2_B"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_RickDiasDevelopmentPlan",
+      "name": "力克迪亚斯开发计划",
+      "description": "解锁力克迪亚斯",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_RickDiasDevelopmentPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 8000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 4000,
+        "supplies": 1000,
+        "points": 1200,
+        "researchSeconds": 30
+      },
+      "points": 1200,
+      "requires": [
+        "Tech_AEUG_0087_BaseTech"
+      ],
+      "unlocks": [
+        "RX_098",
+        "DodaiKai",
+        "RX_77D_4",
+        "RGM_79N_FB_AEUG"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_GundamSeizurePlan",
+      "name": "高达抢夺计划",
+      "description": "解锁高达MK-II",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_GundamSeizurePlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 16000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 8000,
+        "supplies": 2000,
+        "points": 3600,
+        "researchSeconds": 30
+      },
+      "points": 3600,
+      "requires": [
+        "Tech_AEUG_0087_RickDiasDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RMS_099",
+        "RX_178_AEUG",
+        "MSA_003",
+        "RMS_179_Nemo",
+        "IrishClass",
+        "Ballute"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_HyakuShikiDevelopmentPlan",
+      "name": "百式开发计划",
+      "description": "解锁百式",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_HyakuShikiDevelopmentPlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 20000,
+      "supplies": 5000,
+      "sourceCosts": {
+        "money": 10000,
+        "supplies": 2500,
+        "points": 6000,
+        "researchSeconds": 30
+      },
+      "points": 6000,
+      "requires": [
+        "Tech_AEUG_0087_GundamSeizurePlan"
+      ],
+      "unlocks": [
+        "MSN_100",
+        "MSK_008",
+        "RX_178_AEUG_FlyingArmor",
+        "RX_178_AEUG_FXA_05D",
+        "GarudaClass_AEUG"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_MethussDevelopmentPlan",
+      "name": "麦塔斯开发计划",
+      "description": "解锁麦塔斯",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_MethussDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 8400,
+        "researchSeconds": 30
+      },
+      "points": 8400,
+      "requires": [
+        "Tech_AEUG_0087_HyakuShikiDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSA_005",
+        "MSA_004",
+        "ArgamaClass"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_ZeroShikiDevelopmentPlan",
+      "name": "零式开发计划",
+      "description": "解锁百式改",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_ZeroShikiDevelopmentPlan.png",
+      "row": "top",
+      "column": 4,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 7200,
+        "researchSeconds": 30
+      },
+      "points": 7200,
+      "requires": [
+        "Tech_AEUG_0087_HyakuShikiDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSZ_000",
+        "MSA_003_FXA_05D",
+        "MSA_003_FXA_05D_EWAC",
+        "MSA_003_Cannon"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_HyakuShikiKaiDevelopmentPlan",
+      "name": "百式改开发计划",
+      "description": "解锁百式改",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_HyakuShikiKaiDevelopmentPlan.png",
+      "row": "top",
+      "column": 5,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 9600,
+        "researchSeconds": 30
+      },
+      "points": 9600,
+      "requires": [
+        "Tech_AEUG_0087_ZeroShikiDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSR_00100S",
+        "MSA_003_HM"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_ZetaGundamDevelopmentPlan",
+      "name": "Z高达开发计划",
+      "description": "解锁Z高达",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_ZetaGundamDevelopmentPlan.png",
+      "row": "mid",
+      "column": 1,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 10800,
+        "researchSeconds": 30
+      },
+      "points": 999999,
+      "requires": [
+        "Tech_AEUG_0087_MethussDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSZ_006",
+        "MSF_007",
+        "MSA_004K",
+        "RMS_099B_Red",
+        "Refinery_Common_T4"
+      ],
+      "page": 1,
+      "era": "0087",
+      "temporaryPointOverride": {
+        "nativePoints": 10800,
+        "reason": "0087 Page_01 temporary lock"
+      }
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_ZPlusDevelopmentPlan",
+      "name": "Zeta Plus开发计划",
+      "description": "解锁ZetaPlus",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_ZPlusDevelopmentPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 13200,
+        "researchSeconds": 30
+      },
+      "points": 13200,
+      "requires": [
+        "Tech_AEUG_0087_T2_ZetaGundamDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSZ_006A1",
+        "MSZ_006C1"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_ZZGundamDevelopmentPlan",
+      "name": "ZZ高达开发计划",
+      "description": "解锁ZZ高达",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_ZZGundamDevelopmentPlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 15600,
+        "researchSeconds": 30
+      },
+      "points": 15600,
+      "requires": [
+        "Tech_AEUG_0087_T2_ZPlusDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSZ_010",
+        "MSZ_008",
+        "MSA_099_2"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_GMIIIDevelopmentPlan",
+      "name": "吉姆III开发计划",
+      "description": "解锁吉姆III",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_GMIIIDevelopmentPlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 18000,
+        "researchSeconds": 30
+      },
+      "points": 18000,
+      "requires": [
+        "Tech_AEUG_0087_T2_ZZGundamDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RGM_86R",
+        "RGM_86R_FXA_05D"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_NouvelGMIIIDevelopmentPlan",
+      "name": "新式吉姆III开发计划",
+      "description": "解锁新式吉姆III",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_NouvelGMIIIDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 20400,
+        "researchSeconds": 30
+      },
+      "points": 20400,
+      "requires": [
+        "Tech_AEUG_0087_T2_GMIIIDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RGM_86R_Nouvel",
+        "MSZ_010S"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_ZZFADevelopmentPlan",
+      "name": "全装甲ZZ高达开发计划",
+      "description": "解锁全装甲ZZ高达",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_ZZFADevelopmentPlan.png",
+      "row": "mid",
+      "column": 6,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 22800,
+        "researchSeconds": 30
+      },
+      "points": 22800,
+      "requires": [
+        "Tech_AEUG_0087_T2_NouvelGMIIIDevelopmentPlan"
+      ],
+      "unlocks": [
+        "FA_010S",
+        "FA_010A"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_FullArmorHyakuShikiKaiDevelopmentPlan",
+      "name": "全装甲百式改开发计划",
+      "description": "解锁全装甲百式改",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_FullArmorHyakuShikiKaiDevelopmentPlan.png",
+      "row": "top",
+      "column": 1,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 12000,
+        "researchSeconds": 30
+      },
+      "points": 12000,
+      "requires": [
+        "Tech_AEUG_0087_HyakuShikiKaiDevelopmentPlan"
+      ],
+      "unlocks": [
+        "FA_00100S",
+        "MSR_00100S_M"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_MethussKaiDevelopmentPlan",
+      "name": "麦塔斯改开发计划",
+      "description": "解锁麦塔斯改",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_MethussKaiDevelopmentPlan.png",
+      "row": "bot",
+      "column": 2,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 14400,
+        "researchSeconds": 30
+      },
+      "points": 14400,
+      "requires": [
+        "Tech_AEUG_0087_T2_ZPlusDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSA_005S",
+        "MSA_005K",
+        "MSN_001"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_SGundamDevelopmentPlan",
+      "name": "S高达开发计划",
+      "description": "解锁S高达",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_SGundamDevelopmentPlan.png",
+      "row": "bot",
+      "column": 3,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 16800,
+        "researchSeconds": 30
+      },
+      "points": 16800,
+      "requires": [
+        "Tech_AEUG_0087_T2_ZZGundamDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSA_0011",
+        "MSA_007",
+        "MSA_007T"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_AEUG_0087_T2_EXSGundamDevelopmentPlan",
+      "name": "EX-S高达开发计划",
+      "description": "解锁EX-S高达",
+      "icon": "assets/tech-icons/Tech_AEUG_0087_T2_EXSGundamDevelopmentPlan.png",
+      "row": "bot",
+      "column": 5,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 21600,
+        "researchSeconds": 30
+      },
+      "points": 21600,
+      "requires": [
+        "Tech_AEUG_0087_T2_SGundamDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MSA_0011_Ext",
+        "MSA_007E"
+      ],
+      "page": 1,
+      "era": "0087"
+    }
+  ],
+  "TITANS": [
+    {
+      "id": "Tech_TITANS_0087_BaseTech",
+      "name": "基础科技",
+      "description": "解锁提坦斯基础单位",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_BaseTech.png",
+      "row": "mid",
+      "column": 1,
+      "money": 0,
+      "supplies": 0,
+      "sourceCosts": {
+        "money": 0,
+        "supplies": 0,
+        "points": 0,
+        "researchSeconds": 0
+      },
+      "points": 0,
+      "requires": [],
+      "unlocks": [
+        "RMS_106",
+        "RMS_179_TITANS",
+        "RGC_83_TITANS",
+        "RGM_79Q",
+        "RGM_79SP2",
+        "RGM_79C_Space",
+        "RX_77D",
+        "RX_77_4",
+        "RX_77_3",
+        "RGM_79SC",
+        "RGC_80",
+        "RGC_80S",
+        "MS_06M_0087",
+        "MS_07H_0087",
+        "MS_06E3",
+        "MS_11",
+        "FF_S3",
+        "MedeaKai",
+        "GrayPhantomClass_0087",
+        "ColumbusClassKai",
+        "SalamisClassKai_0087_TITANS",
+        "Factory_TITANS_0087_Land",
+        "Factory_TITANS_0087_Mega",
+        "Factory_TITANS_0087_Space",
+        "Factory_TITANS_0087_Space_Mega",
+        "Refinery_Common_T3",
+        "Institute_Common_T2",
+        "SupplyDepot_Common_T2",
+        "Academy_Common_T2",
+        "Beacon_ACE_0087",
+        "HLV_0087_Build",
+        "Turret_AA_B",
+        "Turret_MG_B",
+        "Turret_CN_B",
+        "Turret_BM_B",
+        "Turret_Radar_B",
+        "Turret_Space_MS_B",
+        "Turret_Space_MG_B",
+        "Turret_Space_CN_B",
+        "Wall_T2_A",
+        "Wall_T2_B"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_MovableFrameDevelopmentPlan",
+      "name": "可动框架开发计划",
+      "description": "解锁高达MK-II",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_MovableFrameDevelopmentPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 8000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 4000,
+        "supplies": 1000,
+        "points": 1200,
+        "researchSeconds": 30
+      },
+      "points": 1200,
+      "requires": [
+        "Tech_TITANS_0087_BaseTech"
+      ],
+      "unlocks": [
+        "RX_178",
+        "RMS_117",
+        "RGM_79Q_ChobamArmor",
+        "BaseJabber",
+        "Gator"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_MarasaiDevelopmentPlan",
+      "name": "玛拉塞开发计划",
+      "description": "解锁玛拉塞",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_MarasaiDevelopmentPlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 16000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 8000,
+        "supplies": 2000,
+        "points": 3600,
+        "researchSeconds": 30
+      },
+      "points": 3600,
+      "requires": [
+        "Tech_TITANS_0087_MovableFrameDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RMS_108",
+        "RMS_179_FedayeenRifle",
+        "AlexandriaClass",
+        "Ballute"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_ByarlantDevelopmentPlan",
+      "name": "拜亚兰开发计划",
+      "description": "解锁拜亚兰",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_ByarlantDevelopmentPlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 20000,
+      "supplies": 5000,
+      "sourceCosts": {
+        "money": 10000,
+        "supplies": 2500,
+        "points": 6000,
+        "researchSeconds": 30
+      },
+      "points": 6000,
+      "requires": [
+        "Tech_TITANS_0087_MarasaiDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RX_160",
+        "NRX_044_TR_3",
+        "RX_178_Unit4",
+        "GarudaClass_TITANS"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_AsshimarDevelopmentPlan",
+      "name": "阿西玛开发计划",
+      "description": "解锁阿西玛",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_AsshimarDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 8400,
+        "researchSeconds": 30
+      },
+      "points": 8400,
+      "requires": [
+        "Tech_TITANS_0087_ByarlantDevelopmentPlan"
+      ],
+      "unlocks": [
+        "NRX_044",
+        "RX_110",
+        "RMS_154",
+        "DogosseGiarClass"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_HazelDevelopmentPlan",
+      "name": "海兹尔开发计划",
+      "description": "解锁海兹尔",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_HazelDevelopmentPlan.png",
+      "row": "top",
+      "column": 2,
+      "money": 8000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 4000,
+        "supplies": 1000,
+        "points": 2400,
+        "researchSeconds": 30
+      },
+      "points": 2400,
+      "requires": [
+        "Tech_TITANS_0087_BaseTech"
+      ],
+      "unlocks": [
+        "RX_121",
+        "RX_121_1",
+        "RX_121_HighMobilityForm",
+        "RX_121_TripleBooster"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_HIZakuCustomDevelopmentPlan",
+      "name": "高扎古特装型开发计划",
+      "description": "解锁高扎古特装型",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_HIZakuCustomDevelopmentPlan.png",
+      "row": "top",
+      "column": 3,
+      "money": 16000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 8000,
+        "supplies": 2000,
+        "points": 4800,
+        "researchSeconds": 30
+      },
+      "points": 4800,
+      "requires": [
+        "Tech_TITANS_0087_HazelDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RMS_106CS",
+        "RMS_119",
+        "RX_121_1_FF_X29A"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_PsycoGundamDevelopmentPlan",
+      "name": "精神感应高达开发计划",
+      "description": "解锁精神感应高达",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_PsycoGundamDevelopmentPlan.png",
+      "row": "top",
+      "column": 4,
+      "money": 20000,
+      "supplies": 5000,
+      "sourceCosts": {
+        "money": 10000,
+        "supplies": 2500,
+        "points": 7200,
+        "researchSeconds": 30
+      },
+      "points": 7200,
+      "requires": [
+        "Tech_TITANS_0087_ByarlantDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MRX_009",
+        "RX_121_2A",
+        "RX_121_2A_M"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_T2_SpaceTypeTMSDevelopmentPlan",
+      "name": "宇宙用TMS开发计划",
+      "description": "解锁宇宙用TMS",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_T2_SpaceTypeTMSDevelopmentPlan.png",
+      "row": "mid",
+      "column": 1,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 10800,
+        "researchSeconds": 30
+      },
+      "points": 999999,
+      "requires": [
+        "Tech_TITANS_0087_AsshimarDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RX_139",
+        "ORX_005",
+        "PMX_000",
+        "Refinery_Common_T4"
+      ],
+      "page": 1,
+      "era": "0087",
+      "temporaryPointOverride": {
+        "nativePoints": 10800,
+        "reason": "0087 Page_01 temporary lock"
+      }
+    },
+    {
+      "id": "Tech_TITANS_0087_T2_TheODevelopmentPlan",
+      "name": "铁奥开发计划",
+      "description": "解锁铁奥",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_T2_TheODevelopmentPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 13200,
+        "researchSeconds": 30
+      },
+      "points": 13200,
+      "requires": [
+        "Tech_TITANS_0087_T2_SpaceTypeTMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "PMX_003",
+        "PMX_002",
+        "PMX_001",
+        "RMS_154_Kai"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_T2_WoundwortDevelopmentPlan",
+      "name": "伍德渥特开发计划",
+      "description": "解锁伍德渥特",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_T2_WoundwortDevelopmentPlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 15600,
+        "researchSeconds": 30
+      },
+      "points": 15600,
+      "requires": [
+        "Tech_TITANS_0087_T2_TheODevelopmentPlan"
+      ],
+      "unlocks": [
+        "RX_124",
+        "RX_121_3C",
+        "ORX_005_TR_5"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_T2_GMIIIDevelopmentPlan",
+      "name": "吉姆III开发计划",
+      "description": "解锁吉姆III",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_T2_GMIIIDevelopmentPlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 18000,
+        "researchSeconds": 30
+      },
+      "points": 18000,
+      "requires": [
+        "Tech_TITANS_0087_T2_WoundwortDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RGM_86R_EFSF",
+        "RX_124_FF_X39A",
+        "ORX_005_TR_5_FF_X39A"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_T2_Kehaar2DevelopmentPlan",
+      "name": "基哈尔II开发计划",
+      "description": "解锁基哈尔II",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_T2_Kehaar2DevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 20400,
+        "researchSeconds": 30
+      },
+      "points": 20400,
+      "requires": [
+        "Tech_TITANS_0087_T2_GMIIIDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RX_124_Kehaar2",
+        "RX_124_Kehaar2_M"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_TITANS_0087_T2_PsycoGundamMK2DevelopmentPlan",
+      "name": "精神感应高达MK-II开发计划",
+      "description": "解锁精神感应高达MK-II",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_T2_PsycoGundamMK2DevelopmentPlan.png",
+      "row": "top",
+      "column": 1,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 12000,
+        "researchSeconds": 30
+      },
+      "points": 12000,
+      "requires": [
+        "Tech_TITANS_0087_PsycoGundamDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MRX_010",
+        "NRX_055"
+      ],
+      "page": 1,
+      "era": "0087"
+    }
+  ],
+  "NEO_ZEON": [
+    {
+      "id": "Tech_NEO_ZEON_0087_BaseTech",
+      "name": "基础科技",
+      "description": "解锁提坦斯基础单位",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_BaseTech.png",
+      "row": "mid",
+      "column": 1,
+      "money": 0,
+      "supplies": 0,
+      "sourceCosts": {
+        "money": 0,
+        "supplies": 0,
+        "points": 0,
+        "researchSeconds": 0
+      },
+      "points": 0,
+      "requires": [],
+      "unlocks": [
+        "MS_09R_Stutzer",
+        "MS_06F_Stutzer",
+        "MS_09S",
+        "YMS_18",
+        "MS_15FS",
+        "MS_15F",
+        "MS_14FS",
+        "MS_14F",
+        "MS_06E3",
+        "MS_06M_0087",
+        "MS_07H_0087",
+        "MS_11",
+        "MS_06F2_Commander",
+        "MS_06F2",
+        "Dopp",
+        "FatUncleKai",
+        "ZanzibarClassKai_0087",
+        "PazockClass",
+        "MusaiClassFinalType",
+        "ChivvayClassKai",
+        "Factory_NEO_ZEON_0087_Land",
+        "Factory_NEO_ZEON_0087_Mega",
+        "Factory_NEO_ZEON_0087_Space",
+        "Factory_NEO_ZEON_0087_Space_Mega",
+        "Refinery_Common_T3",
+        "Institute_Common_T2",
+        "SupplyDepot_Common_T2",
+        "Academy_Common_T2",
+        "Beacon_ACE_0087",
+        "HLV_0087_Build",
+        "Turret_AA_B",
+        "Turret_MG_B",
+        "Turret_CN_B",
+        "Turret_BM_B_Yellow",
+        "Turret_Radar_B",
+        "Turret_Space_MS_B",
+        "Turret_Space_MG_B",
+        "Turret_Space_CN_B",
+        "Wall_T2_A",
+        "Wall_T2_B"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_GelgoogStutzerDevelopmentPlan",
+      "name": "勇士复合装备开发计划",
+      "description": "解锁勇士复合装备",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_GelgoogStutzerDevelopmentPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 8000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 4000,
+        "supplies": 1000,
+        "points": 1200,
+        "researchSeconds": 30
+      },
+      "points": 1200,
+      "requires": [
+        "Tech_NEO_ZEON_0087_BaseTech"
+      ],
+      "unlocks": [
+        "MS_14A_Stutzer",
+        "MS_09SS",
+        "Gator"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_GyanKaiDevelopmentPlan",
+      "name": "强人改开发计划",
+      "description": "解锁强人改",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_GyanKaiDevelopmentPlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 16000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 8000,
+        "supplies": 2000,
+        "points": 3600,
+        "researchSeconds": 30
+      },
+      "points": 3600,
+      "requires": [
+        "Tech_NEO_ZEON_0087_GelgoogStutzerDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MS_15K",
+        "AGX_04A1",
+        "GwanbanClass",
+        "Ballute"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_EnemyMSBlueprintAcquisitionPlan",
+      "name": "敌MS蓝图窃取计划",
+      "description": "解锁敌MS图纸",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_EnemyMSBlueprintAcquisitionPlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 20000,
+      "supplies": 5000,
+      "sourceCosts": {
+        "money": 10000,
+        "supplies": 2500,
+        "points": 6000,
+        "researchSeconds": 30
+      },
+      "points": 6000,
+      "requires": [
+        "Tech_NEO_ZEON_0087_GyanKaiDevelopmentPlan"
+      ],
+      "unlocks": [
+        "RMS_099_NEO_ZEON",
+        "RMS_106_NEO_ZEON",
+        "GarudaClass_NEO_ZEON"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_GazaCDevelopmentPlan",
+      "name": "加撒C开发计划",
+      "description": "解锁加撒C",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_GazaCDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 8400,
+        "researchSeconds": 30
+      },
+      "points": 8400,
+      "requires": [
+        "Tech_NEO_ZEON_0087_EnemyMSBlueprintAcquisitionPlan"
+      ],
+      "unlocks": [
+        "AMX_003",
+        "RMS_119_NEO_ZEON",
+        "GwadanClass"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_ReGelgDevelopmentPlan",
+      "name": "改修型勇士开发计划",
+      "description": "解锁改修型勇士",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_ReGelgDevelopmentPlan.png",
+      "row": "top",
+      "column": 3,
+      "money": 16000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 8000,
+        "supplies": 2000,
+        "points": 4800,
+        "researchSeconds": 30
+      },
+      "points": 4800,
+      "requires": [
+        "Tech_NEO_ZEON_0087_GyanKaiDevelopmentPlan"
+      ],
+      "unlocks": [
+        "MS_14J",
+        "AMX_002"
+      ],
+      "page": 0,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_T2_QubeleyDevelopmentPlan",
+      "name": "卡碧尼开发计划",
+      "description": "解锁卡碧尼",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_T2_QubeleyDevelopmentPlan.png",
+      "row": "mid",
+      "column": 1,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 10800,
+        "researchSeconds": 30
+      },
+      "points": 999999,
+      "requires": [
+        "Tech_NEO_ZEON_0087_GazaCDevelopmentPlan"
+      ],
+      "unlocks": [
+        "AMX_004_1",
+        "AMX_006",
+        "AMX_009",
+        "RMS_099B_NEO_ZEON",
+        "Refinery_Common_T4"
+      ],
+      "page": 1,
+      "era": "0087",
+      "temporaryPointOverride": {
+        "nativePoints": 10800,
+        "reason": "0087 Page_01 temporary lock"
+      }
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_T2_GallussJDevelopmentPlan",
+      "name": "卡尔斯J开发计划",
+      "description": "解锁卡尔斯J",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_T2_GallussJDevelopmentPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 13200,
+        "researchSeconds": 30
+      },
+      "points": 13200,
+      "requires": [
+        "Tech_NEO_ZEON_0087_T2_QubeleyDevelopmentPlan"
+      ],
+      "unlocks": [
+        "AMX_101",
+        "AMX_101K",
+        "AMX_102",
+        "MRX_010"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_T2_HammaHammaDevelopmentPlan",
+      "name": "悍马·悍马开发计划",
+      "description": "解锁悍马·悍马",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_T2_HammaHammaDevelopmentPlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 15600,
+        "researchSeconds": 30
+      },
+      "points": 15600,
+      "requires": [
+        "Tech_NEO_ZEON_0087_T2_GallussJDevelopmentPlan"
+      ],
+      "unlocks": [
+        "AMX_103",
+        "AMX_109",
+        "AMX_008",
+        "AMX_004G"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_T2_JamruFinDevelopmentPlan",
+      "name": "杰姆鲁芬开发计划",
+      "description": "解锁杰姆鲁芬",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_T2_JamruFinDevelopmentPlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 18000,
+        "researchSeconds": 30
+      },
+      "points": 18000,
+      "requires": [
+        "Tech_NEO_ZEON_0087_T2_HammaHammaDevelopmentPlan"
+      ],
+      "unlocks": [
+        "AMA_01X",
+        "AMX_011",
+        "AMX_014"
+      ],
+      "page": 1,
+      "era": "0087"
+    },
+    {
+      "id": "Tech_NEO_ZEON_0087_T2_BawooDevelopmentPlan",
+      "name": "龙飞开发计划",
+      "description": "解锁龙飞",
+      "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_T2_BawooDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 20400,
+        "researchSeconds": 30
+      },
+      "points": 20400,
+      "requires": [
+        "Tech_NEO_ZEON_0087_T2_JamruFinDevelopmentPlan"
+      ],
+      "unlocks": [
+        "AMX_107",
+        "AMX_107M"
+      ],
+      "page": 1,
+      "era": "0087"
+    }
   ]
 }

@@ -41,7 +41,11 @@ const Encyclopedia = (() => {
       ["", "全部阵营"],
       ["EFSF", "地球联邦军"],
       ["ZEON", "吉翁公国军"],
+      ["AEUG", "奥古"],
+      ["TITANS", "提坦斯"],
+      ["NEO_ZEON", "新吉翁"],
     ]);
+    field("Faction").hidden = !!window.CATALOG_DEVELOPER_MODE;
     options("Era", [["", "全部年代"], ...Rules.eras.map((v) => [v, v])]);
     options("Status", [
       ["", "全部"],

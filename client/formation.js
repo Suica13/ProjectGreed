@@ -8,7 +8,7 @@ const Formation = (() => {
   const sessionSaves = new Map();
   const pilotStorageKey = "projectgreed.custom-pilots.v2.";
   const pilotStores = {};
-  for (const faction of ["PMC", "EFSF", "ZEON"]) {
+  for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]) {
     let saved = null;
     try {
       saved = JSON.parse(localStorage.getItem(pilotStorageKey + faction));
@@ -123,7 +123,7 @@ const Formation = (() => {
         passenger("MS_06S", "kit_1"),
       ],
     };
-    return [{ name: faction + " 默认编组", units: units[faction] }];
+    return [{ name: faction + " 默认编组", units: units[faction] || [] }];
   }
   let squads = defaultSquads(group);
   let index = 0,
@@ -284,7 +284,8 @@ const Formation = (() => {
     renderCatalog();
   }
   function setGroup(next) {
-    if (!["PMC", "EFSF", "ZEON"].includes(next) || group === next) return;
+    if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(next) || group === next)
+      return;
     finishPilotEditor();
     group = next;
     PlayerProfile.setFormationGroup(group);
@@ -2793,7 +2794,7 @@ const Formation = (() => {
     receivePilotAwards,
     exportPilotStores: () =>
       Object.fromEntries(
-        ["PMC", "EFSF", "ZEON"].map((faction) => [
+        ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].map((faction) => [
           faction,
           {
             pilots: structuredClone(pilotStore.pilots.filter((pilot) => pilot.faction === faction)),
@@ -2807,7 +2808,11 @@ const Formation = (() => {
     setGroup,
     alignWithRoom: (snapshot) => {
       const member = snapshot?.members?.find((item) => item.id === snapshot.you?.id);
-      if (!member || !["PMC", "EFSF", "ZEON"].includes(member.characterFaction)) return;
+      if (
+        !member ||
+        !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(member.characterFaction)
+      )
+        return;
       setGroup(member.characterFaction);
       PlayerProfile.setFaction(member.characterFaction);
     },

@@ -886,5 +886,9 @@
   "production": {
     "enabled": true,
     "refitFrom": []
-  }
+  },
+  "availableFactions": [
+    "ZEON",
+    "NEO_ZEON"
+  ]
 }

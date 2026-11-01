@@ -37,8 +37,7 @@ const Economy = (() => {
     if (!owned || typeof owned !== "object" || Array.isArray(owned)) throw Error("部署许可无效");
     const licenses = {};
     for (const [id, amount] of Object.entries(owned)) {
-      if (typeof amount !== "boolean")
-        throw Error("部署许可无效: " + id);
+      if (typeof amount !== "boolean") throw Error("部署许可无效: " + id);
       const unitId = id;
       if (
         !Object.hasOwn(catalog.baseModels, unitId) &&
@@ -72,8 +71,10 @@ const Economy = (() => {
       const saved = localStorage.getItem(key);
       if (saved !== null) {
         const parsed = JSON.parse(saved);
-        const migrations = typeof ProfileMigrations !== "undefined"
-          ? ProfileMigrations : require("./profile-migrations.js");
+        const migrations =
+          typeof ProfileMigrations !== "undefined"
+            ? ProfileMigrations
+            : require("./profile-migrations.js");
         state = validate(migrations.economy(parsed));
         if (parsed.schemaVersion !== 2 || parsed.licenses === undefined) {
           const backupKey = key + ".before-deployment-licenses";
@@ -175,8 +176,7 @@ const Economy = (() => {
     next.supplies += award.supplies;
     if (award.inventory !== undefined) throw Error("活动奖励仅支持部署许可");
     for (const [id, owned] of Object.entries(award.licenses || {})) {
-      if (!Object.hasOwn(catalog.baseModels, id) || owned !== true)
-        throw Error("活动单位奖励无效");
+      if (!Object.hasOwn(catalog.baseModels, id) || owned !== true) throw Error("活动单位奖励无效");
       next.licenses[id] = true;
     }
     next.claimed = { ...next.claimed, [award.id]: award.matchId };
@@ -194,19 +194,14 @@ const Economy = (() => {
   function available(offer, faction) {
     if (
       !offer ||
-      !["PMC", "EFSF", "ZEON"].includes(faction) ||
+      !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction) ||
       (faction !== "PMC" && !(offer.availableFactions || [offer.faction]).includes(faction))
     )
       return false;
     const development =
       typeof Development !== "undefined" ? Development : require("./development.js");
     const model = modelsForUnits()[offer.unitId + "__" + defaultKit(offer.unitId)];
-    return (
-      !!model &&
-      !model.wip &&
-      !model.formOnly &&
-      development.allows(faction, offer.unitId)
-    );
+    return !!model && !model.wip && !model.formOnly && development.allows(faction, offer.unitId);
   }
   function purchaseLicense(unitId, faction) {
     const offer = licenseOffer(unitId);
@@ -216,7 +211,7 @@ const Economy = (() => {
   function licensePlan(entries) {
     const items = [],
       total = { money: 0, supplies: 0 };
-    for (const unitId of new Set(entries.map(entry => entry.unitId))) {
+    for (const unitId of new Set(entries.map((entry) => entry.unitId))) {
       if (state.licenses[unitId]) continue;
       const offer = licenseOffer(unitId);
       items.push({ unitId });
@@ -229,9 +224,7 @@ const Economy = (() => {
   }
   function purchaseMissingLicenses(entries, faction) {
     const plan = licensePlan(entries);
-    const unavailable = plan.items.filter(
-      (item) => !available(licenseOffer(item.unitId), faction),
-    );
+    const unavailable = plan.items.filter((item) => !available(licenseOffer(item.unitId), faction));
     if (unavailable.length)
       return { ok: false, reason: "unavailable", units: unavailable.map((item) => item.unitId) };
     if (!plan.items.length) return { ok: true, plan };

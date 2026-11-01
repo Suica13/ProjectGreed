@@ -1,0 +1,839 @@
+{
+  "schemaVersion": 2,
+  "id": "MS_15K",
+  "code": "MS-15K",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/MS_15K/MS_15K.ini",
+  "materials": {
+    "textures": {
+      "MS_15K_Crotch_1.png": "textures/MS_15K_Crotch_1.png",
+      "MS_15K_Body_1.png": "textures/MS_15K_Body_1.png",
+      "MS_15K_ArmL_1.png": "textures/MS_15K_ArmL_1.png",
+      "MS_15K_ArmR_1.png": "textures/MS_15K_ArmR_1.png",
+      "MS_15K_ShoulderL_1.png": "textures/MS_15K_ShoulderL_1.png",
+      "MS_15K_ShoulderR_1.png": "textures/MS_15K_ShoulderR_1.png",
+      "MS_15K_Head_1.png": "textures/MS_15K_Head_1.png",
+      "MS_15K_Eye_1.png": "textures/MS_15K_Eye_1.png",
+      "MS_15K_FootL_1.png": "textures/MS_15K_FootL_1.png",
+      "MS_15K_LegL_1.png": "textures/MS_15K_LegL_1.png",
+      "MS_15K_FootR_1.png": "textures/MS_15K_FootR_1.png",
+      "MS_15K_LegR_1.png": "textures/MS_15K_LegR_1.png",
+      "NEO_ZEON_MS_15K_BeamLance_1.png": "textures/NEO_ZEON_MS_15K_BeamLance_1.png",
+      "ZN_MS_15B_BeamLance.png": "textures/ZN_MS_15B_BeamLance.png",
+      "NEO_ZEON_MS_15K_Shield.png": "textures/NEO_ZEON_MS_15K_Shield.png",
+      "NEO_ZEON_MS_15K_Shield_Breaked.png": "textures/NEO_ZEON_MS_15K_Shield_Breaked.png",
+      "MS_15K.png": "textures/MS_15K.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MS_15K.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "MS_15K_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MS_15K_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MS_15K_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MS_15K_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "MS_15K_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "MS_15K_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "rotation": -5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "MS_15K_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "rotation": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "ZN_MS_15B_BeamLance_BF",
+      "texture": "NEO_ZEON_MS_15K_BeamLance_1.png",
+      "bone": "RightWeapon",
+      "order": 4.5,
+      "scale": 0.95,
+      "rotation": -5.0,
+      "offset": {
+        "x": 13.0,
+        "y": 35.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Shield",
+      "texture": "NEO_ZEON_MS_15K_Shield.png",
+      "bone": "LeftArm",
+      "order": 4.5,
+      "scale": 1.0,
+      "rotation": 8.0,
+      "offset": {
+        "x": -8.0,
+        "y": 12.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "Shield_Breaked",
+      "texture": "NEO_ZEON_MS_15K_Shield_Breaked.png",
+      "bone": "LeftArm",
+      "order": 4.5,
+      "scale": 1.0,
+      "rotation": 8.0,
+      "offset": {
+        "x": -8.0,
+        "y": 12.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body",
+      "texture": "MS_15K_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MS_15K_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MS_15K_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "MS_15K_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MS_15K_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Eye",
+      "texture": "MS_15K_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.5,
+      "offset": {
+        "x": 0.0,
+        "y": 0.75
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A_L": "../../animations/Common_Shoot_A_L.json",
+    "Common_Melee_B": "../../animations/Common_Melee_B__MSM_04.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "Common_Melee_B2": "../../animations/Common_Melee_B2.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 50000,
+    "en": 475.0,
+    "move": 8,
+    "mobility": 175.0,
+    "cost": 1000,
+    "counterLimit": 1,
+    "accuracy": 155.0,
+    "partStructuralStrength": 145.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 145,
+    "actionPoints": 11,
+    "sensors": {
+      "sight": 10,
+      "radar": 12.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 65.0,
+    "shooting": 55.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 15.0,
+      "flat": 200.0
+    },
+    "shell": {
+      "percent": 15.0,
+      "flat": 200.0
+    },
+    "melee": {
+      "percent": 15.0,
+      "flat": 500.0
+    },
+    "dp": {
+      "percent": 15.0,
+      "flat": 20.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 6500.0,
+    "blockChance": 0.4,
+    "coverage": 0.5,
+    "defenses": {
+      "beam": {
+        "percent": 5.0,
+        "flat": 45.0
+      },
+      "shell": {
+        "percent": 10.0,
+        "flat": 45.0
+      },
+      "melee": {
+        "percent": 5.0,
+        "flat": 175.0
+      },
+      "dp": {
+        "percent": 10.0,
+        "flat": 25.0
+      }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
+  },
+  "sourceStats": {
+    "hp": 40000.0,
+    "walkSpeed": 0.75,
+    "boostSpeed": 2.0,
+    "turnSpeed": 2.75,
+    "reaction": 175.0,
+    "shooting": 155.0,
+    "melee": 165.0,
+    "nativeTags": [
+      "MS_15K",
+      "Unit",
+      "MS",
+      "NEO_ZEON",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "accuracy": 155.0,
+    "partStructuralStrength": 145.0,
+    "actionTurnSpeed": 2.75,
+    "movementBeforeMobility": 7,
+    "mobilityMoveTarget": 8,
+    "enBeforeReduction": 950.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 432.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 4000.0,
+    "tacticalMoveBeforeBonus": 7,
+    "v17BaseHp": 40000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "强人改",
+  "faction": "NEO_ZEON",
+  "tags": [
+    "NEO_ZEON",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "强人改",
+      "description": "阿克西斯对强人进行改良后得到的机体"
+    },
+    "en": {
+      "name": "Gyan Kai",
+      "description": "An Axis-upgraded version of the Gyan"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "ZN_MS_15B_ShieldRocket": {
+      "ref": "ZN_MS_15B_ShieldRocket__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/ZN_MS_15B_ShieldRocket.gw",
+          "barrels": [
+            {
+              "id": "ZN_MS_15B_ShieldRocket",
+              "x": -15.0,
+              "y": 12.0
+            },
+            {
+              "id": "ZN_MS_15B_ShieldRocket_L",
+              "x": -12.0,
+              "y": 12.5
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -15.0,
+                "y": 12.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -12.0,
+                "y": 12.5
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ZN_MS_15B_ShieldRocket_L": {
+      "ref": "ZN_MS_15B_ShieldRocket_L__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/ZN_MS_15B_ShieldRocket.gw",
+          "barrels": [
+            {
+              "id": "ZN_MS_15B_ShieldRocket",
+              "x": -15.0,
+              "y": 12.0
+            },
+            {
+              "id": "ZN_MS_15B_ShieldRocket_L",
+              "x": -12.0,
+              "y": 12.5
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -15.0,
+                "y": 12.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -12.0,
+                "y": 12.5
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "ZN_MS_15B_ShieldRocket"
+        }
+      }
+    },
+    "ZN_MS_15B_BeamLance_BF_B": {
+      "ref": "ZN_MS_15B_BeamLance_BF_B__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/ZN_MS_15B_BeamLance_BF.gw",
+          "barrels": [
+            {
+              "id": "ZN_MS_15B_BeamLance_BF_B",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "ZN_MS_15B_BeamLance_B2": {
+      "ref": "ZN_MS_15B_BeamLance_B2__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/ZN_MS_15B_BeamLance_B2.gw",
+          "barrels": [
+            {
+              "id": "ZN_MS_15B_BeamLance_B2",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "availability": {
+          "hidden": false,
+          "reasons": [],
+          "requirements": [
+            {
+              "stat": "pilotCqbSkillFinal",
+              "greaterThan": 145.0
+            }
+          ],
+          "secondarySlots": []
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "ZN_MS_15B_ShieldRocket",
+        "ZN_MS_15B_BeamLance_BF_B",
+        "ZN_MS_15B_BeamLance_B2",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "阿克西斯对强人进行改良后得到的机体",
+  "skills": [
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 4000.0,
+    "levelMultiplier": 0.25,
+    "published": 1000
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "ZN_MS_15B_ShieldRocket",
+      "channels": [
+        {
+          "id": "ZN_MS_15B_ShieldRocket",
+          "weaponId": "ZN_MS_15B_ShieldRocket",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": null
+        },
+        {
+          "id": "ZN_MS_15B_ShieldRocket_L",
+          "weaponId": "ZN_MS_15B_ShieldRocket_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": null
+        }
+      ]
+    }
+  ],
+  "refits": []
+}

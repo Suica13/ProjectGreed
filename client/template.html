@@ -37,6 +37,14 @@
         color: #ff9c93;
         overflow-wrap: anywhere;
       }
+
+      .development-era-locked .development-tree-scroll,
+      .development-era-locked #developmentDetails { position: relative; overflow: hidden; }
+      .development-era-lock { position: absolute; inset: 0; z-index: 5; background: rgba(0,0,0,.86); display: flex; align-items: center; justify-content: center; padding: 1rem; }
+      .development-era-lock strong { background: #182331; color: #fff; border: 1px solid #84caff; border-radius: 5px; padding: 1rem; text-align: center; }
+      .faction-tag[data-faction="AEUG"], .faction-aeug { color:#8de6a3; border-color:#5eb67a; }
+      .faction-tag[data-faction="TITANS"], .faction-titans { color:#c5b3ff; border-color:#9980d9; }
+      .faction-tag[data-faction="NEO_ZEON"], .faction-neo_zeon { color:#ffb1c1; border-color:#d96d8d; }
     </style>
     <style>
       :root {
@@ -2344,6 +2352,9 @@
                 <option value="PMC">PMC</option>
                 <option value="EFSF">地球联邦军[0079]</option>
                 <option value="ZEON">吉翁公国军[0079]</option>
+                <option value="AEUG">奥古[0087]</option>
+                <option value="TITANS">提坦斯[0087]</option>
+                <option value="NEO_ZEON">新吉翁[0087]</option>
               </select>
             </div>
           </div>
@@ -3080,6 +3091,9 @@
               <select id="developmentFactionSelect" aria-label="阵营">
                 <option value="EFSF">地球联邦军[0079]</option>
                 <option value="ZEON">吉翁公国军[0079]</option>
+                <option value="AEUG">奥古[0087]</option>
+                <option value="TITANS">提坦斯[0087]</option>
+                <option value="NEO_ZEON">新吉翁[0087]</option>
               </select>
             </label>
             <div class="development-balance">可用科技点 <strong id="developmentPoints">0</strong></div>
@@ -3113,6 +3127,9 @@
             <option value="PMC">PMC</option>
             <option value="EFSF">地球联邦军[0079]</option>
             <option value="ZEON">吉翁公国军[0079]</option>
+                <option value="AEUG">奥古[0087]</option>
+                <option value="TITANS">提坦斯[0087]</option>
+                <option value="NEO_ZEON">新吉翁[0087]</option>
           </select>
         </label>
           </div>

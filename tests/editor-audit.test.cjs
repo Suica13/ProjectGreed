@@ -41,8 +41,10 @@ test("unit edits log exact field and price changes and preserve the curated exce
     ),
   );
   assert(fields.some((field) => field.path === "/deploymentLicense/money" && field.after === 700));
-  const table = fs.readFileSync(path.join(f.root, exceptionFile), "utf8");
-  assert(table.startsWith(document.split("<!-- catalog-editor-exceptions:start -->")[0]));
+  const index = fs.readFileSync(path.join(f.root, exceptionFile), "utf8");
+  assert(index.startsWith(document.split("<!-- catalog-editor-index:start -->")[0].trimEnd()));
+  assert(index.includes("docs/editor-changes/EFSF.md"));
+  const table = fs.readFileSync(path.join(f.root, "docs/editor-changes/EFSF.md"), "utf8");
   assert(table.includes(result.auditLog));
   assert(table.includes("203.0.113.20"));
   assert(table.includes("RX_78_2"));
@@ -76,7 +78,11 @@ test("common-template edits log all affected units including additive unit excep
     .sort();
   assert(affected.length > 0);
   assert.deepEqual(record.units.map((unit) => unit.id).sort(), affected);
-  assert(fs.readFileSync(path.join(f.root, exceptionFile), "utf8").includes(result.auditLog));
+  assert(
+    fs
+      .readFileSync(path.join(f.root, "docs/editor-changes/EFSF.md"), "utf8")
+      .includes(result.auditLog),
+  );
 });
 
 test("repeated no-op saves create no audit entries and newest changes appear first", (t) => {
@@ -91,7 +97,7 @@ test("repeated no-op saves create no audit entries and newest changes appear fir
   const next = editableUnit(f);
   next.unit.stats.hp += 500;
   const b = f.store.saveUnit(next);
-  const table = fs.readFileSync(path.join(f.root, exceptionFile), "utf8");
+  const table = fs.readFileSync(path.join(f.root, "docs/editor-changes/EFSF.md"), "utf8");
   assert(table.indexOf(b.auditLog) < table.indexOf(a.auditLog));
   assert.equal(logs(f.root).length, 2);
 });
@@ -192,4 +198,22 @@ test("authenticated HTTP saves record the actual socket IP, never client claims 
   assert(!bytes.includes(session.token));
   assert(!bytes.includes("forged-IP"));
   assert.equal(logs(f.root).length, 1);
+});
+
+test("global-rule saves have a separate register rather than duplicating faction histories", (t) => {
+  const f = editorFixture();
+  t.after(f.cleanup);
+  const Audit = require("../tools/editor-audit.cjs");
+  const record = {
+    operation: "conversion-rules",
+    localTimestamp: "now",
+    source: { ip: "local" },
+    target: { name: "rules" },
+    units: [{ id: "RX_78_2", name: "Gundam", faction: "EFSF", changes: [] }],
+    files: [],
+    logFile: "server-data/editor-changes/test.json",
+  };
+  const outputs = Audit.auditOutputs(f.root, record, "revision");
+  assert(outputs.has("docs/editor-changes/global-rules.md"));
+  assert(!outputs.has("docs/editor-changes/EFSF.md"));
 });

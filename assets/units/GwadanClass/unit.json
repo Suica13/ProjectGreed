@@ -1,0 +1,1515 @@
+{
+  "schemaVersion": 2,
+  "id": "GwadanClass",
+  "code": "GwadanClass",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/GwadanClass/GwadanClass.ini",
+  "materials": {
+    "textures": {
+      "GwadanClass.png": "textures/GwadanClass.png",
+      "GwadanClass_Body_1.png": "textures/GwadanClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "RooketBooster.png": "textures/RooketBooster.png",
+      "GwadanClass_Turret_BeamCannon_1.png": "textures/GwadanClass_Turret_BeamCannon_1.png",
+      "GwadanClass_Turret_BeamCannon_2.png": "textures/GwadanClass_Turret_BeamCannon_2.png"
+    },
+    "icon": "GwadanClass.png"
+  },
+  "skeleton": {
+    "Turret_GwadanClass_Turret_BeamCannon_M1": {
+      "x": 0.0,
+      "y": -232.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_GwadanClass_Turret_BeamCannon_M2": {
+      "x": -55.0,
+      "y": -235.0,
+      "endDirOffset": -25.0
+    },
+    "Turret_GwadanClass_Turret_BeamCannon_M3": {
+      "x": 55.0,
+      "y": -235.0,
+      "endDirOffset": 25.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_L1": {
+      "x": -40.0,
+      "y": 60.0,
+      "endDirOffset": -8.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_R1": {
+      "x": 40.0,
+      "y": 60.0,
+      "endDirOffset": 8.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_L2": {
+      "x": -93.0,
+      "y": -105.0,
+      "endDirOffset": -35.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_R2": {
+      "x": 93.0,
+      "y": -105.0,
+      "endDirOffset": 35.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_L3": {
+      "x": -128.0,
+      "y": -214.0,
+      "endDirOffset": 205.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_R3": {
+      "x": 128.0,
+      "y": -214.0,
+      "endDirOffset": -205.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_L4": {
+      "x": -93.0,
+      "y": -102.0,
+      "endDirOffset": -35.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_R4": {
+      "x": 93.0,
+      "y": -102.0,
+      "endDirOffset": 35.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_M1": {
+      "x": 0.0,
+      "y": -104.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_GwadanClass_Turret_SubBeamCannon_M2": {
+      "x": 0.0,
+      "y": -129.0,
+      "endDirOffset": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": -14.0,
+        "y": -155.0
+      },
+      "scaleX": -0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": 14.0,
+        "y": -155.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_L4",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L4",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_L4",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 3.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_R4",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R4",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_R4",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 3.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "GwadanClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "GwadanClass_Turret_BeamCannon_M1",
+      "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+      "moduleId": "GwadanClass_Turret_BeamCannon_M1",
+      "texture": "GwadanClass_Turret_BeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_BeamCannon_M2",
+      "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+      "moduleId": "GwadanClass_Turret_BeamCannon_M2",
+      "texture": "GwadanClass_Turret_BeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_BeamCannon_M3",
+      "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+      "moduleId": "GwadanClass_Turret_BeamCannon_M3",
+      "texture": "GwadanClass_Turret_BeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_L1",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L1",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_L1",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_R1",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R1",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_R1",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_L2",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L2",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_L2",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_R2",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R2",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_R2",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_L3",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L3",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_L3",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_R3",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R3",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_R3",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_M1",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_M1",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_M1",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GwadanClass_Turret_SubBeamCannon_M2",
+      "bone": "Turret_GwadanClass_Turret_SubBeamCannon_M2",
+      "moduleId": "GwadanClass_Turret_SubBeamCannon_M2",
+      "texture": "GwadanClass_Turret_BeamCannon_2.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 350000,
+    "en": 25000.0,
+    "move": 8,
+    "mobility": 100.0,
+    "cost": 3750,
+    "counterLimit": 1,
+    "accuracy": 94.25,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 0,
+      "space": 100,
+      "water": 10.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "GwadanClass_Turret_BeamCannon_M1",
+        "name": "GwadanClass_Turret_BeamCannon_M1",
+        "hp": 47500.0,
+        "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+        "x": 0.0,
+        "y": -232.0,
+        "idleDir": 0.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_BeamCannon_M2",
+        "name": "GwadanClass_Turret_BeamCannon_M2",
+        "hp": 47500.0,
+        "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+        "x": -55.0,
+        "y": -235.0,
+        "idleDir": -25.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_BeamCannon_M3",
+        "name": "GwadanClass_Turret_BeamCannon_M3",
+        "hp": 47500.0,
+        "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+        "x": 55.0,
+        "y": -235.0,
+        "idleDir": 25.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_L1",
+        "name": "GwadanClass_Turret_SubBeamCannon_L1",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L1",
+        "x": -40.0,
+        "y": 60.0,
+        "idleDir": -8.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_R1",
+        "name": "GwadanClass_Turret_SubBeamCannon_R1",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R1",
+        "x": 40.0,
+        "y": 60.0,
+        "idleDir": 8.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_L2",
+        "name": "GwadanClass_Turret_SubBeamCannon_L2",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L2",
+        "x": -93.0,
+        "y": -105.0,
+        "idleDir": -35.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_R2",
+        "name": "GwadanClass_Turret_SubBeamCannon_R2",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R2",
+        "x": 93.0,
+        "y": -105.0,
+        "idleDir": 35.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_L3",
+        "name": "GwadanClass_Turret_SubBeamCannon_L3",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L3",
+        "x": -128.0,
+        "y": -214.0,
+        "idleDir": 205.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_R3",
+        "name": "GwadanClass_Turret_SubBeamCannon_R3",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R3",
+        "x": 128.0,
+        "y": -214.0,
+        "idleDir": -205.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_L4",
+        "name": "GwadanClass_Turret_SubBeamCannon_L4",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L4",
+        "x": -93.0,
+        "y": -102.0,
+        "idleDir": -35.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_R4",
+        "name": "GwadanClass_Turret_SubBeamCannon_R4",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R4",
+        "x": 93.0,
+        "y": -102.0,
+        "idleDir": 35.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_M1",
+        "name": "GwadanClass_Turret_SubBeamCannon_M1",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_M1",
+        "x": 0.0,
+        "y": -104.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GwadanClass_Turret_SubBeamCannon_M2",
+        "name": "GwadanClass_Turret_SubBeamCannon_M2",
+        "hp": 40000.0,
+        "bone": "Turret_GwadanClass_Turret_SubBeamCannon_M2",
+        "x": 0.0,
+        "y": -129.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GwadanClass_Turret_SubBeamCannon"
+          ]
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 3
+    },
+    "commandAuras": [
+      {
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
+      },
+      {
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "speed": 95,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 9,
+      "radar": 18.055555555555557,
+      "antiDetection": -12.152777777777777,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 75.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 35.0,
+      "flat": 350.0
+    },
+    "shell": {
+      "percent": 40.0,
+      "flat": 350.0
+    },
+    "melee": {
+      "percent": 25.0,
+      "flat": 350.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 10.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 10.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 500000.0,
+    "walkSpeed": 0.6,
+    "boostSpeed": 1.35,
+    "turnSpeed": 0.4,
+    "reaction": 100.0,
+    "shooting": 175.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "GwadanClass",
+      "Unit",
+      "Ship",
+      "CmdUnit",
+      "NEO_ZEON",
+      "0087",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X48"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "CmdCom",
+      "CmdDef",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 145.0,
+    "unitLevel": 15000.0,
+    "enBeforeReduction": 50000.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 5,
+    "actionTurnSpeed": 0.4,
+    "mobilityMoveTarget": 8,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 10.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 22.0,
+      "radar": 650.0,
+      "antiDetection": -350.0
+    },
+    "shipHullBeforeReduction": 500000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "格瓦丹级",
+  "faction": "NEO_ZEON",
+  "tags": [
+    "NEO_ZEON",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "格瓦丹级",
+      "description": "阿克西斯为了提升长期处于闭锁环境下的吉翁残党的凝聚力,而开发出的一款作为回归地球圈的新吉翁军旗舰的战舰"
+    },
+    "en": {
+      "name": "Gwadan Class",
+      "description": "A flagship warship developed by Axis to strengthen the cohesion of Zeon remnants long confined in isolation, serving as the new Neo Zeon flagship upon returning to the Earth Sphere"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "GwadanClass_Turret_BeamCannon": {
+      "ref": "GwadanClass_Turret_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_BeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GwadanClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_L",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_R",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_L",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_R",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_L",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_R",
+              "x": 0.0,
+              "y": 27.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "GwadanClass_Turret_BeamCannon_L": {
+      "ref": "GwadanClass_Turret_BeamCannon_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_BeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GwadanClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_L",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_R",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_L",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_R",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_L",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_R",
+              "x": 0.0,
+              "y": 27.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GwadanClass_Turret_BeamCannon"
+        }
+      }
+    },
+    "GwadanClass_Turret_BeamCannon_R": {
+      "ref": "GwadanClass_Turret_BeamCannon_R__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_BeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GwadanClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_L",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_R",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_L",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_R",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_L",
+              "x": 0.0,
+              "y": 27.0
+            },
+            {
+              "id": "GwadanClass_Turret_BeamCannon_R",
+              "x": 0.0,
+              "y": 27.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 27.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GwadanClass_Turret_BeamCannon"
+        }
+      }
+    },
+    "GwadanClass_Turret_SubBeamCannon": {
+      "ref": "GwadanClass_Turret_SubBeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GwadanClass/GwadanClass_Turret_SubBeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "GwadanClass_Turret_SubBeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L1",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R1",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L2",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R2",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L3",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R3",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_L4",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_R4",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_M1",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_GwadanClass_Turret_SubBeamCannon_M2",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "CmdDef",
+      "source": "Template/Unit/Skill/CmdDef.gw",
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "special_Common_ReEntry_NeedBooster",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+      "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "GwadanClass_Turret_BeamCannon",
+        "GwadanClass_Turret_SubBeamCannon"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 4,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "description": "阿克西斯为了提升长期处于闭锁环境下的吉翁残党的凝聚力,而开发出的一款作为回归地球圈的新吉翁军旗舰的战舰",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 15000.0,
+    "levelMultiplier": 0.25,
+    "published": 3750
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    },
+    {
+      "id": "Hangar_2",
+      "name": "格纳库 2",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    },
+    {
+      "id": "Hangar_3",
+      "name": "格纳库 3",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    },
+    {
+      "id": "Hangar_4",
+      "name": "格纳库 4",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    }
+  ],
+  "refits": []
+}

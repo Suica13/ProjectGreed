@@ -1,0 +1,2223 @@
+{
+  "schemaVersion": 2,
+  "id": "DogosseGiarClass",
+  "code": "DogosseGiarClass",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/DogosseGiarClass/DogosseGiarClass.ini",
+  "materials": {
+    "textures": {
+      "DogosseGiarClass.png": "textures/DogosseGiarClass.png",
+      "DogosseGiarClass_Body_1.png": "textures/DogosseGiarClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "RooketBooster.png": "textures/RooketBooster.png",
+      "DogosseGiarClass_Turret_BeamCannon_1.png": "textures/DogosseGiarClass_Turret_BeamCannon_1.png",
+      "DogosseGiarClass_Turret_BeamCannon_2.png": "textures/DogosseGiarClass_Turret_BeamCannon_2.png",
+      "DogosseGiarClass_Turret_BeamCannon_3.png": "textures/DogosseGiarClass_Turret_BeamCannon_3.png",
+      "DogosseGiarClass_Turret_BeamCannon_4.png": "textures/DogosseGiarClass_Turret_BeamCannon_4.png",
+      "DogosseGiarClass_Turret_AA_1.png": "textures/DogosseGiarClass_Turret_AA_1.png"
+    },
+    "icon": "DogosseGiarClass.png"
+  },
+  "skeleton": {
+    "Turret_DogosseGiarClass_Turret_BeamCannon_M1": {
+      "x": 43.0,
+      "y": 50.0,
+      "endDirOffset": 10.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannon_M2": {
+      "x": -43.0,
+      "y": 50.0,
+      "endDirOffset": -10.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannon_M3": {
+      "x": 82.0,
+      "y": -72.0,
+      "endDirOffset": 25.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannon_M4": {
+      "x": -82.0,
+      "y": -72.0,
+      "endDirOffset": -25.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannon_M5": {
+      "x": 82.0,
+      "y": -174.0,
+      "endDirOffset": -205.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannon_M6": {
+      "x": -82.0,
+      "y": -174.0,
+      "endDirOffset": 205.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannon_M7": {
+      "x": 43.0,
+      "y": 52.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannon_M8": {
+      "x": -43.0,
+      "y": 52.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannonS_M1": {
+      "x": 43.0,
+      "y": -45.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannonS_M2": {
+      "x": -43.0,
+      "y": -45.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannonS_M3": {
+      "x": 43.0,
+      "y": -43.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannonS_M4": {
+      "x": -43.0,
+      "y": -43.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannonDB_M1": {
+      "x": 82.0,
+      "y": 4.0,
+      "endDirOffset": 5.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannonDB_M2": {
+      "x": -82.0,
+      "y": 4.0,
+      "endDirOffset": -5.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannonSB_M1": {
+      "x": 116.0,
+      "y": -130.0,
+      "endDirOffset": -185.0
+    },
+    "Turret_DogosseGiarClass_Turret_BeamCannonSB_M2": {
+      "x": -116.0,
+      "y": -130.0,
+      "endDirOffset": 185.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M1": {
+      "x": 43.0,
+      "y": 116.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M2": {
+      "x": -43.0,
+      "y": 116.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M3": {
+      "x": 42.0,
+      "y": -98.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M4": {
+      "x": -42.0,
+      "y": -98.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M5": {
+      "x": 42.0,
+      "y": -142.0,
+      "endDirOffset": -250.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M6": {
+      "x": -42.0,
+      "y": -142.0,
+      "endDirOffset": 205.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M7": {
+      "x": 24.0,
+      "y": -190.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M8": {
+      "x": -24.0,
+      "y": -190.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M9": {
+      "x": 43.0,
+      "y": 114.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M10": {
+      "x": -43.0,
+      "y": 114.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M11": {
+      "x": 42.0,
+      "y": -96.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M12": {
+      "x": -42.0,
+      "y": -96.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M13": {
+      "x": 42.0,
+      "y": -140.0,
+      "endDirOffset": -250.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M14": {
+      "x": -42.0,
+      "y": -140.0,
+      "endDirOffset": 205.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M15": {
+      "x": 24.0,
+      "y": -188.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_DogosseGiarClass_Turret_AA_M16": {
+      "x": -24.0,
+      "y": -188.0,
+      "endDirOffset": -90.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_M1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": -125.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": -55.0,
+        "y": -145.0
+      },
+      "scaleX": -0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": 55.0,
+        "y": -145.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannonS_M3",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M3",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannonS_M3",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_2.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannonS_M4",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M4",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannonS_M4",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_2.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannonDB_M1",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannonDB_M1",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannonDB_M1",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_3.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannonDB_M2",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannonDB_M2",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannonDB_M2",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_3.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M9",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M9",
+      "moduleId": "DogosseGiarClass_Turret_AA_M9",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M10",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M10",
+      "moduleId": "DogosseGiarClass_Turret_AA_M10",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M11",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M11",
+      "moduleId": "DogosseGiarClass_Turret_AA_M11",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M12",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M12",
+      "moduleId": "DogosseGiarClass_Turret_AA_M12",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M13",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M13",
+      "moduleId": "DogosseGiarClass_Turret_AA_M13",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M14",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M14",
+      "moduleId": "DogosseGiarClass_Turret_AA_M14",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M15",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M15",
+      "moduleId": "DogosseGiarClass_Turret_AA_M15",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M16",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M16",
+      "moduleId": "DogosseGiarClass_Turret_AA_M16",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannon_M7",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M7",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannon_M7",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannon_M8",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M8",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannon_M8",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "DogosseGiarClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannonS_M1",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M1",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannonS_M1",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_2.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannonS_M2",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M2",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannonS_M2",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_2.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannonSB_M1",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannonSB_M1",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannonSB_M1",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_4.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannonSB_M2",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannonSB_M2",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannonSB_M2",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_4.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M1",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M1",
+      "moduleId": "DogosseGiarClass_Turret_AA_M1",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M2",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M2",
+      "moduleId": "DogosseGiarClass_Turret_AA_M2",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M3",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M3",
+      "moduleId": "DogosseGiarClass_Turret_AA_M3",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M4",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M4",
+      "moduleId": "DogosseGiarClass_Turret_AA_M4",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M5",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M5",
+      "moduleId": "DogosseGiarClass_Turret_AA_M5",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M6",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M6",
+      "moduleId": "DogosseGiarClass_Turret_AA_M6",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M7",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M7",
+      "moduleId": "DogosseGiarClass_Turret_AA_M7",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_AA_M8",
+      "bone": "Turret_DogosseGiarClass_Turret_AA_M8",
+      "moduleId": "DogosseGiarClass_Turret_AA_M8",
+      "texture": "DogosseGiarClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannon_M1",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M1",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannon_M1",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannon_M2",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M2",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannon_M2",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannon_M3",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M3",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannon_M3",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannon_M4",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M4",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannon_M4",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannon_M5",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M5",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannon_M5",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DogosseGiarClass_Turret_BeamCannon_M6",
+      "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M6",
+      "moduleId": "DogosseGiarClass_Turret_BeamCannon_M6",
+      "texture": "DogosseGiarClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 297500,
+    "en": 22500.0,
+    "move": 8,
+    "mobility": 105.0,
+    "cost": 3750,
+    "counterLimit": 1,
+    "accuracy": 107.25,
+    "partStructuralStrength": 125.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 0,
+      "space": 100,
+      "water": 25.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannon_M1",
+        "name": "DogosseGiarClass_Turret_BeamCannon_M1",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M1",
+        "x": 43.0,
+        "y": 50.0,
+        "idleDir": 10.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_1.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_1"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannon_M2",
+        "name": "DogosseGiarClass_Turret_BeamCannon_M2",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M2",
+        "x": -43.0,
+        "y": 50.0,
+        "idleDir": -10.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_1.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_1"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannon_M3",
+        "name": "DogosseGiarClass_Turret_BeamCannon_M3",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M3",
+        "x": 82.0,
+        "y": -72.0,
+        "idleDir": 25.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_1.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_1"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannon_M4",
+        "name": "DogosseGiarClass_Turret_BeamCannon_M4",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M4",
+        "x": -82.0,
+        "y": -72.0,
+        "idleDir": -25.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_1.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_1"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannon_M5",
+        "name": "DogosseGiarClass_Turret_BeamCannon_M5",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M5",
+        "x": 82.0,
+        "y": -174.0,
+        "idleDir": -205.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_1.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_1"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannon_M6",
+        "name": "DogosseGiarClass_Turret_BeamCannon_M6",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M6",
+        "x": -82.0,
+        "y": -174.0,
+        "idleDir": 205.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_1.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_1"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannon_M7",
+        "name": "DogosseGiarClass_Turret_BeamCannon_M7",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M7",
+        "x": 43.0,
+        "y": 52.0,
+        "idleDir": 15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_1.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_1"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannon_M8",
+        "name": "DogosseGiarClass_Turret_BeamCannon_M8",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M8",
+        "x": -43.0,
+        "y": 52.0,
+        "idleDir": -15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_1.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_1"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannonS_M1",
+        "name": "DogosseGiarClass_Turret_BeamCannonS_M1",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M1",
+        "x": 43.0,
+        "y": -45.0,
+        "idleDir": 15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_2.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_2"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannonS_M2",
+        "name": "DogosseGiarClass_Turret_BeamCannonS_M2",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M2",
+        "x": -43.0,
+        "y": -45.0,
+        "idleDir": -15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_2.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_2"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannonS_M3",
+        "name": "DogosseGiarClass_Turret_BeamCannonS_M3",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M3",
+        "x": 43.0,
+        "y": -43.0,
+        "idleDir": 15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_2"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannonS_M4",
+        "name": "DogosseGiarClass_Turret_BeamCannonS_M4",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M4",
+        "x": -43.0,
+        "y": -43.0,
+        "idleDir": -15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon_2"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannonDB_M1",
+        "name": "DogosseGiarClass_Turret_BeamCannonDB_M1",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannonDB_M1",
+        "x": 82.0,
+        "y": 4.0,
+        "idleDir": 5.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_3.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannonDB_M2",
+        "name": "DogosseGiarClass_Turret_BeamCannonDB_M2",
+        "hp": 35000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannonDB_M2",
+        "x": -82.0,
+        "y": 4.0,
+        "idleDir": -5.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_4.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannonSB_M1",
+        "name": "DogosseGiarClass_Turret_BeamCannonSB_M1",
+        "hp": 30000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannonSB_M1",
+        "x": 116.0,
+        "y": -130.0,
+        "idleDir": -185.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_5.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_BeamCannonSB_M2",
+        "name": "DogosseGiarClass_Turret_BeamCannonSB_M2",
+        "hp": 30000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_BeamCannonSB_M2",
+        "x": -116.0,
+        "y": -130.0,
+        "idleDir": 185.0,
+        "arc": 75.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_6.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M1",
+        "name": "DogosseGiarClass_Turret_AA_M1",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M1",
+        "x": 43.0,
+        "y": 116.0,
+        "idleDir": 15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M2",
+        "name": "DogosseGiarClass_Turret_AA_M2",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M2",
+        "x": -43.0,
+        "y": 116.0,
+        "idleDir": -15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M3",
+        "name": "DogosseGiarClass_Turret_AA_M3",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M3",
+        "x": 42.0,
+        "y": -98.0,
+        "idleDir": 15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M4",
+        "name": "DogosseGiarClass_Turret_AA_M4",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M4",
+        "x": -42.0,
+        "y": -98.0,
+        "idleDir": -15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M5",
+        "name": "DogosseGiarClass_Turret_AA_M5",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M5",
+        "x": 42.0,
+        "y": -142.0,
+        "idleDir": -250.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M6",
+        "name": "DogosseGiarClass_Turret_AA_M6",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M6",
+        "x": -42.0,
+        "y": -142.0,
+        "idleDir": 205.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M7",
+        "name": "DogosseGiarClass_Turret_AA_M7",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M7",
+        "x": 24.0,
+        "y": -190.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M8",
+        "name": "DogosseGiarClass_Turret_AA_M8",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M8",
+        "x": -24.0,
+        "y": -190.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M9",
+        "name": "DogosseGiarClass_Turret_AA_M9",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M9",
+        "x": 43.0,
+        "y": 114.0,
+        "idleDir": 15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M10",
+        "name": "DogosseGiarClass_Turret_AA_M10",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M10",
+        "x": -43.0,
+        "y": 114.0,
+        "idleDir": -15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M11",
+        "name": "DogosseGiarClass_Turret_AA_M11",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M11",
+        "x": 42.0,
+        "y": -96.0,
+        "idleDir": 15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M12",
+        "name": "DogosseGiarClass_Turret_AA_M12",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M12",
+        "x": -42.0,
+        "y": -96.0,
+        "idleDir": -15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M13",
+        "name": "DogosseGiarClass_Turret_AA_M13",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M13",
+        "x": 42.0,
+        "y": -140.0,
+        "idleDir": -250.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M14",
+        "name": "DogosseGiarClass_Turret_AA_M14",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M14",
+        "x": -42.0,
+        "y": -140.0,
+        "idleDir": 205.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M15",
+        "name": "DogosseGiarClass_Turret_AA_M15",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M15",
+        "x": 24.0,
+        "y": -188.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "DogosseGiarClass_Turret_AA_M16",
+        "name": "DogosseGiarClass_Turret_AA_M16",
+        "hp": 8000.0,
+        "bone": "Turret_DogosseGiarClass_Turret_AA_M16",
+        "x": -24.0,
+        "y": -188.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DogosseGiarClass_Turret_AA"
+          ]
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 3
+    },
+    "commandAuras": [
+      {
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
+      },
+      {
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "speed": 105,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 20.833333333333332,
+      "antiDetection": -10.416666666666666,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 75.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 50.0,
+      "flat": 950.0
+    },
+    "shell": {
+      "percent": 50.0,
+      "flat": 950.0
+    },
+    "melee": {
+      "percent": 50.0,
+      "flat": 950.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 15.0
+    },
+    "sp": {
+      "percent": 50.0,
+      "flat": 15.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 425000.0,
+    "walkSpeed": 0.75,
+    "boostSpeed": 1.5,
+    "turnSpeed": 0.35,
+    "reaction": 105.0,
+    "shooting": 175.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "DogosseGiarClass",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "TITANS",
+      "0087",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X48"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "CmdCom",
+      "CmdDef",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 165.0,
+    "unitLevel": 15000.0,
+    "enBeforeReduction": 45000.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 5,
+    "actionTurnSpeed": 0.35,
+    "mobilityMoveTarget": 8,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 25.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 750.0,
+      "antiDetection": -300.0
+    },
+    "shipHullBeforeReduction": 425000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "多戈斯·基亚级",
+  "faction": "TITANS",
+  "tags": [
+    "TITANS",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "多戈斯·基亚级",
+      "description": "泰坦斯在格利普斯战争期间开发的一款大型宇宙战舰以用作旗舰"
+    },
+    "en": {
+      "name": "DogosseGiar Class",
+      "description": "A large-scale space battleship developed by the Titans during the Gryps War to serve as a flagship"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "DogosseGiarClass_Turret_BeamCannon_1": {
+      "ref": "DogosseGiarClass_Turret_BeamCannon_1__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_1.ini",
+          "barrels": [
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_1",
+              "x": 2.0,
+              "y": 16.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_1",
+              "x": 2.0,
+              "y": 16.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_1",
+              "x": 2.0,
+              "y": 16.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_1",
+              "x": 2.0,
+              "y": 16.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_1",
+              "x": 2.0,
+              "y": 16.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_1",
+              "x": 2.0,
+              "y": 16.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_1",
+              "x": 2.0,
+              "y": 16.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_1",
+              "x": 2.0,
+              "y": 16.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 2.0,
+                "y": 16.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 2.0,
+                "y": 16.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 2.0,
+                "y": 16.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M4",
+              "offset": {
+                "x": 2.0,
+                "y": 16.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M5",
+              "offset": {
+                "x": 2.0,
+                "y": 16.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M6",
+              "offset": {
+                "x": 2.0,
+                "y": 16.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M7",
+              "offset": {
+                "x": 2.0,
+                "y": 16.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannon_M8",
+              "offset": {
+                "x": 2.0,
+                "y": 16.0
+              },
+              "alternatingOffsetX": -4.0
+            }
+          ]
+        }
+      }
+    },
+    "DogosseGiarClass_Turret_BeamCannon_2": {
+      "ref": "DogosseGiarClass_Turret_BeamCannon_2__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_2.ini",
+          "barrels": [
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_2",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_2",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_2",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon_2",
+              "x": 0.0,
+              "y": 6.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannonS_M4",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "DogosseGiarClass_Turret_BeamCannon": {
+      "ref": "DogosseGiarClass_Turret_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_BeamCannon_3.ini",
+          "barrels": [
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 6.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannonDB_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannonDB_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannonSB_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 7.0
+              }
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_BeamCannonSB_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 7.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "DogosseGiarClass_Turret_AA": {
+      "ref": "DogosseGiarClass_Turret_AA__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/DogosseGiarClass/DogosseGiarClass_Turret_AA.ini",
+          "barrels": [
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "DogosseGiarClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M1",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M2",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M3",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M4",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M5",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M6",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M7",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M8",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M9",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M10",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M11",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M12",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M13",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M14",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M15",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DogosseGiarClass_Turret_AA_M16",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "CmdDef",
+      "source": "Template/Unit/Skill/CmdDef.gw",
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "special_Common_ReEntry_NeedBooster",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+      "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "DogosseGiarClass_Turret_BeamCannon_1",
+        "DogosseGiarClass_Turret_BeamCannon_2",
+        "DogosseGiarClass_Turret_BeamCannon",
+        "DogosseGiarClass_Turret_AA"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 4,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "description": "泰坦斯在格利普斯战争期间开发的一款大型宇宙战舰以用作旗舰",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 15000.0,
+    "levelMultiplier": 0.25,
+    "published": 3750
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    },
+    {
+      "id": "Hangar_2",
+      "name": "格纳库 2",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    },
+    {
+      "id": "Hangar_3",
+      "name": "格纳库 3",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    },
+    {
+      "id": "Hangar_4",
+      "name": "格纳库 4",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    }
+  ],
+  "refits": []
+}

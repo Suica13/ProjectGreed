@@ -98,16 +98,19 @@ const Net = (() => {
   const key = (url, room) => "slg-seat:" + url + ":" + room;
   const lastKey = () => "slg-last";
   const legacyToken = (url, room) =>
-    ["PMC", "EFSF", "ZEON"]
+    ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]
       .map((faction) => storage.get("slg-seat:" + faction + ":" + url + ":" + room))
       .find(Boolean);
   const canControl = (unit) =>
     !window.ReplayPlayer?.active &&
     !n.snapshot?.campaign?.delegatedSeats?.includes(n.seat) &&
-    !n.snapshot?.campaign?.delegatedSeats?.includes(Rules.controllerOf(n.snapshot?.game || {}, unit || {})) &&
+    !n.snapshot?.campaign?.delegatedSeats?.includes(
+      Rules.controllerOf(n.snapshot?.game || {}, unit || {}),
+    ) &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
-    if (BattleAssets.loading || n.snapshot?.campaign?.delegatedSeats?.includes(n.seat)) return false;
+    if (BattleAssets.loading || n.snapshot?.campaign?.delegatedSeats?.includes(n.seat))
+      return false;
     if (window.ReplayPlayer?.active) return false;
     return (
       !n.active ||
@@ -125,16 +128,43 @@ const Net = (() => {
   // authority deduplication resolves lost replies without executing an action twice.
   const actionQueue = [];
   let actionTimer = null;
-  const profileActions = new Set(["set_ready", "start_game", "update_formation", "confirm_formation"]);
+  const profileActions = new Set([
+    "set_ready",
+    "start_game",
+    "update_formation",
+    "confirm_formation",
+  ]);
   const rebaseActions = new Set([
-    "set_ready", "update_formation", "confirm_formation", "start_game",
-    "move", "confirm_move", "cancel_move", "rotate", "skill", "undo", "wait",
-    "attack", "cancel_attack", "end_turn", "embark", "launch", "deploy",
-    "confirm_deployment", "respond", "playback_ready", "capture_point", "region_transfer",
+    "set_ready",
+    "update_formation",
+    "confirm_formation",
+    "start_game",
+    "move",
+    "confirm_move",
+    "cancel_move",
+    "rotate",
+    "skill",
+    "undo",
+    "wait",
+    "attack",
+    "cancel_attack",
+    "end_turn",
+    "embark",
+    "launch",
+    "deploy",
+    "confirm_deployment",
+    "respond",
+    "playback_ready",
+    "capture_point",
+    "region_transfer",
   ]);
   function actionContext(snapshot = n.snapshot) {
-    return { matchId: snapshot?.matchId ?? null, round: snapshot?.game?.round ?? null,
-      phase: snapshot?.phase ?? null, reactionId: snapshot?.pending?.id ?? null };
+    return {
+      matchId: snapshot?.matchId ?? null,
+      round: snapshot?.game?.round ?? null,
+      phase: snapshot?.phase ?? null,
+      reactionId: snapshot?.pending?.id ?? null,
+    };
   }
   function sameContext(context, snapshot = n.snapshot) {
     return JSON.stringify(context) === JSON.stringify(actionContext(snapshot));
@@ -156,8 +186,10 @@ const Net = (() => {
   }
   function sendPending() {
     clearTimeout(actionTimer);
-    const request = n.awaiting, socket = n.socket;
-    if (!request || !request.payload || socket?.readyState !== WebSocket.OPEN || n.connecting) return;
+    const request = n.awaiting,
+      socket = n.socket;
+    if (!request || !request.payload || socket?.readyState !== WebSocket.OPEN || n.connecting)
+      return;
     if (socket.bufferedAmount > 256 * 1024) {
       actionTimer = setTimeout(() => {
         if (n.socket === socket && n.awaiting === request) sendPending();
@@ -166,22 +198,36 @@ const Net = (() => {
     }
     try {
       // A receipt means execution succeeded; only refresh state, never replay intent.
-      socket.send(request.receiptRevision === undefined ? request.payload : JSON.stringify({
-        type: "action", action: "sync", id: request.id + "-sync",
-      }));
+      socket.send(
+        request.receiptRevision === undefined
+          ? request.payload
+          : JSON.stringify({
+              type: "action",
+              action: "sync",
+              id: request.id + "-sync",
+            }),
+      );
     } catch {
       return; // Resume retains the unresolved intent.
     }
     request.attempts++;
-    const delay = Math.min(15000, Math.max(1500, (n.pingMs || 0) * 3) *
-      Math.pow(2, Math.min(4, request.attempts - 1)));
+    const delay = Math.min(
+      15000,
+      Math.max(1500, (n.pingMs || 0) * 3) * Math.pow(2, Math.min(4, request.attempts - 1)),
+    );
     actionTimer = setTimeout(() => {
       if (n.socket === socket && n.awaiting === request) sendPending();
     }, delay);
   }
   function drainActions() {
-    if (n.awaiting || !actionQueue.length || n.connecting ||
-        n.socket?.readyState !== WebSocket.OPEN || !n.snapshot) return;
+    if (
+      n.awaiting ||
+      !actionQueue.length ||
+      n.connecting ||
+      n.socket?.readyState !== WebSocket.OPEN ||
+      !n.snapshot
+    )
+      return;
     const intent = actionQueue.shift();
     if (!sameContext(intent.context)) {
       note("战局阶段已改变，未发送的操作已取消。");
@@ -189,38 +235,57 @@ const Net = (() => {
       return;
     }
     const message = {
-      type: "action", action: intent.action, id: intent.id,
-      revision: n.revision, phase: n.snapshot?.phase, round: n.snapshot?.game?.round,
-      matchId: n.snapshot?.matchId, reactionId: n.snapshot?.pending?.id,
+      type: "action",
+      action: intent.action,
+      id: intent.id,
+      revision: n.revision,
+      phase: n.snapshot?.phase,
+      round: n.snapshot?.game?.round,
+      matchId: n.snapshot?.matchId,
+      reactionId: n.snapshot?.pending?.id,
       ...intent.fields,
     };
     if (profileActions.has(intent.action) && n.snapshot?.settings.mode !== "campaign") {
       message.licenses = Economy.snapshot().licenses;
       if (!n.snapshot?.started) message.researched = Development.researchSnapshot();
     }
-    n.awaiting = { ...intent, message, revision: n.revision, attempts: 0, rebases: 0,
-      payload: JSON.stringify(message) };
+    n.awaiting = {
+      ...intent,
+      message,
+      revision: n.revision,
+      attempts: 0,
+      rebases: 0,
+      payload: JSON.stringify(message),
+    };
     sendPending();
     update();
   }
   function request(action, fields = {}) {
     if (window.ReplayPlayer?.active && action !== "sync") return;
-    if (n.snapshot?.returnCountdown &&
-        !["sync", "return_room", "download_log", "spectate"].includes(action)) return;
+    if (
+      n.snapshot?.returnCountdown &&
+      !["sync", "return_room", "download_log", "spectate"].includes(action)
+    )
+      return;
     if (!n.active || n.socket?.readyState !== WebSocket.OPEN) {
       note("尚未连接服务端");
       return;
     }
     const signature = JSON.stringify([action, fields]);
-    const existing = [n.awaiting, ...actionQueue].find(item => item?.signature === signature);
+    const existing = [n.awaiting, ...actionQueue].find((item) => item?.signature === signature);
     if (existing) return existing.id;
     if (actionQueue.length >= 32) {
       note("待发送操作过多，请等待服务端确认。");
       return;
     }
     const id = crypto.randomUUID?.() || Date.now() + "-" + Math.random().toString(16).slice(2);
-    actionQueue.push({ id, action, fields: structuredClone(fields), signature,
-      context: actionContext() });
+    actionQueue.push({
+      id,
+      action,
+      fields: structuredClone(fields),
+      signature,
+      context: actionContext(),
+    });
     drainActions();
     return id;
   }
@@ -228,8 +293,10 @@ const Net = (() => {
     const waiting = n.awaiting;
     if (!waiting) return;
     // Even an older snapshot can confirm an action; do not roll back visible state.
-    if (snapshot.ack === waiting.id ||
-        (waiting.receiptRevision !== undefined && snapshot.revision >= waiting.receiptRevision)) {
+    if (
+      snapshot.ack === waiting.id ||
+      (waiting.receiptRevision !== undefined && snapshot.revision >= waiting.receiptRevision)
+    ) {
       finishAction(waiting.id, true);
       return;
     }
@@ -341,7 +408,10 @@ const Net = (() => {
     } else if (msg.type === "state") {
       if (n.memberId === null) return;
       observeActionState(msg);
-      if (msg.revision < n.revision) { update(); return; }
+      if (msg.revision < n.revision) {
+        update();
+        return;
+      }
       n.revision = msg.revision;
       msg.receivedAt = performance.now();
       n.snapshot = msg;
@@ -355,8 +425,12 @@ const Net = (() => {
         Chat.reject(msg.id, msg.message);
         return;
       }
-      if (msg.id === n.awaiting?.id && msg.code === "STALE" &&
-          rebaseActions.has(n.awaiting.action) && n.awaiting.rebases < 5) {
+      if (
+        msg.id === n.awaiting?.id &&
+        msg.code === "STALE" &&
+        rebaseActions.has(n.awaiting.action) &&
+        n.awaiting.rebases < 5
+      ) {
         n.awaiting.rebases++;
         n.awaiting.rebase = true;
         return; // Authority follows STALE with a fresh snapshot.
@@ -570,7 +644,10 @@ const Net = (() => {
     window.CampaignUI?.refreshBattleControls(s);
     document.body.classList.toggle("campaign-active", !!s.campaign);
     document.body.classList.toggle("campaign-room", s.settings.mode === "campaign");
-    document.body.classList.toggle("campaign-delegated", !!s.campaign?.delegatedSeats?.includes(n.seat));
+    document.body.classList.toggle(
+      "campaign-delegated",
+      !!s.campaign?.delegatedSeats?.includes(n.seat),
+    );
     window.MenuShell?.refresh();
     if (!s.campaign && s.settings.mode !== "campaign") Formation.alignWithRoom(s);
     MusicPlayer.sync();
@@ -604,7 +681,9 @@ const Net = (() => {
       battleView = null;
       if (
         !n.applied ||
-        !["menu", "formation", "production", "development", "records", "encyclopedia"].includes(pageView)
+        !["menu", "formation", "production", "development", "records", "encyclopedia"].includes(
+          pageView,
+        )
       )
         setPageView("room");
       RoomPanel.render(s);
@@ -613,9 +692,14 @@ const Net = (() => {
       return;
     }
     if (!s.started && s.campaign) {
-      MatchResults.reset(); CombatPlayback.reset(); PlanningUI.reset();
+      MatchResults.reset();
+      CombatPlayback.reset();
+      PlanningUI.reset();
       if (wasStarted) {
-        MapEffects.reset(); WeaponAudio.stop(); TurnFlow.reset(); MapCamera.reset();
+        MapEffects.reset();
+        WeaponAudio.stop();
+        TurnFlow.reset();
+        MapCamera.reset();
       }
       byId("reaction").hidden = true;
       battleView = moving = pending = selected = weaponId = null;
@@ -644,7 +728,9 @@ const Net = (() => {
       if (
         wasStarted ||
         !n.applied ||
-        !["menu", "formation", "production", "development", "records", "encyclopedia"].includes(pageView)
+        !["menu", "formation", "production", "development", "records", "encyclopedia"].includes(
+          pageView,
+        )
       )
         setPageView("room");
       RoomPanel.render(s);
@@ -700,11 +786,19 @@ const Net = (() => {
         }
         if (s.pending.savedChoice && counterDraftState?.reviewEditId !== s.pending.reviewEditId) {
           const saved = s.pending.savedChoice;
-          const entries = saved.orders.flatMap((order) => order.weaponIds.map((weaponId) => ({ targetId: order.targetId, weaponId })));
+          const entries = saved.orders.flatMap((order) =>
+            order.weaponIds.map((weaponId) => ({ targetId: order.targetId, weaponId })),
+          );
           response = saved.response;
           counterTargetId = entries[0]?.targetId || s.pending.attacker;
           counterId = entries.at(-1)?.weaponId || null;
-          counterDraftState = { key: s.pending.id, session, entries, ids: entries.map((entry) => entry.weaponId), reviewEditId: s.pending.reviewEditId };
+          counterDraftState = {
+            key: s.pending.id,
+            session,
+            entries,
+            ids: entries.map((entry) => entry.weaponId),
+            reviewEditId: s.pending.reviewEditId,
+          };
         }
         renderReaction();
         byId("reaction").hidden = false;

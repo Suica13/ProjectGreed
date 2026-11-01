@@ -5,6 +5,7 @@ Local server-data, cfg overrides, tests, dev dependencies and compressed HTML
 are deliberately excluded from distribution.
 """
 from weapon_store import loads as load_source_json, dumps as dump_source_json
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -19,6 +20,10 @@ TOOLS = ["server-activities.cjs", "open-server-activities.cjs", "settlement-log.
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Package the Windows server with its runtime.")
+    parser.add_argument("--folder", action="store_true", help="Keep an unpacked folder; do not create a ZIP.")
+    parser.add_argument("--with-client", action="store_true", help="Include the built standalone client and serve it over HTTP.")
+    args = parser.parse_args()
     node = shutil.which("node")
     if not node:
         raise SystemExit("Node.js >=22 is required on the packaging machine.")
@@ -29,8 +34,15 @@ def main():
         raise SystemExit("Package on Windows using Node.js >=22.")
     project = load_source_json((ROOT / "project.json").read_text(encoding="utf-8"))
     name = f'{project["name"]}-{project["version"]}-server-only-win32-{runtime["arch"]}'
+    if args.with_client:
+        name = name.replace("-server-only-", "-server-client-")
+        client = ROOT / "public/client.html"
+        if not client.is_file() or f'"version":"{project["version"]}"' not in client.read_text(encoding="utf-8"):
+            raise SystemExit("Build the matching client first: npm run build")
     output = ROOT / "build"
     output.mkdir(exist_ok=True)
+    if args.folder and (output / name).exists():
+        raise SystemExit(f"Output already exists; choose a new destination before packaging: {output / name}")
     # Cache the full upstream notices for the exact runtime being redistributed.
     license_file = output / f'node-{runtime["version"]}-LICENSE.txt'
     if not license_file.exists():
@@ -49,7 +61,10 @@ def main():
         for filename in ["server.js", "project.json", "start_server.bat"]:
             shutil.copy2(ROOT / filename, stage / filename)
         (stage / "cfg.json").write_text('{"port":1313}\n', encoding="utf-8")
-        for filename in TOOLS:
+        if args.with_client:
+            (stage / "public").mkdir()
+            shutil.copy2(client, stage / "public/client.html")
+        for filename in TOOLS + (["client-resources.cjs", "static-client.cjs"] if args.with_client else []):
             destination = stage / "tools" / filename
             destination.parent.mkdir(exist_ok=True)
             shutil.copy2(ROOT / "tools" / filename, destination)
@@ -70,13 +85,29 @@ def main():
             '@echo off\nsetlocal\nchcp 65001 >nul\ncd /d "%~dp0"\n'
             '"%~dp0runtime\\node.exe" "tools\\open-server-activities.cjs"\n'
             'if errorlevel 1 pause\n', encoding="utf-8", newline="\r\n")
-        shutil.copy2(ROOT / "服务器独立包说明.md", stage / "使用说明.md")
+        if args.with_client:
+            (stage / "使用说明.md").write_text(
+                f'# {project["name"]} {project["version"]} 服务端与客户端\n\n'
+                '双击 start_server.bat 启动服务端。已附带 Node 与 ws，无需安装依赖。\n'
+                '服务器默认端口1313，可修改 cfg.json 后重启。网页客户端：http://127.0.0.1:1313/ 。\n'
+                '其他玩家可在浏览器访问 http://服务器IP:1313/，也可复制 public/client.html 独立打开后输入服务器IP连接。\n'
+                'open_activities.bat 用于本机活动管理。关闭CMD窗口或按 Ctrl+C 停服。\n'
+                '运行后生成的 server-data 为活动、领取记录与结算日志，请在升级时保留；发行包不包含本机玩家数据。\n'
+                '房间与对局在内存中，停服不会保留。manifest.json 记录发行文件的 SHA-256。\n', encoding="utf-8")
+        else:
+            shutil.copy2(ROOT / "服务器独立包说明.md", stage / "使用说明.md")
         files = sorted(p for p in stage.rglob("*") if p.is_file())
-        manifest = {"mode":"server-only", "project":project, "runtime":runtime, "files":{
+        manifest = {"mode":"server-client" if args.with_client else "server-only", "project":project, "runtime":runtime, "files":{
             p.relative_to(stage).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in files
         }}
         (stage / "manifest.json").write_text(dump_source_json(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+        if args.folder:
+            destination = output / name
+            shutil.move(str(stage), str(destination))
+            total = sum(p.stat().st_size for p in destination.rglob("*") if p.is_file())
+            print(f"Packaged folder {destination}: {total / 1024**2:.1f} MiB; no ZIP created.")
+            return
         archive = output / (name + ".zip")
         with ZipFile(archive, "w", compression=ZIP_DEFLATED, compresslevel=6) as bundle:
             for file in sorted(stage.rglob("*")):

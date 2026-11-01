@@ -22,7 +22,9 @@ document.documentElement.classList.add("catalog-developer");
       if (!url.port && !value.includes("://") && !/:\d+$/.test(value)) url.port = "1314";
       const base = url.origin;
       if (location.protocol === "https:" && url.protocol === "http:")
-        throw Error("HTTPS页面不能连接HTTP编辑服务。请独立打开developer.html，或直接打开编辑服务器提供的HTTP页面。");
+        throw Error(
+          "HTTPS页面不能连接HTTP编辑服务。请独立打开developer.html，或直接打开编辑服务器提供的HTTP页面。",
+        );
       status.textContent = "正在验证密钥…";
       let response;
       try {
@@ -33,7 +35,9 @@ document.documentElement.classList.add("catalog-developer");
           signal: AbortSignal.timeout(10000),
         });
       } catch {
-        throw Error(`无法连接编辑服务器：${base}。请确认编辑服务监听服务器网卡IP而非127.0.0.1，并已放行或转发对应TCP端口；编辑端口不能与游戏端口相同。`);
+        throw Error(
+          `无法连接编辑服务器：${base}。请确认编辑服务监听服务器网卡IP而非127.0.0.1，并已放行或转发对应TCP端口；编辑端口不能与游戏端口相同。`,
+        );
       }
       let session;
       try {
@@ -45,13 +49,20 @@ document.documentElement.classList.add("catalog-developer");
       if (!session.token || session.protocol !== 2)
         throw Error("编辑服务版本不匹配，请更新并重启编辑服务。");
       if (session.dataOnlyVersion !== 1 || !session.incrementalCatalog)
-        throw Error("编辑后台仍是旧版。请关闭服务器CMD，重新运行start_developer.bat，再刷新本页面。");
+        throw Error(
+          "编辑后台仍是旧版。请关闭服务器CMD，重新运行start_developer.bat，再刷新本页面。",
+        );
       key.value = "";
       status.textContent = "正在下载编辑数据（不含图片和动画）…";
-      const bootstrap = await fetch(base + "/api/editor/bootstrap", {
-        headers: { "X-Editor-Token": session.token },
-        signal: AbortSignal.timeout(180000),
-      });
+      const faction = document.getElementById("editorFaction").value;
+      if (!session.factionCatalogs) throw Error("请更新编辑服务端以支持按阵营下载。");
+      const bootstrap = await fetch(
+        base + "/api/editor/bootstrap?faction=" + encodeURIComponent(faction),
+        {
+          headers: { "X-Editor-Token": session.token },
+          signal: AbortSignal.timeout(180000),
+        },
+      );
       if (!bootstrap.ok) throw Error((await bootstrap.json()).error || "加载数据失败。");
       const total = Number(bootstrap.headers.get("X-Editor-JSON-Bytes"));
       if (total > 0) progressBar.value = 0;
@@ -64,8 +75,9 @@ document.documentElement.classList.add("catalog-developer");
           if (done) break;
           chunks.push(value);
           received += value.length;
-          if (total > 0) progressBar.value = Math.min(100, received / total * 100);
-          const progress = total > 0 ? ` ${Math.min(100, Math.floor(received / total * 100))}%` : "";
+          if (total > 0) progressBar.value = Math.min(100, (received / total) * 100);
+          const progress =
+            total > 0 ? ` ${Math.min(100, Math.floor((received / total) * 100))}%` : "";
           status.textContent = `正在下载编辑数据${progress} · 已接收 ${(received / 1048576).toFixed(1)} MB（不含图片和动画）`;
         }
         progressBar.value = 100;
@@ -76,11 +88,13 @@ document.documentElement.classList.add("catalog-developer");
         window.catalogBootstrap = await bootstrap.json();
         progressBar.value = 100;
       }
-      window.editorConnection = { base, token: session.token };
+      window.editorConnection = { base, token: session.token, faction };
       const script = document.createElement("script");
       script.textContent = document.getElementById("catalogRuntime").textContent;
       let runtimeError = null;
-      const onRuntimeError = (event) => { runtimeError = event.error || Error(event.message); };
+      const onRuntimeError = (event) => {
+        runtimeError = event.error || Error(event.message);
+      };
       window.addEventListener("error", onRuntimeError);
       try {
         document.body.append(script);
@@ -88,7 +102,11 @@ document.documentElement.classList.add("catalog-developer");
         window.removeEventListener("error", onRuntimeError);
       }
       if (runtimeError || !window.catalogEditorReady)
-        throw Error("编辑界面初始化失败：" + (runtimeError?.message || "界面未完成启动") + "。请刷新后使用最新版developer.html重试。");
+        throw Error(
+          "编辑界面初始化失败：" +
+            (runtimeError?.message || "界面未完成启动") +
+            "。请刷新后使用最新版developer.html重试。",
+        );
       document.getElementById("editorLoginScreen").hidden = true;
     } catch (error) {
       progressBar.hidden = true;

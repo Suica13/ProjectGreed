@@ -133,6 +133,11 @@ const DevelopmentUI = (() => {
     const faction = byId("developmentFactionSelect").value;
     screen.dataset.faction = faction;
     byId("developmentMain").dataset.faction = faction;
+    const locked = Development.eraLocked(faction);
+    byId("developmentMain").classList.toggle("development-era-locked", locked);
+    for (const host of [treeScroll, details]) {
+      host.querySelector(":scope > .development-era-lock")?.remove();
+    }
     const allNodes = Development.nodes(faction);
     const nodes = allNodes;
     const lateStart = Math.max(0, ...nodes.filter((n) => !n.page).map((n) => n.column)) + 2;
@@ -163,7 +168,11 @@ const DevelopmentUI = (() => {
     lines.setAttribute("class", "development-lines");
     lines.setAttribute("aria-hidden", "true");
     graph.append(lines);
-    const divider = element("div", "development-era-divider", "0079后期");
+    const divider = element(
+      "div",
+      "development-era-divider",
+      ["AEUG", "TITANS", "NEO_ZEON"].includes(faction) ? "0087后期" : "0079后期",
+    );
     divider.style.gridColumn = "1 / -1";
     divider.style.gridRow = String(lateStart - 1);
     graph.append(divider);
@@ -226,6 +235,13 @@ const DevelopmentUI = (() => {
     const selected = nodes.find((node) => node.id === selectedId);
     if (selected) showDetails(selected, faction);
     else details.replaceChildren();
+    if (locked)
+      for (const host of [treeScroll, details]) {
+        const overlay = element("div", "development-era-lock");
+        overlay.append(element("strong", "", "请先完成任何0079科技树"));
+        overlay.title = "完成联邦或吉翁任一阵营的全部0079及0083科技后开放";
+        host.append(overlay);
+      }
   }
 
   if (typeof ResizeObserver !== "undefined") {
@@ -241,7 +257,9 @@ const DevelopmentUI = (() => {
     render();
   };
   byId("openDevelopment").onclick = () => {
-    byId("developmentFactionSelect").value = PlayerProfile.faction() === "ZEON" ? "ZEON" : "EFSF";
+    byId("developmentFactionSelect").value = Development.factions.includes(PlayerProfile.faction())
+      ? PlayerProfile.faction()
+      : "EFSF";
     setPageView("development");
     render();
     byId("closeDevelopment").focus();

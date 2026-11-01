@@ -1,0 +1,1044 @@
+{
+  "schemaVersion": 2,
+  "id": "MSN_100",
+  "code": "MSN-100",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/MSN_100/MSN_100.ini",
+  "materials": {
+    "textures": {
+      "MSN_100_Crotch_1.png": "textures/MSN_100_Crotch_1.png",
+      "MSN_100_Body_1.png": "textures/MSN_100_Body_1.png",
+      "MSN_100_ArmL_1.png": "textures/MSN_100_ArmL_1.png",
+      "MSN_100_ArmR_1.png": "textures/MSN_100_ArmR_1.png",
+      "MSN_100_ShoulderL_1.png": "textures/MSN_100_ShoulderL_1.png",
+      "MSN_100_ShoulderR_1.png": "textures/MSN_100_ShoulderR_1.png",
+      "MSN_100_Head_1.png": "textures/MSN_100_Head_1.png",
+      "MSN_100_Head_1_Close.png": "textures/MSN_100_Head_1_Close.png",
+      "MSN_100_Foot_1.png": "textures/MSN_100_Foot_1.png",
+      "MSN_100_LegL_1.png": "textures/MSN_100_LegL_1.png",
+      "MSN_100_LegR_1.png": "textures/MSN_100_LegR_1.png",
+      "AEUG_ClayBazooka.png": "textures/AEUG_ClayBazooka.png",
+      "AEUG_MSN_100_BR.png": "textures/AEUG_MSN_100_BR.png",
+      "EF_BeamSaber_Yellow.png": "textures/EF_BeamSaber_Yellow.png",
+      "Word_Bai.png": "textures/Word_Bai.png",
+      "MSN_100.png": "textures/MSN_100.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MSN_100.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "AEUG_ClayBazooka_NotUsing",
+      "texture": "AEUG_ClayBazooka.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.75,
+      "scaleY": -1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": 0.0,
+        "y": -9.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "AEUG_ClayBazooka_ShotgunMode_NotUsing",
+      "texture": "AEUG_ClayBazooka.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.75,
+      "scaleY": -1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": 0.0,
+        "y": -9.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "LeftFoot",
+      "texture": "MSN_100_Foot_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MSN_100_Foot_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MSN_100_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MSN_100_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "AEUG_MSN_100_BR_NotUsing",
+      "texture": "AEUG_MSN_100_BR.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 0.75,
+      "rotation": -90.0,
+      "offset": {
+        "x": 1.0,
+        "y": -10.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Crotch",
+      "texture": "MSN_100_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "MSN_100_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "MSN_100_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "AEUG_ClayBazooka",
+      "texture": "AEUG_ClayBazooka.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 13.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "AEUG_ClayBazooka_ShotgunMode",
+      "texture": "AEUG_ClayBazooka.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 13.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "AEUG_MSN_100_BR",
+      "texture": "AEUG_MSN_100_BR.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 0.75,
+      "rotation": 0.0,
+      "offset": {
+        "x": 1.0,
+        "y": 18.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Body",
+      "texture": "MSN_100_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_BeamSaber_BF_Yellow",
+      "texture": "EF_BeamSaber_Yellow.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": -16.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 6.0,
+        "y": 22.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "kit_2",
+          "kit_0",
+          "kit_1"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MSN_100_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MSN_100_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderL_100",
+      "texture": "Word_Bai.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "scale": -0.05,
+      "rotation": 0.0,
+      "offset": {
+        "x": -3.0,
+        "y": 1.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR_100",
+      "texture": "Word_Bai.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "scale": -0.05,
+      "rotation": 0.0,
+      "offset": {
+        "x": 3.5,
+        "y": 1.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "MSN_100_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MSN_100_Head_1_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Shoot_A_L": "../../animations/Common_Shoot_A_L.json",
+    "Common_Melee_B": "../../animations/Common_Melee_B__MSM_04.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 78000,
+    "en": 625.0,
+    "move": 8,
+    "mobility": 185.0,
+    "cost": 1500,
+    "counterLimit": 1,
+    "accuracy": 165.0,
+    "partStructuralStrength": 160.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 75.0,
+      "air": 50.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 160,
+    "actionPoints": 12,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "commandAuras": [
+      {
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
+      }
+    ]
+  },
+  "attackBonuses": {
+    "melee": 65.0,
+    "shooting": 65.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 20.0,
+      "flat": 250.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 250.0
+    },
+    "melee": {
+      "percent": 25.0,
+      "flat": 550.0
+    },
+    "dp": {
+      "percent": 25.0,
+      "flat": 25.0
+    },
+    "sp": {
+      "percent": 5.0,
+      "flat": 50.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 62500.0,
+    "walkSpeed": 0.9,
+    "boostSpeed": 2.25,
+    "turnSpeed": 3.75,
+    "reaction": 185.0,
+    "shooting": 165.0,
+    "melee": 165.0,
+    "nativeTags": [
+      "MSN_100",
+      "Unit",
+      "MS",
+      "AEUG",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [
+      "CmdCom",
+      "ABC"
+    ],
+    "accuracy": 165.0,
+    "partStructuralStrength": 160.0,
+    "actionTurnSpeed": 3.75,
+    "movementBeforeMobility": 8,
+    "mobilityMoveTarget": 9,
+    "enBeforeReduction": 1250.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 75.0,
+      "air": 50.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 6000.0,
+    "tacticalMoveBeforeBonus": 8,
+    "v17BaseHp": 62500.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "百式",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "百式",
+      "description": "奥古的可动框架试验机,具备很高的运动性能"
+    },
+    "en": {
+      "name": "Hyaku Shiki",
+      "description": "A movable frame test unit developed by the AEUG, possessing excellent mobility performance"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "AEUG_ClayBazooka": {
+      "ref": "AEUG_ClayBazooka__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_ClayBazooka.gw",
+          "barrels": [
+            {
+              "id": "AEUG_ClayBazooka",
+              "x": 10.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "AEUG_ClayBazooka",
+              "point": {
+                "x": 1.1111111111111116,
+                "y": -7.777777777777778
+              }
+            }
+          ]
+        }
+      }
+    },
+    "AEUG_ClayBazooka_ShotgunMode": {
+      "ref": "AEUG_ClayBazooka_ShotgunMode__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_ClayBazooka_ShotgunMode.gw",
+          "barrels": [
+            {
+              "id": "AEUG_ClayBazooka_ShotgunMode",
+              "x": 10.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "AEUG_ClayBazooka_ShotgunMode",
+              "point": {
+                "x": 1.1111111111111116,
+                "y": -7.777777777777778
+              }
+            }
+          ]
+        }
+      }
+    },
+    "AEUG_MSN_100_BR": {
+      "ref": "AEUG_MSN_100_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_MSN_100_BR.gw",
+          "barrels": [
+            {
+              "id": "AEUG_MSN_100_BR",
+              "x": 9.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "AEUG_MSN_100_BR",
+              "point": {
+                "x": -1.3333333333333328,
+                "y": -9.333333333333334
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Common_ArmGL_L": {
+      "ref": "Common_ArmGL_L__lv4",
+      "overrides": {
+        "requiredParts": [
+          "leftArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_ArmGL_L.gw",
+          "barrels": [
+            {
+              "id": "Common_ArmGL_L",
+              "x": -16.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -16.0,
+                "y": 12.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "Common_ArmGL"
+        }
+      }
+    },
+    "Common_ArmGL": {
+      "ref": "Common_ArmGL__lv4",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_ArmGL.gw",
+          "barrels": [
+            {
+              "id": "Common_ArmGL",
+              "x": 16.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 16.0,
+                "y": 12.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_BeamSaber_BF_Yellow_B": {
+      "ref": "EF_BeamSaber_BF_Yellow_B__lv3",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF_Yellow.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber_BF_Yellow_B",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "Common_DoubleVulcan_MS": {
+      "ref": "Common_DoubleVulcan_MS__lv3",
+      "overrides": {
+        "requiredParts": [
+          "head"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleVulcan_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Head",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "ABC",
+      "source": "Template/Unit/Skill/ABC.gw",
+      "status": "review",
+      "name": "ABC"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "kit_2",
+      "name": "光束步枪套件",
+      "cost": 100,
+      "weapons": [
+        "AEUG_MSN_100_BR",
+        "Common_ArmGL",
+        "EF_BeamSaber_BF_Yellow_B",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ]
+    },
+    {
+      "id": "kit_0",
+      "name": "火箭筒套件",
+      "cost": 50,
+      "weapons": [
+        "AEUG_ClayBazooka",
+        "Common_ArmGL",
+        "EF_BeamSaber_BF_Yellow_B",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ]
+    },
+    {
+      "id": "kit_1",
+      "name": "火箭筒套件",
+      "cost": 50,
+      "weapons": [
+        "AEUG_ClayBazooka_ShotgunMode",
+        "Common_ArmGL",
+        "EF_BeamSaber_BF_Yellow_B",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "奥古的可动框架试验机,具备很高的运动性能",
+  "skills": [],
+  "kitAliases": {
+    "kit_3": "kit_2",
+    "kit_4": "kit_2"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 6000.0,
+    "levelMultiplier": 0.25,
+    "published": 1500
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "Common_ArmGL",
+      "channels": [
+        {
+          "id": "Common_ArmGL_L",
+          "weaponId": "Common_ArmGL_L",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        },
+        {
+          "id": "Common_ArmGL",
+          "weaponId": "Common_ArmGL",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        }
+      ],
+      "fireMode": "independent"
+    }
+  ],
+  "refits": []
+}

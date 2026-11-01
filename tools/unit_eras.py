@@ -12,6 +12,10 @@ def eras():
             for row in load_source_json(path.read_text(encoding="utf-8")):
                 stardust = any(tech.endswith(("_OperationStardust", "_GPProject")) for tech in row.get("tech", []))
                 result.setdefault(row["id"], "0079E" if page == 0 else "0083" if stardust else "0079L")
+    path=Path(__file__).with_name("0087-manifest.json")
+    if path.exists():
+        for row in load_source_json(path.read_text(encoding="utf8")):
+            result.setdefault(row["id"], "0087")
     return result
 
 def apply(prefab):
@@ -20,13 +24,15 @@ def apply(prefab):
     row=next((row for row in rows if row["id"]==prefab["id"]),None)
     if row:
         factions=sorted({tech.split("_")[1] for tech in row.get("tech",[])})
-        if len(factions)>1: prefab["availableFactions"]=factions
+        if len(factions)>1: prefab["availableFactions"]=sorted(set(factions + prefab.get("availableFactions",[])))
     mapping=eras(); era="0079L" if prefab["id"] in ("MS_06Z","MSN_01") else mapping.get(prefab["id"])
+    if era == "0087" and not prefab.get("source", "").startswith("GW_BattleUniverse_DLC_0087/"):
+        era=next((tag for tag in prefab["tags"] if tag in ["0079E","0079L","0083"]),era)
     if not era:
         parents=sorted(mapping,key=len,reverse=True)
         era=next((mapping[parent] for parent in parents if prefab["id"].startswith(parent+"_")),None)
     if not era and any(tag in ["0079","0079E","0079L"] for tag in prefab["tags"]): era="0079E"
     if era:
-        prefab["tags"]=[tag for tag in prefab["tags"] if tag not in ["0079","0079E","0079L","0083"]]+[era]
+        prefab["tags"]=[tag for tag in prefab["tags"] if tag not in ["0079","0079E","0079L","0083","0087"]]+[era]
         prefab.setdefault("sourceStats",{})["technologyEra"]=era
     return prefab

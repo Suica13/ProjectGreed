@@ -1,0 +1,972 @@
+{
+  "schemaVersion": 2,
+  "id": "RX_124_FF_X39A",
+  "code": "RX-124-FF-X39A",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/RX_124/RX_124_FF_X39A.ini",
+  "materials": {
+    "textures": {
+      "RX_124_Crotch_1.png": "textures/RX_124_Crotch_1.png",
+      "RX_124_Body_2.png": "textures/RX_124_Body_2.png",
+      "RX_124_ArmL_1.png": "textures/RX_124_ArmL_1.png",
+      "RX_124_ArmR_1.png": "textures/RX_124_ArmR_1.png",
+      "RX_124_ShoulderL_1.png": "textures/RX_124_ShoulderL_1.png",
+      "RX_124_ShoulderR_1.png": "textures/RX_124_ShoulderR_1.png",
+      "RX_124_Head_1.png": "textures/RX_124_Head_1.png",
+      "RX_124_Head_1_Close.png": "textures/RX_124_Head_1_Close.png",
+      "RX_124_LegL_3.png": "textures/RX_124_LegL_3.png",
+      "RX_124_LegR_3.png": "textures/RX_124_LegR_3.png",
+      "RX_124_FF_X39A.png": "textures/RX_124_FF_X39A.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "HoverMove_1.png": "textures/HoverMove_1.png",
+      "TITANS_ShieldBoostedRifle.png": "textures/TITANS_ShieldBoostedRifle.png",
+      "ShieldBoostedRifle_Winch.png": "textures/ShieldBoostedRifle_Winch.png",
+      "TITANS_ShieldBoostedRifle_Cqb_1.png": "textures/TITANS_ShieldBoostedRifle_Cqb_1.png"
+    },
+    "icon": "RX_124_FF_X39A.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Hover",
+      "texture": "HoverMove_1.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.35,
+      "offset": {
+        "x": 0.0,
+        "y": -5.0
+      },
+      "alpha": 0.5,
+      "frames": 6,
+      "frameFps": 10,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "onLand": true
+      }
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "RX_124_LegL_3.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "rotation": -15.0,
+      "offset": {
+        "x": 1.0,
+        "y": 6.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "RX_124_LegR_3.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "rotation": 15.0,
+      "offset": {
+        "x": -1.0,
+        "y": 6.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "RX_124_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": -2.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "RX_124_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "RX_124_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body",
+      "texture": "RX_124_Body_2.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "TITANS_ShieldBoostedRifle_Double",
+      "texture": "TITANS_ShieldBoostedRifle.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.75,
+      "offset": {
+        "x": 10.0,
+        "y": 20.0
+      },
+      "rotation": 0.0,
+      "visibleWhen": {
+        "thrustActive": true,
+        "weaponDisplayIndex": [
+          0,
+          2
+        ]
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "independentClock": true
+    },
+    {
+      "name": "TITANS_ShieldBoostedRifle_Double_L",
+      "texture": "TITANS_ShieldBoostedRifle.png",
+      "bone": "LeftArm",
+      "order": 5.5,
+      "scale": 0.75,
+      "offset": {
+        "x": -10.0,
+        "y": 20.0
+      },
+      "scaleX": -1.0,
+      "rotation": 0.0,
+      "visibleWhen": {
+        "thrustActive": true,
+        "weaponDisplayIndex": [
+          0,
+          2
+        ]
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "independentClock": true
+    },
+    {
+      "name": "TITANS_ShieldBoostedRifle_Double_Winch",
+      "texture": "ShieldBoostedRifle_Winch.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.75,
+      "offset": {
+        "x": 10.0,
+        "y": 20.0
+      },
+      "rotation": 0.0,
+      "visibleWhen": {
+        "thrustActive": true,
+        "weaponDisplayIndex": [
+          0,
+          2
+        ]
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "independentClock": true
+    },
+    {
+      "name": "TITANS_ShieldBoostedRifle_Double_Winch_L",
+      "texture": "ShieldBoostedRifle_Winch.png",
+      "bone": "LeftArm",
+      "order": 5.5,
+      "scale": 0.75,
+      "offset": {
+        "x": -10.0,
+        "y": 20.0
+      },
+      "scaleX": -1.0,
+      "rotation": 0.0,
+      "visibleWhen": {
+        "thrustActive": true,
+        "weaponDisplayIndex": [
+          0,
+          2
+        ]
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "independentClock": true
+    },
+    {
+      "name": "TITANS_ShieldBoostedRifle_Double_Cqb_DBDF",
+      "texture": "TITANS_ShieldBoostedRifle_Cqb_1.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.75,
+      "offset": {
+        "x": 10.0,
+        "y": 20.0
+      },
+      "rotation": 0.0,
+      "visibleWhen": {
+        "thrustActive": true,
+        "weaponDisplayIndex": 1
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "independentClock": true
+    },
+    {
+      "name": "TITANS_ShieldBoostedRifle_Double_Cqb_DBDF_L",
+      "texture": "TITANS_ShieldBoostedRifle_Cqb_1.png",
+      "bone": "LeftArm",
+      "order": 5.5,
+      "scale": 0.75,
+      "offset": {
+        "x": -10.0,
+        "y": 20.0
+      },
+      "scaleX": -1.0,
+      "rotation": 0.0,
+      "visibleWhen": {
+        "thrustActive": true,
+        "weaponDisplayIndex": 1
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "independentClock": true
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RX_124_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "rotation": 15.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RX_124_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "rotation": -15.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "RX_124_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "RX_124_Head_1_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__MAM_07.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving__MS_09S.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing__MS_09S.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_DoubleShoot_A_Light_L": "../../animations/Common_DoubleShoot_A_Light_L.json",
+    "Common_DoubleShoot_A_Light_R": "../../animations/Common_DoubleShoot_A_Light_R.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_Melee_Double_B": "../../animations/Common_Melee_Double_B.json",
+    "Common_Melee_Double_F": "../../animations/Common_Melee_Double_F.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 69000,
+    "en": 675.0,
+    "move": 9,
+    "mobility": 210.0,
+    "cost": 2000,
+    "counterLimit": 1,
+    "accuracy": 190.0,
+    "partStructuralStrength": 155.0,
+    "partsBreakable": true,
+    "movementType": "hover",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 75.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 175,
+    "actionPoints": 11,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "iField": {
+      "capacity": 35000.0,
+      "reduction": 0.95,
+      "piercingReduction": 0.5,
+      "recoveryPercent": 10,
+      "nativeRecoverySpeed": 200.0,
+      "minimumRatio": -0.25,
+      "effect": "I_Field_2"
+    }
+  },
+  "attackBonuses": {
+    "melee": 75.0,
+    "shooting": 95.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 15.0,
+      "flat": 450.0
+    },
+    "shell": {
+      "percent": 20.0,
+      "flat": 450.0
+    },
+    "melee": {
+      "percent": 15.0,
+      "flat": 350.0
+    },
+    "dp": {
+      "percent": 15.0,
+      "flat": 25.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 12500.0,
+    "blockChance": 0.55,
+    "coverage": 0.75,
+    "defenses": {
+      "beam": {
+        "percent": 25.0,
+        "flat": 450.0
+      },
+      "shell": {
+        "percent": 15.0,
+        "flat": 250.0
+      },
+      "melee": {
+        "percent": 10.0,
+        "flat": 300.0
+      },
+      "dp": {
+        "percent": 15.0,
+        "flat": 35.0
+      }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
+  },
+  "sourceStats": {
+    "hp": 55000.0,
+    "walkSpeed": 0.8,
+    "boostSpeed": 2.45,
+    "turnSpeed": 2.75,
+    "reaction": 210.0,
+    "shooting": 195.0,
+    "melee": 175.0,
+    "nativeTags": [
+      "RX_124_FF_X39A",
+      "Unit",
+      "MS",
+      "TITANS",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [
+      "Hover",
+      "Hover_Lv2",
+      "I_Field"
+    ],
+    "accuracy": 190.0,
+    "partStructuralStrength": 155.0,
+    "actionTurnSpeed": 2.75,
+    "movementBeforeMobility": 9,
+    "mobilityMoveTarget": 10,
+    "enBeforeReduction": 1350.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 75.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 8000.0,
+    "tacticalMoveBeforeBonus": 9,
+    "v17BaseHp": 55000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "高达TR-6[伍德渥特·拉II]",
+  "faction": "TITANS",
+  "tags": [
+    "TITANS",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "高达TR-6[伍德渥特·拉II]",
+      "description": "TR-6装备了两架弗多德II后的形态"
+    },
+    "en": {
+      "name": "Gundam TR-6[Woundwort·RahII]",
+      "description": "A configuration of the TR-6 equipped with two Hrududu II units"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "TITANS_ShieldBoostedRifle_Double": {
+      "ref": "TITANS_ShieldBoostedRifle_Double__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_ShieldBoostedRifle_Double.gw",
+          "barrels": [
+            {
+              "id": "TITANS_ShieldBoostedRifle_Double",
+              "x": 18.0,
+              "y": 35.0
+            },
+            {
+              "id": "TITANS_ShieldBoostedRifle_Double_L",
+              "x": -18.0,
+              "y": 35.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "TITANS_ShieldBoostedRifle_Double",
+              "point": {
+                "x": -1.3333333333333321,
+                "y": -20.0
+              }
+            },
+            {
+              "layer": "TITANS_ShieldBoostedRifle_Double_L",
+              "point": {
+                "x": -1.3333333333333346,
+                "y": -20.0
+              }
+            }
+          ]
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "TITANS_ShieldBoostedRifle_Double_L": {
+      "ref": "TITANS_ShieldBoostedRifle_Double_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_ShieldBoostedRifle_Double.gw",
+          "barrels": [
+            {
+              "id": "TITANS_ShieldBoostedRifle_Double",
+              "x": 18.0,
+              "y": 35.0
+            },
+            {
+              "id": "TITANS_ShieldBoostedRifle_Double_L",
+              "x": -18.0,
+              "y": 35.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "TITANS_ShieldBoostedRifle_Double",
+              "point": {
+                "x": -1.3333333333333321,
+                "y": -20.0
+              }
+            },
+            {
+              "layer": "TITANS_ShieldBoostedRifle_Double_L",
+              "point": {
+                "x": -1.3333333333333346,
+                "y": -20.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_ShieldBoostedRifle_Double"
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "TITANS_ShieldBoostedRifle_Double_Winch": {
+      "ref": "TITANS_ShieldBoostedRifle_Double_Winch__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/TITANS_ShieldBoostedRifle_Double_Winch.gw",
+          "barrels": [
+            {
+              "id": "TITANS_ShieldBoostedRifle_Double_Winch",
+              "x": 11.0,
+              "y": 17.0
+            },
+            {
+              "id": "TITANS_ShieldBoostedRifle_Double_Winch_L",
+              "x": -11.0,
+              "y": 17.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 11.0,
+            "y": 17.0
+          }
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "TITANS_ShieldBoostedRifle_Double_Winch_L": {
+      "ref": "TITANS_ShieldBoostedRifle_Double_Winch_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/TITANS_ShieldBoostedRifle_Double_Winch.gw",
+          "barrels": [
+            {
+              "id": "TITANS_ShieldBoostedRifle_Double_Winch",
+              "x": 11.0,
+              "y": 17.0
+            },
+            {
+              "id": "TITANS_ShieldBoostedRifle_Double_Winch_L",
+              "x": -11.0,
+              "y": 17.0
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "TITANS_ShieldBoostedRifle_Double_Winch"
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 11.0,
+            "y": 17.0
+          }
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "TITANS_ShieldBoostedRifle_Double_Cqb_DBDF": {
+      "ref": "TITANS_ShieldBoostedRifle_Double_Cqb_DBDF__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/TITANS_ShieldBoostedRifle_Double_Cqb_DBDF.gw",
+          "barrels": [
+            {
+              "id": "TITANS_ShieldBoostedRifle_Double_Cqb_DBDF",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "Common_DoubleVulcan_MS": {
+      "ref": "Common_DoubleVulcan_MS__lv3",
+      "overrides": {
+        "requiredParts": [
+          "head"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleVulcan_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Head",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+      "status": "implemented"
+    },
+    {
+      "id": "I_Field",
+      "source": "Template/Unit/Skill/I_Field.gw",
+      "status": "adapted",
+      "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "TITANS_ShieldBoostedRifle_Double",
+        "TITANS_ShieldBoostedRifle_Double_Winch",
+        "TITANS_ShieldBoostedRifle_Double_Cqb_DBDF",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "TR-6装备了两架弗多德II后的形态",
+  "skills": [],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 8000.0,
+    "levelMultiplier": 0.25,
+    "published": 2000
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Hover"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "TITANS_ShieldBoostedRifle_Double",
+      "channels": [
+        {
+          "id": "TITANS_ShieldBoostedRifle_Double",
+          "weaponId": "TITANS_ShieldBoostedRifle_Double",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        },
+        {
+          "id": "TITANS_ShieldBoostedRifle_Double_L",
+          "weaponId": "TITANS_ShieldBoostedRifle_Double_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        }
+      ],
+      "fireMode": "simultaneous"
+    }
+  ],
+  "refits": []
+}

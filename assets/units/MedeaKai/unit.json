@@ -604,5 +604,10 @@
     "refitFrom": [
       "Medea"
     ]
-  }
+  },
+  "availableFactions": [
+    "EFSF",
+    "AEUG",
+    "TITANS"
+  ]
 }

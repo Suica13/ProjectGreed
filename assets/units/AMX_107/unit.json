@@ -1,0 +1,1125 @@
+{
+  "schemaVersion": 2,
+  "id": "AMX_107",
+  "code": "AMX-107",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/AMX_107/AMX_107.ini",
+  "materials": {
+    "textures": {
+      "AMX_107_Crotch_1.png": "textures/AMX_107_Crotch_1.png",
+      "AMX_107_Body_1.png": "textures/AMX_107_Body_1.png",
+      "AMX_107_ArmL_1.png": "textures/AMX_107_ArmL_1.png",
+      "AMX_107_ArmR_1.png": "textures/AMX_107_ArmR_1.png",
+      "AMX_107_ShoulderL_1.png": "textures/AMX_107_ShoulderL_1.png",
+      "AMX_107_ShoulderR_1.png": "textures/AMX_107_ShoulderR_1.png",
+      "AMX_107_Head_1.png": "textures/AMX_107_Head_1.png",
+      "AMX_011_Eye_1.png": "textures/AMX_011_Eye_1.png",
+      "AMX_107_FootL_1.png": "textures/AMX_107_FootL_1.png",
+      "AMX_107_LegL_1.png": "textures/AMX_107_LegL_1.png",
+      "AMX_107_FootR_1.png": "textures/AMX_107_FootR_1.png",
+      "AMX_107_LegR_1.png": "textures/AMX_107_LegR_1.png",
+      "NZN_AMX_107_BR.png": "textures/NZN_AMX_107_BR.png",
+      "EF_BeamSaber_Yellow.png": "textures/EF_BeamSaber_Yellow.png",
+      "AMX_107_Backpack_1.png": "textures/AMX_107_Backpack_1.png",
+      "AMX_107_Shield_1.png": "textures/AMX_107_Shield_1.png",
+      "AMX_107.png": "textures/AMX_107.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "AMX_107.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "AMX_107_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "AMX_107_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "AMX_107_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "AMX_107_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "NZN_AMX_107_BR_NotUsing",
+      "texture": "NZN_AMX_107_BR.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 0.75,
+      "rotation": -90.0,
+      "offset": {
+        "x": 1.0,
+        "y": -10.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Crotch",
+      "texture": "AMX_107_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "AMX_107_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "AMX_107_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "NZN_AMX_107_BR",
+      "texture": "NZN_AMX_107_BR.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 0.75,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.0,
+        "y": 18.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Body",
+      "texture": "AMX_107_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Backpack",
+      "texture": "AMX_107_Backpack_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_BeamSaber_AF_Large_Yellow",
+      "texture": "EF_BeamSaber_Yellow.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 1.0,
+      "scaleY": 1.35,
+      "rotation": -10.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 7.0,
+        "y": 29.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "AMX_107_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "AMX_107_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Shield",
+      "texture": "AMX_107_Shield_1.png",
+      "bone": "LeftArm",
+      "order": 6.5,
+      "scale": 1.0,
+      "rotation": -5.0,
+      "offset": {
+        "x": -3.0,
+        "y": 10.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "Head",
+      "texture": "AMX_107_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "AMX_107_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Eye",
+      "texture": "AMX_011_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 1.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__AMX_002.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_L": "../../animations/Common_Shoot_A_L.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Melee_A": "../../animations/Common_Melee_A__FA_78_1.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 87500,
+    "en": 600.0,
+    "move": 8,
+    "mobility": 225.0,
+    "cost": 1625,
+    "counterLimit": 1,
+    "accuracy": 200.0,
+    "partStructuralStrength": 160.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 75.0,
+      "air": 50.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 170,
+    "actionPoints": 12,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "commandAuras": [
+      {
+        "type": "cmdAtk",
+        "name": "攻击指挥",
+        "source": "Template/Unit/Skill/CmdAtk.gw"
+      }
+    ]
+  },
+  "attackBonuses": {
+    "melee": 105.0,
+    "shooting": 105.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 450.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 450.0
+    },
+    "melee": {
+      "percent": 25.0,
+      "flat": 550.0
+    },
+    "dp": {
+      "percent": 20.0,
+      "flat": 25.0
+    },
+    "sp": {
+      "percent": 5.0,
+      "flat": 50.0
+    }
+  },
+  "shield": {
+    "hp": 35000.0,
+    "blockChance": 0.55,
+    "coverage": 0.75,
+    "defenses": {
+      "beam": {
+        "percent": 25.0,
+        "flat": 500.0
+      },
+      "shell": {
+        "percent": 15.0,
+        "flat": 500.0
+      },
+      "melee": {
+        "percent": 25.0,
+        "flat": 500.0
+      },
+      "dp": {
+        "percent": 25.0,
+        "flat": 50.0
+      }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
+  },
+  "sourceStats": {
+    "hp": 70000.0,
+    "walkSpeed": 0.9,
+    "boostSpeed": 2.35,
+    "turnSpeed": 3.75,
+    "reaction": 225.0,
+    "shooting": 205.0,
+    "melee": 205.0,
+    "nativeTags": [
+      "AMX_107",
+      "Unit",
+      "MS",
+      "NEO_ZEON",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [
+      "CmdAtk",
+      "Transform_LandFly"
+    ],
+    "accuracy": 200.0,
+    "partStructuralStrength": 160.0,
+    "actionTurnSpeed": 3.75,
+    "movementBeforeMobility": 8,
+    "mobilityMoveTarget": 9,
+    "enBeforeReduction": 1200.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 75.0,
+      "air": 50.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 6500.0,
+    "tacticalMoveBeforeBonus": 8,
+    "v17BaseHp": 70000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "龙飞",
+  "faction": "NEO_ZEON",
+  "tags": [
+    "NEO_ZEON",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "龙飞",
+      "description": "新吉翁所开发的可变MS,据说借鉴了Z高达的设计"
+    },
+    "en": {
+      "name": "Bawoo",
+      "description": "A transformable MS developed by Neo Zeon, said to be inspired by the design of the Zeta Gundam"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "Common_DoubleVulcan_MS": {
+      "ref": "Common_DoubleVulcan_MS__lv3",
+      "overrides": {
+        "requiredParts": [
+          "head"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleVulcan_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Head",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    },
+    "NZN_AMX_107_MS": {
+      "ref": "NZN_AMX_107_MS__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/NZN_AMX_107_MS.gw",
+          "barrels": [
+            {
+              "id": "NZN_AMX_107_MS",
+              "x": 10.0,
+              "y": -15.0
+            },
+            {
+              "id": "NZN_AMX_107_MS_L",
+              "x": -10.0,
+              "y": -15.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 10.0,
+                "y": -15.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": -15.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NZN_AMX_107_MS_L": {
+      "ref": "NZN_AMX_107_MS_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/NZN_AMX_107_MS.gw",
+          "barrels": [
+            {
+              "id": "NZN_AMX_107_MS",
+              "x": 10.0,
+              "y": -15.0
+            },
+            {
+              "id": "NZN_AMX_107_MS_L",
+              "x": -10.0,
+              "y": -15.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 10.0,
+                "y": -15.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": -15.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "NZN_AMX_107_MS"
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "Common_ArmGL_L": {
+      "ref": "Common_ArmGL_L__lv3",
+      "overrides": {
+        "requiredParts": [
+          "leftArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_ArmGL_L.gw",
+          "barrels": [
+            {
+              "id": "Common_ArmGL_L",
+              "x": -16.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -16.0,
+                "y": 12.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "Common_ArmGL"
+        }
+      }
+    },
+    "Common_ArmGL": {
+      "ref": "Common_ArmGL__lv3",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_ArmGL.gw",
+          "barrels": [
+            {
+              "id": "Common_ArmGL",
+              "x": 16.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 16.0,
+                "y": 12.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NZN_AMX_107_ShieldBSG": {
+      "ref": "NZN_AMX_107_ShieldBSG__lv1",
+      "overrides": {
+        "requiredParts": [
+          "leftArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107_ShieldBSG.gw",
+          "barrels": [
+            {
+              "id": "NZN_AMX_107_ShieldBSG",
+              "x": -16.0,
+              "y": -3.0
+            },
+            {
+              "id": "NZN_AMX_107_ShieldBSG_L",
+              "x": -10.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -16.0,
+                "y": -3.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": 0.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NZN_AMX_107_ShieldBSG_L": {
+      "ref": "NZN_AMX_107_ShieldBSG_L__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107_ShieldBSG.gw",
+          "barrels": [
+            {
+              "id": "NZN_AMX_107_ShieldBSG",
+              "x": -16.0,
+              "y": -3.0
+            },
+            {
+              "id": "NZN_AMX_107_ShieldBSG_L",
+              "x": -10.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -16.0,
+                "y": -3.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": 0.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "NZN_AMX_107_ShieldBSG"
+        }
+      }
+    },
+    "NZN_AMX_107_BR": {
+      "ref": "NZN_AMX_107_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107_BR.gw",
+          "barrels": [
+            {
+              "id": "NZN_AMX_107_BR",
+              "x": 9.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "NZN_AMX_107_BR",
+              "point": {
+                "x": -2.666666666666666,
+                "y": -9.333333333333334
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_BeamSaber_AF_Large_Yellow_A": {
+      "ref": "EF_BeamSaber_AF_Large_Yellow_A__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Large_Yellow.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber_AF_Large_Yellow_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "CmdAtk",
+      "source": "Template/Unit/Skill/CmdAtk.gw",
+      "status": "adapted",
+      "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "Transform_LandFly",
+      "source": "Template/Unit/Skill/Transform_LandFly.gw",
+      "status": "review",
+      "name": "Transform_LandFly"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "NZN_AMX_107_BR",
+        "Common_DoubleVulcan_MS",
+        "NZN_AMX_107_MS",
+        "Common_ArmGL",
+        "NZN_AMX_107_ShieldBSG",
+        "EF_BeamSaber_AF_Large_Yellow_A",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "新吉翁所开发的可变MS,据说借鉴了Z高达的设计",
+  "skills": [],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard",
+    "kit_2": "standard",
+    "kit_3": "standard",
+    "kit_4": "standard",
+    "kit_5": "standard",
+    "kit_6": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 6500.0,
+    "levelMultiplier": 0.25,
+    "published": 1625
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "NZN_AMX_107_MS",
+      "channels": [
+        {
+          "id": "NZN_AMX_107_MS",
+          "weaponId": "NZN_AMX_107_MS",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "backpack",
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        },
+        {
+          "id": "NZN_AMX_107_MS_L",
+          "weaponId": "NZN_AMX_107_MS_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "backpack",
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        }
+      ],
+      "fireMode": "simultaneous"
+    },
+    {
+      "id": "Common_ArmGL",
+      "channels": [
+        {
+          "id": "Common_ArmGL_L",
+          "weaponId": "Common_ArmGL_L",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        },
+        {
+          "id": "Common_ArmGL",
+          "weaponId": "Common_ArmGL",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        }
+      ],
+      "fireMode": "independent"
+    },
+    {
+      "id": "NZN_AMX_107_ShieldBSG",
+      "channels": [
+        {
+          "id": "NZN_AMX_107_ShieldBSG",
+          "weaponId": "NZN_AMX_107_ShieldBSG",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": null
+        },
+        {
+          "id": "NZN_AMX_107_ShieldBSG_L",
+          "weaponId": "NZN_AMX_107_ShieldBSG_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": null
+        }
+      ]
+    }
+  ],
+  "refits": []
+}

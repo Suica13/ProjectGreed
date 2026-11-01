@@ -1,0 +1,1614 @@
+{
+  "schemaVersion": 2,
+  "id": "MRX_009",
+  "code": "MRX-009",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/MRX_009/MRX_009.ini",
+  "materials": {
+    "textures": {
+      "MRX_009_Crotch_1.png": "textures/MRX_009_Crotch_1.png",
+      "MRX_009_Body_1.png": "textures/MRX_009_Body_1.png",
+      "MRX_009_ArmL_1.png": "textures/MRX_009_ArmL_1.png",
+      "MRX_009_ArmR_1.png": "textures/MRX_009_ArmR_1.png",
+      "MRX_009_ShoulderL_1.png": "textures/MRX_009_ShoulderL_1.png",
+      "MRX_009_ShoulderR_1.png": "textures/MRX_009_ShoulderR_1.png",
+      "MRX_009_Head_1.png": "textures/MRX_009_Head_1.png",
+      "MRX_009_Head_1_Close.png": "textures/MRX_009_Head_1_Close.png",
+      "MRX_009_FootL_1.png": "textures/MRX_009_FootL_1.png",
+      "MRX_009_LegL_1.png": "textures/MRX_009_LegL_1.png",
+      "MRX_009_FootR_1.png": "textures/MRX_009_FootR_1.png",
+      "MRX_009_LegR_1.png": "textures/MRX_009_LegR_1.png",
+      "MRX_009_ArmL_2.png": "textures/MRX_009_ArmL_2.png",
+      "MRX_009_ArmR_2.png": "textures/MRX_009_ArmR_2.png",
+      "MRX_009_Shield_1.png": "textures/MRX_009_Shield_1.png",
+      "MRX_009.png": "textures/MRX_009.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MRX_009.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "MRX_009_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MRX_009_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MRX_009_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MRX_009_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "MRX_009_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "MRX_009_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      }
+    },
+    {
+      "name": "ArmR",
+      "texture": "MRX_009_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      }
+    },
+    {
+      "name": "ArmL_2",
+      "texture": "MRX_009_ArmL_2.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 0
+      }
+    },
+    {
+      "name": "ArmR_2",
+      "texture": "MRX_009_ArmR_2.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 0
+      }
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Shield",
+      "texture": "MRX_009_Shield_1.png",
+      "bone": "LeftArm",
+      "order": 4.4,
+      "scale": 1.25,
+      "rotation": 0.0,
+      "offset": {
+        "x": -33.0,
+        "y": 30.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MRX_009_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 4.5,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MRX_009_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 4.5,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body",
+      "texture": "MRX_009_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "MRX_009_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MRX_009_Head_1_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      }
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk__MA_08.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Shoot_A_L": "../../animations/Common_Shoot_A_L.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_Large_Shock_A": "../../animations/Common_Large_Shock_A.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 312500,
+    "en": 1500.0,
+    "move": 6,
+    "mobility": 100.0,
+    "cost": 3000,
+    "counterLimit": 1,
+    "accuracy": 135.0,
+    "partStructuralStrength": 155.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 75.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "commandAuras": [
+      {
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
+      }
+    ],
+    "speed": 105,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": -3.4722222222222223,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "iField": {
+      "capacity": 500000.0,
+      "reduction": 0.95,
+      "piercingReduction": 0.5,
+      "recoveryPercent": 10,
+      "nativeRecoverySpeed": 250.0,
+      "minimumRatio": -0.25,
+      "effect": "I_Field_2"
+    }
+  },
+  "attackBonuses": {
+    "melee": 100.0,
+    "shooting": 100.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 35.0,
+      "flat": 1000.0
+    },
+    "shell": {
+      "percent": 45.0,
+      "flat": 1000.0
+    },
+    "melee": {
+      "percent": 35.0,
+      "flat": 1000.0
+    },
+    "dp": {
+      "percent": 45.0,
+      "flat": 90.0
+    },
+    "sp": {
+      "percent": 35.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 250000.0,
+    "walkSpeed": 0.85,
+    "boostSpeed": 1.5,
+    "turnSpeed": 0.75,
+    "reaction": 100.0,
+    "shooting": 200.0,
+    "melee": 200.0,
+    "nativeTags": [
+      "MRX_009",
+      "Unit",
+      "MA",
+      "TITANS",
+      "0087",
+      "UC",
+      "LargeUnit"
+    ],
+    "nativeSkills": [
+      "CmdDef",
+      "Transform_LandFly",
+      "I_Field"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 135.0,
+    "unitLevel": 12000.0,
+    "enBeforeReduction": 3000.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 5,
+    "actionTurnSpeed": 0.75,
+    "mobilityMoveTarget": 6,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 75.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": -100.0
+    },
+    "v17BaseHp": 250000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "精神感应高达",
+  "faction": "TITANS",
+  "tags": [
+    "TITANS",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "精神感应高达",
+      "description": "提坦斯所开发的塞克谬系统试作机,具备强大的火力"
+    },
+    "en": {
+      "name": "Psyco Gundam",
+      "description": "A prototype Psycommu-system unit developed by the Titans, equipped with overwhelming firepower"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "slot": "secondary",
+        "swingEffects": [
+          "Cqb_Fire_1_Pink_R",
+          "Cqb_Fire_1_Pink_L"
+        ],
+        "actionCost": 2,
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      },
+      "remove": [
+        "localization"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR": {
+      "ref": "TITANS_MRX_009_ArmBR__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_MRX_009_ArmBR_2": {
+      "ref": "TITANS_MRX_009_ArmBR_2__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      }
+    },
+    "TITANS_MRX_009_ArmBR_3": {
+      "ref": "TITANS_MRX_009_ArmBR_3__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      }
+    },
+    "TITANS_MRX_009_ArmBR_4": {
+      "ref": "TITANS_MRX_009_ArmBR_4__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_MRX_009_ArmBR_5": {
+      "ref": "TITANS_MRX_009_ArmBR_5__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      }
+    },
+    "TITANS_MRX_009_ArmBR_L": {
+      "ref": "TITANS_MRX_009_ArmBR_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      }
+    },
+    "TITANS_MRX_009_ArmBR_L_2": {
+      "ref": "TITANS_MRX_009_ArmBR_L_2__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      }
+    },
+    "TITANS_MRX_009_ArmBR_L_3": {
+      "ref": "TITANS_MRX_009_ArmBR_L_3__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      }
+    },
+    "TITANS_MRX_009_ArmBR_L_4": {
+      "ref": "TITANS_MRX_009_ArmBR_L_4__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_MRX_009_ArmBR_L_5": {
+      "ref": "TITANS_MRX_009_ArmBR_L_5__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      }
+    },
+    "TITANS_MRX_009_ChestBeam": {
+      "ref": "TITANS_MRX_009_ChestBeam__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ChestBeam.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ChestBeam",
+              "x": 0.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 20.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_MRX_009_BeamCannon": {
+      "ref": "TITANS_MRX_009_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_BeamCannon.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_BeamCannon",
+              "x": 0.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 20.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_MRX_009_MegaBeamCannon": {
+      "ref": "TITANS_MRX_009_MegaBeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_MegaBeamCannon.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_MegaBeamCannon",
+              "x": 0.0,
+              "y": 15.0
+            }
+          ],
+          "muzzleNote": "Native weapon has no standalone muzzle flash"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 15.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_MRX_009_Shock_A": {
+      "ref": "TITANS_MRX_009_Shock_A__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/TITANS_MRX_009_Shock_A.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_Shock_A",
+              "x": 30.0,
+              "y": 55.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 30.0,
+            "y": 55.0
+          }
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "CmdDef",
+      "source": "Template/Unit/Skill/CmdDef.gw",
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "Transform_LandFly",
+      "source": "Template/Unit/Skill/Transform_LandFly.gw",
+      "status": "review",
+      "name": "Transform_LandFly"
+    },
+    {
+      "id": "I_Field",
+      "source": "Template/Unit/Skill/I_Field.gw",
+      "status": "adapted",
+      "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "TITANS_MRX_009_ChestBeam",
+        "TITANS_MRX_009_ArmBR",
+        "TITANS_MRX_009_ArmBR_4",
+        "TITANS_MRX_009_ArmBR_L_4",
+        "TITANS_MRX_009_BeamCannon",
+        "TITANS_MRX_009_MegaBeamCannon",
+        "TITANS_MRX_009_Shock_A",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "提坦斯所开发的塞克谬系统试作机,具备强大的火力",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 12000.0,
+    "levelMultiplier": 0.25,
+    "published": 3000
+  },
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MA",
+    "LargeUnit"
+  ],
+  "transport": {
+    "slotCost": 3,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "TITANS_MRX_009_ArmBR",
+      "channels": [
+        {
+          "id": "TITANS_MRX_009_ArmBR",
+          "weaponId": "TITANS_MRX_009_ArmBR",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_2",
+          "weaponId": "TITANS_MRX_009_ArmBR",
+          "muzzleIndex": 1,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_3",
+          "weaponId": "TITANS_MRX_009_ArmBR",
+          "muzzleIndex": 2,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_5",
+          "weaponId": "TITANS_MRX_009_ArmBR",
+          "muzzleIndex": 4,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_L",
+          "weaponId": "TITANS_MRX_009_ArmBR_L",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_L_2",
+          "weaponId": "TITANS_MRX_009_ArmBR_L",
+          "muzzleIndex": 1,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_L_3",
+          "weaponId": "TITANS_MRX_009_ArmBR_L",
+          "muzzleIndex": 2,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_L_5",
+          "weaponId": "TITANS_MRX_009_ArmBR_L",
+          "muzzleIndex": 4,
+          "requiredParts": [],
+          "limb": null
+        }
+      ],
+      "name": "腕部光束枪"
+    }
+  ],
+  "refits": []
+}

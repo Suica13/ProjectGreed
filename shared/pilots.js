@@ -289,7 +289,8 @@ const PilotSystem = (() => {
       record[key] = n;
     }
     const faction = value.faction ?? "PMC";
-    if (!["PMC", "EFSF", "ZEON"].includes(faction)) throw Error("驾驶员阵营无效");
+    if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction))
+      throw Error("驾驶员阵营无效");
     const uploadedPortrait = portraitData(value.uploadedPortrait);
     const portraitId = portraitsById.has(value.portraitId)
       ? value.portraitId

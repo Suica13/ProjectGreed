@@ -1,0 +1,771 @@
+{
+  "schemaVersion": 2,
+  "id": "RX_77D_4",
+  "code": "RX-77D-4",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/RX_77D_4/RX_77D_4.ini",
+  "materials": {
+    "textures": {
+      "RX_77D_4_Crotch_1.png": "textures/RX_77D_4_Crotch_1.png",
+      "RX_77D_4_Body_1.png": "textures/RX_77D_4_Body_1.png",
+      "RX_77D_4_ArmL_1.png": "textures/RX_77D_4_ArmL_1.png",
+      "RX_77D_4_ArmR_1.png": "textures/RX_77D_4_ArmR_1.png",
+      "RX_77D_4_ShoulderL_1.png": "textures/RX_77D_4_ShoulderL_1.png",
+      "RX_77D_4_ShoulderR_1.png": "textures/RX_77D_4_ShoulderR_1.png",
+      "RX_77D_4_Head_1.png": "textures/RX_77D_4_Head_1.png",
+      "RX_77D_4_Head_1_Close.png": "textures/RX_77D_4_Head_1_Close.png",
+      "RX_77D_4_Head_Scope_1.png": "textures/RX_77D_4_Head_Scope_1.png",
+      "RX_77D_4_Foot_1.png": "textures/RX_77D_4_Foot_1.png",
+      "RX_77D_4_LegL_1.png": "textures/RX_77D_4_LegL_1.png",
+      "RX_77D_4_LegR_1.png": "textures/RX_77D_4_LegR_1.png",
+      "RX_77D_4_Backpack_1.png": "textures/RX_77D_4_Backpack_1.png",
+      "RX_77D_4.png": "textures/RX_77D_4.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "RX_77D_4.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "RX_77D_4_Foot_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "RX_77D_4_Foot_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "RX_77D_4_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "RX_77D_4_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "RX_77D_4_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "RX_77D_4_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "RX_77D_4_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "RX_77D_4_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RX_77D_4_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RX_77D_4_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Backpack",
+      "texture": "RX_77D_4_Backpack_1.png",
+      "bone": "Body",
+      "order": 6.5,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "RX_77D_4_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "RX_77D_4_Head_1_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Eye",
+      "texture": "RX_77D_4_Head_Scope_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "offset": {
+        "x": 0.0,
+        "y": 0.25
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_DoubleShoot_A_Light_L": "../../animations/Common_DoubleShoot_A_Light_L.json",
+    "Common_DoubleShoot_A_Light_R": "../../animations/Common_DoubleShoot_A_Light_R.json",
+    "Common_Melee_A": "../../animations/Common_Melee_A__FA_78_1.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 37500,
+    "en": 350.0,
+    "move": 7,
+    "mobility": 125.0,
+    "cost": 625,
+    "counterLimit": 1,
+    "accuracy": 145.0,
+    "partStructuralStrength": 125.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 120,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 20.0,
+    "shooting": 55.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 50.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 100.0
+    },
+    "melee": {
+      "percent": 10.0,
+      "flat": 250.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 15.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 30000.0,
+    "walkSpeed": 0.6,
+    "boostSpeed": 1.65,
+    "turnSpeed": 2.0,
+    "reaction": 125.0,
+    "shooting": 155.0,
+    "melee": 120.0,
+    "nativeTags": [
+      "RX_77D_4",
+      "Unit",
+      "MS",
+      "EFSF",
+      "0079",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "accuracy": 145.0,
+    "partStructuralStrength": 125.0,
+    "actionTurnSpeed": 2.0,
+    "movementBeforeMobility": 6,
+    "mobilityMoveTarget": 7,
+    "enBeforeReduction": 700.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 2500.0,
+    "tacticalMoveBeforeBonus": 6,
+    "v17BaseHp": 30000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "量产型钢加农II",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "量产型钢加农II",
+      "description": "吉姆狙击型II的炮击战规格"
+    },
+    "en": {
+      "name": "Guncannon Mass ProductionType II",
+      "description": "An artillery combat variant of the GM Sniper II"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv2",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "EF_RX_77D_4_BeamCannon": {
+      "ref": "EF_RX_77D_4_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/EF_RX_77D_4_BeamCannon.gw",
+          "barrels": [
+            {
+              "id": "EF_RX_77D_4_BeamCannon",
+              "x": -7.0,
+              "y": 16.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -7.0,
+                "y": 16.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_RX_77D_4_BeamGun": {
+      "ref": "EF_RX_77D_4_BeamGun__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/EF_RX_77D_4_BeamGun.gw",
+          "barrels": [
+            {
+              "id": "EF_RX_77D_4_BeamGun",
+              "x": 9.0,
+              "y": 20.0
+            },
+            {
+              "id": "EF_RX_77D_4_BeamGun_L",
+              "x": -9.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 9.0,
+                "y": 20.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -9.0,
+                "y": 20.0
+              }
+            }
+          ]
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "EF_RX_77D_4_BeamGun_L": {
+      "ref": "EF_RX_77D_4_BeamGun_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/EF_RX_77D_4_BeamGun.gw",
+          "barrels": [
+            {
+              "id": "EF_RX_77D_4_BeamGun",
+              "x": 9.0,
+              "y": 20.0
+            },
+            {
+              "id": "EF_RX_77D_4_BeamGun_L",
+              "x": -9.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 9.0,
+                "y": 20.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -9.0,
+                "y": 20.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "EF_RX_77D_4_BeamGun"
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "Common_Cqb_A": {
+      "ref": "Common_Cqb_A__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw",
+          "barrels": [
+            {
+              "id": "Common_Cqb_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "EF_RX_77D_4_BeamCannon",
+        "EF_RX_77D_4_BeamGun",
+        "Common_Cqb_A",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "吉姆狙击型II的炮击战规格",
+  "skills": [],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard",
+    "kit_2": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 2500.0,
+    "levelMultiplier": 0.25,
+    "published": 625
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "EF_RX_77D_4_BeamGun",
+      "channels": [
+        {
+          "id": "EF_RX_77D_4_BeamGun",
+          "weaponId": "EF_RX_77D_4_BeamGun",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        },
+        {
+          "id": "EF_RX_77D_4_BeamGun_L",
+          "weaponId": "EF_RX_77D_4_BeamGun_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        }
+      ],
+      "fireMode": "simultaneous"
+    }
+  ],
+  "refits": []
+}

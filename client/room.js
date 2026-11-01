@@ -60,7 +60,7 @@ const RoomPanel = (() => {
     const forced =
       member.seat === null ? null : snapshot.settings.teamFactions?.[Rules.seatTeam(member.seat)];
     const select = element("select", badge.className);
-    for (const faction of ["PMC", "EFSF", "ZEON"])
+    for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"])
       select.add(new Option(PlayerProfile.displayFaction(faction), faction));
     select.value = member.characterFaction;
     select.disabled = !!Net.awaiting || !!forced || snapshot.settings.mode === "quick";
@@ -220,29 +220,76 @@ const RoomPanel = (() => {
     panel.replaceChildren();
     const config = Rules.aiTactics.settings(snapshot.settings.campaignOptions);
     const option = (parent, label, choices, value, change, id) => {
-      const row = element("label", "", label), select = element("select");
+      const row = element("label", "", label),
+        select = element("select");
       select.id = id;
       for (const [key, text] of choices) select.add(new Option(I18n.text(text), String(key)));
       select.value = String(value);
       select.disabled = locked || !!snapshot.campaign;
-      select.onchange = () => { change(select.value); sendSettings({ campaignOptions: config }); };
-      row.append(select); parent.append(row);
+      select.onchange = () => {
+        change(select.value);
+        sendSettings({ campaignOptions: config });
+      };
+      row.append(select);
+      parent.append(row);
     };
     const general = element("div", "campaign-room-ai-options");
-    option(general, "AI难度", [["easy", "简单"], ["normal", "标准"], ["hard", "困难"]],
-      config.difficulty, (v) => config.difficulty = v, "campaignAIDifficulty");
-    option(general, "进攻欲望", [["low", "低"], ["normal", "中"], ["high", "高"]],
-      config.aggression, (v) => config.aggression = v, "campaignAIAggression");
+    option(
+      general,
+      "AI难度",
+      [
+        ["easy", "简单"],
+        ["normal", "标准"],
+        ["hard", "困难"],
+      ],
+      config.difficulty,
+      (v) => (config.difficulty = v),
+      "campaignAIDifficulty",
+    );
+    option(
+      general,
+      "进攻欲望",
+      [
+        ["low", "低"],
+        ["normal", "中"],
+        ["high", "高"],
+      ],
+      config.aggression,
+      (v) => (config.aggression = v),
+      "campaignAIAggression",
+    );
     panel.append(general);
     for (let team = 0; team < 2; team++) {
       const group = element("fieldset", "campaign-room-team-options");
       group.append(element("legend", "", ["地球联邦军", "吉翁公国军"][team]));
-      option(group, "科技速度", [[0.75, "慢 75%"], [1, "中 100%"], [1.25, "快 125%"]],
-        config.teams[team].research, (v) => config.teams[team].research = Number(v), "campaignResearch" + team);
-      option(group, "单位强度（耐久）", [0.75, 1, 1.25].map((v) => [v, v * 100 + "%"]),
-        config.teams[team].durability, (v) => config.teams[team].durability = Number(v), "campaignDurability" + team);
-      option(group, "初始资源", [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2].map((v) => [v, v * 100 + "%"]),
-        config.teams[team].resources, (v) => config.teams[team].resources = Number(v), "campaignResources" + team);
+      option(
+        group,
+        "科技速度",
+        [
+          [0.75, "慢 75%"],
+          [1, "中 100%"],
+          [1.25, "快 125%"],
+        ],
+        config.teams[team].research,
+        (v) => (config.teams[team].research = Number(v)),
+        "campaignResearch" + team,
+      );
+      option(
+        group,
+        "单位强度（耐久）",
+        [0.75, 1, 1.25].map((v) => [v, v * 100 + "%"]),
+        config.teams[team].durability,
+        (v) => (config.teams[team].durability = Number(v)),
+        "campaignDurability" + team,
+      );
+      option(
+        group,
+        "初始资源",
+        [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2].map((v) => [v, v * 100 + "%"]),
+        config.teams[team].resources,
+        (v) => (config.teams[team].resources = Number(v)),
+        "campaignResources" + team,
+      );
       panel.append(group);
     }
   }
@@ -250,7 +297,9 @@ const RoomPanel = (() => {
     const settings = snapshot.settings || Rules.defaultRoomSettings();
     const mapSelect = byId("roomMapSelect");
     mapSelect.replaceChildren();
-    for (const map of Object.values(Rules.catalog.maps).filter(map => map.scope !== "strategic")) {
+    for (const map of Object.values(Rules.catalog.maps).filter(
+      (map) => map.scope !== "strategic",
+    )) {
       const option = new Option(map.name, map.id);
       option.disabled =
         !!map.supportedModes &&
@@ -324,6 +373,8 @@ const RoomPanel = (() => {
         select.add(new Option("PMC", "PMC"));
         select.add(new Option("地球联邦军[0079]", "EFSF"));
         select.add(new Option("吉翁公国军[0079]", "ZEON"));
+        for (const f of ["AEUG", "TITANS", "NEO_ZEON"])
+          select.add(new Option(PlayerProfile.displayFaction(f), f));
         select.value = settings.teamFactions?.[team] || "";
         select.disabled = locked;
         select.onchange = () => {
@@ -385,6 +436,9 @@ const RoomPanel = (() => {
       ["PMC", "PMC"],
       ["EFSF", "地球联邦军[0079]"],
       ["ZEON", "吉翁公国军[0079]"],
+      ["AEUG", "奥古[0087]"],
+      ["TITANS", "提坦斯[0087]"],
+      ["NEO_ZEON", "新吉翁[0087]"],
     ])
       faction.add(new Option(label, value));
     faction.value = player.characterFaction || "PMC";
@@ -604,9 +658,11 @@ const RoomPanel = (() => {
       (player.bot ? "aiSettings" : "managePlayer-") + (player.bot ? player.seat : player.id);
     if (snapshot.settings.mode === "campaign" && Number.isInteger(player.seat)) {
       const team = Rules.seatTeam(player.seat);
-      const leader = snapshot.campaign?.commanders?.[team] ?? snapshot.members
-        .filter((member) => Number.isInteger(member.seat) && Rules.seatTeam(member.seat) === team)
-        .sort((a, b) => a.seat - b.seat)[0]?.seat;
+      const leader =
+        snapshot.campaign?.commanders?.[team] ??
+        snapshot.members
+          .filter((member) => Number.isInteger(member.seat) && Rules.seatTeam(member.seat) === team)
+          .sort((a, b) => a.seat - b.seat)[0]?.seat;
       if (leader === player.seat) {
         const badge = element("span", "commander-badge", "★");
         badge.title = I18n.text("主指挥官");
@@ -974,7 +1030,11 @@ const RoomPanel = (() => {
           (!member || member.bot) &&
           !reserved
         ) {
-          const addAI = element("button", "choose-spawn" + (member ? " danger" : ""), member ? "移除 AI" : "添加 AI");
+          const addAI = element(
+            "button",
+            "choose-spawn" + (member ? " danger" : ""),
+            member ? "移除 AI" : "添加 AI",
+          );
           addAI.id = (member ? "removeSeatAI" : "addAI") + seat;
           addAI.disabled = busy || !!snapshot.returnCountdown;
           addAI.onclick = () => Net.request(member ? "remove_ai" : "add_ai", { seat });

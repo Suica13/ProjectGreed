@@ -1,0 +1,784 @@
+{
+  "schemaVersion": 2,
+  "id": "RMS_179_FedayeenRifle",
+  "code": "RMS-179-FedayeenRifle",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/RMS_179/RMS_179_FedayeenRifle.ini",
+  "materials": {
+    "textures": {
+      "RMS_179_Crotch_1.png": "textures/RMS_179_Crotch_1.png",
+      "RMS_179_Body_1.png": "textures/RMS_179_Body_1.png",
+      "RMS_179_ArmL_1.png": "textures/RMS_179_ArmL_1.png",
+      "RMS_179_ArmR_1.png": "textures/RMS_179_ArmR_1.png",
+      "RMS_179_ShoulderL_1.png": "textures/RMS_179_ShoulderL_1.png",
+      "RMS_179_ShoulderR_1.png": "textures/RMS_179_ShoulderR_1.png",
+      "RMS_179_Head_1.png": "textures/RMS_179_Head_1.png",
+      "RMS_179_Head_1_Close.png": "textures/RMS_179_Head_1_Close.png",
+      "RMS_179_Foot_1.png": "textures/RMS_179_Foot_1.png",
+      "RMS_179_LegL_1.png": "textures/RMS_179_LegL_1.png",
+      "RMS_179_LegR_1.png": "textures/RMS_179_LegR_1.png",
+      "TITANS_FedayeenRifle.png": "textures/TITANS_FedayeenRifle.png",
+      "TITANS_FedayeenRifle_BS.png": "textures/TITANS_FedayeenRifle_BS.png",
+      "RMS_179_Body_BeamSaberL_1.png": "textures/RMS_179_Body_BeamSaberL_1.png",
+      "EF_GalbaldyShield_Blue_B.png": "textures/EF_GalbaldyShield_Blue_B.png",
+      "RMS_179_FedayeenRifle.png": "textures/RMS_179_FedayeenRifle.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "RMS_179_FedayeenRifle.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "RMS_179_Foot_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "RMS_179_Foot_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "RMS_179_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "RMS_179_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "TITANS_FedayeenRifle_NotUsing",
+      "texture": "TITANS_FedayeenRifle.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 0.75,
+      "rotation": -90.0,
+      "offset": {
+        "x": 11.0,
+        "y": -9.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Crotch",
+      "texture": "RMS_179_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "RMS_179_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "RMS_179_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "TITANS_FedayeenRifle",
+      "texture": "TITANS_FedayeenRifle.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 8.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "TITANS_FedayeenRifle_BS_BF",
+      "texture": "TITANS_FedayeenRifle_BS.png",
+      "bone": "RightWeapon",
+      "order": 4.5,
+      "scale": 1.0,
+      "rotation": -10.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 9.0,
+        "y": 26.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "RMS_179_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_BeamSaber",
+      "texture": "RMS_179_Body_BeamSaberL_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RMS_179_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RMS_179_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Shield",
+      "texture": "EF_GalbaldyShield_Blue_B.png",
+      "bone": "LeftArm",
+      "order": 6.5,
+      "scale": 1.0,
+      "rotation": 5.0,
+      "offset": {
+        "x": -6.0,
+        "y": 8.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "Head",
+      "texture": "RMS_179_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "RMS_179_Head_1_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_Two_Handed_A": "../../animations/Common_Shoot_Two_Handed_A.json",
+    "Common_Shoot_A_L": "../../animations/Common_Shoot_A_L.json",
+    "Common_Melee_B": "../../animations/Common_Melee_B__MSM_04.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 34000,
+    "en": 375.0,
+    "move": 7,
+    "mobility": 125.0,
+    "cost": 375,
+    "counterLimit": 1,
+    "accuracy": 125.0,
+    "partStructuralStrength": 145.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 110,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 12.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 25.0,
+    "shooting": 25.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 100.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 100.0
+    },
+    "melee": {
+      "percent": 10.0,
+      "flat": 150.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 15.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 5000.0,
+    "blockChance": 0.55,
+    "coverage": 0.75,
+    "defenses": {
+      "beam": {
+        "percent": 5.0,
+        "flat": 35.0
+      },
+      "shell": {
+        "percent": 10.0,
+        "flat": 35.0
+      },
+      "melee": {
+        "percent": 5.0,
+        "flat": 175.0
+      },
+      "dp": {
+        "percent": 10.0,
+        "flat": 25.0
+      }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
+  },
+  "sourceStats": {
+    "hp": 27000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.55,
+    "turnSpeed": 2.0,
+    "reaction": 125.0,
+    "shooting": 125.0,
+    "melee": 125.0,
+    "nativeTags": [
+      "RMS_179_FedayeenRifle",
+      "Unit",
+      "MS",
+      "TITANS",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "accuracy": 125.0,
+    "partStructuralStrength": 145.0,
+    "actionTurnSpeed": 2.0,
+    "movementBeforeMobility": 6,
+    "mobilityMoveTarget": 7,
+    "enBeforeReduction": 750.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 432.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 1500.0,
+    "tacticalMoveBeforeBonus": 6,
+    "v17BaseHp": 27000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "吉姆II[斗士步枪]",
+  "faction": "TITANS",
+  "tags": [
+    "TITANS",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "吉姆II[斗士步枪]",
+      "description": "用于测试新武装的吉姆II"
+    },
+    "en": {
+      "name": "GM II[FedayeenRifle]",
+      "description": "LunarII-type GM of the Federation Forces, with performance rivaling the Gundam"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv2",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "TITANS_FedayeenRifle": {
+      "ref": "TITANS_FedayeenRifle__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_FedayeenRifle.gw",
+          "barrels": [
+            {
+              "id": "TITANS_FedayeenRifle",
+              "x": 9.0,
+              "y": 33.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "TITANS_FedayeenRifle",
+              "point": {
+                "x": 1.5308084989341915e-15,
+                "y": -25.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Common_ShieldMS": {
+      "ref": "Common_ShieldMS__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_ShieldMS.gw",
+          "barrels": [
+            {
+              "id": "Common_ShieldMS",
+              "x": -16.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -16.0,
+                "y": 12.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_FedayeenRifle_BS_BF_B": {
+      "ref": "TITANS_FedayeenRifle_BS_BF_B__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/TITANS_FedayeenRifle_BS_BF.gw",
+          "barrels": [
+            {
+              "id": "TITANS_FedayeenRifle_BS_BF_B",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "Common_DoubleVulcan_MS": {
+      "ref": "Common_DoubleVulcan_MS__lv1",
+      "overrides": {
+        "requiredParts": [
+          "head"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleVulcan_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Head",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "TITANS_FedayeenRifle",
+        "Common_ShieldMS",
+        "TITANS_FedayeenRifle_BS_BF_B",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "用于测试新武装的吉姆II",
+  "skills": [],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 1500.0,
+    "levelMultiplier": 0.25,
+    "published": 375
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}

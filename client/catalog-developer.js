@@ -58,10 +58,17 @@ window.CatalogDeveloper = (() => {
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
   }
+  const factionCache = new Map();
+  let activeFaction = window.editorConnection.faction || "EFSF";
   async function refreshCatalog(ids = null) {
+    factionCache.clear();
     const selected = ids && [...new Set(ids)];
     if (selected && !selected.length) return;
-    const next = await api("catalog" + (selected ? "?ids=" + encodeURIComponent(selected.join(",")) : ""));
+    const next = await api(
+      "catalog?faction=" +
+        encodeURIComponent(activeFaction) +
+        (selected ? "&ids=" + encodeURIComponent(selected.join(",")) : ""),
+    );
     I18n.bindCatalog(next);
     if (next.partial) {
       const replaced = new Set(next.ids);
@@ -79,7 +86,8 @@ window.CatalogDeveloper = (() => {
       Rules.catalog.prefabs.splice(0, Rules.catalog.prefabs.length, ...next.prefabs);
       for (const key of Object.keys(UnitModels)) delete UnitModels[key];
       Object.assign(UnitModels, next.models);
-      for (const key of Object.keys(next.production)) PRODUCTION_CATALOG[key] = next.production[key];
+      for (const key of Object.keys(next.production))
+        PRODUCTION_CATALOG[key] = next.production[key];
     }
     Encyclopedia.invalidate();
   }
@@ -446,13 +454,18 @@ window.CatalogDeveloper = (() => {
     select(
       identity,
       "主要阵营标签",
-      unit.tags.find((tag) => ["EFSF", "ZEON"].includes(tag)),
+      unit.tags.find((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag)),
       [
         ["EFSF", "EFSF"],
         ["ZEON", "ZEON"],
+        ["AEUG", "AEUG"],
+        ["TITANS", "TITANS"],
+        ["NEO_ZEON", "NEO_ZEON"],
       ],
       (value) => {
-        unit.tags = unit.tags.filter((tag) => !["EFSF", "ZEON"].includes(tag));
+        unit.tags = unit.tags.filter(
+          (tag) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag),
+        );
         unit.tags.unshift(value);
         unit.faction = value;
       },
@@ -468,10 +481,14 @@ window.CatalogDeveloper = (() => {
     input(
       identity,
       "年代标签（逗号分隔）",
-      unit.tags.filter((tag) => !["EFSF", "ZEON"].includes(tag)).join(","),
+      unit.tags
+        .filter((tag) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag))
+        .join(","),
       (value) =>
         (unit.tags = [
-          ...unit.tags.filter((tag) => ["EFSF", "ZEON"].includes(tag)),
+          ...unit.tags.filter((tag) =>
+            ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag),
+          ),
           ...tags(value),
         ]),
       "text",
@@ -508,7 +525,6 @@ window.CatalogDeveloper = (() => {
       (value) => {
         unit.presentation ??= {};
         unit.presentation.previewScale = value;
-
       },
       "number",
       "unit.previewScale",
@@ -959,12 +975,16 @@ window.CatalogDeveloper = (() => {
     await api("wip", { revision: wipSession.revision, units: wipSession.policy.units });
     wipSession = await api("wip");
     wipInitial = JSON.stringify(wipSession.policy.units);
-    const changedIds = Rules.catalog.prefabs.filter((prefab) => {
-      const next = wipSession.policy.units.some((pattern) =>
-        pattern.endsWith("*") ? prefab.id.startsWith(pattern.slice(0, -1)) : prefab.id === pattern,
-      );
-      return next !== prefab.wip;
-    }).map((prefab) => prefab.id);
+    const changedIds = Rules.catalog.prefabs
+      .filter((prefab) => {
+        const next = wipSession.policy.units.some((pattern) =>
+          pattern.endsWith("*")
+            ? prefab.id.startsWith(pattern.slice(0, -1))
+            : prefab.id === pattern,
+        );
+        return next !== prefab.wip;
+      })
+      .map((prefab) => prefab.id);
     await refreshCatalog(changedIds);
     renderWip();
     wipScreen.querySelector("[role=status]").textContent =
@@ -1065,6 +1085,62 @@ window.CatalogDeveloper = (() => {
     renderWip();
     selectEditorTab("wip");
   }
+  const factionSelect = node("select");
+  factionSelect.id = "editorFactionSwitch";
+  factionSelect.setAttribute("aria-label", "切换阵营单位库");
+  for (const [id, label] of Object.entries({
+    EFSF: "地球联邦军 [0079]",
+    ZEON: "吉翁公国军 [0079]",
+    AEUG: "奥古 [0087]",
+    TITANS: "提坦斯 [0087]",
+    NEO_ZEON: "新吉翁 [0087]",
+  })) {
+    const option = node("option", label);
+    option.value = id;
+    factionSelect.append(option);
+  }
+  factionSelect.value = activeFaction;
+  factionSelect.onchange = () =>
+    run(async () => {
+      const nextFaction = factionSelect.value;
+      if (unitSession || weaponSession || !(await leaveConfigTab())) {
+        factionSelect.value = activeFaction;
+        return;
+      }
+      factionSelect.disabled = true;
+      try {
+        factionCache.set(activeFaction, {
+          prefabs: [...ART.prefabs],
+          models: { ...UnitModels },
+          production: structuredClone(PRODUCTION_CATALOG),
+        });
+        const next =
+          factionCache.get(nextFaction) ||
+          (await api("catalog?faction=" + encodeURIComponent(nextFaction)));
+        byId("formationUnitDetail").hidden = true;
+        ART.prefabs.splice(0, ART.prefabs.length, ...next.prefabs);
+        for (const id of Object.keys(UnitModels)) delete UnitModels[id];
+        Object.assign(UnitModels, next.models);
+        for (const field of Object.keys(PRODUCTION_CATALOG)) delete PRODUCTION_CATALOG[field];
+        Object.assign(PRODUCTION_CATALOG, next.production);
+        Rules.eras = [
+          ...new Set(
+            ART.prefabs.flatMap((prefab) => prefab.tags).filter((tag) => /^\d{4}[EL]?$/.test(tag)),
+          ),
+        ].sort();
+        activeFaction = window.editorConnection.faction = nextFaction;
+        activeUnitId = null;
+        I18n.bindCatalog(ART);
+        Encyclopedia.invalidate();
+        Encyclopedia.open();
+        selectEditorTab("catalog");
+      } catch (error) {
+        factionSelect.value = activeFaction;
+        throw error;
+      } finally {
+        factionSelect.disabled = false;
+      }
+    });
   const toolbar = node("header", "", "developer-toolbar");
   toolbar.append(
     node("strong", "PROJECT GREED · 配置编辑"),
@@ -1073,6 +1149,7 @@ window.CatalogDeveloper = (() => {
     (wipTab = button("WIP列表", () => run(openWip))),
     node("span", base),
     node("small", "已连接"),
+    factionSelect,
     button("断开连接", () => location.reload()),
   );
   document.body.append(toolbar);

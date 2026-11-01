@@ -4,6 +4,8 @@ const Development = (() => {
   const economy = typeof Economy !== "undefined" ? Economy : require("./economy.js");
   const tree =
     typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
+  const factions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
+  const laterFactions = ["AEUG", "TITANS", "NEO_ZEON"];
   const starterTech = {
     // 原 MOD 的起始科技；61式和飞鳐都由联邦基础科技解锁。
     EFSF: ["Tech_EFSF_0079_BaseTech"],
@@ -21,21 +23,35 @@ const Development = (() => {
     } catch {}
   }
 
+  let localResearchSource, localResearchCache;
+  function currentResearch() {
+    if (!localResearchCache || localResearchSource !== progress.researched) {
+      localResearchSource = progress.researched;
+      localResearchCache = normalizeResearch(progress.researched);
+    }
+    return localResearchCache;
+  }
   function nodes(faction) {
     return tree[faction] || [];
   }
   function unlockedTech(faction) {
-    return normalizeResearch(progress.researched)[faction] || [];
+    return [...(currentResearch()[faction] || [])];
   }
   function normalizeResearch(value = {}) {
     const result = { units: {} };
-    for (const faction of ["EFSF", "ZEON"]) {
+    for (const faction of factions) {
       const requested = new Set(Array.isArray(value?.[faction]) ? value[faction] : []);
-      const active = new Set(starterTech[faction]);
-      for (let pass = 0; pass < nodes(faction).length; pass++)
+      const gated = laterFactions.includes(faction) && !hasCompleted0079(result);
+      const active = new Set(
+        starterTech[faction] || (gated ? [] : ["Tech_" + faction + "_0087_BaseTech"]),
+      );
+      for (let pass = 0; pass < nodes(faction).length && !gated; pass++) {
+        const before = active.size;
         for (const node of nodes(faction))
           if (requested.has(node.id) && node.requires.every((id) => active.has(id)))
             active.add(node.id);
+        if (active.size === before) break;
+      }
       result[faction] = [...active];
       const knownUnits = new Set([
         ...nodes(faction).flatMap((node) => node.unlocks),
@@ -47,38 +63,63 @@ const Development = (() => {
     }
     return result;
   }
+  // Complete either whole legacy faction, including the 0083 nodes.
+  function hasCompleted0079(value = progress.researched) {
+    return ["EFSF", "ZEON"].some((faction) => {
+      const active = new Set(value?.[faction] || []);
+      return nodes(faction).length > 0 && nodes(faction).every((node) => active.has(node.id));
+    });
+  }
+  function eraLocked(faction, value) {
+    return (
+      laterFactions.includes(faction) &&
+      !hasCompleted0079(value === undefined ? currentResearch() : normalizeResearch(value))
+    );
+  }
   // Room-only AI progression: union each participant's active-faction research, then mirror the furthest
   // main-line column (page first) across both factions and all three lanes.
   // Explicit branch/event unlocks remain in the union but cannot advance the main line.
   function aiResearch(researches = []) {
-    const factions = ["EFSF", "ZEON"];
     const union = { units: {} };
     for (const faction of factions) {
       union[faction] = new Set();
       union.units[faction] = new Set();
     }
-    let stage = [0, 1];
-    for (const value of researches) {
-      const clean = normalizeResearch(value?.researched ?? value);
-      const activeFactions = factions.includes(value?.characterFaction)
-        ? [value.characterFaction] : factions;
-      for (const faction of activeFactions) {
-        for (const id of clean[faction]) union[faction].add(id);
-        for (const id of clean.units[faction]) union.units[faction].add(id);
-        for (const node of nodes(faction)) {
-          if (node.row !== "mid" || !clean[faction].includes(node.id)) continue;
-          const next = [node.page || 0, node.column];
-          if (next[0] > stage[0] || (next[0] === stage[0] && next[1] > stage[1]))
-            stage = next;
+    for (const group of [["EFSF", "ZEON"], laterFactions]) {
+      let stage = [0, 1];
+      for (const value of researches) {
+        const clean = normalizeResearch(value?.researched ?? value);
+        const character = value?.characterFaction;
+        const activeFactions = factions.includes(character)
+          ? group.includes(character)
+            ? [character]
+            : []
+          : group;
+        for (const faction of activeFactions) {
+          for (const id of clean[faction]) union[faction].add(id);
+          for (const id of clean.units[faction]) union.units[faction].add(id);
+          for (const node of nodes(faction)) {
+            if (node.row !== "mid" || !clean[faction].includes(node.id)) continue;
+            const next = [node.page || 0, node.column];
+            if (next[0] > stage[0] || (next[0] === stage[0] && next[1] > stage[1])) stage = next;
+          }
         }
+        // An 0087 participant necessarily completed one legacy tree. Carry that gate proof
+        // without treating its columns as 0087 progression.
+        if (laterFactions.includes(character))
+          for (const legacy of ["EFSF", "ZEON"])
+            if (nodes(legacy).every((node) => clean[legacy].includes(node.id)))
+              for (const id of clean[legacy]) union[legacy].add(id);
       }
+      for (const faction of group)
+        for (const node of nodes(faction))
+          if (
+            (node.page || 0) < stage[0] ||
+            ((node.page || 0) === stage[0] && node.column <= stage[1])
+          )
+            union[faction].add(node.id);
     }
     for (const faction of factions) {
-      for (const node of nodes(faction)) {
-        const page = node.page || 0;
-        if (page < stage[0] || (page === stage[0] && node.column <= stage[1]))
-          union[faction].add(node.id);
-      }
       union[faction] = [...union[faction]].sort();
       union.units[faction] = [...union.units[faction]].sort();
     }
@@ -88,6 +129,7 @@ const Development = (() => {
     const node = nodes(faction).find((node) => node.id === id);
     const active = new Set(unlockedTech(faction));
     if (
+      eraLocked(faction) ||
       !node ||
       active.has(id) ||
       !node.requires.every((id) => active.has(id)) ||
@@ -130,7 +172,7 @@ const Development = (() => {
     for (const id of [...(award.unlockUnits || []), ...(award.unlockAces || [])]) {
       const faction =
         aces.find((p) => p.id === id)?.faction ||
-        ["EFSF", "ZEON"].find((group) => nodes(group).some((node) => node.unlocks.includes(id)));
+        factions.find((group) => nodes(group).some((node) => node.unlocks.includes(id)));
       if (!faction) throw Error("活动开发奖励无效：" + id);
       if (!next.researched.units[faction].includes(id)) next.researched.units[faction].push(id);
     }
@@ -144,6 +186,7 @@ const Development = (() => {
     return normalizeResearch(progress.researched);
   }
   function unlockedUnits(faction) {
+    if (eraLocked(faction)) return new Set();
     if (!unitCache.has(faction)) {
       const active = new Set(unlockedTech(faction));
       const ids = new Set(
@@ -165,16 +208,17 @@ const Development = (() => {
     }
     if (researched !== undefined) {
       const active = normalizeResearch(researched);
-      return (faction === "PMC" ? ["EFSF", "ZEON"] : [faction]).some(
+      return (faction === "PMC" ? factions : [faction]).some(
         (side) =>
-          active.units[side]?.includes(prefabId) ||
-          nodes(side).some(
-            (node) => active[side]?.includes(node.id) && node.unlocks.includes(prefabId),
-          ),
+          (!laterFactions.includes(side) ||
+            active[side]?.includes("Tech_" + side + "_0087_BaseTech")) &&
+          (active.units[side]?.includes(prefabId) ||
+            nodes(side).some(
+              (node) => active[side]?.includes(node.id) && node.unlocks.includes(prefabId),
+            )),
       );
     }
-    if (faction === "PMC")
-      return ["EFSF", "ZEON"].some((side) => unlockedUnits(side).has(prefabId));
+    if (faction === "PMC") return factions.some((side) => unlockedUnits(side).has(prefabId));
     return unlockedUnits(faction).has(prefabId);
   }
   function pointBalance(faction) {
@@ -185,7 +229,7 @@ const Development = (() => {
       !award ||
       typeof award.id !== "string" ||
       !award.matchId ||
-      !["EFSF", "ZEON"].includes(award.faction) ||
+      !factions.includes(award.faction) ||
       !Number.isInteger(award.points) ||
       award.points < 1 ||
       progress.claimed[award.id]
@@ -203,10 +247,10 @@ const Development = (() => {
       throw Error("科技进度无效");
     const points = {},
       claimed = {};
-    for (const faction of ["EFSF", "ZEON"]) {
-      if (!Number.isSafeInteger(value.points[faction]) || value.points[faction] < 0)
-        throw Error("科技点余额无效");
-      points[faction] = value.points[faction];
+    for (const faction of factions) {
+      const balance = value.points[faction] ?? (laterFactions.includes(faction) ? 0 : NaN);
+      if (!Number.isSafeInteger(balance) || balance < 0) throw Error("科技点余额无效");
+      points[faction] = balance;
     }
     for (const [id, match] of Object.entries(value.claimed)) {
       if (typeof match !== "string" || id.length > 200 || match.length > 200)
@@ -219,6 +263,9 @@ const Development = (() => {
     return validateProgress(progress);
   }
   return {
+    factions,
+    hasCompleted0079,
+    eraLocked,
     exportProgress,
     validateProgress,
     nodes,

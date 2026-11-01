@@ -93,7 +93,9 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     const catalogRequests = editorRequests.filter((url) => url.pathname === "/api/editor/catalog");
     expect(catalogRequests).toHaveLength(2);
     expect(catalogRequests.every((url) => !!url.searchParams.get("ids"))).toBe(true);
-    expect(editorRequests.filter((url) => url.pathname === "/api/editor/bootstrap")).toHaveLength(1);
+    expect(editorRequests.filter((url) => url.pathname === "/api/editor/bootstrap")).toHaveLength(
+      1,
+    );
     await page.screenshot({ path: "tmp/catalog-developer.png" });
   } finally {
     await page.close();
@@ -383,8 +385,9 @@ for (const width of [1440, 390])
     }
   });
 
-
-test("developer uses data-only catalog without unit icons or preview rendering", async ({ page }) => {
+test("developer uses data-only catalog without unit icons or preview rendering", async ({
+  page,
+}) => {
   const app = createDeveloperServer({ port: 0 });
   const address = await app.listen();
   const errors = [];
@@ -411,7 +414,6 @@ test("developer uses data-only catalog without unit icons or preview rendering",
   }
 });
 
-
 test("remote editor completes a slow download and shows transfer progress", async ({ page }) => {
   test.setTimeout(90000);
   const app = createDeveloperServer({ port: 0 });
@@ -425,15 +427,22 @@ test("remote editor completes a slow download and shows transfer progress", asyn
     const network = await page.context().newCDPSession(page);
     await network.send("Network.enable");
     await network.send("Network.emulateNetworkConditions", {
-      offline: false, latency: 150, downloadThroughput: 80 * 1024, uploadThroughput: 80 * 1024,
+      offline: false,
+      latency: 150,
+      downloadThroughput: 80 * 1024,
+      uploadThroughput: 80 * 1024,
     });
     await page.locator("#editorServerAddress").fill("http://127.0.0.1:" + address.port);
     await page.locator("#editorAccessKey").fill("13450");
     await page.locator("#confirmEditorLogin").click();
     await expect(page.locator("#editorLoginStatus")).toContainText("已接收", { timeout: 20000 });
     await expect(page.locator("#editorDownloadProgress")).toBeVisible();
-    await expect.poll(() => page.locator("#editorDownloadProgress").evaluate((bar) => bar.value)).toBeGreaterThan(0);
-    expect(await page.locator("#editorDownloadProgress").evaluate((bar) => bar.value)).toBeLessThan(100);
+    await expect
+      .poll(() => page.locator("#editorDownloadProgress").evaluate((bar) => bar.value))
+      .toBeGreaterThan(0);
+    expect(await page.locator("#editorDownloadProgress").evaluate((bar) => bar.value)).toBeLessThan(
+      100,
+    );
     await expect(page.locator("#editorLoginScreen")).toBeHidden({ timeout: 60000 });
     await expect(page.locator("#encyclopediaScreen")).toBeVisible();
     await page.locator("#encyclopediaWeaponsTab").click();
@@ -455,7 +464,10 @@ test("editor runtime failures stay visible on the login screen", async ({ page }
     });
     await page.locator("#editorAccessKey").fill("13450");
     await page.locator("#confirmEditorLogin").click();
-    await expect(page.locator("#editorLoginStatus")).toContainText("编辑界面初始化失败：TEST_RUNTIME_FAILURE", { timeout: 15000 });
+    await expect(page.locator("#editorLoginStatus")).toContainText(
+      "编辑界面初始化失败：TEST_RUNTIME_FAILURE",
+      { timeout: 15000 },
+    );
     await expect(page.locator("#editorDownloadProgress")).toBeHidden();
     await expect(page.locator("#editorLoginScreen")).toBeVisible();
     await expect(page.locator("#confirmEditorLogin")).toBeEnabled();
@@ -465,8 +477,9 @@ test("editor runtime failures stay visible on the login screen", async ({ page }
   }
 });
 
-
-test("shared head vulcan editor agrees with converted AP and saves a final-value adjustment", async ({ page }) => {
+test("shared head vulcan editor agrees with converted AP and saves a final-value adjustment", async ({
+  page,
+}) => {
   test.setTimeout(60000);
   const f = editorFixture();
   const app = createDeveloperServer({ port: 0, store: f.store, catalog: f.catalog });
@@ -475,13 +488,22 @@ test("shared head vulcan editor agrees with converted AP and saves a final-value
     await login(page, "http://127.0.0.1:" + address.port);
     await page.locator("#encyclopediaSearch").fill("RX_78_2");
     await page.locator('[data-unit-id="RX_78_2"] button').click();
-    await page.locator('#formationDetailSlots [data-weapon-id="Common_DoubleVulcan_MS"] .edit-common-weapon').click();
+    await page
+      .locator(
+        '#formationDetailSlots [data-weapon-id="Common_DoubleVulcan_MS"] .edit-common-weapon',
+      )
+      .click();
     const initialRef = f.read("assets/units/RX_78_2/unit.json").weapons.Common_DoubleVulcan_MS.ref;
     const currentAP = f.store.getWeapon(initialRef).weapon.actionCost;
     await expect(page.locator('[data-field="common.actionCost"]')).toHaveValue(String(currentAP));
-    await expect(page.locator('[data-field="common.actionCost"]').locator("..")).toContainText("基准 3 · 调整 " + (currentAP >= 3 ? "+" : "") + (currentAP - 3));
+    await expect(page.locator('[data-field="common.actionCost"]').locator("..")).toContainText(
+      "基准 3 · 调整 " + (currentAP >= 3 ? "+" : "") + (currentAP - 3),
+    );
     await page.locator('[data-field="common.actionCost"]').fill("2");
-    await page.locator("#commonWeaponEditor").getByRole("button", { name: "保存修改", exact: true }).click();
+    await page
+      .locator("#commonWeaponEditor")
+      .getByRole("button", { name: "保存修改", exact: true })
+      .click();
     await expect(page.locator("#commonWeaponEditor")).not.toBeVisible();
     const ref = f.read("assets/units/RX_78_2/unit.json").weapons.Common_DoubleVulcan_MS.ref;
     expect(f.read("assets/weapons.json").definitions[ref].actionCost).toBe(1);
@@ -491,5 +513,74 @@ test("shared head vulcan editor agrees with converted AP and saves a final-value
     await page.close();
     await app.close();
     f.cleanup();
+  }
+});
+
+test("faction libraries download separately, cached switches and preview closing need no network", async ({
+  page,
+}) => {
+  test.setTimeout(90000);
+  const app = createDeveloperServer({ port: 0 }),
+    address = await app.listen();
+  const requests = [],
+    errors = [];
+  page.on("request", (r) => {
+    if (r.url().includes("/api/editor/")) requests.push(new URL(r.url()));
+  });
+  page.on("pageerror", (e) => errors.push(e.message));
+  try {
+    await page.goto("http://127.0.0.1:" + address.port + "/developer.html");
+    await page.locator("#editorFaction").selectOption("ZEON");
+    await page.locator("#editorAccessKey").fill("13450");
+    await page.locator("#confirmEditorLogin").click();
+    await expect(page.locator("#editorLoginScreen")).toBeHidden({ timeout: 30000 });
+    expect(
+      await page.evaluate(() =>
+        ART.prefabs.every((p) => (p.availableFactions || [p.faction]).includes("ZEON")),
+      ),
+    ).toBe(true);
+    await page.locator("#encyclopediaSearch").fill("MS_06F");
+    await page.locator('[data-unit-id="MS_06F"] button').click();
+    const count = requests.length;
+    const time = await page.evaluate(async () => {
+      const start = performance.now();
+      document.getElementById("closeFormationDetail").click();
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      return performance.now() - start;
+    });
+    await expect(page.locator("#formationUnitDetail")).toBeHidden();
+    expect(time).toBeLessThan(350);
+    expect(requests.length).toBe(count);
+    await page.locator("#editorFactionSwitch").selectOption("AEUG");
+    await expect(page.locator("#editorFactionSwitch")).toBeEnabled({ timeout: 30000 });
+    expect(
+      await page.evaluate(() =>
+        ART.prefabs.every((p) => (p.availableFactions || [p.faction]).includes("AEUG")),
+      ),
+    ).toBe(true);
+    await page.locator("#encyclopediaSearch").fill("MSZ_006");
+    await page.locator('[data-unit-id="MSZ_006"] button').click();
+    await expect(page.locator("#formationDetailTitle")).toContainText("Z");
+    await page.locator("#editUnitProperties").click();
+    await expect(page.locator("#unitSourceEditor")).toBeVisible();
+    const primary = page.locator("#unitSourceEditor label").filter({hasText:"主要阵营标签"}).locator("select");
+    await expect(primary).toHaveValue("AEUG");
+    await expect(page.locator('[data-field="unit.eras"]')).toHaveValue("0087");
+    await page.locator("#closeFormationDetail").click();
+    await page.getByRole("button",{name:"取消修改并关闭",exact:true}).click();
+    const afterDownload = requests.length;
+    await page.locator("#editorFactionSwitch").selectOption("ZEON");
+    await expect(page.locator("#editorFactionSwitch")).toBeEnabled();
+    await page.locator("#editorFactionSwitch").selectOption("AEUG");
+    await expect(page.locator("#editorFactionSwitch")).toBeEnabled();
+    expect(requests.length).toBe(afterDownload);
+    expect(
+      requests.filter((url) => url.pathname.endsWith("bootstrap"))[0].searchParams.get("faction"),
+    ).toBe("ZEON");
+    expect(errors).toEqual([]);
+    console.log("Developer preview close:", Math.round(time), "ms; scoped faction cache reused");
+  } finally {
+    await page.close();
+    await app.close();
   }
 });

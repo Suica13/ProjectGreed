@@ -12,7 +12,9 @@ const { WebSocketServer, WebSocket } = require("ws"),
   { createRoomEngine } = require("./shared/room-engine.js"),
   G = require("./shared/rules.js");
 // Dedicated distributions contain validated rule data, without game webpages or media.
-const serverOnly = fs.existsSync(path.join(__dirname, "shared/server-catalog.json"));
+const serverOnly =
+  fs.existsSync(path.join(__dirname, "shared/server-catalog.json")) &&
+  !fs.existsSync(path.join(__dirname, "public/client.html"));
 function createServer({
   dedicated = serverOnly,
   port = 1313,
@@ -148,7 +150,8 @@ function createServer({
   activityTimer.unref();
   let lastRoomList = "";
   const writeSettlement = require("./tools/settlement-log.cjs").createSettlementLog({
-    directory: settlementDirectory, version: project.version,
+    directory: settlementDirectory,
+    version: project.version,
   });
   const engine = createRoomEngine({
     rules,
@@ -214,7 +217,12 @@ function createServer({
           ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action);
         const payloadLimit = formationAction
           ? 4 * 1024 * 1024
-          : ["record_upload_chunk", "campaign_import_chunk", "campaign_move", "campaign_transfer"].includes(msg?.action)
+          : [
+                "record_upload_chunk",
+                "campaign_import_chunk",
+                "campaign_move",
+                "campaign_transfer",
+              ].includes(msg?.action)
             ? 128 * 1024
             : 16384;
         if (data.length > payloadLimit) throw Error("消息过大。");
@@ -240,7 +248,7 @@ function createServer({
             });
             return;
           }
-          if (!["PMC", "EFSF", "ZEON"].includes(msg.characterFaction))
+          if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(msg.characterFaction))
             throw Error("请使用最新客户端并选择角色阵营后加入房间。");
           if (msg.identity) activities.identify(ws, msg.identity, msg.name);
           ws.stateDelta = msg.stateDelta === 1 ? 1 : 0;

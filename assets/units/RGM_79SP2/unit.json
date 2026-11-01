@@ -1279,5 +1279,10 @@
   "production": {
     "enabled": true,
     "refitFrom": []
-  }
+  },
+  "availableFactions": [
+    "EFSF",
+    "AEUG",
+    "TITANS"
+  ]
 }

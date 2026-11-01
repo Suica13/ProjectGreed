@@ -18,13 +18,13 @@ def find(pattern, source, context):
         raise ValueError(f"Missing {context}")
     return match.group(1).strip()
 
-def import_faction(root, faction, page_number=0):
+def import_faction(root, faction, page_number=0, era="0079"):
     tree = root / "Units" / "TechTree"
-    page = read(tree / "Core" / "Faction" / f"{faction}_0079" /
-                f"TechTree_UI_Page_{faction}_0079_{page_number:02d}.ini")
-    tech_list = read(tree / "Tech" / "Faction" / f"{faction}_0079" /
-                     f"TechList_{faction}_0079.ini")
-    marker_dir = tree / "Tech" / "Faction" / f"{faction}_0079" / "Common"
+    page = read(tree / "Core" / "Faction" / f"{faction}_{era}" /
+                f"TechTree_UI_Page_{faction}_{era}_{page_number:02d}.ini")
+    tech_list = read(tree / "Tech" / "Faction" / f"{faction}_{era}" /
+                     f"TechList_{faction}_{era}.ini")
+    marker_dir = tree / "Tech" / "Faction" / f"{faction}_{era}" / "Common"
     slots = re.findall(
         r"\[attachment_Tech_(Mid|Top|Bot)_(\d+)\]"
         r"(?:(?!\[attachment_Tech_)[\s\S])*?onCreateSpawnUnitOf:(Tech_\w+)\*1",
@@ -70,7 +70,7 @@ def import_faction(root, faction, page_number=0):
         })
     for node in nodes:
         node["page"] = page_number
-        node["era"] = "0079E" if page_number == 0 else "0083" if node["id"].endswith(("_GPProject", "_OperationStardust")) else "0079L"
+        node["era"] = "0087" if era == "0087" else "0079E" if page_number == 0 else "0083" if node["id"].endswith(("_GPProject", "_OperationStardust")) else "0079L"
     return nodes
 
 def main():

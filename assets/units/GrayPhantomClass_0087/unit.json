@@ -1,0 +1,1960 @@
+{
+  "schemaVersion": 2,
+  "id": "GrayPhantomClass_0087",
+  "code": "GrayPhantomClass-0087",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087.ini",
+  "materials": {
+    "textures": {
+      "GrayPhantomClass_0087.png": "textures/GrayPhantomClass_0087.png",
+      "GrayPhantomClass_0087_Body_1.png": "textures/GrayPhantomClass_0087_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "GrayPhantomClass_0087_Body_2.png": "textures/GrayPhantomClass_0087_Body_2.png",
+      "GrayPhantomClass_0087_Turret_Cannon_1.png": "textures/GrayPhantomClass_0087_Turret_Cannon_1.png",
+      "GrayPhantomClass_0087_Turret_MegaBeamCannon_1.png": "textures/GrayPhantomClass_0087_Turret_MegaBeamCannon_1.png",
+      "GrayPhantomClass_0087_Turret_AA_1.png": "textures/GrayPhantomClass_0087_Turret_AA_1.png",
+      "GrayPhantomClass_0087_Turret_AA_2.png": "textures/GrayPhantomClass_0087_Turret_AA_2.png"
+    },
+    "icon": "GrayPhantomClass_0087.png"
+  },
+  "skeleton": {
+    "Turret_GrayPhantomClass_0087_Turret_Cannon_M1": {
+      "x": 0.0,
+      "y": 25.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1": {
+      "x": -78.0,
+      "y": -7.0,
+      "endDirOffset": -35.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1": {
+      "x": 78.0,
+      "y": -7.0,
+      "endDirOffset": 35.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_MS_L1": {
+      "x": -10.0,
+      "y": -70.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_MS_R1": {
+      "x": 10.0,
+      "y": -70.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_L1": {
+      "x": -7.0,
+      "y": 50.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_R1": {
+      "x": 7.0,
+      "y": 50.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_L2": {
+      "x": -9.0,
+      "y": 42.0,
+      "endDirOffset": -45.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_R2": {
+      "x": 9.0,
+      "y": 42.0,
+      "endDirOffset": 45.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_L3": {
+      "x": -11.0,
+      "y": 35.0,
+      "endDirOffset": -75.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_R3": {
+      "x": 11.0,
+      "y": 35.0,
+      "endDirOffset": 75.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_L1": {
+      "x": -40.0,
+      "y": 30.0,
+      "endDirOffset": -35.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_R1": {
+      "x": 40.0,
+      "y": 30.0,
+      "endDirOffset": 35.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_L2": {
+      "x": -40.0,
+      "y": 0.0,
+      "endDirOffset": -125.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_R2": {
+      "x": 40.0,
+      "y": 0.0,
+      "endDirOffset": 125.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_L3": {
+      "x": -55.0,
+      "y": -110.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_R3": {
+      "x": 55.0,
+      "y": -110.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_L4": {
+      "x": -55.0,
+      "y": -130.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_R4": {
+      "x": 55.0,
+      "y": -130.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_L5": {
+      "x": -55.0,
+      "y": -150.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_GrayPhantomClass_0087_Turret_AA_B_R5": {
+      "x": 55.0,
+      "y": -150.0,
+      "endDirOffset": 180.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": -47.0,
+        "y": -160.0
+      },
+      "scaleX": -0.75,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": 47.0,
+        "y": -160.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_L1",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L1",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_L1",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_R1",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R1",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_R1",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_L2",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L2",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_L2",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_R2",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R2",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_R2",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_L3",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L3",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_L3",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_R3",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R3",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_R3",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_L4",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L4",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_L4",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_R4",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R4",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_R4",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_L5",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L5",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_L5",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_B_R5",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R5",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_B_R5",
+      "texture": "GrayPhantomClass_0087_Turret_AA_2.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_Cannon_M1",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+      "moduleId": "GrayPhantomClass_0087_Turret_Cannon_M1",
+      "texture": "GrayPhantomClass_0087_Turret_Cannon_1.png",
+      "order": 3.005,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "GrayPhantomClass_0087_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_2",
+      "texture": "GrayPhantomClass_0087_Body_2.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+      "moduleId": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+      "texture": "GrayPhantomClass_0087_Turret_MegaBeamCannon_1.png",
+      "order": 5.001,
+      "scale": 0.75,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+      "moduleId": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+      "texture": "GrayPhantomClass_0087_Turret_MegaBeamCannon_1.png",
+      "order": 5.001,
+      "scale": 0.75,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_L1",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_L1",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_L1",
+      "texture": "GrayPhantomClass_0087_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_R1",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_R1",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_R1",
+      "texture": "GrayPhantomClass_0087_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_L2",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_L2",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_L2",
+      "texture": "GrayPhantomClass_0087_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_R2",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_R2",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_R2",
+      "texture": "GrayPhantomClass_0087_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_L3",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_L3",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_L3",
+      "texture": "GrayPhantomClass_0087_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "GrayPhantomClass_0087_Turret_AA_R3",
+      "bone": "Turret_GrayPhantomClass_0087_Turret_AA_R3",
+      "moduleId": "GrayPhantomClass_0087_Turret_AA_R3",
+      "texture": "GrayPhantomClass_0087_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 154000,
+    "en": 11250.0,
+    "move": 8,
+    "mobility": 85.0,
+    "cost": 1875,
+    "counterLimit": 1,
+    "accuracy": 74.75,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "GrayPhantomClass_0087_Turret_Cannon_M1",
+        "name": "GrayPhantomClass_0087_Turret_Cannon_M1",
+        "hp": 20000.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+        "x": 0.0,
+        "y": 25.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_Cannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_Cannon"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+        "name": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+        "hp": 20000.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+        "x": -78.0,
+        "y": -7.0,
+        "idleDir": -35.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_MegaBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_MegaBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+        "name": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+        "hp": 20000.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+        "x": 78.0,
+        "y": -7.0,
+        "idleDir": 35.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_MegaBeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_MegaBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_MS_L1",
+        "name": "GrayPhantomClass_0087_Turret_MS_L1",
+        "hp": 10000.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_MS_L1",
+        "x": -10.0,
+        "y": -70.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_MS_R1",
+        "name": "GrayPhantomClass_0087_Turret_MS_R1",
+        "hp": 10000.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_MS_R1",
+        "x": 10.0,
+        "y": -70.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_L1",
+        "name": "GrayPhantomClass_0087_Turret_AA_L1",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_L1",
+        "x": -7.0,
+        "y": 50.0,
+        "idleDir": -15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_R1",
+        "name": "GrayPhantomClass_0087_Turret_AA_R1",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_R1",
+        "x": 7.0,
+        "y": 50.0,
+        "idleDir": 15.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_L2",
+        "name": "GrayPhantomClass_0087_Turret_AA_L2",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_L2",
+        "x": -9.0,
+        "y": 42.0,
+        "idleDir": -45.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_R2",
+        "name": "GrayPhantomClass_0087_Turret_AA_R2",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_R2",
+        "x": 9.0,
+        "y": 42.0,
+        "idleDir": 45.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_L3",
+        "name": "GrayPhantomClass_0087_Turret_AA_L3",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_L3",
+        "x": -11.0,
+        "y": 35.0,
+        "idleDir": -75.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_R3",
+        "name": "GrayPhantomClass_0087_Turret_AA_R3",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_R3",
+        "x": 11.0,
+        "y": 35.0,
+        "idleDir": 75.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_L1",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_L1",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L1",
+        "x": -40.0,
+        "y": 30.0,
+        "idleDir": -35.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_R1",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_R1",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R1",
+        "x": 40.0,
+        "y": 30.0,
+        "idleDir": 35.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_L2",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_L2",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L2",
+        "x": -40.0,
+        "y": 0.0,
+        "idleDir": -125.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_R2",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_R2",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R2",
+        "x": 40.0,
+        "y": 0.0,
+        "idleDir": 125.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_L3",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_L3",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L3",
+        "x": -55.0,
+        "y": -110.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_R3",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_R3",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R3",
+        "x": 55.0,
+        "y": -110.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_L4",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_L4",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L4",
+        "x": -55.0,
+        "y": -130.0,
+        "idleDir": -90.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_R4",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_R4",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R4",
+        "x": 55.0,
+        "y": -130.0,
+        "idleDir": 90.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_L5",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_L5",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L5",
+        "x": -55.0,
+        "y": -150.0,
+        "idleDir": -180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "GrayPhantomClass_0087_Turret_AA_B_R5",
+        "name": "GrayPhantomClass_0087_Turret_AA_B_R5",
+        "hp": 7500.0,
+        "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R5",
+        "x": 55.0,
+        "y": -150.0,
+        "idleDir": 180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA_2.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_GrayPhantomClass_0087_Turret_AA"
+          ]
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 3
+    },
+    "commandAuras": [
+      {
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
+      },
+      {
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "speed": 95,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 16.666666666666668,
+      "antiDetection": -6.944444444444445,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 20.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 30.0,
+      "flat": 350.0
+    },
+    "shell": {
+      "percent": 40.0,
+      "flat": 350.0
+    },
+    "melee": {
+      "percent": 25.0,
+      "flat": 350.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 10.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 10.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 220000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.35,
+    "turnSpeed": 0.45,
+    "reaction": 85.0,
+    "shooting": 120.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "GrayPhantomClass_0087",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "TITANS",
+      "0087",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X16"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "CmdCom",
+      "CmdDef",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 115.0,
+    "unitLevel": 7500.0,
+    "enBeforeReduction": 22500.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 5,
+    "actionTurnSpeed": 0.45,
+    "mobilityMoveTarget": 8,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 600.0,
+      "antiDetection": -200.0
+    },
+    "shipHullBeforeReduction": 220000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "灰色幽灵级[0087]",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "灰色幽灵级[0087]",
+      "description": "飞马级的改良型,综合性能有所强化"
+    },
+    "en": {
+      "name": "GrayPhantom Class[0087]",
+      "description": "An improved model of the Pegasus-class, with enhanced overall performance"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "GrayPhantomClass_0087_Turret_Cannon": {
+      "ref": "GrayPhantomClass_0087_Turret_Cannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_Cannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_0087_Turret_Cannon",
+              "x": 0.0,
+              "y": 35.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_Cannon_L",
+              "x": 0.0,
+              "y": 35.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_Cannon_R",
+              "x": 0.0,
+              "y": 35.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "GrayPhantomClass_0087_Turret_Cannon_L": {
+      "ref": "GrayPhantomClass_0087_Turret_Cannon_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_Cannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_0087_Turret_Cannon",
+              "x": 0.0,
+              "y": 35.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_Cannon_L",
+              "x": 0.0,
+              "y": 35.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_Cannon_R",
+              "x": 0.0,
+              "y": 35.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GrayPhantomClass_0087_Turret_Cannon"
+        }
+      }
+    },
+    "GrayPhantomClass_0087_Turret_Cannon_R": {
+      "ref": "GrayPhantomClass_0087_Turret_Cannon_R__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_Cannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_0087_Turret_Cannon",
+              "x": 0.0,
+              "y": 35.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_Cannon_L",
+              "x": 0.0,
+              "y": 35.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_Cannon_R",
+              "x": 0.0,
+              "y": 35.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_Cannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GrayPhantomClass_0087_Turret_Cannon"
+        }
+      }
+    },
+    "GrayPhantomClass_0087_Turret_MegaBeamCannon": {
+      "ref": "GrayPhantomClass_0087_Turret_MegaBeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_MegaBeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R",
+              "x": 0.0,
+              "y": 18.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "GrayPhantomClass_0087_Turret_MegaBeamCannon_L": {
+      "ref": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_MegaBeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R",
+              "x": 0.0,
+              "y": 18.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GrayPhantomClass_0087_Turret_MegaBeamCannon"
+        }
+      }
+    },
+    "GrayPhantomClass_0087_Turret_MegaBeamCannon_R": {
+      "ref": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_MegaBeamCannon.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_L",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_MegaBeamCannon_R",
+              "x": 0.0,
+              "y": 18.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "GrayPhantomClass_0087_Turret_MegaBeamCannon"
+        }
+      }
+    },
+    "GrayPhantomClass_0087_Turret_AMS": {
+      "ref": "GrayPhantomClass_0087_Turret_AMS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_MS.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_0087_Turret_AMS",
+              "x": 4.0,
+              "y": 0.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AMS",
+              "x": 4.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MS_L1",
+              "offset": {
+                "x": 4.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -8.0
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_MS_R1",
+              "offset": {
+                "x": 4.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -8.0
+            }
+          ]
+        }
+      }
+    },
+    "GrayPhantomClass_0087_Turret_AA": {
+      "ref": "GrayPhantomClass_0087_Turret_AA__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_Turret_AA.ini",
+          "barrels": [
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "GrayPhantomClass_0087_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_L2",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_R2",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_L3",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_R3",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L2",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R2",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L3",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R3",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L4",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R4",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_L5",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_GrayPhantomClass_0087_Turret_AA_B_R5",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "CmdDef",
+      "source": "Template/Unit/Skill/CmdDef.gw",
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "special_Common_ReEntry",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_FromSpace",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_Both",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
+      "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "GrayPhantomClass_0087_Turret_Cannon",
+        "GrayPhantomClass_0087_Turret_MegaBeamCannon",
+        "GrayPhantomClass_0087_Turret_AMS",
+        "GrayPhantomClass_0087_Turret_AA"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 4,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "description": "飞马级的改良型,综合性能有所强化",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 7500.0,
+    "levelMultiplier": 0.25,
+    "published": 1875
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Aircraft",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 8,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+      "sourceUnit": "Hangar_X8"
+    },
+    {
+      "id": "Hangar_2",
+      "name": "格纳库 2",
+      "capacity": 8,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+      "sourceUnit": "Hangar_X8"
+    }
+  ],
+  "refits": [],
+  "availableFactions": [
+    "AEUG",
+    "TITANS"
+  ]
+}

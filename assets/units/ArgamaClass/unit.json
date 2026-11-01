@@ -1,0 +1,822 @@
+{
+  "schemaVersion": 2,
+  "id": "ArgamaClass",
+  "code": "ArgamaClass",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/ArgamaClass/ArgamaClass.ini",
+  "materials": {
+    "textures": {
+      "ArgamaClass.png": "textures/ArgamaClass.png",
+      "ArgamaClass_Body_1.png": "textures/ArgamaClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "ArgamaClass_Turret_BeamCannon_1.png": "textures/ArgamaClass_Turret_BeamCannon_1.png",
+      "ArgamaClass_Turret_MegaBeamCannon_1.png": "textures/ArgamaClass_Turret_MegaBeamCannon_1.png"
+    },
+    "icon": "ArgamaClass.png"
+  },
+  "skeleton": {
+    "Turret_ArgamaClass_Turret_BeamCannon_M1": {
+      "x": 0.0,
+      "y": 60.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArgamaClass_Turret_BeamCannon_M2": {
+      "x": 0.0,
+      "y": -105.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_ArgamaClass_Turret_BeamCannon_M3": {
+      "x": 50.0,
+      "y": 0.0,
+      "endDirOffset": 10.0
+    },
+    "Turret_ArgamaClass_Turret_BeamCannon_M4": {
+      "x": -50.0,
+      "y": 0.0,
+      "endDirOffset": -10.0
+    },
+    "Turret_ArgamaClass_Turret_MegaBeamCannon_L1": {
+      "x": -87.0,
+      "y": -7.0,
+      "endDirOffset": -8.0
+    },
+    "Turret_ArgamaClass_Turret_MegaBeamCannon_R1": {
+      "x": 87.0,
+      "y": -7.0,
+      "endDirOffset": 8.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_M1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": -125.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": -55.0,
+        "y": -145.0
+      },
+      "scaleX": -0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": 55.0,
+        "y": -145.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "ArgamaClass_Turret_MegaBeamCannon_L1",
+      "bone": "Turret_ArgamaClass_Turret_MegaBeamCannon_L1",
+      "moduleId": "ArgamaClass_Turret_MegaBeamCannon_L1",
+      "texture": "ArgamaClass_Turret_MegaBeamCannon_1.png",
+      "order": 3.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArgamaClass_Turret_MegaBeamCannon_R1",
+      "bone": "Turret_ArgamaClass_Turret_MegaBeamCannon_R1",
+      "moduleId": "ArgamaClass_Turret_MegaBeamCannon_R1",
+      "texture": "ArgamaClass_Turret_MegaBeamCannon_1.png",
+      "order": 3.001,
+      "scale": 1.0,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArgamaClass_Turret_BeamCannon_M3",
+      "bone": "Turret_ArgamaClass_Turret_BeamCannon_M3",
+      "moduleId": "ArgamaClass_Turret_BeamCannon_M3",
+      "texture": "ArgamaClass_Turret_BeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArgamaClass_Turret_BeamCannon_M4",
+      "bone": "Turret_ArgamaClass_Turret_BeamCannon_M4",
+      "moduleId": "ArgamaClass_Turret_BeamCannon_M4",
+      "texture": "ArgamaClass_Turret_BeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "ArgamaClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArgamaClass_Turret_BeamCannon_M1",
+      "bone": "Turret_ArgamaClass_Turret_BeamCannon_M1",
+      "moduleId": "ArgamaClass_Turret_BeamCannon_M1",
+      "texture": "ArgamaClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArgamaClass_Turret_BeamCannon_M2",
+      "bone": "Turret_ArgamaClass_Turret_BeamCannon_M2",
+      "moduleId": "ArgamaClass_Turret_BeamCannon_M2",
+      "texture": "ArgamaClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 262500,
+    "en": 17500.0,
+    "move": 9,
+    "mobility": 115.0,
+    "cost": 3750,
+    "counterLimit": 1,
+    "accuracy": 107.25,
+    "partStructuralStrength": 125.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "ArgamaClass_Turret_BeamCannon_M1",
+        "name": "ArgamaClass_Turret_BeamCannon_M1",
+        "hp": 45000.0,
+        "bone": "Turret_ArgamaClass_Turret_BeamCannon_M1",
+        "x": 0.0,
+        "y": 60.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArgamaClass/ArgamaClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "ArgamaClass_Turret_BeamCannon_M2",
+        "name": "ArgamaClass_Turret_BeamCannon_M2",
+        "hp": 45000.0,
+        "bone": "Turret_ArgamaClass_Turret_BeamCannon_M2",
+        "x": 0.0,
+        "y": -105.0,
+        "idleDir": -180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArgamaClass/ArgamaClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "ArgamaClass_Turret_BeamCannon_M3",
+        "name": "ArgamaClass_Turret_BeamCannon_M3",
+        "hp": 45000.0,
+        "bone": "Turret_ArgamaClass_Turret_BeamCannon_M3",
+        "x": 50.0,
+        "y": 0.0,
+        "idleDir": 10.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArgamaClass/ArgamaClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "ArgamaClass_Turret_BeamCannon_M4",
+        "name": "ArgamaClass_Turret_BeamCannon_M4",
+        "hp": 45000.0,
+        "bone": "Turret_ArgamaClass_Turret_BeamCannon_M4",
+        "x": -50.0,
+        "y": 0.0,
+        "idleDir": -10.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArgamaClass/ArgamaClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "ArgamaClass_Turret_MegaBeamCannon_L1",
+        "name": "ArgamaClass_Turret_MegaBeamCannon_L1",
+        "hp": 45000.0,
+        "bone": "Turret_ArgamaClass_Turret_MegaBeamCannon_L1",
+        "x": -87.0,
+        "y": -7.0,
+        "idleDir": -8.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArgamaClass/ArgamaClass_Turret_MegaBeamCannon_L.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArgamaClass_Turret_MegaBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "ArgamaClass_Turret_MegaBeamCannon_R1",
+        "name": "ArgamaClass_Turret_MegaBeamCannon_R1",
+        "hp": 45000.0,
+        "bone": "Turret_ArgamaClass_Turret_MegaBeamCannon_R1",
+        "x": 87.0,
+        "y": -7.0,
+        "idleDir": 8.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArgamaClass/ArgamaClass_Turret_MegaBeamCannon_R.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArgamaClass_Turret_MegaBeamCannon"
+          ]
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 3
+    },
+    "commandAuras": [
+      {
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
+      },
+      {
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "speed": 120,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 20.833333333333332,
+      "antiDetection": -8.680555555555555,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 75.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 50.0,
+      "flat": 850.0
+    },
+    "shell": {
+      "percent": 50.0,
+      "flat": 850.0
+    },
+    "melee": {
+      "percent": 50.0,
+      "flat": 850.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 15.0
+    },
+    "sp": {
+      "percent": 50.0,
+      "flat": 15.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 375000.0,
+    "walkSpeed": 0.85,
+    "boostSpeed": 1.65,
+    "turnSpeed": 0.5,
+    "reaction": 115.0,
+    "shooting": 175.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "ArgamaClass",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "AEUG",
+      "0087",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X24"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "CmdCom",
+      "CmdDef",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 165.0,
+    "unitLevel": 15000.0,
+    "enBeforeReduction": 35000.0,
+    "enCapacityMultiplier": 0.5,
+    "tacticalMoveBeforeBonus": 6,
+    "actionTurnSpeed": 0.5,
+    "mobilityMoveTarget": 9,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 750.0,
+      "antiDetection": -250.0
+    },
+    "shipHullBeforeReduction": 375000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "阿伽玛级",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "阿伽玛级",
+      "description": "由奥古委托阿纳海姆电子公司建造的强袭机动巡洋舰"
+    },
+    "en": {
+      "name": "Argama Class",
+      "description": "An assault mobile cruiser commissioned by the AEUG and constructed by Anaheim Electronics"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "ArgamaClass_Turret_BeamCannon": {
+      "ref": "ArgamaClass_Turret_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/ArgamaClass/ArgamaClass_Turret_BeamCannon.ini",
+          "barrels": [
+            {
+              "id": "ArgamaClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "ArgamaClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "ArgamaClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            },
+            {
+              "id": "ArgamaClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 18.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_ArgamaClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_ArgamaClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_ArgamaClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            },
+            {
+              "bone": "Turret_ArgamaClass_Turret_BeamCannon_M4",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ArgamaClass_Turret_MegaBeamCannon": {
+      "ref": "ArgamaClass_Turret_MegaBeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/ArgamaClass/ArgamaClass_Turret_MegaBeamCannon_L.ini",
+          "barrels": [
+            {
+              "id": "ArgamaClass_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 25.0
+            },
+            {
+              "id": "ArgamaClass_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_ArgamaClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 25.0
+              }
+            },
+            {
+              "bone": "Turret_ArgamaClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 25.0
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "CmdDef",
+      "source": "Template/Unit/Skill/CmdDef.gw",
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "special_Common_ReEntry",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_FromSpace",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_Both",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
+      "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "ArgamaClass_Turret_BeamCannon",
+        "ArgamaClass_Turret_MegaBeamCannon"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 4,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "description": "由奥古委托阿纳海姆电子公司建造的强袭机动巡洋舰",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 15000.0,
+    "levelMultiplier": 0.25,
+    "published": 3750
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Aircraft",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    },
+    {
+      "id": "Hangar_2",
+      "name": "格纳库 2",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    }
+  ],
+  "refits": []
+}

@@ -1,0 +1,1079 @@
+{
+  "schemaVersion": 2,
+  "id": "MS_14J",
+  "code": "MS-14J",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/MS_14J/MS_14J.ini",
+  "materials": {
+    "textures": {
+      "MS_14J_Crotch_1.png": "textures/MS_14J_Crotch_1.png",
+      "MS_14J_Body_1.png": "textures/MS_14J_Body_1.png",
+      "MS_14J_ArmL_1.png": "textures/MS_14J_ArmL_1.png",
+      "MS_14J_ArmR_1.png": "textures/MS_14J_ArmR_1.png",
+      "MS_14J_ShoulderL_1.png": "textures/MS_14J_ShoulderL_1.png",
+      "MS_14J_ShoulderR_1.png": "textures/MS_14J_ShoulderR_1.png",
+      "MS_14J_Head_1.png": "textures/MS_14J_Head_1.png",
+      "MS_14J_Eye_1.png": "textures/MS_14J_Eye_1.png",
+      "MS_14J_FootL_1.png": "textures/MS_14J_FootL_1.png",
+      "MS_14J_LegL_1.png": "textures/MS_14J_LegL_1.png",
+      "MS_14J_FootR_1.png": "textures/MS_14J_FootR_1.png",
+      "MS_14J_LegR_1.png": "textures/MS_14J_LegR_1.png",
+      "NZN_MS_14J_BR.png": "textures/NZN_MS_14J_BR.png",
+      "ZN_360mmBazookaKai.png": "textures/ZN_360mmBazookaKai.png",
+      "ZN_TwinBeamSword.png": "textures/ZN_TwinBeamSword.png",
+      "MS_14J.png": "textures/MS_14J.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MS_14J.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "ZN_360mmBazookaKai_NotUsing",
+      "texture": "ZN_360mmBazookaKai.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.8,
+      "scaleY": -1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": -0.5,
+        "y": -8.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "LeftFoot",
+      "texture": "MS_14J_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MS_14J_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MS_14J_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MS_14J_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "NZN_MS_14J_BR_NotUsing",
+      "texture": "NZN_MS_14J_BR.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 1.0,
+      "rotation": -90.0,
+      "offset": {
+        "x": 4.0,
+        "y": -10.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Body_BeamSaber",
+      "texture": "ZN_TwinBeamSword.png",
+      "bone": "Body",
+      "order": 3.0,
+      "scaleY": 0.75,
+      "rotation": 75.0,
+      "frames": 2.0,
+      "frame": 0.0,
+      "offset": {
+        "x": 10.0,
+        "y": -7.5
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 1
+        }
+      }
+    },
+    {
+      "name": "Crotch",
+      "texture": "MS_14J_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "MS_14J_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "MS_14J_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "NZN_MS_14J_BR",
+      "texture": "NZN_MS_14J_BR.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 4.0,
+        "y": 14.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Body",
+      "texture": "MS_14J_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ZN_TwinBeamSword_AF",
+      "texture": "ZN_TwinBeamSword.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 1.0,
+      "rotation": -16.0,
+      "frames": 2.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 12.0,
+        "y": 24.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "kit_0",
+          "kit_2"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MS_14J_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MS_14J_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ZN_360mmBazookaKai",
+      "texture": "ZN_360mmBazookaKai.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.5,
+        "y": 12.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Head",
+      "texture": "MS_14J_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MS_14J_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Eye",
+      "texture": "MS_14J_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.5,
+      "offset": {
+        "x": 0.0,
+        "y": 2.5
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_L": "../../animations/Common_Shoot_A_L.json",
+    "Common_Melee_A": "../../animations/Common_Melee_A__FA_78_1.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 47000,
+    "en": 475.0,
+    "move": 8,
+    "mobility": 165.0,
+    "cost": 875,
+    "counterLimit": 1,
+    "accuracy": 155.0,
+    "partStructuralStrength": 150.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 145,
+    "actionPoints": 12,
+    "sensors": {
+      "sight": 10,
+      "radar": 12.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 45.0,
+    "shooting": 55.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 15.0,
+      "flat": 200.0
+    },
+    "shell": {
+      "percent": 15.0,
+      "flat": 200.0
+    },
+    "melee": {
+      "percent": 15.0,
+      "flat": 400.0
+    },
+    "dp": {
+      "percent": 15.0,
+      "flat": 25.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 37500.0,
+    "walkSpeed": 0.75,
+    "boostSpeed": 2.0,
+    "turnSpeed": 3.0,
+    "reaction": 165.0,
+    "shooting": 155.0,
+    "melee": 145.0,
+    "nativeTags": [
+      "MS_14J",
+      "Unit",
+      "MS",
+      "NEO_ZEON",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "accuracy": 155.0,
+    "partStructuralStrength": 150.0,
+    "actionTurnSpeed": 3.0,
+    "movementBeforeMobility": 7,
+    "mobilityMoveTarget": 8,
+    "enBeforeReduction": 950.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 432.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 3500.0,
+    "tacticalMoveBeforeBonus": 7,
+    "v17BaseHp": 37500.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "改修型勇士",
+  "faction": "NEO_ZEON",
+  "tags": [
+    "NEO_ZEON",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "改修型勇士",
+      "description": "阿克西斯对勇士改良而来的机体"
+    },
+    "en": {
+      "name": "ReGelg",
+      "description": "A unit improved from the Gelgoog by Axis"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv2",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "NZN_MS_14J_BR": {
+      "ref": "NZN_MS_14J_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/NZN_MS_14J_BR.gw",
+          "barrels": [
+            {
+              "id": "NZN_MS_14J_BR",
+              "x": 13.0,
+              "y": 25.0
+            },
+            {
+              "id": "NZN_MS_14J_BR_GL",
+              "x": 13.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "NZN_MS_14J_BR",
+              "point": {
+                "x": 6.735557395310443e-16,
+                "y": -11.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 13.0,
+                "y": 25.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NZN_MS_14J_BR_GL": {
+      "ref": "NZN_MS_14J_BR_GL__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/NZN_MS_14J_BR.gw",
+          "barrels": [
+            {
+              "id": "NZN_MS_14J_BR",
+              "x": 13.0,
+              "y": 25.0
+            },
+            {
+              "id": "NZN_MS_14J_BR_GL",
+              "x": 13.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "NZN_MS_14J_BR",
+              "point": {
+                "x": 6.735557395310443e-16,
+                "y": -11.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 13.0,
+                "y": 25.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ZN_360mmBazookaKai": {
+      "ref": "ZN_360mmBazookaKai__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazookaKai.gw",
+          "barrels": [
+            {
+              "id": "ZN_360mmBazookaKai",
+              "x": 11.0,
+              "y": 27.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "ZN_360mmBazookaKai",
+              "point": {
+                "x": -0.5555555555555545,
+                "y": -16.666666666666668
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NZN_MS_14J_MS": {
+      "ref": "NZN_MS_14J_MS__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/NZN_MS_14J_MS.gw",
+          "barrels": [
+            {
+              "id": "NZN_MS_14J_MS",
+              "x": 15.0,
+              "y": -5.0
+            },
+            {
+              "id": "NZN_MS_14J_MS_L",
+              "x": -15.0,
+              "y": -5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 15.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -15.0,
+                "y": -5.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NZN_MS_14J_MS_L": {
+      "ref": "NZN_MS_14J_MS_L__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/NZN_MS_14J_MS.gw",
+          "barrels": [
+            {
+              "id": "NZN_MS_14J_MS",
+              "x": 15.0,
+              "y": -5.0
+            },
+            {
+              "id": "NZN_MS_14J_MS_L",
+              "x": -15.0,
+              "y": -5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 15.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -15.0,
+                "y": -5.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "NZN_MS_14J_MS"
+        }
+      }
+    },
+    "Common_ArmGL_L": {
+      "ref": "Common_ArmGL_L__lv3",
+      "overrides": {
+        "requiredParts": [
+          "leftArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_ArmGL_L.gw",
+          "barrels": [
+            {
+              "id": "Common_ArmGL_L",
+              "x": -16.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -16.0,
+                "y": 12.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "Common_ArmGL"
+        }
+      }
+    },
+    "Common_ArmGL": {
+      "ref": "Common_ArmGL__lv3",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_ArmGL.gw",
+          "barrels": [
+            {
+              "id": "Common_ArmGL",
+              "x": 16.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 16.0,
+                "y": 12.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ZN_TwinBeamSword_AF_A": {
+      "ref": "ZN_TwinBeamSword_AF_A__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/ZN_TwinBeamSword_AF.gw",
+          "barrels": [
+            {
+              "id": "ZN_TwinBeamSword_AF_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "kit_0",
+      "name": "光束步枪套件",
+      "cost": 100,
+      "weapons": [
+        "NZN_MS_14J_BR",
+        "NZN_MS_14J_MS",
+        "Common_ArmGL",
+        "ZN_TwinBeamSword_AF_A",
+        "NZN_MS_14J_BR_GL",
+        "Common_Push_A"
+      ]
+    },
+    {
+      "id": "kit_2",
+      "name": "360mm火箭筒套件",
+      "cost": 50,
+      "weapons": [
+        "ZN_360mmBazookaKai",
+        "NZN_MS_14J_MS",
+        "Common_ArmGL",
+        "ZN_TwinBeamSword_AF_A",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "阿克西斯对勇士改良而来的机体",
+  "skills": [],
+  "kitAliases": {
+    "kit_1": "kit_0",
+    "kit_3": "kit_0",
+    "kit_4": "kit_0",
+    "kit_5": "kit_0",
+    "kit_6": "kit_0"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 3500.0,
+    "levelMultiplier": 0.25,
+    "published": 875
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "NZN_MS_14J_MS",
+      "channels": [
+        {
+          "id": "NZN_MS_14J_MS",
+          "weaponId": "NZN_MS_14J_MS",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "NZN_MS_14J_MS_L",
+          "weaponId": "NZN_MS_14J_MS_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        }
+      ]
+    },
+    {
+      "id": "Common_ArmGL",
+      "channels": [
+        {
+          "id": "Common_ArmGL_L",
+          "weaponId": "Common_ArmGL_L",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        },
+        {
+          "id": "Common_ArmGL",
+          "weaponId": "Common_ArmGL",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        }
+      ],
+      "fireMode": "independent"
+    }
+  ],
+  "refits": []
+}

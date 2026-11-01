@@ -54,7 +54,9 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
         if control and control != kind:
             raise ValueError('Mixed native remote controls: ' + key)
         control = kind
-        projectile = next(v for k,v in child.items() if k.startswith('projectile_') and 'BeamDamage' in v.get('spawnUnit',''))
+        projectile = next((v for k,v in child.items() if k.startswith('projectile_') and 'BeamDamage' in v.get('spawnUnit','')), None)
+        if projectile is None:
+            raise ValueError('Unsupported remote payload (reflector or indirect control): ' + ident)
         payloads.append({name:float(value) for name,value in re.findall(r'(\w+)\s*[=:]\s*([-\d.]+)',projectile['spawnUnit'])})
         if not units:
             color = next((name for name in ('Yellow','Pink','Blue') if name in projectile['spawnUnit']), 'Yellow')
@@ -141,7 +143,12 @@ def apply(prefab, native=None):
              if '/Weapon/Funnel/' in r and '/Mod/' not in r]
     for reference in dict.fromkeys(refs):
         path=root/reference
-        key,weapon=compile_launcher(prefab,path,root)
+        try:
+            key,weapon=compile_launcher(prefab,path,root)
+        except ValueError as error:
+            if not str(error).startswith('Unsupported remote payload'): raise
+            prefab.setdefault('mechanics', []).append({'id':'remote_review_'+path.stem, 'name':str(error), 'source':reference, 'status':'review'})
+            continue
         prefab['weapons'][key]=weapon
         for kit in prefab['weaponKits']:
             if key not in kit['weapons']:kit['weapons'].append(key)

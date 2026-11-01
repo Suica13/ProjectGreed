@@ -1037,5 +1037,10 @@
         }
       ]
     }
+  ],
+  "availableFactions": [
+    "EFSF",
+    "AEUG",
+    "TITANS"
   ]
 }

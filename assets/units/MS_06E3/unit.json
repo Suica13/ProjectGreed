@@ -910,5 +910,11 @@
     "refitFrom": [
       "MS_06E"
     ]
-  }
+  },
+  "availableFactions": [
+    "ZEON",
+    "AEUG",
+    "TITANS",
+    "NEO_ZEON"
+  ]
 }

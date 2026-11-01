@@ -1021,5 +1021,9 @@
     "refitFrom": [
       "MS_06F2"
     ]
-  }
+  },
+  "availableFactions": [
+    "ZEON",
+    "NEO_ZEON"
+  ]
 }

@@ -278,7 +278,9 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
       next.presentation.previewScale > 10
     )
       throw Error("预览倍率必须大于0且不超过10");
-    next.faction = next.tags.find((tag) => ["EFSF", "ZEON"].includes(tag));
+    next.faction = next.tags.find((tag) =>
+      ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag),
+    );
     if (!candidate.name?.trim() || !candidate.code?.trim()) throw Error("单位名称和型号不能为空");
     if (
       (next.skills || []).some(

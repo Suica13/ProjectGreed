@@ -1,0 +1,1070 @@
+{
+  "schemaVersion": 2,
+  "id": "RX_178_AEUG_FlyingArmor",
+  "code": "RX-178-AEUG-FlyingArmor",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/RX_178_AEUG/RX_178_AEUG_FlyingArmor.ini",
+  "materials": {
+    "textures": {
+      "RX_178_AEUG_Crotch_1.png": "textures/RX_178_AEUG_Crotch_1.png",
+      "RX_178_AEUG_Body_1.png": "textures/RX_178_AEUG_Body_1.png",
+      "RX_178_AEUG_ArmL_1.png": "textures/RX_178_AEUG_ArmL_1.png",
+      "RX_178_AEUG_ArmR_1.png": "textures/RX_178_AEUG_ArmR_1.png",
+      "RX_178_AEUG_ShoulderL_1.png": "textures/RX_178_AEUG_ShoulderL_1.png",
+      "RX_178_AEUG_ShoulderR_1.png": "textures/RX_178_AEUG_ShoulderR_1.png",
+      "RX_178_AEUG_Head_2.png": "textures/RX_178_AEUG_Head_2.png",
+      "RX_178_AEUG_Head_2_Close.png": "textures/RX_178_AEUG_Head_2_Close.png",
+      "RX_178_AEUG_FootL_1.png": "textures/RX_178_AEUG_FootL_1.png",
+      "RX_178_AEUG_LegL_1.png": "textures/RX_178_AEUG_LegL_1.png",
+      "RX_178_AEUG_FootR_1.png": "textures/RX_178_AEUG_FootR_1.png",
+      "RX_178_AEUG_LegR_1.png": "textures/RX_178_AEUG_LegR_1.png",
+      "EF_HypeBazookaKai.png": "textures/EF_HypeBazookaKai.png",
+      "TITANS_RX_178_BR.png": "textures/TITANS_RX_178_BR.png",
+      "EF_BeamSaber.png": "textures/EF_BeamSaber.png",
+      "RX_178_AEUG_Body_1_Close.png": "textures/RX_178_AEUG_Body_1_Close.png",
+      "RX_178_AEUG_Body_BeamSaberL_1.png": "textures/RX_178_AEUG_Body_BeamSaberL_1.png",
+      "RX_178_AEUG_Body_BeamSaberR_1.png": "textures/RX_178_AEUG_Body_BeamSaberR_1.png",
+      "AEUG_LateTypeShield_MKII.png": "textures/AEUG_LateTypeShield_MKII.png",
+      "RX_178_AEUG_FlyingArmor_1.png": "textures/RX_178_AEUG_FlyingArmor_1.png",
+      "RX_178_Aeug_FlyingArmor.png": "textures/RX_178_Aeug_FlyingArmor.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "RX_178_Aeug_FlyingArmor.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "EF_HypeBazookaKai_0087_ShotgunMode_NotUsing",
+      "texture": "EF_HypeBazookaKai.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.75,
+      "scaleY": -1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": 0.0,
+        "y": -9.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "EF_HypeBazookaKai_0087_NotUsing",
+      "texture": "EF_HypeBazookaKai.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.75,
+      "scaleY": -1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": 0.0,
+        "y": -9.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "LeftFoot",
+      "texture": "RX_178_AEUG_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "RX_178_AEUG_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -18.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost_MA",
+      "texture": "Boost_1.png",
+      "bone": "Attachment15",
+      "order": 1.0,
+      "scale": 1.5,
+      "offset": {
+        "x": -2.0,
+        "y": -15.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Attachment15",
+      "order": 1.5,
+      "scale": 2.5,
+      "offset": {
+        "x": -2.5,
+        "y": -15.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "RX_178_AEUG_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "RX_178_AEUG_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "MA",
+      "texture": "RX_178_AEUG_FlyingArmor_1.png",
+      "bone": "Attachment15",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "TITANS_RX_178_BR_NotUsing",
+      "texture": "TITANS_RX_178_BR.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 1.0,
+      "rotation": -90.0,
+      "offset": {
+        "x": 1.0,
+        "y": -10.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Crotch",
+      "texture": "RX_178_AEUG_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "RX_178_AEUG_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "RX_178_AEUG_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "TITANS_RX_178_BR",
+      "texture": "TITANS_RX_178_BR.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 1.0,
+        "y": 14.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Body",
+      "texture": "RX_178_AEUG_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_Close",
+      "texture": "RX_178_AEUG_Body_1_Close.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_BeamSaberL",
+      "texture": "RX_178_AEUG_Body_BeamSaberL_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 1
+        }
+      }
+    },
+    {
+      "name": "Body_BeamSaberR",
+      "texture": "RX_178_AEUG_Body_BeamSaberR_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_BeamSaber_BF",
+      "texture": "EF_BeamSaber.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": -16.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 6.0,
+        "y": 22.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "kit_2",
+          "kit_1",
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RX_178_AEUG_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RX_178_AEUG_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_HypeBazookaKai_0087_ShotgunMode",
+      "texture": "EF_HypeBazookaKai.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.85,
+      "rotation": 0.0,
+      "offset": {
+        "x": 1.0,
+        "y": 7.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "EF_HypeBazookaKai_0087",
+      "texture": "EF_HypeBazookaKai.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.85,
+      "rotation": 0.0,
+      "offset": {
+        "x": 1.0,
+        "y": 7.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Shield",
+      "texture": "AEUG_LateTypeShield_MKII.png",
+      "bone": "LeftArm",
+      "order": 6.5,
+      "scale": 1.0,
+      "rotation": 15.0,
+      "offset": {
+        "x": -7.5,
+        "y": 8.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "Head",
+      "texture": "RX_178_AEUG_Head_2.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "RX_178_AEUG_Head_2_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Melee_B": "../../animations/Common_Melee_B__MSM_04.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 56500,
+    "en": 600.0,
+    "move": 9,
+    "mobility": 175.0,
+    "cost": 1125,
+    "counterLimit": 1,
+    "accuracy": 155.0,
+    "partStructuralStrength": 155.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 25.0,
+      "space": 100,
+      "water": 25.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 25.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 180,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 45.0,
+    "shooting": 55.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 15.0,
+      "flat": 150.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 150.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 450.0
+    },
+    "dp": {
+      "percent": 20.0,
+      "flat": 25.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 50.0
+    }
+  },
+  "shield": {
+    "hp": 8500.0,
+    "blockChance": 0.55,
+    "coverage": 0.75,
+    "defenses": {
+      "beam": {
+        "percent": 5.0,
+        "flat": 100.0
+      },
+      "shell": {
+        "percent": 10.0,
+        "flat": 100.0
+      },
+      "melee": {
+        "percent": 5.0,
+        "flat": 350.0
+      },
+      "dp": {
+        "percent": 10.0,
+        "flat": 25.0
+      }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
+  },
+  "sourceStats": {
+    "hp": 45000.0,
+    "walkSpeed": 1.25,
+    "boostSpeed": 2.55,
+    "turnSpeed": 1.5,
+    "reaction": 175.0,
+    "shooting": 155.0,
+    "melee": 145.0,
+    "nativeTags": [
+      "RX_178_AEUG_FlyingArmor",
+      "Unit",
+      "MS",
+      "AEUG",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [
+      "CustomUnit",
+      "ExitUnit",
+      "DogFight_A",
+      "FlyUnit",
+      "FlyMS"
+    ],
+    "accuracy": 155.0,
+    "partStructuralStrength": 155.0,
+    "actionTurnSpeed": 1.5,
+    "movementBeforeMobility": 9,
+    "mobilityMoveTarget": 10,
+    "enBeforeReduction": 1200.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 25.0,
+      "space": 100.0,
+      "water": 25.0,
+      "air": 100.0,
+      "mountain": 25.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 4500.0,
+    "tacticalMoveBeforeBonus": 9,
+    "v17BaseHp": 45000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "高达MK-II[AEUG][SFS]",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "高达MK-II[AEUG][SFS]",
+      "description": "新型可动骨架的试验机,机动性优异"
+    },
+    "en": {
+      "name": "Gundam MK-II[AEUG][SFS]",
+      "description": "Experimental unit with new movable frame, excellent mobility"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv2",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "Common_DoubleVulcan_MS": {
+      "ref": "Common_DoubleVulcan_MS__lv3",
+      "overrides": {
+        "requiredParts": [
+          "head"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleVulcan_MS",
+              "x": -3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Head",
+              "offset": {
+                "x": -3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": 0.0
+            }
+          ]
+        }
+      }
+    },
+    "EF_HypeBazookaKai_0087_ShotgunMode": {
+      "ref": "EF_HypeBazookaKai_0087_ShotgunMode__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_HypeBazookaKai_0087_ShotgunMode.gw",
+          "barrels": [
+            {
+              "id": "EF_HypeBazookaKai_0087_ShotgunMode",
+              "x": 10.0,
+              "y": 17.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_HypeBazookaKai_0087_ShotgunMode",
+              "point": {
+                "x": 7.203804700866784e-16,
+                "y": -11.764705882352942
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_HypeBazookaKai_0087": {
+      "ref": "EF_HypeBazookaKai_0087__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_HypeBazookaKai_0087.gw",
+          "barrels": [
+            {
+              "id": "EF_HypeBazookaKai_0087",
+              "x": 10.0,
+              "y": 17.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_HypeBazookaKai_0087",
+              "point": {
+                "x": 7.203804700866784e-16,
+                "y": -11.764705882352942
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_RX_178_BR": {
+      "ref": "TITANS_RX_178_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_RX_178_BR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_RX_178_BR",
+              "x": 9.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "TITANS_RX_178_BR",
+              "point": {
+                "x": -0.9999999999999993,
+                "y": -11.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_BeamSaber_BF_B": {
+      "ref": "EF_BeamSaber_BF_B__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber_BF_B",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "CustomUnit",
+      "source": "Template/Unit/Skill/CustomUnit.gw",
+      "status": "review",
+      "name": "换装／改修"
+    },
+    {
+      "id": "ExitUnit",
+      "source": "Template/Unit/Skill/ExitUnit.gw",
+      "status": "adapted",
+      "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
+    },
+    {
+      "id": "DogFight_A",
+      "source": "Template/Unit/Skill/DogFight_A.gw",
+      "status": "review",
+      "name": "空中缠斗"
+    },
+    {
+      "id": "FlyUnit",
+      "source": "Template/Unit/Skill/FlyUnit.gw",
+      "status": "review",
+      "name": "飞行模式"
+    },
+    {
+      "id": "FlyMS",
+      "source": "Template/Unit/Skill/FlyMS.gw",
+      "status": "review",
+      "name": "FlyMS"
+    },
+    {
+      "id": "special_Common_ReEntry_MS_FromSpace",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_MS_FromSpace.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "kit_2",
+      "name": "光束步枪套件",
+      "cost": 100,
+      "weapons": [
+        "TITANS_RX_178_BR",
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_BF_B",
+        "Common_Push_A"
+      ]
+    },
+    {
+      "id": "kit_1",
+      "name": "火箭筒套件",
+      "cost": 50,
+      "weapons": [
+        "EF_HypeBazookaKai_0087",
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_BF_B",
+        "Common_Push_A"
+      ]
+    },
+    {
+      "id": "kit_0",
+      "name": "火箭筒套件",
+      "cost": 50,
+      "weapons": [
+        "EF_HypeBazookaKai_0087_ShotgunMode",
+        "Common_DoubleVulcan_MS",
+        "EF_BeamSaber_BF_B",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "新型可动骨架的试验机,机动性优异",
+  "skills": [
+    {
+      "id": "ExitUnit",
+      "type": "armor_purge",
+      "name": "爆甲",
+      "localization": {
+        "zh": {
+          "name": "爆甲"
+        },
+        "en": {
+          "name": "Armor Purge"
+        },
+        "ja": {
+          "name": "装甲パージ"
+        }
+      },
+      "range": 0,
+      "minRange": 0,
+      "maxUses": 1,
+      "consumeAction": false,
+      "actionCost": 1,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_ExitUnit",
+      "source": {
+        "mode": "transform",
+        "unitId": "RX_178_AEUG",
+        "kitId": "kit_2",
+        "kitMap": {
+          "kit_2": "kit_2",
+          "kit_1": "kit_1",
+          "kit_0": "kit_0"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 35.0,
+        "enRecoveryPercent": 35.0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      }
+    }
+  ],
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 4500.0,
+    "levelMultiplier": 0.25,
+    "published": 1125
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}

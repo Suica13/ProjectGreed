@@ -1454,5 +1454,51 @@
     "drift": 0,
     "sounds": [],
     "source": "MOD native Resource/Image/Fx/Unit/I_Field_2.gw"
+  },
+  "BZ_ShotGunMode_1": {
+    "texture": "textures/BZ_ShotGunMode_1.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 12.0,
+    "scaleFrom": 1.5,
+    "scaleTo": 1.5,
+    "alpha": 1.0,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 50.0
+    },
+    "drift": 60.0,
+    "sounds": [
+      {
+        "file": "../sounds/Explosion_Hit_1.ogg",
+        "volume": 0.35
+      }
+    ],
+    "source": "MOD native BZ_ShotGunMode_1"
+  },
+  "Beam_Hit_1_S_Blue": {
+    "texture": "textures/Beam_Hit_1_Blue.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 12.0,
+    "scaleFrom": 0.35,
+    "scaleTo": 0.35,
+    "alpha": 0.75,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 10.0
+    },
+    "drift": 45.0,
+    "sounds": [
+      {
+        "file": "../sounds/Beam_Hit_1.ogg",
+        "volume": 0.15
+      }
+    ],
+    "source": "MOD native Beam_Hit_1_S_Blue"
   }
 }

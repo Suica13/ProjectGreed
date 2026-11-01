@@ -7,12 +7,21 @@ const PlayerProfile = (() => {
   let formationGroup = "PMC";
   try {
     const savedFaction = localStorage.getItem(factionKey);
-    if (["PMC", "EFSF", "ZEON"].includes(savedFaction)) character = savedFaction;
+    if (["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(savedFaction))
+      character = savedFaction;
   } catch {}
 
   function displayFaction(faction) {
     if (faction === "PMC") return "PMC";
-    return faction === "EFSF" ? "地球联邦军[0079]" : "吉翁公国军[0079]";
+    return (
+      {
+        EFSF: "地球联邦军[0079]",
+        ZEON: "吉翁公国军[0079]",
+        AEUG: "奥古[0087]",
+        TITANS: "提坦斯[0087]",
+        NEO_ZEON: "新吉翁[0087]",
+      }[faction] || faction
+    );
   }
   function showFaction() {
     const select = byId("menuFactionSelect");
@@ -21,30 +30,36 @@ const PlayerProfile = (() => {
   }
 
   function updateProgress() {
-    const factions = character === "PMC" ? ["EFSF", "ZEON"] : [character];
-    const unlocked = factions.reduce((sum, faction) => sum + Development.unlockedTech(faction).length, 0);
+    const factions =
+      character === "PMC" ? ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"] : [character];
+    const unlocked = factions.reduce(
+      (sum, faction) => sum + Development.unlockedTech(faction).length,
+      0,
+    );
     const total = factions.reduce((sum, faction) => sum + Development.nodes(faction).length, 0);
     const bar = byId("menuTechProgressBar");
     bar.setAttribute("aria-valuenow", String(unlocked));
     bar.setAttribute("aria-valuemax", String(total));
-    byId("menuTechProgressFill").style.width = (total ? unlocked / total * 100 : 0) + "%";
+    byId("menuTechProgressFill").style.width = (total ? (unlocked / total) * 100 : 0) + "%";
     byId("menuTechProgressText").textContent = `${unlocked}/${total} 已解锁`;
   }
 
   let saved = "";
   try {
-    saved = localStorage.getItem(nameKey) ||
-      localStorage.getItem(nameKey + "." + character) || "";
+    saved = localStorage.getItem(nameKey) || localStorage.getItem(nameKey + "." + character) || "";
   } catch {}
   const generated = "Player-" + Math.random().toString(36).slice(2, 6).toUpperCase();
   const clean = (value) =>
     Array.from(value.trim().replace(/[\u0000-\u001f\u007f]/g, ""))
-      .slice(0, 24).join("");
+      .slice(0, 24)
+      .join("");
   input.value = clean(saved) || generated;
   function name() {
     const value = clean(input.value) || generated;
     input.value = value;
-    try { localStorage.setItem(nameKey, value); } catch {}
+    try {
+      localStorage.setItem(nameKey, value);
+    } catch {}
     return value;
   }
   input.addEventListener("change", name);
@@ -55,14 +70,22 @@ const PlayerProfile = (() => {
   window.addEventListener("language-change", updateProgress);
 
   function setFaction(faction) {
-    if (!["PMC", "EFSF", "ZEON"].includes(faction) || faction === character) return;
+    if (
+      !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction) ||
+      faction === character
+    )
+      return;
     character = faction;
-    try { localStorage.setItem(factionKey, faction); } catch {}
+    try {
+      localStorage.setItem(factionKey, faction);
+    } catch {}
     showFaction();
     updateProgress();
-    window.dispatchEvent(new CustomEvent("character-selected", {
-      detail: { character: faction, initial: false },
-    }));
+    window.dispatchEvent(
+      new CustomEvent("character-selected", {
+        detail: { character: faction, initial: false },
+      }),
+    );
   }
   byId("menuFactionSelect").onchange = (event) => {
     const next = event.target.value;
@@ -72,15 +95,17 @@ const PlayerProfile = (() => {
   function restriction(model) {
     if (model?.wip) return "wip";
     const group = formationGroup;
-    if (group !== "PMC" && !(model?.availableFactions || [model?.faction]).includes(group)) return "faction_mismatch";
-    return Development.allows(group, model?.prefabId || model?.id)
-      ? null : "not_developed";
+    if (group !== "PMC" && !(model?.availableFactions || [model?.faction]).includes(group))
+      return "faction_mismatch";
+    return Development.allows(group, model?.prefabId || model?.id) ? null : "not_developed";
   }
   return {
     name,
     faction: () => character,
     setFaction,
-    setFormationGroup: (group) => { formationGroup = group; },
+    setFormationGroup: (group) => {
+      formationGroup = group;
+    },
     displayFaction,
     updateProgress,
     selected: () => true,
@@ -88,7 +113,7 @@ const PlayerProfile = (() => {
     allows: (model) => restriction(model) === null,
     badge: (member, mode) => {
       const faction = member?.characterFaction;
-      if (!["EFSF", "PMC", "ZEON"].includes(faction)) return null;
+      if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction)) return null;
       const label = displayFaction(faction);
       const badge = element("span", "faction-badge faction-" + faction.toLowerCase(), label);
       return badge;

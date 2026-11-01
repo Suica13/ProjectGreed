@@ -118,3 +118,8 @@
 头部火神炮（Common_DoubleVulcan_MS）与腕部枪炮（Common_ArmBR/GL/MG/MS）最终3 AP、射程1–2，不套用通用AP×2与射程+1；不包含腕装军刀、胸部火神炮或飞机机炮。迫击炮基础命中×1.10（不是增加10个百分点），分段命中同步。实弹及光束火箭筒统一伤害×1.25，不叠加光束步枪倍率；光束步枪仍为×1.5，FA-78-1双管步枪每管5000→7500，合计15000。原生载荷与发数不变。上述规则在人工数值差值之前应用，配置见 `shared/conversion-rules.json`。
 
 最终AP＝`round(基础AP × max(1,1+(机体机动−100)×0.005) × max(0.5,1+(驾驶员机动−100)×0.004) × 2) / 2`，最低1 AP。通用武器AP费用、反击预算、EMP惩罚、出击及母舰损毁扣费也按0.5点四舍五入；攻击计划扣费与取消返还保留半点。反应不参与AP换算。追加断言：`tests/head-wrist-mortar-bazooka.test.cjs`。
+
+
+## 0087科技与阵营边界
+
+联邦或吉翁任一阵营的0079E、0079L及0083整棵科技树全部完成，才免费开放AEUG、TITANS、NEO_ZEON三个BASE科技。不得只判断主线、单条支线或排除0083；服务端与客户端共用Development.normalizeResearch裁定。三个0087第二页首项暂为999999科技点，原值记录在sourceCosts.points及temporaryPointOverride.nativePoints中。跨阵营复用机体沿用原JSON人工配置，通过availableFactions开放；新机体标记0087。断言：tests/0087-import.test.cjs。完整清单与缺失机制由tools/report-0087.py从当前JSON生成。

@@ -1,0 +1,760 @@
+{
+  "schemaVersion": 2,
+  "id": "MSA_007T",
+  "code": "MSA-007T",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/MSA_007T/MSA_007T.ini",
+  "materials": {
+    "textures": {
+      "MSA_007T_Crotch_1.png": "textures/MSA_007T_Crotch_1.png",
+      "MSA_007T_Body_1.png": "textures/MSA_007T_Body_1.png",
+      "MSA_007T_ArmL_1.png": "textures/MSA_007T_ArmL_1.png",
+      "MSA_007T_ArmR_1.png": "textures/MSA_007T_ArmR_1.png",
+      "MSA_007T_ShoulderL_1.png": "textures/MSA_007T_ShoulderL_1.png",
+      "MSA_007T_ShoulderR_1.png": "textures/MSA_007T_ShoulderR_1.png",
+      "MSA_007T_Head_1.png": "textures/MSA_007T_Head_1.png",
+      "MSA_007T_Head_1_Close.png": "textures/MSA_007T_Head_1_Close.png",
+      "MSA_007T_Foot_1.png": "textures/MSA_007T_Foot_1.png",
+      "MSA_007T_LegL_1.png": "textures/MSA_007T_LegL_1.png",
+      "MSA_007T_LegR_1.png": "textures/MSA_007T_LegR_1.png",
+      "AEUG_MSA_007_BR.png": "textures/AEUG_MSA_007_BR.png",
+      "EF_BeamSaber_Blue.png": "textures/EF_BeamSaber_Blue.png",
+      "MSA_007T.png": "textures/MSA_007T.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MSA_007T.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "MSA_007T_Foot_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MSA_007T_Foot_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MSA_007T_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MSA_007T_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "AEUG_MSA_007_BR_NotUsing",
+      "texture": "AEUG_MSA_007_BR.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 0.85,
+      "rotation": -90.0,
+      "offset": {
+        "x": 2.0,
+        "y": -9.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": {
+          "not": 1
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Crotch",
+      "texture": "MSA_007T_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "MSA_007T_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "MSA_007T_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "AEUG_MSA_007_BR",
+      "texture": "AEUG_MSA_007_BR.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.0,
+        "y": 11.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Body",
+      "texture": "MSA_007T_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_BeamSaber_Large_Double_BBLDF_Blue",
+      "texture": "EF_BeamSaber_Blue.png",
+      "bone": "RightArm",
+      "order": 5.4,
+      "scale": 1.0,
+      "scaleY": 1.35,
+      "rotation": -5.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 1.0,
+        "y": 29.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 1
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "EF_BeamSaber_Large_Double_BBLDF_Blue_L",
+      "texture": "EF_BeamSaber_Blue.png",
+      "bone": "LeftArm",
+      "order": 5.4,
+      "scale": 1.0,
+      "scaleX": -1.0,
+      "scaleY": 1.35,
+      "rotation": 5.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": -1.0,
+        "y": 29.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MSA_007T_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MSA_007T_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "MSA_007T_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MSA_007T_Head_1_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Melee_B": "../../animations/Common_Melee_B__MSM_04.json",
+    "Common_Melee_B_L": "../../animations/Common_Melee_B_L.json",
+    "Common_Melee_Double_F": "../../animations/Common_Melee_Double_F.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 78000,
+    "en": 500.0,
+    "move": 8,
+    "mobility": 195.0,
+    "cost": 1325,
+    "counterLimit": 1,
+    "accuracy": 180.0,
+    "partStructuralStrength": 155.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 75.0,
+      "air": 50.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 170,
+    "actionPoints": 12,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "commandAuras": [
+      {
+        "type": "cmdAtk",
+        "name": "攻击指挥",
+        "source": "Template/Unit/Skill/CmdAtk.gw"
+      }
+    ]
+  },
+  "attackBonuses": {
+    "melee": 95.0,
+    "shooting": 80.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 400.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 400.0
+    },
+    "melee": {
+      "percent": 25.0,
+      "flat": 650.0
+    },
+    "dp": {
+      "percent": 30.0,
+      "flat": 40.0
+    },
+    "sp": {
+      "percent": 5.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 62500.0,
+    "walkSpeed": 0.9,
+    "boostSpeed": 2.35,
+    "turnSpeed": 4.0,
+    "reaction": 195.0,
+    "shooting": 180.0,
+    "melee": 195.0,
+    "nativeTags": [
+      "MSA_007T",
+      "Unit",
+      "MS",
+      "AEUG",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [
+      "CmdAtk"
+    ],
+    "accuracy": 180.0,
+    "partStructuralStrength": 155.0,
+    "actionTurnSpeed": 4.0,
+    "movementBeforeMobility": 8,
+    "mobilityMoveTarget": 9,
+    "enBeforeReduction": 1000.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 75.0,
+      "air": 50.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 5250.0,
+    "tacticalMoveBeforeBonus": 8,
+    "v17BaseHp": 62500.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "尼洛训练型",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "尼洛训练型",
+      "description": "尼洛的训练型,装备了两肩推进器"
+    },
+    "en": {
+      "name": "Nero Trainer",
+      "description": "A training variant of the Nero, equipped with dual shoulder boosters"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "AEUG_MSA_007_BR": {
+      "ref": "AEUG_MSA_007_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_007_BR.gw",
+          "barrels": [
+            {
+              "id": "AEUG_MSA_007_BR",
+              "x": 9.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "AEUG_MSA_007_BR",
+              "point": {
+                "x": -1.9999999999999991,
+                "y": -14.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_BeamSaber_Large_Double_BBLDF_Blue": {
+      "ref": "EF_BeamSaber_Large_Double_BBLDF_Blue__lv2",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Large_Double_BBLDF_Blue.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber_Large_Double_BBLDF_Blue",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "CmdAtk",
+      "source": "Template/Unit/Skill/CmdAtk.gw",
+      "status": "adapted",
+      "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "AEUG_MSA_007_BR",
+        "EF_BeamSaber_Large_Double_BBLDF_Blue",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "尼洛的训练型,装备了两肩推进器",
+  "skills": [
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 5250.0,
+    "levelMultiplier": 0.25,
+    "published": 1325
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}

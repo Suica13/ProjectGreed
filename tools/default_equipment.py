@@ -1,12 +1,13 @@
 """Native EquipmentIndex zero is the default, independently from license pricing."""
 import json, re
+from weapon_store import loads
 from mod_source import ASSETS, MOD, load
 from native_weapon_layout import conditions
 
 def collect():
  result={}
  for reference in json.loads((ASSETS/"unit-catalog.json").read_text(encoding="utf-8"))["units"]:
-  p=json.loads((ASSETS/reference).read_text(encoding="utf-8"))
+  p=loads((ASSETS/reference).read_text(encoding="utf-8"))
   root=MOD/p["source"].split("/",1)[0]
   native=load(MOD/p["source"],root=root)
   indices={}

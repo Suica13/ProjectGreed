@@ -867,5 +867,10 @@
     "refitFrom": [
       "RGM_79"
     ]
-  }
+  },
+  "availableFactions": [
+    "EFSF",
+    "AEUG",
+    "TITANS"
+  ]
 }

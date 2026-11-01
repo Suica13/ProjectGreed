@@ -1,0 +1,917 @@
+{
+  "schemaVersion": 2,
+  "id": "MSZ_008",
+  "code": "MSZ-008",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/MSZ_008/MSZ_008.ini",
+  "materials": {
+    "textures": {
+      "MSZ_008_Crotch_1.png": "textures/MSZ_008_Crotch_1.png",
+      "MSZ_008_Body_1.png": "textures/MSZ_008_Body_1.png",
+      "MSZ_008_ArmL_1.png": "textures/MSZ_008_ArmL_1.png",
+      "MSZ_008_ArmR_1.png": "textures/MSZ_008_ArmR_1.png",
+      "MSZ_008_ShoulderL_1.png": "textures/MSZ_008_ShoulderL_1.png",
+      "MSZ_008_ShoulderR_1.png": "textures/MSZ_008_ShoulderR_1.png",
+      "MSZ_008_Head_1.png": "textures/MSZ_008_Head_1.png",
+      "MSZ_008_FootL_1.png": "textures/MSZ_008_FootL_1.png",
+      "MSZ_008_LegL_1.png": "textures/MSZ_008_LegL_1.png",
+      "MSZ_008_FootR_1.png": "textures/MSZ_008_FootR_1.png",
+      "MSZ_008_LegR_1.png": "textures/MSZ_008_LegR_1.png",
+      "AEUG_ClayBazooka.png": "textures/AEUG_ClayBazooka.png",
+      "EF_BeamSaber.png": "textures/EF_BeamSaber.png",
+      "MSZ_008_Backpack_1.png": "textures/MSZ_008_Backpack_1.png",
+      "MSZ_008_Backpack_2.png": "textures/MSZ_008_Backpack_2.png",
+      "MSZ_008_BR_2.png": "textures/MSZ_008_BR_2.png",
+      "MSZ_008_BR_1.png": "textures/MSZ_008_BR_1.png",
+      "MSZ_008.png": "textures/MSZ_008.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "HoverMove_1.png": "textures/HoverMove_1.png"
+    },
+    "icon": "MSZ_008.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Hover",
+      "texture": "HoverMove_1.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.35,
+      "offset": {
+        "x": 0.0,
+        "y": -5.0
+      },
+      "alpha": 0.5,
+      "frames": 6,
+      "frameFps": 10,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "onLand": true
+      }
+    },
+    {
+      "name": "LeftFoot",
+      "texture": "MSZ_008_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MSZ_008_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MSZ_008_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MSZ_008_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BR_0",
+      "texture": "MSZ_008_BR_1.png",
+      "bone": "RightArm",
+      "order": 2.5,
+      "offset": {
+        "x": 6.0,
+        "y": 13.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "weaponDisplayIndex": 0
+      }
+    },
+    {
+      "name": "Crotch",
+      "texture": "MSZ_008_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "MSZ_008_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "MSZ_008_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "AEUG_ClayBazooka_Double",
+      "texture": "AEUG_ClayBazooka.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 4.0,
+        "y": 13.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 2
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "AEUG_ClayBazooka_Double_L",
+      "texture": "AEUG_ClayBazooka.png",
+      "bone": "LeftArm",
+      "order": 4.5,
+      "scale": 0.9,
+      "scaleX": -1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": -4.0,
+        "y": 13.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 2
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "Backpack_1",
+      "texture": "MSZ_008_Backpack_1.png",
+      "bone": "Body",
+      "order": 4.6,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 2
+      }
+    },
+    {
+      "name": "Backpack_2",
+      "texture": "MSZ_008_Backpack_2.png",
+      "bone": "Body",
+      "order": 4.6,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 2
+        }
+      }
+    },
+    {
+      "name": "BR_1",
+      "texture": "MSZ_008_BR_2.png",
+      "bone": "Body",
+      "order": 4.6,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "MSZ_008_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_BeamSaber_BF",
+      "texture": "EF_BeamSaber.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": -16.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 10.0,
+        "y": 22.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MSZ_008_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MSZ_008_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "MSZ_008_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MSZ_008_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving__MS_09S.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing__MS_09S.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_DoubleShoot_A_L": "../../animations/Common_DoubleShoot_A_L.json",
+    "Common_DoubleShoot_A_R": "../../animations/Common_DoubleShoot_A_R.json",
+    "Common_Melee_B": "../../animations/Common_Melee_B__MSM_04.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 87500,
+    "en": 725.0,
+    "move": 9,
+    "mobility": 220.0,
+    "cost": 2000,
+    "counterLimit": 1,
+    "accuracy": 200.0,
+    "partStructuralStrength": 165.0,
+    "partsBreakable": true,
+    "movementType": "hover",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 50.0,
+      "atmosphere": 0,
+      "mountain": 75.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 175,
+    "actionPoints": 12,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 85.0,
+    "shooting": 95.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 450.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 450.0
+    },
+    "melee": {
+      "percent": 25.0,
+      "flat": 800.0
+    },
+    "dp": {
+      "percent": 25.0,
+      "flat": 35.0
+    },
+    "sp": {
+      "percent": 5.0,
+      "flat": 50.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 70000.0,
+    "walkSpeed": 0.95,
+    "boostSpeed": 2.45,
+    "turnSpeed": 4.0,
+    "reaction": 220.0,
+    "shooting": 195.0,
+    "melee": 185.0,
+    "nativeTags": [
+      "MSZ_008",
+      "Unit",
+      "MS",
+      "AEUG",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [
+      "Hover",
+      "Hover_Lv2",
+      "Transform_LandFly_SFS_OFF"
+    ],
+    "accuracy": 200.0,
+    "partStructuralStrength": 165.0,
+    "actionTurnSpeed": 4.0,
+    "movementBeforeMobility": 9,
+    "mobilityMoveTarget": 10,
+    "enBeforeReduction": 1450.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 50.0,
+      "mountain": 75.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 8000.0,
+    "tacticalMoveBeforeBonus": 9,
+    "v17BaseHp": 70000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "Z II",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "Z II",
+      "description": "Z高达的发展型,是作为Z高达的宇宙战高性能简易量产化的提案"
+    },
+    "en": {
+      "name": "Z II",
+      "description": "A development model of the Zeta Gundam, proposed as a high-performance, simplified mass-production type for space combat"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "AEUG_MSZ_008_BR": {
+      "ref": "AEUG_MSZ_008_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_008_BR.gw",
+          "barrels": [
+            {
+              "id": "AEUG_MSZ_008_BR",
+              "x": 10.0,
+              "y": 42.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 10.0,
+                "y": 42.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "AEUG_ClayBazooka_Double": {
+      "ref": "AEUG_ClayBazooka_Double__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_ClayBazooka_Double.gw",
+          "barrels": [
+            {
+              "id": "AEUG_ClayBazooka_Double",
+              "x": 14.0,
+              "y": 20.0
+            },
+            {
+              "id": "AEUG_ClayBazooka_Double_L",
+              "x": -14.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "AEUG_ClayBazooka_Double",
+              "point": {
+                "x": 1.1111111111111116,
+                "y": -7.777777777777778
+              }
+            },
+            {
+              "layer": "AEUG_ClayBazooka_Double_L",
+              "point": {
+                "x": 1.1111111111111105,
+                "y": -7.777777777777778
+              }
+            }
+          ]
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "AEUG_ClayBazooka_Double_L": {
+      "ref": "AEUG_ClayBazooka_Double_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_ClayBazooka_Double.gw",
+          "barrels": [
+            {
+              "id": "AEUG_ClayBazooka_Double",
+              "x": 14.0,
+              "y": 20.0
+            },
+            {
+              "id": "AEUG_ClayBazooka_Double_L",
+              "x": -14.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "AEUG_ClayBazooka_Double",
+              "point": {
+                "x": 1.1111111111111116,
+                "y": -7.777777777777778
+              }
+            },
+            {
+              "layer": "AEUG_ClayBazooka_Double_L",
+              "point": {
+                "x": 1.1111111111111105,
+                "y": -7.777777777777778
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "AEUG_ClayBazooka_Double"
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "EF_BeamSaber_BF_B": {
+      "ref": "EF_BeamSaber_BF_B__lv3",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber_BF_B",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+      "status": "implemented"
+    },
+    {
+      "id": "Transform_LandFly_SFS_OFF",
+      "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+      "status": "review",
+      "name": "Transform_LandFly_SFS_OFF"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "AEUG_ClayBazooka_Double",
+        "AEUG_MSZ_008_BR",
+        "EF_BeamSaber_BF_B",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "Z高达的发展型,是作为Z高达的宇宙战高性能简易量产化的提案",
+  "skills": [],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard",
+    "kit_2": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 8000.0,
+    "levelMultiplier": 0.25,
+    "published": 2000
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Hover"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "AEUG_ClayBazooka_Double",
+      "channels": [
+        {
+          "id": "AEUG_ClayBazooka_Double",
+          "weaponId": "AEUG_ClayBazooka_Double",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        },
+        {
+          "id": "AEUG_ClayBazooka_Double_L",
+          "weaponId": "AEUG_ClayBazooka_Double_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        }
+      ],
+      "fireMode": "simultaneous"
+    }
+  ],
+  "refits": []
+}

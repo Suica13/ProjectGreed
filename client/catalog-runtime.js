@@ -15,7 +15,7 @@ const element = (tag, className = "", text = "") => {
 const formatDistance = (value) => String(Math.round(value));
 const Rules = {
   catalog: ART,
-  factions: ["EFSF", "ZEON"],
+  factions: ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"],
   eras: [
     ...new Set(
       ART.prefabs.flatMap((prefab) => prefab.tags).filter((tag) => /^\d{4}[EL]?$/.test(tag)),

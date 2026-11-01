@@ -1,0 +1,1796 @@
+{
+  "schemaVersion": 2,
+  "id": "FA_010A",
+  "code": "FA-010A",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/FA_010A/FA_010A.ini",
+  "materials": {
+    "textures": {
+      "FA_010A_Crotch_1.png": "textures/FA_010A_Crotch_1.png",
+      "FA_010A_Body_1.png": "textures/FA_010A_Body_1.png",
+      "FA_010A_ArmL_1.png": "textures/FA_010A_ArmL_1.png",
+      "FA_010A_ArmR_2.png": "textures/FA_010A_ArmR_2.png",
+      "FA_010A_ShoulderL_1.png": "textures/FA_010A_ShoulderL_1.png",
+      "FA_010A_ShoulderR_1.png": "textures/FA_010A_ShoulderR_1.png",
+      "FA_010A_Head_1.png": "textures/FA_010A_Head_1.png",
+      "FA_010A_Head_1_Close.png": "textures/FA_010A_Head_1_Close.png",
+      "FA_010A_FootL_1.png": "textures/FA_010A_FootL_1.png",
+      "FA_010A_LegL_1.png": "textures/FA_010A_LegL_1.png",
+      "FA_010A_FootR_1.png": "textures/FA_010A_FootR_1.png",
+      "FA_010A_LegR_1.png": "textures/FA_010A_LegR_1.png",
+      "AEUG_FA_010A_MegaBeamCannon.png": "textures/AEUG_FA_010A_MegaBeamCannon.png",
+      "EF_BeamSaber_Blue.png": "textures/EF_BeamSaber_Blue.png",
+      "FA_010A_Backpack_1.png": "textures/FA_010A_Backpack_1.png",
+      "FA_010A_Backpack_2.png": "textures/FA_010A_Backpack_2.png",
+      "FA_010A_Backpack_3.png": "textures/FA_010A_Backpack_3.png",
+      "FA_010A_ArmL_2.png": "textures/FA_010A_ArmL_2.png",
+      "FA_010A.png": "textures/FA_010A.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "FA_010A.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "FA_010A_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "FA_010A_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "FA_010A_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "FA_010A_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "FA_010A_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "FA_010A_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "FA_010A_ArmR_2.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL_2",
+      "texture": "FA_010A_ArmL_2.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "FA_010A_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Backpack_1",
+      "texture": "FA_010A_Backpack_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": [
+            1,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "name": "Backpack_2",
+      "texture": "FA_010A_Backpack_2.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "EF_BeamSaber_AF_Large_Blue",
+      "texture": "EF_BeamSaber_Blue.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 1.0,
+      "scaleY": 1.35,
+      "rotation": -10.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 7.0,
+        "y": 29.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "FA_010A_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "FA_010A_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "FA_010A_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "FA_010A_Head_1_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "AEUG_FA_010A_MegaBeamCannon",
+      "texture": "AEUG_FA_010A_MegaBeamCannon.png",
+      "bone": "RightArm",
+      "order": 7.0,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 5.0,
+        "y": 12.5
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Backpack_3",
+      "texture": "FA_010A_Backpack_3.png",
+      "bone": "Body",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 3
+      }
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__AMX_002.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_Melee_A": "../../animations/Common_Melee_A__FA_78_1.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 112500,
+    "en": 750.0,
+    "move": 8,
+    "mobility": 175.0,
+    "cost": 2250,
+    "counterLimit": 1,
+    "accuracy": 180.0,
+    "partStructuralStrength": 180.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 75.0,
+      "air": 50.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 135,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 65.0,
+    "shooting": 85.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 35.0,
+      "flat": 900.0
+    },
+    "shell": {
+      "percent": 35.0,
+      "flat": 900.0
+    },
+    "melee": {
+      "percent": 25.0,
+      "flat": 450.0
+    },
+    "dp": {
+      "percent": 35.0,
+      "flat": 85.0
+    },
+    "sp": {
+      "percent": 10.0,
+      "flat": 50.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 90000.0,
+    "walkSpeed": 0.6,
+    "boostSpeed": 1.9,
+    "turnSpeed": 2.0,
+    "reaction": 175.0,
+    "shooting": 185.0,
+    "melee": 165.0,
+    "nativeTags": [
+      "FA_010A",
+      "Unit",
+      "MS",
+      "AEUG",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "accuracy": 180.0,
+    "partStructuralStrength": 180.0,
+    "actionTurnSpeed": 2.0,
+    "movementBeforeMobility": 7,
+    "mobilityMoveTarget": 8,
+    "enBeforeReduction": 1500.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 75.0,
+      "air": 50.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 9000.0,
+    "tacticalMoveBeforeBonus": 7,
+    "v17BaseHp": 90000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "FAZZ",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "FAZZ",
+      "description": "为了实验全装甲ZZ而制造的试验机"
+    },
+    "en": {
+      "name": "FAZZ",
+      "description": "A test ms for the experiment of Full Armor ZZ"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "AEUG_FA_010A_MegaBeamCannon": {
+      "ref": "AEUG_FA_010A_MegaBeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_MegaBeamCannon.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010A_MegaBeamCannon",
+              "x": 13.0,
+              "y": 44.0
+            }
+          ],
+          "muzzleNote": "Native weapon has no standalone muzzle flash"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "AEUG_FA_010A_MegaBeamCannon",
+              "point": {
+                "x": -1.111111111111109,
+                "y": -35.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "Common_DoubleVulcan_MS": {
+      "ref": "Common_DoubleVulcan_MS__lv1",
+      "overrides": {
+        "damagePerShot": 660.0,
+        "damageComponents": {
+          "shell": 600.0,
+          "shellAP": 60.0
+        },
+        "attack": {
+          "steps": [
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.05
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/MG_1.png",
+          "scale": 0.25,
+          "speed": 100.0,
+          "forwardOffset": -10.0,
+          "rotation": 0.0
+        },
+        "nativePayload": {
+          "ShellDamage": 600.0,
+          "ShellAPDamage": 60.0,
+          "DpDamage": 18.0,
+          "WeaponAccuracy": 100.0,
+          "PartBreakModifier": 1.0,
+          "CockpitBreakModifier": 0.5,
+          "PilotDamageModifier": 1.0,
+          "PilotTrueDamage": 0.0,
+          "AntiSizeLargeDamage": 1.0,
+          "AntiSizeSmallDamage": 1.0,
+          "AntiSizeLargeAccuracy": 1.0,
+          "AntiSizeSmallAccuracy": 1.0,
+          "AntiBuilding": 1.0,
+          "AntiAqua": 0.75,
+          "AntiAir": 1.5,
+          "AntiLand": 1.0,
+          "AntiSpace": 1.0,
+          "HeightChangeSpeed": 3.0,
+          "HeightHitRange": 25.0,
+          "ProjectileSpeed": 100.0,
+          "ProjectileSpread": 8.0,
+          "ProjectileLife": 10.0
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrel": "Common_DoubleVulcan_MS",
+          "entry": "automatic_turret",
+          "cooldown": 4.0,
+          "duration": 0.75,
+          "firstShot": 0.0,
+          "lastShot": 0.75,
+          "firingEvents": 16,
+          "projectiles": 16,
+          "declaredEnergy": 0.0,
+          "energyMode": "perShot",
+          "energyPerEmission": 0.0,
+          "energy": 0.0,
+          "actions": []
+        },
+        "requiredParts": [
+          "head"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleVulcan_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Head",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    },
+    "AEUG_FA_010A_BR": {
+      "ref": "AEUG_FA_010A_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_BR.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010A_BR",
+              "x": 15.0,
+              "y": 25.0
+            },
+            {
+              "id": "AEUG_FA_010A_BR_R",
+              "x": 7.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 15.0,
+                "y": 25.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 7.0,
+                "y": 25.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "AEUG_FA_010A_BR_R": {
+      "ref": "AEUG_FA_010A_BR_R__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_BR.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010A_BR",
+              "x": 15.0,
+              "y": 25.0
+            },
+            {
+              "id": "AEUG_FA_010A_BR_R",
+              "x": 7.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 15.0,
+                "y": 25.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 7.0,
+                "y": 25.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "AEUG_FA_010A_BR"
+        }
+      }
+    },
+    "AEUG_FA_010A_BeamCannon": {
+      "ref": "AEUG_FA_010A_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_BeamCannon.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010A_BeamCannon",
+              "x": 15.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010A_BeamCannon_L",
+              "x": -15.0,
+              "y": -5.0
+            }
+          ],
+          "muzzleNote": "Native weapon has no standalone muzzle flash"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 15.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -15.0,
+                "y": -5.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "AEUG_FA_010A_BeamCannon_L": {
+      "ref": "AEUG_FA_010A_BeamCannon_L__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_BeamCannon.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010A_BeamCannon",
+              "x": 15.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010A_BeamCannon_L",
+              "x": -15.0,
+              "y": -5.0
+            }
+          ],
+          "muzzleNote": "Native weapon has no standalone muzzle flash"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 15.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -15.0,
+                "y": -5.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "AEUG_FA_010A_BeamCannon"
+        }
+      }
+    },
+    "AEUG_FA_010S_BodyMS": {
+      "ref": "AEUG_FA_010S_BodyMS__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_FA_010S_BodyMS.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010S_BodyMS",
+              "x": 7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L",
+              "x": -7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R2",
+              "x": 10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L2",
+              "x": -10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R3",
+              "x": 3.0,
+              "y": 5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L3",
+              "x": -3.0,
+              "y": 5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 3.0,
+                "y": 5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -3.0,
+                "y": 5.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "AEUG_FA_010S_BodyMS_L": {
+      "ref": "AEUG_FA_010S_BodyMS_L__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_FA_010S_BodyMS.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010S_BodyMS",
+              "x": 7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L",
+              "x": -7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R2",
+              "x": 10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L2",
+              "x": -10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R3",
+              "x": 3.0,
+              "y": 5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L3",
+              "x": -3.0,
+              "y": 5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 3.0,
+                "y": 5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -3.0,
+                "y": 5.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "AEUG_FA_010S_BodyMS"
+        }
+      }
+    },
+    "AEUG_FA_010S_BodyMS_R2": {
+      "ref": "AEUG_FA_010S_BodyMS_R2__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_FA_010S_BodyMS.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010S_BodyMS",
+              "x": 7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L",
+              "x": -7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R2",
+              "x": 10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L2",
+              "x": -10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R3",
+              "x": 3.0,
+              "y": 5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L3",
+              "x": -3.0,
+              "y": 5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 3.0,
+                "y": 5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -3.0,
+                "y": 5.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "AEUG_FA_010S_BodyMS"
+        }
+      }
+    },
+    "AEUG_FA_010S_BodyMS_L2": {
+      "ref": "AEUG_FA_010S_BodyMS_L2__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_FA_010S_BodyMS.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010S_BodyMS",
+              "x": 7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L",
+              "x": -7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R2",
+              "x": 10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L2",
+              "x": -10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R3",
+              "x": 3.0,
+              "y": 5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L3",
+              "x": -3.0,
+              "y": 5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 3.0,
+                "y": 5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -3.0,
+                "y": 5.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "AEUG_FA_010S_BodyMS"
+        }
+      }
+    },
+    "AEUG_FA_010S_BodyMS_R3": {
+      "ref": "AEUG_FA_010S_BodyMS_R3__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_FA_010S_BodyMS.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010S_BodyMS",
+              "x": 7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L",
+              "x": -7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R2",
+              "x": 10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L2",
+              "x": -10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R3",
+              "x": 3.0,
+              "y": 5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L3",
+              "x": -3.0,
+              "y": 5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 3.0,
+                "y": 5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -3.0,
+                "y": 5.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "AEUG_FA_010S_BodyMS"
+        }
+      }
+    },
+    "AEUG_FA_010S_BodyMS_L3": {
+      "ref": "AEUG_FA_010S_BodyMS_L3__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_FA_010S_BodyMS.gw",
+          "barrels": [
+            {
+              "id": "AEUG_FA_010S_BodyMS",
+              "x": 7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L",
+              "x": -7.0,
+              "y": -16.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R2",
+              "x": 10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L2",
+              "x": -10.0,
+              "y": -5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_R3",
+              "x": 3.0,
+              "y": 5.0
+            },
+            {
+              "id": "AEUG_FA_010S_BodyMS_L3",
+              "x": -3.0,
+              "y": 5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -7.0,
+                "y": -16.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": -5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 3.0,
+                "y": 5.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -3.0,
+                "y": 5.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "AEUG_FA_010S_BodyMS"
+        }
+      }
+    },
+    "EF_BeamSaber_AF_Large_Blue_A": {
+      "ref": "EF_BeamSaber_AF_Large_Blue_A__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Large_Blue.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber_AF_Large_Blue_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "AEUG_FA_010A_MegaBeamCannon",
+        "Common_DoubleVulcan_MS",
+        "AEUG_FA_010A_BR",
+        "AEUG_FA_010A_BeamCannon",
+        "AEUG_FA_010S_BodyMS",
+        "EF_BeamSaber_AF_Large_Blue_A",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "为了实验全装甲ZZ而制造的试验机",
+  "skills": [],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard",
+    "kit_2": "standard",
+    "kit_3": "standard",
+    "kit_4": "standard",
+    "kit_5": "standard",
+    "kit_6": "standard",
+    "kit_7": "standard",
+    "kit_8": "standard",
+    "kit_9": "standard",
+    "kit_10": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 9000.0,
+    "levelMultiplier": 0.25,
+    "published": 2250
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "AEUG_FA_010A_BR",
+      "channels": [
+        {
+          "id": "AEUG_FA_010A_BR",
+          "weaponId": "AEUG_FA_010A_BR",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": null
+        },
+        {
+          "id": "AEUG_FA_010A_BR_R",
+          "weaponId": "AEUG_FA_010A_BR_R",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": null
+        }
+      ]
+    },
+    {
+      "id": "AEUG_FA_010A_BeamCannon",
+      "channels": [
+        {
+          "id": "AEUG_FA_010A_BeamCannon",
+          "weaponId": "AEUG_FA_010A_BeamCannon",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "AEUG_FA_010A_BeamCannon_L",
+          "weaponId": "AEUG_FA_010A_BeamCannon_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        }
+      ]
+    },
+    {
+      "id": "AEUG_FA_010S_BodyMS",
+      "channels": [
+        {
+          "id": "AEUG_FA_010S_BodyMS",
+          "weaponId": "AEUG_FA_010S_BodyMS",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "AEUG_FA_010S_BodyMS_L",
+          "weaponId": "AEUG_FA_010S_BodyMS_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "AEUG_FA_010S_BodyMS_R2",
+          "weaponId": "AEUG_FA_010S_BodyMS",
+          "muzzleIndex": 2,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "AEUG_FA_010S_BodyMS_L2",
+          "weaponId": "AEUG_FA_010S_BodyMS",
+          "muzzleIndex": 3,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "AEUG_FA_010S_BodyMS_R3",
+          "weaponId": "AEUG_FA_010S_BodyMS",
+          "muzzleIndex": 4,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        },
+        {
+          "id": "AEUG_FA_010S_BodyMS_L3",
+          "weaponId": "AEUG_FA_010S_BodyMS",
+          "muzzleIndex": 5,
+          "requiredParts": [
+            "backpack"
+          ],
+          "limb": null
+        }
+      ]
+    }
+  ],
+  "refits": []
+}

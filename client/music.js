@@ -6,10 +6,13 @@ const MusicPlayer = (() => {
   const next = document.getElementById("musicNext");
   const title = document.getElementById("musicTitle");
   const status = document.getElementById("musicStatus");
+  const musicFaction = (faction) =>
+    ({ AEUG: "EFSF", TITANS: "EFSF", NEO_ZEON: "ZEON" })[faction] || faction;
   let menuFaction = "EFSF";
   try {
     const saved = localStorage.getItem("projectgreed.combatFaction");
-    if (["PMC", "EFSF", "ZEON"].includes(saved)) menuFaction = saved;
+    if (["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(saved))
+      menuFaction = musicFaction(saved);
   } catch {}
   let available = playlist.filter(
     (track) => track.scene === "menu" && (!track.faction || track.faction === menuFaction),
@@ -67,7 +70,7 @@ const MusicPlayer = (() => {
   }
   function sync() {
     const scene = typeof pageView !== "undefined" && pageView === "game" ? "battle" : "menu";
-    const faction = currentFaction();
+    const faction = musicFaction(currentFaction());
     available = playlist.filter(
       (track) => track.scene === scene && (!track.faction || track.faction === faction),
     );

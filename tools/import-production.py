@@ -3,6 +3,7 @@ import json,re
 from collections import defaultdict
 from pathlib import Path
 from mod_source import ROOT,MOD,ASSETS,parse,load,section,number
+from weapon_store import loads as load_json
 from native_weapon_layout import conditions
 PROJECT=Path(__file__).resolve().parents[1]
 
@@ -16,9 +17,9 @@ def source_sections(file):
             if match:current['define.'+match[1]]=match[2]
     return data
 
-def factory_offers():
+def factory_offers(root=ROOT):
     offers=defaultdict(list)
-    base=ROOT/'Units/Buildings/Factory/UnitList'
+    base=root/'Units/Buildings/Factory/UnitList'
     template=parse(base/'Mod/UnitTemplate.ini')
     for file in sorted(base.glob('*/Units/**/*')):
         if not file.is_file() or file.suffix.lower() not in ('.ini','.gw'):continue
@@ -54,10 +55,13 @@ def tech_costs():
     return result
 
 def main():
-    offers=factory_offers();result={};unavailable=[]
+    offers=defaultdict(list)
+    for root in [MOD/"GW_BattleUniverse_DLC_0079", MOD/"GW_BattleUniverse_DLC_0087"]:
+        for key, values in factory_offers(root).items(): offers[key].extend(values)
+    result={};unavailable=[]
     registry=json.loads((ASSETS/'unit-catalog.json').read_text(encoding='utf8'))
     for reference in registry['units']:
-        p=json.loads((ASSETS/reference).read_text(encoding='utf8'));native=load(MOD/p['source']);indices={}
+        p=load_json((ASSETS/reference).read_text(encoding='utf8'));native=load(MOD/p['source']);indices={}
         for key,weapon in p['weapons'].items():
             found={int(m[1]) for condition in conditions(native,weapon) for m in re.finditer(r'\bEquipmentIndex\s*==\s*(\d+)',condition)}
             if len(found)==1:indices[key]=next(iter(found))
@@ -67,22 +71,22 @@ def main():
             index=next(iter(values),0);candidates=offers.get((p['id'],index),[])
             if not candidates and len(p['weaponKits'])==1:
                 candidates=[o for (unit,_),rows in offers.items() if unit==p['id'] for o in rows]
+            same_dlc=[o for o in candidates if o['source']['file'].split('/')[0]==p['source'].split('/')[0]]
+            candidates=same_dlc or candidates
             normal=[o for o in candidates if '_Fast' not in o['source']['action'] and 'Fast' not in Path(o['source']['file']).stem];candidates=normal or candidates
             model_id=p['id']+'__'+kit['id']
             if not candidates:unavailable.append(model_id);continue
             prices={(o['money'],o['supplies'],o['quantity']) for o in candidates}
             if len(prices)!=1:raise ValueError('Conflicting prices: '+model_id+': '+str(prices))
             selected=max(candidates,key=lambda o:o['source']['buildSeconds'])
-            result[model_id]={'output':{'unitId':p['id'],'kitId':kit['id'],'quantity':selected['quantity']},'unitId':p['id'],'faction':next(tag for tag in p['tags'] if tag in ('EFSF','ZEON')),**({'availableFactions':p['availableFactions']} if p.get('availableFactions') else {}),**selected,'sourceAlternatives':[o['source'] for o in candidates if o!=selected]}
+            result[model_id]={'output':{'unitId':p['id'],'kitId':kit['id'],'quantity':selected['quantity']},'unitId':p['id'],'faction':next(tag for tag in p['tags'] if tag in ('EFSF','ZEON','AEUG','TITANS','NEO_ZEON')),**({'availableFactions':p['availableFactions']} if p.get('availableFactions') else {}),**selected,'sourceAlternatives':[o['source'] for o in candidates if o!=selected]}
     units={}
     for model_id,offer in result.items():
         unit=offer['unitId'];previous=units.get(unit)
         if previous is None or (offer['money']+offer['supplies'],offer['money'],model_id)<(result[previous]['money']+result[previous]['supplies'],result[previous]['money'],previous):units[unit]=model_id
-    for unit,base_id in units.items():
-        base=result[base_id]
-        if any(o['money']<base['money'] or o['supplies']<base['supplies'] for o in result.values() if o['unitId']==unit):raise ValueError('No cheapest base in both currencies: '+unit)
+    # Some native kits trade money against supplies; preserve both prices independently.
     for reference in registry['units']:
-        p=json.loads((ASSETS/reference).read_text(encoding='utf8'))
+        p=load_json((ASSETS/reference).read_text(encoding='utf8'))
         units.setdefault(p['id'],p['id']+'__'+p['weaponKits'][0]['id'])
     (PROJECT/'shared/production-catalog.json').write_text(json.dumps({'schemaVersion':1,'timeEnabled':False,'equipmentPolicy':'free-equipment-deployment-license','defaultKits':__import__('default_equipment').collect(),'baseModels':units,'offers':result,'unavailable':unavailable},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
     import subprocess

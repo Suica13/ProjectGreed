@@ -1,0 +1,638 @@
+[
+  {
+    "id": "AMA_01X_MA",
+    "name": "杰姆鲁芬",
+    "source": "Units/BattleUnits/AMA_01X/AMA_01X_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "AMA_01X_MA_OverLine",
+    "name": "杰姆鲁芬",
+    "source": "Units/BattleUnits/AMA_01X/AMA_01X_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "AMX_003_MA",
+    "name": "加撒C",
+    "source": "Units/BattleUnits/AMX_003/AMX_003_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "AMX_003_MA_OverLine",
+    "name": "加撒C",
+    "source": "Units/BattleUnits/AMX_003/AMX_003_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "AMX_006_MA",
+    "name": "加撒D",
+    "source": "Units/BattleUnits/AMX_006/AMX_006_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "AMX_006_MA_OverLine",
+    "name": "加撒D",
+    "source": "Units/BattleUnits/AMX_006/AMX_006_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "AMX_008_MA",
+    "name": "加佐姆",
+    "source": "Units/BattleUnits/AMX_008/AMX_008_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "AMX_008_MA_OverLine",
+    "name": "加佐姆",
+    "source": "Units/BattleUnits/AMX_008/AMX_008_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "AMX_102_MA",
+    "name": "兹萨",
+    "source": "Units/BattleUnits/AMX_102/AMX_102_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "AMX_102_MA_OverLine",
+    "name": "兹萨",
+    "source": "Units/BattleUnits/AMX_102/AMX_102_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "AMX_107_MA",
+    "name": "龙飞",
+    "source": "Units/BattleUnits/AMX_107/AMX_107_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "AMX_107_MA_OverLine",
+    "name": "龙飞",
+    "source": "Units/BattleUnits/AMX_107/AMX_107_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "AMX_107M_MA",
+    "name": "龙飞量产型",
+    "source": "Units/BattleUnits/AMX_107M/AMX_107M_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "AMX_107M_MA_OverLine",
+    "name": "龙飞量产型",
+    "source": "Units/BattleUnits/AMX_107M/AMX_107M_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "ArgamaClass_CloseState",
+    "name": "阿伽玛级",
+    "source": "Units/BattleUnits/ArgamaClass/ArgamaClass_CloseState.ini",
+    "reason": "搭载／收纳状态"
+  },
+  {
+    "id": "ArgamaClass_OverLine",
+    "name": "阿伽玛级",
+    "source": "Units/BattleUnits/ArgamaClass/ArgamaClass_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "BaseJabber_CloseState",
+    "name": "航空踏板",
+    "source": "Units/BattleUnits/BaseJabber/BaseJabber_CloseState.ini",
+    "reason": "搭载／收纳状态"
+  },
+  {
+    "id": "BaseJabber_OverLine",
+    "name": "航空踏板",
+    "source": "Units/BattleUnits/BaseJabber/BaseJabber_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "DodaiKai_CloseState",
+    "name": "德戴改",
+    "source": "Units/BattleUnits/DodaiKai/DodaiKai_CloseState.ini",
+    "reason": "搭载／收纳状态"
+  },
+  {
+    "id": "DodaiKai_OverLine",
+    "name": "德戴改",
+    "source": "Units/BattleUnits/DodaiKai/DodaiKai_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "GarudaClass_AEUG_CloseState",
+    "name": "迦楼罗级[AEUG]",
+    "source": "Units/BattleUnits/GarudaClass_AEUG/GarudaClass_AEUG_CloseState.ini",
+    "reason": "搭载／收纳状态"
+  },
+  {
+    "id": "GarudaClass_AEUG_OverLine",
+    "name": "迦楼罗级[AEUG]",
+    "source": "Units/BattleUnits/GarudaClass_AEUG/GarudaClass_AEUG_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "GarudaClass_NEO_ZEON_CloseState",
+    "name": "迦楼罗级[NEO ZEON]",
+    "source": "Units/BattleUnits/GarudaClass_NEO_ZEON/GarudaClass_NEO_ZEON_CloseState.ini",
+    "reason": "搭载／收纳状态"
+  },
+  {
+    "id": "GarudaClass_NEO_ZEON_OverLine",
+    "name": "迦楼罗级[NEO ZEON]",
+    "source": "Units/BattleUnits/GarudaClass_NEO_ZEON/GarudaClass_NEO_ZEON_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "GarudaClass_TITANS_CloseState",
+    "name": "迦楼罗级[TITANS]",
+    "source": "Units/BattleUnits/GarudaClass_TITANS/GarudaClass_TITANS_CloseState.ini",
+    "reason": "搭载／收纳状态"
+  },
+  {
+    "id": "GarudaClass_TITANS_OverLine",
+    "name": "迦楼罗级[TITANS]",
+    "source": "Units/BattleUnits/GarudaClass_TITANS/GarudaClass_TITANS_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "Gator_CloseState",
+    "name": "加托尔",
+    "source": "Units/BattleUnits/Gator/Gator_CloseState.ini",
+    "reason": "搭载／收纳状态"
+  },
+  {
+    "id": "Gator_OverLine",
+    "name": "加托尔",
+    "source": "Units/BattleUnits/Gator/Gator_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "GrayPhantomClass_0087_CloseState",
+    "name": "灰色幽灵级[0087]",
+    "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_CloseState.ini",
+    "reason": "搭载／收纳状态"
+  },
+  {
+    "id": "GrayPhantomClass_0087_OverLine",
+    "name": "灰色幽灵级[0087]",
+    "source": "Units/BattleUnits/GrayPhantomClass_0087/GrayPhantomClass_0087_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MRX_009_MA",
+    "name": "精神感应高达",
+    "source": "Units/BattleUnits/MRX_009/MRX_009_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MRX_009_MA_OverLine",
+    "name": "精神感应高达",
+    "source": "Units/BattleUnits/MRX_009/MRX_009_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MRX_010_MA",
+    "name": "精神感应高达MK-II",
+    "source": "Units/BattleUnits/MRX_010/MRX_010_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MRX_010_MA_OverLine",
+    "name": "精神感应高达MK-II",
+    "source": "Units/BattleUnits/MRX_010/MRX_010_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSA_0011_ALICE",
+    "name": "S高达",
+    "source": "Units/BattleUnits/MSA_0011/MSA_0011_ALICE.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSA_0011_Ext_ALICE",
+    "name": "EX-S高达",
+    "source": "Units/BattleUnits/MSA_0011_Ext/MSA_0011_Ext_ALICE.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSA_0011_Ext_MA",
+    "name": "EX-S高达",
+    "source": "Units/BattleUnits/MSA_0011_Ext/MSA_0011_Ext_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSA_0011_Ext_MA_ALICE",
+    "name": "EX-S高达",
+    "source": "Units/BattleUnits/MSA_0011_Ext/MSA_0011_Ext_MA_ALICE.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSA_0011_Ext_MA_OverLine",
+    "name": "EX-S高达",
+    "source": "Units/BattleUnits/MSA_0011_Ext/MSA_0011_Ext_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSA_005_MA",
+    "name": "麦塔斯",
+    "source": "Units/BattleUnits/MSA_005/MSA_005_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSA_005_MA_OverLine",
+    "name": "麦塔斯",
+    "source": "Units/BattleUnits/MSA_005/MSA_005_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSA_005S_MA",
+    "name": "麦塔斯改",
+    "source": "Units/BattleUnits/MSA_005S/MSA_005S_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSA_005S_MA_OverLine",
+    "name": "麦塔斯改",
+    "source": "Units/BattleUnits/MSA_005S/MSA_005S_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSN_001_MA",
+    "name": "德尔塔高达",
+    "source": "Units/BattleUnits/MSN_001/MSN_001_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSN_001_MA_OverLine",
+    "name": "德尔塔高达",
+    "source": "Units/BattleUnits/MSN_001/MSN_001_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSZ_006_MA",
+    "name": "Z高达",
+    "source": "Units/BattleUnits/MSZ_006/MSZ_006_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSZ_006_MA_OverLine",
+    "name": "Z高达",
+    "source": "Units/BattleUnits/MSZ_006/MSZ_006_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSZ_006_ZakuHead",
+    "name": "Z扎古",
+    "source": "Units/BattleUnits/MSZ_006/MSZ_006_ZakuHead.ini",
+    "reason": "科技树外专用机／其他单位"
+  },
+  {
+    "id": "MSZ_006A1_MA",
+    "name": "ZetaPlus A1",
+    "source": "Units/BattleUnits/MSZ_006A1/MSZ_006A1_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSZ_006A1_MA_OverLine",
+    "name": "ZetaPlus A1",
+    "source": "Units/BattleUnits/MSZ_006A1/MSZ_006A1_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSZ_006C1_MA",
+    "name": "ZetaPlus C1",
+    "source": "Units/BattleUnits/MSZ_006C1/MSZ_006C1_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSZ_006C1_MA_OverLine",
+    "name": "ZetaPlus C1",
+    "source": "Units/BattleUnits/MSZ_006C1/MSZ_006C1_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSZ_008_MA",
+    "name": "Z II",
+    "source": "Units/BattleUnits/MSZ_008/MSZ_008_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSZ_008_MA_OverLine",
+    "name": "Z II",
+    "source": "Units/BattleUnits/MSZ_008/MSZ_008_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSZ_010_MA",
+    "name": "ZZ高达",
+    "source": "Units/BattleUnits/MSZ_010/MSZ_010_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MSZ_010_MA_OverLine",
+    "name": "ZZ高达",
+    "source": "Units/BattleUnits/MSZ_010/MSZ_010_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MS_07H_0087_FlyStyle",
+    "name": "老虎飞行实验型[0087]",
+    "source": "Units/BattleUnits/MS_07H_0087/MS_07H_0087_FlyStyle.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "MS_07H_0087_FlyStyle_OverLine",
+    "name": "老虎飞行实验型[0087]",
+    "source": "Units/BattleUnits/MS_07H_0087/MS_07H_0087_FlyStyle_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "NRX_044_MA",
+    "name": "阿西玛",
+    "source": "Units/BattleUnits/NRX_044/NRX_044_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "NRX_044_MA_OverLine",
+    "name": "阿西玛",
+    "source": "Units/BattleUnits/NRX_044/NRX_044_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "NRX_044_TR_3_MA",
+    "name": "试作型阿西玛TR-3[基哈尔]",
+    "source": "Units/BattleUnits/NRX_044_TR_3/NRX_044_TR_3_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "NRX_044_TR_3_MA_OverLine",
+    "name": "试作型阿西玛TR-3[基哈尔]",
+    "source": "Units/BattleUnits/NRX_044_TR_3/NRX_044_TR_3_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "NRX_055_MA",
+    "name": "猎犬",
+    "source": "Units/BattleUnits/NRX_055/NRX_055_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "NRX_055_MA_OverLine",
+    "name": "猎犬",
+    "source": "Units/BattleUnits/NRX_055/NRX_055_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "ORX_005_MA",
+    "name": "加布兰",
+    "source": "Units/BattleUnits/ORX_005/ORX_005_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "ORX_005_MA_OverLine",
+    "name": "加布兰",
+    "source": "Units/BattleUnits/ORX_005/ORX_005_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "ORX_005_TR_5_FF_X39A_MA",
+    "name": "弗莱尔·拉II",
+    "source": "Units/BattleUnits/ORX_005_TR_5/ORX_005_TR_5_FF_X39A_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "ORX_005_TR_5_FF_X39A_MA_OverLine",
+    "name": "弗莱尔·拉II",
+    "source": "Units/BattleUnits/ORX_005_TR_5/ORX_005_TR_5_FF_X39A_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "ORX_005_TR_5_MA",
+    "name": "加布兰 TR-5",
+    "source": "Units/BattleUnits/ORX_005_TR_5/ORX_005_TR_5_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "ORX_005_TR_5_MA_OverLine",
+    "name": "加布兰 TR-5",
+    "source": "Units/BattleUnits/ORX_005_TR_5/ORX_005_TR_5_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "PMX_000_MA",
+    "name": "梅萨拉",
+    "source": "Units/BattleUnits/PMX_000/PMX_000_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "PMX_000_MA_OverLine",
+    "name": "梅萨拉",
+    "source": "Units/BattleUnits/PMX_000/PMX_000_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "MSK_003",
+    "name": "WAGTAIL II",
+    "source": "Units/BattleUnits/RGM_79C_KS/MSK_003.ini",
+    "reason": "科技树外专用机／其他单位"
+  },
+  {
+    "id": "RGM_79C_KS_Custom",
+    "name": "吉姆改 WAGTAIL",
+    "source": "Units/BattleUnits/RGM_79C_KS/RGM_79C_KS_Custom.ini",
+    "reason": "科技树外专用机／其他单位"
+  },
+  {
+    "id": "RMS_099_Red",
+    "name": "力克迪亚斯[红色机]",
+    "source": "Units/BattleUnits/RMS_099_Red/RMS_099_Red.ini",
+    "reason": "科技树外专用机／其他单位"
+  },
+  {
+    "id": "RX_110_MA",
+    "name": "卡普斯利",
+    "source": "Units/BattleUnits/RX_110/RX_110_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "RX_110_MA_OverLine",
+    "name": "卡普斯利",
+    "source": "Units/BattleUnits/RX_110/RX_110_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "RX_124_Kehaar2_MA",
+    "name": "高达TR-6[基哈尔II]",
+    "source": "Units/BattleUnits/RX_124/RX_124_Kehaar2_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "RX_124_Kehaar2_MA_OverLine",
+    "name": "高达TR-6[基哈尔II]",
+    "source": "Units/BattleUnits/RX_124/RX_124_Kehaar2_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "RX_124_Kehaar2_M_MA",
+    "name": "高达TR-6[基哈尔II]",
+    "source": "Units/BattleUnits/RX_124/RX_124_Kehaar2_M_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "RX_124_Kehaar2_M_MA_OverLine",
+    "name": "高达TR-6[基哈尔II]",
+    "source": "Units/BattleUnits/RX_124/RX_124_Kehaar2_M_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "RX_124_MA",
+    "name": "高达TR-6[伍德渥特]",
+    "source": "Units/BattleUnits/RX_124/RX_124_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "RX_124_MA_OverLine",
+    "name": "高达TR-6[伍德渥特]",
+    "source": "Units/BattleUnits/RX_124/RX_124_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "RX_139_MA",
+    "name": "汉布拉比",
+    "source": "Units/BattleUnits/RX_139/RX_139_MA.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "RX_139_MA_OverLine",
+    "name": "汉布拉比",
+    "source": "Units/BattleUnits/RX_139/RX_139_MA_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "RX_160_FlyStyle",
+    "name": "拜亚兰",
+    "source": "Units/BattleUnits/RX_160/RX_160_FlyStyle.ini",
+    "reason": "系统／飞行／变形状态"
+  },
+  {
+    "id": "RX_160_FlyStyle_OverLine",
+    "name": "拜亚兰",
+    "source": "Units/BattleUnits/RX_160/RX_160_FlyStyle_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "RX_178_AEUG_FlyingArmor_OverLine",
+    "name": "高达MK-II[AEUG][SFS]",
+    "source": "Units/BattleUnits/RX_178_AEUG/RX_178_AEUG_FlyingArmor_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "RX_178_Unit0",
+    "name": "高达MK-II[Unit0]",
+    "source": "Units/BattleUnits/RX_178_Unit0/RX_178_Unit0.ini",
+    "reason": "科技树外专用机／其他单位"
+  },
+  {
+    "id": "TivvayClass",
+    "name": "提贝级",
+    "source": "Units/BattleUnits/TivvayClass/TivvayClass.ini",
+    "reason": "科技树外专用机／其他单位"
+  },
+  {
+    "id": "ZanzibarClassKai_0087_CloseState",
+    "name": "桑吉巴尔级改[0087]",
+    "source": "Units/BattleUnits/ZanzibarClassKai_0087/ZanzibarClassKai_0087_CloseState.ini",
+    "reason": "搭载／收纳状态"
+  },
+  {
+    "id": "ZanzibarClassKai_0087_OverLine",
+    "name": "桑吉巴尔级改[0087]",
+    "source": "Units/BattleUnits/ZanzibarClassKai_0087/ZanzibarClassKai_0087_OverLine.ini",
+    "reason": "再入辅助状态"
+  },
+  {
+    "id": "Pilot_AEUG_0087_N_ACE_AMR",
+    "name": "阿姆罗·雷[AEUG][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_AMR.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_AEUG_0087_N_ACE_BRTNA",
+    "name": "布莱特·诺亚[AEUG][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_BRTNA.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_AEUG_0087_N_ACE_EMSN",
+    "name": "艾玛·幸[AEUG][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_EMSN.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_AEUG_0087_N_ACE_FAUR",
+    "name": "花・园丽[AEUG][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_FAUR.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_AEUG_0087_N_ACE_HKBKN",
+    "name": "汉肯·贝肯纳[AEUG][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_HKBKN.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_AEUG_0087_N_ACE_KMBD",
+    "name": "卡缪·维丹[AEUG][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_KMBD.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_AEUG_0087_N_ACE_QWTR",
+    "name": "科瓦特罗·巴吉纳[AEUG][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_QWTR.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_TITANS_0087_N_ACE_Basque",
+    "name": "巴斯克·奥姆[TITANS][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Basque.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_TITANS_0087_N_ACE_Brown",
+    "name": "布朗·布尔达克[TITANS][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Brown.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_TITANS_0087_N_ACE_FOUR",
+    "name": "村雨·凤[TITANS][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_FOUR.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_TITANS_0087_N_ACE_JRDMS",
+    "name": "杰利特·梅萨[TITANS][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_JRDMS.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_TITANS_0087_N_ACE_Rosamia",
+    "name": "罗莎米亚·巴达姆[TITANS][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Rosamia.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_TITANS_0087_N_ACE_Scirocco",
+    "name": "帕普提玛斯·西洛克[TITANS][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Scirocco.ini",
+    "reason": "ACE驾驶员"
+  },
+  {
+    "id": "Pilot_TITANS_0087_N_ACE_Yazan",
+    "name": "亚赞·盖博[TITANS][0087]",
+    "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Yazan.ini",
+    "reason": "ACE驾驶员"
+  }
+]

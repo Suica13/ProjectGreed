@@ -859,5 +859,9 @@
         }
       ]
     }
+  ],
+  "availableFactions": [
+    "ZEON",
+    "NEO_ZEON"
   ]
 }

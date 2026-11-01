@@ -1,10 +1,11 @@
 """Read-only MOD parser. Importing this module never writes assets or executes legacy importers."""
+import os
 import functools
 import re
 from pathlib import Path
 
 MOD = Path(r"E:/RustedWarfare_Reunion/mods/units")
-ROOT = MOD / "GW_BattleUniverse_DLC_0079"
+ROOT = MOD / os.environ.get("PROJECTGREED_MOD_DLC", "GW_BattleUniverse_DLC_0079")
 MAIN = MOD / "GW_BattleUniverse_Main"
 ASSETS = Path(__file__).resolve().parents[1] / "assets"
 
@@ -27,7 +28,13 @@ def parse(file):
             current[key.strip()] = value.strip()
     return sections
 
-def resolve(reference, base=ROOT, root=ROOT):
+def source_root(path):
+    path = Path(path).resolve()
+    relative = path.relative_to(MOD.resolve())
+    return MOD / relative.parts[0]
+
+def resolve(reference, base=ROOT, root=None):
+    root = Path(root) if root is not None else source_root(base)
     reference = reference.strip().replace("\\", "/")
     path = root / reference[5:].lstrip("/") if reference.startswith("ROOT:") else base / reference
     path = path.resolve()
@@ -36,8 +43,9 @@ def resolve(reference, base=ROOT, root=ROOT):
     return path
 
 @functools.lru_cache(None)
-def load(file, root=ROOT, stack=()):
+def load(file, root=None, stack=()):
     file = Path(file)
+    root = Path(root) if root is not None else source_root(file)
     if file in stack:
         raise ValueError("Cyclic copyFrom: " + str(file))
     own, result = parse(file), {}

@@ -347,7 +347,25 @@ html.catalog-developer #formationUnitDetail .unit-detail-summary {
   overflow: hidden;
   background: #101923;
 }
-#editorDownloadProgress[hidden] { display: none; }
-#editorDownloadProgress::-webkit-progress-bar { background: #101923; }
-#editorDownloadProgress::-webkit-progress-value { background: #62c8ff; }
-#editorDownloadProgress::-moz-progress-bar { background: #62c8ff; }
+#editorDownloadProgress[hidden] {
+  display: none;
+}
+#editorDownloadProgress::-webkit-progress-bar {
+  background: #101923;
+}
+#editorDownloadProgress::-webkit-progress-value {
+  background: #62c8ff;
+}
+#editorDownloadProgress::-moz-progress-bar {
+  background: #62c8ff;
+}
+
+.developer-toolbar #editorFactionSwitch {
+  margin-left: auto;
+  max-width: 240px;
+}
+html.catalog-developer .encyclopedia-unit,
+html.catalog-developer #encyclopediaList > .formation-weapon-detail {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 140px;
+}

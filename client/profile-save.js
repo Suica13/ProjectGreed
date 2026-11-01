@@ -1,6 +1,6 @@
 /* Personal progress only: never copy connection credentials or an ongoing match. */
 const ProfileSave = (() => {
-  const factions = ["PMC", "EFSF", "ZEON"];
+  const factions = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
   const pilotKey = "projectgreed.custom-pilots.v2.",
     formationKey = "slg-formations-v1.";
   // Archive-only lossless dictionary compression. Runtime receipt lookup stays unchanged.
@@ -11,15 +11,18 @@ const ProfileSave = (() => {
       groups.get(match).push(id);
     }
     const { claimed, ...rest } = store;
-    return { ...rest, claimedPacked: [...groups].map(([match, ids]) => {
-      let prefix = ids[0];
-      for (const id of ids) {
-        let n = 0;
-        while (n < prefix.length && prefix[n] === id[n]) n++;
-        prefix = prefix.slice(0, n);
-      }
-      return [match, prefix, ids.map(id => id.slice(prefix.length))];
-    }) };
+    return {
+      ...rest,
+      claimedPacked: [...groups].map(([match, ids]) => {
+        let prefix = ids[0];
+        for (const id of ids) {
+          let n = 0;
+          while (n < prefix.length && prefix[n] === id[n]) n++;
+          prefix = prefix.slice(0, n);
+        }
+        return [match, prefix, ids.map((id) => id.slice(prefix.length))];
+      }),
+    };
   }
   function unpackClaims(store) {
     if (!store || !Array.isArray(store.claimedPacked) || store.claimed !== undefined)
@@ -28,8 +31,13 @@ const ProfileSave = (() => {
     for (const group of store.claimedPacked) {
       if (!Array.isArray(group) || group.length !== 3) throw Error("奖励记录压缩格式无效");
       const [match, prefix, suffixes] = group;
-      if (typeof match !== "string" || match.length > 200 ||
-          typeof prefix !== "string" || prefix.length > 200 || !Array.isArray(suffixes))
+      if (
+        typeof match !== "string" ||
+        match.length > 200 ||
+        typeof prefix !== "string" ||
+        prefix.length > 200 ||
+        !Array.isArray(suffixes)
+      )
         throw Error("奖励记录压缩格式无效");
       for (const suffix of suffixes) {
         if (typeof suffix !== "string" || prefix.length + suffix.length > 200)
@@ -45,27 +53,37 @@ const ProfileSave = (() => {
   function encodeData(value = exportData()) {
     const clean = validate(value);
     return {
-      ...clean, schemaVersion: 2, createdAt: value.createdAt || new Date().toISOString(),
-      development: packClaims(clean.development), economy: packClaims(clean.economy),
+      ...clean,
+      schemaVersion: 2,
+      createdAt: value.createdAt || new Date().toISOString(),
+      development: packClaims(clean.development),
+      economy: packClaims(clean.economy),
     };
   }
   function validate(value) {
     if (value?.format !== "ProjectGreed-profile" || ![1, 2].includes(value.schemaVersion))
       throw Error("不支持的个人存档格式");
-    if (value.schemaVersion === 2) value = {
-      ...value, development: unpackClaims(value.development), economy: unpackClaims(value.economy),
-    };
+    if (value.schemaVersion === 2)
+      value = {
+        ...value,
+        development: unpackClaims(value.development),
+        economy: unpackClaims(value.economy),
+      };
     const result = {
       format: value.format,
       schemaVersion: 1,
-      identity: value.identity ? ProfileIdentity.validate(value.identity) : ProfileIdentity.snapshot(),
+      identity: value.identity
+        ? ProfileIdentity.validate(value.identity)
+        : ProfileIdentity.snapshot(),
       pilots: {},
       formations: {},
       development: Development.validateProgress(value.development),
       economy: Economy.validate(ProfileMigrations.economy(value.economy)),
     };
     for (const faction of factions) {
-      const store = value.pilots?.[faction];
+      const addedFaction = ["AEUG", "TITANS", "NEO_ZEON"].includes(faction);
+      const store =
+        value.pilots?.[faction] ?? (addedFaction ? { pilots: [], awards: [] } : undefined);
       if (
         !Array.isArray(store?.pilots) ||
         !Array.isArray(store.awards) ||
@@ -79,7 +97,8 @@ const ProfileSave = (() => {
       });
       if (new Set(pilots.map((p) => p.id)).size !== pilots.length) throw Error("驾驶员编号重复");
       result.pilots[faction] = { pilots, awards: [...new Set(store.awards)] };
-      const formation = value.formations?.[faction];
+      const formation =
+        value.formations?.[faction] ?? (addedFaction ? null : value.formations?.[faction]);
       if (formation === null) {
         result.formations[faction] = null;
         continue;

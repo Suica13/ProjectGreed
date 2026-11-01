@@ -1802,5 +1802,9 @@
     "refitFrom": [
       "ChivvayClass"
     ]
-  }
+  },
+  "availableFactions": [
+    "ZEON",
+    "NEO_ZEON"
+  ]
 }

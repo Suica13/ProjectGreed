@@ -491,7 +491,9 @@ function loadCatalog({
       prefab.availableFactions !== undefined &&
       (!Array.isArray(prefab.availableFactions) ||
         !prefab.availableFactions.length ||
-        prefab.availableFactions.some((value) => !["EFSF", "ZEON"].includes(value)))
+        prefab.availableFactions.some(
+          (value) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(value),
+        ))
     )
       throw Error("Invalid available factions: " + prefab.id);
     if (
@@ -502,9 +504,10 @@ function loadCatalog({
       throw Error("Invalid unit action points: " + prefab.id);
     if (
       !Array.isArray(prefab.tags) ||
-      prefab.tags.filter((tag) => ["EFSF", "ZEON"].includes(tag)).length !== 1
+      prefab.tags.filter((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag))
+        .length !== 1
     )
-      throw Error("Unit must have exactly one EFSF or ZEON tag: " + ref);
+      throw Error("Unit must have exactly one primary faction tag: " + ref);
     if (!prefab.tags.some((tag) => /^\d{4}(?:[EL])?$/.test(tag)))
       throw Error("Unit must have an era tag: " + ref);
     prefab.unitTags ??= [];
@@ -553,7 +556,9 @@ function loadCatalog({
     );
     if (sizeTags.length > 1) throw Error("Conflicting unit size tags: " + ref);
     if (!sizeTags.length) prefab.unitTags.push(prefab.stats.ship ? "LargeUnit" : "MediumUnit");
-    prefab.faction = prefab.tags.find((tag) => ["EFSF", "ZEON"].includes(tag));
+    prefab.faction = prefab.tags.find((tag) =>
+      ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag),
+    );
     if (prefab.schemaVersion !== 2 || result.prefabs.some((p) => p.id === prefab.id))
       throw Error("Invalid prefab: " + ref);
     if (typeof prefab.code !== "string" || !prefab.code.trim())

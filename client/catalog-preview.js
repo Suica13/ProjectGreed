@@ -14,7 +14,7 @@ const Formation = (() => {
   };
   function close() {
     byId("formationUnitDetail").hidden = true;
-    trigger?.focus();
+    if (trigger?.isConnected) trigger.focus({ preventScroll: true });
   }
   function previewUnit(id, focus = null) {
     const prefab = ART.prefabs.find((value) => value.id === id);

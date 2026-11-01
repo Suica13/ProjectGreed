@@ -63,25 +63,63 @@ function createDeveloperServer({
     }
     return JSON.parse(Buffer.concat(chunks).toString("utf8"));
   }
-  function editorCatalog() {
-    const data = catalog();
+  const editorFactions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
+  function editorCatalog(faction = "EFSF") {
+    if (!editorFactions.includes(faction)) throw Error("请选择一个有效阵营单位库");
+    const full = catalog();
+    const data = {
+      ...full,
+      prefabs: full.prefabs.filter((prefab) =>
+        (prefab.availableFactions || [prefab.faction]).includes(faction),
+      ),
+    };
+    const ids = new Set(data.prefabs.map((prefab) => prefab.id));
+    const strip = ({ materials, skeleton, layers, animations, source, sourceStats, ...value }) =>
+      value;
+    data.models = Object.fromEntries(
+      Object.entries(full.models)
+        .filter(([, model]) => ids.has(model.prefabId))
+        .map(([id, model]) => [id, strip(model)]),
+    );
     // The editor fetches complete source JSON only when editing an individual item.
     // These drawing-only fields are unused by its text-based catalog and inspector.
     const prefabs = data.prefabs.map((prefab) => {
       const { materials, skeleton, layers, animations, source, sourceStats, ...editable } = prefab;
       return editable;
     });
-    return { ...data, prefabs, units: [], assets: {}, sounds: {}, music: [], maps: {}, effects: {} };
+    return {
+      ...data,
+      prefabs,
+      units: [],
+      assets: {},
+      sounds: {},
+      music: [],
+      maps: {},
+      effects: {},
+    };
+  }
+  function scopedProduction(data, production) {
+    const ids = new Set(data.prefabs.map((prefab) => prefab.id));
+    return Object.fromEntries(
+      ["defaultKits", "licenseOffers"].map((field) => [
+        field,
+        Object.fromEntries(Object.entries(production[field] || {}).filter(([id]) => ids.has(id))),
+      ]),
+    );
   }
   const server = http.createServer(async (req, res) => {
     const send = (status, value) => {
       const json = Buffer.from(JSON.stringify(value));
-      const compressed = json.length > 2048 && /(?:^|,)\s*gzip(?:\s*;\s*q=(?!0(?:\.0*)?(?:\s|,|$))[0-9.]+)?(?:\s|,|$)/i.test(req.headers["accept-encoding"] || "");
+      const compressed =
+        json.length > 2048 &&
+        /(?:^|,)\s*gzip(?:\s*;\s*q=(?!0(?:\.0*)?(?:\s|,|$))[0-9.]+)?(?:\s|,|$)/i.test(
+          req.headers["accept-encoding"] || "",
+        );
       const payload = compressed ? gzipSync(json, { level: 3 }) : json;
       res.writeHead(status, {
         "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "no-store",
-        "Vary": "Origin, Accept-Encoding",
+        Vary: "Origin, Accept-Encoding",
         "Content-Length": payload.length,
         "X-Editor-JSON-Bytes": json.length,
         "Access-Control-Expose-Headers": "X-Editor-JSON-Bytes",
@@ -92,14 +130,30 @@ function createDeveloperServer({
     try {
       const url = new URL(req.url, "http://localhost");
       if (logger) {
-        const routes = ["/api/editor/session", "/api/editor/bootstrap", "/api/editor/unit", "/api/editor/weapon", "/api/editor/conversion", "/api/editor/wip"];
+        const routes = [
+          "/api/editor/session",
+          "/api/editor/bootstrap",
+          "/api/editor/unit",
+          "/api/editor/weapon",
+          "/api/editor/conversion",
+          "/api/editor/wip",
+        ];
         const route = routes.includes(url.pathname) ? url.pathname : "其他接口";
         res.once("finish", () => {
-          if (res.statusCode >= 400 || (req.method === "POST" && routes.includes(url.pathname)) || url.pathname === "/api/editor/bootstrap") {
-            const result = url.pathname === "/api/editor/session" && req.method === "POST"
-              ? (res.statusCode === 200 ? "认证通过" : "认证失败")
-              : "请求完成";
-            logger(`[${new Date().toISOString()}] ${req.socket.remoteAddress} ${result} ${req.method} ${route} HTTP ${res.statusCode} · 发送 ${res.getHeader("Content-Length") || 0} 字节`);
+          if (
+            res.statusCode >= 400 ||
+            (req.method === "POST" && routes.includes(url.pathname)) ||
+            url.pathname === "/api/editor/bootstrap"
+          ) {
+            const result =
+              url.pathname === "/api/editor/session" && req.method === "POST"
+                ? res.statusCode === 200
+                  ? "认证通过"
+                  : "认证失败"
+                : "请求完成";
+            logger(
+              `[${new Date().toISOString()}] ${req.socket.remoteAddress} ${result} ${req.method} ${route} HTTP ${res.statusCode} · 发送 ${res.getHeader("Content-Length") || 0} 字节`,
+            );
           }
         });
       }
@@ -155,7 +209,7 @@ function createDeveloperServer({
           for (const [id, expires] of sessions) if (expires <= now) sessions.delete(id);
           const token = crypto.randomBytes(32).toString("hex");
           sessions.set(token, now + 8 * 3600000);
-          return send(200, { ...metadata, token });
+          return send(200, { ...metadata, token, factionCatalogs: true, factions: editorFactions });
         }
       }
       if ((sessions.get(req.headers["x-editor-token"]) || 0) <= Date.now())
@@ -169,14 +223,17 @@ function createDeveloperServer({
           return send(200, store.getWeapon(url.searchParams.get("ref")));
         if (url.pathname === "/api/editor/templates") return send(200, store.templates());
         if (url.pathname === "/api/editor/bootstrap") {
-          const data = editorCatalog();
+          const data = editorCatalog(url.searchParams.get("faction") || "EFSF");
           return send(200, {
             catalog: require("../shared/asset-pool.js").pack(data),
-            production: require("../shared/catalog-adjustments.cjs").production(
-              JSON.parse(
-                fs.readFileSync(path.join(root, "shared/production-catalog.json"), "utf8"),
+            production: scopedProduction(
+              data,
+              require("../shared/catalog-adjustments.cjs").production(
+                JSON.parse(
+                  fs.readFileSync(path.join(root, "shared/production-catalog.json"), "utf8"),
+                ),
+                require("../shared/catalog-adjustments.cjs").read(root),
               ),
-              require("../shared/catalog-adjustments.cjs").read(root),
             ),
             locales: {
               en: JSON.parse(fs.readFileSync(path.join(root, "client/locales/en.json"), "utf8")),
@@ -185,7 +242,7 @@ function createDeveloperServer({
           });
         }
         if (url.pathname === "/api/editor/catalog") {
-          const data = editorCatalog();
+          const data = editorCatalog(url.searchParams.get("faction") || "EFSF");
           const selected = url.searchParams.get("ids");
           let ids = null;
           if (selected !== null) {
@@ -202,14 +259,23 @@ function createDeveloperServer({
             partial: !!ids,
             ids,
             prefabs: wanted ? data.prefabs.filter((prefab) => wanted.has(prefab.id)) : data.prefabs,
-            models: wanted ? Object.fromEntries(Object.entries(data.models).filter(([, model]) => wanted.has(model.prefabId))) : data.models,
+            models: wanted
+              ? Object.fromEntries(
+                  Object.entries(data.models).filter(([, model]) => wanted.has(model.prefabId)),
+                )
+              : data.models,
             units: [],
             assets: {},
-            production: wanted ? Object.fromEntries(
-              ["defaultKits", "licenseOffers"].map((field) => [field,
-                Object.fromEntries(Object.entries(production[field]).filter(([id]) => wanted.has(id))),
-              ]),
-            ) : production,
+            production: wanted
+              ? Object.fromEntries(
+                  ["defaultKits", "licenseOffers"].map((field) => [
+                    field,
+                    Object.fromEntries(
+                      Object.entries(production[field]).filter(([id]) => wanted.has(id)),
+                    ),
+                  ]),
+                )
+              : scopedProduction(data, production),
           });
         }
       }
@@ -280,11 +346,16 @@ if (require.main === module) {
     .then((address) => {
       console.log("编辑服务已启动：http://" + address.address + ":" + address.port);
       console.log("等待管理员连接；此窗口显示连接与编辑请求。关闭窗口或按 Ctrl+C 停止服务。");
-      console.log("管理员独立打开 developer.html，输入服务器地址与密钥即可。此服务不会自动打开网页。");
+      console.log(
+        "管理员独立打开 developer.html，输入服务器地址与密钥即可。此服务不会自动打开网页。",
+      );
     })
     .catch((error) => {
       console.error("编辑服务启动失败：" + error.message);
-      if (error.code === "EADDRINUSE") console.error("此端口已被占用，可能已有旧编辑服务在后台运行。请先停止旧服务，或修改 developer-config.json 的 port。");
+      if (error.code === "EADDRINUSE")
+        console.error(
+          "此端口已被占用，可能已有旧编辑服务在后台运行。请先停止旧服务，或修改 developer-config.json 的 port。",
+        );
       process.exitCode = 1;
     });
 }

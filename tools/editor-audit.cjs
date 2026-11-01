@@ -125,6 +125,12 @@ function planAudit(root, changes, metadata) {
         id: after.id,
         previousId: before.id,
         name: after.name,
+        factions:
+          after.availableFactions ||
+          after.tags.filter((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag)),
+        faction:
+          after.tags.find((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag)) ||
+          "OTHER",
         previousName: before.name,
         file,
         changes: fields,
@@ -255,11 +261,62 @@ function exceptionDocument(existing, record) {
 }
 function auditOutputs(root, record, afterRevision) {
   record.afterRevision = afterRevision;
-  const file = path.join(root, exceptionFile),
-    existing = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "# MS、舰船例外列表\n";
-  return new Map([
-    [record.logFile, JSON.stringify(record, null, 2) + "\n"],
-    [exceptionFile, exceptionDocument(existing, record)],
-  ]);
+  const outputs = new Map([[record.logFile, JSON.stringify(record, null, 2) + "\n"]]);
+  const groups = new Map();
+  if (record.operation === "conversion-rules") groups.set("global-rules", []);
+  else if (record.units.length)
+    for (const unit of record.units) {
+      for (const faction of unit.factions?.length ? unit.factions : [unit.faction || "OTHER"]) {
+        if (!groups.has(faction)) groups.set(faction, []);
+        groups.get(faction).push(unit);
+      }
+    }
+  else groups.set(record.operation === "wip-list" ? "wip" : "common-weapons", []);
+  for (const [group, units] of groups) {
+    const file = "docs/editor-changes/" + group + ".md";
+    const existing = fs.existsSync(path.join(root, file))
+      ? fs.readFileSync(path.join(root, file), "utf8")
+      : "# " + group + " 修改记录\n";
+    outputs.set(
+      file,
+      exceptionDocument(existing, { ...record, units, logFile: "../../" + record.logFile }),
+    );
+  }
+  const file = path.join(root, exceptionFile);
+  let existing = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "# MS、舰船例外列表\n";
+  const a = existing.indexOf(start),
+    b = existing.indexOf(end);
+  if (a < 0 !== b < 0 || (a >= 0 && b < a))
+    throw Error("例外表格的自动登记标记不完整，请先修复文档。");
+  const links =
+    "<!-- catalog-editor-index:start -->\n\n## 开发者修改记录\n\n" +
+    [
+      "EFSF",
+      "ZEON",
+      "AEUG",
+      "TITANS",
+      "NEO_ZEON",
+      "global-rules",
+      "common-weapons",
+      "wip",
+      "OTHER",
+      "legacy",
+    ]
+      .map((group) => "- [" + group + "](docs/editor-changes/" + group + ".md)")
+      .join("\n") +
+    "\n\n<!-- catalog-editor-index:end -->";
+  if (a >= 0 && b >= a) {
+    const archive = "docs/editor-changes/legacy.md";
+    const previous = fs.existsSync(path.join(root, archive))
+      ? fs.readFileSync(path.join(root, archive), "utf8")
+      : "# 历史编辑记录\n";
+    outputs.set(archive, previous + "\n\n" + existing.slice(a, b + end.length) + "\n");
+    existing = existing.slice(0, a) + existing.slice(b + end.length);
+  }
+  existing = existing
+    .replace(/<!-- catalog-editor-index:start -->[\s\S]*?<!-- catalog-editor-index:end -->/, "")
+    .trimEnd();
+  outputs.set(exceptionFile, existing + "\n\n" + links + "\n");
+  return outputs;
 }
 module.exports = { differences, planAudit, auditOutputs, exceptionDocument, exceptionFile };

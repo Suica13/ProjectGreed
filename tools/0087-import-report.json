@@ -1,0 +1,3400 @@
+{
+  "units": [
+    {
+      "id": "RMS_179_AEUG",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGC_83_AEUG",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "ExplosiveReactiveArmor_Shell",
+          "source": "Template/Unit/Skill/ExplosiveReactiveArmor_Shell.gw",
+          "status": "adapted",
+          "name": "爆炸反应装甲：最终实弹伤害降低25%"
+        }
+      ]
+    },
+    {
+      "id": "RGM_79N_AEUG",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGM_79C_KS",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGM_79SP2",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGM_79C_Space",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RX_77D",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RX_77_4",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RX_77_3",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGM_79SC",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGC_80",
+      "status": "existing",
+      "mechanics": []
+    },
+    {
+      "id": "RGC_80S",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MS_06M_0087",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "两栖：可穿越陆地与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "Sonar",
+          "source": "Template/Unit/Skill/Sonar.gw",
+          "status": "adapted",
+          "name": "声呐"
+        },
+        {
+          "id": "SonarScan",
+          "name": "SonarScan",
+          "status": "adapted"
+        }
+      ]
+    },
+    {
+      "id": "MS_07H_0087",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "FlyStyle",
+          "source": "Template/Unit/Skill/FlyStyle.gw",
+          "status": "adapted",
+          "name": "飞行姿态：部位完好时消耗1 AP起飞或降落，保留移动机会"
+        }
+      ]
+    },
+    {
+      "id": "MS_06E3",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MS_11",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        }
+      ]
+    },
+    {
+      "id": "FF_S3",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "Fighter",
+          "source": "Template/Unit/Skill/Fighter.gw",
+          "status": "adapted",
+          "name": "战斗机特性"
+        },
+        {
+          "id": "DogFight_A",
+          "source": "Template/Unit/Skill/DogFight_A.gw",
+          "status": "review",
+          "name": "空中缠斗"
+        }
+      ]
+    },
+    {
+      "id": "MedeaKai",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "Deploy",
+          "source": "Template/Unit/Skill/Deploy.gw",
+          "status": "adapted",
+          "name": "部署：切换原生形态，部署期间禁止移动"
+        }
+      ]
+    },
+    {
+      "id": "GrayPhantomClass_0087",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_ReEntry",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
+          "status": "review"
+        },
+        {
+          "id": "special_Common_ReEntry_FromSpace",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+          "status": "review"
+        },
+        {
+          "id": "special_Common_ReEntry_Both",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "ColumbusClassKai",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        }
+      ]
+    },
+    {
+      "id": "SalamisClassKai_0087_AEUG",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "RX_098",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "DodaiKai",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "DogFight_A",
+          "source": "Template/Unit/Skill/DogFight_A.gw",
+          "status": "review",
+          "name": "空中缠斗"
+        },
+        {
+          "id": "SFS_2X",
+          "source": "Template/Unit/Skill/SFS_2X.gw",
+          "status": "review",
+          "name": "SFS_2X"
+        }
+      ]
+    },
+    {
+      "id": "RX_77D_4",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGM_79N_FB_AEUG",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RMS_099",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RX_178_AEUG",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        }
+      ]
+    },
+    {
+      "id": "MSA_003",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        }
+      ]
+    },
+    {
+      "id": "RMS_179_Nemo",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "IrishClass",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "MSN_100",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "ABC",
+          "source": "Template/Unit/Skill/ABC.gw",
+          "status": "review",
+          "name": "ABC"
+        }
+      ]
+    },
+    {
+      "id": "MSK_008",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "RX_178_AEUG_FlyingArmor",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "review",
+          "name": "换装／改修"
+        },
+        {
+          "id": "ExitUnit",
+          "source": "Template/Unit/Skill/ExitUnit.gw",
+          "status": "adapted",
+          "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
+        },
+        {
+          "id": "DogFight_A",
+          "source": "Template/Unit/Skill/DogFight_A.gw",
+          "status": "review",
+          "name": "空中缠斗"
+        },
+        {
+          "id": "FlyUnit",
+          "source": "Template/Unit/Skill/FlyUnit.gw",
+          "status": "review",
+          "name": "飞行模式"
+        },
+        {
+          "id": "FlyMS",
+          "source": "Template/Unit/Skill/FlyMS.gw",
+          "status": "review",
+          "name": "FlyMS"
+        },
+        {
+          "id": "special_Common_ReEntry_MS_FromSpace",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_MS_FromSpace.gw",
+          "status": "review"
+        }
+      ]
+    },
+    {
+      "id": "RX_178_AEUG_FXA_05D",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "GarudaClass_AEUG",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "MSA_005",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly_SFS_OFF",
+          "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+          "status": "review",
+          "name": "Transform_LandFly_SFS_OFF"
+        }
+      ]
+    },
+    {
+      "id": "MSA_004",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        }
+      ]
+    },
+    {
+      "id": "ArgamaClass",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_ReEntry",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
+          "status": "review"
+        },
+        {
+          "id": "special_Common_ReEntry_FromSpace",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+          "status": "review"
+        },
+        {
+          "id": "special_Common_ReEntry_Both",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "MSZ_000",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "MSA_003_FXA_05D",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MSA_003_FXA_05D_EWAC",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MSA_003_Cannon",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "MSR_00100S",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CustomUnit_NewUnit",
+          "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        },
+        {
+          "id": "ABC",
+          "source": "Template/Unit/Skill/ABC.gw",
+          "status": "review",
+          "name": "ABC"
+        }
+      ]
+    },
+    {
+      "id": "MSA_003_HM",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "MSZ_006",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "Transform_LandFly_SFS_OFF",
+          "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+          "status": "review",
+          "name": "Transform_LandFly_SFS_OFF"
+        }
+      ]
+    },
+    {
+      "id": "MSF_007",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "MSA_004K",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RMS_099B_Red",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MSZ_006A1",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly_SFS_OFF",
+          "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+          "status": "review",
+          "name": "Transform_LandFly_SFS_OFF"
+        }
+      ]
+    },
+    {
+      "id": "MSZ_006C1",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly_SFS_OFF",
+          "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+          "status": "review",
+          "name": "Transform_LandFly_SFS_OFF"
+        }
+      ]
+    },
+    {
+      "id": "MSZ_010",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CustomUnit_NewUnit",
+          "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "MSZ_008",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly_SFS_OFF",
+          "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+          "status": "review",
+          "name": "Transform_LandFly_SFS_OFF"
+        }
+      ]
+    },
+    {
+      "id": "MSA_099_2",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGM_86R",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGM_86R_FXA_05D",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGM_86R_Nouvel",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MSZ_010S",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "ABC",
+          "source": "Template/Unit/Skill/ABC.gw",
+          "status": "review",
+          "name": "ABC"
+        },
+        {
+          "id": "CustomUnit_NewUnit",
+          "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        }
+      ]
+    },
+    {
+      "id": "FA_010S",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "ABC",
+          "source": "Template/Unit/Skill/ABC.gw",
+          "status": "review",
+          "name": "ABC"
+        },
+        {
+          "id": "ExitUnit",
+          "source": "Template/Unit/Skill/ExitUnit.gw",
+          "status": "adapted",
+          "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
+        }
+      ]
+    },
+    {
+      "id": "FA_010A",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "FA_00100S",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "ExitUnit_NewUnit",
+          "source": "Template/Unit/Skill/ExitUnit_NewUnit.gw",
+          "status": "adapted",
+          "name": "脱出：原生形态转换，资源与部位规则使用显式配置"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        }
+      ]
+    },
+    {
+      "id": "MSR_00100S_M",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "ABC",
+          "source": "Template/Unit/Skill/ABC.gw",
+          "status": "review",
+          "name": "ABC"
+        }
+      ]
+    },
+    {
+      "id": "MSA_005S",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly_SFS_OFF",
+          "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+          "status": "review",
+          "name": "Transform_LandFly_SFS_OFF"
+        }
+      ]
+    },
+    {
+      "id": "MSA_005K",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MSN_001",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "ABC",
+          "source": "Template/Unit/Skill/ABC.gw",
+          "status": "review",
+          "name": "ABC"
+        },
+        {
+          "id": "Transform_LandFly_SFS_OFF",
+          "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+          "status": "review",
+          "name": "Transform_LandFly_SFS_OFF"
+        }
+      ]
+    },
+    {
+      "id": "MSA_0011",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CustomUnit_NewUnit",
+          "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        },
+        {
+          "id": "ALICE_Off",
+          "source": "Template/Unit/Skill/ALICE_Off.gw",
+          "status": "review",
+          "name": "ALICE_Off"
+        },
+        {
+          "id": "remote_weapon_AEUG_MSA_0011_Incom",
+          "name": "INCOM有线炮：逐发判定、错峰飞行与回收",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Funnel/AEUG_MSA_0011_Incom.gw"
+        }
+      ]
+    },
+    {
+      "id": "MSA_007",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "review",
+          "name": "换装／改修"
+        }
+      ]
+    },
+    {
+      "id": "MSA_007T",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "MSA_0011_Ext",
+      "status": "imported",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "ALICE_Off",
+          "source": "Template/Unit/Skill/ALICE_Off.gw",
+          "status": "review",
+          "name": "ALICE_Off"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        },
+        {
+          "id": "remote_weapon_AEUG_MSA_0011_Incom",
+          "name": "INCOM有线炮：逐发判定、错峰飞行与回收",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Funnel/AEUG_MSA_0011_Incom.gw"
+        },
+        {
+          "id": "remote_weapon_AEUG_MSA_0011_Ext_AntiBeamIncom",
+          "name": "浮游兵器：部署、远程操控与回收待适配",
+          "status": "review",
+          "source": "Units/BattleUnits/Weapon/Funnel/AEUG_MSA_0011_Ext_AntiBeamIncom.gw"
+        },
+        {
+          "id": "remote_review_AEUG_MSA_0011_Ext_AntiBeamIncom",
+          "name": "Unsupported remote payload (reflector or indirect control): MSA_0011_Ext_AntiBeamIncom_L",
+          "source": "Units/BattleUnits/Weapon/Funnel/AEUG_MSA_0011_Ext_AntiBeamIncom.gw",
+          "status": "review"
+        }
+      ]
+    },
+    {
+      "id": "MSA_007E",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RMS_106",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RMS_179_TITANS",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGC_83_TITANS",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "ExplosiveReactiveArmor_Shell",
+          "source": "Template/Unit/Skill/ExplosiveReactiveArmor_Shell.gw",
+          "status": "adapted",
+          "name": "爆炸反应装甲：最终实弹伤害降低25%"
+        }
+      ]
+    },
+    {
+      "id": "RGM_79Q",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        }
+      ]
+    },
+    {
+      "id": "SalamisClassKai_0087_TITANS",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "RX_178",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "review",
+          "name": "换装／改修"
+        }
+      ]
+    },
+    {
+      "id": "RMS_117",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RGM_79Q_ChobamArmor",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "ExplosiveReactiveArmor_Shell",
+          "source": "Template/Unit/Skill/ExplosiveReactiveArmor_Shell.gw",
+          "status": "adapted",
+          "name": "爆炸反应装甲：最终实弹伤害降低25%"
+        }
+      ]
+    },
+    {
+      "id": "BaseJabber",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "DogFight_A",
+          "source": "Template/Unit/Skill/DogFight_A.gw",
+          "status": "review",
+          "name": "空中缠斗"
+        },
+        {
+          "id": "SFS_2X",
+          "source": "Template/Unit/Skill/SFS_2X.gw",
+          "status": "review",
+          "name": "SFS_2X"
+        }
+      ]
+    },
+    {
+      "id": "Gator",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "DogFight_A",
+          "source": "Template/Unit/Skill/DogFight_A.gw",
+          "status": "review",
+          "name": "空中缠斗"
+        },
+        {
+          "id": "SFS_2X",
+          "source": "Template/Unit/Skill/SFS_2X.gw",
+          "status": "review",
+          "name": "SFS_2X"
+        }
+      ]
+    },
+    {
+      "id": "RMS_108",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RMS_179_FedayeenRifle",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "AlexandriaClass",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "RX_160",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "FlyStyle",
+          "source": "Template/Unit/Skill/FlyStyle.gw",
+          "status": "adapted",
+          "name": "飞行姿态：部位完好时消耗1 AP起飞或降落，保留移动机会"
+        }
+      ]
+    },
+    {
+      "id": "NRX_044_TR_3",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "RX_178_Unit4",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "review",
+          "name": "换装／改修"
+        }
+      ]
+    },
+    {
+      "id": "GarudaClass_TITANS",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "NRX_044",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "RX_110",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "RMS_154",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        }
+      ]
+    },
+    {
+      "id": "DogosseGiarClass",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "RX_121",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RX_121_1",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "RX_121_HighMobilityForm",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "RX_121_TripleBooster",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RMS_106CS",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RMS_119",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RX_121_1_FF_X29A",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "MRX_009",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        }
+      ]
+    },
+    {
+      "id": "RX_121_2A",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "RX_121_2A_M",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RX_139",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "ORX_005",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "PMX_000",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "PMX_003",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "PMX_002",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_DetectArea_Lv2",
+          "name": "special_Common_DetectArea_Lv2",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_DetectArea_Lv2.gw",
+          "status": "review"
+        }
+      ]
+    },
+    {
+      "id": "PMX_001",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "RMS_154_Kai",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RX_124",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit_NewUnit",
+          "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        }
+      ]
+    },
+    {
+      "id": "RX_121_3C",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        }
+      ]
+    },
+    {
+      "id": "ORX_005_TR_5",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit_NewUnit",
+          "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "RGM_86R_EFSF",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RX_124_FF_X39A",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        }
+      ]
+    },
+    {
+      "id": "ORX_005_TR_5_FF_X39A",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "RX_124_Kehaar2",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        }
+      ]
+    },
+    {
+      "id": "RX_124_Kehaar2_M",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        }
+      ]
+    },
+    {
+      "id": "MRX_010",
+      "status": "imported",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        },
+        {
+          "id": "remote_weapon_TITANS_MRX_010_Funnel",
+          "name": "浮游兵器：部署、远程操控与回收待适配",
+          "status": "review",
+          "source": "Units/BattleUnits/Weapon/Funnel/TITANS_MRX_010_Funnel.gw"
+        },
+        {
+          "id": "remote_review_TITANS_MRX_010_Funnel",
+          "name": "Unsupported remote payload (reflector or indirect control): MRX_010_Funnel",
+          "source": "Units/BattleUnits/Weapon/Funnel/TITANS_MRX_010_Funnel.gw",
+          "status": "review"
+        }
+      ]
+    },
+    {
+      "id": "NRX_055",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "MS_09R_Stutzer",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "special_Common_MineLauncher_Continuous_Back_Space",
+          "name": "special_Common_MineLauncher_Continuous_Back_Space",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Space.gw",
+          "status": "review"
+        },
+        {
+          "id": "special_Common_MineLauncher_Continuous_Back_Space_Lv2",
+          "name": "special_Common_MineLauncher_Continuous_Back_Space_Lv2",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Space_Lv2.gw",
+          "status": "review"
+        }
+      ]
+    },
+    {
+      "id": "MS_06F_Stutzer",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MS_09S",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "YMS_18",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MS_15FS",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MS_15F",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MS_14FS",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "MS_14F",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MS_06F2_Commander",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "MS_06F2",
+      "status": "existing",
+      "mechanics": []
+    },
+    {
+      "id": "Dopp",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "Fighter",
+          "source": "Template/Unit/Skill/Fighter.gw",
+          "status": "adapted",
+          "name": "战斗机特性"
+        },
+        {
+          "id": "DogFight_A",
+          "source": "Template/Unit/Skill/DogFight_A.gw",
+          "status": "review",
+          "name": "空中缠斗"
+        }
+      ]
+    },
+    {
+      "id": "FatUncleKai",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "Deploy",
+          "source": "Template/Unit/Skill/Deploy.gw",
+          "status": "adapted",
+          "name": "部署：切换原生形态，部署期间禁止移动"
+        }
+      ]
+    },
+    {
+      "id": "ZanzibarClassKai_0087",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "special_Common_ReEntry_FromSpace",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+          "status": "review"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster_Both",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster_Both.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "PazockClass",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        }
+      ]
+    },
+    {
+      "id": "MusaiClassFinalType",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "ChivvayClassKai",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "MS_14A_Stutzer",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "special_Common_MineLauncher_Continuous_Back_Space",
+          "name": "special_Common_MineLauncher_Continuous_Back_Space",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Space.gw",
+          "status": "review"
+        },
+        {
+          "id": "special_Common_MineLauncher_Continuous_Back_Space_Lv2",
+          "name": "special_Common_MineLauncher_Continuous_Back_Space_Lv2",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MineLauncher_Continuous_Back_Space_Lv2.gw",
+          "status": "review"
+        }
+      ]
+    },
+    {
+      "id": "MS_09SS",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "MS_15K",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "AGX_04A1",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "GwanbanClass",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "RMS_099_NEO_ZEON",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RMS_106_NEO_ZEON",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "GarudaClass_NEO_ZEON",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "空中移动：可跨越山岩与水域",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "AMX_003",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "CustomUnit",
+          "source": "Template/Unit/Skill/CustomUnit.gw",
+          "status": "adapted",
+          "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "RMS_119_NEO_ZEON",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "GwadanClass",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "LaunchAllUnits",
+          "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+          "status": "adapted",
+          "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+        },
+        {
+          "id": "CmdCom",
+          "source": "Template/Unit/Skill/CmdCom.gw",
+          "status": "adapted",
+          "name": "通信指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "special_Common_ReEntry_NeedBooster",
+          "name": "大气层突入",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+          "status": "review"
+        },
+        {
+          "id": "Common_MinovskyParticle_M",
+          "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+        }
+      ]
+    },
+    {
+      "id": "MS_14J",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "AMX_002",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "I_Field",
+          "source": "Template/Unit/Skill/I_Field.gw",
+          "status": "adapted",
+          "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+        },
+        {
+          "id": "Irradiation",
+          "status": "adapted",
+          "name": "光束照射：方向射线、蓄力、逐机命中；原版固定演出与判定射程独立"
+        }
+      ]
+    },
+    {
+      "id": "AMX_004_1",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "remote_weapon_NZN_AMX_004_1_Funnel",
+          "name": "浮游炮：逐发判定、错峰飞行与回收",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Funnel/NZN_AMX_004_1_Funnel.gw"
+        }
+      ]
+    },
+    {
+      "id": "AMX_006",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "AMX_009",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "RMS_099B_NEO_ZEON",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "AMX_101",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "AMX_101K",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "AMX_102",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "AMX_103",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdDef",
+          "source": "Template/Unit/Skill/CmdDef.gw",
+          "status": "adapted",
+          "name": "防御指挥：范围与效果随驾驶员领导力变化"
+        }
+      ]
+    },
+    {
+      "id": "AMX_109",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "两栖：可穿越陆地与水域",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "AMX_008",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "AMX_004G",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "remote_weapon_NZN_AMX_004G_Funnel",
+          "name": "浮游炮：逐发判定、错峰飞行与回收",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Funnel/NZN_AMX_004G_Funnel.gw"
+        }
+      ]
+    },
+    {
+      "id": "AMA_01X",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "AMX_011",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        }
+      ]
+    },
+    {
+      "id": "AMX_014",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "remote_weapon_NZN_AMX_014_Incom",
+          "name": "INCOM有线炮：逐发判定、错峰飞行与回收",
+          "status": "adapted",
+          "source": "Units/BattleUnits/Weapon/Funnel/NZN_AMX_014_Incom.gw"
+        }
+      ]
+    },
+    {
+      "id": "AMX_107",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "CmdAtk",
+          "source": "Template/Unit/Skill/CmdAtk.gw",
+          "status": "adapted",
+          "name": "攻击指挥：范围与效果随驾驶员领导力变化"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    },
+    {
+      "id": "AMX_107M",
+      "status": "existing",
+      "mechanics": [
+        {
+          "id": "movement",
+          "name": "地面移动",
+          "status": "implemented"
+        },
+        {
+          "id": "Transform_LandFly",
+          "source": "Template/Unit/Skill/Transform_LandFly.gw",
+          "status": "review",
+          "name": "Transform_LandFly"
+        }
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "id": "Factory_AEUG_0087_Land",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_AEUG_0087_Mega",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_AEUG_0087_Space",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_AEUG_0087_Space_Mega",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Refinery_Common_T3",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Institute_Common_T2",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "SupplyDepot_Common_T2",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Academy_Common_T2",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Beacon_ACE_0087",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "HLV_0087_Build",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_AA_B",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_MG_B",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_CN_B",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_BM_B_Yellow",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Radar_B",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Space_MS_B",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Space_MG_B",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Space_CN_B",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Wall_T2_A",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Wall_T2_B",
+      "tech": "Tech_AEUG_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Ballute",
+      "tech": "Tech_AEUG_0087_GundamSeizurePlan",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Refinery_Common_T4",
+      "tech": "Tech_AEUG_0087_T2_ZetaGundamDevelopmentPlan",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_TITANS_0087_Land",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_TITANS_0087_Mega",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_TITANS_0087_Space",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_TITANS_0087_Space_Mega",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Refinery_Common_T3",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Institute_Common_T2",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "SupplyDepot_Common_T2",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Academy_Common_T2",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Beacon_ACE_0087",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "HLV_0087_Build",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_AA_B",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_MG_B",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_CN_B",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_BM_B",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Radar_B",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Space_MS_B",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Space_MG_B",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Space_CN_B",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Wall_T2_A",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Wall_T2_B",
+      "tech": "Tech_TITANS_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Ballute",
+      "tech": "Tech_TITANS_0087_MarasaiDevelopmentPlan",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Refinery_Common_T4",
+      "tech": "Tech_TITANS_0087_T2_SpaceTypeTMSDevelopmentPlan",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_NEO_ZEON_0087_Land",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_NEO_ZEON_0087_Mega",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_NEO_ZEON_0087_Space",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Factory_NEO_ZEON_0087_Space_Mega",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Refinery_Common_T3",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Institute_Common_T2",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "SupplyDepot_Common_T2",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Academy_Common_T2",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Beacon_ACE_0087",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "HLV_0087_Build",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_AA_B",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_MG_B",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_CN_B",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_BM_B_Yellow",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Radar_B",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Space_MS_B",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Space_MG_B",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Turret_Space_CN_B",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Wall_T2_A",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Wall_T2_B",
+      "tech": "Tech_NEO_ZEON_0087_BaseTech",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Ballute",
+      "tech": "Tech_NEO_ZEON_0087_GyanKaiDevelopmentPlan",
+      "reason": "建筑、驾驶员或非战斗对象"
+    },
+    {
+      "id": "Refinery_Common_T4",
+      "tech": "Tech_NEO_ZEON_0087_T2_QubeleyDevelopmentPlan",
+      "reason": "建筑、驾驶员或非战斗对象"
+    }
+  ]
+}

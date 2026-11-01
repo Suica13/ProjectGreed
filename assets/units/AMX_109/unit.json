@@ -1,0 +1,714 @@
+{
+  "schemaVersion": 2,
+  "id": "AMX_109",
+  "code": "AMX-109",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/AMX_109/AMX_109.ini",
+  "materials": {
+    "textures": {
+      "AMX_109_Crotch_1.png": "textures/AMX_109_Crotch_1.png",
+      "AMX_109_Body_1.png": "textures/AMX_109_Body_1.png",
+      "AMX_109_ArmL_1.png": "textures/AMX_109_ArmL_1.png",
+      "AMX_109_ArmR_1.png": "textures/AMX_109_ArmR_1.png",
+      "AMX_109_ShoulderL_1.png": "textures/AMX_109_ShoulderL_1.png",
+      "AMX_109_ShoulderR_1.png": "textures/AMX_109_ShoulderR_1.png",
+      "AMX_109_Eye_1.png": "textures/AMX_109_Eye_1.png",
+      "AMX_109_LegL_1.png": "textures/AMX_109_LegL_1.png",
+      "AMX_109_LegR_1.png": "textures/AMX_109_LegR_1.png",
+      "AMX_109_Body_2.png": "textures/AMX_109_Body_2.png",
+      "AMX_109.png": "textures/AMX_109.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "AMX_109.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftLeg",
+      "texture": "AMX_109_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "rotation": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 3.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "AMX_109_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "rotation": -5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 3.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "AMX_109_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "AMX_109_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "rotation": -15.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "AMX_109_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "rotation": 15.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "AMX_109_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "AMX_109_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "AMX_109_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_2",
+      "texture": "AMX_109_Body_2.png",
+      "bone": "Body",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Eye",
+      "texture": "AMX_109_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 2.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_Melee_Double_A": "../../animations/Common_Melee_Double_A.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 69000,
+    "en": 600.0,
+    "move": 8,
+    "mobility": 175.0,
+    "cost": 1200,
+    "counterLimit": 1,
+    "accuracy": 165.0,
+    "partStructuralStrength": 165.0,
+    "partsBreakable": true,
+    "movementType": "amphibious",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 100.0,
+      "air": 25.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 145,
+    "actionPoints": 12,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 85.0,
+    "shooting": 85.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 400.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 400.0
+    },
+    "melee": {
+      "percent": 25.0,
+      "flat": 450.0
+    },
+    "dp": {
+      "percent": 25.0,
+      "flat": 25.0
+    },
+    "sp": {
+      "percent": 5.0,
+      "flat": 50.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 55000.0,
+    "walkSpeed": 0.95,
+    "boostSpeed": 2.0,
+    "turnSpeed": 3.75,
+    "reaction": 175.0,
+    "shooting": 185.0,
+    "melee": 185.0,
+    "nativeTags": [
+      "AMX_109",
+      "Unit",
+      "MS",
+      "NEO_ZEON",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "accuracy": 165.0,
+    "partStructuralStrength": 165.0,
+    "actionTurnSpeed": 3.75,
+    "movementBeforeMobility": 7,
+    "mobilityMoveTarget": 8,
+    "enBeforeReduction": 1200.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 25.0,
+      "water": 100.0,
+      "air": 25.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 4750.0,
+    "tacticalMoveBeforeBonus": 7,
+    "v17BaseHp": 55000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "卡普尔",
+  "faction": "NEO_ZEON",
+  "tags": [
+    "NEO_ZEON",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "卡普尔",
+      "description": "阿克西斯所开发的水中战用MS,机动性优异"
+    },
+    "en": {
+      "name": "Capule",
+      "description": "An amphibious MS developed by Axis, featuring excellent mobility"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "NZN_AMX_109_BSG": {
+      "ref": "NZN_AMX_109_BSG__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/NZN_AMX_109_BSG.gw",
+          "barrels": [
+            {
+              "id": "NZN_AMX_109_BSG",
+              "x": 0.0,
+              "y": 5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 5.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NZN_AMX_109_MS": {
+      "ref": "NZN_AMX_109_MS__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/NZN_AMX_109_MS.gw",
+          "barrels": [
+            {
+              "id": "NZN_AMX_109_MS",
+              "x": 5.0,
+              "y": -10.0
+            },
+            {
+              "id": "NZN_AMX_109_MS_L",
+              "x": -5.0,
+              "y": -10.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 5.0,
+                "y": -10.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -5.0,
+                "y": -10.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NZN_AMX_109_MS_L": {
+      "ref": "NZN_AMX_109_MS_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/NZN_AMX_109_MS.gw",
+          "barrels": [
+            {
+              "id": "NZN_AMX_109_MS",
+              "x": 5.0,
+              "y": -10.0
+            },
+            {
+              "id": "NZN_AMX_109_MS_L",
+              "x": -5.0,
+              "y": -10.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 5.0,
+                "y": -10.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -5.0,
+                "y": -10.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "NZN_AMX_109_MS"
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    },
+    "Common_Cqb_Double_A": {
+      "ref": "Common_Cqb_Double_A__lv3",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A.gw",
+          "barrels": [
+            {
+              "id": "Common_Cqb_Double_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "两栖：可穿越陆地与水域",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "NZN_AMX_109_BSG",
+        "NZN_AMX_109_MS",
+        "Common_Cqb_Double_A",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "阿克西斯所开发的水中战用MS,机动性优异",
+  "skills": [],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard",
+    "kit_2": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 4750.0,
+    "levelMultiplier": 0.25,
+    "published": 1200
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Amphibious"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "NZN_AMX_109_MS",
+      "channels": [
+        {
+          "id": "NZN_AMX_109_MS",
+          "weaponId": "NZN_AMX_109_MS",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "backpack",
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        },
+        {
+          "id": "NZN_AMX_109_MS_L",
+          "weaponId": "NZN_AMX_109_MS_L",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "backpack",
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        }
+      ],
+      "fireMode": "simultaneous"
+    }
+  ],
+  "refits": []
+}

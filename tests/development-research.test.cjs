@@ -8,11 +8,14 @@ function load(saved = {}) {
   if (!storage.has("projectgreed.economy.v1"))
     storage.set(
       "projectgreed.economy.v1",
-      JSON.stringify({ money: 1000000, supplies: 1000000, inventory: {}, kits: {} }),
+      JSON.stringify({ schemaVersion: 2, money: 1000000, supplies: 1000000, licenses: {} }),
     );
   const context = {
+    structuredClone,
     PRODUCTION_CATALOG: require("../shared/production-catalog.json"),
     DEVELOPMENT_TREE: tree,
+    PILOT_DATA: require("../shared/pilots.json"),
+    ProfileMigrations: require("../shared/profile-migrations.js"),
     module: { exports: {} },
     localStorage: { getItem: (k) => storage.get(k), setItem: (k, v) => storage.set(k, v) },
   };

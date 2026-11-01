@@ -1,0 +1,926 @@
+{
+  "schemaVersion": 2,
+  "id": "RGM_79C_KS",
+  "code": "RGM-79C-KS",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/RGM_79C_KS/RGM_79C_KS.ini",
+  "materials": {
+    "textures": {
+      "RGM_79C_KS_Crotch_1.png": "textures/RGM_79C_KS_Crotch_1.png",
+      "RGM_79C_KS_Body_1.png": "textures/RGM_79C_KS_Body_1.png",
+      "RGM_79C_KS_ArmL_1.png": "textures/RGM_79C_KS_ArmL_1.png",
+      "RGM_79C_KS_ArmR_1.png": "textures/RGM_79C_KS_ArmR_1.png",
+      "RGM_79C_KS_ShoulderL_1.png": "textures/RGM_79C_KS_ShoulderL_1.png",
+      "RGM_79C_KS_ShoulderR_1.png": "textures/RGM_79C_KS_ShoulderR_1.png",
+      "RGM_79C_KS_Head_1.png": "textures/RGM_79C_KS_Head_1.png",
+      "RGM_79C_KS_Head_1_Close.png": "textures/RGM_79C_KS_Head_1_Close.png",
+      "RGM_79C_KS_Foot_1.png": "textures/RGM_79C_KS_Foot_1.png",
+      "RGM_79C_KS_LegL_1.png": "textures/RGM_79C_KS_LegL_1.png",
+      "RGM_79C_KS_LegR_1.png": "textures/RGM_79C_KS_LegR_1.png",
+      "EF_90mmMG.png": "textures/EF_90mmMG.png",
+      "AEUG_ClayBazooka.png": "textures/AEUG_ClayBazooka.png",
+      "EF_RMS_179_BR.png": "textures/EF_RMS_179_BR.png",
+      "EF_BeamSaber.png": "textures/EF_BeamSaber.png",
+      "RGM_79C_KS_Body_BeamSaberR_1.png": "textures/RGM_79C_KS_Body_BeamSaberR_1.png",
+      "EF_LaterStandardTypeShield_Blue_B.png": "textures/EF_LaterStandardTypeShield_Blue_B.png",
+      "RGM_79C_KS.png": "textures/RGM_79C_KS.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "RGM_79C_KS.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "AEUG_ClayBazooka_NotUsing",
+      "texture": "AEUG_ClayBazooka.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.75,
+      "scaleY": -1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": 0.0,
+        "y": -9.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "LeftFoot",
+      "texture": "RGM_79C_KS_Foot_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "RGM_79C_KS_Foot_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "RGM_79C_KS_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "RGM_79C_KS_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_90mmMG_NotUsing",
+      "texture": "EF_90mmMG.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 0.75,
+      "rotation": -90.0,
+      "offset": {
+        "x": -1.0,
+        "y": -8.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "EF_RMS_179_BR_NotUsing",
+      "texture": "EF_RMS_179_BR.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 0.7,
+      "rotation": -90.0,
+      "offset": {
+        "x": 3.5,
+        "y": -8.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Crotch",
+      "texture": "RGM_79C_KS_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "RGM_79C_KS_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "RGM_79C_KS_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "EF_RMS_179_BR",
+      "texture": "EF_RMS_179_BR.png",
+      "bone": "RightArm",
+      "order": 4.5,
+      "scale": 0.8,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 12.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_2"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Body",
+      "texture": "RGM_79C_KS_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_BeamSaberR",
+      "texture": "RGM_79C_KS_Body_BeamSaberR_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 1
+        }
+      }
+    },
+    {
+      "name": "EF_90mmMG",
+      "texture": "EF_90mmMG.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 12.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "EF_BeamSaber_A",
+      "texture": "EF_BeamSaber.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": -16.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 6.0,
+        "y": 22.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ],
+        "weaponDisplayIndex": 1
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RGM_79C_KS_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RGM_79C_KS_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "AEUG_ClayBazooka",
+      "texture": "AEUG_ClayBazooka.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 13.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Shield",
+      "texture": "EF_LaterStandardTypeShield_Blue_B.png",
+      "bone": "LeftArm",
+      "order": 6.5,
+      "scale": 1.0,
+      "rotation": 10.0,
+      "offset": {
+        "x": -8.0,
+        "y": 6.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "Head",
+      "texture": "RGM_79C_KS_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "RGM_79C_KS_Head_1_Close.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Melee_A": "../../animations/Common_Melee_A__FA_78_1.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 30000,
+    "en": 375.0,
+    "move": 7,
+    "mobility": 130.0,
+    "cost": 375,
+    "counterLimit": 1,
+    "accuracy": 130.0,
+    "partStructuralStrength": 145.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 110,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 12.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 25.0,
+    "shooting": 25.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 10.0,
+      "flat": 50.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 75.0
+    },
+    "melee": {
+      "percent": 10.0,
+      "flat": 150.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 15.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 5000.0,
+    "blockChance": 0.55,
+    "coverage": 0.75,
+    "defenses": {
+      "beam": {
+        "percent": 5.0,
+        "flat": 25.0
+      },
+      "shell": {
+        "percent": 10.0,
+        "flat": 25.0
+      },
+      "melee": {
+        "percent": 10.0,
+        "flat": 150.0
+      },
+      "dp": {
+        "percent": 10.0,
+        "flat": 25.0
+      }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
+  },
+  "sourceStats": {
+    "hp": 24000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.55,
+    "turnSpeed": 2.0,
+    "reaction": 130.0,
+    "shooting": 125.0,
+    "melee": 125.0,
+    "nativeTags": [
+      "RGM_79C_KS",
+      "Unit",
+      "MS",
+      "AEUG",
+      "0087",
+      "UC"
+    ],
+    "nativeSkills": [],
+    "accuracy": 130.0,
+    "partStructuralStrength": 145.0,
+    "actionTurnSpeed": 2.0,
+    "movementBeforeMobility": 6,
+    "mobilityMoveTarget": 7,
+    "enBeforeReduction": 750.0,
+    "enCapacityMultiplier": 0.5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 432.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 1450.0,
+    "tacticalMoveBeforeBonus": 6,
+    "v17BaseHp": 24000.0,
+    "technologyEra": "0087"
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "吉姆改[KS]",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087"
+  ],
+  "localization": {
+    "zh": {
+      "name": "吉姆改[KS]",
+      "description": "雷神部队所使用的吉姆改"
+    },
+    "en": {
+      "name": "GM Kai[KS]",
+      "description": "Keraunos Squad's GM Kai"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "EF_90mmMG": {
+      "ref": "EF_90mmMG__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw",
+          "barrels": [
+            {
+              "id": "EF_90mmMG",
+              "x": 8.0,
+              "y": 24.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_90mmMG",
+              "point": {
+                "x": -1.1764705882352933,
+                "y": -14.117647058823529
+              }
+            }
+          ]
+        }
+      }
+    },
+    "AEUG_ClayBazooka": {
+      "ref": "AEUG_ClayBazooka__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/AEUG_ClayBazooka.gw",
+          "barrels": [
+            {
+              "id": "AEUG_ClayBazooka",
+              "x": 10.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "AEUG_ClayBazooka",
+              "point": {
+                "x": 1.1111111111111116,
+                "y": -7.777777777777778
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_RMS_179_BR": {
+      "ref": "EF_RMS_179_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/EF_RMS_179_BR.gw",
+          "barrels": [
+            {
+              "id": "EF_RMS_179_BR",
+              "x": 9.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_RMS_179_BR",
+              "point": {
+                "x": 9.950255243072245e-16,
+                "y": -16.25
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_BeamSaber_A": {
+      "ref": "EF_BeamSaber_A__lv2",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "Common_DoubleVulcan_MS": {
+      "ref": "Common_DoubleVulcan_MS__lv1",
+      "overrides": {
+        "requiredParts": [
+          "head"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleVulcan_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Head",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "kit_0",
+      "name": "90mm机枪套件",
+      "cost": 0,
+      "weapons": [
+        "EF_90mmMG",
+        "EF_BeamSaber_A",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ]
+    },
+    {
+      "id": "kit_1",
+      "name": "火箭筒套件",
+      "cost": 50,
+      "weapons": [
+        "AEUG_ClayBazooka",
+        "EF_BeamSaber_A",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ]
+    },
+    {
+      "id": "kit_2",
+      "name": "光束步枪套件",
+      "cost": 100,
+      "weapons": [
+        "EF_RMS_179_BR",
+        "EF_BeamSaber_A",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "雷神部队所使用的吉姆改",
+  "skills": [],
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 1450.0,
+    "levelMultiplier": 0.25,
+    "published": 375
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}

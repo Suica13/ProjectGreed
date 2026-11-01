@@ -8,7 +8,10 @@ const Tactics = (() => {
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
   const aiTactics = typeof AITactics !== "undefined" ? AITactics : require("./ai-tactics.js");
-  const campaignBattlefield = typeof CampaignBattlefield !== "undefined" ? CampaignBattlefield : require("./campaign-battlefield.js");
+  const campaignBattlefield =
+    typeof CampaignBattlefield !== "undefined"
+      ? CampaignBattlefield
+      : require("./campaign-battlefield.js");
   const damagePolicy =
     typeof WeaponSequence !== "undefined" ? WeaponSequence : require("./weapon-sequence.js");
   const roundDamage = damagePolicy.roundDamage;
@@ -43,7 +46,8 @@ const Tactics = (() => {
     if (ownerOf(unit) === seat) return true;
     return (
       unit.team === seatTeam(seat) &&
-      (settings?.campaignCommanders?.[unit.team] === seat || settings?.shareAlliedUnits === true ||
+      (settings?.campaignCommanders?.[unit.team] === seat ||
+        settings?.shareAlliedUnits === true ||
         members.some((m) => m.seat === ownerOf(unit) && m.shareUnits === true))
     );
   }
@@ -188,7 +192,7 @@ const Tactics = (() => {
     if (cost > maxCost) throw Error("编组 COST 超出上限");
     return clean;
   }
-  const factions = ["EFSF", "ZEON"];
+  const factions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
   const eras = [
     ...new Set(
       catalog.prefabs.flatMap((prefab) =>
@@ -234,7 +238,11 @@ const Tactics = (() => {
     if (
       !Array.isArray(value) ||
       value.length !== 2 ||
-      value.some((faction) => faction !== null && !["PMC", "EFSF", "ZEON"].includes(faction))
+      value.some(
+        (faction) =>
+          faction !== null &&
+          !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction),
+      )
     )
       throw Error("队伍强制阵营无效。");
     return [...value];
@@ -268,18 +276,25 @@ const Tactics = (() => {
   // Strategic rooms use scenario armies; ordinary formation and tag settings do not apply.
   function campaignRoomSettings(settings = {}) {
     return {
-      ...defaultRoomSettings(), mapId: settings.mapId || "military_base_5v5",
-      mode: "campaign", scenarioId: "earth_0079_mid", costLimit: maxCostLimit,
+      ...defaultRoomSettings(),
+      mapId: settings.mapId || "military_base_5v5",
+      mode: "campaign",
+      scenarioId: "earth_0079_mid",
+      costLimit: maxCostLimit,
       campaignOptions: aiTactics.settings(settings.campaignOptions),
-      unitCostLimit: maxCostLimit, unitLimit: catalog.formation.maxUnits,
+      unitCostLimit: maxCostLimit,
+      unitLimit: catalog.formation.maxUnits,
     };
   }
   function formationRestrictions(settings = {}, seat = null) {
-    if (settings.mode === "campaign") return {
-      environment: getMap(settings.mapId).environment, mapId: settings.mapId,
-      deploymentSeat: seat ?? 0, unitCostLimit: Infinity,
-      ...validateTagRestrictions(),
-    };
+    if (settings.mode === "campaign")
+      return {
+        environment: getMap(settings.mapId).environment,
+        mapId: settings.mapId,
+        deploymentSeat: seat ?? 0,
+        unitCostLimit: Infinity,
+        ...validateTagRestrictions(),
+      };
     const teamRules =
       seat === null || settings.mode !== "quick"
         ? null
@@ -320,12 +335,14 @@ const Tactics = (() => {
   function restrictionReason(model, restrictions = {}) {
     if (model.wip) return "wip";
     if (
-      ["EFSF", "ZEON"].includes(restrictions.characterFaction) &&
+      ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(restrictions.characterFaction) &&
       !(model.availableFactions || [model.faction]).includes(restrictions.characterFaction)
     )
       return "faction_mismatch";
     if (
-      ["PMC", "EFSF", "ZEON"].includes(restrictions.characterFaction) &&
+      ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(
+        restrictions.characterFaction,
+      ) &&
       !development.allows(restrictions.characterFaction, model.prefabId, restrictions.researched) &&
       (restrictions.licenses ?? restrictions.ownedLicenses)?.[model.prefabId] !== true
     )
@@ -518,7 +535,9 @@ const Tactics = (() => {
   }
   function armyRestrictions(settings, player) {
     const rules = formationRestrictions(settings, player?.seat ?? null);
-    rules.characterFaction = ["PMC", "EFSF", "ZEON"].includes(player?.characterFaction)
+    rules.characterFaction = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(
+      player?.characterFaction,
+    )
       ? player.characterFaction
       : null;
     // Room authority supplies the merged, cross-faction AI progression.
@@ -603,7 +622,7 @@ const Tactics = (() => {
       entries = [];
     if (!choices.length) return entries;
     const mainlineUnits = new Set(
-      ["EFSF", "ZEON"].flatMap((faction) =>
+      ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].flatMap((faction) =>
         development
           .nodes(faction)
           .filter((node) => node.row === "mid")
@@ -989,7 +1008,8 @@ const Tactics = (() => {
         actionPoints: Math.max(
           1,
           roundAP(
-            (base.actionPoints ?? 10) * mobilityActionMultiplier(base) *
+            (base.actionPoints ?? 10) *
+              mobilityActionMultiplier(base) *
               modifiers.actionPointsMultiplier,
           ),
         ),
@@ -1040,10 +1060,11 @@ const Tactics = (() => {
   }
   const durabilityModels = new WeakMap();
   function campaignModelOf(unit) {
-    const base = performanceModelOf(unit), factor = unit.campaignDurability ?? 1;
+    const base = performanceModelOf(unit),
+      factor = unit.campaignDurability ?? 1;
     if (factor === 1) return base;
     let variants = durabilityModels.get(base);
-    if (!variants) durabilityModels.set(base, variants = new Map());
+    if (!variants) durabilityModels.set(base, (variants = new Map()));
     if (!variants.has(factor)) variants.set(factor, { ...base, hp: Math.ceil(base.hp * factor) });
     return variants.get(factor);
   }
@@ -1107,8 +1128,19 @@ const Tactics = (() => {
   }
   function deploymentCells(g, seat, unit = null) {
     if (g.campaignBattlefield) {
-      const actor = unit || g.units.find(actor => actor.campaignDeploying && !actor.embarked && campaignBattlefield.deploymentSeat(g,actor) === seat);
-      return actor ? campaignBattlefield.deploymentCells(Tactics,g,actor).filter(cell => Number.isFinite(terrainCost(g,actor,cell.x,cell.y))) : [];
+      const actor =
+        unit ||
+        g.units.find(
+          (actor) =>
+            actor.campaignDeploying &&
+            !actor.embarked &&
+            campaignBattlefield.deploymentSeat(g, actor) === seat,
+        );
+      return actor
+        ? campaignBattlefield
+            .deploymentCells(Tactics, g, actor)
+            .filter((cell) => Number.isFinite(terrainCost(g, actor, cell.x, cell.y)))
+        : [];
     }
     const map = getMap(g.mapId),
       spawn = map.spawns[seat],
@@ -1140,7 +1172,13 @@ const Tactics = (() => {
 
   function deploy(g, team, id, x, y) {
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再调整");
-    const u = g.units.find((u) => u.id === id && (g.campaignBattlefield ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g,u) === team : ownerOf(u) === team));
+    const u = g.units.find(
+      (u) =>
+        u.id === id &&
+        (g.campaignBattlefield
+          ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === team
+          : ownerOf(u) === team),
+    );
     if (
       !onMap(u) ||
       !!u.embarked ||
@@ -1158,8 +1196,14 @@ const Tactics = (() => {
   function confirmDeployment(g, team) {
     if (g.units.some((u) => u.pendingMove?.seat === team)) throw Error("请先确认或取消移动");
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再次确认");
-    const controlled = g.units.filter(u => g.campaignBattlefield ? campaignBattlefield.deploymentSeat(g,u) === team : ownerOf(u) === team);
-    for (const u of controlled.filter(u => onMap(u) && !u.embarked && (!g.campaignBattlefield || u.campaignDeploying))) {
+    const controlled = g.units.filter((u) =>
+      g.campaignBattlefield
+        ? campaignBattlefield.deploymentSeat(g, u) === team
+        : ownerOf(u) === team,
+    );
+    for (const u of controlled.filter(
+      (u) => onMap(u) && !u.embarked && (!g.campaignBattlefield || u.campaignDeploying),
+    )) {
       if (!deploymentCells(g, team, u).some((c) => c.x === u.x && c.y === u.y))
         throw Error("单位不在有效部署区域");
       if (!fits(g, u, u.x, u.y, u.angle, false, team)) throw Error("部署位置重叠");
@@ -1500,7 +1544,12 @@ const Tactics = (() => {
         settings.seatUnitLimits?.[seat] ?? unitLimit,
       ),
     );
-    if (map.supportedModes && !map.supportedModes.includes(settings.mode === "campaign" ? "regular" : settings.mode || "regular"))
+    if (
+      map.supportedModes &&
+      !map.supportedModes.includes(
+        settings.mode === "campaign" ? "regular" : settings.mode || "regular",
+      )
+    )
       throw Error("此地图不支持所选对战模式");
     if (formations.length !== map.spawns.length) throw Error("编组数量必须匹配地图席位");
     const rulesForSeat = (seat) =>
@@ -1514,8 +1563,8 @@ const Tactics = (() => {
       if (formations[seat] === null) continue;
       formations[seat] = validateFormation(
         formations[seat],
-        settings.mode === "campaign" ? Infinity : settings.seatCostLimits?.[seat] ?? costLimit,
-        settings.mode === "campaign" ? Infinity : settings.seatUnitLimits?.[seat] ?? unitLimit,
+        settings.mode === "campaign" ? Infinity : (settings.seatCostLimits?.[seat] ?? costLimit),
+        settings.mode === "campaign" ? Infinity : (settings.seatUnitLimits?.[seat] ?? unitLimit),
       );
       const licenses = rulesForSeat(seat).licenses;
       const stockPlan =
@@ -1644,7 +1693,9 @@ const Tactics = (() => {
     const base = terrainCost(g, u, x, y);
     const cost = g.units.some(
       (enemy) => onMap(enemy) && enemy.team !== u.team && dist(enemy, { x, y }) === 1,
-    ) ? Math.max(base, 3) : base;
+    )
+      ? Math.max(base, 3)
+      : base;
     return cost / (campaignBattlefield.onSupply(g, u, x, y) ? 1.25 : 1);
   }
   // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
@@ -3302,14 +3353,13 @@ const Tactics = (() => {
               remaining = Math.max(0, e.hp - (commitment?.damage || 0)),
               expected = (ex.damage * ex.hit) / 100,
               s =
-                positionScore(c) + 2 +
+                positionScore(c) +
+                2 +
                 Math.min(expected, remaining) / (cautious ? 4000 : 1000) +
                 (remaining > 0 ? Math.min(1, expected / remaining) * 0.6 : 0) -
                 c.cost * 0.025 -
                 (destinations ? near * 0.12 : 0);
-            if (
-              expected > 0 && s > score
-            ) {
+            if (expected > 0 && s > score) {
               score = s;
               target = e.id;
               weapon = w.id;
