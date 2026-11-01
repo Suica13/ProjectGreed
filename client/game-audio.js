@@ -11,6 +11,11 @@ const GameAudio = (() => {
   function play(key) {
     playSound(ART.presentation[key]);
   }
+  function actionAccepted(action) {
+    const key = { campaign_produce: "productionSound", campaign_research: "researchSound",
+      deploy: "deploymentSound", confirm_deployment: "deploymentSound" }[action];
+    if (key) play(key);
+  }
   function selectUnit(unit) {
     const model = unit?.model ? Rules.modelOf(unit) : unit;
     const ms = model?.unitTags?.includes("MS");
@@ -75,5 +80,5 @@ const GameAudio = (() => {
         emit(match + ":warning:" + request.id, ART.presentation.underAttackSound);
     }
   }
-  return { receive, reset, play, playSound, selectUnit, moveUnit };
+  return { receive, reset, play, playSound, selectUnit, moveUnit, actionAccepted };
 })();

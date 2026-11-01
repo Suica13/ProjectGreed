@@ -118,5 +118,25 @@
     "file": "sounds/TankFoot_1.ogg",
     "volume": 0.5,
     "duration": 4.514875283446712
+  },
+  "buttonSound": {
+    "file": "sounds/Select_1.ogg",
+    "volume": 0.35,
+    "duration": 0.96
+  },
+  "productionSound": {
+    "file": "sounds/Start_1.ogg",
+    "volume": 0.5,
+    "duration": 1.104013605442177
+  },
+  "deploymentSound": {
+    "file": "sounds/Ready_1.ogg",
+    "volume": 0.7,
+    "duration": 0.7456916099773243
+  },
+  "researchSound": {
+    "file": "sounds/ResearchCompleted_1.ogg",
+    "volume": 0.75,
+    "duration": 0.7456916099773243
   }
 }

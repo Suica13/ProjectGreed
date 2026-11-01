@@ -145,10 +145,11 @@ const Net = (() => {
     actionQueue.length = 0;
     n.awaiting = null;
   }
-  function finishAction(id) {
+  function finishAction(id, accepted = false) {
     if (!n.awaiting || n.awaiting.id !== id) return false;
     clearTimeout(actionTimer);
     actionTimer = null;
+    if (accepted) GameAudio.actionAccepted?.(n.awaiting.action);
     n.awaiting = null;
     queueMicrotask(drainActions);
     return true;
@@ -229,7 +230,7 @@ const Net = (() => {
     // Even an older snapshot can confirm an action; do not roll back visible state.
     if (snapshot.ack === waiting.id ||
         (waiting.receiptRevision !== undefined && snapshot.revision >= waiting.receiptRevision)) {
-      finishAction(waiting.id);
+      finishAction(waiting.id, true);
       return;
     }
     if (waiting.rebase) {
@@ -334,7 +335,7 @@ const Net = (() => {
       if (msg.id !== n.awaiting?.id || !Number.isSafeInteger(msg.revision)) return;
       n.awaiting.receiptRevision = msg.revision;
       if (n.snapshot && n.revision >= msg.revision) {
-        finishAction(msg.id);
+        finishAction(msg.id, true);
         update();
       }
     } else if (msg.type === "state") {

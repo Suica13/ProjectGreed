@@ -44,6 +44,7 @@ test("native game notifications are embedded OGG assets and play once for start 
     "selectUnitSound",
     "selectWeaponSound",
     "changeEquipmentSound",
+    "buttonSound", "productionSound", "deploymentSound", "researchSound",
   ]) {
     const sound = G.catalog.presentation[key];
     assert.ok(sound.duration > 0);
@@ -183,4 +184,13 @@ test("multiple new radar contacts emit one cue; duplicate snapshots, reconnect a
   await flush();assert.equal(played.length,1);
   audio.receive(state(5,[]),2,true);audio.receive(state(6,["b"]),2,true);
   await flush();assert.equal(played.length,2);
+});
+
+
+test("acknowledged production, deployment and research use native operation sounds", async () => {
+  const { audio, played } = runtime();
+  for (const action of ["campaign_produce", "campaign_research", "deploy", "confirm_deployment", "cancel_move"])
+    audio.actionAccepted(action);
+  await flush();
+  assert.deepEqual(played, ["presentation/productionSound", "presentation/researchSound", "presentation/deploymentSound", "presentation/deploymentSound"]);
 });

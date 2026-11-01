@@ -40,6 +40,7 @@ window.CampaignUI = (() => {
   movementDialog.id = "campaignMovementDialog";
   document.body.append(intelligenceDialog, movementDialog);
   let inspectedMovement = null;
+  const regionYield = (s, id) => CampaignRules.regionIncome({ world: CAMPAIGN_WORLD }, s, id);
   const armyModel = (unit) => Rules.modelOf({ model: unit.unitId + "__" + unit.kitId,
     campaignDurability: unit.campaignDurability ?? unit.state?.campaignDurability ?? state()?.options?.teams[unit.team]?.durability ?? 1 });
   const reportCount = (count, approximate = false) =>
@@ -68,6 +69,16 @@ window.CampaignUI = (() => {
           s.intel?.team !== null && s.intel?.progress < 75 && counts[1 - s.intel.team] > 0,
         );
     return report + (own ? ` (${formatNumber(own)})` : "");
+  }
+  function regionCostReport(s, regionId) {
+    const costs = s.intelRegions?.find((entry) => entry.id === regionId)?.costs;
+    if (!costs || costs.some((cost) => cost === null)) return I18n.text("未知") + "C";
+    const approximate = s.intel?.team !== null && s.intel?.progress < 75 && costs[1 - s.intel.team] > 0;
+    return (approximate ? I18n.text("约") : "") + formatNumber(costs[0] + costs[1]) + "C";
+  }
+  function regionStrengthReport(s, regionId) {
+    return regionReport(s, regionId).replace(/(\d)\s+(?=台|機)/g, "$1").replace(" (", "(") +
+      "/" + regionCostReport(s, regionId);
   }
   function openIntelligence() {
     renderIntelligence();
@@ -223,13 +234,14 @@ window.CampaignUI = (() => {
     }
     pending?.resolve(message);
   }
+  const fittedMapWidth = (scroll) => Math.max(1, Math.min(scroll.clientWidth, scroll.clientHeight * 1200 / 560));
   function layout() {
     panel.style.top = "0px";
     panel.style.left = "0px";
     const scroll = panel.querySelector(".campaign-map-scroll"),
       svg = scroll?.querySelector("svg");
     if (svg && scroll.clientWidth)
-      svg.style.width = Math.max(650, scroll.clientWidth) * zoom + "px";
+      svg.style.width = fittedMapWidth(scroll) * zoom + "px";
   }
   function open(nextTab = tab) {
     if (!state()) return;
@@ -407,7 +419,7 @@ window.CampaignUI = (() => {
     )) {
       const width = Math.min(
           190,
-          Math.max(42, measure.measureText(I18n.text(region.name)).width + 18),
+          Math.max(132, measure.measureText(I18n.text(region.name)).width + 18),
         ),
         height = 33;
       const [x, y] = region.center,
@@ -427,7 +439,7 @@ window.CampaignUI = (() => {
             ]
           : [[0, 0]]) {
           const cx = Math.max(width / 2 + 5, Math.min(1195 - width / 2, x + dx + mx)),
-            cy = Math.max(21, Math.min(535, y + dy + my));
+            cy = Math.max(21, Math.min(555 - (height - 14), y + dy + my));
           const rect = {
             left: cx - width / 2,
             right: cx + width / 2,
@@ -523,7 +535,7 @@ window.CampaignUI = (() => {
           "text",
           {
             x,
-            y: y + 13,
+            y: y + 12,
             "text-anchor": "middle",
             fill: "#b7d0e2",
             "font-size": 10,
@@ -532,6 +544,7 @@ window.CampaignUI = (() => {
           "",
         ),
       );
+
       const select = () => {
         const current = Net.snapshot.campaign;
         if (moveDraft && CAMPAIGN_WORLD.regions.find((r) => r.id === moveDraft.from)?.links.includes(region.id)) {
@@ -582,8 +595,8 @@ window.CampaignUI = (() => {
     const x = clientX ?? viewport.left + viewport.width / 2;
     const y = clientY ?? viewport.top + viewport.height / 2;
     const point = { x: (x - before.left) / before.width, y: (y - before.top) / before.height };
-    zoom = Math.max(1, Math.min(2.5, nextZoom));
-    svg.style.width = Math.max(650, scroll.clientWidth) * zoom + "px";
+    zoom = Math.max(0.85, Math.min(2.5, nextZoom));
+    svg.style.width = fittedMapWidth(scroll) * zoom + "px";
     const after = svg.getBoundingClientRect();
     scroll.scrollLeft += after.left + point.x * after.width - x;
     scroll.scrollTop += after.top + point.y * after.height - y;
@@ -653,7 +666,7 @@ window.CampaignUI = (() => {
     const svg = panel.querySelector(".campaign-map-scroll svg");
     if (!svg) return;
     panel.querySelector(".campaign-map-title").textContent = mapTitle(s);
-    svg.style.width = Math.max(650, svg.parentElement.clientWidth) * zoom + "px";
+    svg.style.width = fittedMapWidth(svg.parentElement) * zoom + "px";
     for (const region of CAMPAIGN_WORLD.regions) {
       const group = svg.querySelector(`[data-region="${region.id}"]`),
         surface = group.querySelector(".campaign-region-surface"),
@@ -692,7 +705,7 @@ window.CampaignUI = (() => {
       );
       surface.setAttribute("stroke-dasharray", region.kind === "sea" ? "4 4" : "none");
       label.querySelector(".campaign-region-count").textContent =
-        regionReport(s, region.id) + (contested ? I18n.text(" · 交战") : "");
+        regionStrengthReport(s, region.id) + (contested ? I18n.text(" · 交战") : "");
       label
         .querySelector(".campaign-region-label-box")
         .setAttribute(
@@ -872,7 +885,7 @@ window.CampaignUI = (() => {
     const region = CAMPAIGN_WORLD.regions.find((item) => item.id === encounterRegion);
     if (!svg || !region || !encounterDialog.open || Net.started) return;
     zoom = Math.max(zoom, 2);
-    svg.style.width = Math.max(650, scroll.clientWidth) * zoom + "px";
+    svg.style.width = fittedMapWidth(scroll) * zoom + "px";
     // Leave enough scrollable ocean to center even territories at the map edges.
     scroll.style.paddingBlock = Math.round(scroll.clientHeight / 2) + "px";
     scroll.dataset.encounterFocus = "true";
@@ -1064,6 +1077,14 @@ window.CampaignUI = (() => {
         preparationId: preparation.id,
       });
     const markers = node("div", "", "campaign-encounter-readiness");
+    const viewerTeam = Number.isInteger(Net.seat) ? Rules.seatTeam(Net.seat) : 0;
+    const readinessGroups = [viewerTeam, 1 - viewerTeam].map((team, index) => {
+      const group = node("div", "", "campaign-ready-group");
+      group.dataset.team = team;
+      group.append(node("small", Number.isInteger(Net.seat) ? (index ? "敌军" : "我军") : "队伍" + (team + 1)));
+      markers.append(group);
+      return group;
+    });
     for (const participant of preparation?.participants || []) {
       const member = Net.snapshot.members.find((item) => item.seat === participant.seat);
       const marker = node("span", "", "campaign-ready-marker");
@@ -1074,7 +1095,7 @@ window.CampaignUI = (() => {
         " · " +
         (participant.ready ? (participant.delegate ? "AI委任" : "手动指挥") : "等待选择");
       marker.setAttribute("aria-label", marker.title);
-      markers.append(marker);
+      readinessGroups[Rules.seatTeam(participant.seat) === viewerTeam ? 0 : 1].append(marker);
     }
     const footer = node("footer", "", "campaign-encounter-footer");
     const actions = node("div", "", "campaign-encounter-actions");
@@ -1115,10 +1136,11 @@ window.CampaignUI = (() => {
           return !unit || unit.destroyed || unit.pendingTransfer || unit.region !== moveDraft.from ||
             !selectedUnits.has(id) || !CampaignRules.controls(s, Net.snapshot.members, Net.seat, unit);
         }))) moveDraft = null;
+    const targetScroll = map.querySelector(".campaign-move-targets")?.scrollTop || 0;
     map.querySelector(".campaign-move-dock")?.remove();
     map.dataset.moveDraft = String(!!moveDraft);
     const finish = map.querySelector(".campaign-end-turn");
-    if (finish) finish.disabled = !!moveDraft || !!Net.awaiting || s.phase !== "strategy" || Net.seat === null || s.winner !== null;
+    if (finish) finish.disabled = !!moveDraft || !!Net.awaiting || s.phase !== "strategy" || Net.seat === null || s.winner !== null || s.ready.includes(Net.seat);
     regionEffect(svg, moveDraft?.destination || null, "campaign-move-outline", "data-move-region");
     const signature = moveDraft?.destination ? moveDraft.from + ":" + moveDraft.destination : "";
     let arrow = svg?.querySelector(".campaign-move-preview");
@@ -1170,11 +1192,35 @@ window.CampaignUI = (() => {
       const choice = button("", () => { moveDraft.destination = id; renderMoveDraft(); });
       choice.dataset.destination = id;
       choice.setAttribute("aria-pressed", String(id === moveDraft.destination));
-      choice.append(node("strong", region.name), node("small", ["EFSF", "ZEON"][owner] + " · " + regionReport(s, id)));
+      choice.append(node("strong", region.name), node("small", ["EFSF", "ZEON"][owner] + " · " + regionStrengthReport(s, id)));
       targets.append(choice);
     }
     dock.append(actions, targets);
     map.append(dock);
+    targets.scrollTop = targetScroll;
+  }
+  function openEmbark(armyId) {
+    const s = state(), unit = s.units.find((item) => item.id === armyId);
+    if (!unit) return;
+    const header = node("header", "", "campaign-order-header"), title = node("h3", "搭载格纳库");
+    title.id = "campaignOrderTitle";
+    orderDialog.setAttribute("aria-labelledby", title.id);
+    header.append(title, button("关闭", () => orderDialog.close()));
+    const targets = node("div", "", "campaign-order-targets");
+    for (const option of CampaignRules.embarkOptions({G:Rules}, s, unit)) {
+      const carrier = s.units.find((item) => item.id === option.carrierId);
+      if (!CampaignRules.controls(s, Net.snapshot.members, Net.seat, carrier)) continue;
+      const choice = button("", () => {
+        command("campaign_embark", {armyId, carrierId:option.carrierId, hangarId:option.hangarId});
+        orderDialog.close();
+      });
+      choice.dataset.carrierId = option.carrierId;
+      choice.dataset.hangarId = option.hangarId;
+      choice.append(node("strong", armyModel(carrier).name + "[No." + carrier.id.split("-")[1] + "]"), node("small", option.name));
+      targets.append(choice);
+    }
+    orderDialog.replaceChildren(header, targets);
+    orderDialog.showModal();
   }
   function chooseOrder(kind, ids, region) {
     if (kind === "move") {
@@ -1341,13 +1387,17 @@ window.CampaignUI = (() => {
   }
   function regionForces(s, region, locked) {
     const root = node("section", "", "campaign-forces");
-    const units = s.units
+    let units = s.units
       .filter((unit) => !unit.destroyed && !unit.pendingTransfer && unit.region === region.id)
       .sort(
         (a, b) =>
           UnitModels[a.unitId + "__" + a.kitId].cost - UnitModels[b.unitId + "__" + b.kitId].cost ||
           a.id.localeCompare(b.id, undefined, { numeric: true }),
       );
+    const sorted = units;
+    units = sorted.filter((unit) => !unit.carrierArmyId || !sorted.some((carrier) => carrier.id === unit.carrierArmyId))
+      .flatMap((carrier) => [carrier, ...sorted.filter((unit) => unit.carrierArmyId === carrier.id)
+        .sort((a, b) => (a.hangarId || "").localeCompare(b.hangarId || "") || sorted.indexOf(a) - sorted.indexOf(b))]);
     const controllable = units.filter(
       (unit) =>
         !locked &&
@@ -1428,6 +1478,10 @@ window.CampaignUI = (() => {
         kit = prefab?.weaponKits.find((item) => item.id === unit.kitId);
       const row = node("article", "", "campaign-force-card");
       row.dataset.unitId = unit.id;
+      if (unit.carrierArmyId) {
+        row.dataset.carrierId = unit.carrierArmyId;
+        row.dataset.hangarId = unit.hangarId;
+      }
       row.dataset.selected = selectedUnits.has(unit.id);
       const input = document.createElement("input");
       input.type = "checkbox";
@@ -1500,6 +1554,17 @@ window.CampaignUI = (() => {
       heading.append(operations);
       row.append(input, heading, portrait, copy);
       if (!unit.intelRedacted) row.append(vitals);
+      if (controllable.includes(unit)) {
+        if (unit.aboard) {
+          const parent = units.find((item) => item.id === unit.carrierArmyId);
+          row.title = (parent ? armyModel(parent).name : "格纳库") + " · " + unit.hangarId;
+          operations.append(button("离舰", () => command("campaign_disembark", {armyId:unit.id}), locked || !!unit.moveTo));
+        } else {
+          const options = CampaignRules.embarkOptions({G:Rules}, s, unit).filter((option) =>
+            controllable.some((carrier) => carrier.id === option.carrierId));
+          if (options.length) operations.append(button("搭载", () => openEmbark(unit.id), locked));
+        }
+      }
       list.append(row);
     }
     const hiddenEnemies =
@@ -1520,14 +1585,12 @@ window.CampaignUI = (() => {
       CAMPAIGN_WORLD.regions[0];
     selectedRegion = region.id;
     const owner = s.regions.find((item) => item.id === region.id)?.owner ?? region.owner;
-    detail.append(
-      node("h3", region.name),
-      node(
-        "p",
-        (owner === 0 ? "地球联邦军" : "吉翁公国军") +
-          (region.factory ? " · 生产据点" : " · 普通区域"),
-      ),
-    );
+    const heading = node("h3", region.name);
+    heading.title = I18n.text(owner === 0 ? "地球联邦军" : "吉翁公国军") + " · " + I18n.text(CAMPAIGN_WORLD.settings.headquarters?.some((base) => base.region === region.id) ? "指挥部" : region.factory ? "生产据点" : "普通区域");
+    const revenue = node("div", "", "campaign-region-revenue resource-balance");
+    revenue.title = I18n.text("每回合收入");
+    ProductionUI.resources(revenue, regionYield(s, region.id), { compact: true, technology: !!region.factory });
+    detail.append(heading, revenue, node("p", I18n.text("单位数量") + " · " + regionReport(s, region.id), "campaign-region-count-summary"));
     const tabs = node("div", "", "campaign-tabs");
     for (const [id, label] of [
       ["units", "部队"],
@@ -1548,7 +1611,7 @@ window.CampaignUI = (() => {
       button("谍报", openIntelligence),
     );
     detail.append(actions, tabs);
-    const locked = s.phase !== "strategy" || Net.seat === null || s.winner !== null;
+    const locked = s.phase !== "strategy" || Net.seat === null || s.winner !== null || s.ready.includes(Net.seat);
     if (tab === "units") {
       detail.append(regionForces(s, region, locked));
       for (const transfer of s.transfers.filter((transfer) => transfer.to === Net.seat)) {
@@ -1715,10 +1778,9 @@ window.CampaignUI = (() => {
     overview.append(identity, utilities);
     const balances = node("div", "", "campaign-header-balances");
     const resources = node("span", "", "resource-balance campaign-header-resources");
-    ProductionUI.resources(resources, pool, { compact: true });
-    const technology = node("span", "", "campaign-header-technology");
-    technology.append(node("small", "科技"), node("strong", formatNumber(pool.technology)));
-    balances.append(resources, technology);
+    ProductionUI.resources(resources, pool, { compact: true, technology: true,
+      income: CampaignRules.income({ world: CAMPAIGN_WORLD }, s, team) });
+    balances.append(resources);
     const status = node("div", "", "campaign-header-state");
     const humans = Net.snapshot.members.filter((member) => member.seat !== null && !member.bot);
     status.append(
@@ -1735,9 +1797,14 @@ window.CampaignUI = (() => {
       ),
     );
     const finish = button(
-      s.ready.includes(Net.seat) ? "撤销结束回合" : "结束战略回合",
-      () => command("campaign_ready", { ready: !s.ready.includes(Net.seat) }),
-      s.phase !== "strategy" || Net.seat === null || s.winner !== null,
+      s.ready.includes(Net.seat) ? "等待其他玩家思考中" : "结束战略回合",
+      async () => {
+        if (!await GameDialog.confirm("确定结束本战略回合？", {title:"结束战略回合", confirmText:"确定"})) return;
+        const current = state();
+        if (current?.turn === s.turn && current.phase === "strategy" && !current.ready.includes(Net.seat))
+          command("campaign_ready", {ready:true});
+      },
+      s.phase !== "strategy" || Net.seat === null || s.winner !== null || s.ready.includes(Net.seat),
     );
     finish.className = "campaign-green-command campaign-end-turn";
     header.append(overview, status, balances);
@@ -1755,8 +1822,12 @@ window.CampaignUI = (() => {
       refreshWorld(s);
     }
     const map = panel.querySelector(".campaign-world");
-    map.querySelector(".campaign-end-turn")?.remove();
-    map.append(finish);
+    let commands = map.querySelector(".campaign-map-commands");
+    if (!commands) {
+      commands = node("div", "", "campaign-map-commands");
+      map.append(commands);
+    }
+    commands.replaceChildren(finish);
     renderMoveDraft();
     panel.querySelector(".campaign-status")?.remove();
     panel.querySelector(".campaign-victory")?.remove();
@@ -1765,7 +1836,7 @@ window.CampaignUI = (() => {
       panel.append(
         node(
           "p",
-          (s.winner === 0 ? "地球联邦军" : "吉翁公国军") + "完成地球统一，战役结束。",
+          (s.winner === 0 ? "地球联邦军" : "吉翁公国军") + "占领敌方指挥部，战役结束。",
           "campaign-victory",
         ),
       );

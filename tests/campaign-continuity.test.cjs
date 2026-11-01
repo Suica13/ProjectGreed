@@ -12,7 +12,7 @@ const ctx = {
   development: require("../shared/development.js"),
   validateBattle: (save) => Records.validateSave(G, save),
 };
-function fixture(ids = ["Gunperry", "RGM_79", "MS_06F"]) {
+function fixture(ids = ["Gunperry", "RGM_79", "MS_06F"], prepare = null, regionId = "canada", seatCount = 2) {
   let serial = 0;
   const members = [
     { id: "host", seat: 0 },
@@ -20,14 +20,15 @@ function fixture(ids = ["Gunperry", "RGM_79", "MS_06F"]) {
   ];
   const state = C.create(ctx, members);
   state.units = [];
-  ids.forEach((id, index) => C.addUnit(ctx, state, index === ids.length - 1 ? 1 : 0, "canada", id));
+  ids.forEach((id, index) => C.addUnit(ctx, state, index === ids.length - 1 ? 1 : 0, regionId, id));
+  if (prepare) prepare(state, members);
   state.phase = "encounters";
-  state.encounters = [{ region: "canada", turn: 0, battleSave: null, roster: {}, settled: [] }];
+  state.encounters = [{ region: regionId, turn: 0, battleSave: null, roster: {}, settled: [] }];
   const planner = createAttackPlanner(G, () => "plan-" + ++serial);
   const room = {
     hostId: "host",
     campaign: state,
-    seats: members,
+    seats: [...members, ...Array(seatCount - members.length).fill(null)],
     settings: { mode: "campaign" },
     started: false,
     phase: "waiting",
@@ -49,7 +50,7 @@ function fixture(ids = ["Gunperry", "RGM_79", "MS_06F"]) {
         action: "campaign_enter",
         region: preparation.region,
         preparationId: preparation.id,
-        mapId: "frontier_1v1",
+        mapId: preparation.mapId || "frontier_1v1",
         delegate: false,
       });
   }
@@ -161,4 +162,41 @@ test("a sniper becoming ready at a segment boundary survives save validation and
   assert.equal(room.plans[0].target, target.id);
   assert.equal(room.plans[0].charged, true);
   assert.equal(room.game.units[0].actionPoints, 0);
+});
+
+
+test("strategic boarding enters and resumes a real local battle with the same carrier and crew", () => {
+  let passengerId, carrierId, pilotId;
+  const {room,adapter,enter} = fixture(["Medea","Type61","MS_06F"], (state,members) => {
+    const carrier=state.units[0], passenger=state.units[1];
+    carrierId=carrier.id; passengerId=passenger.id;
+    C.action(ctx,state,members,0,{action:"campaign_pilot_recruit",turn:1,name:"Transport pilot"});
+    pilotId=state.pilots[0].profile.id;
+    C.action(ctx,state,members,0,{action:"campaign_pilot_assign",turn:1,armyId:passenger.id,pilotId});
+    C.action(ctx,state,members,0,{action:"campaign_embark",turn:1,armyId:passenger.id,carrierId:carrier.id,hangarId:"Hangar_1"});
+  });
+  const passenger=room.game.units.find(u=>u.campaignId===passengerId), carrier=room.game.units.find(u=>u.campaignId===carrierId);
+  assert(passenger && carrier);assert.equal(passenger.embarked.carrierId,carrier.id);assert.equal(passenger.pilot.id,pilotId);
+  assert.equal(G.hangars.cargo(room.game,carrier).length,1);
+  adapter.checkpoint(room);C.validate(ctx,room.campaign,room.seats);
+  const saved=room.campaign.encounters[0].battleSave.game.units.find(u=>u.campaignId===passengerId);
+  assert.equal(saved.embarked.carrierId,carrier.id);
+  room.campaign.phase="encounters";
+  enter();assert.equal(room.game.units.find(u=>u.campaignId===passengerId).embarked.carrierId,carrier.id);
+});
+
+
+test("capturing Odessa's local base ends the campaign even with defending survivors", () => {
+  const {room,adapter} = fixture(["Gunperry","RGM_79","MS_06F"], null, "odessa", 10);
+  const actor = room.game.units.find(u=>u.team===0 && G.modelOf(u).prefabId==="RGM_79");
+  const base = room.game.campaignBattlefield.layout.nodes.find(node=>node.kind==="base");
+  actor.x=base.x;actor.y=base.y;actor.actionPoints=5;actor.acted=false;
+  room.game.team=0;
+  G.campaignBattlefield.capture(G,room.game,actor);
+  assert(room.game.units.some(u=>u.team===1 && u.hp>0));
+  adapter.checkpoint(room);
+  assert.equal(room.campaign.regions.find(r=>r.id==="odessa").owner,0);
+  assert.equal(room.campaign.winner,0);
+  assert.equal(adapter.view(room).preparation,null);
+  assert.equal(C.validate(ctx,room.campaign,room.seats).winner,0);
 });

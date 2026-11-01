@@ -24,6 +24,9 @@ test("a delayed peer loses one request and recovers readiness without manual ret
   await idle(guest);
   await guest.evaluate(()=>{
    const socket=Net.socket,send=socket.send.bind(socket),receive=socket.onmessage;
+   window.audioActions=[];
+   const audioAccepted=GameAudio.actionAccepted;
+   GameAudio.actionAccepted=action=>{audioActions.push(action);audioAccepted(action)};
    window.lostRequests=[];
    socket.send=raw=>{
     const m=JSON.parse(raw);
@@ -43,6 +46,7 @@ test("a delayed peer loses one request and recovers readiness without manual ret
   const retry=await guest.evaluate(()=>lostRequests);
   expect(retry.length).toBeGreaterThanOrEqual(2);
   expect(new Set(retry.map(m=>m.id)).size).toBe(1);
+  expect(await guest.evaluate(()=>audioActions.filter(a=>a==="set_ready").length)).toBe(1);
   // Disconnect after submission while the reply is still delayed. Resume retains ID.
   await guest.evaluate(()=>{
    Net.request("set_ready",{ready:false,formation:Formation.current()});
@@ -53,6 +57,7 @@ test("a delayed peer loses one request and recovers readiness without manual ret
   await guest.locator("#reconnectRoom").click();
   await idle(guest);
   expect(await guest.evaluate(()=>Net.snapshot.members.find(m=>m.id===Net.memberId).ready)).toBe(false);
+  expect(await guest.evaluate(()=>audioActions.filter(a=>a==="set_ready").length)).toBe(2);
   expect(errors).toEqual([]);
  }finally{await context.close();await page.close();await app.close()}
 });

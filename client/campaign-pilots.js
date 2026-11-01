@@ -35,7 +35,7 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
     const army = s.units.find((unit) => unit.id === armyId && !unit.destroyed);
     const pool = s.teams[side],
       members = Net.snapshot.members;
-    const locked = s.phase !== "strategy" || s.winner !== null || !!Net.awaiting;
+    const locked = s.phase !== "strategy" || s.winner !== null || !!Net.awaiting || s.ready.includes(Net.seat);
     const header = node("header", "", "campaign-order-header");
     header.append(
       node(

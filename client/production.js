@@ -11,22 +11,26 @@ const ProductionUI = (() => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("class", "resource-icon");
     const path = document.createElementNS(svg.namespaceURI, "path");
     path.setAttribute("fill", "currentColor");
     path.setAttribute(
       "d",
-      kind === "money"
+      kind === "technology"
+        ? "M9 2h6v2h-1v5l6 10a2 2 0 0 1-2 3H6a2 2 0 0 1-2-3l6-10V4H9Zm3 8-4 7h8l-4-7Z"
+        : kind === "money"
         ? "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 4v1h3v2h-6v2h4a3 3 0 0 1 0 6h-1v1h-2v-1H8v-2h6v-2h-4a3 3 0 0 1 0-6h1V6Z"
         : "M3 7 12 2l9 5v11l-9 5-9-5Zm2 1v9l6 3v-9Zm8 3v9l6-3V8ZM7 7l5 3 5-3-5-3Z",
     );
     svg.append(path);
     return svg;
   };
-  function resources(container, value, { compact = false } = {}) {
+  function resources(container, value, { compact = false, income = null, technology = false } = {}) {
     container.replaceChildren();
     for (const [kind, name] of [
       ["money", "资金"],
       ["supplies", "物资"],
+      ...(technology ? [["technology", "科技点"]] : []),
     ]) {
       const item = element("span", "resource-" + kind);
       item.setAttribute("aria-label", name + " " + formatNumber(value[kind] || 0));
@@ -35,6 +39,12 @@ const ProductionUI = (() => {
         resourceIcon(kind),
         element("span", "", (compact ? "" : name + " ") + formatNumber(value[kind] || 0)),
       );
+      if (income) {
+        const next = element("span", "resource-income", "+" + formatNumber(income[kind] || 0));
+        next.dataset.resource = kind;
+        next.title = "下回合收入";
+        item.append(next);
+      }
       container.append(item);
     }
   }
@@ -80,9 +90,9 @@ const ProductionUI = (() => {
   function purchaseUnitLicense(unitId) {
     if (Net.started && Net.snapshot?.phase !== "assembly") return "当前无法购买部署许可";
     try {
-      return Economy.purchaseLicense(unitId, PlayerProfile.faction())
-        ? "已获得永久部署许可"
-        : "当前无法购买部署许可";
+      if (!Economy.purchaseLicense(unitId, PlayerProfile.faction())) return "当前无法购买部署许可";
+      GameAudio.play("productionSound");
+      return "已获得永久部署许可";
     } catch (error) {
       return "许可购买失败：" + Economy.errorMessage(error);
     }
@@ -335,6 +345,7 @@ const ProductionUI = (() => {
     list.replaceChildren();
     for (const prefab of prefabs) {
       const card = element("button", "production-unit");
+      card.dataset.buttonSound = "off";
       card.type = "button";
       card.dataset.unitId = prefab.id;
       card.dataset.locked = String(!Economy.hasLicense(prefab.id) && !allows(prefab));
@@ -501,5 +512,5 @@ const ProductionUI = (() => {
     setPageView("production");
     render();
   }
-  return { render, resources, openUnit, receiveAwards, renderLicensePurchase };
+  return { render, resources, resourceIcon, openUnit, receiveAwards, renderLicensePurchase };
 })();

@@ -1271,7 +1271,7 @@
   "选择{range}格内的位置，提供{vision}格视野与{radar}格侦测，持续至下次己方回合。消耗{en} EN、{ap} AP；下次己方回合可再次使用。": "Choose a cell within {range} tiles. Provides {vision} sight and {radar} detection until the next friendly turn. Costs {en} EN and {ap} AP; reusable next friendly turn.",
   "范围 {range} · 友军HP +{hp}% · EN +{en}% · 盾牌 +{shield}% · 消耗EN {cost}和本次行动；不修复破损部位。": "Range {range} · Allied HP +{hp}% · EN +{en}% · Shield +{shield}% · Costs {cost} EN and this action; does not repair damaged parts.",
   "扫描": "Scan",
-  "敌军": "enemies",
+  "敌军": "Enemies",
   "水中敌军": "underwater enemies",
   "标记持续至下次己方回合；消除己方未侦测命中惩罚，不直接揭露普通单位。": "Marks last until the next friendly turn, removing the undetected-target hit penalty without revealing ordinary units.",
   "的米诺夫斯基粒子": " Minovsky particles",
@@ -2596,5 +2596,15 @@
   "单位强度（耐久）": "Unit strength (HP)",
   "初始资源": "Starting resources",
   "主指挥官": "Commander-in-chief",
-  "确认调动": "Confirm movement"
+  "确认调动": "Confirm movement",
+  "下回合收入": "Next turn income",
+  "每回合收入": "Income per turn",
+  "等待其他玩家思考中": "Waiting for other players",
+  "确定结束本战略回合？": "End this strategic turn?",
+  "搭载格纳库": "Select hangar",
+  "离舰": "Disembark",
+  "我军": "Allies",
+  "研发中 · 剩余{turns}回合": "Researching · {turns} turns remaining",
+  "研发需要{turns}个战略回合": "Research takes {turns} strategic turns",
+  "并行生产槽位 {used}/{total}": "Parallel production slots {used}/{total}"
 }

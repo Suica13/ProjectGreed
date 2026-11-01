@@ -97,7 +97,7 @@ test("Earth regions have reciprocal routes and campaign forces are independent o
   assert.equal(
     state.units.length,
     ctx.world.regions.reduce(
-      (sum, region) => sum + (region.initialUnits ?? (region.factory ? 4 : 2)),
+      (sum, region) => sum + Object.values(ctx.world.settings.initialForces[region.owner === 0 ? "EFSF" : "ZEON"]).reduce((a,b)=>a+b,0) * (region.factory ? 3 : 1),
       0,
     ),
   );
@@ -130,7 +130,7 @@ test("shared treasury reserves batch orders once, produces to the applicant and 
   assert.equal(state.teams[0].money, before - quote.money * 2);
   C.advance(ctx, state, players);
   assert.equal(count(0), a + quote.quantity);
-  assert.equal(count(2), b);
+  assert.equal(count(2), b + quote.quantity);
   C.advance(ctx, state, players);
   assert.equal(count(2), b + quote.quantity);
   assert.equal(state.orders.length, 0);
@@ -196,6 +196,11 @@ test("technology costs are spent from the campaign pool; invalid archived resour
   C.action(ctx, state, players, 2, { action: "campaign_research", turn: 1, techId: tech.id });
   assert.equal(state.teams[0].money, 100000 - tech.money);
   assert.equal(state.teams[0].technology, 100000 - tech.points);
+  assert(!state.teams[0].researched.includes(tech.id));
+  assert.equal(state.teams[0].researchQueue[0].remaining, 2);
+  C.advance(ctx, state, players);
+  assert(!state.teams[0].researched.includes(tech.id));
+  C.advance(ctx, state, players);
   assert(state.teams[0].researched.includes(tech.id));
   const invalid = structuredClone(state);
   invalid.teams[0].money = -1;

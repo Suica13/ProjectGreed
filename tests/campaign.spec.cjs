@@ -79,6 +79,19 @@ for (const viewport of [
         return own ? label.includes(`(${formatNumber(own)})`) : !/\(\d+\)/.test(label);
       });
     })).toBe(true);
+    const economy = await page.locator(".campaign-header-resources").evaluate((panel) => ({
+      colors: [...panel.children].map((item) => getComputedStyle(item).color),
+      icons: panel.querySelectorAll("svg").length,
+      income: [...panel.querySelectorAll(".resource-income")].map((item) => item.textContent),
+      expected: Object.values(CampaignRules.income({world:CAMPAIGN_WORLD}, Net.snapshot.campaign, 0)).map((amount) => "+" + formatNumber(amount)),
+    }));
+    expect(economy.colors).toEqual(["rgb(242, 203, 101)", "rgb(131, 212, 154)", "rgb(142, 212, 250)"]);
+    expect(economy.icons).toBe(3);
+    expect(economy.income).toEqual(economy.expected);
+    await expect(page.locator(".campaign-region-income")).toHaveCount(0);
+    await expect(page.locator(".campaign-region-cost")).toHaveCount(0);
+    await expect(page.locator(".campaign-region-count").first()).toContainText(/\/.*C/);
+    await expect(page.locator(".campaign-map-commands .campaign-end-turn")).toBeVisible();
     const impactBay = await page.evaluate(() => {
       const world = CAMPAIGN_WORLD;
       const cutout = world.coastalCutouts.find((item) => item.id === "sydney_impact_bay");
@@ -131,7 +144,7 @@ for (const viewport of [
       "驾驶员",
       "谍报",
     ]);
-    await expect(page.locator(".campaign-world > .campaign-end-turn")).toHaveText("结束战略回合");
+    await expect(page.locator(".campaign-map-commands > .campaign-end-turn")).toHaveText("结束战略回合");
     const ordersRow = await page.locator(".campaign-header-state > strong").boundingBox();
     const balancesRow = await page.locator(".campaign-header-balances").boundingBox();
     expect(Math.abs(ordersRow.y - balancesRow.y)).toBeLessThan(3);
@@ -339,6 +352,12 @@ for (const viewport of [
     const fixedCommand = await commandBounds();
     await expect(page.locator(".campaign-end-turn")).toBeEnabled();
     expect(await page.locator(".campaign-end-turn").evaluate((button) => getComputedStyle(button).animationName)).toBe("campaign-command-pulse");
+    for (let i = 0; i < 5; i++) await page.locator(".campaign-map-tools button").first().click();
+    const zoomedOut = await page.locator(".campaign-map-scroll svg").boundingBox();
+    expect(zoomedOut.width).toBeLessThan(mapBounds.width * 0.9);
+    expect(zoomedOut.height).toBeLessThan(mapBounds.height * 0.9);
+    await page.screenshot({path:`tmp/campaign-map-panels-${viewport.width}.png`});
+    await page.locator(".campaign-map-tools button").last().click();
     const beforeZoom = await page.locator(".campaign-map-scroll svg").boundingBox();
     const anchoredX = (mouseX - beforeZoom.x) / beforeZoom.width;
     await page.mouse.move(mouseX, mouseY);
@@ -365,7 +384,8 @@ for (const viewport of [
     await expect(page.getByRole("button", { name: "调动", exact: true })).toBeVisible();
     await expect(page.getByRole("button", { name: "调动", exact: true })).toBeDisabled();
     await expect(page.getByRole("button", { name: "转交", exact: true })).toBeVisible();
-    await expect(page.locator("#campaignScreen")).not.toContainText("COST");
+    await expect(page.locator(".campaign-force-list")).not.toContainText("COST");
+    await expect(page.locator(".campaign-region-count").first()).toContainText(/\/.*C/);
     expect(
       await page.locator(".campaign-force-list").evaluate((el) => getComputedStyle(el).overflowY),
     ).toBe("scroll");
@@ -466,6 +486,14 @@ for (const viewport of [
       ),
     ).toEqual(personalBefore);
     await page.screenshot({ path: `tmp/campaign-scene-${viewport.width}.png` });
+    const transportId = await firstArmy.getAttribute("data-unit-id");
+    await firstArmy.getByRole("button", {name:"搭载",exact:true}).click();
+    await page.locator("#campaignOrderDialog [data-carrier-id]").first().click();
+    const transported = page.locator(`.campaign-force-card[data-unit-id="${transportId}"]`);
+    await expect(transported).toHaveAttribute("data-carrier-id", /army-/);
+    expect(await transported.evaluate((row) => parseFloat(getComputedStyle(row).marginLeft))).toBe(16);
+    await transported.getByRole("button", {name:"离舰",exact:true}).click();
+    await expect(transported).not.toHaveAttribute("data-carrier-id");
     await firstArmy.locator("input").check();
     await expect(page.locator(".campaign-selection-summary")).toContainText("已选 1 台");
     await page
@@ -475,6 +503,21 @@ for (const viewport of [
     await expect(page.locator("#campaignOrderDialog")).not.toBeVisible();
     const moveDock = page.locator("#campaignMoveDock");
     await expect(moveDock).toBeVisible();
+    await expect(page.locator(".campaign-map-commands")).toBeHidden();
+    await expect(moveDock.locator("[data-destination]").first()).toContainText(/\/.*C/);
+    expect(await moveDock.evaluate((dock) => Math.abs(dock.getBoundingClientRect().bottom - dock.parentElement.getBoundingClientRect().bottom))).toBeLessThanOrEqual(2);
+    const scrollingTargets = await moveDock.locator(".campaign-move-targets").evaluate((targets) => {
+      const children = [...targets.children];
+      for (let i = 0; i < 30; i++) targets.append(children[i % children.length].cloneNode(true));
+      const result = { overflow: getComputedStyle(targets).overflowY, scrolls: targets.scrollHeight > targets.clientHeight };
+      targets.scrollTop = targets.scrollHeight;
+      result.moved = targets.scrollTop > 0;
+      [...targets.children].slice(children.length).forEach((item) => item.remove());
+      targets.scrollTop = 0;
+      return result;
+    });
+    expect(scrollingTargets).toEqual({overflow:"auto", scrolls:true, moved:true});
+    await page.screenshot({path:`tmp/campaign-move-cost-${viewport.width}.png`});
     await expect(page.locator("#campaignConfirmMove")).toBeHidden();
     const movingArmyId = await firstArmy.getAttribute("data-unit-id");
     const beforeOrder = await page.evaluate((id) => Net.snapshot.campaign.units.find((u) => u.id === id).moveTo, movingArmyId);
@@ -493,6 +536,7 @@ for (const viewport of [
     expect(await page.locator(".campaign-move-outline path").first().evaluate((path) => getComputedStyle(path).fill)).toBe("none");
     await moveDock.getByRole("button", { name: "取消", exact: true }).click();
     await expect(moveDock).toHaveCount(0);
+    await expect(page.locator(".campaign-map-commands")).toBeVisible();
     await expect(page.locator(".campaign-move-outline")).toHaveCount(0);
     expect(await page.evaluate((id) => Net.snapshot.campaign.units.find((u) => u.id === id).moveTo, movingArmyId)).toBe(beforeOrder);
     await page.locator(".campaign-unit-actions button").filter({ hasText: /^调动$/ }).click();
@@ -608,7 +652,7 @@ for (const viewport of [
     await workspace.locator(".campaign-purchase > button").click();
     await expect(workspace.locator('[data-tech-id="Tech_EFSF_0079_AntiMSPlan"]')).toHaveAttribute(
       "data-status",
-      "researched",
+      "researching",
     );
     await expect.poll(() => page.evaluate(() => Net.awaiting)).toBe(null);
     await workspace.locator(".campaign-workspace-header > button").click();
@@ -633,6 +677,11 @@ for (const viewport of [
       await expect.poll(() => page.evaluate(() => Net.awaiting)).toBe(null);
     }
     await page.getByRole("button", { name: "结束战略回合", exact: true }).click();
+    await expect(page.locator("#gameDialog")).toBeVisible();
+    await page.locator("#gameDialog").getByRole("button", {name:"取消",exact:true}).click();
+    await expect.poll(() => page.evaluate(() => Net.snapshot.campaign.turn)).toBe(1);
+    await page.getByRole("button", { name: "结束战略回合", exact: true }).click();
+    await page.locator("#gameDialog").getByRole("button", {name:"确定",exact:true}).click();
     await expect(page.locator(".campaign-battle-hint")).toContainText("黄色");
     const encounter = page.locator("#campaignEncounterDialog");
     await expect(encounter).toBeVisible();
@@ -689,6 +738,9 @@ for (const viewport of [
     await page.keyboard.press("Escape");
     await expect(encounter).toBeVisible();
     await expect(encounter.locator(".campaign-ready-marker")).toHaveCount(2);
+    await expect(encounter.locator(".campaign-ready-group")).toHaveCount(2);
+    await expect(encounter.locator(".campaign-ready-group").first()).toHaveAttribute("data-team", "0");
+    await expect(encounter.locator(".campaign-ready-group").last()).toHaveAttribute("data-team", "1");
     await expect(encounter.locator('.campaign-ready-marker[data-ready="true"]')).toHaveCount(1);
     await page.screenshot({ path: `tmp/campaign-ready-${viewport.width}.png` });
     await expect(encounter.locator(".campaign-encounter-team")).toHaveCount(2);

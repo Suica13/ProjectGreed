@@ -4,6 +4,7 @@ const WeaponAudio = (() => {
     loading = null,
     current = null,
     battleMuted = false;
+  const decoding = new Map();
   const buffers = new Map(),
     nodes = new Map(),
     volumeGains = new Map(),
@@ -55,6 +56,13 @@ const WeaponAudio = (() => {
       stopNodes("tail");
     }
   }
+  function decodeSound(source) {
+    if (!decoding.has(source)) decoding.set(source, (async () => {
+      const response = await fetch(source);
+      return context.decodeAudioData(await response.arrayBuffer());
+    })());
+    return decoding.get(source);
+  }
   async function loadSounds() {
     // 不同单位复用了同一份 OGG；按素材内容解码一次，所有逻辑 ID 共用缓冲。
     const groups = new Map();
@@ -69,8 +77,7 @@ const WeaponAudio = (() => {
         entries.slice(i, i + 2).map(async ([source, keys]) => {
           try {
             // data URL 在浏览器内部读取，不访问服务器，也不在 JS 中逐字节转换。
-            const response = await fetch(source);
-            const buffer = await context.decodeAudioData(await response.arrayBuffer());
+            const buffer = await decodeSound(source);
             for (const key of keys) buffers.set(key, buffer);
           } catch {
             // 单份损坏素材不妨碍其余音效初始化。
@@ -118,6 +125,21 @@ const WeaponAudio = (() => {
     startTimes.set(source, startsAt);
     source.start(startsAt);
   }
+  // Decode only the native button asset on first use; reuse the normal sound cache.
+  function buttonClick() {
+    try {
+      unlock();
+      const sound = ART.presentation.buttonSound;
+      if (!context || !sound || volumeMultiplier() === 0) return;
+      if (buffers.has(sound.asset)) return play(sound, undefined, 1, "ui");
+      decodeSound(ART.sounds[sound.asset]).then((buffer) => {
+        buffers.set(sound.asset, buffer);
+        if (!document.hidden) play(sound, undefined, 1, "ui");
+      }).catch(() => {});
+    } catch {
+      // Unavailable audio must never block an interface action.
+    }
+  }
   function sync(owner, index, weapon, time, rate = 1, cues = null) {
     if (battleMuted) {
       stopBattle();
@@ -147,6 +169,13 @@ const WeaponAudio = (() => {
       play(sound, origin + at / rate, rate, "battle");
     }
   }
+  // Delegation also covers dynamically created dialogs and keyboard/touch activation.
+  document.addEventListener("click", (event) => {
+    if (!event.isTrusted) return;
+    const button = event.target?.closest?.("button, [role='button'], input[type='button'], input[type='submit'], summary");
+    if (!button || button.dataset.buttonSound === "off" || button.matches(":disabled") || button.getAttribute("aria-disabled") === "true" || button.closest("[inert]")) return;
+    buttonClick();
+  }, { capture: true });
   window.addEventListener("pointerdown", unlock, { capture: true });
   window.addEventListener("keydown", unlock, { capture: true });
   document.addEventListener("visibilitychange", () => {

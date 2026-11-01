@@ -137,12 +137,11 @@ const AITactics = (() => {
     for (const team of new Set(bots.map((p) => ctx.G.seatTeam(p.seat)))) {
       const pool = state.teams[team];
       for (let i = 0; i < (options.difficulty === "hard" ? 2 : 1); i++) {
-        const node = ctx.development.nodes(pool.faction).find((n) => !pool.researched.includes(n.id) &&
+        const node = ctx.development.nodes(pool.faction).find((n) => !pool.researched.includes(n.id) && !(pool.researchQueue || []).some((order) => order.techId === n.id) &&
           n.requires.every((id) => pool.researched.includes(id)) && n.points <= pool.technology &&
           (n.money || 0) <= pool.money && (n.supplies || 0) <= pool.supplies);
         if (!node) break;
-        pool.researched.push(node.id); pool.technology -= node.points;
-        pool.money -= node.money || 0; pool.supplies -= node.supplies || 0;
+        helpers.startResearch(ctx, state, team, node);
       }
     }
     for (const player of bots) {

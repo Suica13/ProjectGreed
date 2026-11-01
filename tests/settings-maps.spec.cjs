@@ -24,7 +24,7 @@ test("global settings switch language, mix music and effects live, mute active g
       return node;
     };
   });
-  await page.locator("#openClientSettings").click();
+  await page.locator("#shellSettings").click();
   await expect(page.locator("#clientSettingsDialog")).toBeVisible();
   await slider(page, "master", 50);
   await slider(page, "music", 20);
@@ -61,7 +61,7 @@ test("global settings switch language, mix music and effects live, mute active g
   await page.keyboard.press("Escape");
   await expect(page.locator("#clientSettingsDialog")).not.toBeVisible();
   await page.reload();
-  await page.locator("#openClientSettings").click();
+  await page.locator("#shellSettings").click();
   await expect(page.locator("#settingsLanguage")).toHaveValue("en");
   await expect(page.locator("#volume-master")).toHaveValue("50");
   await expect(page.locator("#volume-sfx")).toHaveValue("30");

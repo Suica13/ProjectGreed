@@ -60,7 +60,7 @@ function reports(progress) {
   own.moveTo = "andes";
   for (let i = 0; i < 20; i++) {
     const enemy = C.addUnit(ctx, s, 1, "odessa", "MS_06F");
-    enemy.moveTo = "europe";
+    enemy.moveTo = "europe_central";
     enemy.state = { hp: 1234, en: 56, pilot: { name: "Secret pilot" } };
   }
   s.history = [
@@ -78,6 +78,15 @@ test("server reports enforce all four intelligence tiers without transmitting hi
       view = C.view(s, 0);
     const count = view.intelRegions.find((region) => region.id === "odessa").counts[1];
     const enemies = view.units.filter((unit) => unit.team === 1);
+    const cost = view.intelRegions.find((region) => region.id === "odessa").costs[1];
+    const actualCost = s.units.filter((unit) => unit.team === 1).reduce((sum, unit) => sum + C.model(ctx, unit).cost, 0);
+    if (progress < 25) assert.equal(cost, null);
+    else if (progress < 75) {
+      const error = progress < 50 ? 0.5 : 0.25;
+      assert(cost >= actualCost * (1 - error) && cost <= actualCost * (1 + error));
+    } else assert.equal(cost, actualCost);
+    assert.equal(view.intelRegions.find((region) => region.id === "jaburo").costs[0], C.model(ctx, s.units[0]).cost);
+
     assert.deepEqual(C.view(s, 0), view, "reports must not reroll on refresh");
     assert.deepEqual(s, before, "view filtering must not mutate saved state");
     assert(!view.history.some((line) => line.includes("敌军秘密")));
@@ -109,8 +118,11 @@ test("movement details follow intelligence tiers; friendly reports and omniscien
       view = C.view(s, 0);
     assert.equal(view.movements.find((move) => move.team === 0).unitIds.length, 1);
     const enemy = view.movements.find((move) => move.team === 1);
-    if (progress < 25) assert.equal(enemy, undefined);
-    else assert.equal(enemy.unitIds.length, progress < 75 ? 0 : 20);
+    assert.equal(enemy, undefined, "enemy planning intents stay private at every intelligence tier");
+    for (const unit of view.units.filter((unit) => unit.team === 1)) {
+      assert.equal(unit.moveTo, null);
+      assert(!Object.hasOwn(unit, "pendingTransfer"));
+    }
     const global = C.view(s);
     assert.equal(global.units.length, 21);
     assert.equal(global.movements[1].count, 20);
@@ -142,4 +154,42 @@ test("campaign archives retain intelligence and safely initialize legacy archive
     progress: 50,
     fundedTurn: 0,
   });
+});
+
+
+test("enemy movement reports appear only after settlement and survive campaign export", () => {
+  const s = reports(100);
+  const before = C.view(s, 0);
+  assert(!before.movements.some((m) => m.team === 1));
+  assert.equal(before.intelRegions.find((r) => r.id === "europe_central").counts[1], 0);
+  C.advance(ctx, s, members);
+  const view = C.view(s, 0);
+  assert.equal(view.intelRegions.find((r) => r.id === "europe_central").counts[1], 20);
+  const report = view.movements.find((m) => m.team === 1);
+  assert(report);
+  assert.equal(report.from, "odessa");
+  assert.equal(report.to, "europe_central");
+  assert.equal(report.unitIds.length, 20);
+  assert(!Object.hasOwn(view, "marches"));
+  const imported = C.validate(ctx, s, members);
+  assert.deepEqual(imported.marches, s.marches);
+  assert.deepEqual(C.view(imported, 0).movements, view.movements);
+  imported.marches[0].to = "missing-region";
+  assert.throws(() => C.validate(ctx, imported, members));
+});
+
+test("income forecast equals settlement and respects regional ownership and research speed", () => {
+  const s = C.create(ctx, members);
+  s.options.teams[0].research = 1.25;
+  const forecast = C.income(ctx, s, 0);
+  const before = structuredClone(s.teams[0]);
+  C.advance(ctx, s, members);
+  for (const key of ["money", "supplies", "technology"])
+    assert.equal(s.teams[0][key] - before[key], forecast[key]);
+  const core = ctx.world.regions.find((r) => r.factory);
+  const holder = s.regions.find((r) => r.id === core.id);
+  holder.owner = 0;
+  assert.deepEqual(C.regionIncome(ctx, s, core.id), {money:300, supplies:600, technology:125});
+  const ordinary = ctx.world.regions.find((r) => !r.factory);
+  assert.deepEqual(C.regionIncome(ctx, s, ordinary.id), {money:200, supplies:400, technology:0});
 });

@@ -103,7 +103,7 @@ function createCampaignRoom({
   // never to a player's next battle or to a client-selected region.
   function preparation(room) {
     const state = room.campaign;
-    if (!state || room.started || state.phase !== "encounters") return null;
+    if (!state || room.started || state.winner !== null || state.phase !== "encounters") return null;
     const next = state.encounters.find(
       (item) => item.turn < state.turn && C.disputed(state, item.region),
     );
@@ -143,7 +143,7 @@ function createCampaignRoom({
   function view(room, team = null) {
     if (!room.campaign) return null;
     return {
-      ...C.view(room.campaign, team),
+      ...C.view(room.campaign, team, ctx),
       preparation: preparation(room),
       activeRegion: room.campaignBattle?.region || null,
       stopRound: room.campaignBattle?.stopRound || null,
@@ -520,8 +520,7 @@ function createCampaignRoom({
       state.turn++;
       C.arrive(ctx, state);
     }
-    if (new Set(state.regions.map((region) => region.owner)).size === 1)
-      state.winner = state.regions[0].owner;
+    C.updateVictory(ctx, state);
     room.started = false;
     room.startedFromSave = false;
     room.phase = "waiting";

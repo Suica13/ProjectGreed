@@ -10707,8 +10707,8 @@
     }
   ],
   "settings": {
-    "startingMoney": 20000,
-    "startingSupplies": 30000,
+    "startingMoney": 25000,
+    "startingSupplies": 50000,
     "startingTechnology": 2000,
     "productionSecondsPerTurn": 30,
     "ordinaryIncome": {
@@ -10720,6 +10720,31 @@
       "money": 300,
       "supplies": 600,
       "technology": 100
+    },
+    "researchTurns": 2,
+    "productionSlots": 3,
+    "headquartersProductionSlots": 5,
+    "headquarters": [
+      {
+        "region": "jaburo",
+        "team": 0
+      },
+      {
+        "region": "odessa",
+        "team": 1
+      }
+    ],
+    "initialForces": {
+      "EFSF": {
+        "Type61": 4,
+        "FF_B2": 2,
+        "Medea": 1
+      },
+      "ZEON": {
+        "MS_06F": 2,
+        "MS_06S": 1,
+        "FatUncle": 1
+      }
     }
   },
   "id": "earth_0079_mid",

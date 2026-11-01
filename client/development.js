@@ -114,6 +114,7 @@ const DevelopmentUI = (() => {
     action.onclick = () => {
       try {
         if (Development.research(faction, node.id)) {
+          GameAudio.play("researchSound");
           window.dispatchEvent(new Event("development-changed"));
           render();
         }

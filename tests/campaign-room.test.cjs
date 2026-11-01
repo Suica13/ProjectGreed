@@ -150,7 +150,7 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
   await act(host, "start_game", { campaignRounds: 1 });
   assert(frames.get(host).campaign.units.every((unit) => unit.team === 0));
   assert(frames.get(other).campaign.units.every((unit) => unit.team === 1));
-  assert.equal(room.campaign.teams[0].money, 30000);
+  assert.equal(room.campaign.teams[0].money, 37500);
   assert.equal(room.campaign.options.teams[1].durability, 0.75);
   const beforeIntelligence = room.campaign.teams[0].money;
   await act(host, "campaign_intelligence", { id: "intel-once", turn: 1 });
@@ -202,7 +202,8 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
     amount: 5,
   });
   await act(host, "campaign_research", { turn: 1, techId: "Tech_EFSF_0079_AntiMSPlan" });
-  assert(room.campaign.teams[0].researched.includes("Tech_EFSF_0079_AntiMSPlan"));
+  assert(!room.campaign.teams[0].researched.includes("Tech_EFSF_0079_AntiMSPlan"));
+  assert.equal(room.campaign.teams[0].researchQueue.find((order) => order.techId === "Tech_EFSF_0079_AntiMSPlan").remaining, 2);
   assert.match(frames.get(host).ack, /^request-/);
   const moneyBeforeOrder = room.campaign.teams[0].money;
   await act(host, "campaign_produce", {
@@ -226,7 +227,7 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
   await enter();
   assert.equal(room.phase, "idle");
   assert.equal(room.settings.mode, "campaign");
-  assert.equal(room.game.units.length, 3);
+  assert.equal(room.game.units.length, room.campaign.units.filter((unit) => !unit.destroyed && unit.region === room.campaignBattle.region).length);
   const survivor = room.game.units.find((unit) => unit.team === 0);
   assert.equal(survivor.pilot.id, crew.profile.id);
   assert.equal(survivor.pilot.stats.speed, 105);

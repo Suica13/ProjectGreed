@@ -1031,6 +1031,7 @@ const Formation = (() => {
       };
       const details = element("button", "formation-detail-button", "详情");
       details.setAttribute("aria-haspopup", "dialog");
+      details.dataset.buttonSound = "off";
       details.onclick = show;
       const icon = element("span", "formation-icon"),
         image = element("img");
@@ -1466,6 +1467,7 @@ const Formation = (() => {
     list.replaceChildren();
     for (const prefab of prefabs) {
       const card = element("button", "catalog-unit");
+      card.dataset.buttonSound = "off";
       card.dataset.unitId = prefab.id;
       card.disabled = !!prefab.wip;
       if (prefab.wip) card.title = "WIP";
@@ -1514,6 +1516,7 @@ const Formation = (() => {
       };
       const details = element("button", "catalog-detail", "详情");
       details.dataset.detailUnitId = prefab.id;
+      details.dataset.buttonSound = "off";
       details.setAttribute("aria-haspopup", "dialog");
       details.setAttribute("aria-label", `${prefab.code} ${prefab.name} · ${I18n.text("详情")}`);
       details.onclick = () => {
@@ -2909,6 +2912,7 @@ const Deployment = (() => {
     else {
       try {
         Rules.deploy(game, team(), u.id, anchor.x, anchor.y);
+        GameAudio.play("deploymentSound");
         update();
       } catch {
         note("请在己方出生区的空格部署。");
@@ -2921,6 +2925,7 @@ const Deployment = (() => {
     if (Net.active) return Net.request("confirm_deployment");
     if (game.ai) game.deployment[1] = true;
     const finished = Rules.confirmDeployment(game, team());
+    GameAudio.play("deploymentSound");
     if (finished) {
       phase = "idle";
       selected = null;

@@ -24,7 +24,7 @@ window.CampaignWorkspace = (() => {
   const team = () => (Number.isInteger(Net.seat) ? Rules.seatTeam(Net.seat) : 0);
   const pool = () => state().teams[team()];
   const editable = () =>
-    Number.isInteger(Net.seat) && state()?.phase === "strategy" && state().winner === null;
+    Number.isInteger(Net.seat) && state()?.phase === "strategy" && state().winner === null && !state().ready.includes(Net.seat);
   function action(label, callback, disabled = false) {
     const button = node("button", label);
     button.type = "button";
@@ -224,6 +224,7 @@ window.CampaignWorkspace = (() => {
       node("strong", "每批生产价格"),
       money(price),
       node("p", `每批${price.quantity}台 · ${price.turns}大回合`),
+      node("p", `并行生产槽位 ${state().orders.filter((order) => order.region === regionId && order.status === "working").length}/${CampaignRules.productionCapacity(context(), regionId)}`),
     );
     const basePrice = CampaignRules.quote(context(), prefab.id);
     const body = {
@@ -295,6 +296,7 @@ window.CampaignWorkspace = (() => {
         )
           continue;
         const researched = pool().researched.includes(tech.id),
+          pending = pool().researchQueue?.find((order) => order.techId === tech.id),
           available = tech.requires.every((id) => pool().researched.includes(id));
         const card = action("", () => {
           selectedTech = tech.id;
@@ -303,14 +305,14 @@ window.CampaignWorkspace = (() => {
         });
         card.className = "campaign-tech-node";
         card.dataset.techId = tech.id;
-        card.dataset.status = researched ? "researched" : available ? "available" : "locked";
+        card.dataset.status = researched ? "researched" : pending ? "researching" : available ? "available" : "locked";
         card.setAttribute("aria-pressed", String(selectedTech === tech.id));
         card.style.gridColumn = { top: 1, mid: 2, bot: 3 }[tech.row] || 2;
         card.style.gridRow = offset + tech.column;
         card.append(
           icon(tech.icon, "campaign-tech-icon"),
           node("strong", tech.name),
-          node("small", researched ? "已开发" : available ? "可以开发" : "前置科技未完成"),
+          node("small", researched ? "已开发" : pending ? `研发中 · 剩余${pending.remaining}回合` : available ? "可以开发" : "前置科技未完成"),
           node("small", `科技 ${formatNumber(tech.points)}`),
           money(tech),
         );
@@ -396,6 +398,7 @@ window.CampaignWorkspace = (() => {
       money(tech),
     );
     const researched = pool().researched.includes(tech.id),
+      pending = pool().researchQueue?.find((order) => order.techId === tech.id),
       available = tech.requires.every((id) => pool().researched.includes(id));
     const affordable =
       pool().technology >= tech.points &&
@@ -403,17 +406,18 @@ window.CampaignWorkspace = (() => {
       pool().supplies >= (tech.supplies || 0);
     const status = researched
       ? "已开发"
-      : !available
+      : pending ? `研发中 · 剩余${pending.remaining}回合` : !available
         ? "前置科技未完成"
         : !affordable
           ? "研发资源不足"
           : "可以开发";
     footer.append(
       node("p", status),
+      node("p", `研发需要${CAMPAIGN_WORLD.settings.researchTurns || 2}个战略回合`),
       action(
         "开发",
         () => Net.request("campaign_research", { turn: state().turn, techId: tech.id }),
-        !editable() || researched || !available || !affordable,
+        !editable() || researched || !!pending || !available || !affordable,
       ),
     );
     inspector.append(content, footer);
