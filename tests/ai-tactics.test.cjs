@@ -83,6 +83,41 @@ test("strategic AI uses multiple factories and does not dispatch tiny groups int
   }
 });
 
+for (const [label, ids, expectOrders] of [
+  ["rejects cheap space units in favor of terrestrial units", ["RB_79", "RGM_79_G_SPACE", "RX_78GP01_FB", "Type61"], true],
+  ["does not produce space units when there is no terrestrial choice", ["RB_79", "RGM_79_G_SPACE", "RX_78GP01_FB"], false],
+  ["still produces atmospheric aircraft", ["FF_B2"], true],
+]) test(`Earth campaign AI ${label}`, () => {
+  const members = [{seat:0,bot:true},{seat:1}];
+  const state = C.create(ctx,members);
+  state.units = [];
+  state.teams[0].researched = ctx.development.nodes("EFSF").map(node => node.id);
+  state.teams[0].money = state.teams[0].supplies = 1000000;
+  const rules = Object.create(G);
+  rules.catalog = {...G.catalog, prefabs:G.catalog.prefabs.filter(prefab => ids.includes(prefab.id))};
+  const local = {...ctx,G:rules};
+  const before = [state.teams[0].money,state.teams[0].supplies];
+  A.strategic(local,state,members,{
+    busy:()=>false,disputed:()=>false,available:C.available,
+    controller:(_,unit)=>unit.ownerSeat,startResearch:()=>{},
+    // Force unsuitable space designs to win the old cost/efficiency scoring.
+    quote:(context,id)=>{
+      const quote = C.quote(context,id);
+      if (!quote) return null;
+      const model = G.models[id+"__"+quote.kitId];
+      return {...quote,money:model.adaptability.ground<100?0:10000,supplies:0};
+    },
+    charge:(pool,quote)=>{pool.money-=quote.money;pool.supplies-=quote.supplies;return true;},
+  });
+  assert.equal(state.orders.length>0,expectOrders);
+  for (const order of state.orders) {
+    const model = G.models[order.unitId+"__"+order.kitId];
+    assert(model.adaptability.ground>=100,order.unitId);
+    if (ids.length===1) assert.equal(order.unitId,"FF_B2");
+  }
+  if (!expectOrders) assert.deepEqual([state.teams[0].money,state.teams[0].supplies],before);
+});
+
 test("escape and separation successors inherit the team's durability multiplier",()=>{
   const game=G.create(false,1,[[{unitId:"MTank",kitId:"standard"}],[{unitId:"RGM_79",kitId:"beam_spray"}]],false,
     {costLimit:99999,unitCostLimit:10000});

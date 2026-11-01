@@ -253,7 +253,11 @@ const AITactics = (() => {
         population.set(unit.unitId, (population.get(unit.unitId) || 0) + 1);
       for (const order of state.orders.filter((o) => o.team === team))
         population.set(order.unitId, (population.get(order.unitId) || 0) + order.quantity);
-      const quotes = available.map((p) => helpers.quote(ctx, p.id)).filter(Boolean);
+      // Low nonzero adaptability permits emergency deployment, not sensible AI production.
+      // Use the same >=100 threshold as the UI's normal environment tags.
+      const environment = world.environment || "ground";
+      const quotes = available.map((p) => helpers.quote(ctx, p.id)).filter((quote) =>
+        quote && (model(quote)?.adaptability?.[environment] || 0) >= 100);
       for (const factory of factories) {
         if (state.orders.filter((o) => o.region === factory.id && o.ownerSeat === player.seat).length >= 2) continue;
         const choices = quotes.filter((q) =>
