@@ -157,6 +157,7 @@ const Net = (() => {
     "playback_ready",
     "capture_point",
     "region_transfer",
+    "unit_control_transfer",
   ]);
   function actionContext(snapshot = n.snapshot) {
     return {
@@ -438,6 +439,7 @@ const Net = (() => {
       if (!msg.id || msg.id === n.awaiting?.id) finishAction(n.awaiting?.id);
       status(msg.message);
       note(msg.message);
+      if (pageView === "campaign") window.CampaignUI?.render();
       if (n.connecting) {
         if (mode === "resume") {
           storage.remove(key(url, room));

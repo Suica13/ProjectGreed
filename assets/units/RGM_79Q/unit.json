@@ -911,7 +911,18 @@
         "EF_BeamSaber_BF_B",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "严格来说算作提坦斯规格的吉姆特装型,性能没有很大的提升",

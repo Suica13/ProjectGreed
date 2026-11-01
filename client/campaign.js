@@ -15,10 +15,11 @@ window.CampaignUI = (() => {
   const replies = new Map();
   const storageKey = "projectgreed.campaign.backup.v1";
   const node = (tag, text = "", css = "") => element(tag, css, text);
-  function button(text, action, disabled = false) {
+  function button(text, action, disabled = false, local = false) {
     const result = node("button", text);
     result.type = "button";
-    result.disabled = disabled || !!Net.awaiting;
+    result.disabled = disabled || (!local && !!Net.awaiting);
+    if (!local) result.dataset.campaignDisabled = String(disabled);
     result.onclick = () =>
       Promise.resolve()
         .then(action)
@@ -92,7 +93,7 @@ window.CampaignUI = (() => {
     const header = node("header", "", "campaign-order-header");
     header.append(
       node("h3", "情报等级"),
-      button("关闭", () => intelligenceDialog.close()),
+      button("关闭", () => intelligenceDialog.close(), false, true),
     );
     const body = node("div", "", "campaign-intelligence-body");
     const meter = node("div", "", "campaign-intelligence-meter");
@@ -152,7 +153,7 @@ window.CampaignUI = (() => {
     const header = node("header", "", "campaign-order-header");
     header.append(
       node("h3", "行进部队"),
-      button("关闭", () => movementDialog.close()),
+      button("关闭", () => movementDialog.close(), false, true),
     );
     const region = (id) =>
       I18n.text(CAMPAIGN_WORLD.regions.find((item) => item.id === id)?.name || id);
@@ -245,6 +246,11 @@ window.CampaignUI = (() => {
   }
   function open(nextTab = tab) {
     if (!state()) return;
+    if (state().inLobby) {
+      if (Net.memberId === Net.snapshot.hostId) Net.request("campaign_resume");
+      else GameDialog.alert("请等待房主继续战役");
+      return;
+    }
     const workspace = ["production", "research"].includes(nextTab) ? nextTab : null;
     tab = workspace ? "units" : nextTab;
     setPageView("campaign");
@@ -257,6 +263,12 @@ window.CampaignUI = (() => {
     refreshBattleControls(snapshot);
     if (!snapshot.campaign) return;
     if (!snapshot.started) {
+      if (snapshot.campaign.inLobby) {
+        if (pageView !== "room") setPageView("room");
+        panel.hidden = true;
+        RoomPanel.render(snapshot);
+        return;
+      }
       if (pageView !== "campaign") open();
       else if (lastRevision !== snapshot.revision) render();
       if (Net.memberId === snapshot.hostId && !Net.awaiting) {
@@ -419,9 +431,9 @@ window.CampaignUI = (() => {
     )) {
       const width = Math.min(
           190,
-          Math.max(132, measure.measureText(I18n.text(region.name)).width + 18),
+          Math.max(52, measure.measureText(I18n.text(region.name)).width + 18),
         ),
-        height = 33;
+        height = 24;
       const [x, y] = region.center,
         [dx, dy] = region.labelOffset || [0, 0];
       let best = { x: x + dx, y: y + dy, score: Infinity };
@@ -528,20 +540,6 @@ window.CampaignUI = (() => {
             "font-weight": region.factory ? 700 : 500,
           },
           I18n.text(region.name),
-        ),
-      );
-      label.append(
-        shape(
-          "text",
-          {
-            x,
-            y: y + 12,
-            "text-anchor": "middle",
-            fill: "#b7d0e2",
-            "font-size": 10,
-            class: "campaign-region-count",
-          },
-          "",
         ),
       );
 
@@ -704,8 +702,6 @@ window.CampaignUI = (() => {
         selectedRegion === region.id ? 2 : region.kind === "sea" ? 1.2 : 0.7,
       );
       surface.setAttribute("stroke-dasharray", region.kind === "sea" ? "4 4" : "none");
-      label.querySelector(".campaign-region-count").textContent =
-        regionStrengthReport(s, region.id) + (contested ? I18n.text(" · 交战") : "");
       label
         .querySelector(".campaign-region-label-box")
         .setAttribute(
@@ -891,7 +887,7 @@ window.CampaignUI = (() => {
     scroll.dataset.encounterFocus = "true";
     const rect = scroll.getBoundingClientRect(),
       map = svg.getBoundingClientRect();
-    const drawerTop = window.innerHeight - Math.min(330, window.innerHeight - 20);
+    const drawerTop = encounterDialog.getBoundingClientRect().top;
     const visibleBottom = Math.min(rect.bottom, drawerTop);
     const visibleHeight = Math.max(40, visibleBottom - rect.top);
     const scale = map.width / 1200;
@@ -915,7 +911,9 @@ window.CampaignUI = (() => {
     if (encounterRegion !== next || !encounterDialog.open) encounterExpanded = false;
     encounterRegion = next;
     renderEncounter();
-    if (!encounterDialog.open) encounterDialog.showModal();
+    const map = panel.querySelector(".campaign-world");
+    if (map && encounterDialog.parentElement !== map) map.append(encounterDialog);
+    if (!encounterDialog.open) encounterDialog.show();
     highlightEncounter();
     // Run after render() restores ordinary scroll positions and the scene has laid out.
     requestAnimationFrame(focusEncounter);
@@ -1121,6 +1119,8 @@ window.CampaignUI = (() => {
   }
   const orderDialog = node("dialog", "", "campaign-order-dialog");
   orderDialog.id = "campaignOrderDialog";
+  let embarkingArmy = null;
+  orderDialog.addEventListener("close", () => { embarkingArmy = null; });
   document.body.append(orderDialog);
   function clearMoveDraft() {
     moveDraft = null;
@@ -1201,11 +1201,12 @@ window.CampaignUI = (() => {
   }
   function openEmbark(armyId) {
     const s = state(), unit = s.units.find((item) => item.id === armyId);
-    if (!unit) return;
+    if (!unit || unit.destroyed || unit.aboard) return orderDialog.close();
+    embarkingArmy = armyId;
     const header = node("header", "", "campaign-order-header"), title = node("h3", "搭载格纳库");
     title.id = "campaignOrderTitle";
     orderDialog.setAttribute("aria-labelledby", title.id);
-    header.append(title, button("关闭", () => orderDialog.close()));
+    header.append(title, button("关闭", () => orderDialog.close(), false, true));
     const targets = node("div", "", "campaign-order-targets");
     for (const option of CampaignRules.embarkOptions({G:Rules}, s, unit)) {
       const carrier = s.units.find((item) => item.id === option.carrierId);
@@ -1219,10 +1220,12 @@ window.CampaignUI = (() => {
       choice.append(node("strong", armyModel(carrier).name + "[No." + carrier.id.split("-")[1] + "]"), node("small", option.name));
       targets.append(choice);
     }
+    if (!targets.children.length) targets.append(node("p", "没有可用的格纳库", "campaign-empty"));
     orderDialog.replaceChildren(header, targets);
-    orderDialog.showModal();
+    if (!orderDialog.open) orderDialog.showModal();
   }
   function chooseOrder(kind, ids, region) {
+    embarkingArmy = null;
     if (kind === "move") {
       moveDraft = { ids: [...ids], from: region.id, destination: null, seat: Net.seat, turn: state().turn };
       renderMoveDraft();
@@ -1233,7 +1236,7 @@ window.CampaignUI = (() => {
     const header = node("header", "", "campaign-order-header"), title = node("h3", "转交控制权");
     title.id = "campaignOrderTitle";
     orderDialog.setAttribute("aria-labelledby", title.id);
-    header.append(title, button("关闭", () => orderDialog.close()));
+    header.append(title, button("关闭", () => orderDialog.close(), false, true));
     const targets = node("div", "", "campaign-order-targets");
     for (const player of Net.snapshot.members.filter((member) => Number.isInteger(member.seat) &&
         !member.bot && Rules.seatTeam(member.seat) === team && member.seat !== Net.seat)) {
@@ -1274,9 +1277,19 @@ window.CampaignUI = (() => {
       !s.transfers.some((item) => item.ids.includes(unit.id)) &&
       CampaignRules.controls(s, Net.snapshot.members, Net.seat, unit);
     const header = node("header", "", "campaign-order-header");
+    const ctx = { G: Rules, production: PRODUCTION_CATALOG };
+    const refund = CampaignRules.dismissalQuote(ctx, unit);
+    const dismiss = button("出售／解散", async () => {
+      if (!refund || !await GameDialog.confirm(
+        I18n.text("返还资金") + " " + formatNumber(refund.money) + " · " + I18n.text("物资") + " " + formatNumber(refund.supplies),
+        { title: I18n.text("出售／解散") + " · " + m.name, confirmText: "确认" })) return;
+      command("campaign_dismiss", { armyId: unit.id });
+    }, !CampaignRules.canDismiss(ctx, s, Net.snapshot.members, Net.seat, unit));
+    dismiss.id = "campaignDismissArmy";
     header.append(
       node("h3", m.name),
-      button("关闭", () => armyDialog.close()),
+      dismiss,
+      button("关闭", () => armyDialog.close(), false, true),
     );
     const content = node("div", "", "campaign-army-content");
     const canvas = node("canvas", "", "campaign-unit-preview");
@@ -1590,7 +1603,15 @@ window.CampaignUI = (() => {
     const revenue = node("div", "", "campaign-region-revenue resource-balance");
     revenue.title = I18n.text("每回合收入");
     ProductionUI.resources(revenue, regionYield(s, region.id), { compact: true, technology: !!region.factory });
-    detail.append(heading, revenue, node("p", I18n.text("单位数量") + " · " + regionReport(s, region.id), "campaign-region-count-summary"));
+    detail.append(heading, revenue);
+    const report = s.intelRegions?.find((entry) => entry.id === region.id);
+    for (const side of [0, 1]) {
+      const approximate = Number.isInteger(s.intel?.team) && side !== s.intel.team && s.intel.progress < 75;
+      const cost = report?.costs[side];
+      const label = Number.isInteger(team) ? (side === team ? "我军" : "敌军") : "队伍" + (side + 1);
+      detail.append(node("p", I18n.text(label) + " · " + reportCount(regionCount(s, region.id, side), approximate) +
+        " / " + (cost == null ? I18n.text("未知") : (approximate && cost > 0 ? I18n.text("约") : "") + formatNumber(cost)) + "C", "campaign-region-count-summary"));
+    }
     const tabs = node("div", "", "campaign-tabs");
     for (const [id, label] of [
       ["units", "部队"],
@@ -1675,7 +1696,8 @@ window.CampaignUI = (() => {
   seatsHeading.append(
     node("h3", "玩家席位"),
     watchSeat,
-    button("关闭", () => seatsDialog.close()),
+    button("退出房间", requestMenu),
+    button("关闭", () => seatsDialog.close(), false, true),
   );
   const seatsBody = node("div", "", "campaign-seats-body");
   const seatsPage = byId("roomSeatsPage"),
@@ -1713,7 +1735,7 @@ window.CampaignUI = (() => {
     const heading = node("header", "", "campaign-order-header");
     heading.append(
       node("h3", "战役存档"),
-      button("关闭", () => saveDialog.close()),
+      button("关闭", () => saveDialog.close(), false, true),
     );
     const name = node("p", s.name || CAMPAIGN_WORLD.name, "campaign-save-name");
     name.setAttribute("data-i18n-ignore", "");
@@ -1822,6 +1844,7 @@ window.CampaignUI = (() => {
       refreshWorld(s);
     }
     const map = panel.querySelector(".campaign-world");
+    if (encounterDialog.parentElement !== map) map.append(encounterDialog);
     let commands = map.querySelector(".campaign-map-commands");
     if (!commands) {
       commands = node("div", "", "campaign-map-commands");
@@ -1857,6 +1880,11 @@ window.CampaignUI = (() => {
         item.scrollLeft = x;
         item.scrollTop = y;
       }
+    }
+    if (orderDialog.open) {
+      if (embarkingArmy) openEmbark(embarkingArmy);
+      else for (const button of orderDialog.querySelectorAll("button[data-campaign-disabled]"))
+        button.disabled = button.dataset.campaignDisabled === "true" || !!Net.awaiting;
     }
     window.CampaignWorkspace?.refresh();
   }

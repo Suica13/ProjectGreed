@@ -962,7 +962,18 @@
         "EF_BeamSaber_A",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "90mm机枪套件"
+        },
+        "en": {
+          "name": "90mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "90mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_1",

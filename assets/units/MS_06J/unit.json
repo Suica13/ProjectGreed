@@ -672,17 +672,6 @@
     "ZN_120mmMG": {
       "ref": "ZN_120mmMG__lv1",
       "overrides": {
-        "localization": {
-          "zh": {
-            "name": "120mm机枪"
-          },
-          "en": {
-            "name": "120mm Machine Gun"
-          },
-          "ja": {
-            "name": "120mmマシンガン"
-          }
-        },
         "source": {
           "file": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
           "barrelX": 11,

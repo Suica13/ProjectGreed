@@ -55,3 +55,10 @@
 `tools/import-ace-pilots.py`读取0079的40名ACE资料及原生信标报价；仅35名有独立报价可招募。招募只消费资金/物资，不产生原信标附送单位。普通头像候选不混入ACE头像。`shared/pilots.js`以`aceId`固定身份，复用共享驾驶员存档、配属、战绩及服务端奖励路径；ACE不能手动强化或重置。原生初始0级、最高3级，每次升级属性乘悟性/100，经验需求乘1.5并保留超额经验，各项最大值按满级成长结果计算，无通用200点上限。每级50 COST；技能声明`implemented=false`仅展示占位，不产生战斗效果。重新导入普通驾驶员会同步重建ACE目录。
 
 ACE招募复用科技节点的`unlocks`；客户端招募与开发页预览共用开发校验，无节点报价不能直接放开。`needsRecruitment`保存在共享驾驶员档案；普通战损毁由服务端私有驾驶员奖励标记，保留等级、经验与战绩，解除编组配属，重新扣招募价格后恢复。快速战暂沿用无损规则，存档对局不改变驾驶员档案。ACE名称、头像及手动属性强化均锁定。
+
+
+## 子母弹与霰弹（0087修复）
+
+Bazooka_SG、BZ_SG和Bazooka_ShotgunMode为扩散火箭筒。沿母弹Projectile_Bazooka_ShotgunMode（含Lv2）的hiddenAction_SpawnHitEffect读取12枚子弹及其独立载荷、命中、部位系数和目标修正，保留母弹伤害。原生发射数保存在nativeTiming.projectiles，衍生弹数另存secondaryProjectiles；不能用13枚同时出枪口冒充子母弹。演出splitFraction默认为0.65，可单独配置；子弹不重复播放发射声和枪口特效。普通ShellShotGun/BeamShotGun从枪口直接按原offsetRandomDir扩散，必须支持任意射击方向。断言见tests/scatter-projectiles.test.cjs。
+
+0087的AEUG、TITANS战舰按联邦系处理，NEO_ZEON按非联邦系处理。统一native HP×0.70、伤害×0.75、机体命中系数×0.65；联邦系额外HP×1.10、命中×1.10、回避×1.15，耐久按500取整。舰炮爆炸命中×0.8、普通舰炮对中型目标命中×0.75和对空炮减半发数继续保留。顺序须先apply_anti_air，再apply_damage，避免重建对空炮步骤后丢失伤害减免。

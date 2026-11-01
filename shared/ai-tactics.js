@@ -131,8 +131,8 @@ const AITactics = (() => {
       },
       force = (units) => power(units.map((u) => ({ ...u, hp: u.state?.hp })), model),
       minGroup = { low: 6, normal: 4, high: 3 }[options.aggression],
-      attackTurn = options.aggression === "high" ||
-        (options.aggression === "normal" ? state.turn % 3 !== 0 : state.turn % 3 === 0);
+      // Low / normal / high attack on 1/6, 1/3 and 1/2 of turns respectively.
+      attackTurn = state.turn % ({ low: 6, normal: 3, high: 2 }[options.aggression]) === 0;
     // Research is a team decision, not multiplied by the number of AI seats.
     for (const team of new Set(bots.map((p) => ctx.G.seatTeam(p.seat)))) {
       const pool = state.teams[team];

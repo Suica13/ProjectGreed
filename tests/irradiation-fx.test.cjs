@@ -4,6 +4,7 @@ const test = require("node:test"),
   fs = require("node:fs");
 test("irradiation hides stored passengers until impact and never resurrects a destroyed fog actor", () => {
   const context = vm.createContext({
+    MovementTiming: require("../shared/movement-timing.js"),
     performance: { now: () => 0 },
     ART: {
       models: {},
@@ -64,6 +65,7 @@ test("native charge anchor follows the rendered actor, firing audio is separate 
     charges = [],
     images = [];
   const context = vm.createContext({
+    MovementTiming: require("../shared/movement-timing.js"),
     ART: {
       models: { hull: { presentation: { mapScale: 1 } } },
       effects: Object.fromEntries(

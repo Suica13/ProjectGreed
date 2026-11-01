@@ -135,7 +135,7 @@ const DevelopmentUI = (() => {
     byId("developmentMain").dataset.faction = faction;
     const locked = Development.eraLocked(faction);
     byId("developmentMain").classList.toggle("development-era-locked", locked);
-    for (const host of [treeScroll, details]) {
+    for (const host of [treeScroll, details, treeScroll.parentElement]) {
       host.querySelector(":scope > .development-era-lock")?.remove();
     }
     const allNodes = Development.nodes(faction);
@@ -236,7 +236,7 @@ const DevelopmentUI = (() => {
     if (selected) showDetails(selected, faction);
     else details.replaceChildren();
     if (locked)
-      for (const host of [treeScroll, details]) {
+      for (const host of [treeScroll.parentElement]) {
         const overlay = element("div", "development-era-lock");
         overlay.append(element("strong", "", "请先完成任何0079科技树"));
         overlay.title = "完成联邦或吉翁任一阵营的全部0079及0083科技后开放";

@@ -1123,7 +1123,7 @@ const RoomPanel = (() => {
       !snapshot.started || snapshot.phase === "assembly" || self.id !== snapshot.hostId;
     byId("returnAllToRoom").disabled = busy;
     byId("toggleReady").hidden =
-      snapshot.started || self.seat === null || self.id === snapshot.hostId;
+      !!snapshot.campaign || snapshot.started || self.seat === null || self.id === snapshot.hostId;
     byId("toggleReady").disabled = busy || (!own?.ready && !valid);
     byId("toggleReady").textContent = own?.ready ? "取消准备" : "准备";
     const participants = roster.filter((player) => player.seat !== null);
@@ -1145,6 +1145,8 @@ const RoomPanel = (() => {
         (player) => !player.connected || (player.id !== self.id && !player.ready),
       ) ||
       ![0, 1].every((team) => participants.some((player) => Rules.seatTeam(player.seat) === team));
+    if (snapshot.campaign && !snapshot.started) byId("startRoomGame").disabled = busy;
+    byId("startRoomGame").textContent = snapshot.campaign ? "继续战役" : "开始游戏";
     byId("roomMainMenu").textContent =
       snapshot.started && snapshot.phase !== "assembly" ? "返回战斗" : "主菜单";
     renderFinalAssembly(snapshot, busy);
@@ -1167,6 +1169,7 @@ const RoomPanel = (() => {
   byId("joinTeam1").onclick = () => joinTeam(0);
   byId("joinTeam2").onclick = () => joinTeam(1);
   byId("becomeSpectator").onclick = () => Net.request("switch_seat", { seat: null });
+  byId("roomLeaveGame").onclick = requestMenu;
   byId("returnAllToRoom").onclick = () => BattlePrompts.requestReturn();
   byId("returnAssemblyToRoom").onclick = () => BattlePrompts.requestReturn();
   byId("toggleReady").onclick = () => {
@@ -1205,7 +1208,8 @@ const RoomPanel = (() => {
     const snapshot = Net.snapshot;
     if (!snapshot || snapshot.started || snapshot.you?.id !== snapshot.hostId || Net.awaiting)
       return;
-    if (snapshot.settings.mode === "campaign") return window.CampaignUI?.create();
+    if (snapshot.settings.mode === "campaign")
+      return snapshot.campaign ? Net.request("campaign_resume") : window.CampaignUI?.create();
     const own = snapshot.members.find((p) => p.id === snapshot.you?.id);
     const entries = own?.formationPreset?.units || Formation.current();
     const proceed = () => Net.request("start_game", { formation: entries });

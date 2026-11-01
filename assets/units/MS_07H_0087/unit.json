@@ -765,7 +765,18 @@
         "Common_Cqb_A",
         "ZN_MS_07B_HandMG",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "120mm机枪套件"
+        },
+        "en": {
+          "name": "120mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "120mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_2",

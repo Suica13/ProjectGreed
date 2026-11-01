@@ -2378,8 +2378,17 @@ const Tactics = (() => {
           (response === "evade" ? 1.25 : 1) -
           100) *
         0.1875,
-      sizeModifier = w.antiSize?.[unitSize(defender)] || { damage: 1, accuracy: 1 },
-      targetFactor = targetModifier(g, b, w),
+      sizeModifier = (w.attack.strikes.length === 1 ? w.attack.strikes[0].antiSize : null)?.[
+        unitSize(defender)
+      ] ||
+        w.antiSize?.[unitSize(defender)] || { damage: 1, accuracy: 1 },
+      targetFactor = targetModifier(
+        g,
+        b,
+        w.attack.strikes.length === 1 && w.attack.strikes[0].targetModifiers
+          ? { ...w, targetModifiers: w.attack.strikes[0].targetModifiers }
+          : w,
+      ),
       sensorFactor = sensors.detected(g, a.team, b) ? 1 : 0.75,
       baseHit =
         Math.max(

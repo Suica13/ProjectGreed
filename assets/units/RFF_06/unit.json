@@ -709,7 +709,18 @@
         "EF_100mmMG",
         "Common_Cqb_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "100mm机枪套件"
+        },
+        "en": {
+          "name": "100mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "100mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_1",

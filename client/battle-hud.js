@@ -23,9 +23,11 @@ const BattleHUD = (() => {
   byId("mapWrap").append(phaseControls, topControls);
   const capturePoint = element("button", "primary", "占领");
   capturePoint.id = "hudCapturePoint";
-  capturePoint.title = "占领据点：消耗5AP，空中单位不可占领";
+  capturePoint.title = "占领据点：消耗5AP，空中单位不可占领，据点内有敌军时不可占领";
   const transferRegion = element("button", "", "转移");
   transferRegion.id = "hudTransferRegion";
+  const transferControl = element("button", "", "转交控制权");
+  transferControl.id = "hudTransferControl";
   const attackPlanSummary = element("section", "attack-plan-summary");
   attackPlanSummary.id = "hudAttackPlanSummary";
   attackPlanSummary.hidden = true;
@@ -390,7 +392,19 @@ const BattleHUD = (() => {
       row.prepend(infoButton);
       infoButton.hidden = false;
       row.prepend(capturePoint);
-      row.append(transferRegion);
+      row.append(transferRegion, transferControl);
+      transferControl.hidden = !own || !game.campaignBattlefield || phase !== "idle";
+      transferControl.disabled = !canCommand || !!unit.plan || !!unit.pendingMove;
+      transferControl.onclick = async () => {
+        const recipients = (Net.snapshot?.members || []).filter((member) =>
+          Number.isInteger(member.seat) && Rules.seatTeam(member.seat) === unit.team && member.seat !== Rules.ownerOf(unit));
+        const to = await GameDialog.choose({
+          title: "转交控制权", message: "选择接收玩家，搭载单位会随运输单位一并转交。",
+          actions: [{ label: "取消", value: null }, ...recipients.map((member) =>
+            ({ label: member.name, value: member.seat }))],
+        });
+        if (Number.isInteger(to)) Net.request("unit_control_transfer", { unitId: unit.id, to });
+      };
       const point = unit && Rules.campaignBattlefield.nodeAt(Rules, game, unit);
       capturePoint.hidden =
         !own ||

@@ -1001,14 +1001,25 @@
   "weaponKits": [
     {
       "id": "main_0",
-      "name": "光束军刀套件",
+      "name": "120mm机枪套件",
       "cost": 0,
       "weapons": [
         "TITANS_120mmMGKai",
         "EF_BeamSaber_A_Yellow",
         "TITANS_RMS_106_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "120mm机枪套件"
+        },
+        "en": {
+          "name": "120mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "120mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_1",
@@ -1022,14 +1033,25 @@
     },
     {
       "id": "kit_0",
-      "name": "光束炮套件",
+      "name": "光束步枪套件",
       "cost": 100,
       "weapons": [
         "TITANS_BR_87A",
         "TITANS_RMS_106_MS",
         "TITANS_HeatHawkKai_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "采用两军技术所开发的新型扎古,多为提坦斯配备",

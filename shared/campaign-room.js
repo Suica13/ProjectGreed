@@ -145,6 +145,7 @@ function createCampaignRoom({
     return {
       ...C.view(room.campaign, team, ctx),
       preparation: preparation(room),
+      inLobby: !!room.campaignLobby,
       activeRegion: room.campaignBattle?.region || null,
       stopRound: room.campaignBattle?.stopRound || null,
       startRound: room.campaignBattle?.startRound || null,
@@ -194,6 +195,7 @@ function createCampaignRoom({
       unit.unitId = G.modelOf(actor).prefabId;
       unit.kitId = G.modelOf(actor).kitId;
       unit.ownerSeat = G.ownerOf(actor);
+      unit.participatedTurn = state.turn;
       unit.team = actor.team;
       unit.destroyed = actor.hp <= 0;
     }
@@ -441,6 +443,10 @@ function createCampaignRoom({
     delete encounter.resumeStopRound;
     delete encounter.resumeStartRound;
     room.campaignPreparation = null;
+    for (const actor of game.units) {
+      const army = state.units.find((unit) => unit.id === actor.campaignId);
+      if (army) army.participatedTurn = state.turn;
+    }
     room.activeSeats = eligible(room);
     resetTurns(room);
     if (encounter.battleSave?.campaignTurnDone)
@@ -517,6 +523,7 @@ function createCampaignRoom({
       !state.encounters.some((item) => C.disputed(state, item.region) && item.turn < state.turn)
     ) {
       state.phase = "strategy";
+      C.recoverReserves(ctx, state);
       state.turn++;
       C.arrive(ctx, state);
     }
@@ -530,6 +537,37 @@ function createCampaignRoom({
     room.activeSeats = room.seats.map(() => false);
     planner.reset(room);
     return { type: "campaign_checkpoint" };
+  }
+  function transferControl(room, actor, to, seat) {
+    check(room.campaignBattle && room.phase === "idle" && room.game.winner === null,
+      "仅可在局地战规划阶段转交控制权");
+    const recipient = room.seats[to];
+    check(Number.isInteger(to) && recipient && G.seatTeam(to) === actor.team && to !== G.ownerOf(actor),
+      "请选择同队的其他玩家");
+    const group = new Set([actor]);
+    for (let size = 0; size !== group.size;) {
+      size = group.size;
+      for (const passenger of room.game.units)
+        if (passenger.hp > 0 && [...group].some((carrier) => passenger.embarked?.carrierId === carrier.id))
+          group.add(passenger);
+    }
+    check([...group].every((unit) => C.controls(room.campaign, members(room), seat, {ownerSeat:G.ownerOf(unit), team:unit.team})),
+      "请由总指挥官转交共同搭载的部队");
+    check([...group].every((unit) => !unit.pendingMove && !unit.plan && !unit.pendingTransfer),
+      "请先确认移动或清空攻击计划");
+    for (const unit of group) {
+      unit.ownerSeat = to;
+      const army = room.campaign.units.find((army) => army.id === unit.campaignId);
+      if (army) {
+        army.ownerSeat = to;
+        if (army.state) army.state.ownerSeat = to;
+        const pilot = crews.find(room.campaign, army.team, army.pilotId);
+        if (pilot) pilot.ownerSeat = to;
+      }
+    }
+    refreshSeats(room);
+    log(room, `${G.unitLogName(actor)} 控制权转交给 ${recipient.name || "席位" + (to + 1)}。`, { teams: [actor.team] });
+    return { type: "unit_control_transfer", unitId: actor.id, to };
   }
   function transfer(room, actor, regionId) {
     check(
@@ -573,6 +611,27 @@ function createCampaignRoom({
     );
     if (!alive[0] || !alive[1]) room.game.winner = alive[0] ? 0 : 1;
     return { type: "region_transfer", unitId: actor.id, region: regionId };
+  }
+  function suspend(room) {
+    check(room.campaignBattle && ["idle", "deployment"].includes(room.phase) && !room.plans.length &&
+      !room.game.units.some((unit) => unit.pendingMove), "请先完成当前交战、确认移动或清空攻击计划");
+    const encounter = room.campaign.encounters.find((item) => item.region === room.campaignBattle.region);
+    encounter.battleSave = battlefieldSave(room, true);
+    captureArmies(room.campaign, encounter, encounter.battleSave.game);
+    encounter.resumeStopRound = room.campaignBattle.stopRound;
+    encounter.resumeStartRound = room.campaignBattle.startRound;
+    encounter.delegatedSeats = room.campaignBattle.delegatedSeats || [];
+    room.campaign.phase = "encounters";
+    room.campaignLobby = true;
+    room.campaignPreparation = null;
+    room.campaignBattle = null;
+    room.started = room.startedFromSave = false;
+    room.phase = "waiting";
+    room.pending = room.battle = room.playback = room.returnCountdown = null;
+    room.returnAt = null;
+    room.activeSeats = room.seats.map(() => false);
+    planner.reset(room);
+    return { type: "campaign_suspended" };
   }
   function freeze(room) {
     const encounter = room.campaign.encounters.find(
@@ -651,6 +710,11 @@ function createCampaignRoom({
       return;
     }
     check(room.campaign, "请先创建或导入战役");
+    if (msg.action === "campaign_resume") {
+      check(member.id === room.hostId && !room.started, "只有房主可以继续战役");
+      room.campaignLobby = false;
+      return;
+    }
     if (msg.action === "campaign_delegate") {
       check(room.started && room.campaignBattle && room.game.winner === null, "当前没有进行中的局地战");
       check(Number.isInteger(member.seat) && room.seats[member.seat] === member && !member.bot,
@@ -674,6 +738,7 @@ function createCampaignRoom({
       return { quiet: true, save: save(room) };
     }
     if (msg.action === "campaign_enter") {
+      check(!room.campaignLobby, "请等待房主继续战役");
       const pending = preparation(room);
       check(
         pending && msg.preparationId === pending.id && msg.region === pending.region,
@@ -721,7 +786,9 @@ function createCampaignRoom({
     boundary,
     checkpoint,
     freeze,
+    suspend,
     transfer,
+    transferControl,
     resetTurns,
     refreshSeats,
     refreshControl,

@@ -2859,6 +2859,7 @@ function createRoomEngine({
         "playback_ready",
         "campaign_export",
         "campaign_delegate",
+        "return_room",
         "download_log",
         "spectate",
         "switch_seat",
@@ -2914,8 +2915,6 @@ function createRoomEngine({
       ].includes(msg.action)
     )
       throw Error("战役使用独立部队和固定席位，请在战略地图操作");
-    if (room.campaign && room.started && msg.action === "return_room")
-      throw Error("局地战会在指定轮数后自动返回战略地图；可先保存战役再离开");
     if (msg.action === "playback_ready") {
       const playback = room.playback;
       if (
@@ -2995,6 +2994,16 @@ function createRoomEngine({
       if (!room.started) throw Error("当前没有正在进行的对局。");
       if (room.hostId !== member.id) throw Error("只有房主可以让所有人返回房间。");
       if (msg.matchId !== room.matchId) throw Error("对局已更新，请重新同步。");
+      if (room.campaignBattle && !room.returnCountdown) {
+        const event = campaign().suspend(room);
+        clearTimeout(aiTimers.get(room)); aiTimers.delete(room);
+        clearTimeout(autoEndTimers.get(room)?.timer); autoEndTimers.delete(room);
+        room.revision++;
+        room.lastEvent = { id: randomId(), ...event };
+        cache.set(id, true);
+        broadcast(room, id, member);
+        return;
+      }
       cache.set(id, true);
       if (cache.size > 512) cache.delete(cache.keys().next().value);
       if (room.returnCountdown) {
@@ -3653,6 +3662,13 @@ function createRoomEngine({
       throw Error("请先确认或取消移动");
     let event;
     switch (msg.action) {
+      case "unit_control_transfer": {
+        validateActive(room, seat);
+        if (!room.campaignBattle) throw Error("仅战略局地战可转交控制权");
+        const actor = ownUnit(room, seat, msg.unitId, true);
+        event = campaign().transferControl(room, actor, msg.to, seat);
+        break;
+      }
       case "capture_point": {
         validateActive(room, seat);
         if (!room.campaignBattle) throw Error("仅战略局地战可占领据点");

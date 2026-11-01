@@ -10736,14 +10736,31 @@
     ],
     "initialForces": {
       "EFSF": {
-        "Type61": 4,
+        "Type61": 6,
         "FF_B2": 2,
-        "Medea": 1
+        "FF_6": 2
       },
       "ZEON": {
         "MS_06F": 2,
-        "MS_06S": 1,
-        "FatUncle": 1
+        "MTank": 2,
+        "ZN_Heli": 1
+      }
+    },
+    "initialCoreForces": {
+      "EFSF": {
+        "Type61": 18,
+        "FF_B2": 6,
+        "Medea": 2,
+        "FF_6": 4,
+        "FF_S3": 2
+      },
+      "ZEON": {
+        "MS_06F": 4,
+        "MS_06S": 2,
+        "FatUncle": 1,
+        "ZN_Heli": 2,
+        "Dopp": 2,
+        "MTank": 3
       }
     }
   },

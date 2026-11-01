@@ -55,13 +55,19 @@ const MapCombat = (() => {
     const nuclearLaunches = new Set();
     const orderedBattles = [...(view.battles || [])].sort((a, b) =>
       Number.isInteger(a.combatWave) && Number.isInteger(b.combatWave)
-        ? a.combatWave - b.combatWave || Number(a.combatStage === "counter") - Number(b.combatStage === "counter")
-        : 0);
+        ? a.combatWave - b.combatWave ||
+          Number(a.combatStage === "counter") - Number(b.combatStage === "counter")
+        : 0,
+    );
     const visualBattles = orderedBattles.map((battle) => ({
       ...battle,
       events: battle.events.map((event) => {
         const actor = displayed.get(event.from) || battle.actors.find((u) => u.id === event.from);
-        if (!actor || !event.impactCell || !["nuke", "blast"].includes(Rules.eventWeapon(actor, event)?.special?.type))
+        if (
+          !actor ||
+          !event.impactCell ||
+          !["nuke", "blast"].includes(Rules.eventWeapon(actor, event)?.special?.type)
+        )
           return event;
         const key = event.blastId || JSON.stringify([event.from, event.weapon, event.impactCell]);
         const nuclearFollowup = nuclearLaunches.has(key);
@@ -90,12 +96,18 @@ const MapCombat = (() => {
             entry.lane.view.attackQueue?.attacker === lane.view.attackQueue.attacker,
         );
         const waveDependencies = Number.isInteger(lane.view.combatWave)
-          ? earlier.filter(entry => entry.lane !== lane &&
-              (entry.lane.view.combatWave < lane.view.combatWave ||
-                (entry.lane.view.combatWave === lane.view.combatWave &&
-                  lane.view.combatStage === "counter" && entry.lane.view.combatStage !== "counter")))
+          ? earlier.filter(
+              (entry) =>
+                entry.lane !== lane &&
+                (entry.lane.view.combatWave < lane.view.combatWave ||
+                  (entry.lane.view.combatWave === lane.view.combatWave &&
+                    lane.view.combatStage === "counter" &&
+                    entry.lane.view.combatStage !== "counter")),
+            )
           : lane.view.combatStage === "counter"
-            ? earlier.filter(entry => entry.lane !== lane && entry.lane.view.combatStage !== "counter")
+            ? earlier.filter(
+                (entry) => entry.lane !== lane && entry.lane.view.combatStage !== "counter",
+              )
             : [];
         if (
           waveDependencies.length ||
@@ -166,14 +178,21 @@ const MapCombat = (() => {
         );
     }
     const weapon = Rules.eventWeapon(source.unit, event);
-    const impact = ["nuke", "blast"].includes(weapon.special?.type) && event.impactCell
-      ? { x: (event.impactCell.x + 0.5) * 64, y: (event.impactCell.y + 0.5) * 64 }
-      : target;
+    const impact =
+      ["nuke", "blast"].includes(weapon.special?.type) && event.impactCell
+        ? { x: (event.impactCell.x + 0.5) * 64, y: (event.impactCell.y + 0.5) * 64 }
+        : target;
     const aim = (Math.atan2(impact.x - source.x, -(impact.y - source.y)) * 180) / Math.PI;
-    source.angle = (Rules.modelOf(source.unit).ship || Rules.modelOf(source.unit).fixedWeaponFacing) ? source.unit.angle : aim;
+    source.angle =
+      Rules.modelOf(source.unit).ship || Rules.modelOf(source.unit).fixedWeaponFacing
+        ? source.unit.angle
+        : aim;
     source.aimAngle = aim;
     source.unit.aimAngle = aim;
-    target.angle = (Rules.modelOf(target.unit).ship || Rules.modelOf(target.unit).fixedWeaponFacing) ? target.unit.angle : aim + 180;
+    target.angle =
+      Rules.modelOf(target.unit).ship || Rules.modelOf(target.unit).fixedWeaponFacing
+        ? target.unit.angle
+        : aim + 180;
     if (!dodgeStarts.has(event.to)) dodgeStarts.set(event.to, []);
     const plan = WeaponEffects.plan(weapon, source, target, event, {
       start,
@@ -214,8 +233,10 @@ const MapCombat = (() => {
         0,
         source.en - (event.energySpent ?? getWeapon(source, event.weapon).en),
       );
-    if (source && frame && !Rules.modelOf(source).ship && !Rules.modelOf(source).fixedWeaponFacing) source.angle = frame.source.angle;
-    if (target && frame && !Rules.modelOf(target).ship && !Rules.modelOf(target).fixedWeaponFacing) target.angle = frame.target.angle;
+    if (source && frame && !Rules.modelOf(source).ship && !Rules.modelOf(source).fixedWeaponFacing)
+      source.angle = frame.source.angle;
+    if (target && frame && !Rules.modelOf(target).ship && !Rules.modelOf(target).fixedWeaponFacing)
+      target.angle = frame.target.angle;
     view.displayHp[event.to] = event.after;
     view.index++;
     frame = null;
@@ -229,7 +250,7 @@ const MapCombat = (() => {
     const view = battleView;
     if (!view?.mapBattle || view.suspendedAt !== undefined || pageView !== "game") return;
     const current = frame?.view === view && frame.index === view.index ? frame : setup(view);
-    const rate = window.ReplayPlayer?.active ? 1 : byId("quick").checked ? 1 / 0.35 : 1;
+    const rate = MovementTiming.combatRate(byId("quick").checked, !!window.ReplayPlayer?.active);
     // 累积时间允许播放中切换速度，不会令演出倒退或重复触发音效。
     current.time += (Math.max(0, now - (current.lastNow ?? now)) / 1000) * rate;
     current.lastNow = now;
@@ -340,14 +361,14 @@ const MapCombat = (() => {
   }
   // 同一波全体单位并行；全部攻击演完才反击，全部反击演完才进入下一波。
   function update(now) {
-    const dodgeRate = window.ReplayPlayer?.active ? 1 : byId("quick").checked ? 1 / 0.35 : 1;
+    const dodgeRate = MovementTiming.combatRate(byId("quick").checked, !!window.ReplayPlayer?.active);
     if (battleView?.mapBattle && battleView.suspendedAt === undefined && pageView === "game")
       dodgeClock += (Math.max(0, now - (dodgeLastNow ?? now)) / 1000) * dodgeRate;
     dodgeLastNow = now;
     if (!lanes.length) return updateSingle(now);
     if (!battleView?.mapBattle || battleView.suspendedAt !== undefined || pageView !== "game")
       return;
-    const rate = window.ReplayPlayer?.active ? 1 : byId("quick").checked ? 1 / 0.35 : 1;
+    const rate = MovementTiming.combatRate(byId("quick").checked, !!window.ReplayPlayer?.active);
     WeaponAudio.setBattleMuted(byId("quick").checked);
     for (const lane of lanes) {
       if (lane.view.completed) continue;
@@ -540,22 +561,30 @@ const MapCombat = (() => {
     ctx.translate(geometry.ox, geometry.oy);
     ctx.scale(geometry.tile / 64, geometry.tile / 64);
     const facing = Math.atan2(target.y - source.y, target.x - source.x);
-    if (!event.nuclearFollowup) WeaponEffects.draw(
-      ctx,
-      weapon,
-      plan,
-      time,
-      source,
-      event,
-      1,
-      sourcePose,
-      underlay ? "underlay" : "foreground",
-    );
+    if (!event.nuclearFollowup)
+      WeaponEffects.draw(
+        ctx,
+        weapon,
+        plan,
+        time,
+        source,
+        event,
+        1,
+        sourcePose,
+        underlay ? "underlay" : "foreground",
+      );
     if (underlay) {
       ctx.restore();
       return;
     }
     for (const [index, contact] of (event.nuclearFollowup ? [] : plan.contacts).entries()) {
+      const contactShot = plan.shots.find((shot) => shot.index === contact.shotIndex);
+      const scatterPoint =
+        contact.clusterRole === "carrier"
+          ? contactShot?.splitPoint
+          : contact.clusterRole === "fragment"
+            ? contactShot?.destination
+            : null;
       if (weapon.swingEffects?.length)
         SpriteEffects.draw(
           ctx,
@@ -567,18 +596,23 @@ const MapCombat = (() => {
           facing,
         );
       if (
-        plan.blastPoint || contact.hit ||
+        plan.blastPoint ||
+        contact.hit ||
         weapon.projectile?.motion === "mortar" ||
         weapon.projectile?.motion === "bomb"
       )
         SpriteEffects.draw(
           ctx,
-          weapon.hitEffect,
-          plan.blastPoint?.x ?? target.x,
-          plan.blastPoint?.y ?? target.y +
-            WeaponEffects.position(plan, contact.at) *
-              target.scale *
-              ART.presentation.dodgeDistance,
+          contact.clusterRole === "fragment"
+            ? weapon.projectile.cluster.hitEffect
+            : weapon.hitEffect,
+          scatterPoint?.x ?? plan.blastPoint?.x ?? target.x,
+          scatterPoint?.y ??
+            plan.blastPoint?.y ??
+            target.y +
+              WeaponEffects.position(plan, contact.at) *
+                target.scale *
+                ART.presentation.dodgeDistance,
           target.scale,
           (time - contact.at) * ART.presentation.animationSpeed,
           facing,

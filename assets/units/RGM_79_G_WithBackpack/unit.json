@@ -977,7 +977,18 @@
         "EF_100mmMG",
         "EF_BeamSaber_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "100mm机枪套件"
+        },
+        "en": {
+          "name": "100mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "100mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_0",
@@ -991,13 +1002,24 @@
     },
     {
       "id": "kit_2",
-      "name": "陆战型光束步枪套件",
+      "name": "光束步枪套件",
       "cost": 100,
       "weapons": [
         "EF_GroundTypeBeamRifle",
         "EF_BeamSaber_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     },
     {
       "id": "kit_3",

@@ -95,3 +95,26 @@ test("escape and separation successors inherit the team's durability multiplier"
     assert.equal(actor.hp,G.modelOf(actor).hp);
   }
 });
+
+
+test("strategic attack cadence is halved at every aggression setting", () => {
+  const members = [{seat:0,bot:true},{seat:1}];
+  const seed = C.create(ctx,members);seed.units=[];
+  for(let i=0;i<8;i++) C.addUnit(ctx,seed,0,"canada","Type61");
+  const world={...ctx.world,regions:[
+    {...ctx.world.regions.find(r=>r.id==="canada"),links:["new_york"],factory:false},
+    {...ctx.world.regions.find(r=>r.id==="new_york"),links:["canada"],factory:false},
+  ]};
+  for(const [aggression,expected] of [["low",1],["normal",2],["high",3]]) {
+    let attacks=0;
+    for(let turn=1;turn<=6;turn++) {
+      const state=structuredClone(seed);state.turn=turn;state.options=A.settings({aggression});
+      A.strategic({...ctx,world},state,members,{
+        busy:()=>false,disputed:()=>false,available:()=>false,controller:(_,u)=>u.ownerSeat,
+        startResearch:()=>{},quote:()=>null,
+      });
+      if(state.units[0].moveTo==="new_york") attacks++;
+    }
+    assert.equal(attacks,expected,aggression);
+  }
+});

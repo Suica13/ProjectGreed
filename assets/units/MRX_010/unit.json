@@ -619,6 +619,11 @@
       "ref": "Common_Push_A__lv3",
       "overrides": {
         "slot": "secondary",
+        "swingEffects": [
+          "Cqb_Fire_1_Pink_R",
+          "Cqb_Fire_1_Pink_L"
+        ],
+        "actionCost": 2,
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -630,18 +635,13 @@
             }
           ]
         },
-        "swingEffects": [
-          "Cqb_Fire_1_Pink_R",
-          "Cqb_Fire_1_Pink_L"
-        ],
         "muzzle": {
           "bone": "Body",
           "offset": {
             "x": 0.0,
             "y": 0.0
           }
-        },
-        "actionCost": 2
+        }
       },
       "remove": [
         "localization"

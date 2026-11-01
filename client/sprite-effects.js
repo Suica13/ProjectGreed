@@ -228,7 +228,7 @@ const MapEffects = (() => {
     }
     for (let i = active.length - 1; i >= 0; i--) {
       const item = active[i],
-        age = ((now - item.start) / 1000 - item.delay) * ART.presentation.animationSpeed;
+        age = (((now - item.start) / 1000) * MovementTiming.presentationSpeed - item.delay) * ART.presentation.animationSpeed;
       if (age >= item.sequence.duration) {
         active.splice(i, 1);
         continue;

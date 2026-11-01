@@ -983,7 +983,18 @@
         "ZN_TwinBeamSword_AF_A",
         "NZN_MS_14J_BR_GL",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     },
     {
       "id": "kit_2",

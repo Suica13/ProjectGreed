@@ -45107,7 +45107,18 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG.gw",
+      "localization": {
+        "zh": {
+          "name": "100mm机枪"
+        },
+        "en": {
+          "name": "100mm Machine Gun"
+        },
+        "ja": {
+          "name": "100mmマシンガン"
+        }
+      }
     },
     "EF_100mmMG__lv2": {
       "name": "100mm机枪",
@@ -45314,7 +45325,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "100mm机枪"
+        },
+        "en": {
+          "name": "100mm Machine Gun"
+        },
+        "ja": {
+          "name": "100mmマシンガン"
+        }
+      }
     },
     "EF_100mmMG_Blue__lv1": {
       "name": "100mm机枪",
@@ -45533,7 +45555,18 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Blue.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Blue.gw",
+      "localization": {
+        "zh": {
+          "name": "100mm机枪"
+        },
+        "en": {
+          "name": "100mm Machine Gun"
+        },
+        "ja": {
+          "name": "100mmマシンガン"
+        }
+      }
     },
     "EF_180mmCannon__lv1": {
       "name": "180mm加农炮",
@@ -46202,7 +46235,18 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_75mmMG_Double_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_75mmMG_Double_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "75mm机枪"
+        },
+        "en": {
+          "name": "75mm Machine Gun"
+        },
+        "ja": {
+          "name": "75mmマシンガン"
+        }
+      }
     },
     "EF_75mmMG_Double_L__lv2": {
       "name": "75mm机枪",
@@ -46477,7 +46521,18 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_75mmMG_Double_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_75mmMG_Double_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "75mm机枪"
+        },
+        "en": {
+          "name": "75mm Machine Gun"
+        },
+        "ja": {
+          "name": "75mmマシンガン"
+        }
+      }
     },
     "EF_75mmSniperRifle__lv2": {
       "name": "狙击步枪",
@@ -46958,7 +47013,18 @@
       "changeHeldWeapon": true,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG.gw",
+      "localization": {
+        "zh": {
+          "name": "90mm机枪"
+        },
+        "en": {
+          "name": "90mm Machine Gun"
+        },
+        "ja": {
+          "name": "90mmマシンガン"
+        }
+      }
     },
     "EF_90mmMG__lv2": {
       "name": "90mm机枪",
@@ -47176,7 +47242,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "90mm机枪"
+        },
+        "en": {
+          "name": "90mm Machine Gun"
+        },
+        "ja": {
+          "name": "90mmマシンガン"
+        }
+      }
     },
     "EF_90mmMG_79D__lv1": {
       "name": "90mm机枪",
@@ -47445,7 +47522,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_79D.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_79D.gw",
+      "localization": {
+        "zh": {
+          "name": "90mm机枪"
+        },
+        "en": {
+          "name": "90mm Machine Gun"
+        },
+        "ja": {
+          "name": "90mmマシンガン"
+        }
+      }
     },
     "EF_90mmMG_L__lv2": {
       "name": "90mm机枪",
@@ -47663,7 +47751,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_L_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_90mmMG_L_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "90mm机枪"
+        },
+        "en": {
+          "name": "90mm Machine Gun"
+        },
+        "ja": {
+          "name": "90mmマシンガン"
+        }
+      }
     },
     "EF_AMS_Squad_AMS__lv1": {
       "name": "EF AMS Squad AMS",
@@ -50112,7 +50211,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamRifleAuqa.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamRifleAuqa.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_BeamSaber_A__lv1": {
       "name": "光束军刀",
@@ -55105,10 +55215,21 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FA_78_1_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FA_78_1_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_FA_78_1_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -55244,7 +55365,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FA_78_1_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FA_78_1_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_FA_78_1_MS__lv1": {
       "name": "导弹发射器",
@@ -56780,10 +56912,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FA_78_G_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FA_78_G_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_FA_78_G_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -56934,7 +57077,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FA_78_G_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FA_78_G_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_FA_78_G_MS__lv1": {
       "name": "导弹发射器",
@@ -57259,10 +57413,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X_II_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X_II_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_FF_X_II_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -57388,7 +57553,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X_II_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X_II_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_FF_X7Bst_BR__lv1": {
       "name": "光束步枪",
@@ -57526,10 +57702,21 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X7Bst_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X7Bst_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_FF_X7Bst_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -57660,7 +57847,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X7Bst_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FF_X7Bst_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_FFB_7Bst_BR__lv1": {
       "name": "光束步枪",
@@ -57785,7 +57983,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FFB_7Bst_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_FFB_7Bst_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_G_Bull_Easy_BeamGun__lv1": {
       "name": "光束枪",
@@ -58048,10 +58257,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_G_Fighter_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_G_Fighter_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_G_Fighter_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -58182,7 +58402,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_G_Fighter_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_G_Fighter_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_GLine_HBR__lv1": {
       "name": "光束炮",
@@ -58907,7 +59138,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GroundTypeBazooka_Lv2.gw"
     },
     "EF_GroundTypeBeamRifle__lv1": {
-      "name": "陆战型光束步枪",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -59033,7 +59264,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_GroundTypeBeamRifle_Blue__lv1": {
       "name": "光束步枪",
@@ -59162,7 +59404,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle_Blue.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle_Blue.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_GroundTypeBeamRifle_LateType__lv1": {
       "name": "光束步枪",
@@ -59291,7 +59544,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle_LateType.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle_LateType.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_GroundTypeMissileLauncher__lv1": {
       "name": "陆战型导弹发射器",
@@ -61622,7 +61886,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_HyperBeamRifle.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_HyperBeamRifle.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_LongRangeBeamSniperRifle__lv1": {
       "name": "光束狙击枪",
@@ -66290,10 +66565,21 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_79DO_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_79DO_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RGM_79DO_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -66429,7 +66715,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_79DO_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_79DO_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RGM_79HC_ShieldMG__lv1": {
       "name": "机枪",
@@ -67568,7 +67865,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RMS_179_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RMS_179_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RMV_1_Cannon__lv1": {
       "name": "加农炮",
@@ -70004,7 +70312,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_77_2_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_77_2_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_77_2_MS__lv1": {
       "name": "导弹发射器",
@@ -70528,7 +70847,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_77_4_BeamCannon.gw"
     },
     "EF_RX_78_1_BR__lv1": {
-      "name": "试作型光束步枪",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -70659,13 +70978,13 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_1_BR.gw",
       "localization": {
         "zh": {
-          "name": "试作型光束步枪"
+          "name": "光束步枪"
         },
         "en": {
-          "name": "Prototype Beam Rifle"
+          "name": "Beam Rifle"
         },
         "ja": {
-          "name": "試作型ビーム・ライフル"
+          "name": "ビーム・ライフル"
         }
       }
     },
@@ -70796,7 +71115,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_2_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_2_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_78_3_BR__lv1": {
       "name": "光束步枪",
@@ -70925,7 +71255,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_3_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_3_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_78_4_HighMegaLauncher__lv1": {
       "name": "光束炮",
@@ -72463,7 +72804,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_6_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_6_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_78_6_WIP_DoubleBeamCannon__lv1": {
       "name": "光束炮",
@@ -72872,7 +73224,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_7_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78_7_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_78GP01_BR__lv1": {
       "name": "光束步枪",
@@ -73009,7 +73372,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP01_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP01_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_78GP01_LBR__lv1": {
       "name": "光束炮",
@@ -74350,7 +74724,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78NT_1_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78NT_1_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_78SP_BR__lv1": {
       "name": "光束步枪",
@@ -74489,10 +74874,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78SP_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78SP_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_78SP_BR_Sniper_Aim__lv1": {
-      "name": "光束狙击枪",
+      "name": "光束步枪",
       "type": "beam",
       "min": 3,
       "max": 8,
@@ -74606,7 +75002,18 @@
       "category": "sniper",
       "actionCost": 4,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78SP_BR_Sniper.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78SP_BR_Sniper.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_79_BD_ChestMG__lv1": {
       "name": "机枪",
@@ -75465,7 +75872,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_80_PR_2_FrameLauncher_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_80_PR_2_FrameLauncher_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_80_PR_2_FrameLauncher_MG__lv1": {
       "name": "机枪",
@@ -77015,7 +77433,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw"
     },
     "EF_RX_81AS_Shotgun__lv1": {
-      "name": "EF RX 81AS Shotgun",
+      "name": "霰弹枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -77152,7 +77570,18 @@
       "category": "other",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81AS_Shotgun.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81AS_Shotgun.gw",
+      "localization": {
+        "zh": {
+          "name": "霰弹枪"
+        },
+        "en": {
+          "name": "Shotgun"
+        },
+        "ja": {
+          "name": "ショットガン"
+        }
+      }
     },
     "EF_SHM__lv1": {
       "name": "近身格斗",
@@ -131739,7 +132168,18 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_105mmMG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_105mmMG.gw",
+      "localization": {
+        "zh": {
+          "name": "105mm机枪"
+        },
+        "en": {
+          "name": "105mm Machine Gun"
+        },
+        "ja": {
+          "name": "105mmマシンガン"
+        }
+      }
     },
     "ZN_105mmMG__lv2": {
       "name": "105mm机枪",
@@ -131946,7 +132386,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_105mmMG_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_105mmMG_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "105mm机枪"
+        },
+        "en": {
+          "name": "105mm Machine Gun"
+        },
+        "ja": {
+          "name": "105mmマシンガン"
+        }
+      }
     },
     "ZN_105mmMG_L__lv2": {
       "name": "105mm机枪",
@@ -132153,7 +132604,18 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_105mmMG_L_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_105mmMG_L_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "105mm机枪"
+        },
+        "en": {
+          "name": "105mm Machine Gun"
+        },
+        "ja": {
+          "name": "105mmマシンガン"
+        }
+      }
     },
     "ZN_120mmMG__lv1": {
       "name": "120mm机枪",
@@ -132360,7 +132822,18 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG.gw",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      }
     },
     "ZN_120mmMG__lv2": {
       "name": "120mm机枪",
@@ -132567,10 +133040,21 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      }
     },
     "ZN_120mmMG_AntiAir__lv1": {
-      "name": "120mm对空机枪",
+      "name": "120mm机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -132753,10 +133237,21 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir.gw",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      }
     },
     "ZN_120mmMG_AntiAir__lv2": {
-      "name": "120mm对空机枪",
+      "name": "120mm机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -132939,7 +133434,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_AntiAir_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      }
     },
     "ZN_120mmMG_L__lv2": {
       "name": "120mm机枪",
@@ -133146,7 +133652,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_L_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_L_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      }
     },
     "ZN_120mmMGShortVer__lv1": {
       "name": "120mm机枪",
@@ -133397,7 +133914,18 @@
       "actionCost": 3,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMGShortVer.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMGShortVer.gw",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      }
     },
     "ZN_120mmMGWithGrenadeLauncher__lv1": {
       "name": "120mm机枪",
@@ -133620,7 +134148,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMGWithGrenadeLauncher.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMGWithGrenadeLauncher.gw",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      }
     },
     "ZN_120mmMGWithGrenadeLauncher__lv2": {
       "name": "120mm机枪",
@@ -133843,7 +134382,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMGWithGrenadeLauncher_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMGWithGrenadeLauncher_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      }
     },
     "ZN_135mmAntiShipSniper__lv1": {
       "name": "狙击步枪",
@@ -136302,7 +136852,18 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_ACT_Zaku_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_ACT_Zaku_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_ACT_Zaku_MG__lv1": {
       "name": "机枪",
@@ -145337,7 +145898,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Luggun_AA.gw"
     },
     "ZN_MA_04X_BeamShotgun__lv1": {
-      "name": "光束炮",
+      "name": "光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -145477,10 +146038,21 @@
       "category": "other",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_04X_BeamShotgun.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_04X_BeamShotgun.gw",
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪"
+        },
+        "en": {
+          "name": "Beam Shotgun"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン"
+        }
+      }
     },
     "ZN_MA_04X_BeamShotgun_L__lv1": {
-      "name": "光束炮",
+      "name": "光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -145616,7 +146188,18 @@
       "category": "other",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_04X_BeamShotgun.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_04X_BeamShotgun.gw",
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪"
+        },
+        "en": {
+          "name": "Beam Shotgun"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン"
+        }
+      }
     },
     "ZN_MA_04X_MS__lv1": {
       "name": "导弹发射器",
@@ -146764,10 +147347,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_06_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_06_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_MA_06_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -146898,7 +147492,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_06_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_06_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_MA_06_Leader__lv1": {
       "name": "ZN MA 06 Leader",
@@ -163333,7 +163938,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_12_MG.gw"
     },
     "ZN_MS_14_BR__lv1": {
-      "name": "格鲁古古光束步枪",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -163459,7 +164064,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_MS_14C_BeamCannon__lv1": {
       "name": "光束炮",
@@ -163898,10 +164514,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14G_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14G_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_MS_14G_BR_Sniper_Aim__lv1": {
-      "name": "光束狙击枪",
+      "name": "光束步枪",
       "type": "beam",
       "min": 3,
       "max": 8,
@@ -164015,7 +164642,18 @@
       "category": "sniper",
       "actionCost": 4,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14G_BR_Sniper.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14G_BR_Sniper.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_MS_14JG_BMG__lv1": {
       "name": "机枪",
@@ -165176,7 +165814,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_17_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_17_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_MS_17R_BR__lv1": {
       "name": "光束步枪",
@@ -165355,7 +166004,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_17R_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_17R_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_MS_21C_MG__lv1": {
       "name": "机枪",
@@ -169485,7 +170145,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSM_10_HighBeamRifle.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSM_10_HighBeamRifle.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_MSN_01_BG__lv1": {
       "name": "光束炮",
@@ -173699,7 +174370,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSN_02_Head_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MSN_02_Head_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_MTank_Cannon__lv1": {
       "name": "加农炮",
@@ -175517,7 +176199,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_SamsonGroundTransportTruck_AA.gw"
     },
     "ZN_Shotgun__lv1": {
-      "name": "ZN Shotgun",
+      "name": "霰弹枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -175651,10 +176333,21 @@
       "actionCost": 2,
       "displayIndex": 0,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw",
+      "localization": {
+        "zh": {
+          "name": "霰弹枪"
+        },
+        "en": {
+          "name": "Shotgun"
+        },
+        "ja": {
+          "name": "ショットガン"
+        }
+      }
     },
     "ZN_ShotgunKai__lv1": {
-      "name": "ZN ShotgunKai",
+      "name": "霰弹枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -175788,7 +176481,18 @@
       "category": "other",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_ShotgunKai.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_ShotgunKai.gw",
+      "localization": {
+        "zh": {
+          "name": "霰弹枪"
+        },
+        "en": {
+          "name": "Shotgun"
+        },
+        "ja": {
+          "name": "ショットガン"
+        }
+      }
     },
     "ZN_Skiure_BeamCannon__lv1": {
       "name": "光束炮",
@@ -178054,7 +178758,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_YMS_15E_Lance_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_YMS_15E_Lance_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZN_YMS_16M_Cannon_AP__lv1": {
       "name": "加农炮",
@@ -179069,7 +179784,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_YMT_05_MainCannon_HE.gw"
     },
     "EF_RMS_179_BR_Yellow__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -179195,7 +179910,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RMS_179_BR_Yellow.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RMS_179_BR_Yellow.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_HypeBazookaKai_0087__lv1": {
       "name": "火箭筒",
@@ -187410,7 +188136,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/AEUG_ClayBazooka_Lv2.gw"
     },
     "AEUG_ClayBazooka_ShotgunMode__lv2": {
-      "name": "火箭筒",
+      "name": "扩散火箭筒",
       "type": "shell",
       "min": 2,
       "max": 4,
@@ -187540,7 +188266,18 @@
       "category": "bazooka",
       "actionCost": 3,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/AEUG_ClayBazooka_ShotgunMode_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/AEUG_ClayBazooka_ShotgunMode_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "扩散火箭筒"
+        },
+        "en": {
+          "name": "Cluster Bazooka"
+        },
+        "ja": {
+          "name": "拡散バズーカ"
+        }
+      }
     },
     "EF_BeamSaber_AF_Yellow_A__lv2": {
       "name": "光束军刀",
@@ -187682,7 +188419,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Yellow_Lv2.gw"
     },
     "EF_HypeBazookaKai_0087_ShotgunMode__lv2": {
-      "name": "火箭筒",
+      "name": "扩散火箭筒",
       "type": "shell",
       "min": 2,
       "max": 4,
@@ -187812,7 +188549,18 @@
       "category": "bazooka",
       "actionCost": 3,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazookaKai_0087_ShotgunMode_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_HypeBazookaKai_0087_ShotgunMode_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "扩散火箭筒"
+        },
+        "en": {
+          "name": "Cluster Bazooka"
+        },
+        "ja": {
+          "name": "拡散バズーカ"
+        }
+      }
     },
     "EF_HypeBazookaKai_0087__lv2": {
       "name": "火箭筒",
@@ -188082,7 +188830,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_178_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_178_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_170mmCannon__lv1": {
       "name": "170mm加农炮",
@@ -188812,7 +189571,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSN_100_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSN_100_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "Common_ArmGL_L__lv4": {
       "name": "腕部榴弹发射器",
@@ -189532,7 +190302,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_RX_178_AEUG_FXA_05D_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_RX_178_AEUG_FXA_05D_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_RX_178_AEUG_FXA_05D_MS__lv1": {
       "name": "导弹发射器",
@@ -192474,7 +193255,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_ArmGL_Lv3.gw"
     },
     "EF_RMS_179_BR_Yellow__lv2": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -192600,7 +193381,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RMS_179_BR_Yellow_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RMS_179_BR_Yellow_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_GMRifle__lv2": {
       "name": "光束步枪",
@@ -193462,7 +194254,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_000_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_000_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSA_003_Cannon_DoubleBeamCannon__lv1": {
       "name": "光束炮",
@@ -194890,7 +195693,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_006_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_006_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSZ_006_HML__lv1": {
       "name": "导弹发射器",
@@ -195166,7 +195980,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_AF_Large_Lv2.gw"
     },
     "AEUG_MSZ_006_BR_BS_BF_B__lv1": {
-      "name": "近身格斗",
+      "name": "光束步枪",
       "type": "melee",
       "min": 1,
       "max": 1,
@@ -195303,7 +196117,18 @@
       "category": "melee",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Cqb/AEUG_MSZ_006_BR_BS_BF.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/AEUG_MSZ_006_BR_BS_BF.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSF_007_BR__lv1": {
       "name": "光束步枪",
@@ -195449,7 +196274,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSF_007_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSF_007_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSF_007_DoubleBeamCannon__lv1": {
       "name": "光束炮",
@@ -196572,7 +197408,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_006A1_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_006A1_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSZ_006A1_HML__lv1": {
       "name": "导弹发射器",
@@ -198577,10 +199424,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSZ_010_BR_R__lv1": {
-      "name": "导弹发射器",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -198733,7 +199591,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSZ_010_BeamCannon__lv1": {
       "name": "光束炮",
@@ -199872,7 +200741,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_008_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_008_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_ClayBazooka_Double__lv1": {
       "name": "火箭筒",
@@ -200336,10 +201216,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_099_2_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_099_2_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSA_099_2_BR_R__lv1": {
-      "name": "导弹发射器",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -200492,7 +201383,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_099_2_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_099_2_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RGM_86R_SMS__lv1": {
       "name": "EF RGM 86R SMS",
@@ -201311,7 +202213,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_86R_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_86R_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_BeamSaber_AF_A__lv3": {
       "name": "光束军刀",
@@ -202300,7 +203213,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_86R_Nouvel_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RGM_86R_Nouvel_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSZ_010S_BR__lv1": {
       "name": "光束步枪",
@@ -202446,10 +203370,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010S_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010S_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSZ_010S_BR_R__lv1": {
-      "name": "导弹发射器",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -202588,7 +203523,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010S_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010S_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSZ_010S_BackpackMS__lv1": {
       "name": "导弹发射器",
@@ -206203,10 +207149,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_FA_010A_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -206359,7 +207316,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_FA_010A_BeamCannon__lv1": {
       "name": "光束炮",
@@ -208576,7 +209544,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_FA_00100S_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_FA_00100S_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_BeamSaber_Double_BBLDF_Yellow__lv3": {
       "name": "光束军刀",
@@ -208882,7 +209861,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSR_00100S_M_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSR_00100S_M_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSR_00100S_BeamMinigun_Single__lv1": {
       "name": "机枪",
@@ -209087,7 +210077,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSR_00100S_BeamMinigun_Single.gw"
     },
     "AEUG_MSN_100_BR_Black_MSA_005S__lv1": {
-      "name": "导弹发射器",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -209223,7 +210213,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSN_100_BR_Black_MSA_005S.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSN_100_BR_Black_MSA_005S.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSA_005S_BeamCannon__lv1": {
       "name": "光束炮",
@@ -209521,10 +210522,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_005K_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_005K_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSA_005K_BR_GL__lv1": {
-      "name": "导弹发射器",
+      "name": "光束步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -209684,7 +210696,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_005K_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_005K_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSA_005K_DoubleBeamCannon__lv1": {
       "name": "光束炮",
@@ -210367,7 +211390,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSN_001_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSN_001_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "AEUG_MSN_001_ShieldBG__lv1": {
       "name": "导弹发射器",
@@ -212109,7 +213143,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_007_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_007_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_BeamSaber_Large_Double_BBLDF_Blue__lv2": {
       "name": "光束军刀",
@@ -212281,7 +213326,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Large_Double_BBLDF_Blue_Lv2.gw"
     },
     "TITANS_BR_87A__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -212407,7 +213452,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_BR_87A.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_BR_87A.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_120mmMGKai__lv1": {
       "name": "120mm机枪",
@@ -212616,7 +213672,18 @@
       "category": "machine_gun",
       "actionCost": 3,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/TITANS_120mmMGKai.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/TITANS_120mmMGKai.gw",
+      "localization": {
+        "zh": {
+          "name": "120mm机枪"
+        },
+        "en": {
+          "name": "120mm Machine Gun"
+        },
+        "ja": {
+          "name": "120mmマシンガン"
+        }
+      }
     },
     "TITANS_RMS_106_MS__lv1": {
       "name": "导弹发射器",
@@ -213064,7 +214131,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Cqb/TITANS_HeatHawkKai_A.gw"
     },
     "ZN_MS_14_BR__lv2": {
-      "name": "格鲁古古光束步枪",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -213190,7 +214257,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "Common_ShieldMS__lv2": {
       "name": "Common ShieldMS",
@@ -215994,10 +217072,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_NRX_044_TR_3_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_NRX_044_TR_3_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_NRX_044_TR_3_BR_BS_A_A__lv1": {
-      "name": "近身格斗",
+      "name": "光束步枪",
       "type": "melee",
       "min": 1,
       "max": 1,
@@ -216121,7 +217210,18 @@
       "category": "melee",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Cqb/TITANS_NRX_044_TR_3_BR_BS_A.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Cqb/TITANS_NRX_044_TR_3_BR_BS_A.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_NRX_044_BR__lv1": {
       "name": "光束步枪",
@@ -216265,7 +217365,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_NRX_044_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_NRX_044_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "Common_Cqb_BF_B__lv3": {
       "name": "近身格斗",
@@ -216864,7 +217975,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RMS_154_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RMS_154_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "DogosseGiarClass_Turret_BeamCannon_1__lv1": {
       "name": "舰载光束炮",
@@ -221057,7 +222179,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_RX_121_BodyMS__lv1": {
       "name": "TITANS RX 121 BodyMS",
@@ -221378,7 +222511,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/TITANS_RX_121_BodyMS.gw"
     },
     "TITANS_RX_121_BR_Double__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -221551,10 +222684,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_BR_Double.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_BR_Double.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_RX_121_BR_Double_L__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -221723,7 +222867,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_BR_Double.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_BR_Double.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_BeamSniper_RMS_106CS__lv1": {
       "name": "光束狙击枪",
@@ -228106,7 +229261,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_003_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_003_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_PMX_002_BR__lv1": {
       "name": "光束步枪",
@@ -228251,10 +229417,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_002_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_002_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_PMX_002_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -228392,7 +229569,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_002_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_002_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_PMX_002_MS__lv1": {
       "name": "导弹发射器",
@@ -229479,10 +230667,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_PMX_001_BR_R__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -229632,10 +230831,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_PMX_001_BR_M__lv1": {
-      "name": "TITANS PMX 001 BR M",
+      "name": "光束步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -229785,7 +230995,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_PMX_001_BeamCannon__lv1": {
       "name": "光束炮",
@@ -230698,7 +231919,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_15B_ShieldRocket_Lv2.gw"
     },
     "TITANS_RX_178_BR_WGL__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -230844,10 +232065,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_178_BR_WGL.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_178_BR_WGL.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "TITANS_RX_178_BR_WGL_GL__lv1": {
-      "name": "TITANS RX 178 BR WGL GL",
+      "name": "光束步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -230993,7 +232225,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_178_BR_WGL.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_178_BR_WGL.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_BeamSaber_AF_Yellow_A__lv3": {
       "name": "光束军刀",
@@ -234059,7 +235302,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_NRX_055_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_NRX_055_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "Common_ArmBSG_L_Yellow_NRX_055__lv1": {
       "name": "光束炮",
@@ -234816,7 +236070,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_MS_09R_Stutzer_MS.gw"
     },
     "ZN_MS_14_BR_Stutzer__lv1": {
-      "name": "导弹发射器",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -234937,7 +236191,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR_Stutzer.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR_Stutzer.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "ZanzibarClassKai_0087_Turret_Cannon__lv1": {
       "name": "舰载加农炮",
@@ -241807,10 +243072,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MS_14J_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MS_14J_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "NZN_MS_14J_BR_GL__lv1": {
-      "name": "导弹发射器",
+      "name": "光束步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -241948,7 +243224,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MS_14J_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MS_14J_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "NZN_MS_14J_MS__lv1": {
       "name": "导弹发射器",
@@ -244084,7 +245371,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107M_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107M_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "NZN_AMX_009_MS__lv1": {
       "name": "导弹发射器",
@@ -245031,7 +246329,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/NZN_AMX_101_MS.gw"
     },
     "NZN_AMX_101_BR_MS__lv1": {
-      "name": "导弹发射器",
+      "name": "光束步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -245185,7 +246483,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/NZN_AMX_101_BR_MS.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/NZN_AMX_101_BR_MS.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "NZN_AMX_101_ArmMG__lv1": {
       "name": "腕部机枪",
@@ -245563,7 +246872,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_101_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_101_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "Common_ArmMS_L__lv3": {
       "name": "腕部导弹发射器",
@@ -247053,7 +248373,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_102_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_102_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "NZN_AMX_103_ShieldBSG__lv1": {
       "name": "光束炮",
@@ -249316,7 +250647,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Funnel/NZN_AMX_004G_Funnel.gw"
     },
     "NZN_AMX_01X_BR_Double__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -249515,10 +250846,21 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_01X_BR_Double.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_01X_BR_Double.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "NZN_AMX_01X_BR_Double_L__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -249713,7 +251055,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_01X_BR_Double.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_01X_BR_Double.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "NZN_AMA_01X_BeamCannon__lv1": {
       "name": "光束炮",
@@ -250545,7 +251898,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_011_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_011_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "NZN_AMX_011_BeamGun__lv1": {
       "name": "光束枪",
@@ -251119,7 +252483,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_014_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_014_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "NZN_AMX_014_BeamCannon__lv1": {
       "name": "光束炮",
@@ -254193,7 +255568,18 @@
       "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107_BR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107_BR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "Common_ArmBeamSaber_Large_Double_BBLDF_Yellow_MRX_010__lv1": {
       "name": "光束军刀",

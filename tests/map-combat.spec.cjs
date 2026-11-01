@@ -9,6 +9,14 @@ async function stage(page, death = false) {
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
   await page.evaluate((death) => {
+    // This fixture tests melee presentation explicitly, independent of saved formations.
+    Net.leave();
+    game = Rules.create(false, 1, [
+      [{ unitId: "RX_78_2", kitId: PRODUCTION_CATALOG.defaultKits.RX_78_2 }],
+      [{ unitId: "MS_06F", kitId: PRODUCTION_CATALOG.defaultKits.MS_06F }],
+    ], false, { costLimit:99999, unitCostLimit:99999 });
+    game.deployment = null;
+    setPageView("game");
     const a = game.units[0],
       b = game.units.find((u) => u.team === 1);
     Object.assign(a, { x: 10, y: 7, hp: 100000, shield: 0 });
@@ -17,7 +25,8 @@ async function stage(page, death = false) {
     game.seed = 0;
     const actors = JSON.parse(JSON.stringify([a, b]));
     const weapon = UnitModels[a.model].weapons.find((w) => w.type === "melee");
-    const events = Rules.fight(game, a, b, weapon, death ? "defend" : "counter", weapon.id);
+    const counter = UnitModels[b.model].weapons.find((w) => w.type === "melee");
+    const events = Rules.fight(game, a, b, weapon, death ? "defend" : "counter", counter.id);
     const record = {
       id: "map-fixture",
       a: a.id,
@@ -61,6 +70,7 @@ async function at(page, value) {
       time: f.time,
       deathAt: f.plan.deathAt,
       events: battleView.events.length,
+      nativeClips: f.weapon.attack.animations.map(item => item.clip).filter(Boolean),
     };
   }, value);
 }
@@ -77,7 +87,7 @@ test("map melee approaches vertically, plays its native swing and keeps real gri
   expect(source.x).toBe(10);
   expect(source.y).toBe(7);
   const swing = await at(page, 1.3);
-  expect(swing.units.find((u) => u.id === swing.source).pose.clip).toBe("Common_Melee_A");
+  expect(swing.nativeClips).toContain(swing.units.find((u) => u.id === swing.source).pose.clip);
   expect(swing.events).toBe(2);
   await expect(page.locator("#battle")).toBeHidden();
   await page.screenshot({ path: ".openai/map-combat-melee.png" });
@@ -672,4 +682,19 @@ test("warship sprite remains through the last explosion and disappears only afte
   for (const sample of result.slice(0, 3))
     expect(sample).toEqual({ hidden: false, keepVisible: true, draws: 1 });
   expect(result[3]).toEqual({ hidden: true, keepVisible: false, draws: 0 });
+});
+
+
+test("battle clocks run at 1.5x and preserve the quick playback multiplier",async({page})=>{
+  await stage(page);
+  const speeds=await page.evaluate(()=>{
+    const f=MapCombat.frame,now=performance.now();
+    byId("quick").checked=false;f.lastNow=now;
+    const before=f.time;MapCombat.update(now+100);const normal=f.time-before;
+    byId("quick").checked=true;MapCombat.update(now+200);const quick=f.time-before-normal;
+    byId("quick").checked=false;
+    return {normal,quick};
+  });
+  expect(speeds.normal).toBeCloseTo(.15,8);
+  expect(speeds.quick).toBeCloseTo(.15/.35,8);
 });

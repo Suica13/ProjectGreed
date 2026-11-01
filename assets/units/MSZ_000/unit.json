@@ -722,6 +722,135 @@
     "AEUG_ClayBazooka_ShotgunMode": {
       "ref": "AEUG_ClayBazooka_ShotgunMode__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "clusterRole": "carrier",
+              "clusterGroup": 2,
+              "delay": 0.35
+            },
+            {
+              "shots": 12,
+              "muzzleIndex": 0,
+              "damageComponents": {
+                "shell": 725.0,
+                "shellAP": 725.0
+              },
+              "accuracy": 95.0,
+              "partBreakModifier": 1.5,
+              "requiredParts": [],
+              "clusterRole": "fragment",
+              "clusterGroup": 2,
+              "antiSize": {
+                "small": {
+                  "damage": 0.75,
+                  "accuracy": 0.75
+                },
+                "medium": {
+                  "damage": 1,
+                  "accuracy": 1
+                },
+                "large": {
+                  "damage": 1.0,
+                  "accuracy": 1.0
+                }
+              },
+              "targetModifiers": {
+                "ground": 1.0,
+                "water": 0.75,
+                "air": 1.25,
+                "space": 1.25
+              },
+              "delay": 0.0
+            },
+            {
+              "delay": 0.3
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/Bazooka_1.png",
+          "scale": 1.0,
+          "speed": 40.0,
+          "forwardOffset": -5.0,
+          "rotation": 0.0,
+          "spreadDegrees": 0,
+          "cluster": {
+            "splitFraction": 0.65,
+            "count": 12,
+            "spreadDegrees": 24.0,
+            "hitEffect": "MG_Hit_1_S",
+            "speed": 70.0,
+            "texture": "../../projectiles/MG_1.png",
+            "scale": 0.35,
+            "nativePayload": {
+              "offsetRandomDir": 12.0,
+              "ShellDamage": 725.0,
+              "ShellAPDamage": 725.0,
+              "DpDamage": 80.0,
+              "WeaponAccuracy": 95.0,
+              "PartBreakModifier": 1.5,
+              "CockpitBreakModifier": 5.0,
+              "PilotDamageModifier": 1.0,
+              "PilotTrueDamage": 0.0,
+              "AntiSizeLargeDamage": 1.0,
+              "AntiSizeSmallDamage": 0.75,
+              "AntiSizeLargeAccuracy": 1.0,
+              "AntiSizeSmallAccuracy": 0.75,
+              "AntiBuilding": 0.75,
+              "AntiAqua": 0.75,
+              "AntiAir": 1.25,
+              "AntiLand": 1.0,
+              "AntiSpace": 1.25,
+              "HeightChangeSpeed": 2.0,
+              "HeightHitRange": 35.0,
+              "ProjectileSpeed": 70.0,
+              "ProjectileSpread": 2.0,
+              "ProjectileLife": 8.0
+            },
+            "source": "Units/BattleUnits/Weapon/Shell/Projectile/Projectile_Bazooka_ShotgunMode_Lv2.ini"
+          }
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Shell/AEUG_ClayBazooka_ShotgunMode.gw",
+          "barrel": "AEUG_ClayBazooka_ShotgunMode",
+          "entry": "hiddenAction_AEUG_ClayBazooka_ShotgunMode_Fire",
+          "cooldown": 2.5,
+          "duration": 0.6499999999999999,
+          "firstShot": 0.35,
+          "lastShot": 0.35,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 12,
+          "declaredEnergy": 35.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 35.0,
+          "actions": [
+            "hiddenAction_AEUG_ClayBazooka_ShotgunMode_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_AEUG_ClayBazooka_ShotgunMode_SetWeaponIndex",
+            "hiddenAction_AEUG_ClayBazooka_ShotgunMode_B1_Step_1",
+            "hiddenAction_AEUG_ClayBazooka_ShotgunMode_Fire_Step_1",
+            "hiddenAction_AEUG_ClayBazooka_ShotgunMode_Fire_Step_2",
+            "hiddenAction_AEUG_ClayBazooka_ShotgunMode_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -922,7 +1051,18 @@
         "EF_BeamSaber_BF_Yellow_B",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     },
     {
       "id": "kit_0",
@@ -938,7 +1078,7 @@
     },
     {
       "id": "kit_1",
-      "name": "火箭筒套件",
+      "name": "扩散火箭筒套件",
       "cost": 50,
       "weapons": [
         "AEUG_ClayBazooka_ShotgunMode",
@@ -946,7 +1086,18 @@
         "EF_BeamSaber_BF_Yellow_B",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "扩散火箭筒套件"
+        },
+        "en": {
+          "name": "Cluster Bazooka Kit"
+        },
+        "ja": {
+          "name": "拡散バズーカ装備"
+        }
+      }
     }
   ],
   "description": "基于百式改进而来,是Z高达的原型机",

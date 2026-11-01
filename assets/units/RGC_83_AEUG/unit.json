@@ -930,7 +930,18 @@
         "EF_BeamSaber_AF_A",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "吉姆加农的后续发展型,拥有不错的射击战性能",

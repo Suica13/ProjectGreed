@@ -762,7 +762,18 @@
       "weapons": [
         "ZN_120mmMG",
         "Common_Cqb_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "120mm机枪套件"
+        },
+        "en": {
+          "name": "120mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "120mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "main_1",

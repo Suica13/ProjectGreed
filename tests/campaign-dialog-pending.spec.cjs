@@ -1,0 +1,48 @@
+const {test,expect}=require("@playwright/test");
+const {pathToFileURL}=require("node:url"),path=require("node:path");
+for(const width of [1440,390]) test(`campaign dialogs recover from pending autosave and allow dismissal at ${width}px`,async({page})=>{
+ test.setTimeout(45000);await page.setViewportSize({width,height:900});
+ await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+ await expect(page.locator("#openSkirmish")).toBeEnabled();
+ await page.evaluate(()=>{const factory=createRoomEngine;createRoomEngine=options=>(window.testEngine=factory(options));});
+ await page.locator("#openSkirmish").click();await page.locator("#offlineRoomMode").selectOption("campaign");
+ await page.locator("#createOfflineRoom").click();await page.locator("#startRoomGame").click();
+ await page.locator(".campaign-setup button").last().click();await expect(page.locator("#campaignScreen")).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>Net.awaiting)).toBe(null);
+ await page.evaluate(()=>{
+  const room=[...testEngine.rooms.values()][0],s=room.campaign,ctx={G:Rules,production:PRODUCTION_CATALOG};
+  s.units=[];CampaignRules.addUnit(ctx,s,0,"jaburo","Medea");
+  window.testPassenger=CampaignRules.addUnit(ctx,s,0,"jaburo","Type61").id;
+  room.revision++;testEngine.broadcast(room);
+ });
+ await expect(page.getByRole("button",{name:"搭载",exact:true})).toBeEnabled();
+ await page.evaluate(()=>{
+  Net.awaiting={id:"pending-boarding",action:"campaign_export"};
+  [...document.querySelectorAll(".campaign-force-card button")].find(b=>b.textContent==="搭载").click();
+ });
+ const dock=page.locator("#campaignOrderDialog");await expect(dock).toBeVisible();
+ await expect(dock.getByRole("button",{name:"关闭",exact:true})).toBeEnabled();
+ await expect(dock.locator("[data-carrier-id]").first()).toBeDisabled();
+ await page.evaluate(()=>Net.receive({type:"campaign_upload_ack",ack:"pending-boarding"},Net.socket));
+ await expect(dock.locator("[data-carrier-id]").first()).toBeEnabled();
+ await dock.locator("[data-carrier-id]").first().click();await expect(dock).toBeHidden();
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot.campaign.units.find(u=>u.id===testPassenger).aboard)).toBe(true);
+ await expect.poll(()=>page.evaluate(()=>Net.awaiting)).toBe(null);
+ await page.evaluate(()=>{Net.awaiting={id:"pending-production",action:"campaign_export"};CampaignWorkspace.open("production","jaburo");});
+ const production=page.locator("#campaignWorkspace");await expect(production).toBeVisible();
+ await expect(production.getByRole("button",{name:"关闭",exact:true})).toBeEnabled();
+ await production.getByRole("button",{name:"关闭",exact:true}).click();await expect(production).toBeHidden();
+ await page.evaluate(()=>CampaignWorkspace.open("production","jaburo"));await expect(production).toBeVisible();
+ await page.evaluate(()=>Net.receive({type:"error",id:"pending-production",message:"模拟自动存档请求失败"},Net.socket));
+ await expect(production.locator(".campaign-catalog-card").first()).toBeEnabled();
+ await production.getByRole("button",{name:"关闭",exact:true}).click();
+ await page.locator(".campaign-force-card").filter({has:page.getByText("61式主战坦克",{exact:true})}).getByRole("button",{name:"详情",exact:true}).click();
+ const detail=page.locator("#campaignArmyDialog");await expect(detail).toBeVisible();
+ const refund=await page.evaluate(()=>CampaignRules.dismissalQuote({G:Rules,production:PRODUCTION_CATALOG},Net.snapshot.campaign.units.find(u=>u.id===testPassenger)));
+ const money=await page.evaluate(()=>Net.snapshot.campaign.teams[0].money);
+ await page.locator("#campaignDismissArmy").click();await expect(page.locator("#gameDialog")).toBeVisible();
+ await page.locator("#gameDialog").getByRole("button",{name:"取消",exact:true}).click();await expect(detail).toBeVisible();
+ await page.locator("#campaignDismissArmy").click();await page.locator("#gameDialog").getByRole("button",{name:"确认",exact:true}).click();
+ await expect(detail).toBeHidden();await expect.poll(()=>page.evaluate(()=>Net.snapshot.campaign.teams[0].money)).toBe(money+refund.money);
+ expect(await page.evaluate(()=>Net.snapshot.campaign.units.some(u=>u.id===testPassenger))).toBe(false);
+});

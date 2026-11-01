@@ -69,6 +69,24 @@ const CampaignRules = (() => {
       ),
     };
   }
+  function dismissalQuote(ctx, unit) {
+    const prefab = ctx.G.catalog.prefabs.find((item) => item.id === unit.unitId);
+    const base = unit.pilotBase || { unitId: prefab?.formOf || unit.unitId, kitId: unit.kitId };
+    const price = quote(ctx, base.unitId, base.kitId) || quote(ctx, base.unitId);
+    return price && {
+      money: Math.floor(price.money / price.quantity / 2),
+      supplies: Math.floor(price.supplies / price.quantity / 2),
+    };
+  }
+  function canDismiss(ctx, state, members, seat, unit) {
+    return !!(unit && !unit.destroyed && state.phase === "strategy" && state.winner === null &&
+      !state.ready.includes(seat) && controls(state, members, seat, unit) &&
+      !unit.pendingTransfer && !unit.moveTo && !busy(state, unit) &&
+      !state.transfers.some((transfer) => transfer.ids.includes(unit.id)) &&
+      !state.units.some((other) => !other.destroyed && (other.carrierArmyId === unit.id ||
+        (unit.state?.id && other.state?.embarked?.carrierId === unit.state.id))) &&
+      dismissalQuote(ctx, unit));
+  }
   function updateSavedArmy(state, unit) {
     if (!unit.state) return;
     for (const encounter of state.encounters) {
@@ -186,16 +204,28 @@ const CampaignRules = (() => {
         .sort((a, b) => a.seat - b.seat);
       check(players.length, "两个阵营都需要玩家或AI");
       const owner = players[ctx.world.regions.indexOf(region) % players.length];
-      const roster = ctx.world.settings.initialForces?.[state.teams[region.owner].faction];
+      const faction = state.teams[region.owner].faction;
+      const coreRoster = region.factory && ctx.world.settings.initialCoreForces?.[faction];
+      const roster = coreRoster || ctx.world.settings.initialForces?.[faction];
       if (roster) {
         for (const [unitId, count] of Object.entries(roster))
-          for (let i = 0; i < count * (region.factory ? 3 : 1); i++)
+          for (let i = 0; i < count * (region.factory && !coreRoster ? 3 : 1); i++)
             addUnit(ctx, state, owner.seat, region.id, unitId);
       } else {
         const ids = region.owner === 0 ? ["Type61", "FF_B2"] : ["MS_06F", "MS_06J"];
         for (let i = 0; i < (region.initialUnits ?? (region.factory ? 4 : 2)); i++)
           addUnit(ctx, state, owner.seat, region.id, ids[i % ids.length]);
       }
+    }
+    // Use the same type/capacity validation as manual strategic boarding.
+    for (const unit of state.units) {
+      const option = embarkOptions(ctx, state, unit).find((option) =>
+        ["Medea", "FatUncle"].includes(state.units.find((carrier) => carrier.id === option.carrierId)?.unitId));
+      if (!option) continue;
+      const carrier = state.units.find((carrier) => carrier.id === option.carrierId);
+      const actor = ensureArmyState(ctx, state, unit), parent = ensureArmyState(ctx, state, carrier);
+      actor.embarked = { carrierId: parent.id, hangarId: option.hangarId, boardRound: null };
+      actor.x = parent.x; actor.y = parent.y;
     }
     return state;
   }
@@ -296,6 +326,9 @@ const CampaignRules = (() => {
       case "campaign_embark":
         text = `${name} 搭乘 ${unitLabel(ctx, state.units.find((unit) => unit.id === command.carrierId))} · ${command.hangarId}`;
         break;
+      case "campaign_dismiss":
+        text = `出售／解散：${previous.unitName} · 返还资金 ${previous.refund.money}、物资 ${previous.refund.supplies}`;
+        break;
       case "campaign_disembark":
         text = `${name} 离开格纳库`;
         break;
@@ -386,6 +419,24 @@ const CampaignRules = (() => {
           progress: Math.min(100, intel.progress + intelligenceRules.gain),
           fundedTurn: state.turn,
         };
+        break;
+      }
+      case "campaign_dismiss": {
+        const unit = getUnit(command.armyId);
+        check(canDismiss(ctx, state, members, seat, unit), "当前不能出售／解散：请先完成调动、交战、转交或清空格纳库");
+        previous.refund = dismissalQuote(ctx, unit);
+        previous.unitName = unitLabel(ctx, unit);
+        pool.money += previous.refund.money;
+        pool.supplies += previous.refund.supplies;
+        state.units = state.units.filter((item) => item !== unit);
+        state.marches = (state.marches || []).filter((march) => march.armyId !== unit.id);
+        for (const encounter of state.encounters) {
+          const game = encounter.battleSave?.game;
+          if (game) game.units = game.units.filter((actor) => actor.campaignId !== unit.id && actor.id !== unit.state?.id);
+          for (const [id, armyId] of Object.entries(encounter.roster || {}))
+            if (armyId === unit.id) delete encounter.roster[id];
+          encounter.settled = (encounter.settled || []).filter((id) => id !== unit.id);
+        }
         break;
       }
       case "campaign_embark": {
@@ -780,6 +831,17 @@ const CampaignRules = (() => {
     }
     return total;
   }
+  function recoverReserves(ctx, state) {
+    for (const unit of state.units) {
+      if (unit.destroyed || unit.pendingTransfer || unit.participatedTurn === state.turn ||
+          state.regions.find((region) => region.id === unit.region)?.owner !== unit.team ||
+          !unit.state) continue;
+      const m = model(ctx, unit);
+      unit.state.hp = Math.min(m.hp, unit.state.hp + Math.round(m.hp * 0.3));
+      unit.state.en = Math.min(m.en, unit.state.en + Math.ceil(m.en * 0.6));
+      updateSavedArmy(state, unit);
+    }
+  }
   function advance(ctx, state, members) {
     ctx.G.aiTactics.strategic(ctx, state, members, { busy, disputed, available, quote, charge, controller, startResearch });
     for (const pool of state.teams) pool.researchQueue = (pool.researchQueue || []).filter((order) => {
@@ -904,6 +966,7 @@ const CampaignRules = (() => {
       ? "encounters"
       : "strategy";
     if (state.phase === "strategy") {
+      recoverReserves(ctx, state);
       state.turn++;
       arrive(ctx, state);
     }
@@ -1321,12 +1384,15 @@ const CampaignRules = (() => {
     arrive,
     action,
     advance,
+    recoverReserves,
     regionIncome,
     income,
     productionCapacity, updateVictory, startResearch, embarkOptions,
     available,
     quote,
     equipmentQuote,
+    dismissalQuote,
+    canDismiss,
     model,
     unitLabel,
     addUnit,

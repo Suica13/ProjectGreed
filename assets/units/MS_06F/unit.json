@@ -749,17 +749,6 @@
           ]
         },
         "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_TwoHand.gw",
-        "localization": {
-          "zh": {
-            "name": "120mm机枪"
-          },
-          "en": {
-            "name": "120mm Machine Gun"
-          },
-          "ja": {
-            "name": "120mmマシンガン"
-          }
-        },
         "source": {
           "file": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_TwoHand.gw",
           "barrelX": 11,

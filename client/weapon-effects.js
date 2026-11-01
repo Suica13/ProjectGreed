@@ -183,12 +183,18 @@ const WeaponEffects = (() => {
   }
   function plan(weapon, source, target, event = null, dodgeSchedule = null) {
     const nuclear = ["nuke", "blast"].includes(weapon.special?.type) && event?.impactCell;
-    if (nuclear) target = { ...target,
-      x: (event.impactCell.x + 0.5) * 64, y: (event.impactCell.y + 0.5) * 64 };
+    if (nuclear)
+      target = {
+        ...target,
+        x: (event.impactCell.x + 0.5) * 64,
+        y: (event.impactCell.y + 0.5) * 64,
+      };
     // 每发未命中子弹从发射起最多等待两秒；连射中的后续子弹独立计时。
     const missTimeout = 2,
       timedProjectile =
-        !nuclear && weapon.projectile && !["bomb", "mortar", "tether"].includes(weapon.projectile.motion);
+        !nuclear &&
+        weapon.projectile &&
+        !["bomb", "mortar", "tether"].includes(weapon.projectile.motion);
     const speed = animationSpeed(weapon),
       effectSpeed = ART.presentation.animationSpeed,
       lead =
@@ -235,7 +241,12 @@ const WeaponEffects = (() => {
               Math.PI) /
             180
           : 0;
-      const spreadY = Math.tan(spreadAngle) * Math.abs(destination.x - origin.x);
+      const fanDistance =
+        Math.tan(spreadAngle) * Math.hypot(destination.x - origin.x, destination.y - origin.y);
+      const aimAngle = Math.atan2(destination.y - origin.y, destination.x - origin.x);
+      const spreadX = -Math.sin(aimAngle) * fanDistance;
+      const spreadY = Math.cos(aimAngle) * fanDistance;
+      destination.x += spreadX;
       destination.y += spreadY;
       if (weapon.projectile?.motion === "bomb") {
         const first = weapon.attack.shots[0],
@@ -284,11 +295,67 @@ const WeaponEffects = (() => {
         at,
         origin,
         destination,
+        spreadX,
         spreadY,
         flight,
         impactAt: at + flight,
       };
     });
+    const cluster = weapon.projectile?.cluster;
+    if (cluster) {
+      const carriers = new Map();
+      for (const strike of weapon.attack.strikes)
+        if (strike.clusterRole === "carrier") {
+          const shot = shots[strike.shotIndex];
+          shot.flight = Math.max(0.24, shot.flight);
+          shot.splitAt = shot.at + shot.flight * cluster.splitFraction;
+          shot.splitPoint = {
+            x: shot.origin.x + (shot.destination.x - shot.origin.x) * cluster.splitFraction,
+            y: shot.origin.y + (shot.destination.y - shot.origin.y) * cluster.splitFraction,
+          };
+          shot.impactAt = shot.splitAt;
+          carriers.set(strike.clusterGroup, shot);
+        }
+      for (const strike of weapon.attack.strikes)
+        if (strike.clusterRole === "fragment") {
+          const shot = shots[strike.shotIndex],
+            carrier = carriers.get(strike.clusterGroup);
+          if (!carrier) continue;
+          const peers = weapon.attack.strikes.filter(
+            (s) => s.clusterRole === "fragment" && s.clusterGroup === strike.clusterGroup,
+          );
+          const rank = peers.findIndex((s) => s.shotIndex === strike.shotIndex);
+          const angle =
+            (((peers.length > 1 ? rank / (peers.length - 1) : 0.5) - 0.5) *
+              cluster.spreadDegrees *
+              Math.PI) /
+            180;
+          const distance = Math.hypot(
+            carrier.destination.x - carrier.splitPoint.x,
+            carrier.destination.y - carrier.splitPoint.y,
+          );
+          const direction = Math.atan2(
+            carrier.destination.y - carrier.origin.y,
+            carrier.destination.x - carrier.origin.x,
+          );
+          shot.isFragment = true;
+          shot.carrierIndex = carrier.index;
+          shot.origin = { ...carrier.splitPoint };
+          shot.at = carrier.splitAt;
+          shot.spreadX = -Math.sin(direction) * Math.tan(angle) * distance;
+          shot.spreadY = Math.cos(direction) * Math.tan(angle) * distance;
+          shot.destination = {
+            x: carrier.destination.x + shot.spreadX,
+            y: carrier.destination.y + shot.spreadY,
+          };
+          shot.flight = Math.max(
+            0.12,
+            Math.hypot(shot.destination.x - shot.origin.x, shot.destination.y - shot.origin.y) /
+              (cluster.speed * 60 * source.scale * ART.presentation.projectileSpeed),
+          );
+          shot.impactAt = shot.at + shot.flight;
+        }
+    }
     const steps = weapon.attack.strikes;
     const contacts = steps
       .map((step, index) => {
@@ -317,7 +384,8 @@ const WeaponEffects = (() => {
       })
       .filter((contact) => contact.executed !== false)
       .sort((a, b) => a.at - b.at);
-    const moves = event?.empty || nuclear ? [] : dodgeMoves(contacts, initialSlot, event, dodgeSchedule),
+    const moves =
+        event?.empty || nuclear ? [] : dodgeMoves(contacts, initialSlot, event, dodgeSchedule),
       motion = { moves, initialSlot };
     // Aim at the defender's current lane, without adding artificial Miss deviation.
     for (const shot of shots)
@@ -325,11 +393,25 @@ const WeaponEffects = (() => {
         target.y +
         position(motion, shot.impactAt) * ART.presentation.dodgeDistance * target.scale +
         shot.spreadY;
+    for (const shot of shots)
+      if (shot.isFragment) {
+        const carrier = shots[shot.carrierIndex];
+        carrier.splitPoint = {
+          x: carrier.origin.x + (carrier.destination.x - carrier.origin.x) * cluster.splitFraction,
+          y: carrier.origin.y + (carrier.destination.y - carrier.origin.y) * cluster.splitFraction,
+        };
+        shot.origin = { ...carrier.splitPoint };
+        shot.destination.x = target.x + shot.spreadX;
+      }
     const activeShots = shots.filter((shot) =>
       contacts.some((contact) => contact.shotIndex === shot.index),
     );
     const impacts = contacts.map((contact) => contact.at);
-    const cues = (event?.nuclearFollowup ? [] : [...new Set(activeShots.map((shot) => shot.at))]).map((at) => ({
+    const cues = (
+      event?.nuclearFollowup
+        ? []
+        : [...new Set(activeShots.filter((shot) => !shot.isFragment).map((shot) => shot.at))]
+    ).map((at) => ({
       at,
       sound: weapon.sound,
     }));
@@ -339,7 +421,8 @@ const WeaponEffects = (() => {
         .every((contact) => !contact.hit);
       let travel = 1;
       if (
-        shot.miss && !nuclear &&
+        shot.miss &&
+        !nuclear &&
         weapon.projectile &&
         !["bomb", "mortar", "tether"].includes(weapon.projectile.motion)
       ) {
@@ -365,6 +448,7 @@ const WeaponEffects = (() => {
           ? shot.impactAt +
             (weapon.projectile.tether.hold + weapon.projectile.tether.retract) / speed
           : shot.at + shot.flight * travel;
+      if (shot.splitAt !== undefined) shot.visibleUntil = shot.splitAt;
       if (timedProjectile && shot.miss)
         shot.visibleUntil = Math.min(shot.visibleUntil, shot.at + missTimeout);
     }
@@ -385,8 +469,13 @@ const WeaponEffects = (() => {
       deathEvents = null;
     for (const [index, contact] of contacts.entries())
       if (nuclear || contact.hit || ["bomb", "mortar"].includes(weapon.projectile?.motion)) {
-        if (!event?.nuclearFollowup) cues.push({ at: contact.at, sound: SpriteEffects.sound(weapon.hitEffect, index) });
-        end = Math.max(end, contact.at + ART.effects[weapon.hitEffect].duration / effectSpeed);
+        const impactEffect =
+          contact.clusterRole === "fragment"
+            ? weapon.projectile.cluster.hitEffect
+            : weapon.hitEffect;
+        if (!event?.nuclearFollowup)
+          cues.push({ at: contact.at, sound: SpriteEffects.sound(impactEffect, index) });
+        end = Math.max(end, contact.at + ART.effects[impactEffect].duration / effectSpeed);
       }
     for (const contact of contacts)
       if (ART.models[target.unit.model].modules?.length && contact.brokenParts?.length) {
@@ -606,6 +695,7 @@ const WeaponEffects = (() => {
     if (!weapon.muzzleEffects?.length) return;
     const drawn = new Set();
     for (const shot of plan.shots) {
+      if (shot.isFragment) continue;
       const mountIndex = weapon.attack.muzzleIndices[shot.index] ?? 0,
         id = weapon.muzzleEffects[mountIndex],
         effect = ART.effects[id],
@@ -721,9 +811,10 @@ const WeaponEffects = (() => {
     if (weapon.remote) drawRemotes(ctx, weapon, plan, time, source, size);
     drawMuzzle(ctx, weapon, plan, time, source, event, pose);
     if (!weapon.projectile) return;
-    const image = SpriteRenderer.images[weapon.projectile.asset];
-    if (!image) return;
     for (const shot of plan.shots) {
+      const projectile = shot.isFragment ? weapon.projectile.cluster : weapon.projectile;
+      const image = SpriteRenderer.images[projectile.asset];
+      if (!image) continue;
       const age = time - shot.at;
       if (age < 0 || time > shot.visibleUntil) continue;
       const travel = age / shot.flight,
@@ -735,7 +826,7 @@ const WeaponEffects = (() => {
             ? Math.PI * 80 * source.scale * Math.cos(Math.PI * Math.max(0, travel))
             : 0,
         angle = Math.atan2(dy - arcSlope, dx),
-        scale = source.scale * weapon.projectile.scale * size,
+        scale = source.scale * projectile.scale * size,
         offset = ["bomb", "mortar"].includes(weapon.projectile.motion)
           ? 0
           : (source.projectileForwardOffset ?? weapon.projectile.forwardOffset) * source.scale;

@@ -8,8 +8,11 @@ test("scenario starts with the specified resources, regional garrisons and produ
  const s=C.create(ctx,members);
  for(const p of s.teams) {assert.equal(p.money,25000);assert.equal(p.supplies,50000);}
  for(const r of ctx.world.regions) {
-  const roster=r.owner===0?{Type61:4,FF_B2:2,Medea:1}:{MS_06F:2,MS_06S:1,FatUncle:1};
-  for(const [id,count] of Object.entries(roster)) assert.equal(s.units.filter(u=>u.region===r.id&&u.unitId===id).length,count*(r.factory?3:1));
+  const roster=r.factory ? (r.owner===0 ? {Type61:18,FF_B2:6,Medea:2,FF_6:4,FF_S3:2} :
+    {MS_06F:4,MS_06S:2,FatUncle:1,ZN_Heli:2,Dopp:2,MTank:3}) :
+    (r.owner===0 ? {Type61:6,FF_B2:2,FF_6:2} : {MS_06F:2,MTank:2,ZN_Heli:1});
+  const actual={};for(const u of s.units.filter(u=>u.region===r.id)) actual[u.unitId]=(actual[u.unitId]||0)+1;
+  assert.deepEqual(actual,roster);
  }
  assert.equal(C.productionCapacity(ctx,"jaburo"),5);assert.equal(C.productionCapacity(ctx,"odessa"),5);assert.equal(C.productionCapacity(ctx,"belfast"),3);
 });
@@ -68,4 +71,62 @@ test("strategic boarding uses real hangar capacity, survives saves and moves wit
  const enemy=C.addUnit(ctx,s,1,"andes","MS_06F");assert.throws(()=>act(s,0,"campaign_embark",{armyId:enemy.id,carrierId:carrier.id,hangarId:"Hangar_1"}),/无权/);
  const invalid=structuredClone(s);invalid.units.find(u=>u.state?.embarked).state.embarked.carrierId="missing";
  assert.throws(()=>C.validate(ctx,invalid,members),/搭载关系/);
+});
+
+
+test("initial garrisons automatically fill legal transports and survive campaign import",()=>{
+ const s=C.create(ctx,members);
+ assert(s.units.some(u=>u.state?.embarked));
+ for(const u of s.units.filter(u=>u.state?.embarked)) {
+  const carrier=s.units.find(c=>c.state?.id===u.state.embarked.carrierId);
+  assert(carrier);assert.equal(carrier.region,u.region);assert.equal(carrier.team,u.team);
+  assert(["Medea","FatUncle"].includes(carrier.unitId));
+ }
+ for(const u of s.units.filter(u=>!u.state?.embarked))
+  assert.equal(C.embarkOptions(ctx,s,u).filter(o=>["Medea","FatUncle"].includes(s.units.find(c=>c.id===o.carrierId)?.unitId)).length,0);
+ assert.doesNotThrow(()=>C.validate(ctx,s,members));
+});
+
+test("reserve maintenance heals only surviving nonparticipants in friendly regions, including cargo",()=>{
+ const s=C.create(ctx,members);s.units=[];
+ const reserve=C.addUnit(ctx,s,0,"jaburo","Type61"), fought=C.addUnit(ctx,s,0,"jaburo","Type61"),
+ enemyLand=C.addUnit(ctx,s,0,"odessa","Type61"), destroyed=C.addUnit(ctx,s,0,"jaburo","Type61");
+ for(const u of s.units) u.state={hp:100,en:0};
+ fought.participatedTurn=s.turn;destroyed.destroyed=true;
+ const m=C.model(ctx,reserve);C.recoverReserves(ctx,s);
+ assert.equal(reserve.state.hp,Math.min(m.hp,100+Math.round(m.hp*.3)));
+ assert.equal(reserve.state.en,Math.ceil(m.en*.6));
+ for(const u of [fought,enemyLand,destroyed]) assert.deepEqual(u.state,{hp:100,en:0});
+});
+
+
+test("dismissal refunds half the single-unit selected-kit price, frees crews and cannot repeat",()=>{
+ const s=C.create(ctx,members);s.units=[];
+ const u=C.addUnit(ctx,s,0,"jaburo","Type61"),price=C.quote(ctx,u.unitId,u.kitId);
+ act(s,0,"campaign_pilot_recruit",{name:"待命驾驶员"});
+ const crew=s.pilots.at(-1);
+ act(s,0,"campaign_pilot_assign",{armyId:u.id,pilotId:crew.profile.id});
+ const before={...s.teams[0]},crewBefore=structuredClone(crew);
+ const refund=C.dismissalQuote(ctx,u);
+ assert.deepEqual(refund,{money:Math.floor(price.money/price.quantity/2),supplies:Math.floor(price.supplies/price.quantity/2)});
+ s.marches=[{armyId:u.id,team:0,from:"andes",to:"jaburo",turn:1}];
+ act(s,0,"campaign_dismiss",{armyId:u.id,money:99999999,supplies:99999999});
+ assert.equal(s.teams[0].money,before.money+refund.money);assert.equal(s.teams[0].supplies,before.supplies+refund.supplies);
+ assert(!s.units.some(a=>a.id===u.id));assert.deepEqual(s.pilots[0],crewBefore);
+ assert(!s.units.some(a=>a.pilotId===crew.profile.id));assert.deepEqual(s.marches,[]);assert.match(s.history.at(-1),/出售.*No\./);
+ const settled=structuredClone(s);assert.throws(()=>act(s,0,"campaign_dismiss",{armyId:u.id}));assert.deepEqual(s,settled);
+ assert.doesNotThrow(()=>C.validate(ctx,s,members));
+});
+
+test("dismissal rejects enemy, moving, pending and occupied-carrier units, but allows removing a passenger",()=>{
+ const s=C.create(ctx,members);s.units=[];
+ const carrier=C.addUnit(ctx,s,0,"jaburo","Medea"),pax=C.addUnit(ctx,s,0,"jaburo","Type61");
+ act(s,0,"campaign_embark",{armyId:pax.id,carrierId:carrier.id,hangarId:"Hangar_1"});
+ const before=structuredClone(s);
+ assert.throws(()=>act(s,1,"campaign_dismiss",{armyId:pax.id}),/无权/);
+ assert.throws(()=>act(s,0,"campaign_dismiss",{armyId:carrier.id}),/清空格纳库/);assert.deepEqual(s,before);
+ pax.moveTo="andes";assert.throws(()=>act(s,0,"campaign_dismiss",{armyId:pax.id}));pax.moveTo=null;
+ s.transfers=[{id:"x",ids:[pax.id],to:2}];assert.throws(()=>act(s,0,"campaign_dismiss",{armyId:pax.id}));s.transfers=[];
+ act(s,0,"campaign_dismiss",{armyId:pax.id});assert(C.canDismiss(ctx,s,members,0,carrier));
+ assert.doesNotThrow(()=>C.validate(ctx,s,members));
 });

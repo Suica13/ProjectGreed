@@ -612,17 +612,6 @@
             "y": -14.117647058823529
           }
         },
-        "localization": {
-          "zh": {
-            "name": "90mm机枪"
-          },
-          "ja": {
-            "name": "90mmマシンガン"
-          },
-          "en": {
-            "name": "90mm Machine Gun"
-          }
-        },
         "requiredParts": [
           "rightArm"
         ]

@@ -9,7 +9,7 @@ ACCURACY_FACTOR = 0.65
 
 
 def federation_ship(prefab):
-    return "EFSF" in prefab.get("tags", [])
+    return any(tag in prefab.get("tags", []) for tag in ("EFSF", "AEUG", "TITANS"))
 
 
 def apply_hull(prefab, native_hp):

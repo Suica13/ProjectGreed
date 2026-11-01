@@ -946,7 +946,7 @@
     },
     {
       "id": "kit_1",
-      "name": "120mm对空机枪套件",
+      "name": "120mm机枪套件",
       "cost": 0,
       "weapons": [
         "ZN_120mmMG_AntiAir",
@@ -955,7 +955,18 @@
         "Common_MortarDouble",
         "Common_Cqb_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "120mm机枪套件"
+        },
+        "en": {
+          "name": "120mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "120mmマシンガン装備"
+        }
+      }
     }
   ],
   "description": "通过重新设计后得到优化的大魔加农,性能有所提升",

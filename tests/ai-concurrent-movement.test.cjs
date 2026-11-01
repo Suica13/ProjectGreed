@@ -5,12 +5,12 @@ const Timing = require("../shared/movement-timing.js");
 const {createRoomEngine} = require("../shared/room-engine.js");
 
 test("movement accelerates long paths, caps duration and preserves quick-mode timing",()=>{
-  assert.equal(Timing.duration(1),120);
-  assert.equal(Timing.duration(4),480);
+  assert.equal(Timing.duration(1),80);
+  assert.equal(Timing.duration(4),320);
   for(const count of [5,10,20,50,100]) {
-    assert(Timing.duration(count)<=1200);
-    assert(Timing.step(count)<120);
-    assert.equal(Timing.duration(count,true),Timing.duration(count)*50/120);
+    assert(Timing.duration(count)<=800);
+    assert(Timing.step(count)<80);
+    assert(Math.abs(Timing.duration(count,true)-Timing.duration(count)*50/120)<1e-10);
   }
   assert(Timing.duration(20)>Timing.duration(10));
   assert.equal(Timing.duration([]),0);
@@ -59,6 +59,20 @@ test("different AI players stagger independently without waiting for another ani
   const owners=moves.map(({event})=>G.ownerOf(room.game.units.find(u=>u.id===event.unitId)));
   assert.deepEqual(owners,[0,2]);
   assert(moves[1].time-moves[0].time>=150);
-  assert(moves[1].time-moves[0].time<Timing.duration(moves[0].event.path)/2);
+  // Random player delays stay unchanged; animations must still overlap at the faster rate.
+  assert(moves[1].time-moves[0].time<Timing.duration(moves[0].event.path));
   assert.notDeepEqual(moves[0].event.path.at(-1),moves[1].event.path.at(-1));
+});
+
+
+test("all movement lengths and combat playback use a single 1.5x presentation rate",()=>{
+ assert.equal(Timing.presentationSpeed,1.5);
+ for(const count of [1,4,5,10,50,200]) {
+  const before=Math.min(1200,count<=4?count*120:480+Math.sqrt(count-4)*90);
+  assert.equal(Timing.duration(count),before/1.5);
+  assert.equal(Timing.step(count)*count,Timing.duration(count));
+ }
+ assert.equal(Timing.combatRate(),1.5);
+ assert.equal(Timing.combatRate(true),1.5/0.35);
+ assert.equal(Timing.combatRate(true,true),1.5,"replay speed is already applied by its virtual clock");
 });

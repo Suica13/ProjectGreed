@@ -38,8 +38,7 @@
         overflow-wrap: anywhere;
       }
 
-      .development-era-locked .development-tree-scroll,
-      .development-era-locked #developmentDetails { position: relative; overflow: hidden; }
+      .development-era-locked .development-workspace { position: relative; isolation: isolate; }
       .development-era-lock { position: absolute; inset: 0; z-index: 5; background: rgba(0,0,0,.86); display: flex; align-items: center; justify-content: center; padding: 1rem; }
       .development-era-lock strong { background: #182331; color: #fff; border: 1px solid #84caff; border-radius: 5px; padding: 1rem; text-align: center; }
       .faction-tag[data-faction="AEUG"], .faction-aeug { color:#8de6a3; border-color:#5eb67a; }
@@ -1279,6 +1278,13 @@
       }
       #leaveConfirm {
         z-index: 40;
+        width: 100vw;
+        height: 100dvh;
+        max-width: none;
+        max-height: none;
+        margin: 0;
+        box-sizing: border-box;
+        border: 0;
       }
       .menu-screen {
         min-height: 100vh;
@@ -2680,6 +2686,7 @@
           <button data-ui-node="node-183" id="joinTeam1">加入队伍1</button
           ><button data-ui-node="node-184" id="joinTeam2">加入队伍2</button>
           <button data-ui-node="node-185" id="becomeSpectator">切换到观战席</button
+          ><button id="roomLeaveGame">退出房间</button
           ><button id="returnAllToRoom" hidden>返回到房间</button
           ><button data-ui-node="node-186" id="toggleReady" class="primary">准备</button>
           <button id="startRoomGame" class="primary" hidden>开始游戏</button>
@@ -2709,7 +2716,7 @@
         </div>
       </dialog>
     </section>
-    <div
+    <dialog
       data-ui-node="node-191"
       id="leaveConfirm"
       class="overlay"
@@ -2726,7 +2733,7 @@
           ><button data-ui-node="node-197" id="confirmLeave" class="danger">确认离开</button>
         </div>
       </div>
-    </div>
+    </dialog>
     <dialog
       id="disconnectDialog"
       class="modal disconnect-dialog"

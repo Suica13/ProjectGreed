@@ -1287,7 +1287,18 @@
         "Common_DoubleVulcan_MS",
         "EF_BeamSaber_Double_DE",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "90mm机枪套件"
+        },
+        "en": {
+          "name": "90mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "90mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_2",
@@ -1315,7 +1326,18 @@
         "Common_DoubleVulcan_MS",
         "EF_BeamSaber_Double_DE",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "苍白骑士的宇宙规格",

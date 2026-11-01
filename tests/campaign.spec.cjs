@@ -74,9 +74,8 @@ for (const viewport of [
     expect(await page.evaluate(() => {
       const s = Net.snapshot.campaign;
       return CAMPAIGN_WORLD.regions.every((region) => {
-        const own = s.units.filter((u) => !u.destroyed && !u.pendingTransfer && u.region === region.id && u.ownerSeat === Net.seat).length;
-        const label = document.querySelector(`[data-region-label="${region.id}"] .campaign-region-count`).textContent;
-        return own ? label.includes(`(${formatNumber(own)})`) : !/\(\d+\)/.test(label);
+        const label = document.querySelector(`[data-region-label="${region.id}"]`).textContent;
+        return label === I18n.text(region.name);
       });
     })).toBe(true);
     const economy = await page.locator(".campaign-header-resources").evaluate((panel) => ({
@@ -90,7 +89,7 @@ for (const viewport of [
     expect(economy.income).toEqual(economy.expected);
     await expect(page.locator(".campaign-region-income")).toHaveCount(0);
     await expect(page.locator(".campaign-region-cost")).toHaveCount(0);
-    await expect(page.locator(".campaign-region-count").first()).toContainText(/\/.*C/);
+    await expect(page.locator(".campaign-region-count")).toHaveCount(0);
     await expect(page.locator(".campaign-map-commands .campaign-end-turn")).toBeVisible();
     const impactBay = await page.evaluate(() => {
       const world = CAMPAIGN_WORLD;
@@ -385,7 +384,7 @@ for (const viewport of [
     await expect(page.getByRole("button", { name: "调动", exact: true })).toBeDisabled();
     await expect(page.getByRole("button", { name: "转交", exact: true })).toBeVisible();
     await expect(page.locator(".campaign-force-list")).not.toContainText("COST");
-    await expect(page.locator(".campaign-region-count").first()).toContainText(/\/.*C/);
+    await expect(page.locator(".campaign-region-count")).toHaveCount(0);
     expect(
       await page.locator(".campaign-force-list").evaluate((el) => getComputedStyle(el).overflowY),
     ).toBe("scroll");
@@ -694,12 +693,14 @@ for (const viewport of [
     await expect
       .poll(async () => {
         const box = await encounter.boundingBox();
-        return Math.abs(box.y + box.height - viewport.height);
+        const map = await page.locator(".campaign-world").boundingBox();
+        return Math.abs(box.y + box.height - map.y - map.height);
       })
       .toBeLessThan(2);
     const compact = await encounter.boundingBox();
     expect(compact.height).toBeLessThan(viewport.height * 0.75);
-    expect(Math.abs(compact.y + compact.height - viewport.height)).toBeLessThan(2);
+    const mapFrame = await page.locator(".campaign-world").boundingBox();
+    expect(Math.abs(compact.y + compact.height - mapFrame.y - mapFrame.height)).toBeLessThan(2);
     await expect(page.locator(".campaign-encounter-outline")).toHaveCount(1);
     await expect(page.locator(".campaign-encounter-particle")).toHaveCount(16);
     expect(await page.evaluate(() => {
@@ -736,7 +737,7 @@ for (const viewport of [
     await expect.poll(async () => (await encounter.boundingBox()).y).toBeLessThan(compact.y - 100);
     await page.waitForTimeout(300);
     const expanded = await encounter.boundingBox();
-    expect(Math.abs(expanded.y + expanded.height - viewport.height)).toBeLessThan(2);
+    expect(Math.abs(expanded.y + expanded.height - mapFrame.y - mapFrame.height)).toBeLessThan(2);
     expect(expanded.width).toBeCloseTo(compact.width, 0);
     await page.keyboard.press("Escape");
     await expect(encounter).toBeVisible();

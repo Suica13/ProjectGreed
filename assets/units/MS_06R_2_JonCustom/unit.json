@@ -834,7 +834,18 @@
         "ZN_120mmMGWithGrenadeLauncher",
         "ZN_HeatHawk_F",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "120mm机枪套件"
+        },
+        "en": {
+          "name": "120mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "120mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_1",

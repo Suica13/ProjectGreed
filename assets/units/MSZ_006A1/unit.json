@@ -908,7 +908,18 @@
         "AEUG_MSZ_006A1_MA_BeamGun",
         "EF_BeamSaber_AF_Large_Blue_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     },
     {
       "id": "kit_1",

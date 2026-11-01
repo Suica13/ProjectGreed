@@ -48,7 +48,8 @@ test("Miss keeps the same trajectory and triggers dodge for every defense stance
           plan = r.fx.plan(w, a, target, event);
         for (const shot of plan.shots) {
           if (w.projectile?.motion === "bomb") assert.equal(shot.destination.x, shot.origin.x);
-          else assert.equal(shot.destination.x, target.x);
+          else if (!w.projectile?.spreadDegrees && !w.projectile?.cluster)
+            assert.equal(shot.destination.x, target.x);
         }
         assert.equal(r.fx.dodge(event, plan, plan.impacts[0], a, target).active, true);
         if (!["bomb", "mortar"].includes(w.projectile?.motion))
@@ -431,6 +432,10 @@ test("miss lifetimes stop at the first arena edge or two seconds for native proj
             assert.equal(shot.visibleUntil, shot.impactAt);
             continue;
           }
+          if (shot.splitAt !== undefined) {
+            assert.equal(shot.visibleUntil, shot.splitAt);
+            continue;
+          }
           const margin = 64 * a.scale * w.projectile.scale + 16,
             progress = (shot.visibleUntil - shot.at) / shot.flight,
             x = shot.origin.x + (shot.destination.x - shot.origin.x) * progress,
@@ -672,18 +677,25 @@ test("queued map deaths keep electricity active throughout the wait and stop at 
   assert.ok(calls.some((call) => call[1] === "Explosion_Ground_1"));
 });
 test("nuclear victims share one fixed impact and secondary records have no launch/blast audio", () => {
-  const r=runtime();
-  const modelId=Object.keys(ART.models).find(id=>ART.models[id].weapons.some(w=>w.special?.type==='nuke'));
-  const w=ART.models[modelId].weapons.find(w=>w.special?.type==='nuke');
-  const a={...source,unit:{...source.unit,model:modelId}};
-  const event={hit:true,before:100000,after:70000,impactCell:{x:8,y:10}};
-  const main=r.fx.plan(w,a,target,event);
-  const secondary=r.fx.plan(w,a,{...target,x:1000,y:800},{...event,nuclearFollowup:true});
-  assert.equal(main.shots.length,1);
-  assert.equal(main.shots[0].destination.x,544);
-  assert.equal(main.shots[0].destination.y,672);
-  assert.deepEqual(secondary.shots[0].destination,main.shots[0].destination);
-  assert.equal(secondary.cues.length,0);
-  assert.ok(main.cues.length>=2);
-  assert.equal(secondary.contacts.length,1);
+  const r = runtime();
+  const modelId = Object.keys(ART.models).find((id) =>
+    ART.models[id].weapons.some((w) => w.special?.type === "nuke"),
+  );
+  const w = ART.models[modelId].weapons.find((w) => w.special?.type === "nuke");
+  const a = { ...source, unit: { ...source.unit, model: modelId } };
+  const event = { hit: true, before: 100000, after: 70000, impactCell: { x: 8, y: 10 } };
+  const main = r.fx.plan(w, a, target, event);
+  const secondary = r.fx.plan(
+    w,
+    a,
+    { ...target, x: 1000, y: 800 },
+    { ...event, nuclearFollowup: true },
+  );
+  assert.equal(main.shots.length, 1);
+  assert.equal(main.shots[0].destination.x, 544);
+  assert.equal(main.shots[0].destination.y, 672);
+  assert.deepEqual(secondary.shots[0].destination, main.shots[0].destination);
+  assert.equal(secondary.cues.length, 0);
+  assert.ok(main.cues.length >= 2);
+  assert.equal(secondary.contacts.length, 1);
 });

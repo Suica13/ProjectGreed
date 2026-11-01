@@ -818,17 +818,6 @@
             "hiddenAction_SetAttackingOff"
           ]
         },
-        "localization": {
-          "zh": {
-            "name": "100mm机枪"
-          },
-          "en": {
-            "name": "100mm Machine Gun"
-          },
-          "ja": {
-            "name": "100mmマシンガン"
-          }
-        },
         "source": {
           "file": "Units/BattleUnits/Weapon/Shell/EF_100mmMG_Lv2.gw",
           "barrelX": 8,
@@ -860,17 +849,6 @@
     "EF_GroundTypeBeamRifle": {
       "ref": "EF_GroundTypeBeamRifle__lv1",
       "overrides": {
-        "localization": {
-          "zh": {
-            "name": "陆战型光束步枪"
-          },
-          "en": {
-            "name": "Ground Type Beam Rifle"
-          },
-          "ja": {
-            "name": "陸戦型ビーム・ライフル"
-          }
-        },
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/EF_GroundTypeBeamRifle.gw",
           "barrelX": 9,

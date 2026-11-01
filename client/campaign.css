@@ -530,9 +530,6 @@
 body[data-page="campaign"] #menuResources {
   display: none;
 }
-body.campaign-active #startRoomGame {
-  display: none;
-}
 .campaign-victory {
   color: #ffe29a;
   font-size: 20px;
@@ -2421,3 +2418,20 @@ body[data-page="campaign"] #openClientSettings {
 .campaign-ready-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .campaign-ready-group:last-child { justify-content: flex-end; }
 .campaign-ready-group > small { color: #c3d5e3; font-size: 11px; }
+
+/* Preparation belongs to the map viewport; chat and left commands stay usable. */
+.campaign-world > .campaign-encounter-dialog[open] {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: none;
+  width: 100%;
+  height: min(760px, 100%);
+  max-height: 100%;
+  z-index: 8;
+  animation: none;
+}
+.campaign-world > .campaign-encounter-dialog[open][data-expanded="false"] {
+  height: min(290px, 65%);
+  max-height: 100%;
+}

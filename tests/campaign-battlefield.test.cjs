@@ -317,3 +317,14 @@ test("owned posts provide five-cell sight without units, supply or radar marking
   field.version++;
   assert(!G.sensors.visible(game, 0, enemy), "capture immediately transfers the objective's sight");
 });
+
+
+test("an enemy footprint inside a post blocks capture until it leaves or is destroyed",()=>{
+ const {game,unit,enemy,field}=fixture(),post=field.layout.nodes[1];
+ Object.assign(unit,{x:post.x,y:post.y,actionPoints:10});field.owners[post.id]=1;
+ Object.assign(enemy,{x:post.x+1,y:post.y+1});
+ assert.equal(B.canCapture(G,game,unit),null);
+ const before=structuredClone(game);assert.throws(()=>B.capture(G,game,unit));assert.deepEqual(game,before);
+ enemy.x=post.x+2;assert.equal(B.canCapture(G,game,unit)?.id,post.id);
+ enemy.x=post.x+1;enemy.hp=0;assert.equal(B.canCapture(G,game,unit)?.id,post.id);
+});

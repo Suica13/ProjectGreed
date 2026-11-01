@@ -20,7 +20,8 @@ test("long map movements accelerate and two player animations coexist",async({pa
     PlanningUI.reset();return values;
   });
   expect(result.both).toBe(true);
-  expect(result.long).toBeLessThanOrEqual(1200);
+  expect(result.long).toBe(840/1.5);
+  expect(result.long).toBeLessThanOrEqual(800);
   expect(result.long).toBeLessThan(20*120);
   expect(result.long).toBeGreaterThan(result.short);
   expect(result.longAlive&&result.shortFinished&&result.longFinished).toBe(true);

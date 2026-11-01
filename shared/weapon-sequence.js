@@ -52,8 +52,11 @@ const WeaponSequence = (() => {
         damageMultiplier = step.damageMultiplier ?? 1,
         partBreakModifier = step.partBreakModifier ?? weapon.partBreakModifier ?? 1;
       if (
-        (step.firingArc && (!Number.isFinite(step.firingArc.idleDir) ||
-          !Number.isFinite(step.firingArc.arc) || step.firingArc.arc < 0 || step.firingArc.arc > 180)) ||
+        (step.firingArc &&
+          (!Number.isFinite(step.firingArc.idleDir) ||
+            !Number.isFinite(step.firingArc.arc) ||
+            step.firingArc.arc < 0 ||
+            step.firingArc.arc > 180)) ||
         !Number.isInteger(step.muzzleIndex ?? 0) ||
         (step.muzzleIndex ?? 0) < 0 ||
         (step.muzzleIndex ?? 0) > 31 ||
@@ -87,6 +90,11 @@ const WeaponSequence = (() => {
         for (let n = 0; n < count; n++) {
           shots.push(time);
           shotProperties.push({
+            ...(step.clusterRole
+              ? { clusterRole: step.clusterRole, clusterGroup: step.clusterGroup }
+              : {}),
+            ...(step.antiSize ? { antiSize: structuredClone(step.antiSize) } : {}),
+            ...(step.targetModifiers ? { targetModifiers: { ...step.targetModifiers } } : {}),
             ...(step.firingArc ? { firingArc: { ...step.firingArc } } : {}),
             ...(step.channelId ? { channelId: step.channelId } : {}),
             ...(stepComponents ? { damageComponents: stepComponents } : {}),

@@ -97,7 +97,7 @@ test("Earth regions have reciprocal routes and campaign forces are independent o
   assert.equal(
     state.units.length,
     ctx.world.regions.reduce(
-      (sum, region) => sum + Object.values(ctx.world.settings.initialForces[region.owner === 0 ? "EFSF" : "ZEON"]).reduce((a,b)=>a+b,0) * (region.factory ? 3 : 1),
+      (sum, region) => sum + Object.values((region.factory ? ctx.world.settings.initialCoreForces : ctx.world.settings.initialForces)[region.owner === 0 ? "EFSF" : "ZEON"]).reduce((a,b)=>a+b,0),
       0,
     ),
   );
@@ -168,8 +168,8 @@ test("transfers need recipient acceptance and crossed enemy moves create one enc
     accept: true,
   });
   assert.equal(own.ownerSeat, 2);
-  const a = state.units.find((unit) => unit.region === "canada"),
-    b = state.units.find((unit) => unit.region === "new_york");
+  const a = state.units.find((unit) => unit.region === "canada" && !unit.state?.embarked),
+    b = state.units.find((unit) => unit.region === "new_york" && !unit.state?.embarked);
   a.moveTo = "new_york";
   b.moveTo = "canada";
   C.advance(ctx, state, players);

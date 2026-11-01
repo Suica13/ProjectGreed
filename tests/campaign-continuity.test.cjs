@@ -45,7 +45,7 @@ function fixture(ids = ["Gunperry", "RGM_79", "MS_06F"], prepare = null, regionI
   });
   function enter() {
     const preparation = adapter.view(room).preparation;
-    for (const member of members)
+    for (const member of members.filter(member => preparation.participants.some(p => p.seat === member.seat)))
       adapter.handle(room, member, {
         action: "campaign_enter",
         region: preparation.region,
@@ -125,6 +125,7 @@ test("mid-battle campaign export retains escaped units and completed player acti
   const savedBattle = exported.encounters[0].battleSave;
   assert.equal(exported.units.find((unit) => unit.id === removed.campaignId).destroyed, true);
   assert(savedBattle.game.units.find((unit) => unit.id === spawned.id).campaignId);
+  assert.equal(exported.units.find(unit=>unit.id===savedBattle.game.units.find(actor=>actor.id===spawned.id).campaignId).participatedTurn,exported.turn);
   assert.equal(
     room.campaign.units.length,
     3,
@@ -192,6 +193,7 @@ test("capturing Odessa's local base ends the campaign even with defending surviv
   const base = room.game.campaignBattlefield.layout.nodes.find(node=>node.kind==="base");
   actor.x=base.x;actor.y=base.y;actor.actionPoints=5;actor.acted=false;
   room.game.team=0;
+  for (const enemy of room.game.units.filter(u=>u.team!==actor.team)) { enemy.x=base.x+5;enemy.y=base.y+5; }
   G.campaignBattlefield.capture(G,room.game,actor);
   assert(room.game.units.some(u=>u.team===1 && u.hp>0));
   adapter.checkpoint(room);
@@ -199,4 +201,70 @@ test("capturing Odessa's local base ends the campaign even with defending surviv
   assert.equal(room.campaign.winner,0);
   assert.equal(adapter.view(room).preparation,null);
   assert.equal(C.validate(ctx,room.campaign,room.seats).winner,0);
+});
+
+
+test("local control transfer preserves actor identity, AP, transport links and campaign ownership",()=>{
+ const {room,adapter,members,enter}=fixture(["Gunperry","RGM_79","MS_06F"],(state,members)=>members.push({id:"ally",name:"Ally",seat:2}),"canada",10);
+ room.phase="idle";
+ const carrier=room.game.units.find(u=>G.modelOf(u).prefabId==="Gunperry"),
+ passenger=room.game.units.find(u=>G.modelOf(u).prefabId==="RGM_79");
+ passenger.embarked={carrierId:carrier.id,hangarId:G.hangars.of(carrier)[0].id};
+ const before=structuredClone([carrier,passenger]);
+ assert.throws(()=>adapter.transferControl(room,carrier,1,0),/同队/);
+ assert.throws(()=>adapter.transferControl(room,carrier,2,1),/总指挥官/);
+ carrier.plan={test:true};assert.throws(()=>adapter.transferControl(room,carrier,2,0),/攻击计划/);delete carrier.plan;
+ adapter.transferControl(room,carrier,2,0);
+ for(const [i,u] of [carrier,passenger].entries()) {
+  assert.equal(u.ownerSeat,2);assert.deepEqual({...u,ownerSeat:before[i].ownerSeat},before[i]);
+  assert.equal(room.campaign.units.find(a=>a.id===u.campaignId).ownerSeat,2);
+ }
+ assert.equal(G.controllerOf(room.game,passenger),2);
+ assert(room.log.some(line=>line.includes("控制权转交")));
+ const exported=adapter.handle(room,members[0],{action:"campaign_export"}).save;
+ room.campaign=C.validate(ctx,exported,members);room.started=false;room.campaignBattle=null;enter();
+ assert.equal(room.game.units.find(u=>u.id===carrier.id).ownerSeat,2);
+ assert.equal(room.game.units.find(u=>u.id===passenger.id).embarked.carrierId,carrier.id);
+});
+
+
+test("ending the final local segment heals reserves once, while battlefield participants keep damage",()=>{
+ const {room,adapter}=fixture();
+ const reserve=C.addUnit(ctx,room.campaign,0,"jaburo","Type61");
+ reserve.state={hp:100,en:0};
+ const actor=room.game.units[0];actor.hp=100;actor.en=0;
+ assert.equal(room.campaign.units.find(u=>u.id===actor.campaignId).participatedTurn,room.campaign.turn);
+ const m=C.model(ctx,reserve);adapter.checkpoint(room);
+ assert.equal(room.campaign.turn,2);
+ assert.equal(reserve.state.hp,Math.min(m.hp,100+Math.round(m.hp*.3)));
+ assert.equal(reserve.state.en,Math.ceil(m.en*.6));
+ assert.equal(room.campaign.units.find(u=>u.id===actor.campaignId).state.hp,100);
+ assert.doesNotThrow(()=>C.validate(ctx,room.campaign,room.seats));
+});
+
+
+test("returning a local battle to the lobby preserves the remaining segment and all unit state",()=>{
+ const {room,adapter,members,enter}=fixture();
+ room.phase="idle";room.game.round=4;room.turnDone=[true,false];
+ const actor=room.game.units[0];actor.hp=123;actor.en=45;actor.angle=73;actor.actionPoints=2.5;
+ const before=structuredClone(room.game),stop=room.campaignBattle.stopRound;
+ adapter.suspend(room);
+ assert.equal(room.started,false);assert.equal(adapter.view(room).inLobby,true);
+ assert.equal(room.campaign.turn,1);assert.equal(room.campaign.encounters[0].resumeStopRound,stop);
+ assert.throws(()=>adapter.handle(room,members[1],{action:"campaign_resume"}),/只有房主/);
+ adapter.handle(room,members[0],{action:"campaign_resume"});assert.equal(adapter.view(room).inLobby,false);
+ enter();assert.deepEqual(room.game,before);assert.deepEqual(room.turnDone,[true,false]);
+ assert.equal(room.campaignBattle.stopRound,stop);
+});
+
+
+test("dismissing an archived battlefield unit removes its saved actor before the next encounter",()=>{
+ const {room,adapter,members}=fixture();adapter.checkpoint(room);
+ const army=room.campaign.units.find(u=>u.team===0&&u.unitId==="RGM_79");
+ const encounter=room.campaign.encounters[0];
+ assert(encounter.battleSave.game.units.some(u=>u.campaignId===army.id));
+ C.action(ctx,room.campaign,members,0,{action:"campaign_dismiss",turn:room.campaign.turn,armyId:army.id});
+ assert(!encounter.battleSave.game.units.some(u=>u.campaignId===army.id));
+ assert(!Object.values(encounter.roster).includes(army.id));
+ assert.doesNotThrow(()=>C.validate(ctx,room.campaign,members));
 });

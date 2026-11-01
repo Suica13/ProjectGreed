@@ -128,8 +128,8 @@ test("campaign team changes synchronize faction and allow spectating/AI takeover
   await act(host, "switch_seat", { seat: 0 });
   assert.equal(room.seats[2], null);
 
-  const ally = room.campaign.units.find((unit) => unit.ownerSeat === 0);
-  const enemy = room.campaign.units.find((unit) => unit.ownerSeat === 1);
+  const ally = room.campaign.units.find((unit) => unit.ownerSeat === 0 && !unit.state?.embarked);
+  const enemy = room.campaign.units.find((unit) => unit.ownerSeat === 1 && !unit.state?.embarked);
   ally.region = enemy.region = "canada_east";
   const reinforcement = C.addUnit(
     { G, production: require("../shared/production-data.cjs") },
@@ -278,6 +278,10 @@ test("campaign team changes synchronize faction and allow spectating/AI takeover
   attacker.y = base.y;
   attacker.actionPoints = 10;
   attacker.acted = false;
+  const defender=room.game.units.find(unit=>unit.team===0);
+  defender.x=base.x+1;defender.y=base.y;
+  await assert.rejects(act(other,"capture_point",{unitId:attacker.id}),/据点内没有敌军/);
+  defender.x=base.x+5;defender.y=base.y+5;
   const positions = room.game.units.map((unit) => [unit.id, unit.x, unit.y, unit.hp, unit.en]);
   const treasury = structuredClone(room.campaign.teams);
   await act(other, "capture_point", { unitId: attacker.id });

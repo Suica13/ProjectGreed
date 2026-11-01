@@ -773,7 +773,7 @@
             {
               "shots": 8,
               "muzzleIndex": 0,
-              "partBreakModifier": 1,
+              "partBreakModifier": 1.0,
               "requiredParts": [],
               "delay": 0.25
             },
@@ -787,6 +787,42 @@
           ],
           "startAnimation": null
         },
+        "projectile": {
+          "texture": "../../projectiles/MG_1.png",
+          "scale": 0.35,
+          "speed": 55.0,
+          "forwardOffset": -10,
+          "rotation": 0,
+          "spreadDegrees": 18.0
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw",
+          "barrel": "ZN_Shotgun",
+          "entry": "hiddenAction_ZN_Shotgun_Fire",
+          "cooldown": 3.0,
+          "duration": 0.75,
+          "firstShot": 0.25,
+          "lastShot": 0.25,
+          "firingEvents": 1,
+          "projectiles": 8,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 25.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 25.0,
+          "actions": [
+            "hiddenAction_ZN_Shotgun_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_ZN_Shotgun_SetWeaponIndex",
+            "hiddenAction_ZN_Shotgun_B1_Step_1",
+            "hiddenAction_ZN_Shotgun_Fire_Step_1",
+            "hiddenAction_ZN_Shotgun_Fire_Step_2",
+            "hiddenAction_ZN_Shotgun_Fire_Step_3",
+            "hiddenAction_ZN_Shotgun_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
         "displayIndex": 2,
         "requiredParts": [
           "rightArm"
@@ -796,8 +832,8 @@
           "barrels": [
             {
               "id": "ZN_Shotgun",
-              "x": 9,
-              "y": 15
+              "x": 9.0,
+              "y": 15.0
             }
           ]
         },

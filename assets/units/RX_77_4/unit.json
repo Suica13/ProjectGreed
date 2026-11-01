@@ -792,7 +792,18 @@
         "Common_Cqb_BF_B",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     },
     {
       "id": "kit_2",
@@ -805,7 +816,18 @@
         "Common_Cqb_BF_B",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "100mm机枪套件"
+        },
+        "en": {
+          "name": "100mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "100mmマシンガン装備"
+        }
+      }
     }
   ],
   "description": "钢加农的重装型号,防御力得到了提升",

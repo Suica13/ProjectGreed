@@ -1012,7 +1012,18 @@
         "Common_DoubleVulcan_MS",
         "EF_BeamDagger_Double_AALDE",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "90mm机枪套件"
+        },
+        "en": {
+          "name": "90mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "90mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_1",
@@ -1024,7 +1035,18 @@
         "Common_DoubleVulcan_MS",
         "EF_BeamDagger_Double_AALDE",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "75mm机枪套件"
+        },
+        "en": {
+          "name": "75mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "75mmマシンガン装備"
+        }
+      }
     }
   ],
   "description": "RX-78-2统称高达的格斗战特化型号",

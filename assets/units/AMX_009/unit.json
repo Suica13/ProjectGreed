@@ -848,7 +848,18 @@
         "Common_ArmBMG_L_Yellow",
         "NZN_AMX_009_BeamHawk_A_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "新吉翁所开发的大魔后续机型",

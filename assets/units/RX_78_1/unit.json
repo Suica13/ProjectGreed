@@ -857,17 +857,6 @@
             "hiddenAction_SetAttackingOff"
           ]
         },
-        "localization": {
-          "zh": {
-            "name": "100mm机枪"
-          },
-          "en": {
-            "name": "100mm Machine Gun"
-          },
-          "ja": {
-            "name": "100mmマシンガン"
-          }
-        },
         "requiredParts": [
           "rightArm"
         ],

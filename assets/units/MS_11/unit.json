@@ -789,7 +789,18 @@
         "ZN_ACT_Zaku_BR",
         "ZN_HeatHawk_ACT_A_Fast",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "培曾计划中诞生的高性能扎古,可以配备光束步枪",

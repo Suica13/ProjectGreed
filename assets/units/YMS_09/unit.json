@@ -840,7 +840,18 @@
         "ZN_MS_09_ChestBeam",
         "ZN_HeatSaber_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "120mm机枪套件"
+        },
+        "en": {
+          "name": "120mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "120mmマシンガン装備"
+        }
+      }
     }
   ],
   "description": "大魔的试作型机体",

@@ -25,10 +25,10 @@ window.CampaignWorkspace = (() => {
   const pool = () => state().teams[team()];
   const editable = () =>
     Number.isInteger(Net.seat) && state()?.phase === "strategy" && state().winner === null && !state().ready.includes(Net.seat);
-  function action(label, callback, disabled = false) {
+  function action(label, callback, disabled = false, local = false) {
     const button = node("button", label);
     button.type = "button";
-    button.disabled = disabled || !!Net.awaiting;
+    button.disabled = disabled || (!local && !!Net.awaiting);
     button.onclick = callback;
     return button;
   }
@@ -452,7 +452,7 @@ window.CampaignWorkspace = (() => {
           ? CAMPAIGN_WORLD.regions.find((item) => item.id === regionId).name
           : pool().faction,
       ),
-      action("关闭", close),
+      action("关闭", close, false, true),
     );
     balance = node("div", "", "campaign-workspace-balance");
     const toolbar = node("div", "", "campaign-workspace-toolbar");

@@ -668,17 +668,6 @@
     "ZN_MS_14_BR": {
       "ref": "ZN_MS_14_BR__lv1",
       "overrides": {
-        "localization": {
-          "zh": {
-            "name": "格鲁古古光束步枪"
-          },
-          "en": {
-            "name": "Gelgoog Beam Rifle"
-          },
-          "ja": {
-            "name": "ゲルググ用ビーム・ライフル"
-          }
-        },
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MS_14_BR.gw",
           "barrelX": 13,

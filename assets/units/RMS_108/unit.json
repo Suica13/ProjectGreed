@@ -855,7 +855,7 @@
   "weaponKits": [
     {
       "id": "main_0",
-      "name": "光束军刀套件",
+      "name": "光束步枪套件",
       "cost": 0,
       "weapons": [
         "TITANS_BR_87A",
@@ -863,7 +863,18 @@
         "TITANS_SeaSerpent",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     },
     {
       "id": "kit_1",

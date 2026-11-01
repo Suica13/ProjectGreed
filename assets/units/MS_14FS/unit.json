@@ -1147,7 +1147,7 @@
     },
     {
       "id": "kit_4",
-      "name": "格鲁古古光束步枪套件",
+      "name": "光束步枪套件",
       "cost": 100,
       "weapons": [
         "ZN_MS_14_BR",
@@ -1156,7 +1156,18 @@
         "EF_BeamSaber_BF_Yellow_B",
         "EF_BeamSaber_F_Yellow",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "勇士海军陆战队型的指挥官型号",

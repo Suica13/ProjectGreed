@@ -979,14 +979,25 @@
     },
     {
       "id": "kit_4",
-      "name": "120mm对空机枪套件",
+      "name": "120mm机枪套件",
       "cost": 0,
       "weapons": [
         "ZN_120mmMG_AntiAir",
         "Common_Grenade_A",
         "ZN_HeatHawk_F",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "120mm机枪套件"
+        },
+        "en": {
+          "name": "120mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "120mmマシンガン装備"
+        }
+      }
     }
   ],
   "description": "扎古II后期型的指挥官机型",

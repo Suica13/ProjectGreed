@@ -954,6 +954,42 @@
     "EF_RX_81AS_Shotgun": {
       "ref": "EF_RX_81AS_Shotgun__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/MG_1.png",
+          "scale": 0.35,
+          "speed": 55.0,
+          "forwardOffset": -10,
+          "rotation": 0,
+          "spreadDegrees": 10.0
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Shell/EF_RX_81AS_Shotgun.gw",
+          "barrel": "EF_RX_81AS_Shotgun",
+          "entry": "hiddenAction_EF_RX_81AS_Shotgun_Fire",
+          "cooldown": 3.5,
+          "duration": 0.7,
+          "firstShot": 0.25,
+          "lastShot": 0.45,
+          "firingEvents": 2,
+          "projectiles": 12,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 40.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 40.0,
+          "actions": [
+            "hiddenAction_EF_RX_81AS_Shotgun_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_EF_RX_81AS_Shotgun_SetWeaponIndex",
+            "hiddenAction_EF_RX_81AS_Shotgun_B2_Step_1",
+            "hiddenAction_EF_RX_81AS_Shotgun_Fire_Step_1",
+            "hiddenAction_EF_RX_81AS_Shotgun_Fire_Step_2",
+            "hiddenAction_EF_RX_81AS_Shotgun_Fire_Step_3",
+            "hiddenAction_EF_RX_81AS_Shotgun_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -962,8 +998,8 @@
           "barrels": [
             {
               "id": "EF_RX_81AS_Shotgun",
-              "x": 9,
-              "y": 20
+              "x": 9.0,
+              "y": 20.0
             }
           ]
         },
@@ -1137,7 +1173,7 @@
   "weaponKits": [
     {
       "id": "kit_1",
-      "name": "EF RX 81 GG套件",
+      "name": "霰弹枪套件",
       "cost": 0,
       "weapons": [
         "EF_RX_81AS_Shotgun",
@@ -1147,11 +1183,22 @@
         "Common_DoubleVulcan_MS",
         "EF_BeamSaber_F",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "霰弹枪套件"
+        },
+        "en": {
+          "name": "Shotgun Kit"
+        },
+        "ja": {
+          "name": "ショットガン装備"
+        }
+      }
     },
     {
       "id": "kit_3",
-      "name": "导弹发射器套件",
+      "name": "霰弹枪套件",
       "cost": 50,
       "weapons": [
         "EF_RX_81AS_Shotgun",
@@ -1161,11 +1208,22 @@
         "Common_DoubleVulcan_MS",
         "EF_BeamSaber_F",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "霰弹枪套件"
+        },
+        "en": {
+          "name": "Shotgun Kit"
+        },
+        "ja": {
+          "name": "ショットガン装備"
+        }
+      }
     },
     {
       "id": "kit_0",
-      "name": "肩部加农炮套件",
+      "name": "霰弹枪套件",
       "cost": 100,
       "weapons": [
         "EF_RX_81AS_Shotgun",
@@ -1175,7 +1233,18 @@
         "Common_DoubleVulcan_MS",
         "EF_BeamSaber_F",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "霰弹枪套件"
+        },
+        "en": {
+          "name": "Shotgun Kit"
+        },
+        "ja": {
+          "name": "ショットガン装備"
+        }
+      }
     }
   ],
   "description": "真正意义上的量产型高达,性能已经超越了高达",

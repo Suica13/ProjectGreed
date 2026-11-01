@@ -1121,6 +1121,11 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
     game.environment,
     game.team,
     game.deployment,
+    game.campaignBattlefield?.regionId,
+    game.campaignBattlefield?.version,
+    game.campaignBattlefield?.deploymentControllers,
+    chosen?.campaignEntry,
+    chosen?.campaignDeploying,
     game.units.map((u) => [
       u.id,
       u.model,
@@ -1170,7 +1175,9 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
     [...moveCells.values()].filter((c) => c.path.length).map(displayCell),
   );
   const deploymentCells =
-      deploymentSeat === null ? [] : Rules.deploymentCells(game, deploymentSeat, chosen),
+      deploymentSeat === null ? [] : Rules.deploymentCells(game, deploymentSeat,
+        !game.campaignBattlefield || (chosen?.campaignDeploying &&
+          Rules.campaignBattlefield.deploymentSeat(game, chosen) === deploymentSeat) ? chosen : null),
     allowedFootprint = new Set(deploymentCells.map((c) => Rules.key(c.x, c.y))),
     deploymentArea = new Set(
       deploymentCells
@@ -1288,7 +1295,7 @@ function drawCachedMapTerrain(target, w, h, dpr, tile, ox, oy, immersive, deploy
         ctx.strokeStyle = "#49616b55";
         ctx.lineWidth = 0.7;
         if (!immersive) ctx.strokeRect(px + 0.4, py + 0.4, tile - 0.8, tile - 0.8);
-        if (!immersive && phase === "deployment") {
+        if (!immersive && phase === "deployment" && !game.campaignBattlefield) {
           const expansion = Rules.getMap(game.mapId).deploymentExpansion;
           if (
             expansion &&
@@ -2810,7 +2817,7 @@ function battleEventDuration() {
       byId("battleCanvas"),
     ) *
     1000 *
-    (byId("quick").checked ? 0.35 : 1)
+    (byId("quick").checked ? 0.35 : 1) / MovementTiming.presentationSpeed
   );
 }
 function logEvent(event) {
@@ -3038,6 +3045,7 @@ function showVictory() {
 }
 // 主动回主菜单会退出当前房间；网络意外中断则由网络层自动恢复。
 function openMenu() {
+  if (byId("leaveConfirm").open) byId("leaveConfirm").close();
   session++;
   Net.leave();
   moving = pending = battleView = null;
@@ -3060,13 +3068,17 @@ function openMenu() {
   update();
 }
 function requestMenu() {
-  byId("leaveConfirm").hidden = false;
+  const dialog = byId("leaveConfirm");
+  dialog.hidden = false;
+  if (!dialog.open) dialog.showModal();
 }
 byId("netSettings").onclick = requestMenu;
 
 byId("cancelLeave").onclick = () => {
+  byId("leaveConfirm").close();
   byId("leaveConfirm").hidden = true;
 };
+byId("leaveConfirm").addEventListener("cancel", () => { byId("leaveConfirm").hidden = true; });
 byId("confirmLeave").onclick = openMenu;
 byId("helpBtn").onclick = () => {
   byId("help").hidden = false;

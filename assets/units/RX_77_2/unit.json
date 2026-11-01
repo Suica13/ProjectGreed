@@ -1145,7 +1145,7 @@
   "weaponKits": [
     {
       "id": "kit_2",
-      "name": "加农炮套件",
+      "name": "光束步枪套件",
       "cost": 100,
       "weapons": [
         "EF_RX_77_2_BR",
@@ -1154,11 +1154,22 @@
         "Common_Cqb_BF_B",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     },
     {
       "id": "kit_4",
-      "name": "导弹套件",
+      "name": "光束步枪套件",
       "cost": 50,
       "weapons": [
         "EF_RX_77_2_BR",
@@ -1166,7 +1177,18 @@
         "Common_Cqb_BF_B",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "V计划试作型中距离支援战用MS,火力强劲",

@@ -772,7 +772,18 @@
         "ZN_105mmMG",
         "ZN_HeatHawk_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "105mm机枪套件"
+        },
+        "en": {
+          "name": "105mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "105mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_1",

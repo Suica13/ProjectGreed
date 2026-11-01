@@ -93,11 +93,14 @@ const CampaignBattlefield = (() => {
     )
       return null;
     const node = nodeAt(G, g, u);
-    return node && g.campaignBattlefield.owners[node.id] !== u.team ? node : null;
+    const defended = node && g.units.some((enemy) => enemy.team !== u.team && G.onMap(enemy) &&
+      G.cells(enemy).some((cell) =>
+        Math.max(Math.abs(cell.x - node.x), Math.abs(cell.y - node.y)) <= 1));
+    return node && !defended && g.campaignBattlefield.owners[node.id] !== u.team ? node : null;
   }
   function capture(G, g, u) {
     const node = canCapture(G, g, u);
-    if (!node) throw Error("无法占领：需地面单位位于敌方据点内并保有5AP");
+    if (!node) throw Error("无法占领：需地面单位位于敌方据点内、据点内没有敌军并保有5AP");
     u.actionPoints = G.actionPoints(u) - 5;
     g.campaignBattlefield.owners[node.id] = u.team;
     g.campaignBattlefield.version++;

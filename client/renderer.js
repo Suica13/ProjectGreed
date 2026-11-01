@@ -535,6 +535,7 @@ const SpriteRenderer = (() => {
           ...[...ids].flatMap((id) =>
             ART.models[id].weapons.flatMap((weapon) => [
               weapon.projectile?.asset,
+              weapon.projectile?.cluster?.asset,
               ...(weapon.remote?.units || []).map((unit) => unit.asset),
             ]),
           ),

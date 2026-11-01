@@ -22,6 +22,15 @@ def label(key, weapon, ship=False):
         return (("右腿" if right else "左腿") + family[0], ("Right Leg " if right else "Left Leg ") + family[1], ("右脚" if right else "左脚") + family[2])
     if ident in EXACT:
         return EXACT[ident]
+    if re.search(r"(?:Bazooka\w*|(?:^|_)BZ)_(?:SG|ShotgunMode)(?:_|$)", ident, re.I):
+        return ("扩散火箭筒", "Cluster Bazooka", "拡散バズーカ")
+    if re.search(r"(?:BeamRifle|(?:^|_)BR(?:_|$))", ident, re.I) and not re.search(r"(?:Arm|Double|Hand)_?BR", ident):
+        return ("光束步枪", "Beam Rifle", "ビーム・ライフル")
+    caliber = re.search(r"(\d+)mmMG", ident, re.I)
+    if caliber:
+        return (caliber[1]+"mm机枪", caliber[1]+"mm Machine Gun", caliber[1]+"mmマシンガン")
+    if "Shotgun" in ident and "Bazooka" not in ident:
+        return ("光束霰弹枪", "Beam Shotgun", "ビーム・ショットガン") if weapon.get("type") == "beam" else ("霰弹枪", "Shotgun", "ショットガン")
     if "BeamGun" in ident:
         if "ShieldBeamGun" in ident:
             return ("盾牌光束枪", "Shield Beam Gun", "シールド・ビームガン")
@@ -64,7 +73,7 @@ def apply(prefab):
             weapon.setdefault("localization", {}).setdefault(lang, {})["name"] = name
         # Rename a generated kit label only when it is exactly its old weapon label.
         for kit in prefab.get("weaponKits", []):
-            if kit.get("weapons", [None])[0] == key and kit.get("name") == previous + "套件":
+            if kit.get("name") != "复合发射器套件" and kit.get("weapons", [None])[0] == key and (kit.get("name") == previous + "套件" or kit.get("id", "").startswith("kit_") or "0087" in prefab.get("tags", [])) and len(prefab["weaponKits"]) > 1:
                 kit["name"] = names[0] + "套件"
                 for lang, name, suffix in zip(("zh", "en", "ja"), names, ("套件", " Kit", "装備")):
                     kit.setdefault("localization", {}).setdefault(lang, {})["name"] = name + suffix

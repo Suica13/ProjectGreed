@@ -998,6 +998,29 @@ function loadCatalog({
                 "data:image/png;base64," +
                 fs.readFileSync(file(base, weapon.projectile.texture)).toString("base64");
             weapon.projectile = { ...weapon.projectile, asset: projectileKey };
+            if (weapon.projectile.cluster) {
+              const cluster = weapon.projectile.cluster;
+              if (
+                !(cluster.splitFraction > 0 && cluster.splitFraction < 1) ||
+                !Number.isInteger(cluster.count) ||
+                cluster.count < 1 ||
+                cluster.count > 64 ||
+                !Number.isFinite(cluster.spreadDegrees) ||
+                cluster.spreadDegrees < 0 ||
+                cluster.spreadDegrees > 90 ||
+                !Number.isFinite(cluster.speed) ||
+                cluster.speed <= 0 ||
+                !Number.isFinite(cluster.scale) ||
+                cluster.scale <= 0
+              )
+                throw Error("Invalid cluster projectile: " + key);
+              const asset = projectileKey + "/fragments";
+              const texture = file(base, cluster.texture);
+              if (embedAssets)
+                result.assets[asset] =
+                  "data:image/png;base64," + fs.readFileSync(texture).toString("base64");
+              cluster.asset = asset;
+            }
             if (
               weapon.projectile.spreadDegrees !== undefined &&
               (!Number.isFinite(weapon.projectile.spreadDegrees) ||

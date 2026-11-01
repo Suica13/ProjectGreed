@@ -5,7 +5,7 @@ import functools
 import math
 import re
 from pathlib import Path
-from mod_source import ROOT, MAIN, parse, load, section, resolve, stat
+from mod_source import ROOT, MAIN, MOD, source_root, parse, load, section, resolve, stat
 
 CHANNELS = {"BeamDamage": "beam", "ShellDamage": "shell", "CqbDamage": "melee", "CqbBeamDamage": "meleeBeam", "CqbShellDamage": "meleeShell", "BeamAPDamage": "beamAP", "ShellAPDamage": "shellAP", "CqbAPDamage": "meleeAP"}
 PARTS = {"head": "head", "backpack": "backpack", "armL": "leftArm", "armR": "rightArm", "legL": "leftLeg", "legR": "rightLeg"}
@@ -49,8 +49,9 @@ def payload(text):
     return {key:float(value) for key,value in re.findall(r"\b(\w+)\s*[:=]\s*(-?[\d.]+)",text)}
 
 
-def source_for(weapon):
-    return ROOT / weapon["source"]["file"]
+def source_for(weapon, prefab=None):
+    root = MOD / prefab["source"].split("/")[0] if prefab else ROOT
+    return root / weapon["source"]["file"]
 
 
 def native_weapon(prefab, weapon, unit_data):
@@ -59,7 +60,7 @@ def native_weapon(prefab, weapon, unit_data):
         from mod_source import MOD
         root = MOD / prefab['source'].split('/')[0]
         return compile_launcher(prefab, root / weapon['source']['file'], root, False)[1]
-    path = source_for(weapon)
+    path = source_for(weapon, prefab)
     weapon_data = load(path)
     data = {key:{**weapon_data.get(key,{}),**unit_data.get(key,{})} for key in weapon_data.keys() | unit_data.keys()}
     variables = {**globals_for(path), "enMax": stat(unit_data,"enMax")}
@@ -90,6 +91,35 @@ def native_weapon(prefab, weapon, unit_data):
         conditions = action.get("requireConditional","")
         required = [PARTS[name] for name in re.findall(r"memory\.(head|backpack|armL|armR|legL|legR)Breaked\s*==\s*false",conditions)]
         events.append({"at":at,"shots":count,"muzzleIndex":min(barrels.index(turret_id),len(weapon.get("muzzle",{}).get("mounts",[0]))-1),"nativeBarrel":turret_id,"damageComponents":components,"accuracy":values.get("WeaponAccuracy",100),"partBreakModifier":values.get("PartBreakModifier",1),"nativePayload":values,"requiredParts":required})
+        # Cluster bazookas emit a carrier first, then native child pellets. Both payloads
+        # are authoritative strikes; the client only chooses their presentation paths.
+        ident = raw.split('*',1)[0].strip()
+        if ident.startswith("Projectile_Bazooka_ShotgunMode"):
+            from mod_source import source_root
+            child_path = source_root(path) / "Units/BattleUnits/Weapon/Shell/Projectile" / (ident+".ini")
+            if not child_path.exists(): child_path = MAIN / "Units/BattleUnits/Weapon/Shell/Projectile" / (ident+".ini")
+            child_data = load(child_path)
+            child_raw = section(child_data,"hiddenAction_SpawnHitEffect").get("spawnUnits", "")
+            child_match = re.search(r"Projectile_ShellShotGun\*(\d+)",child_raw)
+            if not child_match: raise ValueError("Missing native cluster pellets: " + ident)
+            child_values = payload(child_raw)
+            child_components = {channel:child_values[key] for key,channel in CHANNELS.items() if child_values.get(key,0)>0}
+            group = len(events)-1
+            events[-1].update(clusterRole="carrier", clusterGroup=group)
+            events.append({**copy.deepcopy(events[-1]), "shots":int(child_match[1]), "clusterRole":"fragment",
+                "damageComponents":child_components, "accuracy":child_values.get("WeaponAccuracy",100),
+                "partBreakModifier":child_values.get("PartBreakModifier",1), "nativePayload":child_values,
+                "antiSize":{size:{"damage":child_values.get("AntiSize"+tag+"Damage",1),"accuracy":child_values.get("AntiSize"+tag+"Accuracy",1)} for size,tag in [("small","Small"),("medium","Medium"),("large","Large")]},
+                "targetModifiers":{key:child_values.get(tag,1) for key,tag in [("ground","AntiLand"),("water","AntiAqua"),("air","AntiAir"),("space","AntiSpace")]}})
+            angle = re.search(r"offsetRandomDir\s*=\s*([\d.]+)", child_raw)
+            weapon.setdefault("projectile", {}).update(spreadDegrees=0, cluster={"splitFraction":0.65,"count":int(child_match[1]),
+                "spreadDegrees":float(angle[1])*2 if angle else 24,
+                "hitEffect":"MG_Hit_1_S", "speed":child_values.get("ProjectileSpeed",65), "texture":"../../projectiles/MG_1.png", "scale":0.35,
+                "nativePayload":child_values, "source":child_path.relative_to(MAIN if child_path.is_relative_to(MAIN) else source_root(path)).as_posix()})
+        elif ident.startswith(("Projectile_ShellShotGun", "Projectile_BeamShotGun")):
+            angle = re.search(r"offsetRandomDir\s*=\s*([\d.]+)",raw)
+            weapon.setdefault("projectile", {})["spreadDegrees"] = float(angle[1])*2 if angle else 18
+
     def visit(name, at, stack=()):
         nonlocal energy,duration
         name=name.strip()
@@ -207,7 +237,7 @@ def native_weapon(prefab, weapon, unit_data):
     # Follow actual display-index writes, not mount/body-part heuristics or action names alone.
     weapon["changeHeldWeapon"] = any(re.search(r"\bnowWeaponIndex\s*=", section(data, action).get("setUnitMemory", ""))
         for action in visited_actions)
-    weapon["nativeTiming"]={"source":path.relative_to(ROOT).as_posix(),"barrel":first["nativeBarrel"],"entry":root or "automatic_turret", "cooldown":cooldown,"duration":duration,"firstShot":min(e["at"] for e in events if e.get("shots")),"lastShot":max(e["at"] for e in events if e.get("shots")),"firingEvents":sum(1 for e in events if e.get("shots")),"projectiles":sum(e.get("shots",0) for e in events),"declaredEnergy":number(variables.get(native_name+"_EN",variables.get(stem+"_EN",0))),"energyMode":"perShot" if per_shot else "perVolley","energyPerEmission":energy_unit,"energy":energy,"actions":list(dict.fromkeys(visited_actions))}
+    weapon["nativeTiming"]={"source":path.relative_to(source_root(path)).as_posix(),"barrel":first["nativeBarrel"],"entry":root or "automatic_turret", "cooldown":cooldown,"duration":duration,"firstShot":min(e["at"] for e in events if e.get("shots")),"lastShot":max(e["at"] for e in events if e.get("shots")),"firingEvents":sum(1 for e in events if e.get("shots") and e.get("clusterRole") != "fragment"),"projectiles":sum(e.get("shots",0) for e in events if e.get("clusterRole") != "fragment"),"secondaryProjectiles":sum(e.get("shots",0) for e in events if e.get("clusterRole") == "fragment"),"declaredEnergy":number(variables.get(native_name+"_EN",variables.get(stem+"_EN",0))),"energyMode":"perShot" if per_shot else "perVolley","energyPerEmission":energy_unit,"energy":energy,"actions":list(dict.fromkeys(visited_actions))}
     return weapon
 
 

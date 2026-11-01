@@ -22,7 +22,7 @@ const IrradiationFX = (() => {
     return {
       angle: (Math.atan2(beam.to.x - beam.from.x, -(beam.to.y - beam.from.y)) * 180) / Math.PI,
       clip: beam.clip,
-      time: beam.start === null ? 0 : Math.min(beam.chargeSeconds, (now - beam.start) / 1000),
+      time: beam.start === null ? 0 : Math.min(beam.chargeSeconds, ((now - beam.start) / 1000) * MovementTiming.presentationSpeed),
       weaponDisplayIndex: beam.weaponDisplayIndex,
     };
   }
@@ -31,7 +31,7 @@ const IrradiationFX = (() => {
     for (const beam of active.values())
       for (const actor of beam.actors || []) {
         const hit = beam.hitsById.get(actor.id);
-        const waiting = beam.start === null || now - beam.start < beam.chargeSeconds * 1000;
+        const waiting = beam.start === null || ((now - beam.start) / 1000) * MovementTiming.presentationSpeed < beam.chargeSeconds;
         const current = result.get(actor.id) || actor;
         result.set(
           actor.id,
@@ -66,10 +66,10 @@ const IrradiationFX = (() => {
       )
         continue;
       if (beam.start === null) {
-        beam.start = now - (beam.elapsedSeconds || 0) * 1000;
+        beam.start = now - (beam.elapsedSeconds || 0) * 1000 / MovementTiming.presentationSpeed;
         if ((beam.elapsedSeconds || 0) < beam.chargeSeconds) GameAudio.playSound(beam.sound);
       }
-      const time = (now - beam.start) / 1000;
+      const time = ((now - beam.start) / 1000) * MovementTiming.presentationSpeed;
       const origin = position(beam.from.x, beam.from.y);
       const model = ART.models[beam.model];
       const sampledActor = actorPose?.(beam.unitId);
@@ -166,7 +166,7 @@ const IrradiationFX = (() => {
     let age = Infinity;
     for (const beam of active.values())
       if (beam.start !== null && beam.hitsById.get(id)?.iFieldDamage > 0) {
-        const time = (now - beam.start) / 1000 - beam.chargeSeconds;
+        const time = ((now - beam.start) / 1000) * MovementTiming.presentationSpeed - beam.chargeSeconds;
         if (time >= 0) age = Math.min(age, time);
       }
     return age;

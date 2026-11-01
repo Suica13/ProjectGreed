@@ -413,13 +413,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 122500,
+    "hp": 135000,
     "en": 7500.0,
     "move": 8,
-    "mobility": 80.0,
+    "mobility": 92.0,
     "cost": 1250,
     "counterLimit": 1,
-    "accuracy": 94.25,
+    "accuracy": 103.675,
     "partStructuralStrength": 100.0,
     "partsBreakable": false,
     "movementType": "ground",
@@ -916,9 +916,9 @@
     },
     "shipHullBeforeReduction": 175000.0,
     "shipBalanceMultiplier": 0.7,
-    "shipFactionHullMultiplier": 1,
-    "shipFactionAccuracyMultiplier": 1,
-    "shipFactionEvasionMultiplier": 1,
+    "shipFactionHullMultiplier": 1.1,
+    "shipFactionAccuracyMultiplier": 1.1,
+    "shipFactionEvasionMultiplier": 1.15,
     "technologyEra": "0087"
   },
   "presentation": {

@@ -856,7 +856,18 @@
         "ZN_HeatHawk_ACT_A_Fast",
         "EF_BeamSaber_F_Yellow",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "指挥官型号的机动扎古",
