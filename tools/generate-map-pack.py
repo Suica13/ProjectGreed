@@ -90,8 +90,8 @@ def generate(spec, index):
 
 def main():
     maps=[generate(spec,index) for index,spec in enumerate(SPECS)]
-    directory=(ROOT/'assets/maps').resolve()
-    assert directory==ROOT.resolve()/'assets/maps'
+    directory=(ROOT/'assets/maps/encounter').resolve()
+    assert directory==ROOT.resolve()/'assets/maps/encounter'
     # Rebuild the original presets, then restore the additive large-map pack.
     # Preserve additional maps and hand-authored files.
     for data in maps:
@@ -100,7 +100,7 @@ def main():
         print(data['id'],data['width'],data['height'])
     path=ROOT/'assets/unit-catalog.json'
     catalog=json.loads(path.read_text(encoding='utf-8'))
-    catalog['maps']=['maps/'+data['id']+'.json' for data in maps]+[ref for ref in catalog.get('maps',[]) if ref not in ['maps/'+data['id']+'.json' for data in maps]]
+    catalog['maps']=['maps/encounter/'+data['id']+'.json' for data in maps]+[ref for ref in catalog.get('maps',[]) if ref not in ['maps/encounter/'+data['id']+'.json' for data in maps]]
     catalog['defaultMap']=maps[0]['id']
     sync_default(catalog)
     path.write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

@@ -112,8 +112,51 @@ function loadCatalog({
     "data:audio/ogg;base64," +
     fs.readFileSync(file(root, "sounds/Action_8.ogg")).toString("base64");
   result.maps = {};
+  result.scenarios = {};
+  const mapReferences = [...catalog.maps];
+  const scenarioIndex = catalog.scenarioIndex ? file(root, catalog.scenarioIndex) : null;
+  const scenarioReferences = scenarioIndex
+    ? read(scenarioIndex).scenarios.map((ref) =>
+        path
+          .relative(root, file(path.dirname(scenarioIndex), ref))
+          .split(path.sep)
+          .join("/"),
+      )
+    : catalog.scenarios || [];
+  for (const reference of scenarioReferences) {
+    const filename = file(root, reference),
+      base = path.dirname(filename),
+      scenario = read(filename);
+    if (
+      !/^[a-z0-9_]+$/.test(scenario.id) ||
+      result.scenarios[scenario.id] ||
+      scenario.playersPerTeam !== 5
+    )
+      throw Error("Invalid strategic scenario: " + reference);
+    const world = read(file(base, scenario.world)),
+      regions = {};
+    for (const region of world.regions) {
+      const entry = scenario.regions[region.id];
+      if (!entry || typeof entry.map !== "string")
+        throw Error("Missing regional map: " + region.id);
+      const target = entry.map.startsWith("@encounter/")
+        ? file(root, "maps/encounter/" + entry.map.slice(11) + ".json")
+        : file(base, entry.map);
+      const ref = path.relative(root, target).split(path.sep).join("/");
+      const map = mapOverrides[ref] || read(target);
+      if (!mapReferences.includes(ref)) mapReferences.push(ref);
+      const layout = entry.layout ? read(file(base, entry.layout)) : map;
+      require("../shared/campaign-battlefield.js").validateLayout(
+        layout.strategic || layout,
+        map,
+        region,
+      );
+      regions[region.id] = { ...entry, mapId: map.id, layout: layout.strategic || layout };
+    }
+    result.scenarios[scenario.id] = { ...scenario, world, regions };
+  }
   if (!Array.isArray(catalog.maps) || !catalog.maps.length) throw Error("Missing preset maps");
-  for (const reference of catalog.maps) {
+  for (const reference of mapReferences) {
     const map = mapOverrides[reference] || read(file(root, reference));
     localize.record(map);
     validateLocalization(map.localization, map.id);
@@ -279,6 +322,10 @@ function loadCatalog({
     }
     result.maps[map.id] = map;
   }
+  for (const scenario of Object.values(result.scenarios))
+    for (const entry of Object.values(scenario.regions))
+      if (result.maps[entry.mapId]?.playersPerTeam !== scenario.playersPerTeam)
+        throw Error("Regional map must support 5v5: " + entry.mapId);
   result.maps = Object.fromEntries(
     Object.entries(result.maps).sort(([, a], [, b]) => a.spawns.length - b.spawns.length),
   );
@@ -382,9 +429,10 @@ function loadCatalog({
     )
       throw Error("Invalid effect frames: " + id);
     effect.asset = "effect/" + id;
-    if (embedAssets) result.assets[effect.asset] =
-      "data:image/png;base64," +
-      fs.readFileSync(file(effectBase, effect.texture)).toString("base64");
+    if (embedAssets)
+      result.assets[effect.asset] =
+        "data:image/png;base64," +
+        fs.readFileSync(file(effectBase, effect.texture)).toString("base64");
     effect.duration = (effect.endFrame - effect.startFrame + 1) / effect.fps;
     effect.sounds = effect.sounds.map((sound, index) => {
       if (!Number.isFinite(sound.volume) || sound.volume < 0 || sound.volume > 1)
@@ -757,8 +805,9 @@ function loadCatalog({
     for (const [id, ref] of Object.entries(prefab.materials.textures)) {
       const key = prefab.id + "/" + id;
       textureKeys[id] = key;
-      if (embedAssets) result.assets[key] =
-        "data:image/png;base64," + fs.readFileSync(file(base, ref)).toString("base64");
+      if (embedAssets)
+        result.assets[key] =
+          "data:image/png;base64," + fs.readFileSync(file(base, ref)).toString("base64");
     }
     for (const [alias, target] of Object.entries(prefab.kitAliases || {})) {
       if (
@@ -935,9 +984,10 @@ function loadCatalog({
             throw Error("Invalid weapon target modifiers: " + key);
           if (weapon.projectile) {
             const projectileKey = prefab.id + "/projectile/" + key;
-            if (embedAssets) result.assets[projectileKey] =
-              "data:image/png;base64," +
-              fs.readFileSync(file(base, weapon.projectile.texture)).toString("base64");
+            if (embedAssets)
+              result.assets[projectileKey] =
+                "data:image/png;base64," +
+                fs.readFileSync(file(base, weapon.projectile.texture)).toString("base64");
             weapon.projectile = { ...weapon.projectile, asset: projectileKey };
             if (
               weapon.projectile.spreadDegrees !== undefined &&

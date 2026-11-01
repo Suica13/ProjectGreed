@@ -130,7 +130,7 @@ const Net = (() => {
     "set_ready", "update_formation", "confirm_formation", "start_game",
     "move", "confirm_move", "cancel_move", "rotate", "skill", "undo", "wait",
     "attack", "cancel_attack", "end_turn", "embark", "launch", "deploy",
-    "confirm_deployment", "respond", "playback_ready",
+    "confirm_deployment", "respond", "playback_ready", "capture_point", "region_transfer",
   ]);
   function actionContext(snapshot = n.snapshot) {
     return { matchId: snapshot?.matchId ?? null, round: snapshot?.game?.round ?? null,

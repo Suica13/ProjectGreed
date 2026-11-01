@@ -4,7 +4,7 @@ const C = require("../shared/campaign.js"),
   G = require("../shared/rules.js");
 const ctx = {
   G,
-  world: require("../shared/campaign-world.json"),
+  world: require("../assets/maps/strategy/earth_0079_mid/world.json"),
   production: require("../shared/production-data.cjs"),
   development: require("../shared/development.js"),
 };
@@ -46,6 +46,7 @@ test("selected equipment prices are charged per batch and preserved on every pro
   assert.equal(state.teams[0].money, money - 2100);
   assert.equal(state.teams[0].supplies, supplies - 3200);
   assert.equal(state.orders[0].kitId, "kit_1");
+  assert.match(state.history.at(-1), /生产.*×3.*资金 2100.*物资 3200/);
   const before = structuredClone(state);
   assert.throws(
     () =>
@@ -347,8 +348,10 @@ test("encounter readiness advances to the next region only after the current bat
   assert.equal(room.started, true);
   assert.equal(adapter.view(room).preparation, null);
   assert.deepEqual(room.campaignBattle.delegatedSeats, [0]);
-  // End this segment without resolving the territory: it must not be selected again this turn.
+  // End this segment without resolving the territory or paying tactical rewards.
+  const treasury = structuredClone(state.teams);
   adapter.checkpoint(room);
+  assert.deepEqual(state.teams, treasury);
   const next = adapter.view(room).preparation;
   assert.equal(next.region, "jaburo");
   assert.notEqual(next.id, first.id);
@@ -473,4 +476,40 @@ test("Earth geography has bounded coastline paths and a fully connected reciproc
     "south_pacific",
   ])
     assert(seen.has(id));
+});
+
+test("campaign save names persist and old archives receive the scenario name", () => {
+  const state = C.create(ctx, players, { name: "我们的地球攻略" });
+  assert.equal(C.view(state).name, "我们的地球攻略");
+  assert.equal(C.validate(ctx, state, players).name, "我们的地球攻略");
+  const old = structuredClone(state);
+  delete old.name;
+  assert.equal(C.validate(ctx, old, players).name, ctx.world.name);
+  const bad = structuredClone(state);
+  bad.name = "x".repeat(81);
+  assert.throws(() => C.validate(ctx, bad, players), /存档名称无效/);
+});
+
+
+test("every controlled region yields fixed strategic income, including contested territory", () => {
+  assert.deepEqual(ctx.world.settings.ordinaryIncome, { money: 200, supplies: 400, technology: 0 });
+  assert.deepEqual(ctx.world.settings.factoryIncome, { money: 300, supplies: 600, technology: 100 });
+  const state = C.create(ctx, players);
+  state.units = [];
+  const contested = state.regions.find((region) => region.id === "jaburo");
+  C.addUnit(ctx, state, 0, contested.id, "Type61");
+  C.addUnit(ctx, state, 1, contested.id, "MS_06F");
+  const expected = structuredClone(state.teams);
+  for (const region of state.regions) {
+    const core = ctx.world.regions.find((source) => source.id === region.id).factory;
+    expected[region.owner].money += core ? 300 : 200;
+    expected[region.owner].supplies += core ? 600 : 400;
+    expected[region.owner].technology += core ? 100 : 0;
+  }
+  C.advance(ctx, state, players);
+  assert.equal(contested.owner, 0);
+  assert(state.encounters.some((encounter) => encounter.region === contested.id));
+  for (let team = 0; team < 2; team++)
+    for (const resource of ["money", "supplies", "technology"])
+      assert.equal(state.teams[team][resource], expected[team][resource], `team ${team} ${resource}`);
 });

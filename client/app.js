@@ -363,7 +363,10 @@ function updateContents() {
   Chat.refreshStatus();
   const busy = isBusy(),
     u = getUnit(selected);
-  byId("turnBadge").textContent = `第${game.round}回合 · ${teamName(game.team)}`;
+  const campaignBattle = Net.snapshot?.campaign;
+  byId("turnBadge").textContent = campaignBattle?.startRound
+    ? `局地战 ${Math.min(game.round - campaignBattle.startRound + 1, campaignBattle.stopRound - campaignBattle.startRound)} / ${campaignBattle.stopRound - campaignBattle.startRound}回合 · ${teamName(game.team)}`
+    : `第${game.round}回合 · ${teamName(game.team)}`;
   byId("turnBadge").style.color = game.team ? "var(--red)" : "var(--blue)";
   byId("phaseTitle").textContent = teamName(game.team) + (isAI() ? "AI行动阶段" : "行动阶段");
   if (phase === "deployment") byId("phaseTitle").textContent = "开局部署";
@@ -439,17 +442,32 @@ function renderReactionReview() {
     panel.setAttribute("aria-label", "应战方案复核");
     document.body.append(panel);
   }
-  const snapshot = Net.snapshot, review = snapshot?.reactionReview;
-  panel.hidden = !Net.active || snapshot?.phase !== "reaction" || !review || !!snapshot.reactions?.length;
+  const snapshot = Net.snapshot,
+    review = snapshot?.reactionReview;
+  panel.hidden =
+    !Net.active || snapshot?.phase !== "reaction" || !review || !!snapshot.reactions?.length;
   if (panel.hidden) return;
   const key = snapshot.revision + ":" + !!Net.awaiting;
   if (panel.dataset.renderKey === key) return;
   panel.dataset.renderKey = key;
-  panel.replaceChildren(element("strong", "", "应战方案复核"), element("p", "", "可修改已保存的方案；所有相关玩家确认后执行。"));
+  panel.replaceChildren(
+    element("strong", "", "应战方案复核"),
+    element("p", "", "可修改已保存的方案；所有相关玩家确认后执行。"),
+  );
   for (const choice of review.choices) {
     const actor = getUnit(choice.target);
     const row = element("div", "reaction-review-row");
-    row.append(element("span", "", (actor ? Rules.modelOf(actor).name : choice.target) + " · " + I18n.text({ counter: "反击", defend: "防御", evade: "回避" }[choice.response] || choice.response)));
+    row.append(
+      element(
+        "span",
+        "",
+        (actor ? Rules.modelOf(actor).name : choice.target) +
+          " · " +
+          I18n.text(
+            { counter: "反击", defend: "防御", evade: "回避" }[choice.response] || choice.response,
+          ),
+      ),
+    );
     const edit = element("button", "", "修改");
     edit.disabled = !!Net.awaiting;
     edit.onclick = () => Net.request("edit_response", { reactionId: choice.id });
@@ -461,7 +479,11 @@ function renderReactionReview() {
     return name + ": " + I18n.text(review.ready.includes(seat) ? "已确认" : "待确认");
   });
   panel.append(element("p", "", names.join(" · ")));
-  const confirm = element("button", "primary", review.ready.includes(Net.seat) ? "已确认，等待队友" : "确认应战方案");
+  const confirm = element(
+    "button",
+    "primary",
+    review.ready.includes(Net.seat) ? "已确认，等待队友" : "确认应战方案",
+  );
   confirm.id = "confirmReactionReview";
   confirm.disabled = !!Net.awaiting || review.ready.includes(Net.seat);
   confirm.onclick = () => Net.request("confirm_responses", { reviewId: review.id });
@@ -1398,6 +1420,48 @@ function mapMinovskyCells() {
 }
 
 // 地图画布：先画地形与范围，再画单位、血条和名称。now 是毫秒时间。
+function drawCampaignSupply(ctx, ox, oy, tile) {
+  const field = game.campaignBattlefield,
+    net = Rules.campaignBattlefield.network(game);
+  if (!field || !net) return;
+  const color = (team) => (team === 0 ? "#68c7ff" : team === 1 ? "#ff7789" : "#ffffff");
+  const screen = (node) => ({ x: ox + (node.x + 0.5) * tile, y: oy + (node.y + 0.5) * tile });
+  ctx.save();
+  for (const line of net.lines) {
+    const a = screen(line.a),
+      b = screen(line.b);
+    ctx.strokeStyle = color(line.team);
+    ctx.lineWidth = Math.max(1, tile * 0.08);
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+  }
+  for (const node of net.nodes) {
+    const p = screen(node),
+      team = node.region ? field.adjacentOwners[node.region] : field.owners[node.id];
+    ctx.strokeStyle = color(team);
+    ctx.lineWidth = Math.max(1.5, tile * 0.1);
+    ctx.fillStyle = "#101923bb";
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, tile * (node.radius + 0.45), 0, Math.PI * 2);
+    ctx.stroke();
+    const radius = Math.max(6, tile * 0.45);
+    ctx.fillRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
+    ctx.strokeRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
+    ctx.fillStyle = color(team);
+    ctx.font = `bold ${Math.max(9, Math.min(13, tile * 0.6))}px sans-serif`;
+    ctx.textAlign = "center";
+    const label = node.region
+      ? CAMPAIGN_WORLD.regions.find((region) => region.id === node.region)?.name || node.region
+      : node.kind === "base"
+        ? I18n.text("基地")
+        : I18n.text(node.name);
+    ctx.fillText(label, p.x, p.y - radius - 4);
+    ctx.fillText(team === null ? "—" : String(team + 1), p.x, p.y + 4);
+  }
+  ctx.restore();
+}
 function drawMap(now) {
   const battleSettings = BattleScene.settings();
   let c = byId("map"),
@@ -1591,6 +1655,7 @@ function drawMap(now) {
   const intel =
     Net.snapshot?.phase === "playback" ? Net.snapshot.combatIntel || game.intel : game.intel;
   EnvironmentVisuals.fog(ctx, intel, ox, oy, tile);
+  drawCampaignSupply(ctx, ox, oy, tile);
   // The clip remains available for individual effects opting out of fog visibility.
   const visibilityClip = EnvironmentVisuals.visibilityClip(intel, ox, oy, tile);
   const drawVisibleEffects = (draw) => {
@@ -2383,7 +2448,9 @@ function renderCounterSummary(panel, unit) {
 }
 // 应战弹窗展示预估值，不扣血或消耗资源。
 function renderReaction() {
-  byId("confirmResponse").textContent = I18n.text(Net.active && Net.snapshot?.reactionReview ? "保存单位应战方案" : "确认应战");
+  byId("confirmResponse").textContent = I18n.text(
+    Net.active && Net.snapshot?.reactionReview ? "保存单位应战方案" : "确认应战",
+  );
   const targets = pending.counterTargets || [
     {
       attacker: pending.attacker,

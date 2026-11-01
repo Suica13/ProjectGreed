@@ -107,6 +107,7 @@ for (const [key, file] of [
   ["DEVELOPMENT", "shared/development.js"],
   ["HANGAR_UI", "client/hangar-ui.js"],
   ["SFS_UI", "client/sfs-ui.js"],
+  ["CAMPAIGN_BATTLEFIELD", "shared/campaign-battlefield.js"],
   ["CORE", "shared/rules.js"],
   ["WEAPON_SEQUENCE", "shared/weapon-sequence.js"],
   ["WEAPON_CLASSES", "shared/weapon-classes.js"],
@@ -136,6 +137,7 @@ for (const [key, file] of [
   ["MATCH_RECORDS", "shared/match-records.js"],
   ["REPLAY_PLAYER", "client/replay-player.js"],
   ["MOVEMENT_TIMING", "shared/movement-timing.js"],
+  ["CAMPAIGN_PILOTS", "shared/campaign-pilots.js"],
   ["CAMPAIGN_RULES", "shared/campaign.js"],
   ["CAMPAIGN_ROOM", "shared/campaign-room.js"],
   ["ROOM_ENGINE", "shared/room-engine.js"],
@@ -157,7 +159,7 @@ for (const [key, file] of [
         ).replace(/</g, "\\u003c")
       : inlineScript(read(file)),
   );
-html = html.replace("</body>", () => `<style>${read("client/campaign.css")}</style><script>const CAMPAIGN_WORLD=${json(JSON.parse(read("shared/campaign-world.json")))};${inlineScript(read("client/campaign-workspace.js"))}${inlineScript(read("client/campaign.js"))}</script></body>`);
+html = html.replace("</body>", () => `<style>${read("client/campaign.css")}</style><script>const CAMPAIGN_WORLD=ART.scenarios.earth_0079_mid.world;${inlineScript(read("client/campaign-workspace.js"))}${inlineScript(read("client/campaign-pilots.js"))}${inlineScript(read("client/campaign-console.js"))}${inlineScript(read("client/campaign.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
 html = html.replace(
   "</body>",

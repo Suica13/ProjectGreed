@@ -5,7 +5,8 @@ const BattlePrompts = (() => {
   let endContext = null,
     returnId = null,
     deadline = 0,
-    timer = null;
+    timer = null,
+    returnToCampaign = false;
   function closeEnd() {
     endContext = null;
     if (endDialog.open) endDialog.close();
@@ -52,7 +53,19 @@ const BattlePrompts = (() => {
   };
   function renderReturn() {
     const seconds = Math.max(0, Math.ceil((deadline - performance.now()) / 1000));
-    byId("roomReturnMessage").textContent = I18n.text(`${seconds}秒后所有玩家一起返回房间`);
+    byId("roomReturnTitle").textContent = I18n.text(
+      returnToCampaign
+        ? Net.snapshot?.game?.campaignBattlefield?.capturedBaseTeam !== null &&
+          Net.snapshot?.game?.campaignBattlefield?.capturedBaseTeam !== undefined
+          ? "基地已被占领，返回战略地图"
+          : "战局中断，返回战略地图"
+        : "即将返回房间",
+    );
+    byId("roomReturnMessage").textContent = I18n.text(
+      returnToCampaign
+        ? `${seconds}秒后所有玩家一起返回战略地图`
+        : `${seconds}秒后所有玩家一起返回房间`,
+    );
   }
   function resetReturn() {
     clearInterval(timer);
@@ -69,6 +82,7 @@ const BattlePrompts = (() => {
       return;
     }
     closeEnd();
+    returnToCampaign = countdown.destination === "campaign";
     if (returnId !== countdown.id) {
       resetReturn();
       returnId = countdown.id;

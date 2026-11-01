@@ -24,16 +24,20 @@ test("chat channels sit left of both inputs and messages use channel, player and
   await page.locator("#roomChatChannel").selectOption("team1");
   await page.locator("#roomChatInput").fill("<b>Hello</b>");
   await page.locator("#roomChatSend").click();
-  await expect(page.locator("#roomChatLines .chat-line")).toHaveText(
-    "[队伍1]ChatPlayer:<b>Hello</b>",
-  );
+  const roomMessage = page.locator('#roomChatLines .chat-line[data-channel="team1"]');
+  await expect(roomMessage.locator(".chat-channel-label")).toHaveText("[队伍1]");
+  await expect(roomMessage.locator("strong")).toContainText("ChatPlayer");
+  await expect(roomMessage).toContainText(":<b>Hello</b>");
   await expect(page.locator("#roomChatLines b")).toHaveCount(0);
   await expect(page.locator("#roomChatLines time")).toHaveCount(0);
   await page.locator("#startRoomGame").click();
   await page.locator("#confirmFinalFormation").click();
   await page.locator("#showChat").click();
   await channelOnLeft(page, "chat");
-  await expect(page.locator("#chatLines .chat-line")).toHaveText("[队伍1]ChatPlayer:<b>Hello</b>");
+  const battleMessage = page.locator('#chatLines .chat-line[data-channel="team1"]');
+  await expect(battleMessage.locator(".chat-channel-label")).toHaveText("[队伍1]");
+  await expect(battleMessage.locator("strong")).toContainText("ChatPlayer");
+  await expect(battleMessage).toContainText(":<b>Hello</b>");
   await page.locator("#roomSettings").click();
   await page.setViewportSize({ width: 430, height: 900 });
   await channelOnLeft(page, "roomChat");

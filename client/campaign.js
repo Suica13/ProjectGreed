@@ -27,6 +27,149 @@ window.CampaignUI = (() => {
   function state() {
     return Net.snapshot?.campaign;
   }
+  const campaignPilots = createCampaignPilotUI({ state, command, node, button });
+  const campaignConsole = createCampaignConsole({ panel, state, node, button });
+  const intelligenceDialog = node(
+    "dialog",
+    "",
+    "campaign-order-dialog campaign-intelligence-dialog",
+  );
+  intelligenceDialog.id = "campaignIntelligenceDialog";
+  const movementDialog = node("dialog", "", "campaign-order-dialog campaign-movement-dialog");
+  movementDialog.id = "campaignMovementDialog";
+  document.body.append(intelligenceDialog, movementDialog);
+  let inspectedMovement = null;
+  const reportCount = (count, approximate = false) =>
+    count === null
+      ? I18n.text("未知")
+      : (approximate ? I18n.text("约") : "") + formatNumber(count) + I18n.text(" 台");
+  function regionCount(s, regionId, team) {
+    return (
+      s.intelRegions?.find((entry) => entry.id === regionId)?.counts[team] ??
+      (s.intelRegions
+        ? null
+        : s.units.filter(
+            (unit) => !unit.destroyed && unit.region === regionId && unit.team === team,
+          ).length)
+    );
+  }
+  function regionReport(s, regionId) {
+    const counts = [0, 1].map((team) => regionCount(s, regionId, team));
+    return counts.some((count) => count === null)
+      ? I18n.text("敌军数量未知")
+      : reportCount(
+          counts[0] + counts[1],
+          s.intel?.team !== null && s.intel?.progress < 75 && counts[1 - s.intel.team] > 0,
+        );
+  }
+  function openIntelligence() {
+    renderIntelligence();
+    intelligenceDialog.showModal();
+  }
+  function renderIntelligence() {
+    const s = state();
+    if (!s) return;
+    const intel = s.intel || { progress: 50, rules: CampaignRules.intelligenceRules };
+    const rules = intel.rules;
+    const header = node("header", "", "campaign-order-header");
+    header.append(
+      node("h3", "情报等级"),
+      button("关闭", () => intelligenceDialog.close()),
+    );
+    const body = node("div", "", "campaign-intelligence-body");
+    const meter = node("div", "", "campaign-intelligence-meter");
+    meter.setAttribute("role", "progressbar");
+    meter.setAttribute("aria-label", "情报进度");
+    meter.setAttribute("aria-valuemin", "0");
+    meter.setAttribute("aria-valuemax", "100");
+    meter.setAttribute("aria-valuenow", intel.progress);
+    const fill = node("span");
+    fill.style.width = intel.progress + "%";
+    meter.append(fill);
+    body.append(node("strong", intel.progress + "%", "campaign-intelligence-value"), meter);
+    for (const [level, text] of [
+      [25, "显示敌军大致数量，误差不超过50%"],
+      [50, "显示敌军大致数量，误差不超过25%"],
+      [75, "显示准确数量、驻守单位名称与信息；耐久和EN保密"],
+      [100, "显示敌军耐久、EN及配属驾驶员"],
+    ]) {
+      const row = node("p", level + "% · " + I18n.text(text), "campaign-intelligence-tier");
+      row.dataset.active = intel.progress >= level;
+      body.append(row);
+    }
+    body.append(
+      node(
+        "p",
+        `每队每回合可投入一次：资金 ${formatNumber(rules.price)}，情报 +${rules.gain}%；战略回合结算后情报 −${rules.decay}%。`,
+      ),
+    );
+    const team = Number.isInteger(Net.seat) ? Rules.seatTeam(Net.seat) : null;
+    const funded = intel.fundedTurn === s.turn;
+    const invest = button(
+      funded ? "本回合已投入" : "投入谍报资金",
+      () => command("campaign_intelligence"),
+      team === null ||
+        s.phase !== "strategy" ||
+        s.winner !== null ||
+        funded ||
+        intel.progress >= 100 ||
+        s.teams[team]?.money < rules.price,
+    );
+    invest.className = "primary";
+    intelligenceDialog.replaceChildren(header, body, invest);
+  }
+  function openMovement(id) {
+    inspectedMovement = id;
+    renderMovement();
+    if (inspectedMovement && !movementDialog.open) movementDialog.showModal();
+  }
+  function renderMovement() {
+    const s = state(),
+      move = s?.movements?.find((item) => item.id === inspectedMovement);
+    if (!move) {
+      inspectedMovement = null;
+      if (movementDialog.open) movementDialog.close();
+      return;
+    }
+    const header = node("header", "", "campaign-order-header");
+    header.append(
+      node("h3", "行进部队"),
+      button("关闭", () => movementDialog.close()),
+    );
+    const region = (id) =>
+      I18n.text(CAMPAIGN_WORLD.regions.find((item) => item.id === id)?.name || id);
+    const body = node("div", "", "campaign-movement-body");
+    body.append(
+      node("p", region(move.from) + " → " + region(move.to)),
+      node("strong", reportCount(move.count, move.approximate)),
+    );
+    const units = move.unitIds.map((id) => s.units.find((unit) => unit.id === id)).filter(Boolean);
+    if (!units.length) body.append(node("p", "情报不足，无法查看部队名单"));
+    for (const unit of units) {
+      const m = UnitModels[unit.unitId + "__" + unit.kitId];
+      const row = node("article", "", "campaign-movement-unit");
+      const image = node("img");
+      image.src = unitIcon(unit.unitId + "__" + unit.kitId);
+      image.alt = "";
+      image.loading = "lazy";
+      const copy = node("div");
+      copy.append(node("strong", m.name));
+      if (!unit.intelRedacted)
+        copy.append(
+          node(
+            "small",
+            `HP ${formatNumber(unit.hp ?? m.hp)} · EN ${formatNumber(unit.en ?? m.en)} · ${unit.pilotName}`,
+          ),
+        );
+      row.append(
+        image,
+        copy,
+        button("详情", () => openArmy(unit.id)),
+      );
+      body.append(row);
+    }
+    movementDialog.replaceChildren(header, body);
+  }
   function command(action, fields = {}) {
     if (Net.awaiting) return;
     Net.request(action, { turn: state()?.turn, ...fields });
@@ -54,7 +197,8 @@ window.CampaignUI = (() => {
   function download(save) {
     const link = document.createElement("a");
     link.href = URL.createObjectURL(new Blob([JSON.stringify(save)], { type: "application/json" }));
-    link.download = "ProjectGreed-campaign-turn-" + save.turn + ".json";
+    const name = (save.name || CAMPAIGN_WORLD.name).replace(/[<>:"/\\|?*\u0000-\u001f]/g, "_");
+    link.download = name + "-" + save.turn + ".json";
     link.click();
     setTimeout(() => URL.revokeObjectURL(link.href), 1000);
   }
@@ -75,6 +219,10 @@ window.CampaignUI = (() => {
   function layout() {
     panel.style.top = "0px";
     panel.style.left = "0px";
+    const scroll = panel.querySelector(".campaign-map-scroll"),
+      svg = scroll?.querySelector("svg");
+    if (svg && scroll.clientWidth)
+      svg.style.width = Math.max(650, scroll.clientWidth) * zoom + "px";
   }
   function open(nextTab = tab) {
     if (!state()) return;
@@ -150,19 +298,25 @@ window.CampaignUI = (() => {
     }
     canvas.setAttribute("aria-label", CAMPAIGN_WORLD.name);
   }
+  function mapTitle(s) {
+    const side = Number.isInteger(Net.seat) ? Rules.seatTeam(Net.seat) : Net.snapshot?.viewTeam;
+    const faction = s.teams[side]?.faction;
+    const names = { EFSF: "地球联邦军", ZEON: "吉翁公国军" };
+    return (
+      I18n.text(names[faction] || "观战") + " - " + I18n.text(CAMPAIGN_WORLD.areaName || "地球")
+    );
+  }
   function world(state) {
     const wrap = node("div", "", "campaign-world");
     wrap.dataset.language = I18n.language;
     const tools = node("div", "", "campaign-map-tools");
     tools.append(
-      node("span", "地球战区 · 蓝：联邦 / 红：吉翁 / 黄：交战"),
+      node("span", mapTitle(state), "campaign-map-title"),
       button("−", () => {
-        zoom = Math.max(1, zoom - 0.25);
-        render();
+        zoomWorld(zoom - 0.25);
       }),
       button("＋", () => {
-        zoom = Math.min(2.5, zoom + 0.25);
-        render();
+        zoomWorld(zoom + 0.25);
       }),
     );
     const scroll = node("div", "", "campaign-map-scroll");
@@ -401,27 +555,104 @@ window.CampaignUI = (() => {
     }
     svg.append(surfaces, routes, labels);
     scroll.append(svg);
+    enableMapGestures(scroll);
     wrap.append(tools, scroll);
     return wrap;
+  }
+  function zoomWorld(nextZoom, clientX, clientY) {
+    const scroll = panel.querySelector(".campaign-map-scroll"),
+      svg = scroll?.querySelector("svg");
+    if (!svg) return;
+    const viewport = scroll.getBoundingClientRect(),
+      before = svg.getBoundingClientRect();
+    const x = clientX ?? viewport.left + viewport.width / 2;
+    const y = clientY ?? viewport.top + viewport.height / 2;
+    const point = { x: (x - before.left) / before.width, y: (y - before.top) / before.height };
+    zoom = Math.max(1, Math.min(2.5, nextZoom));
+    svg.style.width = Math.max(650, scroll.clientWidth) * zoom + "px";
+    const after = svg.getBoundingClientRect();
+    scroll.scrollLeft += after.left + point.x * after.width - x;
+    scroll.scrollTop += after.top + point.y * after.height - y;
+  }
+  function enableMapGestures(scroll) {
+    let drag = null,
+      suppressClick = false;
+    scroll.addEventListener(
+      "wheel",
+      (event) => {
+        event.preventDefault();
+        const delta =
+          event.deltaY *
+          (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? scroll.clientHeight : 1);
+        zoomWorld(zoom * Math.exp(-delta * 0.0015), event.clientX, event.clientY);
+      },
+      { passive: false },
+    );
+    scroll.addEventListener("pointerdown", (event) => {
+      if (!event.isPrimary || event.button !== 0) return;
+      suppressClick = false;
+      drag = {
+        id: event.pointerId,
+        x: event.clientX,
+        y: event.clientY,
+        left: scroll.scrollLeft,
+        top: scroll.scrollTop,
+        moved: false,
+      };
+    });
+    scroll.addEventListener("pointermove", (event) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      const dx = event.clientX - drag.x,
+        dy = event.clientY - drag.y;
+      if (!drag.moved && Math.hypot(dx, dy) < 5) return;
+      if (!drag.moved) {
+        drag.moved = true;
+        scroll.setPointerCapture(event.pointerId);
+        scroll.classList.add("is-dragging");
+      }
+      event.preventDefault();
+      suppressClick = true;
+      scroll.scrollLeft = drag.left - dx;
+      scroll.scrollTop = drag.top - dy;
+    });
+    const stop = (event) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      drag = null;
+      scroll.classList.remove("is-dragging");
+      if (scroll.hasPointerCapture(event.pointerId)) scroll.releasePointerCapture(event.pointerId);
+    };
+    scroll.addEventListener("pointerup", stop);
+    scroll.addEventListener("pointercancel", stop);
+    scroll.addEventListener("lostpointercapture", stop);
+    scroll.addEventListener(
+      "click",
+      (event) => {
+        if (!suppressClick) return;
+        suppressClick = false;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      },
+      true,
+    );
   }
   function refreshWorld(s) {
     const svg = panel.querySelector(".campaign-map-scroll svg");
     if (!svg) return;
-    svg.style.width = zoom * 100 + "%";
+    panel.querySelector(".campaign-map-title").textContent = mapTitle(s);
+    svg.style.width = Math.max(650, svg.parentElement.clientWidth) * zoom + "px";
     for (const region of CAMPAIGN_WORLD.regions) {
       const group = svg.querySelector(`[data-region="${region.id}"]`),
         surface = group.querySelector(".campaign-region-surface"),
         label = svg.querySelector(`[data-region-label="${region.id}"]`);
       const units = s.units
-        .filter((unit) => !unit.destroyed && unit.region === region.id)
+        .filter((unit) => !unit.destroyed && !unit.pendingTransfer && unit.region === region.id)
         .sort(
           (a, b) =>
             UnitModels[a.unitId + "__" + a.kitId].cost -
               UnitModels[b.unitId + "__" + b.kitId].cost ||
             a.id.localeCompare(b.id, undefined, { numeric: true }),
         );
-      const contested =
-        s.phase === "encounters" && new Set(units.map((unit) => unit.team)).size > 1;
+      const contested = s.phase === "encounters" && CampaignRules.disputed(s, region.id);
       const owner = s.regions.find((item) => item.id === region.id)?.owner ?? region.owner;
       group.dataset.contested = String(contested);
       surface.setAttribute(
@@ -447,7 +678,7 @@ window.CampaignUI = (() => {
       );
       surface.setAttribute("stroke-dasharray", region.kind === "sea" ? "4 4" : "none");
       label.querySelector(".campaign-region-count").textContent =
-        units.length + I18n.text(" 台") + (contested ? I18n.text(" · 交战") : "");
+        regionReport(s, region.id) + (contested ? I18n.text(" · 交战") : "");
       label
         .querySelector(".campaign-region-label-box")
         .setAttribute(
@@ -469,19 +700,199 @@ window.CampaignUI = (() => {
       route.setAttribute("opacity", active ? 0.85 : 0.1);
       route.setAttribute("stroke-width", active ? 1.8 : 1);
     }
+    renderMovements(svg, s);
+    highlightEncounter();
     for (const button of panel.querySelectorAll(".campaign-map-tools button"))
       button.disabled = !!Net.awaiting;
+  }
+  function renderMovements(svg, s) {
+    const previous = svg.querySelector(".campaign-moving-armies");
+    const signature = JSON.stringify(s.movements || []);
+    if (previous?.dataset.signature === signature) return;
+    previous?.remove();
+    const shape = (tag, attrs, text = "") => {
+      const item = document.createElementNS(svg.namespaceURI, tag);
+      for (const [name, value] of Object.entries(attrs)) item.setAttribute(name, value);
+      item.textContent = text;
+      return item;
+    };
+    const layer = shape("g", { class: "campaign-moving-armies" });
+    layer.dataset.signature = signature;
+    const defs = shape("defs", {});
+    for (const team of [0, 1]) {
+      const marker = shape("marker", {
+        id: "campaignMoveArrow" + team,
+        viewBox: "0 0 10 10",
+        refX: 9,
+        refY: 5,
+        markerWidth: 6,
+        markerHeight: 6,
+        orient: "auto-start-reverse",
+      });
+      marker.append(
+        shape("path", { d: "M0 0L10 5L0 10Z", fill: team === 0 ? "#8ad6ff" : "#ff9eaa" }),
+      );
+      defs.append(marker);
+    }
+    layer.append(defs);
+    const occupied = [];
+    for (const move of s.movements || []) {
+      const from = CAMPAIGN_WORLD.regions.find((region) => region.id === move.from),
+        to = CAMPAIGN_WORLD.regions.find((region) => region.id === move.to);
+      if (!from || !to) continue;
+      const [x1, y1] = from.center,
+        [rawX2, y2] = to.center;
+      const x2 = rawX2 + (rawX2 - x1 > 600 ? -1200 : rawX2 - x1 < -600 ? 1200 : 0);
+      const d = `M${x1},${y1}L${x2},${y2}`;
+      for (const offset of x2 === rawX2 ? [0] : [0, x2 < 0 ? 1200 : -1200])
+        layer.append(
+          shape("path", {
+            d,
+            transform: `translate(${offset},0)`,
+            fill: "none",
+            stroke: move.team === 0 ? "#8ad6ff" : "#ff9eaa",
+            "stroke-width": 2,
+            "stroke-dasharray": "6 3",
+            "marker-end": `url(#campaignMoveArrow${move.team})`,
+            "pointer-events": "none",
+          }),
+        );
+      const x = Math.max(58, Math.min(1142, ((x1 + x2) / 2 + 1200) % 1200));
+      let y = (y1 + y2) / 2 - 28;
+      while (occupied.some((point) => Math.abs(point.x - x) < 115 && Math.abs(point.y - y) < 40))
+        y += 42;
+      y = Math.max(22, Math.min(535, y));
+      occupied.push({ x, y });
+      const label = shape("g", {
+        class: "campaign-movement-label",
+        "data-movement": move.id,
+        role: "button",
+        tabindex: 0,
+        "aria-label": I18n.text("行进部队") + " · " + reportCount(move.count, move.approximate),
+      });
+      label.append(
+        shape("rect", {
+          x: x - 56,
+          y: y - 19,
+          width: 112,
+          height: 38,
+          rx: 3,
+          fill: "#162332",
+          stroke: move.team === 0 ? "#8ad6ff" : "#ff9eaa",
+        }),
+      );
+      label.append(
+        shape(
+          "text",
+          { x, y: y - 3, "text-anchor": "middle", fill: "#edf5fc", "font-size": 10 },
+          I18n.text("行进部队") + " · " + reportCount(move.count, move.approximate),
+        ),
+      );
+      label.append(
+        shape(
+          "text",
+          { x, y: y + 11, "text-anchor": "middle", fill: "#a5dfff", "font-size": 9 },
+          I18n.text("查看详情"),
+        ),
+      );
+      label.onclick = () => openMovement(move.id);
+      label.onkeydown = (event) => {
+        if (["Enter", " "].includes(event.key)) {
+          event.preventDefault();
+          openMovement(move.id);
+        }
+      };
+      layer.append(label);
+    }
+    svg.append(layer);
+  }
+  // A single lightweight SVG effect follows the active encounter, not every contested region.
+  function highlightEncounter() {
+    const svg = panel.querySelector(".campaign-map-scroll svg");
+    if (!svg) return;
+    const active = encounterDialog.open ? encounterRegion : null;
+    const previous = svg.querySelector(".campaign-encounter-outline");
+    if (previous?.dataset.encounterRegion === active) return;
+    previous?.remove();
+    if (!active) return;
+    const surface = svg.querySelector(`[data-region="${active}"] .campaign-region-surface`);
+    if (!surface) return;
+    const shape = (name, attributes) => {
+      const element = document.createElementNS(svg.namespaceURI, name);
+      for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, value);
+      return element;
+    };
+    const effect = shape("g", {
+      class: "campaign-encounter-outline",
+      "data-encounter-region": active,
+      "aria-hidden": "true",
+    });
+    const path = surface.getAttribute("d");
+    effect.append(shape("path", { d: path, class: "campaign-encounter-glow" }));
+    effect.append(shape("path", { d: path, class: "campaign-encounter-edge" }));
+    for (let index = 0; index < 16; index++) {
+      const particle = shape("circle", {
+        r: index % 3 === 0 ? 2.2 : 1.3,
+        class: "campaign-encounter-particle",
+      });
+      particle.append(
+        shape("animateMotion", {
+          path,
+          dur: "10s",
+          begin: `${(-index * 10) / 16}s`,
+          repeatCount: "indefinite",
+          calcMode: "paced",
+          rotate: "auto",
+        }),
+      );
+      effect.append(particle);
+    }
+    svg.append(effect);
+  }
+  function focusEncounter() {
+    const scroll = panel.querySelector(".campaign-map-scroll");
+    const svg = scroll?.querySelector("svg");
+    const region = CAMPAIGN_WORLD.regions.find((item) => item.id === encounterRegion);
+    if (!svg || !region || !encounterDialog.open || Net.started) return;
+    zoom = Math.max(zoom, 2);
+    svg.style.width = Math.max(650, scroll.clientWidth) * zoom + "px";
+    // Leave enough scrollable ocean to center even territories at the map edges.
+    scroll.style.paddingBlock = Math.round(scroll.clientHeight / 2) + "px";
+    scroll.dataset.encounterFocus = "true";
+    const rect = scroll.getBoundingClientRect(),
+      map = svg.getBoundingClientRect();
+    const drawerTop = window.innerHeight - Math.min(330, window.innerHeight - 20);
+    const visibleBottom = Math.min(rect.bottom, drawerTop);
+    const visibleHeight = Math.max(40, visibleBottom - rect.top);
+    const scale = map.width / 1200;
+    scroll.scrollTo({
+      left: scroll.scrollLeft + map.left + region.center[0] * scale - (rect.left + rect.width / 2),
+      top: scroll.scrollTop + map.top + region.center[1] * scale - (rect.top + visibleHeight / 2),
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
+    scroll.dataset.focusRegion = region.id;
   }
   const encounterDialog = node("dialog", "", "campaign-encounter-dialog");
   encounterDialog.id = "campaignEncounterDialog";
   document.body.append(encounterDialog);
-  let encounterRegion = null;
+  let encounterRegion = null,
+    encounterExpanded = false;
   encounterDialog.addEventListener("cancel", (event) => event.preventDefault());
   function openEncounter(id) {
-    encounterRegion = state()?.preparation?.region || id;
+    const next = state()?.preparation?.region || id;
+    if (encounterRegion !== next || !encounterDialog.open) encounterExpanded = false;
+    encounterRegion = next;
     renderEncounter();
     if (!encounterDialog.open) encounterDialog.showModal();
+    highlightEncounter();
+    // Run after render() restores ordinary scroll positions and the scene has laid out.
+    requestAnimationFrame(focusEncounter);
   }
+  encounterDialog.addEventListener("close", () => {
+    highlightEncounter();
+  });
   function renderEncounter() {
     const s = state();
     if (!s || s.phase !== "encounters" || !CampaignRules.disputed(s, encounterRegion)) {
@@ -500,10 +911,43 @@ window.CampaignUI = (() => {
       title = node("h2", region.name + " · " + I18n.text("交战状态"));
     title.id = "campaignEncounterTitle";
     encounterDialog.setAttribute("aria-labelledby", title.id);
-    header.append(title);
+    const expand = button(encounterExpanded ? "收起详情" : "展开详情", () => {
+      encounterExpanded = !encounterExpanded;
+      renderEncounter();
+    });
+    expand.disabled = false;
+    expand.id = "campaignEncounterExpand";
+    expand.setAttribute("aria-expanded", String(encounterExpanded));
+    expand.setAttribute("aria-controls", "campaignEncounterBody");
+    encounterDialog.dataset.expanded = encounterExpanded;
+    header.append(title, expand);
     const body = node("div", "", "campaign-encounter-body");
+    body.id = "campaignEncounterBody";
     const teams = node("div", "", "campaign-encounter-teams");
-    for (const team of [0, 1]) {
+    if (!encounterExpanded) {
+      for (const team of [0, 1]) {
+        const count = regionCount(s, region.id, team);
+        const card = node("article", "", "campaign-encounter-count");
+        card.dataset.team = team;
+        const relation = Number.isInteger(Net.seat)
+          ? Rules.seatTeam(Net.seat) === team
+            ? "己方"
+            : "敌方"
+          : "队伍" + (team + 1);
+        card.append(
+          node("small", relation + " · " + (team === 0 ? "地球联邦军" : "吉翁公国军")),
+          node(
+            "strong",
+            reportCount(
+              count,
+              s.intel?.team !== null && s.intel?.team !== team && s.intel?.progress < 75,
+            ),
+          ),
+        );
+        teams.append(card);
+      }
+    }
+    for (const team of encounterExpanded ? [0, 1] : []) {
       const army = s.units.filter((unit) => unit.region === region.id && unit.team === team),
         alive = army.filter((unit) => !unit.destroyed);
       const section = node("details", "", "campaign-encounter-team");
@@ -513,21 +957,33 @@ window.CampaignUI = (() => {
         node(
           "summary",
           (team === 0 ? I18n.text("地球联邦军") : I18n.text("吉翁公国军")) +
-            ` · ${alive.length} 台`,
-        ),
-      );
-      section.append(
-        node(
-          "p",
-          (s.regions.find((item) => item.id === region.id).owner === team
-            ? I18n.text("防守方")
-            : I18n.text("进攻方")) +
             " · " +
-            I18n.text("损毁 ") +
-            (army.length - alive.length),
+            reportCount(
+              regionCount(s, region.id, team),
+              s.intel?.team !== null && s.intel?.team !== team && s.intel?.progress < 75,
+            ),
         ),
       );
+      if (s.intel?.team === null || s.intel?.team === team || s.intel?.progress >= 100)
+        section.append(
+          node(
+            "p",
+            (s.regions.find((item) => item.id === region.id).owner === team
+              ? I18n.text("防守方")
+              : I18n.text("进攻方")) +
+              " · " +
+              I18n.text("损毁 ") +
+              (army.length - alive.length),
+          ),
+        );
       const list = node("div", "", "campaign-encounter-roster");
+      if (
+        !army.length &&
+        s.intel?.team !== null &&
+        s.intel?.team !== team &&
+        s.intel?.progress < 75
+      )
+        list.append(node("p", "情报不足，无法查看部队名单"));
       for (const unit of army) {
         const m = UnitModels[unit.unitId + "__" + unit.kitId],
           row = node("article", "", "campaign-encounter-unit");
@@ -537,26 +993,28 @@ window.CampaignUI = (() => {
         image.alt = "";
         image.loading = "lazy";
         const copy = node("div", "", "campaign-encounter-unit-copy");
-        copy.append(
-          node("strong", m.name),
-          node("small", I18n.text("驾驶员：") + unit.pilotName),
-          node(
-            "small",
-            unit.destroyed
-              ? "已损毁"
-              : unit.aboard
-                ? "搭载中"
-                : (unit.hp ?? m.hp) < m.hp
-                  ? "受损"
-                  : "待战",
-          ),
-        );
+        copy.append(node("strong", m.name));
+        if (!unit.intelRedacted)
+          copy.append(
+            node("small", I18n.text("驾驶员：") + unit.pilotName),
+            node(
+              "small",
+              unit.destroyed
+                ? "已损毁"
+                : unit.aboard
+                  ? "搭载中"
+                  : (unit.hp ?? m.hp) < m.hp
+                    ? "受损"
+                    : "待战",
+            ),
+          );
         const vitals = node("div", "", "campaign-encounter-vitals");
         vitals.append(
           node("span", `HP ${formatNumber(unit.hp ?? m.hp)} / ${formatNumber(m.hp)}`),
           node("span", `EN ${formatNumber(unit.en ?? m.en)} / ${formatNumber(m.en)}`),
         );
-        row.append(image, copy, vitals);
+        row.append(image, copy);
+        if (!unit.intelRedacted) row.append(vitals);
         list.append(row);
       }
       section.append(list);
@@ -567,24 +1025,15 @@ window.CampaignUI = (() => {
     const maps = document.createElement("select");
     maps.id = "campaignEncounterMap";
     maps.setAttribute("aria-label", "局地战地图");
-    for (const map of Object.values(ART.maps).filter(
-      (map) =>
-        map.environment !== "space" &&
-        map.spawns.length === Rules.getMap(Net.snapshot.settings.mapId).spawns.length &&
-        (!map.supportedModes || map.supportedModes.includes("regular")),
-    ))
-      maps.append(new Option(map.name, map.id));
-    if (encounter?.mapId) maps.value = encounter.mapId;
-    else if (
-      [...maps.options].some(
-        (option) => option.value === (previousMap || Net.snapshot.settings.mapId),
-      )
-    )
-      maps.value = previousMap || Net.snapshot.settings.mapId;
+    const indexedMap =
+      ART.scenarios[Net.snapshot.settings.scenarioId || "earth_0079_mid"].regions[region.id].mapId;
+    const mapId = encounter?.mapId || indexedMap;
+    const map = ART.maps[mapId];
+    maps.append(new Option(map.name, map.id));
+    maps.disabled = true;
     const preparation = s.preparation;
-    if (preparation?.mapId) maps.value = preparation.mapId;
-    maps.disabled = !!encounter?.hasBattle || !!preparation?.mapId;
     const mapLabel = node("label", "局地战地图", "campaign-encounter-map");
+    mapLabel.hidden = !encounterExpanded;
     mapLabel.append(maps);
     body.append(mapLabel);
     const pending = preparation?.region === region.id,
@@ -739,6 +1188,10 @@ window.CampaignUI = (() => {
     kits.disabled = !editable || prefab.weaponKits.length < 2;
     equipment.append(kits);
     content.append(equipment);
+    if (!unit.intelRedacted) {
+      content.append(button("配属驾驶员", () => campaignPilots.open(unit.id), !editable));
+      content.append(node("small", "驾驶员：" + unit.pilotName));
+    } else content.append(node("small", "情报不足：耐久、EN及驾驶员信息保密"));
     kits.onchange = () => {
       inspectedKit = kits.value;
       renderArmyEquipment(unit, kits.value, equipment, editable);
@@ -768,6 +1221,7 @@ window.CampaignUI = (() => {
         ["视野", m.sensors.sight],
         ["侦察", m.sensors.radar],
       ]) {
+        if (unit.intelRedacted && ["HP", "EN"].includes(label)) continue;
         const entry = node("div");
         entry.append(node("dt", label), node("dd", String(value)));
         stats.append(entry);
@@ -828,7 +1282,7 @@ window.CampaignUI = (() => {
   function regionForces(s, region, locked) {
     const root = node("section", "", "campaign-forces");
     const units = s.units
-      .filter((unit) => !unit.destroyed && unit.region === region.id)
+      .filter((unit) => !unit.destroyed && !unit.pendingTransfer && unit.region === region.id)
       .sort(
         (a, b) =>
           UnitModels[a.unitId + "__" + a.kitId].cost - UnitModels[b.unitId + "__" + b.kitId].cost ||
@@ -848,7 +1302,9 @@ window.CampaignUI = (() => {
     selection.append(
       node(
         "strong",
-        selected.length ? `已选 ${selected.length} 台` : `区域部队 ${units.length} 台`,
+        selected.length
+          ? `已选 ${selected.length} 台`
+          : I18n.text("区域部队") + " " + regionReport(s, region.id),
       ),
     );
     const all = controllable.length > 0 && selected.length === controllable.length;
@@ -927,13 +1383,20 @@ window.CampaignUI = (() => {
       portrait.alt = "";
       portrait.loading = "lazy";
       const copy = node("div", "", "campaign-force-copy");
-      copy.append(
-        node("strong", m?.name || unit.unitId),
-        node("small", kit ? I18n.localized(kit) : unit.kitId),
-      );
+      const heading = node("div", "", "campaign-force-heading");
+      const name = node("strong", m?.name || unit.unitId);
+      name.title = name.textContent;
+      heading.append(name);
+      copy.append(node("small", kit ? I18n.localized(kit) : unit.kitId, "campaign-force-kit"));
       const owner = node("small", player?.name || "无人控制", "campaign-force-owner");
       owner.setAttribute("data-i18n-ignore", "");
       copy.append(owner);
+      if (unit.pilotId) {
+        const assigned = node("small", unit.pilotName, "campaign-force-assigned-pilot");
+        assigned.title = unit.pilotName;
+        assigned.setAttribute("data-i18n-ignore", "");
+        copy.append(assigned);
+      }
       const status = node("span", "", "campaign-force-status");
       const pending = s.transfers.find((transfer) => transfer.ids.includes(unit.id));
       status.append(
@@ -964,11 +1427,28 @@ window.CampaignUI = (() => {
         vitals.append(meter);
       }
       const operations = node("div", "", "campaign-force-operations");
-      operations.append(button("预览 / 装备 / 技能", () => openArmy(unit.id)));
-      row.append(input, portrait, copy, vitals, operations);
+      operations.append(button("详情", () => openArmy(unit.id)));
+      const pilot = button(
+        "配属驾驶员",
+        () => campaignPilots.open(unit.id),
+        locked || !controllable.includes(unit),
+      );
+      pilot.className = "campaign-force-pilot";
+      pilot.title = I18n.text("驾驶员：") + (unit.pilotName || I18n.text("未知"));
+      if (!unit.intelRedacted) operations.append(pilot);
+      portrait.title = (m?.name || unit.unitId) + " · " + (kit ? I18n.localized(kit) : unit.kitId);
+      heading.append(operations);
+      row.append(input, heading, portrait, copy);
+      if (!unit.intelRedacted) row.append(vitals);
       list.append(row);
     }
-    if (!units.length) list.append(node("p", "该区域没有部队", "campaign-empty"));
+    const hiddenEnemies =
+      s.intel &&
+      s.intel.team !== null &&
+      s.intel.progress < 75 &&
+      regionCount(s, region.id, 1 - s.intel.team) !== 0;
+    if (hiddenEnemies) list.append(node("p", "情报不足，无法查看敌军部队名单", "campaign-empty"));
+    else if (!units.length) list.append(node("p", "该区域没有部队", "campaign-empty"));
     root.append(list);
     return root;
   }
@@ -1002,8 +1482,10 @@ window.CampaignUI = (() => {
     }
     const actions = node("div", "", "campaign-side-actions");
     actions.append(
-      button("生产单位", () => CampaignWorkspace.open("production", region.id)),
-      button("科技开发", () => CampaignWorkspace.open("research", region.id)),
+      button("生产", () => CampaignWorkspace.open("production", region.id)),
+      button("科技", () => CampaignWorkspace.open("research", region.id)),
+      button("驾驶员", () => campaignPilots.open(), Net.seat === null),
+      button("谍报", openIntelligence),
     );
     detail.append(actions, tabs);
     const locked = s.phase !== "strategy" || Net.seat === null || s.winner !== null;
@@ -1062,6 +1544,78 @@ window.CampaignUI = (() => {
       detail.append(node("p", "点击黄色交战区域查看双方战况", "campaign-battle-hint"));
     return detail;
   }
+  const seatsDialog = node("dialog", "", "campaign-order-dialog campaign-seats-dialog");
+  seatsDialog.id = "campaignSeatsDialog";
+  const seatsHeading = node("header", "", "campaign-order-header");
+  const watchSeat = button("切换到观战席", () => Net.request("switch_seat", { seat: null }));
+  watchSeat.id = "campaignBecomeSpectator";
+  seatsHeading.append(
+    node("h3", "玩家席位"),
+    watchSeat,
+    button("关闭", () => seatsDialog.close()),
+  );
+  const seatsBody = node("div", "", "campaign-seats-body");
+  const seatsPage = byId("roomSeatsPage"),
+    seatsHome = document.createComment("campaign-seats-home");
+  seatsPage.before(seatsHome);
+  const memberDetail = byId("roomDetailPanel"),
+    memberDetailHome = document.createComment("campaign-member-detail-home");
+  memberDetail.before(memberDetailHome);
+  seatsDialog.append(seatsHeading, seatsBody);
+  document.body.append(seatsDialog);
+  seatsDialog.addEventListener("close", () => {
+    if (memberDetail.open) byId("closeRoomDetail").click();
+    memberDetailHome.after(memberDetail);
+    seatsHome.after(seatsPage);
+  });
+  function openSeats() {
+    seatsBody.append(seatsPage);
+    document.body.append(memberDetail);
+    seatsDialog.showModal();
+    refreshSeats();
+  }
+  function refreshSeats() {
+    if (!seatsDialog.open) return;
+    RoomPanel.render(Net.snapshot);
+    watchSeat.disabled = !!Net.awaiting || Net.seat === null || !!Net.snapshot.returnCountdown;
+    for (const control of seatsPage.querySelectorAll(".team-heading button")) control.hidden = true;
+  }
+  const saveDialog = node("dialog", "", "campaign-order-dialog campaign-save-dialog");
+  saveDialog.id = "campaignSaveDialog";
+  document.body.append(saveDialog);
+  function openSaves() {
+    const s = state();
+    if (!s) return;
+    const host = Net.memberId === Net.snapshot.hostId;
+    const heading = node("header", "", "campaign-order-header");
+    heading.append(
+      node("h3", "战役存档"),
+      button("关闭", () => saveDialog.close()),
+    );
+    const name = node("p", s.name || CAMPAIGN_WORLD.name, "campaign-save-name");
+    name.setAttribute("data-i18n-ignore", "");
+    const actions = node("div", "", "campaign-save-actions");
+    actions.append(
+      button(
+        "导出战役",
+        () => {
+          command("campaign_export");
+          saveDialog.close();
+        },
+        !host,
+      ),
+      button(
+        "导入战役",
+        () => {
+          importFile.click();
+          saveDialog.close();
+        },
+        !host,
+      ),
+    );
+    saveDialog.replaceChildren(heading, name, node("p", `第${s.turn}大回合`), actions);
+    saveDialog.showModal();
+  }
   function render() {
     const s = state();
     if (!s) return;
@@ -1074,17 +1628,41 @@ window.CampaignUI = (() => {
     if (s.phase !== "strategy" && orderDialog.open) orderDialog.close();
     lastRevision = Net.snapshot.revision;
     const header = node("header", "", "campaign-header");
-    const team = Net.seat === null ? 0 : Rules.seatTeam(Net.seat),
+    const team = Net.seat === null ? (Net.snapshot.viewTeam ?? 0) : Rules.seatTeam(Net.seat),
       pool = s.teams[team];
-    header.append(
-      node("h2", "战略模式"),
-      node("strong", `第${s.turn}大回合 · ${s.phase === "strategy" ? "规划阶段" : "战斗阶段"}`),
+    const overview = node("div", "", "campaign-header-overview");
+    const identity = node("div", "", "campaign-header-identity");
+    const title = node("div", "", "campaign-header-title");
+    const divider = node("span", "", "campaign-title-divider");
+    divider.setAttribute("aria-hidden", "true");
+    const savedName = s.name || CAMPAIGN_WORLD.name;
+    const caption = node(
+      "span",
+      savedName === CAMPAIGN_WORLD.name ? I18n.text(savedName) : savedName,
+      "campaign-header-save-name",
     );
+    caption.title = savedName;
+    caption.setAttribute("data-i18n-ignore", "");
+    title.append(node("h2", "战略模式"), divider, caption);
+    identity.append(title);
+    const utilities = node("div", "", "campaign-header-utilities");
+    utilities.append(
+      button("存档", openSaves),
+      button("玩家席位", openSeats),
+      button("离开房间", () => requestMenu()),
+      button("设置", () => byId("shellSettings").click()),
+    );
+    overview.append(identity, utilities);
+    const balances = node("div", "", "campaign-header-balances");
     const resources = node("span", "", "resource-balance campaign-header-resources");
-    ProductionUI.resources(resources, pool);
-    header.append(resources, node("span", I18n.text("科技 ") + formatNumber(pool.technology)));
+    ProductionUI.resources(resources, pool, { compact: true });
+    const technology = node("span", "", "campaign-header-technology");
+    technology.append(node("small", "科技"), node("strong", formatNumber(pool.technology)));
+    balances.append(resources, technology);
+    const status = node("div", "", "campaign-header-state");
     const humans = Net.snapshot.members.filter((member) => member.seat !== null && !member.bot);
-    header.append(
+    status.append(
+      node("strong", `第${s.turn}大回合 · ${s.phase === "strategy" ? "规划阶段" : "战斗阶段"}`),
       node(
         "small",
         (s.phase === "strategy"
@@ -1093,24 +1671,16 @@ window.CampaignUI = (() => {
             s.encounters.filter(
               (item) => item.turn < s.turn && CampaignRules.disputed(s, item.region),
             ).length) + (s.commanders.includes(Net.seat) ? " · 总指挥官" : ""),
+        "campaign-header-readiness",
       ),
     );
-    if (Net.memberId === Net.snapshot.hostId)
-      header.append(
-        button("导出战役", () => command("campaign_export")),
-        button("导入战役", () => importFile.click()),
-      );
-    header.append(
-      button(
-        s.ready.includes(Net.seat) ? "撤销结束回合" : "结束战略回合",
-        () => command("campaign_ready", { ready: !s.ready.includes(Net.seat) }),
-        s.phase !== "strategy" || Net.seat === null || s.winner !== null,
-      ),
+    const finish = button(
+      s.ready.includes(Net.seat) ? "撤销结束回合" : "结束战略回合",
+      () => command("campaign_ready", { ready: !s.ready.includes(Net.seat) }),
+      s.phase !== "strategy" || Net.seat === null || s.winner !== null,
     );
-    header.append(
-      button("设置", () => byId("shellSettings").click()),
-      button("离开房间", () => requestMenu()),
-    );
+    finish.className = "primary campaign-end-turn";
+    header.append(overview, status, balances);
     const existing = panel.querySelector(".campaign-body");
     if (existing) {
       panel.querySelector(".campaign-header").replaceWith(header);
@@ -1120,13 +1690,16 @@ window.CampaignUI = (() => {
       refreshWorld(s);
     } else {
       const body = node("div", "", "campaign-body");
-      body.append(world(s), details(s));
-      panel.append(header, body);
+      body.append(details(s), world(s));
+      panel.append(header, body, campaignConsole.root);
       refreshWorld(s);
     }
+    const map = panel.querySelector(".campaign-world");
+    map.querySelector(".campaign-end-turn")?.remove();
+    map.append(finish);
     panel.querySelector(".campaign-status")?.remove();
     panel.querySelector(".campaign-victory")?.remove();
-    if (s.history.length) panel.append(node("small", s.history.at(-1), "campaign-status"));
+    campaignConsole.refresh();
     if (s.winner !== null)
       panel.append(
         node(
@@ -1141,6 +1714,10 @@ window.CampaignUI = (() => {
       else renderEncounter();
     } else if (encounterDialog.open) encounterDialog.close();
     if (armyDialog.open) renderArmy();
+    campaignPilots.refresh();
+    if (intelligenceDialog.open) renderIntelligence();
+    if (movementDialog.open) renderMovement();
+    refreshSeats();
     layout();
     for (const [selector, x, y] of scroll) {
       const item = panel.querySelector(selector);
@@ -1164,7 +1741,7 @@ window.CampaignUI = (() => {
     rounds.max = 10;
     rounds.value = 10;
     rounds.id = "campaignRounds";
-    const label = node("label", "局地战持续回合（双方各行动一次）");
+    const label = node("label", "局地战持续回合（与战斗界面计数一致）");
     label.append(rounds);
     dialog.append(
       node("h2", "创建地球战役"),
@@ -1206,7 +1783,10 @@ window.CampaignUI = (() => {
       const file = importFile.files[0];
       if (!file) return;
       if (file.size > 16 * 1024 * 1024) throw Error("战役存档过大");
-      await upload(JSON.parse(await file.text()));
+      const save = JSON.parse(await file.text());
+      if (save?.format === "ProjectGreed-campaign" && save.name === undefined)
+        save.name = file.name.replace(/\.json$/i, "").slice(0, 80);
+      await upload(save);
     } catch (error) {
       GameDialog.alert(error.message);
     } finally {
@@ -1237,8 +1817,13 @@ window.CampaignUI = (() => {
   window.addEventListener("page-changing", () => {
     panel.hidden = true;
     window.CampaignWorkspace?.close();
+    campaignPilots.close();
+    if (seatsDialog.open) seatsDialog.close();
+    if (saveDialog.open) saveDialog.close();
     if (orderDialog.open) orderDialog.close();
     if (armyDialog.open) armyDialog.close();
+    if (intelligenceDialog.open) intelligenceDialog.close();
+    if (movementDialog.open) movementDialog.close();
     if (encounterDialog.open) encounterDialog.close();
     setTimeout(() => {
       if (pageView === "campaign") panel.hidden = false;

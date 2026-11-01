@@ -163,7 +163,7 @@ test("catalog accepts authored maps and rules honour per-cell space and selected
   d.layers[0].data[4 * d.width + 15] = "terrain_snow";
   d.tiles.find((t) => t.id === "terrain_snow").environment = "space";
   const raw = require("../assets/unit-catalog.json"),
-    ref = "maps/editor_test.json",
+    ref = "maps/encounter/editor_test.json",
     map = M.compile(d);
   const catalog = loadCatalog({
     catalogOverride: { ...raw, maps: [...raw.maps, ref] },
@@ -225,5 +225,5 @@ test("map registration check validates an exported project without changing cata
   fs.writeFileSync(file, JSON.stringify(d));
   assert.deepEqual(importMap(file, { checkOnly: true }), { id: d.id, checkOnly: true });
   assert.equal(fs.readFileSync("assets/unit-catalog.json", "utf8"), before);
-  assert.equal(fs.existsSync("assets/maps/" + d.id + ".json"), false);
+  assert.equal(fs.existsSync("assets/maps/encounter/" + d.id + ".json"), false);
 });

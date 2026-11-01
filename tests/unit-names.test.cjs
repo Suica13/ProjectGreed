@@ -45,6 +45,20 @@ test("original indices survive deployment filtering and are not renumbered", () 
   assert.equal(mixed.units[0].formationIndex, 1);
   assert.match(G.unitLogName(mixed.units[0]), /\[No\.2\]$/);
 });
+
+test("campaign logs keep the army number across regional rosters, owners and model changes", () => {
+  const game = G.create(false, 1, [[entry], [entry]]);
+  const actor = game.units[0];
+  actor.campaignId = "army-137";
+  actor.formationIndex = 0;
+  assert.equal(G.unitLogName(actor), "61式主战坦克[No.137]");
+  actor.ownerSeat = 2;
+  actor.id = "2-0";
+  actor.formationIndex = 12;
+  actor.model = "RGM_79__machine_gun";
+  assert.equal(G.unitLogName(actor), G.modelOf(actor).name + "[No.137]");
+  assert.equal(G.unitName(actor), G.modelOf(actor).name, "ordinary labels still omit log codes");
+});
 test("AI formations no longer generate random display identifiers", () => {
   const army = G.randomFormation(1234);
   assert.deepEqual(army, G.randomFormation(1234));

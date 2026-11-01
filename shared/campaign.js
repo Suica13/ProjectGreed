@@ -1,12 +1,28 @@
 /* Persistent Earth campaign. Clients submit orders; this module owns resources and armies. */
 "use strict";
 const CampaignRules = (() => {
+  const crews =
+    typeof CampaignPilots !== "undefined" ? CampaignPilots : require("./campaign-pilots.js");
   const copy = (value) => JSON.parse(JSON.stringify(value));
   const check = (condition, message) => {
     if (!condition) throw Error(message);
   };
   const integer = (value, min, max) => Number.isSafeInteger(value) && value >= min && value <= max;
   const teamOf = (seat) => seat % 2;
+  const intelligenceRules = Object.freeze({ initial: 50, price: 2000, gain: 30, decay: 15 });
+  const intelligenceOf = (pool) =>
+    pool.intelligence || { progress: intelligenceRules.initial, fundedTurn: 0 };
+  // A report stays stable within a strategic turn, so reopening it cannot average away its error.
+  function intelligenceCount(count, progress, key) {
+    if (progress < 25) return null;
+    if (progress >= 75 || count === 0) return count;
+    const error = progress >= 50 ? 0.25 : 0.5;
+    let hash = 2166136261;
+    for (const char of key) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
+    const low = Math.max(1, Math.ceil(count * (1 - error)));
+    const high = Math.floor(count * (1 + error));
+    return low + ((hash >>> 0) % (high - low + 1));
+  }
   function commander(members, team) {
     return (
       members
@@ -17,6 +33,7 @@ const CampaignRules = (() => {
   function controls(state, members, seat, unit) {
     return (
       Number.isInteger(seat) &&
+      !unit.pendingTransfer &&
       unit.team === teamOf(seat) &&
       (unit.ownerSeat === seat || commander(members, unit.team) === seat)
     );
@@ -107,12 +124,25 @@ const CampaignRules = (() => {
     state.units.push(unit);
     return unit;
   }
+  function saveName(value, fallback) {
+    check(
+      value === undefined ||
+        (typeof value === "string" &&
+          value.trim().length > 0 &&
+          value.length <= 80 &&
+          !/[\u0000-\u001f\u007f]/.test(value)),
+      "战役存档名称无效",
+    );
+    return value?.trim() || fallback || "战略战役";
+  }
   function create(ctx, members, options = {}) {
     const rounds = Number(options.rounds ?? 10);
-    check(integer(rounds, 1, 10), "局地战轮数应为1至10");
+    check(integer(rounds, 1, 10), "局地战回合数应为1至10");
     const state = {
       format: "ProjectGreed-campaign",
       version: 1,
+      scenarioId: options.scenarioId || ctx.scenarioId || "earth_0079_mid",
+      name: saveName(options.name, ctx.world.name),
       geographyVersion: ctx.world.geographyVersion || 1,
       turn: 1,
       phase: "strategy",
@@ -121,6 +151,7 @@ const CampaignRules = (() => {
       winner: null,
       ready: [],
       units: [],
+      pilots: [],
       orders: [],
       transfers: [],
       encounters: [],
@@ -128,6 +159,7 @@ const CampaignRules = (() => {
       regions: ctx.world.regions.map((region) => ({ id: region.id, owner: region.owner })),
       teams: ["EFSF", "ZEON"].map((faction) => ({
         faction,
+        intelligence: { progress: intelligenceRules.initial, fundedTurn: 0 },
         money: ctx.world.settings.startingMoney,
         supplies: ctx.world.settings.startingSupplies,
         technology: ctx.world.settings.startingTechnology,
@@ -150,10 +182,12 @@ const CampaignRules = (() => {
     return state;
   }
   function disputed(state, id) {
+    if (state.intelRegions)
+      return !!state.intelRegions.find((region) => region.id === id)?.contested;
     return (
       new Set(
         state.units
-          .filter((unit) => !unit.destroyed && unit.region === id)
+          .filter((unit) => !unit.destroyed && !unit.pendingTransfer && unit.region === id)
           .map((unit) => unit.team),
       ).size > 1
     );
@@ -194,6 +228,103 @@ const CampaignRules = (() => {
     }
     return [...result];
   }
+  function unitLabel(ctx, unit) {
+    return ctx.G.unitLogName({ model: unit.unitId + "__" + unit.kitId, campaignId: unit.id });
+  }
+  function recordOrder(ctx, state, members, seat, command, previous = {}) {
+    const player = members.find((member) => member.seat === seat)?.name || "玩家" + (seat + 1);
+    const regionName = (id) => ctx.world.regions.find((region) => region.id === id)?.name || id;
+    const unit = state.units.find((unit) => unit.id === command.armyId);
+    const name = unit ? unitLabel(ctx, unit) : "";
+    const references = (ids) =>
+      [...new Set(ids || [])]
+        .map((id) => state.units.find((unit) => unit.id === id))
+        .filter(Boolean)
+        .map((unit) => unitLabel(ctx, unit))
+        .join("、");
+    let text;
+    switch (command.action) {
+      case "campaign_intelligence":
+        text =
+          "投入谍报资金：" +
+          intelligenceRules.price +
+          " · 情报进度 " +
+          intelligenceOf(state.teams[seat % 2]).progress +
+          "%";
+        break;
+      case "campaign_produce": {
+        const order = state.orders.at(-1);
+        text = `生产 ${model(ctx, order).name} ×${order.quantity} · ${regionName(order.region)} · 资金 ${order.money} / 物资 ${order.supplies} · ${order.reserved ? "已下单" : "等待资源"}`;
+        break;
+      }
+      case "campaign_cancel_order":
+        text =
+          "取消生产订单：" +
+          (previous.orderName || "") +
+          (previous.orderQuantity ? " ×" + previous.orderQuantity : "");
+        break;
+      case "campaign_move":
+        text = command.region
+          ? `调动 ${command.ids.length} 台部队 → ${regionName(command.region)}：${references(command.ids)}`
+          : `撤销 ${command.ids.length} 台部队的调动：${references(command.ids)}`;
+        break;
+      case "campaign_research":
+        text =
+          "开发科技：" +
+          ctx.development
+            .nodes(state.teams[seat % 2].faction)
+            .find((node) => node.id === command.techId)?.name;
+        break;
+      case "campaign_equip":
+        text = "更换装备：" + name;
+        break;
+      case "campaign_unit_skill":
+        text = "使用机体技能：" + name + (previous.skillName ? " · " + previous.skillName : "");
+        break;
+      case "campaign_transfer":
+        text = `申请转交 ${command.ids.length} 台部队 → ${members.find((member) => member.seat === command.to)?.name || "玩家" + (command.to + 1)}：${references(command.ids)}`;
+        break;
+      case "campaign_accept_transfer":
+        text =
+          (command.accept ? "接受部队控制权转交：" : "拒绝部队控制权转交：") +
+          references(previous.unitIds);
+        break;
+      default: {
+        if (!command.action.startsWith("campaign_pilot_")) return;
+        const labels = {
+          recruit: "招募驾驶员",
+          assign: "配属驾驶员",
+          train: "强化驾驶员",
+          upgrade: "驾驶员升职",
+          demote: "驾驶员降职",
+          reset: "重置驾驶员",
+          skill: "学习驾驶员技能",
+        };
+        const kind = command.action.slice("campaign_pilot_".length);
+        const crew = command.aceId
+          ? crews.find(state, seat % 2, "ace-" + command.aceId)
+          : crews.find(state, seat % 2, command.pilotId);
+        text =
+          (labels[kind] || "驾驶员操作") +
+          "：" +
+          (crew?.profile.name || (kind === "recruit" ? state.pilots.at(-1)?.profile.name : name));
+        if (kind === "assign") {
+          text =
+            command.pilotId === null
+              ? `取消配属：${previous.pilotName || "默认驾驶员"} ← ${name}`
+              : `配属驾驶员：${crew.profile.name} → ${name}` +
+                (previous.pilotName && previous.pilotName !== crew.profile.name
+                  ? ` · 原驾驶员：${previous.pilotName}`
+                  : "");
+        } else if (crew) {
+          const attached = crews.assigned(state, crew);
+          text += attached ? " · 配属单位：" + unitLabel(ctx, attached) : " · 未配属";
+        }
+      }
+    }
+    state.history.push(`战略第${state.turn}回合 · 队伍${(seat % 2) + 1} · ${player}：${text}`);
+    state.history = state.history.slice(-100);
+  }
   function action(ctx, state, members, seat, command) {
     check(
       Number.isInteger(seat) && members.some((member) => member.seat === seat),
@@ -208,7 +339,30 @@ const CampaignRules = (() => {
       check(unit && controls(state, members, seat, unit), "无权指挥这支部队");
       return unit;
     };
+    if (command.action.startsWith("campaign_pilot_")) {
+      const army = state.units.find((unit) => unit.id === command.armyId);
+      const previous = {
+        pilotName: army ? crews.find(state, army.team, army.pilotId)?.profile.name : null,
+      };
+      crews.action({ ...ctx, controls }, state, members, seat, command);
+      recordOrder(ctx, state, members, seat, command, previous);
+      clearReady(state);
+      return;
+    }
+    const previous = {};
     switch (command.action) {
+      case "campaign_intelligence": {
+        const intel = intelligenceOf(pool);
+        check(intel.fundedTurn !== state.turn, "本回合已投入谍报资金");
+        check(intel.progress < 100, "情报进度已满");
+        check(pool.money >= intelligenceRules.price, "资金不足");
+        pool.money -= intelligenceRules.price;
+        pool.intelligence = {
+          progress: Math.min(100, intel.progress + intelligenceRules.gain),
+          fundedTurn: state.turn,
+        };
+        break;
+      }
       case "campaign_equip": {
         const unit = getUnit(command.armyId);
         check(
@@ -248,6 +402,14 @@ const CampaignRules = (() => {
           delete unit.state.plan;
         }
         unit.kitId = command.kitId;
+        if (unit.pilotBase) {
+          const base = ctx.G.models[unit.pilotBase.unitId + "__" + unit.pilotBase.kitId];
+          const form = base?.pilotForms?.find((form) => form.unitId === unit.unitId);
+          const baseKit = Object.entries(form?.kitMap || {}).find(
+            ([, target]) => target === command.kitId,
+          )?.[0];
+          if (baseKit) unit.pilotBase.kitId = baseKit;
+        }
         pool.money -= price.money;
         pool.supplies -= price.supplies;
         updateSavedArmy(state, unit);
@@ -267,6 +429,7 @@ const CampaignRules = (() => {
           skill && ["transform", "flight"].includes(skill.type) && !skill.spawn && !skill.passive,
           "此技能需要在局地战中使用",
         );
+        previous.skillName = skill.name;
         check(unit.strategicSkillTurn !== state.turn, "本大回合已使用机体技能");
         check(
           !unit.state?.embarked &&
@@ -397,6 +560,8 @@ const CampaignRules = (() => {
           order && order.ownerSeat === seat && order.status !== "working",
           "只能取消自己的未开工订单",
         );
+        previous.orderName = model(ctx, order).name;
+        previous.orderQuantity = order.quantity;
         if (order.reserved) {
           pool.money += order.money;
           pool.supplies += order.supplies;
@@ -444,9 +609,14 @@ const CampaignRules = (() => {
           (item) => item.id === command.transferId && item.to === seat,
         );
         check(transfer, "转交请求不存在");
+        previous.unitIds = [...transfer.ids];
         if (command.accept === true)
-          for (const id of transfer.ids)
-            state.units.find((unit) => unit.id === id).ownerSeat = seat;
+          for (const id of transfer.ids) {
+            const unit = state.units.find((unit) => unit.id === id);
+            unit.ownerSeat = seat;
+            const crew = crews.find(state, unit.team, unit.pilotId);
+            if (crew) crew.ownerSeat = seat;
+          }
         state.transfers = state.transfers.filter((item) => item !== transfer);
         break;
       }
@@ -481,6 +651,7 @@ const CampaignRules = (() => {
       default:
         throw Error("未知的战略命令");
     }
+    recordOrder(ctx, state, members, seat, command, previous);
     clearReady(state);
   }
   function advance(ctx, state, members) {
@@ -505,7 +676,11 @@ const CampaignRules = (() => {
         pool.supplies -= research.supplies || 0;
       }
       for (const unit of state.units.filter(
-        (unit) => !unit.destroyed && unit.ownerSeat === player.seat && !busy(state, unit),
+        (unit) =>
+          !unit.destroyed &&
+          !unit.pendingTransfer &&
+          unit.ownerSeat === player.seat &&
+          !busy(state, unit),
       )) {
         if (state.transfers.some((transfer) => transfer.ids.includes(unit.id))) continue;
         const region = ctx.world.regions.find((item) => item.id === unit.region);
@@ -570,7 +745,9 @@ const CampaignRules = (() => {
         if (carrier) unit.moveTo = carrier.moveTo;
       }
     // All movement is simultaneous. Crossing forces meet in the same destination.
-    const moving = state.units.filter((unit) => !unit.destroyed && unit.moveTo);
+    const moving = state.units.filter(
+      (unit) => !unit.destroyed && !unit.pendingTransfer && unit.moveTo,
+    );
     const destinations = new Map(moving.map((unit) => [unit.id, unit.moveTo]));
     const origins = new Map(moving.map((unit) => [unit.id, unit.region]));
     for (const unit of moving) {
@@ -580,6 +757,7 @@ const CampaignRules = (() => {
           origins.get(other.id) === destinations.get(unit.id) &&
           destinations.get(other.id) === origins.get(unit.id),
       );
+      unit.entryFrom = origins.get(unit.id);
       unit.region = opposing
         ? [origins.get(unit.id), destinations.get(unit.id)].sort()[0]
         : destinations.get(unit.id);
@@ -589,7 +767,7 @@ const CampaignRules = (() => {
       const teams = [
         ...new Set(
           state.units
-            .filter((unit) => !unit.destroyed && unit.region === region.id)
+            .filter((unit) => !unit.destroyed && !unit.pendingTransfer && unit.region === region.id)
             .map((unit) => unit.team),
         ),
       ];
@@ -603,13 +781,12 @@ const CampaignRules = (() => {
           turn: 0,
         });
       const base = ctx.world.regions.find((item) => item.id === region.id);
-      if (teams.length <= 1) {
-        const income = base.factory
-          ? ctx.world.settings.factoryIncome
-          : ctx.world.settings.ordinaryIncome;
-        for (const resource of ["money", "supplies", "technology"])
-          state.teams[region.owner][resource] += income[resource];
-      }
+      // Regional income belongs to the current controller, including contested regions.
+      const income = base.factory
+        ? ctx.world.settings.factoryIncome
+        : ctx.world.settings.ordinaryIncome;
+      for (const resource of ["money", "supplies", "technology"])
+        state.teams[region.owner][resource] += income[resource];
     }
     state.orders = state.orders.filter((order) => {
       const holder = state.regions.find((region) => region.id === order.region);
@@ -640,11 +817,22 @@ const CampaignRules = (() => {
         if (order) order.status = "working";
       }
       if (order && state.units.length + order.quantity <= 5000 && --order.remaining <= 0) {
+        const produced = [];
         for (let i = 0; i < order.quantity; i++)
-          addUnit(ctx, state, order.ownerSeat, region.id, order.unitId, order.kitId);
+          produced.push(addUnit(ctx, state, order.ownerSeat, region.id, order.unitId, order.kitId));
+        state.history.push(
+          `战略第${state.turn}回合 · 队伍${order.team + 1} · ${region.name}：生产完成 ${model(ctx, order).name} ×${order.quantity} · ${produced.map((unit) => unitLabel(ctx, unit)).join("、")}`,
+        );
         holder.lastProducer = order.ownerSeat;
         state.orders = state.orders.filter((item) => item !== order);
       }
+    }
+    for (const pool of state.teams) {
+      const intel = intelligenceOf(pool);
+      pool.intelligence = {
+        ...intel,
+        progress: Math.max(0, intel.progress - intelligenceRules.decay),
+      };
     }
     state.ready = [];
     state.phase = state.encounters.some(
@@ -652,15 +840,39 @@ const CampaignRules = (() => {
     )
       ? "encounters"
       : "strategy";
-    if (state.phase === "strategy") state.turn++;
+    if (state.phase === "strategy") {
+      state.turn++;
+      arrive(ctx, state);
+    }
     state.history.push("战略第" + state.turn + "回合：生产、收入与调动已结算");
     state.history = state.history.slice(-100);
     const owners = new Set(state.regions.map((region) => region.owner));
     if (owners.size === 1) state.winner = state.regions[0].owner;
   }
-  function view(state) {
+  function arrive(ctx, state) {
+    for (const unit of state.units.filter(
+      (unit) =>
+        !unit.destroyed && unit.pendingTransfer && unit.pendingTransfer.arriveTurn <= state.turn,
+    )) {
+      unit.entryFrom = unit.pendingTransfer.from;
+      unit.region = unit.pendingTransfer.to;
+      delete unit.pendingTransfer;
+      if (
+        disputed(state, unit.region) &&
+        !state.encounters.some((item) => item.region === unit.region)
+      )
+        state.encounters.push({
+          region: unit.region,
+          battleSave: null,
+          roster: {},
+          settled: [],
+          turn: Math.max(0, state.turn - 1),
+        });
+    }
+  }
+  function view(state, team = null) {
     // Strip private battle data before cloning: large saved battlefields never enter snapshots.
-    return copy({
+    const result = copy({
       ...state,
       encounters: state.encounters.map(({ battleSave, roster, settled, ...encounter }) => ({
         ...encounter,
@@ -672,9 +884,93 @@ const CampaignRules = (() => {
         hp: actor?.hp ?? null,
         en: actor?.en ?? null,
         aboard: !!actor?.embarked,
-        pilotName: actor?.pilot?.name || (unit.team === 0 ? "联邦默认驾驶员" : "吉翁默认驾驶员"),
+        pilotName:
+          crews.find(state, unit.team, unit.pilotId)?.profile.name ||
+          actor?.pilot?.name ||
+          (unit.team === 0 ? "联邦默认驾驶员" : "吉翁默认驾驶员"),
       })),
     });
+    const progress = team === null ? 100 : intelligenceOf(state.teams[team]).progress;
+    result.intel = {
+      team,
+      progress,
+      rules: intelligenceRules,
+      fundedTurn: team === null ? 0 : intelligenceOf(state.teams[team]).fundedTurn,
+    };
+    result.intelRegions = state.regions.map((region) => {
+      const armies = state.units.filter(
+        (unit) => !unit.destroyed && !unit.pendingTransfer && unit.region === region.id,
+      );
+      return {
+        id: region.id,
+        contested: new Set(armies.map((unit) => unit.team)).size > 1,
+        counts: [0, 1].map((side) =>
+          intelligenceCount(
+            armies.filter((unit) => unit.team === side).length,
+            team === null || side === team ? 100 : progress,
+            `${state.turn}:${team}:${region.id}:${side}`,
+          ),
+        ),
+      };
+    });
+    const moving = new Map();
+    for (const unit of state.units.filter(
+      (unit) => !unit.destroyed && (unit.moveTo || unit.pendingTransfer),
+    )) {
+      const target = unit.moveTo || unit.pendingTransfer.to;
+      const key = `${unit.team}:${unit.region}:${target}`;
+      if (!moving.has(key))
+        moving.set(key, {
+          id: key,
+          team: unit.team,
+          from: unit.region,
+          to: target,
+          units: [],
+        });
+      moving.get(key).units.push(unit.id);
+    }
+    result.movements = [...moving.values()]
+      .filter((move) => team === null || move.team === team || progress >= 25)
+      .map(({ units, ...move }) => ({
+        ...move,
+        count: intelligenceCount(
+          units.length,
+          team === null || move.team === team ? 100 : progress,
+          `${state.turn}:${team}:${move.id}`,
+        ),
+        approximate: team !== null && move.team !== team && progress < 75,
+        unitIds: team === null || move.team === team || progress >= 75 ? units : [],
+      }));
+    if (team !== null) {
+      result.units = result.units
+        .filter((unit) => unit.team === team || (progress >= 75 && !unit.destroyed))
+        .map((unit) => {
+          if (unit.team === team || progress >= 100) return unit;
+          return {
+            id: unit.id,
+            unitId: unit.unitId,
+            kitId: unit.kitId,
+            team: unit.team,
+            ownerSeat: unit.ownerSeat,
+            region: unit.region,
+            moveTo: unit.moveTo,
+            destroyed: false,
+            ...(unit.pendingTransfer ? { pendingTransfer: unit.pendingTransfer } : {}),
+            intelRedacted: true,
+          };
+        });
+      result.pilots = result.pilots.filter((entry) => entry.team === team);
+      result.orders = result.orders.filter((entry) => entry.team === team);
+      result.transfers = result.transfers.filter((entry) =>
+        entry.ids.some((id) => result.units.some((unit) => unit.id === id && unit.team === team)),
+      );
+      result.history = result.history.filter(
+        (line) =>
+          new RegExp(`^战略第\\d+回合 · 队伍${team + 1} ·`).test(line) ||
+          /^战略第\d+回合：生产、收入与调动已结算$/.test(line),
+      );
+    }
+    return result;
   }
   function validate(ctx, value, members) {
     check(
@@ -757,11 +1053,32 @@ const CampaignRules = (() => {
           typeof unit.destroyed === "boolean",
         "战役单位无效",
       );
+      if (unit.stateRound !== undefined)
+        check(integer(unit.stateRound, 1, 10000000), "部队状态回合无效");
+      if (unit.pendingTransfer)
+        check(
+          unit.pendingTransfer.from === unit.region &&
+            ctx.world.regions
+              .find((region) => region.id === unit.region)
+              .links.includes(unit.pendingTransfer.to) &&
+            integer(unit.pendingTransfer.arriveTurn, value.turn, value.turn + 1),
+          "跨区转移存档无效",
+        );
+      if (unit.entryFrom !== undefined)
+        check(
+          ctx.world.regions.some((region) => region.id === unit.entryFrom),
+          "部队来向无效",
+        );
       check(
         unit.moveTo === null ||
           ctx.world.regions.find((region) => region.id === unit.region).links.includes(unit.moveTo),
         "战役调动无效",
       );
+      if (unit.pilotBase)
+        check(
+          ctx.G.models[unit.pilotBase.unitId + "__" + unit.pilotBase.kitId]?.pilotForms?.length > 0,
+          "驾驶员专用机基础机型无效",
+        );
       if (unit.state)
         check(
           Number.isFinite(unit.state.hp) &&
@@ -773,7 +1090,7 @@ const CampaignRules = (() => {
           "单位状态无效",
         );
       check(
-        members.some((member) => member.seat === unit.ownerSeat),
+        unit.ownerSeat < ctx.G.catalog.scenarios.earth_0079_mid.playersPerTeam * 2,
         "请先恢复存档中的玩家或AI席位：" + (unit.ownerSeat + 1),
       );
     }
@@ -802,7 +1119,7 @@ const CampaignRules = (() => {
           [order.money, order.supplies].every((n) => integer(n, 0, 1000000000)) &&
           integer(order.remaining, 1, 10000) &&
           integer(order.ownerSeat, 0, 15) &&
-          members.some((member) => member.seat === order.ownerSeat) &&
+          order.ownerSeat < ctx.G.catalog.scenarios.earth_0079_mid.playersPerTeam * 2 &&
           order.team === teamOf(order.ownerSeat) &&
           ["waiting", "queued", "working"].includes(order.status) &&
           order.reserved === (order.status !== "waiting"),
@@ -837,6 +1154,12 @@ const CampaignRules = (() => {
           "局地战行动完成状态无效",
         );
       }
+      if (encounter.resumeStartRound !== undefined)
+        check(
+          encounter.battleSave &&
+            integer(encounter.resumeStartRound, 1, encounter.battleSave.game.round),
+          "局地战起始回合无效",
+        );
       if (encounter.resumeStopRound !== undefined)
         check(
           encounter.battleSave &&
@@ -852,9 +1175,34 @@ const CampaignRules = (() => {
       0,
       ...value.units.map((unit) => Number(unit.id.split("-").at(-1))),
       ...value.orders.map((order) => Number(order.id.split("-").at(-1)) || 0),
+      ...(value.pilots || [])
+        .filter((entry) => !entry.profile?.ace)
+        .map((entry) => Number(entry.profile?.id?.split("-").at(-1)) || 0),
     );
     check(value.nextId > maxId, "战役编号计数无效");
     const clean = copy(value);
+    // Reports are derived per recipient; never restore client report fields as authoritative data.
+    delete clean.intel;
+    delete clean.intelRegions;
+    delete clean.movements;
+    for (const pool of clean.teams) {
+      const intel = intelligenceOf(pool);
+      check(
+        integer(intel.progress, 0, 100) && integer(intel.fundedTurn, 0, value.turn),
+        "情报数据无效",
+      );
+      pool.intelligence = { ...intel };
+    }
+    clean.scenarioId = value.scenarioId || "earth_0079_mid";
+    check(Object.hasOwn(ctx.G.catalog.scenarios, clean.scenarioId), "战役剧本不存在");
+    clean.name = saveName(value.name, ctx.world.name);
+    clean.pilots = crews.validate(
+      clean,
+      Array.from(
+        { length: ctx.G.catalog.scenarios.earth_0079_mid.playersPerTeam * 2 },
+        (_, seat) => ({ seat }),
+      ),
+    );
     clean.ready = [];
     clean.transfers = []; // Never restore an unaccepted permission transfer from an external archive.
     clean.history = Array.isArray(clean.history)
@@ -863,13 +1211,16 @@ const CampaignRules = (() => {
     return clean;
   }
   return {
+    intelligenceRules,
     create,
+    arrive,
     action,
     advance,
     available,
     quote,
     equipmentQuote,
     model,
+    unitLabel,
     addUnit,
     commander,
     controls,

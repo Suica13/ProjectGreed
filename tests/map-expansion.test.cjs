@@ -28,21 +28,27 @@ test("all maps reserve ship-sized side strips and preserve every original battle
       assert.ok(row.slice(0, expansion.addedLeft).every((t) => t === "plain"));
       assert.ok(row.slice(expansion.addedLeft + before.width).every((t) => t === "plain"));
     }
-    const seen = new Set();
+    const seen = new Map();
     for (let seat = 0; seat < map.spawns.length; seat++) {
       const cells = G.deploymentCells({ tiles: map.tiles, mapId: map.id }, seat);
       const team = G.seatTeam(seat),
         area = map.deploymentAreas[seat];
       assert.ok(cells.length >= 234, map.id + ":" + seat);
-      assert.equal(cells.length, area.width * area.height);
+      assert.equal(
+        cells.length,
+        map.deploymentAreas.reduce(
+          (sum, area, index) => sum + (G.seatTeam(index) === team ? area.width * area.height : 0),
+          0,
+        ),
+      );
       assert.ok(cells.some((c) => c.x === map.spawns[seat].x && c.y === map.spawns[seat].y));
       for (const cell of cells) {
         assert.ok(
           team === 0 ? cell.x < expansion.addedLeft : cell.x >= expansion.addedLeft + before.width,
         );
         const key = G.key(cell.x, cell.y);
-        assert.ok(!seen.has(key), map.id + ": overlap at " + key);
-        seen.add(key);
+        assert.ok(!seen.has(key) || seen.get(key) === team, map.id + ": hostile overlap at " + key);
+        seen.set(key, team);
       }
     }
     assert.equal(
@@ -74,7 +80,7 @@ test("expanded strips fit a Salamis plus 23 mobile suits at every space-map spaw
         {
           mapId: map.id,
           costLimit: 99999,
-          seatUnitLimits: map.spawns.map(() => 24),
+          seatUnitLimits: map.spawns.map(() => 72),
         },
       );
       assert.equal(game.units.length, map.spawns.length * 24);
@@ -90,7 +96,7 @@ test("expanded strips fit a Salamis plus 23 mobile suits at every space-map spaw
     }
 });
 
-test("deployment rejects the old battlefield and another player's strip while ordinary movement can enter the battlefield", () => {
+test("deployment shares allied strips, rejects enemy strips and permits movement into the battlefield", () => {
   const map = G.getMap("crossroads_2v2"),
     entry = { unitId: "RGM_79", kitId: "machine_gun" };
   const game = G.create(
@@ -103,7 +109,10 @@ test("deployment rejects the old battlefield and another player's strip while or
   const own = game.units.find((u) => u.ownerSeat === 0),
     teammateArea = map.deploymentAreas[2];
   assert.throws(() => G.deploy(game, 0, own.id, map.deploymentExpansion.addedLeft, own.y));
-  assert.throws(() => G.deploy(game, 0, own.id, teammateArea.x, teammateArea.y));
+  G.deploy(game, 0, own.id, teammateArea.x, teammateArea.y);
+  assert.throws(() =>
+    G.deploy(game, 0, own.id, map.deploymentAreas[1].x, map.deploymentAreas[1].y),
+  );
   const edge = { x: map.deploymentAreas[0].width - 1, y: own.y };
   G.deploy(game, 0, own.id, edge.x, edge.y);
   for (let seat = 0; seat < map.spawns.length; seat++) G.confirmDeployment(game, seat);
@@ -112,8 +121,8 @@ test("deployment rejects the old battlefield and another player's strip while or
 
 test("catalog rejects malformed, undersized or overlapping rectangular deployment areas", () => {
   const map = G.getMap("frontier_1v1");
-  const filename = path.resolve("assets/maps/.deployment-test-" + randomUUID() + ".json");
-  const ref = "maps/" + path.basename(filename);
+  const filename = path.resolve("assets/maps/encounter/.deployment-test-" + randomUUID() + ".json");
+  const ref = "maps/encounter/" + path.basename(filename);
   try {
     for (const mutate of [
       (m) => m.deploymentAreas.pop(),

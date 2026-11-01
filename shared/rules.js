@@ -7,6 +7,7 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const campaignBattlefield = typeof CampaignBattlefield !== "undefined" ? CampaignBattlefield : require("./campaign-battlefield.js");
   const damagePolicy =
     typeof WeaponSequence !== "undefined" ? WeaponSequence : require("./weapon-sequence.js");
   const roundDamage = damagePolicy.roundDamage;
@@ -82,6 +83,10 @@ const Tactics = (() => {
   }
   const unitName = (unit) => modelOf(unit).name;
   function unitLogName(unit) {
+    // Campaign army identity survives new regional deployments, owners and equipment.
+    const campaignNumber = Number(String(unit.campaignId).match(/^army-([1-9]\d*)$/)?.[1]);
+    if (Number.isSafeInteger(campaignNumber) && campaignNumber > 0)
+      return unitName(unit) + `[No.${campaignNumber}]`;
     // Original formation position survives license filtering, embarking and form changes.
     const savedIndex =
       Number.isInteger(unit.formationIndex) && unit.formationIndex >= 0
@@ -261,7 +266,7 @@ const Tactics = (() => {
   // Strategic rooms use scenario armies; ordinary formation and tag settings do not apply.
   function campaignRoomSettings(settings = {}) {
     return {
-      ...defaultRoomSettings(), mapId: settings.mapId || catalog.defaultMap,
+      ...defaultRoomSettings(), mapId: settings.mapId || "military_base_5v5",
       mode: "campaign", scenarioId: "earth_0079_mid", costLimit: maxCostLimit,
       unitCostLimit: maxCostLimit, unitLimit: catalog.formation.maxUnits,
     };
@@ -1089,6 +1094,10 @@ const Tactics = (() => {
     };
   }
   function deploymentCells(g, seat, unit = null) {
+    if (g.campaignBattlefield) {
+      const actor = unit || g.units.find(actor => actor.campaignDeploying && !actor.embarked && campaignBattlefield.deploymentSeat(g,actor) === seat);
+      return actor ? campaignBattlefield.deploymentCells(Tactics,g,actor).filter(cell => Number.isFinite(terrainCost(g,actor,cell.x,cell.y))) : [];
+    }
     const map = getMap(g.mapId),
       spawn = map.spawns[seat],
       available = new Map();
@@ -1119,7 +1128,7 @@ const Tactics = (() => {
 
   function deploy(g, team, id, x, y) {
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再调整");
-    const u = g.units.find((u) => u.id === id && ownerOf(u) === team);
+    const u = g.units.find((u) => u.id === id && (g.campaignBattlefield ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g,u) === team : ownerOf(u) === team));
     if (
       !onMap(u) ||
       !!u.embarked ||
@@ -1137,11 +1146,13 @@ const Tactics = (() => {
   function confirmDeployment(g, team) {
     if (g.units.some((u) => u.pendingMove?.seat === team)) throw Error("请先确认或取消移动");
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再次确认");
-    for (const u of g.units.filter((u) => ownerOf(u) === team && onMap(u) && !u.embarked)) {
+    const controlled = g.units.filter(u => g.campaignBattlefield ? campaignBattlefield.deploymentSeat(g,u) === team : ownerOf(u) === team);
+    for (const u of controlled.filter(u => onMap(u) && !u.embarked && (!g.campaignBattlefield || u.campaignDeploying))) {
       if (!deploymentCells(g, team, u).some((c) => c.x === u.x && c.y === u.y))
         throw Error("单位不在有效部署区域");
       if (!fits(g, u, u.x, u.y, u.angle, false, team)) throw Error("部署位置重叠");
     }
+    for (const unit of controlled) delete unit.campaignDeploying;
     g.deployment[team] = true;
     return g.deployment.every(Boolean);
   }
@@ -1619,11 +1630,10 @@ const Tactics = (() => {
   }
   function movementCost(g, u, x, y) {
     const base = terrainCost(g, u, x, y);
-    return g.units.some(
+    const cost = g.units.some(
       (enemy) => onMap(enemy) && enemy.team !== u.team && dist(enemy, { x, y }) === 1,
-    )
-      ? Math.max(base, 3)
-      : base;
+    ) ? Math.max(base, 3) : base;
+    return cost / (campaignBattlefield.onSupply(g, u, x, y) ? 1.25 : 1);
   }
   // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
   function reachable(g, u, starts = null) {
@@ -3059,6 +3069,7 @@ const Tactics = (() => {
       u.moved = false;
       u.origin = null;
     }
+    campaignBattlefield.heal(Tactics, g);
     // Supply ticks once on the recipient team's turn, with no stacking from overlapping providers.
     const providers = g.units.filter((u) => onMap(u) && u.team === g.team && modelOf(u).supplyAura);
     for (const u of g.units.filter((u) => onMap(u) && u.team === g.team)) {
@@ -3352,6 +3363,7 @@ const Tactics = (() => {
         LargeUnit: "大型",
       })[tag] || tag,
     hangars,
+    campaignBattlefield,
     W,
     getMap,
     mapWidth,

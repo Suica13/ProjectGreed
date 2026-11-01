@@ -863,10 +863,7 @@ const Formation = (() => {
       if (WeaponClasses.isWeaponSkill(skill))
         card.append(WeaponInfo.classBadge(skill), WeaponInfo.conversionRules(skill));
       if (skill.sourceWeapon)
-        card.append(
-          WeaponInfo.encyclopediaLink(skill),
-          Encyclopedia.usersButton(skill),
-        );
+        card.append(WeaponInfo.encyclopediaLink(skill), Encyclopedia.usersButton(skill));
       mechanics.append(card);
     }
     for (const weapon of model.hiddenWeapons || []) {
@@ -2856,7 +2853,12 @@ const Deployment = (() => {
     !!u &&
     phase === "deployment" &&
     !Net.awaiting &&
-    !game.deployment?.[Rules.ownerOf(u)] &&
+    (!game.campaignBattlefield || !!u.campaignDeploying) &&
+    !game.deployment?.[
+      game.campaignBattlefield
+        ? Rules.campaignBattlefield.deploymentSeat(game, u)
+        : Rules.ownerOf(u)
+    ] &&
     (Net.active
       ? Net.canControl(u) && Net.snapshot.connected.every(Boolean)
       : Rules.ownerOf(u) === team());
@@ -2879,8 +2881,12 @@ const Deployment = (() => {
     ].includes(phase);
     if (phase !== "deployment") return;
     const seat = team();
-    byId("deploymentStatus").textContent =
-      seat === null
+    byId("deploymentHint").textContent = game.campaignBattlefield
+      ? "在高亮区域内调整新参战单位，全部指挥玩家确认后继续局地战。"
+      : "部署区域全队共享，在高亮区域内调整位置，两队确认后开始回合。";
+    byId("deploymentStatus").textContent = game.campaignBattlefield
+      ? "局地战部署：防守方选择己方据点，进攻方仅限各自来向入口；原战场存活部队保持位置。"
+      : seat === null
         ? "观战：等待两队部署。"
         : `${teamName(Rules.seatTeam(seat))}全队共享部署区 · 选中己方单位，再点击高亮空格调整位置。`;
     byId("confirmDeployment").disabled = !canEdit() || !!pendingMovement();

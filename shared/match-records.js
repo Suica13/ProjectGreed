@@ -279,6 +279,7 @@ const MatchRecords = (() => {
   }
   function validateGame(G, g, tiles) {
     if (!g || !Object.hasOwn(G.catalog.maps, g.mapId)) throw Error("存档地图不受支持。");
+    G.campaignBattlefield.validate(G, g);
     const map = G.getMap(g.mapId);
     if (
       !Array.isArray(tiles) ||

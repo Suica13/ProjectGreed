@@ -18,8 +18,8 @@ from shapely.ops import unary_union
 from shapely.affinity import scale, affine_transform
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = json.loads((ROOT/'shared/campaign-geography.json').read_text(encoding='utf-8'))
-world = json.loads((ROOT/'shared/campaign-world.json').read_text(encoding='utf-8'))
+spec = json.loads((ROOT/'assets/maps/strategy/earth_0079_mid/geography-source.json').read_text(encoding='utf-8'))
+world = json.loads((ROOT/'assets/maps/strategy/earth_0079_mid/world.json').read_text(encoding='utf-8'))
 width, height = spec['width'], spec['height']
 low, high = spec['latitudeBounds']
 def project(lon, lat):
@@ -61,6 +61,16 @@ def path(geometry):
 
 source=json.loads((ROOT/'assets/geography/ne_110m_land.geojson').read_text(encoding='utf-8'))
 land=unary_union([shape(f['geometry']) for f in source['features']]).intersection(box(-180,low,180,high)).simplify(.18,preserve_topology=True)
+# Fictional UC coastline changes cut the actual land geometry, not a painted overlay.
+# Consequently room previews, territory selection and the world map share the same bay.
+for cutout in spec.get('coastalCutouts', []):
+    lon, lat = cutout['lonLat']
+    rx, ry = cutout['radiusDegrees']
+    assert rx > 0 and ry > 0, "Invalid coastal cutout radius"
+    bay = scale(Point(lon, lat).buffer(1, quad_segs=48), rx, ry)
+    assert land.intersects(bay) and not land.covers(bay), "Impact bay must open to the sea"
+    land = make_valid(land.difference(bay))
+
 africa=land.intersection(Polygon([(-20,-40),(55,-40),(55,12),(43,12),(35,30),(32,32),(10,38),(-6,37),(-20,30)]))
 greenland=next(p for p in polygons(land) if p.contains(Point(-42,72)))
 americas=land.intersection(box(-180,-60,-25,85)).union(greenland)
@@ -100,6 +110,6 @@ for r in regions:
 coverage=unary_union([*land_territories, projected(new_zealand)])
 assert coverage.symmetric_difference(projected(land)).area < .1, "Uncovered coastline"
 assert abs(sum(area.area for area in land_territories)-unary_union(land_territories).area) < .1, "Overlapping land regions"
-world.update(width=width,height=height,regions=regions,geographyVersion=2,landPath=path(projected(land)),legacyRegionIds=spec['legacyRegionIds'],references=spec['references'])
-(ROOT/'shared/campaign-world.json').write_text(json.dumps(world,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+world.update(width=width,height=height,regions=regions,geographyVersion=2,coastalCutouts=spec.get('coastalCutouts',[]),landPath=path(projected(land)),legacyRegionIds=spec['legacyRegionIds'],references=spec['references'])
+(ROOT/'assets/maps/strategy/earth_0079_mid/world.json').write_text(json.dumps(world,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('Built',len(regions),'Earth regions with coastline paths')

@@ -307,7 +307,7 @@ const Chat = (() => {
       list.scrollTop = list.scrollHeight;
     }
   }
-  for (const view of views) {
+  function bindView(view) {
     byId(view.channel).onchange = () => selectChannel(byId(view.channel).value);
     byId(view.form).onsubmit = (event) => {
       event.preventDefault();
@@ -332,6 +332,13 @@ const Chat = (() => {
       }, 8000);
     };
   }
+  function registerView(view) {
+    if (views.some((existing) => existing.lines === view.lines)) return;
+    views.push(view);
+    bindView(view);
+    render();
+  }
+  for (const view of views) bindView(view);
   function selectTab(tab) {
     const chat = tab === "chat";
     byId("log").hidden = chat;
@@ -367,6 +374,7 @@ const Chat = (() => {
   });
   render();
   return {
+    registerView,
     setSnapshot,
     setLog,
     saveLog,

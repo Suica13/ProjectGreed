@@ -7,7 +7,7 @@ const View = require('../shared/tilemap-view.js');
 
 for (const id of ['a_baoa_qu_space_3v3', 'colony_interior_3v3', 'mass_driver_facility_3v3']) {
   test(id + ' displays embedded art without painting terrain attributes over it', () => {
-    const map = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/maps', id + '.json'), 'utf8'));
+    const map = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/maps/encounter', id + '.json'), 'utf8'));
     const doc = M.importMap(map);
     const terrainLayers = doc.layers.filter(l => l.type === 'tile' && !l.decorative);
     assert.ok(terrainLayers.length > 0);

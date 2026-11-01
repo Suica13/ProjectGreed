@@ -7,7 +7,7 @@ const { createCampaignRoom } = require("../shared/campaign-room.js");
 const { createAttackPlanner } = require("../shared/attack-plans.js");
 const ctx = {
   G,
-  world: require("../shared/campaign-world.json"),
+  world: require("../assets/maps/strategy/earth_0079_mid/world.json"),
   production: require("../shared/production-data.cjs"),
   development: require("../shared/development.js"),
   validateBattle: (save) => Records.validateSave(G, save),
@@ -103,7 +103,7 @@ test("regional re-entry preserves the full battlefield and every actor, includin
     "no unit, field, RNG stream or turn state is rebuilt for a continuing battlefield",
   );
   assert.deepEqual(room.log.slice(1), oldLog);
-  assert.equal(room.campaignBattle.stopRound, expected.round + room.campaign.rounds * 2);
+  assert.equal(room.campaignBattle.stopRound, expected.round + room.campaign.rounds);
 });
 
 test("mid-battle campaign export retains escaped units and completed player actions through import", () => {
@@ -135,7 +135,7 @@ test("mid-battle campaign export retains escaped units and completed player acti
   enter();
   assert.deepEqual(room.game, savedBattle.game);
   assert.deepEqual(room.turnDone, [true, false]);
-  assert.equal(room.campaignBattle.stopRound, 21, "resume the original remaining segment rounds");
+  assert.equal(room.campaignBattle.stopRound, 11, "resume the original remaining segment rounds");
 });
 
 test("a sniper becoming ready at a segment boundary survives save validation and queues once on re-entry", () => {

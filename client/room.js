@@ -51,7 +51,12 @@ const RoomPanel = (() => {
     const badge = PlayerProfile.badge(member, snapshot.settings.mode);
     if (!badge) return element("span", "faction-badge", "—");
     const editingAI = member.bot && self.id === snapshot.hostId;
-    if ((!editingAI && member.id !== self.id) || snapshot.started) return badge;
+    if (
+      (!editingAI && member.id !== self.id) ||
+      snapshot.started ||
+      snapshot.settings.mode === "campaign"
+    )
+      return badge;
     const forced =
       member.seat === null ? null : snapshot.settings.teamFactions?.[Rules.seatTeam(member.seat)];
     const select = element("select", badge.className);
@@ -207,9 +212,11 @@ const RoomPanel = (() => {
     const settings = snapshot.settings || Rules.defaultRoomSettings();
     const mapSelect = byId("roomMapSelect");
     mapSelect.replaceChildren();
-    for (const map of Object.values(Rules.catalog.maps)) {
+    for (const map of Object.values(Rules.catalog.maps).filter(map => map.scope !== "strategic")) {
       const option = new Option(map.name, map.id);
-      option.disabled = !!map.supportedModes && !map.supportedModes.includes(settings.mode === "campaign" ? "regular" : settings.mode);
+      option.disabled =
+        !!map.supportedModes &&
+        !map.supportedModes.includes(settings.mode === "campaign" ? "regular" : settings.mode);
       mapSelect.add(option);
     }
     const nextKey = JSON.stringify([snapshot.room, snapshot.you?.id, snapshot.hostId]);
@@ -297,11 +304,17 @@ const RoomPanel = (() => {
     byId("roomScenarioSelect").hidden = !strategic;
     byId("roomScenarioSelect").disabled = locked;
     mapSelect.hidden = strategic;
-    for (const id of ["roomFormationPreset", "roomTagRestrictions", "roomTeamRestrictions"]) byId(id).closest("details").hidden = strategic;
-    for (const id of ["roomFogMode", "roomShareAlliedUnits"]) byId(id).closest("label").hidden = strategic;
+    for (const id of ["roomFormationPreset", "roomTagRestrictions", "roomTeamRestrictions"])
+      byId(id).closest("details").hidden = strategic;
+    for (const id of ["roomFogMode", "roomShareAlliedUnits"])
+      byId(id).closest("label").hidden = strategic;
     let summary = byId("campaignRoomRuleSummary");
     if (!summary) {
-      summary = element("p", "muted", "战略模式使用剧本部队与共享资源，不限制编组COST、单位点数或禁用标签。");
+      summary = element(
+        "p",
+        "muted",
+        "战略模式使用剧本部队与共享资源，不限制编组COST、单位点数或禁用标签。",
+      );
       summary.id = "campaignRoomRuleSummary";
       byId("roomBattleMode").closest("details").append(summary);
     }
@@ -309,7 +322,12 @@ const RoomPanel = (() => {
     if (strategic) {
       window.CampaignUI.preview(byId("roomMapPreview"), snapshot.campaign);
       byId("roomMapTitle").textContent = CAMPAIGN_WORLD.name;
-      byId("roomMapInfo").textContent = I18n.text("地球") + " · " + CAMPAIGN_WORLD.regions.length + I18n.text("个区域") + " · EFSF / ZEON";
+      byId("roomMapInfo").textContent =
+        I18n.text("地球") +
+        " · " +
+        CAMPAIGN_WORLD.regions.length +
+        I18n.text("个区域") +
+        " · EFSF / ZEON";
       byId("roomMapChoiceHint").textContent = I18n.text("战役剧本");
     } else drawMap(Rules.getMap(mapSelect.value));
   }
@@ -331,7 +349,8 @@ const RoomPanel = (() => {
     ])
       faction.add(new Option(label, value));
     faction.value = player.characterFaction || "PMC";
-    faction.disabled = locked || !!required || snapshot.settings.mode === "quick";
+    faction.disabled =
+      locked || !!required || ["quick", "campaign"].includes(snapshot.settings.mode);
     faction.onchange = () =>
       Net.request("configure_ai", {
         seat: player.seat,
@@ -460,7 +479,11 @@ const RoomPanel = (() => {
     const content = byId("roomDetailContent");
     content.classList.add("member-management");
     content.replaceChildren();
-    const locked = !!Net.awaiting || snapshot.started || snapshot.you.id !== snapshot.hostId;
+    const locked =
+      !!Net.awaiting ||
+      snapshot.started ||
+      !!snapshot.campaign ||
+      snapshot.you.id !== snapshot.hostId;
     if (snapshot.settings.mode === "quick") {
       const switchView = element(
         "button",
@@ -518,7 +541,11 @@ const RoomPanel = (() => {
       actionSection.append(element("h3", "", player.bot ? "移除 AI" : "玩家操作"));
       const remove = element("button", "danger", player.bot ? "移除 AI" : "踢出玩家");
       remove.id = player.bot ? "removeAI" + player.seat : "kickPlayer";
-      remove.disabled = !!Net.awaiting || snapshot.started || snapshot.you.id !== snapshot.hostId;
+      remove.disabled =
+        !!Net.awaiting ||
+        snapshot.started ||
+        !!snapshot.campaign ||
+        snapshot.you.id !== snapshot.hostId;
       remove.onclick = () => {
         Net.request(
           player.bot ? "remove_ai" : "kick_player",
@@ -799,7 +826,9 @@ const RoomPanel = (() => {
     );
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local
-      ? "离线" + ({ quick: "快速战", campaign: "战略模式", regular: "常规战" }[snapshot.settings.mode]) + "房间"
+      ? "离线" +
+        { quick: "快速战", campaign: "战略模式", regular: "常规战" }[snapshot.settings.mode] +
+        "房间"
       : "房间 " + snapshot.room;
     byId("roomStatus").hidden = !snapshot.started && !snapshot.loadedSave;
     byId("roomStatus").textContent = snapshot.connected.every(Boolean)
@@ -821,7 +850,10 @@ const RoomPanel = (() => {
       const column = element("section", "team-slot");
       column.dataset.team = String(team);
       const teamHeading = element("div", "team-heading");
-      const forced = snapshot.settings.teamFactions?.[team];
+      const forced =
+        snapshot.settings.mode === "campaign"
+          ? snapshot.campaign?.teams[team]?.faction || ["EFSF", "ZEON"][team]
+          : snapshot.settings.teamFactions?.[team];
       const summary = element(
         "button",
         "team-ban-summary",
@@ -830,6 +862,7 @@ const RoomPanel = (() => {
           : "强制阵营：" + (forced || "不限"),
       );
       summary.id = "teamBanSummary" + team;
+      summary.disabled = snapshot.settings.mode === "campaign";
       summary.title = summary.textContent;
       summary.setAttribute("aria-haspopup", "dialog");
       summary.onclick = () => {
@@ -838,6 +871,15 @@ const RoomPanel = (() => {
         byId("closeRoomDetail").focus();
       };
       teamHeading.append(element("h3", "", "队伍" + (team + 1)), summary, joinButtons[team]);
+      if (snapshot.settings.mode === "campaign") {
+        const badge = element(
+          "span",
+          "faction-badge faction-" + forced.toLowerCase() + " campaign-team-faction",
+          forced,
+        );
+        badge.title = PlayerProfile.displayFaction(forced);
+        teamHeading.append(badge);
+      }
       column.append(teamHeading);
       column.setAttribute("role", "table");
       column.setAttribute("aria-label", "队伍" + (team + 1));
@@ -873,21 +915,27 @@ const RoomPanel = (() => {
           kick.onclick = () => Net.request("kick_player", { memberId: reserved.memberId });
           nameCell.append(kick);
         }
-        if (!snapshot.started && self.id === snapshot.hostId && !member && !reserved) {
+        if (
+          (!snapshot.started || !!snapshot.campaign) &&
+          self.id === snapshot.hostId &&
+          !member &&
+          !reserved
+        ) {
           const addAI = element("button", "choose-spawn", "添加 AI");
           addAI.id = "addAI" + seat;
-          addAI.disabled = busy;
+          addAI.disabled = busy || !!snapshot.returnCountdown;
           addAI.onclick = () => Net.request("add_ai", { seat });
           nameCell.append(addAI);
         }
         const positionCell = element("div", "spawn-cell");
-        if (member || reserved) {
+        const takingAI = !!snapshot.campaign && member?.bot;
+        if ((member && !takingAI) || reserved) {
           positionCell.append(element("span", "spawn-position", "位置" + spawn.position));
         } else {
           const choose = element(
             "button",
             "choose-spawn",
-            (inBattle ? "接管" : "位置") + spawn.position,
+            (inBattle || takingAI ? "接管" : "位置") + spawn.position,
           );
           choose.id = "chooseSeat" + seat;
           choose.title = inBattle ? "接管位置" + spawn.position : "选择位置" + spawn.position;
@@ -934,8 +982,9 @@ const RoomPanel = (() => {
         self.seat !== null && self.seat !== undefined && Rules.seatTeam(self.seat) === team;
       const full = !seats.some(
         (item) =>
-          !roster.some((player) => player.seat === item.seat) &&
-          !snapshot.reservedSeats?.some((reserved) => reserved.seat === item.seat),
+          !roster.some(
+            (player) => player.seat === item.seat && (!snapshot.campaign || !player.bot),
+          ) && !snapshot.reservedSeats?.some((reserved) => reserved.seat === item.seat),
       );
       button.disabled = busy || current || full;
       button.textContent = current
@@ -969,7 +1018,10 @@ const RoomPanel = (() => {
     for (const id of ["importCampaignRoom", "restoreCampaignBackup"]) {
       const control = byId(id);
       if (control) {
-        control.hidden = snapshot.settings.mode !== "campaign" || !!snapshot.campaign || self.id !== snapshot.hostId;
+        control.hidden =
+          snapshot.settings.mode !== "campaign" ||
+          !!snapshot.campaign ||
+          self.id !== snapshot.hostId;
         control.disabled = busy;
       }
     }
@@ -1006,7 +1058,8 @@ const RoomPanel = (() => {
   byId("returnAssemblyToRoom").onclick = () => BattlePrompts.requestReturn();
   byId("toggleReady").onclick = () => {
     const self = Net.snapshot?.members.find((member) => member.id === Net.memberId);
-    if (Net.snapshot?.settings.mode === "campaign") return Net.request("set_ready", { ready: !self?.ready });
+    if (Net.snapshot?.settings.mode === "campaign")
+      return Net.request("set_ready", { ready: !self?.ready });
     const entries = self?.formationPreset?.units || Formation.current();
     const proceed = () => Net.request("set_ready", { ready: !self?.ready, formation: entries });
     if (!self?.ready && !Net.snapshot?.loadedSave) Formation.checkLicenses(entries, proceed);

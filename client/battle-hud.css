@@ -481,7 +481,8 @@
   background: #243846;
   color: #647e91;
 }
-#gameScene #log {
+#gameScene #log,
+#campaignStrategicLog {
   flex: 1;
   min-height: 0;
   height: auto;
@@ -490,7 +491,8 @@
   font-size: 11px;
   line-height: 1.7;
 }
-#gameScene #chatPanel {
+#gameScene #chatPanel,
+#campaignChatPanel {
   flex: 1;
   min-height: 0;
   padding: 7px 14px;
@@ -499,7 +501,8 @@
   grid-template-rows: minmax(0, 1fr) auto auto;
   gap: 4px;
 }
-#gameScene #chatLines {
+#gameScene #chatLines,
+#campaignChatLines {
   grid-row: 1;
   min-height: 0;
   height: auto;
@@ -507,7 +510,8 @@
   overflow: auto;
   font-size: 11px;
 }
-#gameScene #chatForm {
+#gameScene #chatForm,
+#campaignChatForm {
   grid-column: 1;
   grid-row: 2;
   display: grid;
@@ -519,12 +523,16 @@
 }
 #gameScene #chatForm input,
 #gameScene #chatForm select,
-#gameScene #chatForm button {
+#gameScene #chatForm button,
+#campaignChatForm input,
+#campaignChatForm select,
+#campaignChatForm button {
   font-size: 11px;
   border-radius: 1px;
   min-height: 32px;
 }
-#gameScene #chatStatus {
+#gameScene #chatStatus,
+#campaignChatStatus {
   grid-column: 1;
   grid-row: 3;
   padding: 0;

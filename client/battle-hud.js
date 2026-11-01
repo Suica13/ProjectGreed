@@ -17,13 +17,15 @@ const BattleHUD = (() => {
   byId("mapWrap").append(terrainInfo, byId("hudActionBand"));
   // Phase information and zoom share one flowing column, including translated text.
   const phaseControls = element("div", "hud-phase-controls");
-  phaseControls.append(
-    scene.querySelector(".phase-row"),
-
-  );
+  phaseControls.append(scene.querySelector(".phase-row"));
   const topControls = element("div", "hud-top-controls");
   topControls.append(scene.querySelector(".map-camera-controls"), byId("hudTurnActions"));
   byId("mapWrap").append(phaseControls, topControls);
+  const capturePoint = element("button", "primary", "占领");
+  capturePoint.id = "hudCapturePoint";
+  capturePoint.title = "占领据点：消耗5AP，空中单位不可占领";
+  const transferRegion = element("button", "", "转移");
+  transferRegion.id = "hudTransferRegion";
   const attackPlanSummary = element("section", "attack-plan-summary");
   attackPlanSummary.id = "hudAttackPlanSummary";
   attackPlanSummary.hidden = true;
@@ -260,8 +262,13 @@ const BattleHUD = (() => {
     const headerButtons = scene.querySelector(".header-buttons");
     if (active && settings.parentElement !== headerButtons) headerButtons.append(settings);
     else if (!active && settings.previousSibling !== settingsHome) settingsHome.after(settings);
-    if (active && music.parentElement !== byId("hudMusicSlot")) byId("hudMusicSlot").append(music);
-    else if (!active && music.previousSibling !== musicHome) musicHome.after(music);
+    const musicSlot = active
+      ? byId("hudMusicSlot")
+      : pageView === "campaign"
+        ? byId("campaignMusicSlot")
+        : null;
+    if (musicSlot && music.parentElement !== musicSlot) musicSlot.append(music);
+    else if (!musicSlot && music.previousSibling !== musicHome) musicHome.after(music);
     if (lastSelection !== selected) {
       tab = "overview";
       byId("unitPanel").scrollTop = 0;
@@ -272,14 +279,16 @@ const BattleHUD = (() => {
     }
     lastMode = mode;
     lastSelection = selected;
-    const counterPicking = phase === "reaction" && pending &&
-      counterDraft(getUnit(pending.target)).pickingTarget;
+    const counterPicking =
+      phase === "reaction" && pending && counterDraft(getUnit(pending.target)).pickingTarget;
     const pickingTarget = AttackControls.changing() || !!counterPicking;
     scene.dataset.targetSwitch = String(pickingTarget);
     scene.dataset.counterTargetSwitch = String(!!counterPicking);
-    attackPlanSummary.hidden = !(active && (
-      (AttackControls.changing() && AttackControls.renderSummary(attackPlanSummary,unit)) ||
-      (counterPicking && renderCounterSummary(attackPlanSummary,getUnit(pending.target)))));
+    attackPlanSummary.hidden = !(
+      active &&
+      ((AttackControls.changing() && AttackControls.renderSummary(attackPlanSummary, unit)) ||
+        (counterPicking && renderCounterSummary(attackPlanSummary, getUnit(pending.target))))
+    );
     cancelTargetSwitch.hidden = !active || !pickingTarget;
     cancelTargetSwitch.textContent = I18n.text("取消更换目标");
     const actionActive =
@@ -289,7 +298,14 @@ const BattleHUD = (() => {
     const pendingMove = pendingMovement();
     const confirmingMove = !!pendingMove && mode === "move-confirm";
     const movingPreview = pendingMove && PlanningUI.motion(pendingMove, performance.now());
-    confirmMove.textContent = I18n.text(pendingMove?.pendingMove?.rotation ? "确认旋转" : pendingMove?.pendingMove?.boarding ? "确认搭载" : "确认移动") + " (Q)";
+    confirmMove.textContent =
+      I18n.text(
+        pendingMove?.pendingMove?.rotation
+          ? "确认旋转"
+          : pendingMove?.pendingMove?.boarding
+            ? "确认搭载"
+            : "确认移动",
+      ) + " (Q)";
     confirmMove.setAttribute("aria-keyshortcuts", "Q");
     if (confirmingMove) byId("hudCancelAction").setAttribute("aria-keyshortcuts", "W");
     else byId("hudCancelAction").removeAttribute("aria-keyshortcuts");
@@ -373,6 +389,41 @@ const BattleHUD = (() => {
             : !canCommand;
       row.prepend(infoButton);
       infoButton.hidden = false;
+      row.prepend(capturePoint);
+      row.append(transferRegion);
+      const point = unit && Rules.campaignBattlefield.nodeAt(Rules, game, unit);
+      capturePoint.hidden =
+        !own ||
+        !point ||
+        phase !== "idle" ||
+        game.campaignBattlefield?.owners[point.id] === unit.team ||
+        !!unit.flying ||
+        Rules.modelOf(unit).movementType === "air" ||
+        !!unit.embarked;
+      capturePoint.disabled =
+        !canCommand || !Rules.campaignBattlefield.canCapture(Rules, game, unit);
+      capturePoint.onclick = () => Net.request("capture_point", { unitId: unit.id });
+      const exits = unit ? Rules.campaignBattlefield.exits(Rules, game, unit) : [];
+      transferRegion.hidden = !own || phase !== "idle" || !exits.length;
+      transferRegion.disabled = isBusy() || !Net.canAct() || isAI();
+      transferRegion.onclick = async () => {
+        const destination = await GameDialog.choose({
+          title: "转移部队",
+          message: "离开当前战场，下一战略回合抵达目标区块。",
+          actions: [
+            { label: "取消", value: null },
+            ...exits.map((gate) => ({
+              label:
+                CAMPAIGN_WORLD.regions.find((region) => region.id === gate.region)?.name ||
+                gate.region,
+              value: gate.region,
+              primary: exits.length === 1,
+            })),
+          ],
+        });
+        if (destination) Net.request("region_transfer", { unitId: unit.id, region: destination });
+      };
+
       if (pendingMove) for (const button of row.querySelectorAll("button")) button.disabled = true;
       row.hidden = false;
       commands.append(row);

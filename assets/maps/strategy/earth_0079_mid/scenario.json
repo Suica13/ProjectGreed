@@ -1,0 +1,137 @@
+{
+  "id": "earth_0079_mid",
+  "name": "地球攻略战[0079中期]",
+  "playersPerTeam": 5,
+  "world": "world.json",
+  "regions": {
+    "alaska": {
+      "map": "local-battles/alaska_5v5.json"
+    },
+    "canada": {
+      "map": "local-battles/canada_5v5.json"
+    },
+    "canada_east": {
+      "map": "local-battles/canada_east_5v5.json"
+    },
+    "greenland": {
+      "map": "local-battles/greenland_5v5.json"
+    },
+    "california": {
+      "map": "local-battles/california_5v5.json"
+    },
+    "america": {
+      "map": "local-battles/america_5v5.json"
+    },
+    "new_york": {
+      "map": "local-battles/new_york_5v5.json"
+    },
+    "central_america": {
+      "map": "local-battles/central_america_5v5.json"
+    },
+    "andes": {
+      "map": "local-battles/andes_5v5.json"
+    },
+    "south_america": {
+      "map": "local-battles/south_america_5v5.json"
+    },
+    "jaburo": {
+      "map": "local-battles/jaburo_5v5.json"
+    },
+    "belfast": {
+      "map": "local-battles/belfast_5v5.json"
+    },
+    "scandinavia": {
+      "map": "local-battles/scandinavia_5v5.json"
+    },
+    "europe": {
+      "map": "local-battles/europe_5v5.json"
+    },
+    "europe_central": {
+      "map": "local-battles/europe_central_5v5.json"
+    },
+    "europe_south": {
+      "map": "local-battles/europe_south_5v5.json"
+    },
+    "odessa": {
+      "map": "local-battles/odessa_5v5.json"
+    },
+    "russia_west": {
+      "map": "local-battles/russia_west_5v5.json"
+    },
+    "siberia": {
+      "map": "local-battles/siberia_5v5.json"
+    },
+    "russia_east": {
+      "map": "local-battles/russia_east_5v5.json"
+    },
+    "kamchatka": {
+      "map": "local-battles/kamchatka_5v5.json"
+    },
+    "kazakhstan": {
+      "map": "local-battles/kazakhstan_5v5.json"
+    },
+    "beijing": {
+      "map": "local-battles/beijing_5v5.json"
+    },
+    "china": {
+      "map": "local-battles/china_5v5.json"
+    },
+    "japan": {
+      "map": "local-battles/japan_5v5.json"
+    },
+    "arabia": {
+      "map": "local-battles/arabia_5v5.json"
+    },
+    "india": {
+      "map": "local-battles/india_5v5.json"
+    },
+    "madras": {
+      "map": "local-battles/madras_5v5.json"
+    },
+    "southeast_asia": {
+      "map": "local-battles/southeast_asia_5v5.json"
+    },
+    "indonesia": {
+      "map": "local-battles/indonesia_5v5.json"
+    },
+    "dakar": {
+      "map": "local-battles/dakar_5v5.json"
+    },
+    "north_africa": {
+      "map": "local-battles/north_africa_5v5.json"
+    },
+    "central_africa": {
+      "map": "local-battles/central_africa_5v5.json"
+    },
+    "kilimanjaro": {
+      "map": "local-battles/kilimanjaro_5v5.json"
+    },
+    "south_africa": {
+      "map": "local-battles/south_africa_5v5.json"
+    },
+    "australia_west": {
+      "map": "local-battles/australia_west_5v5.json"
+    },
+    "australia_north": {
+      "map": "local-battles/australia_north_5v5.json"
+    },
+    "torrington": {
+      "map": "local-battles/torrington_5v5.json"
+    },
+    "north_atlantic": {
+      "map": "local-battles/north_atlantic_5v5.json"
+    },
+    "south_atlantic": {
+      "map": "local-battles/south_atlantic_5v5.json"
+    },
+    "indian_ocean": {
+      "map": "local-battles/indian_ocean_5v5.json"
+    },
+    "south_pacific": {
+      "map": "local-battles/south_pacific_5v5.json"
+    },
+    "hawaii": {
+      "map": "local-battles/hawaii_5v5.json"
+    }
+  }
+}

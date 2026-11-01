@@ -35,12 +35,13 @@
 }
 .campaign-body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 350px;
+  grid-template-columns: 350px minmax(0, 1fr);
   min-height: 0;
   flex: 1;
   gap: 14px;
 }
 .campaign-world {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -299,21 +300,55 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 16px;
-  width: min(1050px, calc(100vw - 24px));
-  height: min(760px, calc(100dvh - 24px));
+  position: fixed;
+  inset: auto;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1050px, 100vw);
+  height: min(760px, calc(100dvh - 20px));
+  transition: height 280ms ease;
+  animation: campaign-drawer-enter 220ms ease-out;
   max-width: none;
   max-height: none;
   box-sizing: border-box;
-  padding: 22px;
-  margin: auto;
+  padding: 26px 22px 18px;
+  padding-bottom: max(18px, env(safe-area-inset-bottom));
+  margin: 0;
   overflow: hidden;
   background: #18222e;
   color: #eef5fc;
   border: 1px solid #d3b56d;
-  border-radius: 7px;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 0;
+  box-shadow: 0 -12px 40px #0006;
+}
+.campaign-encounter-dialog::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: calc(50% - 22px);
+  width: 44px;
+  height: 4px;
+  border-radius: 4px;
+  background: #9daec2;
+}
+@keyframes campaign-drawer-enter {
+  from {
+    transform: translate(-50%, 100%);
+  }
+  to {
+    transform: translate(-50%, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .campaign-encounter-dialog[open] {
+    transition: none;
+    animation: none;
+  }
 }
 .campaign-encounter-dialog::backdrop {
-  background: #060b13cc;
+  background: transparent;
 }
 .campaign-encounter-dialog > .campaign-encounter-header {
   position: static;
@@ -443,7 +478,7 @@ body.campaign-delegated[data-page="game"] .campaign-delegation-badge {
 }
 @media (max-width: 700px) {
   .campaign-encounter-dialog[open] {
-    padding: 14px;
+    padding: 24px 14px max(14px, env(safe-area-inset-bottom));
     gap: 10px;
   }
   .campaign-encounter-header h2 {
@@ -528,7 +563,7 @@ body.campaign-active #startRoomGame {
     padding: 10px;
   }
   .campaign-body {
-    grid-template-columns: minmax(0, 1fr) 290px;
+    grid-template-columns: 290px minmax(0, 1fr);
     gap: 8px;
   }
 }
@@ -538,6 +573,7 @@ body.campaign-active #startRoomGame {
     flex-direction: column;
   }
   .campaign-world {
+    order: -1;
     flex: none;
     height: 230px;
   }
@@ -1013,7 +1049,7 @@ body[data-page="campaign"] #shellSidebar {
   display: none !important;
 }
 .campaign-body {
-  grid-template-columns: minmax(0, 1fr) minmax(350px, 32%);
+  grid-template-columns: minmax(350px, 32%) minmax(0, 1fr);
 }
 .campaign-detail {
   display: flex;
@@ -1174,23 +1210,6 @@ body[data-page="campaign"] #shellSidebar {
 body[data-page="campaign"] #openClientSettings {
   display: none !important;
 }
-.campaign-screen {
-  padding-bottom: 52px;
-}
-@media (max-width: 700px) {
-  .campaign-header > button {
-    flex: 1 1 62px;
-    min-width: 0;
-    padding: 6px 3px;
-    font-size: 11px;
-  }
-  .campaign-screen > .campaign-header {
-    gap: 6px;
-  }
-  .campaign-header > h2 {
-    flex: 1;
-  }
-}
 
 .campaign-map-scroll svg > g {
   cursor: default;
@@ -1221,4 +1240,1076 @@ body[data-page="campaign"] #openClientSettings {
 .campaign-map-scroll svg {
   flex: none;
   margin-block: auto;
+}
+
+.campaign-encounter-dialog > .campaign-encounter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.campaign-encounter-header h2 {
+  min-width: 0;
+}
+#campaignEncounterExpand {
+  flex: none;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.campaign-encounter-dialog[open][data-expanded="false"] {
+  height: min(330px, calc(100dvh - 20px));
+  max-height: calc(100dvh - 20px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+.campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-header h2 {
+  font-size: 20px;
+}
+.campaign-encounter-count {
+  display: grid;
+  gap: 12px;
+  padding: 18px 12px;
+  border: 1px solid #648ca8;
+  border-radius: 5px;
+  background: #1d2c3d;
+  text-align: center;
+}
+.campaign-encounter-count[data-team="1"] {
+  border-color: #b87980;
+  background: #342630;
+}
+.campaign-encounter-count small {
+  color: #cfdeed;
+  font-size: 12px;
+}
+.campaign-encounter-count strong {
+  color: #b6e3ff;
+  font-size: 25px;
+}
+.campaign-encounter-count[data-team="1"] strong {
+  color: #ffc0c4;
+}
+.campaign-encounter-map[hidden] {
+  display: none;
+}
+@media (max-width: 700px) {
+  .campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-teams {
+    grid-template-columns: 1fr 1fr;
+  }
+  .campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-header h2 {
+    font-size: 17px;
+  }
+  .campaign-encounter-count {
+    padding: 14px 6px;
+    gap: 10px;
+  }
+}
+
+/* The preparation drawer leaves the focused battlefield visible behind it. */
+.campaign-map-scroll[data-encounter-focus="true"] svg {
+  margin-block: 0;
+}
+.campaign-encounter-outline {
+  pointer-events: none;
+}
+.campaign-encounter-outline path {
+  fill: none;
+  stroke: #ffdc62;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.campaign-encounter-glow {
+  stroke-width: 10px;
+  opacity: 0.2;
+}
+.campaign-encounter-edge {
+  stroke-width: 2.5px;
+}
+.campaign-encounter-particle {
+  fill: #fff2aa;
+  stroke: #ffc83e;
+  stroke-width: 0.6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .campaign-encounter-particle {
+    display: none;
+  }
+}
+
+/* Dense regional rows keep a large army readable without opening every unit. */
+.campaign-force-list {
+  gap: 5px;
+}
+.campaign-force-card {
+  grid-template-columns: 16px 40px minmax(0, 1fr);
+  gap: 4px 7px;
+  padding: 7px;
+}
+.campaign-force-card > input {
+  grid-row: 1 / 4;
+}
+.campaign-force-portrait {
+  width: 40px;
+  height: 40px;
+  grid-row: 1 / 4;
+}
+.campaign-force-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 6px;
+  line-height: 1.3;
+}
+.campaign-force-copy > strong {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.campaign-force-kit {
+  display: none;
+}
+.campaign-force-owner {
+  font-size: 10px;
+}
+.campaign-force-status {
+  font-size: 10px;
+  white-space: nowrap;
+}
+.campaign-force-status small {
+  font-size: inherit;
+}
+.campaign-force-vitals {
+  grid-column: 3;
+  gap: 7px;
+}
+.campaign-vital small {
+  font-size: 9px;
+  margin-bottom: 2px;
+}
+.campaign-vital-track {
+  height: 3px;
+}
+.campaign-force-operations {
+  grid-column: 3;
+  display: grid;
+  grid-template-columns: repeat(2, 72px);
+  gap: 5px;
+}
+.campaign-force-operations button {
+  min-width: 0;
+  min-height: 28px;
+  padding: 3px 5px;
+  font-size: 11px;
+}
+.campaign-force-pilot {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.campaign-pilot-dialog[open] {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  box-sizing: border-box;
+  width: min(780px, calc(100vw - 20px));
+  height: min(760px, calc(100dvh - 20px));
+  max-width: none;
+  max-height: none;
+  padding: 16px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  overflow: hidden;
+  background: #1b2633;
+  border: 1px solid #8cbddd;
+  border-radius: 7px;
+  color: #edf4fc;
+}
+.campaign-pilot-dialog::backdrop {
+  background: #0008;
+}
+.campaign-pilot-dialog > .campaign-order-header > button {
+  flex: none;
+  white-space: nowrap;
+}
+.campaign-pilot-body {
+  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.campaign-pilot-toolbar,
+.campaign-pilot-advancement {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.campaign-pilot-recruit {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 8px;
+}
+.campaign-pilot-recruit > img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  grid-row: span 2;
+}
+.campaign-pilot-recruit button {
+  grid-column: 1 / -1;
+}
+.campaign-pilot-ace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+.campaign-pilot-dialog select,
+.campaign-pilot-dialog input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.campaign-pilot-list {
+  display: grid;
+  gap: 8px;
+}
+.campaign-pilot-card {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: #263342;
+  border: 1px solid #536a7f;
+  border-radius: 4px;
+}
+.campaign-pilot-card > img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  background: #363b43;
+  border: 1px solid #8798a8;
+  box-sizing: border-box;
+}
+.campaign-pilot-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.campaign-pilot-copy > strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.campaign-pilot-copy small {
+  font-size: 11px;
+  color: #d0dce8;
+}
+.campaign-pilot-buttons {
+  display: flex;
+  gap: 5px;
+}
+.campaign-pilot-buttons button {
+  padding: 6px;
+}
+.campaign-pilot-details {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 7px;
+}
+.campaign-pilot-details > p {
+  margin: 5px 0;
+}
+.campaign-pilot-stat {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 55px 42px 42px;
+  align-items: center;
+  gap: 5px;
+}
+.campaign-pilot-stat button {
+  padding: 4px;
+}
+.campaign-pilot-advancement button {
+  font-size: 12px;
+  padding: 7px;
+}
+.campaign-pilot-upgrade-ready:not(:disabled) {
+  animation: campaign-pilot-upgrade 1.2s ease-in-out infinite alternate;
+}
+@keyframes campaign-pilot-upgrade {
+  to {
+    box-shadow: inset 0 0 0 2px #8bd4ff;
+    background: #315778;
+  }
+}
+@media (max-width: 500px) {
+  .campaign-pilot-card {
+    grid-template-columns: 38px minmax(0, 1fr);
+  }
+  .campaign-pilot-card > img {
+    width: 38px;
+    height: 38px;
+  }
+  .campaign-pilot-buttons {
+    grid-column: 2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .campaign-pilot-upgrade-ready {
+    animation: none;
+  }
+}
+
+.campaign-selection-toolbar {
+  padding: 4px 0;
+  margin-bottom: 4px;
+}
+.campaign-selection-summary {
+  margin: 0;
+}
+.campaign-unit-actions {
+  margin-top: 5px;
+}
+.campaign-unit-actions button {
+  padding: 5px;
+  min-height: 32px;
+}
+@media (max-width: 700px) {
+  .campaign-world {
+    height: 180px;
+  }
+  .campaign-detail > h3 {
+    margin-bottom: 2px;
+    font-size: 15px;
+  }
+  .campaign-detail > p {
+    font-size: 11px;
+    margin: 2px 0;
+  }
+  .campaign-side-actions {
+    margin: 4px 0;
+  }
+  .campaign-side-actions button,
+  .campaign-detail > .campaign-tabs button {
+    padding: 5px 8px;
+    min-height: 32px;
+  }
+  .campaign-selection-toolbar {
+    padding: 3px 0;
+  }
+  .campaign-selection-toolbar .campaign-select-all {
+    padding: 4px 8px;
+  }
+}
+
+.campaign-map-scroll {
+  touch-action: none;
+  user-select: none;
+  overscroll-behavior: contain;
+  cursor: grab;
+}
+.campaign-map-scroll.is-dragging,
+.campaign-map-scroll.is-dragging svg * {
+  cursor: grabbing !important;
+}
+/* The strategic header keeps identity/resources separate from orders and utilities. */
+.campaign-screen {
+  --campaign-inset: 18px;
+  padding: var(--campaign-inset);
+  padding-bottom: 0;
+}
+.campaign-screen > .campaign-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #42566a;
+}
+.campaign-header-overview {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+.campaign-header-overview h2 {
+  margin: 0;
+  font-size: 21px;
+  white-space: nowrap;
+}
+.campaign-header-balances {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  min-width: 0;
+}
+.campaign-header-technology {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: #b1dcf5;
+  font-variant-numeric: tabular-nums;
+}
+.campaign-header-technology small {
+  font-size: 11px;
+  color: #a6bdce;
+}
+.campaign-header-technology strong {
+  font-size: 14px;
+}
+.campaign-header-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 18px;
+  min-width: 0;
+}
+.campaign-header-state > strong {
+  font-size: 13px;
+  color: #e3effa;
+}
+.campaign-header .campaign-header-readiness {
+  display: block;
+  color: #a8bdce;
+  font-size: 11px;
+}
+.campaign-header-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  align-items: center;
+}
+.campaign-header-actions button {
+  flex: none;
+  padding: 6px 12px;
+  min-height: 32px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.campaign-header-actions .campaign-end-turn {
+  margin-left: 8px;
+  border-color: #82caee;
+  background: #295270;
+  color: #eef9ff;
+}
+
+/* Same flat message dock and chat rows as tactical combat; music stays in its toolbar. */
+.campaign-console {
+  flex: none;
+  height: clamp(150px, 21dvh, 210px);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-inline: calc(-1 * var(--campaign-inset));
+  padding: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-top: 1px solid #536779;
+  background: #111d27;
+}
+.campaign-console[data-expanded="true"] {
+  height: min(40dvh, 360px);
+}
+.campaign-console[data-collapsed="true"] {
+  height: 39px;
+}
+.campaign-console-tabs {
+  flex: 0 0 38px;
+  min-width: 0;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 1px solid #2c3d4a;
+}
+.campaign-console-navigation {
+  display: flex;
+  flex: none;
+  gap: 5px;
+  align-items: center;
+}
+.campaign-console-tabs button {
+  flex: none;
+  white-space: nowrap;
+  min-height: 28px;
+  padding: 4px 9px;
+  font-size: 11px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 1px;
+  background: transparent;
+}
+.campaign-console-tabs button[aria-selected="true"],
+#campaignConsoleExpand[aria-pressed="true"] {
+  border-bottom-color: #63c2ef;
+  color: #def5ff;
+  background: #1a4968;
+}
+#campaignConsoleExpand {
+  margin-left: auto;
+}
+#campaignConsoleFold {
+  margin-left: 3px;
+}
+.campaign-console-pane {
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+  background: #101620;
+}
+#campaignChatPanel[hidden],
+#campaignStrategicLog[hidden] {
+  display: none;
+}
+#campaignChatLines {
+  scrollbar-gutter: stable;
+}
+#campaignChatForm :is(input, select, button) {
+  min-width: 0;
+  box-sizing: border-box;
+}
+#campaignChatChannel {
+  max-width: 110px;
+}
+#campaignChatStatus:empty {
+  display: none;
+}
+.campaign-log-line + .campaign-log-line {
+  margin-top: 3px;
+}
+.campaign-music-slot {
+  display: flex;
+  flex: 0 1 auto;
+  max-width: 300px;
+  justify-content: flex-end;
+  min-width: 0;
+}
+#campaignMusicSlot #musicPlayer {
+  position: static;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  z-index: auto;
+}
+#campaignMusicSlot #musicTitle {
+  min-width: 0;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  color: #a7bdcf;
+}
+#campaignMusicSlot #musicPlayer button {
+  padding: 3px 6px;
+  min-height: 24px;
+  font-size: 10px;
+}
+#campaignMusicSlot #musicStatus {
+  display: none;
+}
+@media (max-width: 1100px) {
+  .campaign-header-state,
+  .campaign-header-actions {
+    grid-column: 1 / -1;
+  }
+  .campaign-header-state {
+    justify-content: space-between;
+  }
+  .campaign-header-actions {
+    justify-content: flex-start;
+  }
+  .campaign-header-actions .campaign-end-turn {
+    margin-left: auto;
+  }
+}
+@media (max-width: 900px) {
+  .campaign-screen {
+    --campaign-inset: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .campaign-screen {
+    --campaign-inset: 8px;
+  }
+  .campaign-screen > .campaign-header {
+    gap: 7px;
+    padding-bottom: 7px;
+  }
+  .campaign-header-overview {
+    gap: 8px;
+  }
+  .campaign-header-overview h2 {
+    font-size: 17px;
+  }
+  .campaign-header-balances {
+    gap: 10px;
+  }
+  .campaign-header-balances .resource-balance {
+    gap: 10px;
+    font-size: 11px;
+  }
+  .campaign-header-technology {
+    gap: 4px;
+  }
+  .campaign-header-technology strong {
+    font-size: 12px;
+  }
+  .campaign-header-technology small {
+    display: inline;
+    font-size: 10px;
+  }
+  .campaign-header-state > strong,
+  .campaign-header .campaign-header-readiness {
+    font-size: 10px;
+  }
+  .campaign-header-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .campaign-header-actions button {
+    min-width: 0;
+    padding: 5px 3px;
+    min-height: 30px;
+    font-size: 11px;
+  }
+  .campaign-header-actions .campaign-end-turn {
+    margin: 0;
+  }
+  .campaign-header-actions[data-count="4"] .campaign-end-turn {
+    grid-column: 1 / -1;
+  }
+  .campaign-console {
+    height: 136px;
+  }
+  .campaign-console-tabs {
+    padding-inline: 6px;
+    gap: 3px;
+  }
+  .campaign-console-tabs button {
+    padding-inline: 6px;
+  }
+  .campaign-console-navigation {
+    gap: 2px;
+  }
+  .campaign-music-slot {
+    max-width: 190px;
+  }
+  #campaignMusicSlot #musicTitle {
+    max-width: 65px;
+  }
+  #campaignMusicSlot #musicPlayer {
+    gap: 2px;
+  }
+  #campaignMusicSlot #musicPlayer button {
+    padding-inline: 3px;
+    font-size: 9px;
+  }
+  #campaignChatPanel {
+    padding: 6px 8px;
+  }
+  #campaignChatForm {
+    gap: 5px;
+  }
+  #campaignChatChannel {
+    max-width: 80px;
+  }
+  .campaign-world {
+    height: 150px;
+  }
+}
+
+/* Two fixed toolbar rows: title/room utilities, then orders/resources. */
+.campaign-screen > .campaign-header {
+  padding: 0 0 8px;
+}
+.campaign-header-overview {
+  align-items: flex-start;
+}
+.campaign-header-identity {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+.campaign-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.campaign-title-divider {
+  flex: 0 0 28px;
+  height: 1px;
+  background: #76a9c8;
+}
+.campaign-header-save-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  color: #c6d8e7;
+}
+.campaign-header-utilities {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+}
+.campaign-header-utilities button {
+  white-space: nowrap;
+  min-height: 32px;
+  padding: 6px 11px;
+  font-size: 12px;
+}
+.campaign-header-actions {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  justify-content: flex-start;
+}
+.campaign-header-balances {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
+  flex-wrap: nowrap;
+  align-self: start;
+}
+.campaign-header-actions .campaign-end-turn {
+  margin-left: 6px;
+}
+.campaign-save-name {
+  overflow-wrap: anywhere;
+  color: #dceeff;
+}
+.campaign-save-actions {
+  display: flex;
+  gap: 10px;
+}
+.campaign-save-actions button {
+  flex: 1;
+  padding: 10px;
+}
+.campaign-seats-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  width: min(1080px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  overflow: hidden;
+}
+.campaign-seats-dialog > header {
+  flex: none;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #536a7f;
+}
+.campaign-seats-body {
+  overflow: auto;
+  min-height: 0;
+}
+#campaignSeatsDialog #roomSeatsPage {
+  display: block;
+}
+#campaignSeatsDialog #roomSeatResources {
+  display: none;
+}
+#campaignSeatsDialog .team-slots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+#campaignSeatsDialog .team-slot[data-team="0"] {
+  background: #1a2c40;
+  border-color: #75b7ed;
+}
+#campaignSeatsDialog .team-slot[data-team="1"] {
+  background: #382630;
+  border-color: #e38890;
+}
+#campaignSeatsDialog .team-heading {
+  display: flex;
+  align-items: center;
+}
+#campaignSeatsDialog .team-slot {
+  max-height: min(55dvh, 500px);
+  overflow: auto;
+}
+#campaignSeatsDialog .spawn-slot {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 0;
+}
+#campaignSeatsDialog .lineup-faction {
+  min-width: 0;
+}
+#campaignSeatsDialog .lineup-faction > * {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#campaignSeatsDialog .lineup-ready {
+  white-space: nowrap;
+}
+#campaignSeatsDialog .lineup-header,
+#campaignSeatsDialog .spawn-slot {
+  grid-template-columns: minmax(100px, 1fr) 55px minmax(85px, 110px) 55px;
+}
+@media (max-width: 700px) {
+  .campaign-header-title {
+    gap: 6px;
+  }
+  .campaign-title-divider {
+    flex-basis: 14px;
+  }
+  .campaign-header-save-name {
+    font-size: 11px;
+  }
+  .campaign-header-utilities {
+    gap: 4px;
+  }
+  .campaign-header-utilities button {
+    min-height: 29px;
+    padding: 4px 6px;
+    font-size: 10px;
+  }
+  .campaign-header-actions {
+    gap: 4px;
+  }
+  .campaign-header-actions button {
+    padding: 5px;
+    font-size: 11px;
+  }
+  .campaign-header-actions .campaign-end-turn {
+    margin-left: 0;
+  }
+  .campaign-header-balances,
+  .campaign-header-balances .resource-balance {
+    gap: 8px;
+  }
+  #campaignSeatsDialog .team-slots {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .campaign-seats-dialog {
+    padding: 12px;
+  }
+  #campaignSeatsDialog .lineup-header,
+  #campaignSeatsDialog .spawn-slot {
+    grid-template-columns: minmax(80px, 1fr) 42px 85px 42px;
+    font-size: 10px;
+    gap: 4px;
+  }
+}
+@media (max-width: 360px) {
+  .campaign-header-title h2 {
+    font-size: 15px;
+  }
+  .campaign-header-actions button {
+    font-size: 10px;
+    padding-inline: 3px;
+  }
+  .campaign-header-balances,
+  .campaign-header-balances .resource-balance {
+    gap: 4px;
+    font-size: 10px;
+  }
+  .campaign-header-balances .resource-icon {
+    width: 12px;
+    height: 12px;
+  }
+  .campaign-header-technology strong {
+    font-size: 10px;
+  }
+}
+
+/* Map commands stay outside the zoomed/scrolling artwork. */
+.campaign-world > .campaign-end-turn {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2;
+  min-height: 34px;
+  padding: 7px 14px;
+  white-space: nowrap;
+  border: 1px solid #82caee;
+  background: #295270;
+  color: #eef9ff;
+  box-shadow: 0 2px 8px #0008;
+}
+.campaign-header > .campaign-header-state {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  align-items: baseline;
+}
+.campaign-side-actions {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.campaign-force-heading {
+  grid-column: 2 / -1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+.campaign-force-heading > strong {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+}
+.campaign-force-heading > .campaign-force-operations {
+  flex: none;
+}
+.campaign-force-card > input {
+  grid-column: 1;
+  grid-row: 1 / 4;
+}
+.campaign-force-card > .campaign-force-portrait {
+  grid-column: 2;
+  grid-row: 2 / 4;
+}
+.campaign-force-card > .campaign-force-copy {
+  grid-column: 3;
+  grid-row: 2;
+}
+.campaign-force-assigned-pilot {
+  grid-column: 1;
+  grid-row: 2;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #a9d8f1;
+  font-size: 10px;
+}
+.campaign-force-copy > .campaign-force-status {
+  grid-column: 2;
+  grid-row: 1;
+}
+.campaign-force-card > .campaign-force-vitals {
+  grid-row: 3;
+}
+@media (max-width: 700px) {
+  .campaign-world > .campaign-end-turn {
+    right: 14px;
+    bottom: 14px;
+    min-height: 30px;
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+  .campaign-header > .campaign-header-state {
+    display: grid;
+    gap: 3px;
+  }
+}
+
+/* Intelligence and marching reports use bounded modal content on phones too. */
+.campaign-side-actions {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.campaign-intelligence-dialog,
+.campaign-movement-dialog {
+  box-sizing: border-box;
+  width: min(620px, calc(100vw - 20px));
+  max-height: calc(100dvh - 20px);
+  overflow-y: auto;
+  color: #e5f0fb;
+}
+.campaign-intelligence-body,
+.campaign-movement-body {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.campaign-intelligence-value {
+  display: block;
+  margin-block: 12px 6px;
+  font-size: 24px;
+  color: #b8e6ff;
+}
+.campaign-intelligence-meter {
+  height: 12px;
+  border: 1px solid #60778a;
+  background: #101822;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.campaign-intelligence-meter > span {
+  display: block;
+  height: 100%;
+  background: #55b8f0;
+  transition: width 180ms ease;
+}
+.campaign-intelligence-tier {
+  padding: 9px;
+  border-left: 3px solid #4c5968;
+  color: #aebac8;
+  background: #18222e;
+}
+.campaign-intelligence-tier[data-active="true"] {
+  border-color: #74ceff;
+  color: #e5f4ff;
+  background: #253342;
+}
+.campaign-intelligence-dialog > button {
+  min-height: 36px;
+  width: 100%;
+}
+.campaign-movement-unit {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #445365;
+}
+.campaign-movement-unit > img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  background: #343942;
+  border: 1px solid #718495;
+  border-radius: 3px;
+}
+.campaign-movement-unit small {
+  display: block;
+  margin-top: 4px;
+  color: #b6cada;
+}
+.campaign-movement-label {
+  cursor: pointer;
+}
+.campaign-movement-label:is(:hover, :focus) > rect {
+  fill: #304254;
+  stroke-width: 2;
+}
+
+.team-heading > .campaign-team-faction {
+  margin-left: auto;
+  flex: none;
+  align-self: center;
+  white-space: nowrap;
+  font-size: 11px;
+}
+#campaignSeatsDialog .spawn-cell .choose-spawn {
+  min-width: 0;
+  padding: 5px 3px;
+  font-size: 11px;
+  white-space: nowrap;
 }

@@ -14,7 +14,7 @@ function importMap(filename, { checkOnly = false } = {}) {
   const issues = M.gameIssues(doc, catalog.formation.maxUnits);
   if (issues.length) throw Error(issues.join("\n"));
   const map = M.compile(doc),
-    reference = "maps/" + doc.id + ".json";
+    reference = "maps/encounter/" + doc.id + ".json";
   if (!catalog.maps.includes(reference)) catalog.maps.push(reference);
   loadCatalog({ catalogOverride: catalog, mapOverrides: { [reference]: map } });
   if (!checkOnly) {

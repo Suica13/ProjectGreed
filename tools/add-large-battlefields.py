@@ -50,7 +50,7 @@ def finish(m):
                 seen.add((xx,yy));queue.append((xx,yy))
     assert len(seen)==sum(t not in ("water","rock") for row in m["tiles"] for t in row),m["id"]
     widen_map(m)
-    (ASSETS/"maps"/(m["id"]+".json")).write_text(json.dumps(m,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    (ASSETS/"maps"/"encounter"/(m["id"]+".json")).write_text(json.dumps(m,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 
 
 def space_expansion():
@@ -93,7 +93,7 @@ def register_maps(maps):
     catalog_path=ASSETS/"unit-catalog.json"
     catalog=json.loads(catalog_path.read_text(encoding="utf-8"))
     for m in maps:
-        reference="maps/"+m["id"]+".json"
+        reference="maps/encounter/"+m["id"]+".json"
         if reference not in catalog["maps"]:catalog["maps"].append(reference)
     catalog["maps"].sort(key=lambda ref:json.loads((ASSETS/ref).read_text(encoding="utf-8"))["playersPerTeam"])
     catalog_path.write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
