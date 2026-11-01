@@ -5,7 +5,7 @@ const url = pathToFileURL(path.resolve("public/client.html")).href;
 
 test("phone landscape uses a centred desktop viewport and survives orientation changes", async ({
   browser,
-}) => {
+}, testInfo) => {
   const context = await browser.newContext({
     viewport: { width: 844, height: 390 },
     isMobile: true,
@@ -31,7 +31,7 @@ test("phone landscape uses a centred desktop viewport and survives orientation c
     expect(geometry.body.x).toBeGreaterThan(0);
     expect(Math.abs(geometry.body.x * 2 + 1600 - geometry.width)).toBeLessThan(3);
     await page.locator("#shellSettings").click();
-    await page.screenshot({ path: ".openai/phone-landscape-settings.png" });
+    await page.screenshot({ path: testInfo.outputPath("phone-landscape-settings.png") });
     await page.locator("#closeClientSettings").click();
     await page.evaluate(async () => {
       await SpriteRenderer.load();
@@ -66,7 +66,7 @@ test("phone landscape uses a centred desktop viewport and survives orientation c
     await expect.poll(() => page.evaluate(() => selected)).toBe("0-0");
     await page.locator('[data-unit-command="info"]').click();
     await expect(page.locator("#hudUnitPanel")).toBeVisible();
-    await page.screenshot({ path: ".openai/phone-landscape-battle.png" });
+    await page.screenshot({ path: testInfo.outputPath("phone-landscape-battle.png") });
     expect(errors).toEqual([]);
     const match = await page.evaluate(() => game);
     await page.setViewportSize({ width: 390, height: 844 });

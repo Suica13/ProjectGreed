@@ -171,11 +171,13 @@ html = html
   .replace("__MENU_SHELL_CSS__", () => read("client/menu-shell.css"))
   .replace("__BLUE_THEME_CSS__", () => read("client/blue-theme.css"));
 // Fixed virtual game dimensions keep viewport-sized panels inside landscape black bars.
-// Desktop/portrait retain their native viewport units through the fallback value.
+// Use supported vh/vw fallbacks; CSS selects dynamic units only after feature detection.
+// Keep feature queries and the unit definitions themselves intact (no recursive variables).
 html = html.replace("__LANDSCAPE_VIEWPORT_CSS__", () => read("client/landscape-viewport.css"));
 html = html.replace(/<style([^>]*)>([\s\S]*?)<\/style>/g, (_, attrs, css) =>
-  `<style${attrs}>${css.replace(/(\d*\.?\d+)(dvh|svh|lvh|vh|dvw|svw|lvw|vw)\b/g,
-    (_, n, unit) => `calc(var(--game-v${unit.endsWith("h") ? "h" : "w"}, 1${unit}) * ${n})`)}</style>`);
+  `<style${attrs}>${css.replace(/(@supports\s*\([^{}]*\))|(--game-v[hw]\s*:[^;{}]+)|(\d*\.?\d+)(dvh|svh|lvh|vh|dvw|svw|lvw|vw)\b/g,
+    (match, support, definition, n, unit) => support || definition ||
+      `calc(var(--game-v${unit.endsWith("h") ? "h" : "w"}, 1v${unit.endsWith("h") ? "h" : "w"}) * ${n})`)}</style>`);
 // Explicit local-only profile grant. Normal builds never embed personal grants.
 const grantFlag = process.argv.indexOf("--local-profile-grant");
 if (grantFlag >= 0) {

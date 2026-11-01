@@ -1,3 +1,18 @@
+/* Legacy Android engines do not support dvh/dvw. Keep a valid computed fallback. */
+:root {
+  --game-vh: 1vh;
+  --game-vw: 1vw;
+}
+@supports (height: 100dvh) {
+  :root {
+    --game-vh: 1dvh;
+  }
+}
+@supports (width: 100dvw) {
+  :root {
+    --game-vw: 1dvw;
+  }
+}
 /* The black canvas surrounds a centred desktop-sized game, including fixed HUDs. */
 html.phone-landscape {
   --game-vw: 16px;

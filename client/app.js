@@ -1491,7 +1491,7 @@ function drawMap(now) {
   const battleSettings = BattleScene.settings();
   let c = byId("map"),
     box = c.getBoundingClientRect(),
-    dpr = window.devicePixelRatio || 1;
+    dpr = window.GameViewport?.pixelRatio(box.width, box.height) || window.devicePixelRatio || 1;
   if (box.width < 1 || box.height < 1) return;
   if (c.width !== Math.round(box.width * dpr) || c.height !== Math.round(box.height * dpr)) {
     c.width = Math.round(box.width * dpr);

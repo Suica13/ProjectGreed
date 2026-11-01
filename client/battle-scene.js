@@ -72,7 +72,7 @@ const BattleScene = (() => {
     const width = bounds.width,
       height = bounds.height;
     if (!width || !height) return [];
-    const pixelRatio = window.devicePixelRatio || 1;
+    const pixelRatio = window.GameViewport?.pixelRatio(width, height) || window.devicePixelRatio || 1;
     if (
       canvas.width !== Math.round(width * pixelRatio) ||
       canvas.height !== Math.round(height * pixelRatio)
