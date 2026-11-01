@@ -15,6 +15,27 @@ def module(name, filename):
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
+def prune_intermediate_animations(rows):
+    # The visual reader creates unit-prefixed conversion files before share() rewires
+    # them to native-named pooled clips. Delete only those unreferenced intermediates.
+    folder = (ASSETS / "animations").resolve()
+    referenced = set()
+    for file in (ASSETS / "units").glob("*/unit.json"):
+        prefab = json.loads(file.read_text(encoding="utf8"))
+        referenced.update((file.parent / ref).resolve() for ref in prefab["animations"].values())
+    removed, size = 0, 0
+    for row in rows:
+        prefab = json.loads((ASSETS / f"units/{row['id']}/unit.json").read_text(encoding="utf8"))
+        if not prefab["source"].startswith("GW_BattleUniverse_DLC_0087/"): continue
+        for file in folder.glob(row["id"] + "__*.json"):
+            target = file.resolve()
+            if target.parent != folder: raise ValueError("Animation outside project animation folder")
+            if target in referenced: continue
+            size += target.stat().st_size
+            target.unlink()
+            removed += 1
+    print("Removed unreferenced 0087 animation intermediates:", removed, "files,", size, "bytes")
+
 def main():
     sys.stdout.reconfigure(encoding="utf8")
     tech = module("tech0087", "import-0079-tech.py")
@@ -95,6 +116,7 @@ def main():
     if check.returncode: raise SystemExit(check.stderr)
     write(ASSETS / "unit-catalog.json", catalog)
     write(treefile, tree)
+    prune_intermediate_animations(list(rows.values()))
     environment = dict(os.environ)
     environment.pop("PROJECTGREED_MOD_DLC", None)
     for filename in ("import-production.py", "report-0087.py"):
