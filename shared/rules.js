@@ -7,6 +7,7 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const aiTactics = typeof AITactics !== "undefined" ? AITactics : require("./ai-tactics.js");
   const campaignBattlefield = typeof CampaignBattlefield !== "undefined" ? CampaignBattlefield : require("./campaign-battlefield.js");
   const damagePolicy =
     typeof WeaponSequence !== "undefined" ? WeaponSequence : require("./weapon-sequence.js");
@@ -35,6 +36,7 @@ const Tactics = (() => {
   const maxCostLimit = 99999;
   const seatTeam = (seat) => (seat === null ? null : seat % 2);
   const ownerOf = (unit) => unit.ownerSeat ?? unit.team;
+  const controllerOf = (game, unit) => game.campaignControllers?.[ownerOf(unit)] ?? ownerOf(unit);
   function canControlUnit(settings, members, seat, unit) {
     if (!unit || !Number.isInteger(seat) || seat < 0 || !members?.some((m) => m.seat === seat))
       return false;
@@ -268,6 +270,7 @@ const Tactics = (() => {
     return {
       ...defaultRoomSettings(), mapId: settings.mapId || "military_base_5v5",
       mode: "campaign", scenarioId: "earth_0079_mid", costLimit: maxCostLimit,
+      campaignOptions: aiTactics.settings(settings.campaignOptions),
       unitCostLimit: maxCostLimit, unitLimit: catalog.formation.maxUnits,
     };
   }
@@ -1035,8 +1038,17 @@ const Tactics = (() => {
         : (models[unit.model].adaptability?.[environment] ?? 100)) / 100
     );
   }
+  const durabilityModels = new WeakMap();
+  function campaignModelOf(unit) {
+    const base = performanceModelOf(unit), factor = unit.campaignDurability ?? 1;
+    if (factor === 1) return base;
+    let variants = durabilityModels.get(base);
+    if (!variants) durabilityModels.set(base, variants = new Map());
+    if (!variants.has(factor)) variants.set(factor, { ...base, hp: Math.ceil(base.hp * factor) });
+    return variants.get(factor);
+  }
   function modelOf(unit, g = null) {
-    const original = pilotModelOf(unit, performanceModelOf(unit)),
+    const original = pilotModelOf(unit, campaignModelOf(unit)),
       base = unit.flying
         ? {
             ...original,
@@ -2977,7 +2989,7 @@ const Tactics = (() => {
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.overBoost)) {
       const active = u.overBoost;
       if (g.round > active.startedRound) {
-        const maximum = performanceModelOf(u).hp;
+        const maximum = campaignModelOf(u).hp;
         u.hp = Math.max(0, u.hp - roundDamage((maximum * active.hpDrainPercent) / 100));
         g.turnEffects.push({
           type: "overboost",
@@ -3117,7 +3129,7 @@ const Tactics = (() => {
         u.hp <= 0 ||
         (u.embarked && !hangars.launchCells(g, u).length) ||
         (u.acted && !u.plan) ||
-        (ownerSeat !== null && ownerOf(u) !== ownerSeat)
+        (ownerSeat !== null && controllerOf(g, u) !== ownerSeat)
       )
         return false;
       if (u.embarked) return true;
@@ -3197,7 +3209,10 @@ const Tactics = (() => {
       enemies = g.units.filter((e) => e.team !== u.team && onMap(e)),
       best = null;
     const weapons = modelOf(u).weapons,
-      pressure = aiTargetPressure(g, u.team);
+      pressure = aiTargetPressure(g, u.team),
+      strategy = aiTactics.decide(Tactics, g, u),
+      positionScore = (cell) => aiTactics.positionScore(Tactics, g, u, cell, strategy),
+      cautious = ["gather", "defend"].includes(strategy.state);
     // AI navigation knows enemy positions even through fog. Keep actual sight
     // separate so this knowledge does not grant attacks against unseen targets.
     const decisionGame = {
@@ -3215,7 +3230,7 @@ const Tactics = (() => {
         (ally) =>
           onMap(ally) &&
           ally.team === u.team &&
-          ownerOf(ally) === ownerOf(u) &&
+          controllerOf(g, ally) === controllerOf(g, u) &&
           modelOf(ally).move > 0 &&
           !ally.deployed &&
           !ally.embarked,
@@ -3270,7 +3285,7 @@ const Tactics = (() => {
         near = enemies.length
           ? Math.min(...enemies.map((e) => dist(virtual, e)))
           : Math.hypot(c.x - (u.team === 0 ? mapWidth(g) - 3 : 2), c.y - mapHeight(g) / 2);
-      let score = -near * 0.12 - c.cost * 0.025 + terrain[g.tiles[c.y][c.x]].cover * 0.006,
+      let score = positionScore(c) - c.cost * 0.025,
         target = null,
         weapon = null,
         assignedAttackers = Infinity;
@@ -3287,15 +3302,13 @@ const Tactics = (() => {
               remaining = Math.max(0, e.hp - (commitment?.damage || 0)),
               expected = (ex.damage * ex.hit) / 100,
               s =
-                2 +
-                Math.min(expected, remaining) / 1000 +
+                positionScore(c) + 2 +
+                Math.min(expected, remaining) / (cautious ? 4000 : 1000) +
                 (remaining > 0 ? Math.min(1, expected / remaining) * 0.6 : 0) -
                 c.cost * 0.025 -
                 (destinations ? near * 0.12 : 0);
             if (
-              expected > 0 &&
-              ((commitment?.attackers || 0) < assignedAttackers ||
-                ((commitment?.attackers || 0) === assignedAttackers && s > score))
+              expected > 0 && s > score
             ) {
               score = s;
               target = e.id;
@@ -3305,8 +3318,8 @@ const Tactics = (() => {
           }
       if (
         !best ||
-        assignedAttackers < best.assignedAttackers ||
-        (assignedAttackers === best.assignedAttackers && score > best.score)
+        score > best.score ||
+        (score === best.score && assignedAttackers < best.assignedAttackers)
       )
         best = { ...c, score, target, weapon, assignedAttackers };
     }
@@ -3364,6 +3377,7 @@ const Tactics = (() => {
       })[tag] || tag,
     hangars,
     campaignBattlefield,
+    aiTactics,
     W,
     getMap,
     mapWidth,
@@ -3371,6 +3385,7 @@ const Tactics = (() => {
     columnLabel,
     seatTeam,
     ownerOf,
+    controllerOf,
     canControlUnit,
     validateCostLimit,
     validateUnitLimit,

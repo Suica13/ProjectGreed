@@ -9,6 +9,7 @@ for (const viewport of [
   test(`Earth campaign team ${viewport.team} opens and enters a local battle at ${viewport.width}px`, async ({
     page,
   }) => {
+    test.setTimeout(60000);
     await page.setViewportSize(viewport);
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
@@ -31,6 +32,21 @@ for (const viewport of [
       await expect(page.locator("#roomPreparation")).toBeVisible();
       if (viewport.width === 1440) await page.locator("#roomBattleMode").selectOption("campaign");
       await expect(page.locator("#roomBattleMode")).toHaveValue("campaign");
+      if (viewport.width === 390) await page.locator('[data-room-tab="settings"]').click();
+      const rulesGroup = page.locator("#roomBattleMode").locator("xpath=ancestor::details[1]");
+      const rulesWereOpen = await rulesGroup.evaluate((details) => details.open);
+      if (!rulesWereOpen) await rulesGroup.locator(":scope > summary").click();
+      await expect(page.locator("#campaignAIDifficulty")).toHaveValue("normal");
+      await page.locator("#campaignAIDifficulty").selectOption("hard");
+      await expect.poll(() => page.evaluate(() => Net.snapshot.settings.campaignOptions.difficulty)).toBe("hard");
+      await page.locator("#campaignAIAggression").selectOption("high");
+      await expect.poll(() => page.evaluate(() => Net.snapshot.settings.campaignOptions.aggression)).toBe("high");
+      await expect(page.locator("#campaignResources0")).toHaveValue("1");
+      await expect(page.locator("#campaignResearch0 option")).toHaveCount(3);
+      await expect(page.locator("#campaignDurability1 option")).toHaveCount(3);
+      await expect(page.locator("#campaignResources1 option")).toHaveCount(7);
+      if (!rulesWereOpen) await rulesGroup.locator(":scope > summary").click();
+      if (viewport.width === 390) await page.locator("#closeRoomSettingsSheet").click();
       await expect(page.locator("#roomFormationControls")).toBeHidden();
       await expect(page.locator("#roomFormationPreset")).toBeHidden();
       await expect(page.locator("#roomTagRestrictions")).toBeHidden();
@@ -47,12 +63,22 @@ for (const viewport of [
       ).toBe("contain");
     }
     await createRoom();
+    await expect(page.locator(".spawn-slot .commander-badge")).toHaveCount(2);
+    expect(await page.locator(".commander-badge").first().evaluate((badge) => getComputedStyle(badge).color)).toBe("rgb(246, 204, 97)");
     await page.locator("#startRoomGame").click();
     await expect(page.locator("#campaignRounds")).toHaveValue("10");
     await page.locator("#campaignRounds").fill("1");
     await page.locator(".campaign-setup button").last().click();
     await expect(page.locator("#campaignScreen")).toBeVisible();
     await expect(page.locator("#campaignScreen [data-region]")).toHaveCount(43);
+    expect(await page.evaluate(() => {
+      const s = Net.snapshot.campaign;
+      return CAMPAIGN_WORLD.regions.every((region) => {
+        const own = s.units.filter((u) => !u.destroyed && !u.pendingTransfer && u.region === region.id && u.ownerSeat === Net.seat).length;
+        const label = document.querySelector(`[data-region-label="${region.id}"] .campaign-region-count`).textContent;
+        return own ? label.includes(`(${formatNumber(own)})`) : !/\(\d+\)/.test(label);
+      });
+    })).toBe(true);
     const impactBay = await page.evaluate(() => {
       const world = CAMPAIGN_WORLD;
       const cutout = world.coastalCutouts.find((item) => item.id === "sydney_impact_bay");
@@ -138,6 +164,12 @@ for (const viewport of [
     await seatsPanel.locator("#campaignBecomeSpectator").click();
     await expect.poll(() => page.evaluate(() => Net.seat)).toBe(null);
     await expect(seatsPanel.locator("#campaignBecomeSpectator")).toBeDisabled();
+    await expect(seatsPanel.locator("#addAI0")).toBeVisible();
+    await seatsPanel.locator("#addAI0").click();
+    await expect(seatsPanel.locator('[data-commander-seat="0"]')).toBeVisible();
+    await expect(seatsPanel.locator("#removeSeatAI0")).toBeVisible();
+    await expect(seatsPanel.locator("#addAI0")).toHaveCount(0);
+    await seatsPanel.locator("#removeSeatAI0").click();
     await expect(seatsPanel.locator("#addAI0")).toBeVisible();
     await seatsPanel.locator("#addAI0").click();
     await expect(seatsPanel.locator("#chooseSeat0")).toBeEnabled();
@@ -303,7 +335,10 @@ for (const viewport of [
         const { x, y, width, height } = button.getBoundingClientRect();
         return { x, y, width, height };
       });
+    await expect.poll(async () => (await commandBounds()).width).toBeGreaterThan(0);
     const fixedCommand = await commandBounds();
+    await expect(page.locator(".campaign-end-turn")).toBeEnabled();
+    expect(await page.locator(".campaign-end-turn").evaluate((button) => getComputedStyle(button).animationName)).toBe("campaign-command-pulse");
     const beforeZoom = await page.locator(".campaign-map-scroll svg").boundingBox();
     const anchoredX = (mouseX - beforeZoom.x) / beforeZoom.width;
     await page.mouse.move(mouseX, mouseY);
@@ -437,8 +472,33 @@ for (const viewport of [
       .locator(".campaign-unit-actions button")
       .filter({ hasText: /^调动$/ })
       .click();
-    await expect(page.locator("#campaignOrderDialog")).toBeVisible();
-    await page.locator('#campaignOrderDialog [data-destination="andes"]').click();
+    await expect(page.locator("#campaignOrderDialog")).not.toBeVisible();
+    const moveDock = page.locator("#campaignMoveDock");
+    await expect(moveDock).toBeVisible();
+    await expect(page.locator("#campaignConfirmMove")).toBeHidden();
+    const movingArmyId = await firstArmy.getAttribute("data-unit-id");
+    const beforeOrder = await page.evaluate((id) => Net.snapshot.campaign.units.find((u) => u.id === id).moveTo, movingArmyId);
+    await moveDock.locator('[data-destination="andes"]').click();
+    await expect(page.locator("#campaignConfirmMove")).toBeVisible();
+    await expect(page.locator('.campaign-move-outline[data-move-region="andes"]')).toHaveCount(1);
+    await expect(page.locator(".campaign-move-outline .campaign-encounter-particle")).toHaveCount(16);
+    await expect(page.locator(".campaign-move-preview .campaign-march-arrow")).not.toHaveCount(0);
+    expect(await page.evaluate((id) => Net.snapshot.campaign.units.find((u) => u.id === id).moveTo, movingArmyId)).toBe(beforeOrder);
+    expect(await page.locator("#campaignConfirmMove").evaluate((button) => {
+      const css = getComputedStyle(button);
+      const row = button.parentElement.getBoundingClientRect();
+      const targets = button.closest(".campaign-move-dock").querySelector(".campaign-move-targets").getBoundingClientRect();
+      return { background: css.backgroundColor, animation: css.animationName, above: row.bottom <= targets.top };
+    })).toEqual({ background: "rgb(25, 123, 96)", animation: "campaign-command-pulse", above: true });
+    expect(await page.locator(".campaign-move-outline path").first().evaluate((path) => getComputedStyle(path).fill)).toBe("none");
+    await moveDock.getByRole("button", { name: "取消", exact: true }).click();
+    await expect(moveDock).toHaveCount(0);
+    await expect(page.locator(".campaign-move-outline")).toHaveCount(0);
+    expect(await page.evaluate((id) => Net.snapshot.campaign.units.find((u) => u.id === id).moveTo, movingArmyId)).toBe(beforeOrder);
+    await page.locator(".campaign-unit-actions button").filter({ hasText: /^调动$/ }).click();
+    await page.locator('#campaignMoveDock [data-destination="andes"]').click();
+    await page.locator("#campaignConfirmMove").click();
+    await expect(moveDock).toHaveCount(0);
     await expect(firstArmy.locator(".campaign-force-status")).toContainText("南美西部");
     const march = page.locator('.campaign-movement-label[data-movement="0:jaburo:andes"]');
     await expect(march).toContainText("行进部队");
@@ -590,6 +650,11 @@ for (const viewport of [
     expect(Math.abs(compact.y + compact.height - viewport.height)).toBeLessThan(2);
     await expect(page.locator(".campaign-encounter-outline")).toHaveCount(1);
     await expect(page.locator(".campaign-encounter-particle")).toHaveCount(16);
+    expect(await page.evaluate(() => {
+      const effect = document.querySelector(".campaign-encounter-outline");
+      const labels = document.querySelector(".campaign-world-labels");
+      return !!(effect.compareDocumentPosition(labels) & Node.DOCUMENT_POSITION_FOLLOWING);
+    })).toBe(true);
     await expect
       .poll(() =>
         page.evaluate(() => {
@@ -675,8 +740,29 @@ for (const viewport of [
     if (viewport.width === 390) {
       expect(await page.evaluate(() => Net.snapshot.campaign.delegatedSeats)).toEqual([0]);
       expect(await page.evaluate(() => Net.canAct())).toBe(false);
-      await expect(page.locator(".campaign-delegation-badge")).toBeVisible();
+      await expect(page.locator("#campaignDelegationToggle")).toBeVisible();
     }
+    const delegateButton = page.locator("#campaignDelegationToggle");
+    await expect(delegateButton).toBeVisible();
+    expect(await delegateButton.evaluate((button) => button.closest(".log-tabs") !== null)).toBe(true);
+    const wasDelegated = await delegateButton.getAttribute("aria-pressed");
+    await page.evaluate(() => {
+      const room = [...campaignTestEngine.rooms.values()][0];
+      room.turnNotBefore = Date.now() + 60000;
+    });
+    await delegateButton.click();
+    await expect(delegateButton).toHaveAttribute("aria-pressed", String(wasDelegated !== "true"));
+    await expect(delegateButton).toBeEnabled();
+    await delegateButton.click();
+    await expect(delegateButton).toHaveAttribute("aria-pressed", wasDelegated);
+    await page.locator("#openMatchRecords").click();
+    await expect(page.locator("#matchRecordsDialog #saveCampaignBattle")).toBeVisible();
+    await expect(page.locator("#matchRecordsDialog #saveCampaignBattle")).toBeEnabled();
+    await page.locator("#matchRecordsDialog .record-close").click();
+    await page.evaluate(() => {
+      const room = [...campaignTestEngine.rooms.values()][0];
+      room.turnNotBefore = 0;
+    });
     if (viewport.width === 1440) {
       await page.evaluate(() => {
         const room = [...campaignTestEngine.rooms.values()][0];

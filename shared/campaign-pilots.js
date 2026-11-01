@@ -39,7 +39,8 @@ const CampaignPilots = (() => {
   }
   function sync(ctx, state, unit, profile) {
     const base = unit.pilotBase || { unitId: unit.unitId, kitId: unit.kitId };
-    const original = ctx.G.models[unit.unitId + "__" + unit.kitId];
+    const factor = unit.campaignDurability ?? unit.state?.campaignDurability ?? 1;
+    const original = ctx.G.modelOf({ model: unit.unitId + "__" + unit.kitId, campaignDurability: factor });
     const baseModel = ctx.G.models[base.unitId + "__" + base.kitId];
     if (baseModel?.pilotForms?.length) {
       const target = ctx.G.formationModel({
@@ -47,6 +48,7 @@ const CampaignPilots = (() => {
         ...(profile ? { customPilot: profile } : {}),
       });
       const targetKey = target.prefabId + "__" + target.kitId;
+      const maximums = { ...target, hp: Math.ceil(target.hp * factor) };
       if (targetKey !== unit.unitId + "__" + unit.kitId) {
         unit.unitId = target.prefabId;
         unit.kitId = target.kitId;
@@ -54,8 +56,8 @@ const CampaignPilots = (() => {
           unit.state.model = targetKey;
           for (const field of ["hp", "en"])
             unit.state[field] = Math.min(
-              target[field],
-              Math.floor((unit.state[field] / Math.max(1, original[field])) * target[field]),
+              maximums[field],
+              Math.floor((unit.state[field] / Math.max(1, original[field])) * maximums[field]),
             );
           unit.state.shield = Math.min(unit.state.shield || 0, target.shield.hp);
           delete unit.state.defaultFormModel;

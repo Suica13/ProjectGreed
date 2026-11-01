@@ -36,6 +36,11 @@ const UnitSensors = {
     }
     const allies = (g, team) => [
       ...g.units.filter((u) => u.team === team && onMap(u)),
+      // Occupied objectives provide persistent sight without radar marking or connection requirements.
+      ...(g.campaignBattlefield?.layout.nodes || [])
+        .filter((node) => g.campaignBattlefield.owners[node.id] === team)
+        .map((node) => ({ ...node, team, sensorArea: true,
+          sensors: { sight: 5, radar: 0, antiDetection: 0 } })),
       ...(g.visionAreas || [])
         .filter((area) => area.team === team && area.expiresRound > g.round)
         .map((area) => ({

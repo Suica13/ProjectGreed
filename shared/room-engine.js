@@ -982,6 +982,12 @@ function createRoomEngine({
       return;
     }
     refreshHost(room);
+    if (room.campaign) {
+      const previous = JSON.stringify([room.settings.campaignCommanders, room.game.campaignControllers]);
+      campaign().refreshControl(room);
+      if (room.started && previous !== JSON.stringify([room.settings.campaignCommanders, room.game.campaignControllers]))
+        campaign().refreshSeats(room);
+    }
     if (!room.returnCountdown) {
       completePlayback(room);
       scheduleResultReturn(room);
@@ -1116,7 +1122,7 @@ function createRoomEngine({
   function botReaction(room) {
     return (
       (room.reactions || []).find((request) => {
-        const owner = G.ownerOf(unit(room, request.target));
+        const owner = G.controllerOf(room.game, unit(room, request.target));
         return aiControlled(room, room.seats[owner]) && reactionForSeat(room, owner)?.id === request.id;
       }) || null
     );
@@ -2098,7 +2104,7 @@ function createRoomEngine({
       const pending = botReaction(room);
       if (!pending) return null;
       const target = unit(room, pending.target);
-      const player = room.seats[G.ownerOf(target)];
+      const player = room.seats[G.controllerOf(room.game, target)];
       if (!aiControlled(room, player)) return null;
       const attacker = unit(room, pending.attacker);
       const weapon = G.modelOf(attacker).weapons.find((w) => w.id === pending.weapon);
@@ -2183,7 +2189,7 @@ function createRoomEngine({
         fields: { unitId: pendingMover.id },
       };
     for (const passenger of room.game.units.filter((u) => u.embarked && u.hp > 0)) {
-      const owner = room.seats[G.ownerOf(passenger)];
+      const owner = room.seats[G.controllerOf(room.game, passenger)];
       if (!aiControlled(room, owner) || !allowed(owner) || room.turnDone[owner.seat]) continue;
       const point = G.aiLaunchChoice(room.game, passenger);
       if (
@@ -2200,7 +2206,7 @@ function createRoomEngine({
     }
     // Let passengers approach/board before their carriers move away this turn.
     for (const passenger of room.game.units) {
-      const owner = room.seats[G.ownerOf(passenger)];
+      const owner = room.seats[G.controllerOf(room.game, passenger)];
       if (
         !aiControlled(room, owner) ||
         !allowed(owner) ||
@@ -2235,7 +2241,7 @@ function createRoomEngine({
         allowed(p) &&
         G.seatTeam(p.seat) === room.game.team &&
         !room.turnDone[p.seat] &&
-        room.game.units.some((u) => G.ownerOf(u) === p.seat && G.onMap(u) && canPlanMore(u)),
+        room.game.units.some((u) => G.controllerOf(room.game, u) === p.seat && G.onMap(u) && canPlanMore(u)),
     );
     if (!player) {
       const unfinished = room.seats.find(
@@ -2248,9 +2254,14 @@ function createRoomEngine({
       return unfinished ? { player: unfinished, action: "end_turn", fields: {} } : null;
     }
     const u = room.game.units.find(
-      (u) => G.ownerOf(u) === player.seat && G.onMap(u) && canPlanMore(u),
+      (u) => G.controllerOf(room.game, u) === player.seat && G.onMap(u) && canPlanMore(u),
     );
     if (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, u)) return {player, action: "capture_point", fields: {unitId: u.id}};
+    const objective = room.campaignBattle && G.campaignBattlefield.nodeAt(G, room.game, u);
+    if (objective && u.flying && room.game.campaignBattlefield.owners[objective.id] !== u.team) {
+      const landing = G.unitSkills(u).find((skill) => skill.type === "flight" && G.canUseSkill(room.game, u, skill.id));
+      if (landing) return { player, action: "skill", fields: { unitId: u.id, skillId: landing.id, x: u.x, y: u.y } };
+    }
     const smoke = G.unitSkills(u).find((skill) => skill.type === "smoke");
     if (
       smoke &&
@@ -2288,7 +2299,7 @@ function createRoomEngine({
         };
     }
     for (const skill of G.unitSkills(u).filter((s) => s.type === "flight")) {
-      if (!u.flying && !u.moved && G.canUseSkill(room.game, u, skill.id))
+      if (!u.flying && !u.moved && !room.campaignBattle && G.canUseSkill(room.game, u, skill.id))
         return {
           player,
           action: "skill",
@@ -2630,6 +2641,23 @@ function createRoomEngine({
       history.unshift(text);
     }
   }
+  function transportSight(room, actors) {
+    return Object.fromEntries(logTeamIds(room).map((team) => [team, actors.filter(Boolean)
+      .filter((actor) => G.sensors.visible(room.game, team, actor)).map((actor) => actor.id)]));
+  }
+  function logTransport(room, passenger, carrier, launching, visibleBefore = null) {
+    const destination = G.columnLabel(passenger.x) + (passenger.y + 1);
+    const passengerName = unitLabel(room, passenger), carrierName = unitLabel(room, carrier);
+    log(room, launching
+      ? `${passengerName} 从${carrierName}出击至${destination}。`
+      : `${passengerName} 搭乘${carrierName}。`, {
+      units: [passenger, carrier],
+      ...(visibleBefore ? { visibleBy: visibleBefore } : {}),
+      // A visible departing unit must not reveal an unseen carrier's identity.
+      partial: launching ? (team) => G.sensors.visible(room.game, team, passenger)
+        ? `${passengerName} 出击至${destination}。` : null : null,
+    });
+  }
   const unit = (room, id) => room.game.units.find((u) => u.id === id);
   function cancelSeatMoves(room, seat) {
     for (const u of room.game.units)
@@ -2638,7 +2666,7 @@ function createRoomEngine({
         room.lastEvent = { id: randomId(), type: "move_cancel", unitId: u.id };
       }
   }
-  const canControl = (room, seat, u) => (!u || !delegated(room, G.ownerOf(u)) || G.ownerOf(u) === seat) && G.canControlUnit(room.settings, members(room), seat, u);
+  const canControl = (room, seat, u) => (!u || !delegated(room, G.controllerOf(room.game, u)) || G.controllerOf(room.game, u) === seat) && G.canControlUnit(room.settings, members(room), seat, u);
   function ownUnit(room, seat, id, allowCargo = false, allowPending = false) {
     let u = unit(room, id);
     if (!u || !canControl(room, seat, u) || u.hp <= 0 || (!allowCargo && u.embarked && !G.onMap(u)))
@@ -2714,8 +2742,8 @@ function createRoomEngine({
       return;
     }
     if (room.campaignBattle && !automatedRequests.has(msg) &&
-        (delegated(room, seat) || (msg.unitId && delegated(room, G.ownerOf(unit(room, msg.unitId) || {})))) &&
-        !["sync", "chat", "playback_ready", "campaign_export", "download_log", "spectate", "switch_seat", "join_team", "add_ai"].includes(msg.action))
+        (delegated(room, seat) || (msg.unitId && delegated(room, G.controllerOf(room.game, unit(room, msg.unitId) || {})))) &&
+        !["sync", "chat", "playback_ready", "campaign_export", "campaign_delegate", "download_log", "spectate", "switch_seat", "join_team", "add_ai"].includes(msg.action))
       throw Error("部队已委任AI，本阶段由AI操作");
     if (room.returnCountdown && !["sync", "chat", "return_room", "spectate"].includes(msg.action))
       throw Error(room.returnCountdown.destination === "campaign" ? "战局已中断，正在返回战略地图" : "正在返回房间，请稍候。");
@@ -2739,7 +2767,7 @@ function createRoomEngine({
       }
       return;
     }
-    if (room.campaign && ["start_game", "set_ready", "update_formation", "confirm_formation", "configure_room", "move_player", "remove_ai"].includes(msg.action))
+    if (room.campaign && ["start_game", "set_ready", "update_formation", "confirm_formation", "configure_room", "move_player"].includes(msg.action))
       throw Error("战役使用独立部队和固定席位，请在战略地图操作");
     if (room.campaign && room.started && msg.action === "return_room")
       throw Error("局地战会在指定轮数后自动返回战略地图；可先保存战役再离开");
@@ -3099,7 +3127,7 @@ function createRoomEngine({
           bot.formation = null;
         } else if (msg.action === "add_ai" || msg.action === "remove_ai") {
           if (room.hostId !== member.id) throw Error("只有房主可以添加或移除 AI");
-          if (room.started && !(room.campaign && msg.action === "add_ai")) throw Error("对局开始后不能添加或移除 AI");
+          if (room.started && !room.campaign) throw Error("对局开始后不能添加或移除 AI");
           const destination = msg.seat;
           if (!Number.isInteger(destination) || destination < 0 || destination >= room.seats.length)
             throw Error("无效的席位");
@@ -3141,6 +3169,12 @@ function createRoomEngine({
             if (!bot?.bot) throw Error("该席位不是 AI");
             room.members.delete(bot.id);
             room.seats[destination] = null;
+            if (room.campaign) {
+              room.campaign.ready = [];
+              if (room.campaignPreparation) room.campaignPreparation.choices = {};
+              room.campaignBattle && (room.campaignBattle.delegatedSeats = room.campaignBattle.delegatedSeats.filter((seat) => seat !== destination));
+              if (room.started) campaign().refreshSeats(room);
+            }
           }
         } else if (msg.action === "configure_room") {
           if (room.hostId !== member.id) throw Error("只有房主可以修改房间设置");
@@ -3152,7 +3186,7 @@ function createRoomEngine({
           if (!strategic && map.scope === "strategic") throw Error("区块局地战地图仅用于战略模式");
           if (!strategic && msg.shareAlliedUnits !== undefined && typeof msg.shareAlliedUnits !== "boolean")
             throw Error("友军单位共享设置无效");
-          const settings = strategic ? G.campaignRoomSettings({ mapId: map.id }) : {
+          const settings = strategic ? G.campaignRoomSettings({ mapId: map.id, campaignOptions: msg.campaignOptions ?? room.settings.campaignOptions }) : {
             mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
             mapId: map.id,
             fogMode: G.validateFogMode(msg.fogMode ?? room.settings.fogMode),
@@ -3466,20 +3500,15 @@ function createRoomEngine({
         if (room.campaignBattle && room.phase === "deployment" && !passenger.campaignDeploying) throw Error("原战场存活部队不能重新部署");
         if (msg.action === "embark") {
           const carrier = unit(room, msg.carrierId);
+          const visibleBefore = transportSight(room, [passenger, carrier]);
           event = G.hangars.embark(room.game, passenger, carrier, msg.hangarId);
-          log(room, `${unitLabel(room, passenger)} 搭载至${unitLabel(room, carrier)}。`, {
-            units: [passenger, carrier],
-          });
+          logTransport(room, passenger, carrier, false, visibleBefore);
         } else {
+          const carrier = unit(room, passenger.embarked?.carrierId);
           event = aiControlled(room, member)
             ? G.hangars.launch(room.game, passenger, msg.x, msg.y)
             : G.hangars.previewLaunch(room.game, passenger, msg.x, msg.y, seat);
-          if (aiControlled(room, member))
-            log(
-              room,
-              `${unitLabel(room, passenger)} 出击至${G.columnLabel(passenger.x)}${passenger.y + 1}。`,
-              { units: [passenger] },
-            );
+          if (aiControlled(room, member)) logTransport(room, passenger, carrier, true);
         }
         break;
       }
@@ -3619,16 +3648,19 @@ function createRoomEngine({
         validateActive(room, seat);
         let u = ownUnit(room, seat, msg.unitId);
         if (!Number.isInteger(msg.x) || !Number.isInteger(msg.y)) throw Error("目标格无效");
+        const visibleBefore = aiControlled(room, member)
+          ? transportSight(room, [u, ...room.game.units.filter((c) => c.team === u.team && G.hangars.of(c).length)]) : null;
         let from = { x: u.x, y: u.y },
           steps = aiControlled(room, member)
             ? G.move(room.game, u, msg.x, msg.y)
             : G.previewMove(room.game, u, msg.x, msg.y, seat);
         event = { type: aiControlled(room, member) ? "move" : "move_preview", unitId: u.id, from, path: steps };
-        if (aiControlled(room, member))
-          log(room, `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`, {
-            units: [u],
-            movement: event,
+        if (aiControlled(room, member)) {
+          if (u.embarked) logTransport(room, u, unit(room, u.embarked.carrierId), false, visibleBefore);
+          else log(room, `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`, {
+            units: [u], movement: event,
           });
+        }
         break;
       }
       case "confirm_move":
@@ -3641,12 +3673,16 @@ function createRoomEngine({
           event = { type: "move_cancel", unitId: u.id };
         } else {
           const pending = u.pendingMove;
+          const carrier = unit(room, pending.carrierId || pending.boarding?.carrierId);
+          const visibleBefore = pending.boarding ? transportSight(room, [u, carrier]) : null;
           const from = pending.launch ? pending.from : { x: u.x, y: u.y },
             path = G.confirmMove(room.game, u);
           event = pending.rotation
             ? { type: "rotate", unitId: u.id }
             : { type: "move", unitId: u.id, from, path, previewTeam: u.team };
-          log(
+          if (pending.launch || pending.boarding)
+            logTransport(room, u, carrier, !!pending.launch, visibleBefore);
+          else log(
             room,
             pending.rotation
               ? `${unitLabel(room, u)} ${pending.rotation < 0 ? "左转" : "右转"}。`
@@ -3685,7 +3721,7 @@ function createRoomEngine({
         validateActive(room, seat);
         room.turnDone[seat] = true;
         for (const u of room.game.units)
-          if (G.ownerOf(u) === seat && G.onMap(u) && !u.acted) G.wait(room.game, u);
+          if (G.controllerOf(room.game, u) === seat && G.onMap(u) && !u.acted) G.wait(room.game, u);
         const teammates = room.seats.filter(
           (player) =>
             player &&

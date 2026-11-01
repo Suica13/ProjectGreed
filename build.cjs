@@ -107,6 +107,7 @@ for (const [key, file] of [
   ["DEVELOPMENT", "shared/development.js"],
   ["HANGAR_UI", "client/hangar-ui.js"],
   ["SFS_UI", "client/sfs-ui.js"],
+  ["AI_TACTICS", "shared/ai-tactics.js"],
   ["CAMPAIGN_BATTLEFIELD", "shared/campaign-battlefield.js"],
   ["CORE", "shared/rules.js"],
   ["WEAPON_SEQUENCE", "shared/weapon-sequence.js"],

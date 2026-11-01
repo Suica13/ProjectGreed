@@ -30,6 +30,10 @@ const CampaignRules = (() => {
         .sort((a, b) => a.seat - b.seat)[0]?.seat ?? null
     );
   }
+  function controller(members, unit) {
+    const owner = members.find((member) => member.seat === unit.ownerSeat && teamOf(member.seat) === unit.team);
+    return owner ? owner.seat : commander(members, unit.team);
+  }
   function controls(state, members, seat, unit) {
     return (
       Number.isInteger(seat) &&
@@ -39,7 +43,9 @@ const CampaignRules = (() => {
     );
   }
   function model(ctx, unit) {
-    return ctx.G.models[unit.unitId + "__" + unit.kitId];
+    const base = ctx.G.models[unit.unitId + "__" + unit.kitId],
+      factor = unit.campaignDurability ?? unit.state?.campaignDurability ?? 1;
+    return !base || factor === 1 ? base : { ...base, hp: Math.ceil(base.hp * factor) };
   }
   function quote(ctx, unitId, kitId = ctx.production.defaultKits[unitId]) {
     const prefab = ctx.G.catalog.prefabs.find((item) => item.id === unitId);
@@ -113,6 +119,7 @@ const CampaignRules = (() => {
       id: "army-" + state.nextId++,
       ownerSeat,
       team: teamOf(ownerSeat),
+      campaignDurability: state.options?.teams[teamOf(ownerSeat)]?.durability ?? 1,
       region,
       unitId,
       kitId: kitId || ctx.production.defaultKits[unitId],
@@ -141,6 +148,7 @@ const CampaignRules = (() => {
     const state = {
       format: "ProjectGreed-campaign",
       version: 1,
+      options: ctx.G.aiTactics.settings(options.campaignOptions),
       scenarioId: options.scenarioId || ctx.scenarioId || "earth_0079_mid",
       name: saveName(options.name, ctx.world.name),
       geographyVersion: ctx.world.geographyVersion || 1,
@@ -157,11 +165,11 @@ const CampaignRules = (() => {
       encounters: [],
       history: [],
       regions: ctx.world.regions.map((region) => ({ id: region.id, owner: region.owner })),
-      teams: ["EFSF", "ZEON"].map((faction) => ({
+      teams: ["EFSF", "ZEON"].map((faction, team) => ({
         faction,
         intelligence: { progress: intelligenceRules.initial, fundedTurn: 0 },
-        money: ctx.world.settings.startingMoney,
-        supplies: ctx.world.settings.startingSupplies,
+        money: Math.floor(ctx.world.settings.startingMoney * ctx.G.aiTactics.settings(options.campaignOptions).teams[team].resources),
+        supplies: Math.floor(ctx.world.settings.startingSupplies * ctx.G.aiTactics.settings(options.campaignOptions).teams[team].resources),
         technology: ctx.world.settings.startingTechnology,
         researched: ctx.development
           .nodes(faction)
@@ -655,84 +663,7 @@ const CampaignRules = (() => {
     clearReady(state);
   }
   function advance(ctx, state, members) {
-    // AI uses campaign funds, technology and the same legal neighboring regions.
-    for (const player of members.filter((member) => member.bot && member.seat !== null)) {
-      const team = teamOf(player.seat),
-        pool = state.teams[team];
-      const research = ctx.development
-        .nodes(pool.faction)
-        .find(
-          (node) =>
-            !pool.researched.includes(node.id) &&
-            node.requires.every((id) => pool.researched.includes(id)) &&
-            node.points <= pool.technology &&
-            (node.money || 0) <= pool.money &&
-            (node.supplies || 0) <= pool.supplies,
-        );
-      if (research) {
-        pool.researched.push(research.id);
-        pool.technology -= research.points;
-        pool.money -= research.money || 0;
-        pool.supplies -= research.supplies || 0;
-      }
-      for (const unit of state.units.filter(
-        (unit) =>
-          !unit.destroyed &&
-          !unit.pendingTransfer &&
-          unit.ownerSeat === player.seat &&
-          !busy(state, unit),
-      )) {
-        if (state.transfers.some((transfer) => transfer.ids.includes(unit.id))) continue;
-        const region = ctx.world.regions.find((item) => item.id === unit.region);
-        const queue = [{ id: region.id, first: null }],
-          visited = new Set([region.id]);
-        while (queue.length) {
-          const next = queue.shift();
-          if (
-            next.id !== region.id &&
-            state.regions.find((item) => item.id === next.id).owner !== team
-          ) {
-            unit.moveTo = next.first;
-            break;
-          }
-          for (const id of ctx.world.regions.find((item) => item.id === next.id).links)
-            if (!visited.has(id)) {
-              visited.add(id);
-              queue.push({ id, first: next.first || id });
-            }
-        }
-      }
-      const factory = ctx.world.regions.find(
-        (region) =>
-          region.factory &&
-          state.regions.find((item) => item.id === region.id).owner === team &&
-          !disputed(state, region.id),
-      );
-      const choices = ctx.G.catalog.prefabs.filter(
-        (prefab) =>
-          available(ctx, state, team, prefab.id) &&
-          !prefab.unitTags?.includes("Ship") &&
-          !prefab.unitTags?.includes("Support"),
-      );
-      if (
-        factory &&
-        choices.length &&
-        state.orders.filter((order) => order.ownerSeat === player.seat).length < 3
-      ) {
-        const price = quote(ctx, choices[state.turn % choices.length].id);
-        if (charge(pool, price))
-          state.orders.push({
-            id: "order-" + state.nextId++,
-            ownerSeat: player.seat,
-            team,
-            region: factory.id,
-            ...price,
-            status: "queued",
-            remaining: price.turns,
-            reserved: true,
-          });
-      }
-    }
+    ctx.G.aiTactics.strategic(ctx, state, members, { busy, disputed, available, quote, charge, controller });
     // Embarked armies follow their carrier, including AI transport orders.
     for (let depth = 0; depth < 4; depth++)
       for (const unit of state.units.filter((unit) => !unit.destroyed && unit.state?.embarked)) {
@@ -757,10 +688,13 @@ const CampaignRules = (() => {
           origins.get(other.id) === destinations.get(unit.id) &&
           destinations.get(other.id) === origins.get(unit.id),
       );
-      unit.entryFrom = origins.get(unit.id);
       unit.region = opposing
         ? [origins.get(unit.id), destinations.get(unit.id)].sort()[0]
         : destinations.get(unit.id);
+      // In a head-on encounter, the army remaining at its origin enters from the opposing region.
+      unit.entryFrom = unit.region === origins.get(unit.id)
+        ? destinations.get(unit.id)
+        : origins.get(unit.id);
       unit.moveTo = null;
     }
     for (const region of state.regions) {
@@ -786,7 +720,8 @@ const CampaignRules = (() => {
         ? ctx.world.settings.factoryIncome
         : ctx.world.settings.ordinaryIncome;
       for (const resource of ["money", "supplies", "technology"])
-        state.teams[region.owner][resource] += income[resource];
+        state.teams[region.owner][resource] += Math.floor(income[resource] *
+          (resource === "technology" ? (state.options?.teams[region.owner]?.research ?? 1) : 1));
     }
     state.orders = state.orders.filter((order) => {
       const holder = state.regions.find((region) => region.id === order.region);
@@ -980,6 +915,7 @@ const CampaignRules = (() => {
         ["strategy", "encounters"].includes(value.phase),
       "战役存档格式无效",
     );
+    const campaignOptions = ctx.G.aiTactics.settings(value.options);
     const legacy = ctx.world.legacyRegionIds;
     if (
       legacy &&
@@ -1079,11 +1015,14 @@ const CampaignRules = (() => {
           ctx.G.models[unit.pilotBase.unitId + "__" + unit.pilotBase.kitId]?.pilotForms?.length > 0,
           "驾驶员专用机基础机型无效",
         );
+      const factor = campaignOptions.teams[unit.team].durability;
+      check((unit.campaignDurability === undefined || unit.campaignDurability === factor) &&
+        (unit.state?.campaignDurability === undefined || unit.state.campaignDurability === factor), "战役耐久倍率无效");
       if (unit.state)
         check(
           Number.isFinite(unit.state.hp) &&
             unit.state.hp >= 0 &&
-            unit.state.hp <= model(ctx, unit).hp &&
+            unit.state.hp <= Math.ceil(ctx.G.models[unit.unitId + "__" + unit.kitId].hp * campaignOptions.teams[unit.team].durability) &&
             Number.isFinite(unit.state.en) &&
             unit.state.en >= 0 &&
             unit.state.en <= model(ctx, unit).en,
@@ -1193,6 +1132,11 @@ const CampaignRules = (() => {
       );
       pool.intelligence = { ...intel };
     }
+    clean.options = campaignOptions;
+    for (const unit of clean.units) {
+      unit.campaignDurability = campaignOptions.teams[unit.team].durability;
+      if (unit.state) unit.state.campaignDurability = unit.campaignDurability;
+    }
     clean.scenarioId = value.scenarioId || "earth_0079_mid";
     check(Object.hasOwn(ctx.G.catalog.scenarios, clean.scenarioId), "战役剧本不存在");
     clean.name = saveName(value.name, ctx.world.name);
@@ -1223,6 +1167,7 @@ const CampaignRules = (() => {
     unitLabel,
     addUnit,
     commander,
+    controller,
     controls,
     disputed,
     view,

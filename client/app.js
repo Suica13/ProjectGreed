@@ -1443,9 +1443,23 @@ function drawCampaignSupply(ctx, ox, oy, tile) {
     ctx.strokeStyle = color(team);
     ctx.lineWidth = Math.max(1.5, tile * 0.1);
     ctx.fillStyle = "#101923bb";
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, tile * (node.radius + 0.45), 0, Math.PI * 2);
-    ctx.stroke();
+    const areaRadius = node.region ? node.radius : 1;
+    const areaSize = tile * (areaRadius * 2 + 1);
+    ctx.strokeRect(p.x - areaSize / 2, p.y - areaSize / 2, areaSize, areaSize);
+    if (!node.region) {
+      ctx.save();
+      ctx.globalAlpha = 0.3;
+      ctx.lineWidth = Math.max(0.5, tile * 0.025);
+      for (const offset of [-0.5, 0.5]) {
+        ctx.beginPath();
+        ctx.moveTo(p.x + tile * offset, p.y - areaSize / 2);
+        ctx.lineTo(p.x + tile * offset, p.y + areaSize / 2);
+        ctx.moveTo(p.x - areaSize / 2, p.y + tile * offset);
+        ctx.lineTo(p.x + areaSize / 2, p.y + tile * offset);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
     const radius = Math.max(6, tile * 0.45);
     ctx.fillRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
     ctx.strokeRect(p.x - radius, p.y - radius, radius * 2, radius * 2);

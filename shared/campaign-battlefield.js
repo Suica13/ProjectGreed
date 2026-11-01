@@ -75,7 +75,7 @@ const CampaignBattlefield = (() => {
   }
   function nodeAt(G, g, u) {
     const nodes = g.campaignBattlefield?.layout.nodes || [];
-    return nodes.find((node) => G.cells(u).some((cell) => distance(cell, node) <= node.radius));
+    return nodes.find((node) => G.cells(u).some((cell) => Math.max(Math.abs(cell.x - node.x), Math.abs(cell.y - node.y)) <= 1));
   }
   function canCapture(G, g, u) {
     if (
@@ -225,6 +225,12 @@ const CampaignBattlefield = (() => {
     if (!f) return;
     const entry = G.catalog.scenarios[f.scenarioId]?.regions[f.regionId],
       source = entry?.layout;
+    if (source?.nodes && f.layout?.nodes) {
+      const migrated = clone(f.layout);
+      for (const node of migrated.nodes)
+        if (node.radius === (node.kind === "base" ? 3 : 2)) node.radius = 1;
+      if (JSON.stringify(migrated) === JSON.stringify(source)) f.layout = migrated;
+    }
     if (
       entry?.mapId !== g.mapId ||
       !source?.nodes ||

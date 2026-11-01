@@ -11,6 +11,7 @@ window.CampaignUI = (() => {
   let autosaved = "",
     autosaveTimer = null;
   const selectedUnits = new Set();
+  let moveDraft = null;
   const replies = new Map();
   const storageKey = "projectgreed.campaign.backup.v1";
   const node = (tag, text = "", css = "") => element(tag, css, text);
@@ -39,6 +40,8 @@ window.CampaignUI = (() => {
   movementDialog.id = "campaignMovementDialog";
   document.body.append(intelligenceDialog, movementDialog);
   let inspectedMovement = null;
+  const armyModel = (unit) => Rules.modelOf({ model: unit.unitId + "__" + unit.kitId,
+    campaignDurability: unit.campaignDurability ?? unit.state?.campaignDurability ?? state()?.options?.teams[unit.team]?.durability ?? 1 });
   const reportCount = (count, approximate = false) =>
     count === null
       ? I18n.text("未知")
@@ -55,12 +58,16 @@ window.CampaignUI = (() => {
   }
   function regionReport(s, regionId) {
     const counts = [0, 1].map((team) => regionCount(s, regionId, team));
-    return counts.some((count) => count === null)
+    const own = Number.isInteger(Net.seat)
+      ? s.units.filter((unit) => !unit.destroyed && !unit.pendingTransfer && unit.region === regionId && unit.ownerSeat === Net.seat).length
+      : 0;
+    const report = counts.some((count) => count === null)
       ? I18n.text("敌军数量未知")
       : reportCount(
           counts[0] + counts[1],
           s.intel?.team !== null && s.intel?.progress < 75 && counts[1 - s.intel.team] > 0,
         );
+    return report + (own ? ` (${formatNumber(own)})` : "");
   }
   function openIntelligence() {
     renderIntelligence();
@@ -146,7 +153,7 @@ window.CampaignUI = (() => {
     const units = move.unitIds.map((id) => s.units.find((unit) => unit.id === id)).filter(Boolean);
     if (!units.length) body.append(node("p", "情报不足，无法查看部队名单"));
     for (const unit of units) {
-      const m = UnitModels[unit.unitId + "__" + unit.kitId];
+      const m = armyModel(unit);
       const row = node("article", "", "campaign-movement-unit");
       const image = node("img");
       image.src = unitIcon(unit.unitId + "__" + unit.kitId);
@@ -235,6 +242,7 @@ window.CampaignUI = (() => {
     if (workspace) CampaignWorkspace.open(workspace, selectedRegion);
   }
   function receive(snapshot) {
+    refreshBattleControls(snapshot);
     if (!snapshot.campaign) return;
     if (!snapshot.started) {
       if (pageView !== "campaign") open();
@@ -526,6 +534,12 @@ window.CampaignUI = (() => {
       );
       const select = () => {
         const current = Net.snapshot.campaign;
+        if (moveDraft && CAMPAIGN_WORLD.regions.find((r) => r.id === moveDraft.from)?.links.includes(region.id)) {
+          moveDraft.destination = region.id;
+          renderMoveDraft();
+          return;
+        }
+        moveDraft = null;
         const previous = selectedRegion;
         selectedRegion = region.id;
         selectedUnits.clear();
@@ -702,6 +716,7 @@ window.CampaignUI = (() => {
     }
     renderMovements(svg, s);
     highlightEncounter();
+    renderMoveDraft();
     for (const button of panel.querySelectorAll(".campaign-map-tools button"))
       button.disabled = !!Net.awaiting;
   }
@@ -806,13 +821,11 @@ window.CampaignUI = (() => {
     }
     svg.append(layer);
   }
-  // A single lightweight SVG effect follows the active encounter, not every contested region.
-  function highlightEncounter() {
-    const svg = panel.querySelector(".campaign-map-scroll svg");
+  // Reuse one lightweight outline per active encounter or movement destination, below all labels.
+  function regionEffect(svg, active, className, attribute) {
     if (!svg) return;
-    const active = encounterDialog.open ? encounterRegion : null;
-    const previous = svg.querySelector(".campaign-encounter-outline");
-    if (previous?.dataset.encounterRegion === active) return;
+    const previous = svg.querySelector("." + className);
+    if (previous?.getAttribute(attribute) === active) return;
     previous?.remove();
     if (!active) return;
     const surface = svg.querySelector(`[data-region="${active}"] .campaign-region-surface`);
@@ -823,8 +836,8 @@ window.CampaignUI = (() => {
       return element;
     };
     const effect = shape("g", {
-      class: "campaign-encounter-outline",
-      "data-encounter-region": active,
+      class: className,
+      [attribute]: active,
       "aria-hidden": "true",
     });
     const path = surface.getAttribute("d");
@@ -847,7 +860,11 @@ window.CampaignUI = (() => {
       );
       effect.append(particle);
     }
-    svg.append(effect);
+    svg.insertBefore(effect, svg.querySelector(".campaign-world-labels"));
+  }
+  function highlightEncounter() {
+    regionEffect(panel.querySelector(".campaign-map-scroll svg"), encounterDialog.open ? encounterRegion : null,
+      "campaign-encounter-outline", "data-encounter-region");
   }
   function focusEncounter() {
     const scroll = panel.querySelector(".campaign-map-scroll");
@@ -985,7 +1002,7 @@ window.CampaignUI = (() => {
       )
         list.append(node("p", "情报不足，无法查看部队名单"));
       for (const unit of army) {
-        const m = UnitModels[unit.unitId + "__" + unit.kitId],
+        const m = armyModel(unit),
           row = node("article", "", "campaign-encounter-unit");
         row.dataset.destroyed = unit.destroyed;
         const image = node("img");
@@ -1084,62 +1101,105 @@ window.CampaignUI = (() => {
   const orderDialog = node("dialog", "", "campaign-order-dialog");
   orderDialog.id = "campaignOrderDialog";
   document.body.append(orderDialog);
+  function clearMoveDraft() {
+    moveDraft = null;
+    renderMoveDraft();
+  }
+  function renderMoveDraft() {
+    const s = state(), map = panel.querySelector(".campaign-world"), svg = map?.querySelector("svg");
+    if (!map || !s) return;
+    if (moveDraft && (s.phase !== "strategy" || s.winner !== null || Net.seat !== moveDraft.seat ||
+        s.turn !== moveDraft.turn || selectedRegion !== moveDraft.from ||
+        moveDraft.ids.some((id) => {
+          const unit = s.units.find((u) => u.id === id);
+          return !unit || unit.destroyed || unit.pendingTransfer || unit.region !== moveDraft.from ||
+            !selectedUnits.has(id) || !CampaignRules.controls(s, Net.snapshot.members, Net.seat, unit);
+        }))) moveDraft = null;
+    map.querySelector(".campaign-move-dock")?.remove();
+    map.dataset.moveDraft = String(!!moveDraft);
+    const finish = map.querySelector(".campaign-end-turn");
+    if (finish) finish.disabled = !!moveDraft || !!Net.awaiting || s.phase !== "strategy" || Net.seat === null || s.winner !== null;
+    regionEffect(svg, moveDraft?.destination || null, "campaign-move-outline", "data-move-region");
+    const signature = moveDraft?.destination ? moveDraft.from + ":" + moveDraft.destination : "";
+    let arrow = svg?.querySelector(".campaign-move-preview");
+    if ((arrow?.dataset.route || "") !== signature) {
+      arrow?.remove();
+      if (signature) {
+        const shape = (tag, attrs) => {
+          const e = document.createElementNS(svg.namespaceURI, tag);
+          for (const [key, value] of Object.entries(attrs)) e.setAttribute(key, value);
+          return e;
+        };
+        arrow = shape("g", { class: "campaign-move-preview", "data-route": signature, "pointer-events": "none" });
+        const defs = shape("defs", {}), marker = shape("marker", {
+          id: "campaignDraftArrow", viewBox: "0 0 10 10", refX: 9, refY: 5,
+          markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse",
+        });
+        marker.append(shape("path", { d: "M0 0L10 5L0 10Z", fill: "#ffd66b" }));
+        defs.append(marker); arrow.append(defs);
+        const from = CAMPAIGN_WORLD.regions.find((r) => r.id === moveDraft.from),
+          target = CAMPAIGN_WORLD.regions.find((r) => r.id === moveDraft.destination),
+          [x1, y1] = from.center, [rawX2, y2] = target.center,
+          x2 = rawX2 + (rawX2 - x1 > 600 ? -1200 : rawX2 - x1 < -600 ? 1200 : 0);
+        for (const offset of x2 === rawX2 ? [0] : [0, x2 < 0 ? 1200 : -1200])
+          arrow.append(shape("path", { d: `M${x1},${y1}L${x2},${y2}`, transform: `translate(${offset},0)`,
+            class: "campaign-march-arrow", fill: "none", stroke: "#ffd66b", "stroke-width": 3,
+            "stroke-dasharray": "9 5", "marker-end": "url(#campaignDraftArrow)" }));
+        svg.insertBefore(arrow, svg.querySelector(".campaign-world-labels"));
+      }
+    }
+    if (!moveDraft) return;
+    const dock = node("section", "", "campaign-move-dock"), actions = node("div", "", "campaign-move-confirm-row");
+    dock.id = "campaignMoveDock";
+    dock.setAttribute("aria-label", I18n.text("调动部队"));
+    actions.append(node("strong", I18n.text("调动部队") + " · " + moveDraft.ids.length));
+    const confirm = button("确认调动", () => {
+      if (!moveDraft?.destination || Net.awaiting) return;
+      command("campaign_move", { ids: [...moveDraft.ids], region: moveDraft.destination });
+      clearMoveDraft();
+    });
+    confirm.id = "campaignConfirmMove";
+    confirm.className = "campaign-green-command";
+    confirm.hidden = !moveDraft.destination;
+    actions.append(confirm, button("取消", clearMoveDraft));
+    const targets = node("div", "", "campaign-move-targets");
+    const source = CAMPAIGN_WORLD.regions.find((r) => r.id === moveDraft.from);
+    for (const id of source.links) {
+      const region = CAMPAIGN_WORLD.regions.find((r) => r.id === id),
+        owner = s.regions.find((r) => r.id === id).owner;
+      const choice = button("", () => { moveDraft.destination = id; renderMoveDraft(); });
+      choice.dataset.destination = id;
+      choice.setAttribute("aria-pressed", String(id === moveDraft.destination));
+      choice.append(node("strong", region.name), node("small", ["EFSF", "ZEON"][owner] + " · " + regionReport(s, id)));
+      targets.append(choice);
+    }
+    dock.append(actions, targets);
+    map.append(dock);
+  }
   function chooseOrder(kind, ids, region) {
-    const s = state(),
-      team = Rules.seatTeam(Net.seat);
-    const header = node("header", "", "campaign-order-header");
-    const title = node("h3", kind === "move" ? "调动部队" : "转交控制权");
+    if (kind === "move") {
+      moveDraft = { ids: [...ids], from: region.id, destination: null, seat: Net.seat, turn: state().turn };
+      renderMoveDraft();
+      return;
+    }
+    clearMoveDraft();
+    const s = state(), team = Rules.seatTeam(Net.seat);
+    const header = node("header", "", "campaign-order-header"), title = node("h3", "转交控制权");
     title.id = "campaignOrderTitle";
     orderDialog.setAttribute("aria-labelledby", title.id);
-    header.append(
-      title,
-      button("关闭", () => orderDialog.close()),
-    );
+    header.append(title, button("关闭", () => orderDialog.close()));
     const targets = node("div", "", "campaign-order-targets");
-    if (kind === "move")
-      for (const id of region.links) {
-        const target = CAMPAIGN_WORLD.regions.find((item) => item.id === id);
-        const owner = s.regions.find((item) => item.id === id).owner;
-        const forces = s.units.filter((unit) => !unit.destroyed && unit.region === id);
-        const choice = button("", () => {
-          command("campaign_move", { ids, region: id });
-          orderDialog.close();
-        });
-        choice.dataset.destination = id;
-        choice.append(
-          node("strong", target.name),
-          node(
-            "small",
-            (owner === 0 ? "地球联邦军" : "吉翁公国军") + " · " + forces.length + I18n.text("台"),
-          ),
-        );
-        targets.append(choice);
-      }
-    if (kind === "transfer")
-      for (const player of Net.snapshot.members.filter(
-        (member) =>
-          Number.isInteger(member.seat) &&
-          !member.bot &&
-          Rules.seatTeam(member.seat) === team &&
-          member.seat !== Net.seat,
-      )) {
-        const already = ids.every(
-          (id) => s.units.find((unit) => unit.id === id)?.ownerSeat === player.seat,
-        );
-        const choice = button(
-          "",
-          () => {
-            command("campaign_transfer", { ids, to: player.seat });
-            orderDialog.close();
-          },
-          already,
-        );
-        choice.dataset.recipient = player.seat;
-        const name = node("strong", player.name);
-        name.setAttribute("data-i18n-ignore", "");
-        choice.append(name, node("small", already ? "已由该玩家控制" : "发送控制权转交请求"));
-        targets.append(choice);
-      }
+    for (const player of Net.snapshot.members.filter((member) => Number.isInteger(member.seat) &&
+        !member.bot && Rules.seatTeam(member.seat) === team && member.seat !== Net.seat)) {
+      const already = ids.every((id) => s.units.find((unit) => unit.id === id)?.ownerSeat === player.seat);
+      const choice = button("", () => {
+        command("campaign_transfer", { ids, to: player.seat }); orderDialog.close();
+      }, already);
+      choice.dataset.recipient = player.seat;
+      const name = node("strong", player.name); name.setAttribute("data-i18n-ignore", "");
+      choice.append(name, node("small", already ? "已由该玩家控制" : "发送控制权转交请求"));
+      targets.append(choice);
+    }
     orderDialog.replaceChildren(header, node("p", `已选 ${ids.length} 台`), targets);
     orderDialog.showModal();
   }
@@ -1159,7 +1219,7 @@ window.CampaignUI = (() => {
     const s = state(),
       unit = s?.units.find((item) => item.id === inspectedArmy && !item.destroyed);
     if (!unit || Net.started) return armyDialog.close();
-    const m = UnitModels[unit.unitId + "__" + unit.kitId],
+    const m = armyModel(unit),
       prefab = ART.prefabs.find((item) => item.id === unit.unitId);
     const editable =
       s.phase === "strategy" &&
@@ -1362,7 +1422,7 @@ window.CampaignUI = (() => {
     root.append(toolbar);
     const list = node("div", "", "campaign-force-list");
     for (const unit of units) {
-      const m = UnitModels[unit.unitId + "__" + unit.kitId],
+      const m = armyModel(unit),
         player = Net.snapshot.members.find((member) => member.seat === unit.ownerSeat);
       const prefab = ART.prefabs.find((item) => item.id === unit.unitId),
         kit = prefab?.weaponKits.find((item) => item.id === unit.kitId);
@@ -1679,7 +1739,7 @@ window.CampaignUI = (() => {
       () => command("campaign_ready", { ready: !s.ready.includes(Net.seat) }),
       s.phase !== "strategy" || Net.seat === null || s.winner !== null,
     );
-    finish.className = "primary campaign-end-turn";
+    finish.className = "campaign-green-command campaign-end-turn";
     header.append(overview, status, balances);
     const existing = panel.querySelector(".campaign-body");
     if (existing) {
@@ -1697,6 +1757,7 @@ window.CampaignUI = (() => {
     const map = panel.querySelector(".campaign-world");
     map.querySelector(".campaign-end-turn")?.remove();
     map.append(finish);
+    renderMoveDraft();
     panel.querySelector(".campaign-status")?.remove();
     panel.querySelector(".campaign-victory")?.remove();
     campaignConsole.refresh();
@@ -1807,14 +1868,30 @@ window.CampaignUI = (() => {
   backup.id = "restoreCampaignBackup";
   backup.hidden = true;
   byId("startRoomGame").parentElement.append(backup);
-  const delegationBadge = node("div", "AI委任中（本阶段）", "campaign-delegation-badge");
-  document.body.append(delegationBadge);
+  const delegationToggle = button("开启AI委任（本阶段）", () => {
+    command("campaign_delegate", { delegate: !state()?.delegatedSeats?.includes(Net.seat) });
+  });
+  delegationToggle.id = "campaignDelegationToggle";
+  delegationToggle.className = "campaign-delegation-toggle";
+  delegationToggle.hidden = true;
+  byId("showLog").after(delegationToggle);
   const battleSave = button("保存战役", () => command("campaign_export"));
   battleSave.id = "saveCampaignBattle";
-  battleSave.className = "campaign-battle-save";
   battleSave.hidden = true;
-  document.body.append(battleSave);
+  document.querySelector("#matchRecordsDialog .record-actions").prepend(battleSave);
+  function refreshBattleControls(snapshot = Net.snapshot) {
+    const inBattle = !!snapshot?.campaign && snapshot.started && !window.ReplayPlayer?.active;
+    const delegated = snapshot?.campaign?.delegatedSeats?.includes(Net.seat);
+    delegationToggle.hidden = !inBattle;
+    delegationToggle.textContent = I18n.text(delegated ? "AI委任中（本阶段）" : "开启AI委任（本阶段）");
+    delegationToggle.setAttribute("aria-pressed", String(!!delegated));
+    delegationToggle.disabled = !Number.isInteger(Net.seat) || !!Net.awaiting ||
+      !!snapshot?.returnCountdown || snapshot?.game?.winner !== null;
+    battleSave.hidden = !snapshot?.campaign || Net.memberId !== snapshot.hostId || !!window.ReplayPlayer?.active;
+    battleSave.disabled = !!Net.awaiting;
+  }
   window.addEventListener("page-changing", () => {
+    moveDraft = null;
     panel.hidden = true;
     window.CampaignWorkspace?.close();
     campaignPilots.close();
@@ -1827,11 +1904,12 @@ window.CampaignUI = (() => {
     if (encounterDialog.open) encounterDialog.close();
     setTimeout(() => {
       if (pageView === "campaign") panel.hidden = false;
-      battleSave.hidden = pageView !== "game" || !state() || Net.memberId !== Net.snapshot?.hostId;
+      refreshBattleControls();
     }, 0);
   });
   window.addEventListener("resize", layout);
   window.addEventListener("language-change", () => {
+    refreshBattleControls();
     if (pageView === "campaign" && state()) render();
   });
   function failure(id, message) {
@@ -1841,5 +1919,5 @@ window.CampaignUI = (() => {
       pending.reject(Error(message));
     }
   }
-  return { open, receive, reply, failure, create, render, preview };
+  return { open, receive, reply, failure, create, render, preview, refreshBattleControls };
 })();

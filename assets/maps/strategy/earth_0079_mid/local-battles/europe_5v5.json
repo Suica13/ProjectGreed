@@ -7183,7 +7183,7 @@
         "name": "中心基地",
         "x": 38,
         "y": 45,
-        "radius": 3,
+        "radius": 1,
         "deploymentRadius": 10
       },
       {
@@ -7192,7 +7192,7 @@
         "name": "据点1",
         "x": 38,
         "y": 16,
-        "radius": 2,
+        "radius": 1,
         "deploymentRadius": 3
       },
       {
@@ -7201,7 +7201,7 @@
         "name": "据点2",
         "x": 58,
         "y": 30,
-        "radius": 2,
+        "radius": 1,
         "deploymentRadius": 3
       },
       {
@@ -7210,7 +7210,7 @@
         "name": "据点3",
         "x": 58,
         "y": 59,
-        "radius": 2,
+        "radius": 1,
         "deploymentRadius": 3
       },
       {
@@ -7219,7 +7219,7 @@
         "name": "据点4",
         "x": 38,
         "y": 74,
-        "radius": 2,
+        "radius": 1,
         "deploymentRadius": 3
       },
       {
@@ -7228,7 +7228,7 @@
         "name": "据点5",
         "x": 18,
         "y": 60,
-        "radius": 2,
+        "radius": 1,
         "deploymentRadius": 3
       },
       {
@@ -7237,7 +7237,7 @@
         "name": "据点6",
         "x": 18,
         "y": 30,
-        "radius": 2,
+        "radius": 1,
         "deploymentRadius": 3
       }
     ],

@@ -104,7 +104,7 @@ const Net = (() => {
   const canControl = (unit) =>
     !window.ReplayPlayer?.active &&
     !n.snapshot?.campaign?.delegatedSeats?.includes(n.seat) &&
-    !n.snapshot?.campaign?.delegatedSeats?.includes(Rules.ownerOf(unit || {})) &&
+    !n.snapshot?.campaign?.delegatedSeats?.includes(Rules.controllerOf(n.snapshot?.game || {}, unit || {})) &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
     if (BattleAssets.loading || n.snapshot?.campaign?.delegatedSeats?.includes(n.seat)) return false;
@@ -566,6 +566,7 @@ const Net = (() => {
       n.memberId = s.you.id;
     }
     n.started = s.started;
+    window.CampaignUI?.refreshBattleControls(s);
     document.body.classList.toggle("campaign-active", !!s.campaign);
     document.body.classList.toggle("campaign-room", s.settings.mode === "campaign");
     document.body.classList.toggle("campaign-delegated", !!s.campaign?.delegatedSeats?.includes(n.seat));

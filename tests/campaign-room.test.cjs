@@ -112,6 +112,11 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
       if (room.phase === "deployment" && room.game.deployment[seat] === false)
         await act(socket, "confirm_deployment");
     }
+    for (const actor of room.game.units) {
+      const rate = room.campaign.options.teams[actor.team].durability;
+      assert.equal(actor.campaignDurability, rate);
+      assert.equal(G.modelOf(actor).hp, Math.ceil(G.models[actor.model].hp * rate));
+    }
     assert.equal(
       room.started,
       true,
@@ -127,8 +132,15 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
     unitCostLimit: -10,
     bannedFactions: ["EFSF", "ZEON"],
     bannedEras: ["0079E"],
+    campaignOptions: { difficulty: "hard", aggression: "high", teams: [
+      { research: 1.25, durability: 1.25, resources: 1.5 },
+      { research: 0.75, durability: 0.75, resources: 0.5 },
+    ] },
   });
   assert.equal(room.settings.scenarioId, "earth_0079_mid");
+  assert.equal(room.settings.campaignOptions.difficulty, "hard");
+  await assert.rejects(act(other, "configure_room", { battleMode: "campaign", campaignOptions: { difficulty: "easy" } }), /房主/);
+  await assert.rejects(act(host, "configure_room", { battleMode: "campaign", campaignOptions: { difficulty: "invalid" } }), /设置无效/);
   assert.equal(room.settings.costLimit, 99999);
   assert.deepEqual(room.settings.bannedFactions, []);
   assert.deepEqual(room.settings.bannedEras, []);
@@ -138,6 +150,8 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
   await act(host, "start_game", { campaignRounds: 1 });
   assert(frames.get(host).campaign.units.every((unit) => unit.team === 0));
   assert(frames.get(other).campaign.units.every((unit) => unit.team === 1));
+  assert.equal(room.campaign.teams[0].money, 30000);
+  assert.equal(room.campaign.options.teams[1].durability, 0.75);
   const beforeIntelligence = room.campaign.teams[0].money;
   await act(host, "campaign_intelligence", { id: "intel-once", turn: 1 });
   await act(host, "campaign_intelligence", { id: "intel-once", turn: 1 });

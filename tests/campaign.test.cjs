@@ -174,6 +174,10 @@ test("transfers need recipient acceptance and crossed enemy moves create one enc
   b.moveTo = "canada";
   C.advance(ctx, state, players);
   assert.equal(a.region, b.region);
+  for (const unit of [a, b]) {
+    assert.notEqual(unit.entryFrom, unit.region, "head-on encounters never use their own territory as an entry gate");
+    assert.equal(unit.entryFrom, unit.region === "canada" ? "new_york" : "canada");
+  }
   assert(state.encounters.some((encounter) => encounter.region === a.region));
 });
 
@@ -512,4 +516,20 @@ test("every controlled region yields fixed strategic income, including contested
   for (let team = 0; team < 2; team++)
     for (const resource of ["money", "supplies", "technology"])
       assert.equal(state.teams[team][resource], expected[team][resource], `team ${team} ${resource}`);
+});
+
+
+test("head-on regional movement retains a real adjacent entry for both armies", () => {
+  const state = C.create(ctx, players);
+  state.units = [];
+  const region = ctx.world.regions.find((r) => r.id === "canada_east");
+  const a = C.addUnit(ctx, state, 0, region.id, "Type61");
+  const b = C.addUnit(ctx, state, 1, region.links[0], "MS_06F");
+  a.moveTo = b.region;
+  b.moveTo = a.region;
+  C.advance(ctx, state, players);
+  assert.equal(a.region, b.region);
+  const entry = G.catalog.scenarios.earth_0079_mid.regions[a.region];
+  for (const army of [a, b])
+    assert(entry.layout.gates.some((gate) => gate.region === army.entryFrom));
 });

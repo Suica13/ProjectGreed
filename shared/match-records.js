@@ -280,6 +280,7 @@ const MatchRecords = (() => {
   function validateGame(G, g, tiles) {
     if (!g || !Object.hasOwn(G.catalog.maps, g.mapId)) throw Error("存档地图不受支持。");
     G.campaignBattlefield.validate(G, g);
+    if (g.aiOptions !== undefined) g.aiOptions = G.aiTactics.settings(g.aiOptions);
     const map = G.getMap(g.mapId);
     if (
       !Array.isArray(tiles) ||
@@ -302,6 +303,8 @@ const MatchRecords = (() => {
       throw Error("存档对局状态无效。");
     const ids = new Set();
     for (const u of g.units) {
+      if (u.campaignDurability !== undefined && ![0.75, 1, 1.25].includes(u.campaignDurability))
+        throw Error("战役耐久倍率无效");
       if (u.pilot?.custom) u.pilot = G.pilots.custom(u.pilot);
       if (
         typeof u.id !== "string" ||

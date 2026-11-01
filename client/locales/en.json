@@ -2579,5 +2579,22 @@
   "在高亮区域内调整新参战单位，全部指挥玩家确认后继续局地战。": "Place reinforcements in the highlighted zone. The battle continues after all commanders confirm.",
   "原战场存活部队不能重新部署": "Existing survivors cannot redeploy",
   "基地已被占领，返回战略地图": "Base captured; returning to the strategic map",
-  "战役剧本不存在": "Campaign scenario not found"
+  "战役剧本不存在": "Campaign scenario not found",
+  "开启AI委任（本阶段）": "Enable AI delegation (this stage)",
+  "AI难度": "AI difficulty",
+  "进攻欲望": "Aggression",
+  "简单": "Easy",
+  "标准": "Standard",
+  "困难": "Hard",
+  "低": "Low",
+  "中": "Medium",
+  "高": "High",
+  "科技速度": "Research speed",
+  "慢 75%": "Slow 75%",
+  "中 100%": "Normal 100%",
+  "快 125%": "Fast 125%",
+  "单位强度（耐久）": "Unit strength (HP)",
+  "初始资源": "Starting resources",
+  "主指挥官": "Commander-in-chief",
+  "确认调动": "Confirm movement"
 }

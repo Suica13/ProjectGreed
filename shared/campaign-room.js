@@ -78,8 +78,18 @@ function createCampaignRoom({
   function finishDeployment(room) {
     if (room.campaignBattle) planner.resumeCharges(room);
   }
+  function refreshControl(room) {
+    const roster = members(room);
+    room.settings.campaignCommanders = [0, 1].map((team) => C.commander(roster, team));
+    room.game.campaignControllers = Object.fromEntries(room.seats.map((_, seat) =>
+      [seat, C.controller(roster, { ownerSeat: seat, team: G.seatTeam(seat) }) ?? seat]));
+    for (const actor of room.game.units) {
+      const pending = actor.pendingMove;
+      if (pending && !room.seats[pending.seat]) pending.seat = G.controllerOf(room.game, actor);
+    }
+  }
   function refreshSeats(room) {
-    room.settings.campaignCommanders = [0, 1].map((team) => C.commander(members(room), team));
+    refreshControl(room);
     if (room.phase === "deployment") configureDeployment(room);
     const previous = room.activeSeats || [];
     const completed = room.campaignSeatCompletion || room.seats.map(() => false);
@@ -248,6 +258,7 @@ function createCampaignRoom({
         actor.team = unit.team;
         return unit.region === regionId;
       });
+    const incomingDeployment = [];
     const present = new Set((game?.units || []).map((unit) => unit.campaignId));
     const armies = Array(room.seats.length).fill(null);
     const selected = [];
@@ -370,6 +381,8 @@ function createCampaignRoom({
         ])
           delete actor[key];
       }
+      actor.campaignDurability = G.aiTactics.settings(state.options).teams[source.team].durability;
+      if (!preserved) actor.hp = Math.ceil(actor.hp * actor.campaignDurability);
       actor.id = source.state?.id || source.ownerSeat + "-" + source.id.split("-")[1];
       actor.ownerSeat = source.ownerSeat;
       actor.team = source.team;
@@ -396,6 +409,7 @@ function createCampaignRoom({
       if (!game.units.some((unit) => unit.campaignId === source.id)) {
         if (game.campaignBattlefield) actor.campaignDeploying = true;
         game.units.push(actor);
+        incomingDeployment.push(actor);
       }
       encounter.roster[actor.id] = source.id;
     }
@@ -404,6 +418,8 @@ function createCampaignRoom({
       [0, 1].every((team) => game.units.some((unit) => unit.team === team && unit.hp > 0)),
       "双方都需要可部署的存活单位",
     );
+    settings.campaignOptions = G.aiTactics.settings(state.options);
+    game.aiOptions = settings.campaignOptions;
     room.settings = settings;
     room.game = game;
     room.game.winner = null;
@@ -420,6 +436,7 @@ function createCampaignRoom({
         .filter(([, delegated]) => delegated)
         .map(([owner]) => Number(owner)),
     };
+    refreshControl(room);
     if (game.campaignBattlefield) configureDeployment(room);
     delete encounter.resumeStopRound;
     delete encounter.resumeStartRound;
@@ -436,6 +453,13 @@ function createCampaignRoom({
     room.teamLogs = Records.clone(encounter.battleSave?.teamLogs || {});
     room.logNames = Records.clone(encounter.battleSave?.logNames || []);
     room.logTeamIds = [0, 1];
+    const directionNames = { west: "西", east: "东", north: "北", south: "南" };
+    for (const actor of incomingDeployment) {
+      const gate = game.campaignBattlefield?.layout.gates.find((gate) => gate.region === actor.campaignEntry);
+      const origin = ctx.world.regions.find((region) => region.id === actor.campaignEntry)?.name;
+      const source = gate ? `${origin || gate.region}（${directionNames[gate.side]}方向）` : "本区域据点";
+      log(room, `${G.unitLogName(actor)} 从${source}部署。`, { teams: [actor.team] });
+    }
     room.techAwards = [];
     room.economyAwards = [];
     room.pilotAwards = [];
@@ -573,7 +597,7 @@ function createCampaignRoom({
         !room.campaign,
       "只有房主可开始战略模式房间",
     );
-    room.campaign = C.create(ctx, members(room), { rounds });
+    room.campaign = C.create(ctx, members(room), { rounds, campaignOptions: room.settings.campaignOptions });
     bindTeams(room);
   }
   function handle(room, member, msg) {
@@ -621,12 +645,31 @@ function createCampaignRoom({
         return value;
       });
       room.campaign = C.validate(ctx, input, members(room));
+      room.settings.campaignOptions = G.aiTactics.settings(room.campaign.options);
       bindTeams(room);
       room.campaignPreparation = null;
       member.campaignUpload = null;
       return;
     }
     check(room.campaign, "请先创建或导入战役");
+    if (msg.action === "campaign_delegate") {
+      check(room.started && room.campaignBattle && room.game.winner === null, "当前没有进行中的局地战");
+      check(Number.isInteger(member.seat) && room.seats[member.seat] === member && !member.bot,
+        "只有参战玩家可切换自己的AI委任");
+      check(typeof msg.delegate === "boolean", "AI委任状态无效");
+      const seats = new Set(room.campaignBattle.delegatedSeats || []);
+      if (msg.delegate) seats.add(member.seat);
+      else seats.delete(member.seat);
+      room.campaignBattle.delegatedSeats = [...seats];
+      const wasDeploying = room.phase === "deployment";
+      if (wasDeploying) {
+        configureDeployment(room);
+        if (room.phase === "idle") finishDeployment(room);
+      }
+      log(room, `${member.name} ${msg.delegate ? "开启" : "关闭"}AI委任（本阶段）。`,
+        { teams: [G.seatTeam(member.seat)] });
+      return;
+    }
     if (msg.action === "campaign_export") {
       check(member.id === room.hostId, "战役存档由房主保管");
       return { quiet: true, save: save(room) };
@@ -682,6 +725,7 @@ function createCampaignRoom({
     transfer,
     resetTurns,
     refreshSeats,
+    refreshControl,
     finishDeployment,
     preparation,
     controls: (room, seat, actor) =>

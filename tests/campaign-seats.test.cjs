@@ -160,17 +160,49 @@ test("campaign team changes synchronize faction and allow spectating/AI takeover
       await act(socket, "confirm_deployment");
   }
   assert.equal(room.started, true);
+  const deploymentLog = room.log.filter((line) => line.includes(" 从") && line.endsWith("部署。"));
+  assert.equal(deploymentLog.length, room.game.units.length);
+  for (const actor of room.game.units) {
+    const line = deploymentLog.find((line) => line.startsWith(G.unitLogName(actor) + " 从"));
+    assert(line);
+    assert(room.teamLogs[actor.team].includes(line));
+    assert(!room.teamLogs[1 - actor.team].includes(line), "enemy deployment origin must remain private");
+  }
+  const delegationState = room.game.units.map((unit) => [unit.id, unit.hp, unit.en, unit.actionPoints, unit.x, unit.y]);
+  const done = [...room.turnDone];
+  const previousTurnNotBefore = room.turnNotBefore;
+  room.turnNotBefore = Date.now() + 10000;
+  await act(host, "campaign_delegate", { delegate: true, id: "delegate-once" });
+  await act(host, "campaign_delegate", { delegate: true, id: "delegate-once" });
+  assert.deepEqual(room.campaignBattle.delegatedSeats, [0]);
+  await act(host, "campaign_delegate", { delegate: false });
+  assert.deepEqual(room.campaignBattle.delegatedSeats, []);
+  assert.deepEqual(room.turnDone, done);
+  assert.deepEqual(room.game.units.map((unit) => [unit.id, unit.hp, unit.en, unit.actionPoints, unit.x, unit.y]), delegationState);
+  await assert.rejects(act(host, "campaign_delegate", { delegate: "yes" }), /状态无效/);
+  room.turnNotBefore = previousTurnNotBefore;
   const ap = room.game.units.map((unit) => [unit.id, unit.actionPoints]);
   await act(host, "switch_seat", { seat: null });
   assert.equal(room.settings.campaignCommanders[0], null);
+  await assert.rejects(act(host, "campaign_delegate", { delegate: true }), /参战玩家/);
   assert.equal(room.activeSeats[0], false);
   await act(host, "switch_seat", { seat: 2 });
   assert.equal(room.settings.campaignCommanders[0], 2);
+  assert.equal(room.game.campaignControllers[0], 2);
+  assert.equal(G.controllerOf(room.game, room.game.units.find((u) => G.ownerOf(u) === 0)), 2);
+  assert(room.game.units.some((u) => G.ownerOf(u) === 0), "fallback must preserve historical ownership");
   assert.equal(C.commander([...room.members.values()], 0), 2);
   assert.equal(room.activeSeats[2], true);
   await act(host, "add_ai", { seat: 4 });
   assert.equal(room.seats[4].bot, true);
   assert.equal(room.seats[4].characterFaction, "EFSF");
+  const beforeRemoval = structuredClone(room.game.units);
+  await assert.rejects(act(other, "remove_ai", { seat: 4 }), /房主/);
+  await act(host, "remove_ai", { seat: 4 });
+  assert.equal(room.seats[4], null);
+  assert.deepEqual(room.game.units, beforeRemoval);
+  await act(host, "add_ai", { seat: 4 });
+  assert.equal(room.seats[4].bot, true);
   assert.equal(room.turnDone[2], false);
   assert(room.seats.every((player, seat) => player || !room.activeSeats[seat]));
   assert.deepEqual(

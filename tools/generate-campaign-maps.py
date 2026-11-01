@@ -21,12 +21,12 @@ def write(path, value):
 def make_layout(region, lookup, width, height):
     center_x, center_y = width // 2, height // 2
     nodes = [dict(id='base', kind='base', name='中心基地', x=center_x, y=center_y,
-                  radius=3, deploymentRadius=10)]
+                  radius=1, deploymentRadius=10)]
     for index in range(6):
         angle = math.pi * (index / 3 - 0.5)
         nodes.append(dict(id='post_' + str(index + 1), kind='outpost', name='据点' + str(index + 1),
                           x=round(center_x + 23 * math.cos(angle)),
-                          y=round(center_y + 29 * math.sin(angle)), radius=2, deploymentRadius=3))
+                          y=round(center_y + 29 * math.sin(angle)), radius=1, deploymentRadius=3))
     links = [dict(id='base_' + node['id'], a='base', b=node['id']) for node in nodes[1:]]
     gates = []
     sides = {side: [] for side in ['west', 'east', 'north', 'south']}

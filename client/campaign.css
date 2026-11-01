@@ -460,21 +460,10 @@
 .campaign-encounter-actions button {
   padding: 13px 5px;
 }
-.campaign-delegation-badge {
-  display: none;
-  position: fixed;
-  top: 108px;
-  left: 15px;
-  padding: 7px 12px;
-  background: #1e3547;
-  border: 1px solid #80c9f3;
-  border-radius: 4px;
-  color: #d2efff;
-  z-index: 40;
-  pointer-events: none;
-}
-body.campaign-delegated[data-page="game"] .campaign-delegation-badge {
-  display: block;
+#gameScene .log-tabs .campaign-delegation-toggle[aria-pressed="true"] {
+  background: #25435c;
+  border-color: #80c9f3;
+  color: #e1f4ff;
 }
 @media (max-width: 700px) {
   .campaign-encounter-dialog[open] {
@@ -537,15 +526,6 @@ body.campaign-delegated[data-page="game"] .campaign-delegation-badge {
 }
 .campaign-setup::backdrop {
   background: #000a;
-}
-.campaign-battle-save {
-  position: fixed;
-  top: 65px;
-  left: 15px;
-  z-index: 40;
-}
-.campaign-battle-save[hidden] {
-  display: none;
 }
 body[data-page="campaign"] #menuResources {
   display: none;
@@ -1308,10 +1288,10 @@ body[data-page="campaign"] #openClientSettings {
 .campaign-map-scroll[data-encounter-focus="true"] svg {
   margin-block: 0;
 }
-.campaign-encounter-outline {
+.campaign-encounter-outline, .campaign-move-outline {
   pointer-events: none;
 }
-.campaign-encounter-outline path {
+.campaign-encounter-outline path, .campaign-move-outline path {
   fill: none;
   stroke: #ffdc62;
   stroke-linejoin: round;
@@ -2312,4 +2292,52 @@ body[data-page="campaign"] #openClientSettings {
   padding: 5px 3px;
   font-size: 11px;
   white-space: nowrap;
+}
+
+.campaign-room-options { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.campaign-room-options[hidden] { display: none; }
+.campaign-room-ai-options { grid-column: 1 / -1; display: flex; gap: 12px; }
+.campaign-room-options label { display: grid; gap: 5px; min-width: 0; }
+.campaign-room-options select { width: 100%; min-width: 0; }
+.campaign-room-team-options { display: grid; gap: 8px; min-width: 0; border: 1px solid #546475; }
+.campaign-room-team-options:first-of-type { border-color: #6ab9e8; }
+.campaign-room-team-options:last-of-type { border-color: #c77e85; }
+@media(max-width:600px) { .campaign-room-options { grid-template-columns: minmax(0,1fr); } }
+
+.commander-badge {
+  display: inline-flex;
+  flex: 0 0 16px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  color: #f6cc61;
+  font-size: 15px;
+  line-height: 1;
+  text-shadow: 0 0 5px #dba32f44;
+}
+
+/* Strategic movement is previewed on the map, then explicitly committed. */
+.campaign-move-dock { flex: none; padding: 8px 10px 54px; border-top: 1px solid #546577; background: #182532; }
+.campaign-move-confirm-row { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-height: 32px; margin-bottom: 7px; }
+.campaign-move-confirm-row > strong { margin-right: auto; font-size: 12px; color: #dfebf4; }
+.campaign-move-targets { display: grid; grid-template-columns: repeat(auto-fit,minmax(110px,1fr)); gap: 6px; max-height: 104px; overflow-y: auto; }
+.campaign-move-targets button { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 6px 9px; gap: 3px; }
+.campaign-move-targets strong { font-size: 12px; }
+.campaign-move-targets small { color: #c0cdd9; font-size: 10px; }
+.campaign-move-targets button[aria-pressed="true"] { border-color: #f5cf70; background: #3c3830; }
+.campaign-world .campaign-green-command { background: #197b60; border: 1px solid #62d5a2; color: #f0fff7; font-weight: 700; }
+.campaign-world .campaign-green-command:not(:disabled) { animation: campaign-command-pulse 1.6s ease-in-out infinite; }
+.campaign-world .campaign-green-command:hover:not(:disabled) { background: #239774; }
+.campaign-world .campaign-green-command:disabled { background: #214438; border-color: #456b5a; color: #a6b9ae; animation: none; }
+.campaign-march-arrow, .campaign-moving-armies > path { animation: campaign-march-flow 1.2s linear infinite, campaign-march-pulse 1.6s ease-in-out infinite; }
+@keyframes campaign-command-pulse { 0%,100% { box-shadow: 0 0 0 0 #51d99a00; filter: brightness(1); } 50% { box-shadow: 0 0 9px 1px #51d99a66; filter: brightness(1.18); } }
+@keyframes campaign-march-flow { to { stroke-dashoffset: -28; } }
+@keyframes campaign-march-pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+@media(max-width:700px) {
+  .campaign-world[data-move-draft="true"] { height: min(52dvh,360px); }
+  .campaign-move-dock { padding: 6px 8px 48px; }
+  .campaign-move-confirm-row { gap: 5px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .campaign-world .campaign-green-command:not(:disabled), .campaign-march-arrow, .campaign-moving-armies > path { animation: none; }
 }

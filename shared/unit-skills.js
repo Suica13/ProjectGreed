@@ -395,6 +395,7 @@ const UnitSkills = (() => {
         ownerSeat: unit.ownerSeat ?? unit.team,
         environment: unit.environment,
         performance: unit.performance ?? 1,
+        ...(unit.campaignDurability !== undefined ? { campaignDurability: unit.campaignDurability } : {}),
         pilot: unit.pilot,
         ...(unit.pilotBuffs ? { pilotBuffs: structuredClone(unit.pilotBuffs) } : {}),
         ...(unit.skillReadyRound ? { skillReadyRound: { ...unit.skillReadyRound } } : {}),

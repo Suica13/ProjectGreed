@@ -45,7 +45,7 @@ async function peer(url, mode) {
       characterFaction: "PMC",
       room: "SFSTEST",
       mode,
-      inventory: { RGM_79: 5 },
+      licenses: { RGM_79: true },
       name: mode,
     }),
   );
@@ -122,6 +122,11 @@ test("real WebSocket SFS boarding, duplicate confirmation, passenger combat owne
   assert(u.embarked.exposed);
   await host.act("confirm_move", { unitId: u.id }, id);
   assert.equal(G.hangars.cargo(room.game, carrier).length, 1);
+  const boardingLines = room.log.filter(line => line.includes(G.unitLogName(u)) && line.includes("搭乘"));
+  assert.equal(boardingLines.length, 1, "SFS confirmation logs boarding exactly once");
+  assert(boardingLines[0].includes(G.unitLogName(carrier)));
+  assert(room.teamLogs[0].includes(boardingLines[0]));
+  assert(room.teamLogs[1].includes(boardingLines[0]), "visible boarding is included in the opposing perspective");
   result = await guest.act("sync");
   assert(result.game.units.find((x) => x.id === u.id).embarked.exposed);
   assert.equal((await guest.act("wait", { unitId: u.id })).type, "error");
@@ -171,12 +176,23 @@ test("real WebSocket loaded APC boarding keeps nested cargo and rejects unauthor
   Object.assign(passenger,{x:apc.x-1,y:apc.y});
   G.hangars.embark(g,passenger,apc,G.hangars.of(apc)[0].id);
   await host.act("sync");
+  g.fogMode="full";
+  const enemy=g.units.find(u=>u.team===1);
+  const corners=[{x:0,y:0},{x:G.mapWidth(g)-1,y:0},{x:0,y:G.mapHeight(g)-1},{x:G.mapWidth(g)-1,y:G.mapHeight(g)-1}];
+  corners.sort((a,b)=>G.dist(b,ship)-G.dist(a,ship));
+  Object.assign(enemy,corners[0]);
+  assert(!G.sensors.visible(g,1,apc));
   const fields={unitId:apc.id,carrierId:ship.id,hangarId:G.hangars.of(ship)[0].id};
   assert.equal((await guest.act("embark",fields)).type,"error");
   const id=randomUUID(), result=await host.act("embark",fields,id);
   assert.equal(result.type,"state",JSON.stringify(result));
   await host.act("embark",fields,id);
   assert.equal(G.hangars.used(g,ship,fields.hangarId),1);
+  const boardingLines=room.log.filter(line=>line.includes(G.unitLogName(apc))&&line.includes("搭乘"));
+  assert.equal(boardingLines.length,1);
+  assert(boardingLines[0].includes(G.unitLogName(ship)));
+  assert(room.teamLogs[0].includes(boardingLines[0]));
+  assert(!room.teamLogs[1].includes(boardingLines[0]),"hidden boarding must not reveal either unit");
   assert.equal(result.game.units.find(u=>u.id===passenger.id).embarked.carrierId,apc.id);
   assert.equal(result.game.units.find(u=>u.id===apc.id).embarked.carrierId,ship.id);
   assert.equal((await host.act("launch",{unitId:passenger.id,x:8,y:8})).type,"error");

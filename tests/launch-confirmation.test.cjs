@@ -18,7 +18,7 @@ test("WebSocket launch preview preserves cargo and intel, rejects other intents,
   });
   await new Promise((resolve,reject)=>{ws.once("open",resolve);ws.once("error",reject);});
   const client={ws,frames,wait};clients.push(client);
-  ws.send(JSON.stringify({type:"hello",version:require("../project.json").version,mode,room:"LAUNCH",characterFaction:"PMC",inventory:{Medea:3,Type61:24}}));
+  ws.send(JSON.stringify({type:"hello",version:require("../project.json").version,mode,room:"LAUNCH",characterFaction:"PMC",licenses:{Medea:true,Type61:true}}));
   await wait(frame=>frame.type==="joined");await wait(frame=>frame.type==="state");return client;
  }
  const first=await connect("create"),second=await connect("join"),room=app.rooms.get("LAUNCH");
@@ -36,11 +36,14 @@ test("WebSocket launch preview preserves cargo and intel, rejects other intents,
  const cargo=room.game.units.find(unit=>unit.embarked),carrier=room.game.units.find(unit=>unit.id===cargo.embarked.carrierId);
  const destination=G.hangars.launchCells(room.game,cargo)[0];assert(destination);
  const before=JSON.stringify(cargo),intelBefore=JSON.stringify(G.sensors.view(room.game,0));
+ const launchLines=()=>room.log.filter(line=>line.includes(G.unitLogName(cargo))&&line.includes("出击至"));
+ const beforeLogs=launchLines().length;
  await ok(first,"launch",{unitId:cargo.id,x:destination.x,y:destination.y});
  assert(cargo.embarked);assert(cargo.pendingMove.launch);assert.equal(JSON.stringify(G.sensors.view(room.game,0)),intelBefore);
  assert.equal((await act(first,"confirm_deployment")).type,"error");
  assert.equal((await act(second,"confirm_move",{unitId:cargo.id})).type,"error");
  await ok(first,"cancel_move",{unitId:cargo.id});assert.equal(JSON.stringify(cargo),before);
+ assert.equal(launchLines().length,beforeLogs,"preview and cancellation must not record a launch");
  await ok(first,"launch",{unitId:cargo.id,x:destination.x,y:destination.y});
  const confirmId="launch-confirm-once";
  assert.equal((await act(first,"confirm_move",{unitId:cargo.id},confirmId)).type,"state");
@@ -48,4 +51,8 @@ test("WebSocket launch preview preserves cargo and intel, rejects other intents,
  const confirmed=JSON.stringify(room.game);
  await act(first,"confirm_move",{unitId:cargo.id},confirmId);assert.equal(JSON.stringify(room.game),confirmed);
  assert.equal(G.hangars.cargo(room.game,carrier).length,0);
+ assert.equal(launchLines().length,beforeLogs+1,"duplicate confirmation must not duplicate the launch log");
+ assert(launchLines()[0].includes(G.unitLogName(carrier)));
+ assert(launchLines()[0].includes(G.columnLabel(cargo.x)+(cargo.y+1)));
+ assert(room.teamLogs[0].includes(launchLines()[0]));
 });

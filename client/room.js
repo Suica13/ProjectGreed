@@ -208,6 +208,44 @@ const RoomPanel = (() => {
       restrictions[select.dataset.key] = JSON.parse(select.dataset.bannedTags);
     return restrictions;
   }
+  function renderCampaignOptions(snapshot, locked) {
+    let panel = byId("campaignRoomOptions");
+    if (!panel) {
+      panel = element("section", "campaign-room-options");
+      panel.id = "campaignRoomOptions";
+      byId("roomBattleMode").closest("details").append(panel);
+    }
+    panel.hidden = snapshot.settings.mode !== "campaign";
+    if (panel.hidden) return;
+    panel.replaceChildren();
+    const config = Rules.aiTactics.settings(snapshot.settings.campaignOptions);
+    const option = (parent, label, choices, value, change, id) => {
+      const row = element("label", "", label), select = element("select");
+      select.id = id;
+      for (const [key, text] of choices) select.add(new Option(I18n.text(text), String(key)));
+      select.value = String(value);
+      select.disabled = locked || !!snapshot.campaign;
+      select.onchange = () => { change(select.value); sendSettings({ campaignOptions: config }); };
+      row.append(select); parent.append(row);
+    };
+    const general = element("div", "campaign-room-ai-options");
+    option(general, "AI难度", [["easy", "简单"], ["normal", "标准"], ["hard", "困难"]],
+      config.difficulty, (v) => config.difficulty = v, "campaignAIDifficulty");
+    option(general, "进攻欲望", [["low", "低"], ["normal", "中"], ["high", "高"]],
+      config.aggression, (v) => config.aggression = v, "campaignAIAggression");
+    panel.append(general);
+    for (let team = 0; team < 2; team++) {
+      const group = element("fieldset", "campaign-room-team-options");
+      group.append(element("legend", "", ["地球联邦军", "吉翁公国军"][team]));
+      option(group, "科技速度", [[0.75, "慢 75%"], [1, "中 100%"], [1.25, "快 125%"]],
+        config.teams[team].research, (v) => config.teams[team].research = Number(v), "campaignResearch" + team);
+      option(group, "单位强度（耐久）", [0.75, 1, 1.25].map((v) => [v, v * 100 + "%"]),
+        config.teams[team].durability, (v) => config.teams[team].durability = Number(v), "campaignDurability" + team);
+      option(group, "初始资源", [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2].map((v) => [v, v * 100 + "%"]),
+        config.teams[team].resources, (v) => config.teams[team].resources = Number(v), "campaignResources" + team);
+      panel.append(group);
+    }
+  }
   function renderSettings(snapshot, busy) {
     const settings = snapshot.settings || Rules.defaultRoomSettings();
     const mapSelect = byId("roomMapSelect");
@@ -319,6 +357,7 @@ const RoomPanel = (() => {
       byId("roomBattleMode").closest("details").append(summary);
     }
     summary.hidden = !strategic;
+    renderCampaignOptions(snapshot, locked);
     if (strategic) {
       window.CampaignUI.preview(byId("roomMapPreview"), snapshot.campaign);
       byId("roomMapTitle").textContent = CAMPAIGN_WORLD.name;
@@ -543,8 +582,8 @@ const RoomPanel = (() => {
       remove.id = player.bot ? "removeAI" + player.seat : "kickPlayer";
       remove.disabled =
         !!Net.awaiting ||
-        snapshot.started ||
-        !!snapshot.campaign ||
+        (snapshot.started && !snapshot.campaign) ||
+        (!!snapshot.campaign && !player.bot) ||
         snapshot.you.id !== snapshot.hostId;
       remove.onclick = () => {
         Net.request(
@@ -563,6 +602,20 @@ const RoomPanel = (() => {
     button.type = "button";
     button.id =
       (player.bot ? "aiSettings" : "managePlayer-") + (player.bot ? player.seat : player.id);
+    if (snapshot.settings.mode === "campaign" && Number.isInteger(player.seat)) {
+      const team = Rules.seatTeam(player.seat);
+      const leader = snapshot.campaign?.commanders?.[team] ?? snapshot.members
+        .filter((member) => Number.isInteger(member.seat) && Rules.seatTeam(member.seat) === team)
+        .sort((a, b) => a.seat - b.seat)[0]?.seat;
+      if (leader === player.seat) {
+        const badge = element("span", "commander-badge", "★");
+        badge.title = I18n.text("主指挥官");
+        badge.setAttribute("role", "img");
+        badge.setAttribute("aria-label", I18n.text("主指挥官"));
+        badge.dataset.commanderSeat = player.seat;
+        button.append(badge);
+      }
+    }
     button.append(playerLabel(player, snapshot.you, snapshot));
     button.title = player.bot ? "管理 AI" : "管理玩家";
     button.setAttribute("aria-label", button.title + "：" + player.name);
@@ -918,13 +971,13 @@ const RoomPanel = (() => {
         if (
           (!snapshot.started || !!snapshot.campaign) &&
           self.id === snapshot.hostId &&
-          !member &&
+          (!member || member.bot) &&
           !reserved
         ) {
-          const addAI = element("button", "choose-spawn", "添加 AI");
-          addAI.id = "addAI" + seat;
+          const addAI = element("button", "choose-spawn" + (member ? " danger" : ""), member ? "移除 AI" : "添加 AI");
+          addAI.id = (member ? "removeSeatAI" : "addAI") + seat;
           addAI.disabled = busy || !!snapshot.returnCountdown;
-          addAI.onclick = () => Net.request("add_ai", { seat });
+          addAI.onclick = () => Net.request(member ? "remove_ai" : "add_ai", { seat });
           nameCell.append(addAI);
         }
         const positionCell = element("div", "spawn-cell");

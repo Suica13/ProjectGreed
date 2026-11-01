@@ -278,3 +278,42 @@ test("connected post maintenance is applied once on the incoming team turn", () 
   assert.equal(unit.hp, hp);
   assert.equal(unit.en, en);
 });
+
+
+test("objective capture and maintenance use exactly a 3 by 3 footprint", () => {
+  const { game, unit, field } = fixture();
+  const post = field.layout.nodes[1];
+  for (let dy = -2; dy <= 2; dy++)
+    for (let dx = -2; dx <= 2; dx++) {
+      unit.x = post.x + dx;
+      unit.y = post.y + dy;
+      assert.equal(B.nodeAt(G, game, unit)?.id === post.id, Math.abs(dx) <= 1 && Math.abs(dy) <= 1);
+    }
+  const legacy = structuredClone(game);
+  for (const node of legacy.campaignBattlefield.layout.nodes)
+    node.radius = node.kind === "base" ? 3 : 2;
+  B.validate(G, legacy);
+  assert.deepEqual(legacy.campaignBattlefield.layout, field.layout);
+});
+
+test("owned posts provide five-cell sight without units, supply or radar marking", () => {
+  const { game, unit, enemy, field } = fixture();
+  const post = field.layout.nodes[1];
+  for (const node of field.layout.nodes) field.owners[node.id] = 1;
+  for (const gate of field.layout.gates) field.adjacentOwners[gate.region] = 1;
+  field.owners[post.id] = 0;
+  field.version++;
+  game.fogMode = "full";
+  unit.hp = 0;
+  enemy.x = post.x + 5;
+  enemy.y = post.y;
+  assert(G.sensors.visible(game, 0, enemy));
+  assert(!G.sensors.detected(game, 0, enemy), "sight is not radar");
+  assert(G.sensors.view(game, 0).visibleCells.includes(G.key(enemy.x, enemy.y)));
+  enemy.x++;
+  assert(!G.sensors.visible(game, 0, enemy));
+  enemy.x--;
+  field.owners[post.id] = 1;
+  field.version++;
+  assert(!G.sensors.visible(game, 0, enemy), "capture immediately transfers the objective's sight");
+});
